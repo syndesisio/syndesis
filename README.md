@@ -1,6 +1,6 @@
 ## Funktion
 
-**Funktion** implements a simple even driven lambda style programming model on top of [Kubernetes](http://kubernetes.io)
+**Funktion** implements a simple event driven lambda style programming model on top of [Kubernetes](http://kubernetes.io)
 
 ![Apache 2](http://img.shields.io/badge/license-Apache%202-red.svg)
 
