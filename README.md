@@ -6,7 +6,7 @@ A 'funktion' is a function in some programming language bound to a trigger deplo
 
 ### Using funktion
 
-You write a simple function in any programming language [like this]().
+You write a simple function in any programming language [like this](https://github.com/fabric8io/funktion/blob/master/funktion-runtime/src/test/java/io/fabric8/funktion/sample/Main.java#L25-L27).
 
 Then you associate it with an event trigger, such as a HTTP URL or email address to listen on, a message queue name or database table etc. Hundreds of different trigger endpoints are supported including most network protocols, transports, databases, messaging systems, social networks, cloud services and SaaS offerings.
 
