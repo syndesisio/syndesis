@@ -71,6 +71,7 @@
   </scm>
 
   <modules>
+    <module>parent</module>
     <module>funktion-runtime</module>
     <module>examples</module>
     <module>starter-parent-java</module>
