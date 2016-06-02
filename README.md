@@ -8,7 +8,7 @@ Funktion supports hundreds of different [trigger endpoint URLs](http://camel.apa
 
 In a sense funktion is a [serverless](https://www.quora.com/What-is-Serverless-Computing) approach to event driven microservices as you focus on just writing _funktions_ and Kubernetes takes care of the rest. Its not that there's no servers; its more that you as the funktion developer don't have to worry about managing them.
 
-![Apache 2](http://img.shields.io/badge/license-Apache%202-red.svg)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.fabric8.funktion/funktion-runtime/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/io.fabric8.funktion/funktion-runtime/) ![Apache 2](http://img.shields.io/badge/license-Apache%202-red.svg)
 
 <p align="center">
   <a href="http://fabric8.io/">
