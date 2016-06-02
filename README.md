@@ -1,24 +1,33 @@
 ## Funktion
 
-**Funktion** implements a simple event driven lambda style programming model on top of [Kubernetes](http://kubernetes.io).
+**Funktion** is an open source event driven lambda style programming model on top of [Kubernetes](http://kubernetes.io).
 
-A 'funktion' is a function in some programming language bound to a trigger deployed into Kubernetes!
+A _funktion_ is a regular function in any programming language bound to a _trigger_ deployed into Kubernetes. Then Kubernetes takes care of the rest (scaling, high availability, load balancing, logging and metrics etc).
 
-### Using funktion
+Funktion supports hundreds of different [trigger endpoint URLs](http://camel.apache.org/components.html) including most network protocols, transports, databases, messaging systems, social networks, cloud services and SaaS offerings.
 
-You write a simple function in any programming language [like this](https://github.com/fabric8io/funktion/blob/master/funktion-runtime/src/test/java/io/fabric8/funktion/sample/Main.java#L25-L27).
-
-Then you associate it with an event trigger, such as a HTTP URL or email address to listen on, a message queue name or database table etc. Hundreds of different trigger endpoints are supported including most network protocols, transports, databases, messaging systems, social networks, cloud services and SaaS offerings.
-
-You add the event trigger URL to the [funktion.yml](funktion-runtime/funktion.yml) file and then kick off the build and your funktion will be deployed to your kubernetes cluster!
+In a sense this is a [serverless](https://www.quora.com/What-is-Serverless-Computing) approach to event driven microservices as you focus on just writing _funktions_ and Kubernetes takes care of the rest. Its not that there's no servers; its more that you as the funktion developer don't have to worry about managing them.
 
 ![Apache 2](http://img.shields.io/badge/license-Apache%202-red.svg)
 
 <p align="center">
   <a href="http://fabric8.io/">
-  	<img src="https://raw.githubusercontent.com/fabric8io/fabric8/master/docs/images/cover/cover_small.png" alt="fabric8 logo"/>
+  	<img src="https://raw.githubusercontent.com/fabric8io/funktion/master/docs/images/logo.png" alt="funktion logo"/>
   </a>
 </p>
+
+
+### Using funktion
+
+* You write a simple function in any programming language [like this](https://github.com/fabric8io/funktion/blob/master/funktion-runtime/src/test/java/io/fabric8/funktion/sample/Main.java#L25-L27).
+
+* Associate your function with an event trigger, such as a HTTP URL or email address to listen on, a message queue name or database table etc. Hundreds of different trigger endpoints are supported including most network protocols, transports, databases, messaging systems, social networks, cloud services and SaaS offerings.
+
+* Add the event trigger URL to the [funktion.yml](funktion-runtime/funktion.yml) file
+
+* Kick off the build (usually a [Jenkins CI / CD pipeline](http://fabric8.io/guide/cdelivery.html) and your funktion will be deployed to your kubernetes cluster!
+
+* Win! :)
 
 ### Contributing to the project
 
