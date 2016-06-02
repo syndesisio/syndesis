@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016 Red Hat, Inc.
  * <p>
  * Red Hat licenses this file to you under the Apache License, version
@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied.  See the License for the specific language governing
  * permissions and limitations under the License.
+ *
  */
 package io.fabric8.funktion.runtime;
 
