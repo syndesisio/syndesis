@@ -70,6 +70,13 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+<!--
+      <version>${spring-boot.version}</version>
+-->
+    </dependency>
 
     <!-- testing -->
     <dependency>
@@ -100,7 +107,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2.1</version>
+        <version>${maven.exec.plugin.version}</version>
         <configuration>
           <mainClass>io.fabric8.funktion.runtime.Main</mainClass>
           <includePluginDependencies>false</includePluginDependencies>

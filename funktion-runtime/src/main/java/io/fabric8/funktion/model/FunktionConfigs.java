@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +70,14 @@ public class FunktionConfigs {
         return config;
     }
 
+    protected static FunktionConfig validateConfig(FunktionConfig config, URL url) {
+        List<FunktionRule> rules = config.getRules();
+        if (rules.isEmpty()) {
+            throw new IllegalStateException("No Funktion rules defined in URL: " + url);
+        }
+        return config;
+    }
+
 
     /**
      * Tries to find the configuration from the current directory or a parent folder.
@@ -83,11 +92,32 @@ public class FunktionConfigs {
             if (parentFile != null) {
                 return findFromFolder(parentFile);
             }
+            FunktionConfig answer = tryFindConfigOnClassPath();
+            if (answer != null) {
+                return answer;
+            }
             throw new IOException("Funktion configuration file does not exist: " + file.getPath());
         } else if (folder.isFile()) {
            return loadFromFile(folder);
         }
+        FunktionConfig answer = tryFindConfigOnClassPath();
+        if (answer != null) {
+            return answer;
+        }
         throw new IOException("Funktion configuration folder does not exist: " + folder.getPath());
+    }
+
+    protected static FunktionConfig tryFindConfigOnClassPath() throws IOException {
+        URL url = FunktionConfigs.class.getClassLoader().getResource(FILE_NAME);
+        if (url != null) {
+            try {
+                FunktionConfig config = parseFunktionConfig(url);
+                return validateConfig(config, url);
+            } catch (IOException e) {
+                throw new IOException("Failed to parse funktion config: " + url + ". " + e, e);
+            }
+        }
+        return null;
     }
 
     /**
@@ -106,11 +136,17 @@ public class FunktionConfigs {
     }
 
     public static FunktionConfig parseFunktionConfig(File file) throws IOException {
+        LOG.info("Loading Funktion rules from file: " + file);
         return parseYaml(file, FunktionConfig.class);
     }
 
     public static FunktionConfig parseFunktionConfig(InputStream input) throws IOException {
         return parseYaml(input, FunktionConfig.class);
+    }
+
+    public static FunktionConfig parseFunktionConfig(URL url) throws IOException {
+        LOG.info("Loading Funktion rules from URL: " + url);
+        return parseYaml(url, FunktionConfig.class);
     }
 
     public static FunktionConfig parseFunktionConfig(String yaml) throws IOException {
@@ -120,6 +156,11 @@ public class FunktionConfigs {
     private static <T> T parseYaml(File file, Class<T> clazz) throws IOException {
         ObjectMapper mapper = createObjectMapper();
         return mapper.readValue(file, clazz);
+    }
+
+    private static <T> T parseYaml(URL url, Class<T> clazz) throws IOException {
+        ObjectMapper mapper = createObjectMapper();
+        return mapper.readValue(url, clazz);
     }
 
     static <T> List<T> parseYamlValues(File file, Class<T> clazz) throws IOException {

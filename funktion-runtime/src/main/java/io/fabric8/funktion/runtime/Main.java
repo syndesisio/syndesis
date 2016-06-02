@@ -35,7 +35,7 @@ import java.util.List;
 public class Main extends FatJarRouter {
     private static final transient Logger LOG = LoggerFactory.getLogger(Main.class);
 
-    private static final String DEFAULT_TRIGGER_URL = "http://localhost:8080/";
+    private static final String DEFAULT_TRIGGER_URL = "http://0.0.0.0:8080/";
     private static final String DEFAUT_HTTP_ENDPOINT_PREFIX = "netty4-http:";
 
     // must have a main method spring-boot can run

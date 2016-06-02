@@ -10,12 +10,15 @@ This example shows how easy it is to develop a [funktion](https://github.com/fab
 
 The source code consists of:
 
-* [funktion.yml](funktion.yml) to define the trigger URL (in this case HTTP)
+* [funktion.yml](src/main/resources/funktion.yml) to define the trigger URL (in this case HTTP)
 * [main() function in Java](src/main/java/io/fabric8/funktion/example/Main.java#L25-L27) to process incoming events
 
 You can then run your funktion locally via:
 
 ```
-mvn compile exec:java
+mvn spring-boot:run
 ```
+
+You can then invoke it via your web browser at [http://localhost:8080/?name=Funktion](http://localhost:8080/?name=Funktion)
+
 
