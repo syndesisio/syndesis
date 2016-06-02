@@ -30,9 +30,11 @@ In a sense funktion is a [serverless](https://www.quora.com/What-is-Serverless-C
 
 ### Examples
 
-Check out the following example projects
+Check out the following example projects:
 
-* [example-java](https://github.com/fabric8io/funktion/tree/master/examples/example-java) is a simple example using a Java funktion triggered by HTTP
+* [funktion-java-example](https://github.com/fabric8-quickstarts/funktion-java-example) is an example using a Java funktion triggered by HTTP
+* [funktion-groovy-example](https://github.com/fabric8-quickstarts/funktion-groovy-example) is an example using a [Groovy](http://www.groovy-lang.org/) funktion triggered by HTTP
+* [funktion-kotlin-example](https://github.com/fabric8-quickstarts/funktion-kotlin-example) is an example using a [Kotlin](https://kotlinlang.org/) funktion triggered by HTTP
 
 ### Contributing to the project
 
