@@ -27,6 +27,13 @@ In a sense funktion is a [serverless](https://www.quora.com/What-is-Serverless-C
 
 * Win! :)
 
+
+### Examples
+
+Check out the following example projects
+
+* [example-java](https://github.com/fabric8io/funktion/tree/master/examples/example-java) is a simple example using a Java funktion triggered by HTTP
+
 ### Contributing to the project
 
 We love [contributions](http://fabric8.io/contributing/index.html) and you are very welcome to help.
