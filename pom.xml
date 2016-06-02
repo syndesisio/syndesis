@@ -139,6 +139,7 @@
   <modules>
     <module>funktion-runtime</module>
     <module>examples</module>
+    <module>starter-parent-java</module>
   </modules>
 
   <build>

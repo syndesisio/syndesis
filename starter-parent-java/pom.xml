@@ -20,19 +20,23 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.fabric8.funktion.examples</groupId>
-    <artifactId>examples</artifactId>
+    <groupId>io.fabric8.funktion</groupId>
+    <artifactId>funktion-project</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>example-java</artifactId>
-  <packaging>jar</packaging>
+  <groupId>io.fabric8.funktion.starter</groupId>
+  <artifactId>starter-parent-java</artifactId>
+  <packaging>pom</packaging>
 
-  <name>Example Java</name>
-  <description>Funktion :: Examples :: Java</description>
+  <name>Funktion Starter Parent Java</name>
+  <description>Funktion :: Starter Parent :: Java</description>
 
-  <properties>
-  </properties>
+  <modules>
+<!--
+    <module>example-java</module>
+-->
+  </modules>
 
   <dependencies>
     <dependency>
@@ -49,7 +53,35 @@
   </dependencies>
 
   <build>
+    <defaultGoal>spring-boot:run</defaultGoal>
+
+    <resources>
+      <resource>
+        <directory>.</directory>
+        <includes>
+          <include>funktion.yml</include>
+        </includes>
+      </resource>
+    </resources>
+
     <plugins>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-maven-plugin</artifactId>
+        <configuration>
+          <enricher>
+            <default.service.type>LoadBalancer</default.service.type>
+          </enricher>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>resource</goal>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -57,30 +89,4 @@
     </plugins>
   </build>
 
-  <profiles>
-    <profile>
-      <id>k8s</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>fabric8-maven-plugin</artifactId>
-            <configuration>
-              <enricher>
-                <default.service.type>LoadBalancer</default.service.type>
-              </enricher>
-            </configuration>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>resource</goal>
-                  <goal>build</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>
