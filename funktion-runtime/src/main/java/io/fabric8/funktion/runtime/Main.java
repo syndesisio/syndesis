@@ -70,11 +70,26 @@ public class Main extends FatJarRouter {
         RouteDefinition route = from(trigger);
         String action = rule.getAction();
         if (!Strings.isEmpty(action)) {
+            String method = null;
+
+            int idx = action.indexOf("::");
+            if (idx > 0) {
+                method = action.substring(idx + 2);
+                action = action.substring(0, idx);
+            }
+
             message.append(" => ");
             message.append(action);
-            message.append(".main()");
 
+            if (method != null) {
+                message.append("." + method + "()");
+                action += "?method=" + method;
+            }
+            else {
+                message.append(".main()");
+            }
             action = "class:" + action;
+
             route.to(action);
         }
         String chain = rule.getChain();
