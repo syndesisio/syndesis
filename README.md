@@ -1,4 +1,4 @@
-## Funktion
+## <img src="https://raw.githubusercontent.com/fabric8io/funktion/master/docs/images/icon.png" width="24" height="24"/>&nbsp; Funktion
 
 **Funktion** is an open source event driven lambda style programming model on top of [Kubernetes](http://kubernetes.io).
 
@@ -12,7 +12,7 @@ In a sense this is a [serverless](https://www.quora.com/What-is-Serverless-Compu
 
 <p align="center">
   <a href="http://fabric8.io/">
-  	<img src="https://raw.githubusercontent.com/fabric8io/funktion/master/docs/images/logo.png" alt="funktion logo"/>
+  	<img src="https://raw.githubusercontent.com/fabric8io/funktion/master/docs/images/icon.png" alt="funktion logo" width="200" height="200"/>
   </a>
 </p>
 
