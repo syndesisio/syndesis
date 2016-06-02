@@ -6,7 +6,7 @@ A _funktion_ is a regular function in any programming language bound to a _trigg
 
 Funktion supports hundreds of different [trigger endpoint URLs](http://camel.apache.org/components.html) including most network protocols, transports, databases, messaging systems, social networks, cloud services and SaaS offerings.
 
-In a sense this is a [serverless](https://www.quora.com/What-is-Serverless-Computing) approach to event driven microservices as you focus on just writing _funktions_ and Kubernetes takes care of the rest. Its not that there's no servers; its more that you as the funktion developer don't have to worry about managing them.
+In a sense funktion is a [serverless](https://www.quora.com/What-is-Serverless-Computing) approach to event driven microservices as you focus on just writing _funktions_ and Kubernetes takes care of the rest. Its not that there's no servers; its more that you as the funktion developer don't have to worry about managing them.
 
 ![Apache 2](http://img.shields.io/badge/license-Apache%202-red.svg)
 
@@ -21,9 +21,7 @@ In a sense this is a [serverless](https://www.quora.com/What-is-Serverless-Compu
 
 * You write a simple function in any programming language [like this](https://github.com/fabric8io/funktion/blob/master/funktion-runtime/src/test/java/io/fabric8/funktion/sample/Main.java#L25-L27).
 
-* Associate your function with an event trigger, such as a HTTP URL or email address to listen on, a message queue name or database table etc. Hundreds of different trigger endpoints are supported including most network protocols, transports, databases, messaging systems, social networks, cloud services and SaaS offerings.
-
-* Add the event trigger URL to the [funktion.yml](funktion-runtime/funktion.yml) file
+* Create a [funktion.yml](funktion-runtime/funktion.yml) file and associate your function with an [event trigger endpoint URL](http://camel.apache.org/components.html) such as a HTTP URL or email address to listen on, a message queue name or database table etc.
 
 * Kick off the build (usually a [Jenkins CI / CD pipeline](http://fabric8.io/guide/cdelivery.html) and your funktion will be deployed to your kubernetes cluster!
 
