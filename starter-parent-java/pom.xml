@@ -34,6 +34,7 @@
 
   <modules>
     <module>starter-parent-groovy</module>
+    <module>starter-parent-kotlin</module>
   </modules>
 
   <dependencies>
