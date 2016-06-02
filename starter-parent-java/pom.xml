@@ -33,9 +33,7 @@
   <description>Funktion :: Starter Parent :: Java</description>
 
   <modules>
-<!--
-    <module>example-java</module>
--->
+    <module>starter-parent-groovy</module>
   </modules>
 
   <dependencies>
