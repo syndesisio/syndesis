@@ -1,0 +1,3 @@
+rules:
+  - trigger: http://localhost:8080
+    action: io.fabric8.funktion.example.Main

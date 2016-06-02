@@ -44,7 +44,6 @@ public class Main extends FatJarRouter {
 
     @Override
     public void configure() throws Exception {
-
         FunktionConfig config = FunktionConfigs.load();
 
         List<FunktionRule> rules = config.getRules();
@@ -54,12 +53,13 @@ public class Main extends FatJarRouter {
     }
 
     protected void configureRule(FunktionRule rule) {
-        LOG.info("Configuring funktion rule: " + rule);
-
         String trigger = rule.getTrigger();
         if (Strings.isEmpty(trigger)) {
             trigger = DEFAULT_TRIGGER_URL;
         }
+
+        StringBuilder message =  new StringBuilder("FUNKTION ");
+        message.append(trigger);
 
         if (trigger.startsWith("http://") || trigger.startsWith("https://")) {
             // lets add the HTTP endpoint prefix
@@ -69,13 +69,21 @@ public class Main extends FatJarRouter {
         RouteDefinition route = from(trigger);
         String action = rule.getAction();
         if (!Strings.isEmpty(action)) {
+            message.append(" => ");
+            message.append(action);
+            message.append(".main()");
+
             action = "class:" + action;
             route.to(action);
         }
         String chain = rule.getChain();
         if (!Strings.isEmpty(chain)) {
             route.to(chain);
+            message.append(" => ");
+            message.append(chain);
         }
+        LOG.info(message.toString());
+
         if (Strings.isEmpty(chain) && Strings.isEmpty(action)) {
             throw new IllegalStateException("Both action and chain are empty! Invaild rule " + trigger);
         }

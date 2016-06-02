@@ -20,18 +20,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.fabric8.funktion.support.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.camel.component.xslt.XsltOutput.file;
 
 /**
  */
@@ -48,82 +46,48 @@ public class FunktionConfigs {
     /**
      * Tries to load the configuration file from the current directory
      */
-    public static FunktionConfig load() {
-        return loadFromFolder(new File("."));
+    public static FunktionConfig load() throws IOException {
+        return findFromFolder(new File("."));
     }
 
 
-    /**
-     * Returns the configuration from the {@link #FILE_NAME} in the given folder or returns the default configuration
-     */
-    public static FunktionConfig loadFromFolder(File folder) {
-        File FunktionConfigFile = new File(folder, FILE_NAME);
-        if (FunktionConfigFile != null && FunktionConfigFile.exists() && FunktionConfigFile.isFile()) {
-            LOG.debug("Parsing funktion configuration from: " + FunktionConfigFile.getName());
-            try {
-                return FunktionConfigs.parseFunktionConfig(FunktionConfigFile);
-            } catch (IOException e) {
-                LOG.warn("Failed to parse " + FunktionConfigFile + ". " + e, e);
-            }
+    protected static FunktionConfig loadFromFile(File file) throws IOException {
+        LOG.debug("Parsing funktion configuration from: " + file.getName());
+        try {
+            FunktionConfig config = FunktionConfigs.parseFunktionConfig(file);
+            return validateConfig(config, file);
+        } catch (IOException e) {
+            throw new IOException("Failed to parse funktion config: " + file + ". " + e, e);
         }
-        return new FunktionConfig();
+    }
+
+    protected static FunktionConfig validateConfig(FunktionConfig config, File file) {
+        List<FunktionRule> rules = config.getRules();
+        if (rules.isEmpty()) {
+            throw new IllegalStateException("No Funktion rules defined in file: " + file.getPath());
+        }
+        return config;
     }
 
 
     /**
-     * Tries to find the project configuration from the current directory or a parent folder.
-     * <p>
-     * If no fabric8.yml file can be found just return an empty configuration
+     * Tries to find the configuration from the current directory or a parent folder.
      */
-    public static FunktionConfig findFromFolder(File folder) {
+    public static FunktionConfig findFromFolder(File folder) throws IOException {
         if (folder.isDirectory()) {
-            File FunktionConfigFile = new File(folder, FILE_NAME);
-            if (FunktionConfigFile != null && FunktionConfigFile.exists() && FunktionConfigFile.isFile()) {
-                return loadFromFolder(folder);
+            File file = new File(folder, FILE_NAME);
+            if (file != null && file.exists() && file.isFile()) {
+                return loadFromFile(file);
             }
             File parentFile = folder.getParentFile();
             if (parentFile != null) {
                 return findFromFolder(parentFile);
             }
+            throw new IOException("Funktion configuration file does not exist: " + file.getPath());
+        } else if (folder.isFile()) {
+           return loadFromFile(folder);
         }
-        return new FunktionConfig();
-    }
-
-    /**
-     * Returns the project config from the given url if it exists or null
-     */
-    public static FunktionConfig loadFromUrl(String url) {
-        if (!Strings.isEmpty(url)) {
-            try {
-                return loadFromUrl(new URL(url));
-            } catch (MalformedURLException e) {
-                LOG.warn("Failed to create URL from: " + url + ". " + e, e);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Returns the config from the given url if it exists or null
-     */
-    public static FunktionConfig loadFromUrl(URL url) {
-        InputStream input = null;
-        try {
-            input = url.openStream();
-        } catch (FileNotFoundException e) {
-            LOG.info("No fabric8.yml at URL: " + url);
-        } catch (IOException e) {
-            LOG.warn("Failed to open fabric8.yml file at URL: " + url + ". " + e, e);
-        }
-        if (input != null) {
-            try {
-                LOG.info("Parsing " + FunktionConfigs.FILE_NAME + " from " + url);
-                return FunktionConfigs.parseFunktionConfig(input);
-            } catch (IOException e) {
-                LOG.warn("Failed to parse " + FunktionConfigs.FILE_NAME + " from " + url + ". " + e, e);
-            }
-        }
-        return null;
+        throw new IOException("Funktion configuration folder does not exist: " + folder.getPath());
     }
 
     /**
@@ -179,7 +143,7 @@ public class FunktionConfigs {
     }
 
     /**
-     * Saves the fabric8.yml file to the given project directory
+     * Saves the funktion.yml file to the given project directory
      */
     public static boolean saveToFolder(File basedir, FunktionConfig config, boolean overwriteIfExists) throws IOException {
         File file = new File(basedir, FunktionConfigs.FILE_NAME);
