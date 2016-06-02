@@ -1,6 +1,6 @@
 ## Example Java Funktion
 
-This example shows how easy it is to develop a _funktion_ in Java.
+This example shows how easy it is to develop a [funktion](https://github.com/fabric8io/funktion/blob/master/README.md) in Java.
 
 <p align="center">
   <a href="http://fabric8.io/">
@@ -8,12 +8,12 @@ This example shows how easy it is to develop a _funktion_ in Java.
   </a>
 </p>
 
-It consists of:
+The source code consists of:
 
-* [funktion.yml](funktion.yml) to define the trigger URL (in this cas HTTP)
+* [funktion.yml](funktion.yml) to define the trigger URL (in this case HTTP)
 * [main() function in Java](src/main/java/io/fabric8/funktion/example/Main.java#L25-L27) to process incoming events
 
-You can then run it via:
+You can then run your funktion locally via:
 
 ```
 mvn compile exec:java
