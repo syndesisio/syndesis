@@ -32,6 +32,10 @@
   <name>Funktion Starter Parent Java</name>
   <description>Funktion :: Starter Parent :: Java</description>
 
+  <properties>
+    <fabric8.docker.skip.pom>true</fabric8.docker.skip.pom>
+  </properties>
+
   <modules>
     <module>starter-parent-groovy</module>
     <module>starter-parent-kotlin</module>
