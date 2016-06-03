@@ -37,7 +37,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
     private static final transient Logger LOG = LoggerFactory.getLogger(FunktionRouteBuilder.class);
 
     private static final String DEFAULT_TRIGGER_URL = "http://0.0.0.0:8080/";
-    private static final String DEFAUT_HTTP_ENDPOINT_PREFIX = "netty4-http:";
+    private static final String DEFAUT_HTTP_ENDPOINT_PREFIX = "jetty:";
 
     // must have a main method spring-boot can run
     public static void main(String[] args) {
