@@ -37,12 +37,14 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-core</artifactId>
+      <artifactId>camel-spring-boot-starter</artifactId>
     </dependency>
+<!--
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring-boot</artifactId>
     </dependency>
+-->
     <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-netty4-http</artifactId>
@@ -62,6 +64,10 @@
     </dependency>
 
     <!-- spring-boot -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
@@ -109,7 +115,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>${maven.exec.plugin.version}</version>
         <configuration>
-          <mainClass>io.fabric8.funktion.runtime.Main</mainClass>
+          <mainClass>io.fabric8.funktion.runtime.FunktionRouteBuilder</mainClass>
           <includePluginDependencies>false</includePluginDependencies>
           <classpathScope>test</classpathScope>
         </configuration>
