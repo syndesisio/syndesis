@@ -163,7 +163,7 @@
       <dependency>
         <groupId>io.fabric8.funktion</groupId>
         <artifactId>funktion-runtime</artifactId>
-        <version>${project.version}</version>
+        <version>${funktion.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
