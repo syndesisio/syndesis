@@ -40,6 +40,9 @@
           <enricher>
             <default.service.type>LoadBalancer</default.service.type>
           </enricher>
+          <customizer>
+            <spring.boot.combine>true</spring.boot.combine>
+          </customizer>
           <images>
             <image>
               <!-- TODO is there a maven property we can use for the user in the image name? -->
