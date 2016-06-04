@@ -72,14 +72,14 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
-    <fabric8.version>2.2.115</fabric8.version>
+    <fabric8.version>2.2.126</fabric8.version>
     <spring-boot.version>1.3.5.RELEASE</spring-boot.version>
     <spring-boot-plugin.version>1.3.3.RELEASE</spring-boot-plugin.version>
 
     <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
     <maven.enforcer.plugin.version>1.4</maven.enforcer.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
-    <maven.fabric8.plugin.version>3.0.7</maven.fabric8.plugin.version>
+    <maven.fabric8.plugin.version>3.0.9</maven.fabric8.plugin.version>
     <maven.javadoc.plugin.version>2.10.3</maven.javadoc.plugin.version>
     <maven.require.version>3.1.1</maven.require.version>
     <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
