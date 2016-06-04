@@ -31,6 +31,14 @@
   <name>Funktion Starter Parent NodeJS</name>
   <description>Funktion :: Starter Parent :: NodeJS</description>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-http</artifactId>
+    </dependency>
+  </dependencies>
+
+
   <build>
     <plugins>
       <plugin>
@@ -45,9 +53,8 @@
           </customizer>
           <images>
             <image>
-              <!-- TODO is there a maven property we can use for the user in the image name? -->
-              <name>example/${project.artifactId}-nodejs:${project.version}</name>
-              <alias>nodejs</alias>
+              <name>${fabric8.docker.user}/${fabric8.docker.name}-nodejs:${fabric8.docker.label}</name>
+              <alias>funktor</alias>
               <build>
                 <dockerFile>${basedir}/Dockerfile</dockerFile>
               </build>
