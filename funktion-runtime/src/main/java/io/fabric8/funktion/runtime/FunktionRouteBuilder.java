@@ -49,19 +49,26 @@ public class FunktionRouteBuilder extends RouteBuilder {
     public void configure() throws Exception {
         FunktionConfig config = FunktionConfigs.load();
 
+        int idx = 0;
         List<FunktionRule> rules = config.getRules();
         for (FunktionRule rule : rules) {
-            configureRule(rule);
+            configureRule(rule, idx++);
         }
     }
 
-    protected void configureRule(FunktionRule rule) {
+    protected void configureRule(FunktionRule rule, int funktionIndex) {
         String trigger = rule.getTrigger();
         if (Strings.isEmpty(trigger)) {
             trigger = DEFAULT_TRIGGER_URL;
         }
 
         StringBuilder message =  new StringBuilder("FUNKTION ");
+        String name = rule.getName();
+        if (!Strings.isEmpty(name)) {
+            name = "funktion" + (funktionIndex + 1);
+        }
+        message.append(name);
+        message.append(": ");
         message.append(trigger);
 
         if (trigger.startsWith("http://") || trigger.startsWith("https://")) {
@@ -70,6 +77,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
         }
 
         RouteDefinition route = from(trigger);
+        route.id(name);
         String action = rule.getAction();
         if (!Strings.isEmpty(action)) {
             String method = null;
