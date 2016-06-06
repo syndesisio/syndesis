@@ -21,6 +21,7 @@ import io.fabric8.funktion.model.FunktionConfigs;
 import io.fabric8.funktion.model.FunktionRule;
 import io.fabric8.funktion.support.Strings;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.http.HttpEndpoint;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.boot.FatJarRouter;
 import org.slf4j.Logger;
@@ -95,6 +96,13 @@ public class FunktionRouteBuilder extends RouteBuilder {
         }
         String chain = rule.getChain();
         if (!Strings.isEmpty(chain)) {
+            // lets configure the http component
+            if (chain.startsWith("http:") || chain.startsWith("https:")) {
+                HttpEndpoint endpoint = endpoint(chain, HttpEndpoint.class);
+                if (endpoint != null) {
+                    endpoint.setBridgeEndpoint(true);
+                }
+            }
             route.to(chain);
             message.append(" => ");
             message.append(chain);
