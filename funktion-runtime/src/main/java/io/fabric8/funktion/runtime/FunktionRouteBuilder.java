@@ -64,11 +64,11 @@ public class FunktionRouteBuilder extends RouteBuilder {
 
         StringBuilder message =  new StringBuilder("FUNKTION ");
         String name = rule.getName();
-        if (!Strings.isEmpty(name)) {
+        if (Strings.isEmpty(name)) {
             name = "funktion" + (funktionIndex + 1);
         }
         message.append(name);
-        message.append(": ");
+        message.append("() ");
         message.append(trigger);
 
         if (trigger.startsWith("http://") || trigger.startsWith("https://")) {
