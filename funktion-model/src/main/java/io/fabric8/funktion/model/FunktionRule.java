@@ -16,6 +16,8 @@
  */
 package io.fabric8.funktion.model;
 
+import io.fabric8.funktion.support.Strings;
+
 /**
  */
 public class FunktionRule extends DtoSupport {
@@ -26,12 +28,23 @@ public class FunktionRule extends DtoSupport {
 
     @Override
     public String toString() {
-        return "FunktionRule{" +
-                "name='" + name + '\'' +
-                ", trigger='" + trigger + '\'' +
-                ", action='" + action + '\'' +
-                ", chain='" + chain + '\'' +
-                '}';
+        StringBuilder builder = new StringBuilder("FUNKTION ");
+        if (!Strings.isEmpty(name)) {
+            builder.append(name);
+            builder.append(": ");
+        }
+        if (!Strings.isEmpty(trigger)) {
+            builder.append(trigger);
+        }
+        if (!Strings.isEmpty(action)) {
+            builder.append(" => ");
+            builder.append(action);
+        }
+        if (!Strings.isEmpty(chain)) {
+            builder.append(" => ");
+            builder.append(chain);
+        }
+        return builder.toString();
     }
 
     public String getName() {

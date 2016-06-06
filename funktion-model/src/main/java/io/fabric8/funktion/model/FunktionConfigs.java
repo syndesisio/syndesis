@@ -30,8 +30,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.camel.component.xslt.XsltOutput.file;
-
 /**
  */
 public class FunktionConfigs {
