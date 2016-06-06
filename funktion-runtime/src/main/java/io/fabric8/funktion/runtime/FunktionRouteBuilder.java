@@ -21,6 +21,7 @@ import io.fabric8.funktion.model.FunktionConfigs;
 import io.fabric8.funktion.model.FunktionRule;
 import io.fabric8.funktion.support.Strings;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.http.HttpEndpoint;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.boot.FatJarRouter;
 import org.slf4j.Logger;
@@ -48,19 +49,26 @@ public class FunktionRouteBuilder extends RouteBuilder {
     public void configure() throws Exception {
         FunktionConfig config = FunktionConfigs.load();
 
+        int idx = 0;
         List<FunktionRule> rules = config.getRules();
         for (FunktionRule rule : rules) {
-            configureRule(rule);
+            configureRule(rule, idx++);
         }
     }
 
-    protected void configureRule(FunktionRule rule) {
+    protected void configureRule(FunktionRule rule, int funktionIndex) {
         String trigger = rule.getTrigger();
         if (Strings.isEmpty(trigger)) {
             trigger = DEFAULT_TRIGGER_URL;
         }
 
         StringBuilder message =  new StringBuilder("FUNKTION ");
+        String name = rule.getName();
+        if (!Strings.isEmpty(name)) {
+            name = "funktion" + (funktionIndex + 1);
+        }
+        message.append(name);
+        message.append(": ");
         message.append(trigger);
 
         if (trigger.startsWith("http://") || trigger.startsWith("https://")) {
@@ -69,6 +77,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
         }
 
         RouteDefinition route = from(trigger);
+        route.id(name);
         String action = rule.getAction();
         if (!Strings.isEmpty(action)) {
             String method = null;
@@ -95,6 +104,13 @@ public class FunktionRouteBuilder extends RouteBuilder {
         }
         String chain = rule.getChain();
         if (!Strings.isEmpty(chain)) {
+            // lets configure the http component
+            if (chain.startsWith("http:") || chain.startsWith("https:")) {
+                HttpEndpoint endpoint = endpoint(chain, HttpEndpoint.class);
+                if (endpoint != null) {
+                    endpoint.setBridgeEndpoint(true);
+                }
+            }
             route.to(chain);
             message.append(" => ");
             message.append(chain);
