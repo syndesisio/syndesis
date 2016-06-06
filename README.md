@@ -35,6 +35,7 @@ Check out the following example projects:
 * [funktion-java-example](https://github.com/fabric8-quickstarts/funktion-java-example) is an example using a Java funktion triggered by HTTP
 * [funktion-groovy-example](https://github.com/fabric8-quickstarts/funktion-groovy-example) is an example using a [Groovy](http://www.groovy-lang.org/) funktion triggered by HTTP
 * [funktion-kotlin-example](https://github.com/fabric8-quickstarts/funktion-kotlin-example) is an example using a [Kotlin](https://kotlinlang.org/) funktion triggered by HTTP
+* [funktion-nodejs-example](https://github.com/fabric8-quickstarts/funktion-nodejs-example) is an example using a [NodeJS](https://nodejs.org/en/) funktion triggered by HTTP
 
 ### Contributing to the project
 
