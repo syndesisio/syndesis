@@ -21,7 +21,7 @@
 
   <parent>
     <groupId>io.fabric8.funktion.starter</groupId>
-    <artifactId>starter-parent-java</artifactId>
+    <artifactId>starter-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 

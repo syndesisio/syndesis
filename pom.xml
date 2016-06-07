@@ -75,7 +75,7 @@
     <module>funktion-model</module>
     <module>funktion-runtime</module>
     <module>examples</module>
-    <module>starter-parent-java</module>
+    <module>starter-parent</module>
   </modules>
 
   <build>
