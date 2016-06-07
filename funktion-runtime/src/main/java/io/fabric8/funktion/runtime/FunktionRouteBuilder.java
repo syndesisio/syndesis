@@ -66,6 +66,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
         String name = rule.getName();
         if (Strings.isEmpty(name)) {
             name = "funktion" + (funktionIndex + 1);
+            rule.setName(name);
         }
         message.append(name);
         message.append("() ");
