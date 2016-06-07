@@ -25,11 +25,11 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>starter-parent-nodejs</artifactId>
+  <artifactId>starter-parent-sidecar</artifactId>
   <packaging>pom</packaging>
 
-  <name>Funktion Starter Parent NodeJS</name>
-  <description>Funktion :: Starter Parent :: NodeJS</description>
+  <name>Funktion Starter Parent Sidecar</name>
+  <description>Funktion :: Starter Parent :: Sidecar</description>
 
   <dependencies>
     <dependency>
@@ -53,7 +53,7 @@
           </customizer>
           <images>
             <image>
-              <name>%g/%a-nodejs:%l</name>
+              <name>%g/%a-funktor:%l</name>
               <alias>funktor</alias>
               <build>
                 <dockerFile>${basedir}/Dockerfile</dockerFile>
