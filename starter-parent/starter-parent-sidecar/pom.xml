@@ -50,10 +50,11 @@
           </enricher>
           <customizer>
             <spring.boot.combine>true</spring.boot.combine>
+            <spring.boot.alias>trigger</spring.boot.alias>
           </customizer>
           <images>
             <image>
-              <name>%g/%a-funktor:%l</name>
+              <name>%g/%a-funktor:%t</name>
               <alias>funktor</alias>
               <build>
                 <dockerFile>${basedir}/Dockerfile</dockerFile>
