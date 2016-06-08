@@ -42,4 +42,12 @@ def mergePullRequest(prId){
   }
 
 }
+
+def pushDependencyUpdates(newVersion){
+  def parentPomProjects = ['fabric8-quickstarts/funktion-nodejs-example','fabric8-quickstarts/funktion-kotlin-example','fabric8-quickstarts/funktion-java-example','fabric8-quickstarts/funktion-groovy-example']
+  pushParentPomVersionChangePR{
+    projects = parentPomProjects
+    version = newVersion
+  }
+}
 return this;

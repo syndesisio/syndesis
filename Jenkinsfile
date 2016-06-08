@@ -14,5 +14,9 @@ node{
 
     stage 'Promote'
     pipeline.release(stagedProject)
+
+    stage 'Push Update Dependencies'
+    def newVersion = stagedProject[1]
+    pushDependencyUpdates(newVersion)
   }
 }
