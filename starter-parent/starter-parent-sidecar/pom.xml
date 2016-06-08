@@ -51,6 +51,7 @@
           <customizer>
             <spring.boot.combine>true</spring.boot.combine>
             <spring.boot.alias>trigger</spring.boot.alias>
+            <spring.boot.name>%g/%a-trigger:%t</spring.boot.name>
           </customizer>
           <images>
             <image>
