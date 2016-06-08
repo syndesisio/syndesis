@@ -17,6 +17,6 @@ node{
 
     stage 'Push Update Dependencies'
     def newVersion = stagedProject[1]
-    pushDependencyUpdates(newVersion)
+    pipeline.pushDependencyUpdates(newVersion)
   }
 }
