@@ -96,22 +96,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>${maven.exec.plugin.version}</version>
-        <configuration>
-          <mainClass>io.fabric8.funktion.runtime.FunktionRouteBuilder</mainClass>
-          <includePluginDependencies>false</includePluginDependencies>
-          <classpathScope>test</classpathScope>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
-  <profiles>
-  </profiles>
 </project>

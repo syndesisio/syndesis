@@ -78,8 +78,7 @@
 
     <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
     <maven.enforcer.plugin.version>1.4</maven.enforcer.plugin.version>
-    <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
-    <maven.fabric8.plugin.version>3.0.11</maven.fabric8.plugin.version>
+    <maven.fabric8.plugin.version>3.0.14</maven.fabric8.plugin.version>
     <maven.javadoc.plugin.version>2.10.3</maven.javadoc.plugin.version>
     <maven.require.version>3.1.1</maven.require.version>
     <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
