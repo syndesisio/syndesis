@@ -74,6 +74,10 @@
         <groupId>io.fabric8</groupId>
         <artifactId>fabric8-maven-plugin</artifactId>
         <configuration>
+          <customizer>
+            <spring.boot.name>%g/%a:%t</spring.boot.name>
+            <spring.boot.alias>funktor</spring.boot.alias>
+          </customizer>
           <enricher>
             <default.service.type>LoadBalancer</default.service.type>
           </enricher>
