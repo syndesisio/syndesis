@@ -37,6 +37,25 @@ Check out the following example projects:
 * [funktion-kotlin-example](https://github.com/fabric8-quickstarts/funktion-kotlin-example) is an example using a [Kotlin](https://kotlinlang.org/) funktion triggered by HTTP
 * [funktion-nodejs-example](https://github.com/fabric8-quickstarts/funktion-nodejs-example) is an example using a [NodeJS](https://nodejs.org/en/) funktion triggered by HTTP
 
+
+### How it works
+
+When you implement your **Funktion** using a JVM based language like Java, Groovy, Kotlin or Scala then your function is packaged up into a [Spring Boot](http://projects.spring.io/spring-boot/) application using [Apache Camel](http://camel.apache.org/) to implement the trigger via the various [endpoint URLs](http://camel.apache.org/components.html).
+
+When using non-JVM based languages to implement your **Funktion** then the [Spring Boot](http://projects.spring.io/spring-boot/) and Camel based trigger processor is embedded into your [Kubernetes Pod](http://kubernetes.io/docs/user-guide/pods/) via a [sidecar container](http://blog.kubernetes.io/2015/06/the-distributed-system-toolkit-patterns.html) which then invokes your funktion; usually via a local REST call.
+
+The creation of the docker images and generation of the kubernetes manifests is all done by the [fabric8-maven-plugin](https://github.com/fabric8io/fabric8-maven-plugin).
+
+Underneath the covers a [Kubernetes Deployment](http://kubernetes.io/docs/user-guide/deployments/) is automatically created for you Funktion (or on OpenShift a [DeploymentConfig](https://docs.openshift.com/enterprise/3.0/dev_guide/deployments.html) is used) which takes care of scaling your funkion and performing [rolling updates](http://kubernetes.io/docs/user-guide/rolling-updates/) as you edit your code.
+
+To simplify building, testing, staging, approving, releasing and managing code changes to your funkion we recommend you use the [Fabric8 Microservices Platform](http://fabric8.io/) with its baked in [Continuous Deployment](http://fabric8.io/guide/cdelivery.html) based on [Jenkins Pipelines](https://jenkins.io/solutions/pipeline/) together with integrated [Developer Console](http://fabric8.io/guide/console.html), [Management](http://fabric8.io/guide/management.html) (centralised logging, metrics, alerts), [ChatOps](http://fabric8.io/guide/chat.html) and [Chaos Monkey](http://fabric8.io/guide/chaosMonkey.html).
+
+When using the [Fabric8 Microservices Platform](http://fabric8.io/) you can create a new funktion in a few clicks; then the platform takes care of building, testing, staging and approving your releases, rolling upgrades, management and monitoring; you just focus on changing your funktion source code ;)
+
+### Video
+
+Coming soon!!! :)
+
 ### Contributing to the project
 
 We love [contributions](http://fabric8.io/contributing/index.html) and you are very welcome to help.
