@@ -42,9 +42,9 @@ Check out the following example projects:
 
 You can just fork one of the above examples and use command line tools to build and deploy it to a Kubernetes or OpenShift cluster.
 
-However to make it easier to create, build, test, stage, approve, release, manage and iterate on your funktion code from inside your browser we recommend you use the [Fabric8 Microservices Platform](http://fabric8.io/) with its baked in [Continuous Deployment](http://fabric8.io/guide/cdelivery.html) based on [Jenkins Pipelines](https://jenkins.io/solutions/pipeline/) together with integrated [Developer Console](http://fabric8.io/guide/console.html), [Management](http://fabric8.io/guide/management.html) (centralised logging, metrics, alerts), [ChatOps](http://fabric8.io/guide/chat.html) and [Chaos Monkey](http://fabric8.io/guide/chaosMonkey.html).
+However to make it easier to create, build, test, stage, approve, release, manage and iterate on your funktion code from inside your browser we recommend you use the [Fabric8 Microservices Platform](http://fabric8.io/) with its baked in [Continuous Delivery](http://fabric8.io/guide/cdelivery.html) based on [Jenkins Pipelines](https://jenkins.io/solutions/pipeline/) together with integrated [Developer Console](http://fabric8.io/guide/console.html), [Management](http://fabric8.io/guide/management.html) (centralised logging, metrics, alerts), [ChatOps](http://fabric8.io/guide/chat.html) and [Chaos Monkey](http://fabric8.io/guide/chaosMonkey.html).
 
-When using the [Fabric8 Microservices Platform](http://fabric8.io/) you can create a new funktion in a few clicks from the `Create Application` button; then the platform takes care of building, testing, staging and approving your releases, rolling upgrades, management and monitoring; you just use your browser via the [Developer Console](http://fabric8.io/guide/console.html) to create, edit or test your funktion while funktion, Jenkins and Kubernetes take care of building, packaging, deploying, testing and releasing your project.
+When using the [Fabric8 Microservices Platform](http://fabric8.io/) you can create a new funktion in a few clicks from the `Create Application` button; then the platform takes care of building, testing, staging and approving your releases, rolling upgrades, management and monitoring; you just use your browser via the [Developer Console](http://fabric8.io/guide/console.html) to create, edit or test your code while funktion, Jenkins and Kubernetes take care of building, packaging, deploying, testing and releasing your project.
 
 #### Using the Fabric8 Microservices Platform
 
@@ -58,16 +58,22 @@ First you will need to ensure you are running the `CD Pipeline` app in fabric8. 
 * There may now be a delay of up to an hour depending on your internet connection while the docker images get pulled down to your Kubernetes cluster and things startup. Please be patient.
 * You can watch progress on the command line via: `kubectl get pods -w` or on OpenShift:`oc get pods -w`
 * Eventually you wil be presented with a `Create Application` button on the `Team` page
-* Note that we are in the process of optimising the above UX so its much easier and more straightforward! :)
-
+* Note that we are in the process of optimising the above UX in the next few weeks so its much easier and more straightforward! :)
+* Any issues getting this far, check the [troubleshooting guide](http://fabric8.io/guide/getStarted/troubleshooting.html) or [reach out to the fabric8 team](http://fabric8.io/community/index.html) on IRC / slack / github issues / email.
 
 #### Create and use your funktion
 
 * from inside your `Team` page click `Create Application` button then you will be presented with a number of different kinds of microservice to create
 * select the `Funktion` icon and type in the name of your microservice and hit `Next`
+
+![select the funktion microservice and enter a name for your project](https://raw.githubusercontent.com/fabric8io/funktion/master/docs/images/select-microservice.png)
+
 * select the kind of funktion you wish to create (Java, Groovy, Kotlin, NodeJS etc) then hit `Next`
 * you will now be prompted to choose one of the default CD Pipelines to use. For your first funktion we recommend `CanaryReleaseAndStage`
 * selecting `Copy pipeline to project` is kinda handy if you want to edit your `Jenkinsfile` from your source code later on
+
+![select the CD Pipeline](https://raw.githubusercontent.com/fabric8io/funktion/master/docs/images/select-pipeline.png)
+
 * click `Next` then your app should be built and deployed. Please be patient first time you build a funktion as its going to be downloading a few docker images to do the build and runtime. You're second build should be much faster!
 * once the build is complete you should see on the `App Dashboard` page the build pipeline run, the running pods for your funktion in each environment for your CD Pipeline and a link so you can easily navigate to the environment or ReplicaSet/ReplicationController/Pods in kubernetes
 * in the screenshot below you can see we're running version `1.0.1` of the app `groovyfunktion` which currently has `1` running pod (those are all clickable links to view the ReplicationController or pods)
@@ -85,11 +91,11 @@ Coming soon!!! :)
 
 When you implement your **Funktion** using a JVM based language like Java, Groovy, Kotlin or Scala then your function is packaged up into a [Spring Boot](http://projects.spring.io/spring-boot/) application using [Apache Camel](http://camel.apache.org/) to implement the trigger via the various [endpoint URLs](http://camel.apache.org/components.html).
 
-When using non-JVM based languages to implement your **Funktion** then the [Spring Boot](http://projects.spring.io/spring-boot/) and Camel based trigger processor is embedded into your [Kubernetes Pod](http://kubernetes.io/docs/user-guide/pods/) via a [sidecar container](http://blog.kubernetes.io/2015/06/the-distributed-system-toolkit-patterns.html) which then invokes your funktion; usually via a local REST call [at least for now](https://github.com/fabric8io/funktion/issues/11. Note that the use of sidecar is our current implementation strategy; going forward we'll support various options such as separating the trigger containers from the funktion containers for independent scaling for better resource utilisation.
+When using non-JVM based languages to implement your **Funktion** then the [Spring Boot](http://projects.spring.io/spring-boot/) and Camel based trigger processor is embedded into your [Kubernetes Pod](http://kubernetes.io/docs/user-guide/pods/) via a [sidecar container](http://blog.kubernetes.io/2015/06/the-distributed-system-toolkit-patterns.html) which then invokes your funktion; usually via a local REST call [at least for now](https://github.com/fabric8io/funktion/issues/11). Note that the use of sidecar is our current implementation strategy; going forward we'll support various options such as separating the trigger containers from the funktion containers for independent scaling for better resource utilisation.
 
 We've focussed `funktion` on being some simple declarative metadata to describe triggers via URLs and a simple programming model which is the only thing funktion developers should focus on; leaving the implementation free to use different approaches for optimal resource usage.
 
-The creation of the docker images and generation of the kubernetes manifests is all done by the [fabric8-maven-plugin](https://github.com/fabric8io/fabric8-maven-plugin) which can work with pure docker on Kubernetes or reuse OpenShift's binary source to image builds.
+The creation of the docker images and generation of the kubernetes manifests is all done by the [fabric8-maven-plugin](https://github.com/fabric8io/fabric8-maven-plugin) which can work with pure docker on Kubernetes or reuse OpenShift's binary source to image builds. Usually this is hidden from you if you are using the [Continuous Delivery](http://fabric8.io/guide/cdelivery.html) in the [fabric8 microservices platform](http://fabric8.io/); but if you want to play with funktion purely from the command line, you'll need to [install Java](https://java.com/en/download/help/index_installing.xml) and [install Apache Maven](https://maven.apache.org/install.html).
 
 Underneath the covers a [Kubernetes Deployment](http://kubernetes.io/docs/user-guide/deployments/) is automatically created for your Funktion (or on OpenShift a [DeploymentConfig](https://docs.openshift.com/enterprise/3.0/dev_guide/deployments.html) is used) which takes care of scaling your funktion and performing [rolling updates](http://kubernetes.io/docs/user-guide/rolling-updates/) as you edit your code.
 
