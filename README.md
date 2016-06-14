@@ -56,8 +56,8 @@ First you will need to ensure you are running the `CD Pipeline` app in fabric8. 
 * select the `Existing Namespace` from the `Create Using` form entry along with choosing the kubernetes namespace where you installed fabric8 (e.g. `default`).
 * the UI will prompt you to ensure the `CD Pipeline` app from fabric8 is running to get the full [Continuous Deployment capability](http://fabric8.io/guide/cdelivery.html).
 * There may now be a delay of up to an hour depending on your internet connection while the docker images get pulled down to your Kubernetes cluster and things startup. Please be patient.
-* You can watch progress on the command line via: `kubectl get pods -w` or on OpenShift:`oc get pods -w`
-* Eventually you wil be presented with a `Create Application` button on the `Team` page
+* If you like, you can watch progress on the command line via: `kubectl get pods -w` or on OpenShift:`oc get pods -w`
+* Eventually you will be presented with a `Create Application` button on the `Team` page
 * Note that we are in the process of optimising the above UX in the next few weeks so its much easier and more straightforward! :)
 * Any issues getting this far, check the [troubleshooting guide](http://fabric8.io/guide/getStarted/troubleshooting.html) or [reach out to the fabric8 team](http://fabric8.io/community/index.html) on IRC / slack / github issues / email.
 
