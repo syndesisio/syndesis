@@ -40,7 +40,7 @@ Check out the following example projects:
 
 ### Getting started
 
-You can just fork one of the above examples and use command line tools to build and deploy it to a Kubernetes or OpenShift cluster.
+You can just fork one of the above examples and use command line tools to build and deploy it to a [Kubernetes](http://kubernetes.io) or [OpenShift](https://www.openshift.org/) cluster.
 
 However to make it easier to create, build, test, stage, approve, release, manage and iterate on your funktion code from inside your browser we recommend you use the [Fabric8 Microservices Platform](http://fabric8.io/) with its baked in [Continuous Delivery](http://fabric8.io/guide/cdelivery.html) based on [Jenkins Pipelines](https://jenkins.io/solutions/pipeline/) together with integrated [Developer Console](http://fabric8.io/guide/console.html), [Management](http://fabric8.io/guide/management.html) (centralised logging, metrics, alerts), [ChatOps](http://fabric8.io/guide/chat.html) and [Chaos Monkey](http://fabric8.io/guide/chaosMonkey.html).
 
@@ -48,22 +48,15 @@ When using the [Fabric8 Microservices Platform](http://fabric8.io/) you can crea
 
 #### Using the Fabric8 Microservices Platform
 
-First you will need to ensure you are running the `CD Pipeline` app in fabric8. Here's instructions:
+First you will need to install the [fabric8 microservices platform](http://fabric8.io/) on a cluster of [Kubernetes](http://kubernetes.io) (1.2 or later) or [OpenShift](https://www.openshift.org/) (3.2 or later).
 
 * follow one of the [fabric8 getting started guides](http://fabric8.io/guide/getStarted/index.html) to get the [fabric8 microservices platform](http://fabric8.io/) up and running on a Kubernetes or OpenShift cluster
 * open the [Developer Console](http://fabric8.io/guide/console.html)
-* click the `Create Team` button to create a team which is a place for you and your team to create funktions.
-* select the `Existing Namespace` from the `Create Using` form entry along with choosing the kubernetes namespace where you installed fabric8 (e.g. `default`).
-* the UI will prompt you to ensure the `CD Pipeline` app from fabric8 is running to get the full [Continuous Deployment capability](http://fabric8.io/guide/cdelivery.html).
-* There may now be a delay of up to an hour depending on your internet connection while the docker images get pulled down to your Kubernetes cluster and things startup. Please be patient.
-* If you like, you can watch progress on the command line via: `kubectl get pods -w` or on OpenShift:`oc get pods -w`
-* Eventually you will be presented with a `Create Application` button on the `Team` page
-* Note that we are in the process of optimising the above UX in the next few weeks so its much easier and more straightforward! :)
-* Any issues getting this far, check the [troubleshooting guide](http://fabric8.io/guide/getStarted/troubleshooting.html) or [reach out to the fabric8 team](http://fabric8.io/community/index.html) on IRC / slack / github issues / email.
+* select your `Team Dashboard` page
 
 #### Create and use your funktion
 
-* from inside your `Team` page click `Create Application` button then you will be presented with a number of different kinds of microservice to create
+* from inside your `Team Dashboard` page click `Create Application` button then you will be presented with a number of different kinds of microservice to create
 * select the `Funktion` icon and type in the name of your microservice and hit `Next`
 
 ![select the funktion microservice and enter a name for your project](https://raw.githubusercontent.com/fabric8io/funktion/master/docs/images/select-microservice.png)
