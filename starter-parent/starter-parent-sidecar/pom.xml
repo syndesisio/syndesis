@@ -46,13 +46,17 @@
         <artifactId>fabric8-maven-plugin</artifactId>
         <configuration>
           <enricher>
-            <default.service.type>LoadBalancer</default.service.type>
+            <config>
+              <default.service.type>LoadBalancer</default.service.type>
+            </config>
           </enricher>
-          <customizer>
-            <spring.boot.combine>true</spring.boot.combine>
-            <spring.boot.alias>trigger</spring.boot.alias>
-            <spring.boot.name>%g/%a-trigger:%t</spring.boot.name>
-          </customizer>
+          <generator>
+            <config>
+              <spring.boot.combine>true</spring.boot.combine>
+              <spring.boot.alias>trigger</spring.boot.alias>
+              <spring.boot.name>%g/%a-trigger:%t</spring.boot.name>
+            </config>
+          </generator>
           <images>
             <image>
               <name>%g/%a-funktor:%t</name>
