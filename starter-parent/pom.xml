@@ -76,13 +76,17 @@
         <configuration>
           <generator>
             <config>
-              <spring.boot.name>%g/%a:%t</spring.boot.name>
-              <spring.boot.alias>funktor</spring.boot.alias>
+              <spring-boot>
+                 <name>%g/%a:%t</name>
+                 <alias>funktor</alias>
+              </spring-boot>
             </config>
           </generator>
           <enricher>
             <config>
-              <default.service.type>LoadBalancer</default.service.type>
+              <f8-service>
+                <type>LoadBalancer</type>
+              </f8-service>
             </config>
           </enricher>
         </configuration>
