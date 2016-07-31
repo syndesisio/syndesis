@@ -47,14 +47,18 @@
         <configuration>
           <enricher>
             <config>
-              <default.service.type>LoadBalancer</default.service.type>
+              <f8-service>
+                <type>LoadBalancer</type>
+              </f8-service>
             </config>
           </enricher>
           <generator>
             <config>
-              <spring.boot.combine>true</spring.boot.combine>
-              <spring.boot.alias>trigger</spring.boot.alias>
-              <spring.boot.name>%g/%a-trigger:%t</spring.boot.name>
+              <spring-boot>
+                <combine>true</combine>
+                <alias>trigger</alias>
+                <name>%g/%a-trigger:%t</name>
+              </spring-boot>
             </config>
           </generator>
           <images>
