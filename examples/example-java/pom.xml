@@ -54,6 +54,12 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
+
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-maven-plugin</artifactId>
+      </plugin>
+
     </plugins>
   </build>
 
@@ -67,7 +73,11 @@
             <artifactId>fabric8-maven-plugin</artifactId>
             <configuration>
               <enricher>
-                <default.service.type>LoadBalancer</default.service.type>
+                <config>
+                  <fmp-service>
+                   <type>LoadBalancer</type>
+                  </fmp-service>
+                </config>
               </enricher>
             </configuration>
             <executions>
