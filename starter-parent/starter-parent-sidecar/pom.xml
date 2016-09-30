@@ -56,6 +56,7 @@
             <config>
               <spring-boot>
                 <combine>true</combine>
+                <enabled>true</enabled>
                 <alias>trigger</alias>
                 <name>%g/%a-trigger:%t</name>
               </spring-boot>
@@ -66,6 +67,7 @@
               <name>%g/%a-funktor:%t</name>
               <alias>funktor</alias>
               <build>
+                <from>fabric8/s2i-java:1.3.4</from>
                 <dockerFile>${basedir}/Dockerfile</dockerFile>
               </build>
             </image>
