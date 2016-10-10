@@ -19,9 +19,17 @@ package io.fabric8.funktion.example;
 import org.apache.camel.Header;
 
 /**
+ * A plain java class which implements the funktion
  */
 public class Main {
 
+    /**
+     * The method used as funktion
+     *
+     * @param body  the message body
+     * @param name  the header with the key name
+     * @return the response from the funktion
+     */
     public Object cheese(String body, @Header("name") String name) {
         return "Hello " + name + ". I got payload `" + body + "` and I am on host: " + System.getenv("HOSTNAME");
     }
