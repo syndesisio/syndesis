@@ -30,8 +30,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- */
 public class FunktionConfigs {
     private static final transient Logger LOG = LoggerFactory.getLogger(FunktionConfigs.class);
 

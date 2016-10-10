@@ -18,13 +18,12 @@ package io.fabric8.funktion.model;
 
 import io.fabric8.funktion.support.Strings;
 
-/**
- */
 public class FunktionRule extends DtoSupport {
     private String name;
     private String trigger;
     private String action;
     private String chain;
+    private String trace;
 
     @Override
     public String toString() {
@@ -43,6 +42,9 @@ public class FunktionRule extends DtoSupport {
         if (!Strings.isEmpty(chain)) {
             builder.append(" => ");
             builder.append(chain);
+        }
+        if (!Strings.isEmpty(trace) && trace.equalsIgnoreCase("true")) {
+            builder.append(" (tracing) ");
         }
         return builder.toString();
     }
@@ -77,5 +79,13 @@ public class FunktionRule extends DtoSupport {
 
     public void setChain(String chain) {
         this.chain = chain;
+    }
+
+    public String getTrace() {
+        return trace;
+    }
+
+    public void setTrace(String trace) {
+        this.trace = trace;
     }
 }

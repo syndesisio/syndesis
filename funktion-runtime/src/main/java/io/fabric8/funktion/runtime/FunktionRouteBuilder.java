@@ -73,6 +73,12 @@ public class FunktionRouteBuilder extends RouteBuilder {
     }
 
     protected void configureRule(FunktionRule rule, int funktionIndex) {
+
+        // enable tracing
+        if ("true".equalsIgnoreCase(rule.getTrace())) {
+            getContext().setTracing(true);
+        }
+
         String trigger = rule.getTrigger();
         if (Strings.isEmpty(trigger)) {
             trigger = DEFAULT_TRIGGER_URL;

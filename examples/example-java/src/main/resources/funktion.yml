@@ -2,3 +2,4 @@ rules:
   - trigger: http
     name: thingy
     action: io.fabric8.funktion.example.Main::cheese
+    trace: true

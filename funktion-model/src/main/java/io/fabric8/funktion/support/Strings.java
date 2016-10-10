@@ -16,10 +16,10 @@
  */
 package io.fabric8.funktion.support;
 
-/**
- */
 public class Strings {
+
     public static boolean isEmpty(String value) {
         return value == null || value.length() == 0 || value.trim().length() == 0;
     }
+
 }
