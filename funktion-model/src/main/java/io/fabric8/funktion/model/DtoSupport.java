@@ -18,8 +18,6 @@ package io.fabric8.funktion.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-/**
- */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public abstract class DtoSupport {
 }
