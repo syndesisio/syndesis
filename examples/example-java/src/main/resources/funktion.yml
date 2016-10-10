@@ -1,4 +1,4 @@
 rules:
-  - trigger: http://0.0.0.0:8080
+  - trigger: http
     name: thingy
     action: io.fabric8.funktion.example.Main::cheese

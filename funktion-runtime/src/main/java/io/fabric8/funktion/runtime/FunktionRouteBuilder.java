@@ -16,19 +16,22 @@
  */
 package io.fabric8.funktion.runtime;
 
+import java.util.List;
+
 import io.fabric8.funktion.model.FunktionConfig;
 import io.fabric8.funktion.model.FunktionConfigs;
 import io.fabric8.funktion.model.FunktionRule;
 import io.fabric8.funktion.support.Strings;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http.HttpEndpoint;
+import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.boot.FatJarRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.embedded.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * A Camel {@link RouteBuilder} which maps the Funktion rules to Camel routes
@@ -37,12 +40,25 @@ import java.util.List;
 public class FunktionRouteBuilder extends RouteBuilder {
     private static final transient Logger LOG = LoggerFactory.getLogger(FunktionRouteBuilder.class);
 
+    // use servlet to map from http trigger to use Spring Boot servlet engine
     private static final String DEFAULT_TRIGGER_URL = "http://0.0.0.0:8080/";
-    private static final String DEFAUT_HTTP_ENDPOINT_PREFIX = "jetty:";
+    private static final String DEFAULT_HTTP_ENDPOINT_PREFIX = "servlet:funktion";
 
     // must have a main method spring-boot can run
     public static void main(String[] args) {
         FatJarRouter.main(args);
+    }
+
+    @Bean
+    ServletRegistrationBean camelServlet() {
+        // use a @Bean to register the Camel servlet which we need to do
+        // because we want to use the camel-servlet component for the Camel REST service
+        ServletRegistrationBean mapping = new ServletRegistrationBean();
+        mapping.setName("CamelServlet");
+        mapping.setLoadOnStartup(1);
+        mapping.setServlet(new CamelHttpTransportServlet());
+        mapping.addUrlMappings("/camel/*");
+        return mapping;
     }
 
     @Override
@@ -72,9 +88,28 @@ public class FunktionRouteBuilder extends RouteBuilder {
         message.append("() ");
         message.append(trigger);
 
-        if (trigger.startsWith("http://") || trigger.startsWith("https://")) {
+        if (trigger.equals("http")) {
+            trigger = DEFAULT_HTTP_ENDPOINT_PREFIX;
+        } else if (trigger.startsWith("http://") || trigger.startsWith("https://")) {
             // lets add the HTTP endpoint prefix
-            trigger = DEFAUT_HTTP_ENDPOINT_PREFIX + trigger;
+
+            // is there any context-path
+            String path = trigger.startsWith("https://") ? trigger.substring(8) : null;
+            if (path == null) {
+                path = trigger.startsWith("http://") ? trigger.substring(7) : null;
+            }
+
+            if (path != null) {
+                // keep only context path
+                if (path.contains("/")) {
+                    path = path.substring(path.indexOf('/'));
+                }
+            }
+            if (path != null) {
+                trigger = path;
+            }
+
+            trigger = DEFAULT_HTTP_ENDPOINT_PREFIX + trigger;
         }
 
         RouteDefinition route = from(trigger);
@@ -109,7 +144,9 @@ public class FunktionRouteBuilder extends RouteBuilder {
             if (chain.startsWith("http:") || chain.startsWith("https:")) {
                 HttpEndpoint endpoint = endpoint(chain, HttpEndpoint.class);
                 if (endpoint != null) {
+                    // lets bridge them as a proxy
                     endpoint.setBridgeEndpoint(true);
+                    endpoint.setThrowExceptionOnFailure(false);
                 }
             }
             route.to(chain);
@@ -119,7 +156,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
         LOG.info(message.toString());
 
         if (Strings.isEmpty(chain) && Strings.isEmpty(action)) {
-            throw new IllegalStateException("Both action and chain are empty! Invaild rule " + trigger);
+            throw new IllegalStateException("Both action and chain are empty! Invalid rule " + trigger);
         }
     }
 }
