@@ -148,18 +148,17 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
         <groupId>io.fabric8</groupId>
-        <artifactId>fabric8-project-bom-full</artifactId>
+        <artifactId>fabric8-project-bom-camel-spring-boot</artifactId>
         <version>${fabric8.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
       </dependency>
 
       <dependency>
