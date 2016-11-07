@@ -35,5 +35,6 @@
   <modules>
     <module>example-java</module>
     <module>example-groovy</module>
+    <module>example-kotlin</module>
   </modules>
 </project>

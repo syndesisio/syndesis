@@ -1,0 +1,5 @@
+rules:
+  - trigger: http
+    name: red
+    action: io.fabric8.funktion.example.Main::wine
+    trace: false
