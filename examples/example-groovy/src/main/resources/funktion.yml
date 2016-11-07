@@ -1,0 +1,5 @@
+rules:
+  - trigger: http
+    name: dude
+    action: io.fabric8.funktion.example.Main::beer
+    trace: false
