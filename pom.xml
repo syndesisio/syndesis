@@ -74,8 +74,8 @@
     <module>parent</module>
     <module>funktion-model</module>
     <module>funktion-runtime</module>
-    <module>examples</module>
     <module>starter-parent</module>
+    <module>examples</module>
   </modules>
 
   <build>
