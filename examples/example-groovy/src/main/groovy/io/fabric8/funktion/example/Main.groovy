@@ -19,19 +19,25 @@ package io.fabric8.funktion.example
 import org.apache.camel.Header
 
 /**
- * A plain java class which implements the funktion
+ * A plain groovy class which implements the funktion
  */
 class Main {
 
+    String host
+
+    Main() {
+        host = System.getenv("HOSTNAME")
+    }
+
     /**
-     * The method used as funktion
+     * The groovy method used as funktion
      *
      * @param body  the message body
      * @param name  the header with the key name
      * @return the response from the funktion
      */
-    Object beer(String body, @Header("name") String name) {
-        return "Hello " + name + ". I got payload `" + body + "` and I am on host: " + System.getenv("HOSTNAME");
+    String beer(String body, @Header("name") String name) {
+        "Hello ${name}. I got payload `${body}` and I am on host: ${host}"
     }
 
 }
