@@ -55,8 +55,7 @@
           <generator>
             <config>
               <spring-boot>
-                <combine>true</combine>
-                <enabled>true</enabled>
+                <add>true</add>
                 <alias>trigger</alias>
                 <name>%g/%a-trigger:%t</name>
               </spring-boot>
