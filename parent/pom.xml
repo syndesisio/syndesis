@@ -72,7 +72,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <assertj.version>2.4.1</assertj.version>
-    <fabric8.version>2.2.181</fabric8.version>
+    <fabric8.version>2.2.182</fabric8.version>
     <rest-assured.version>3.0.0</rest-assured.version>
     <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
     <spring-boot-plugin.version>1.4.1.RELEASE</spring-boot-plugin.version>
