@@ -92,6 +92,7 @@
         <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
         <maven.templating.plugin.version>1.0.0</maven.templating.plugin.version>
 
+        <fabric8.maven.plugin.version>3.2.7</fabric8.maven.plugin.version>
     </properties>
 
     <modules>
