@@ -58,6 +58,11 @@ public class FunktionConfigs {
         }
     }
 
+
+    public static FunktionConfig loadFromString(String yaml) throws IOException {
+        return parseFunktionConfig(yaml);
+    }
+
     protected static FunktionConfig validateConfig(FunktionConfig config, File file) {
         List<FunktionRule> rules = config.getRules();
         if (rules.isEmpty()) {

@@ -16,11 +16,16 @@
  */
 package io.fabric8.funktion.runtime;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
+import io.fabric8.funktion.model.FunktionAction;
 import io.fabric8.funktion.model.FunktionConfig;
 import io.fabric8.funktion.model.FunktionConfigs;
 import io.fabric8.funktion.model.FunktionRule;
+import io.fabric8.funktion.model.InvokeEndpoint;
+import io.fabric8.funktion.model.InvokeFunction;
 import io.fabric8.funktion.support.Strings;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http.HttpEndpoint;
@@ -72,7 +77,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
         }
     }
 
-    protected void configureRule(FunktionRule rule, int funktionIndex) {
+    protected void configureRule(FunktionRule rule, int funktionIndex) throws MalformedURLException {
 
         // enable tracing
         if ("true".equalsIgnoreCase(rule.getTrace())) {
@@ -100,69 +105,80 @@ public class FunktionRouteBuilder extends RouteBuilder {
             // lets add the HTTP endpoint prefix
 
             // is there any context-path
-            String path = trigger.startsWith("https://") ? trigger.substring(8) : null;
-            if (path == null) {
-                path = trigger.startsWith("http://") ? trigger.substring(7) : null;
+            URL url = new URL(trigger);
+            String path = url.getPath();
+            if (path == null || path.length() == 0) {
+                path = "/";
             }
+            String query = url.getQuery();
+            if (query == null)  {
+                query = "";
+            }
+            String separator = query.length() == 0 ? "" : "&";
+            trigger = "servlet:" + path + "?" + query + separator + "servletName=funktion";
 
-            if (path != null) {
-                // keep only context path
-                if (path.contains("/")) {
-                    path = path.substring(path.indexOf('/'));
-                }
-            }
-            if (path != null) {
-                trigger = path;
-            }
-
-            trigger = DEFAULT_HTTP_ENDPOINT_PREFIX + trigger;
+            // TODO should we do anything with the path or query params?
+            // see https://github.com/fabric8io/funktion/issues/144
+            trigger = DEFAULT_HTTP_ENDPOINT_PREFIX;
         }
 
         RouteDefinition route = from(trigger);
         route.id(name);
-        String action = rule.getAction();
-        if (!Strings.isEmpty(action)) {
-            String method = null;
+        List<FunktionAction> actions = rule.getActions();
+        int validActions = 0;
+        if (actions != null) {
+            for (FunktionAction item : actions) {
+                if (item instanceof InvokeFunction) {
+                    InvokeFunction invokeFunction = (InvokeFunction) item;
+                    String action = invokeFunction.getName();
+                    if (!Strings.isEmpty(action)) {
+                        String method = null;
+                        int idx = action.indexOf("::");
+                        if (idx > 0) {
+                            method = action.substring(idx + 2);
+                            action = action.substring(0, idx);
+                        }
 
-            int idx = action.indexOf("::");
-            if (idx > 0) {
-                method = action.substring(idx + 2);
-                action = action.substring(0, idx);
-            }
+                        message.append(" => ");
+                        message.append(action);
 
-            message.append(" => ");
-            message.append(action);
+                        if (method != null) {
+                            message.append("." + method + "()");
+                            action += "?method=" + method;
+                        }
+                        else {
+                            message.append(".main()");
+                        }
+                        action = "class:" + action;
 
-            if (method != null) {
-                message.append("." + method + "()");
-                action += "?method=" + method;
-            }
-            else {
-                message.append(".main()");
-            }
-            action = "class:" + action;
-
-            route.to(action);
-        }
-        String chain = rule.getChain();
-        if (!Strings.isEmpty(chain)) {
-            // lets configure the http component
-            if (chain.startsWith("http:") || chain.startsWith("https:")) {
-                HttpEndpoint endpoint = endpoint(chain, HttpEndpoint.class);
-                if (endpoint != null) {
-                    // lets bridge them as a proxy
-                    endpoint.setBridgeEndpoint(true);
-                    endpoint.setThrowExceptionOnFailure(false);
+                        route.to(action);
+                        validActions++;
+                    }
+                } else if (item instanceof InvokeEndpoint) {
+                    InvokeEndpoint invokeEndpoint = (InvokeEndpoint) item;
+                    String chain = invokeEndpoint.getUrl();
+                    if (!Strings.isEmpty(chain)) {
+                        // lets configure the http component
+                        if (chain.startsWith("http:") || chain.startsWith("https:")) {
+                            HttpEndpoint endpoint = endpoint(chain, HttpEndpoint.class);
+                            if (endpoint != null) {
+                                // lets bridge them as a proxy
+                                endpoint.setBridgeEndpoint(true);
+                                endpoint.setThrowExceptionOnFailure(false);
+                            }
+                        }
+                        route.to(chain);
+                        message.append(" => ");
+                        message.append(chain);
+                        validActions++;
+                    }
                 }
             }
-            route.to(chain);
-            message.append(" => ");
-            message.append(chain);
         }
         LOG.info(message.toString());
 
-        if (Strings.isEmpty(chain) && Strings.isEmpty(action)) {
-            throw new IllegalStateException("Both action and chain are empty! Invalid rule " + trigger);
+        if (validActions == 0) {
+            throw new IllegalStateException("No valid actions! Invalid rule " + trigger);
         }
     }
 }

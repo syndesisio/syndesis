@@ -1,5 +1,7 @@
 rules:
   - trigger: http
     name: dude
-    action: io.fabric8.funktion.example.Main::beer
+    actions:
+    - kind: function
+      name: io.fabric8.funktion.example.Main::beer
     trace: false

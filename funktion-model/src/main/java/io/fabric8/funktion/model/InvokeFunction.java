@@ -16,11 +16,42 @@
  */
 package io.fabric8.funktion.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-public abstract class DtoSupport {
+/**
+ * Invokes a function with the current payload
+ */
+@JsonDeserialize(
+    using = JsonDeserializer.None.class
+)
+public class InvokeFunction extends FunktionAction {
+    private String name;
+
+    public InvokeFunction() {
+        super("function");
+    }
+
+    public InvokeFunction(String name) {
+        this();
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Function: " + name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getKind() {
+        return "function";
+    }
 
 }
