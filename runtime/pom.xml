@@ -54,7 +54,6 @@
                 <version>${wildfly.swarm.version}</version>
                 <configuration>
                     <mainClass>com.redhat.ipaas.runtime.Main</mainClass>
-                    <!--mainClass></mainClass-->
                 </configuration>
                 <executions>
                     <execution>
@@ -108,5 +107,13 @@
             <groupId>org.wildfly.swarm</groupId>
             <artifactId>infinispan</artifactId>
         </dependency>
+        <dependency>
+		  <groupId>org.wildfly.swarm</groupId>
+		  <artifactId>swagger</artifactId>
+		</dependency>
+		<dependency>
+		  <groupId>org.wildfly.swarm</groupId>
+		  <artifactId>swagger-webapp</artifactId>
+		</dependency>
     </dependencies>
 </project>

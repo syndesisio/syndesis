@@ -10,4 +10,12 @@ public class User implements Serializable{
     String name;
     String kind;
     Set<Integration> integrations;
+    
+    static User getHardcodedUser() {
+    	User user = new User();
+    	user.id = "1";
+    	user.name = "Clint Eastwood";
+    	user.kind = "UsuallyNot";
+    	return user;
+    }
 }
