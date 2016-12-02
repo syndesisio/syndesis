@@ -28,11 +28,12 @@ public class FunktionController {
     public FunktionController() {
     }
 
-    @RequestMapping("/")
+    @RequestMapping("/*")
     public void funktion(HttpServletRequest request, HttpServletResponse response) {
-        // forward root requests to the Camel funktion servlet so it can service this request
+        // forward requests to the Camel funktion servlet so it can service the requests
         try {
-            request.getServletContext().getRequestDispatcher("/camel/funktion").forward(request, response);
+            String path = request.getRequestURI();
+            request.getServletContext().getRequestDispatcher("/camel/funktion" + path).forward(request, response);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

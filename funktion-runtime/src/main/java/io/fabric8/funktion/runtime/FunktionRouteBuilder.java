@@ -17,7 +17,6 @@
 package io.fabric8.funktion.runtime;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import io.fabric8.funktion.model.FunktionAction;
@@ -34,7 +33,7 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.boot.FatJarRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.embedded.ServletRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -101,25 +100,33 @@ public class FunktionRouteBuilder extends RouteBuilder {
 
         if (trigger.equals("http")) {
             trigger = DEFAULT_HTTP_ENDPOINT_PREFIX;
-        } else if (trigger.startsWith("http://") || trigger.startsWith("https://")) {
+        } else if (trigger.startsWith("http:") || trigger.startsWith("https:") ||
+                   trigger.startsWith("http://") || trigger.startsWith("https://")) {
             // lets add the HTTP endpoint prefix
 
             // is there any context-path
-            URL url = new URL(trigger);
-            String path = url.getPath();
-            if (path == null || path.length() == 0) {
-                path = "/";
+            String path = trigger.startsWith("https:") ? trigger.substring(6) : null;
+            if (path == null) {
+                path = trigger.startsWith("http:") ? trigger.substring(5) : null;
             }
-            String query = url.getQuery();
-            if (query == null)  {
-                query = "";
+            if (path == null) {
+                path = trigger.startsWith("https://") ? trigger.substring(8) : null;
             }
-            String separator = query.length() == 0 ? "" : "&";
-            trigger = "servlet:" + path + "?" + query + separator + "servletName=funktion";
+            if (path == null) {
+                path = trigger.startsWith("http://") ? trigger.substring(7) : null;
+            }
 
-            // TODO should we do anything with the path or query params?
-            // see https://github.com/fabric8io/funktion/issues/144
-            trigger = DEFAULT_HTTP_ENDPOINT_PREFIX;
+            if (path != null) {
+                // keep only context path
+                if (path.contains("/")) {
+                    path = path.substring(path.indexOf('/'));
+                }
+            }
+            if (path != null) {
+                trigger = path;
+            }
+
+            trigger = DEFAULT_HTTP_ENDPOINT_PREFIX + "/" + trigger;
         }
 
         RouteDefinition route = from(trigger);
