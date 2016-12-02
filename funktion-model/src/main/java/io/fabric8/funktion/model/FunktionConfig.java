@@ -32,4 +32,13 @@ public class FunktionConfig extends DtoSupport {
     public void setRules(List<FunktionRule> rules) {
         this.rules = rules;
     }
+
+    public FunktionRule createRule() {
+        return addRule(new FunktionRule());
+    }
+
+    public FunktionRule addRule(FunktionRule rule) {
+        rules.add(rule);
+        return rule;
+    }
 }

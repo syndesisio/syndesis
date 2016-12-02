@@ -1,7 +1,11 @@
 rules:
   - trigger: http://0.0.0.0:8080
     name: thingy
-    action: io.fabric8.funktion.example.Main::cheese
+    actions:
+    - kind: function
+      name: io.fabric8.funktion.example.Main::cheese
   - trigger: activemq:foo.bar
     name: another
-    chain: activemq:whatnot
+    actions:
+    - kind: endpoint
+      url: activemq:whatnot

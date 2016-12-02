@@ -18,12 +18,19 @@ package io.fabric8.funktion.model;
 
 import io.fabric8.funktion.support.Strings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FunktionRule extends DtoSupport {
     private String name;
     private String trigger;
-    private String action;
-    private String chain;
     private String trace;
+    private List<FunktionAction> actions = new ArrayList<>();
+
+    public FunktionAction addAction(FunktionAction action) {
+        actions.add(action);
+        return action;
+    }
 
     @Override
     public String toString() {
@@ -35,13 +42,11 @@ public class FunktionRule extends DtoSupport {
         if (!Strings.isEmpty(trigger)) {
             builder.append(trigger);
         }
-        if (!Strings.isEmpty(action)) {
-            builder.append(" => ");
-            builder.append(action);
-        }
-        if (!Strings.isEmpty(chain)) {
-            builder.append(" => ");
-            builder.append(chain);
+        if (actions != null) {
+            for (FunktionAction action : actions) {
+                builder.append(" => ");
+                builder.append(action);
+            }
         }
         if (!Strings.isEmpty(trace) && trace.equalsIgnoreCase("true")) {
             builder.append(" (tracing) ");
@@ -65,20 +70,12 @@ public class FunktionRule extends DtoSupport {
         this.trigger = trigger;
     }
 
-    public String getAction() {
-        return action;
+    public List<FunktionAction> getActions() {
+        return actions;
     }
 
-    public void setAction(String action) {
-        this.action = action;
-    }
-
-    public String getChain() {
-        return chain;
-    }
-
-    public void setChain(String chain) {
-        this.chain = chain;
+    public void setActions(List<FunktionAction> actions) {
+        this.actions = actions;
     }
 
     public String getTrace() {
@@ -88,4 +85,5 @@ public class FunktionRule extends DtoSupport {
     public void setTrace(String trace) {
         this.trace = trace;
     }
+
 }

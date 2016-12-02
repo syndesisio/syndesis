@@ -16,11 +16,38 @@
  */
 package io.fabric8.funktion.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-public abstract class DtoSupport {
+/**
+ * Invokes an endpoint (typically HTTP or HTTPS) with the payload
+ */
+@JsonDeserialize(
+    using = JsonDeserializer.None.class
+)
+public class InvokeEndpoint extends FunktionAction {
+    private String url;
+
+    public InvokeEndpoint() {
+        super("endpoint");
+    }
+
+    public InvokeEndpoint(String url) {
+        this();
+        this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Endpoint: " + url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
 }
