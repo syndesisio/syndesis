@@ -18,7 +18,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>templating-maven-plugin</artifactId>
-                <version>${maven.templating.plugin.version}</version>
+                <version>${templating.maven.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
