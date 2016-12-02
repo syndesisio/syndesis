@@ -35,6 +35,10 @@
                 <groupId>org.wildfly.swarm</groupId>
                 <artifactId>wildfly-swarm-plugin</artifactId>
                 <version>${wildfly.swarm.version}</version>
+                <configuration>
+                    <mainClass>com.redhat.ipaas.runtime.Main</mainClass>
+                    <!--mainClass></mainClass-->
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
