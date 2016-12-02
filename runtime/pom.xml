@@ -7,7 +7,6 @@
         <relativePath>..</relativePath>
     </parent>
 
-    <groupId>com.redhat.ipaas</groupId>
     <artifactId>ipaas-runtime</artifactId>
     <name>IPaaS API Java :: Runtime</name>
     <packaging>jar</packaging>
