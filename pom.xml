@@ -26,7 +26,7 @@
         <version>9</version>
     </parent>
 
-    <groupId>com.readhat.ipaas</groupId>
+    <groupId>com.redhat.ipaas</groupId>
     <artifactId>ipaas-api-java-project</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -80,6 +80,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
 
+        <wildfly.swarm.version>2016.11.0</wildfly.swarm.version>
+
         <!-- maven plugin version -->
         <maven.enforcer.plugin.version>1.3.1</maven.enforcer.plugin.version>
         <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
@@ -88,11 +90,29 @@
         <maven.resources.plugin.version>3.0.1</maven.resources.plugin.version>
         <maven.source.plugin.version>2.4</maven.source.plugin.version>
         <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
+        <maven.templating.plugin.version>1.0.0</maven.templating.plugin.version>
 
     </properties>
 
     <modules>
+        <module>runtime</module>
+        <module>api</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.redhat.ipaas</groupId>
+                <artifactId>api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.redhat.ipaas</groupId>
+                <artifactId>runtime</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
