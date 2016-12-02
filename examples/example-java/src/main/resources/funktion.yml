@@ -5,3 +5,9 @@ rules:
     - kind: function
       name: io.fabric8.funktion.example.Main::cheese
     trace: true
+  - trigger: http:bar
+    name: thirsty
+    actions:
+    - kind: function
+      name: io.fabric8.funktion.example.Main::wine
+    trace: false    

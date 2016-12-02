@@ -34,4 +34,11 @@ public class Main {
         return "Hello " + name + ". I got payload `" + body + "` and I am on host: " + System.getenv("HOSTNAME");
     }
 
+    /**
+     * Another method used as funktion
+     */
+    public String wine() {
+        return "I am bust drinking wine";
+    }
+
 }
