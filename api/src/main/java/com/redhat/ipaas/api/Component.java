@@ -17,6 +17,7 @@
 package com.redhat.ipaas.api;
 
 import java.io.Serializable;
+import java.util.Properties;
 
 public class Component implements Serializable {
 
@@ -24,6 +25,6 @@ public class Component implements Serializable {
     String id;
     String name;
     String icon;
-    String properties;
+    Properties properties;
     ComponentGroup componentGroup;
 }

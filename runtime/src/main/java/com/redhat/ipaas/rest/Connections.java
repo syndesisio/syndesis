@@ -27,7 +27,6 @@ import io.swagger.annotations.ApiParam;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 

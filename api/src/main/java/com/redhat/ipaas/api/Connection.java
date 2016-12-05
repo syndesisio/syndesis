@@ -17,6 +17,7 @@
 package com.redhat.ipaas.api;
 
 import java.io.Serializable;
+import java.util.Properties;
 import java.util.Set;
 
 public class Connection implements Serializable {
@@ -26,7 +27,7 @@ public class Connection implements Serializable {
     String name;
     Organization organization;
     Component component;
-    String configurationProperties;
+    Properties configurationProperties;
     String icon;
     String description;
     String position;
