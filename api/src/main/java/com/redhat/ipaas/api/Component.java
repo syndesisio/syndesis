@@ -21,10 +21,47 @@ import java.util.Properties;
 
 public class Component implements Serializable {
 
-    private static final long serialVersionUID = -4372417241895695792L;
-    String id;
-    String name;
-    String icon;
-    Properties properties;
-    ComponentGroup componentGroup;
+	private static final long serialVersionUID = -4372417241895695792L;
+    private String id;
+    private String name;
+    private String icon;
+    private Properties properties;
+    private ComponentGroup componentGroup;
+    
+    public Component() {
+		super();
+	}
+    
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getIcon() {
+		return icon;
+	}
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+	public Properties getProperties() {
+		return properties;
+	}
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+	}
+	public ComponentGroup getComponentGroup() {
+		return componentGroup;
+	}
+	public void setComponentGroup(ComponentGroup componentGroup) {
+		this.componentGroup = componentGroup;
+	}
+    
+    
 }

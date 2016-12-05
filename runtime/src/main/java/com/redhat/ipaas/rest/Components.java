@@ -26,18 +26,27 @@ import io.swagger.annotations.Api;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
+
+import org.infinispan.Cache;
 
 @Path("/components")
 @Api(value = "components")
 public class Components {
 
+	@Inject
+	Cache<String, String> cache;
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Set<Component> doGet() {
-		//return all Camel components
+	public Set<Component> list() {
+		// return all Camel components
+		cache.keySet();
+		System.out.println("*******************" + cache);
 		Set<Component> components = new HashSet<Component>();
 		return components;
 	}
+
 }

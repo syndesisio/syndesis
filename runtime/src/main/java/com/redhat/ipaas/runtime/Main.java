@@ -57,8 +57,8 @@ public class Main {
         deployment.addClass(VersionEndpoint.class);
         deployment.addAllDependencies();
         swarm.fraction(swaggerFraction);
-        swarm.start().deploy(deployment);
         
+        swarm.start().deploy(deployment);
         
     }
     
