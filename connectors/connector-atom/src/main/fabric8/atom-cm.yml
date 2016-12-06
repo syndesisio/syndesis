@@ -1,0 +1,500 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: atom
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: atom
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: atom
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-atom:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: atom
+      syntax: atom:feedUri
+      title: Atom
+      description: The atom component is used for consuming Atom RSS feeds.
+      label: rss
+      deprecated: false
+      async: false
+      consumerOnly: true
+      lenientProperties: true
+      javaType: org.apache.camel.component.atom.AtomComponent
+      groupId: org.apache.camel
+      artifactId: camel-atom
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      feedUri:
+        kind: path
+        group: consumer
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The URI to the feed to poll.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      feedHeader:
+        kind: parameter
+        group: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Sets whether to add the feed object as a header
+      filter:
+        kind: parameter
+        group: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Sets whether to use filtering or not of the entries.
+      lastUpdate:
+        kind: parameter
+        group: consumer
+        type: string
+        javaType: java.util.Date
+        deprecated: false
+        secret: false
+        description: Sets the timestamp to be used for filtering entries from the atom feeds. This options is only in conjunction with the splitEntries.
+      password:
+        kind: parameter
+        group: consumer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Sets the password to be used for basic authentication when polling from a HTTP feed
+      sendEmptyMessageWhenIdle:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+      sortEntries:
+        kind: parameter
+        group: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether to sort entries by published date. Only works when splitEntries = true.
+      splitEntries:
+        kind: parameter
+        group: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Sets whether or not entries should be sent individually or whether the entire feed should be sent as a single message
+      throttleEntries:
+        kind: parameter
+        group: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Sets whether all entries identified in a single feed poll should be delivered immediately. If true only one entry is processed per consumer.delay. Only applicable when splitEntries = true.
+      username:
+        kind: parameter
+        group: consumer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Sets the username to be used for basic authentication when polling from a HTTP feed
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      pollStrategy:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.PollingConsumerPollStrategy
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+      backoffErrorThreshold:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: integer
+        javaType: int
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+      backoffIdleThreshold:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: integer
+        javaType: int
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+      backoffMultiplier:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: integer
+        javaType: int
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+      delay:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: integer
+        javaType: long
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: "500"
+        description: Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+      greedy:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+      initialDelay:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: integer
+        javaType: long
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: "1000"
+        description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+      runLoggingLevel:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: string
+        javaType: org.apache.camel.LoggingLevel
+        enum:
+        - TRACE
+        - DEBUG
+        - INFO
+        - WARN
+        - ERROR
+        - OFF
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: TRACE
+        description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+      scheduledExecutorService:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: object
+        javaType: java.util.concurrent.ScheduledExecutorService
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+      scheduler:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: string
+        javaType: org.apache.camel.spi.ScheduledPollConsumerScheduler
+        enum:
+        - none
+        - spring
+        - quartz2
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: none
+        description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+      schedulerProperties:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: object
+        javaType: java.util.Map<java.lang.String,java.lang.Object>
+        prefix: scheduler.
+        multiValue: true
+        deprecated: false
+        secret: false
+        description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+      startScheduler:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Whether the scheduler should be auto started.
+      timeUnit:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: string
+        javaType: java.util.concurrent.TimeUnit
+        enum:
+        - NANOSECONDS
+        - MICROSECONDS
+        - MILLISECONDS
+        - SECONDS
+        - MINUTES
+        - HOURS
+        - DAYS
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: MILLISECONDS
+        description: Time unit for initialDelay and delay options.
+      useFixedDelay:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+  documentation.adoc: |+
+    [[Atom-AtomComponent]]
+    Atom Component
+    ~~~~~~~~~~~~~~
+
+    The *atom:* component is used for polling Atom feeds.
+
+    Camel will poll the feed every 60 seconds by default. +
+     *Note:* The component currently only supports polling (consuming)
+    feeds.
+
+    Maven users will need to add the following dependency to their `pom.xml`
+    for this component:
+
+    [source,xml]
+    ------------------------------------------------------------
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-atom</artifactId>
+        <version>x.x.x</version>
+        <!-- use the same version as your Camel core version -->
+    </dependency>
+    ------------------------------------------------------------
+
+    [[Atom-URIformat]]
+    URI format
+    ^^^^^^^^^^
+
+    [source,java]
+    ------------------------
+    atom://atomUri[?options]
+    ------------------------
+
+    Where *atomUri* is the URI to the Atom feed to poll.
+
+    [[Atom-Options]]
+    Options
+    ^^^^^^^
+
+
+    // component options: START
+    The Atom component has no options.
+    // component options: END
+
+
+
+    // endpoint options: START
+    The Atom component supports 28 endpoint options which are listed below:
+
+    {% raw %}
+    [width="100%",cols="2,1,1m,1m,5",options="header"]
+    |=======================================================================
+    | Name | Group | Default | Java Type | Description
+    | feedUri | consumer |  | String | *Required* The URI to the feed to poll.
+    | bridgeErrorHandler | consumer | false | boolean | Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | feedHeader | consumer | true | boolean | Sets whether to add the feed object as a header
+    | filter | consumer | true | boolean | Sets whether to use filtering or not of the entries.
+    | lastUpdate | consumer |  | Date | Sets the timestamp to be used for filtering entries from the atom feeds. This options is only in conjunction with the splitEntries.
+    | password | consumer |  | String | Sets the password to be used for basic authentication when polling from a HTTP feed
+    | sendEmptyMessageWhenIdle | consumer | false | boolean | If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+    | sortEntries | consumer | false | boolean | Sets whether to sort entries by published date. Only works when splitEntries = true.
+    | splitEntries | consumer | true | boolean | Sets whether or not entries should be sent individually or whether the entire feed should be sent as a single message
+    | throttleEntries | consumer | true | boolean | Sets whether all entries identified in a single feed poll should be delivered immediately. If true only one entry is processed per consumer.delay. Only applicable when splitEntries = true.
+    | username | consumer |  | String | Sets the username to be used for basic authentication when polling from a HTTP feed
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | exchangePattern | consumer (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer creates an exchange.
+    | pollStrategy | consumer (advanced) |  | PollingConsumerPollStrategy | A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+    | backoffErrorThreshold | scheduler |  | int | The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+    | backoffIdleThreshold | scheduler |  | int | The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+    | backoffMultiplier | scheduler |  | int | To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+    | delay | scheduler | 500 | long | Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+    | greedy | scheduler | false | boolean | If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+    | initialDelay | scheduler | 1000 | long | Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+    | runLoggingLevel | scheduler | TRACE | LoggingLevel | The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+    | scheduledExecutorService | scheduler |  | ScheduledExecutorService | Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+    | scheduler | scheduler | none | ScheduledPollConsumerScheduler | To use a cron scheduler from either camel-spring or camel-quartz2 component
+    | schedulerProperties | scheduler |  | Map | To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+    | startScheduler | scheduler | true | boolean | Whether the scheduler should be auto started.
+    | timeUnit | scheduler | MILLISECONDS | TimeUnit | Time unit for initialDelay and delay options.
+    | useFixedDelay | scheduler | true | boolean | Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+    |=======================================================================
+    {% endraw %}
+    // endpoint options: END
+
+
+    You can append query options to the URI in the following format,
+    `?option=value&option=value&...`
+
+    [[Atom-Exchangedataformat]]
+    Exchange data format
+    ^^^^^^^^^^^^^^^^^^^^
+
+    Camel will set the In body on the returned `Exchange` with the entries.
+    Depending on the `splitEntries` flag Camel will either return one
+    `Entry` or a `List<Entry>`.
+
+    [width="100%",cols="10%,10%,80%",options="header",]
+    |=======================================================================
+    |Option |Value |Behavior
+    |`splitEntries` |`true` |Only a single entry from the currently being processed feed is set:
+    `exchange.in.body(Entry)`
+
+    |`splitEntries` |`false` |The entire list of entries from the feed is set:
+    `exchange.in.body(List<Entry>)`
+    |=======================================================================
+
+    Camel can set the `Feed` object on the In header (see `feedHeader`
+    option to disable this):
+
+    [[Atom-MessageHeaders]]
+    Message Headers
+    ^^^^^^^^^^^^^^^
+
+    Camel atom uses these headers.
+
+    [width="100%",cols="10%,90%",options="header",]
+    |=======================================================================
+    |Header |Description
+    |`CamelAtomFeed` |When consuming the `org.apache.abdera.model.Feed` object is set to this
+    header.
+    |=======================================================================
+
+    [[Atom-Samples]]
+    Samples
+    ^^^^^^^
+
+    In this sample we poll James Strachan's blog.
+
+    [source,java]
+    ---------------------------------------------------------------------------------
+    from("atom://http://macstrac.blogspot.com/feeds/posts/default").to("seda:feeds");
+    ---------------------------------------------------------------------------------
+
+    In this sample we want to filter only good blogs we like to a SEDA
+    queue. The sample also shows how to setup Camel standalone, not running
+    in any Container or using Spring.
+
+    [[Atom-SeeAlso]]
+    See Also
+    ^^^^^^^^
+
+    * link:configuring-camel.html[Configuring Camel]
+    * link:component.html[Component]
+    * link:endpoint.html[Endpoint]
+    * link:getting-started.html[Getting Started]
+
+    * link:rss.html[RSS]
+

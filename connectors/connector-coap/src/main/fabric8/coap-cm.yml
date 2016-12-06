@@ -1,0 +1,142 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: coap
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: coap
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: coap
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-coap:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: coap
+      syntax: coap:uri
+      title: CoAP
+      description: The coap component is used for sending and receiving messages from COAP capable devices.
+      label: iot
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.coap.CoAPComponent
+      groupId: org.apache.camel
+      artifactId: camel-coap
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      uri:
+        kind: path
+        group: common
+        type: string
+        javaType: java.net.URI
+        deprecated: false
+        secret: false
+        description: The URI for the CoAP endpoint
+      coapMethod:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: '*'
+        description: The CoAP method this endpoint binds to. Default is to bind to all () but can be restricted to GET POST PUT DELETE PING
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[CoAP-CoAPComponent]]\nCoAP Component\n~~~~~~~~~~~~~~\n\n\
+    *Camel-CoAP* is an http://camel.apache.org/[Apache Camel] component that\nallows\
+    \ you to work with CoAP, a lightweight REST-type protocol for machine-to-machine\
+    \ operation. \nhttp://coap.technology/[CoAP], Constrained Application Protocol\
+    \ is a specialized web transfer protocol \nfor use with constrained nodes and\
+    \ constrained networks and it is based on RFC 7252.\n\n*Available as of Camel\
+    \ 2.16*\n\nMaven users will need to add the following dependency to their pom.xml\n\
+    for this component:\n\n[source,xml]\n---------------------------------------------------------\n\
+    <dependency>\n\_<groupId>org.apache.camel</groupId>\n\_<artifactId>camel-coap</artifactId>\n\
+    \_<version>x.x.x</version>\n\_<!-- use the same version as your Camel core version\
+    \ -->\n</dependency>\n---------------------------------------------------------\n\
+    \n[[CoAP-Options]]\nOptions\n~~~~~~~\n\n\n// component options: START\nThe CoAP\
+    \ component has no options.\n// component options: END\n\n\n\n\n// endpoint options:\
+    \ START\nThe CoAP component supports 6 endpoint options which are listed below:\n\
+    \n{% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| uri | common |  | URI |\
+    \ The URI for the CoAP endpoint\n| coapMethod | common | * | String | The CoAP\
+    \ method this endpoint binds to. Default is to bind to all () but can be restricted\
+    \ to GET POST PUT DELETE PING\n| bridgeErrorHandler | consumer | false | boolean\
+    \ | Allows for bridging the consumer to the Camel routing Error Handler which\
+    \ mean any exceptions occurred while the consumer is trying to pickup incoming\
+    \ messages or the likes will now be processed as a message and handled by the\
+    \ routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler\
+    \ to deal with exceptions that will be logged at WARN/ERROR level and ignored.\n\
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer\
+    \ use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled\
+    \ then this options is not in use. By default the consumer will deal with exceptions\
+    \ that will be logged at WARN/ERROR level and ignored.\n| exchangePattern | consumer\
+    \ (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer\
+    \ creates an exchange.\n| synchronous | advanced | false | boolean | Sets whether\
+    \ synchronous processing should be strictly used or Camel is allowed to use asynchronous\
+    \ processing (if supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n"

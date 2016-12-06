@@ -1,0 +1,204 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: direct
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: direct
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: direct
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-direct:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: direct
+      syntax: direct:name
+      title: Direct
+      description: The direct component provides direct synchronous call to another endpoint from the same CamelContext.
+      label: core,endpoint
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.direct.DirectComponent
+      groupId: org.apache.camel
+      artifactId: camel-core
+      version: 2.18.1
+    componentProperties:
+      block:
+        kind: property
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        description: If sending a message to a direct endpoint which has no active consumer then we can tell the producer to block and wait for the consumer to become active.
+      timeout:
+        kind: property
+        required: false
+        type: integer
+        javaType: long
+        deprecated: false
+        secret: false
+        defaultValue: "30000"
+        description: The timeout value to use if block is enabled.
+    properties:
+      name:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Name of direct endpoint
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the default exchange pattern when creating an exchange.
+      block:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: If sending a message to a direct endpoint which has no active consumer then we can tell the producer to block and wait for the consumer to become active.
+      failIfNoConsumers:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether the producer should fail by throwing an exception when sending to a DIRECT endpoint with no active consumers.
+      timeout:
+        kind: parameter
+        group: producer
+        label: producer
+        type: integer
+        javaType: long
+        deprecated: false
+        secret: false
+        defaultValue: "30000"
+        description: The timeout value to use if block is enabled.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[Direct-DirectComponent]]\nDirect Component\n~~~~~~~~~~~~~~~~\n\
+    \nThe *direct:* component provides direct, synchronous invocation of any\nconsumers\
+    \ when a producer sends a message exchange. +\n This endpoint can be used to connect\
+    \ existing routes in the *same*\ncamel context.\n\nTIP: *Asynchronous*\nThe link:seda.html[SEDA]\
+    \ component provides asynchronous invocation of\nany consumers when a producer\
+    \ sends a message exchange.\n\nTIP:*Connection to other camel contexts*\nThe link:vm.html[VM]\
+    \ component provides connections between Camel\ncontexts as long they run in the\
+    \ same *JVM*.\n\n[[Direct-URIformat]]\nURI format\n^^^^^^^^^^\n\n[source,text]\n\
+    -------------------------\ndirect:someName[?options]\n-------------------------\n\
+    \nWhere *someName* can be any string to uniquely identify the endpoint\n\n[[Direct-Options]]\n\
+    Options\n^^^^^^^\n\n\n\n// component options: START\nThe Direct component supports\
+    \ 2 options which are listed below.\n\n\n\n{% raw %}\n[width=\"100%\",cols=\"\
+    2,1m,7\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| block | boolean | If sending a message to\
+    \ a direct endpoint which has no active consumer then we can tell the producer\
+    \ to block and wait for the consumer to become active.\n| timeout | long | The\
+    \ timeout value to use if block is enabled.\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n\n\n\n// endpoint options: START\n\
+    The Direct component supports 8 endpoint options which are listed below:\n\n{%\
+    \ raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| name | common |  | String\
+    \ | *Required* Name of direct endpoint\n| bridgeErrorHandler | consumer | false\
+    \ | boolean | Allows for bridging the consumer to the Camel routing Error Handler\
+    \ which mean any exceptions occurred while the consumer is trying to pickup incoming\
+    \ messages or the likes will now be processed as a message and handled by the\
+    \ routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler\
+    \ to deal with exceptions that will be logged at WARN/ERROR level and ignored.\n\
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer\
+    \ use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled\
+    \ then this options is not in use. By default the consumer will deal with exceptions\
+    \ that will be logged at WARN/ERROR level and ignored.\n| exchangePattern | consumer\
+    \ (advanced) |  | ExchangePattern | Sets the default exchange pattern when creating\
+    \ an exchange.\n| block | producer | false | boolean | If sending a message to\
+    \ a direct endpoint which has no active consumer then we can tell the producer\
+    \ to block and wait for the consumer to become active.\n| failIfNoConsumers |\
+    \ producer | false | boolean | Whether the producer should fail by throwing an\
+    \ exception when sending to a DIRECT endpoint with no active consumers.\n| timeout\
+    \ | producer | 30000 | long | The timeout value to use if block is enabled.\n\
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing\
+    \ should be strictly used or Camel is allowed to use asynchronous processing (if\
+    \ supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n[[Direct-Samples]]\nSamples\n^^^^^^^\n\
+    \nIn the route below we use the direct component to link the two routes\ntogether:\n\
+    \n[source,java]\n-------------------------------------------\nfrom(\"activemq:queue:order.in\"\
+    )\n    .to(\"bean:orderServer?method=validate\")\n    .to(\"direct:processOrder\"\
+    );\n\nfrom(\"direct:processOrder\")\n    .to(\"bean:orderService?method=process\"\
+    )\n    .to(\"activemq:queue:order.out\");\n-------------------------------------------\n\
+    \nAnd the sample using spring DSL:\n\n[source,xml]\n--------------------------------------------------\n\
+    \   <route>\n     <from uri=\"activemq:queue:order.in\"/>\n     <to uri=\"bean:orderService?method=validate\"\
+    />\n     <to uri=\"direct:processOrder\"/>\n  </route>\n\n  <route>\n     <from\
+    \ uri=\"direct:processOrder\"/>\n     <to uri=\"bean:orderService?method=process\"\
+    />\n     <to uri=\"activemq:queue:order.out\"/>\n  </route>    \n--------------------------------------------------\n\
+    \nSee also samples from the link:seda.html[SEDA] component, how they can\nbe used\
+    \ together.\n\n[[Direct-SeeAlso]]\nSee Also\n^^^^^^^^\n\n* link:configuring-camel.html[Configuring\
+    \ Camel]\n* link:component.html[Component]\n* link:endpoint.html[Endpoint]\n*\
+    \ link:getting-started.html[Getting Started]\n* link:seda.html[SEDA]\n* link:vm.html[VM]\n\
+    \n"

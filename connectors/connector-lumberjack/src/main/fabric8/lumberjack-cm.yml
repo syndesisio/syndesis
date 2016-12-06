@@ -1,0 +1,238 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: lumberjack
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: lumberjack
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: lumberjack
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-lumberjack:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: lumberjack
+      syntax: lumberjack:host:port
+      title: Lumberjack
+      description: The lumberjack retrieves logs sent over the network using the Lumberjack protocol.
+      label: log
+      deprecated: false
+      async: false
+      consumerOnly: true
+      javaType: org.apache.camel.component.lumberjack.LumberjackComponent
+      groupId: org.apache.camel
+      artifactId: camel-lumberjack
+      version: 2.18.1
+    componentProperties:
+      sslContextParameters:
+        kind: property
+        type: object
+        javaType: org.apache.camel.util.jsse.SSLContextParameters
+        deprecated: false
+        secret: false
+        description: Sets the default SSL configuration to use for all the endpoints. You can also configure it directly at the endpoint level.
+    properties:
+      host:
+        kind: path
+        group: consumer
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Network interface on which to listen for Lumberjack
+      port:
+        kind: path
+        group: consumer
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "5044"
+        description: Network port on which to listen for Lumberjack
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      sslContextParameters:
+        kind: parameter
+        group: consumer
+        type: object
+        javaType: org.apache.camel.util.jsse.SSLContextParameters
+        deprecated: false
+        secret: false
+        description: SSL configuration
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: |+
+    [[Lumberjack-LumberjackComponent]]
+    Lumberjack Component
+    ~~~~~~~~~~~~~~~~~~~~
+
+    *Available as of Camel 2.18*
+
+    The *Lumberjack* component retrieves logs sent over the network using the Lumberjack protocol,
+    from https://www.elastic.co/fr/products/beats/filebeat[Filebeat] for instance.
+    The network communication can be secured with SSL.
+
+    This component only supports consumer endpoints.
+
+    Maven users will need to add the following dependency to their `pom.xml` for this component:
+
+    [source,xml]
+    ------------------------------------------------------------
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-lumberjack</artifactId>
+        <version>x.x.x</version>
+        <!-- use the same version as your Camel core version -->
+    </dependency>
+    ------------------------------------------------------------
+
+    [[Lumberjack-URIformat]]
+    URI format
+    ^^^^^^^^^^
+
+    [source,java]
+    ------------------------------------
+    lumberjack:host
+    lumberjack:host:port
+    ------------------------------------
+
+    You can append query options to the URI in the following format,
+    `?option=value&option=value&...`
+
+    [[Lumberjack-Options]]
+    Options
+    ^^^^^^^
+
+
+
+
+    // component options: START
+    The Lumberjack component supports 1 options which are listed below.
+
+
+
+    {% raw %}
+    [width="100%",cols="2,1m,7",options="header"]
+    |=======================================================================
+    | Name | Java Type | Description
+    | sslContextParameters | SSLContextParameters | Sets the default SSL configuration to use for all the endpoints. You can also configure it directly at the endpoint level.
+    |=======================================================================
+    {% endraw %}
+    // component options: END
+
+
+
+
+
+
+
+    // endpoint options: START
+    The Lumberjack component supports 7 endpoint options which are listed below:
+
+    {% raw %}
+    [width="100%",cols="2,1,1m,1m,5",options="header"]
+    |=======================================================================
+    | Name | Group | Default | Java Type | Description
+    | host | consumer |  | String | *Required* Network interface on which to listen for Lumberjack
+    | port | consumer | 5044 | int | Network port on which to listen for Lumberjack
+    | bridgeErrorHandler | consumer | false | boolean | Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | sslContextParameters | consumer |  | SSLContextParameters | SSL configuration
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | exchangePattern | consumer (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer creates an exchange.
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+    |=======================================================================
+    {% endraw %}
+    // endpoint options: END
+
+
+
+
+
+    [[Lumberjack-Result]]
+    Result
+    ^^^^^^
+
+    The result body is a `Map<String, Object>` object.
+
+    [[Lumberjack-LumberjackUsageSamples]]
+    Lumberjack Usage Samples
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+    [[Lumberjack-Example1:]]
+    Example 1: Streaming the log messages
+    +++++++++++++++++++++++++++++++++++++
+
+    [source,java]
+    ------------------------------------------------------------------------------------
+    RouteBuilder builder = new RouteBuilder() {
+        public void configure() {
+           from("lumberjack:0.0.0.0").                  // Listen on all network interfaces using the default port
+               setBody(simple("${body[message]}")).     // Select only the log message
+               to("stream:out");                        // Write it into the output stream
+        }
+    };
+    ------------------------------------------------------------------------------------
+

@@ -1,0 +1,500 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: hbase
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: hbase
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: hbase
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-hbase:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: hbase
+      syntax: hbase:tableName
+      title: HBase
+      description: For reading/writing from/to an HBase store (Hadoop database).
+      label: hadoop
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.hbase.HBaseComponent
+      groupId: org.apache.camel
+      artifactId: camel-hbase
+      version: 2.18.1
+    componentProperties:
+      configuration:
+        kind: property
+        type: object
+        javaType: org.apache.hadoop.conf.Configuration
+        deprecated: false
+        secret: false
+        description: To use the shared configuration
+      poolMaxSize:
+        kind: property
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        description: Maximum number of references to keep for each table in the HTable pool. The default value is 10.
+    properties:
+      tableName:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The name of the table
+      cellMappingStrategyFactory:
+        kind: parameter
+        group: common
+        type: object
+        javaType: org.apache.camel.component.hbase.mapping.CellMappingStrategyFactory
+        deprecated: false
+        secret: false
+        description: To use a custom CellMappingStrategyFactory that is responsible for mapping cells.
+      filters:
+        kind: parameter
+        group: common
+        type: array
+        javaType: java.util.List<org.apache.hadoop.hbase.filter.Filter>
+        deprecated: false
+        secret: false
+        description: A list of filters to use.
+      mappingStrategyClassName:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The class name of a custom mapping strategy implementation.
+      mappingStrategyName:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        enum:
+        - header
+        - body
+        deprecated: false
+        secret: false
+        description: 'The strategy to use for mapping Camel messages to HBase columns.
+          Supported values: header or body.'
+      rowMapping:
+        kind: parameter
+        group: common
+        type: object
+        javaType: java.util.Map<java.lang.String,java.lang.Object>
+        prefix: row.
+        multiValue: true
+        deprecated: false
+        secret: false
+        description: 'To map the key/values from the Map to a HBaseRow. The following
+          keys is supported: rowId - The id of the row. This has limited use as the row
+          usually changes per Exchange. rowType - The type to covert row id to. Supported
+          operations: CamelHBaseScan. family - The column family. Supports a number suffix
+          for referring to more than one columns. qualifier - The column qualifier. Supports
+          a number suffix for referring to more than one columns. value - The value. Supports
+          a number suffix for referring to more than one columns valueType - The value
+          type. Supports a number suffix for referring to more than one columns. Supported
+          operations: CamelHBaseGet and CamelHBaseScan.'
+      rowModel:
+        kind: parameter
+        group: common
+        type: object
+        javaType: org.apache.camel.component.hbase.model.HBaseRow
+        deprecated: false
+        secret: false
+        description: An instance of org.apache.camel.component.hbase.model.HBaseRow which describes how each row should be modeled
+      userGroupInformation:
+        kind: parameter
+        group: common
+        type: object
+        javaType: org.apache.hadoop.security.UserGroupInformation
+        deprecated: false
+        secret: false
+        description: Defines privileges to communicate with HBase such as using kerberos.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      maxMessagesPerPoll:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        description: Gets the maximum number of messages as a limit to poll at each polling. Is default unlimited but use 0 or negative number to disable it as unlimited.
+      operation:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: java.lang.String
+        enum:
+        - CamelHBasePut
+        - CamelHBaseGet
+        - CamelHBaseScan
+        - CamelHBaseDelete
+        deprecated: false
+        secret: false
+        description: The HBase operation to perform
+      remove:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: If the option is true Camel HBase Consumer will remove the rows which it processes.
+      removeHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: object
+        javaType: org.apache.camel.component.hbase.HBaseRemoveHandler
+        deprecated: false
+        secret: false
+        description: To use a custom HBaseRemoveHandler that is executed when a row is to be removed.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      maxResults:
+        kind: parameter
+        group: producer
+        label: producer
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "100"
+        description: The maximum number of rows to scan.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[hbase-HBaseComponent]]\nHBase Component\n~~~~~~~~~~~~~~~\n\
+    \n*Available as of Camel 2.10*\n\nThis component provides an idemptotent repository,\
+    \ producers and\nconsumers for http://hbase.apache.org/[Apache HBase].\n\nMaven\
+    \ users will need to add the following dependency to their `pom.xml`\nfor this\
+    \ component:\n\n[source,xml]\n------------------------------------------------------------\n\
+    <dependency>\n    <groupId>org.apache.camel</groupId>\n    <artifactId>camel-hbase</artifactId>\n\
+    \    <version>x.x.x</version>\n    <!-- use the same version as your Camel core\
+    \ version -->\n</dependency>\n------------------------------------------------------------\n\
+    \n[[hbase-ApacheHBaseOverview]]\nApache HBase Overview\n^^^^^^^^^^^^^^^^^^^^^\n\
+    \nHBase is an open-source, distributed, versioned, column-oriented store\nmodeled\
+    \ after Google's Bigtable: A Distributed Storage System for\nStructured Data.\
+    \ You can use HBase when you need random, realtime\nread/write access to your\
+    \ Big Data. More information at\nhttp://hbase.apache.org[Apache HBase].\n\n[[hbase-CamelandHBase]]\n\
+    Camel and HBase\n^^^^^^^^^^^^^^^\n\nWhen using a datasotre inside a camel route,\
+    \ there is always the\nchalenge of specifying how the camel message will stored\
+    \ to the\ndatastore. In document based stores things are more easy as the message\n\
+    body can be directly mapped to a document. In relational databases an\nORM solution\
+    \ can be used to map properties to columns etc. In column\nbased stores things\
+    \ are more challenging as there is no standard way to\nperform that kind of mapping.\n\
+    \nHBase adds two additional challenges:\n\n* HBase groups columns into families,\
+    \ so just mapping a property to a\ncolumn using a name convention is just not\
+    \ enough.\n* HBase doesn't have the notion of type, which means that it stores\n\
+    everything as byte[] and doesn't know if the byte[] represents a String,\na Number,\
+    \ a serialized Java object or just binary data.\n\nTo overcome these challenges,\
+    \ camel-hbase makes use of the message\nheaders to specify the mapping of the\
+    \ message to HBase columns. It also\nprovides the ability to use some camel-hbase\
+    \ provided classes that model\nHBase data and can be easily convert to and from\
+    \ xml/json etc. +\n Finally it provides the ability to the user to implement and\
+    \ use his\nown mapping strategy.\n\nRegardless of the mapping strategy camel-hbase\
+    \ will convert a message\ninto an org.apache.camel.component.hbase.model.HBaseData\
+    \ object and use\nthat object for its internal operations.\n\n[[hbase-Configuringthecomponent]]\n\
+    Configuring the component\n^^^^^^^^^^^^^^^^^^^^^^^^^\n\nThe HBase component can\
+    \ be provided a custom HBaseConfiguration object\nas a property or it can create\
+    \ an HBase configuration object on its own\nbased on the HBase related resources\
+    \ that are found on classpath.\n\n[source,xml]\n-----------------------------------------------------------------------------\n\
+    \    <bean id=\"hbase\" class=\"org.apache.camel.component.hbase.HBaseComponent\"\
+    >\n        <property name=\"configuration\" ref=\"config\"/>\n    </bean>\n-----------------------------------------------------------------------------\n\
+    \nIf no configuration object is provided to the component, the component\nwill\
+    \ create one. The created configuration will search the class path\nfor an hbase-site.xml\
+    \ file, from which it will draw the configuration.\nYou can find more information\
+    \ about how to configure HBase clients at:\nhttp://archive.apache.org/dist/hbase/docs/client_dependencies.html[HBase\n\
+    client configuration and dependencies]\n\n[[hbase-HBaseProducer]]\nHBase Producer\n\
+    ^^^^^^^^^^^^^^\n\nAs mentioned above camel provides produers endpoints for HBase.\
+    \ This\nallows you to store, delete, retrieve or query data from HBase using\n\
+    your camel routes.\n\n[source,java]\n-----------------------\nhbase://table[?options]\n\
+    -----------------------\n\nwhere *table* is the table name.\n\nThe supported operations\
+    \ are:\n\n* Put\n* Get\n* Delete\n* Scan\n\n[[hbase-SupportedURIoptions]]\nSupported\
+    \ URI options\n+++++++++++++++++++++\n\n\n\n\n// component options: START\nThe\
+    \ HBase component supports 2 options which are listed below.\n\n\n\n{% raw %}\n\
+    [width=\"100%\",cols=\"2,1m,7\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| configuration | Configuration | To use the\
+    \ shared configuration\n| poolMaxSize | int | Maximum number of references to\
+    \ keep for each table in the HTable pool. The default value is 10.\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n\n\n\n\n\n// endpoint options: START\n\
+    The HBase component supports 17 endpoint options which are listed below:\n\n{%\
+    \ raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| tableName | common |  |\
+    \ String | *Required* The name of the table\n| cellMappingStrategyFactory | common\
+    \ |  | CellMappingStrategyFactory | To use a custom CellMappingStrategyFactory\
+    \ that is responsible for mapping cells.\n| filters | common |  | List | A list\
+    \ of filters to use.\n| mappingStrategyClassName | common |  | String | The class\
+    \ name of a custom mapping strategy implementation.\n| mappingStrategyName | common\
+    \ |  | String | The strategy to use for mapping Camel messages to HBase columns.\
+    \ Supported values: header or body.\n| rowMapping | common |  | Map | To map the\
+    \ key/values from the Map to a HBaseRow. The following keys is supported: rowId\
+    \ - The id of the row. This has limited use as the row usually changes per Exchange.\
+    \ rowType - The type to covert row id to. Supported operations: CamelHBaseScan.\
+    \ family - The column family. Supports a number suffix for referring to more than\
+    \ one columns. qualifier - The column qualifier. Supports a number suffix for\
+    \ referring to more than one columns. value - The value. Supports a number suffix\
+    \ for referring to more than one columns valueType - The value type. Supports\
+    \ a number suffix for referring to more than one columns. Supported operations:\
+    \ CamelHBaseGet and CamelHBaseScan.\n| rowModel | common |  | HBaseRow | An instance\
+    \ of org.apache.camel.component.hbase.model.HBaseRow which describes how each\
+    \ row should be modeled\n| userGroupInformation | common |  | UserGroupInformation\
+    \ | Defines privileges to communicate with HBase such as using kerberos.\n| bridgeErrorHandler\
+    \ | consumer | false | boolean | Allows for bridging the consumer to the Camel\
+    \ routing Error Handler which mean any exceptions occurred while the consumer\
+    \ is trying to pickup incoming messages or the likes will now be processed as\
+    \ a message and handled by the routing Error Handler. By default the consumer\
+    \ will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that\
+    \ will be logged at WARN/ERROR level and ignored.\n| maxMessagesPerPoll | consumer\
+    \ |  | int | Gets the maximum number of messages as a limit to poll at each polling.\
+    \ Is default unlimited but use 0 or negative number to disable it as unlimited.\n\
+    | operation | consumer |  | String | The HBase operation to perform\n| remove\
+    \ | consumer | true | boolean | If the option is true Camel HBase Consumer will\
+    \ remove the rows which it processes.\n| removeHandler | consumer |  | HBaseRemoveHandler\
+    \ | To use a custom HBaseRemoveHandler that is executed when a row is to be removed.\n\
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer\
+    \ use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled\
+    \ then this options is not in use. By default the consumer will deal with exceptions\
+    \ that will be logged at WARN/ERROR level and ignored.\n| exchangePattern | consumer\
+    \ (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer\
+    \ creates an exchange.\n| maxResults | producer | 100 | int | The maximum number\
+    \ of rows to scan.\n| synchronous | advanced | false | boolean | Sets whether\
+    \ synchronous processing should be strictly used or Camel is allowed to use asynchronous\
+    \ processing (if supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n\n[[hbase-PutOperations.]]\nPut Operations.\n\
+    +++++++++++++++\n\nHBase is a column based store, which allows you to store data\
+    \ into a\nspecific column of a specific row. Columns are grouped into families,\
+    \ so\nin order to specify a column you need to specify the column family and\n\
+    the qualifier of that column. To store data into a specific column you\nneed to\
+    \ specify both the column and the row.\n\nThe simplest scenario for storing data\
+    \ into HBase from a camel route,\nwould be to store part of the message body to\
+    \ specified HBase column.\n\n[source,xml]\n-----------------------------------------------------------------------------------------------------------\n\
+    \        <route>\n            <from uri=\"direct:in\"/>\n            <!-- Set\
+    \ the HBase Row -->\n            <setHeader headerName=\"CamelHBaseRowId\">\n\
+    \                <el>${in.body.id}</el>\n            </setHeader>\n          \
+    \  <!-- Set the HBase Value -->\n            <setHeader headerName=\"CamelHBaseValue\"\
+    >\n                <el>${in.body.value}</el>\n            </setHeader>\n     \
+    \       <to uri=\"hbase:mytable?operation=CamelHBasePut&amp;family=myfamily&amp;qualifier=myqualifier\"\
+    />\n        </route>\n-----------------------------------------------------------------------------------------------------------\n\
+    \nThe route above assumes that the message body contains an object that\nhas an\
+    \ id and value property and will store the content of value in the\nHBase column\
+    \ myfamily:myqualifier in the row specified by id. If we\nneeded to specify more\
+    \ than one column/value pairs we could just specify\nadditional column mappings.\
+    \ Notice that you must use numbers from the\n2nd header onwards, eg RowId2, RowId3,\
+    \ RowId4, etc. Only the 1st header\ndoes not have the number 1.\n\n[source,xml]\n\
+    ------------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    \        <route>\n            <from uri=\"direct:in\"/>\n            <!-- Set\
+    \ the HBase Row 1st column -->\n            <setHeader headerName=\"CamelHBaseRowId\"\
+    >\n                <el>${in.body.id}</el>\n            </setHeader>\n        \
+    \    <!-- Set the HBase Row 2nd column -->\n            <setHeader headerName=\"\
+    CamelHBaseRowId2\">\n                <el>${in.body.id}</el>\n            </setHeader>\n\
+    \            <!-- Set the HBase Value for 1st column -->\n            <setHeader\
+    \ headerName=\"CamelHBaseValue\">\n                <el>${in.body.value}</el>\n\
+    \            </setHeader>\n            <!-- Set the HBase Value for 2nd column\
+    \ -->\n            <setHeader headerName=\"CamelHBaseValue2\">\n             \
+    \   <el>${in.body.othervalue}</el>\n            </setHeader>\n            <to\
+    \ uri=\"hbase:mytable?operation=CamelHBasePut&amp;family=myfamily&amp;qualifier=myqualifier&amp;family2=myfamily&amp;qualifier2=myqualifier2\"\
+    />\n        </route>\n------------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    \nIt is important to remember that you can use uri options, message\nheaders or\
+    \ a combination of both. It is recommended to specify constants\nas part of the\
+    \ uri and dynamic values as headers. If something is\ndefined both as header and\
+    \ as part of the uri, the header will be used.\n\n[[hbase-GetOperations.]]\nGet\
+    \ Operations.\n+++++++++++++++\n\nA Get Operation is an operation that is used\
+    \ to retrieve one or more\nvalues from a specified HBase row. To specify what\
+    \ are the values that\nyou want to retrieve you can just specify them as part\
+    \ of the uri or as\nmessage headers.\n\n[source,xml]\n----------------------------------------------------------------------------------------------------------------------------------------\n\
+    \        <route>\n            <from uri=\"direct:in\"/>\n            <!-- Set\
+    \ the HBase Row of the Get -->\n            <setHeader headerName=\"CamelHBaseRowId\"\
+    >\n                <el>${in.body.id}</el>\n            </setHeader>\n        \
+    \    <to uri=\"hbase:mytable?operation=CamelHBaseGet&amp;family=myfamily&amp;qualifier=myqualifier&amp;valueType=java.lang.Long\"\
+    />\n            <to uri=\"log:out\"/>\n        </route>\n----------------------------------------------------------------------------------------------------------------------------------------\n\
+    \nIn the example above the result of the get operation will be stored as a\nheader\
+    \ with name CamelHBaseValue.\n\n[[hbase-DeleteOperations.]]\nDelete Operations.\n\
+    ++++++++++++++++++\n\nYou can also you camel-hbase to perform HBase delete operation.\
+    \ The\ndelete operation will remove an entire row. All that needs to be\nspecified\
+    \ is one or more rows as part of the message headers.\n\n[source,xml]\n----------------------------------------------------------------\n\
+    \        <route>\n            <from uri=\"direct:in\"/>\n            <!-- Set\
+    \ the HBase Row of the Get -->\n            <setHeader headerName=\"CamelHBaseRowId\"\
+    >\n                <el>${in.body.id}</el>\n            </setHeader>\n        \
+    \    <to uri=\"hbase:mytable?operation=CamelHBaseDelete\"/>\n        </route>\n\
+    ----------------------------------------------------------------\n\n[[hbase-ScanOperations.]]\n\
+    Scan Operations.\n++++++++++++++++\n\nA scan operation is the equivalent of a\
+    \ query in HBase. You can use the\nscan operation to retrieve multiple rows. To\
+    \ specify what columns should\nbe part of the result and also specify how the\
+    \ values will be converted\nto objects you can use either uri options or headers.\n\
+    \n[source,xml]\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    \        <route>\n            <from uri=\"direct:in\"/>\n            <to uri=\"\
+    hbase:mytable?operation=CamelHBaseScan&amp;family=myfamily&amp;qualifier=myqualifier&amp;valueType=java.lang.Long&amp;rowType=java.lang.String\"\
+    />\n            <to uri=\"log:out\"/>\n        </route>\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    \nIn this case its probable that you also also need to specify a list of\nfilters\
+    \ for limiting the results. You can specify a list of filters as\npart of the\
+    \ uri and camel will return only the rows that satisfy *ALL*\nthe filters.  +\n\
+    \ To have a filter that will be aware of the information that is part of\nthe\
+    \ message, camel defines the ModelAwareFilter. This will allow your\nfilter to\
+    \ take into consideration the model that is defined by the\nmessage and the mapping\
+    \ strategy. +\n When using a ModelAwareFilter camel-hbase will apply the selected\n\
+    mapping strategy to the in message, will create an object that models\nthe mapping\
+    \ and will pass that object to the Filter.\n\nFor example to perform scan using\
+    \ as criteria the message headers, you\ncan make use of the ModelAwareColumnMatchingFilter\
+    \ as shown below.\n\n[source,xml]\n-----------------------------------------------------------------------------------------------------------\n\
+    \        <route>\n            <from uri=\"direct:scan\"/>\n            <!-- Set\
+    \ the Criteria -->\n            <setHeader headerName=\"CamelHBaseFamily\">\n\
+    \                <constant>name</constant>\n            </setHeader>\n       \
+    \     <setHeader headerName=\"CamelHBaseQualifier\">\n                <constant>first</constant>\n\
+    \            </setHeader>\n            <setHeader headerName=\"CamelHBaseValue\"\
+    >\n                <el>in.body.firstName</el>\n            </setHeader>\n    \
+    \        <setHeader headerName=\"CamelHBaseFamily2\">\n                <constant>name</constant>\n\
+    \            </setHeader>\n            <setHeader headerName=\"CamelHBaseQualifier2\"\
+    >\n                <constant>last</constant>\n            </setHeader>\n     \
+    \       <setHeader headerName=\"CamelHBaseValue2\">\n                <el>in.body.lastName</el>\n\
+    \            </setHeader>\n            <!-- Set additional fields that you want\
+    \ to be return by skipping value -->\n            <setHeader headerName=\"CamelHBaseFamily3\"\
+    >\n                <constant>address</constant>\n            </setHeader>\n  \
+    \          <setHeader headerName=\"CamelHBaseQualifier3\">\n                <constant>country</constant>\n\
+    \            </setHeader>\n            <to uri=\"hbase:mytable?operation=CamelHBaseScan&amp;filters=#myFilterList\"\
+    />\n        </route>\n\n        <bean id=\"myFilters\" class=\"java.util.ArrayList\"\
+    >\n            <constructor-arg>\n                <list>\n                   \
+    \ <bean class=\"org.apache.camel.component.hbase.filters.ModelAwareColumnMatchingFilter\"\
+    />\n                </list>\n            </constructor-arg>\n        </bean>\n\
+    -----------------------------------------------------------------------------------------------------------\n\
+    \nThe route above assumes that a pojo is with properties firstName and\nlastName\
+    \ is passed as the message body, it takes those properties and\nadds them as part\
+    \ of the message headers. The default mapping strategy\nwill create a model object\
+    \ that will map the headers to HBase columns\nand will pass that model the the\
+    \ ModelAwareColumnMatchingFilter. The\nfilter will filter out any rows, that do\
+    \ not contain columns that match\nthe model. It is like query by example.\n\n\
+    [[hbase-HBaseConsumer]]\nHBase Consumer\n^^^^^^^^^^^^^^\n\nThe Camel HBase Consumer,\
+    \ will perform repeated scan on the specified\nHBase table and will return the\
+    \ scan results as part of the message. You\ncan either specify header mapping\
+    \ (default) or body mapping. The later\nwill just add the org.apache.camel.component.hbase.model.HBaseData\
+    \ as\npart of the message body.\n\n[source,java]\n-----------------------\nhbase://table[?options]\n\
+    -----------------------\n\nYou can specify the columns that you want to be return\
+    \ and their types\nas part of the uri options:\n\n[source,java]\n------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    hbase:mutable?family=name&qualifer=first&valueType=java.lang.String&family=address&qualifer=number&valueType2=java.lang.Integer&rowType=java.lang.Long\n\
+    ------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    \nThe example above will create a model object that is consisted of the\nspecified\
+    \ fields and the scan results will populate the model object\nwith values. Finally\
+    \ the mapping strategy will be used to map this model\nto the camel message.\n\
+    \n[[hbase-HBaseIdempotentrepository]]\nHBase Idempotent repository\n^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nThe camel-hbase component also provides an idempotent repository which\ncan\
+    \ be used when you want to make sure that each message is processed\nonly once.\
+    \ The HBase idempotent repository is configured with a table, a\ncolumn family\
+    \ and a column qualifier and will create to that table a row\nper message.\n\n\
+    [source,java]\n------------------------------------------------------------------------------------------------------------------\n\
+    HBaseConfiguration configuration = HBaseConfiguration.create();\nHBaseIdempotentRepository\
+    \ repository = new HBaseIdempotentRepository(configuration, tableName, family,\
+    \ qualifier);\n\nfrom(\"direct:in\")\n  .idempotentConsumer(header(\"messageId\"\
+    ), repository)\n  .to(\"log:out);\n------------------------------------------------------------------------------------------------------------------\n\
+    \n[[hbase-HBaseMapping]]\nHBase Mapping\n^^^^^^^^^^^^^\n\nIt was mentioned above\
+    \ that you the default mapping strategies are\n*header* and *body* mapping. +\n\
+    \ Below you can find some detailed examples of how each mapping strategy\nworks.\n\
+    \n[[hbase-HBaseHeadermappingExamples]]\nHBase Header mapping Examples\n+++++++++++++++++++++++++++++\n\
+    \nThe header mapping is the default mapping. \n To put the value \"myvalue\" into\
+    \ HBase row \"myrow\" and column\n\"myfamily:mycolum\" the message should contain\
+    \ the following headers:\n\n[width=\"100%\",cols=\"10%,90%\",options=\"header\"\
+    ,]\n|=======================================================================\n\
+    |Header |Value\n\n|CamelHBaseRowId |myrow\n\n|CamelHBaseFamily |myfamily\n\n|CamelHBaseQualifier\
+    \ |myqualifier\n\n|CamelHBaseValue |myvalue\n|=======================================================================\n\
+    \nTo put more values for different columns and / or different rows you can\nspecify\
+    \ additional headers suffixed with the index of the headers, e.g:\n\n[width=\"\
+    100%\",cols=\"10%,90%\",options=\"header\",]\n|=======================================================================\n\
+    |Header |Value\n\n|CamelHBaseRowId |myrow\n\n|CamelHBaseFamily |myfamily\n\n|CamelHBaseQualifier\
+    \ |myqualifier\n\n|CamelHBaseValue |myvalue\n\n|CamelHBaseRowId2 |myrow2\n\n|CamelHBaseFamily2\
+    \ |myfamily\n\n|CamelHBaseQualifier2 |myqualifier\n\n|CamelHBaseValue2 |myvalue2\n\
+    |=======================================================================\n\nIn\
+    \ the case of retrieval operations such as get or scan you can also\nspecify for\
+    \ each column the type that you want the data to be converted\nto. For exampe:\n\
+    \n[width=\"100%\",cols=\"10%,90%\",options=\"header\",]\n|=======================================================================\n\
+    |Header |Value\n\n|CamelHBaseFamily |myfamily\n\n|CamelHBaseQualifier |myqualifier\n\
+    \n|CamelHBaseValueType |Long\n|=======================================================================\n\
+    \nPlease note that in order to avoid boilerplate headers that are\nconsidered\
+    \ constant for all messages, you can also specify them as part\nof the endpoint\
+    \ uri, as you will see below.\n\n[[hbase-BodymappingExamples]]\nBody mapping Examples\n\
+    +++++++++++++++++++++\n\nIn order to use the body mapping strategy you will have\
+    \ to specify the\noption mappingStrategy as part of the uri, for example:\n\n\
+    [source,java]\n----------------------------------\nhbase:mytable?mappingStrategyName=body\n\
+    ----------------------------------\n\nTo use the body mapping strategy the body\
+    \ needs to contain an instance\nof org.apache.camel.component.hbase.model.HBaseData.\
+    \ You can construct t\n\n[source,java]\n---------------------------------\nHBaseData\
+    \ data = new HBaseData();\nHBaseRow row = new HBaseRow();\nrow.setId(\"myRowId\"\
+    );\nHBaseCell cell = new HBaseCell();\ncell.setFamily(\"myfamily\");\ncell.setQualifier(\"\
+    myqualifier\");\ncell.setValue(\"myValue\");\nrow.getCells().add(cell);\ndata.addRows().add(row);\n\
+    ---------------------------------\n\nThe object above can be used for example\
+    \ in a put operation and will\nresult in creating or updating the row with id\
+    \ myRowId and add the value\nmyvalue to the column myfamily:myqualifier. +\n The\
+    \ body mapping strategy might not seem very appealing at first. The\nadvantage\
+    \ it has over the header mapping strategy is that the HBaseData\nobject can be\
+    \ easily converted to or from xml/json.\n\n[[hbase-Seealso]]\nSee also\n^^^^^^^^\n\
+    \n* link:polling-consumer.html[Polling Consumer]\n* http://hbase.apache.org[Apache\
+    \ HBase]\n\n"

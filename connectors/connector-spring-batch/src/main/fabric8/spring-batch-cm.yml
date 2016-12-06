@@ -1,0 +1,219 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: spring-batch
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: spring-batch
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: spring-batch
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-spring-batch:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: spring-batch
+      syntax: spring-batch:jobName
+      title: Spring Batch
+      description: The spring-batch component allows to send messages to Spring Batch for further processing.
+      label: spring,batch,scheduling
+      deprecated: false
+      async: false
+      producerOnly: true
+      javaType: org.apache.camel.component.spring.batch.SpringBatchComponent
+      groupId: org.apache.camel
+      artifactId: camel-spring-batch
+      version: 2.18.1
+    componentProperties:
+      jobLauncher:
+        kind: property
+        type: object
+        javaType: org.springframework.batch.core.launch.JobLauncher
+        deprecated: false
+        secret: false
+        description: Explicitly specifies a JobLauncher to be used.
+      jobRegistry:
+        kind: property
+        type: object
+        javaType: org.springframework.batch.core.configuration.JobRegistry
+        deprecated: false
+        secret: false
+        description: Explicitly specifies a JobRegistry to be used.
+    properties:
+      jobName:
+        kind: path
+        group: producer
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The name of the Spring Batch job located in the registry.
+      jobFromHeader:
+        kind: parameter
+        group: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Explicitly defines if the jobName should be taken from the headers instead of the URI.
+      jobLauncher:
+        kind: parameter
+        group: producer
+        type: object
+        javaType: org.springframework.batch.core.launch.JobLauncher
+        deprecated: false
+        secret: false
+        description: Explicitly specifies a JobLauncher to be used.
+      jobRegistry:
+        kind: parameter
+        group: producer
+        type: object
+        javaType: org.springframework.batch.core.configuration.JobRegistry
+        deprecated: false
+        secret: false
+        description: Explicitly specifies a JobRegistry to be used.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[SpringBatch-SpringBatchComponent]]\nSpring Batch Component\n\
+    ~~~~~~~~~~~~~~~~~~~~~~\n\nThe *spring-batch:* component and support classes provide\
+    \ integration\nbridge between Camel and http://www.springsource.org/spring-batch[Spring\n\
+    Batch] infrastructure.\n\nMaven users will need to add the following dependency\
+    \ to their `pom.xml`\nfor this component:\n\n[source,xml]\n------------------------------------------------------------\n\
+    <dependency>\n    <groupId>org.apache.camel</groupId>\n    <artifactId>camel-spring-batch</artifactId>\n\
+    \    <version>x.x.x</version>\n    <!-- use the same version as your Camel core\
+    \ version -->\n</dependency>\n------------------------------------------------------------\n\
+    \n[[SpringBatch-URIformat]]\nURI format\n^^^^^^^^^^\n\n[source,java]\n------------------------------\n\
+    spring-batch:jobName[?options]\n------------------------------\n\nWhere *jobName*\
+    \ represents the name of the Spring Batch job located in\nthe Camel registry.\
+    \ Alternatively if a JobRegistry is provided it will be used \nto locate the job\
+    \ instead.\n\nWARNING:This component can only be used to define producer endpoints,\
+    \ which\nmeans that you cannot use the Spring Batch component in a `from()`\n\
+    statement.\n\n[[SpringBatch-Options]]\nOptions\n^^^^^^^\n\n\n\n\n// component\
+    \ options: START\nThe Spring Batch component supports 2 options which are listed\
+    \ below.\n\n\n\n{% raw %}\n[width=\"100%\",cols=\"2,1m,7\",options=\"header\"\
+    ]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| jobLauncher | JobLauncher | Explicitly specifies\
+    \ a JobLauncher to be used.\n| jobRegistry | JobRegistry | Explicitly specifies\
+    \ a JobRegistry to be used.\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n\n\n\n\n\n\n\n// endpoint options:\
+    \ START\nThe Spring Batch component supports 5 endpoint options which are listed\
+    \ below:\n\n{% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"\
+    ]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| jobName | producer |  |\
+    \ String | *Required* The name of the Spring Batch job located in the registry.\n\
+    | jobFromHeader | producer | false | boolean | Explicitly defines if the jobName\
+    \ should be taken from the headers instead of the URI.\n| jobLauncher | producer\
+    \ |  | JobLauncher | Explicitly specifies a JobLauncher to be used.\n| jobRegistry\
+    \ | producer |  | JobRegistry | Explicitly specifies a JobRegistry to be used.\n\
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing\
+    \ should be strictly used or Camel is allowed to use asynchronous processing (if\
+    \ supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n\n\n\n[[SpringBatch-Usage]]\nUsage\n\
+    ^^^^^\n\nWhen Spring Batch component receives the message, it triggers the job\n\
+    execution. The job will be executed using the\n`org.springframework.batch.core.launch.JobLaucher`\
+    \ instance resolved\naccording to the following algorithm:\n\n* if `JobLauncher`\
+    \ is manually set on the component, then use it.\n* if `jobLauncherRef` option\
+    \ is set on the component, then search Camel\nlink:registry.html[Registry] for\
+    \ the `JobLauncher` with the given name.\n*Deprecated and will be removed in Camel\
+    \ 3.0!*\n* if there is `JobLauncher` registered in the Camel\nlink:registry.html[Registry]\
+    \ under *jobLauncher* name, then use it.\n* if none of the steps above allow to\
+    \ resolve the `JobLauncher` and\nthere is exactly one `JobLauncher` instance in\
+    \ the Camel\nlink:registry.html[Registry], then use it.\n\nAll headers found in\
+    \ the message are passed to the `JobLauncher` as job\nparameters. `String`, `Long`,\
+    \ `Double` and `java.util.Date` values are\ncopied to the `org.springframework.batch.core.JobParametersBuilder`\
+    \ -\nother data types are converted to Strings.\n\n[[SpringBatch-Examples]]\n\
+    Examples\n^^^^^^^^\n\nTriggering the Spring Batch job execution:\n\n[source,java]\n\
+    ---------------------------------------------------\nfrom(\"direct:startBatch\"\
+    ).to(\"spring-batch:myJob\");\n---------------------------------------------------\n\
+    \nTriggering the Spring Batch job execution with the `JobLauncher` set\nexplicitly.\n\
+    \n[source,java]\n--------------------------------------------------------------------------------\n\
+    from(\"direct:startBatch\").to(\"spring-batch:myJob?jobLauncherRef=myJobLauncher\"\
+    );\n--------------------------------------------------------------------------------\n\
+    \nStarting from the Camel *2.11.1* `JobExecution` instance returned by the\n`JobLauncher`\
+    \ is forwarded by the `SpringBatchProducer` as the output\nmessage. You can use\
+    \ the `JobExecution` instance to perform some\noperations using the Spring Batch\
+    \ API directly.\n\n[source,java]\n---------------------------------------------------------------------------------------------------\n\
+    from(\"direct:startBatch\").to(\"spring-batch:myJob\").to(\"mock:JobExecutions\"\
+    );\n...\nMockEndpoint mockEndpoint = ...;\nJobExecution jobExecution = mockEndpoint.getExchanges().get(0).getIn().getBody(JobExecution.class);\n\
+    BatchStatus currentJobStatus = jobExecution.getStatus();\n---------------------------------------------------------------------------------------------------\n\
+    \n[[SpringBatch-Supportclasses]]\nSupport classes\n^^^^^^^^^^^^^^^\n\nApart from\
+    \ the Component, Camel Spring Batch provides also support\nclasses, which can\
+    \ be used to hook into Spring Batch infrastructure.\n\n[[SpringBatch-CamelItemReader]]\n\
+    CamelItemReader\n+++++++++++++++\n\n`CamelItemReader` can be used to read batch\
+    \ data directly from the Camel\ninfrastructure.\n\nFor example the snippet below\
+    \ configures Spring Batch to read data from\nJMS queue.\n\n[source,xml]\n-----------------------------------------------------------------------------------------------\n\
+    <bean id=\"camelReader\" class=\"org.apache.camel.component.spring.batch.support.CamelItemReader\"\
+    >\n  <constructor-arg ref=\"consumerTemplate\"/>\n  <constructor-arg value=\"\
+    jms:dataQueue\"/>\n</bean>\n\n<batch:job id=\"myJob\">\n  <batch:step id=\"step\"\
+    >\n    <batch:tasklet>\n      <batch:chunk reader=\"camelReader\" writer=\"someWriter\"\
+    \ commit-interval=\"100\"/>\n    </batch:tasklet>\n  </batch:step>\n</batch:job>\n\
+    -----------------------------------------------------------------------------------------------\n\
+    \n[[SpringBatch-CamelItemWriter]]\nCamelItemWriter\n+++++++++++++++\n\n`CamelItemWriter`\
+    \ has similar purpose as `CamelItemReader`, but it is\ndedicated to write chunk\
+    \ of the processed data.\n\nFor example the snippet below configures Spring Batch\
+    \ to read data from\nJMS queue.\n\n[source,xml]\n-----------------------------------------------------------------------------------------------\n\
+    <bean id=\"camelwriter\" class=\"org.apache.camel.component.spring.batch.support.CamelItemWriter\"\
+    >\n  <constructor-arg ref=\"producerTemplate\"/>\n  <constructor-arg value=\"\
+    jms:dataQueue\"/>\n</bean>\n\n<batch:job id=\"myJob\">\n  <batch:step id=\"step\"\
+    >\n    <batch:tasklet>\n      <batch:chunk reader=\"someReader\" writer=\"camelwriter\"\
+    \ commit-interval=\"100\"/>\n    </batch:tasklet>\n  </batch:step>\n</batch:job>\n\
+    -----------------------------------------------------------------------------------------------\n\
+    \n[[SpringBatch-CamelItemProcessor]]\nCamelItemProcessor\n++++++++++++++++++\n\
+    \n`CamelItemProcessor` is the implementation of Spring Batch\n`org.springframework.batch.item.ItemProcessor`\
+    \ interface. The latter\nimplementation relays on\nhttp://camel.apache.org/request-reply.html[Request\
+    \ Reply pattern] to\ndelegate the processing of the batch item to the Camel infrastructure.\n\
+    The item to process is sent to the Camel endpoint as the body of the\nmessage.\n\
+    \nFor example the snippet below performs simple processing of the batch\nitem\
+    \ using the http://camel.apache.org/direct.html[Direct endpoint] and\nthe http://camel.apache.org/simple.html[Simple\
+    \ expression language].\n\n[source,xml]\n-------------------------------------------------------------------------------------------------------------\n\
+    <camel:camelContext>\n  <camel:route>\n    <camel:from uri=\"direct:processor\"\
+    />\n    <camel:setExchangePattern pattern=\"InOut\"/>\n    <camel:setBody>\n \
+    \     <camel:simple>Processed ${body}</camel:simple>\n    </camel:setBody>\n \
+    \ </camel:route>\n</camel:camelContext>\n\n<bean id=\"camelProcessor\" class=\"\
+    org.apache.camel.component.spring.batch.support.CamelItemProcessor\">\n  <constructor-arg\
+    \ ref=\"producerTemplate\"/>\n  <constructor-arg value=\"direct:processor\"/>\n\
+    </bean>\n\n<batch:job id=\"myJob\">\n  <batch:step id=\"step\">\n    <batch:tasklet>\n\
+    \      <batch:chunk reader=\"someReader\" writer=\"someWriter\" processor=\"camelProcessor\"\
+    \ commit-interval=\"100\"/>\n    </batch:tasklet>\n  </batch:step>\n</batch:job>\n\
+    -------------------------------------------------------------------------------------------------------------\n\
+    \n[[SpringBatch-CamelJobExecutionListener]]\nCamelJobExecutionListener\n+++++++++++++++++++++++++\n\
+    \n`CamelJobExecutionListener` is the implementation of the\n`org.springframework.batch.core.JobExecutionListener`\
+    \ interface sending\njob execution events to the Camel endpoint.\n\nThe `org.springframework.batch.core.JobExecution`\
+    \ instance produced by\nthe Spring Batch is sent as a body of the message. To\
+    \ distinguish\nbetween before- and after-callbacks `SPRING_BATCH_JOB_EVENT_TYPE`\
+    \ header\nis set to the `BEFORE` or `AFTER` value.\n\nThe example snippet below\
+    \ sends Spring Batch job execution events to the\nJMS queue.\n\n[source,xml]\n\
+    -----------------------------------------------------------------------------------------------------------------------\n\
+    <bean id=\"camelJobExecutionListener\" class=\"org.apache.camel.component.spring.batch.support.CamelJobExecutionListener\"\
+    >\n  <constructor-arg ref=\"producerTemplate\"/>\n  <constructor-arg value=\"\
+    jms:batchEventsBus\"/>\n</bean>\n\n<batch:job id=\"myJob\">\n  <batch:step id=\"\
+    step\">\n    <batch:tasklet>\n      <batch:chunk reader=\"someReader\" writer=\"\
+    someWriter\" commit-interval=\"100\"/>\n    </batch:tasklet>\n  </batch:step>\n\
+    \  <batch:listeners>\n    <batch:listener ref=\"camelJobExecutionListener\"/>\n\
+    \  </batch:listeners>\n</batch:job>\n-----------------------------------------------------------------------------------------------------------------------\n"

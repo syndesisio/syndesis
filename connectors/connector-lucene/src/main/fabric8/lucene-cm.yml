@@ -1,0 +1,228 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: lucene
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: lucene
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: lucene
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-lucene:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: lucene
+      syntax: lucene:host:operation
+      title: Lucene
+      description: To insert or query from Apache Lucene databases.
+      label: database,search
+      deprecated: false
+      async: false
+      producerOnly: true
+      javaType: org.apache.camel.component.lucene.LuceneComponent
+      groupId: org.apache.camel
+      artifactId: camel-lucene
+      version: 2.18.1
+    componentProperties:
+      config:
+        kind: property
+        type: object
+        javaType: org.apache.camel.component.lucene.LuceneConfiguration
+        deprecated: false
+        secret: false
+        description: To use a shared lucene configuration
+    properties:
+      host:
+        kind: path
+        group: producer
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The URL to the lucene server
+      operation:
+        kind: path
+        group: producer
+        required: true
+        type: string
+        javaType: org.apache.camel.component.lucene.LuceneOperation
+        enum:
+        - insert
+        - query
+        deprecated: false
+        secret: false
+        description: Operation to do such as insert or query.
+      analyzer:
+        kind: parameter
+        group: producer
+        type: object
+        javaType: org.apache.lucene.analysis.Analyzer
+        deprecated: false
+        secret: false
+        description: An Analyzer builds TokenStreams which analyze text. It thus represents a policy for extracting index terms from text. The value for analyzer can be any class that extends the abstract class org.apache.lucene.analysis.Analyzer. Lucene also offers a rich set of analyzers out of the box
+      indexDir:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.io.File
+        deprecated: false
+        secret: false
+        description: A file system directory in which index files are created upon analysis of the document by the specified analyzer
+      maxHits:
+        kind: parameter
+        group: producer
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        description: An integer value that limits the result set of the search operation
+      srcDir:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.io.File
+        deprecated: false
+        secret: false
+        description: An optional directory containing files to be used to be analyzed and added to the index at producer startup.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[Lucene-LuceneIndexerandSearchComponent]]\nLucene (Indexer\
+    \ and Search) Component\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n*Available as\
+    \ of Camel 2.2*\n\nThe *lucene* component is based on the Apache Lucene project.\
+    \ Apache\nLucene is a powerful high-performance, full-featured text search engine\n\
+    library written entirely in Java. For more details about Lucene, please\nsee the\
+    \ following links\n\n* http://lucene.apache.org/java/docs/[http://lucene.apache.org/java/docs/]\n\
+    * http://lucene.apache.org/java/docs/features.html[http://lucene.apache.org/java/docs/features.html]\n\
+    \nThe lucene component in camel facilitates integration and utilization of\nLucene\
+    \ endpoints in enterprise integration patterns and scenarios. The\nlucene component\
+    \ does the following\n\n* builds a searchable index of documents when payloads\
+    \ are sent to the\nLucene Endpoint\n* facilitates performing of indexed searches\
+    \ in Camel\n\nThis component only supports producer endpoints.\n\nMaven users\
+    \ will need to add the following dependency to their `pom.xml`\nfor this component:\n\
+    \n[source,xml]\n------------------------------------------------------------\n\
+    <dependency>\n    <groupId>org.apache.camel</groupId>\n    <artifactId>camel-lucene</artifactId>\n\
+    \    <version>x.x.x</version>\n    <!-- use the same version as your Camel core\
+    \ version -->\n</dependency>\n------------------------------------------------------------\n\
+    \n[[Lucene-URIformat]]\nURI format\n^^^^^^^^^^\n\n[source,java]\n------------------------------------\n\
+    lucene:searcherName:insert[?options]\nlucene:searcherName:query[?options]\n------------------------------------\n\
+    \nYou can append query options to the URI in the following format,\n`?option=value&option=value&...`\n\
+    \n[[Lucene-InsertOptions]]\nInsert Options\n^^^^^^^^^^^^^^\n\n\n\n\n\n// component\
+    \ options: START\nThe Lucene component supports 1 options which are listed below.\n\
+    \n\n\n{% raw %}\n[width=\"100%\",cols=\"2,1m,7\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| config | LuceneConfiguration | To use a shared\
+    \ lucene configuration\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n\n\n\n\n\n\n// endpoint options: START\n\
+    The Lucene component supports 7 endpoint options which are listed below:\n\n{%\
+    \ raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| host | producer |  | String\
+    \ | *Required* The URL to the lucene server\n| operation | producer |  | LuceneOperation\
+    \ | *Required* Operation to do such as insert or query.\n| analyzer | producer\
+    \ |  | Analyzer | An Analyzer builds TokenStreams which analyze text. It thus\
+    \ represents a policy for extracting index terms from text. The value for analyzer\
+    \ can be any class that extends the abstract class org.apache.lucene.analysis.Analyzer.\
+    \ Lucene also offers a rich set of analyzers out of the box\n| indexDir | producer\
+    \ |  | File | A file system directory in which index files are created upon analysis\
+    \ of the document by the specified analyzer\n| maxHits | producer |  | int | An\
+    \ integer value that limits the result set of the search operation\n| srcDir |\
+    \ producer |  | File | An optional directory containing files to be used to be\
+    \ analyzed and added to the index at producer startup.\n| synchronous | advanced\
+    \ | false | boolean | Sets whether synchronous processing should be strictly used\
+    \ or Camel is allowed to use asynchronous processing (if supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n\n[[Lucene-Sending/ReceivingMessagestoFromthecache]]\n\
+    Sending/Receiving Messages to/from the cache\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \n[[Lucene-MessageHeaders]]\nMessage Headers\n+++++++++++++++\n\n[width=\"100%\"\
+    ,cols=\"10%,90%\",options=\"header\",]\n|=======================================================================\n\
+    |Header |Description\n\n|`QUERY` |The Lucene Query to performed on the index.\
+    \ The query may include\nwildcards and phrases\n\n|`RETURN_LUCENE_DOCS` | *Camel\
+    \ 2.15:* Set this header to true to include the actual Lucene\ndocumentation when\
+    \ returning hit information.\n|=======================================================================\n\
+    \n[[Lucene-LuceneProducers]]\nLucene Producers\n++++++++++++++++\n\nThis component\
+    \ supports 2 producer endpoints.\n\n*insert* - The insert producer builds a searchable\
+    \ index by analyzing\nthe body in incoming exchanges and associating it with a\
+    \ token\n(\"content\").\n*query* - The query producer performs searches on a pre-created\
+    \ index.\nThe query uses the searchable index to perform score & relevance based\n\
+    searches. Queries are sent via the incoming exchange contains a header\nproperty\
+    \ name called 'QUERY'. The value of the header property 'QUERY'\nis a Lucene Query.\
+    \ For more details on how to create Lucene Queries\ncheck out http://lucene.apache.org/java/3_0_0/queryparsersyntax.html[http://lucene.apache.org/java/3_0_0/queryparsersyntax.html]\n\
+    \n[[Lucene-LuceneProcessor]]\nLucene Processor\n++++++++++++++++\n\nThere is a\
+    \ processor called LuceneQueryProcessor available to perform\nqueries against\
+    \ lucene without the need to create a producer.\n\n[[Lucene-LuceneUsageSamples]]\n\
+    Lucene Usage Samples\n^^^^^^^^^^^^^^^^^^^^\n\n[[Lucene-Example1:CreatingaLuceneindex]]\n\
+    Example 1: Creating a Lucene index\n++++++++++++++++++++++++++++++++++\n\n[source,java]\n\
+    ------------------------------------------------------------------------------------\n\
+    RouteBuilder builder = new RouteBuilder() {\n    public void configure() {\n \
+    \      from(\"direct:start\").\n           to(\"lucene:whitespaceQuotesIndex:insert?\n\
+    \               analyzer=#whitespaceAnalyzer&indexDir=#whitespace&srcDir=#load_dir\"\
+    ).\n           to(\"mock:result\");\n    }\n};\n------------------------------------------------------------------------------------\n\
+    \n[[Lucene-Example2:LoadingpropertiesintotheJNDIregistryintheCamelContext]]\n\
+    Example 2: Loading properties into the JNDI registry in the Camel Context\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\
+    \n[source,java]\n-----------------------------------------------------------------\n\
+    @Override\nprotected JndiRegistry createRegistry() throws Exception {\n  JndiRegistry\
+    \ registry =\n         new JndiRegistry(createJndiContext());\n  registry.bind(\"\
+    whitespace\", new File(\"./whitespaceIndexDir\"));\n  registry.bind(\"load_dir\"\
+    ,\n        new File(\"src/test/resources/sources\"));\n  registry.bind(\"whitespaceAnalyzer\"\
+    ,\n        new WhitespaceAnalyzer());\n  return registry;\n}\n...\nCamelContext\
+    \ context = new DefaultCamelContext(createRegistry());\n-----------------------------------------------------------------\n\
+    \n[[Lucene-Example2:PerformingsearchesusingaQueryProducer]]\nExample 2: Performing\
+    \ searches using a Query Producer\n+++++++++++++++++++++++++++++++++++++++++++++++++++++\n\
+    \n[source,java]\n----------------------------------------------------------------------------------------------------\n\
+    RouteBuilder builder = new RouteBuilder() {\n    public void configure() {\n \
+    \      from(\"direct:start\").\n          setHeader(\"QUERY\", constant(\"Seinfeld\"\
+    )).\n          to(\"lucene:searchIndex:query?\n             analyzer=#whitespaceAnalyzer&indexDir=#whitespace&maxHits=20\"\
+    ).\n          to(\"direct:next\");\n                \n       from(\"direct:next\"\
+    ).process(new Processor() {\n          public void process(Exchange exchange)\
+    \ throws Exception {\n             Hits hits = exchange.getIn().getBody(Hits.class);\n\
+    \             printResults(hits);\n          }\n\n          private void printResults(Hits\
+    \ hits) {\n              LOG.debug(\"Number of hits: \" + hits.getNumberOfHits());\n\
+    \              for (int i = 0; i < hits.getNumberOfHits(); i++) {\n          \
+    \       LOG.debug(\"Hit \" + i + \" Index Location:\" + hits.getHit().get(i).getHitLocation());\n\
+    \                 LOG.debug(\"Hit \" + i + \" Score:\" + hits.getHit().get(i).getScore());\n\
+    \                 LOG.debug(\"Hit \" + i + \" Data:\" + hits.getHit().get(i).getData());\n\
+    \              }\n           }\n       }).to(\"mock:searchResult\");\n   }\n};\n\
+    ----------------------------------------------------------------------------------------------------\n\
+    \n[[Lucene-Example3:PerformingsearchesusingaQueryProcessor]]\nExample 3: Performing\
+    \ searches using a Query Processor\n++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\
+    \n[source,java]\n-------------------------------------------------------------------------------------------------------\n\
+    RouteBuilder builder = new RouteBuilder() {\n    public void configure() {   \
+    \         \n        try {\n            from(\"direct:start\").\n             \
+    \   setHeader(\"QUERY\", constant(\"Rodney Dangerfield\")).\n                process(new\
+    \ LuceneQueryProcessor(\"target/stdindexDir\", analyzer, null, 20)).\n       \
+    \         to(\"direct:next\");\n        } catch (Exception e) {\n            e.printStackTrace();\n\
+    \        }\n                \n        from(\"direct:next\").process(new Processor()\
+    \ {\n            public void process(Exchange exchange) throws Exception {\n \
+    \               Hits hits = exchange.getIn().getBody(Hits.class);\n          \
+    \      printResults(hits);\n            }\n                    \n            private\
+    \ void printResults(Hits hits) {\n                LOG.debug(\"Number of hits:\
+    \ \" + hits.getNumberOfHits());\n                for (int i = 0; i < hits.getNumberOfHits();\
+    \ i++) {\n                    LOG.debug(\"Hit \" + i + \" Index Location:\" +\
+    \ hits.getHit().get(i).getHitLocation());\n                    LOG.debug(\"Hit\
+    \ \" + i + \" Score:\" + hits.getHit().get(i).getScore());\n                 \
+    \   LOG.debug(\"Hit \" + i + \" Data:\" + hits.getHit().get(i).getData());\n \
+    \               }\n            }\n       }).to(\"mock:searchResult\");\n   }\n\
+    };\n-------------------------------------------------------------------------------------------------------\n"

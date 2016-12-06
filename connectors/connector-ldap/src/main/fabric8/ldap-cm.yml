@@ -1,0 +1,242 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: ldap
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: ldap
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: ldap
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-ldap:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: ldap
+      syntax: ldap:dirContextName
+      title: LDAP
+      description: The ldap component allows you to perform searches in LDAP servers using filters as the message payload.
+      label: ldap
+      deprecated: false
+      async: false
+      producerOnly: true
+      javaType: org.apache.camel.component.ldap.LdapComponent
+      groupId: org.apache.camel
+      artifactId: camel-ldap
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      dirContextName:
+        kind: path
+        group: producer
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Name of javax.naming.directory.DirContext bean to lookup in the registry.
+      base:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: ou=system
+        description: The base DN for searches.
+      pageSize:
+        kind: parameter
+        group: producer
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        description: When specified the ldap module uses paging to retrieve all results (most LDAP Servers throw an exception when trying to retrieve more than 1000 entries in one query). To be able to use this a LdapContext (subclass of DirContext) has to be passed in as ldapServerBean (otherwise an exception is thrown)
+      returnedAttributes:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Comma-separated list of attributes that should be set in each entry of the result
+      scope:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        enum:
+        - object
+        - onelevel
+        - subtree
+        deprecated: false
+        secret: false
+        defaultValue: subtree
+        description: Specifies how deeply to search the tree of entries starting at the base DN.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[LDAP-LDAPComponent]]\nLDAP Component\n~~~~~~~~~~~~~~\n\n\
+    The *ldap* component allows you to perform searches in LDAP servers\nusing filters\
+    \ as the message payload. +\n This component uses standard JNDI (`javax.naming`\
+    \ package) to access\nthe server.\n\nMaven users will need to add the following\
+    \ dependency to their `pom.xml`\nfor this component:\n\n[source,xml]\n------------------------------------------------------------\n\
+    <dependency>\n    <groupId>org.apache.camel</groupId>\n    <artifactId>camel-ldap</artifactId>\n\
+    \    <version>x.x.x</version>\n    <!-- use the same version as your Camel core\
+    \ version -->\n</dependency>\n------------------------------------------------------------\n\
+    \n[[LDAP-URIformat]]\nURI format\n^^^^^^^^^^\n\n[source,java]\n-----------------------------\n\
+    ldap:ldapServerBean[?options]\n-----------------------------\n\nThe _ldapServerBean_\
+    \ portion of the URI refers to a\nhttp://java.sun.com/j2se/1.4.2/docs/api/javax/naming/directory/DirContext.html[DirContext]\n\
+    bean in the registry. The LDAP component only supports producer\nendpoints, which\
+    \ means that an `ldap` URI cannot appear in the `from` at\nthe start of a route.\n\
+    \nYou can append query options to the URI in the following format,\n`?option=value&option=value&...`\n\
+    \n[[LDAP-Options]]\nOptions\n^^^^^^^\n\n\n// component options: START\nThe LDAP\
+    \ component has no options.\n// component options: END\n\n\n\n\n// endpoint options:\
+    \ START\nThe LDAP component supports 6 endpoint options which are listed below:\n\
+    \n{% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| dirContextName | producer\
+    \ |  | String | *Required* Name of javax.naming.directory.DirContext bean to lookup\
+    \ in the registry.\n| base | producer | ou=system | String | The base DN for searches.\n\
+    | pageSize | producer |  | Integer | When specified the ldap module uses paging\
+    \ to retrieve all results (most LDAP Servers throw an exception when trying to\
+    \ retrieve more than 1000 entries in one query). To be able to use this a LdapContext\
+    \ (subclass of DirContext) has to be passed in as ldapServerBean (otherwise an\
+    \ exception is thrown)\n| returnedAttributes | producer |  | String | Comma-separated\
+    \ list of attributes that should be set in each entry of the result\n| scope |\
+    \ producer | subtree | String | Specifies how deeply to search the tree of entries\
+    \ starting at the base DN.\n| synchronous | advanced | false | boolean | Sets\
+    \ whether synchronous processing should be strictly used or Camel is allowed to\
+    \ use asynchronous processing (if supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n\n[[LDAP-Result]]\nResult\n^^^^^^\n\
+    \nThe result is returned in the Out body as a\n`ArrayList<javax.naming.directory.SearchResult>`\
+    \ object.\n\n[[LDAP-DirContext]]\nDirContext\n^^^^^^^^^^\n\nThe URI, `ldap:ldapserver`,\
+    \ references a Spring bean with the ID,\n`ldapserver`. The `ldapserver` bean may\
+    \ be defined as follows:\n\n[source,java]\n-----------------------------------------------------------------------------------------\n\
+    <bean id=\"ldapserver\" class=\"javax.naming.directory.InitialDirContext\" scope=\"\
+    prototype\">\n  <constructor-arg>\n    <props>\n      <prop key=\"java.naming.factory.initial\"\
+    >com.sun.jndi.ldap.LdapCtxFactory</prop>\n      <prop key=\"java.naming.provider.url\"\
+    >ldap://localhost:10389</prop>\n      <prop key=\"java.naming.security.authentication\"\
+    >none</prop>\n    </props>\n  </constructor-arg>\n</bean>\n-----------------------------------------------------------------------------------------\n\
+    \nThe preceding example declares a regular Sun based LDAP `DirContext`\nthat connects\
+    \ anonymously to a locally hosted LDAP server.\n\nNOTE: `DirContext` objects are\
+    \ *not* required to support concurrency by\ncontract. It is therefore important\
+    \ that the directory context is\ndeclared with the setting, `scope=\"prototype\"\
+    `, in the `bean` definition\nor that the context supports concurrency. In the\
+    \ Spring framework,\n`prototype` scoped objects are instantiated each time they\
+    \ are looked\nup.\n\n[[LDAP-Samples]]\nSamples\n^^^^^^^\n\nFollowing on from the\
+    \ Spring configuration above, the code sample below\nsends an LDAP request to\
+    \ filter search a group for a member. The Common\nName is then extracted from\
+    \ the response.\n\n[source,java]\n----------------------------------------------------------\n\
+    ProducerTemplate<Exchange> template = exchange\n  .getContext().createProducerTemplate();\n\
+    \nCollection<?> results = (Collection<?>) (template\n  .sendBody(\n    \"ldap:ldapserver?base=ou=mygroup,ou=groups,ou=system\"\
+    ,\n    \"(member=uid=huntc,ou=users,ou=system)\"));\n\nif (results.size() > 0)\
+    \ {\n  // Extract what we need from the device's profile\n\n  Iterator<?> resultIter\
+    \ = results.iterator();\n  SearchResult searchResult = (SearchResult) resultIter\n\
+    \      .next();\n  Attributes attributes = searchResult\n      .getAttributes();\n\
+    \  Attribute deviceCNAttr = attributes.get(\"cn\");\n  String deviceCN = (String)\
+    \ deviceCNAttr.get();\n\n  ...\n----------------------------------------------------------\n\
+    \nIf no specific filter is required - for example, you just need to look\nup a\
+    \ single entry - specify a wildcard filter expression. For example,\nif the LDAP\
+    \ entry has a Common Name, use a filter expression like:\n\n[source,java]\n------\n\
+    (cn=*)\n------\n\n[[LDAP-Bindingusingcredentials]]\nBinding using credentials\n\
+    +++++++++++++++++++++++++\n\nA Camel end user donated this sample code he used\
+    \ to bind to the ldap\nserver using credentials.\n\n[source,java]\n---------------------------------------------------------------------------------------\n\
+    Properties props = new Properties();\nprops.setProperty(Context.INITIAL_CONTEXT_FACTORY,\
+    \ \"com.sun.jndi.ldap.LdapCtxFactory\");\nprops.setProperty(Context.PROVIDER_URL,\
+    \ \"ldap://localhost:389\");\nprops.setProperty(Context.URL_PKG_PREFIXES, \"com.sun.jndi.url\"\
+    );\nprops.setProperty(Context.REFERRAL, \"ignore\");\nprops.setProperty(Context.SECURITY_AUTHENTICATION,\
+    \ \"simple\");\nprops.setProperty(Context.SECURITY_PRINCIPAL, \"cn=Manager\");\n\
+    props.setProperty(Context.SECURITY_CREDENTIALS, \"secret\");\n\nSimpleRegistry\
+    \ reg = new SimpleRegistry();\nreg.put(\"myldap\", new InitialLdapContext(props,\
+    \ null));\n\nCamelContext context = new DefaultCamelContext(reg);\ncontext.addRoutes(\n\
+    \    new RouteBuilder() {\n        public void configure() throws Exception {\
+    \ \n            from(\"direct:start\").to(\"ldap:myldap?base=ou=test\");\n   \
+    \     }\n    }\n);\ncontext.start();\n\nProducerTemplate template = context.createProducerTemplate();\n\
+    \nEndpoint endpoint = context.getEndpoint(\"direct:start\");\nExchange exchange\
+    \ = endpoint.createExchange();\nexchange.getIn().setBody(\"(uid=test)\");\nExchange\
+    \ out = template.send(endpoint, exchange);\n\nCollection<SearchResult> data =\
+    \ out.getOut().getBody(Collection.class);\nassert data != null;\nassert !data.isEmpty();\n\
+    \nSystem.out.println(out.getOut().getBody());\n\ncontext.stop();\n---------------------------------------------------------------------------------------\n\
+    \n[[LDAP-ConfiguringSSL]]\nConfiguring SSL\n^^^^^^^^^^^^^^^\n\nAll required is\
+    \ to create a custom socket factory and reference it in\nthe InitialDirContext\
+    \ bean - see below sample.\n\n*SSL Configuration*\n\n[source,xml]\n----------------------------------------------------------------------------------------------------------------------------------\n\
+    <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<blueprint xmlns=\"http://www.osgi.org/xmlns/blueprint/v1.0.0\"\
+    \n           xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n       \
+    \    xsi:schemaLocation=\"http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd\n\
+    \                 http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd\"\
+    >\n\n\n    <sslContextParameters xmlns=\"http://camel.apache.org/schema/blueprint\"\
+    \n                          id=\"sslContextParameters\">\n        <keyManagers\n\
+    \                keyPassword=\"{{keystore.pwd}}\">\n            <keyStore\n  \
+    \                  resource=\"{{keystore.url}}\"\n                    password=\"\
+    {{keystore.pwd}}\"/>\n        </keyManagers>\n    </sslContextParameters>\n\n\
+    \    <bean id=\"customSocketFactory\" class=\"zotix.co.util.CustomSocketFactory\"\
+    >\n        <argument ref=\"sslContextParameters\" />\n    </bean>\n    <bean id=\"\
+    ldapserver\" class=\"javax.naming.directory.InitialDirContext\" scope=\"prototype\"\
+    >\n        <argument>\n            <props>\n                <prop key=\"java.naming.factory.initial\"\
+    \ value=\"com.sun.jndi.ldap.LdapCtxFactory\"/>\n                <prop key=\"java.naming.provider.url\"\
+    \ value=\"ldaps://lab.zotix.co:636\"/>\n                <prop key=\"java.naming.security.protocol\"\
+    \ value=\"ssl\"/>\n                <prop key=\"java.naming.security.authentication\"\
+    \ value=\"simple\" />\n                <prop key=\"java.naming.security.principal\"\
+    \ value=\"cn=Manager,dc=example,dc=com\"/>\n                <prop key=\"java.naming.security.credentials\"\
+    \ value=\"passw0rd\"/>\n                <prop key=\"java.naming.ldap.factory.socket\"\
+    \n                      value=\"zotix.co.util.CustomSocketFactory\"/>\n      \
+    \      </props>\n        </argument>\n    </bean>\n</blueprint>\n----------------------------------------------------------------------------------------------------------------------------------\n\
+    \n*Custom Socket Factory*\n\n[source,java]\n-----------------------------------------------------------------------------------------------------\n\
+    import org.apache.camel.util.jsse.SSLContextParameters;\n\nimport javax.net.SocketFactory;\n\
+    import javax.net.ssl.SSLContext;\nimport javax.net.ssl.SSLSocketFactory;\nimport\
+    \ javax.net.ssl.TrustManagerFactory;\nimport java.io.IOException;\nimport java.net.InetAddress;\n\
+    import java.net.Socket;\nimport java.security.KeyStore;\n\n/**\n * The CustomSocketFactory.\
+    \ Loads the KeyStore and creates an instance of SSLSocketFactory\n */\npublic\
+    \ class CustomSocketFactory extends SSLSocketFactory {\n\n    private static SSLSocketFactory\
+    \ socketFactory;\n\n    /**\n     * Called by the getDefault() method.\n     */\n\
+    \    public CustomSocketFactory() {\n\n    }\n\n    /**\n     * Called by Blueprint\
+    \ DI to initialise an instance of SocketFactory\n     *\n     * @param sslContextParameters\n\
+    \     */\n    public CustomSocketFactory(SSLContextParameters sslContextParameters)\
+    \ {\n        try {\n            KeyStore keyStore = sslContextParameters.getKeyManagers().getKeyStore().createKeyStore();\n\
+    \            TrustManagerFactory tmf = TrustManagerFactory.getInstance(\"SunX509\"\
+    );\n            tmf.init(keyStore);\n            SSLContext ctx = SSLContext.getInstance(\"\
+    TLS\");\n            ctx.init(null, tmf.getTrustManagers(), null);\n         \
+    \   socketFactory = ctx.getSocketFactory();\n        } catch (Exception ex) {\n\
+    \            ex.printStackTrace(System.err);  /* handle exception */\n       \
+    \ }\n    }\n\n    /**\n     * Getter for the SocketFactory\n     *\n     * @return\n\
+    \     */\n    public static SocketFactory getDefault() {\n        return new CustomSocketFactory();\n\
+    \    }\n\n    @Override\n    public String[] getDefaultCipherSuites() {\n    \
+    \    return socketFactory.getDefaultCipherSuites();\n    }\n\n    @Override\n\
+    \    public String[] getSupportedCipherSuites() {\n        return socketFactory.getSupportedCipherSuites();\n\
+    \    }\n\n    @Override\n    public Socket createSocket(Socket socket, String\
+    \ string, int i, boolean bln) throws IOException {\n        return socketFactory.createSocket(socket,\
+    \ string, i, bln);\n    }\n\n    @Override\n    public Socket createSocket(String\
+    \ string, int i) throws IOException {\n        return socketFactory.createSocket(string,\
+    \ i);\n    }\n\n    @Override\n    public Socket createSocket(String string, int\
+    \ i, InetAddress ia, int i1) throws IOException {\n        return socketFactory.createSocket(string,\
+    \ i, ia, i1);\n    }\n\n    @Override\n    public Socket createSocket(InetAddress\
+    \ ia, int i) throws IOException {\n        return socketFactory.createSocket(ia,\
+    \ i);\n    }\n\n    @Override\n    public Socket createSocket(InetAddress ia,\
+    \ int i, InetAddress ia1, int i1) throws IOException {\n        return socketFactory.createSocket(ia,\
+    \ i, ia1, i1);\n    }\n}\n-----------------------------------------------------------------------------------------------------\n\
+    \n\_\n\n[[LDAP-SeeAlso]]\nSee Also\n^^^^^^^^\n\n* link:configuring-camel.html[Configuring\
+    \ Camel]\n* link:component.html[Component]\n* link:endpoint.html[Endpoint]\n*\
+    \ link:getting-started.html[Getting Started]\n\n"

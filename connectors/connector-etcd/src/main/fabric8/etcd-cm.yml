@@ -1,0 +1,265 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: etcd
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: etcd
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: etcd
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-etcd:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: etcd
+      syntax: etcd:namespace/path
+      title: etcd
+      description: The camel etcd component allows you to work with Etcd a distributed A distributed reliable key-value store.
+      label: etcd
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.etcd.EtcdComponent
+      groupId: org.apache.camel
+      artifactId: camel-etcd
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      namespace:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: org.apache.camel.component.etcd.EtcdNamespace
+        enum:
+        - keys
+        - stats
+        - watch
+        deprecated: false
+        secret: false
+        description: The API namespace to use
+      path:
+        kind: path
+        group: common
+        required: false
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The path the enpoint refers to
+      recursive:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: To apply an action recursively.
+      servicePath:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: /services/
+        description: The path to look for for service discovery
+      timeout:
+        kind: parameter
+        group: common
+        type: integer
+        javaType: java.lang.Long
+        deprecated: false
+        secret: false
+        description: To set the maximum time an action could take to complete.
+      uris:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: http://localhost:2379,http://localhost:4001
+        description: To set the URIs the client connects.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      sendEmptyExchangeOnTimeout:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: To send an empty message in case of timeout watching for a key.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      fromIndex:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: integer
+        javaType: java.lang.Long
+        deprecated: false
+        secret: false
+        defaultValue: "0"
+        description: The index to watch from
+      timeToLive:
+        kind: parameter
+        group: producer
+        label: producer
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        description: To set the lifespan of a key in milliseconds.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+      password:
+        kind: parameter
+        group: security
+        label: security
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: true
+        description: The password to use for basic authentication.
+      sslContextParameters:
+        kind: parameter
+        group: security
+        label: security
+        type: object
+        javaType: org.apache.camel.util.jsse.SSLContextParameters
+        deprecated: false
+        secret: false
+        description: To configure security using SSLContextParameters.
+      userName:
+        kind: parameter
+        group: security
+        label: security
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: true
+        description: The user name to use for basic authentication.
+  documentation.adoc: |+
+    +[[Etcd-Etcd]]
+    +Etcd
+
+
+
+
+
+
+
+
+
+
+
+
+    // endpoint options: START
+    The etcd component supports 16 endpoint options which are listed below:
+
+    {% raw %}
+    [width="100%",cols="2,1,1m,1m,5",options="header"]
+    |=======================================================================
+    | Name | Group | Default | Java Type | Description
+    | namespace | common |  | EtcdNamespace | *Required* The API namespace to use
+    | path | common |  | String | The path the enpoint refers to
+    | recursive | common | false | boolean | To apply an action recursively.
+    | servicePath | common | /services/ | String | The path to look for for service discovery
+    | timeout | common |  | Long | To set the maximum time an action could take to complete.
+    | uris | common | http://localhost:2379,http://localhost:4001 | String | To set the URIs the client connects.
+    | bridgeErrorHandler | consumer | false | boolean | Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | sendEmptyExchangeOnTimeout | consumer | false | boolean | To send an empty message in case of timeout watching for a key.
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | exchangePattern | consumer (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer creates an exchange.
+    | fromIndex | consumer (advanced) | 0 | Long | The index to watch from
+    | timeToLive | producer |  | Integer | To set the lifespan of a key in milliseconds.
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+    | password | security |  | String | The password to use for basic authentication.
+    | sslContextParameters | security |  | SSLContextParameters | To configure security using SSLContextParameters.
+    | userName | security |  | String | The user name to use for basic authentication.
+    |=======================================================================
+    {% endraw %}
+    // endpoint options: END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // component options: START
+    The etcd component has no options.
+    // component options: END
+
+

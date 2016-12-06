@@ -1,0 +1,328 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: undertow
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: undertow
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: undertow
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-undertow:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: undertow
+      syntax: undertow:httpURI
+      title: Undertow
+      description: The undertow component provides HTTP-based endpoints for consuming and producing HTTP requests.
+      label: http
+      deprecated: false
+      async: true
+      lenientProperties: true
+      javaType: org.apache.camel.component.undertow.UndertowComponent
+      groupId: org.apache.camel
+      artifactId: camel-undertow
+      version: 2.18.1
+    componentProperties:
+      undertowHttpBinding:
+        kind: property
+        type: object
+        javaType: org.apache.camel.component.undertow.UndertowHttpBinding
+        deprecated: false
+        secret: false
+        description: To use a custom HttpBinding to control the mapping between Camel message and HttpClient.
+      sslContextParameters:
+        kind: property
+        type: object
+        javaType: org.apache.camel.util.jsse.SSLContextParameters
+        deprecated: false
+        secret: false
+        description: To configure security using SSLContextParameters
+    properties:
+      httpURI:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.net.URI
+        deprecated: false
+        secret: false
+        description: The url of the HTTP endpoint to use.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      httpMethodRestrict:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Used to only allow consuming if the HttpMethod matches such as GET/POST/PUT etc. Multiple methods can be specified separated by comma.
+      matchOnUriPrefix:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: java.lang.Boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Whether or not the consumer should try to find a target consumer by matching the URI prefix if no exact match is found.
+      optionsEnabled:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Specifies whether to enable HTTP OPTIONS for this Servlet consumer. By default OPTIONS is turned off.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      keepAlive:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: java.lang.Boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Setting to ensure socket is not closed due to inactivity
+      options:
+        kind: parameter
+        group: producer
+        label: producer
+        type: object
+        javaType: java.util.Map<java.lang.String,java.lang.Object>
+        prefix: option.
+        multiValue: true
+        deprecated: false
+        secret: false
+        description: Sets additional channel options. The options that can be used are defined in org.xnio.Options. To configure from endpoint uri then prefix each option with option. such as option.close-abort=true&option.send-buffer=8192
+      reuseAddresses:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: java.lang.Boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Setting to facilitate socket multiplexing
+      tcpNoDelay:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: java.lang.Boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Setting to improve TCP protocol performance
+      throwExceptionOnFailure:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: java.lang.Boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: If the option is true HttpProducer will ignore the Exchange.HTTP_URI header and use the endpoint's URI for request. You may also set the option throwExceptionOnFailure to be false to let the producer send all the fault response back.
+      transferException:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: java.lang.Boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Option to disable throwing the HttpOperationFailedException in case of failed responses from the remote server. This allows you to get all responses regardless of the HTTP status code.
+      headerFilterStrategy:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: object
+        javaType: org.apache.camel.spi.HeaderFilterStrategy
+        deprecated: false
+        secret: false
+        description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+      undertowHttpBinding:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: object
+        javaType: org.apache.camel.component.undertow.UndertowHttpBinding
+        deprecated: false
+        secret: false
+        description: To use a custom UndertowHttpBinding to control the mapping between Camel message and undertow.
+      sslContextParameters:
+        kind: parameter
+        group: security
+        label: security
+        type: object
+        javaType: org.apache.camel.util.jsse.SSLContextParameters
+        deprecated: false
+        secret: false
+        description: To configure security using SSLContextParameters
+  documentation.adoc: "[[Undertow-UndertowComponent]]\nUndertow Component\n~~~~~~~~~~~~~~~~~~\n\
+    \n*Available as of Camel 2.16*\n\nThe *undertow* component provides HTTP-based\n\
+    link:endpoint.html[endpoints] for consuming and producing HTTP requests.\nThat\
+    \ is, the Undertow component behaves as a simple Web server. +\n Undertow can\
+    \ also be used as a http client which mean you can also use\nit with Camel as\
+    \ a producer.\n\nMaven users will need to add the following dependency to their\
+    \ `pom.xml`\nfor this component:\n\n[source,xml]\n------------------------------------------------------------\n\
+    <dependency>\n    <groupId>org.apache.camel</groupId>\n    <artifactId>camel-undertow</artifactId>\n\
+    \    <version>x.x.x</version>\n    <!-- use the same version as your Camel core\
+    \ version -->\n</dependency>\n------------------------------------------------------------\n\
+    \n[[Undertow-URIformat]]\nURI format\n^^^^^^^^^^\n\n[source,java]\n-------------------------------------------------------\n\
+    undertow:http://hostname[:port][/resourceUri][?options]\n-------------------------------------------------------\n\
+    \nYou can append query options to the URI in the following format,\n`?option=value&option=value&...`\n\
+    \n[[Undertow-Options]]\nOptions\n^^^^^^^\n\n\n\n\n\n// component options: START\n\
+    The Undertow component supports 2 options which are listed below.\n\n\n\n{% raw\
+    \ %}\n[width=\"100%\",cols=\"2,1m,7\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| undertowHttpBinding | UndertowHttpBinding\
+    \ | To use a custom HttpBinding to control the mapping between Camel message and\
+    \ HttpClient.\n| sslContextParameters | SSLContextParameters | To configure security\
+    \ using SSLContextParameters\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n\n\n\n\n\n\n// endpoint options: START\n\
+    The Undertow component supports 17 endpoint options which are listed below:\n\n\
+    {% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| httpURI | common |  | URI\
+    \ | *Required* The url of the HTTP endpoint to use.\n| bridgeErrorHandler | consumer\
+    \ | false | boolean | Allows for bridging the consumer to the Camel routing Error\
+    \ Handler which mean any exceptions occurred while the consumer is trying to pickup\
+    \ incoming messages or the likes will now be processed as a message and handled\
+    \ by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler\
+    \ to deal with exceptions that will be logged at WARN/ERROR level and ignored.\n\
+    | httpMethodRestrict | consumer |  | String | Used to only allow consuming if\
+    \ the HttpMethod matches such as GET/POST/PUT etc. Multiple methods can be specified\
+    \ separated by comma.\n| matchOnUriPrefix | consumer | true | Boolean | Whether\
+    \ or not the consumer should try to find a target consumer by matching the URI\
+    \ prefix if no exact match is found.\n| optionsEnabled | consumer | false | boolean\
+    \ | Specifies whether to enable HTTP OPTIONS for this Servlet consumer. By default\
+    \ OPTIONS is turned off.\n| exceptionHandler | consumer (advanced) |  | ExceptionHandler\
+    \ | To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler\
+    \ is enabled then this options is not in use. By default the consumer will deal\
+    \ with exceptions that will be logged at WARN/ERROR level and ignored.\n| exchangePattern\
+    \ | consumer (advanced) |  | ExchangePattern | Sets the exchange pattern when\
+    \ the consumer creates an exchange.\n| keepAlive | producer | true | Boolean |\
+    \ Setting to ensure socket is not closed due to inactivity\n| options | producer\
+    \ |  | Map | Sets additional channel options. The options that can be used are\
+    \ defined in org.xnio.Options. To configure from endpoint uri then prefix each\
+    \ option with option. such as option.close-abort=true&option.send-buffer=8192\n\
+    | reuseAddresses | producer | true | Boolean | Setting to facilitate socket multiplexing\n\
+    | tcpNoDelay | producer | true | Boolean | Setting to improve TCP protocol performance\n\
+    | throwExceptionOnFailure | producer | true | Boolean | If the option is true\
+    \ HttpProducer will ignore the Exchange.HTTP_URI header and use the endpoint's\
+    \ URI for request. You may also set the option throwExceptionOnFailure to be false\
+    \ to let the producer send all the fault response back.\n| transferException |\
+    \ producer | false | Boolean | Option to disable throwing the HttpOperationFailedException\
+    \ in case of failed responses from the remote server. This allows you to get all\
+    \ responses regardless of the HTTP status code.\n| headerFilterStrategy | advanced\
+    \ |  | HeaderFilterStrategy | To use a custom HeaderFilterStrategy to filter header\
+    \ to and from Camel message.\n| synchronous | advanced | false | boolean | Sets\
+    \ whether synchronous processing should be strictly used or Camel is allowed to\
+    \ use asynchronous processing (if supported).\n| undertowHttpBinding | advanced\
+    \ |  | UndertowHttpBinding | To use a custom UndertowHttpBinding to control the\
+    \ mapping between Camel message and undertow.\n| sslContextParameters | security\
+    \ |  | SSLContextParameters | To configure security using SSLContextParameters\n\
+    |=======================================================================\n{% endraw\
+    \ %}\n// endpoint options: END\n\n\n\n[[Undertow-MessageHeaders]]\nMessage Headers\n\
+    ^^^^^^^^^^^^^^^\n\nCamel uses the same message headers as the link:http.html[HTTP]\n\
+    component. \n From Camel 2.2, it also uses\n`Exchange.HTTP_CHUNKED,CamelHttpChunked`\_\
+    header to turn on or turn off\nthe chuched encoding on the camel-undertow consumer.\n\
+    \nCamel also populates *all* request.parameter and request.headers. For\nexample,\
+    \ given a client request with the URL,\n`http://myserver/myserver?orderid=123`,\
+    \ the exchange will contain a\nheader named `orderid` with the value 123.\n\n\
+    [[Undertow-ProducerExample]]\nProducer Example\n^^^^^^^^^^^^^^^^\n\nThe following\
+    \ is a basic example of how to send an HTTP request to an\nexisting HTTP endpoint.\n\
+    \nin Java DSL\n\n[source,java]\n----------------------------------------------------------\n\
+    from(\"direct:start\").to(\"undertow:http://www.google.com\");\n----------------------------------------------------------\n\
+    \nor in Spring XML\n\n[source,xml]\n----------------------------------------------\n\
+    <route>\n    <from uri=\"direct:start\"/>\n    <to uri=\"undertow:http://www.google.com\"\
+    />\n<route>\n----------------------------------------------\n\n[[Undertow-ConsumerExample]]\n\
+    Consumer Example\n^^^^^^^^^^^^^^^^\n\nIn this sample we define a route that exposes\
+    \ a HTTP service at\n`http://localhost:8080/myapp/myservice`:\n\n[source,xml]\n\
+    --------------------------------------------------------------\n<route>\n  <from\
+    \ uri=\"undertow:http://localhost:8080/myapp/myservice\"/>\n  <to uri=\"bean:myBean\"\
+    />\n</route>\n--------------------------------------------------------------\n\
+    \nNOTE:*Usage of localhost*\nWhen you specify `localhost` in a URL, Camel exposes\
+    \ the endpoint only\non the local TCP/IP network interface, so it cannot be accessed\
+    \ from\noutside the machine it operates on.\n\nIf you need to expose a Jetty endpoint\
+    \ on a specific network interface,\nthe numerical IP address of this interface\
+    \ should be used as the host.\nIf you need to expose a Jetty endpoint on all network\
+    \ interfaces, the\n`0.0.0.0` address should be used.\n\nTIP:To listen across an\
+    \ entire URI prefix, see\nlink:how-do-i-let-jetty-match-wildcards.html[How do\
+    \ I let Jetty match\nwildcards].\n\n\nTIP:If you actually want to expose routes\
+    \ by HTTP and already have a\nServlet, you should instead refer to the\nhttps://cwiki.apache.org/confluence/pages/viewpage.action?pageId=46339[Servlet\n\
+    Transport].\n\n[[Undertow-SeeAlso]]\nSee Also\n^^^^^^^^\n\n* link:configuring-camel.html[Configuring\
+    \ Camel]\n* link:component.html[Component]\n* link:endpoint.html[Endpoint]\n*\
+    \ link:getting-started.html[Getting Started]\n\n* link:jetty.html[Jetty]\n* link:http.html[HTTP]\n\
+    \n"

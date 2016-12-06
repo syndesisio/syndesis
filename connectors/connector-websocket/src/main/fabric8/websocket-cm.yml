@@ -1,0 +1,499 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: websocket
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: websocket
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: websocket
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-websocket:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: websocket
+      syntax: websocket:host:port/resourceUri
+      title: Jetty Websocket
+      description: The websocket component provides websocket endpoints for communicating with clients using websocket.
+      label: websocket
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.websocket.WebsocketComponent
+      groupId: org.apache.camel
+      artifactId: camel-websocket
+      version: 2.18.1
+    componentProperties:
+      staticResources:
+        kind: property
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: 'Set a resource path for static resources (such as .html files etc).
+          The resources can be loaded from classpath if you prefix with classpath: otherwise
+          the resources is loaded from file system or from JAR files. For example to load
+          from root classpath use classpath:. or classpath:WEB-INF/static If not configured
+          (eg null) then no static resource is in use.'
+      host:
+        kind: property
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The hostname. The default value is 0.0.0.0
+      port:
+        kind: property
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        description: The port number. The default value is 9292
+      sslKeyPassword:
+        kind: property
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The password for the keystore when using SSL.
+      sslPassword:
+        kind: property
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The password when using SSL.
+      sslKeystore:
+        kind: property
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The path to the keystore.
+      enableJmx:
+        kind: property
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        description: If this option is true Jetty JMX support will be enabled for this endpoint. See Jetty JMX support for more details.
+      minThreads:
+        kind: property
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        description: To set a value for minimum number of threads in server thread pool. MaxThreads/minThreads or threadPool fields are required due to switch to Jetty9. The default values for minThreads is 1.
+      maxThreads:
+        kind: property
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        description: To set a value for maximum number of threads in server thread pool. MaxThreads/minThreads or threadPool fields are required due to switch to Jetty9. The default values for maxThreads is 1 2 noCores.
+      threadPool:
+        kind: property
+        type: object
+        javaType: org.eclipse.jetty.util.thread.ThreadPool
+        deprecated: false
+        secret: false
+        description: To use a custom thread pool for the server. MaxThreads/minThreads or threadPool fields are required due to switch to Jetty9.
+      sslContextParameters:
+        kind: property
+        type: object
+        javaType: org.apache.camel.util.jsse.SSLContextParameters
+        deprecated: false
+        secret: false
+        description: To configure security using SSLContextParameters
+      socketFactory:
+        kind: property
+        type: object
+        javaType: java.util.Map<java.lang.String,org.apache.camel.component.websocket.WebSocketFactory>
+        deprecated: false
+        secret: false
+        description: To configure a map which contains custom WebSocketFactory for sub protocols. The key in the map is the sub protocol. The default key is reserved for the default implementation.
+    properties:
+      host:
+        kind: path
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: 0.0.0.0
+        description: The hostname. The default value is 0.0.0.0. Setting this option on the component will use the component configured value as default.
+      port:
+        kind: path
+        group: common
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: "9292"
+        description: The port number. The default value is 9292. Setting this option on the component will use the component configured value as default.
+      resourceUri:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Name of the websocket channel to use
+      maxBinaryMessageSize:
+        kind: parameter
+        group: common
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: -1
+        description: Can be used to set the size in bytes that the websocket created by the websocketServlet may be accept before closing. (Default is -1 - or unlimited)
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      sessionSupport:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether to enable session support which enables HttpSession for each http request.
+      staticResources:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: 'Set a resource path for static resources (such as .html files etc).
+          The resources can be loaded from classpath if you prefix with classpath: otherwise
+          the resources is loaded from file system or from JAR files. For example to load
+          from root classpath use classpath:. or classpath:WEB-INF/static If not configured
+          (eg null) then no static resource is in use.'
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      sendTimeout:
+        kind: parameter
+        group: producer
+        label: producer
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: "30000"
+        description: Timeout in millis when sending to a websocket channel. The default timeout is 30000 (30 seconds).
+      sendToAll:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: java.lang.Boolean
+        deprecated: false
+        secret: false
+        description: To send to all websocket subscribers. Can be used to configure on endpoint level instead of having to use the WebsocketConstants.SEND_TO_ALL header on the message.
+      bufferSize:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: "8192"
+        description: Set the buffer size of the websocketServlet which is also the max frame byte size (default 8192)
+      maxIdleTime:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: "300000"
+        description: Set the time in ms that the websocket created by the websocketServlet may be idle before closing. (default is 300000)
+      maxTextMessageSize:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        description: Can be used to set the size in characters that the websocket created by the websocketServlet may be accept before closing.
+      minVersion:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: "13"
+        description: Can be used to set the minimum protocol version accepted for the websocketServlet. (Default 13 - the RFC6455 version)
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+      allowedOrigins:
+        kind: parameter
+        group: cors
+        label: cors
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The CORS allowed origins. Use to allow all.
+      crossOriginFilterOn:
+        kind: parameter
+        group: cors
+        label: cors
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether to enable CORS
+      filterPath:
+        kind: parameter
+        group: cors
+        label: cors
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Context path for filtering CORS
+      enableJmx:
+        kind: parameter
+        group: monitoring
+        label: monitoring
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: If this option is true Jetty JMX support will be enabled for this endpoint. See Jetty JMX support for more details.
+      sslContextParameters:
+        kind: parameter
+        group: security
+        label: security
+        type: object
+        javaType: org.apache.camel.util.jsse.SSLContextParameters
+        deprecated: false
+        secret: false
+        description: To configure security using SSLContextParameters
+  documentation.adoc: "[[Websocket-WebsocketComponent]]\nWebsocket Component\n~~~~~~~~~~~~~~~~~~~\n\
+    \n*Available as of Camel 2.10*\n\nThe *websocket* component provides websocket\n\
+    link:endpoint.html[endpoints] for communicating with clients using\nwebsocket.\
+    \ The component uses Eclipse Jetty Server which implements the\nhttp://tools.ietf.org/html/rfc6455[IETF]\
+    \ specification (drafts and RFC\n6455). It supports the protocols ws:// and wss://.\
+    \ To use wss://\nprotocol, the SSLContextParameters must be defined.\n\n\n*Version\
+    \ currently supported*\n\nCamel 2.18 uses Jetty 9\n\n[[Websocket-URIformat]]\n\
+    URI format\n^^^^^^^^^^\n\n[source,java]\n---------------------------------------------------\n\
+    websocket://hostname[:port][/resourceUri][?options]\n---------------------------------------------------\n\
+    \nYou can append query options to the URI in the following format,\n`?option=value&option=value&...`\n\
+    \n[[Websocket-Options]]\nWebsocket Options\n^^^^^^^^^^^^^^^^^\n\n\n\n\n\n\n//\
+    \ component options: START\nThe Jetty Websocket component supports 12 options\
+    \ which are listed below.\n\n\n\n{% raw %}\n[width=\"100%\",cols=\"2,1m,7\",options=\"\
+    header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| staticResources | String | Set a resource\
+    \ path for static resources (such as .html files etc). The resources can be loaded\
+    \ from classpath if you prefix with classpath: otherwise the resources is loaded\
+    \ from file system or from JAR files. For example to load from root classpath\
+    \ use classpath:. or classpath:WEB-INF/static If not configured (eg null) then\
+    \ no static resource is in use.\n| host | String | The hostname. The default value\
+    \ is 0.0.0.0\n| port | Integer | The port number. The default value is 9292\n\
+    | sslKeyPassword | String | The password for the keystore when using SSL.\n| sslPassword\
+    \ | String | The password when using SSL.\n| sslKeystore | String | The path to\
+    \ the keystore.\n| enableJmx | boolean | If this option is true Jetty JMX support\
+    \ will be enabled for this endpoint. See Jetty JMX support for more details.\n\
+    | minThreads | Integer | To set a value for minimum number of threads in server\
+    \ thread pool. MaxThreads/minThreads or threadPool fields are required due to\
+    \ switch to Jetty9. The default values for minThreads is 1.\n| maxThreads | Integer\
+    \ | To set a value for maximum number of threads in server thread pool. MaxThreads/minThreads\
+    \ or threadPool fields are required due to switch to Jetty9. The default values\
+    \ for maxThreads is 1 2 noCores.\n| threadPool | ThreadPool | To use a custom\
+    \ thread pool for the server. MaxThreads/minThreads or threadPool fields are required\
+    \ due to switch to Jetty9.\n| sslContextParameters | SSLContextParameters | To\
+    \ configure security using SSLContextParameters\n| socketFactory | Map | To configure\
+    \ a map which contains custom WebSocketFactory for sub protocols. The key in the\
+    \ map is the sub protocol. The default key is reserved for the default implementation.\n\
+    |=======================================================================\n{% endraw\
+    \ %}\n// component options: END\n\n\n\n\n\n\n\n\n\n\n// endpoint options: START\n\
+    The Jetty Websocket component supports 21 endpoint options which are listed below:\n\
+    \n{% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| host | common | 0.0.0.0\
+    \ | String | The hostname. The default value is 0.0.0.0. Setting this option on\
+    \ the component will use the component configured value as default.\n| port |\
+    \ common | 9292 | Integer | The port number. The default value is 9292. Setting\
+    \ this option on the component will use the component configured value as default.\n\
+    | resourceUri | common |  | String | *Required* Name of the websocket channel\
+    \ to use\n| maxBinaryMessageSize | common | -1 | Integer | Can be used to set\
+    \ the size in bytes that the websocket created by the websocketServlet may be\
+    \ accept before closing. (Default is -1 - or unlimited)\n| bridgeErrorHandler\
+    \ | consumer | false | boolean | Allows for bridging the consumer to the Camel\
+    \ routing Error Handler which mean any exceptions occurred while the consumer\
+    \ is trying to pickup incoming messages or the likes will now be processed as\
+    \ a message and handled by the routing Error Handler. By default the consumer\
+    \ will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that\
+    \ will be logged at WARN/ERROR level and ignored.\n| sessionSupport | consumer\
+    \ | false | boolean | Whether to enable session support which enables HttpSession\
+    \ for each http request.\n| staticResources | consumer |  | String | Set a resource\
+    \ path for static resources (such as .html files etc). The resources can be loaded\
+    \ from classpath if you prefix with classpath: otherwise the resources is loaded\
+    \ from file system or from JAR files. For example to load from root classpath\
+    \ use classpath:. or classpath:WEB-INF/static If not configured (eg null) then\
+    \ no static resource is in use.\n| exceptionHandler | consumer (advanced) |  |\
+    \ ExceptionHandler | To let the consumer use a custom ExceptionHandler. Notice\
+    \ if the option bridgeErrorHandler is enabled then this options is not in use.\
+    \ By default the consumer will deal with exceptions that will be logged at WARN/ERROR\
+    \ level and ignored.\n| exchangePattern | consumer (advanced) |  | ExchangePattern\
+    \ | Sets the exchange pattern when the consumer creates an exchange.\n| sendTimeout\
+    \ | producer | 30000 | Integer | Timeout in millis when sending to a websocket\
+    \ channel. The default timeout is 30000 (30 seconds).\n| sendToAll | producer\
+    \ |  | Boolean | To send to all websocket subscribers. Can be used to configure\
+    \ on endpoint level instead of having to use the WebsocketConstants.SEND_TO_ALL\
+    \ header on the message.\n| bufferSize | advanced | 8192 | Integer | Set the buffer\
+    \ size of the websocketServlet which is also the max frame byte size (default\
+    \ 8192)\n| maxIdleTime | advanced | 300000 | Integer | Set the time in ms that\
+    \ the websocket created by the websocketServlet may be idle before closing. (default\
+    \ is 300000)\n| maxTextMessageSize | advanced |  | Integer | Can be used to set\
+    \ the size in characters that the websocket created by the websocketServlet may\
+    \ be accept before closing.\n| minVersion | advanced | 13 | Integer | Can be used\
+    \ to set the minimum protocol version accepted for the websocketServlet. (Default\
+    \ 13 - the RFC6455 version)\n| synchronous | advanced | false | boolean | Sets\
+    \ whether synchronous processing should be strictly used or Camel is allowed to\
+    \ use asynchronous processing (if supported).\n| allowedOrigins | cors |  | String\
+    \ | The CORS allowed origins. Use to allow all.\n| crossOriginFilterOn | cors\
+    \ | false | boolean | Whether to enable CORS\n| filterPath | cors |  | String\
+    \ | Context path for filtering CORS\n| enableJmx | monitoring | false | boolean\
+    \ | If this option is true Jetty JMX support will be enabled for this endpoint.\
+    \ See Jetty JMX support for more details.\n| sslContextParameters | security |\
+    \  | SSLContextParameters | To configure security using SSLContextParameters\n\
+    |=======================================================================\n{% endraw\
+    \ %}\n// endpoint options: END\n\n\n\n\_\n\n[[Websocket-MessageHeaders]]\nMessage\
+    \ Headers\n^^^^^^^^^^^^^^^\n\nThe websocket component uses 2 headers to indicate\
+    \ to either send\nmessages back to a single/current client, or to all clients.\n\
+    \n[width=\"100%\",cols=\"10%,90%\",options=\"header\",]\n|=======================================================================\n\
+    \n|`WebsocketConstants.SEND_TO_ALL` |Sends the message to all clients which are\
+    \ currently connected. You can\nuse the `sendToAll` option on the endpoint instead\
+    \ of using this header.\n\n|`WebsocketConstants.CONNECTION_KEY` |Sends the message\
+    \ to the client with the given connection key.\n|=======================================================================\n\
+    \n[[Websocket-Usage]]\nUsage\n^^^^^\n\nIn this example we let Camel exposes a\
+    \ websocket server which clients\ncan communicate with. The websocket server uses\
+    \ the default host and\nport, which would be `0.0.0.0:9292`. +\n The example will\
+    \ send back an echo of the input. To send back a\nmessage, we need to send the\
+    \ transformed message to the same endpoint\n`\"websocket://echo\"`. This is needed\
+    \ +\n because by default the messaging is InOnly.\n\nThis example is part of an\
+    \ unit test, which you can find\nhttps://svn.apache.org/repos/asf/camel/trunk/components/camel-websocket/src/test/java/org/apache/camel/component/websocket/WebsocketRouteExampleTest.java[here].\n\
+    As a client we use the link:ahc.html[AHC] library which offers support\nfor web\
+    \ socket as well.\n\nHere is another example where webapp resources location have\
+    \ been\ndefined to allow the Jetty Application Server to not only register the\n\
+    WebSocket servlet but also to expose web resources for the browser.\nResources\
+    \ should be defined under the webapp directory.\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    from(\"activemq:topic:newsTopic\")\n   .routeId(\"fromJMStoWebSocket\")\n   .to(\"\
+    websocket://localhost:8443/newsTopic?sendToAll=true&staticResources=classpath:webapp\"\
+    );\n-----------------------------------------------------------------------------------------------\n\
+    \n[[Websocket-SettingupSSLforWebSocketComponent]]\nSetting up SSL for WebSocket\
+    \ Component\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n[[Websocket-UsingtheJSSEConfigurationUtility]]\n\
+    Using the JSSE Configuration Utility\n++++++++++++++++++++++++++++++++++++\n\n\
+    As of Camel 2.10, the WebSocket component supports SSL/TLS configuration\nthrough\
+    \ the link:camel-configuration-utilities.html[Camel JSSE\nConfiguration Utility].\_\
+    \ This utility greatly decreases the amount of\ncomponent specific code you need\
+    \ to write and is configurable at the\nendpoint and component levels.\_ The following\
+    \ examples demonstrate how\nto use the utility with the Cometd component.\n\n\
+    [[Websocket-Programmaticconfigurationofthecomponent]]\nProgrammatic configuration\
+    \ of the component\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    KeyStoreParameters ksp = new KeyStoreParameters();\nksp.setResource(\"/users/home/server/keystore.jks\"\
+    );\nksp.setPassword(\"keystorePassword\");\n\nKeyManagersParameters kmp = new\
+    \ KeyManagersParameters();\nkmp.setKeyStore(ksp);\nkmp.setKeyPassword(\"keyPassword\"\
+    );\n\nTrustManagersParameters tmp = new TrustManagersParameters();\ntmp.setKeyStore(ksp);\n\
+    \nSSLContextParameters scp = new SSLContextParameters();\nscp.setKeyManagers(kmp);\n\
+    scp.setTrustManagers(tmp);\n\nCometdComponent commetdComponent = getContext().getComponent(\"\
+    cometds\", CometdComponent.class);\ncommetdComponent.setSslContextParameters(scp);\n\
+    -----------------------------------------------------------------------------------------------\n\
+    \n[[Websocket-SpringDSLbasedconfigurationofendpoint]]\nSpring DSL based configuration\
+    \ of endpoint\n\n[source,xml]\n-------------------------------------------------------------------------------------------\n\
+    ...\n  <camel:sslContextParameters\n      id=\"sslContextParameters\">\n    <camel:keyManagers\n\
+    \        keyPassword=\"keyPassword\">\n      <camel:keyStore\n          resource=\"\
+    /users/home/server/keystore.jks\"\n          password=\"keystorePassword\"/>\n\
+    \    </camel:keyManagers>\n    <camel:trustManagers>\n      <camel:keyStore\n\
+    \          resource=\"/users/home/server/keystore.jks\"\n          password=\"\
+    keystorePassword\"/>\n    </camel:trustManagers>\n  </camel:sslContextParameters>...\n\
+    ...\n  <to uri=\"websocket://127.0.0.1:8443/test?sslContextParameters=#sslContextParameters\"\
+    />...\n-------------------------------------------------------------------------------------------\n\
+    \n[[Websocket-JavaDSLbasedconfigurationofendpoint]]\nJava DSL based configuration\
+    \ of endpoint\n\n[source,java]\n----------------------------------------------------------------------------------------------------------\n\
+    ...\n    protected RouteBuilder createRouteBuilder() throws Exception {\n    \
+    \    return new RouteBuilder() {\n            public void configure() {\n    \
+    \            \n                String uri = \"websocket://127.0.0.1:8443/test?sslContextParameters=#sslContextParameters\"\
+    ;\n                \n                from(uri)\n                     .log(\">>>\
+    \ Message received from WebSocket Client : ${body}\")\n                     .to(\"\
+    mock:client\")\n                     .loop(10)\n                         .setBody().constant(\"\
+    >> Welcome on board!\")\n                         .to(uri);\n...\n----------------------------------------------------------------------------------------------------------\n\
+    \n[[Websocket-SeeAlso]]\nSee Also\n^^^^^^^^\n\n* link:configuring-camel.html[Configuring\
+    \ Camel]\n* link:component.html[Component]\n* link:endpoint.html[Endpoint]\n*\
+    \ link:getting-started.html[Getting Started]\n\n* link:ahc.html[AHC]\n* link:jetty.html[Jetty]\n\
+    * link:twitter-websocket-example.html[Twitter Websocket Example]\ndemonstrates\
+    \ how to poll a constant feed of twitter searches and publish\nresults in real\
+    \ time using web socket to a web page.\n\n"

@@ -1,0 +1,504 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: mina
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: mina
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: mina
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-mina:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: mina
+      syntax: mina:protocol:host:port
+      title: Mina
+      description: Socket level networking using TCP or UDP with the Apache Mina 1.x library.
+      label: networking,tcp,udp
+      deprecated: true
+      async: false
+      javaType: org.apache.camel.component.mina.MinaComponent
+      groupId: org.apache.camel
+      artifactId: camel-mina
+      version: 2.18.1
+    componentProperties:
+      configuration:
+        kind: property
+        type: object
+        javaType: org.apache.camel.component.mina.MinaConfiguration
+        deprecated: false
+        secret: false
+        description: To use the shared mina configuration.
+    properties:
+      protocol:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        enum:
+        - tcp
+        - udp
+        - vm
+        deprecated: false
+        secret: false
+        description: Protocol to use
+      host:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Hostname to use. Use localhost or 0.0.0.0 for local server as consumer. For producer use the hostname or ip address of the remote server.
+      port:
+        kind: path
+        group: common
+        required: true
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        description: Port number
+      disconnect:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether or not to disconnect(close) from Mina session right after use. Can be used for both consumer and producer.
+      minaLogger:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: You can enable the Apache MINA logging filter. Apache MINA uses slf4j logging at INFO level to log all input and output.
+      sync:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Setting to set endpoint as one-way or request-response.
+      timeout:
+        kind: parameter
+        group: common
+        type: integer
+        javaType: long
+        deprecated: false
+        secret: false
+        defaultValue: "30000"
+        description: You can configure the timeout that specifies how long to wait for a response from a remote server. The timeout unit is in milliseconds so 60000 is 60 seconds.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      clientMode:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: If the clientMode is true mina consumer will connect the address as a TCP client.
+      disconnectOnNoReply:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: If sync is enabled then this option dictates MinaConsumer if it should disconnect where there is no reply to send back.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      noReplyLogLevel:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.LoggingLevel
+        enum:
+        - TRACE
+        - DEBUG
+        - INFO
+        - WARN
+        - ERROR
+        - OFF
+        deprecated: false
+        secret: false
+        defaultValue: WARN
+        description: If sync is enabled this option dictates MinaConsumer which logging level to use when logging a there is no reply to send back.
+      lazySessionCreation:
+        kind: parameter
+        group: producer (advanced)
+        label: producer,advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Sessions can be lazily created to avoid exceptions if the remote server is not up and running when the Camel producer is started.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+      transferExchange:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: 'Only used for TCP. You can transfer the exchange over the wire instead
+          of just the body. The following fields are transferred: In body Out body fault
+          body In headers Out headers fault headers exchange properties exchange exception.
+          This requires that the objects are serializable. Camel will exclude any non-serializable
+          objects and log it at WARN level.'
+      allowDefaultCodec:
+        kind: parameter
+        group: codec
+        label: codec
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: The mina component installs a default codec if both codec is null and textline is false. Setting allowDefaultCodec to false prevents the mina component from installing a default codec as the first element in the filter chain. This is useful in scenarios where another filter must be the first in the filter chain like the SSL filter.
+      codec:
+        kind: parameter
+        group: codec
+        label: codec
+        type: object
+        javaType: org.apache.mina.filter.codec.ProtocolCodecFactory
+        deprecated: false
+        secret: false
+        description: To use a custom minda codec implementation.
+      decoderMaxLineLength:
+        kind: parameter
+        group: codec
+        label: codec
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "1024"
+        description: To set the textline protocol decoder max line length. By default the default value of Mina itself is used which are 1024.
+      encoderMaxLineLength:
+        kind: parameter
+        group: codec
+        label: codec
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: -1
+        description: To set the textline protocol encoder max line length. By default the default value of Mina itself is used which are Integer.MAX_VALUE.
+      encoding:
+        kind: parameter
+        group: codec
+        label: codec
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: You can configure the encoding (a charset name) to use for the TCP textline codec and the UDP protocol. If not provided Camel will use the JVM default Charset
+      filters:
+        kind: parameter
+        group: codec
+        label: codec
+        type: array
+        javaType: java.util.List<org.apache.mina.common.IoFilter>
+        deprecated: false
+        secret: false
+        description: You can set a list of Mina IoFilters to use.
+      textline:
+        kind: parameter
+        group: codec
+        label: codec
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Only used for TCP. If no codec is specified you can use this flag to indicate a text line based codec; if not specified or the value is false then Object Serialization is assumed over TCP.
+      textlineDelimiter:
+        kind: parameter
+        group: codec
+        label: codec
+        type: string
+        javaType: org.apache.camel.component.mina.TextLineDelimiter
+        enum:
+        - DEFAULT
+        - AUTO
+        - UNIX
+        - WINDOWS
+        - MAC
+        deprecated: false
+        secret: false
+        description: Only used for TCP and if textline=true. Sets the text line delimiter to use. If none provided Camel will use DEFAULT. This delimiter is used to mark the end of text.
+  documentation.adoc: "[[MINA-MINAComponent]]\nMINA Component\n~~~~~~~~~~~~~~\n\n\
+    *Deprecated*\n\nWARNING: This component is deprecated as the Apache Mina 1.x project\
+    \ is EOL.\nInstead use link:mina2.html[MINA2] or link:netty.html[Netty] instead.\n\
+    \nThe *mina:* component is a transport for working with\nhttp://mina.apache.org/[Apache\
+    \ MINA]\n\nMaven users will need to add the following dependency to their `pom.xml`\n\
+    for this component:\n\n[source,xml]\n------------------------------------------------------------\n\
+    <dependency>\n    <groupId>org.apache.camel</groupId>\n    <artifactId>camel-mina</artifactId>\n\
+    \    <version>x.x.x</version>\n    <!-- use the same version as your Camel core\
+    \ version -->\n</dependency>\n------------------------------------------------------------\n\
+    \n[[MINA-URIformat]]\nURI format\n^^^^^^^^^^\n\n[source,java]\n------------------------------------\n\
+    mina:tcp://hostname[:port][?options]\nmina:udp://hostname[:port][?options]\nmina:vm://hostname[:port][?options]\n\
+    ------------------------------------\n\nYou can specify a codec in the link:registry.html[Registry]\
+    \ using the\n*codec* option. If you are using TCP and no codec is specified then\
+    \ the\n`textline` flag is used to determine if text line based codec or object\n\
+    serialization should be used instead. By default the object\nserialization is\
+    \ used.\n\nFor UDP if no codec is specified the default uses a basic `ByteBuffer`\n\
+    based codec.\n\nThe VM protocol is used as a direct forwarding mechanism in the\
+    \ same\nJVM. See the\nhttp://mina.apache.org/report/1.1/apidocs/org/apache/mina/transport/vmpipe/package-summary.html[MINA\n\
+    VM-Pipe API documentation] for details.\n\nA Mina producer has a default timeout\
+    \ value of 30 seconds, while it\nwaits for a response from the remote server.\n\
+    \nIn normal use, `camel-mina` only supports marshalling the body\ncontent—message\
+    \ headers and exchange properties are not sent. +\n However, the option, *transferExchange*,\
+    \ does allow you to transfer the\nexchange itself over the wire. See options below.\n\
+    \nYou can append query options to the URI in the following format,\n`?option=value&option=value&...`\n\
+    \n[[MINA-Options]]\nOptions\n^^^^^^^\n\n\n\n\n\n// component options: START\n\
+    The Mina component supports 1 options which are listed below.\n\n\n\n{% raw %}\n\
+    [width=\"100%\",cols=\"2,1m,7\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| configuration | MinaConfiguration | To use\
+    \ the shared mina configuration.\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n\n\n\n\n\n\n\n// endpoint options:\
+    \ START\nThe Mina component supports 24 endpoint options which are listed below:\n\
+    \n{% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| protocol | common |  | String\
+    \ | *Required* Protocol to use\n| host | common |  | String | *Required* Hostname\
+    \ to use. Use localhost or 0.0.0.0 for local server as consumer. For producer\
+    \ use the hostname or ip address of the remote server.\n| port | common |  | int\
+    \ | *Required* Port number\n| disconnect | common | false | boolean | Whether\
+    \ or not to disconnect(close) from Mina session right after use. Can be used for\
+    \ both consumer and producer.\n| minaLogger | common | false | boolean | You can\
+    \ enable the Apache MINA logging filter. Apache MINA uses slf4j logging at INFO\
+    \ level to log all input and output.\n| sync | common | true | boolean | Setting\
+    \ to set endpoint as one-way or request-response.\n| timeout | common | 30000\
+    \ | long | You can configure the timeout that specifies how long to wait for a\
+    \ response from a remote server. The timeout unit is in milliseconds so 60000\
+    \ is 60 seconds.\n| bridgeErrorHandler | consumer | false | boolean | Allows for\
+    \ bridging the consumer to the Camel routing Error Handler which mean any exceptions\
+    \ occurred while the consumer is trying to pickup incoming messages or the likes\
+    \ will now be processed as a message and handled by the routing Error Handler.\
+    \ By default the consumer will use the org.apache.camel.spi.ExceptionHandler to\
+    \ deal with exceptions that will be logged at WARN/ERROR level and ignored.\n\
+    | clientMode | consumer | false | boolean | If the clientMode is true mina consumer\
+    \ will connect the address as a TCP client.\n| disconnectOnNoReply | consumer\
+    \ (advanced) | true | boolean | If sync is enabled then this option dictates MinaConsumer\
+    \ if it should disconnect where there is no reply to send back.\n| exceptionHandler\
+    \ | consumer (advanced) |  | ExceptionHandler | To let the consumer use a custom\
+    \ ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this\
+    \ options is not in use. By default the consumer will deal with exceptions that\
+    \ will be logged at WARN/ERROR level and ignored.\n| exchangePattern | consumer\
+    \ (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer\
+    \ creates an exchange.\n| noReplyLogLevel | consumer (advanced) | WARN | LoggingLevel\
+    \ | If sync is enabled this option dictates MinaConsumer which logging level to\
+    \ use when logging a there is no reply to send back.\n| lazySessionCreation |\
+    \ producer (advanced) | true | boolean | Sessions can be lazily created to avoid\
+    \ exceptions if the remote server is not up and running when the Camel producer\
+    \ is started.\n| synchronous | advanced | false | boolean | Sets whether synchronous\
+    \ processing should be strictly used or Camel is allowed to use asynchronous processing\
+    \ (if supported).\n| transferExchange | advanced | false | boolean | Only used\
+    \ for TCP. You can transfer the exchange over the wire instead of just the body.\
+    \ The following fields are transferred: In body Out body fault body In headers\
+    \ Out headers fault headers exchange properties exchange exception. This requires\
+    \ that the objects are serializable. Camel will exclude any non-serializable objects\
+    \ and log it at WARN level.\n| allowDefaultCodec | codec | true | boolean | The\
+    \ mina component installs a default codec if both codec is null and textline is\
+    \ false. Setting allowDefaultCodec to false prevents the mina component from installing\
+    \ a default codec as the first element in the filter chain. This is useful in\
+    \ scenarios where another filter must be the first in the filter chain like the\
+    \ SSL filter.\n| codec | codec |  | ProtocolCodecFactory | To use a custom minda\
+    \ codec implementation.\n| decoderMaxLineLength | codec | 1024 | int | To set\
+    \ the textline protocol decoder max line length. By default the default value\
+    \ of Mina itself is used which are 1024.\n| encoderMaxLineLength | codec | -1\
+    \ | int | To set the textline protocol encoder max line length. By default the\
+    \ default value of Mina itself is used which are Integer.MAX_VALUE.\n| encoding\
+    \ | codec |  | String | You can configure the encoding (a charset name) to use\
+    \ for the TCP textline codec and the UDP protocol. If not provided Camel will\
+    \ use the JVM default Charset\n| filters | codec |  | List | You can set a list\
+    \ of Mina IoFilters to use.\n| textline | codec | false | boolean | Only used\
+    \ for TCP. If no codec is specified you can use this flag to indicate a text line\
+    \ based codec; if not specified or the value is false then Object Serialization\
+    \ is assumed over TCP.\n| textlineDelimiter | codec |  | TextLineDelimiter | Only\
+    \ used for TCP and if textline=true. Sets the text line delimiter to use. If none\
+    \ provided Camel will use DEFAULT. This delimiter is used to mark the end of text.\n\
+    |=======================================================================\n{% endraw\
+    \ %}\n// endpoint options: END\n\n\n\n\n[[MINA-Usingacustomcodec]]\nUsing a custom\
+    \ codec\n^^^^^^^^^^^^^^^^^^^^\n\nSee the http://mina.apache.org/tutorial-on-protocolcodecfilter.html[Mina\n\
+    documentation] how to write your own codec. To use your custom codec\nwith `camel-mina`,\
+    \ you should register your codec in the\nlink:registry.html[Registry]; for example,\
+    \ by creating a bean in the\nSpring XML file. Then use the `codec` option to specify\
+    \ the bean ID of\nyour codec. See link:hl7.html[HL7] that has a custom codec.\n\
+    \n[[MINA-Samplewithsync=false]]\nSample with sync=false\n^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nIn this sample, Camel exposes a service that listens for TCP connections\non\
+    \ port 6200. We use the *textline* codec. In our route, we create a\nMina consumer\
+    \ endpoint that listens on port 6200:\n\nAs the sample is part of a unit test,\
+    \ we test it by sending some data to\nit on port 6200.\n\n[[MINA-Samplewithsync=true]]\n\
+    Sample with sync=true\n^^^^^^^^^^^^^^^^^^^^^\n\nIn the next sample, we have a\
+    \ more common use case where we expose a TCP\nservice on port 6201 also use the\
+    \ textline codec. However, this time we\nwant to return a response, so we set\
+    \ the `sync` option to `true` on the\nconsumer.\n\nThen we test the sample by\
+    \ sending some data and retrieving the response\nusing the `template.requestBody()`\
+    \ method. As we know the response is a\n`String`, we cast it to `String` and can\
+    \ assert that the response is, in\nfact, something we have dynamically set in\
+    \ our processor code logic.\n\n[[MINA-SamplewithSpringDSL]]\nSample with Spring\
+    \ DSL\n^^^^^^^^^^^^^^^^^^^^^^\n\nSpring DSL can, of course, also be used for link:mina.html[MINA].\
+    \ In the\nsample below we expose a TCP server on port 5555:\n\n[source,xml]\n\
+    ----------------------------------------------------------\n   <route>\n     <from\
+    \ uri=\"mina:tcp://localhost:5555?textline=true\"/>\n     <to uri=\"bean:myTCPOrderHandler\"\
+    />\n  </route>\n----------------------------------------------------------\n\n\
+    In the route above, we expose a TCP server on port 5555 using the\ntextline codec.\
+    \ We let the Spring bean with ID, `myTCPOrderHandler`,\nhandle the request and\
+    \ return a reply. For instance, the handler bean\ncould be implemented as follows:\n\
+    \n[source,java]\n-----------------------------------------------\n    public String\
+    \ handleOrder(String payload) {\n        ...\n        return \"Order: OK\"\n \
+    \  }\n-----------------------------------------------\n\n[[MINA-ConfiguringMinaendpointsusingSpringbeanstyle]]\n\
+    Configuring Mina endpoints using Spring bean style\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nConfiguration of Mina endpoints is possible using regular Spring bean\nstyle\
+    \ configuration in the Spring DSL.\n\nHowever, in the underlying Apache Mina toolkit,\
+    \ it is relatively\ndifficult to set up the acceptor and the connector, because\
+    \ you can\n_not_ use simple setters. To resolve this difficulty, we leverage the\n\
+    `MinaComponent` as a Spring factory bean to configure this for us. If\nyou really\
+    \ need to configure this yourself, there are setters on the\n`MinaEndpoint` to\
+    \ set these when needed.\n\nThe sample below shows the factory approach:\n\nAnd\
+    \ then we can refer to our endpoint directly in the route, as follows:\n\n[[MINA-ClosingSessionWhenComplete]]\n\
+    Closing Session When Complete\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nWhen acting as\
+    \ a server you sometimes want to close the session when,\nfor example, a client\
+    \ conversion is finished. To instruct Camel to close\nthe session, you should\
+    \ add a header with the key\n`CamelMinaCloseSessionWhenComplete` set to a boolean\
+    \ `true` value.\n\nFor instance, the example below will close the session after\
+    \ it has\nwritten the `bye` message back to the client:\n\n[source,java]\n--------------------------------------------------------------------------------------------------\n\
+    \        from(\"mina:tcp://localhost:8080?sync=true&textline=true\").process(new\
+    \ Processor() {\n            public void process(Exchange exchange) throws Exception\
+    \ {\n                String body = exchange.getIn().getBody(String.class);\n \
+    \               exchange.getOut().setBody(\"Bye \" + body);\n                exchange.getOut().setHeader(MinaConstants.MINA_CLOSE_SESSION_WHEN_COMPLETE,\
+    \ true);\n            }\n        });\n--------------------------------------------------------------------------------------------------\n\
+    \n[[MINA-GettheIoSessionformessage]]\nGet the IoSession for message\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \n*Available since Camel 2.1* \nYou can get the IoSession from the message header\
+    \ with this key\nMinaEndpoint.HEADER_MINA_IOSESSION, and also get the local host\
+    \ address\nwith the key MinaEndpoint.HEADER_LOCAL_ADDRESS and remote host address\n\
+    with the key MinaEndpoint.HEADER_REMOTE_ADDRESS.\n\n[[MINA-ConfiguringMinafilters]]\n\
+    Configuring Mina filters\n^^^^^^^^^^^^^^^^^^^^^^^^\n\nFilters permit you to use\
+    \ some Mina Filters, such as `SslFilter`. You\ncan also implement some customized\
+    \ filters. Please note that `codec` and\n`logger` are also implemented as Mina\
+    \ filters of type, `IoFilter`. Any\nfilters you may define are appended to the\
+    \ end of the filter chain; that\nis, after `codec` and `logger`.\n\nTIP: If using\
+    \ the `SslFilter` you need to add the `mina-filter-ssl` JAR to\nthe classpath.\n\
+    \nFor instance, the example below will send a keep-alive message after 10\nseconds\
+    \ of inactivity:\n\n[source,java]\n------------------------------------------------------------------------\n\
+    public class KeepAliveFilter extends IoFilterAdapter {\n    @Override\n    public\
+    \ void sessionCreated(NextFilter nextFilter, IoSession session)\n            throws\
+    \ Exception {\n        session.setIdleTime(IdleStatus.BOTH_IDLE, 10);\n\n    \
+    \    nextFilter.sessionCreated(session);\n    }\n\n    @Override\n    public void\
+    \ sessionIdle(NextFilter nextFilter, IoSession session,\n            IdleStatus\
+    \ status) throws Exception {\n        session.write(\"NOOP\"); // NOOP is a FTP\
+    \ command for keep alive\n        nextFilter.sessionIdle(session, status);\n \
+    \   }\n}\n------------------------------------------------------------------------\n\
+    \nAs Camel Mina may use a request-reply scheme, the endpoint as a client\nwould\
+    \ like to drop some message, such as greeting when the connection is\nestablished.\
+    \ For example, when you connect to an FTP server, you will\nget a `220` message\
+    \ with a greeting (`220 Welcome to Pure-FTPd`). If you\ndon't drop the message,\
+    \ your request-reply scheme will be broken.\n\n[source,java]\n--------------------------------------------------------------------------------------------------\n\
+    public class DropGreetingFilter extends IoFilterAdapter {\n\n    @Override\n \
+    \   public void messageReceived(NextFilter nextFilter, IoSession session,\n  \
+    \          Object message) throws Exception {\n        if (message instanceof\
+    \ String) {\n            String ftpMessage = (String) message;\n            //\
+    \ \"220\" is given as greeting. \"200 Zzz\" is given as a response to \"NOOP\"\
+    \ (keep alive)\n            if (ftpMessage.startsWith(\"220\") || or ftpMessage.startsWith(\"\
+    200 Zzz\")) {\n                // Dropping greeting\n                return;\n\
+    \            }\n        }\n        nextFilter.messageReceived(session, message);\n\
+    \    }\n}\n--------------------------------------------------------------------------------------------------\n\
+    \nThen, you can configure your endpoint using Spring DSL:\n\n[source,xml]\n----------------------------------------------------------------------------------\n\
+    <bean id=\"myMinaFactory\" class=\"org.apache.camel.component.mina.MinaComponent\"\
+    >\n    <constructor-arg index=\"0\" ref=\"camelContext\" />\n</bean>\n\n<bean\
+    \ id=\"myMinaEndpoint\"\n      factory-bean=\"myMinaFactory\"\n      factory-method=\"\
+    createEndpoint\">\n    <constructor-arg index=\"0\" ref=\"myMinaConfig\"/>\n</bean>\n\
+    \n<bean id=\"myMinaConfig\" class=\"org.apache.camel.component.mina.MinaConfiguration\"\
+    >\n    <property name=\"protocol\" value=\"tcp\" />\n    <property name=\"host\"\
+    \ value=\"localhost\" />\n    <property name=\"port\" value=\"2121\" />\n    <property\
+    \ name=\"sync\" value=\"true\" />\n    <property name=\"minaLogger\" value=\"\
+    true\" />\n    <property name=\"filters\" ref=\"listFilters\"/>\n</bean>\n\n<bean\
+    \ id=\"listFilters\" class=\"java.util.ArrayList\" >\n    <constructor-arg>\n\
+    \        <list value-type=\"org.apache.mina.common.IoFilter\">\n            <bean\
+    \ class=\"com.example.KeepAliveFilter\"/>\n            <bean class=\"com.example.DropGreetingFilter\"\
+    />\n        </list>\n    </constructor-arg>\n</bean>\n----------------------------------------------------------------------------------\n\
+    \n[[MINA-SeeAlso]]\nSee Also\n^^^^^^^^\n\n* link:configuring-camel.html[Configuring\
+    \ Camel]\n* link:component.html[Component]\n* link:endpoint.html[Endpoint]\n*\
+    \ link:getting-started.html[Getting Started]\n\n* link:mina2.html[MINA2]\n* link:netty.html[Netty]\n\
+    \n"

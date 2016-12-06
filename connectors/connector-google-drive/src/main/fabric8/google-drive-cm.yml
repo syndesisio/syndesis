@@ -1,0 +1,307 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: google-drive
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: google-drive
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: google-drive
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-google-drive:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: google-drive
+      syntax: google-drive:apiName/methodName
+      title: Google Drive
+      description: The google-drive component provides access to Google Drive file storage service.
+      label: api,cloud,file
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.google.drive.GoogleDriveComponent
+      groupId: org.apache.camel
+      artifactId: camel-google-drive
+      version: 2.18.1
+    componentProperties:
+      configuration:
+        kind: property
+        type: object
+        javaType: org.apache.camel.component.google.drive.GoogleDriveConfiguration
+        deprecated: false
+        secret: false
+        description: To use the shared configuration
+      clientFactory:
+        kind: property
+        type: object
+        javaType: org.apache.camel.component.google.drive.GoogleDriveClientFactory
+        deprecated: false
+        secret: false
+        description: To use the GoogleCalendarClientFactory as factory for creating the client. Will by default use BatchGoogleDriveClientFactory
+    properties:
+      apiName:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: org.apache.camel.component.google.drive.internal.GoogleDriveApiName
+        enum:
+        - drive-about
+        - drive-apps
+        - drive-changes
+        - drive-channels
+        - drive-children
+        - drive-comments
+        - drive-files
+        - drive-parents
+        - drive-permissions
+        - drive-properties
+        - drive-realtime
+        - drive-replies
+        - drive-revisions
+        deprecated: false
+        secret: false
+        description: What kind of operation to perform
+      methodName:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        enum:
+        - copy
+        - delete
+        - get
+        - getIdForEmail
+        - insert
+        - list
+        - patch
+        - stop
+        - touch
+        - trash
+        - untrash
+        - update
+        - watch
+        deprecated: false
+        secret: false
+        description: What sub operation to use for the selected operation
+      accessToken:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: OAuth 2 access token. This typically expires after an hour so refreshToken is recommended for long term usage.
+      applicationName:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Google drive application name. Example would be camel-google-drive/1.0
+      clientFactory:
+        kind: parameter
+        group: common
+        type: object
+        javaType: org.apache.camel.component.google.drive.GoogleDriveClientFactory
+        deprecated: false
+        secret: false
+        description: To use the GoogleCalendarClientFactory as factory for creating the client. Will by default use BatchGoogleDriveClientFactory
+      clientId:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Client ID of the drive application
+      clientSecret:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Client secret of the drive application
+      inBody:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Sets the name of a parameter to be passed in the exchange In Body
+      refreshToken:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: OAuth 2 refresh token. Using this the Google Calendar component can obtain a new accessToken whenever the current one expires - a necessity if the application is long-lived.
+      scopes:
+        kind: parameter
+        group: common
+        type: array
+        javaType: java.util.List<java.lang.String>
+        deprecated: false
+        secret: false
+        description: Specifies the level of permissions you want a drive application to have to a user account. See https://developers.google.com/drive/web/scopes for more info.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[GoogleDrive-GoogleDriveComponent]]\nGoogleDrive Component\n\
+    ~~~~~~~~~~~~~~~~~~~~~\n\n*Available as of Camel 2.14*\n\nThe Google Drive component\
+    \ provides access to the\nhttp://drive.google.com[Google Drive file storage service]\
+    \ via the\nhttps://developers.google.com/drive/v2/reference[Google Drive Web APIs].\n\
+    \nGoogle Drive uses\nthe\_https://developers.google.com/accounts/docs/OAuth2[OAuth\
+    \ 2.0\nprotocol]\_for authenticating a Google account and authorizing access to\n\
+    user data. Before you can use this component, you will need to\nhttps://developers.google.com/drive/web/auth/web-server[create\
+    \ an\naccount and generate OAuth credentials]. Credentials comprise of a\nclientId,\
+    \ clientSecret, and a refreshToken. A handy resource for\ngenerating a long-lived\_\
+    refreshToken is the\nhttps://developers.google.com/oauthplayground[OAuth playground].\n\
+    \nMaven users will need to add the following dependency to their pom.xml\nfor\
+    \ this component:\n\n-------------------------------------------------------\n\
+    \    <dependency>\n            <groupId>org.apache.camel</groupId>\n         \
+    \   <artifactId>camel-google-drive</artifactId>\n            <version>2.14-SNAPSHOT</version>\n\
+    \    </dependency>\n        \n-------------------------------------------------------\n\
+    \n[[GoogleDrive-URIFormat]]\nURI Format\n^^^^^^^^^^\n\n'''''\n\nThe GoogleDrive\
+    \ Component uses the following URI format:\n\n---------------------------------------------------------\n\
+    \        google-drive://endpoint-prefix/endpoint?[options]\n    \n---------------------------------------------------------\n\
+    \nEndpoint prefix can be one of:\n\n* drive-about\n* drive-apps\n* drive-changes\n\
+    * drive-channels\n* drive-children\n* drive-comments\n* drive-files\n* drive-parents\n\
+    * drive-permissions\n* drive-properties\n* drive-realtime\n* drive-replies\n*\
+    \ drive-revisions\n\n[[GoogleDrive-GoogleDriveComponent.1]]\nGoogleDriveComponent\n\
+    ^^^^^^^^^^^^^^^^^^^^\n\n\n\n\n\n// component options: START\nThe Google Drive\
+    \ component supports 2 options which are listed below.\n\n\n\n{% raw %}\n[width=\"\
+    100%\",cols=\"2,1m,7\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| configuration | GoogleDriveConfiguration |\
+    \ To use the shared configuration\n| clientFactory | GoogleDriveClientFactory\
+    \ | To use the GoogleCalendarClientFactory as factory for creating the client.\
+    \ Will by default use BatchGoogleDriveClientFactory\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n\n\n\n\n\n\n\n// endpoint options:\
+    \ START\nThe Google Drive component supports 14 endpoint options which are listed\
+    \ below:\n\n{% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"\
+    ]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| apiName | common |  | GoogleDriveApiName\
+    \ | *Required* What kind of operation to perform\n| methodName | common |  | String\
+    \ | *Required* What sub operation to use for the selected operation\n| accessToken\
+    \ | common |  | String | OAuth 2 access token. This typically expires after an\
+    \ hour so refreshToken is recommended for long term usage.\n| applicationName\
+    \ | common |  | String | Google drive application name. Example would be camel-google-drive/1.0\n\
+    | clientFactory | common |  | GoogleDriveClientFactory | To use the GoogleCalendarClientFactory\
+    \ as factory for creating the client. Will by default use BatchGoogleDriveClientFactory\n\
+    | clientId | common |  | String | Client ID of the drive application\n| clientSecret\
+    \ | common |  | String | Client secret of the drive application\n| inBody | common\
+    \ |  | String | Sets the name of a parameter to be passed in the exchange In Body\n\
+    | refreshToken | common |  | String | OAuth 2 refresh token. Using this the Google\
+    \ Calendar component can obtain a new accessToken whenever the current one expires\
+    \ - a necessity if the application is long-lived.\n| scopes | common |  | List\
+    \ | Specifies the level of permissions you want a drive application to have to\
+    \ a user account. See https://developers.google.com/drive/web/scopes for more\
+    \ info.\n| bridgeErrorHandler | consumer | false | boolean | Allows for bridging\
+    \ the consumer to the Camel routing Error Handler which mean any exceptions occurred\
+    \ while the consumer is trying to pickup incoming messages or the likes will now\
+    \ be processed as a message and handled by the routing Error Handler. By default\
+    \ the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with\
+    \ exceptions that will be logged at WARN/ERROR level and ignored.\n| exceptionHandler\
+    \ | consumer (advanced) |  | ExceptionHandler | To let the consumer use a custom\
+    \ ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this\
+    \ options is not in use. By default the consumer will deal with exceptions that\
+    \ will be logged at WARN/ERROR level and ignored.\n| exchangePattern | consumer\
+    \ (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer\
+    \ creates an exchange.\n| synchronous | advanced | false | boolean | Sets whether\
+    \ synchronous processing should be strictly used or Camel is allowed to use asynchronous\
+    \ processing (if supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n\n[[GoogleDrive-ProducerEndpoints]]\n\
+    Producer Endpoints\n^^^^^^^^^^^^^^^^^^\n\nProducer endpoints can use endpoint\
+    \ prefixes followed by endpoint names\nand associated options described next.\
+    \ A shorthand alias can be used for\nsome endpoints. The endpoint URI MUST contain\
+    \ a prefix.\n\nEndpoint options that are not mandatory are denoted by []. When\
+    \ there\nare no mandatory options for an endpoint, one of the set of [] options\n\
+    MUST be provided. Producer endpoints can also use a special option\n*`inBody`*\
+    \ that in turn should contain the name of the endpoint option\nwhose value will\
+    \ be contained in the Camel Exchange In message.\n\nAny of the endpoint options\
+    \ can be provided in either the endpoint URI,\nor dynamically in a message header.\
+    \ The message header name must be of\nthe format `CamelGoogleDrive.<option>`.\
+    \ Note that the `inBody` option\noverrides message header, i.e. the endpoint option\
+    \ `inBody=option` would\noverride a `CamelGoogleDrive.option` header.\n\nFor more\
+    \ information on the endpoints and options see API documentation\nat:\_https://developers.google.com/drive/v2/reference/[https://developers.google.com/drive/v2/reference/]\n\
+    \n[[GoogleDrive-ConsumerEndpoints]]\nConsumer Endpoints\n^^^^^^^^^^^^^^^^^^\n\n\
+    Any of the producer endpoints can be used as a consumer endpoint.\nConsumer endpoints\
+    \ can use\nhttp://camel.apache.org/polling-consumer.html#PollingConsumer-ScheduledPollConsumerOptions[Scheduled\n\
+    Poll Consumer Options] with a `consumer.` prefix to schedule endpoint\ninvocation.\
+    \ Consumer endpoints that return an array or collection will\ngenerate one exchange\
+    \ per element, and their routes will be executed\nonce for each exchange.\n\n\
+    [[GoogleDrive-MessageHeaders]]\nMessage Headers\n^^^^^^^^^^^^^^^\n\nAny URI option\
+    \ can be provided in a message header for producer\nendpoints with a `CamelGoogleDrive.`\
+    \ prefix.\n\n[[GoogleDrive-MessageBody]]\nMessage Body\n^^^^^^^^^^^^\n\nAll result\
+    \ message bodies utilize objects provided by the underlying\nAPIs used by the\
+    \ GoogleDriveComponent. Producer endpoints can specify\nthe option name for incoming\
+    \ message body in the `inBody` endpoint URI\nparameter. For endpoints that return\
+    \ an array or collection, a consumer\nendpoint will map every element to distinct\
+    \ messages. \_ \_\_\n"
