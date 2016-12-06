@@ -109,10 +109,13 @@
               <key>project.version</key>
               <value>${project.version}</value>
             </systemProperty>
+            <systemProperty>
+              <key>basedir</key>
+              <value>${basedir}</value>
+            </systemProperty>
           </systemProperties>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 
