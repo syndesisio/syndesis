@@ -168,6 +168,7 @@ public class ConnectorGenerator {
                         "    <groupId>io.fabric8.funktion.starter</groupId>\n" +
                         "    <artifactId>starter-parent-java</artifactId>\n" +
                         "    <version>" + projectVersion + "</version>\n" +
+                        "    <relativePath>../../starter-parent/starter-parent-java</relativePath>\n" +
                         "  </parent>\n" +
                         "\n" +
                         "  <groupId>io.fabric8.funktion.connector</groupId>\n" +
