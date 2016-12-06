@@ -59,7 +59,7 @@ public class Connectors {
                 withNewMetadata().withLabels(subscriptionLabels).endMetadata().
                 withNewSpec().withReplicas(1).
                 withNewTemplate().withNewMetadata().withLabels(subscriptionLabels).endMetadata().
-                withNewSpec().addNewContainer().withImage(image).endContainer().
+                withNewSpec().addNewContainer().withName("connector").withImage(image).endContainer().
                 endSpec().endTemplate().endSpec().build();
         try {
             String deploymentYaml = createYamlMapper().writeValueAsString(deployment);

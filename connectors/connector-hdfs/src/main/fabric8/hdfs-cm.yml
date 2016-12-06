@@ -23,7 +23,8 @@ data:
             kind.funktion.fabric8.io: Subscription
         spec:
           containers:
-          - image: connector-hdfs:${project.version}
+          - image: fabric8/connector-hdfs:${project.version}
+            name: connector
   schema.yml: |
     ---
     component:

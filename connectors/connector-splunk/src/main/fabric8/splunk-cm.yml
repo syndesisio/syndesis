@@ -23,7 +23,8 @@ data:
             kind.funktion.fabric8.io: Subscription
         spec:
           containers:
-          - image: connector-splunk:${project.version}
+          - image: fabric8/connector-splunk:${project.version}
+            name: connector
   schema.yml: |
     ---
     component:

@@ -23,7 +23,8 @@ data:
             kind.funktion.fabric8.io: Subscription
         spec:
           containers:
-          - image: connector-ahc-wss:${project.version}
+          - image: fabric8/connector-ahc-wss:${project.version}
+            name: connector
   schema.yml: |
     ---
     component:

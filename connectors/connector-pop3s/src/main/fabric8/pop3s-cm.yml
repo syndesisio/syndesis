@@ -23,7 +23,8 @@ data:
             kind.funktion.fabric8.io: Subscription
         spec:
           containers:
-          - image: connector-pop3s:${project.version}
+          - image: fabric8/connector-pop3s:${project.version}
+            name: connector
   schema.yml: |
     ---
     component:

@@ -23,7 +23,8 @@ data:
             kind.funktion.fabric8.io: Subscription
         spec:
           containers:
-          - image: connector-cm-sms:${project.version}
+          - image: fabric8/connector-cm-sms:${project.version}
+            name: connector
   schema.yml: |
     ---
     component:
