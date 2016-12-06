@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static io.fabric8.funktion.connector.generator.Connectors.createYamlMapper;
 import static io.fabric8.utils.DomHelper.firstChild;
@@ -110,6 +112,7 @@ public class ConnectorGenerator {
         boolean updatedComponentPackagePom = false;
 
 
+        Set<String> moduleNames = new TreeSet<>();
         int count = 0;
         for (ComponentModel component : components) {
             String componentName = component.getScheme();
@@ -137,6 +140,7 @@ public class ConnectorGenerator {
                 }
 
                 String moduleName = "connector-" + componentName;
+                moduleNames.add(moduleName);
                 if (addModuleNameIfMissing(modules, moduleName)) {
                     updatedComponentsPom = true;
                 }
@@ -226,6 +230,15 @@ public class ConnectorGenerator {
         if (updatedComponentPackagePom) {
             updateDocument(componentPackagePomFile, componentPackagePom);
         }
+
+        String moduleNamesText = io.fabric8.utils.Strings.join(moduleNames, "', '");
+        String releaseImagesGroovy = "#!/usr/bin/groovy\n" +
+                "def imagesBuiltByPipeline() {\n" +
+                "  return ['" + moduleNamesText + "']\n" +
+                "}\n";
+        IOHelpers.writeFully(new File(getBaseDir(), "../releaseImages.groovy"), releaseImagesGroovy);
+
+
         LOG.info("Generated " + count + " connectors");
     }
 

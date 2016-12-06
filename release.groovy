@@ -1,7 +1,13 @@
 #!/usr/bin/groovy
+def imagesBuiltByPipeline() {
+  def images = load 'releaseImages.groovy'
+  return images.imagesBuiltByPipeline()
+}
+
 def repo(){
  return 'fabric8io/funktion'
 }
+
 
 def stage(){
 
