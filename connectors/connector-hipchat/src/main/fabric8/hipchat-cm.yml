@@ -23,7 +23,8 @@ data:
             kind.funktion.fabric8.io: Subscription
         spec:
           containers:
-          - image: connector-hipchat:${project.version}
+          - image: fabric8/connector-hipchat:${project.version}
+            name: connector
   schema.yml: |
     ---
     component:

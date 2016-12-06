@@ -23,7 +23,8 @@ data:
             kind.funktion.fabric8.io: Subscription
         spec:
           containers:
-          - image: connector-dropbox:${project.version}
+          - image: fabric8/connector-dropbox:${project.version}
+            name: connector
   schema.yml: |
     ---
     component:

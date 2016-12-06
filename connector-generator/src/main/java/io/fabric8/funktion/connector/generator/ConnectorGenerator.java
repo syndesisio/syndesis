@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static io.fabric8.funktion.connector.generator.Connectors.createYamlMapper;
 import static io.fabric8.utils.DomHelper.firstChild;
@@ -110,6 +112,7 @@ public class ConnectorGenerator {
         boolean updatedComponentPackagePom = false;
 
 
+        Set<String> moduleNames = new TreeSet<>();
         int count = 0;
         for (ComponentModel component : components) {
             String componentName = component.getScheme();
@@ -137,6 +140,7 @@ public class ConnectorGenerator {
                 }
 
                 String moduleName = "connector-" + componentName;
+                moduleNames.add(moduleName);
                 if (addModuleNameIfMissing(modules, moduleName)) {
                     updatedComponentsPom = true;
                 }
@@ -192,6 +196,14 @@ public class ConnectorGenerator {
                         "              <exclude>fmp-service</exclude>\n" +
                         "            </excludes>\n" +
                         "          </enricher>\n" +
+                        "          <generator>\n" +
+                        "            <config>\n" +
+                        "              <spring-boot>\n" +
+                        "                <name>fabric8/%a:%v</name>\n" +
+                        "                <alias>connector</alias>\n" +
+                        "              </spring-boot>\n" +
+                        "            </config>\n" +
+                        "          </generator>\n" +
                         "        </configuration>\n" +
                         "      </plugin>\n" +
                         "    </plugins>\n" +
@@ -202,7 +214,7 @@ public class ConnectorGenerator {
                 String jSonSchema = camelCatalog.componentJSonSchema(componentName);
                 String asciiDoc = camelCatalog.componentAsciiDoc(componentName);
 
-                String image = moduleName + ":${project.version}";
+                String image = "fabric8/" + moduleName + ":${project.version}";
                 ConfigMap configMap = Connectors.createConnector(component, jSonSchema, asciiDoc, image);
                 File configMapFile = new File(projectDir, "src/main/fabric8/" + componentName + "-cm.yml");
                 configMapFile.getParentFile().mkdirs();
@@ -218,6 +230,15 @@ public class ConnectorGenerator {
         if (updatedComponentPackagePom) {
             updateDocument(componentPackagePomFile, componentPackagePom);
         }
+
+        String moduleNamesText = io.fabric8.utils.Strings.join(moduleNames, "', '");
+        String releaseImagesGroovy = "#!/usr/bin/groovy\n" +
+                "def imagesBuiltByPipeline() {\n" +
+                "  return ['" + moduleNamesText + "']\n" +
+                "}\n";
+        IOHelpers.writeFully(new File(getBaseDir(), "../releaseImages.groovy"), releaseImagesGroovy);
+
+
         LOG.info("Generated " + count + " connectors");
     }
 

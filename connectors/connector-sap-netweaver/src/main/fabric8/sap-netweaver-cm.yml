@@ -23,7 +23,8 @@ data:
             kind.funktion.fabric8.io: Subscription
         spec:
           containers:
-          - image: connector-sap-netweaver:${project.version}
+          - image: fabric8/connector-sap-netweaver:${project.version}
+            name: connector
   schema.yml: |
     ---
     component:

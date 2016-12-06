@@ -23,7 +23,8 @@ data:
             kind.funktion.fabric8.io: Subscription
         spec:
           containers:
-          - image: connector-jclouds:${project.version}
+          - image: fabric8/connector-jclouds:${project.version}
+            name: connector
   schema.yml: |
     ---
     component:

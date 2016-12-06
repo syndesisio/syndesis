@@ -23,7 +23,8 @@ data:
             kind.funktion.fabric8.io: Subscription
         spec:
           containers:
-          - image: connector-sjms-batch:${project.version}
+          - image: fabric8/connector-sjms-batch:${project.version}
+            name: connector
   schema.yml: |
     ---
     component:
