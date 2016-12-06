@@ -1,0 +1,243 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: spring-integration
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: spring-integration
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: spring-integration
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-spring-integration:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: spring-integration
+      syntax: spring-integration:defaultChannel
+      title: Spring Integration
+      description: Bridges Camel with Spring Integration.
+      label: spring,eventbus
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.spring.integration.SpringIntegrationComponent
+      groupId: org.apache.camel
+      artifactId: camel-spring-integration
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      defaultChannel:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The default channel name which is used by the Spring Integration Spring context. It will equal to the inputChannel name for the Spring Integration consumer and the outputChannel name for the Spring Integration provider.
+      inOut:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: The exchange pattern that the Spring integration endpoint should use. If inOut=true then a reply channel is expected either from the Spring Integration Message header or configured on the endpoint.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      inputChannel:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The Spring integration input channel name that this endpoint wants to consume from Spring integration.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      outputChannel:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The Spring integration output channel name that is used to send messages to Spring integration.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: |+
+    [[SpringIntegration-SpringIntegrationComponent]]
+    Spring Integration Component
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    The *spring-integration:* component provides a bridge for Camel
+    components to talk to
+    http://www.springsource.org/spring-integration[spring integration
+    endpoints].
+
+    Maven users will need to add the following dependency to their `pom.xml`
+    for this component:
+
+    [source,xml]
+    ------------------------------------------------------------
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-spring-integration</artifactId>
+        <version>x.x.x</version>
+        <!-- use the same version as your Camel core version -->
+    </dependency>
+    ------------------------------------------------------------
+
+    [[SpringIntegration-URIformat]]
+    URI format
+    ^^^^^^^^^^
+
+    [source,java]
+    -----------------------------------------------
+    spring-integration:defaultChannelName[?options]
+    -----------------------------------------------
+
+    Where *defaultChannelName* represents the default channel name which is
+    used by the Spring Integration Spring context. It will equal to the
+    `inputChannel` name for the Spring Integration consumer and the
+    `outputChannel` name for the Spring Integration provider.
+
+    You can append query options to the URI in the following format,
+    `?option=value&option=value&...`
+
+    [[SpringIntegration-Options]]
+    Options
+    ^^^^^^^
+
+
+    // component options: START
+    The Spring Integration component has no options.
+    // component options: END
+
+
+
+    // endpoint options: START
+    The Spring Integration component supports 8 endpoint options which are listed below:
+
+    {% raw %}
+    [width="100%",cols="2,1,1m,1m,5",options="header"]
+    |=======================================================================
+    | Name | Group | Default | Java Type | Description
+    | defaultChannel | common |  | String | *Required* The default channel name which is used by the Spring Integration Spring context. It will equal to the inputChannel name for the Spring Integration consumer and the outputChannel name for the Spring Integration provider.
+    | inOut | common | false | boolean | The exchange pattern that the Spring integration endpoint should use. If inOut=true then a reply channel is expected either from the Spring Integration Message header or configured on the endpoint.
+    | bridgeErrorHandler | consumer | false | boolean | Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | inputChannel | consumer |  | String | The Spring integration input channel name that this endpoint wants to consume from Spring integration.
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | exchangePattern | consumer (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer creates an exchange.
+    | outputChannel | producer |  | String | The Spring integration output channel name that is used to send messages to Spring integration.
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+    |=======================================================================
+    {% endraw %}
+    // endpoint options: END
+
+
+    [[SpringIntegration-Usage]]
+    Usage
+    ^^^^^
+
+    The Spring integration component is a bridge that connects Camel
+    endpoints with Spring integration endpoints through the Spring
+    integration's input channels and output channels. Using this component,
+    we can send Camel messages to Spring Integration endpoints or receive
+    messages from Spring integration endpoints in a Camel routing context.
+
+    [[SpringIntegration-Examples]]
+    Examples
+    ^^^^^^^^
+
+    [[SpringIntegration-UsingtheSpringintegrationendpoint]]
+    Using the Spring integration endpoint
+    +++++++++++++++++++++++++++++++++++++
+
+    You can set up a Spring integration endpoint using a URI, as follows:
+
+    Or directly using a Spring integration channel name:
+
+    [[SpringIntegration-TheSourceandTargetadapter]]
+    The Source and Target adapter
+    +++++++++++++++++++++++++++++
+
+    Spring integration also provides the Spring integration's source and
+    target adapters, which can route messages from a Spring integration
+    channel to a Camel endpoint or from a Camel endpoint to a Spring
+    integration channel.
+
+    This example uses the following namespaces:
+
+    You can bind your source or target to a Camel endpoint as follows:
+
+    [[SpringIntegration-SeeAlso]]
+    See Also
+    ^^^^^^^^
+
+    * link:configuring-camel.html[Configuring Camel]
+    * link:component.html[Component]
+    * link:endpoint.html[Endpoint]
+    * link:getting-started.html[Getting Started]
+

@@ -1,0 +1,804 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: hazelcast
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: hazelcast
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: hazelcast
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-hazelcast:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: hazelcast
+      syntax: hazelcast:command:cacheName
+      title: Hazelcast
+      description: The hazelcast component allows you to work with the Hazelcast distributed data grid / cache.
+      label: cache,datagrid
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.hazelcast.HazelcastComponent
+      groupId: org.apache.camel
+      artifactId: camel-hazelcast
+      version: 2.18.1
+    componentProperties:
+      hazelcastInstance:
+        kind: property
+        type: object
+        javaType: com.hazelcast.core.HazelcastInstance
+        deprecated: false
+        secret: false
+        description: The hazelcast instance reference which can be used for hazelcast endpoint. If you don't specify the instance reference camel use the default hazelcast instance from the camel-hazelcast instance.
+    properties:
+      command:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: org.apache.camel.component.hazelcast.HazelcastCommand
+        enum:
+        - map
+        - multimap
+        - queue
+        - topic
+        - seda
+        - set
+        - atomicvalue
+        - instance
+        - list
+        - replicatedmap
+        - ringbuffer
+        deprecated: false
+        secret: false
+        description: What operation to perform.
+      cacheName:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The name of the cache
+      defaultOperation:
+        kind: parameter
+        group: common
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        description: To specify a default operation to use if no operation header has been provided.
+      hazelcastInstance:
+        kind: parameter
+        group: common
+        type: object
+        javaType: com.hazelcast.core.HazelcastInstance
+        deprecated: false
+        secret: false
+        description: The hazelcast instance reference which can be used for hazelcast endpoint.
+      hazelcastInstanceName:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The hazelcast instance reference name which can be used for hazelcast endpoint. If you don't specify the instance reference camel use the default hazelcast instance from the camel-hazelcast instance.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+      concurrentConsumers:
+        kind: parameter
+        group: seda
+        label: seda
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "1"
+        description: To use concurrent consumers polling from the SEDA queue.
+      pollTimeout:
+        kind: parameter
+        group: seda
+        label: seda
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "1000"
+        description: The timeout used when consuming from the SEDA queue. When a timeout occurs the consumer can check whether it is allowed to continue running. Setting a lower value allows the consumer to react more quickly upon shutdown.
+      transacted:
+        kind: parameter
+        group: seda
+        label: seda
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: If set to true then the consumer runs in transaction mode where the messages in the seda queue will only be removed if the transaction commits which happens when the processing is complete.
+      transferExchange:
+        kind: parameter
+        group: seda
+        label: seda
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: If set to true the whole Exchange will be transfered. If header or body contains not serializable objects they will be skipped.
+  documentation.adoc: "[[HazelcastComponent-HazelcastComponent]]\nHazelcast Component\n\
+    ~~~~~~~~~~~~~~~~~~~\n\n*Available as of Camel 2.7*\n\nThe *hazelcast:* component\
+    \ allows you to work with the\nhttp://www.hazelcast.com[Hazelcast] distributed\
+    \ data grid / cache.\nHazelcast is a in memory data grid, entirely written in\
+    \ Java (single\njar). It offers a great palette of different data stores like\
+    \ map, multi\nmap (same key, n values), queue, list and atomic number. The main\
+    \ reason\nto use Hazelcast is its simple cluster support. If you have enabled\n\
+    multicast on your network you can run a cluster with hundred nodes with\nno extra\
+    \ configuration. Hazelcast can simply configured to add\nadditional features like\
+    \ n copies between nodes (default is 1), cache\npersistence, network configuration\
+    \ (if needed), near cache, enviction\nand so on. For more information consult\
+    \ the Hazelcast documentation on\nhttp://www.hazelcast.com/docs.jsp[http://www.hazelcast.com/docs.jsp].\n\
+    \nMaven users will need to add the following dependency to their `pom.xml`\nfor\
+    \ this component:\n\n[source,xml]\n------------------------------------------------------------\n\
+    <dependency>\n    <groupId>org.apache.camel</groupId>\n    <artifactId>camel-hazelcast</artifactId>\n\
+    \    <version>x.x.x</version>\n    <!-- use the same version as your Camel core\
+    \ version -->\n</dependency>\n------------------------------------------------------------\n\
+    \n[[HazelcastComponent-URIformat]]\nURI format\n^^^^^^^^^^\n\n[source,java]\n\
+    -------------------------------------------------------------------------------------------------------------------------\n\
+    hazelcast:[ map | multimap | queue | topic | seda | set | atomicvalue | instance\
+    \ | list | ringbuffer]:cachename[?options]\n-------------------------------------------------------------------------------------------------------------------------\n\
+    \n* Topic support is available as of Camel 2.15.\_*\n\n\n* RingBuffer support\
+    \ is available as of Camel 2.16.\_*\n\n[[HazelcastComponent-Options]]\nOptions\n\
+    ^^^^^^^\n\n\n\n\n// component options: START\nThe Hazelcast component supports\
+    \ 1 options which are listed below.\n\n\n\n{% raw %}\n[width=\"100%\",cols=\"\
+    2,1m,7\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| hazelcastInstance | HazelcastInstance | The\
+    \ hazelcast instance reference which can be used for hazelcast endpoint. If you\
+    \ don't specify the instance reference camel use the default hazelcast instance\
+    \ from the camel-hazelcast instance.\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n\n\n\n\n\n// endpoint options: START\n\
+    The Hazelcast component supports 13 endpoint options which are listed below:\n\
+    \n{% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| command | common |  | HazelcastCommand\
+    \ | *Required* What operation to perform.\n| cacheName | common |  | String |\
+    \ *Required* The name of the cache\n| defaultOperation | common |  | int | To\
+    \ specify a default operation to use if no operation header has been provided.\n\
+    | hazelcastInstance | common |  | HazelcastInstance | The hazelcast instance reference\
+    \ which can be used for hazelcast endpoint.\n| hazelcastInstanceName | common\
+    \ |  | String | The hazelcast instance reference name which can be used for hazelcast\
+    \ endpoint. If you don't specify the instance reference camel use the default\
+    \ hazelcast instance from the camel-hazelcast instance.\n| bridgeErrorHandler\
+    \ | consumer | false | boolean | Allows for bridging the consumer to the Camel\
+    \ routing Error Handler which mean any exceptions occurred while the consumer\
+    \ is trying to pickup incoming messages or the likes will now be processed as\
+    \ a message and handled by the routing Error Handler. By default the consumer\
+    \ will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that\
+    \ will be logged at WARN/ERROR level and ignored.\n| exceptionHandler | consumer\
+    \ (advanced) |  | ExceptionHandler | To let the consumer use a custom ExceptionHandler.\
+    \ Notice if the option bridgeErrorHandler is enabled then this options is not\
+    \ in use. By default the consumer will deal with exceptions that will be logged\
+    \ at WARN/ERROR level and ignored.\n| exchangePattern | consumer (advanced) |\
+    \  | ExchangePattern | Sets the exchange pattern when the consumer creates an\
+    \ exchange.\n| synchronous | advanced | false | boolean | Sets whether synchronous\
+    \ processing should be strictly used or Camel is allowed to use asynchronous processing\
+    \ (if supported).\n| concurrentConsumers | seda | 1 | int | To use concurrent\
+    \ consumers polling from the SEDA queue.\n| pollTimeout | seda | 1000 | int |\
+    \ The timeout used when consuming from the SEDA queue. When a timeout occurs the\
+    \ consumer can check whether it is allowed to continue running. Setting a lower\
+    \ value allows the consumer to react more quickly upon shutdown.\n| transacted\
+    \ | seda | false | boolean | If set to true then the consumer runs in transaction\
+    \ mode where the messages in the seda queue will only be removed if the transaction\
+    \ commits which happens when the processing is complete.\n| transferExchange |\
+    \ seda | false | boolean | If set to true the whole Exchange will be transfered.\
+    \ If header or body contains not serializable objects they will be skipped.\n\
+    |=======================================================================\n{% endraw\
+    \ %}\n// endpoint options: END\n\n\n\n[[HazelcastComponent-Sections]]\nSections\n\
+    ^^^^^^^^\n\n1.  Usage of link:hazelcast-component.html[#map]\n2.  Usage of link:hazelcast-component.html[#multimap]\n\
+    3.  Usage of link:hazelcast-component.html[#queue]\n4.  Usage of link:hazelcast-component.html[#topic]\n\
+    5.  Usage of link:hazelcast-component.html[#list]\n6.  Usage of link:hazelcast-component.html[#seda]\n\
+    7.  Usage of link:hazelcast-component.html[atomic number]\n8.  Usage of link:hazelcast-component.html[#cluster]\
+    \ support (instance)\n9.  Usage of link:hazelcast-component.html[#replicatedmap]\_\
+    \n10. Usage of\_link:hazelcast-component.html[#ringbuffer]\_\n\n[[HazelcastComponent-UsageofMap]]\n\
+    Usage of Map\n^^^^^^^^^^^^\n\n[[HazelcastComponent-mapcacheproducer-to-map]]\n\
+    Map cache producer - to(\"hazelcast:map:foo\")\n++++++++++++++++++++++++++++++++++++++++++++\n\
+    \nIf you want to store a value in a map you can use the map cache\nproducer. \n\
+    \nThe map cache producer provides follow operations specified by *CamelHazelcastOperationType*\
+    \ header:\n\n* put\n* putIfAbsent\n* get\n* getAll\n* keySet\n* containsKey\n\
+    * containsValue\n* delete\n* update\n* query\n* clear\n* evict\n* evictAll\n\n\
+    All operations are provide the inside the \"hazelcast.operation.type\" header\
+    \ variable. In Java\nDSL you can use the constants from `org.apache.camel.component.hazelcast.HazelcastConstants`.\n\
+    \nHeader Variables for the request message:\n\n[width=\"100%\",cols=\"10%,10%,80%\"\
+    ,options=\"header\",]\n|=======================================================================\n\
+    |Name |Type |Description\n|`CamelHazelcastOperationType` |`String` | as already\
+    \ described. \n\n|`CamelHazelcastObjectId` |`String` |the object id to store /\
+    \ find your object inside the cache (not needed for the query operation)\n|=======================================================================\n\
+    \n*put* and *putIfAbsent* operations provide an eviction mechanism: \n\n[width=\"\
+    100%\",cols=\"10%,10%,80%\",options=\"header\",]\n|=======================================================================\n\
+    |Name |Type |Description\n|`CamelHazelcastObjectTtlValue` |`Integer` | value of\
+    \ TTL. \n\n|`CamelHazelcastObjectTtlUnit` |`java.util.concurrent.TimeUnit` | value\
+    \ of time unit ( DAYS / HOURS / MINUTES / ....\n|=======================================================================\n\
+    \nYou can call the samples with:\n\n[source,java]\n-------------------------------------------------------------------------------------------------------------------\n\
+    template.sendBodyAndHeader(\"direct:[put|get|update|delete|query|evict]\", \"\
+    my-foo\", HazelcastConstants.OBJECT_ID, \"4711\");\n-------------------------------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforput:]]\nSample for *put*:\n\nJava DSL:\n\n[source,java]\n\
+    ------------------------------------------------------------------------------------\n\
+    from(\"direct:put\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.PUT_OPERATION))\n\
+    .toF(\"hazelcast:%sfoo\", HazelcastConstants.MAP_PREFIX);\n------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:put\" />\n        <!-- If using version 2.8 and\
+    \ above set headerName to \"CamelHazelcastOperationType\" -->\n    <setHeader\
+    \ headerName=\"hazelcast.operation.type\">\n        <constant>put</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:map:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \nSample for *put* with eviction:\n\nJava DSL:\n\n[source,java]\n------------------------------------------------------------------------------------\n\
+    from(\"direct:put\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.PUT_OPERATION))\n\
+    .setHeader(HazelcastConstants.TTL_VALUE, constant(Long.valueOf(1)))\n.setHeader(HazelcastConstants.TTL_UNIT,\
+    \ constant(TimeUnit.MINUTES))\n.toF(\"hazelcast:%sfoo\", HazelcastConstants.MAP_PREFIX);\n\
+    ------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:put\" />\n        <!-- If using version 2.8 and\
+    \ above set headerName to \"CamelHazelcastOperationType\" -->\n    <setHeader\
+    \ headerName=\"hazelcast.operation.type\">\n        <constant>put</constant>\n\
+    \    </setHeader>\n    <setHeader headerName=\"HazelcastConstants.TTL_VALUE\"\
+    >\n        <simple resultType=\"java.lang.Long\">1</simple>\n    </setHeader>\n\
+    \    <setHeader headerName=\"HazelcastConstants.TTL_UNIT\">\n        <simple resultType=\"\
+    java.util.concurrent.TimeUnit\">TimeUnit.MINUTES</simple>\n    </setHeader>\n\
+    \    <to uri=\"hazelcast:map:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \n\n[[HazelcastComponent-Sampleforget:]]\nSample for *get*:\n\nJava DSL:\n\n[source,java]\n\
+    ------------------------------------------------------------------------------------\n\
+    from(\"direct:get\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.GET_OPERATION))\n\
+    .toF(\"hazelcast:%sfoo\", HazelcastConstants.MAP_PREFIX)\n.to(\"seda:out\");\n\
+    ------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:get\" />\n        <!-- If using version 2.8 and\
+    \ above set headerName to \"CamelHazelcastOperationType\" -->\n    <setHeader\
+    \ headerName=\"hazelcast.operation.type\">\n        <constant>get</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:map:foo\" />\n    <to uri=\"seda:out\"\
+    \ />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforupdate:]]\nSample for *update*:\n\nJava DSL:\n\
+    \n[source,java]\n---------------------------------------------------------------------------------------\n\
+    from(\"direct:update\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.UPDATE_OPERATION))\n\
+    .toF(\"hazelcast:%sfoo\", HazelcastConstants.MAP_PREFIX);\n---------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:update\" />\n        <!-- If using version 2.8\
+    \ and above set headerName to \"CamelHazelcastOperationType\" -->\n    <setHeader\
+    \ headerName=\"hazelcast.operation.type\">\n        <constant>update</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:map:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Samplefordelete:]]\nSample for *delete*:\n\nJava DSL:\n\
+    \n[source,java]\n---------------------------------------------------------------------------------------\n\
+    from(\"direct:delete\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.DELETE_OPERATION))\n\
+    .toF(\"hazelcast:%sfoo\", HazelcastConstants.MAP_PREFIX);\n---------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:delete\" />\n        <!-- If using version 2.8\
+    \ and above set headerName to \"CamelHazelcastOperationType\" -->\n    <setHeader\
+    \ headerName=\"hazelcast.operation.type\">\n        <constant>delete</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:map:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforquery]]\nSample for *query*\n\nJava DSL:\n\n[source,java]\n\
+    --------------------------------------------------------------------------------------\n\
+    from(\"direct:query\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.QUERY_OPERATION))\n\
+    .toF(\"hazelcast:%sfoo\", HazelcastConstants.MAP_PREFIX)\n.to(\"seda:out\");\n\
+    --------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:query\" />\n        <!-- If using version 2.8\
+    \ and above set headerName to \"CamelHazelcastOperationType\" -->\n    <setHeader\
+    \ headerName=\"hazelcast.operation.type\">\n        <constant>query</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:map:foo\" />\n    <to uri=\"seda:out\"\
+    \ />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \nFor the query operation Hazelcast offers a SQL like syntax to query your\ndistributed\
+    \ map.\n\n[source,java]\n-------------------------------------------------------------------------------\n\
+    String q1 = \"bar > 1000\";\ntemplate.sendBodyAndHeader(\"direct:query\", null,\
+    \ HazelcastConstants.QUERY, q1);\n-------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-mapcacheconsumer-from-map]]\nMap cache consumer - from(\"\
+    hazelcast:map:foo\")\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nHazelcast\
+    \ provides event listeners on their data grid. If you want to be\nnotified if\
+    \ a cache will be manipulated, you can use the map consumer.\nThere're 4 events:\
+    \ *put*, *update*, *delete* and *envict*. The event\ntype will be stored in the\
+    \ \"*hazelcast.listener.action*\" header\nvariable. The map consumer provides\
+    \ some additional information inside\nthese variables:\n\nHeader Variables inside\
+    \ the response message:\n\n[width=\"100%\",cols=\"10%,10%,80%\",options=\"header\"\
+    ,]\n|=======================================================================\n\
+    |Name |Type |Description\n\n|`CamelHazelcastListenerTime` |`Long` |time of the\
+    \ event in millis\n\n|`CamelHazelcastListenerType` |`String` |the map consumer\
+    \ sets here \"cachelistener\"\n\n|`CamelHazelcastListenerAction` |`String` |type\
+    \ of event - here *added*, *updated*, *envicted* and *removed*.\n\n|`CamelHazelcastObjectId`\
+    \ |`String` |the oid of the object\n\n|`CamelHazelcastCacheName` |`String` |the\
+    \ name of the cache - e.g. \"foo\"\n\n|`CamelHazelcastCacheType` |`String` |the\
+    \ type of the cache - here map\n|=======================================================================\n\
+    \nThe object value will be stored within *put* and *update* actions inside\nthe\
+    \ message body.\n\nHere's a sample:\n\n[source,java]\n--------------------------------------------------------------------------------------------\n\
+    fromF(\"hazelcast:%sfoo\", HazelcastConstants.MAP_PREFIX)\n.log(\"object...\"\
+    )\n.choice()\n    .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.ADDED))\n\
+    \         .log(\"...added\")\n         .to(\"mock:added\")\n    .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.ENVICTED))\n\
+    \         .log(\"...envicted\")\n         .to(\"mock:envicted\")\n    .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.UPDATED))\n\
+    \         .log(\"...updated\")\n         .to(\"mock:updated\")\n    .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.REMOVED))\n\
+    \         .log(\"...removed\")\n         .to(\"mock:removed\")\n    .otherwise()\n\
+    \         .log(\"fail!\");\n--------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-UsageofMultiMap]]\nUsage of Multi Map\n^^^^^^^^^^^^^^^^^^\n\
+    \n[[HazelcastComponent-multimapcacheproducer-to-multimap]]\nmultimap cache producer\
+    \ - to(\"hazelcast:multimap:foo\")\n++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\
+    \nA multimap is a cache where you can store n values to one key. The\nmultimap\
+    \ producer provides 4 operations (put, get, removevalue, delete).\n\nHeader Variables\
+    \ for the request message:\n\n[width=\"100%\",cols=\"10%,10%,80%\",options=\"\
+    header\",]\n|=======================================================================\n\
+    |Name |Type |Description\n\n|`CamelHazelcastOperationType` |`String` |valid values\
+    \ are: put, get, removevalue, delete *From Camel 2.16:* clear.\n\n|`CamelHazelcastObjectId`\
+    \ |`String` |the object id to store / find your object inside the cache\n|=======================================================================\n\
+    \n[[HazelcastComponent-Sampleforput:.1]]\nSample for *put*:\n\nJava DSL:\n\n[source,java]\n\
+    ------------------------------------------------------------------------------------\n\
+    from(\"direct:put\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.PUT_OPERATION))\n\
+    .to(String.format(\"hazelcast:%sbar\", HazelcastConstants.MULTIMAP_PREFIX));\n\
+    ------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:put\" />\n    <log message=\"put..\"/>\n     \
+    \   <!-- If using version 2.8 and above set headerName to \"CamelHazelcastOperationType\"\
+    \ -->\n    <setHeader headerName=\"hazelcast.operation.type\">\n        <constant>put</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:multimap:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforremovevalue:]]\nSample for *removevalue*:\n\n\
+    Java DSL:\n\n[source,java]\n--------------------------------------------------------------------------------------------\n\
+    from(\"direct:removevalue\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.REMOVEVALUE_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.MULTIMAP_PREFIX);\n--------------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:removevalue\" />\n    <log message=\"removevalue...\"\
+    />\n        <!-- If using version 2.8 and above set headerName to \"CamelHazelcastOperationType\"\
+    \ -->\n    <setHeader headerName=\"hazelcast.operation.type\">\n        <constant>removevalue</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:multimap:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \nTo remove a value you have to provide the value you want to remove\ninside the\
+    \ message body. If you have a multimap object\n\\{`key: \"4711\" values: { \"\
+    my-foo\", \"my-bar\"`}} you have to put \"my-foo\"\ninside the message body to\
+    \ remove the \"my-foo\" value.\n\n[[HazelcastComponent-Sampleforget:.1]]\nSample\
+    \ for *get*:\n\nJava DSL:\n\n[source,java]\n------------------------------------------------------------------------------------\n\
+    from(\"direct:get\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.GET_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.MULTIMAP_PREFIX)\n.to(\"seda:out\"\
+    );\n------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:get\" />\n    <log message=\"get..\"/>\n     \
+    \   <!-- If using version 2.8 and above set headerName to \"CamelHazelcastOperationType\"\
+    \ -->\n    <setHeader headerName=\"hazelcast.operation.type\">\n        <constant>get</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:multimap:foo\" />\n    <to uri=\"seda:out\"\
+    \ />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Samplefordelete:.1]]\nSample for *delete*:\n\nJava DSL:\n\
+    \n[source,java]\n---------------------------------------------------------------------------------------\n\
+    from(\"direct:delete\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.DELETE_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.MULTIMAP_PREFIX);\n---------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:delete\" />\n    <log message=\"delete..\"/>\n\
+    \        <!-- If using version 2.8 and above set headerName to \"CamelHazelcastOperationType\"\
+    \ -->\n    <setHeader headerName=\"hazelcast.operation.type\">\n        <constant>delete</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:multimap:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \nyou can call them in your test class with:\n\n[source,java]\n------------------------------------------------------------------------------------------------------------------\n\
+    template.sendBodyAndHeader(\"direct:[put|get|removevalue|delete]\", \"my-foo\"\
+    , HazelcastConstants.OBJECT_ID, \"4711\");\n------------------------------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-multimapcacheconsumer-from-multimap]]\nmultimap cache consumer\
+    \ - from(\"hazelcast:multimap:foo\")\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\
+    \nFor the multimap cache this component provides the same listeners /\nvariables\
+    \ as for the map cache consumer (except the update and enviction\nlistener). The\
+    \ only difference is the *multimap* prefix inside the URI.\nHere is a sample:\n\
+    \n[source,java]\n--------------------------------------------------------------------------------------------------\n\
+    fromF(\"hazelcast:%sbar\", HazelcastConstants.MULTIMAP_PREFIX)\n.log(\"object...\"\
+    )\n.choice()\n    .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.ADDED))\n\
+    \        .log(\"...added\")\n                .to(\"mock:added\")\n        //.when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.ENVICTED))\n\
+    \        //        .log(\"...envicted\")\n        //        .to(\"mock:envicted\"\
+    )\n        .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.REMOVED))\n\
+    \                .log(\"...removed\")\n                .to(\"mock:removed\")\n\
+    \        .otherwise()\n                .log(\"fail!\");\n--------------------------------------------------------------------------------------------------\n\
+    \nHeader Variables inside the response message:\n\n[width=\"100%\",cols=\"10%,10%,80%\"\
+    ,options=\"header\",]\n|=======================================================================\n\
+    |Name |Type |Description\n\n|`CamelHazelcastListenerTime` |`Long` |time of the\
+    \ event in millis\n\n|`CamelHazelcastListenerType` |`String` |the map consumer\
+    \ sets here \"cachelistener\"\n\n|`CamelHazelcastListenerAction` |`String` |type\
+    \ of event - here *added* and *removed* (and soon *envicted*)\n\n|`CamelHazelcastObjectId`\
+    \ |`String` |the oid of the object\n\n|`CamelHazelcastCacheName` |`String` |the\
+    \ name of the cache - e.g. \"foo\"\n\n|`CamelHazelcastCacheType` |`String` |the\
+    \ type of the cache - here multimap\n|=======================================================================\n\
+    \n[[HazelcastComponent-UsageofQueue]]\nUsage of Queue\n^^^^^^^^^^^^^^\n\n[[HazelcastComponent-Queueproducer]]\n\
+    Queue producer – to(“hazelcast:queue:foo”)\n++++++++++++++++++++++++++++++++++++++++++\n\
+    \nThe queue producer provides 6 operations (add, put, poll, peek, offer,\nremovevalue).\n\
+    \n[[HazelcastComponent-Sampleforadd:]]\nSample for *add*:\n\n[source,java]\n------------------------------------------------------------------------------------\n\
+    from(\"direct:add\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.ADD_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.QUEUE_PREFIX);\n------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforput:.2]]\nSample for *put*:\n\n[source,java]\n\
+    ------------------------------------------------------------------------------------\n\
+    from(\"direct:put\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.PUT_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.QUEUE_PREFIX);\n------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforpoll:]]\nSample for *poll*:\n\n[source,java]\n\
+    -------------------------------------------------------------------------------------\n\
+    from(\"direct:poll\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.POLL_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.QUEUE_PREFIX);\n-------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforpeek:]]\nSample for *peek*:\n\n[source,java]\n\
+    -------------------------------------------------------------------------------------\n\
+    from(\"direct:peek\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.PEEK_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.QUEUE_PREFIX);\n-------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforoffer:]]\nSample for *offer*:\n\n[source,java]\n\
+    --------------------------------------------------------------------------------------\n\
+    from(\"direct:offer\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.OFFER_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.QUEUE_PREFIX);\n--------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforremovevalue:.1]]\nSample for *removevalue*:\n\n\
+    [source,java]\n--------------------------------------------------------------------------------------------\n\
+    from(\"direct:removevalue\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.REMOVEVALUE_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.QUEUE_PREFIX);\n--------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Queueconsumer]]\nQueue consumer – from(“hazelcast:queue:foo”\
+    )\n++++++++++++++++++++++++++++++++++++++++++++\n\nThe queue consumer provides\
+    \ 2 operations (add, remove).\n\n[source,java]\n-------------------------------------------------------------------------------------------\n\
+    fromF(\"hazelcast:%smm\", HazelcastConstants.QUEUE_PREFIX)\n   .log(\"object...\"\
+    )\n   .choice()\n    .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.ADDED))\n\
+    \            .log(\"...added\")\n        .to(\"mock:added\")\n    .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.REMOVED))\n\
+    \        .log(\"...removed\")\n        .to(\"mock:removed\")\n    .otherwise()\n\
+    \        .log(\"fail!\");\n-------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-topic]]\n\n[[HazelcastComponent-UsageofTopic]]\nUsage of\
+    \ Topic\n^^^^^^^^^^^^^^\n\n[[HazelcastComponent-Topicproducer]]\nTopic producer\
+    \ – to(“hazelcast:topic:foo”)\n++++++++++++++++++++++++++++++++++++++++++\n\n\
+    The topic producer provides only one operation (publish).\n\n[[HazelcastComponent-Sampleforpublish:]]\n\
+    Sample for\_*publish*:\n\n[source,java]\n----------------------------------------------------------------------------------------\n\
+    from(\"direct:add\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.PUBLISH_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.PUBLISH_OPERATION);\n----------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Topicconsumer]]\nTopic consumer – from(“hazelcast:topic:foo”\
+    )\n++++++++++++++++++++++++++++++++++++++++++++\n\nThe topic consumer provides\
+    \ only one operation (received). This\ncomponent is supposed to support multiple\
+    \ consumption as it's expected\nwhen it comes to topics so you are free to have\
+    \ as much consumers as you\nneed on the same hazelcast topic.\n\n[source,java]\n\
+    --------------------------------------------------------------------------------------------\n\
+    fromF(\"hazelcast:%sfoo\", HazelcastConstants.TOPIC_PREFIX)\n  .choice()\n   \
+    \ .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.RECEIVED))\n\
+    \      .log(\"...message received\")\n    .otherwise()\n      .log(\"...this should\
+    \ never have happened\")\n--------------------------------------------------------------------------------------------\n\
+    \n\_\n\n[[HazelcastComponent-UsageofList]]\nUsage of List\n^^^^^^^^^^^^^\n\n[[HazelcastComponent-Listproducer]]\n\
+    List producer – to(“hazelcast:list:foo”)\n++++++++++++++++++++++++++++++++++++++++\n\
+    \nThe list producer provides 4 operations (add, addAll, set, get,\nremovevalue,\
+    \ removeAll, clear).\n\n[[HazelcastComponent-Sampleforadd:.1]]\nSample for *add*:\n\
+    \n[source,java]\n------------------------------------------------------------------------------------\n\
+    from(\"direct:add\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.ADD_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.LIST_PREFIX);\n------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforget:.2]]\nSample for *get*:\n\n[source,java]\n\
+    ------------------------------------------------------------------------------------\n\
+    from(\"direct:get\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.GET_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.LIST_PREFIX)\n.to(\"seda:out\");\n\
+    ------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforsetvalue:]]\nSample for *setvalue*:\n\n[source,java]\n\
+    -----------------------------------------------------------------------------------------\n\
+    from(\"direct:set\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.SETVALUE_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.LIST_PREFIX);\n-----------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforremovevalue:.2]]\nSample for *removevalue*:\n\n\
+    [source,java]\n--------------------------------------------------------------------------------------------\n\
+    from(\"direct:removevalue\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.REMOVEVALUE_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.LIST_PREFIX);\n--------------------------------------------------------------------------------------------\n\
+    \nNote that\_*CamelHazelcastObjectIndex* header is used for indexing\npurpose.\n\
+    \n[[HazelcastComponent-Thelistconsumerprovides2operationsListconsumer]]\nThe list\
+    \ consumer provides 2 operations (add, remove).List consumer – from(“hazelcast:list:foo”\
+    )\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\
+    \n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    fromF(\"hazelcast:%smm\", HazelcastConstants.LIST_PREFIX)\n    .log(\"object...\"\
+    )\n    .choice()\n        .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.ADDED))\n\
+    \            .log(\"...added\")\n                        .to(\"mock:added\")\n\
+    \        .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.REMOVED))\n\
+    \            .log(\"...removed\")\n                        .to(\"mock:removed\"\
+    )\n                .otherwise()\n                        .log(\"fail!\");\n-----------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-UsageofSEDA]]\nUsage of SEDA\n^^^^^^^^^^^^^\n\nSEDA component\
+    \ differs from the rest components provided. It implements\na work-queue in order\
+    \ to support asynchronous SEDA architectures,\nsimilar to the core \"SEDA\" component.\n\
+    \n[[HazelcastComponent-SEDAproducer]]\nSEDA producer – to(“hazelcast:seda:foo”\
+    )\n++++++++++++++++++++++++++++++++++++++++\n\nThe SEDA producer provides no operations.\
+    \ You only send data to the\nspecified queue.\n\n[width=\"100%\",cols=\"10%,10%,80%\"\
+    ,options=\"header\",]\n|=======================================================================\n\
+    |Name |Default value |Description\n\n|`transferExchange` |`false` | if set to\
+    \ true the whole Exchange will be transfered. If\nheader or body contains not\
+    \ serializable objects, they will be skipped.\n|=======================================================================\n\
+    \nJava DSL :\n\n[source,java]\n--------------------------\nfrom(\"direct:foo\"\
+    )\n.to(\"hazelcast:seda:foo\");\n--------------------------\n\nSpring DSL :\n\n\
+    [source,java]\n----------------------------------\n<route>\n   <from uri=\"direct:start\"\
+    \ />\n   <to uri=\"hazelcast:seda:foo\" />\n</route>\n----------------------------------\n\
+    \n[[HazelcastComponent-SEDAconsumer]]\nSEDA consumer – from(“hazelcast:seda:foo”\
+    )\n++++++++++++++++++++++++++++++++++++++++++\n\nThe SEDA consumer provides no\
+    \ operations. You only retrieve data from\nthe specified queue.\n\n[width=\"100%\"\
+    ,cols=\"10%,10%,80%\",options=\"header\",]\n|=======================================================================\n\
+    |Name |Default value |Description\n\n|`pollInterval` |`1000` |The timeout used\
+    \ when consuming from the SEDA queue. When a timeout\noccurs, the consumer can\
+    \ check whether it is allowed to continue\nrunning. Setting a lower value allows\
+    \ the consumer to react more quickly\nupon shutdown. (*deprecated* from Camel\
+    \ 2.15 onwards, use pollTimeout\ninstead).\n\n|`pollTimeout` |1000 | The timeout\
+    \ used when consuming from the SEDA queue. When\na timeout occurs, the consumer\
+    \ can check whether it is allowed to\ncontinue running. Setting a lower value\
+    \ allows the consumer to react\nmore quickly upon shutdown.\n\n|`concurrentConsumers`\
+    \ |`1` |To use concurrent consumers polling from the SEDA queue.\n\n|`transferExchange`\
+    \ |`false`| if set to true the whole Exchange will be transfered. If\nheader or\
+    \ body contains not serializable objects, they will be skipped.\n\n|`transacted`\
+    \ |`false`| if set to true then the consumer runs in transaction\nmode, where\
+    \ the messages in the seda queue will only be removed if the\ntransaction commits,\
+    \ which happens when the processing is complete.\n|=======================================================================\n\
+    \nJava DSL :\n\n[source,java]\n--------------------------\nfrom(\"hazelcast:seda:foo\"\
+    )\n.to(\"mock:result\");\n--------------------------\n\nSpring DSL:\n\n[source,java]\n\
+    -----------------------------------\n<route>\n  <from uri=\"hazelcast:seda:foo\"\
+    \ />\n  <to uri=\"mock:result\" />\n</route>\n-----------------------------------\n\
+    \n[[HazelcastComponent-UsageofAtomicNumber]]\nUsage of Atomic Number\n^^^^^^^^^^^^^^^^^^^^^^\n\
+    \n* There is no consumer for this endpoint! *\n\n[[HazelcastComponent-atomicnumberproducer]]\n\
+    atomic number producer - to(\"hazelcast:atomicnumber:foo\")\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\
+    \nAn atomic number is an object that simply provides a grid wide number\n(long).\
+    \ The operations for this producer are setvalue (set the number\nwith a given\
+    \ value), get, increase (+1), decrease (-1) and destroy.\n\nHeader Variables for\
+    \ the request message:\n\n[width=\"100%\",cols=\"10%,10%,80%\",options=\"header\"\
+    ,]\n|=======================================================================\n\
+    |Name |Type |Description\n\n|`CamelHazelcastOperationType` |`String` |valid values\
+    \ are: setvalue, get, increase, decrease, destroy \n|=======================================================================\n\
+    \n[[HazelcastComponent-Sampleforset:]]\nSample for *set*:\n\nJava DSL:\n\n[source,java]\n\
+    -----------------------------------------------------------------------------------------\n\
+    from(\"direct:set\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.SETVALUE_OPERATION))\n\
+    .toF(\"hazelcast:%sfoo\", HazelcastConstants.ATOMICNUMBER_PREFIX);\n-----------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:set\" />\n        <!-- If using version 2.8 and\
+    \ above set headerName to \"CamelHazelcastOperationType\" -->\n    <setHeader\
+    \ headerName=\"hazelcast.operation.type\">\n        <constant>setvalue</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:atomicvalue:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \nProvide the value to set inside the message body (here the value is 10):\n`template.sendBody(\"\
+    direct:set\", 10);`\n\n[[HazelcastComponent-Sampleforget:.3]]\nSample for *get*:\n\
+    \nJava DSL:\n\n[source,java]\n------------------------------------------------------------------------------------\n\
+    from(\"direct:get\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.GET_OPERATION))\n\
+    .toF(\"hazelcast:%sfoo\", HazelcastConstants.ATOMICNUMBER_PREFIX);\n------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:get\" />\n        <!-- If using version 2.8 and\
+    \ above set headerName to \"CamelHazelcastOperationType\" -->\n    <setHeader\
+    \ headerName=\"hazelcast.operation.type\">\n        <constant>get</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:atomicvalue:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \nYou can get the number with\n`long body = template.requestBody(\"direct:get\"\
+    , null, Long.class);`.\n\n[[HazelcastComponent-Sampleforincrement:]]\nSample for\
+    \ *increment*:\n\nJava DSL:\n\n[source,java]\n------------------------------------------------------------------------------------------\n\
+    from(\"direct:increment\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.INCREMENT_OPERATION))\n\
+    .toF(\"hazelcast:%sfoo\", HazelcastConstants.ATOMICNUMBER_PREFIX);\n------------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:increment\" />\n        <!-- If using version\
+    \ 2.8 and above set headerName to \"CamelHazelcastOperationType\" -->\n    <setHeader\
+    \ headerName=\"hazelcast.operation.type\">\n        <constant>increment</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:atomicvalue:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \nThe actual value (after increment) will be provided inside the message\nbody.\n\
+    \n[[HazelcastComponent-Samplefordecrement:]]\nSample for *decrement*:\n\nJava\
+    \ DSL:\n\n[source,java]\n------------------------------------------------------------------------------------------\n\
+    from(\"direct:decrement\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.DECREMENT_OPERATION))\n\
+    .toF(\"hazelcast:%sfoo\", HazelcastConstants.ATOMICNUMBER_PREFIX);\n------------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:decrement\" />\n        <!-- If using version\
+    \ 2.8 and above set headerName to \"CamelHazelcastOperationType\" -->\n    <setHeader\
+    \ headerName=\"hazelcast.operation.type\">\n        <constant>decrement</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:atomicvalue:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \nThe actual value (after decrement) will be provided inside the message\nbody.\n\
+    \n[[HazelcastComponent-Samplefordestroy]]\nSample for *destroy*\n\nJava DSL:\n\
+    \n[source,java]\n----------------------------------------------------------------------------------------\n\
+    from(\"direct:destroy\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.DESTROY_OPERATION))\n\
+    .toF(\"hazelcast:%sfoo\", HazelcastConstants.ATOMICNUMBER_PREFIX);\n----------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:destroy\" />\n        <!-- If using version 2.8\
+    \ and above set headerName to \"CamelHazelcastOperationType\" -->\n    <setHeader\
+    \ headerName=\"hazelcast.operation.type\">\n        <constant>destroy</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:atomicvalue:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-clustersupport]]\ncluster support\n^^^^^^^^^^^^^^^\n\n\
+    * This endpoint provides no producer! *\n\n[[HazelcastComponent-instanceconsumer-from]]\n\
+    instance consumer - from(\"hazelcast:instance:foo\")\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nHazelcast makes sense in one single \"server node\", but it's extremly\npowerful\
+    \ in a clustered environment. The instance consumer fires if a\nnew cache instance\
+    \ will join or leave the cluster.\n\nHere's a sample:\n\n[source,java]\n-----------------------------------------------------------------------------------------\n\
+    fromF(\"hazelcast:%sfoo\", HazelcastConstants.INSTANCE_PREFIX)\n.log(\"instance...\"\
+    )\n.choice()\n    .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.ADDED))\n\
+    \        .log(\"...added\")\n        .to(\"mock:added\")\n    .otherwise()\n \
+    \       .log(\"...removed\")\n        .to(\"mock:removed\");\n-----------------------------------------------------------------------------------------\n\
+    \nEach event provides the following information inside the message header:\n\n\
+    Header Variables inside the response message:\n\n\n[width=\"100%\",cols=\"10%,10%,80%\"\
+    ,options=\"header\",]\n|=======================================================================\n\
+    |Name |Type |Description\n\n|`CamelHazelcastListenerTime` |`Long` |time of the\
+    \ event in millis\n\n|`CamelHazelcastListenerType` |`String` |the map consumer\
+    \ sets here \"instancelistener\"\n\n|`CamelHazelcastListenerAction` |`String`\
+    \ |type of event - here *added* or *removed*.\n\n|`CamelHazelcastInstanceHost`\
+    \ |`String` | host name of the instance\n\n|`CamelHazelcastInstancePort` |`Integer`\
+    \ |port number of the instance\n|=======================================================================\n\
+    \n[[HazelcastComponent-Usinghazelcastreference]]\nUsing hazelcast reference\n\
+    ^^^^^^^^^^^^^^^^^^^^^^^^^\n\n[[HazelcastComponent-Byitsname]]\nBy its name\n+++++++++++\n\
+    \n[source,xml]\n--------------------------------------------------------------------------------------------------------\n\
+    <bean id=\"hazelcastLifecycle\" class=\"com.hazelcast.core.LifecycleService\"\n\
+    \      factory-bean=\"hazelcastInstance\" factory-method=\"getLifecycleService\"\
+    \n      destroy-method=\"shutdown\" />\n\n<bean id=\"config\" class=\"com.hazelcast.config.Config\"\
+    >\n    <constructor-arg type=\"java.lang.String\" value=\"HZ.INSTANCE\" />\n</bean>\n\
+    \n<bean id=\"hazelcastInstance\" class=\"com.hazelcast.core.Hazelcast\" factory-method=\"\
+    newHazelcastInstance\">\n    <constructor-arg type=\"com.hazelcast.config.Config\"\
+    \ ref=\"config\"/>\n</bean>\n<camelContext xmlns=\"http://camel.apache.org/schema/spring\"\
+    >\n    <route id=\"testHazelcastInstanceBeanRefPut\">\n        <from uri=\"direct:testHazelcastInstanceBeanRefPut\"\
+    />\n        <setHeader headerName=\"CamelHazelcastOperationType\">\n         \
+    \   <constant>put</constant>\n        </setHeader>\n        <to uri=\"hazelcast:map:testmap?hazelcastInstanceName=HZ.INSTANCE\"\
+    />\n    </route>\n\n    <route id=\"testHazelcastInstanceBeanRefGet\">\n     \
+    \   <from uri=\"direct:testHazelcastInstanceBeanRefGet\" />\n        <setHeader\
+    \ headerName=\"CamelHazelcastOperationType\">\n            <constant>get</constant>\n\
+    \        </setHeader>\n        <to uri=\"hazelcast:map:testmap?hazelcastInstanceName=HZ.INSTANCE\"\
+    />\n        <to uri=\"seda:out\" />\n    </route>\n</camelContext>\n--------------------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Byinstance]]\nBy instance\n+++++++++++\n\n[source,xml]\n\
+    ------------------------------------------------------------------------------\n\
+    <bean id=\"hazelcastInstance\" class=\"com.hazelcast.core.Hazelcast\"\n      factory-method=\"\
+    newHazelcastInstance\" />\n<bean id=\"hazelcastLifecycle\" class=\"com.hazelcast.core.LifecycleService\"\
+    \n      factory-bean=\"hazelcastInstance\" factory-method=\"getLifecycleService\"\
+    \n      destroy-method=\"shutdown\" />\n\n<camelContext xmlns=\"http://camel.apache.org/schema/spring\"\
+    >\n    <route id=\"testHazelcastInstanceBeanRefPut\">\n        <from uri=\"direct:testHazelcastInstanceBeanRefPut\"\
+    />\n        <setHeader headerName=\"CamelHazelcastOperationType\">\n         \
+    \   <constant>put</constant>\n        </setHeader>\n        <to uri=\"hazelcast:map:testmap?hazelcastInstance=#hazelcastInstance\"\
+    />\n    </route>\n\n    <route id=\"testHazelcastInstanceBeanRefGet\">\n     \
+    \   <from uri=\"direct:testHazelcastInstanceBeanRefGet\" />\n        <setHeader\
+    \ headerName=\"CamelHazelcastOperationType\">\n            <constant>get</constant>\n\
+    \        </setHeader>\n        <to uri=\"hazelcast:map:testmap?hazelcastInstance=#hazelcastInstance\"\
+    />\n        <to uri=\"seda:out\" />\n    </route>\n</camelContext>\n------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-PublishinghazelcastinstanceasanOSGIservice]]\nPublishing\
+    \ hazelcast instance as an OSGI service\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nIf operating in an OSGI container and you would want to use one instance\nof\
+    \ hazelcast across all bundles in the same container. You can publish\nthe instance\
+    \ as an OSGI service and bundles using the cache al need is\nto reference the\
+    \ service in the hazelcast endpoint.\n\n[[HazelcastComponent-BundleAcreateaninstanceandpublishesitasanOSGIservice]]\n\
+    Bundle A create an instance and publishes it as an OSGI service\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\
+    \n\_\n\n[source,xml]\n--------------------------------------------------------------------------------------------------------\n\
+    <bean id=\"config\" class=\"com.hazelcast.config.FileSystemXmlConfig\">\n    <argument\
+    \ type=\"java.lang.String\" value=\"${hazelcast.config}\"/>\n</bean>\n\n<bean\
+    \ id=\"hazelcastInstance\" class=\"com.hazelcast.core.Hazelcast\" factory-method=\"\
+    newHazelcastInstance\">\n    <argument type=\"com.hazelcast.config.Config\" ref=\"\
+    config\"/>\n</bean>\n\n<!-- publishing the hazelcastInstance as a service -->\n\
+    <service ref=\"hazelcastInstance\" interface=\"com.hazelcast.core.HazelcastInstance\"\
+    \ />\n--------------------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-BundleBusestheinstance]]\nBundle B uses the instance\n\
+    ++++++++++++++++++++++++++\n\n[source,xml]\n--------------------------------------------------------------------------------------\n\
+    <!-- referencing the hazelcastInstance as a service -->\n<reference ref=\"hazelcastInstance\"\
+    \ interface=\"com.hazelcast.core.HazelcastInstance\" />\n\n<camelContext xmlns=\"\
+    http://camel.apache.org/schema/blueprint\">\n    <route id=\"testHazelcastInstanceBeanRefPut\"\
+    >\n        <from uri=\"direct:testHazelcastInstanceBeanRefPut\"/>\n        <setHeader\
+    \ headerName=\"CamelHazelcastOperationType\">\n            <constant>put</constant>\n\
+    \        </setHeader>\n        <to uri=\"hazelcast:map:testmap?hazelcastInstance=#hazelcastInstance\"\
+    />\n    </route>\n\n    <route id=\"testHazelcastInstanceBeanRefGet\">\n     \
+    \   <from uri=\"direct:testHazelcastInstanceBeanRefGet\" />\n        <setHeader\
+    \ headerName=\"CamelHazelcastOperationType\">\n            <constant>get</constant>\n\
+    \        </setHeader>\n        <to uri=\"hazelcast:map:testmap?hazelcastInstance=#hazelcastInstance\"\
+    />\n        <to uri=\"seda:out\" />\n    </route>\n</camelContext>\n--------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-UsageofReplicatedmap]]\nUsage of Replicated map\n^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \n*Avalaible from Camel 2.16*\n\n[[HazelcastComponent-replicatedmapcacheproducer]]\n\
+    replicatedmap cache producer\n++++++++++++++++++++++++++++\n\nA replicated map\
+    \ is a weakly consistent, distributed key-value data\nstructure with no data partition.\
+    \ The replicatedmap producer provides 4\noperations (put, get, delete, clear).\n\
+    \nHeader Variables for the request message:\n\n[width=\"100%\",cols=\"10%,10%,80%\"\
+    ,options=\"header\",]\n|=======================================================================\n\
+    |Name |Type |Description\n\n|`CamelHazelcastOperationType` |`String` | valid values\
+    \ are: put, get, removevalue, delete\n\n|`CamelHazelcastObjectId` |`String` |\
+    \ the object id to store / find your object inside the cache\n|=======================================================================\n\
+    \n[[HazelcastComponent-Sampleforput:.3]]\nSample for\_*put*:\n\nJava DSL:\n\n\
+    [source,java]\n------------------------------------------------------------------------------------\n\
+    from(\"direct:put\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.PUT_OPERATION))\n\
+    .to(String.format(\"hazelcast:%sbar\", HazelcastConstants.REPLICATEDMAP_PREFIX));\n\
+    ------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:put\" />\n    <log message=\"put..\"/>\n     \
+    \   <!-- If using version 2.8 and above set headerName to \"CamelHazelcastOperationType\"\
+    \ -->\n    <setHeader headerName=\"hazelcast.operation.type\">\n        <constant>put</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:replicatedmap:foo\" />\n</route>\n\
+    -----------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforget:.4]]\nSample for\_*get*:\n\nJava DSL:\n\n\
+    [source,java]\n------------------------------------------------------------------------------------\n\
+    from(\"direct:get\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.GET_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.REPLICATEDMAP_PREFIX)\n.to(\"seda:out\"\
+    );\n------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:get\" />\n    <log message=\"get..\"/>\n     \
+    \   <!-- If using version 2.8 and above set headerName to \"CamelHazelcastOperationType\"\
+    \ -->\n    <setHeader headerName=\"hazelcast.operation.type\">\n        <constant>get</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:replicatedmap:foo\" />\n    <to uri=\"\
+    seda:out\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Samplefordelete:.2]]\nSample for\_*delete*:\n\nJava DSL:\n\
+    \n[source,java]\n---------------------------------------------------------------------------------------\n\
+    from(\"direct:delete\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.DELETE_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.REPLICATEDMAP_PREFIX);\n---------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:delete\" />\n    <log message=\"delete..\"/>\n\
+    \        <!-- If using version 2.8 and above set headerName to \"CamelHazelcastOperationType\"\
+    \ -->\n    <setHeader headerName=\"hazelcast.operation.type\">\n        <constant>delete</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:replicatedmap:foo\" />\n</route>\n\
+    -----------------------------------------------------------------------------------------------\n\
+    \nyou can call them in your test class with:\n\n[source,java]\n------------------------------------------------------------------------------------------------------------\n\
+    template.sendBodyAndHeader(\"direct:[put|get|delete|clear]\", \"my-foo\", HazelcastConstants.OBJECT_ID,\
+    \ \"4711\");\n------------------------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-replicatedmapcacheconsumer]]\nreplicatedmap cache consumer\n\
+    ++++++++++++++++++++++++++++\n\nFor the multimap cache this component provides\
+    \ the same listeners /\nvariables as for the map cache consumer (except the update\
+    \ and enviction\nlistener). The only difference is the\_*multimap*\_prefix inside\
+    \ the URI.\nHere is a sample:\n\n[source,java]\n--------------------------------------------------------------------------------------------------\n\
+    fromF(\"hazelcast:%sbar\", HazelcastConstants.MULTIMAP_PREFIX)\n.log(\"object...\"\
+    )\n.choice()\n    .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.ADDED))\n\
+    \        .log(\"...added\")\n                .to(\"mock:added\")\n        //.when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.ENVICTED))\n\
+    \        //        .log(\"...envicted\")\n        //        .to(\"mock:envicted\"\
+    )\n        .when(header(HazelcastConstants.LISTENER_ACTION).isEqualTo(HazelcastConstants.REMOVED))\n\
+    \                .log(\"...removed\")\n                .to(\"mock:removed\")\n\
+    \        .otherwise()\n                .log(\"fail!\");\n--------------------------------------------------------------------------------------------------\n\
+    \nHeader Variables inside the response message:\n\n[width=\"100%\",cols=\"10%,10%,80%\"\
+    ,options=\"header\",]\n|=======================================================================\n\
+    |Name |Type |Description\n\n|`CamelHazelcastListenerTime` |`Long` |time of the\
+    \ event in millis\n\n|`CamelHazelcastListenerType` |`String` |the map consumer\
+    \ sets here \"cachelistener\"\n\n|`CamelHazelcastListenerAction` |`String` |type\
+    \ of event - here *added* and *removed* (and soon *envicted*)\n\n|`CamelHazelcastObjectId`\
+    \ |`String` | the oid of the object\n\n|`CamelHazelcastCacheName` |`String` |the\
+    \ name of the cache - e.g. \"foo\"\n\n|`CamelHazelcastCacheType` |`String` |the\
+    \ type of the cache - here replicatedmap\n|=======================================================================\n\
+    \n[[HazelcastComponent-UsageofRingbuffer]]\nUsage of Ringbuffer\n^^^^^^^^^^^^^^^^^^^\n\
+    \n*Avalaible from Camel 2.16*\n\n[[HazelcastComponent-ringbuffercacheproducer]]\n\
+    ringbuffer cache producer \n+++++++++++++++++++++++++\n\nRingbuffer is a distributed\
+    \ data structure where the data is stored in a\nring-like structure. You can think\
+    \ of it as a circular array with a\ncertain capacity.\_The ringbuffer producer\
+    \ provides 5 operations (add,\nreadonceHead, readonceTail, remainingCapacity,\
+    \ capacity).\n\nHeader Variables for the request message:\n\n[width=\"100%\",cols=\"\
+    10%,10%,80%\",options=\"header\",]\n|=======================================================================\n\
+    |Name |Type |Description\n\n|`CamelHazelcastOperationType` |`String` |valid values\
+    \ are: put, get, removevalue, delete\n\n|`CamelHazelcastObjectId` |`String` |the\
+    \ object id to store / find your object inside the cache\n|=======================================================================\n\
+    \n[[HazelcastComponent-Sampleforput:.4]]\nSample for\_*put*:\n\nJava DSL:\n\n\
+    [source,java]\n------------------------------------------------------------------------------------\n\
+    from(\"direct:put\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.ADD_OPERATION))\n\
+    .to(String.format(\"hazelcast:%sbar\", HazelcastConstants.RINGBUFFER_PREFIX));\n\
+    ------------------------------------------------------------------------------------\n\
+    \nSpring DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    <route>\n    <from uri=\"direct:put\" />\n    <log message=\"put..\"/>\n     \
+    \   <!-- If using version 2.8 and above set headerName to \"CamelHazelcastOperationType\"\
+    \ -->\n    <setHeader headerName=\"hazelcast.operation.type\">\n        <constant>add</constant>\n\
+    \    </setHeader>\n    <to uri=\"hazelcast:ringbuffer:foo\" />\n</route>\n-----------------------------------------------------------------------------------------------\n\
+    \n[[HazelcastComponent-Sampleforreadoncefromhead:]]\nSample for\_*readonce from\
+    \ head*:\n\nJava DSL:\n\n[source,java]\n-----------------------------------------------------------------------------------------------\n\
+    from(\"direct:get\")\n.setHeader(HazelcastConstants.OPERATION, constant(HazelcastConstants.READ_ONCE_HEAD_OPERATION))\n\
+    .toF(\"hazelcast:%sbar\", HazelcastConstants.RINGBUFFER_PREFIX)\n.to(\"seda:out\"\
+    );\n-----------------------------------------------------------------------------------------------\n"

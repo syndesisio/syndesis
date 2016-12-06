@@ -1,0 +1,805 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: jpa
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: jpa
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: jpa
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-jpa:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: jpa
+      syntax: jpa:entityType
+      title: JPA
+      description: The jpa component enables you to store and retrieve Java objects from databases using JPA.
+      label: database,sql
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.jpa.JpaComponent
+      groupId: org.apache.camel
+      artifactId: camel-jpa
+      version: 2.18.1
+    componentProperties:
+      entityManagerFactory:
+        kind: property
+        type: object
+        javaType: javax.persistence.EntityManagerFactory
+        deprecated: false
+        secret: false
+        description: To use the EntityManagerFactory. This is strongly recommended to configure.
+      transactionManager:
+        kind: property
+        type: object
+        javaType: org.springframework.transaction.PlatformTransactionManager
+        deprecated: false
+        secret: false
+        description: To use the PlatformTransactionManager for managing transactions.
+      joinTransaction:
+        kind: property
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        description: The camel-jpa component will join transaction by default. You can use this option to turn this off for example if you use LOCAL_RESOURCE and join transaction doesn't work with your JPA provider. This option can also be set globally on the JpaComponent instead of having to set it on all endpoints.
+      sharedEntityManager:
+        kind: property
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        description: Whether to use Spring's SharedEntityManager for the consumer/producer. Note in most cases joinTransaction should be set to false as this is not an EXTENDED EntityManager.
+    properties:
+      entityType:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.Class<?>
+        deprecated: false
+        secret: false
+        description: The JPA annotated class to use as entity.
+      joinTransaction:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: The camel-jpa component will join transaction by default. You can use this option to turn this off for example if you use LOCAL_RESOURCE and join transaction doesn't work with your JPA provider. This option can also be set globally on the JpaComponent instead of having to set it on all endpoints.
+      persistenceUnit:
+        kind: parameter
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: camel
+        description: The JPA persistence unit used by default.
+      sharedEntityManager:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether to use Spring's SharedEntityManager for the consumer/producer. Note in most cases joinTransaction should be set to false as this is not an EXTENDED EntityManager.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      consumeDelete:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: If true the entity is deleted after it is consumed; if false the entity is not deleted.
+      consumeLockEntity:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Specifies whether or not to set an exclusive lock on each entity bean while processing the results from polling.
+      deleteHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: object
+        javaType: org.apache.camel.component.jpa.DeleteHandler<java.lang.Object>
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To use a custom DeleteHandler to delete the row after the consumer is done processing the exchange
+      lockModeType:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: javax.persistence.LockModeType
+        enum:
+        - READ
+        - WRITE
+        - OPTIMISTIC
+        - OPTIMISTIC_FORCE_INCREMENT
+        - PESSIMISTIC_READ
+        - PESSIMISTIC_WRITE
+        - PESSIMISTIC_FORCE_INCREMENT
+        - NONE
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: PESSIMISTIC_WRITE
+        description: To configure the lock mode on the consumer.
+      maximumResults:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: -1
+        description: Set the maximum number of results to retrieve on the Query.
+      maxMessagesPerPoll:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        description: An integer value to define the maximum number of messages to gather per poll. By default no maximum is set. Can be used to avoid polling many thousands of messages when starting up the server. Set a value of 0 or negative to disable.
+      namedQuery:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: java.lang.String
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To use a named query when consuming data.
+      nativeQuery:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: java.lang.String
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To use a custom native query when consuming data. You may want to use the option consumer.resultClass also when using native queries.
+      parameters:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: object
+        javaType: java.util.Map<java.lang.String,java.lang.Object>
+        optionalPrefix: consumer.
+        multiValue: true
+        deprecated: false
+        secret: false
+        description: This key/value mapping is used for building the query parameters. It's is expected to be of the generic type java.util.Map where the keys are the named parameters of a given JPA query and the values are their corresponding effective values you want to select for.
+      preDeleteHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: object
+        javaType: org.apache.camel.component.jpa.DeleteHandler<java.lang.Object>
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To use a custom Pre-DeleteHandler to delete the row after the consumer has read the entity.
+      query:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: java.lang.String
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To use a custom query when consuming data.
+      resultClass:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: java.lang.Class<?>
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: Defines the type of the returned payload (we will call entityManager.createNativeQuery(nativeQuery resultClass) instead of entityManager.createNativeQuery(nativeQuery)). Without this option we will return an object array. Only has an affect when using in conjunction with native query when consuming data.
+      sendEmptyMessageWhenIdle:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+      skipLockedEntity:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: To configure whether to use NOWAIT on lock and silently skip the entity.
+      transacted:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether to run the consumer in transacted mode by which all messages will either commit or rollback when the entire batch has been processed. The default behavior (false) is to commit all the previously successfully processed messages and only rollback the last failed message.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      pollStrategy:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.PollingConsumerPollStrategy
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+      flushOnSend:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Flushes the EntityManager after the entity bean has been persisted.
+      remove:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Indicates to use entityManager.remove(entity).
+      usePassedInEntityManager:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: If set to true then Camel will use the EntityManager from the header JpaConstants.ENTITYMANAGER instead of the configured entity manager on the component/endpoint. This allows end users to control which entity manager will be in use.
+      usePersist:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: 'Indicates to use entityManager.persist(entity) instead of entityManager.merge(entity).
+          Note: entityManager.persist(entity) doesn''t work for detached entities (where
+          the EntityManager has to execute an UPDATE instead of an INSERT query)!'
+      entityManagerProperties:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: object
+        javaType: java.util.Map<java.lang.String,java.lang.Object>
+        prefix: emf.
+        multiValue: true
+        deprecated: false
+        secret: false
+        description: Additional properties for the entity manager to use.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+      backoffErrorThreshold:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: integer
+        javaType: int
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+      backoffIdleThreshold:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: integer
+        javaType: int
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+      backoffMultiplier:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: integer
+        javaType: int
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+      delay:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: integer
+        javaType: long
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: "500"
+        description: Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+      greedy:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+      initialDelay:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: integer
+        javaType: long
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: "1000"
+        description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+      runLoggingLevel:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: string
+        javaType: org.apache.camel.LoggingLevel
+        enum:
+        - TRACE
+        - DEBUG
+        - INFO
+        - WARN
+        - ERROR
+        - OFF
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: TRACE
+        description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+      scheduledExecutorService:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: object
+        javaType: java.util.concurrent.ScheduledExecutorService
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+      scheduler:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: string
+        javaType: org.apache.camel.spi.ScheduledPollConsumerScheduler
+        enum:
+        - none
+        - spring
+        - quartz2
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: none
+        description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+      schedulerProperties:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: object
+        javaType: java.util.Map<java.lang.String,java.lang.Object>
+        prefix: scheduler.
+        multiValue: true
+        deprecated: false
+        secret: false
+        description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+      startScheduler:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Whether the scheduler should be auto started.
+      timeUnit:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: string
+        javaType: java.util.concurrent.TimeUnit
+        enum:
+        - NANOSECONDS
+        - MICROSECONDS
+        - MILLISECONDS
+        - SECONDS
+        - MINUTES
+        - HOURS
+        - DAYS
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: MILLISECONDS
+        description: Time unit for initialDelay and delay options.
+      useFixedDelay:
+        kind: parameter
+        group: scheduler
+        label: consumer,scheduler
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+  documentation.adoc: "[[JPA-JPAComponent]]\nJPA Component\n~~~~~~~~~~~~~\n\nThe *jpa*\
+    \ component enables you to store and retrieve Java objects from\npersistent storage\
+    \ using EJB 3's Java Persistence Architecture (JPA),\nwhich is a standard interface\
+    \ layer that wraps Object/Relational Mapping\n(ORM) products such as OpenJPA,\
+    \ Hibernate, TopLink, and so on.\n\nMaven users will need to add the following\
+    \ dependency to their `pom.xml`\nfor this component:\n\n[source,xml]\n------------------------------------------------------------\n\
+    <dependency>\n    <groupId>org.apache.camel</groupId>\n    <artifactId>camel-jpa</artifactId>\n\
+    \    <version>x.x.x</version>\n    <!-- use the same version as your Camel core\
+    \ version -->\n</dependency>\n------------------------------------------------------------\n\
+    \n[[JPA-Sendingtotheendpoint]]\nSending to the endpoint\n^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nYou can store a Java entity bean in a database by sending it to a JPA\nproducer\
+    \ endpoint. The body of the _In_ message is assumed to be an\nentity bean (that\
+    \ is, a POJO with an\nhttp://java.sun.com/javaee/5/docs/api/javax/persistence/Entity.html[@Entity]\n\
+    annotation on it) or a collection or array of entity beans.\n\nIf the body is\
+    \ a List of entities, make sure to use\n*entityType=java.util.ArrayList* as a\
+    \ configuration passed to the\nproducer endpoint.\n\nIf the body does not contain\
+    \ one of the previous listed types, put a\nlink:message-translator.html[Message\
+    \ Translator] in front of the\nendpoint to perform the necessary conversion first.\n\
+    \n[[JPA-Consumingfromtheendpoint]]\nConsuming from the endpoint\n^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nConsuming messages from a JPA consumer endpoint removes (or updates)\nentity\
+    \ beans in the database. This allows you to use a database table as\na logical\
+    \ queue: consumers take messages from the queue and then\ndelete/update them to\
+    \ logically remove them from the queue.\n\nIf you do not wish to delete the entity\
+    \ bean when it has been processed\n(and when routing is done), you can specify\
+    \ `consumeDelete=false` on the\nURI. This will result in the entity being processed\
+    \ each poll.\n\nIf you would rather perform some update on the entity to mark\
+    \ it as\nprocessed (such as to exclude it from a future query) then you can\n\
+    annotate a method with\nhttp://camel.apache.org/maven/current/camel-jpa/apidocs/org/apache/camel/component/jpa/Consumed.html[@Consumed]\n\
+    which will be invoked on your entity bean when the entity bean when it\nhas been\
+    \ processed (and when routing is done).\n\nFrom *Camel 2.13* onwards you can use\n\
+    http://camel.apache.org/maven/current/camel-jpa/apidocs/org/apache/camel/component/jpa/PreConsumed.html[@PreConsumed]\n\
+    which will be invoked on your entity bean before it has been processed\n(before\
+    \ routing).\n\nIf you are consuming a lot (100K+) of rows and experience OutOfMemory\n\
+    problems you should set the maximumResults to sensible value.\n\n[[JPA-URIformat]]\n\
+    URI format\n^^^^^^^^^^\n\n[source,java]\n-----------------------------\njpa:entityClassName[?options]\n\
+    -----------------------------\n\nFor sending to the endpoint, the _entityClassName_\
+    \ is optional. If\nspecified, it helps the link:type-converter.html[Type Converter]\
+    \ to\nensure the body is of the correct type.\n\nFor consuming, the _entityClassName_\
+    \ is mandatory.\n\nYou can append query options to the URI in the following format,\n\
+    `?option=value&option=value&...`\n\n[[JPA-Options]]\nOptions\n^^^^^^^\n\n\n\n\n\
+    // component options: START\nThe JPA component supports 4 options which are listed\
+    \ below.\n\n\n\n{% raw %}\n[width=\"100%\",cols=\"2,1m,7\",options=\"header\"\
+    ]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| entityManagerFactory | EntityManagerFactory\
+    \ | To use the EntityManagerFactory. This is strongly recommended to configure.\n\
+    | transactionManager | PlatformTransactionManager | To use the PlatformTransactionManager\
+    \ for managing transactions.\n| joinTransaction | boolean | The camel-jpa component\
+    \ will join transaction by default. You can use this option to turn this off for\
+    \ example if you use LOCAL_RESOURCE and join transaction doesn't work with your\
+    \ JPA provider. This option can also be set globally on the JpaComponent instead\
+    \ of having to set it on all endpoints.\n| sharedEntityManager | boolean | Whether\
+    \ to use Spring's SharedEntityManager for the consumer/producer. Note in most\
+    \ cases joinTransaction should be set to false as this is not an EXTENDED EntityManager.\n\
+    |=======================================================================\n{% endraw\
+    \ %}\n// component options: END\n\n\n\n\n\n\n\n\n// endpoint options: START\n\
+    The JPA component supports 42 endpoint options which are listed below:\n\n{% raw\
+    \ %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| entityType | common |  |\
+    \ Class<?> | *Required* The JPA annotated class to use as entity.\n| joinTransaction\
+    \ | common | true | boolean | The camel-jpa component will join transaction by\
+    \ default. You can use this option to turn this off for example if you use LOCAL_RESOURCE\
+    \ and join transaction doesn't work with your JPA provider. This option can also\
+    \ be set globally on the JpaComponent instead of having to set it on all endpoints.\n\
+    | persistenceUnit | common | camel | String | *Required* The JPA persistence unit\
+    \ used by default.\n| sharedEntityManager | common | false | boolean | Whether\
+    \ to use Spring's SharedEntityManager for the consumer/producer. Note in most\
+    \ cases joinTransaction should be set to false as this is not an EXTENDED EntityManager.\n\
+    | bridgeErrorHandler | consumer | false | boolean | Allows for bridging the consumer\
+    \ to the Camel routing Error Handler which mean any exceptions occurred while\
+    \ the consumer is trying to pickup incoming messages or the likes will now be\
+    \ processed as a message and handled by the routing Error Handler. By default\
+    \ the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with\
+    \ exceptions that will be logged at WARN/ERROR level and ignored.\n| consumeDelete\
+    \ | consumer | true | boolean | If true the entity is deleted after it is consumed;\
+    \ if false the entity is not deleted.\n| consumeLockEntity | consumer | true |\
+    \ boolean | Specifies whether or not to set an exclusive lock on each entity bean\
+    \ while processing the results from polling.\n| deleteHandler | consumer |  |\
+    \ Object> | To use a custom DeleteHandler to delete the row after the consumer\
+    \ is done processing the exchange\n| lockModeType | consumer | PESSIMISTIC_WRITE\
+    \ | LockModeType | To configure the lock mode on the consumer.\n| maximumResults\
+    \ | consumer | -1 | int | Set the maximum number of results to retrieve on the\
+    \ Query.\n| maxMessagesPerPoll | consumer |  | int | An integer value to define\
+    \ the maximum number of messages to gather per poll. By default no maximum is\
+    \ set. Can be used to avoid polling many thousands of messages when starting up\
+    \ the server. Set a value of 0 or negative to disable.\n| namedQuery | consumer\
+    \ |  | String | To use a named query when consuming data.\n| nativeQuery | consumer\
+    \ |  | String | To use a custom native query when consuming data. You may want\
+    \ to use the option consumer.resultClass also when using native queries.\n| parameters\
+    \ | consumer |  | Map | This key/value mapping is used for building the query\
+    \ parameters. It's is expected to be of the generic type java.util.Map where the\
+    \ keys are the named parameters of a given JPA query and the values are their\
+    \ corresponding effective values you want to select for.\n| preDeleteHandler |\
+    \ consumer |  | Object> | To use a custom Pre-DeleteHandler to delete the row\
+    \ after the consumer has read the entity.\n| query | consumer |  | String | To\
+    \ use a custom query when consuming data.\n| resultClass | consumer |  | Class<?>\
+    \ | Defines the type of the returned payload (we will call entityManager.createNativeQuery(nativeQuery\
+    \ resultClass) instead of entityManager.createNativeQuery(nativeQuery)). Without\
+    \ this option we will return an object array. Only has an affect when using in\
+    \ conjunction with native query when consuming data.\n| sendEmptyMessageWhenIdle\
+    \ | consumer | false | boolean | If the polling consumer did not poll any files\
+    \ you can enable this option to send an empty message (no body) instead.\n| skipLockedEntity\
+    \ | consumer | false | boolean | To configure whether to use NOWAIT on lock and\
+    \ silently skip the entity.\n| transacted | consumer | false | boolean | Whether\
+    \ to run the consumer in transacted mode by which all messages will either commit\
+    \ or rollback when the entire batch has been processed. The default behavior (false)\
+    \ is to commit all the previously successfully processed messages and only rollback\
+    \ the last failed message.\n| exceptionHandler | consumer (advanced) |  | ExceptionHandler\
+    \ | To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler\
+    \ is enabled then this options is not in use. By default the consumer will deal\
+    \ with exceptions that will be logged at WARN/ERROR level and ignored.\n| exchangePattern\
+    \ | consumer (advanced) |  | ExchangePattern | Sets the exchange pattern when\
+    \ the consumer creates an exchange.\n| pollStrategy | consumer (advanced) |  |\
+    \ PollingConsumerPollStrategy | A pluggable org.apache.camel.PollingConsumerPollingStrategy\
+    \ allowing you to provide your custom implementation to control error handling\
+    \ usually occurred during the poll operation before an Exchange have been created\
+    \ and being routed in Camel.\n| flushOnSend | producer | true | boolean | Flushes\
+    \ the EntityManager after the entity bean has been persisted.\n| remove | producer\
+    \ | false | boolean | Indicates to use entityManager.remove(entity).\n| usePassedInEntityManager\
+    \ | producer | false | boolean | If set to true then Camel will use the EntityManager\
+    \ from the header JpaConstants.ENTITYMANAGER instead of the configured entity\
+    \ manager on the component/endpoint. This allows end users to control which entity\
+    \ manager will be in use.\n| usePersist | producer | false | boolean | Indicates\
+    \ to use entityManager.persist(entity) instead of entityManager.merge(entity).\
+    \ Note: entityManager.persist(entity) doesn't work for detached entities (where\
+    \ the EntityManager has to execute an UPDATE instead of an INSERT query)!\n| entityManagerProperties\
+    \ | advanced |  | Map | Additional properties for the entity manager to use.\n\
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing\
+    \ should be strictly used or Camel is allowed to use asynchronous processing (if\
+    \ supported).\n| backoffErrorThreshold | scheduler |  | int | The number of subsequent\
+    \ error polls (failed due some error) that should happen before the backoffMultipler\
+    \ should kick-in.\n| backoffIdleThreshold | scheduler |  | int | The number of\
+    \ subsequent idle polls that should happen before the backoffMultipler should\
+    \ kick-in.\n| backoffMultiplier | scheduler |  | int | To let the scheduled polling\
+    \ consumer backoff if there has been a number of subsequent idles/errors in a\
+    \ row. The multiplier is then the number of polls that will be skipped before\
+    \ the next actual attempt is happening again. When this option is in use then\
+    \ backoffIdleThreshold and/or backoffErrorThreshold must also be configured.\n\
+    | delay | scheduler | 500 | long | Milliseconds before the next poll. You can\
+    \ also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes\
+    \ and 30 seconds) and 1h (1 hour).\n| greedy | scheduler | false | boolean | If\
+    \ greedy is enabled then the ScheduledPollConsumer will run immediately again\
+    \ if the previous run polled 1 or more messages.\n| initialDelay | scheduler |\
+    \ 1000 | long | Milliseconds before the first poll starts. You can also specify\
+    \ time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds)\
+    \ and 1h (1 hour).\n| runLoggingLevel | scheduler | TRACE | LoggingLevel | The\
+    \ consumer logs a start/complete log line when it polls. This option allows you\
+    \ to configure the logging level for that.\n| scheduledExecutorService | scheduler\
+    \ |  | ScheduledExecutorService | Allows for configuring a custom/shared thread\
+    \ pool to use for the consumer. By default each consumer has its own single threaded\
+    \ thread pool.\n| scheduler | scheduler | none | ScheduledPollConsumerScheduler\
+    \ | To use a cron scheduler from either camel-spring or camel-quartz2 component\n\
+    | schedulerProperties | scheduler |  | Map | To configure additional properties\
+    \ when using a custom scheduler or any of the Quartz2 Spring based scheduler.\n\
+    | startScheduler | scheduler | true | boolean | Whether the scheduler should be\
+    \ auto started.\n| timeUnit | scheduler | MILLISECONDS | TimeUnit | Time unit\
+    \ for initialDelay and delay options.\n| useFixedDelay | scheduler | true | boolean\
+    \ | Controls if fixed delay or fixed rate is used. See ScheduledExecutorService\
+    \ in JDK for details.\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n\n\n\n[[JPA-MessageHeaders]]\nMessage\
+    \ Headers\n^^^^^^^^^^^^^^^\n\nCamel adds the following message headers to the\
+    \ exchange:\n\n[width=\"100%\",cols=\"10%,10%,80%\",options=\"header\",]\n|=======================================================================\n\
+    |Header |Type |Description\n\n|`CamelJpaTemplate` |`JpaTemplate` |*Not supported\
+    \ anymore since Camel 2.12:* The `JpaTemplate` object that\nis used to access\
+    \ the entity bean. You need this object in some\nsituations, for instance in a\
+    \ type converter or when you are doing some\ncustom processing. See\nhttps://issues.apache.org/jira/browse/CAMEL-5932[CAMEL-5932]\
+    \ for the\nreason why the support for this header has been dropped.\n\n|`CamelEntityManager`\
+    \ |`EntityManager` |*Camel 2.12: JPA consumer / Camel 2.12.2: JPA producer:* The\
+    \ JPA\n`EntityManager` object being used by `JpaConsumer` or `JpaProducer`.\n\n\
+    |=======================================================================\n\n[[JPA-ConfiguringEntityManagerFactory]]\n\
+    Configuring EntityManagerFactory\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nIts strongly\
+    \ advised to configure the JPA component to use a specific\n`EntityManagerFactory`\
+    \ instance. If failed to do so each `JpaEndpoint`\nwill auto create their own\
+    \ instance of `EntityManagerFactory` which most\noften is not what you want.\n\
+    \nFor example, you can instantiate a JPA component that references the\n`myEMFactory`\
+    \ entity manager factory, as follows:\n\n[source,xml]\n-------------------------------------------------------------------\n\
+    <bean id=\"jpa\" class=\"org.apache.camel.component.jpa.JpaComponent\">\n   <property\
+    \ name=\"entityManagerFactory\" ref=\"myEMFactory\"/>\n</bean>\n-------------------------------------------------------------------\n\
+    \nIn *Camel 2.3* the `JpaComponent` will auto lookup the\n`EntityManagerFactory`\
+    \ from the link:registry.html[Registry] which means\nyou do not need to configure\
+    \ this on the `JpaComponent` as shown above.\nYou only need to do so if there\
+    \ is ambiguity, in which case Camel will\nlog a WARN.\n\n[[JPA-ConfiguringTransactionManager]]\n\
+    Configuring TransactionManager\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nSince *Camel\
+    \ 2.3* the `JpaComponent` will auto lookup the\n`TransactionManager` from the\
+    \ link:registry.html[Registry.] If Camel\nwon't find any `TransactionManager`\
+    \ instance registered, it will also\nlook up for the\_`TransactionTemplate` and\
+    \ try to\nextract\_`TransactionManager` from it.\n\nIf none `TransactionTemplate`\
+    \ is available in the registry,\n`JpaEndpoint` will auto create their own instance\
+    \ of\n`TransactionManager` which most often is not what you want.\n\nIf more than\
+    \ single instance of the `TransactionManager` is found, Camel\nwill log a WARN.\
+    \ In such cases you might want to instantiate and\nexplicitly configure a JPA\
+    \ component that references the\n`myTransactionManager` transaction manager, as\
+    \ follows:\n\n[source,xml]\n-------------------------------------------------------------------\n\
+    <bean id=\"jpa\" class=\"org.apache.camel.component.jpa.JpaComponent\">\n   <property\
+    \ name=\"entityManagerFactory\" ref=\"myEMFactory\"/>\n   <property name=\"transactionManager\"\
+    \ ref=\"myTransactionManager\"/>\n</bean>\n-------------------------------------------------------------------\n\
+    \n[[JPA-Usingaconsumerwithanamedquery]]\nUsing a consumer with a named query\n\
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nFor consuming only selected entities, you\
+    \ can use the\n`consumer.namedQuery` URI query option. First, you have to define\
+    \ the\nnamed query in the JPA Entity class:\n\n[source,java]\n----------------------------------------------------------------------------------\n\
+    @Entity\n@NamedQuery(name = \"step1\", query = \"select x from MultiSteps x where\
+    \ x.step = 1\")\npublic class MultiSteps {\n   ...\n}\n----------------------------------------------------------------------------------\n\
+    \nAfter that you can define a consumer uri like this one:\n\n[source,java]\n----------------------------------------------------------------------------\n\
+    from(\"jpa://org.apache.camel.examples.MultiSteps?consumer.namedQuery=step1\"\
+    )\n.to(\"bean:myBusinessLogic\");\n----------------------------------------------------------------------------\n\
+    \n[[JPA-Usingaconsumerwithaquery]]\nUsing a consumer with a query\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nFor consuming only selected entities, you can use the `consumer.query`\nURI\
+    \ query option. You only have to define the query option:\n\n[source,java]\n---------------------------------------------------------------------------------------------------------------------------------------\n\
+    from(\"jpa://org.apache.camel.examples.MultiSteps?consumer.query=select o from\
+    \ org.apache.camel.examples.MultiSteps o where o.step = 1\")\n.to(\"bean:myBusinessLogic\"\
+    );\n---------------------------------------------------------------------------------------------------------------------------------------\n\
+    \n[[JPA-Usingaconsumerwithanativequery]]\nUsing a consumer with a native query\n\
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nFor consuming only selected entities,\
+    \ you can use the\n`consumer.nativeQuery` URI query option. You only have to define\
+    \ the\nnative query option:\n\n[source,java]\n---------------------------------------------------------------------------------------------------------------\n\
+    from(\"jpa://org.apache.camel.examples.MultiSteps?consumer.nativeQuery=select\
+    \ * from MultiSteps where step = 1\")\n.to(\"bean:myBusinessLogic\");\n---------------------------------------------------------------------------------------------------------------\n\
+    \nIf you use the native query option, you will receive an object array in\nthe\
+    \ message body.\n\n[[JPA-Example]]\nExample\n^^^^^^^\n\nSee link:tracer-example.html[Tracer\
+    \ Example] for an example using\nlink:jpa.html[JPA] to store traced messages into\
+    \ a database.\n\n[[JPA-UsingtheJPAbasedidempotentrepository]]\nUsing the JPA based\
+    \ idempotent repository\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nIn this\
+    \ section we will use the JPA based idempotent repository.\n\nFirst we need to\
+    \ setup a `persistence-unit` in the persistence.xml file:\n\nSecond we have to\
+    \ setup a `org.springframework.orm.jpa.JpaTemplate`\nwhich is used by the\n`org.apache.camel.processor.idempotent.jpa.JpaMessageIdRepository`:\n\
+    \nError formatting macro: snippet: java.lang.IndexOutOfBoundsException:\nIndex:\
+    \ 20, Size: 20\n\nAfterwards we can configure our\n`org.apache.camel.processor.idempotent.jpa.JpaMessageIdRepository`:\n\
+    \nAnd finally we can create our JPA idempotent repository in the spring\nXML file\
+    \ as well:\n\n[source,xml]\n---------------------------------------------------------------\n\
+    <camelContext xmlns=\"http://camel.apache.org/schema/spring\">   \n    <route\
+    \ id=\"JpaMessageIdRepositoryTest\">\n        <from uri=\"direct:start\" />\n\
+    \        <idempotentConsumer messageIdRepositoryRef=\"jpaStore\">\n          \
+    \  <header>messageId</header>\n            <to uri=\"mock:result\" />\n      \
+    \  </idempotentConsumer>\n    </route>\n</camelContext>\n---------------------------------------------------------------\n\
+    \n*When running this Camel component tests inside your IDE*\n\nIn case you run\
+    \ the\nhttps://svn.apache.org/repos/asf/camel/trunk/components/camel-jpa/src/test[tests\n\
+    of this component] directly inside your IDE (and not necessarily through\nMaven\
+    \ itself) then you could spot exceptions like:\n\n[source,java]\n--------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    org.springframework.transaction.CannotCreateTransactionException: Could not open\
+    \ JPA EntityManager for transaction; nested exception is\n<openjpa-2.2.1-r422266:1396819\
+    \ nonfatal user error> org.apache.openjpa.persistence.ArgumentException: This\
+    \ configuration disallows runtime optimization,\nbut the following listed types\
+    \ were not enhanced at build time or at class load time with a javaagent: \"org.apache.camel.examples.SendEmail\"\
+    .\n    at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:427)\n\
+    \    at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:371)\n\
+    \    at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:127)\n\
+    \    at org.apache.camel.processor.jpa.JpaRouteTest.cleanupRepository(JpaRouteTest.java:96)\n\
+    \    at org.apache.camel.processor.jpa.JpaRouteTest.createCamelContext(JpaRouteTest.java:67)\n\
+    \    at org.apache.camel.test.junit4.CamelTestSupport.doSetUp(CamelTestSupport.java:238)\n\
+    \    at org.apache.camel.test.junit4.CamelTestSupport.setUp(CamelTestSupport.java:208)\n\
+    --------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    \nThe problem here is that the source has been compiled/recompiled through\nyour\
+    \ IDE and not through Maven itself which would\nhttps://svn.apache.org/repos/asf/camel/trunk/components/camel-jpa/pom.xml[enhance\n\
+    the byte-code at build time]. To overcome this you would need to enable\nhttp://openjpa.apache.org/entity-enhancement.html#dynamic-enhancement[dynamic\n\
+    byte-code enhancement of OpenJPA]. As an example assuming the current\nOpenJPA\
+    \ version being used in Camel itself is 2.2.1, then as running the\ntests inside\
+    \ your favorite IDE you would need to pass the following\nargument to the JVM:\n\
+    \n[source,java]\n-------------------------------------------------------------------------------------------\n\
+    \ \n-javaagent:<path_to_your_local_m2_cache>/org/apache/openjpa/openjpa/2.2.1/openjpa-2.2.1.jar\n\
+    -------------------------------------------------------------------------------------------\n\
+    \nThen it will all become green again\nimage:https://cwiki.apache.org/confluence/s/en_GB/5982/f2b47fb3d636c8bc9fd0b11c0ec6d0ae18646be7.1/_/images/icons/emoticons/smile.png[(smile)]\n\
+    \n[[JPA-SeeAlso]]\nSee Also\n^^^^^^^^\n\n* link:configuring-camel.html[Configuring\
+    \ Camel]\n* link:component.html[Component]\n* link:endpoint.html[Endpoint]\n*\
+    \ link:getting-started.html[Getting Started]\n\n* link:tracer-example.html[Tracer\
+    \ Example]\n\n"

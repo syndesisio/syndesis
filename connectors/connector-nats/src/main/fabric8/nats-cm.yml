@@ -1,0 +1,325 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: nats
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: nats
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: nats
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-nats:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: nats
+      syntax: nats:servers
+      title: Nats
+      description: The nats component allows you produce and consume messages from NATS.
+      label: messaging
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.nats.NatsComponent
+      groupId: org.apache.camel
+      artifactId: camel-nats
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      servers:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: URLs to one or more NAT servers. Use comma to separate URLs when specifying multiple servers.
+      maxReconnectAttempts:
+        kind: parameter
+        group: common
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "3"
+        description: Max reconnection attempts
+      noRandomizeServers:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether or not randomizing the order of servers for the connection attempts
+      pedantic:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether or not running in pedantic mode (this affects performace)
+      pingInterval:
+        kind: parameter
+        group: common
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "4000"
+        description: Ping interval to be aware if connection is still alive (in milliseconds)
+      reconnect:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Whether or not using reconnection feature
+      reconnectTimeWait:
+        kind: parameter
+        group: common
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "2000"
+        description: Waiting time before attempts reconnection (in milliseconds)
+      ssl:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether or not using SSL
+      topic:
+        kind: parameter
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The name of topic we want to use
+      verbose:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether or not running in verbose mode
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      maxMessages:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Stop receiving messages from a topic we are subscribing to after maxMessages
+      poolSize:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "10"
+        description: Consumer pool size
+      queueName:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The Queue name if we are using nats for a queue configuration
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      replySubject:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: the subject to which subscribers should send response
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: |
+    [[NATS-NATSComponent]]
+    NATS Component
+    ~~~~~~~~~~~~~~
+
+    *Available since Camel 2.17.0*
+
+    http://nats.io/[NATS] is a fast and reliable messaging platform.
+
+    Maven users will need to add the following dependency to
+    their `pom.xml` for this component.
+
+    [source,xml]
+    ------------------------------------------------------------
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-nats</artifactId>
+        <!-- use the same version as your Camel core version -->
+        <version>x.y.z</version>
+    </dependency>
+    ------------------------------------------------------------
+
+    [[NATS-URIformat]]
+    URI format
+    ^^^^^^^^^^
+
+    [source,java]
+    ----------------------
+    nats:servers[?options]
+    ----------------------
+
+    Where *servers* represents the list of NATS servers.
+
+    [[NATS-Options]]
+    Options
+    ^^^^^^^
+
+
+    // component options: START
+    The Nats component has no options.
+    // component options: END
+
+
+
+
+
+    // endpoint options: START
+    The Nats component supports 18 endpoint options which are listed below:
+
+    {% raw %}
+    [width="100%",cols="2,1,1m,1m,5",options="header"]
+    |=======================================================================
+    | Name | Group | Default | Java Type | Description
+    | servers | common |  | String | *Required* URLs to one or more NAT servers. Use comma to separate URLs when specifying multiple servers.
+    | maxReconnectAttempts | common | 3 | int | Max reconnection attempts
+    | noRandomizeServers | common | false | boolean | Whether or not randomizing the order of servers for the connection attempts
+    | pedantic | common | false | boolean | Whether or not running in pedantic mode (this affects performace)
+    | pingInterval | common | 4000 | int | Ping interval to be aware if connection is still alive (in milliseconds)
+    | reconnect | common | true | boolean | Whether or not using reconnection feature
+    | reconnectTimeWait | common | 2000 | int | Waiting time before attempts reconnection (in milliseconds)
+    | ssl | common | false | boolean | Whether or not using SSL
+    | topic | common |  | String | *Required* The name of topic we want to use
+    | verbose | common | false | boolean | Whether or not running in verbose mode
+    | bridgeErrorHandler | consumer | false | boolean | Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | maxMessages | consumer |  | String | Stop receiving messages from a topic we are subscribing to after maxMessages
+    | poolSize | consumer | 10 | int | Consumer pool size
+    | queueName | consumer |  | String | The Queue name if we are using nats for a queue configuration
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | exchangePattern | consumer (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer creates an exchange.
+    | replySubject | producer |  | String | the subject to which subscribers should send response
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+    |=======================================================================
+    {% endraw %}
+    // endpoint options: END
+
+
+
+
+    [[NATS-Headers]]
+    Headers
+    ^^^^^^^
+
+    [width="100%",cols="10%,10%,80%",options="header",]
+    |=======================================================================
+    |Name |Type |Description
+
+    |CamelNatsMessageTimestamp |long |The timestamp of a consumed message.
+
+    |CamelNatsSubscriptionId |Integer |The subscription ID of a consumer.
+    |=======================================================================
+     
+    *Producer example:*
+
+    [source,java]
+    -----------------------------------------------------------
+    from("direct:send").to("nats://localhost:4222?topic=test");
+    -----------------------------------------------------------
+
+     
+
+    *Consumer example:*
+
+    [source,java]
+    ----------------------------------------------------------------------------------------
+    from("nats://localhost:4222?topic=test&maxMessages=5&queueName=test").to("mock:result");
+    ----------------------------------------------------------------------------------------

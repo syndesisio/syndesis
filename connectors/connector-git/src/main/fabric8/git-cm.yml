@@ -1,0 +1,307 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: git
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: git
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: git
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-git:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: git
+      syntax: git:localPath
+      title: Git
+      description: The git component is used for working with git repositories.
+      label: file
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.git.GitComponent
+      groupId: org.apache.camel
+      artifactId: camel-git
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      localPath:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Local repository path
+      branchName:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The branch name to work on
+      password:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Remote repository password
+      remoteName:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The remote repository name to use in particular operation like pull
+      remotePath:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The remote repository path
+      tagName:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The tag name to work on
+      username:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Remote repository username
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      type:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: org.apache.camel.component.git.consumer.GitType
+        enum:
+        - commit
+        - tag
+        - branch
+        deprecated: false
+        secret: false
+        description: The consumer type
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      operation:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: java.lang.String
+        enum:
+        - clone
+        - init
+        - add
+        - remove
+        - commit
+        - commitAll
+        - createBranch
+        - deleteBranch
+        - createTag
+        - deleteTag
+        - status
+        - log
+        - push
+        - pull
+        - showBranches
+        - cherryPick
+        deprecated: false
+        secret: false
+        description: The operation to do on the repository
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: |
+    [[Git-GitComponent]]
+    Git Component
+    ~~~~~~~~~~~~~
+
+    *Available as of Camel 2.16*
+
+    The *git:* component allows you to work with a generic Git repository. 
+
+    [source,xml]
+    ------------------------------------------------------------
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-git</artifactId>
+        <version>x.x.x</version>
+        <!-- use the same version as your Camel core version -->
+    </dependency>
+    ------------------------------------------------------------
+
+    *URI Format*
+
+    [source,java]
+    -----------------------------------
+    git://localRepositoryPath[?options]
+    -----------------------------------
+
+    [[Git-URIOptions]]
+    URI Options
+    ^^^^^^^^^^^
+
+    The producer allows to do operations on a specific repository. +
+    The consumer allows consuming commits, tags and branches on a specific
+    repository.
+
+
+    // component options: START
+    The Git component has no options.
+    // component options: END
+
+
+
+
+    // endpoint options: START
+    The Git component supports 13 endpoint options which are listed below:
+
+    {% raw %}
+    [width="100%",cols="2,1,1m,1m,5",options="header"]
+    |=======================================================================
+    | Name | Group | Default | Java Type | Description
+    | localPath | common |  | String | *Required* Local repository path
+    | branchName | common |  | String | The branch name to work on
+    | password | common |  | String | Remote repository password
+    | remoteName | common |  | String | The remote repository name to use in particular operation like pull
+    | remotePath | common |  | String | The remote repository path
+    | tagName | common |  | String | The tag name to work on
+    | username | common |  | String | Remote repository username
+    | bridgeErrorHandler | consumer | false | boolean | Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | type | consumer |  | GitType | The consumer type
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | exchangePattern | consumer (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer creates an exchange.
+    | operation | producer |  | String | The operation to do on the repository
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+    |=======================================================================
+    {% endraw %}
+    // endpoint options: END
+
+
+
+
+    [[Git-MessageHeaders]]
+    Message Headers
+    ^^^^^^^^^^^^^^^
+
+    [width="100%",cols="10%,10%,10%,20%,50%",options="header",]
+    |=======================================================================
+    |Name |Default Value |Type |Context |Description
+
+    |CamelGitOperation |`null` |String |Producer |The operation to do on a repository, if not specified as endpoint option
+
+    |CamelGitFilename |`null` |String |Producer |The file name in an add operation
+
+    |CamelGitCommitMessage |`null` |String |Producer |The commit message related in a commit operation
+
+    |CamelGitCommitUsername |`null` |String |Producer |The commit username in a commit operation
+
+    |CamelGitCommitEmail |`null` |String |Producer |The commit email in a commit operation
+
+    |CamelGitCommitId |`null` |String |Producer |The commit id
+    |=======================================================================
+
+    [[Git-ProducerExample]]
+    Producer Example
+    ^^^^^^^^^^^^^^^^
+
+    Below is an example route of a producer that add a file test.java to a
+    local repository, commit it with a specific message on master branch and
+    then push it to remote repository.
+
+    [source,java]
+    --------------------------------------------------------------------------------------------------------------------
+    from("direct:start")
+            .setHeader(GitConstants.GIT_FILE_NAME, constant("test.java"))
+            .to("git:///tmp/testRepo?operation=add")
+            .setHeader(GitConstants.GIT_COMMIT_MESSAGE, constant("first commit"))
+            .to("git:///tmp/testRepo?operation=commit")
+            .to("git:///tmp/testRepo?operation=push&remotePath=https://foo.com/test/test.git&username=xxx&password=xxx")
+    --------------------------------------------------------------------------------------------------------------------
+
+    [[Git-ConsumerExample]]
+    Consumer Example
+    ^^^^^^^^^^^^^^^^
+
+    Below is an example route of a consumer that consumes commit:
+
+    [source,java]
+    ---------------------------------------
+    from("git:///tmp/testRepo?type=commit")
+                            .to(....)
+    ---------------------------------------

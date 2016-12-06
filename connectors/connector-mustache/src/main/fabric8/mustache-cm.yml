@@ -1,0 +1,176 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: mustache
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: mustache
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: mustache
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-mustache:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: mustache
+      syntax: mustache:resourceUri
+      title: Mustache
+      description: Transforms the message using a Mustache template.
+      label: transformation
+      deprecated: false
+      async: false
+      producerOnly: true
+      javaType: org.apache.camel.component.mustache.MustacheComponent
+      groupId: org.apache.camel
+      artifactId: camel-mustache
+      version: 2.18.1
+    componentProperties:
+      mustacheFactory:
+        kind: property
+        type: object
+        javaType: com.github.mustachejava.MustacheFactory
+        deprecated: false
+        secret: false
+        description: To use a custom MustacheFactory
+    properties:
+      resourceUri:
+        kind: path
+        group: producer
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Path to the resource or a reference to lookup a bean in the Registry to use as the resource
+      contentCache:
+        kind: parameter
+        group: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether to use resource content cache or not
+      encoding:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Character encoding of the resource content.
+      endDelimiter:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: '}}'
+        description: Characters used to mark template code end.
+      startDelimiter:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: '{{'
+        description: Characters used to mark template code beginning.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[Mustache-Mustache]]\nMustache\n~~~~~~~~\n\n*Available as\
+    \ of Camel 2.12*\n\nThe *mustache:* component allows for processing a message\
+    \ using a\nhttp://mustache.github.io/[Mustache] template. This can be ideal when\n\
+    using link:templating.html[Templating] to generate responses for\nrequests.\n\n\
+    Maven users will need to add the following dependency to their `pom.xml`\nfor\
+    \ this component:\n\n[source,xml]\n---------------------------------------------------------------------------------\n\
+    <dependency>\n<groupId>org.apache.camel</groupId>\n<artifactId>camel-mustache</artifactId>\n\
+    <version>x.x.x</version> <!-- use the same version as your Camel core version\
+    \ -->\n</dependency>\n---------------------------------------------------------------------------------\n\
+    \n[[Mustache-URIformat]]\nURI format\n^^^^^^^^^^\n\n[source,java]\n-------------------------------\n\
+    mustache:templateName[?options]\n-------------------------------\n\nWhere *templateName*\
+    \ is the classpath-local URI of the template to\ninvoke; or the complete URL of\
+    \ the remote template (eg:\nfile://folder/myfile.mustache[file://folder/myfile.mustache]).\n\
+    \nYou can append query options to the URI in the following format,\n`?option=value&option=value&...`\n\
+    \n[[Mustache-Options]]\nOptions\n^^^^^^^\n\n\n{% raw %}\n\n\n// component options:\
+    \ START\nThe Mustache component supports 1 options which are listed below.\n\n\
+    \n\n{% raw %}\n[width=\"100%\",cols=\"2,1m,7\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| mustacheFactory | MustacheFactory | To use\
+    \ a custom MustacheFactory\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n\n\n\n\n\n\n\n// endpoint options:\
+    \ START\nThe Mustache component supports 6 endpoint options which are listed below:\n\
+    \n{% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| resourceUri | producer |\
+    \  | String | *Required* Path to the resource or a reference to lookup a bean\
+    \ in the Registry to use as the resource\n| contentCache | producer | false |\
+    \ boolean | Sets whether to use resource content cache or not\n| encoding | producer\
+    \ |  | String | Character encoding of the resource content.\n| endDelimiter |\
+    \ producer | }} | String | Characters used to mark template code end.\n| startDelimiter\
+    \ | producer | {{ | String | Characters used to mark template code beginning.\n\
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing\
+    \ should be strictly used or Camel is allowed to use asynchronous processing (if\
+    \ supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n{% endraw %}\n\n\n[[Mustache-MustacheContext]]\n\
+    Mustache Context\n^^^^^^^^^^^^^^^^\n\nCamel will provide exchange information\
+    \ in the Mustache context (just a\n`Map`). The `Exchange` is transferred as:\n\
+    \n[width=\"100%\",cols=\"10%,90%\",options=\"header\",]\n|=======================================================================\n\
+    |key |value\n\n|`exchange` |The `Exchange` itself.\n\n|`exchange.properties` |The\
+    \ `Exchange` properties.\n\n|`headers` |The headers of the In message.\n\n|`camelContext`\
+    \ |The Camel Context.\n\n|`request` |The In message.\n\n|`body` |The In message\
+    \ body.\n\n|`response` |The Out message (only for InOut message exchange pattern).\n\
+    |=======================================================================\n\n[[Mustache-Dynamictemplates]]\n\
+    Dynamic templates\n^^^^^^^^^^^^^^^^^\n\nCamel provides two headers by which you\
+    \ can define a different resource\nlocation for a template or the template content\
+    \ itself. If any of these\nheaders is set then Camel uses this over the endpoint\
+    \ configured\nresource. This allows you to provide a dynamic template at runtime.\n\
+    \n[width=\"100%\",cols=\"10%,10%,10%,70%\",options=\"header\",]\n|=======================================================================\n\
+    |Header |Type |Description |Support Version\n\n|MustacheConstants.MUSTACHE_RESOURCE_URI\
+    \ |String |A URI for the template resource to use instead of the endpoint\nconfigured.\
+    \ | \n\n|MustacheConstants.MUSTACHE_TEMPLATE |String |The template to use instead\
+    \ of the endpoint configured. |\n|=======================================================================\n\
+    \n[[Mustache-Samples]]\nSamples\n^^^^^^^\n\nFor example you could use something\
+    \ like:\n\n[source,java]\n--------------------------------------------\nfrom(\"\
+    activemq:My.Queue\").\nto(\"mustache:com/acme/MyResponse.mustache\");\n--------------------------------------------\n\
+    \nTo use a Mustache template to formulate a response for a message for\nInOut\
+    \ message exchanges (where there is a `JMSReplyTo` header).\n\nIf you want to\
+    \ use InOnly and consume the message and send it to another\ndestination you could\
+    \ use:\n\n[source,java]\n--------------------------------------------\nfrom(\"\
+    activemq:My.Queue\").\nto(\"mustache:com/acme/MyResponse.mustache\").\nto(\"activemq:Another.Queue\"\
+    );\n--------------------------------------------\n\nIt's possible to specify what\
+    \ template the component should use\ndynamically via a header, so for example:\n\
+    \n[source,java]\n--------------------------------------------------------------------------------------------\n\
+    from(\"direct:in\").\nsetHeader(MustacheConstants.MUSTACHE_RESOURCE_URI).constant(\"\
+    path/to/my/template.mustache\").\nto(\"mustache:dummy\");\n--------------------------------------------------------------------------------------------\n\
+    \n[[Mustache-TheEmailSample]]\nThe Email Sample\n^^^^^^^^^^^^^^^^\n\nIn this sample\
+    \ we want to use Mustache templating for an order\nconfirmation email. The email\
+    \ template is laid out in Mustache as:\n\n[source,java]\n-------------------------------------------------\n\
+    Dear {{headers.lastName}}}, {{headers.firstName}}\n\nThanks for the order of {{headers.item}}.\n\
+    \nRegards Camel Riders Bookstore\n{{body}}\n-------------------------------------------------\n\
+    \n[[Mustache-SeeAlso]]\nSee Also\n^^^^^^^^\n\n* link:configuring-camel.html[Configuring\
+    \ Camel]\n* link:component.html[Component]\n* link:endpoint.html[Endpoint]\n*\
+    \ link:getting-started.html[Getting Started]\n\n"

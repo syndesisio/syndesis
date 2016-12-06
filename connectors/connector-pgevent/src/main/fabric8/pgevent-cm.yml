@@ -1,0 +1,232 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: pgevent
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: pgevent
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: pgevent
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-pgevent:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: pgevent
+      syntax: pgevent:host:port/database/channel
+      title: PostgresSQL Event
+      description: The pgevent component allows for producing/consuming PostgreSQL events related to the LISTEN/NOTIFY commands.
+      label: database,sql
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.pgevent.PgEventComponent
+      groupId: org.apache.camel
+      artifactId: camel-pgevent
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      host:
+        kind: path
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: localhost
+        description: To connect using hostname and port to the database.
+      port:
+        kind: path
+        group: common
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: "5432"
+        description: To connect using hostname and port to the database.
+      database:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The database name
+      channel:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The channel name
+      datasource:
+        kind: parameter
+        group: common
+        type: object
+        javaType: javax.sql.DataSource
+        deprecated: false
+        secret: false
+        description: To connect using the given javax.sql.DataSource instead of using hostname and port.
+      pass:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Password for login
+      user:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: postgres
+        description: Username for login
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: |+
+    [[PGEvent-PGEventComponentPostgresSQLEvent]]
+    PGEvent Component (PostgresSQL Event)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    This is a component for Apache Camel which allows for
+    Producing/Consuming PostgreSQL events related to the LISTEN/NOTIFY
+    commands added since PostgreSQL 8.3.
+
+    Maven users will need to add the following dependency to their `pom.xml`
+    for this component:
+
+    [source,xml]
+    ------------------------------------------------------------
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-pgevent</artifactId>
+        <version>x.x.x</version>
+        <!-- use the same version as your Camel core version -->
+    </dependency>
+    ------------------------------------------------------------
+
+    URI format
+
+    The pgevent component uses the following two styles of endpoint URI
+    notation:
+
+    [source,java]
+    -------------------------------------------------
+    pgevent:datasource[?parameters]
+    pgevent://host:port/database/channel[?parameters]
+    -------------------------------------------------
+
+    You can append query options to the URI in the following format,
+    `?option=value&option=value&...`
+
+    [[PGEvent-Options]]
+    Options
+    ^^^^^^^
+
+
+    // component options: START
+    The PostgresSQL Event component has no options.
+    // component options: END
+
+
+
+    // endpoint options: START
+    The PostgresSQL Event component supports 11 endpoint options which are listed below:
+
+    {% raw %}
+    [width="100%",cols="2,1,1m,1m,5",options="header"]
+    |=======================================================================
+    | Name | Group | Default | Java Type | Description
+    | host | common | localhost | String | To connect using hostname and port to the database.
+    | port | common | 5432 | Integer | To connect using hostname and port to the database.
+    | database | common |  | String | *Required* The database name
+    | channel | common |  | String | *Required* The channel name
+    | datasource | common |  | DataSource | To connect using the given javax.sql.DataSource instead of using hostname and port.
+    | pass | common |  | String | Password for login
+    | user | common | postgres | String | Username for login
+    | bridgeErrorHandler | consumer | false | boolean | Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+    | exchangePattern | consumer (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer creates an exchange.
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+    |=======================================================================
+    {% endraw %}
+    // endpoint options: END
+
+
+    [[PGEvent-SeeAlso]]
+    See Also
+    ^^^^^^^^
+
+    * link:configuring-camel.html[Configuring Camel]
+    * link:component.html[Component]
+    * link:endpoint.html[Endpoint]
+    * link:getting-started.html[Getting Started]
+

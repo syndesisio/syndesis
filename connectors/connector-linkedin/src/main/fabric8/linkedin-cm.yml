@@ -1,0 +1,275 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: linkedin
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: linkedin
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: linkedin
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-linkedin:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: linkedin
+      syntax: linkedin:apiName/methodName
+      title: Linkedin
+      description: The linkedin component is uses for retrieving LinkedIn user profiles connections companies groups posts etc.
+      label: api,cloud,social
+      deprecated: false
+      async: false
+      lenientProperties: true
+      javaType: org.apache.camel.component.linkedin.LinkedInComponent
+      groupId: org.apache.camel
+      artifactId: camel-linkedin
+      version: 2.18.1
+    componentProperties:
+      configuration:
+        kind: property
+        type: object
+        javaType: org.apache.camel.component.linkedin.LinkedInConfiguration
+        deprecated: false
+        secret: false
+        description: To use the shared configuration
+    properties:
+      apiName:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: org.apache.camel.component.linkedin.internal.LinkedInApiName
+        enum:
+        - comments
+        - companies
+        - groups
+        - jobs
+        - people
+        - posts
+        - search
+        deprecated: false
+        secret: false
+        description: What kind of operation to perform
+      methodName:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        enum:
+        - addActivity
+        - addComment
+        - addCompanyUpdateComment
+        - addCompanyUpdateCommentAsCompany
+        - addGroupMembership
+        - addInvite
+        - addJob
+        - addJobBookmark
+        - addPost
+        - addShare
+        - addUpdateComment
+        - editJob
+        - flagCategory
+        - followCompany
+        - followPost
+        - getComment
+        - getCompanies
+        - getCompanyById
+        - getCompanyByName
+        - getCompanyUpdateComments
+        - getCompanyUpdateLikes
+        - getCompanyUpdates
+        - getConnections
+        - getConnectionsById
+        - getConnectionsByUrl
+        - getFollowedCompanies
+        - getGroup
+        - getGroupMemberships
+        - getGroupMembershipSettings
+        - getHistoricalFollowStatistics
+        - getHistoricalStatusUpdateStatistics
+        - getJob
+        - getJobBookmarks
+        - getNetworkStats
+        - getNetworkUpdates
+        - getNetworkUpdatesById
+        - getNumberOfFollowers
+        - getPerson
+        - getPersonById
+        - getPersonByUrl
+        - getPost
+        - getPostComments
+        - getPosts
+        - getStatistics
+        - getSuggestedCompanies
+        - getSuggestedGroupPosts
+        - getSuggestedGroups
+        - getSuggestedJobs
+        - getUpdateComments
+        - getUpdateLikes
+        - isShareEnabled
+        - isViewerShareEnabled
+        - likeCompanyUpdate
+        - likePost
+        - likeUpdate
+        - removeComment
+        - removeGroupMembership
+        - removeGroupSuggestion
+        - removeJob
+        - removeJobBookmark
+        - removePost
+        - searchCompanies
+        - searchJobs
+        - searchPeople
+        - share
+        - stopFollowingCompany
+        - updateGroupMembership
+        deprecated: false
+        secret: false
+        description: What sub operation to use for the selected operation
+      clientId:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: LinkedIn application client ID
+      clientSecret:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: LinkedIn application client secret
+      httpParams:
+        kind: parameter
+        group: common
+        type: object
+        javaType: java.util.Map<java.lang.String,java.lang.Object>
+        deprecated: false
+        secret: false
+        description: Custom HTTP params for example proxy host and port use constants from AllClientPNames
+      inBody:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Sets the name of a parameter to be passed in the exchange In Body
+      lazyAuth:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Flag to enable/disable lazy OAuth default is true. when enabled OAuth token retrieval or generation is not done until the first REST call
+      redirectUri:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Application redirect URI although the component never redirects to this page to avoid having to have a functioning redirect server. So for testing one could use https://localhost
+      scopes:
+        kind: parameter
+        group: common
+        type: object
+        javaType: org.apache.camel.component.linkedin.api.OAuthScope[]
+        deprecated: false
+        secret: false
+        description: List of LinkedIn scopes as specified at https://developer.linkedin.com/documents/authenticationgranting
+      secureStorage:
+        kind: parameter
+        group: common
+        type: object
+        javaType: org.apache.camel.component.linkedin.api.OAuthSecureStorage
+        deprecated: false
+        secret: false
+        description: Callback interface for providing an OAuth token or to store the token generated by the component. The callback should return null on the first call and then save the created token in the saveToken() callback. If the callback returns null the first time a userPassword MUST be provided
+      userName:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: LinkedIn user account name MUST be provided
+      userPassword:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: LinkedIn account password
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).

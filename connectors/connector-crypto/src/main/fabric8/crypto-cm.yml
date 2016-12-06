@@ -1,0 +1,612 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: crypto
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: crypto
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: crypto
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-crypto:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: crypto
+      syntax: crypto:cryptoOperation:name
+      title: Crypto (JCE)
+      description: The crypto component is used for signing and verifying exchanges using the Signature Service of the Java Cryptographic Extension (JCE).
+      label: security,transformation
+      deprecated: false
+      async: false
+      producerOnly: true
+      javaType: org.apache.camel.component.crypto.DigitalSignatureComponent
+      groupId: org.apache.camel
+      artifactId: camel-crypto
+      version: 2.18.1
+    componentProperties:
+      configuration:
+        kind: property
+        type: object
+        javaType: org.apache.camel.component.crypto.DigitalSignatureConfiguration
+        deprecated: false
+        secret: false
+        description: To use the shared DigitalSignatureConfiguration as configuration
+    properties:
+      cryptoOperation:
+        kind: path
+        group: producer
+        required: true
+        type: string
+        javaType: org.apache.camel.component.crypto.CryptoOperation
+        enum:
+        - sign
+        - verify
+        deprecated: false
+        secret: false
+        description: Set the Crypto operation from that supplied after the crypto scheme in the endpoint uri e.g. crypto:sign sets sign as the operation.
+      name:
+        kind: path
+        group: producer
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The logical name of this operation.
+      algorithm:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: SHA1WithDSA
+        description: Sets the JCE name of the Algorithm that should be used for the signer.
+      alias:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Sets the alias used to query the KeyStore for keys and link java.security.cert.Certificate Certificates to be used in signing and verifying exchanges. This value can be provided at runtime via the message header link org.apache.camel.component.crypto.DigitalSignatureConstantsKEYSTORE_ALIAS
+      certificateName:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Sets the reference name for a PrivateKey that can be fond in the registry.
+      keystore:
+        kind: parameter
+        group: producer
+        type: object
+        javaType: java.security.KeyStore
+        deprecated: false
+        secret: false
+        description: Sets the KeyStore that can contain keys and Certficates for use in signing and verifying exchanges. A KeyStore is typically used with an alias either one supplied in the Route definition or dynamically via the message header CamelSignatureKeyStoreAlias. If no alias is supplied and there is only a single entry in the Keystore then this single entry will be used.
+      keystoreName:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Sets the reference name for a Keystore that can be fond in the registry.
+      privateKey:
+        kind: parameter
+        group: producer
+        type: object
+        javaType: java.security.PrivateKey
+        deprecated: false
+        secret: true
+        description: Set the PrivateKey that should be used to sign the exchange
+      privateKeyName:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: true
+        description: Sets the reference name for a PrivateKey that can be fond in the registry.
+      provider:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Set the id of the security provider that provides the configured Signature algorithm.
+      publicKeyName:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: references that should be resolved when the context changes
+      secureRandomName:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Sets the reference name for a SecureRandom that can be fond in the registry.
+      signatureHeaderName:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Set the name of the message header that should be used to store the base64 encoded signature. This defaults to 'CamelDigitalSignature'
+      bufferSize:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: "2048"
+        description: Set the size of the buffer used to read in the Exchange payload data.
+      certificate:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: object
+        javaType: java.security.cert.Certificate
+        deprecated: false
+        secret: false
+        description: Set the Certificate that should be used to verify the signature in the exchange based on its payload.
+      clearHeaders:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Determines if the Signature specific headers be cleared after signing and verification. Defaults to true and should only be made otherwise at your extreme peril as vital private information such as Keys and passwords may escape if unset.
+      keyStoreParameters:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: object
+        javaType: org.apache.camel.util.jsse.KeyStoreParameters
+        deprecated: false
+        secret: false
+        description: Sets the KeyStore that can contain keys and Certficates for use in signing and verifying exchanges based on the given KeyStoreParameters. A KeyStore is typically used with an alias either one supplied in the Route definition or dynamically via the message header CamelSignatureKeyStoreAlias. If no alias is supplied and there is only a single entry in the Keystore then this single entry will be used.
+      publicKey:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: object
+        javaType: java.security.PublicKey
+        deprecated: false
+        secret: false
+        description: Set the PublicKey that should be used to verify the signature in the exchange.
+      secureRandom:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: object
+        javaType: java.security.SecureRandom
+        deprecated: false
+        secret: true
+        description: Set the SecureRandom used to initialize the Signature service
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+      password:
+        kind: parameter
+        group: security
+        label: security
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: true
+        description: Sets the password used to access an aliased PrivateKey in the KeyStore.
+  documentation.adoc: "[[Crypto-Crypto]]\nCrypto\n~~~~~~\n\n*Available as of Camel\
+    \ 2.3* \n*PGP Available as of Camel 2.9*\n\nThe Crypto link:data-format.html[Data\
+    \ Format] integrates the Java\nCryptographic Extension into Camel, allowing simple\
+    \ and flexible\nencryption and decryption of messages using Camel's familiar marshall\n\
+    and unmarshal formatting mechanism. It assumes marshalling to mean\nencryption\
+    \ to cyphertext and unmarshalling to mean decryption back to\nthe original plaintext.\
+    \ This data format implements only symmetric\n(shared-key) encryption and decyption.\n\
+    \n[[Crypto-Options]]\nOptions\n^^^^^^^\n\n// component options: START\nThe Crypto\
+    \ (JCE) component supports 1 options which are listed below.\n\n\n\n{% raw %}\n\
+    [width=\"100%\",cols=\"2,1m,7\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| configuration | DigitalSignatureConfiguration\
+    \ | To use the shared DigitalSignatureConfiguration as configuration\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n// endpoint options: START\nThe Crypto\
+    \ (JCE) component supports 21 endpoint options which are listed below:\n\n{% raw\
+    \ %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| cryptoOperation | producer\
+    \ |  | CryptoOperation | *Required* Set the Crypto operation from that supplied\
+    \ after the crypto scheme in the endpoint uri e.g. crypto:sign sets sign as the\
+    \ operation.\n| name | producer |  | String | *Required* The logical name of this\
+    \ operation.\n| algorithm | producer | SHA1WithDSA | String | Sets the JCE name\
+    \ of the Algorithm that should be used for the signer.\n| alias | producer | \
+    \ | String | Sets the alias used to query the KeyStore for keys and link java.security.cert.Certificate\
+    \ Certificates to be used in signing and verifying exchanges. This value can be\
+    \ provided at runtime via the message header link org.apache.camel.component.crypto.DigitalSignatureConstantsKEYSTORE_ALIAS\n\
+    | certificateName | producer |  | String | Sets the reference name for a PrivateKey\
+    \ that can be fond in the registry.\n| keystore | producer |  | KeyStore | Sets\
+    \ the KeyStore that can contain keys and Certficates for use in signing and verifying\
+    \ exchanges. A KeyStore is typically used with an alias either one supplied in\
+    \ the Route definition or dynamically via the message header CamelSignatureKeyStoreAlias.\
+    \ If no alias is supplied and there is only a single entry in the Keystore then\
+    \ this single entry will be used.\n| keystoreName | producer |  | String | Sets\
+    \ the reference name for a Keystore that can be fond in the registry.\n| privateKey\
+    \ | producer |  | PrivateKey | Set the PrivateKey that should be used to sign\
+    \ the exchange\n| privateKeyName | producer |  | String | Sets the reference name\
+    \ for a PrivateKey that can be fond in the registry.\n| provider | producer |\
+    \  | String | Set the id of the security provider that provides the configured\
+    \ Signature algorithm.\n| publicKeyName | producer |  | String | references that\
+    \ should be resolved when the context changes\n| secureRandomName | producer |\
+    \  | String | Sets the reference name for a SecureRandom that can be fond in the\
+    \ registry.\n| signatureHeaderName | producer |  | String | Set the name of the\
+    \ message header that should be used to store the base64 encoded signature. This\
+    \ defaults to 'CamelDigitalSignature'\n| bufferSize | advanced | 2048 | Integer\
+    \ | Set the size of the buffer used to read in the Exchange payload data.\n| certificate\
+    \ | advanced |  | Certificate | Set the Certificate that should be used to verify\
+    \ the signature in the exchange based on its payload.\n| clearHeaders | advanced\
+    \ | true | boolean | Determines if the Signature specific headers be cleared after\
+    \ signing and verification. Defaults to true and should only be made otherwise\
+    \ at your extreme peril as vital private information such as Keys and passwords\
+    \ may escape if unset.\n| keyStoreParameters | advanced |  | KeyStoreParameters\
+    \ | Sets the KeyStore that can contain keys and Certficates for use in signing\
+    \ and verifying exchanges based on the given KeyStoreParameters. A KeyStore is\
+    \ typically used with an alias either one supplied in the Route definition or\
+    \ dynamically via the message header CamelSignatureKeyStoreAlias. If no alias\
+    \ is supplied and there is only a single entry in the Keystore then this single\
+    \ entry will be used.\n| publicKey | advanced |  | PublicKey | Set the PublicKey\
+    \ that should be used to verify the signature in the exchange.\n| secureRandom\
+    \ | advanced |  | SecureRandom | Set the SecureRandom used to initialize the Signature\
+    \ service\n| synchronous | advanced | false | boolean | Sets whether synchronous\
+    \ processing should be strictly used or Camel is allowed to use asynchronous processing\
+    \ (if supported).\n| password | security |  | String | Sets the password used\
+    \ to access an aliased PrivateKey in the KeyStore.\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n[[Crypto-BasicUsage]]\nBasic Usage\n\
+    ^^^^^^^^^^^\n\nAt its most basic all that is required to encrypt/decrypt an exchange\
+    \ is\na shared secret key. If one or more instances of the Crypto data format\n\
+    are configured with this key the format can be used to encrypt the\npayload in\
+    \ one route (or part of one) and decrypted in another. For\nexample, using the\
+    \ Java DSL as follows:\n\nIn Spring the dataformat is configured first and then\
+    \ used in routes\n\n[source,xml]\n-----------------------------------------------------------------------\n\
+    <camelContext id=\"camel\" xmlns=\"http://camel.apache.org/schema/spring\">\n\
+    \  <dataFormats>\n    <crypto id=\"basic\" algorithm=\"DES\" keyRef=\"desKey\"\
+    \ />\n  </dataFormats>\n    ...\n  <route>\n    <from uri=\"direct:basic-encryption\"\
+    \ />\n    <marshal ref=\"basic\" />\n    <to uri=\"mock:encrypted\" />\n    <unmarshal\
+    \ ref=\"basic\" />\n    <to uri=\"mock:unencrypted\" />\n  </route>\n</camelContext>\n\
+    -----------------------------------------------------------------------\n\n[[Crypto-SpecifyingtheEncryptionAlgorithm]]\n\
+    Specifying the Encryption Algorithm\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nChanging\
+    \ the algorithm is a matter of supplying the JCE algorithm name.\nIf you change\
+    \ the algorithm you will need to use a compatible key.\n\nA list of the available\
+    \ algorithms in Java 7 is available via the\nhttp://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html[Java\n\
+    Cryptography Architecture Standard Algorithm Name Documentation].\n\n[[Crypto-SpecifyinganInitializationVector]]\n\
+    Specifying an Initialization Vector\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nSome\
+    \ crypto algorithms, particularly block algorithms, require\nconfiguration with\
+    \ an initial block of data known as an Initialization\nVector. In the JCE this\
+    \ is passed as an AlgorithmParameterSpec when the\nCipher is initialized. To use\
+    \ such a vector with the CryptoDataFormat\nyou can configure it with a byte[]\
+    \ containing the required data e.g.\n\nor with spring, suppling a reference to\
+    \ a byte[]\n\nThe same vector is required in both the encryption and decryption\n\
+    phases. As it is not necessary to keep the IV a secret, the DataFormat\nallows\
+    \ for it to be inlined into the encrypted data and subsequently\nread out in the\
+    \ decryption phase to initialize the Cipher. To inline the\nIV set the /oinline\
+    \ flag.\n\nor with spring.\n\nFor more information of the use of Initialization\
+    \ Vectors, consult\n\n*\nhttp://en.wikipedia.org/wiki/Initialization_vector[http://en.wikipedia.org/wiki/Initialization_vector]\n\
+    *\nhttp://www.herongyang.com/Cryptography/[http://www.herongyang.com/Cryptography/]\n\
+    *\nhttp://en.wikipedia.org/wiki/Block_cipher_modes_of_operation[http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation]\n\
+    \n[[Crypto-HashedMessageAuthenticationCodes(HMAC)]]\nHashed Message Authentication\
+    \ Codes (HMAC)\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nTo avoid attacks\
+    \ against the encrypted data while it is in transit the\nCryptoDataFormat can\
+    \ also calculate a Message Authentication Code for\nthe encrypted exchange contents\
+    \ based on a configurable MAC algorithm.\nThe calculated HMAC is appended to the\
+    \ stream after encryption. It is\nseparated from the stream in the decryption\
+    \ phase. The MAC is\nrecalculated and verified against the transmitted version\
+    \ to insure\nnothing was tampered with in transit.For more information on Message\n\
+    Authentication Codes see\nhttp://en.wikipedia.org/wiki/HMAC[http://en.wikipedia.org/wiki/HMAC]\n\
+    \nor with spring.\n\nBy default the HMAC is calculated using the HmacSHA1 mac\
+    \ algorithm\nthough this can be easily changed by supplying a different algorithm\n\
+    name. See\nhttps://cwiki.apache.org/confluence/pages/createpage.action?spaceKey=CAMEL&title=here&linkCreation=true&fromPageId=17268915[here]\n\
+    for how to check what algorithms are available through the configured\nsecurity\
+    \ providers\n\nor with spring.\n\n[[Crypto-SupplyingKeysDynamically]]\nSupplying\
+    \ Keys Dynamically\n^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nWhen using a Recipient list\
+    \ or similar EIP the recipient of an exchange\ncan vary dynamically. Using the\
+    \ same key across all recipients may\nneither be feasible or desirable. It would\
+    \ be useful to be able to\nspecify keys dynamically on a per exchange basis. The\
+    \ exchange could\nthen be dynamically enriched with the key of its target recipient\
+    \ before\nbeing processed by the data format. To facilitate this the DataFormat\n\
+    allow for keys to be supplied dynamically via the message headers below\n\n* `CryptoDataFormat.KEY`\
+    \ `\"CamelCryptoKey\"`\n\nor with spring.\n\n[[Crypto-PGPMessage]]\nPGP Message\n\
+    ^^^^^^^^^^^\n\nThe PGP Data Formater can create and decrypt/verify PGP Messages\
+    \ of the\nfollowing PGP packet structure (entries in brackets are optional and\n\
+    ellipses indicate repetition, comma represents \_sequential composition,\nand\
+    \ vertical bar separates alternatives):\n\n\_ \_ Public Key Encrypted Session\
+    \ Key ..., Symmetrically Encrypted Data |\nSym. Encrypted and Integrity Protected\
+    \ Data, (Compressed Data,) (One\nPass Signature ...,)\_Literal Data, (Signature\
+    \ ...,)\n\n*Since Camel 2.16*.*0* the Compressed Data packet is optional, before\
+    \ it\nwas mandatory.\n\n\_\n\n[[Crypto-PGPDataFormatOptions]]\nPGPDataFormat Options\n\
+    ^^^^^^^^^^^^^^^^^^^^^\n[width=\"70%\",cols=\"10%,10%,10%,70%\",options=\"header\"\
+    ,]\n|=======================================================================\n\
+    |Name |Type |Default |Description\n\n|`keyUserid` |`String` |`null` |The user\
+    \ ID of the key in the PGP keyring used during encryption. See\nalso option `keyUserids`.\
+    \ Can also be only a part of a user ID. For\nexample, if the user ID is \"Test\
+    \ User <test@camel.com>\" then you can use\nthe part \"Test User\" or \"<test@camel.com>\"\
+    \ to address the user ID.\n\n|`keyUserids` |`List<String>` |`null` |*Since camel\
+    \ 2.12.2*: PGP allows to encrypt the symmetric key by several\nasymmetric public\
+    \ receiver keys. You can specify here the User IDs or\nparts of User IDs of several\
+    \ public keys contained in the PGP keyring.\nIf you just have one User ID, then\
+    \ you can also use the option\n`keyUserid`. The User ID specified in `keyUserid`\
+    \ and the User IDs in\n`keyUserids` will be merged together and the corresponding\
+    \ public keys\nwill be used for the encryption.\n\n|`password` |`String` |`null`\
+    \ |Password used when opening the private key (not used for encryption).\n\n|`keyFileName`\
+    \ |`String` |`null` |Filename of the keyring; must be accessible as a classpath\
+    \ resource (but\nyou can specify a location in the file system by using the \"\
+    file:\"\nprefix).\n\n|`encryptionKeyRing` |`byte[]` |`null` |*Since camel 2.12.1*:\
+    \ encryption keyring; you can not set the\nkeyFileName and encryptionKeyRing at\
+    \ the same time.\n\n|`signatureKeyUserid` |`String` |`null` |*Since Camel 2.11.0*;\
+    \ optional User ID of the key in the PGP keyring\nused for signing (during encryption)\
+    \ or signature verification (during\ndecryption). During the signature verification\
+    \ process the specified\nUser ID restricts the public keys from the public keyring\
+    \ which can be\nused for the verification. If no User ID is specified for the\
+    \ signature\nverficiation then any public key in the public keyring can be used\
+    \ for\nthe verification. Can also be only a part of a user ID. For example, if\n\
+    the user ID is \"Test User <test@camel.com>\" then you can use the part\n\"Test\
+    \ User\" or \"<test@camel.com>\" to address the User ID.\n\n|`signatureKeyUserids`\
+    \ |`List<String>` |`null` |*Since Camel 2.12.3*: optional list of User IDs of\
+    \ the key in the PGP\nkeyring used for signing (during encryption) or signature\
+    \ verification\n(during decryption). You can specify here the User IDs or parts\
+    \ of User\nIDs of several keys contained in the PGP keyring. If you just have\
+    \ one\nUser ID, then you can also use the option `keyUserid`. The User ID\nspecified\
+    \ in `keyUserid` and the User IDs in `keyUserids` will be merged\ntogether and\
+    \ the corresponding keys will be used for the signing or\nsignature verification.\
+    \ If the specified User IDs reference several keys\nthen for each key a signature\
+    \ is added to the PGP result during the\nencryption-signing process. In the decryption-verifying\
+    \ process the list\nof User IDs restricts the list of public keys which can be\
+    \ used for\nsignature verification. If the list of User IDs is empty then any\
+    \ public\nkey in the public keyring can be used for the signature verification.\n\
+    \n|`signaturePassword` |`String` |`null` |*Since Camel 2.11.0*: optional password\
+    \ used when opening the private\nkey used for signing (during encryption).\n\n\
+    |`signatureKeyFileName` |`String` |`null` |*Since Camel 2.11.0*: optional filename\
+    \ of the keyring to use for\nsigning (during encryption) or for signature verification\
+    \ (during\ndecryption); must be accessible as a classpath resource (but you can\n\
+    specify a location in the file system by using the \"file:\" prefix).\n\n|`signatureKeyRing`\
+    \ |`byte[]` |`null` |*Since camel 2.12.1*: signature keyring; you can not set\
+    \ the\nsignatureKeyFileName and signatureKeyRing at the same time.\n\n|`algorithm`\
+    \ |`int` |`SymmetricKeyAlgorithmTags.CAST5` |*Since camel 2.12.2*: symmetric key\
+    \ encryption algorithm; possible\nvalues are defined in `org.bouncycastle.bcpg.SymmetricKeyAlgorithmTags`;\n\
+    for example 2 (= TRIPLE DES), 3 (= CAST5), 4 (= BLOWFISH), 6 (= DES), 7\n(= AES_128).\
+    \ Only relevant for encrypting.\n\n|`compressionAlgorithm` |`int` |`CompressionAlgorithmTags.ZIP`\
+    \ |*Since camel 2.12.2*: compression algorithm; possible values are defined\n\
+    in `org.bouncycastle.bcpg.CompressionAlgorithmTags`; for example 0 (=\nUNCOMPRESSED),\
+    \ 1 (= ZIP), 2 (= ZLIB), 3 (= BZIP2). Only relevant for\nencrypting.\n\n|`hashAlgorithm`\
+    \ |`int` |`HashAlgorithmTags.SHA1` |*Since camel 2.12.2*: signature hash algorithm;\
+    \ possible values are\ndefined in `org.bouncycastle.bcpg.HashAlgorithmTags`; for\
+    \ example 2 (=\nSHA1), 8 (= SHA256), 9 (= SHA384), 10 (= SHA512), 11 (=SHA224).\
+    \ Only\nrelevant for signing.\n\n|`armored` |`boolean` |`false` |This option will\
+    \ cause PGP to base64 encode the encrypted text, making\nit available for copy/paste,\
+    \ etc.\n\n|`integrity` |`boolean` |`true` |Adds an integrity check/sign into the\
+    \ encryption file.\n\n|`passphraseAccessor` |`PGPPassphraseAccessor` |`null` |*Since\
+    \ Camel 2.12.2*: provides passphrases corresponding to user Ids. If\nno passpharase\
+    \ can be found from the option `password` or\n`signaturePassword` and from the\
+    \ headers `CamelPGPDataFormatKeyPassword`\nor `CamelPGPDataFormatSignatureKeyPassword`\
+    \ then the passphrase is\nfetched from the passphrase accessor. You provide a\
+    \ bean which\nimplements the interface\nhttps://github.com/apache/camel/blob/master/components/camel-crypto/src/main/java/org/apache/camel/converter/crypto/PGPPassphraseAccessor.java[PGPPassphraseAccessor].\n\
+    A default implementation is given by\nhttps://github.com/apache/camel/blob/master/components/camel-crypto/src/main/java/org/apache/camel/converter/crypto/DefaultPGPPassphraseAccessor.java[DefaultPGPPassphraseAccessor].\n\
+    The passphrase accessor is especially useful in the decrypt case; see\nchapter\
+    \ 'PGP Decrypting/Verifying of Messages Encrypted/Signed by\nDifferent Private/Public\
+    \ Keys' below.\n\n|`signatureVerificationOption` |`String` |`\"optional\"` |*Since\
+    \ Camel 2.13.0*: controls the behavior for verifying the signature\nduring unmarshaling.\
+    \ There are three values possible:\n\n* `\"optional\"`: The PGP message may or\
+    \ may not contain signatures; if it\ndoes contain signatures, then a signature\
+    \ verification is executed. Use\nthe constant\nPGPKeyAccessDataFormat.SIGNATURE_VERIFICATION_OPTION_OPTIONAL.\n\
+    * `\"required\"`: The PGP message must contain at least one signature; if\nthis\
+    \ is not the case an exception (PGPException) is thrown. A signature\nverification\
+    \ is executed. Use the constant\nPGPKeyAccessDataFormat.SIGNATURE_VERIFICATION_OPTION_REQUIRED.\n\
+    * `\"ignore\"`: Contained signatures in the PGP message are ignored; no\nsignature\
+    \ verification is executed. Use the constant\nPGPKeyAccessDataFormat.SIGNATURE_VERIFICATION_OPTION_IGNORE.\n\
+    * `\"no_signature_allowed\"`: The PGP message must not contain a\nsignature; otherwise\
+    \ an exception (PGPException) is thrown. Use the\nconstant\nPGPKeyAccessDataFormat.SIGNATURE_VERIFICATION_OPTION_NO_SIGNATURE_ALLOWED.\n\
+    \n|`FileName` |`String` |`\"_CONSOLE\"` |*Since camel 2.15.0*: Sets the file name\
+    \ for the literal data packet.\nCan be overwritten by the\_ header \\{@link Exchange#FILE_NAME}.\n\
+    \n\"`_CONSOLE`\" indicates that the message is considered to be \"for your\neyes\
+    \ only\". This advises that the message data is unusually sensitive,\nand the\
+    \ receiving program should process it more carefully, perhaps\navoiding storing\
+    \ the received data to disk, for example.Only used for\nmarshaling.\n\n|`withCompressedDataPacket`\
+    \ |boolean |`true` |*Since Camel 2.16.0*: Indicator whether the PGP Message shall\
+    \ be created\nwith or without a Compressed Data packet. If the value is set to\
+    \ false,\nthen no Compressed Data packet is added and the compressionAlgorithm\n\
+    value is ignored. Only used for marshaling.\n|=======================================================================\n\
+    \n[[Crypto-PGPDataFormatMessageHeaders]]\nPGPDataFormat Message Headers\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nYou can override the PGPDataFormat options by applying below headers\ninto message\
+    \ dynamically.\n\n[width=\"70%\",cols=\"10%,10%,80%\",options=\"header\",]\n|=======================================================================\n\
+    |Name |Type |Description\n\n|`CamelPGPDataFormatKeyFileName` |`String` |*Since\
+    \ Camel 2.11.0*; filename of the keyring; will override existing\nsetting directly\
+    \ on the PGPDataFormat.\n\n|`CamelPGPDataFormatEncryptionKeyRing` |`byte[]` |*Since\
+    \ Camel 2.12.1*; the encryption keyring; will override existing\nsetting directly\
+    \ on the PGPDataFormat.\n\n|`CamelPGPDataFormatKeyUserid` |`String` |*Since Camel\
+    \ 2.11.0*; the User ID of the key in the PGP keyring; will\noverride existing\
+    \ setting directly on the PGPDataFormat.\n\n|`CamelPGPDataFormatKeyUserids` |`List<String>`\
+    \ |*Since camel 2.12.2*: the User IDs of the key in the PGP keyring; will\noverride\
+    \ existing setting directly on the PGPDataFormat.\n\n|`CamelPGPDataFormatKeyPassword`\
+    \ |`String` |*Since Camel 2.11.0*; password used when opening the private key;\
+    \ will\noverride existing setting directly on the PGPDataFormat.\n\n|`CamelPGPDataFormatSignatureKeyFileName`\
+    \ |`String` |*Since Camel 2.11.0*; filename of the signature keyring; will override\n\
+    existing setting directly on the PGPDataFormat.\n\n|`CamelPGPDataFormatSignatureKeyRing`\
+    \ |`byte[]` |*Since Camel 2.12.1*; the signature keyring; will override existing\n\
+    setting directly on the PGPDataFormat.\n\n|`CamelPGPDataFormatSignatureKeyUserid`\
+    \ |`String` |*Since Camel 2.11.0*; the User ID of the signature key in the PGP\n\
+    keyring; will override existing setting directly on the PGPDataFormat.\n\n|`CamelPGPDataFormatSignatureKeyUserids`\
+    \ |`List<String>` |*Since Camel 2.12.3*; the User IDs of the signature keys in\
+    \ the PGP\nkeyring; will override existing setting directly on the PGPDataFormat.\n\
+    \n|`CamelPGPDataFormatSignatureKeyPassword` |`String` |*Since Camel 2.11.0*; password\
+    \ used when opening the signature private\nkey; will override existing setting\
+    \ directly on the PGPDataFormat.\n\n|`CamelPGPDataFormatEncryptionAlgorithm` |`int`\
+    \ |*Since Camel 2.12.2*; symmetric key encryption algorithm; will override\nexisting\
+    \ setting directly on the PGPDataFormat.\n\n|`CamelPGPDataFormatSignatureHashAlgorithm`\
+    \ |`int` |*Since Camel 2.12.2*; signature hash algorithm; will override existing\n\
+    setting directly on the PGPDataFormat.\n\n|`CamelPGPDataFormatCompressionAlgorithm`\
+    \ |`int` |*Since Camel 2.12.2*; compression algorithm; will override existing\n\
+    setting directly on the PGPDataFormat.\n\n|`CamelPGPDataFormatNumberOfEncryptionKeys`\
+    \ |`Integer` |*Since*\_*Camel 2.12.3;\_*number of public keys used for encrypting\
+    \ the\nsymmectric key, set by PGPDataFormat during encryptiion process\n\n|`CamelPGPDataFormatNumberOfSigningKeys`\
+    \ |`Integer` |*Since*\_*Camel 2.12.3;\_*number of private keys used for creating\n\
+    signatures, set by PGPDataFormat during signing process\n|=======================================================================\n\
+    \n[[Crypto-EncryptingwithPGPDataFormat]]\nEncrypting with PGPDataFormat\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nThe following sample uses the popular PGP format for\nencrypting/decrypting\
+    \ files using the\nhttp://www.bouncycastle.org/java.html[Bouncy Castle Java libraries]:\n\
+    \nThe following sample performs signing + encryption, and then signature\nverification\
+    \ + decryption. It uses the same keyring for both signing and\nencryption, but\
+    \ you can obviously use different keys:\n\nOr using Spring:\n\n[[Crypto-Toworkwiththepreviousexampleyouneedthefollowing]]\n\
+    To work with the previous example you need the following\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\
+    \n* A public keyring file which contains the public keys used to encrypt\nthe\
+    \ data\n* A private keyring file which contains the keys used to decrypt the\n\
+    data\n* The keyring password\n\n[[Crypto-Managingyourkeyring]]\nManaging your\
+    \ keyring\n+++++++++++++++++++++\n\nTo manage the keyring, I use the command line\
+    \ tools, I find this to be\nthe simplest approach in managing the keys. There\
+    \ are also Java\nlibraries available from\nhttp://www.bouncycastle.org/java.html[http://www.bouncycastle.org/java.html]\n\
+    if you would prefer to do it that way.\n\n1.  Install the command line utilities\
+    \ on linux\n\n[source,java]\n---------------------\napt-get install gnupg\n---------------------\n\
+    2.  Create your keyring, entering a secure password\n\n[source,java]\n-------------\n\
+    gpg --gen-key\n-------------\n3.  If you need to import someone elses public key\
+    \ so that you can\nencrypt a file for them.\n\n[source,java]\n--------------------------\n\
+    gpg --import <filename.key\n--------------------------\n4.  The following files\
+    \ should now exist and can be used to run the\nexample\n\n[source,java]\n-----------------------------------------------\n\
+    ls -l ~/.gnupg/pubring.gpg ~/.gnupg/secring.gpg\n-----------------------------------------------\n\
+    \n[[Crypto-PGPDecrypting/VerifyingofMessagesEncrypted/SignedbyDifferentPrivate/PublicKeys]]\n\
+    PGP Decrypting/Verifying of Messages Encrypted/Signed by Different\nPrivate/Public\
+    \ Keys\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nSince *Camel 2.12.2*.\n\nA PGP Data Formater can decrypt/verify messages which\
+    \ have been\nencrypted by different public keys or signed by different private\
+    \ keys.\nJust, provide the corresponding private keys in the secret keyring, the\n\
+    corresponding public keys in the public keyring, and the passphrases in\nthe passphrase\
+    \ accessor.\n\n[source,java]\n------------------------------------------------------------------------------------------------------------------------------------------\n\
+    Map<String, String> userId2Passphrase = new HashMap<String, String>(2);\n// add\
+    \ passphrases of several private keys whose corresponding public keys have been\
+    \ used to encrypt the messages\nuserId2Passphrase.put(\"UserIdOfKey1\",\"passphrase1\"\
+    ); // you must specify the exact User ID!\nuserId2Passphrase.put(\"UserIdOfKey2\"\
+    ,\"passphrase2\");\nPGPPassphraseAccessor passphraseAccessor = new PGPPassphraseAccessorDefault(userId2Passphrase);\n\
+    \nPGPDataFormat pgpVerifyAndDecrypt = new PGPDataFormat();\npgpVerifyAndDecrypt.setPassphraseAccessor(passphraseAccessor);\n\
+    // the method getSecKeyRing() provides the secret keyring as byte array containing\
+    \ the private keys\npgpVerifyAndDecrypt.setEncryptionKeyRing(getSecKeyRing());\
+    \ // alternatively you can use setKeyFileName(keyfileName)\n// the method getPublicKeyRing()\
+    \ provides the public keyring as byte array containing the public keys\npgpVerifyAndDecrypt.setSignatureKeyRing((getPublicKeyRing());\
+    \  // alternatively you can use setSignatureKeyFileName(signatgureKeyfileName)\n\
+    // it is not necessary to specify the encryption or signer  User Id\n \nfrom(\"\
+    direct:start\")\n         ...     \n        .unmarshal(pgpVerifyAndDecrypt) //\
+    \ can decrypt/verify messages encrypted/signed by different private/public keys\n\
+    \        ...            \n------------------------------------------------------------------------------------------------------------------------------------------\n\
+    \n* The functionality is especially useful to support the key exchange. If\nyou\
+    \ want to exchange the private key for decrypting you can accept for a\nperiod\
+    \ of time messages which are either encrypted with the old or new\ncorresponding\
+    \ public key. Or if the sender wants to exchange his signer\nprivate key, you\
+    \ can accept for a period of time, the old or new signer\nkey.\n* Technical background:\
+    \ The PGP encrypted data contains a Key ID of the\npublic key which was used to\
+    \ encrypt the data. This Key ID can be used\nto locate the private key in the\
+    \ secret keyring to decrypt the data. The\nsame mechanism is also used to locate\
+    \ the public key for verifying a\nsignature. Therefore you no longer must specify\
+    \ User IDs for the\nunmarshaling.\n\n[[Crypto-RestrictingtheSignerIdentitiesduringPGPSignatureVerification]]\n\
+    Restricting the Signer Identities during PGP Signature Verification\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nSince\_*Camel 2.12.3.*\n\nIf you verify a signature you not only want to verify\
+    \ the correctness of\nthe signature but you also want check that the signature\
+    \ comes from a\ncertain identity or a specific set of identities. Therefore it\
+    \ is\npossible to restrict the number of public keys from the public keyring\n\
+    which can be used for the verification of a signature. \_\n\n*Signature User IDs*\n\
+    \n[source,java]\n---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    // specify the User IDs of the expected signer identities\n List<String> expectedSigUserIds\
+    \ = new ArrayList<String>();\n expectedSigUserIds.add(\"Trusted company1\");\n\
+    \ expectedSigUserIds.add(\"Trusted company2\");\n\_\n PGPDataFormat pgpVerifyWithSpecificKeysAndDecrypt\
+    \ = new PGPDataFormat();\n pgpVerifyWithSpecificKeysAndDecrypt.setPassword(\"\
+    my password\"); // for decrypting with private key\n pgpVerifyWithSpecificKeysAndDecrypt.setKeyFileName(keyfileName);\n\
+    \ pgpVerifyWithSpecificKeysAndDecrypt.setSignatureKeyFileName(signatgureKeyfileName);\n\
+    \ pgpVerifyWithSpecificKeysAndDecrypt.setSignatureKeyUserids(expectedSigUserIds);\
+    \ // if you have only one signer identity then you can also use setSignatureKeyUserid(\"\
+    expected Signer\")\n\_\nfrom(\"direct:start\")\n         ...     \n        .unmarshal(pgpVerifyWithSpecificKeysAndDecrypt)\n\
+    \        ...      \n---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    \n* If the PGP content has several signatures the verification is\nsuccessful\
+    \ as soon as one signature can be verified.\n* If you do not want to restrict\
+    \ the signer identities for verification\nthen do not specify the signature key\
+    \ User IDs. In this case all public\nkeys in the public keyring are taken into\
+    \ account.\n\n[[Crypto-SeveralSignaturesinOnePGPDataFormat]]\nSeveral Signatures\
+    \ in One PGP Data Format\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nSince\_\
+    *Camel 2.12.3.*\n\nThe PGP specification allows that one PGP data format can contain\n\
+    several signatures from different keys. Since Camel 2.13.3 it is\npossible to\
+    \ create such kind of PGP content via specifying signature\nUser IDs which relate\
+    \ to several private keys in the secret keyring.\n\n*Several Signatures*\n\n[source,java]\n\
+    -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    \ PGPDataFormat pgpSignAndEncryptSeveralSignerKeys = new PGPDataFormat();\n pgpSignAndEncryptSeveralSignerKeys.setKeyUserid(keyUserid);\
+    \ // for encrypting, you can also use setKeyUserids if you want to encrypt with\
+    \ several keys\n pgpSignAndEncryptSeveralSignerKeys.setKeyFileName(keyfileName);\n\
+    \ pgpSignAndEncryptSeveralSignerKeys.setSignatureKeyFileName(signatgureKeyfileName);\n\
+    \ pgpSignAndEncryptSeveralSignerKeys.setSignaturePassword(\"sdude\"); // here\
+    \ we assume that all private keys have the same password, if this is not the case\
+    \ then you can use setPassphraseAccessor\n\n List<String> signerUserIds = new\
+    \ ArrayList<String>();\n signerUserIds.add(\"company old key\");\n signerUserIds.add(\"\
+    company new key\");\n pgpSignAndEncryptSeveralSignerKeys.setSignatureKeyUserids(signerUserIds);\n\
+    \_\nfrom(\"direct:start\")\n         ...     \n        .marshal(pgpSignAndEncryptSeveralSignerKeys)\n\
+    \        ...      \n-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    \n[[Crypto-SupportofSub-KeysandKeyFlagsinPGPDataFormatMarshaler]]\nSupport of\
+    \ Sub-Keys and Key Flags in PGP Data Format Marshaler\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nSince\_*Camel 2.12.3. +\n*An https://tools.ietf.org/html/rfc4880#section-12.1[OpenPGP\
+    \ V4 key] can\nhave a primary key and sub-keys. The usage of the keys is indicated\
+    \ by\nthe so called https://tools.ietf.org/html/rfc4880#section-5.2.3.21[Key\n\
+    Flags]. For example, you can have a primary key with two sub-keys; the\nprimary\
+    \ key shall only be used for certifying other keys (Key Flag\n0x01), the first\
+    \ sub-key\_ shall only be used for signing (Key Flag\n0x02), and the second sub-key\
+    \ shall only be used for encryption (Key\nFlag 0x04 or 0x08). The PGP Data Format\
+    \ marshaler takes into account\nthese Key Flags of the primary key and sub-keys\
+    \ in order to determine\nthe right key for signing and encryption. This is necessary\
+    \ because the\nprimary key and its sub-keys have the same User IDs.\n\n[[Crypto-SupportofCustomKeyAccessors]]\n\
+    Support of Custom Key Accessors\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nSince *Camel\
+    \ 2.13.0. +\n*You can implement custom key accessors for encryption/signing. The\n\
+    above PGPDataFormat class selects in a certain predefined way the keys\nwhich\
+    \ should be used for signing/encryption or verifying/decryption. If\nyou have\
+    \ special requirements how your keys should be selected you\nshould use the\n\
+    https://github.com/apache/camel/blob/master/components/camel-crypto/src/main/java/org/apache/camel/converter/crypto/PGPKeyAccessDataFormat.java[PGPKeyAccessDataFormat]\n\
+    class instead and implement the interfaces\nhttps://github.com/apache/camel/blob/master/components/camel-crypto/src/main/java/org/apache/camel/converter/crypto/PGPPublicKeyAccessor.java[PGPPublicKeyAccessor]\n\
+    and\nhttps://github.com/apache/camel/blob/master/components/camel-crypto/src/main/java/org/apache/camel/converter/crypto/PGPSecretKeyAccessor.java[PGPSecretKeyAccessor]\n\
+    as beans. There are default implementations\nhttps://github.com/apache/camel/blob/master/components/camel-crypto/src/main/java/org/apache/camel/converter/crypto/DefaultPGPPublicKeyAccessor.java[DefaultPGPPublicKeyAccessor]\n\
+    and\nhttps://github.com/apache/camel/blob/master/components/camel-crypto/src/main/java/org/apache/camel/converter/crypto/DefaultPGPSecretKeyAccessor.java[DefaultPGPSecretKeyAccessor]\n\
+    which cache the keys, so that not every time the keyring is parsed when\nthe processor\
+    \ is called.\n\nPGPKeyAccessDataFormat has the same options as PGPDataFormat except\n\
+    password, keyFileName, encryptionKeyRing, signaturePassword,\nsignatureKeyFileName,\
+    \ and signatureKeyRing.\n\n[[Crypto-Dependencies]]\nDependencies\n^^^^^^^^^^^^\n\
+    \nTo use the link:crypto.html[Crypto] dataformat in your camel routes you\nneed\
+    \ to add the following dependency to your pom.\n\n[source,xml]\n----------------------------------------------------------\n\
+    <dependency>\n  <groupId>org.apache.camel</groupId>\n  <artifactId>camel-crypto</artifactId>\n\
+    \  <version>x.x.x</version>\n  <!-- use the same version as your Camel core version\
+    \ -->\n</dependency>\n----------------------------------------------------------\n\
+    \n[[Crypto-SeeAlso]]\nSee Also\n^^^^^^^^\n\n* link:data-format.html[Data Format]\n\
+    * link:crypto-digital-signatures.html[Crypto (Digital Signatures)]\n* http://www.bouncycastle.org/java.html[http://www.bouncycastle.org/java.html]\n\
+    \n"

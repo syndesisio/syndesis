@@ -1,0 +1,386 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: routebox
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: routebox
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: routebox
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-routebox:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: routebox
+      syntax: routebox:routeboxName
+      title: RouteBox
+      description: The routebox component allows to send/receive messages between Camel routes in a black box way.
+      label: eventbus
+      deprecated: true
+      async: false
+      javaType: org.apache.camel.component.routebox.RouteboxComponent
+      groupId: org.apache.camel
+      artifactId: camel-routebox
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      routeboxName:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Logical name for the routebox (eg like a queue name)
+      dispatchMap:
+        kind: parameter
+        group: common
+        type: object
+        javaType: java.util.Map<java.lang.String,java.lang.String>
+        deprecated: false
+        secret: false
+        description: A string representing a key in the Camel Registry matching an object value of the type HashMap. The HashMap key should contain strings that can be matched against the value set for the exchange header ROUTE_DISPATCH_KEY. The HashMap value should contain inner route consumer URI's to which requests should be directed.
+      dispatchStrategy:
+        kind: parameter
+        group: common
+        type: object
+        javaType: org.apache.camel.component.routebox.strategy.RouteboxDispatchStrategy
+        deprecated: false
+        secret: false
+        description: To use a custom RouteboxDispatchStrategy which allows to use custom dispatching instead of the default.
+      forkContext:
+        kind: parameter
+        group: common
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Whether to fork and create a new inner CamelContext instead of reusing the same CamelContext.
+      innerProtocol:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        enum:
+        - direct
+        - seda
+        deprecated: false
+        secret: false
+        defaultValue: direct
+        description: The Protocol used internally by the Routebox component. Can be Direct or SEDA. The Routebox component currently offers protocols that are JVM bound.
+      queueSize:
+        kind: parameter
+        group: common
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        description: Create a fixed size queue to receive requests.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      pollInterval:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: integer
+        javaType: long
+        deprecated: false
+        secret: false
+        defaultValue: "1000"
+        description: The timeout used when polling from seda. When a timeout occurs the consumer can check whether it is allowed to continue running. Setting a lower value allows the consumer to react more quickly upon shutdown.
+      threads:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "20"
+        description: Number of threads to be used by the routebox to receive requests.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      connectionTimeout:
+        kind: parameter
+        group: producer
+        label: producer
+        type: integer
+        javaType: long
+        deprecated: false
+        secret: false
+        defaultValue: "20000"
+        description: Timeout in millis used by the producer when sending a message.
+      sendToConsumer:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Dictates whether a Producer endpoint sends a request to an external routebox consumer. If the setting is false the Producer creates an embedded inner context and processes requests internally.
+      innerContext:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: object
+        javaType: org.apache.camel.CamelContext
+        deprecated: false
+        secret: false
+        description: A string representing a key in the Camel Registry matching an object value of the type org.apache.camel.CamelContext. If a CamelContext is not provided by the user a CamelContext is automatically created for deployment of inner routes.
+      innerProducerTemplate:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: object
+        javaType: org.apache.camel.ProducerTemplate
+        deprecated: false
+        secret: false
+        description: The ProducerTemplate to use by the internal embeded CamelContext
+      innerRegistry:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: object
+        javaType: org.apache.camel.spi.Registry
+        deprecated: false
+        secret: false
+        description: To use a custom registry for the internal embedded CamelContext.
+      routeBuilders:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: A string representing a key in the Camel Registry matching an object value of the type List. If the user does not supply an innerContext pre-primed with inner routes the routeBuilders option must be provided as a non-empty list of RouteBuilders containing inner routes
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[Routebox-RouteboxComponent]]\nRoutebox Component\n~~~~~~~~~~~~~~~~~~\n\
+    \n*Available as of Camel 2.6*\n\n*Routebox subject for change*\n\nThe Routebox\
+    \ component will be revisited in upcoming releases to see if\nit can be further\
+    \ simplified, be more intuitive and user friendly. The\nrelated link:context.html[Context]\
+    \ component may be regardes as the\nsimpler component. This component may be @deprecated\
+    \ in favor of\nlink:context.html[Context].\n\nThe *routebox* component enables\
+    \ the creation of specialized endpoints\nthat offer encapsulation and a strategy\
+    \ based indirection service to a\ncollection of camel routes hosted in an automatically\
+    \ created or user\ninjected camel context.\n\nRoutebox endpoints are camel endpoints\
+    \ that may be invoked directly on\ncamel routes. The routebox endpoint performs\
+    \ the following key functions\n\n* encapsulation - acts as a blackbox, hosting\
+    \ a collection of camel\nroutes stored in an inner camel context. The inner context\
+    \ is fully\nunder the control of the routebox component and is *JVM bound*.\n\
+    * strategy based indirection - direct payloads sent to the routebox\nendpoint\
+    \ along a camel route to specific inner routes based on a user\ndefined internal\
+    \ routing strategy or a dispatch map.\n* exchange propagation - forward exchanges\
+    \ modified by the routebox\nendpoint to the next segment of the camel route.\n\
+    \nThe routebox component supports both consumer and producer endpoints.\n\nProducer\
+    \ endpoints are of two flavors\n\n* Producers that send or dispatch incoming requests\
+    \ to a external\nroutebox consumer endpoint\n* Producers that directly invoke\
+    \ routes in an internal embedded camel\ncontext thereby not sending requests to\
+    \ an external consumer.\n\nMaven users will need to add the following dependency\
+    \ to their `pom.xml`\nfor this component:\n\n[source,xml]\n------------------------------------------------------------\n\
+    <dependency>\n    <groupId>org.apache.camel</groupId>\n    <artifactId>camel-routebox</artifactId>\n\
+    \    <version>x.x.x</version>\n    <!-- use the same version as your Camel core\
+    \ version -->\n</dependency>\n------------------------------------------------------------\n\
+    \n[[Routebox-TheneedforaCamelRouteboxendpoint]]\nThe need for a Camel Routebox\
+    \ endpoint\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nThe routebox component is\
+    \ designed to ease integration in complex\nenvironments needing\n\n* a large collection\
+    \ of routes and\n* involving a wide set of endpoint technologies needing integration\
+    \ in\ndifferent ways\n\nIn such environments, it is often necessary to craft an\
+    \ integration\nsolution by creating a sense of layering among camel routes effectively\n\
+    organizing them into\n\n* Coarse grained or higher level routes - aggregated collection\
+    \ of inner\nor lower level routes exposed as Routebox endpoints that represent\
+    \ an\nintegration focus area. For example\n\n[width=\"100%\",cols=\"50%,50%\"\
+    ,options=\"header\",]\n|=======================================================================\n\
+    |Focus Area |Coarse grained Route Examples\n\n|Department Focus |HR routes, Sales\
+    \ routes etc\n\n|Supply chain & B2B Focus |Shipping routes, Fulfillment routes,\
+    \ 3rd party services etc\n\n|Technology Focus |Database routes, JMS routes, Scheduled\
+    \ batch routes etc\n|=======================================================================\n\
+    \n* Fine grained routes - routes that execute a singular and specific\nbusiness\
+    \ and/or integration pattern.\n\nRequests sent to Routebox endpoints on coarse\
+    \ grained routes can then\ndelegate requests to inner fine grained routes to achieve\
+    \ a specific\nintegration objective, collect the final inner result, and continue\
+    \ to\nprogress to the next step along the coarse-grained route.\n\n[[Routebox-URIformat]]\n\
+    URI format\n^^^^^^^^^^\n\n[source,java]\n-------------------------------\nroutebox:routeboxname[?options]\n\
+    -------------------------------\n\nYou can append query options to the URI in\
+    \ the following format,\n`?option=value&option=value&...`\n\n[[Routebox-Options]]\n\
+    Options\n^^^^^^^\n\n\n// component options: START\nThe RouteBox component has\
+    \ no options.\n// component options: END\n\n\n\n// endpoint options: START\nThe\
+    \ RouteBox component supports 18 endpoint options which are listed below:\n\n\
+    {% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| routeboxName | common |\
+    \  | String | *Required* Logical name for the routebox (eg like a queue name)\n\
+    | dispatchMap | common |  | Map | A string representing a key in the Camel Registry\
+    \ matching an object value of the type HashMap. The HashMap key should contain\
+    \ strings that can be matched against the value set for the exchange header ROUTE_DISPATCH_KEY.\
+    \ The HashMap value should contain inner route consumer URI's to which requests\
+    \ should be directed.\n| dispatchStrategy | common |  | RouteboxDispatchStrategy\
+    \ | To use a custom RouteboxDispatchStrategy which allows to use custom dispatching\
+    \ instead of the default.\n| forkContext | common | true | boolean | Whether to\
+    \ fork and create a new inner CamelContext instead of reusing the same CamelContext.\n\
+    | innerProtocol | common | direct | String | The Protocol used internally by the\
+    \ Routebox component. Can be Direct or SEDA. The Routebox component currently\
+    \ offers protocols that are JVM bound.\n| queueSize | common |  | int | Create\
+    \ a fixed size queue to receive requests.\n| bridgeErrorHandler | consumer | false\
+    \ | boolean | Allows for bridging the consumer to the Camel routing Error Handler\
+    \ which mean any exceptions occurred while the consumer is trying to pickup incoming\
+    \ messages or the likes will now be processed as a message and handled by the\
+    \ routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler\
+    \ to deal with exceptions that will be logged at WARN/ERROR level and ignored.\n\
+    | pollInterval | consumer | 1000 | long | The timeout used when polling from seda.\
+    \ When a timeout occurs the consumer can check whether it is allowed to continue\
+    \ running. Setting a lower value allows the consumer to react more quickly upon\
+    \ shutdown.\n| threads | consumer | 20 | int | Number of threads to be used by\
+    \ the routebox to receive requests.\n| exceptionHandler | consumer (advanced)\
+    \ |  | ExceptionHandler | To let the consumer use a custom ExceptionHandler. Notice\
+    \ if the option bridgeErrorHandler is enabled then this options is not in use.\
+    \ By default the consumer will deal with exceptions that will be logged at WARN/ERROR\
+    \ level and ignored.\n| exchangePattern | consumer (advanced) |  | ExchangePattern\
+    \ | Sets the exchange pattern when the consumer creates an exchange.\n| connectionTimeout\
+    \ | producer | 20000 | long | Timeout in millis used by the producer when sending\
+    \ a message.\n| sendToConsumer | producer | true | boolean | Dictates whether\
+    \ a Producer endpoint sends a request to an external routebox consumer. If the\
+    \ setting is false the Producer creates an embedded inner context and processes\
+    \ requests internally.\n| innerContext | advanced |  | CamelContext | A string\
+    \ representing a key in the Camel Registry matching an object value of the type\
+    \ org.apache.camel.CamelContext. If a CamelContext is not provided by the user\
+    \ a CamelContext is automatically created for deployment of inner routes.\n| innerProducerTemplate\
+    \ | advanced |  | ProducerTemplate | The ProducerTemplate to use by the internal\
+    \ embeded CamelContext\n| innerRegistry | advanced |  | Registry | To use a custom\
+    \ registry for the internal embedded CamelContext.\n| routeBuilders | advanced\
+    \ |  | String | A string representing a key in the Camel Registry matching an\
+    \ object value of the type List. If the user does not supply an innerContext pre-primed\
+    \ with inner routes the routeBuilders option must be provided as a non-empty list\
+    \ of RouteBuilders containing inner routes\n| synchronous | advanced | false |\
+    \ boolean | Sets whether synchronous processing should be strictly used or Camel\
+    \ is allowed to use asynchronous processing (if supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n[[Routebox-SendingReceivingMessagestofromtheroutebox]]\n\
+    Sending/Receiving Messages to/from the routebox\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nBefore sending requests it is necessary to properly configure the\nroutebox\
+    \ by loading the required URI parameters into the Registry as\nshown below. In\
+    \ the case of Spring, if the necessary beans are declared\ncorrectly, the registry\
+    \ is automatically populated by Camel.\n\n[[Routebox-Step1:LoadinginnerroutedetailsintotheRegistry]]\n\
+    Step 1: Loading inner route details into the Registry\n+++++++++++++++++++++++++++++++++++++++++++++++++++++\n\
+    \n[source,java]\n------------------------------------------------------------------------------------------------------------\n\
+    @Override\nprotected JndiRegistry createRegistry() throws Exception {\n    JndiRegistry\
+    \ registry = new JndiRegistry(createJndiContext());\n        \n    // Wire the\
+    \ routeDefinitions & dispatchStrategy to the outer camelContext where the routebox\
+    \ is declared\n    List<RouteBuilder> routes = new ArrayList<RouteBuilder>();\n\
+    \    routes.add(new SimpleRouteBuilder());\n    registry.bind(\"registry\", createInnerRegistry());\n\
+    \    registry.bind(\"routes\", routes);\n        \n    // Wire a dispatch map\
+    \ to registry\n    HashMap<String, String> map = new HashMap<String, String>();\n\
+    \    map.put(\"addToCatalog\", \"seda:addToCatalog\");\n    map.put(\"findBook\"\
+    , \"seda:findBook\");\n    registry.bind(\"map\", map);\n    \n    // Alternatively\
+    \ wiring a dispatch strategy to the registry\n    registry.bind(\"strategy\",\
+    \ new SimpleRouteDispatchStrategy());\n\n    return registry;\n}\n    \nprivate\
+    \ JndiRegistry createInnerRegistry() throws Exception {\n    JndiRegistry innerRegistry\
+    \ = new JndiRegistry(createJndiContext());\n    BookCatalog catalogBean = new\
+    \ BookCatalog();\n    innerRegistry.bind(\"library\", catalogBean);        \n\
+    \        \n    return innerRegistry;\n}\n...\nCamelContext context = new DefaultCamelContext(createRegistry());\n\
+    ------------------------------------------------------------------------------------------------------------\n\
+    \n[[Routebox-Step2:OptionalyusingaDispatchStrategyinsteadofaDispatchMap]]\nStep\
+    \ 2: Optionaly using a Dispatch Strategy instead of a Dispatch Map\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\
+    \nUsing a dispatch Strategy involves implementing the interface\n_org.apache.camel.component.routebox.strategy.RouteboxDispatchStrategy_\n\
+    as shown in the example below.\n\n[source,java]\n-------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    public class SimpleRouteDispatchStrategy implements RouteboxDispatchStrategy {\n\
+    \n    /* (non-Javadoc)\n     * @see org.apache.camel.component.routebox.strategy.RouteboxDispatchStrategy#selectDestinationUri(java.util.List,\
+    \ org.apache.camel.Exchange)\n     */\n    public URI selectDestinationUri(List<URI>\
+    \ activeDestinations,\n            Exchange exchange) {\n        URI dispatchDestination\
+    \ = null;\n            \n        String operation = exchange.getIn().getHeader(\"\
+    ROUTE_DISPATCH_KEY\", String.class);\n        for (URI destination : activeDestinations)\
+    \ {\n            if (destination.toASCIIString().equalsIgnoreCase(\"seda:\" +\
+    \ operation)) {\n                dispatchDestination = destination;\n        \
+    \        break;\n            }\n        }\n            \n        return dispatchDestination;\n\
+    \    }\n}\n-------------------------------------------------------------------------------------------------------------------------------------------------\n\
+    \n[[Routebox-Step2:Launchingarouteboxconsumer]]\nStep 2: Launching a routebox\
+    \ consumer\n+++++++++++++++++++++++++++++++++++++\n\nWhen creating a route consumer,\
+    \ note that the # entries in the\nrouteboxUri are matched to the created inner\
+    \ registry, routebuilder list\nand dispatchStrategy/dispatchMap in the CamelContext\
+    \ Registry. Note that\nall routebuilders and associated routes are launched in\
+    \ the routebox\ncreated inner context\n\n[source,java]\n----------------------------------------------------------------------------------------------------------------------\n\
+    private String routeboxUri = \"routebox:multipleRoutes?innerRegistry=#registry&routeBuilders=#routes&dispatchMap=#map\"\
+    ;\n\npublic void testRouteboxRequests() throws Exception {\n    CamelContext context\
+    \ = createCamelContext();\n    template = new DefaultProducerTemplate(context);\n\
+    \    template.start();        \n     \n    context.addRoutes(new RouteBuilder()\
+    \ {\n        public void configure() {\n            from(routeboxUri)\n      \
+    \          .to(\"log:Routes operation performed?showAll=true\");\n        }\n\
+    \    });\n    context.start();\n\n    // Now use the ProducerTemplate to send\
+    \ the request to the routebox\n    template.requestBodyAndHeader(routeboxUri,\
+    \ book, \"ROUTE_DISPATCH_KEY\", \"addToCatalog\");\n}\n----------------------------------------------------------------------------------------------------------------------\n\
+    \n[[Routebox-Step3:Usingarouteboxproducer]]\nStep 3: Using a routebox producer\n\
+    +++++++++++++++++++++++++++++++++\n\nWhen sending requests to the routebox, it\
+    \ is not necessary for producers\ndo not need to know the inner route endpoint\
+    \ URI and they can simply\ninvoke the Routebox URI endpoint with a dispatch strategy\
+    \ or dispatchMap\nas shown below\n\nIt is necessary to set a special exchange\
+    \ Header called\n*ROUTE_DISPATCH_KEY* (optional for Dispatch Strategy) with a\
+    \ key that\nmatches a key in the dispatch map so that the request can be sent\
+    \ to the\ncorrect inner route\n\n[source,java]\n-----------------------------------------------------------------------------------------------------------\n\
+    from(\"direct:sendToStrategyBasedRoutebox\")\n    .to(\"routebox:multipleRoutes?innerRegistry=#registry&routeBuilders=#routes&dispatchStrategy=#strategy\"\
+    )\n    .to(\"log:Routes operation performed?showAll=true\");\n\nfrom (\"direct:sendToMapBasedRoutebox\"\
+    )\n    .setHeader(\"ROUTE_DISPATCH_KEY\", constant(\"addToCatalog\"))\n    .to(\"\
+    routebox:multipleRoutes?innerRegistry=#registry&routeBuilders=#routes&dispatchMap=#map\"\
+    )\n    .to(\"log:Routes operation performed?showAll=true\");\n-----------------------------------------------------------------------------------------------------------\n"

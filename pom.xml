@@ -76,6 +76,9 @@
     <module>funktion-runtime</module>
     <module>starter-parent</module>
     <module>examples</module>
+    <module>connector-generator</module>
+    <module>connectors</module>
+    <module>connector-package</module>
   </modules>
 
   <build>

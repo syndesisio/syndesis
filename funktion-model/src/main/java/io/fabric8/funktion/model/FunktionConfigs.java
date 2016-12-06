@@ -89,6 +89,11 @@ public class FunktionConfigs {
             if (file != null && file.exists() && file.isFile()) {
                 return loadFromFile(file);
             }
+            File configFolder = new File(folder, "config");
+            file = new File(configFolder, FILE_NAME);
+            if (file != null && file.exists() && file.isFile()) {
+                return loadFromFile(file);
+            }
             File parentFile = folder.getParentFile();
             if (parentFile != null) {
                 return findFromFolder(parentFile);

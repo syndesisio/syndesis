@@ -1,0 +1,188 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: nagios
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: nagios
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: nagios
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-nagios:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: nagios
+      syntax: nagios:host:port
+      title: Nagios
+      description: To send passive checks to Nagios using JSendNSCA.
+      label: monitoring
+      deprecated: false
+      async: false
+      producerOnly: true
+      javaType: org.apache.camel.component.nagios.NagiosComponent
+      groupId: org.apache.camel
+      artifactId: camel-nagios
+      version: 2.18.1
+    componentProperties:
+      configuration:
+        kind: property
+        type: object
+        javaType: org.apache.camel.component.nagios.NagiosConfiguration
+        deprecated: false
+        secret: false
+        description: To use a shared NagiosConfiguration
+    properties:
+      host:
+        kind: path
+        group: producer
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: This is the address of the Nagios host where checks should be send.
+      port:
+        kind: path
+        group: producer
+        required: true
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        description: The port number of the host.
+      connectionTimeout:
+        kind: parameter
+        group: producer
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "5000"
+        description: Connection timeout in millis.
+      encryptionMethod:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: org.apache.camel.component.nagios.NagiosEncryptionMethod
+        enum:
+        - No
+        - Xor
+        - TripleDes
+        deprecated: false
+        secret: false
+        description: To specify an encryption method.
+      password:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Password to be authenticated when sending checks to Nagios.
+      sendSync:
+        kind: parameter
+        group: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: true
+        description: Whether or not to use synchronous when sending a passive check. Setting it to false will allow Camel to continue routing the message and the passive check message will be send asynchronously.
+      timeout:
+        kind: parameter
+        group: producer
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "5000"
+        description: Sending timeout in millis.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[Nagios-Nagios]]\nNagios\n~~~~~~\n\n*Available as of Camel\
+    \ 2.3*\n\nThe link:nagios.html[Nagios] component allows you to send passive checks\n\
+    to http://nagios.org[Nagios].\n\nMaven users will need to add the following dependency\
+    \ to their `pom.xml`\nfor this component:\n\n[source,java]\n------------------------------------------------------------\n\
+    <dependency>\n    <groupId>org.apache.camel</groupId>\n    <artifactId>camel-nagios</artifactId>\n\
+    \    <version>x.x.x</version>\n    <!-- use the same version as your Camel core\
+    \ version -->\n</dependency>\n------------------------------------------------------------\n\
+    \n[[Nagios-URIformat]]\nURI format\n^^^^^^^^^^\n\n[source,java]\n------------------------------\n\
+    nagios://host[:port][?Options]\n------------------------------\n\nCamel provides\
+    \ two abilities with the link:nagios.html[Nagios]\ncomponent. You can send passive\
+    \ check messages by sending a message to\nits endpoint. +\n Camel also provides\
+    \ a link:camel-jmx.html[EventNotifer] which allows\nyou to send notifications\
+    \ to Nagios.\n\n[[Nagios-Options]]\nOptions\n^^^^^^^\n\n\n\n\n\n// component options:\
+    \ START\nThe Nagios component supports 1 options which are listed below.\n\n\n\
+    \n{% raw %}\n[width=\"100%\",cols=\"2,1m,7\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| configuration | NagiosConfiguration | To use\
+    \ a shared NagiosConfiguration\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n\n\n\n\n\n\n// endpoint options: START\n\
+    The Nagios component supports 8 endpoint options which are listed below:\n\n{%\
+    \ raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| host | producer |  | String\
+    \ | *Required* This is the address of the Nagios host where checks should be send.\n\
+    | port | producer |  | int | *Required* The port number of the host.\n| connectionTimeout\
+    \ | producer | 5000 | int | Connection timeout in millis.\n| encryptionMethod\
+    \ | producer |  | NagiosEncryptionMethod | To specify an encryption method.\n\
+    | password | producer |  | String | Password to be authenticated when sending\
+    \ checks to Nagios.\n| sendSync | producer | true | boolean | Whether or not to\
+    \ use synchronous when sending a passive check. Setting it to false will allow\
+    \ Camel to continue routing the message and the passive check message will be\
+    \ send asynchronously.\n| timeout | producer | 5000 | int | Sending timeout in\
+    \ millis.\n| synchronous | advanced | false | boolean | Sets whether synchronous\
+    \ processing should be strictly used or Camel is allowed to use asynchronous processing\
+    \ (if supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n\n[[Nagios-Sendingmessageexamples]]\n\
+    Sending message examples\n^^^^^^^^^^^^^^^^^^^^^^^^\n\nYou can send a message to\
+    \ Nagios where the message payload contains the\nmessage. By default it will be\
+    \ `OK` level and use the\nlink:camelcontext.html[CamelContext] name as the service\
+    \ name. You can\noverrule these values using headers as shown above.\n\nFor example\
+    \ we send the `Hello Nagios` message to Nagios as follows:\n\n[source,java]\n\
+    ---------------------------------------------------------------------------------------\n\
+    \    template.sendBody(\"direct:start\", \"Hello Nagios\");\n\n    from(\"direct:start\"\
+    ).to(\"nagios:127.0.0.1:5667?password=secret\").to(\"mock:result\");\n---------------------------------------------------------------------------------------\n\
+    \nTo send a `CRITICAL` message you can send the headers such as:\n\n[source,java]\n\
+    -----------------------------------------------------------------------------\n\
+    \        Map headers = new HashMap();\n        headers.put(NagiosConstants.LEVEL,\
+    \ \"CRITICAL\");\n        headers.put(NagiosConstants.HOST_NAME, \"myHost\");\n\
+    \        headers.put(NagiosConstants.SERVICE_NAME, \"myService\");\n        template.sendBodyAndHeaders(\"\
+    direct:start\", \"Hello Nagios\", headers);\n-----------------------------------------------------------------------------\n\
+    \n[[Nagios-UsingNagiosEventNotifer]]\nUsing `NagiosEventNotifer`\n^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nThe link:nagios.html[Nagios] component also provides an\nlink:camel-jmx.html[EventNotifer]\
+    \ which you can use to send events to\nNagios. For example we can enable this\
+    \ from Java as follows:\n\n[source,java]\n-------------------------------------------------------------------\n\
+    \        NagiosEventNotifier notifier = new NagiosEventNotifier();\n        notifier.getConfiguration().setHost(\"\
+    localhost\");\n        notifier.getConfiguration().setPort(5667);\n        notifier.getConfiguration().setPassword(\"\
+    password\");\n\n        CamelContext context = ... \n        context.getManagementStrategy().addEventNotifier(notifier);\n\
+    \        return context;\n-------------------------------------------------------------------\n\
+    \nIn Spring XML its just a matter of defining a Spring bean with the type\n`EventNotifier`\
+    \ and Camel will pick it up as documented here:\nlink:advanced-configuration-of-camelcontext-using-spring.html[Advanced\n\
+    configuration of CamelContext using Spring].\n\n[[Nagios-SeeAlso]]\nSee Also\n\
+    ^^^^^^^^\n\n* link:configuring-camel.html[Configuring Camel]\n* link:component.html[Component]\n\
+    * link:endpoint.html[Endpoint]\n* link:getting-started.html[Getting Started]\n\
+    \n"

@@ -1,0 +1,1014 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: smpp
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: smpp
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: smpp
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-smpp:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: smpp
+      alternativeSchemes: smpp,smpps
+      syntax: smpp:host:port
+      title: SMPP
+      description: To send and receive SMS using a SMSC (Short Message Service Center).
+      label: mobile
+      deprecated: false
+      async: false
+      lenientProperties: true
+      javaType: org.apache.camel.component.smpp.SmppComponent
+      groupId: org.apache.camel
+      artifactId: camel-smpp
+      version: 2.18.1
+    componentProperties:
+      configuration:
+        kind: property
+        type: object
+        javaType: org.apache.camel.component.smpp.SmppConfiguration
+        deprecated: false
+        secret: false
+        description: To use the shared SmppConfiguration as configuration.
+    properties:
+      host:
+        kind: path
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: localhost
+        description: Hostname for the SMSC server to use.
+      port:
+        kind: path
+        group: common
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: "2775"
+        description: Port number for the SMSC server to use.
+      initialReconnectDelay:
+        kind: parameter
+        group: common
+        label: common
+        type: integer
+        javaType: long
+        deprecated: false
+        secret: false
+        defaultValue: "5000"
+        description: Defines the initial delay in milliseconds after the consumer/producer tries to reconnect to the SMSC after the connection was lost.
+      maxReconnect:
+        kind: parameter
+        group: common
+        label: common
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "2147483647"
+        description: Defines the maximum number of attempts to reconnect to the SMSC if SMSC returns a negative bind response
+      reconnectDelay:
+        kind: parameter
+        group: common
+        label: common
+        type: integer
+        javaType: long
+        deprecated: false
+        secret: false
+        defaultValue: "5000"
+        description: Defines the interval in milliseconds between the reconnect attempts if the connection to the SMSC was lost and the previous was not succeed.
+      splittingPolicy:
+        kind: parameter
+        group: common
+        type: string
+        javaType: org.apache.camel.component.smpp.SmppSplittingPolicy
+        enum:
+        - ALLOW
+        - REJECT
+        - TRUNCATE
+        deprecated: false
+        secret: false
+        defaultValue: ALLOW
+        description: 'You can specify a policy for handling long messages: ALLOW - the
+          default long messages are split to 140 bytes per message TRUNCATE - long messages
+          are split and only the first fragment will be sent to the SMSC. Some carriers
+          drop subsequent fragments so this reduces load on the SMPP connection sending
+          parts of a message that will never be delivered. REJECT - if a message would
+          need to be split it is rejected with an SMPP NegativeResponseException and the
+          reason code signifying the message is too long.'
+      systemType:
+        kind: parameter
+        group: common
+        label: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: cp
+        description: This parameter is used to categorize the type of ESME (External Short Message Entity) that is binding to the SMSC (max. 13 characters).
+      addressRange:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: You can specify the address range for the SmppConsumer as defined in section 5.2.7 of the SMPP 3.4 specification. The SmppConsumer will receive messages only from SMSC's which target an address (MSISDN or IP address) within this range.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      destAddr:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: "1717"
+        description: Defines the destination SME address. For mobile terminated messages this is the directory number of the recipient MS. Only for SubmitSm SubmitMulti CancelSm and DataSm.
+      destAddrNpi:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: byte
+        enum:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "6"
+        - "8"
+        - "9"
+        - "10"
+        - "13"
+        - "18"
+        deprecated: false
+        secret: false
+        description: 'Defines the type of number (TON) to be used in the SME destination
+          address parameters. Only for SubmitSm SubmitMulti CancelSm and DataSm. The following
+          NPI values are defined: 0: Unknown 1: ISDN (E163/E164) 2: Data (X.121) 3: Telex
+          (F.69) 6: Land Mobile (E.212) 8: National 9: Private 10: ERMES 13: Internet
+          (IP) 18: WAP Client Id (to be defined by WAP Forum)'
+      destAddrTon:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: byte
+        enum:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+        - "6"
+        deprecated: false
+        secret: false
+        description: 'Defines the type of number (TON) to be used in the SME destination
+          address parameters. Only for SubmitSm SubmitMulti CancelSm and DataSm. The following
+          TON values are defined: 0: Unknown 1: International 2: National 3: Network Specific
+          4: Subscriber Number 5: Alphanumeric 6: Abbreviated'
+      lazySessionCreation:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sessions can be lazily created to avoid exceptions if the SMSC is not available when the Camel producer is started. Camel will check the in message headers 'CamelSmppSystemId' and 'CamelSmppPassword' of the first exchange. If they are present Camel will use these data to connect to the SMSC.
+      numberingPlanIndicator:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: byte
+        enum:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "6"
+        - "8"
+        - "9"
+        - "10"
+        - "13"
+        - "18"
+        deprecated: false
+        secret: false
+        description: 'Defines the numeric plan indicator (NPI) to be used in the SME.
+          The following NPI values are defined: 0: Unknown 1: ISDN (E163/E164) 2: Data
+          (X.121) 3: Telex (F.69) 6: Land Mobile (E.212) 8: National 9: Private 10: ERMES
+          13: Internet (IP) 18: WAP Client Id (to be defined by WAP Forum)'
+      priorityFlag:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: byte
+        enum:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        deprecated: false
+        secret: false
+        description: 'Allows the originating SME to assign a priority level to the short
+          message. Only for SubmitSm and SubmitMulti. Four Priority Levels are supported:
+          0: Level 0 (lowest) priority 1: Level 1 priority 2: Level 2 priority 3: Level
+          3 (highest) priority'
+      protocolId:
+        kind: parameter
+        group: producer
+        label: producer
+        type: integer
+        javaType: byte
+        deprecated: false
+        secret: false
+        description: The protocol id
+      registeredDelivery:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: byte
+        enum:
+        - "0"
+        - "1"
+        - "2"
+        deprecated: false
+        secret: false
+        description: 'Is used to request an SMSC delivery receipt and/or SME originated
+          acknowledgements. The following values are defined: 0: No SMSC delivery receipt
+          requested. 1: SMSC delivery receipt requested where final delivery outcome is
+          success or failure. 2: SMSC delivery receipt requested where the final delivery
+          outcome is delivery failure.'
+      replaceIfPresentFlag:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: byte
+        enum:
+        - "0"
+        - "1"
+        deprecated: false
+        secret: false
+        description: 'Used to request the SMSC to replace a previously submitted message
+          that is still pending delivery. The SMSC will replace an existing message provided
+          that the source address destination address and service type match the same
+          fields in the new message. The following replace if present flag values are
+          defined: 0: Don''t replace 1: Replace'
+      serviceType:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: java.lang.String
+        enum:
+        - CMT
+        - CPT
+        - VMN
+        - VMA
+        - WAP
+        - USSD
+        deprecated: false
+        secret: false
+        defaultValue: CMT
+        description: 'The service type parameter can be used to indicate the SMS Application
+          service associated with the message. The following generic service_types are
+          defined: CMT: Cellular Messaging CPT: Cellular Paging VMN: Voice Mail Notification
+          VMA: Voice Mail Alerting WAP: Wireless Application Protocol USSD: Unstructured
+          Supplementary Services Data'
+      sourceAddr:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: "1616"
+        description: Defines the address of SME (Short Message Entity) which originated this message.
+      sourceAddrNpi:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: byte
+        enum:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "6"
+        - "8"
+        - "9"
+        - "10"
+        - "13"
+        - "18"
+        deprecated: false
+        secret: false
+        description: 'Defines the numeric plan indicator (NPI) to be used in the SME originator
+          address parameters. The following NPI values are defined: 0: Unknown 1: ISDN
+          (E163/E164) 2: Data (X.121) 3: Telex (F.69) 6: Land Mobile (E.212) 8: National
+          9: Private 10: ERMES 13: Internet (IP) 18: WAP Client Id (to be defined by WAP
+          Forum)'
+      sourceAddrTon:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: byte
+        enum:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+        - "6"
+        deprecated: false
+        secret: false
+        description: 'Defines the type of number (TON) to be used in the SME originator
+          address parameters. The following TON values are defined: 0: Unknown 1: International
+          2: National 3: Network Specific 4: Subscriber Number 5: Alphanumeric 6: Abbreviated'
+      typeOfNumber:
+        kind: parameter
+        group: producer
+        label: producer
+        type: string
+        javaType: byte
+        enum:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+        - "6"
+        deprecated: false
+        secret: false
+        description: 'Defines the type of number (TON) to be used in the SME. The following
+          TON values are defined: 0: Unknown 1: International 2: National 3: Network Specific
+          4: Subscriber Number 5: Alphanumeric 6: Abbreviated'
+      enquireLinkTimer:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: "5000"
+        description: Defines the interval in milliseconds between the confidence checks. The confidence check is used to test the communication path between an ESME and an SMSC.
+      sessionStateListener:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: object
+        javaType: org.jsmpp.session.SessionStateListener
+        deprecated: false
+        secret: false
+        description: You can refer to a org.jsmpp.session.SessionStateListener in the Registry to receive callbacks when the session state changed.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+      transactionTimer:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: "10000"
+        description: Defines the maximum period of inactivity allowed after a transaction after which an SMPP entity may assume that the session is no longer active. This timer may be active on either communicating SMPP entity (i.e. SMSC or ESME).
+      alphabet:
+        kind: parameter
+        group: codec
+        label: codec
+        type: string
+        javaType: byte
+        enum:
+        - "0"
+        - "4"
+        - "8"
+        deprecated: false
+        secret: false
+        description: 'Defines encoding of data according the SMPP 3.4 specification section
+          5.2.19. 0: SMSC Default Alphabet 4: 8 bit Alphabet 8: UCS2 Alphabet'
+      dataCoding:
+        kind: parameter
+        group: codec
+        label: codec
+        type: integer
+        javaType: byte
+        deprecated: false
+        secret: false
+        description: 'Defines the data coding according the SMPP 3.4 specification section
+          5.2.19. Example data encodings are: 0: SMSC Default Alphabet 3: Latin 1 (ISO-8859-1)
+          4: Octet unspecified (8-bit binary) 8: UCS2 (ISO/IEC-10646) 13: Extended Kanji
+          JIS(X 0212-1990)'
+      encoding:
+        kind: parameter
+        group: codec
+        label: codec
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        defaultValue: ISO-8859-1
+        description: Defines the encoding scheme of the short message user data. Only for SubmitSm ReplaceSm and SubmitMulti.
+      httpProxyHost:
+        kind: parameter
+        group: proxy
+        label: proxy
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: If you need to tunnel SMPP through a HTTP proxy set this attribute to the hostname or ip address of your HTTP proxy.
+      httpProxyPassword:
+        kind: parameter
+        group: proxy
+        label: proxy
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: If your HTTP proxy requires basic authentication set this attribute to the password required for your HTTP proxy.
+      httpProxyPort:
+        kind: parameter
+        group: proxy
+        label: proxy
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        defaultValue: "3128"
+        description: If you need to tunnel SMPP through a HTTP proxy set this attribute to the port of your HTTP proxy.
+      httpProxyUsername:
+        kind: parameter
+        group: proxy
+        label: proxy
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: If your HTTP proxy requires basic authentication set this attribute to the username required for your HTTP proxy.
+      proxyHeaders:
+        kind: parameter
+        group: proxy
+        label: proxy
+        type: object
+        javaType: java.util.Map<java.lang.String,java.lang.String>
+        deprecated: false
+        secret: false
+        description: These headers will be passed to the proxy server while establishing the connection.
+      password:
+        kind: parameter
+        group: security
+        label: security
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: true
+        description: The password for connecting to SMSC server.
+      systemId:
+        kind: parameter
+        group: security
+        label: security
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: true
+        defaultValue: smppclient
+        description: The system id (username) for connecting to SMSC server.
+      usingSSL:
+        kind: parameter
+        group: security
+        label: security
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether using SSL with the smpps protocol
+  documentation.adoc: "[[SMPP-SMPPComponent]]\nSMPP Component\n~~~~~~~~~~~~~~\n\n\
+    *CamelSmppFinalStatusAvailable as of Camel 2.2*\n\nThis component provides access\
+    \ to an SMSC (Short Message Service Center)\nover the http://smsforum.net/SMPP_v3_4_Issue1_2.zip[SMPP]\
+    \ protocol to\nsend and receive SMS. The http://jsmpp.org[JSMPP] library is used\
+    \ for\nthe protocol implementation.\n\nThe Camel component currently operates\
+    \ as an\nhttp://en.wikipedia.org/wiki/ESME[ESME] (External Short Messaging\nEntity)\
+    \ and not as an SMSC itself.\n\nStarting with*Camel 2.9*\_you are also able to\
+    \ execute ReplaceSm,\nQuerySm, SubmitMulti, CancelSm and DataSm.\n\nMaven users\
+    \ will need to add the following dependency to their `pom.xml`\nfor this component:\n\
+    \n[source,xml]\n------------------------------------------------------------\n\
+    <dependency>\n    <groupId>org.apache.camel</groupId>\n    <artifactId>camel-smpp</artifactId>\n\
+    \    <version>x.x.x</version>\n    <!-- use the same version as your Camel core\
+    \ version -->\n</dependency>\n------------------------------------------------------------\n\
+    \n[[SMPP-SMSlimitations]]\nSMS limitations\n^^^^^^^^^^^^^^^\n\nSMS is neither\
+    \ reliable or secure.\_ Users who require reliable and\nsecure delivery may want\
+    \ to consider using the XMPP or SIP components\ninstead, combined with a smartphone\
+    \ app supporting the chosen protocol.\n\n* Reliability: although the SMPP standard\
+    \ offers a range of feedback\nmechanisms to indicate errors, non-delivery and\
+    \ confirmation of delivery\nit is not uncommon for mobile networks to hide or\
+    \ simulate these\nresponses.\_ For example, some networks automatically send a\
+    \ delivery\nconfirmation for every message even if the destination number is invalid\n\
+    or not switched on.\_ Some networks silently drop messages if they think\nthey\
+    \ are spam.\_ Spam detection rules in the network may be very crude,\nsometimes\
+    \ more than 100 messages per day from a single sender may be\nconsidered spam.\n\
+    * Security: there is basic encryption for the last hop from the radio\ntower down\
+    \ to the recipient handset.\_ SMS messages are not encrypted or\nauthenticated\
+    \ in any other part of the network.\_ Some operators allow\nstaff in retail outlets\
+    \ or call centres to browse through the SMS\nmessage histories of their customers.\_\
+    \ Message sender identity can be\neasily forged.\_ Regulators and even the mobile\
+    \ telephone industry itself\nhas cautioned against the use of SMS in two-factor\
+    \ authentication\nschemes and other purposes where security is important.\n\n\
+    While the Camel component makes it as easy as possible to send messages\nto the\
+    \ SMS network, it can not offer an easy solution to these problems.\n\n[[SMPP-Datacoding,alphabetandinternationalcharactersets]]\n\
+    Data coding, alphabet and international character sets\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+    \nData coding and alphabet can be specified on a per-message basis.\_\nDefault\
+    \ values can be specified for the endpoint.\_ It is important to\nunderstand the\
+    \ relationship between these options and the way the\ncomponent acts when more\
+    \ than one value is set.\n\nData coding is an 8 bit field in the SMPP wire format.\n\
+    \nAlphabet corresponds to bits 0-3 of the data coding field.\_ For some\ntypes\
+    \ of message, where a message class is used (by setting bit 5 of the\ndata coding\
+    \ field), the lower two bits of the data coding field are not\ninterpreted as\
+    \ alphabet and only bits 2 and 3 impact the alphabet.\n\nFurthermore, current\
+    \ version of the JSMPP library only seems to support\nbits 2 and 3, assuming that\
+    \ bits 0 and 1 are used for message class.\_\nThis is why the Alphabet class in\
+    \ JSMPP doesn't support the value 3\n(binary 0011) which indicates ISO-8859-1.\n\
+    \nAlthough JSMPP provides a representation of the message class parameter,\nthe\
+    \ Camel component doesn't currently provide a way to set it other than\nmanually\
+    \ setting the corresponding bits in the data coding field.\n\nWhen setting the\
+    \ data coding field in the outgoing message, the Camel\ncomponent considers the\
+    \ following values and uses the first one it can\nfind:\n\n* the data coding specified\
+    \ in a header\n* the alphabet specified in a header\n* the data coding specified\
+    \ in the endpoint configuration (URI\nparameter)\n\nOlder versions of Camel had\
+    \ bugs in support for international character\nsets.\_ This feature only worked\
+    \ when a single encoding was used for all\nmessages and was troublesome when users\
+    \ wanted to change it on a\nper-message basis.\_ Users who require this to work\
+    \ should ensure their\nversion of Camel includes the fix for\_\n\nJIRA Issues\
+    \ Macro: com.atlassian.sal.api.net.ResponseStatusException:\nUnexpected response\
+    \ received. Status code: 404\n\n.\n\nIn addition to trying to send the data coding\
+    \ value to the SMSC, the\nCamel component also tries to analyze the message body,\
+    \ convert it to a\nJava String (Unicode) and convert that to a byte array in the\n\
+    corresponding alphabet\_ When deciding which alphabet to use in the byte\narray,\
+    \ the Camel SMPP component does not consider the data coding value\n(header or\
+    \ configuration), it only considers the specified alphabet\n(from either the header\
+    \ or endpoint parameter).\n\nIf some characters in the String can't be represented\
+    \ in the chosen\nalphabet, they may be replaced by the question mark ( ? ) symbol.\_\
+    \ Users\nof the API may want to consider checking if their message body can be\n\
+    converted to ISO-8859-1 before passing it to the component and if not,\nsetting\
+    \ the alphabet header to request UCS-2 encoding.\_ If the alphabet\nand data coding\
+    \ options are not specified at all then the component may\ntry to detect the required\
+    \ encoding and set the data coding for you.\n\nThe list of alphabet codes are\
+    \ specified in the SMPP specification v3.4,\nsection 5.2.19.\_ One notable limitation\
+    \ of the SMPP specification is\nthat there is no alphabet code for explicitly\
+    \ requesting use of the GSM\n3.38 (7 bit) character set.\_ Choosing the value\
+    \ 0 for the alphabet\nselects the SMSC _default_ alphabet, this usually means\
+    \ GSM 3.38 but it\nis not guaranteed.\_ The SMPP gateway Nexmo\nhttps://help.nexmo.com/hc/en-us/articles/204015813-How-to-change-the-character-encoding-in-SMPP-[actually\n\
+    allows the default to be mapped to any other character set with a\ncontrol panel\
+    \ option]. It is suggested that users check with their SMSC\noperator to confirm\
+    \ exactly which character set is being used as the\ndefault.\n\n[[SMPP-Messagesplittingandthrottling]]\n\
+    Message splitting and throttling\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nAfter transforming\
+    \ a message body from a String to a byte array, the\nCamel component is also responsible\
+    \ for splitting the message into parts\n(within the 140 byte SMS size limit) before\
+    \ passing it to JSMPP.\_ This\nis completed automatically.\n\nIf the GSM 3.38\
+    \ alphabet is used, the component will pack up to 160\ncharacters into the 140\
+    \ byte message body.\_ If an 8 bit character set is\nused (e.g. ISO-8859-1 for\
+    \ western Europe) then 140 characters will be\nallowed within the 140 byte message\
+    \ body.\_ If 16 bit UCS-2 encoding is\nused then just 70 characters fit into each\
+    \ 140 byte message.\n\nSome SMSC providers implement throttling rules.\_ Each\
+    \ part of a message\nthat has been split may be counted separately by the provider's\n\
+    throttling mechanism.\_ The Camel Throttler component can be useful for\nthrottling\
+    \ messages in the SMPP route before handing them to the SMSC.\n\n[[SMPP-URIformat]]\n\
+    URI format\n^^^^^^^^^^\n\n[source,java]\n--------------------------------------------\n\
+    smpp://[username@]hostname[:port][?options]\nsmpps://[username@]hostname[:port][?options]\n\
+    --------------------------------------------\n\nIf no *username* is provided,\
+    \ then Camel will provide the default value\n`smppclient`. +\n If no *port* number\
+    \ is provided, then Camel will provide the default\nvalue `2775`. +\n *Camel 2.3:*\
+    \ If the protocol name is \"smpps\", camel-smpp with try to\nuse SSLSocket to\
+    \ init a connection to the server.\n\nYou can append query options to the URI\
+    \ in the following format,\n`?option=value&option=value&...`\n\n[[SMPP-URIOptions]]\n\
+    URI Options\n^^^^^^^^^^^\n\n\n\n\n// component options: START\nThe SMPP component\
+    \ supports 1 options which are listed below.\n\n\n\n{% raw %}\n[width=\"100%\"\
+    ,cols=\"2,1m,7\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Java Type | Description\n| configuration | SmppConfiguration | To use\
+    \ the shared SmppConfiguration as configuration.\n|=======================================================================\n\
+    {% endraw %}\n// component options: END\n\n\n\n\n\n\n// endpoint options: START\n\
+    The SMPP component supports 40 endpoint options which are listed below:\n\n{%\
+    \ raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| host | common | localhost\
+    \ | String | Hostname for the SMSC server to use.\n| port | common | 2775 | Integer\
+    \ | Port number for the SMSC server to use.\n| initialReconnectDelay | common\
+    \ | 5000 | long | Defines the initial delay in milliseconds after the consumer/producer\
+    \ tries to reconnect to the SMSC after the connection was lost.\n| maxReconnect\
+    \ | common | 2147483647 | int | Defines the maximum number of attempts to reconnect\
+    \ to the SMSC if SMSC returns a negative bind response\n| reconnectDelay | common\
+    \ | 5000 | long | Defines the interval in milliseconds between the reconnect attempts\
+    \ if the connection to the SMSC was lost and the previous was not succeed.\n|\
+    \ splittingPolicy | common | ALLOW | SmppSplittingPolicy | You can specify a policy\
+    \ for handling long messages: ALLOW - the default long messages are split to 140\
+    \ bytes per message TRUNCATE - long messages are split and only the first fragment\
+    \ will be sent to the SMSC. Some carriers drop subsequent fragments so this reduces\
+    \ load on the SMPP connection sending parts of a message that will never be delivered.\
+    \ REJECT - if a message would need to be split it is rejected with an SMPP NegativeResponseException\
+    \ and the reason code signifying the message is too long.\n| systemType | common\
+    \ | cp | String | This parameter is used to categorize the type of ESME (External\
+    \ Short Message Entity) that is binding to the SMSC (max. 13 characters).\n| addressRange\
+    \ | consumer |  | String | You can specify the address range for the SmppConsumer\
+    \ as defined in section 5.2.7 of the SMPP 3.4 specification. The SmppConsumer\
+    \ will receive messages only from SMSC's which target an address (MSISDN or IP\
+    \ address) within this range.\n| bridgeErrorHandler | consumer | false | boolean\
+    \ | Allows for bridging the consumer to the Camel routing Error Handler which\
+    \ mean any exceptions occurred while the consumer is trying to pickup incoming\
+    \ messages or the likes will now be processed as a message and handled by the\
+    \ routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler\
+    \ to deal with exceptions that will be logged at WARN/ERROR level and ignored.\n\
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer\
+    \ use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled\
+    \ then this options is not in use. By default the consumer will deal with exceptions\
+    \ that will be logged at WARN/ERROR level and ignored.\n| exchangePattern | consumer\
+    \ (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer\
+    \ creates an exchange.\n| destAddr | producer | 1717 | String | Defines the destination\
+    \ SME address. For mobile terminated messages this is the directory number of\
+    \ the recipient MS. Only for SubmitSm SubmitMulti CancelSm and DataSm.\n| destAddrNpi\
+    \ | producer |  | byte | Defines the type of number (TON) to be used in the SME\
+    \ destination address parameters. Only for SubmitSm SubmitMulti CancelSm and DataSm.\
+    \ The following NPI values are defined: 0: Unknown 1: ISDN (E163/E164) 2: Data\
+    \ (X.121) 3: Telex (F.69) 6: Land Mobile (E.212) 8: National 9: Private 10: ERMES\
+    \ 13: Internet (IP) 18: WAP Client Id (to be defined by WAP Forum)\n| destAddrTon\
+    \ | producer |  | byte | Defines the type of number (TON) to be used in the SME\
+    \ destination address parameters. Only for SubmitSm SubmitMulti CancelSm and DataSm.\
+    \ The following TON values are defined: 0: Unknown 1: International 2: National\
+    \ 3: Network Specific 4: Subscriber Number 5: Alphanumeric 6: Abbreviated\n| lazySessionCreation\
+    \ | producer | false | boolean | Sessions can be lazily created to avoid exceptions\
+    \ if the SMSC is not available when the Camel producer is started. Camel will\
+    \ check the in message headers 'CamelSmppSystemId' and 'CamelSmppPassword' of\
+    \ the first exchange. If they are present Camel will use these data to connect\
+    \ to the SMSC.\n| numberingPlanIndicator | producer |  | byte | Defines the numeric\
+    \ plan indicator (NPI) to be used in the SME. The following NPI values are defined:\
+    \ 0: Unknown 1: ISDN (E163/E164) 2: Data (X.121) 3: Telex (F.69) 6: Land Mobile\
+    \ (E.212) 8: National 9: Private 10: ERMES 13: Internet (IP) 18: WAP Client Id\
+    \ (to be defined by WAP Forum)\n| priorityFlag | producer |  | byte | Allows the\
+    \ originating SME to assign a priority level to the short message. Only for SubmitSm\
+    \ and SubmitMulti. Four Priority Levels are supported: 0: Level 0 (lowest) priority\
+    \ 1: Level 1 priority 2: Level 2 priority 3: Level 3 (highest) priority\n| protocolId\
+    \ | producer |  | byte | The protocol id\n| registeredDelivery | producer |  |\
+    \ byte | Is used to request an SMSC delivery receipt and/or SME originated acknowledgements.\
+    \ The following values are defined: 0: No SMSC delivery receipt requested. 1:\
+    \ SMSC delivery receipt requested where final delivery outcome is success or failure.\
+    \ 2: SMSC delivery receipt requested where the final delivery outcome is delivery\
+    \ failure.\n| replaceIfPresentFlag | producer |  | byte | Used to request the\
+    \ SMSC to replace a previously submitted message that is still pending delivery.\
+    \ The SMSC will replace an existing message provided that the source address destination\
+    \ address and service type match the same fields in the new message. The following\
+    \ replace if present flag values are defined: 0: Don't replace 1: Replace\n| serviceType\
+    \ | producer | CMT | String | The service type parameter can be used to indicate\
+    \ the SMS Application service associated with the message. The following generic\
+    \ service_types are defined: CMT: Cellular Messaging CPT: Cellular Paging VMN:\
+    \ Voice Mail Notification VMA: Voice Mail Alerting WAP: Wireless Application Protocol\
+    \ USSD: Unstructured Supplementary Services Data\n| sourceAddr | producer | 1616\
+    \ | String | Defines the address of SME (Short Message Entity) which originated\
+    \ this message.\n| sourceAddrNpi | producer |  | byte | Defines the numeric plan\
+    \ indicator (NPI) to be used in the SME originator address parameters. The following\
+    \ NPI values are defined: 0: Unknown 1: ISDN (E163/E164) 2: Data (X.121) 3: Telex\
+    \ (F.69) 6: Land Mobile (E.212) 8: National 9: Private 10: ERMES 13: Internet\
+    \ (IP) 18: WAP Client Id (to be defined by WAP Forum)\n| sourceAddrTon | producer\
+    \ |  | byte | Defines the type of number (TON) to be used in the SME originator\
+    \ address parameters. The following TON values are defined: 0: Unknown 1: International\
+    \ 2: National 3: Network Specific 4: Subscriber Number 5: Alphanumeric 6: Abbreviated\n\
+    | typeOfNumber | producer |  | byte | Defines the type of number (TON) to be used\
+    \ in the SME. The following TON values are defined: 0: Unknown 1: International\
+    \ 2: National 3: Network Specific 4: Subscriber Number 5: Alphanumeric 6: Abbreviated\n\
+    | enquireLinkTimer | advanced | 5000 | Integer | Defines the interval in milliseconds\
+    \ between the confidence checks. The confidence check is used to test the communication\
+    \ path between an ESME and an SMSC.\n| sessionStateListener | advanced |  | SessionStateListener\
+    \ | You can refer to a org.jsmpp.session.SessionStateListener in the Registry\
+    \ to receive callbacks when the session state changed.\n| synchronous | advanced\
+    \ | false | boolean | Sets whether synchronous processing should be strictly used\
+    \ or Camel is allowed to use asynchronous processing (if supported).\n| transactionTimer\
+    \ | advanced | 10000 | Integer | Defines the maximum period of inactivity allowed\
+    \ after a transaction after which an SMPP entity may assume that the session is\
+    \ no longer active. This timer may be active on either communicating SMPP entity\
+    \ (i.e. SMSC or ESME).\n| alphabet | codec |  | byte | Defines encoding of data\
+    \ according the SMPP 3.4 specification section 5.2.19. 0: SMSC Default Alphabet\
+    \ 4: 8 bit Alphabet 8: UCS2 Alphabet\n| dataCoding | codec |  | byte | Defines\
+    \ the data coding according the SMPP 3.4 specification section 5.2.19. Example\
+    \ data encodings are: 0: SMSC Default Alphabet 3: Latin 1 (ISO-8859-1) 4: Octet\
+    \ unspecified (8-bit binary) 8: UCS2 (ISO/IEC-10646) 13: Extended Kanji JIS(X\
+    \ 0212-1990)\n| encoding | codec | ISO-8859-1 | String | Defines the encoding\
+    \ scheme of the short message user data. Only for SubmitSm ReplaceSm and SubmitMulti.\n\
+    | httpProxyHost | proxy |  | String | If you need to tunnel SMPP through a HTTP\
+    \ proxy set this attribute to the hostname or ip address of your HTTP proxy.\n\
+    | httpProxyPassword | proxy |  | String | If your HTTP proxy requires basic authentication\
+    \ set this attribute to the password required for your HTTP proxy.\n| httpProxyPort\
+    \ | proxy | 3128 | Integer | If you need to tunnel SMPP through a HTTP proxy set\
+    \ this attribute to the port of your HTTP proxy.\n| httpProxyUsername | proxy\
+    \ |  | String | If your HTTP proxy requires basic authentication set this attribute\
+    \ to the username required for your HTTP proxy.\n| proxyHeaders | proxy |  | Map\
+    \ | These headers will be passed to the proxy server while establishing the connection.\n\
+    | password | security |  | String | The password for connecting to SMSC server.\n\
+    | systemId | security | smppclient | String | The system id (username) for connecting\
+    \ to SMSC server.\n| usingSSL | security | false | boolean | Whether using SSL\
+    \ with the smpps protocol\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n\nYou can have as many of these options\
+    \ as you like.\n\n[source,java]\n------------------------------------------------------------------------------------------------------------------\n\
+    smpp://smppclient@localhost:2775?password=password&enquireLinkTimer=3000&transactionTimer=5000&systemType=consumer\n\
+    ------------------------------------------------------------------------------------------------------------------\n\
+    \n[[SMPP-ProducerMessageHeaders]]\nProducer Message Headers\n^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nThe following message headers can be used to affect the behavior of the\nSMPP\
+    \ producer\n\n[width=\"100%\",cols=\"10%,10%,80%\",options=\"header\",]\n|=======================================================================\n\
+    |Header |Type |Description\n\n|`CamelSmppDestAddr` |`List`/`String` |*only for\
+    \ SubmitSm, SubmitMulti, CancelSm and DataSm* Defines the\ndestination SME address(es).\
+    \ For mobile terminated messages, this is the\ndirectory number of the recipient\
+    \ MS. Is must be a `List<String>` for\nSubmitMulti and a `String` otherwise.\n\
+    \n|`CamelSmppDestAddrTon` |`Byte` |*only for SubmitSm, SubmitMulti, CancelSm and\
+    \ DataSm* Defines the type\nof number (TON) to be used in the SME destination\
+    \ address parameters.\nUse the `sourceAddrTon` URI option values defined above.\n\
+    \n|`CamelSmppDestAddrNpi` |`Byte` |*only for SubmitSm, SubmitMulti, CancelSm and\
+    \ DataSm* Defines the\nnumeric plan indicator (NPI) to be used in the SME destination\
+    \ address\nparameters. Use the URI option `sourceAddrNpi` values defined above.\n\
+    \n|`CamelSmppSourceAddr` |`String` |Defines the address of SME (Short Message\
+    \ Entity) which originated this\nmessage.\n\n|`CamelSmppSourceAddrTon` |`Byte`\
+    \ |Defines the type of number (TON) to be used in the SME originator\naddress\
+    \ parameters. Use the `sourceAddrTon` URI option values defined\nabove.\n\n|`CamelSmppSourceAddrNpi`\
+    \ |`Byte` |Defines the numeric plan indicator (NPI) to be used in the SME\noriginator\
+    \ address parameters. Use the URI option `sourceAddrNpi` values\ndefined above.\n\
+    \n|`CamelSmppServiceType` |`String` |The service type parameter can be used to\
+    \ indicate the SMS Application\nservice associated with the message. Use the URI\
+    \ option `serviceType`\nsettings above.\n\n|`CamelSmppRegisteredDelivery` |`Byte`\
+    \ |*only for SubmitSm, ReplaceSm, SubmitMulti and DataSm* Is used to\nrequest\
+    \ an SMSC delivery receipt and/or SME originated acknowledgements.\nUse the URI\
+    \ option `registeredDelivery` settings above.\n\n|`CamelSmppPriorityFlag` |`Byte`\
+    \ |*only for SubmitSm and SubmitMulti* Allows the originating SME to assign\n\
+    a priority level to the short message. Use the URI option `priorityFlag`\nsettings\
+    \ above.\n\n|`CamelSmppScheduleDeliveryTime` |`Date` |*only for SubmitSm, SubmitMulti\
+    \ and ReplaceSm* This parameter specifies\nthe scheduled time at which the message\
+    \ delivery should be first\nattempted. It defines either the absolute date and\
+    \ time or relative time\nfrom the current SMSC time at which delivery of this\
+    \ message will be\nattempted by the SMSC. It can be specified in either absolute\
+    \ time\nformat or relative time format. The encoding of a time format is\nspecified\
+    \ in chapter 7.1.1. in the smpp specification v3.4.\n\n|`CamelSmppValidityPeriod`\
+    \ |`String`/`Date` |*only for SubmitSm, SubmitMulti and ReplaceSm* The validity\
+    \ period\nparameter indicates the SMSC expiration time, after which the message\n\
+    should be discarded if not delivered to the destination. If it's\nprovided as\
+    \ `Date`, it's interpreted as absolute time. *Camel 2.9.1\nonwards:* It can be\
+    \ defined in absolute time format or relative time\nformat if you provide it as\
+    \ `String` as specified in chapter 7.1.1 in\nthe smpp specification v3.4.\n\n\
+    |`CamelSmppReplaceIfPresentFlag` |`Byte` |*only for SubmitSm and SubmitMulti*\
+    \ The replace if present flag\nparameter is used to request the SMSC to replace\
+    \ a previously submitted\nmessage, that is still pending delivery. The SMSC will\
+    \ replace an\nexisting message provided that the source address, destination address\n\
+    and service type match the same fields in the new message. The following\nvalues\
+    \ are defined: `0`, Don't replace and `1`, Replace\n\n|`CamelSmppAlphabet` / `CamelSmppDataCoding`\
+    \ |`Byte` |*Camel 2.5* *For SubmitSm, SubmitMulti and ReplaceSm* (Prior to *Camel\n\
+    2.9* use `CamelSmppDataCoding` instead of `CamelSmppAlphabet`.) The data\ncoding\
+    \ according to the SMPP 3.4 specification, section 5.2.19. Use the\nURI option\
+    \ `alphabet` settings above.\n\n|`CamelSmppOptionalParameters` |`Map<String, String>`\
+    \ |*Deprecated and will be removed in Camel 2.13.0/3.0.0* +\n *Camel 2.10.5 and\
+    \ 2.11.1 onwards and only for SubmitSm, SubmitMulti and\nDataSm* The optional\
+    \ parameters send back by the SMSC.\n\n|`CamelSmppOptionalParameter` |`Map<Short,\
+    \ Object>` |*Camel 2.10.7 and 2.11.2 onwards and only for SubmitSm, SubmitMulti\
+    \ and\nDataSm* The optional parameter which are send to the SMSC. The value is\n\
+    converted in the following way: `String` -> `org.jsmpp.bean.OptionalParameter.COctetString`,\
+    \ \n`byte[]` -> `org.jsmpp.bean.OptionalParameter.OctetString`, \n`Byte` -> `org.jsmpp.bean.OptionalParameter.Byte`,\n\
+    `Integer` -> `org.jsmpp.bean.OptionalParameter.Int`,\n`Short` -> `org.jsmpp.bean.OptionalParameter.Short`,\
+    \ \n`null` -> `org.jsmpp.bean.OptionalParameter.Null`\n\n|CamelSmppEncoding |String\
+    \ |*Camel 2.14.1 and Camel 2.15.0 onwards and**only for SubmitSm,\nSubmitMulti\
+    \ and DataSm*.\_ Specifies the encoding (character set name) of\nthe bytes in\
+    \ the message body.\_ If the message body is a string then\nthis is not relevant\
+    \ because Java Strings are always Unicode.\_ If the\nbody is a byte array then\
+    \ this header can be used to indicate that it is\nISO-8859-1 or some other value.\_\
+    \ Default value is specified by the\nendpoint configuration parameter _encoding_\n\
+    \n|CamelSmppSplittingPolicy |String |*Camel 2.14.1 and Camel 2.15.0 onwards and**only\
+    \ for SubmitSm,\nSubmitMulti and DataSm*.\_ Specifies the policy for message splitting\
+    \ for\nthis exchange.\_ Possible values are described in the endpoint\nconfiguration\
+    \ parameter _splittingPolicy_\n|=======================================================================\n\
+    \nThe following message headers are used by the SMPP producer to set the\nresponse\
+    \ from the SMSC in the message header\n\n[width=\"100%\",cols=\"10%,10%,80%\"\
+    ,options=\"header\",]\n|=======================================================================\n\
+    |Header |Type |Description\n\n|`CamelSmppId` |`List<String>`/`String` |The id\
+    \ to identify the submitted short message(s) for later use. *From\nCamel 2.9.0*:\
+    \ In case of a ReplaceSm, QuerySm, CancelSm and DataSm this\nheader vaule is a\
+    \ `String`. In case of a SubmitSm or SubmitMultiSm this\nheader vaule is a `List<String>`.\n\
+    \n|`CamelSmppSentMessageCount` |`Integer` |*From Camel 2.9 onwards only for SubmitSm\
+    \ and SubmitMultiSm* The total\nnumber of messages which has been sent.\n\n|`CamelSmppError`\
+    \ |`Map<String, List<Map<String, Object>>>` |*From Camel 2.9 onwards only for\
+    \ SubmitMultiSm* The errors which\noccurred by sending the short message(s) the\
+    \ form `Map<String, List<Map<String, Object>>>` (messageID : (destAddr :\naddress,\
+    \ error : errorCode)).\n\n|`CamelSmppOptionalParameters` |`Map<String, String>`\
+    \ |*Deprecated and will be removed in Camel 2.13.0/3.0.0* \n*From Camel 2.11.1\
+    \ onwards only for DataSm* The optional parameters\nwhich are returned from the\
+    \ SMSC by sending the message.\n\n|`CamelSmppOptionalParameter` |`Map<Short, Object>`\
+    \ |*From Camel 2.10.7, 2.11.2 onwards only for DataSm* The optional\nparameter\
+    \ which are returned from the SMSC by sending the message. The\nkey is the `Short`\
+    \ code for the optional parameter. The value is\nconverted in the following way:\
+    \ \n`org.jsmpp.bean.OptionalParameter.COctetString` -> `String`,\n`org.jsmpp.bean.OptionalParameter.OctetString`\
+    \ -> `byte[]`,\n`org.jsmpp.bean.OptionalParameter.Byte` -> `Byte`,\n`org.jsmpp.bean.OptionalParameter.Int`\
+    \ -> `Integer`,\n`org.jsmpp.bean.OptionalParameter.Short` -> `Short`, \n`org.jsmpp.bean.OptionalParameter.Null`\
+    \ -> `null`\n|=======================================================================\n\
+    \n[[SMPP-ConsumerMessageHeaders]]\nConsumer Message Headers\n^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \nThe following message headers are used by the SMPP consumer to set the\nrequest\
+    \ data from the SMSC in the message header\n\n[width=\"100%\",cols=\"10%,10%,80%\"\
+    ,options=\"header\",]\n|=======================================================================\n\
+    |Header |Type |Description\n\n|`CamelSmppSequenceNumber` |`Integer` |*only for\
+    \ AlertNotification, DeliverSm and DataSm* A sequence number\nallows a response\
+    \ PDU to be correlated with a request PDU. The\nassociated SMPP response PDU must\
+    \ preserve this field.\n\n|`CamelSmppCommandId` |`Integer` |*only for AlertNotification,\
+    \ DeliverSm and DataSm* The command id field\nidentifies the particular SMPP PDU.\
+    \ For the complete list of defined\nvalues see chapter 5.1.2.1 in the smpp specification\
+    \ v3.4.\n\n|`CamelSmppSourceAddr` |`String` |*only for AlertNotification, DeliverSm\
+    \ and DataSm* Defines the address\nof SME (Short Message Entity) which originated\
+    \ this message.\n\n|`CamelSmppSourceAddrNpi` |`Byte` |*only for AlertNotification\
+    \ and DataSm* Defines the numeric plan\nindicator (NPI) to be used in the SME\
+    \ originator address parameters. Use\nthe URI option `sourceAddrNpi` values defined\
+    \ above.\n\n|`CamelSmppSourceAddrTon` |`Byte` |*only for AlertNotification and\
+    \ DataSm* Defines the type of number (TON)\nto be used in the SME originator address\
+    \ parameters. Use the\n`sourceAddrTon` URI option values defined above.\n\n|`CamelSmppEsmeAddr`\
+    \ |`String` |*only for AlertNotification* Defines the destination ESME address.\
+    \ For\nmobile terminated messages, this is the directory number of the\nrecipient\
+    \ MS.\n\n|`CamelSmppEsmeAddrNpi` |`Byte` |*only for AlertNotification* Defines\
+    \ the numeric plan indicator (NPI) to\nbe used in the ESME originator address\
+    \ parameters. Use the URI option\n`sourceAddrNpi` values defined above.\n\n|`CamelSmppEsmeAddrTon`\
+    \ |`Byte` |*only for AlertNotification* Defines the type of number (TON) to be\
+    \ used\nin the ESME originator address parameters. Use the `sourceAddrTon` URI\n\
+    option values defined above.\n\n|`CamelSmppId` |`String` |*only for smsc DeliveryReceipt\
+    \ and DataSm* The message ID allocated to\nthe message by the SMSC when originally\
+    \ submitted.\n\n|`CamelSmppDelivered` |`Integer` |*only for smsc DeliveryReceipt*\
+    \ Number of short messages delivered. This\nis only relevant where the original\
+    \ message was submitted to a\ndistribution list.The value is padded with leading\
+    \ zeros if necessary.\n\n|`CamelSmppDoneDate` |`Date` |*only for smsc DeliveryReceipt*\
+    \ The time and date at which the short\nmessage reached it's final state. The\
+    \ format is as follows: YYMMDDhhmm.\n\n|`CamelSmppStatus` |`DeliveryReceiptState`\
+    \ |*only for smsc DeliveryReceipt:* The final status of the message. The\nfollowing\
+    \ values are defined: `DELIVRD`: Message is delivered to destination,\n`EXPIRED`:\
+    \ Message validity period has expired,\n`DELETED`: Message has been deleted, \n\
+    `UNDELIV`: Message is undeliverable, \n`ACCEPTD`: Message is in accepted state\
+    \ (i.e. has been manually read on\nbehalf of the subscriber by customer service),\n\
+    `UNKNOWN`: Message is in invalid state,\n`REJECTD`: Message is in a rejected state\n\
+    \n|`CamelSmppCommandStatus` |`Integer` |*only for DataSm* The Command status of\
+    \ the message.\n\n|`CamelSmppError` |`String` |*only for smsc DeliveryReceipt*\
+    \ Where appropriate this may hold a\nNetwork specific error code or an SMSC error\
+    \ code for the attempted\ndelivery of the message. These errors are Network or\
+    \ SMSC specific and\nare not included here.\n\n|`CamelSmppSubmitDate` |`Date`\
+    \ |*only for smsc DeliveryReceipt* The time and date at which the short\nmessage\
+    \ was submitted. In the case of a message which has been replaced,\nthis is the\
+    \ date that the original message was replaced. The format is\nas follows: YYMMDDhhmm.\n\
+    \n|`CamelSmppSubmitted` |`Integer` |*only for smsc DeliveryReceipt* Number of\
+    \ short messages originally\nsubmitted. This is only relevant when the original\
+    \ message was submitted\nto a distribution list.The value is padded with leading\
+    \ zeros if\nnecessary.\n\n|`CamelSmppDestAddr` |`String` |*only for DeliverSm\
+    \ and DataSm:* Defines the destination SME address.\nFor mobile terminated messages,\
+    \ this is the directory number of the\nrecipient MS.\n\n|`CamelSmppScheduleDeliveryTime`\
+    \ |`String` |*only for DeliverSm:* This parameter specifies the scheduled time\
+    \ at\nwhich the message delivery should be first attempted. It defines either\n\
+    the absolute date and time or relative time from the current SMSC time\nat which\
+    \ delivery of this message will be attempted by the SMSC. It can\nbe specified\
+    \ in either absolute time format or relative time format. The\nencoding of a time\
+    \ format is specified in Section 7.1.1. in the smpp\nspecification v3.4.\n\n|`CamelSmppValidityPeriod`\
+    \ |`String` |*only for DeliverSm* The validity period parameter indicates the\
+    \ SMSC\nexpiration time, after which the message should be discarded if not\n\
+    delivered to the destination. It can be defined in absolute time format\nor relative\
+    \ time format. The encoding of absolute and relative time\nformat is specified\
+    \ in Section 7.1.1 in the smpp specification v3.4.\n\n|`CamelSmppServiceType`\
+    \ |`String` |*only for DeliverSm and DataSm* The service type parameter indicates\
+    \ the\nSMS Application service associated with the message.\n\n|`CamelSmppRegisteredDelivery`\
+    \ |`Byte` |*only for DataSm* Is used to request an delivery receipt and/or SME\n\
+    originated acknowledgements. Same values as in Producer header list\nabove.\n\n\
+    |`CamelSmppDestAddrNpi` |`Byte` |*only for DataSm* Defines the numeric plan indicator\
+    \ (NPI) in the\ndestination address parameters. Use the URI option `sourceAddrNpi`\n\
+    values defined above.\n\n|`CamelSmppDestAddrTon` |`Byte` |*only for DataSm* Defines\
+    \ the type of number (TON) in the destination\naddress parameters. Use the `sourceAddrTon`\
+    \ URI option values defined\nabove.\n\n|`CamelSmppMessageType` |`String` |*Camel\
+    \ 2.6 onwards*: Identifies the type of an incoming message: \n`AlertNotification`:\
+    \ an SMSC alert notification,\n`DataSm`: an SMSC data short message,\n`DeliveryReceipt`:\
+    \ an SMSC delivery receipt,\n`DeliverSm`: an SMSC deliver short message\n\n|`CamelSmppOptionalParameters`\
+    \ |`Map<String, Object>` |*Deprecated and will be removed in Camel 2.13.0/3.0.0*\
+    \ \n*Camel 2.10.5 onwards and only for DeliverSm* The optional parameters\nsend\
+    \ back by the SMSC.\n\n|`CamelSmppOptionalParameter` |`Map<Short, Object>` |*Camel\
+    \ 2.10.7, 2.11.2 onwards and only for DeliverSm* The optional\nparameters send\
+    \ back by the SMSC. The key is the `Short` code for the\noptional parameter. The\
+    \ value is converted in the following way: \n`org.jsmpp.bean.OptionalParameter.COctetString`\
+    \ -> `String`,\n`org.jsmpp.bean.OptionalParameter.OctetString` -> `byte[]`,\n\
+    `org.jsmpp.bean.OptionalParameter.Byte` -> `Byte`,\n`org.jsmpp.bean.OptionalParameter.Int`\
+    \ -> `Integer`,\n`org.jsmpp.bean.OptionalParameter.Short` -> `Short`,\n`org.jsmpp.bean.OptionalParameter.Null`\
+    \ -> `null`\n|=======================================================================\n\
+    \nTIP: *JSMPP library*\nSee the documentation of the http://jsmpp.org[JSMPP Library]\
+    \ for more\ndetails about the underlying library.\n\n[[SMPP-Exceptionhandling]]\n\
+    Exception handling\n^^^^^^^^^^^^^^^^^^\n\nThis component supports the general\
+    \ Camel exception handling\ncapabilities\n\nWhen an error occurs sending a message\
+    \ with SubmitSm (the default\naction), the org.apache.camel.component.smpp.SmppException\
+    \ is thrown\nwith a nested exception, org.jsmpp.extra.NegativeResponseException.\_\
+    \nCall NegativeResponseException.getCommandStatus() to obtain the exact\nSMPP\
+    \ negative response code, the values are explained in the SMPP\nspecification\
+    \ 3.4, section 5.1.3. +\n *Camel 2.8 onwards*: When the SMPP consumer receives\
+    \ a `DeliverSm` or\n`DataSm` short message and the processing of these messages\
+    \ fails, you\ncan also throw a `ProcessRequestException` instead of handle the\n\
+    failure. In this case, this exception is forwarded to the underlying\nhttp://jsmpp.org[JSMPP\
+    \ library] which will return the included error\ncode to the SMSC. This feature\
+    \ is useful to e.g. instruct the SMSC to\nresend the short message at a later\
+    \ time. This could be done with the\nfollowing lines of code:\n\n[source,java]\n\
+    --------------------------------------------------------------------------------------------------------------------------\n\
+    from(\"smpp://smppclient@localhost:2775?password=password&enquireLinkTimer=3000&transactionTimer=5000&systemType=consumer\"\
+    )\n  .doTry()\n    .to(\"bean:dao?method=updateSmsState\")\n  .doCatch(Exception.class)\n\
+    \    .throwException(new ProcessRequestException(\"update of sms state failed\"\
+    , 100))\n  .end();\n--------------------------------------------------------------------------------------------------------------------------\n\
+    \nPlease refer to the http://smsforum.net/SMPP_v3_4_Issue1_2.zip[SMPP\nspecification]\
+    \ for the complete list of error codes and their meanings.\n\n[[SMPP-Samples]]\n\
+    Samples\n^^^^^^^\n\nA route which sends an SMS using the Java DSL:\n\n[source,java]\n\
+    ------------------------------------------------------------------------------------------\n\
+    from(\"direct:start\")\n  .to(\"smpp://smppclient@localhost:2775?\n      password=password&enquireLinkTimer=3000&transactionTimer=5000&systemType=producer\"\
+    );\n------------------------------------------------------------------------------------------\n\
+    \nA route which sends an SMS using the Spring XML DSL:\n\n[source,xml]\n-----------------------------------------------------------------------------------------------------------\n\
+    <route>\n  <from uri=\"direct:start\"/>\n  <to uri=\"smpp://smppclient@localhost:2775?\n\
+    \           password=password&amp;enquireLinkTimer=3000&amp;transactionTimer=5000&amp;systemType=producer\"\
+    />\n</route>\n-----------------------------------------------------------------------------------------------------------\n\
+    \nA route which receives an SMS using the Java DSL:\n\n[source,java]\n--------------------------------------------------------------------------------------------------------------------------\n\
+    from(\"smpp://smppclient@localhost:2775?password=password&enquireLinkTimer=3000&transactionTimer=5000&systemType=consumer\"\
+    )\n  .to(\"bean:foo\");\n--------------------------------------------------------------------------------------------------------------------------\n\
+    \nA route which receives an SMS using the Spring XML DSL:\n\n[source,xml]\n----------------------------------------------------------------------------------------------------------------\n\
+    \  <route>\n     <from uri=\"smpp://smppclient@localhost:2775?\n             \
+    \   password=password&amp;enquireLinkTimer=3000&amp;transactionTimer=5000&amp;systemType=consumer\"\
+    />\n     <to uri=\"bean:foo\"/>\n  </route>\n----------------------------------------------------------------------------------------------------------------\n\
+    \n\nTIP: *SMSC simulator*\nIf you need an SMSC simulator for your test, you can\
+    \ use the simulator\nprovided by\nhttp://opensmpp.logica.com/CommonPart/Download/download2.html#simulator[Logica].\n\
+    \n[[SMPP-Debuglogging]]\nDebug logging\n^^^^^^^^^^^^^\n\nThis component has log\
+    \ level *DEBUG*, which can be helpful in debugging\nproblems. If you use log4j,\
+    \ you can add the following line to your\nconfiguration:\n\n[source,java]\n--------------------------------------------------\n\
+    log4j.logger.org.apache.camel.component.smpp=DEBUG\n--------------------------------------------------\n\
+    \n[[SMPP-SeeAlso]]\nSee Also\n^^^^^^^^\n\n* link:configuring-camel.html[Configuring\
+    \ Camel]\n* link:component.html[Component]\n* link:endpoint.html[Endpoint]\n*\
+    \ link:getting-started.html[Getting Started]\n\n"

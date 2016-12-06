@@ -1,0 +1,259 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: sql-stored
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: sql-stored
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: sql-stored
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-sql-stored:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: sql-stored
+      syntax: sql-stored:template
+      title: SQL StoredProcedure
+      description: The sql component allows you to work with databases using JDBC Stored Procedure queries.
+      label: database,sql
+      deprecated: false
+      async: false
+      producerOnly: true
+      javaType: org.apache.camel.component.sql.stored.SqlStoredComponent
+      groupId: org.apache.camel
+      artifactId: camel-sql
+      version: 2.18.1
+    componentProperties:
+      dataSource:
+        kind: property
+        type: object
+        javaType: javax.sql.DataSource
+        deprecated: false
+        secret: false
+        description: Sets the DataSource to use to communicate with the database.
+    properties:
+      template:
+        kind: path
+        group: producer
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Sets the StoredProcedure template to perform
+      batch:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Enables or disables batch mode
+      dataSource:
+        kind: parameter
+        group: producer
+        type: object
+        javaType: javax.sql.DataSource
+        deprecated: false
+        secret: false
+        description: Sets the DataSource to use to communicate with the database.
+      noop:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: If set will ignore the results of the template and use the existing IN message as the OUT message for the continuation of processing
+      outputHeader:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: Store the template result in a header instead of the message body. By default outputHeader == null and the template result is stored in the message body any existing content in the message body is discarded. If outputHeader is set the value is used as the name of the header to store the template result and the original message body is preserved.
+      useMessageBodyForTemplate:
+        kind: parameter
+        group: producer
+        label: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether to use the message body as the template and then headers for parameters. If this option is enabled then the template in the uri is not used.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: |+
+    [[SQLStoredProcedure-SQLStoredProcedureComponent]]
+    SQL Stored Procedure Component
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    *Available as of Camel 2.17*
+
+    The *sql-stored:* component allows you to work with databases using JDBC
+    Stored Procedure queries. This component is an extension to
+    the link:sql-component.html[SQL Component] but specialized for calling
+    stored procedures.
+
+    This component uses `spring-jdbc` behind the scenes for the actual SQL
+    handling.
+
+    Maven users will need to add the following dependency to their `pom.xml`
+    for this component:
+
+    [source,xml]
+    ------------------------------------------------------------
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-sql</artifactId>
+        <version>x.x.x</version>
+        <!-- use the same version as your Camel core version -->
+    </dependency>
+    ------------------------------------------------------------
+
+    [[SQLStoredProcedure-URIformat]]
+    URI format
+    ^^^^^^^^^^
+
+    The SQL component uses the following endpoint URI notation:
+
+    [source,java]
+    -----------------------------
+    sql-stored:template[?options]
+    -----------------------------
+
+    Where template is the stored procedure template, where you declare the
+    name of the stored procedure and the IN and OUT arguments. 
+
+    You can also refer to the template in a external file on the file system
+    or classpath such as:
+
+    [source,java]
+    --------------------------------------------------
+    sql-stored:classpath:sql/myprocedure.sql[?options]
+    --------------------------------------------------
+
+    Where sql/myprocedure.sql is a plain text file in the classpath with the
+    template, as show:
+
+    [source,java]
+    --------------------------
+    SUBNUMBERS(
+      INTEGER ${headers.num1},
+      INTEGER ${headers.num2},
+      OUT INTEGER resultofsub
+    )
+    --------------------------
+
+    You can append query options to the URI in the following format,
+    `?option=value&option=value&...`
+
+    [[SQLStoredProcedure-Options]]
+    Options
+    ^^^^^^^
+
+
+
+    // component options: START
+    The SQL StoredProcedure component supports 1 options which are listed below.
+
+
+
+    {% raw %}
+    [width="100%",cols="2,1m,7",options="header"]
+    |=======================================================================
+    | Name | Java Type | Description
+    | dataSource | DataSource | Sets the DataSource to use to communicate with the database.
+    |=======================================================================
+    {% endraw %}
+    // component options: END
+
+
+
+
+    // endpoint options: START
+    The SQL StoredProcedure component supports 7 endpoint options which are listed below:
+
+    {% raw %}
+    [width="100%",cols="2,1,1m,1m,5",options="header"]
+    |=======================================================================
+    | Name | Group | Default | Java Type | Description
+    | template | producer |  | String | *Required* Sets the StoredProcedure template to perform
+    | batch | producer | false | boolean | Enables or disables batch mode
+    | dataSource | producer |  | DataSource | Sets the DataSource to use to communicate with the database.
+    | noop | producer | false | boolean | If set will ignore the results of the template and use the existing IN message as the OUT message for the continuation of processing
+    | outputHeader | producer |  | String | Store the template result in a header instead of the message body. By default outputHeader == null and the template result is stored in the message body any existing content in the message body is discarded. If outputHeader is set the value is used as the name of the header to store the template result and the original message body is preserved.
+    | useMessageBodyForTemplate | producer | false | boolean | Whether to use the message body as the template and then headers for parameters. If this option is enabled then the template in the uri is not used.
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+    |=======================================================================
+    {% endraw %}
+    // endpoint options: END
+
+
+    [[SQLStoredProcedure-Declaringthestoredproceduretemplate]]
+    Declaring the stored procedure template
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    The template is declared using a syntax that would be similar to a Java
+    method signature. The name of the stored procedure, and then the
+    arguments enclosed in parenthesis. An example explains this well:
+
+    [source,java]
+    ----------------------------------------------------------------------------------------------------------
+    <to uri="sql-stored:SUBNUMBERS(INTEGER ${headers.num1},INTEGER ${headers.num2},OUT INTEGER resultofsub)"/>
+    ----------------------------------------------------------------------------------------------------------
+
+    The arguments is declared by a type and then the mapping to the Camel
+    message using simple expression. So in this example the first two
+    parameters are IN values that are INTEGER type, that maps to the message
+    headers. The last parameter is the OUT value, also an INTEGER type.
+
+    In SQL term the stored procedure could be declared as:
+
+    [source,java]
+    ------------------------------------------------------------------------------
+    CREATE PROCEDURE SUBNUMBERS(VALUE1 INTEGER, VALUE2 INTEGER,OUT RESULT INTEGER)
+    ------------------------------------------------------------------------------
+
+    [[SQLStoredProcedure-SeeAlso]]
+    See Also
+    ^^^^^^^^
+
+    * link:configuring-camel.html[Configuring Camel]
+    * link:component.html[Component]
+    * link:endpoint.html[Endpoint]
+    * link:getting-started.html[Getting Started]
+
+    * link:sql-component.html[SQL Component]
+

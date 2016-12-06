@@ -1,0 +1,504 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: spring-redis
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: spring-redis
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: spring-redis
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-spring-redis:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: spring-redis
+      syntax: spring-redis:host:port
+      title: Spring Redis
+      description: The spring-redis component allows sending and receiving messages from Redis.
+      label: spring,nosql
+      deprecated: false
+      async: false
+      javaType: org.apache.camel.component.redis.RedisComponent
+      groupId: org.apache.camel
+      artifactId: camel-spring-redis
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      host:
+        kind: path
+        group: common
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The host where Redis server is running.
+      port:
+        kind: path
+        group: common
+        required: true
+        type: integer
+        javaType: java.lang.Integer
+        deprecated: false
+        secret: false
+        description: Redis server port number
+      channels:
+        kind: parameter
+        group: common
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: List of topic names or name patterns to subscribe to. Multiple names can be separated by comma.
+      command:
+        kind: parameter
+        group: common
+        type: string
+        javaType: org.apache.camel.component.redis.Command
+        enum:
+        - PING
+        - SET
+        - GET
+        - QUIT
+        - EXISTS
+        - DEL
+        - TYPE
+        - FLUSHDB
+        - KEYS
+        - RANDOMKEY
+        - RENAME
+        - RENAMENX
+        - RENAMEX
+        - DBSIZE
+        - EXPIRE
+        - EXPIREAT
+        - TTL
+        - SELECT
+        - MOVE
+        - FLUSHALL
+        - GETSET
+        - MGET
+        - SETNX
+        - SETEX
+        - MSET
+        - MSETNX
+        - DECRBY
+        - DECR
+        - INCRBY
+        - INCR
+        - APPEND
+        - SUBSTR
+        - HSET
+        - HGET
+        - HSETNX
+        - HMSET
+        - HMGET
+        - HINCRBY
+        - HEXISTS
+        - HDEL
+        - HLEN
+        - HKEYS
+        - HVALS
+        - HGETALL
+        - RPUSH
+        - LPUSH
+        - LLEN
+        - LRANGE
+        - LTRIM
+        - LINDEX
+        - LSET
+        - LREM
+        - LPOP
+        - RPOP
+        - RPOPLPUSH
+        - SADD
+        - SMEMBERS
+        - SREM
+        - SPOP
+        - SMOVE
+        - SCARD
+        - SISMEMBER
+        - SINTER
+        - SINTERSTORE
+        - SUNION
+        - SUNIONSTORE
+        - SDIFF
+        - SDIFFSTORE
+        - SRANDMEMBER
+        - ZADD
+        - ZRANGE
+        - ZREM
+        - ZINCRBY
+        - ZRANK
+        - ZREVRANK
+        - ZREVRANGE
+        - ZCARD
+        - ZSCORE
+        - MULTI
+        - DISCARD
+        - EXEC
+        - WATCH
+        - UNWATCH
+        - SORT
+        - BLPOP
+        - BRPOP
+        - AUTH
+        - SUBSCRIBE
+        - PUBLISH
+        - UNSUBSCRIBE
+        - PSUBSCRIBE
+        - PUNSUBSCRIBE
+        - ZCOUNT
+        - ZRANGEBYSCORE
+        - ZREVRANGEBYSCORE
+        - ZREMRANGEBYRANK
+        - ZREMRANGEBYSCORE
+        - ZUNIONSTORE
+        - ZINTERSTORE
+        - SAVE
+        - BGSAVE
+        - BGREWRITEAOF
+        - LASTSAVE
+        - SHUTDOWN
+        - INFO
+        - MONITOR
+        - SLAVEOF
+        - CONFIG
+        - STRLEN
+        - SYNC
+        - LPUSHX
+        - PERSIST
+        - RPUSHX
+        - ECHO
+        - LINSERT
+        - DEBUG
+        - BRPOPLPUSH
+        - SETBIT
+        - GETBIT
+        - SETRANGE
+        - GETRANGE
+        - PEXPIRE
+        - PEXPIREAT
+        deprecated: false
+        secret: false
+        defaultValue: SET
+        description: 'Default command which can be overridden by message header. Notice
+          the consumer only supports the following commands: PSUBSCRIBE and SUBSCRIBE'
+      connectionFactory:
+        kind: parameter
+        group: common
+        type: object
+        javaType: org.springframework.data.redis.connection.RedisConnectionFactory
+        deprecated: false
+        secret: false
+        description: Reference to a pre-configured RedisConnectionFactory instance to use.
+      listenerContainer:
+        kind: parameter
+        group: common
+        type: object
+        javaType: org.springframework.data.redis.listener.RedisMessageListenerContainer
+        deprecated: false
+        secret: false
+        description: Reference to a pre-configured RedisMessageListenerContainer instance to use.
+      redisTemplate:
+        kind: parameter
+        group: common
+        type: object
+        javaType: org.springframework.data.redis.core.RedisTemplate
+        deprecated: false
+        secret: false
+        description: Reference to a pre-configured RedisTemplate instance to use.
+      serializer:
+        kind: parameter
+        group: common
+        type: object
+        javaType: org.springframework.data.redis.serializer.RedisSerializer
+        deprecated: false
+        secret: false
+        description: Reference to a pre-configured RedisSerializer instance to use.
+      bridgeErrorHandler:
+        kind: parameter
+        group: consumer
+        label: consumer
+        type: boolean
+        javaType: boolean
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exceptionHandler:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: object
+        javaType: org.apache.camel.spi.ExceptionHandler
+        optionalPrefix: consumer.
+        deprecated: false
+        secret: false
+        description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+      exchangePattern:
+        kind: parameter
+        group: consumer (advanced)
+        label: consumer,advanced
+        type: string
+        javaType: org.apache.camel.ExchangePattern
+        enum:
+        - InOnly
+        - RobustInOnly
+        - InOut
+        - InOptionalOut
+        - OutOnly
+        - RobustOutOnly
+        - OutIn
+        - OutOptionalIn
+        deprecated: false
+        secret: false
+        description: Sets the exchange pattern when the consumer creates an exchange.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[SpringRedis-SpringRedisComponent]]\nSpring Redis Component\n\
+    ~~~~~~~~~~~~~~~~~~~~~~\n\n*Available as of Camel 2.11*\n\nThis component allows\
+    \ sending and receiving messages from\nhttp://http//redis.io/[Redis]. Redis is\
+    \ advanced key-value store where\nkeys can contain strings, hashes, lists, sets\
+    \ and sorted sets. In\naddition it provides pub/sub functionality for inter-app\n\
+    communications. +\n Camel provides a producer for executing commands, consumer\
+    \ for\nsubscribing to pub/sub messages an idempotent repository for filtering\n\
+    out duplicate messages.\n\nINFO:*Prerequisites*\nIn order to use this component,\
+    \ you must have a Redis server running.\n\n\n[[SpringRedis-URIFormat]]\nURI Format\n\
+    ^^^^^^^^^^\n\n[source,java]\n----------------------------------\nspring-redis://host:port[?options]\n\
+    ----------------------------------\n\nYou can append query options to the URI\
+    \ in the following format,\n`?options=value&option2=value&...`\n\n[[SpringRedis-URIOptions]]\n\
+    URI Options\n^^^^^^^^^^^\n\n\n// component options: START\nThe Spring Redis component\
+    \ has no options.\n// component options: END\n\n\n\n// endpoint options: START\n\
+    The Spring Redis component supports 12 endpoint options which are listed below:\n\
+    \n{% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| host | common |  | String\
+    \ | *Required* The host where Redis server is running.\n| port | common |  | Integer\
+    \ | *Required* Redis server port number\n| channels | common |  | String | List\
+    \ of topic names or name patterns to subscribe to. Multiple names can be separated\
+    \ by comma.\n| command | common | SET | Command | Default command which can be\
+    \ overridden by message header. Notice the consumer only supports the following\
+    \ commands: PSUBSCRIBE and SUBSCRIBE\n| connectionFactory | common |  | RedisConnectionFactory\
+    \ | Reference to a pre-configured RedisConnectionFactory instance to use.\n| listenerContainer\
+    \ | common |  | RedisMessageListenerContainer | Reference to a pre-configured\
+    \ RedisMessageListenerContainer instance to use.\n| redisTemplate | common | \
+    \ | RedisTemplate | Reference to a pre-configured RedisTemplate instance to use.\n\
+    | serializer | common |  | RedisSerializer | Reference to a pre-configured RedisSerializer\
+    \ instance to use.\n| bridgeErrorHandler | consumer | false | boolean | Allows\
+    \ for bridging the consumer to the Camel routing Error Handler which mean any\
+    \ exceptions occurred while the consumer is trying to pickup incoming messages\
+    \ or the likes will now be processed as a message and handled by the routing Error\
+    \ Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler\
+    \ to deal with exceptions that will be logged at WARN/ERROR level and ignored.\n\
+    | exceptionHandler | consumer (advanced) |  | ExceptionHandler | To let the consumer\
+    \ use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled\
+    \ then this options is not in use. By default the consumer will deal with exceptions\
+    \ that will be logged at WARN/ERROR level and ignored.\n| exchangePattern | consumer\
+    \ (advanced) |  | ExchangePattern | Sets the exchange pattern when the consumer\
+    \ creates an exchange.\n| synchronous | advanced | false | boolean | Sets whether\
+    \ synchronous processing should be strictly used or Camel is allowed to use asynchronous\
+    \ processing (if supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n[[SpringRedis-Usage]]\nUsage\n^^^^^\n\
+    \nSee also the unit tests available\nat\_https://github.com/apache/camel/tree/master/components/camel-spring-redis/src/test/java/org/apache/camel/component/redis[https://github.com/apache/camel/tree/master/components/camel-spring-redis/src/test/java/org/apache/camel/component/redis].\n\
+    \n[[SpringRedis-MessageheadersevaluatedbytheRedisproducer]]\nMessage headers evaluated\
+    \ by the Redis producer\n+++++++++++++++++++++++++++++++++++++++++++++++\n\nThe\
+    \ producer issues commands to the server and each command has\ndifferent set of\
+    \ parameters with specific types. The result from the\ncommand execution is returned\
+    \ in the message body.\n\n[width=\"100%\",cols=\"20%,20%,20%,60%\",options=\"\
+    header\",]\n|=======================================================================\n\
+    |Hash Commands |Description |Parameters |Result\n\n|`HSET` |Set the string value\
+    \ of a hash field |CamelRedis.Key (String), CamelRedis.Field (String), CamelRedis.Value\n\
+    (Object) |void\n\n|`HGET` |Get the value of a hash field |CamelRedis.Key (String),\
+    \ CamelRedis.Field (String) |String\n\n|`HSETNX` |Set the value of a hash field,\
+    \ only if the field does not exist |CamelRedis.Key (String), CamelRedis.Field\
+    \ (String), CamelRedis.Value\n(Object) |void\n\n|`HMSET` |Set multiple hash fields\
+    \ to multiple values |CamelRedis.Key (String), CamelRedis.Values(Map<String, Object>)\
+    \ |void\n\n|`HMGET` |Get the values of all the given hash fields |CamelRedis.Key\
+    \ (String), CamelRedis.Fields (Collection<String>) |Collection<Object>\n\n|`HINCRBY`\
+    \ |Increment the integer value of a hash field by the given number |CamelRedis.Key\
+    \ (String), CamelRedis.Field (String), CamelRedis.Value\n(Long) |Long\n\n|`HEXISTS`\
+    \ |Determine if a hash field exists |CamelRedis.Key (String), CamelRedis.Field\
+    \ (String) |Boolean\n\n|`HDEL` |Delete one or more hash fields |CamelRedis.Key\
+    \ (String), CamelRedis.Field (String) |void \n\n|`HLEN` |Get the number of fields\
+    \ in a hash |CamelRedis.Key (String) |Long\n\n|`HKEYS` |Get all the fields in\
+    \ a hash |CamelRedis.Key (String) |Set<String>\n\n|`HVALS` |Get all the values\
+    \ in a hash |CamelRedis.Key (String) |Collection<Object>\n\n|`HGETALL` |Get all\
+    \ the fields and values in a hash |CamelRedis.Key (String) |Map<String, Object>\n\
+    |=======================================================================\n\n[width=\"\
+    100%\",cols=\"20%,20%,20%,60%\",options=\"header\",]\n|=======================================================================\n\
+    |List Commands |Description |Parameters |Result\n\n|`RPUSH` |Append one or multiple\
+    \ values to a list |CamelRedis.Key (String), CamelRedis.Value (Object) |Long\n\
+    \n|`RPUSHX` |Append a value to a list, only if the list exists |CamelRedis.Key\
+    \ (String), CamelRedis.Value (Object) |Long\n\n|`LPUSH` |Prepend one or multiple\
+    \ values to a list |CamelRedis.Key (String), CamelRedis.Value (Object) |Long\n\
+    \n|`LLEN` |Get the length of a list |CamelRedis.Key (String) |Long\n\n|`LRANGE`\
+    \ |Get a range of elements from a list |CamelRedis.Key (String), CamelRedis.Start\
+    \ (Long), CamelRedis.End (Long) |List<Object>\n\n|`LTRIM` |Trim a list to the\
+    \ specified range |CamelRedis.Key (String), CamelRedis.Start (Long), CamelRedis.End\
+    \ (Long) |void\n\n|`LINDEX` |Get an element from a list by its index |CamelRedis.Key\
+    \ (String), CamelRedis.Index (Long) |String\n\n|`LINSERT` |Insert an element before\
+    \ or after another element in a list |CamelRedis.Key (String), CamelRedis.Value\
+    \ (Object), CamelRedis.Pivot\n(String), CamelRedis.Position (String) |Long\n\n\
+    |`LSET` |Set the value of an element in a list by its index |CamelRedis.Key (String),\
+    \ CamelRedis.Value (Object), CamelRedis.Index\n(Long) |void\n\n|`LREM` |Remove\
+    \ elements from a list |CamelRedis.Key (String), CamelRedis.Value (Object), CamelRedis.Count\n\
+    (Long) |Long\n\n|`LPOP` |Remove and get the first element in a list |CamelRedis.Key\
+    \ (String) |Object\n\n|`RPOP` |Remove and get the last element in a list |CamelRedis.Key\
+    \ (String) |String\n\n|`RPOPLPUSH` |Remove the last element in a list, append\
+    \ it to another list and return\nit |CamelRedis.Key (String), CamelRedis.Destination\
+    \ (String) |Object\n\n|`BRPOPLPUSH` |Pop a value from a list, push it to another\
+    \ list and return it; or block\nuntil one is available |CamelRedis.Key (String),\
+    \ CamelRedis.Destination (String),\nCamelRedis.Timeout (Long) |Object\n\n|`BLPOP`\
+    \ |Remove and get the first element in a list, or block until one is\navailable\
+    \ |CamelRedis.Key (String), CamelRedis.Timeout (Long) |Object\n\n|`BRPOP` |Remove\
+    \ and get the last element in a list, or block until one is\navailable |CamelRedis.Key\
+    \ (String), CamelRedis.Timeout (Long) |String\n|=======================================================================\n\
+    \n[width=\"100%\",cols=\"20%,20%,20%,60%\",options=\"header\",]\n|=======================================================================\n\
+    |Set Commands |Description |Parameters |Result\n\n|`SADD` |Add one or more members\
+    \ to a set |CamelRedis.Key (String), CamelRedis.Value (Object) |Boolean\n\n|`SMEMBERS`\
+    \ |Get all the members in a set |CamelRedis.Key (String) |Set<Object>\n\n|`SREM`\
+    \ |Remove one or more members from a set |CamelRedis.Key (String), CamelRedis.Value\
+    \ (Object) |Boolean\n\n|`SPOP` |Remove and return a random member from a set |CamelRedis.Key\
+    \ (String) |String\n\n|`SMOVE` |Move a member from one set to another |CamelRedis.Key\
+    \ (String), CamelRedis.Value (Object),\nCamelRedis.Destination (String) |Boolean\n\
+    \n|`SCARD` |Get the number of members in a set |CamelRedis.Key (String) |Long\n\
+    \n|`SISMEMBER` |Determine if a given value is a member of a set |CamelRedis.Key\
+    \ (String), CamelRedis.Value (Object) |Boolean\n\n|`SINTER` |Intersect multiple\
+    \ sets |CamelRedis.Key (String), CamelRedis.Keys (String) |Set<Object>\n\n|`SINTERSTORE`\
+    \ |Intersect multiple sets and store the resulting set in a key |CamelRedis.Key\
+    \ (String), CamelRedis.Keys (String),\nCamelRedis.Destination (String) |void\n\
+    \n|`SUNION` |Add multiple sets |CamelRedis.Key (String), CamelRedis.Keys (String)\
+    \ |Set<Object>\n\n|`SUNIONSTORE` |Add multiple sets and store the resulting set\
+    \ in a key |CamelRedis.Key (String), CamelRedis.Keys (String),\nCamelRedis.Destination\
+    \ (String) |void\n\n|`SDIFF` |Subtract multiple sets |CamelRedis.Key (String),\
+    \ CamelRedis.Keys (String) |Set<Object>\n\n|`SDIFFSTORE` |Subtract multiple sets\
+    \ and store the resulting set in a key |CamelRedis.Key (String), CamelRedis.Keys\
+    \ (String),\nCamelRedis.Destination (String) |void\n\n|`SRANDMEMBER` |Get one\
+    \ or multiple random members from a set |CamelRedis.Key (String) |String\n|=======================================================================\n\
+    \n[width=\"100%\",cols=\"20%,20%,20%,60%\",options=\"header\",]\n|=======================================================================\n\
+    |Ordered set Commands |Description |Parameters |Result\n\n|`ZADD` |Add one or\
+    \ more members to a sorted set, or update its score if it\nalready exists |CamelRedis.Key\
+    \ (String), CamelRedis.Value (Object), CamelRedis.Score\n(Double) |Boolean\n\n\
+    |`ZRANGE` |Return a range of members in a sorted set, by index |CamelRedis.Key\
+    \ (String), CamelRedis.Start (Long), CamelRedis.End (Long),\nCamelRedis.WithScore\
+    \ (Boolean) |Object\n\n|`ZREM` |Remove one or more members from a sorted set |CamelRedis.Key\
+    \ (String), CamelRedis.Value (Object) |Boolean\n\n|`ZINCRBY` |Increment the score\
+    \ of a member in a sorted set |CamelRedis.Key (String), CamelRedis.Value (Object),\
+    \ CamelRedis.Increment\n(Double) |Double\n\n|`ZRANK` |Determine the index of a\
+    \ member in a sorted set |CamelRedis.Key (String), CamelRedis.Value (Object) |Long\n\
+    \n|`ZREVRANK` |Determine the index of a member in a sorted set, with scores ordered\n\
+    from high to low |CamelRedis.Key (String), CamelRedis.Value (Object) |Long\n\n\
+    |`ZREVRANGE` |Return a range of members in a sorted set, by index, with scores\
+    \ ordered\nfrom high to low |CamelRedis.Key (String), CamelRedis.Start (Long),\
+    \ CamelRedis.End (Long),\nCamelRedis.WithScore (Boolean) |Object\n\n|`ZCARD` |Get\
+    \ the number of members in a sorted set |CamelRedis.Key (String) |Long\n\n|`ZCOUNT`\
+    \ |Count the members in a sorted set with scores within the given values |CamelRedis.Key\
+    \ (String), CamelRedis.Min (Double), CamelRedis.Max\n(Double) |Long\n\n|`ZRANGEBYSCORE`\
+    \ |Return a range of members in a sorted set, by score |CamelRedis.Key (String),\
+    \ CamelRedis.Min (Double), CamelRedis.Max\n(Double) |Set<Object>\n\n|`ZREVRANGEBYSCORE`\
+    \ |Return a range of members in a sorted set, by score, with scores ordered\n\
+    from high to low |CamelRedis.Key (String), CamelRedis.Min (Double), CamelRedis.Max\n\
+    (Double) |Set<Object>\n\n|`ZREMRANGEBYRANK` |Remove all members in a sorted set\
+    \ within the given indexes |CamelRedis.Key (String), CamelRedis.Start (Long),\
+    \ CamelRedis.End (Long) |void\n\n|`ZREMRANGEBYSCORE` |Remove all members in a\
+    \ sorted set within the given scores |CamelRedis.Key (String), CamelRedis.Start\
+    \ (Long), CamelRedis.End (Long) |void\n\n|`ZUNIONSTORE` |Add multiple sorted sets\
+    \ and store the resulting sorted set in a new key |CamelRedis.Key (String), CamelRedis.Keys\
+    \ (String),\nCamelRedis.Destination (String) |void\n\n|`ZINTERSTORE` |Intersect\
+    \ multiple sorted sets and store the resulting sorted set in a\nnew key |CamelRedis.Key\
+    \ (String), CamelRedis.Keys (String),\nCamelRedis.Destination (String) |void\n\
+    |=======================================================================\n\n[width=\"\
+    100%\",cols=\"20%,20%,20%,60%\",options=\"header\",]\n|=======================================================================\n\
+    |String Commands |Description |Parameters |Result\n\n|`SET` |Set the string value\
+    \ of a key |CamelRedis.Key (String), CamelRedis.Value (Object) |void\n\n|`GET`\
+    \ |Get the value of a key |CamelRedis.Key (String) |Object\n\n|`STRLEN` |Get the\
+    \ length of the value stored in a key |CamelRedis.Key (String) |Long\n\n|`APPEND`\
+    \ |Append a value to a key |CamelRedis.Key (String), CamelRedis.Value (String)\
+    \ |Integer\n\n|`SETBIT` |Sets or clears the bit at offset in the string value\
+    \ stored at key |CamelRedis.Key (String), CamelRedis.Offset (Long), CamelRedis.Value\n\
+    (Boolean) |void\n\n|`GETBIT` |Returns the bit value at offset in the string value\
+    \ stored at key |CamelRedis.Key (String), CamelRedis.Offset (Long) |Boolean\n\n\
+    |`SETRANGE` |Overwrite part of a string at key starting at the specified offset\
+    \ |CamelRedis.Key (String), CamelRedis.Value (Object), CamelRedis.Offset\n(Long)\
+    \ |void\n\n|`GETRANGE` |Get a substring of the string stored at a key |CamelRedis.Key\
+    \ (String), CamelRedis.Start (Long), CamelRedis.End (Long) |String\n\n|`SETNX`\
+    \ |Set the value of a key, only if the key does not exist |CamelRedis.Key (String),\
+    \ CamelRedis.Value (Object) |Boolean\n\n|`SETEX` |Set the value and expiration\
+    \ of a key |CamelRedis.Key (String), CamelRedis.Value (Object), CamelRedis.Timeout\n\
+    (Long), SECONDS |void\n\n|`DECRBY` |Decrement the integer value of a key by the\
+    \ given number |CamelRedis.Key (String), CamelRedis.Value (Long) |Long\n\n|`DECR`\
+    \ |Decrement the integer value of a key by one |CamelRedis.Key (String), |Long\n\
+    \n|`INCRBY` |Increment the integer value of a key by the given amount |CamelRedis.Key\
+    \ (String), CamelRedis.Value (Long) |Long\n\n|`INCR` |Increment the integer value\
+    \ of a key by one |CamelRedis.Key (String) |Long\n\n|`MGET` |Get the values of\
+    \ all the given keys |CamelRedis.Fields (Collection<String>) |List<Object>\n\n\
+    |`MSET` |Set multiple keys to multiple values |CamelRedis.Values(Map<String, Object>)\
+    \ |void\n\n|`MSETNX` |Set multiple keys to multiple values, only if none of the\
+    \ keys exist |CamelRedis.Key (String), CamelRedis.Value (Object) |void\n\n|`GETSET`\
+    \ |Set the string value of a key and return its old value |CamelRedis.Key (String),\
+    \ CamelRedis.Value (Object) |Object\n|=======================================================================\n\
+    \n[width=\"100%\",cols=\"20%,20%,20%,60%\",options=\"header\",]\n|=======================================================================\n\
+    |Key Commands |Description |Parameters |Result\n\n|`EXISTS` |Determine if a key\
+    \ exists |CamelRedis.Key (String) |Boolean\n\n|`DEL` |Delete a key |CamelRedis.Keys\
+    \ (String) |void\n\n|`TYPE` |Determine the type stored at key |CamelRedis.Key\
+    \ (String) |DataType\n\n|`KEYS` |Find all keys matching the given pattern |CamelRedis.Pattern\
+    \ (String) |Collection<String>\n\n|`RANDOMKEY` |Return a random key from the keyspace\
+    \ |CamelRedis.Pattern (String), CamelRedis.Value (String) |String\n\n|`RENAME`\
+    \ |Rename a key |CamelRedis.Key (String) |void\n\n|`RENAMENX` |Rename a key, only\
+    \ if the new key does not exist |CamelRedis.Key (String), CamelRedis.Value (String)\
+    \ |Boolean\n\n|`EXPIRE` |Set a key's time to live in seconds |CamelRedis.Key (String),\
+    \ CamelRedis.Timeout (Long) |Boolean\n\n|`SORT` |Sort the elements in a list,\
+    \ set or sorted set |CamelRedis.Key (String) |List<Object>\n\n|`PERSIST` |Remove\
+    \ the expiration from a key |CamelRedis.Key (String) |Boolean\n\n|`EXPIREAT` |Set\
+    \ the expiration for a key as a UNIX timestamp |CamelRedis.Key (String), CamelRedis.Timestamp\
+    \ (Long) |Boolean\n\n|`PEXPIRE` |Set a key's time to live in milliseconds |CamelRedis.Key\
+    \ (String), CamelRedis.Timeout (Long) |Boolean\n\n|`PEXPIREAT` |Set the expiration\
+    \ for a key as a UNIX timestamp specified in\nmilliseconds |CamelRedis.Key (String),\
+    \ CamelRedis.Timestamp (Long) |Boolean\n\n|`TTL` |Get the time to live for a key\
+    \ |CamelRedis.Key (String) |Long\n\n|`MOVE` |Move a key to another database |CamelRedis.Key\
+    \ (String), CamelRedis.Db (Integer) |Boolean\n|=======================================================================\n\
+    \n[width=\"100%\",cols=\"20%,20%,20%,60%\",options=\"header\",]\n|=======================================================================\n\
+    |Other Command |Description |Parameters |Result\n\n|`MULTI` |Mark the start of\
+    \ a transaction block |none |void\n\n|`DISCARD` |Discard all commands issued after\
+    \ MULTI |none |void\n\n|`EXEC` |Execute all commands issued after MULTI |none\
+    \ |void\n\n|`WATCH` |Watch the given keys to determine execution of the MULTI/EXEC\
+    \ block |CamelRedis.Keys (String) |void\n\n|`UNWATCH` |Forget about all watched\
+    \ keys |none |void\n\n|`ECHO` |Echo the given string |CamelRedis.Value (String)\
+    \ |String\n\n|`PING` |Ping the server |none |String\n\n|`QUIT` |Close the connection\
+    \ |none |void\n\n|`PUBLISH` |Post a message to a channel |CamelRedis.Channel (String),\
+    \ CamelRedis.Message (Object) |void\n|=======================================================================\n\
+    \n[[SpringRedis-Dependencies]]\nDependencies\n^^^^^^^^^^^^\n\nMaven users will\
+    \ need to add the following dependency to their pom.xml.\n\n*pom.xml*\n\n[source,xml]\n\
+    -----------------------------------------------\n<dependency>\n    <groupId>org.apache.camel</groupId>\n\
+    \    <artifactId>camel-spring-redis</artifactId>\n    <version>${camel-version}</version>\n\
+    </dependency>\n-----------------------------------------------\n\nwhere `${camel-version`}\
+    \ must be replaced by the actual version of Camel\n(2.11 or higher).\n\n[[SpringRedis-SeeAlso]]\n\
+    See Also\n^^^^^^^^\n\n* link:configuring-camel.html[Configuring Camel]\n* link:component.html[Component]\n\
+    * link:endpoint.html[Endpoint]\n* link:getting-started.html[Getting Started]\n\
+    \n"

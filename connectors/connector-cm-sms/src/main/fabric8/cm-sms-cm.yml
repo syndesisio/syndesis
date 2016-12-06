@@ -1,0 +1,130 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: cm-sms
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: cm-sms
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: cm-sms
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-cm-sms:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: cm-sms
+      syntax: cm-sms:host
+      title: CM SMS Gateway
+      description: The influxdb component allows to integrate with CM SMS Gateway.
+      label: mobile
+      deprecated: false
+      async: false
+      producerOnly: true
+      javaType: org.apache.camel.component.cm.CMComponent
+      groupId: org.apache.camel
+      artifactId: camel-cm-sms
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      host:
+        kind: path
+        group: producer
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: SMS Provider HOST with scheme
+      defaultFrom:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: This is the sender name. The maximum length is 11 characters.
+      defaultMaxNumberOfParts:
+        kind: parameter
+        group: producer
+        type: integer
+        javaType: int
+        deprecated: false
+        secret: false
+        defaultValue: "8"
+        description: If it is a multipart message forces the max number. Message can be truncated. Technically the gateway will first check if a message is larger than 160 characters if so the message will be cut into multiple 153 characters parts limited by these parameters.
+      productToken:
+        kind: parameter
+        group: producer
+        required: true
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: The unique token to use
+      testConnectionOnStartup:
+        kind: parameter
+        group: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Whether to test the connection to the SMS Gateway on startup
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[CM-SMS]]\nCM-SMS\n~~~~~~\n\n*Available as of Camel 2.18*\n\
+    \n*Camel-Cm-Sms* is an http://camel.apache.org/[Apache Camel] component \nfor\
+    \ the [CM SMS Gateway](https://www.cmtelecom.com). \n\nIt allows to integrate\
+    \ https://dashboard.onlinesmsgateway.com/docs[CM SMS API]in an application as\
+    \ a camel component. \n\nYou must have a valid account.  More information are\
+    \ available at https://www.cmtelecom.com/support[CM Telecom].\n\n[source,java]\n\
+    -------------------------------\ncm-sms://sgw01.cm.nl/gateway.ashx?defaultFrom=DefaultSender&defaultMaxNumberOfParts=8&productToken=xxxxx\n\
+    -------------------------------\n\nMaven users will need to add the following\
+    \ dependency to their pom.xml\nfor this component:\n\n[source,xml]\n---------------------------------------------------------\n\
+    <dependency>\n\_<groupId>org.apache.camel</groupId>\n\_<artifactId>camel-cm-sms</artifactId>\n\
+    \_<version>x.x.x</version>\n\_<!-- use the same version as your Camel core version\
+    \ -->\n</dependency>\n---------------------------------------------------------\n\
+    \n[[CM-SMS-Options]]\nOptions\n~~~~~~~\n\n\n// component options: START\nThe CM\
+    \ SMS Gateway component has no options.\n// component options: END\n\n\n\n// endpoint\
+    \ options: START\nThe CM SMS Gateway component supports 6 endpoint options which\
+    \ are listed below:\n\n{% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"\
+    header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| host | producer |  | String\
+    \ | *Required* SMS Provider HOST with scheme\n| defaultFrom | producer |  | String\
+    \ | This is the sender name. The maximum length is 11 characters.\n| defaultMaxNumberOfParts\
+    \ | producer | 8 | int | If it is a multipart message forces the max number. Message\
+    \ can be truncated. Technically the gateway will first check if a message is larger\
+    \ than 160 characters if so the message will be cut into multiple 153 characters\
+    \ parts limited by these parameters.\n| productToken | producer |  | String |\
+    \ *Required* The unique token to use\n| testConnectionOnStartup | producer | false\
+    \ | boolean | Whether to test the connection to the SMS Gateway on startup\n|\
+    \ synchronous | advanced | false | boolean | Sets whether synchronous processing\
+    \ should be strictly used or Camel is allowed to use asynchronous processing (if\
+    \ supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\n[[CM-SMS-Sample]]\nSample\n~~~~~~\n\
+    \nYou can try https://github.com/oalles/camel-cm-sample[this project] to see how\
+    \ camel-cm-sms can be integrated in a camel route. \n"

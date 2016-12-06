@@ -1,0 +1,255 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    kind.funktion.fabric8.io: Connector
+  name: controlbus
+data:
+  deployment.yml: |
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        connector: controlbus
+        kind.funktion.fabric8.io: Subscription
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            connector: controlbus
+            kind.funktion.fabric8.io: Subscription
+        spec:
+          containers:
+          - image: connector-controlbus:${project.version}
+  schema.yml: |
+    ---
+    component:
+      kind: component
+      scheme: controlbus
+      syntax: controlbus:command:language
+      title: Control Bus
+      description: The controlbus component provides easy management of Camel applications based on the Control Bus EIP pattern.
+      label: core,monitoring
+      deprecated: false
+      async: false
+      producerOnly: true
+      javaType: org.apache.camel.component.controlbus.ControlBusComponent
+      groupId: org.apache.camel
+      artifactId: camel-core
+      version: 2.18.1
+    componentProperties: {}
+    properties:
+      command:
+        kind: path
+        group: producer
+        required: true
+        type: string
+        javaType: java.lang.String
+        enum:
+        - route
+        - language
+        deprecated: false
+        secret: false
+        description: Command can be either route or language
+      language:
+        kind: path
+        group: producer
+        type: string
+        javaType: org.apache.camel.spi.Language
+        enum:
+        - bean
+        - constant
+        - el
+        - exchangeProperty
+        - file
+        - groovy
+        - header
+        - jsonpath
+        - jxpath
+        - mvel
+        - ognl
+        - ref
+        - simple
+        - spel
+        - sql
+        - terser
+        - tokenize
+        - xpath
+        - xquery
+        - xtokenize
+        deprecated: false
+        secret: false
+        description: Allows you to specify the name of a Language to use for evaluating the message body. If there is any result from the evaluation then the result is put in the message body.
+      action:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        enum:
+        - start
+        - stop
+        - suspend
+        - resume
+        - status
+        deprecated: false
+        secret: false
+        description: 'To denote an action that can be either: start stop or status. To
+          either start or stop a route or to get the status of the route as output in
+          the message body. You can use suspend and resume from Camel 2.11.1 onwards to
+          either suspend or resume a route. And from Camel 2.11.1 onwards you can use
+          stats to get performance statics returned in XML format; the routeId option
+          can be used to define which route to get the performance stats for if routeId
+          is not defined then you get statistics for the entire CamelContext.'
+      async:
+        kind: parameter
+        group: producer
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: 'Whether to execute the control bus task asynchronously. Important:
+          If this option is enabled then any result from the task is not set on the Exchange.
+          This is only possible if executing tasks synchronously.'
+      loggingLevel:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: org.apache.camel.LoggingLevel
+        enum:
+        - TRACE
+        - DEBUG
+        - INFO
+        - WARN
+        - ERROR
+        - OFF
+        deprecated: false
+        secret: false
+        defaultValue: INFO
+        description: Logging level used for logging when task is done or if any exceptions occurred during processing the task.
+      routeId:
+        kind: parameter
+        group: producer
+        type: string
+        javaType: java.lang.String
+        deprecated: false
+        secret: false
+        description: To specify a route by its id. The special keyword current indicates the current route.
+      synchronous:
+        kind: parameter
+        group: advanced
+        label: advanced
+        type: boolean
+        javaType: boolean
+        deprecated: false
+        secret: false
+        defaultValue: false
+        description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+  documentation.adoc: "[[ControlBus-ControlBus]]\nControlBus\n^^^^^^^^^^\n\nThe http://www.eaipatterns.com/ControlBus.html[Control\
+    \ Bus] from the\nlink:enterprise-integration-patterns.html[EIP patterns] allows\
+    \ for the\nintegration system to be monitored and managed from within the\nframework.\n\
+    \nimage:http://www.eaipatterns.com/img/ControlBus.gif[image]\n\nUse a Control\
+    \ Bus to manage an enterprise integration system. The\nControl Bus uses the same\
+    \ messaging mechanism used by the application\ndata, but uses separate channels\
+    \ to transmit data that is relevant to\nthe management of components involved\
+    \ in the message flow.\n\nIn Camel you can manage and monitor using link:camel-jmx.html[JMX],\
+    \ or\nby using a Java API from the `CamelContext`, or from the\n`org.apache.camel.api.management`\
+    \ package, +\n or use the event notifier which has an example\nlink:eventnotifier-to-log-details-about-all-sent-exchanges.html[here].\n\
+    \nFrom Camel 2.11 onwards we have introduced a new\nlink:controlbus-component.html[ControlBus\
+    \ Component] that allows you to\nsend messages to a control bus link:endpoint.html[Endpoint]\
+    \ that reacts\naccordingly.\n\n[[ControlBus-ControlBusComponent]]\nControlBus\
+    \ Component\n~~~~~~~~~~~~~~~~~~~~\n\n*Available as of Camel 2.11*\n\nThe *controlbus:*\
+    \ component provides easy management of Camel\napplications based on the link:controlbus.html[Control\
+    \ Bus] EIP\npattern. \nFor example, by sending a message to an link:endpoint.html[Endpoint]\n\
+    you can control the lifecycle of routes, or gather performance\nstatistics.\n\n\
+    [source,java]\n----------------------------\ncontrolbus:command[?options]\n----------------------------\n\
+    \nWhere *command* can be any string to identify which type of command to\nuse.\n\
+    \n[[ControlBus-Commands]]\nCommands\n^^^^^^^^\n\n[width=\"100%\",cols=\"10%,90%\"\
+    ,options=\"header\",]\n|=======================================================================\n\
+    |Command |Description\n\n|`route` |To control routes using the `routeId` and `action`\
+    \ parameter.\n\n|`language` |Allows you to specify a link:language.html[Language]\
+    \ to use for\nevaluating the message body. If there is any result from the evaluation,\n\
+    then the result is put in the message body.\n|=======================================================================\n\
+    \n[[ControlBus-Options]]\nOptions\n^^^^^^^\n\n\n// component options: START\n\
+    The Control Bus component has no options.\n// component options: END\n\n\n\n//\
+    \ endpoint options: START\nThe Control Bus component supports 7 endpoint options\
+    \ which are listed below:\n\n{% raw %}\n[width=\"100%\",cols=\"2,1,1m,1m,5\",options=\"\
+    header\"]\n|=======================================================================\n\
+    | Name | Group | Default | Java Type | Description\n| command | producer |  |\
+    \ String | *Required* Command can be either route or language\n| language | producer\
+    \ |  | Language | Allows you to specify the name of a Language to use for evaluating\
+    \ the message body. If there is any result from the evaluation then the result\
+    \ is put in the message body.\n| action | producer |  | String | To denote an\
+    \ action that can be either: start stop or status. To either start or stop a route\
+    \ or to get the status of the route as output in the message body. You can use\
+    \ suspend and resume from Camel 2.11.1 onwards to either suspend or resume a route.\
+    \ And from Camel 2.11.1 onwards you can use stats to get performance statics returned\
+    \ in XML format; the routeId option can be used to define which route to get the\
+    \ performance stats for if routeId is not defined then you get statistics for\
+    \ the entire CamelContext.\n| async | producer | false | boolean | Whether to\
+    \ execute the control bus task asynchronously. Important: If this option is enabled\
+    \ then any result from the task is not set on the Exchange. This is only possible\
+    \ if executing tasks synchronously.\n| loggingLevel | producer | INFO | LoggingLevel\
+    \ | Logging level used for logging when task is done or if any exceptions occurred\
+    \ during processing the task.\n| routeId | producer |  | String | To specify a\
+    \ route by its id. The special keyword current indicates the current route.\n\
+    | synchronous | advanced | false | boolean | Sets whether synchronous processing\
+    \ should be strictly used or Camel is allowed to use asynchronous processing (if\
+    \ supported).\n|=======================================================================\n\
+    {% endraw %}\n// endpoint options: END\n\n\nYou can append query options to the\
+    \ URI in the following format,\n`?option=value&option=value&...`\n\n[[ControlBus-Samples]]\n\
+    Samples\n^^^^^^^\n\n[[ControlBus-Usingroutecommand]]\nUsing route command\n+++++++++++++++++++\n\
+    \nThe route command allows you to do common tasks on a given route very\neasily,\
+    \ for example to start a route, you can send an empty message to\nthis endpoint:\n\
+    \n[source,java]\n---------------------------------------------------------------------\n\
+    template.sendBody(\"controlbus:route?routeId=foo&action=start\", null);\n---------------------------------------------------------------------\n\
+    \nTo get the status of the route, you can do:\n\n[source,java]\n-------------------------------------------------------------------------------------------------------\n\
+    String status = template.requestBody(\"controlbus:route?routeId=foo&action=status\"\
+    , null, String.class);\n-------------------------------------------------------------------------------------------------------\n\
+    \n[[ControlBus-Gettingperformancestatistics]]\nGetting performance statistics\n\
+    \n*Available as of Camel 2.11.1*\n\nThis requires JMX to be enabled (is by default)\
+    \ then you can get the\nperformance statics per route, or for the\nlink:camelcontext.html[CamelContext].\
+    \ For example to get the statics for\na route named foo, we can do:\n\n[source,java]\n\
+    ---------------------------------------------------------------------------------------------------\n\
+    String xml = template.requestBody(\"controlbus:route?routeId=foo&action=stats\"\
+    , null, String.class);\n---------------------------------------------------------------------------------------------------\n\
+    \nThe returned statics is in XML format. Its the same data you can get\nfrom JMX\
+    \ with the `dumpRouteStatsAsXml` operation on the\n`ManagedRouteMBean`.\n\nTo\
+    \ get statics for the entire link:camelcontext.html[CamelContext] you\njust omit\
+    \ the routeId parameter as shown below:\n\n[source,java]\n---------------------------------------------------------------------------------------\n\
+    String xml = template.requestBody(\"controlbus:route?action=stats\", null, String.class);\n\
+    ---------------------------------------------------------------------------------------\n\
+    \n[[ControlBus-Usinglanguage]]\nUsing link:simple.html[Simple] language\n+++++++++++++++++++++++++++++++++++++++\n\
+    \nYou can use the link:simple.html[Simple] language with the control bus,\nfor\
+    \ example to stop a specific route, you can send a message to the\n`\"controlbus:language:simple\"\
+    ` endpoint containing the following\nmessage:\n\n[source,java]\n----------------------------------------------------------------------------------------\n\
+    template.sendBody(\"controlbus:language:simple\", \"${camelContext.stopRoute('myRoute')}\"\
+    );\n----------------------------------------------------------------------------------------\n\
+    \nAs this is a void operation, no result is returned. However, if you want\nthe\
+    \ route status you can do:\n\n[source,java]\n------------------------------------------------------------------------------------------------------------------------------\n\
+    String status = template.requestBody(\"controlbus:language:simple\", \"${camelContext.getRouteStatus('myRoute')}\"\
+    , String.class);\n------------------------------------------------------------------------------------------------------------------------------\n\
+    \n*Notice:* its easier to use the `route` command to control lifecycle of\nroutes.\
+    \ The `language` command allows you to execute a language script\nthat has stronger\
+    \ powers such as link:groovy.html[Groovy] or to some\nextend the link:simple.html[Simple]\
+    \ language.\n\nFor example to shutdown Camel itself you can do:\n\n[source,java]\n\
+    -------------------------------------------------------------------------------------\n\
+    template.sendBody(\"controlbus:language:simple?async=true\", \"${camelContext.stop()}\"\
+    );\n-------------------------------------------------------------------------------------\n\
+    \nNotice we use `async=true` to stop Camel asynchronously as otherwise we\nwould\
+    \ be trying to stop Camel while it was in-flight processing the\nmessage we sent\
+    \ to the control bus component.\n\nTIP:You can also use other languages such as\
+    \ link:groovy.html[Groovy], etc.\n\n[[ControlBus-SeeAlso]]\nSee Also\n^^^^^^^^\n\
+    \n* link:configuring-camel.html[Configuring Camel]\n* link:component.html[Component]\n\
+    * link:endpoint.html[Endpoint]\n* link:getting-started.html[Getting Started]\n\
+    \n* link:controlbus.html[ControlBus] EIP\n* link:jmx.html[JMX] Component\n* Using\
+    \ link:camel-jmx.html[JMX] with Camel\n\n[[ControlBus-UsingThisPattern]]\nUsing\
+    \ This Pattern\n++++++++++++++++++\n\nIf you would like to use this EIP Pattern\
+    \ then please read the\nlink:getting-started.html[Getting Started], you may also\
+    \ find the\nlink:architecture.html[Architecture] useful particularly the description\n\
+    of link:endpoint.html[Endpoint] and link:uris.html[URIs]. Then you could\ntry\
+    \ out some of the link:examples.html[Examples] first before trying\nthis pattern\
+    \ out.\n"
