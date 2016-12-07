@@ -1,28 +1,16 @@
 package com.redhat.ipaas.rest;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import org.infinispan.Cache;
 import org.infinispan.manager.DefaultCacheManager;
-import org.jboss.arquillian.junit.Arquillian;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.api.Component;
-import com.redhat.ipaas.api.ComponentGroup;
 import com.redhat.ipaas.api.IPaasEntity;
-import com.redhat.ipaas.rest.DataManager;
-import com.redhat.ipaas.rest.ModelData;
-import com.redhat.ipaas.rest.ReadApiClientData;
 
 public class DataManagerTest {
 
@@ -35,7 +23,6 @@ public class DataManagerTest {
 		dataManager.init();
 	}
 	
-	
 	@Test
 	public void getComponents() {
 		Collection<Component> components = dataManager.fetchAll(Component.class);
@@ -45,7 +32,6 @@ public class DataManagerTest {
 		assertTrue(components.size() > 10);
 	}
 	
-
 	@Test
 	public void getComponent() {
 	    Component component = dataManager.fetch(Component.class,"1");

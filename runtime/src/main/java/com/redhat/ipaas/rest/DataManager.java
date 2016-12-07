@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.infinispan.Cache;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -36,6 +39,7 @@ public class DataManager {
 	private Cache<String, Map<String,IPaasEntity>> cache;
 	private ObjectMapper mapper = new ObjectMapper();
 	private String fileName = "com/redhat/ipaas/rest/deployment.json";
+	private static Logger logger = LoggerFactory.getLogger(DataManager.class.getName());
 	
 	public DataManager() {}
 	
@@ -52,8 +56,7 @@ public class DataManager {
 					addToCache(modelData);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Cannot read dummy startup data due to: " + e.getMessage(),e);
 			}
 			
 		}
@@ -68,7 +71,7 @@ public class DataManager {
 				entityMap = new HashMap<String, IPaasEntity>();
 				cache.put(modelData.getModel().toLowerCase(), entityMap);
 			}
-			System.out.println(modelData.getModel() + ":" + modelData.getData());
+			logger.debug(modelData.getModel() + ":" + modelData.getData());
 			IPaasEntity entity = clazz.cast(mapper.readValue(modelData.getData(), clazz));
 			if (entity.getId()==null) {
 				entity.setId(generatePK(entityMap));
