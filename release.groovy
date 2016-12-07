@@ -10,12 +10,9 @@ def repo(){
 
 
 def stage(){
-
-
   return stageProject{
     project = repo()
     useGitTagForNextVersion = true
-    setVersionExtraArgs = '-pl parent'
   }
 }
 
