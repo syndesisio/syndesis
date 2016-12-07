@@ -34,7 +34,26 @@
 
   <modules>
     <module>example-java</module>
-    <module>example-groovy</module>
-    <module>example-kotlin</module>
   </modules>
+
+
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>example-java</module>
+        <module>example-groovy</module>
+        <module>example-kotlin</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>release</id>
+      <modules>
+        <module>example-java</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>
