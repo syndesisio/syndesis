@@ -19,7 +19,7 @@ package io.fabric8.funktion.connector.generator;
 /**
  */
 public class Labels {
-    public static final String KIND = "kind.funktion.fabric8.io";
+    public static final String KIND = "funktion.fabric8.io/kind";
     public static final String CONNECTOR = "connector";
 
     public static class Kind {

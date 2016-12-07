@@ -169,10 +169,9 @@ public class ConnectorGenerator {
                         "  <modelVersion>4.0.0</modelVersion>\n" +
                         "\n" +
                         "  <parent>\n" +
-                        "    <groupId>io.fabric8.funktion.starter</groupId>\n" +
-                        "    <artifactId>starter-parent-java</artifactId>\n" +
+                        "    <groupId>io.fabric8.funktion.connector</groupId>\n" +
+                        "    <artifactId>connectors</artifactId>\n" +
                         "    <version>" + projectVersion + "</version>\n" +
-                        "    <relativePath>../../starter-parent/starter-parent-java</relativePath>\n" +
                         "  </parent>\n" +
                         "\n" +
                         "  <groupId>io.fabric8.funktion.connector</groupId>\n" +
@@ -183,12 +182,21 @@ public class ConnectorGenerator {
                         "  <name>Funktion Connector " + componentTitle + "</name>\n" +
                         "  <description>Funktion :: Connector :: " + componentTitle + "</description>\n" +
                         dependencies +
+                        "\n" +
                         "  <build>\n" +
                         "    <plugins>\n" +
                         "      <plugin>\n" +
                         "        <groupId>io.fabric8</groupId>\n" +
                         "        <artifactId>fabric8-maven-plugin</artifactId>\n" +
                         "        <version>${fabric8.maven.plugin.version}</version>\n" +
+                        "        <executions>\n" +
+                        "          <execution>\n" +
+                        "            <goals>\n" +
+                        "              <goal>resource</goal>\n" +
+                        "              <goal>build</goal>\n" +
+                        "            </goals>\n" +
+                        "          </execution>\n" +
+                        "        </executions>\n" +
                         "        <configuration>\n" +
                         "          <enricher>\n" +
                         "            <excludes>\n" +
@@ -196,15 +204,11 @@ public class ConnectorGenerator {
                         "              <exclude>fmp-service</exclude>\n" +
                         "            </excludes>\n" +
                         "          </enricher>\n" +
-                        "          <generator>\n" +
-                        "            <config>\n" +
-                        "              <spring-boot>\n" +
-                        "                <name>fabric8/%a:%v</name>\n" +
-                        "                <alias>connector</alias>\n" +
-                        "              </spring-boot>\n" +
-                        "            </config>\n" +
-                        "          </generator>\n" +
                         "        </configuration>\n" +
+                        "      </plugin>\n" +
+                        "      <plugin>\n" +
+                        "        <groupId>org.springframework.boot</groupId>\n" +
+                        "        <artifactId>spring-boot-maven-plugin</artifactId>\n" +
                         "      </plugin>\n" +
                         "    </plugins>\n" +
                         "  </build>\n" +
