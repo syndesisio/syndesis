@@ -215,6 +215,15 @@ public class ConnectorGenerator {
                         "</project>";
                 IOHelpers.writeFully(new File(projectDir, "pom.xml"), pomXml);
 
+                String dummyJavaClass = "package io.fabric8.funktion.connector;\n" +
+                        "\n" +
+                        "public class ConnectorMarker{}\n";
+    
+                File dummyJavaFile = new File(projectDir, "src/main/java/io/fabric8/funktion/connector/ConnectorMarker.java");
+                dummyJavaFile.getParentFile().mkdirs();
+                IOHelpers.writeFully(dummyJavaFile, dummyJavaClass);
+
+
                 String jSonSchema = camelCatalog.componentJSonSchema(componentName);
                 String asciiDoc = camelCatalog.componentAsciiDoc(componentName);
 
