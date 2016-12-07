@@ -1,4 +1,4 @@
-package com.redhat.ipaas.runtime.data;
+package com.redhat.ipaas.rest;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
@@ -11,8 +11,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.api.ComponentGroup;
-import com.redhat.ipaas.runtime.data.ModelData;
-import com.redhat.ipaas.runtime.data.ReadApiClientData;
+import com.redhat.ipaas.rest.ModelData;
+import com.redhat.ipaas.rest.ReadApiClientData;
 
 
 public class ReadApiClientDataTest {
@@ -35,7 +35,7 @@ public class ReadApiClientDataTest {
 	
 	@Test
 	public void loadApiClientDataTest() throws JsonParseException, JsonMappingException, IOException {
-		List<ModelData> modelDataList = new ReadApiClientData().readDataFromFile("src/main/resources/deployment.json");
+		List<ModelData> modelDataList = new ReadApiClientData().readDataFromFile("com/redhat/ipaas/rest/deployment.json");
 		System.out.println("Found " + modelDataList.size() + " entities.");
 		assertTrue("We should find some ModelData", 0 < modelDataList.size());
 		List<ComponentGroup> componentGroupList = new ArrayList<ComponentGroup>();

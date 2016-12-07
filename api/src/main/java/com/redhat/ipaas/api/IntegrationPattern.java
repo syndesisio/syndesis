@@ -18,7 +18,9 @@ package com.redhat.ipaas.api;
 
 import java.io.Serializable;
 
-public class IntegrationPattern implements Serializable {
+import com.fasterxml.jackson.annotation.JsonRawValue;
+
+public class IntegrationPattern implements Serializable, IPaasEntity {
 
     private static final long serialVersionUID = 6691059068932717391L;
     String id;
@@ -26,4 +28,46 @@ public class IntegrationPattern implements Serializable {
     String icon;
     String properties;
     IntegrationPatternGroup integrationPatternGroup;
+    String integrationPatternGroupId;
+    
+    @Override
+	public String getId() {
+		return id;
+	}
+    @Override
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getIcon() {
+		return icon;
+	}
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+	@JsonRawValue
+	public String getProperties() {
+		return properties;
+	}
+	public void setProperties(String properties) {
+		this.properties = properties;
+	}
+	public IntegrationPatternGroup getIntegrationPatternGroup() {
+		return integrationPatternGroup;
+	}
+	public void setIntegrationPatternGroup(IntegrationPatternGroup integrationPatternGroup) {
+		this.integrationPatternGroup = integrationPatternGroup;
+	}
+	public String getIntegrationPatternGroupId() {
+		return integrationPatternGroupId;
+	}
+	public void setIntegrationPatternGroupId(String integrationPatternGroupId) {
+		this.integrationPatternGroupId = integrationPatternGroupId;
+	}
+    
 }

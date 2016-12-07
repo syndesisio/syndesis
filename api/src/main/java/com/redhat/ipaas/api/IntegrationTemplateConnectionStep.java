@@ -18,7 +18,7 @@ package com.redhat.ipaas.api;
 
 import java.io.Serializable;
 
-public class IntegrationTemplateConnectionStep implements Serializable{
+public class IntegrationTemplateConnectionStep implements Serializable, IPaasEntity{
    
     private static final long serialVersionUID = -5781903473692657024L;
     String id;
@@ -26,4 +26,38 @@ public class IntegrationTemplateConnectionStep implements Serializable{
     Connection connection;
     IntegrationTemplateConnectionStep previousStep;
     IntegrationTemplateConnectionStep nextStep;
+    
+    @Override
+	public String getId() {
+		return id;
+	}
+    @Override
+	public void setId(String id) {
+		this.id = id;
+	}
+	public IntegrationTemplate getIntegrationTemplate() {
+		return integrationTemplate;
+	}
+	public void setIntegrationTemplate(IntegrationTemplate integrationTemplate) {
+		this.integrationTemplate = integrationTemplate;
+	}
+	public Connection getConnection() {
+		return connection;
+	}
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
+	public IntegrationTemplateConnectionStep getPreviousStep() {
+		return previousStep;
+	}
+	public void setPreviousStep(IntegrationTemplateConnectionStep previousStep) {
+		this.previousStep = previousStep;
+	}
+	public IntegrationTemplateConnectionStep getNextStep() {
+		return nextStep;
+	}
+	public void setNextStep(IntegrationTemplateConnectionStep nextStep) {
+		this.nextStep = nextStep;
+	}
+    
 }

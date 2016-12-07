@@ -25,7 +25,7 @@ import java.io.Serializable;
  * @author kstam
  *
  */
-public class ComponentGroup implements Serializable {
+public class ComponentGroup implements Serializable, IPaasEntity {
 
     private static final long serialVersionUID = -7751366211175725297L;
     private String id;
@@ -41,10 +41,11 @@ public class ComponentGroup implements Serializable {
 		super();
 	}
 
+    @Override
 	public String getId() {
 		return id;
 	}
-
+    @Override
 	public void setId(String id) {
 		this.id = id;
 	}

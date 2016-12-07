@@ -18,9 +18,24 @@ package com.redhat.ipaas.api;
 
 import java.io.Serializable;
 
-public class EnvironmentType implements Serializable {
+public class EnvironmentType implements Serializable, IPaasEntity {
 
     private static final long serialVersionUID = 5660115437932263335L;
     String id;
     String name;
+    
+    @Override
+	public String getId() {
+		return id;
+	}
+    @Override
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 }

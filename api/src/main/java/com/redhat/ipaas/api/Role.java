@@ -19,10 +19,32 @@ package com.redhat.ipaas.api;
 import java.io.Serializable;
 import java.util.Set;
 
-public class Role implements Serializable {
+public class Role implements Serializable, IPaasEntity {
     
     private static final long serialVersionUID = 6858315958004649852L;
     String id;
     String name;
     Set<Permission> permissions;
+    
+    @Override
+	public String getId() {
+		return id;
+	}
+    @Override
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Set<Permission> getPermissions() {
+		return permissions;
+	}
+	public void setPermissions(Set<Permission> permissions) {
+		this.permissions = permissions;
+	}
+    
 }

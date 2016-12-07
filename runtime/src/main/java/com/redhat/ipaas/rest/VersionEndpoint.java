@@ -26,7 +26,7 @@ import javax.ws.rs.Produces;
 
 @Path("/version")
 public class VersionEndpoint {
-
+	
 	@GET
 	@Produces("text/plain")
 	public Response doGet() {

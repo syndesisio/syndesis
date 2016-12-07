@@ -1,4 +1,4 @@
-package com.redhat.ipaas.runtime.data;
+package com.redhat.ipaas.rest;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.JsonNode;

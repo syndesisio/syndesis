@@ -19,11 +19,39 @@ package com.redhat.ipaas.api;
 import java.io.Serializable;
 import java.util.Set;
 
-public class Tag implements Serializable {
+public class Tag implements Serializable, IPaasEntity {
 
     private static final long serialVersionUID = 3710243139895513231L;
     String id;
     String name;
     Set<IntegrationTemplate> integrationTemplate;
     Set<Connection> connections;
+    
+    @Override
+	public String getId() {
+		return id;
+	}
+    @Override
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Set<IntegrationTemplate> getIntegrationTemplate() {
+		return integrationTemplate;
+	}
+	public void setIntegrationTemplate(Set<IntegrationTemplate> integrationTemplate) {
+		this.integrationTemplate = integrationTemplate;
+	}
+	public Set<Connection> getConnections() {
+		return connections;
+	}
+	public void setConnections(Set<Connection> connections) {
+		this.connections = connections;
+	}
+    
 }

@@ -17,15 +17,20 @@
 package com.redhat.ipaas.rest;
 
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 import com.redhat.ipaas.api.Component;
+import com.redhat.ipaas.api.ComponentGroup;
+import com.redhat.ipaas.api.IPaasEntity;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
@@ -37,16 +42,33 @@ import org.infinispan.Cache;
 public class Components {
 
 	@Inject
-	Cache<String, String> cache;
+	Cache<String, Map<String,IPaasEntity>> cache;
+	
+	private DataManager dataMgr;
+	
+	@PostConstruct
+	public void init() {
+		dataMgr = new DataManager(cache);
+		dataMgr.init();
+	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Set<Component> list() {
-		// return all Camel components
-		cache.keySet();
-		System.out.println("*******************" + cache);
-		Set<Component> components = new HashSet<Component>();
-		return components;
+	public Collection<Component> list() {
+		return dataMgr.fetchAll(Component.class);
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value="/{id}")
+	public Component get(
+			@ApiParam(value = "id of the Component", required = true) @PathParam("id") String id) {
+		Component component = dataMgr.fetch(Component.class,id);
+		if (component.getComponentGroupId()!=null) {
+			ComponentGroup cg = dataMgr.fetch(ComponentGroup.class, component.getComponentGroupId());
+			component.setComponentGroup(cg);
+		}
+		return component;
 	}
 
 }

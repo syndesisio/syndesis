@@ -18,9 +18,25 @@ package com.redhat.ipaas.api;
 
 import java.io.Serializable;
 
-public class IntegrationPatternGroup implements Serializable {
+public class IntegrationPatternGroup implements Serializable, IPaasEntity {
 
     private static final long serialVersionUID = 8745546102211129342L;
     String id;
     String name;
+    
+    @Override
+	public String getId() {
+		return id;
+	}
+    @Override
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+    
 }

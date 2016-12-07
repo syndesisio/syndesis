@@ -1,8 +1,8 @@
-package com.redhat.ipaas.runtime.data;
+package com.redhat.ipaas.rest;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -20,12 +20,11 @@ public class ReadApiClientData {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	protected List<ModelData> readDataFromFile(String fileName) throws JsonParseException, JsonMappingException, IOException {
-		File apiClientDataFile = new File(fileName);
-		boolean exists = apiClientDataFile.exists();
-		if (!exists) throw new FileNotFoundException("Cannot find file " + fileName);
+	public List<ModelData> readDataFromFile(String fileName) throws JsonParseException, JsonMappingException, IOException {
+		InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
+		if (is==null) throw new FileNotFoundException("Cannot find file " + fileName + " on classpath");
 		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(apiClientDataFile, new TypeReference<List<ModelData>>(){});
+		return mapper.readValue(is, new TypeReference<List<ModelData>>(){});
 	}
 
 }

@@ -45,4 +45,11 @@
             </plugin>
         </plugins>
     </build>
+    <dependencies>
+    	<dependency>
+    		<groupId>org.wildfly.swarm</groupId>
+    		<artifactId>jaxrs-cdi</artifactId>
+    		<version>2016.11.0</version>
+    	</dependency>
+    </dependencies>
 </project>

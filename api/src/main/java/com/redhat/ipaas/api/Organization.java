@@ -19,11 +19,39 @@ package com.redhat.ipaas.api;
 import java.io.Serializable;
 import java.util.Set;
 
-public class Organization implements Serializable{
+public class Organization implements Serializable, IPaasEntity{
   
     private static final long serialVersionUID = -3312188982109356653L;
     String id;
     String name;
     Set<Environment> environments;
     Set<User> users;
+    
+    @Override
+	public String getId() {
+		return id;
+	}
+    @Override
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Set<Environment> getEnvironments() {
+		return environments;
+	}
+	public void setEnvironments(Set<Environment> environments) {
+		this.environments = environments;
+	}
+	public Set<User> getUsers() {
+		return users;
+	}
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+    
 }

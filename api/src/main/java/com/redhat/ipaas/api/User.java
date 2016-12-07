@@ -19,19 +19,66 @@ package com.redhat.ipaas.api;
 import java.io.Serializable;
 import java.util.Set;
 
-public class User implements Serializable{
+public class User implements Serializable, IPaasEntity{
     
     private static final long serialVersionUID = -8963536197984599474L;
     String id;
     String name;
+    String fullName;
+    String firstName;
+    String lastName;
+    String username;
     String kind;
     Set<Integration> integrations;
     
-    static User getHardcodedUser() {
-    	User user = new User();
-    	user.id = "1";
-    	user.name = "Clint Eastwood";
-    	user.kind = "UsuallyNot";
-    	return user;
-    }
+    @Override
+	public String getId() {
+		return id;
+	}
+    @Override
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getKind() {
+		return kind;
+	}
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
+	public Set<Integration> getIntegrations() {
+		return integrations;
+	}
+	public void setIntegrations(Set<Integration> integrations) {
+		this.integrations = integrations;
+	}
+	public String getFullName() {
+		return fullName;
+	}
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 }

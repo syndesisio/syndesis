@@ -17,24 +17,33 @@
 package com.redhat.ipaas.api;
 
 import java.io.Serializable;
-import java.util.Properties;
 
-public class Component implements Serializable {
+import com.fasterxml.jackson.annotation.JsonRawValue;
+
+public class Component implements Serializable, IPaasEntity {
 
 	private static final long serialVersionUID = -4372417241895695792L;
     private String id;
     private String name;
     private String icon;
-    private Properties properties;
+    @JsonRawValue
+    private String properties;
+    private String description;
+    private String componentGroupId;
     private ComponentGroup componentGroup;
     
     public Component() {
 		super();
 	}
     
+	/* (non-Javadoc)
+	 * @see com.redhat.ipaas.api.IPaas#getId()
+	 */
+	@Override
 	public String getId() {
 		return id;
 	}
+	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -50,10 +59,12 @@ public class Component implements Serializable {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-	public Properties getProperties() {
+	
+	@JsonRawValue
+	public String getProperties() {
 		return properties;
 	}
-	public void setProperties(Properties properties) {
+	public void setProperties(String properties) {
 		this.properties = properties;
 	}
 	public ComponentGroup getComponentGroup() {
@@ -61,6 +72,22 @@ public class Component implements Serializable {
 	}
 	public void setComponentGroup(ComponentGroup componentGroup) {
 		this.componentGroup = componentGroup;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getComponentGroupId() {
+		return componentGroupId;
+	}
+
+	public void setComponentGroupId(String componentGroupId) {
+		this.componentGroupId = componentGroupId;
 	}
     
     

@@ -16,28 +16,29 @@
  */
 package com.redhat.ipaas.rest;
 
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+
+import com.redhat.ipaas.api.ComponentGroup;
+import com.redhat.ipaas.api.IPaasEntity;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
+
 import java.util.Collection;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import org.infinispan.Cache;
 
-import com.redhat.ipaas.api.Connection;
-import com.redhat.ipaas.api.IPaasEntity;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
-
-@Path("/connections")
-@Api(value = "connections")
-public class Connections {
+@Path("/componentgroups")
+@Api(value = "componentgroups")
+public class ComponentGroups {
 
 	@Inject
 	Cache<String, Map<String,IPaasEntity>> cache;
@@ -49,20 +50,19 @@ public class Connections {
 		dataMgr = new DataManager(cache);
 		dataMgr.init();
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Connection> list() {
-		return dataMgr.fetchAll(Connection.class);
+	public Collection<ComponentGroup> list() {
+		return dataMgr.fetchAll(ComponentGroup.class);
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(value="/{id}")
-	public Connection get(
-			@ApiParam(value = "id of the connection", required = true) @PathParam("id") String id) {
-		return dataMgr.fetch(Connection.class,id);
+	public ComponentGroup get(
+			@ApiParam(value = "id of the ComponentGroup", required = true) @PathParam("id") String id) {
+		return dataMgr.fetch(ComponentGroup.class,id);
 	}
-	
-	
+
 }

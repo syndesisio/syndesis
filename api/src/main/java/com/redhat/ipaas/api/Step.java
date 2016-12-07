@@ -18,11 +18,32 @@ package com.redhat.ipaas.api;
 
 import java.io.Serializable;
 
-public class Step implements Serializable {
+public class Step implements Serializable, IPaasEntity {
    
     private static final long serialVersionUID = 1588083078080824197L;
     String id;
     IntegrationPattern integrationPattern;
     String configuredProperties;
+    
+    @Override
+	public String getId() {
+		return id;
+	}
+    @Override
+	public void setId(String id) {
+		this.id = id;
+	}
+	public IntegrationPattern getIntegrationPattern() {
+		return integrationPattern;
+	}
+	public void setIntegrationPattern(IntegrationPattern integrationPattern) {
+		this.integrationPattern = integrationPattern;
+	}
+	public String getConfiguredProperties() {
+		return configuredProperties;
+	}
+	public void setConfiguredProperties(String configuredProperties) {
+		this.configuredProperties = configuredProperties;
+	}
     
 }

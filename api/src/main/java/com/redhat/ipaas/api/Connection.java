@@ -17,17 +17,19 @@
 package com.redhat.ipaas.api;
 
 import java.io.Serializable;
-import java.util.Properties;
 import java.util.Set;
 
-public class Connection implements Serializable {
+import com.fasterxml.jackson.annotation.JsonRawValue;
+
+public class Connection implements Serializable, IPaasEntity {
 
 	private static final long serialVersionUID = -1860337496976921351L;
 	private String id;
 	private String name;
 	private Organization organization;
 	private Component component;
-	private Properties configurationProperties;
+	private String componentId;
+	private String configuredProperties;
 	private String icon;
 	private String description;
 	private String position;
@@ -37,9 +39,11 @@ public class Connection implements Serializable {
  		super();
  	}
     
+    @Override
 	public String getId() {
 		return id;
 	}
+    @Override
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -61,11 +65,12 @@ public class Connection implements Serializable {
 	public void setComponent(Component component) {
 		this.component = component;
 	}
-	public Properties getConfigurationProperties() {
-		return configurationProperties;
+	@JsonRawValue
+	public String getConfiguredProperties() {
+		return configuredProperties;
 	}
-	public void setConfigurationProperties(Properties configurationProperties) {
-		this.configurationProperties = configurationProperties;
+	public void setConfiguredProperties(String configuredProperties) {
+		this.configuredProperties = configuredProperties;
 	}
 	public String getIcon() {
 		return icon;
@@ -90,6 +95,14 @@ public class Connection implements Serializable {
 	}
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
+	}
+
+	public String getComponentId() {
+		return componentId;
+	}
+
+	public void setComponentId(String componentId) {
+		this.componentId = componentId;
 	}
     
     
