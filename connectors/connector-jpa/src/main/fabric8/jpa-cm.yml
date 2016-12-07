@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    kind.funktion.fabric8.io: Connector
+    funktion.fabric8.io/kind: Connector
   name: jpa
 data:
   deployment.yml: |
@@ -12,15 +12,15 @@ data:
     kind: Deployment
     metadata:
       labels:
+        funktion.fabric8.io/kind: Subscription
         connector: jpa
-        kind.funktion.fabric8.io: Subscription
     spec:
       replicas: 1
       template:
         metadata:
           labels:
+            funktion.fabric8.io/kind: Subscription
             connector: jpa
-            kind.funktion.fabric8.io: Subscription
         spec:
           containers:
           - image: fabric8/connector-jpa:${project.version}
