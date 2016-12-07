@@ -94,11 +94,6 @@ public class DataManager {
 		}
 	}
 	
-	public <T> IPaasEntity getEntity(Class<T> clazz, String id) {
-		
-		return null;
-	}
-	
 	public Class<? extends IPaasEntity> getClass(String model) throws ClassNotFoundException {
 		switch (model.toLowerCase()) {
 		case "component":
@@ -147,7 +142,6 @@ public class DataManager {
 	public <T> Collection<T> fetchAll(Class<T> clazz) {
 		String model = clazz.getSimpleName().toLowerCase();
 		Map<String,IPaasEntity> entityMap = cache.get(model);
-		System.out.println("*** SIZE ***: " + entityMap.size());
 		return (Collection<T>) entityMap.values();
 	}
 	
