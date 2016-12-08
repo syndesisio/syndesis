@@ -74,7 +74,6 @@
 						<goals>
 							<goal>resource</goal>
 							<goal>helm</goal>
-							<goal>build</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -140,4 +139,29 @@
 			<version>1.7.10</version>
 		</dependency>
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>docker</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>fabric8-maven-plugin</artifactId>
+						<version>${fabric8.maven.plugin.version}</version>
+						<executions>
+							<execution>
+								<id>fmp</id>
+								<goals>
+									<goal>resource</goal>
+									<goal>helm</goal>
+									<goal>build</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
