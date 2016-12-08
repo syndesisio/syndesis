@@ -21,6 +21,10 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
+/**
+ * A connection is basically a Camel endpoint configuration (parameters) 
+ * and some metadata describing which parameters are available to configure.
+ */
 public class Connection implements Serializable, IPaasEntity {
 
 	private static final long serialVersionUID = -1860337496976921351L;

@@ -19,6 +19,12 @@ package com.redhat.ipaas.api;
 import java.io.Serializable;
 import java.util.Set;
 
+/**
+ * An environment represents a set of properties that apply to a 
+ * deployment of an integration.  For example, an environment might
+ * capture test credentials and hostnames for an application as well
+ * as a specific OpenShift namespace to use for deployment.
+ */
 public class Environment implements Serializable, IPaasEntity {
 
     private static final long serialVersionUID = -4311560785106816407L;
