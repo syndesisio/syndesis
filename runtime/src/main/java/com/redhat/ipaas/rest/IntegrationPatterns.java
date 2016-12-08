@@ -16,41 +16,27 @@
  */
 package com.redhat.ipaas.rest;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
-
-import com.redhat.ipaas.api.IPaasEntity;
 import com.redhat.ipaas.api.IntegrationPattern;
 import com.redhat.ipaas.api.IntegrationPatternGroup;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
-
 import java.util.Collection;
-import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-import org.infinispan.Cache;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 
 @Path("/integrationpatterns")
 @Api(value = "integrationpatterns")
 public class IntegrationPatterns {
 
 	@Inject
-	Cache<String, Map<String,IPaasEntity>> cache;
-	
 	private DataManager dataMgr;
-	
-	@PostConstruct
-	public void init() {
-		dataMgr = new DataManager(cache);
-		dataMgr.init();
-	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
