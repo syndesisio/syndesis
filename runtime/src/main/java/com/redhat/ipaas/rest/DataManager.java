@@ -37,6 +37,8 @@ import com.redhat.ipaas.api.User;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 
 @ApplicationScoped
 public class DataManager {
@@ -97,6 +99,13 @@ public class DataManager {
 		}	
 	}
 	
+	/**
+	 * Simple generator to mimic behavior in api-client project. When we start
+	 * hooking up the back-end systems we may need to query those for the PK
+	 * 
+	 * @param entityMap
+	 * @return
+	 */
 	public String generatePK(Map<String,IPaasEntity> entityMap) {
 		int counter = 1;
 		while (true) {
@@ -160,6 +169,41 @@ public class DataManager {
 		String model = clazz.getSimpleName().toLowerCase();
 		Map<String,IPaasEntity> entityMap = cache.get(model);
 		return clazz.cast(entityMap.get(id));
+	}
+	
+	public String create(IPaasEntity entity) {
+		String model = entity.getClass().getSimpleName().toLowerCase();
+		Map<String,IPaasEntity> entityMap = cache.get(model);
+		if (entityMap == null) {
+			entityMap = new HashMap<String, IPaasEntity>();
+			cache.put(model, entityMap);
+		}
+		String id = entity.getId();
+		if (id==null || id.equals("")) {
+			id = generatePK(entityMap);
+			entity.setId(id);
+		} else {
+			if (entityMap.keySet().contains(id)) {
+				throw new EntityExistsException("There already exists a " 
+						+ entity.getClass().getSimpleName() + " with id " + id);
+			}
+		}
+		entityMap.put(entity.getId(), entity);
+		//TODO interact with the back-end system
+		return id;	
+	}
+	
+	public void update(IPaasEntity entity) {
+		String model = entity.getClass().getSimpleName().toLowerCase();
+		Map<String,IPaasEntity> entityMap = cache.get(model);
+		String id = entity.getId();
+		if (id==null || id.equals("")) 
+				throw new EntityNotFoundException("Setting the id on the entity is required for updates");
+		if (entityMap == null || !entityMap.containsKey(id)) 
+				throw new EntityNotFoundException ("Can not find " + entity.getClass().getSimpleName() + " with id " + id);
+		//TODO 1. properly merge the data ? + add data validation in the REST Resource
+		//TODO 2. interact with the back-end system
+		entityMap.put(id, entity);
 	}
 
 	public String getFileName() {

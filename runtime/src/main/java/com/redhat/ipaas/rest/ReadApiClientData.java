@@ -3,7 +3,6 @@ package com.redhat.ipaas.rest;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
