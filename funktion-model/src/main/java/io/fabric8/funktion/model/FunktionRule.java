@@ -16,6 +16,7 @@
  */
 package io.fabric8.funktion.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.fabric8.funktion.support.Strings;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.List;
 public class FunktionRule extends DtoSupport {
     private String name;
     private String trigger;
-    private String trace;
+    private Boolean trace;
     private List<FunktionAction> actions = new ArrayList<>();
 
     public FunktionAction addAction(FunktionAction action) {
@@ -48,7 +49,7 @@ public class FunktionRule extends DtoSupport {
                 builder.append(action);
             }
         }
-        if (!Strings.isEmpty(trace) && trace.equalsIgnoreCase("true")) {
+        if (isTracing()) {
             builder.append(" (tracing) ");
         }
         return builder.toString();
@@ -78,12 +79,17 @@ public class FunktionRule extends DtoSupport {
         this.actions = actions;
     }
 
-    public String getTrace() {
+
+    @JsonIgnore
+    public boolean isTracing() {
+        return trace != null && trace.booleanValue();
+    }
+
+    public Boolean getTrace() {
         return trace;
     }
 
-    public void setTrace(String trace) {
+    public void setTrace(Boolean trace) {
         this.trace = trace;
     }
-
 }
