@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.persistence.EntityExistsException;
+
 import org.infinispan.Cache;
 import org.infinispan.manager.DefaultCacheManager;
 import org.junit.BeforeClass;
@@ -11,6 +13,7 @@ import org.junit.Test;
 
 import com.redhat.ipaas.api.Component;
 import com.redhat.ipaas.api.IPaasEntity;
+import com.redhat.ipaas.api.Integration;
 
 public class DataManagerTest {
 
@@ -37,6 +40,34 @@ public class DataManagerTest {
 	    Component component = dataManager.fetch(Component.class,"1");
 		System.out.println(component.getName());
 		assertTrue("First Component in the deployment.json is Facebook", component.getName().equals("Facebook"));
+	}
+	
+	@Test
+	public void createIntegration() {
+		Integration integration = new Integration();
+		integration.setName("new integration name");
+		String id = dataManager.create(integration);
+		System.out.println("id=" + id);
+		assertTrue("A new ID should be created", id!=null);
+		
+		try {
+			dataManager.create(integration);
+			assertTrue("We just created the entity with this id, so this should fail",true);
+		} catch (EntityExistsException e) {}
+	}
+	
+	@Test
+	public void updateIntegration() {
+		Integration integration = new Integration();
+		integration.setName("new integration name");
+		String id = dataManager.create(integration);
+		integration.setId(id);
+		assertTrue("A new ID should be created", id!=null);
+		integration.setName("new updated name");
+		dataManager.update(integration);
+		
+		Integration i = dataManager.fetch(Integration.class, id);
+		assertTrue("Name should be updated", "new updated name".equals(i.getName()));
 	}
 
 }
