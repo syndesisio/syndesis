@@ -77,9 +77,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
     }
 
     protected void configureRule(FunktionRule rule, int funktionIndex) throws MalformedURLException {
-
-        // enable tracing
-        if ("true".equalsIgnoreCase(rule.getTrace())) {
+        if (rule.isTracing()) {
             getContext().setTracing(true);
         }
 
