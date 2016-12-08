@@ -22,6 +22,7 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -69,6 +70,16 @@ public class Integrations {
 	public void update(Integration integration) {
 		dataMgr.update(integration);
 		
+	}
+	
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value="/{id}")
+	public Integration delete(
+			@ApiParam(value = "id of the Integration", required = true) @PathParam("id") String id) {
+		Integration i = dataMgr.fetch(Integration.class,id);
+		
+		return i;
 	}
 	
 

@@ -205,6 +205,17 @@ public class DataManager {
 		//TODO 2. interact with the back-end system
 		entityMap.put(id, entity);
 	}
+	
+	public void delete(Class<IPaasEntity> clazz, String id) {
+		String model = clazz.getSimpleName().toLowerCase();
+		Map<String,IPaasEntity> entityMap = cache.get(model);
+		if (id==null || id.equals("")) 
+			throw new EntityNotFoundException("Setting the id on the entity is required for updates");
+		if (entityMap == null || !entityMap.containsKey(id)) 
+			throw new EntityNotFoundException ("Can not find " + clazz.getSimpleName() + " with id " + id);
+		//TODO interact with the back-end system
+		entityMap.remove(id);
+	}
 
 	public String getFileName() {
 		return fileName;
