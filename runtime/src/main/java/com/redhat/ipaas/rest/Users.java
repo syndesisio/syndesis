@@ -41,15 +41,7 @@ import org.infinispan.Cache;
 public class Users {
 
 	@Inject
-	Cache<String, Map<String,IPaasEntity>> cache;
-	
 	private DataManager dataMgr;
-	
-	@PostConstruct
-	public void init() {
-		dataMgr = new DataManager(cache);
-		dataMgr.init();
-	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

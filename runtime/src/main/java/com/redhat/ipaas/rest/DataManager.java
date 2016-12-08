@@ -34,19 +34,28 @@ import com.redhat.ipaas.api.Step;
 import com.redhat.ipaas.api.Tag;
 import com.redhat.ipaas.api.User;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+@ApplicationScoped
 public class DataManager {
 
+	@Inject
 	private Cache<String, Map<String,IPaasEntity>> cache;
+
 	private ObjectMapper mapper = new ObjectMapper();
 	private String fileName = "com/redhat/ipaas/rest/deployment.json";
 	private static Logger logger = LoggerFactory.getLogger(DataManager.class.getName());
-	
-	public DataManager() {}
-	
-	public DataManager(Cache<String, Map<String,IPaasEntity>> cache) {
+
+	public DataManager() {
+	}
+
+	DataManager(Cache<String, Map<String,IPaasEntity>> cache) {
 		this.cache = cache;
 	}
-	
+
+	@PostConstruct
 	public void init() {
 		if (cache.isEmpty()) {
 			ReadApiClientData reader = new ReadApiClientData();
@@ -63,7 +72,6 @@ public class DataManager {
 	}
 	
 	public void addToCache(ModelData modelData) {
-		
 		try {
 			Class<? extends IPaasEntity> clazz = getClass(modelData.getModel());
 			Map<String,IPaasEntity> entityMap = cache.get(modelData.getModel().toLowerCase());

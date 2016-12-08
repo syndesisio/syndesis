@@ -16,40 +16,26 @@
  */
 package com.redhat.ipaas.rest;
 
+import com.redhat.ipaas.api.Role;
+
+import java.util.Collection;
+
+import javax.inject.Inject;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import com.redhat.ipaas.api.IPaasEntity;
-import com.redhat.ipaas.api.Role;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-
-import java.util.Collection;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-
-import org.infinispan.Cache;
 
 @Path("/roles")
 @Api(value = "roles")
 public class Roles {
 
 	@Inject
-	Cache<String, Map<String,IPaasEntity>> cache;
-	
 	private DataManager dataMgr;
-	
-	@PostConstruct
-	public void init() {
-		dataMgr = new DataManager(cache);
-		dataMgr.init();
-	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

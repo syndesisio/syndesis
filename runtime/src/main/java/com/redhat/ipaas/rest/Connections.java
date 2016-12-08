@@ -16,21 +16,16 @@
  */
 package com.redhat.ipaas.rest;
 
-import java.util.Collection;
-import java.util.Map;
+import com.redhat.ipaas.api.Connection;
 
-import javax.annotation.PostConstruct;
+import java.util.Collection;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import org.infinispan.Cache;
-
-import com.redhat.ipaas.api.Connection;
-import com.redhat.ipaas.api.IPaasEntity;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -40,15 +35,7 @@ import io.swagger.annotations.ApiParam;
 public class Connections {
 
 	@Inject
-	Cache<String, Map<String,IPaasEntity>> cache;
-	
 	private DataManager dataMgr;
-	
-	@PostConstruct
-	public void init() {
-		dataMgr = new DataManager(cache);
-		dataMgr.init();
-	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
