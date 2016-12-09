@@ -198,6 +198,14 @@ public class ConnectorGenerator {
                         "          </execution>\n" +
                         "        </executions>\n" +
                         "        <configuration>\n" +
+                        "          <generator>\n" +
+                        "            <config>\n" +
+                        "              <spring-boot>\n" +
+                        "                <name>fabric8/%a:%v</name>\n" +
+                        "                <alias>funktor</alias>\n" +
+                        "              </spring-boot>\n" +
+                        "            </config>\n" +
+                        "          </generator>\n" +
                         "          <enricher>\n" +
                         "            <excludes>\n" +
                         "              <exclude>fmp-controller</exclude>\n" +
