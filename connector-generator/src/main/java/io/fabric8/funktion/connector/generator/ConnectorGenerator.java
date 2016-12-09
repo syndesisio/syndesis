@@ -248,7 +248,8 @@ public class ConnectorGenerator {
         String releaseImagesGroovy = "#!/usr/bin/groovy\n" +
                 "def imagesBuiltByPipeline() {\n" +
                 "  return ['" + moduleNamesText + "']\n" +
-                "}\n";
+                "}\n" +
+                "return this;\n";
         IOHelpers.writeFully(new File(getBaseDir(), "../releaseImages.groovy"), releaseImagesGroovy);
 
 
