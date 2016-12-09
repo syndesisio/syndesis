@@ -162,12 +162,21 @@ public class DataManager {
 	public <T> Collection<T> fetchAll(Class<T> clazz) {
 		String model = clazz.getSimpleName().toLowerCase();
 		Map<String,IPaasEntity> entityMap = cache.get(model);
+		if (entityMap == null) {
+			entityMap = new HashMap<String, IPaasEntity>();
+			cache.put(model, entityMap);
+		}
 		return (Collection<T>) entityMap.values();
 	}
 	
 	public <T> T fetch(Class<T> clazz, String id) {
 		String model = clazz.getSimpleName().toLowerCase();
 		Map<String,IPaasEntity> entityMap = cache.get(model);
+		if (entityMap == null) {
+			entityMap = new HashMap<String, IPaasEntity>();
+			cache.put(model, entityMap);
+		}
+		if (entityMap.get(id)==null) return null;
 		return clazz.cast(entityMap.get(id));
 	}
 	

@@ -42,7 +42,7 @@ public class Main {
         archive.setDescription("IPaaS Client API for the IPaaS Console. The Client API"
         		+ " connects to back-end services on the IPaaS and provides a single entry point"
         		+ " for the IpaaS Console. For console developement it can run in off-line mode"
-        		+ " where it only serves response from the response cache. ");
+        		+ " where it only serves responses from the response cache. ");
         archive.setLicenseUrl("https://www.apache.org/licenses/LICENSE-2.0");
         archive.setPrettyPrint(true);
         archive.setTitle("IPaas Client API");
