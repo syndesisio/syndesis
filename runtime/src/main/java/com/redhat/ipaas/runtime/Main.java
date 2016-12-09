@@ -17,9 +17,7 @@
 
 package com.redhat.ipaas.runtime;
 
-import com.redhat.ipaas.api.Version;
 import com.redhat.ipaas.rest.VersionEndpoint;
-
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.wildfly.swarm.Swarm;
 import org.wildfly.swarm.jaxrs.JAXRSArchive;
@@ -30,13 +28,13 @@ public class Main {
 
     public static void main(String... args) throws Exception {
         Swarm swarm = new Swarm();
-        
+
         SwaggerWebAppFraction swaggerFraction = new SwaggerWebAppFraction();
-        swaggerFraction.addWebContent("target/runtime.jar");
-        
-     // Create a SwaggerArchive using ShrinkWrap API
+        swaggerFraction.addWebContent(System.getProperty("swarm.swagger.ui.resources", "com.redhat.ipaas:swagger-ui:" + com.redhat.ipaas.swaggerui.Version.getVersion()));
+
+        // Create a SwaggerArchive using ShrinkWrap API
         SwaggerArchive archive = ShrinkWrap.create(SwaggerArchive.class);
-        
+
         // Now we can use the SwaggerArchive to fully customize the JSON output
         archive.setVersion(Version.getVersion()); // our API version
         archive.setContact("ipaas-dev <ipaas-dev@redhat.com>");  // set contact info
@@ -49,18 +47,18 @@ public class Main {
         archive.setPrettyPrint(true);
         archive.setTitle("IPaas Client API");
         archive.setResourcePackages("com.redhat.ipaas.rest");
-        
-     // Make the SwaggerArchive JAX-RS friendly and add our api package
+
+        // Make the SwaggerArchive JAX-RS friendly and add our api package
         JAXRSArchive deployment = archive.as(JAXRSArchive.class).addPackage("com.redhat.ipaas.rest");
-        
+
         deployment.setContextRoot("v1");
         deployment.addClass(VersionEndpoint.class);
         deployment.addAllDependencies();
         swarm.fraction(swaggerFraction);
-        
+
         swarm.start().deploy(deployment);
-        
+
     }
-    
-    
+
+
 }

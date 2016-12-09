@@ -19,37 +19,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>ipaas-api-java-project</artifactId>
-        <groupId>com.redhat.ipaas</groupId>
-        <version>0.1-SNAPSHOT</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>ipaas-api-java-project</artifactId>
+    <groupId>com.redhat.ipaas</groupId>
+    <version>0.1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>api</artifactId>
-    <name>IPaaS API Java :: API</name>
+  <artifactId>api</artifactId>
+  <name>iPaaS API Java :: API</name>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>templating-maven-plugin</artifactId>
-                <version>${templating.maven.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>filter-sources</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-    <dependencies>
-    	<dependency>
-    		<groupId>org.wildfly.swarm</groupId>
-    		<artifactId>jaxrs-cdi</artifactId>
-    		<version>2016.11.0</version>
-    	</dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>org.wildfly.swarm</groupId>
+      <artifactId>jaxrs-cdi</artifactId>
+      <version>2016.11.0</version>
+    </dependency>
+  </dependencies>
 </project>

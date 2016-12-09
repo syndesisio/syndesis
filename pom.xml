@@ -18,218 +18,235 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>9</version>
+  </parent>
 
-    <groupId>com.redhat.ipaas</groupId>
-    <artifactId>ipaas-api-java-project</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>IPaaS API Java :: Project</name>
+  <groupId>com.redhat.ipaas</groupId>
+  <artifactId>ipaas-api-java-project</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>iPaaS API Java :: Project</name>
 
-    <inceptionYear>2015</inceptionYear>
+  <inceptionYear>2015</inceptionYear>
 
-    <organization>
-        <name>Red Hat</name>
-        <url>http://redhat.com</url>
-    </organization>
+  <organization>
+    <name>Red Hat</name>
+    <url>http://redhat.com</url>
+  </organization>
 
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
-    <!-- including A developer as it's required by the maven poms going into
-      central -->
-    <developers>
-        <developer>
-            <id>ipaas</id>
-            <name>IpaaS Development Team</name>
-            <organization>redhat</organization>
-            <organizationUrl>http://redhat.com/</organizationUrl>
-        </developer>
-    </developers>
+  <!-- including A developer as it's required by the maven poms going into
+    central -->
+  <developers>
+    <developer>
+      <id>ipaas</id>
+      <name>IpaaS Development Team</name>
+      <organization>redhat</organization>
+      <organizationUrl>http://redhat.com/</organizationUrl>
+    </developer>
+  </developers>
 
-    <scm>
-        <connection>scm:git:git@github.com:redhat-ipaas/ipaas-api-java.git</connection>
-        <developerConnection>scm:git:git@github.com:redhat-ipaas/ipaas-api-java.git
-        </developerConnection>
-        <url>http://github.com/redhat-ipaas/ipaas-api-java/</url>
-        <tag>${project.version}</tag>
-    </scm>
+  <scm>
+    <connection>scm:git:git@github.com:redhat-ipaas/ipaas-api-java.git</connection>
+    <developerConnection>scm:git:git@github.com:redhat-ipaas/ipaas-api-java.git
+    </developerConnection>
+    <url>http://github.com/redhat-ipaas/ipaas-api-java/</url>
+    <tag>${project.version}</tag>
+  </scm>
 
-    <distributionManagement>
-        <repository>
-            <id>oss-sonatype-staging</id>
-            <name>Sonatype Staging Repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-    </distributionManagement>
+  <distributionManagement>
+    <repository>
+      <id>oss-sonatype-staging</id>
+      <name>Sonatype Staging Repository</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+  </distributionManagement>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+    <wildfly.swarm.version>2016.11.0</wildfly.swarm.version>
+    <version.infinispan>9.0.0.Alpha4</version.infinispan>
+
+    <!-- maven plugin version -->
+    <maven.enforcer.plugin.version>1.3.1</maven.enforcer.plugin.version>
+    <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
+    <maven.jar.plugin.version>3.0.1</maven.jar.plugin.version>
+    <maven.javadoc.plugin.version>2.10.3</maven.javadoc.plugin.version>
+    <maven.resources.plugin.version>3.0.1</maven.resources.plugin.version>
+    <maven.source.plugin.version>2.4</maven.source.plugin.version>
+    <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
 
 
-        <wildfly.swarm.version>2016.11.0</wildfly.swarm.version>
-        <version.infinispan>9.0.0.Alpha4</version.infinispan>
+    <fabric8.maven.plugin.version>3.2.8</fabric8.maven.plugin.version>
+    <templating.maven.plugin.version>1.0.0</templating.maven.plugin.version>
+  </properties>
 
-        <!-- maven plugin version -->
-        <maven.enforcer.plugin.version>1.3.1</maven.enforcer.plugin.version>
-        <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
-        <maven.jar.plugin.version>3.0.1</maven.jar.plugin.version>
-        <maven.javadoc.plugin.version>2.10.3</maven.javadoc.plugin.version>
-        <maven.resources.plugin.version>3.0.1</maven.resources.plugin.version>
-        <maven.source.plugin.version>2.4</maven.source.plugin.version>
-        <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
+  <modules>
+    <module>runtime</module>
+    <module>api</module>
+    <module>swagger-ui</module>
+  </modules>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>swagger-ui</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-        <fabric8.maven.plugin.version>3.2.7</fabric8.maven.plugin.version>
-        <templating.maven.plugin.version>1.0.0</templating.maven.plugin.version>
-    </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>templating-maven-plugin</artifactId>
+        <version>${templating.maven.plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>filter-sources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <inherited>true</inherited>
+        <version>${maven.surefire.plugin.version}</version>
+        <configuration>
+          <environmentVariables>
+            <ENV_VAR_EXISTS>value</ENV_VAR_EXISTS>
+            <ENV_VAR_EXISTS_BOOLEAN>true</ENV_VAR_EXISTS_BOOLEAN>
+          </environmentVariables>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>${maven.gpg.plugin.version}</version>
+        <configuration>
+          <passphrase>${gpg.passphrase}</passphrase>
+          <useAgent>true</useAgent>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
-    <modules>
-        <module>runtime</module>
-        <module>api</module>
-    </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.redhat.ipaas</groupId>
-                <artifactId>api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.redhat.ipaas</groupId>
-                <artifactId>runtime</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <build>
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <inherited>true</inherited>
-                <version>${maven.surefire.plugin.version}</version>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <version>${maven.enforcer.plugin.version}</version>
+            <executions>
+              <execution>
+                <id>enforce-no-snapshots</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
                 <configuration>
-                    <environmentVariables>
-                        <ENV_VAR_EXISTS>value</ENV_VAR_EXISTS>
-                        <ENV_VAR_EXISTS_BOOLEAN>true</ENV_VAR_EXISTS_BOOLEAN>
-                    </environmentVariables>
+                  <rules>
+                    <requireReleaseDeps>
+                      <message>No Snapshots Allowed!</message>
+                    </requireReleaseDeps>
+                  </rules>
+                  <fail>false</fail>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>${maven.gpg.plugin.version}</version>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${maven.javadoc.plugin}</version>
+            <configuration>
+              <includeDependencySources>${javadoc.include.deps}
+              </includeDependencySources>
+              <dependencySourceIncludes>
+                <dependencySourceInclude>${javadoc.source.includes}
+                </dependencySourceInclude>
+              </dependencySourceIncludes>
+              <excludePackageNames>${javadoc.package.excludes}</excludePackageNames>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
                 <configuration>
-                    <passphrase>${gpg.passphrase}</passphrase>
-                    <useAgent>true</useAgent>
+                  <additionalparam>${javadoc.opts}</additionalparam>
                 </configuration>
-            </plugin>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>${maven.source.plugin.version}</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
-    </build>
-
-    <profiles>
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>${maven.enforcer.plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>enforce-no-snapshots</id>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <requireReleaseDeps>
-                                            <message>No Snapshots Allowed!</message>
-                                        </requireReleaseDeps>
-                                    </rules>
-                                    <fail>false</fail>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>${maven.javadoc.plugin}</version>
-                        <configuration>
-                            <includeDependencySources>${javadoc.include.deps}
-                            </includeDependencySources>
-                            <dependencySourceIncludes>
-                                <dependencySourceInclude>${javadoc.source.includes}
-                                </dependencySourceInclude>
-                            </dependencySourceIncludes>
-                            <excludePackageNames>${javadoc.package.excludes}</excludePackageNames>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                                <configuration>
-                                    <additionalparam>${javadoc.opts}</additionalparam>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>${maven.source.plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>doclint-java8-disable</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <properties>
-                <javadoc.opts>-Xdoclint:none</javadoc.opts>
-            </properties>
-        </profile>
-    </profiles>
+      </build>
+    </profile>
+    <profile>
+      <id>doclint-java8-disable</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <properties>
+        <javadoc.opts>-Xdoclint:none</javadoc.opts>
+      </properties>
+    </profile>
+  </profiles>
 </project>
