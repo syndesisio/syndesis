@@ -249,4 +249,50 @@
       <module>connector-yammer</module>
       <module>connector-zookeeper</module>
   </modules>
+
+    <dependencies>
+      <dependency>
+        <groupId>io.fabric8.funktion</groupId>
+        <artifactId>funktion-runtime</artifactId>
+      </dependency>
+
+      <!-- testing -->
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- spring testing -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+      </dependency>
+
+      <!-- restful testing -->
+      <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>rest-assured</artifactId>
+        <version>${rest-assured.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- system testing -->
+      <dependency>
+        <groupId>org.jboss.arquillian.junit</groupId>
+        <artifactId>arquillian-junit-container</artifactId>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-arquillian</artifactId>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.shrinkwrap.resolver</groupId>
+        <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+
 </project>

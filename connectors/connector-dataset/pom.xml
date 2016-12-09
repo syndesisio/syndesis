@@ -47,6 +47,14 @@
           </execution>
         </executions>
         <configuration>
+          <generator>
+            <config>
+              <spring-boot>
+                <name>fabric8/%a:%v</name>
+                <alias>funktor</alias>
+              </spring-boot>
+            </config>
+          </generator>
           <enricher>
             <excludes>
               <exclude>fmp-controller</exclude>
