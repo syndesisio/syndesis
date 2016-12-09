@@ -19,6 +19,9 @@ machine:
   services:
     - docker
 
+dependencies:
+  override:
+    - mvn -DskipTests package dependency:go-offline
 test:
   post:
    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
