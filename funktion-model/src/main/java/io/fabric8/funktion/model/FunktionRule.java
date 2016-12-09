@@ -26,6 +26,7 @@ public class FunktionRule extends DtoSupport {
     private String name;
     private String trigger;
     private Boolean trace;
+    private Boolean logResult;
     private List<FunktionAction> actions = new ArrayList<>();
 
     public FunktionAction addAction(FunktionAction action) {
@@ -49,7 +50,7 @@ public class FunktionRule extends DtoSupport {
                 builder.append(action);
             }
         }
-        if (isTracing()) {
+        if (isTraceEnabled()) {
             builder.append(" (tracing) ");
         }
         return builder.toString();
@@ -80,11 +81,6 @@ public class FunktionRule extends DtoSupport {
     }
 
 
-    @JsonIgnore
-    public boolean isTracing() {
-        return trace != null && trace.booleanValue();
-    }
-
     public Boolean getTrace() {
         return trace;
     }
@@ -92,4 +88,24 @@ public class FunktionRule extends DtoSupport {
     public void setTrace(Boolean trace) {
         this.trace = trace;
     }
+
+
+    public Boolean getLogResult() {
+        return logResult;
+    }
+
+    public void setLogResult(Boolean logResult) {
+        this.logResult = logResult;
+    }
+
+    @JsonIgnore
+    public boolean isTraceEnabled() {
+        return trace != null && trace.booleanValue();
+    }
+
+    @JsonIgnore
+    public boolean isLogResultEnabled() {
+        return logResult != null && logResult.booleanValue();
+    }
+
 }

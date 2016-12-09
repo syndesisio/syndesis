@@ -77,7 +77,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
     }
 
     protected void configureRule(FunktionRule rule, int funktionIndex) throws MalformedURLException {
-        if (rule.isTracing()) {
+        if (rule.isTraceEnabled()) {
             getContext().setTracing(true);
         }
 
@@ -179,6 +179,13 @@ public class FunktionRouteBuilder extends RouteBuilder {
                     }
                 }
             }
+        }
+        if (rule.isLogResultEnabled()) {
+            String chain = "log:" +name + "?showStreams=true";
+            route.to(chain);
+            message.append(" => ");
+            message.append(chain);
+            validActions++;
         }
         LOG.info(message.toString());
 

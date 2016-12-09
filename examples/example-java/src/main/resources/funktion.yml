@@ -1,13 +1,15 @@
 rules:
   - trigger: http
     name: thingy
+    trace: true
+    logResult: true
     actions:
     - kind: function
       name: io.fabric8.funktion.example.Main::cheese
     trace: true
   - trigger: http:bar
     name: thirsty
+    logResult: true
     actions:
     - kind: function
       name: io.fabric8.funktion.example.Main::wine
-    trace: false    
