@@ -17,12 +17,12 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.Connection;
-import com.redhat.ipaas.api.Integration;
 
 import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -69,5 +69,16 @@ public class Connections {
 		dataMgr.update(connection);
 		
 	}
+	
+	@DELETE
+	@Consumes("application/json")
+	@Path(value="/{id}")
+	public void delete(
+			@ApiParam(value = "id of the connection", required = true) @PathParam("id") String id) {
+		dataMgr.delete(Connection.class, id);
+		
+	}
+	
+	
 	
 }
