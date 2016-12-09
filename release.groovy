@@ -22,8 +22,6 @@ def approveRelease(project){
 }
 
 def release(project){
-  def images = load 'releaseImages.groovy'
-
   releaseProject{
     stagedProject = project
     useGitTagForNextVersion = true
@@ -32,7 +30,7 @@ def release(project){
     githubOrganisation = 'fabric8io'
     artifactIdToWatchInCentral = 'funktion-runtime'
     artifactExtensionToWatchInCentral = 'jar'
-    imagesToPromoteToDockerHub = images.imagesBuiltByPipeline()
+    imagesToPromoteToDockerHub = imagesBuiltByPipeline()
   }
 }
 
