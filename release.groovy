@@ -21,7 +21,7 @@ def approveRelease(project){
   }
 }
 
-def release(project){
+def release(project, promoteImages){
   releaseProject{
     stagedProject = project
     useGitTagForNextVersion = true
@@ -30,7 +30,7 @@ def release(project){
     githubOrganisation = 'fabric8io'
     artifactIdToWatchInCentral = 'funktion-runtime'
     artifactExtensionToWatchInCentral = 'jar'
-    imagesToPromoteToDockerHub = imagesBuiltByPipeline()
+    imagesToPromoteToDockerHub = promoteImages
   }
 }
 
