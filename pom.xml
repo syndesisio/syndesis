@@ -62,6 +62,7 @@
 
     <assertj.version>2.4.1</assertj.version>
     <fabric8.version>2.2.183</fabric8.version>
+    <fabric8.ipaas.version>2.2.164</fabric8.ipaas.version>
     <rest-assured.version>3.0.0</rest-assured.version>
     <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
     <spring-boot-plugin.version>1.4.1.RELEASE</spring-boot-plugin.version>

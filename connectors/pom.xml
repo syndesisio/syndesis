@@ -34,6 +34,7 @@
       <module>connector-ahc</module>
       <module>connector-ahc-ws</module>
       <module>connector-ahc-wss</module>
+      <module>connector-amq</module>
       <module>connector-amqp</module>
       <module>connector-apns</module>
       <module>connector-asterisk</module>
