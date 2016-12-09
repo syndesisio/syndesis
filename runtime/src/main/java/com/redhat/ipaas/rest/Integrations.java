@@ -66,8 +66,11 @@ public class Integrations {
 	}
 	
 	@PUT
+	@Path(value="/{id}")
 	@Consumes("application/json")
-	public void update(Integration integration) {
+	public void update(
+			@ApiParam(value = "id of the connection", required = true) @PathParam("id") String id,
+			Integration integration) {
 		dataMgr.update(integration);
 		
 	}
