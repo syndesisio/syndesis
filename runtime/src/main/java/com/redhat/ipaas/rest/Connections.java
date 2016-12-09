@@ -64,8 +64,11 @@ public class Connections {
 	}
 	
 	@PUT
+	@Path(value="/{id}")
 	@Consumes("application/json")
-	public void update(Connection connection) {
+	public void update(
+			@ApiParam(value = "id of the connection", required = true) @PathParam("id") String id, 
+			Connection connection) {
 		dataMgr.update(connection);
 		
 	}

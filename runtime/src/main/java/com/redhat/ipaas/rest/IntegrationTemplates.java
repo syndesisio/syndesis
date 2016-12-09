@@ -66,8 +66,11 @@ public class IntegrationTemplates {
 	}
 	
 	@PUT
+	@Path(value="/{id}")
 	@Consumes("application/json")
-	public void update(IntegrationTemplate integrationTemplate) {
+	public void update(
+			@ApiParam(value = "id of the connection", required = true) @PathParam("id") String id,
+			IntegrationTemplate integrationTemplate) {
 		dataMgr.update(integrationTemplate);
 		
 	}
