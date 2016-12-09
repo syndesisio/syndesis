@@ -206,7 +206,7 @@ public class DataManager {
 		entityMap.put(id, entity);
 	}
 	
-	public void delete(Class<IPaasEntity> clazz, String id) {
+	public void delete(Class<? extends IPaasEntity> clazz, String id) {
 		String model = clazz.getSimpleName().toLowerCase();
 		Map<String,IPaasEntity> entityMap = cache.get(model);
 		if (id==null || id.equals("")) 

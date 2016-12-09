@@ -16,7 +16,7 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.Integration;
+import com.redhat.ipaas.api.IntegrationTemplate;
 
 import java.util.Collection;
 
@@ -34,41 +34,41 @@ import javax.ws.rs.core.MediaType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 
-@Path("/integrations")
-@Api(value = "integrations")
-public class Integrations {
+@Path("/integrationtemplates")
+@Api(value = "integrationtemplates")
+public class IntegrationTemplates {
 
 	@Inject
 	private DataManager dataMgr;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Integration> list() {
-		return dataMgr.fetchAll(Integration.class);
+	public Collection<IntegrationTemplate> list() {
+		return dataMgr.fetchAll(IntegrationTemplate.class);
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(value="/{id}")
-	public Integration get(
-			@ApiParam(value = "id of the Integration", required = true) @PathParam("id") String id) {
-		Integration i = dataMgr.fetch(Integration.class,id);
+	public IntegrationTemplate get(
+			@ApiParam(value = "id of the IntegrationTemplate", required = true) @PathParam("id") String id) {
+		IntegrationTemplate it = dataMgr.fetch(IntegrationTemplate.class,id);
 		
-		return i;
+		return it;
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes("application/json")
-	public String create(Integration integration) {
-		String id = dataMgr.create(integration);
+	public String create(IntegrationTemplate integrationTemplate) {
+		String id = dataMgr.create(integrationTemplate);
 		return id;
 	}
 	
 	@PUT
 	@Consumes("application/json")
-	public void update(Integration integration) {
-		dataMgr.update(integration);
+	public void update(IntegrationTemplate integrationTemplate) {
+		dataMgr.update(integrationTemplate);
 		
 	}
 	
@@ -76,9 +76,8 @@ public class Integrations {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(value="/{id}")
 	public void delete(
-			@ApiParam(value = "id of the Integration", required = true) @PathParam("id") String id) {
-		dataMgr.delete(Integration.class,id);
+			@ApiParam(value = "id of the IntegrationTemplate", required = true) @PathParam("id") String id) {
+		dataMgr.delete(IntegrationTemplate.class,id);
 	}
 	
-
 }
