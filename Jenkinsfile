@@ -7,8 +7,9 @@ node{
     def pipeline = load 'release.groovy'
     def dockerImages = load 'releaseImages.groovy'
 
-    echo "will create these docker images imagesBuiltByPipeline(): ${imagesBuiltByPipeline()}"
-    echo "will create these docker images dockerImages.imagesBuiltByPipeline(): ${dockerImages.imagesBuiltByPipeline()}"
+    def promoteImages = dockerImages.imagesBuiltByPipeline()
+
+    echo "will create these docker images: ${promoteImages}"
 
     stage 'Stage'
     def stagedProject = pipeline.stage()
@@ -17,7 +18,7 @@ node{
     // pipeline.approveRelease(stagedProject)
 
     stage 'Promote'
-    pipeline.release(stagedProject)
+    pipeline.release(stagedProject, promoteImages)
 
     stage 'Push Update Dependencies'
     def newVersion = stagedProject[1]
