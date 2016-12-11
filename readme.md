@@ -1,8 +1,8 @@
 # IPaaS API
 
 - [Building](#building)
-- [Running](#run)
-- [Deploying](#deploying) 
+- [Running](#run-in-development-mode)
+- [Deploying](#deploying-to-kubernetes) 
 - [Endpoints](#endpoints)
 
 # Building
