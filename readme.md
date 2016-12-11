@@ -29,4 +29,4 @@
     Demo endpoint on OpenShift dedicated:
     http://runtime-kurt.b6ff.rh-idev.openshiftapps.com/swagger-ui/
     
-    The demo endpoint has some data preloaded and can be used for testing and demoing purposes.
+    The demo endpoint has some preloaded data and can be used for testing and demoing purposes.
