@@ -8,7 +8,7 @@
 	License for the specific language governing permissions and ~ limitations
 	under the License. ~ -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -23,6 +23,11 @@
 
   <properties>
     <failOnMissingWebXml>false</failOnMissingWebXml>
+
+    <apidocs.dir>${project.build.directory}/api-docs</apidocs.dir>
+    <apidocs.output.dir>${project.build.outputDirectory}</apidocs.output.dir>
+
+    <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
   </properties>
 
   <dependencyManagement>
@@ -73,6 +78,101 @@
               <goal>resource</goal>
               <goal>helm</goal>
               <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.kongchen</groupId>
+        <artifactId>swagger-maven-plugin</artifactId>
+        <version>${maven.swagger.plugin.version}</version>
+        <configuration>
+          <apiSources>
+            <apiSource>
+              <locations>
+                <location>com.redhat.ipaas.rest</location>
+              </locations>
+              <swaggerDirectory>${apidocs.output.dir}</swaggerDirectory>
+              <schemes>
+                <scheme>http</scheme>
+                <scheme>https</scheme>
+              </schemes>
+              <host>localhost:8080</host>
+              <basePath>/v1</basePath>
+              <info>
+                <title>Red Hat iPaaS API</title>
+                <version>v1</version>
+                <description>
+                  The Red Hat iPaaS REST API connects to back-end services on the IPaaS and provides a single entry point for the IpaaS Console. For console developement it can run in off-line mode where it only serves responses from the response cache.
+                </description>
+                <license>
+                  <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+                  <name>Apache 2.0</name>
+                </license>
+                <contact>
+                  <email>ipaas-dev@redhat.com</email>
+                  <name>The Red Hat iPaaS Developers</name>
+                  <url>https://redhat-ipaas.github.io</url>
+                </contact>
+              </info>
+              <attachSwaggerArtifact>true</attachSwaggerArtifact>
+            </apiSource>
+          </apiSources>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.github.swagger2markup</groupId>
+        <artifactId>swagger2markup-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <configuration>
+          <swaggerInput>${apidocs.output.dir}/swagger.json</swaggerInput>
+          <outputDir>${apidocs.dir}/asciidoc</outputDir>
+          <config>
+            <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+          </config>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>convertSwagger2markup</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.asciidoctor</groupId>
+        <artifactId>asciidoctor-maven-plugin</artifactId>
+        <version>1.5.3</version>
+        <configuration>
+          <sourceDirectory>${project.basedir}/src/docs/asciidoc</sourceDirectory>
+          <sourceDocumentName>index.adoc</sourceDocumentName>
+          <outputDirectory>${apidocs.output.dir}</outputDirectory>
+          <backend>html5</backend>
+          <sourceHighlighter>coderay</sourceHighlighter>
+          <attributes>
+            <generated>${apidocs.dir}/asciidoc</generated>
+            <toc>left</toc>
+            <sectnums>true</sectnums>
+            <revnumber>${project.version}</revnumber>
+            <revdate>${maven.build.timestamp}</revdate>
+            <organization>${project.organization.name}</organization>
+          </attributes>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>process-asciidoc</goal>
             </goals>
           </execution>
         </executions>

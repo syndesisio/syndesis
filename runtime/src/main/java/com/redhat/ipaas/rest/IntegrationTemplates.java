@@ -17,8 +17,9 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.IntegrationTemplate;
-
-import java.util.Collection;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -30,57 +31,60 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import java.util.Collection;
 
 @Path("/integrationtemplates")
 @Api(value = "integrationtemplates")
 public class IntegrationTemplates {
 
-	@Inject
-	private DataManager dataMgr;
+    @Inject
+    private DataManager dataMgr;
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<IntegrationTemplate> list() {
-		return dataMgr.fetchAll(IntegrationTemplate.class);
-	}
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(value="/{id}")
-	public IntegrationTemplate get(
-			@ApiParam(value = "id of the IntegrationTemplate", required = true) @PathParam("id") String id) {
-		IntegrationTemplate it = dataMgr.fetch(IntegrationTemplate.class,id);
-		
-		return it;
-	}
-	
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes("application/json")
-	public String create(IntegrationTemplate integrationTemplate) {
-		String id = dataMgr.create(integrationTemplate);
-		return id;
-	}
-	
-	@PUT
-	@Path(value="/{id}")
-	@Consumes("application/json")
-	public void update(
-			@ApiParam(value = "id of the connection", required = true) @PathParam("id") String id,
-			IntegrationTemplate integrationTemplate) {
-		dataMgr.update(integrationTemplate);
-		
-	}
-	
-	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(value="/{id}")
-	public void delete(
-			@ApiParam(value = "id of the IntegrationTemplate", required = true) @PathParam("id") String id) {
-		dataMgr.delete(IntegrationTemplate.class,id);
-	}
-	
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "List integration templates")
+    public Collection<IntegrationTemplate> list() {
+        return dataMgr.fetchAll(IntegrationTemplate.class);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}")
+    @ApiOperation(value = "Get an integration template by ID")
+    public IntegrationTemplate get(
+        @ApiParam(value = "id of the IntegrationTemplate", required = true) @PathParam("id") String id) {
+        IntegrationTemplate it = dataMgr.fetch(IntegrationTemplate.class, id);
+
+        return it;
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes("application/json")
+    @ApiOperation(value = "Create an integration template")
+    public String create(IntegrationTemplate integrationTemplate) {
+        String id = dataMgr.create(integrationTemplate);
+        return id;
+    }
+
+    @PUT
+    @Path(value = "/{id}")
+    @Consumes("application/json")
+    @ApiOperation(value = "Update a connection")
+    public void update(
+        @ApiParam(value = "id of the connection", required = true) @PathParam("id") String id,
+        IntegrationTemplate integrationTemplate) {
+        dataMgr.update(integrationTemplate);
+
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}")
+    @ApiOperation(value = "Delete an integration template")
+    public void delete(
+        @ApiParam(value = "id of the IntegrationTemplate", required = true) @PathParam("id") String id) {
+        dataMgr.delete(IntegrationTemplate.class, id);
+    }
+
 }

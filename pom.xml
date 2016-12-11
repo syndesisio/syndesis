@@ -15,8 +15,8 @@
   ~ limitations under the License.
   ~
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -73,6 +73,17 @@
     </repository>
   </distributionManagement>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>jcenter-releases</id>
+      <name>jcenter</name>
+      <url>http://jcenter.bintray.com</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -89,10 +100,10 @@
     <maven.resources.plugin.version>3.0.1</maven.resources.plugin.version>
     <maven.source.plugin.version>2.4</maven.source.plugin.version>
     <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
-
+    <maven.swagger.plugin.version>3.1.4</maven.swagger.plugin.version>
+    <templating.maven.plugin.version>1.0.0</templating.maven.plugin.version>
 
     <fabric8.maven.plugin.version>3.2.8</fabric8.maven.plugin.version>
-    <templating.maven.plugin.version>1.0.0</templating.maven.plugin.version>
   </properties>
 
   <modules>

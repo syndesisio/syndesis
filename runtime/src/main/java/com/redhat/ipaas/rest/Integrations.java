@@ -17,8 +17,9 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.Integration;
-
-import java.util.Collection;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -30,58 +31,61 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import java.util.Collection;
 
 @Path("/integrations")
 @Api(value = "integrations")
 public class Integrations {
 
-	@Inject
-	private DataManager dataMgr;
+    @Inject
+    private DataManager dataMgr;
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Integration> list() {
-		return dataMgr.fetchAll(Integration.class);
-	}
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(value="/{id}")
-	public Integration get(
-			@ApiParam(value = "id of the Integration", required = true) @PathParam("id") String id) {
-		Integration i = dataMgr.fetch(Integration.class,id);
-		
-		return i;
-	}
-	
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes("application/json")
-	public String create(Integration integration) {
-		String id = dataMgr.create(integration);
-		return id;
-	}
-	
-	@PUT
-	@Path(value="/{id}")
-	@Consumes("application/json")
-	public void update(
-			@ApiParam(value = "id of the connection", required = true) @PathParam("id") String id,
-			Integration integration) {
-		dataMgr.update(integration);
-		
-	}
-	
-	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(value="/{id}")
-	public void delete(
-			@ApiParam(value = "id of the Integration", required = true) @PathParam("id") String id) {
-		dataMgr.delete(Integration.class,id);
-	}
-	
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "List integrations")
+    public Collection<Integration> list() {
+        return dataMgr.fetchAll(Integration.class);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}")
+    @ApiOperation(value = "Get an integration by ID")
+    public Integration get(
+        @ApiParam(value = "id of the Integration", required = true) @PathParam("id") String id) {
+        Integration i = dataMgr.fetch(Integration.class, id);
+
+        return i;
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes("application/json")
+    @ApiOperation(value = "Create an integration")
+    public String create(Integration integration) {
+        String id = dataMgr.create(integration);
+        return id;
+    }
+
+    @PUT
+    @Path(value = "/{id}")
+    @Consumes("application/json")
+    @ApiOperation(value = "Update a connection")
+    public void update(
+        @ApiParam(value = "id of the connection", required = true) @PathParam("id") String id,
+        Integration integration) {
+        dataMgr.update(integration);
+
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}")
+    @ApiOperation(value = "Delete a connection")
+    public void delete(
+        @ApiParam(value = "id of the Integration", required = true) @PathParam("id") String id) {
+        dataMgr.delete(Integration.class, id);
+    }
+
 
 }

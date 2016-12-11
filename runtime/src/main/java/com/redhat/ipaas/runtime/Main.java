@@ -23,6 +23,7 @@ import org.wildfly.swarm.Swarm;
 import org.wildfly.swarm.jaxrs.JAXRSArchive;
 import org.wildfly.swarm.swagger.SwaggerArchive;
 import org.wildfly.swarm.swagger.webapp.SwaggerWebAppFraction;
+import org.wildfly.swarm.undertow.WARArchive;
 
 public class Main {
 
@@ -31,33 +32,35 @@ public class Main {
 
         SwaggerWebAppFraction swaggerFraction = new SwaggerWebAppFraction();
         swaggerFraction.addWebContent(System.getProperty("swarm.swagger.ui.resources", "com.redhat.ipaas:swagger-ui:" + com.redhat.ipaas.swaggerui.Version.getVersion()));
-
-        // Create a SwaggerArchive using ShrinkWrap API
-        SwaggerArchive archive = ShrinkWrap.create(SwaggerArchive.class);
-
-        // Now we can use the SwaggerArchive to fully customize the JSON output
-        archive.setVersion(Version.getVersion()); // our API version
-        archive.setContact("ipaas-dev <ipaas-dev@redhat.com>");  // set contact info
-        archive.setLicense("Apache License, Version 2.0"); // set license
-        archive.setDescription("IPaaS Client API for the IPaaS Console. The Client API"
-        		+ " connects to back-end services on the IPaaS and provides a single entry point"
-        		+ " for the IpaaS Console. For console developement it can run in off-line mode"
-        		+ " where it only serves responses from the response cache. ");
-        archive.setLicenseUrl("https://www.apache.org/licenses/LICENSE-2.0");
-        archive.setPrettyPrint(true);
-        archive.setTitle("IPaas Client API");
-        archive.setResourcePackages("com.redhat.ipaas.rest");
-
-        // Make the SwaggerArchive JAX-RS friendly and add our api package
-        JAXRSArchive deployment = archive.as(JAXRSArchive.class).addPackage("com.redhat.ipaas.rest");
-
-        deployment.setContextRoot("v1");
-        deployment.addClass(VersionEndpoint.class);
-        deployment.addAllDependencies();
         swarm.fraction(swaggerFraction);
 
-        swarm.start().deploy(deployment);
+        // Create a SwaggerArchive using ShrinkWrap API
+        SwaggerArchive archive = ShrinkWrap.create(SwaggerArchive.class).
+            setVersion(Version.getVersion()).
+            setContact("ipaas-dev <ipaas-dev@redhat.com>").
+            setDescription("The Red Hat iPaaS REST API "
+                + " connects to back-end services on the IPaaS and provides a single entry point"
+                + " for the IpaaS Console. For console developement it can run in off-line mode"
+                + " where it only serves responses from the response cache.").
+            setLicense("Apache License, Version 2.0").
+            setLicenseUrl("https://www.apache.org/licenses/LICENSE-2.0").
+            setPrettyPrint(true).
+            setTitle("Red Hat iPaaS API").
+            setResourcePackages("com.redhat.ipaas.rest");
+        JAXRSArchive jaxrs = archive.as(JAXRSArchive.class).
+            setContextRoot("v1").
+            addPackage("com.redhat.ipaas.rest").
+            addClass(VersionEndpoint.class).
+            addAllDependencies();
 
+        WARArchive staticContent = ShrinkWrap.create(WARArchive.class).
+            setDefaultContextRoot().
+            staticContent();
+
+        swarm.
+            start().
+            deploy(staticContent).
+            deploy(jaxrs);
     }
 
 

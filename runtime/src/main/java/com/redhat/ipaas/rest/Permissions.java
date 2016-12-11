@@ -17,8 +17,9 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.Permission;
-
-import java.util.Collection;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -26,31 +27,31 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import java.util.Collection;
 
 @Path("/permissions")
 @Api(value = "permissions")
 public class Permissions {
 
-	@Inject
-	private DataManager dataMgr;
+    @Inject
+    private DataManager dataMgr;
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Permission> list() {
-		return dataMgr.fetchAll(Permission.class);
-	}
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(value="/{id}")
-	public Permission get(
-			@ApiParam(value = "id of the Permission", required = true) @PathParam("id") String id) {
-		Permission permission = dataMgr.fetch(Permission.class,id);
-		
-		return permission;
-	}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "List permissions")
+    public Collection<Permission> list() {
+        return dataMgr.fetchAll(Permission.class);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}")
+    @ApiOperation(value = "Get a permission by ID")
+    public Permission get(
+        @ApiParam(value = "id of the Permission", required = true) @PathParam("id") String id) {
+        Permission permission = dataMgr.fetch(Permission.class, id);
+
+        return permission;
+    }
 
 }
