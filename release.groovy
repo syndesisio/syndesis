@@ -31,6 +31,8 @@ def release(project, promoteImages){
     artifactIdToWatchInCentral = 'funktion-runtime'
     artifactExtensionToWatchInCentral = 'jar'
     imagesToPromoteToDockerHub = promoteImages
+    promoteToDockerRegistry = 'docker.io'
+    dockerOrganisation = 'fabric8'
   }
 }
 
