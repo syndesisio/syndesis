@@ -1,0 +1,46 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "nodejs"
+  labels:
+    funktion.fabric8.io/kind: "Runtime"
+data:
+  deployment: |
+    metadata:
+      annotations:
+        fabric8.io/iconUrl: "https://github.com/fabric8io/funktion/raw/master/docs/images/icon.png"
+      labels:
+        kind: function
+        name: hello
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            kind: function
+            name: hello
+        spec:
+          containers:
+          - image: funktion/funktion-nodejs-runtime:1.0.1
+            name: connector
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+              - name: source
+                readOnly: true
+                mountPath: /funktion
+          volumes:
+          - name: source
+            configMap:
+              name: hello
+              items:
+              - key: source
+                path: source.js
+  service: |
+    metadata:
+      annotations:
+        fabric8.io/iconUrl: "https://github.com/fabric8io/funktion/raw/master/docs/images/icon.png"
+    spec:
+      ports:
+      - port: 80
+        targetPort: 8888
