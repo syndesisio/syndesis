@@ -126,6 +126,7 @@
     <maven.swagger.plugin.version>3.1.4</maven.swagger.plugin.version>
     <templating.maven.plugin.version>1.0.0</templating.maven.plugin.version>
     <maven.jacoco.plugin.version>0.7.8</maven.jacoco.plugin.version>
+    <maven.license.plugin.version>3.0</maven.license.plugin.version>
 
     <fabric8.maven.plugin.version>3.2.8</fabric8.maven.plugin.version>
   </properties>
@@ -214,6 +215,23 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>${maven.license.plugin.version}</version>
+        <configuration>
+          <aggregate>true</aggregate>
+          <header>header.txt</header>
+          <properties>
+            <owner>Red Hat, Inc.</owner>
+          </properties>
+          <excludes>
+            <exclude>.editorconfig</exclude>
+            <exclude>license.txt</exclude>
+            <exclude>**/*.adoc</exclude>
+          </excludes>
+        </configuration>
       </plugin>
     </plugins>
   </build>
