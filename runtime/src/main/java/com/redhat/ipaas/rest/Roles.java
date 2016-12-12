@@ -20,6 +20,8 @@ import com.redhat.ipaas.api.Role;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -39,6 +41,7 @@ public class Roles {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List roles")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Role.class)})
     public Collection<Role> list() {
         return dataMgr.fetchAll(Role.class);
     }

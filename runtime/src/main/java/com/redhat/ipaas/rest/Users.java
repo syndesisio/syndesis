@@ -20,6 +20,8 @@ import com.redhat.ipaas.api.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -39,6 +41,7 @@ public class Users {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List users")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = User.class)})
     public Collection<User> list() {
         return dataMgr.fetchAll(User.class);
     }

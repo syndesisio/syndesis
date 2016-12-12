@@ -20,6 +20,8 @@ import com.redhat.ipaas.api.ComponentGroup;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -39,6 +41,7 @@ public class ComponentGroups {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List component groups")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = ComponentGroup.class)})
     public Collection<ComponentGroup> list() {
         return dataMgr.fetchAll(ComponentGroup.class);
     }

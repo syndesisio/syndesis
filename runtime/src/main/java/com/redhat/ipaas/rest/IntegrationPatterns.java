@@ -21,6 +21,8 @@ import com.redhat.ipaas.api.IntegrationPatternGroup;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -40,6 +42,7 @@ public class IntegrationPatterns {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List integration patterns")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = IntegrationPattern.class)})
     public Collection<IntegrationPattern> list() {
         return dataMgr.fetchAll(IntegrationPattern.class);
     }

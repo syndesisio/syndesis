@@ -20,6 +20,8 @@ import com.redhat.ipaas.api.Integration;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -43,6 +45,7 @@ public class Integrations {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List integrations")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Integration.class)})
     public Collection<Integration> list() {
         return dataMgr.fetchAll(Integration.class);
     }
