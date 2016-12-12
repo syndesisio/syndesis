@@ -1,5 +1,5 @@
-/*
-`	 * Copyright (C) 2016 Red Hat, Inc.
+/**
+ * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,16 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package com.redhat.ipaas.api;
 
 import java.io.Serializable;
 /**
- * ComponentGroups are labels in Camel. 
- * 
+ * ComponentGroups are labels in Camel.
+ *
  * https://github.com/apache/camel/blob/master/platforms/catalog/src/main/java/org/apache/camel/catalog/CamelCatalog.java#L233
- * 
+ *
  * @author kstam
  *
  */
@@ -30,13 +29,13 @@ public class ComponentGroup implements Serializable, IPaasEntity {
     private static final long serialVersionUID = -7751366211175725297L;
     private String id;
     private String name;
-    
+
 	public ComponentGroup(String id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 	}
-	
+
 	public ComponentGroup() {
 		super();
 	}
@@ -57,6 +56,6 @@ public class ComponentGroup implements Serializable, IPaasEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-    
-    
+
+
 }
