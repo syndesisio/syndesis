@@ -17,8 +17,11 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.ComponentGroup;
-
-import java.util.Collection;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -26,29 +29,30 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import java.util.Collection;
 
 @Path("/componentgroups")
 @Api(value = "componentgroups")
 public class ComponentGroups {
 
-	@Inject
-	private DataManager dataMgr;
+    @Inject
+    private DataManager dataMgr;
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<ComponentGroup> list() {
-		return dataMgr.fetchAll(ComponentGroup.class);
-	}
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(value="/{id}")
-	public ComponentGroup get(
-			@ApiParam(value = "id of the ComponentGroup", required = true) @PathParam("id") String id) {
-		return dataMgr.fetch(ComponentGroup.class,id);
-	}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "List component groups")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = ComponentGroup.class)})
+    public Collection<ComponentGroup> list() {
+        return dataMgr.fetchAll(ComponentGroup.class);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}")
+    @ApiOperation(value = "Get component group by ID")
+    public ComponentGroup get(
+        @ApiParam(value = "id of the ComponentGroup", required = true) @PathParam("id") String id) {
+        return dataMgr.fetch(ComponentGroup.class, id);
+    }
 
 }

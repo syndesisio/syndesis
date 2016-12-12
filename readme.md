@@ -1,9 +1,15 @@
-# IPaaS API
+# Red Hat iPaaS API
+
+[![CircleCI](https://img.shields.io/circleci/project/github/redhat-ipaas/ipaas-api-java.svg)](https://circleci.com/gh/redhat-ipaas/ipaas-api-java)
+[![Maven Central](https://img.shields.io/maven-central/v/com.redhat.ipaas/ipaas-api-java.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22redhat-ipaas%22%20AND%20a%3A%22ipaas-api-java%22)
 
 - [Building](#building)
 - [Running](#run-in-development-mode)
 - [Deploying](#deploying-to-kubernetes) 
 - [Endpoints](#endpoints)
+
+### Swagger
+[![Swagger](https://online.swagger.io/validator?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-api-java/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)](https://online.swagger.io/validator/debug?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-api-java/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)
 
 # Building
 

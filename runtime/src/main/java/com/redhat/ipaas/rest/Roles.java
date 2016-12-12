@@ -17,8 +17,11 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.Role;
-
-import java.util.Collection;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -26,31 +29,32 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import java.util.Collection;
 
 @Path("/roles")
 @Api(value = "roles")
 public class Roles {
 
-	@Inject
-	private DataManager dataMgr;
+    @Inject
+    private DataManager dataMgr;
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Role> list() {
-		return dataMgr.fetchAll(Role.class);
-	}
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(value="/{id}")
-	public Role get(
-			@ApiParam(value = "id of the Role", required = true) @PathParam("id") String id) {
-		Role role = dataMgr.fetch(Role.class,id);
-		
-		return role;
-	}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "List roles")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Role.class)})
+    public Collection<Role> list() {
+        return dataMgr.fetchAll(Role.class);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}")
+    @ApiOperation(value = "Get a role by ID")
+    public Role get(
+        @ApiParam(value = "id of the Role", required = true) @PathParam("id") String id) {
+        Role role = dataMgr.fetch(Role.class, id);
+
+        return role;
+    }
 
 }

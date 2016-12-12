@@ -16,7 +16,12 @@
  */
 package com.redhat.ipaas.rest;
 
-import java.util.Collection;
+import com.redhat.ipaas.api.User;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -24,33 +29,32 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import com.redhat.ipaas.api.User;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import java.util.Collection;
 
 @Path("/users")
 @Api(value = "users")
 public class Users {
 
-	@Inject
-	private DataManager dataMgr;
+    @Inject
+    private DataManager dataMgr;
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<User> list() {
-		return dataMgr.fetchAll(User.class);
-	}
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(value="/{id}")
-	public User get(
-			@ApiParam(value = "id of the User", required = true) @PathParam("id") String id) {
-		User user = dataMgr.fetch(User.class,id);
-		
-		return user;
-	}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "List users")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = User.class)})
+    public Collection<User> list() {
+        return dataMgr.fetchAll(User.class);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}")
+    @ApiOperation(value = "Get a user by ID")
+    public User get(
+        @ApiParam(value = "id of the User", required = true) @PathParam("id") String id) {
+        User user = dataMgr.fetch(User.class, id);
+
+        return user;
+    }
 
 }

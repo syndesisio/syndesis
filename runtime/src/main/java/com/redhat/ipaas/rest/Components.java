@@ -18,8 +18,11 @@ package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.Component;
 import com.redhat.ipaas.api.ComponentGroup;
-
-import java.util.Collection;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -27,34 +30,35 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import java.util.Collection;
 
 @Path("/components")
 @Api(value = "components")
 public class Components {
 
-	@Inject
-	private DataManager dataMgr;
+    @Inject
+    private DataManager dataMgr;
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Component> list() {
-		return dataMgr.fetchAll(Component.class);
-	}
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(value="/{id}")
-	public Component get(
-			@ApiParam(value = "id of the Component", required = true) @PathParam("id") String id) {
-		Component component = dataMgr.fetch(Component.class,id);
-		if (component.getComponentGroupId()!=null) {
-			ComponentGroup cg = dataMgr.fetch(ComponentGroup.class, component.getComponentGroupId());
-			component.setComponentGroup(cg);
-		}
-		return component;
-	}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "List components")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Component.class)})
+    public Collection<Component> list() {
+        return dataMgr.fetchAll(Component.class);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}")
+    @ApiOperation(value = "Get component by ID")
+    public Component get(
+        @ApiParam(value = "id of the Component", required = true) @PathParam("id") String id) {
+        Component component = dataMgr.fetch(Component.class, id);
+        if (component.getComponentGroupId() != null) {
+            ComponentGroup cg = dataMgr.fetch(ComponentGroup.class, component.getComponentGroupId());
+            component.setComponentGroup(cg);
+        }
+        return component;
+    }
 
 }
