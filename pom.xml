@@ -84,10 +84,10 @@
   <developers>
     <developer>
       <id>geeks</id>
-      <name>Fabric8 Development Team</name>
-      <email>fabric8@googlegroups.com</email>
-      <organization>fabric8</organization>
-      <organizationUrl>http://fabric8.io/</organizationUrl>
+      <name>Funktion Development Team</name>
+      <email>funktionio@googlegroups.com</email>
+      <organization>funktion</organization>
+      <organizationUrl>http://funktion.fabric8.io/</organizationUrl>
     </developer>
   </developers>
 
@@ -146,6 +146,7 @@
     <module>connector-generator</module>
     <module>connectors</module>
     <module>connector-package</module>
+    <module>runtimes</module>
   </modules>
 
   <build>
