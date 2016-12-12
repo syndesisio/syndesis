@@ -73,6 +73,17 @@
     </repository>
   </distributionManagement>
 
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>jcenter-releases</id>
+      <name>jcenter</name>
+      <url>https://jcenter.bintray.com</url>
+    </repository>
+  </repositories>
+
   <pluginRepositories>
     <pluginRepository>
       <snapshots>
@@ -80,7 +91,18 @@
       </snapshots>
       <id>jcenter-releases</id>
       <name>jcenter</name>
-      <url>http://jcenter.bintray.com</url>
+      <url>https://jcenter.bintray.com</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>apache.snapshots</id>
+      <name>Apache Development Snapshot Repository</name>
+      <url>https://repository.apache.org/content/repositories/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </pluginRepository>
   </pluginRepositories>
 
@@ -100,6 +122,7 @@
     <maven.resources.plugin.version>3.0.1</maven.resources.plugin.version>
     <maven.source.plugin.version>2.4</maven.source.plugin.version>
     <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
+    <maven.dependency.plugin.version>3.0.0-SNAPSHOT</maven.dependency.plugin.version>
     <maven.swagger.plugin.version>3.1.4</maven.swagger.plugin.version>
     <templating.maven.plugin.version>1.0.0</templating.maven.plugin.version>
 
@@ -134,6 +157,11 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven.dependency.plugin.version}</version>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>templating-maven-plugin</artifactId>
