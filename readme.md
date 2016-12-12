@@ -9,7 +9,7 @@
 - [Endpoints](#endpoints)
 
 ### Swagger
-[![Swagger](https://online.swagger.io/validator?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-api-java/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)](https://online.swagger.io/validator/debug?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-api-java/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)
+[![Swagger](http://dgrechka.net/swagger_validator_content_type_proxy.php?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-api-java/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)](https://online.swagger.io/validator/debug?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-api-java/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)
 
 # Building
 
