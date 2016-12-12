@@ -21,10 +21,11 @@ machine:
 
 dependencies:
   override:
-    - mvn -DskipTests package dependency:go-offline
+  - mvn -DskipTests package dependency:go-offline
 test:
   post:
-   - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-   - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-   - cp runtime/target/classes/index.html $CIRCLE_ARTIFACTS/apidocs.html
-   - cp runtime/target/classes/swagger.json $CIRCLE_ARTIFACTS/
+  - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+  - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+  - cp runtime/target/classes/index.html $CIRCLE_ARTIFACTS/apidocs.html
+  - cp runtime/target/classes/swagger.json $CIRCLE_ARTIFACTS/
+  - bash <(curl -s https://codecov.io/bash)
