@@ -125,7 +125,8 @@ public class ConnectorGenerator {
             }
 
             if (!Strings.isEmpty(componentName) && !Strings.isEmpty(groupId) && !Strings.isEmpty(artifactId) && !Strings.isEmpty(version)) {
-                File projectDir = new File(projectsDir, "connector-" + componentName);
+                String moduleName = "connector-" + componentName.toLowerCase();
+                File projectDir = new File(projectsDir, moduleName);
                 projectDir.mkdirs();
 
                 String dependencies = "  \n" +
@@ -139,7 +140,6 @@ public class ConnectorGenerator {
                     dependencies = "";
                 }
 
-                String moduleName = "connector-" + componentName;
                 moduleNames.add(moduleName);
                 if (addModuleNameIfMissing(modules, moduleName)) {
                     updatedComponentsPom = true;
@@ -255,7 +255,7 @@ public class ConnectorGenerator {
         String moduleNamesText = io.fabric8.utils.Strings.join(moduleNames, "', '");
         String releaseImagesGroovy = "#!/usr/bin/groovy\n" +
                 "def imagesBuiltByPipeline() {\n" +
-                "  return ['" + moduleNamesText + "']\n" +
+                "  return ['connector-amq', '" + moduleNamesText + "']\n" +
                 "}\n" +
                 "return this;\n";
         IOHelpers.writeFully(new File(getBaseDir(), "../releaseImages.groovy"), releaseImagesGroovy);
