@@ -212,7 +212,7 @@
       <module>connector-smtps</module>
       <module>connector-snmp</module>
       <module>connector-solr</module>
-      <module>connector-solrCloud</module>
+      <module>connector-solrcloud</module>
       <module>connector-solrs</module>
       <module>connector-spark</module>
       <module>connector-spark-rest</module>

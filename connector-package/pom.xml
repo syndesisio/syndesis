@@ -945,11 +945,6 @@
           </dependency>
           <dependency>
             <groupId>io.fabric8.funktion.connector</groupId>
-            <artifactId>connector-solrCloud</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.fabric8.funktion.connector</groupId>
             <artifactId>connector-solrs</artifactId>
             <version>${project.version}</version>
           </dependency>
@@ -1128,7 +1123,12 @@
             <artifactId>connector-zookeeper</artifactId>
             <version>${project.version}</version>
           </dependency>
-        </dependencies>
+        
+          <dependency>
+            <groupId>io.fabric8.funktion.connector</groupId>
+            <artifactId>connector-solrcloud</artifactId>
+            <version>${project.version}</version>
+          </dependency></dependencies>
       </plugin>
     </plugins>
   </build>
