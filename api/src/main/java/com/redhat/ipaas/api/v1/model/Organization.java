@@ -13,29 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.api;
+package com.redhat.ipaas.api.v1.model;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class IntegrationPatternGroup implements Serializable, IPaasEntity {
+@Value.Immutable
+@JsonDeserialize(builder = Organization.Builder.class)
+public interface Organization extends WithId<Organization>, WithName, Serializable {
 
-    private static final long serialVersionUID = 8745546102211129342L;
-    String id;
-    String name;
-    
+    String KIND = "organization";
+
     @Override
-	public String getId() {
-		return id;
-	}
+    default String kind() {
+        return KIND;
+    }
+
+    List<Environment> getEnvironments();
+
+    List<User> getUsers();
+
     @Override
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-    
+    default Organization withId(String id) {
+        return new Builder().createFrom(this).id(id).build();
+    }
+
+    class Builder extends ImmutableOrganization.Builder {
+    }
+
 }

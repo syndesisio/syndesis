@@ -13,36 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.api;
+package com.redhat.ipaas.api.v1.model;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 import java.io.Serializable;
 
-public class Permission implements Serializable, IPaasEntity {
-    
-    private static final long serialVersionUID = -8611093125164481312L;
-    String id;
-    String name;
-    String description;
-    
+@Value.Immutable
+@JsonDeserialize(builder = Step.Builder.class)
+public interface Step extends WithId<Step>, Serializable {
+
+    String KIND = "step";
+
     @Override
-	public String getId() {
-		return id;
-	}
+    default String kind() {
+        return KIND;
+    }
+
+    IntegrationPattern getIntegrationPattern();
+
+    String getConfiguredProperties();
+
     @Override
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-    
+    default Step withId(String id) {
+        return new Builder().createFrom(this).id(id).build();
+    }
+
+    class Builder extends ImmutableStep.Builder {
+    }
+
 }

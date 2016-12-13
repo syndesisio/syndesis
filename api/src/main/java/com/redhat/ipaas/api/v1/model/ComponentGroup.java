@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.api;
+package com.redhat.ipaas.api.v1.model;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 import java.io.Serializable;
+
 /**
  * ComponentGroups are labels in Camel.
  *
@@ -24,38 +28,23 @@ import java.io.Serializable;
  * @author kstam
  *
  */
-public class ComponentGroup implements Serializable, IPaasEntity {
+@Value.Immutable
+@JsonDeserialize(builder = ComponentGroup.Builder.class)
+public interface ComponentGroup extends WithId<ComponentGroup>, WithName, Serializable {
 
-    private static final long serialVersionUID = -7751366211175725297L;
-    private String id;
-    private String name;
-
-	public ComponentGroup(String id, String name) {
-		super();
-		this.id = id;
-		this.name = name;
-	}
-
-	public ComponentGroup() {
-		super();
-	}
+    String KIND = "componentgroup";
 
     @Override
-	public String getId() {
-		return id;
-	}
+    default String kind() {
+        return KIND;
+    }
+
     @Override
-	public void setId(String id) {
-		this.id = id;
-	}
+    default ComponentGroup withId(String id) {
+        return new Builder().createFrom(this).id(id).build();
+    }
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
+    class Builder extends ImmutableComponentGroup.Builder {
+    }
 
 }

@@ -14,75 +14,70 @@
  * limitations under the License.
  */
 package com.redhat.ipaas.rest;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Collection;
-import java.util.Map;
-
-import javax.persistence.EntityExistsException;
-
+import com.redhat.ipaas.api.v1.model.Component;
+import com.redhat.ipaas.api.v1.model.Integration;
+import com.redhat.ipaas.api.v1.model.WithId;
 import org.infinispan.Cache;
 import org.infinispan.manager.DefaultCacheManager;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.redhat.ipaas.api.Component;
-import com.redhat.ipaas.api.IPaasEntity;
-import com.redhat.ipaas.api.Integration;
+import javax.persistence.EntityExistsException;
+import java.util.Collection;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class DataManagerTest {
 
 	static DataManager dataManager = null;
-	
+
 	@BeforeClass
 	public static void setupCache(){
-		Cache<String, Map<String,IPaasEntity>> cache = new DefaultCacheManager().getCache();
+		Cache<String, Map<String,WithId>> cache = new DefaultCacheManager().getCache();
 		dataManager = new DataManager(cache);
 		dataManager.init();
 	}
-	
+
 	@Test
 	public void getComponents() {
-		Collection<Component> components = dataManager.fetchAll(Component.class);
+		Collection<Component> components = dataManager.fetchAll(Component.KIND);
 		for (Component component : components) {
-			System.out.print(component.getId() + ",");
+			System.out.print(component.getId().get() + ",");
 		}
 		assertTrue(components.size() > 10);
 	}
-	
+
 	@Test
 	public void getComponent() {
-	    Component component = dataManager.fetch(Component.class,"1");
-		System.out.println(component.getName());
-		assertTrue("First Component in the deployment.json should be 'non'", component.getName().equals("non"));
+	    Component component = dataManager.fetch(Component.KIND,"1");
+		System.out.println(component.name());
+		assertEquals("First Component in the deployment.json is non", "non", component.name());
 	}
-	
-	@Test
+
+	@Test(expected = EntityExistsException.class)
 	public void createIntegration() {
-		Integration integration = new Integration();
-		integration.setName("new integration name");
-		String id = dataManager.create(integration);
-		System.out.println("id=" + id);
-		assertTrue("A new ID should be created", id!=null);
-		
-		try {
-			dataManager.create(integration);
-			assertTrue("We just created the entity with this id, so this should fail",true);
-		} catch (EntityExistsException e) {}
+		Integration integration = new Integration.Builder().name("new integration name").build();
+		integration = dataManager.create(integration);
+		assertTrue("A new ID should be created", integration.getId().isPresent());
+        System.out.println("id=" + integration.getId().get());
+
+        dataManager.create(integration);
+        fail("We just created the entity with this id, so this should fail");
 	}
-	
+
 	@Test
 	public void updateIntegration() {
-		Integration integration = new Integration();
-		integration.setName("new integration name");
-		String id = dataManager.create(integration);
-		integration.setId(id);
-		assertTrue("A new ID should be created", id!=null);
-		integration.setName("new updated name");
-		dataManager.update(integration);
-		
-		Integration i = dataManager.fetch(Integration.class, id);
-		assertTrue("Name should be updated", "new updated name".equals(i.getName()));
+		Integration integration = new Integration.Builder().name("new integration name").build();
+		integration = dataManager.create(integration);
+        assertTrue("A new ID should be created", integration.getId().isPresent());
+        integration = new Integration.Builder().createFrom(integration).name("new updated name").build();
+        dataManager.update(integration);
+
+		Integration i = dataManager.fetch(Integration.KIND, integration.getId().get());
+		assertEquals("Name should be updated", "new updated name", i.name());
 	}
 
 }

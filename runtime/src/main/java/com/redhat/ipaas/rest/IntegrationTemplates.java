@@ -15,7 +15,7 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.IntegrationTemplate;
+import com.redhat.ipaas.api.v1.model.IntegrationTemplate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,7 +46,7 @@ public class IntegrationTemplates {
     @ApiOperation(value = "List integration templates")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = IntegrationTemplate.class)})
     public Collection<IntegrationTemplate> list() {
-        return dataMgr.fetchAll(IntegrationTemplate.class);
+        return dataMgr.fetchAll(IntegrationTemplate.KIND);
     }
 
     @GET
@@ -55,7 +55,7 @@ public class IntegrationTemplates {
     @ApiOperation(value = "Get an integration template by ID")
     public IntegrationTemplate get(
         @ApiParam(value = "id of the IntegrationTemplate", required = true) @PathParam("id") String id) {
-        IntegrationTemplate it = dataMgr.fetch(IntegrationTemplate.class, id);
+        IntegrationTemplate it = dataMgr.fetch(IntegrationTemplate.KIND, id);
 
         return it;
     }
@@ -64,9 +64,8 @@ public class IntegrationTemplates {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes("application/json")
     @ApiOperation(value = "Create an integration template")
-    public String create(IntegrationTemplate integrationTemplate) {
-        String id = dataMgr.create(integrationTemplate);
-        return id;
+    public IntegrationTemplate create(IntegrationTemplate integrationTemplate) {
+        return dataMgr.create(integrationTemplate);
     }
 
     @PUT
@@ -86,7 +85,7 @@ public class IntegrationTemplates {
     @ApiOperation(value = "Delete an integration template")
     public void delete(
         @ApiParam(value = "id of the IntegrationTemplate", required = true) @PathParam("id") String id) {
-        dataMgr.delete(IntegrationTemplate.class, id);
+        dataMgr.delete(IntegrationTemplate.KIND, id);
     }
 
 }

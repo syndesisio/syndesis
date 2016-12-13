@@ -15,7 +15,7 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.Permission;
+import com.redhat.ipaas.api.v1.model.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -42,7 +42,7 @@ public class Permissions {
     @ApiOperation(value = "List permissions")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Permission.class)})
     public Collection<Permission> list() {
-        return dataMgr.fetchAll(Permission.class);
+        return dataMgr.fetchAll(Permission.KIND);
     }
 
     @GET
@@ -51,7 +51,7 @@ public class Permissions {
     @ApiOperation(value = "Get a permission by ID")
     public Permission get(
         @ApiParam(value = "id of the Permission", required = true) @PathParam("id") String id) {
-        Permission permission = dataMgr.fetch(Permission.class, id);
+        Permission permission = dataMgr.fetch(Permission.KIND, id);
 
         return permission;
     }

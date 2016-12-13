@@ -13,37 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.api;
+package com.redhat.ipaas.api.v1.model;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
-public class Role implements Serializable, IPaasEntity {
-    
-    private static final long serialVersionUID = 6858315958004649852L;
-    String id;
-    String name;
-    Set<Permission> permissions;
-    
+@Value.Immutable
+@JsonDeserialize(builder = Role.Builder.class)
+public interface Role extends WithId<Role>, WithName, Serializable {
+
+    String KIND = "role";
+
     @Override
-	public String getId() {
-		return id;
-	}
+    default String kind() {
+        return KIND;
+    }
+
+    List<Permission> getPermissions();
+
     @Override
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public Set<Permission> getPermissions() {
-		return permissions;
-	}
-	public void setPermissions(Set<Permission> permissions) {
-		this.permissions = permissions;
-	}
-    
+    default Role withId(String id) {
+        return new Builder().createFrom(this).id(id).build();
+    }
+
+    class Builder extends ImmutableRole.Builder {
+    }
+
 }

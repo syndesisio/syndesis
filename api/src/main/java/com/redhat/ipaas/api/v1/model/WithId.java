@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.api;
+package com.redhat.ipaas.api.v1.model;
 
-public interface IPaasEntity {
+import java.util.Optional;
 
-	public String getId();
-	public void setId(String id);
+public interface WithId<T extends WithId> extends WithKind{
+
+    Optional<String> getId();
+
+    T withId(String id);
 
 }

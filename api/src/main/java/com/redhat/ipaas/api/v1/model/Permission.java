@@ -13,28 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.api;
+package com.redhat.ipaas.api.v1.model;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 import java.io.Serializable;
 
-public class EnvironmentType implements Serializable, IPaasEntity {
+@Value.Immutable
+@JsonDeserialize(builder = Permission.Builder.class)
+public interface Permission extends WithId<Permission>, WithName, Serializable {
 
-    private static final long serialVersionUID = 5660115437932263335L;
-    String id;
-    String name;
-    
+    String KIND = "permission";
+
     @Override
-	public String getId() {
-		return id;
-	}
+    default String kind() {
+        return KIND;
+    }
+
+    String getDescription();
+
     @Override
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+    default Permission withId(String id) {
+        return new Builder().createFrom(this).id(id).build();
+    }
+
+    class Builder extends ImmutablePermission.Builder {
+    }
+
 }

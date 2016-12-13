@@ -15,7 +15,7 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.Connection;
+import com.redhat.ipaas.api.v1.model.Connection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,7 +46,7 @@ public class Connections {
     @ApiOperation(value = "List connections")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Connection.class)})
     public Collection<Connection> list() {
-        return dataMgr.fetchAll(Connection.class);
+        return dataMgr.fetchAll(Connection.KIND);
     }
 
     @GET
@@ -55,16 +55,15 @@ public class Connections {
     @ApiOperation(value = "Get connection by ID")
     public Connection get(
         @ApiParam(value = "id of the connection", required = true) @PathParam("id") String id) {
-        return dataMgr.fetch(Connection.class, id);
+        return dataMgr.fetch(Connection.KIND, id);
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes("application/json")
     @ApiOperation(value = "Create a new connection")
-    public String create(Connection connection) {
-        String id = dataMgr.create(connection);
-        return id;
+    public Connection create(Connection connection) {
+        return dataMgr.create(connection);
     }
 
     @PUT
@@ -84,7 +83,7 @@ public class Connections {
     @ApiOperation(value = "Delete a connection")
     public void delete(
         @ApiParam(value = "id of the connection", required = true) @PathParam("id") String id) {
-        dataMgr.delete(Connection.class, id);
+        dataMgr.delete(Connection.KIND, id);
 
     }
 

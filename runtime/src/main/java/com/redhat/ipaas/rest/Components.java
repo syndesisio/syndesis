@@ -15,8 +15,8 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.Component;
-import com.redhat.ipaas.api.ComponentGroup;
+import com.redhat.ipaas.api.v1.model.Component;
+import com.redhat.ipaas.api.v1.model.ComponentGroup;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -43,7 +43,7 @@ public class Components {
     @ApiOperation(value = "List components")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Component.class)})
     public Collection<Component> list() {
-        return dataMgr.fetchAll(Component.class);
+        return dataMgr.fetchAll(Component.KIND);
     }
 
     @GET
@@ -52,10 +52,10 @@ public class Components {
     @ApiOperation(value = "Get component by ID")
     public Component get(
         @ApiParam(value = "id of the Component", required = true) @PathParam("id") String id) {
-        Component component = dataMgr.fetch(Component.class, id);
-        if (component.getComponentGroupId() != null) {
-            ComponentGroup cg = dataMgr.fetch(ComponentGroup.class, component.getComponentGroupId());
-            component.setComponentGroup(cg);
+        Component component = dataMgr.fetch(Component.KIND, id);
+        if (component.getComponentGroupId().isPresent()) {
+            ComponentGroup cg = dataMgr.fetch(ComponentGroup.KIND, component.getComponentGroupId().get());
+            component = new Component.Builder().createFrom(component).componentGroup(cg).build();
         }
         return component;
     }
