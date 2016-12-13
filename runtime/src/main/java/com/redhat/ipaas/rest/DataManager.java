@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.infinispan.Cache;
+import org.wildfly.swarm.spi.runtime.annotations.ConfigurationValue;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -62,8 +63,12 @@ public class DataManager {
 	private Cache<String, Map<String,IPaasEntity>> cache;
 
 	private ObjectMapper mapper = new ObjectMapper();
-	private String fileName = "com/redhat/ipaas/rest/deployment.json";
 	private static Logger logger = LoggerFactory.getLogger(DataManager.class.getName());
+
+
+    @Inject
+    @ConfigurationValue("deployment.file")
+    private String fileName;
 
 	public DataManager() {
 	}
@@ -84,10 +89,10 @@ public class DataManager {
 			} catch (IOException e) {
 				logger.error("Cannot read dummy startup data due to: " + e.getMessage(),e);
 			}
-			
+
 		}
 	}
-	
+
 	public void addToCache(ModelData modelData) {
 		try {
 			Class<? extends IPaasEntity> clazz = getClass(modelData.getModel());
@@ -102,7 +107,7 @@ public class DataManager {
 				entity.setId(generatePK(entityMap));
 			}
 			entityMap.put(entity.getId(), entity);
-			
+
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -111,13 +116,13 @@ public class DataManager {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-		}	
+		}
 	}
-	
+
 	/**
 	 * Simple generator to mimic behavior in api-client project. When we start
 	 * hooking up the back-end systems we may need to query those for the PK
-	 * 
+	 *
 	 * @param entityMap
 	 * @return
 	 */
@@ -128,7 +133,7 @@ public class DataManager {
 			if (!entityMap.containsKey(pk)) return pk;
 		}
 	}
-	
+
 	public Class<? extends IPaasEntity> getClass(String model) throws ClassNotFoundException {
 		switch (model.toLowerCase()) {
 		case "component":
@@ -183,7 +188,7 @@ public class DataManager {
 		}
 		return (Collection<T>) entityMap.values();
 	}
-	
+
 	public <T> T fetch(Class<T> clazz, String id) {
 		String model = clazz.getSimpleName().toLowerCase();
 		Map<String,IPaasEntity> entityMap = cache.get(model);
@@ -194,7 +199,7 @@ public class DataManager {
 		if (entityMap.get(id)==null) return null;
 		return clazz.cast(entityMap.get(id));
 	}
-	
+
 	public String create(IPaasEntity entity) {
 		String model = entity.getClass().getSimpleName().toLowerCase();
 		Map<String,IPaasEntity> entityMap = cache.get(model);
@@ -208,34 +213,34 @@ public class DataManager {
 			entity.setId(id);
 		} else {
 			if (entityMap.keySet().contains(id)) {
-				throw new EntityExistsException("There already exists a " 
+				throw new EntityExistsException("There already exists a "
 						+ entity.getClass().getSimpleName() + " with id " + id);
 			}
 		}
 		entityMap.put(entity.getId(), entity);
 		//TODO interact with the back-end system
-		return id;	
+		return id;
 	}
-	
+
 	public void update(IPaasEntity entity) {
 		String model = entity.getClass().getSimpleName().toLowerCase();
 		Map<String,IPaasEntity> entityMap = cache.get(model);
 		String id = entity.getId();
-		if (id==null || id.equals("")) 
+		if (id==null || id.equals(""))
 				throw new EntityNotFoundException("Setting the id on the entity is required for updates");
-		if (entityMap == null || !entityMap.containsKey(id)) 
+		if (entityMap == null || !entityMap.containsKey(id))
 				throw new EntityNotFoundException ("Can not find " + entity.getClass().getSimpleName() + " with id " + id);
 		//TODO 1. properly merge the data ? + add data validation in the REST Resource
 		//TODO 2. interact with the back-end system
 		entityMap.put(id, entity);
 	}
-	
+
 	public void delete(Class<? extends IPaasEntity> clazz, String id) {
 		String model = clazz.getSimpleName().toLowerCase();
 		Map<String,IPaasEntity> entityMap = cache.get(model);
-		if (id==null || id.equals("")) 
+		if (id==null || id.equals(""))
 			throw new EntityNotFoundException("Setting the id on the entity is required for updates");
-		if (entityMap == null || !entityMap.containsKey(id)) 
+		if (entityMap == null || !entityMap.containsKey(id))
 			throw new EntityNotFoundException ("Can not find " + clazz.getSimpleName() + " with id " + id);
 		//TODO interact with the back-end system
 		entityMap.remove(id);
