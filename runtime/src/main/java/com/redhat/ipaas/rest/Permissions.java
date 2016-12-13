@@ -16,6 +16,7 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.v1.model.Permission;
+import com.redhat.ipaas.rest.util.ReflectiveSorter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -27,7 +28,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 
 @Path("/permissions")
@@ -37,12 +40,16 @@ public class Permissions {
     @Inject
     private DataManager dataMgr;
 
+    @Context
+    private UriInfo uri;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List permissions")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Permission.class)})
     public Collection<Permission> list() {
-        return dataMgr.fetchAll(Permission.KIND);
+        return dataMgr.fetchAll(Permission.KIND,
+            new ReflectiveSorter<>(Permission.class, new SortOptionsFromQueryParams(uri)));
     }
 
     @GET
