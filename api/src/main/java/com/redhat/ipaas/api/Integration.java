@@ -27,6 +27,8 @@ public class Integration implements Serializable, IPaasEntity{
     IntegrationTemplate integrationTemplate;
     Set<User> users;
     Set<Tag> tags;
+    String userId;
+    String integrationTemplateId;
     
     @Override
 	public String getId() {
@@ -65,5 +67,17 @@ public class Integration implements Serializable, IPaasEntity{
 	}
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getIntegrationTemplateId() {
+		return integrationTemplateId;
+	}
+	public void setIntegrationTemplateId(String integrationTemplateId) {
+		this.integrationTemplateId = integrationTemplateId;
 	}
 }

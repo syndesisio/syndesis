@@ -37,6 +37,8 @@ public class Connection implements Serializable, IPaasEntity {
 	private String description;
 	private String position;
 	private Set<Tag> tags;
+	private String userId;
+	private String organizationId;
     
     public Connection() {
  		super();
@@ -106,6 +108,22 @@ public class Connection implements Serializable, IPaasEntity {
 
 	public void setComponentId(String componentId) {
 		this.componentId = componentId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getOrganizationId() {
+		return organizationId;
+	}
+
+	public void setOrganizationId(String organizationId) {
+		this.organizationId = organizationId;
 	}
     
     

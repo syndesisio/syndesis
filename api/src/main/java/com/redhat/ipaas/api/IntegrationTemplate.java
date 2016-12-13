@@ -24,6 +24,8 @@ public class IntegrationTemplate implements Serializable, IPaasEntity {
     String name;
     Organization organization;
     String configuration;
+    String userId;
+    String organizationId;
     
     @Override
 	public String getId() {
@@ -50,5 +52,17 @@ public class IntegrationTemplate implements Serializable, IPaasEntity {
 	}
 	public void setConfiguration(String configuration) {
 		this.configuration = configuration;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getOrganizationId() {
+		return organizationId;
+	}
+	public void setOrganizationId(String organizationId) {
+		this.organizationId = organizationId;
 	}
 }
