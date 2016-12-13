@@ -28,7 +28,9 @@ public class User implements Serializable, IPaasEntity{
     String lastName;
     String username;
     String kind;
+    String organizationId;
     Set<Integration> integrations;
+    String roleId;
     
     @Override
 	public String getId() {
@@ -79,5 +81,17 @@ public class User implements Serializable, IPaasEntity{
 	}
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+	public String getOrganizationId() {
+		return organizationId;
+	}
+	public void setOrganizationId(String organizationId) {
+		this.organizationId = organizationId;
+	}
+	public String getRoleId() {
+		return roleId;
+	}
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
 	}
 }

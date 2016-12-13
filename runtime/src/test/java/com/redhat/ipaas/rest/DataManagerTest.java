@@ -54,7 +54,7 @@ public class DataManagerTest {
 	public void getComponent() {
 	    Component component = dataManager.fetch(Component.class,"1");
 		System.out.println(component.getName());
-		assertTrue("First Component in the deployment.json is Facebook", component.getName().equals("Facebook"));
+		assertTrue("First Component in the deployment.json should be 'non'", component.getName().equals("non"));
 	}
 	
 	@Test
