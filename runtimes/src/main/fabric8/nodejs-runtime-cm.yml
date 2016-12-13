@@ -21,14 +21,25 @@ data:
             kind: function
             name: hello
         spec:
+          terminationGracePeriodSeconds: 1
           containers:
-          - image: funktion/funktion-nodejs-runtime:1.0.1
+          - image: funktion/funktion-nodejs-runtime:1.0.2
             name: connector
             imagePullPolicy: IfNotPresent
             volumeMounts:
               - name: source
                 readOnly: true
                 mountPath: /funktion
+            livenessProbe:
+              httpGet:
+                path: "/healthz"
+                port: 8888
+              initialDelaySeconds: 30
+            readinessProbe:
+              httpGet:
+                path: "/healthz"
+                port: 8888
+              initialDelaySeconds: 2
           volumes:
           - name: source
             configMap:
