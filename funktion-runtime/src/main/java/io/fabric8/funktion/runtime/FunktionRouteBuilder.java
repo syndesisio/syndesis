@@ -25,6 +25,7 @@ import io.fabric8.funktion.model.FunktionConfigs;
 import io.fabric8.funktion.model.FunktionRule;
 import io.fabric8.funktion.model.InvokeEndpoint;
 import io.fabric8.funktion.model.InvokeFunction;
+import io.fabric8.funktion.runtime.designer.SingleMessageRoutePolicyFactory;
 import io.fabric8.funktion.support.Strings;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http.HttpEndpoint;
@@ -191,6 +192,11 @@ public class FunktionRouteBuilder extends RouteBuilder {
 
         if (validActions == 0) {
             throw new IllegalStateException("No valid actions! Invalid rule " + trigger);
+        }
+
+        if (rule.isSingleMessageModeEnabled()) {
+            LOG.info("Enabling single message mode so that only one message is consumed for Design Mode");
+            getContext().addRoutePolicyFactory(new SingleMessageRoutePolicyFactory());
         }
     }
 }

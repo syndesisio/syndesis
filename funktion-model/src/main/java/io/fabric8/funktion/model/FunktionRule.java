@@ -27,6 +27,7 @@ public class FunktionRule extends DtoSupport {
     private String trigger;
     private Boolean trace;
     private Boolean logResult;
+    private Boolean singleMessageMode;
     private List<FunktionAction> actions = new ArrayList<>();
 
     public FunktionAction addAction(FunktionAction action) {
@@ -98,6 +99,14 @@ public class FunktionRule extends DtoSupport {
         this.logResult = logResult;
     }
 
+    public Boolean getSingleMessageMode() {
+        return singleMessageMode;
+    }
+
+    public void setSingleMessageMode(Boolean singleMessageMode) {
+        this.singleMessageMode = singleMessageMode;
+    }
+
     @JsonIgnore
     public boolean isTraceEnabled() {
         return trace != null && trace.booleanValue();
@@ -106,6 +115,11 @@ public class FunktionRule extends DtoSupport {
     @JsonIgnore
     public boolean isLogResultEnabled() {
         return logResult != null && logResult.booleanValue();
+    }
+
+    @JsonIgnore
+    public boolean isSingleMessageModeEnabled() {
+        return singleMessageMode != null && singleMessageMode.booleanValue();
     }
 
 }
