@@ -43,7 +43,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jdk8</artifactId>
-      <version>2.7.4</version>
     </dependency>
     <dependency>
       <groupId>io.swagger</groupId>
