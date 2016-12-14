@@ -22,8 +22,10 @@ machine:
 
 dependencies:
   override:
-  - mvn -DskipTests package dependency:go-offline
+  - mvn -Pfabric8 -Dfabric8.skip -DskipTests package dependency:go-offline
 test:
+  override:
+  - mvn -Pfabric8 integration-test
   post:
   - mkdir -p $CIRCLE_TEST_REPORTS/junit/
   - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;

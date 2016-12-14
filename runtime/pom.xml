@@ -79,16 +79,6 @@
         <groupId>io.fabric8</groupId>
         <artifactId>fabric8-maven-plugin</artifactId>
         <version>${fabric8.maven.plugin.version}</version>
-        <executions>
-          <execution>
-            <id>fmp</id>
-            <goals>
-              <goal>resource</goal>
-              <goal>helm</goal>
-              <goal>build</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
       <plugin>
@@ -112,7 +102,9 @@
                 <title>Red Hat iPaaS API</title>
                 <version>v1</version>
                 <description>
-                  The Red Hat iPaaS REST API connects to back-end services on the IPaaS and provides a single entry point for the IpaaS Console. For console developement it can run in off-line mode where it only serves responses from the response cache.
+                  The Red Hat iPaaS REST API connects to back-end services on the IPaaS and provides a single entry
+                  point for the IpaaS Console. For console developement it can run in off-line mode where it only serves
+                  responses from the response cache.
                 </description>
                 <license>
                   <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
@@ -250,4 +242,28 @@
       <version>1.7.10</version>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>fabric8</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>fmp</id>
+                <goals>
+                  <goal>resource</goal>
+                  <goal>helm</goal>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
