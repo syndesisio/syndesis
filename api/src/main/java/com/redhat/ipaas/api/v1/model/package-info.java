@@ -13,11 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.api;
-
-public interface IPaasEntity {
-
-	public String getId();
-	public void setId(String id);
-
-}
+@com.redhat.ipaas.api.ImmutablesStyle
+package com.redhat.ipaas.api.v1.model;

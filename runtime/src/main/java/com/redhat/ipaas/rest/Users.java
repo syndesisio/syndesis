@@ -15,7 +15,7 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.User;
+import com.redhat.ipaas.api.v1.model.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -42,7 +42,7 @@ public class Users {
     @ApiOperation(value = "List users")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = User.class)})
     public Collection<User> list() {
-        return dataMgr.fetchAll(User.class);
+        return dataMgr.fetchAll(User.KIND);
     }
 
     @GET
@@ -51,7 +51,7 @@ public class Users {
     @ApiOperation(value = "Get a user by ID")
     public User get(
         @ApiParam(value = "id of the User", required = true) @PathParam("id") String id) {
-        User user = dataMgr.fetch(User.class, id);
+        User user = dataMgr.fetch(User.KIND, id);
 
         return user;
     }

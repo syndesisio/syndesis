@@ -15,7 +15,7 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.Integration;
+import com.redhat.ipaas.api.v1.model.Integration;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,7 +46,7 @@ public class Integrations {
     @ApiOperation(value = "List integrations")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Integration.class)})
     public Collection<Integration> list() {
-        return dataMgr.fetchAll(Integration.class);
+        return dataMgr.fetchAll(Integration.KIND);
     }
 
     @GET
@@ -55,7 +55,7 @@ public class Integrations {
     @ApiOperation(value = "Get an integration by ID")
     public Integration get(
         @ApiParam(value = "id of the Integration", required = true) @PathParam("id") String id) {
-        Integration i = dataMgr.fetch(Integration.class, id);
+        Integration i = dataMgr.fetch(Integration.KIND, id);
 
         return i;
     }
@@ -64,9 +64,8 @@ public class Integrations {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes("application/json")
     @ApiOperation(value = "Create an integration")
-    public String create(Integration integration) {
-        String id = dataMgr.create(integration);
-        return id;
+    public Integration create(Integration integration) {
+        return dataMgr.create(integration);
     }
 
     @PUT
@@ -86,7 +85,7 @@ public class Integrations {
     @ApiOperation(value = "Delete a connection")
     public void delete(
         @ApiParam(value = "id of the Integration", required = true) @PathParam("id") String id) {
-        dataMgr.delete(Integration.class, id);
+        dataMgr.delete(Integration.KIND, id);
     }
 
 

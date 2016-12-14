@@ -15,25 +15,17 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.v1.model.Organization;
-import io.swagger.annotations.ApiOperation;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import java.util.HashSet;
-import java.util.Set;
+class ObjectMapperHolder {
 
-@Path("/organizations")
-public class Organizations {
+    static final ObjectMapper OBJECT_MAPPER = createObjectMapper();
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get an organization by ID")
-    public Set<Organization> doGet() {
-
-        Set<Organization> orgs = new HashSet<Organization>();
-        return orgs;
+    private static ObjectMapper createObjectMapper() {
+        ObjectMapper om = new ObjectMapper();
+        om.registerModule(new Jdk8Module());
+        return om;
     }
+
 }

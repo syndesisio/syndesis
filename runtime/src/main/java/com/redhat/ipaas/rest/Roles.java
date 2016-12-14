@@ -15,7 +15,7 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.Role;
+import com.redhat.ipaas.api.v1.model.Role;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -42,7 +42,7 @@ public class Roles {
     @ApiOperation(value = "List roles")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Role.class)})
     public Collection<Role> list() {
-        return dataMgr.fetchAll(Role.class);
+        return dataMgr.fetchAll(Role.KIND);
     }
 
     @GET
@@ -51,7 +51,7 @@ public class Roles {
     @ApiOperation(value = "Get a role by ID")
     public Role get(
         @ApiParam(value = "id of the Role", required = true) @PathParam("id") String id) {
-        Role role = dataMgr.fetch(Role.class, id);
+        Role role = dataMgr.fetch(Role.KIND, id);
 
         return role;
     }

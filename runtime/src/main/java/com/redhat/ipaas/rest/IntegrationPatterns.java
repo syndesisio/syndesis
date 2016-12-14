@@ -15,8 +15,8 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.IntegrationPattern;
-import com.redhat.ipaas.api.IntegrationPatternGroup;
+import com.redhat.ipaas.api.v1.model.IntegrationPattern;
+import com.redhat.ipaas.api.v1.model.IntegrationPatternGroup;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -43,7 +43,7 @@ public class IntegrationPatterns {
     @ApiOperation(value = "List integration patterns")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = IntegrationPattern.class)})
     public Collection<IntegrationPattern> list() {
-        return dataMgr.fetchAll(IntegrationPattern.class);
+        return dataMgr.fetchAll(IntegrationPattern.KIND);
     }
 
     @GET
@@ -52,10 +52,10 @@ public class IntegrationPatterns {
     @ApiOperation(value = "Get an integration patten by ID")
     public IntegrationPattern get(
         @ApiParam(value = "id of the IntegrationPattern", required = true) @PathParam("id") String id) {
-        IntegrationPattern ip = dataMgr.fetch(IntegrationPattern.class, id);
-        if (ip.getIntegrationPatternGroupId() != null) {
-            IntegrationPatternGroup ipg = dataMgr.fetch(IntegrationPatternGroup.class, ip.getIntegrationPatternGroupId());
-            ip.setIntegrationPatternGroup(ipg);
+        IntegrationPattern ip = dataMgr.fetch(IntegrationPattern.KIND, id);
+        if (ip.getIntegrationPatternGroupId().isPresent()) {
+            IntegrationPatternGroup ipg = dataMgr.fetch(IntegrationPatternGroup.KIND, ip.getIntegrationPatternGroupId().get());
+            ip = new IntegrationPattern.Builder().createFrom(ip).integrationPatternGroup(ipg).build();
         }
         return ip;
     }

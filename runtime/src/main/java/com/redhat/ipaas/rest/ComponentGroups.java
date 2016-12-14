@@ -15,7 +15,7 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.ComponentGroup;
+import com.redhat.ipaas.api.v1.model.ComponentGroup;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -42,7 +42,7 @@ public class ComponentGroups {
     @ApiOperation(value = "List component groups")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = ComponentGroup.class)})
     public Collection<ComponentGroup> list() {
-        return dataMgr.fetchAll(ComponentGroup.class);
+        return dataMgr.fetchAll(ComponentGroup.KIND);
     }
 
     @GET
@@ -51,7 +51,7 @@ public class ComponentGroups {
     @ApiOperation(value = "Get component group by ID")
     public ComponentGroup get(
         @ApiParam(value = "id of the ComponentGroup", required = true) @PathParam("id") String id) {
-        return dataMgr.fetch(ComponentGroup.class, id);
+        return dataMgr.fetch(ComponentGroup.KIND, id);
     }
 
 }

@@ -13,27 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.rest;
+package com.redhat.ipaas.api.v1.model;
 
-import com.redhat.ipaas.api.v1.model.Organization;
-import io.swagger.annotations.ApiOperation;
+import java.util.Optional;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import java.util.HashSet;
-import java.util.Set;
+public interface WithId<T extends WithId> extends WithKind{
 
-@Path("/organizations")
-public class Organizations {
+    Optional<String> getId();
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get an organization by ID")
-    public Set<Organization> doGet() {
+    T withId(String id);
 
-        Set<Organization> orgs = new HashSet<Organization>();
-        return orgs;
-    }
 }

@@ -14,42 +14,46 @@
  * limitations under the License.
  */
 package com.redhat.ipaas.rest;
-import static org.junit.Assert.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.redhat.ipaas.api.v1.model.ComponentGroup;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.ipaas.api.ComponentGroup;
-import com.redhat.ipaas.rest.ModelData;
-import com.redhat.ipaas.rest.ReadApiClientData;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class ReadApiClientDataTest {
 
-	private static ObjectMapper mapper = new ObjectMapper();
-	
+    private final static ObjectMapper mapper = getObjectMapper();
+
+	private static ObjectMapper getObjectMapper() {
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    objectMapper.registerModule(new Jdk8Module());
+	    return objectMapper;
+    }
+
 	@Test
-	public void deserializeModelDateTest() throws JsonParseException, JsonMappingException, IOException {
-		
+	public void deserializeModelDataTest() throws IOException {
+
 		//serialize
-		ComponentGroup cg = new ComponentGroup("label", "label");
-		ModelData mdIn = new ModelData("ComponentGroup",  mapper.writeValueAsString(cg));
-		assertTrue("{\"id\":\"label\",\"name\":\"label\"}".equals(mdIn.getData()));
-		
+		ComponentGroup cg = new ComponentGroup.Builder().id("label").name("label").build();
+		ModelData mdIn = new ModelData(ComponentGroup.KIND,  mapper.writeValueAsString(cg));
+		assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdIn.getData());
+
 		//deserialize
 		String json = mapper.writeValueAsString(mdIn);
 		ModelData mdOut = mapper.readValue(json, ModelData.class);
-		assertTrue("{\"id\":\"label\",\"name\":\"label\"}".equals(mdOut.getData()));
+		assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdOut.getData());
 	}
-	
+
 	@Test
-	public void loadApiClientDataTest() throws JsonParseException, JsonMappingException, IOException {
+	public void loadApiClientDataTest() throws IOException {
 		List<ModelData> modelDataList = new ReadApiClientData().readDataFromFile("com/redhat/ipaas/rest/deployment.json");
 		System.out.println("Found " + modelDataList.size() + " entities.");
 		assertTrue("We should find some ModelData", 0 < modelDataList.size());

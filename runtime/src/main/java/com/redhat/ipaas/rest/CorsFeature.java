@@ -15,25 +15,21 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.v1.model.Organization;
-import io.swagger.annotations.ApiOperation;
+import org.jboss.resteasy.plugins.interceptors.CorsFilter;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import java.util.HashSet;
-import java.util.Set;
+import javax.ws.rs.core.Feature;
+import javax.ws.rs.core.FeatureContext;
+import javax.ws.rs.ext.Provider;
 
-@Path("/organizations")
-public class Organizations {
+@Provider
+public class CorsFeature implements Feature {
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get an organization by ID")
-    public Set<Organization> doGet() {
-
-        Set<Organization> orgs = new HashSet<Organization>();
-        return orgs;
+    @Override
+    public boolean configure(FeatureContext context) {
+        CorsFilter corsFilter = new CorsFilter();
+        corsFilter.getAllowedOrigins().add("*");
+        context.register(corsFilter);
+        return true;
     }
+
 }
