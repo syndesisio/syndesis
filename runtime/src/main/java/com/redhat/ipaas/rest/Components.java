@@ -16,56 +16,22 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.v1.model.Component;
-import com.redhat.ipaas.api.v1.model.ComponentGroup;
-import com.redhat.ipaas.rest.util.ReflectiveSorter;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-import java.util.Collection;
 
 @Path("/components")
 @Api(value = "components")
-public class Components {
+public class Components extends BaseHandler implements Lister<Component>, Getter<Component> {
 
-    @Inject
-    private DataManager dataMgr;
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "List components")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Component.class)})
-    @ApiImplicitParams({
-        @ApiImplicitParam(
-            name = "sort", value = "Sort the result list according to the given field value",
-            paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
-                                        "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
-
-    })
-    public Collection<Component> list(@Context UriInfo uri) {
-        return dataMgr.fetchAll(Component.KIND, new ReflectiveSorter<>(Component.class, new SortOptionsFromQueryParams(uri)));
+    @Override
+    public Class<Component> resourceClass() {
+        return Component.class;
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/{id}")
-    @ApiOperation(value = "Get component by ID")
-    public Component get(
-        @ApiParam(value = "id of the Component", required = true) @PathParam("id") String id) {
-        Component component = dataMgr.fetch(Component.KIND, id);
-        if (component.getComponentGroupId().isPresent()) {
-            ComponentGroup cg = dataMgr.fetch(ComponentGroup.KIND, component.getComponentGroupId().get());
-            component = new Component.Builder().createFrom(component).componentGroup(cg).build();
-        }
-        return component;
+    @Override
+    public String resourceKind() {
+        return Component.KIND;
     }
 
 }

@@ -16,24 +16,20 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.v1.model.Organization;
-import io.swagger.annotations.ApiOperation;
 
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import java.util.HashSet;
-import java.util.Set;
 
 @Path("/organizations")
-public class Organizations {
+public class Organizations  extends BaseHandler implements Lister<Organization>, Getter<Organization> {
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get an organization by ID")
-    public Set<Organization> doGet() {
-
-        Set<Organization> orgs = new HashSet<>();
-        return orgs;
+    @Override
+    public Class<Organization> resourceClass() {
+        return Organization.class;
     }
+
+    @Override
+    public String resourceKind() {
+        return Organization.KIND;
+    }
+
 }

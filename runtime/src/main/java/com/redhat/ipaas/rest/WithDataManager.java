@@ -15,23 +15,8 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.v1.model.User;
-import io.swagger.annotations.Api;
+public interface WithDataManager {
 
-import javax.ws.rs.Path;
-
-@Path("/users")
-@Api(value = "users")
-public class Users extends BaseHandler implements Lister<User>, Getter<User> {
-
-    @Override
-    public Class<User> resourceClass() {
-        return User.class;
-    }
-
-    @Override
-    public String resourceKind() {
-        return User.KIND;
-    }
+    DataManager getDataManager();
 
 }
