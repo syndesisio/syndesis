@@ -1,7 +1,7 @@
-rules:
+flows:
   - trigger: http
     name: dude
-    actions:
+    trace: false
+    steps:
     - kind: function
       name: io.fabric8.funktion.example.Main::beer
-    trace: false

@@ -14,12 +14,30 @@
  * permissions and limitations under the License.
  *
  */
-package io.fabric8.funktion.connector.generator;
+package io.fabric8.funktion.model.steps;
 
-/**
- */
-public class DataConstants {
-    public static final String SCHEMA_YAML = "schema.yml";
-    public static final String ASCIIDOC = "documentation.adoc";
-    public static final String DEPLOYMENT_YAML = "deployment.yml";
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.fabric8.funktion.model.FunktionDeserializer;
+
+@JsonDeserialize(
+        using = FunktionDeserializer.class
+)
+public abstract class Step {
+    private String kind;
+
+    public Step() {
+    }
+
+    public Step(String kind) {
+        this.kind = kind;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
 }

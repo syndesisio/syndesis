@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  *
  */
-package io.fabric8.funktion.connector.generator;
+package io.fabric8.funktion;
 
 /**
  */

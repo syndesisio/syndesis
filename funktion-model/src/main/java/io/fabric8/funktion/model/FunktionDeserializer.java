@@ -23,6 +23,11 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.fabric8.funktion.model.steps.Step;
+import io.fabric8.funktion.model.steps.InvokeEndpoint;
+import io.fabric8.funktion.model.steps.InvokeFunction;
+import io.fabric8.funktion.model.steps.SetBody;
+import io.fabric8.funktion.model.steps.SetHeaders;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,10 +41,12 @@ public class FunktionDeserializer extends JsonDeserializer {
     public FunktionDeserializer() {
         kinds.put("function", InvokeFunction.class);
         kinds.put("endpoint", InvokeEndpoint.class);
+        kinds.put("setBody", SetBody.class);
+        kinds.put("setHeaders", SetHeaders.class);
     }
 
     @Override
-    public FunktionAction deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Step deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
         ObjectNode node = jp.readValueAsTree();
         JsonNode kind = node.get("kind");
         if (kind == null) {
@@ -50,7 +57,7 @@ public class FunktionDeserializer extends JsonDeserializer {
         if (kindClass == null) {
             throw ctxt.mappingException("Unknown kind: " + kind);
         } else {
-            return (FunktionAction) jp.getCodec().treeToValue(node, kindClass);
+            return (Step) jp.getCodec().treeToValue(node, kindClass);
         }
     }
 }

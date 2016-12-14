@@ -14,40 +14,44 @@
  * permissions and limitations under the License.
  *
  */
-package io.fabric8.funktion.model;
+package io.fabric8.funktion.model.steps;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "kind")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = InvokeFunction.class, name = "function"),
-        @JsonSubTypes.Type(value = InvokeEndpoint.class, name = "endpoint")
-})
+ * Invokes a function with the current payload
  */
 @JsonDeserialize(
-    using = FunktionDeserializer.class
+    using = JsonDeserializer.None.class
 )
-public abstract class FunktionAction {
-    private String kind;
+public class InvokeFunction extends Step {
+    private String name;
 
-    public FunktionAction() {
+    public InvokeFunction() {
+        super("function");
     }
 
-    public FunktionAction(String kind) {
-        this.kind = kind;
+    public InvokeFunction(String name) {
+        this();
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Function: " + name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getKind() {
-        return kind;
-    }
-
-    public void setKind(String kind) {
-        this.kind = kind;
+        return "function";
     }
 
 }

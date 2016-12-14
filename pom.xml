@@ -141,6 +141,7 @@
   <modules>
     <module>funktion-model</module>
     <module>funktion-runtime</module>
+    <module>funktion-agent</module>
     <module>starter-parent</module>
     <module>examples</module>
     <module>connector-generator</module>

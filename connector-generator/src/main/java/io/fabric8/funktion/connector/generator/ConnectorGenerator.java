@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static io.fabric8.funktion.connector.generator.Connectors.createYamlMapper;
+import static io.fabric8.funktion.support.YamlHelper.createYamlMapper;
 import static io.fabric8.utils.DomHelper.firstChild;
 
 /**
