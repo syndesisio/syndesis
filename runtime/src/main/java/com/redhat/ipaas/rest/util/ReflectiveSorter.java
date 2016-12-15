@@ -16,6 +16,8 @@
 package com.redhat.ipaas.rest.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -68,14 +70,14 @@ public class ReflectiveSorter<T> implements Function<List<T>, List<T>>, Comparat
     }
 
     private Comparator<T> getStringComparator(Class<T> modelClass, String fieldName) {
-        Field stringField = getFieldOfType(modelClass, fieldName, String.class);
-        if (stringField != null) {
+        Method stringGetMethod = getGetMethodOfType(modelClass, fieldName, String.class);
+        if (stringGetMethod != null) {
             return Comparator.comparing(k -> {
                 try {
-                    stringField.setAccessible(true);
-                    return (String) stringField.get(k);
-                } catch (IllegalAccessException e) {
-                    throw new IllegalArgumentException("Cannot extract String value of field " + stringField + " for object " + k, e);
+                    stringGetMethod.setAccessible(true);
+                    return (String) stringGetMethod.invoke(k);
+                } catch (InvocationTargetException | IllegalAccessException e) {
+                    throw new IllegalArgumentException("Cannot extract String value from " + stringGetMethod + " for object " + k, e);
                 }
             });
         }
@@ -83,14 +85,14 @@ public class ReflectiveSorter<T> implements Function<List<T>, List<T>>, Comparat
     }
 
     private Comparator<T> getIntComparator(Class<T> modelClass, String fieldName) {
-        Field intField = getFieldOfType(modelClass, fieldName, int.class, Integer.class);
-        if (intField != null) {
+        Method intGetMethod = getGetMethodOfType(modelClass, fieldName, int.class, Integer.class);
+        if (intGetMethod != null) {
             return Comparator.comparingInt(k -> {
                         try {
-                            intField.setAccessible(true);
-                            return (Integer) intField.get(k);
-                        } catch (IllegalAccessException e) {
-                            throw new IllegalArgumentException("Cannot extract int value of field " + intField + " for object " + k, e);
+                            intGetMethod.setAccessible(true);
+                            return (Integer) intGetMethod.invoke(k);
+                        } catch (InvocationTargetException | IllegalAccessException e) {
+                            throw new IllegalArgumentException("Cannot extract int value from " + intGetMethod + " for object " + k, e);
                         }
             });
         }
@@ -98,17 +100,37 @@ public class ReflectiveSorter<T> implements Function<List<T>, List<T>>, Comparat
     }
 
 
-    private Field getFieldOfType(Class clazz, String fieldName, Class ... types) {
+    private Method getGetMethodOfType(Class clazz, String fieldName, Class ... types) {
+        // Check direct:
+        Method ret = extractMethod(clazz, fieldName, types);
+        if (ret != null) {
+            return ret;
+        }
+
+        // Check interfaces :
+        for (Class intf : clazz.getInterfaces()) {
+            ret = extractMethod(intf, fieldName, types);
+            if (ret != null) {
+                return ret;
+            }
+        }
+
+        // Check parent:
+        Class superClass = clazz.getSuperclass();
+        return superClass != null ? getGetMethodOfType(superClass, fieldName, types) : null;
+    }
+
+    private Method extractMethod(Class clazz, String fieldName, Class[] types) {
         try {
-            Field field = clazz.getDeclaredField(fieldName);
-            Class fieldClass = field.getType();
+            Method method = clazz.getDeclaredMethod("get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1));
+            Class returnType = method.getReturnType();
             for (Class type : types) {
-                if (fieldClass.isAssignableFrom(type)) {
-                    return field;
+                if (returnType.isAssignableFrom(type)) {
+                    return method;
                 }
             }
             return null;
-        } catch (NoSuchFieldException exp) {
+        } catch (NoSuchMethodException exp) {
             return null;
         }
     }

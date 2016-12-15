@@ -28,14 +28,14 @@ import static org.junit.Assert.assertEquals;
  * @author roland
  * @since 13/12/16
  */
-public class ReflectiveSortComparatorTest {
+public class ReflectiveSorterTest {
 
     @Test
     public void stringSort() {
 
-        List<TestPerson> toSort = getTestData();
+        List<TestPersonInterface> toSort = getTestData();
 
-        toSort.sort(new ReflectiveSorter<>(TestPerson.class, getOptions("lastName", "asc")));
+        toSort.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "asc")));
         String[] expectedNames = {
             "Feynman",
             "Heisenberg",
@@ -44,23 +44,23 @@ public class ReflectiveSortComparatorTest {
         };
 
         for (int i = 0; i < expectedNames.length; i++) {
-            assertEquals(toSort.get(i).lastName, expectedNames[i]);
+            assertEquals(toSort.get(i).getLastName(), expectedNames[i]);
         }
 
-        toSort.sort(new ReflectiveSorter<>(TestPerson.class, getOptions("lastName", "DESC")));
+        toSort.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "DESC")));
         List reversed = Arrays.asList(expectedNames);
         Collections.reverse(reversed);
 
         for (int i = 0; i < expectedNames.length; i++) {
-            assertEquals(toSort.get(i).lastName, expectedNames[i]);
+            assertEquals(toSort.get(i).getLastName(), expectedNames[i]);
         }
     }
 
     @Test
     public void intSort() {
-        List<TestPerson> toSort = getTestData();
+        List<TestPersonInterface> toSort = getTestData();
 
-        toSort.sort(new ReflectiveSorter<>(TestPerson.class, getOptions("birthYear", null)));
+        toSort.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("birthYear", null)));
         String[] expectedNames = {
             "Maxwell",
             "Schrödinger",
@@ -69,24 +69,24 @@ public class ReflectiveSortComparatorTest {
         };
 
         for (int i = 0; i < expectedNames.length; i++) {
-            assertEquals(toSort.get(i).lastName, expectedNames[i]);
+            assertEquals(toSort.get(i).getLastName(), expectedNames[i]);
         }
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void invalidType() {
-        getTestData().sort(new ReflectiveSorter<>(TestPerson.class, getOptions("blub", "asc")));
+        getTestData().sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("blub", "asc")));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void invalidDirection() {
-        getTestData().sort(new ReflectiveSorter<>(TestPerson.class, getOptions("lastName", "blub")));
+        getTestData().sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "blub")));
     }
 
     @Test
     public void noParams() {
-        List<TestPerson> toSort = getTestData();
-        Function<List<TestPerson>, List<TestPerson>> operator = new ReflectiveSorter<>(TestPerson.class, getOptions(null, null));
+        List<TestPersonInterface> toSort = getTestData();
+        Function<List<TestPersonInterface>, List<TestPersonInterface>> operator = new ReflectiveSorter<>(TestPersonInterface.class, getOptions(null, null));
         operator.apply(toSort);
 
         String[] expectedNames = {
@@ -97,7 +97,7 @@ public class ReflectiveSortComparatorTest {
         };
 
         for (int i = 0; i < expectedNames.length; i++) {
-            assertEquals(toSort.get(i).lastName, expectedNames[i]);
+            assertEquals(toSort.get(i).getLastName(), expectedNames[i]);
         }
 
     }
@@ -116,7 +116,7 @@ public class ReflectiveSortComparatorTest {
         };
     }
 
-    private List<TestPerson> getTestData() {
+    private List<TestPersonInterface> getTestData() {
         return Arrays.asList(
 
             new TestPerson( "Erwin", "Schrödinger", 1887),
@@ -127,7 +127,16 @@ public class ReflectiveSortComparatorTest {
                             );
     }
 
-    static class TestPerson {
+    interface TestPersonInterface extends TestPersonBase {
+        String getFirstName();
+        int getBirthYear();
+    }
+
+    interface TestPersonBase {
+        String getLastName();
+    }
+
+    static class TestPerson implements TestPersonInterface {
 
         private String firstName;
         private String lastName;
@@ -137,6 +146,18 @@ public class ReflectiveSortComparatorTest {
             this.firstName = firstName;
             this.lastName = lastName;
             this.birthYear = birthYear;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public int getBirthYear() {
+            return birthYear;
         }
     }
 }

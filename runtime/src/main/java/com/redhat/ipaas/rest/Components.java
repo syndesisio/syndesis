@@ -18,11 +18,7 @@ package com.redhat.ipaas.rest;
 import com.redhat.ipaas.api.v1.model.Component;
 import com.redhat.ipaas.api.v1.model.ComponentGroup;
 import com.redhat.ipaas.rest.util.ReflectiveSorter;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -48,7 +44,15 @@ public class Components {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List components")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Component.class)})
-    @ApiParam(name = "sortField", value = "Sort list with the given field")
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "sort", value = "Sort the result list according to the given field value",
+            paramType = "query", dataType = "string"),
+        @ApiImplicitParam(
+            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
+                                        "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
+
+    })
     public Collection<Component> list() {
         return dataMgr.fetchAll(Component.KIND, new ReflectiveSorter<>(Component.class, new SortOptionsFromQueryParams(uri)));
     }
