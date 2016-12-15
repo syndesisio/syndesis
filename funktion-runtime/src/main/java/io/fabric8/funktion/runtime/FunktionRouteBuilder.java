@@ -25,8 +25,8 @@ import io.fabric8.funktion.model.steps.Step;
 import io.fabric8.funktion.model.Funktion;
 import io.fabric8.funktion.model.Funktions;
 import io.fabric8.funktion.model.Flow;
-import io.fabric8.funktion.model.steps.InvokeEndpoint;
-import io.fabric8.funktion.model.steps.InvokeFunction;
+import io.fabric8.funktion.model.steps.Endpoint;
+import io.fabric8.funktion.model.steps.Function;
 import io.fabric8.funktion.model.steps.SetBody;
 import io.fabric8.funktion.model.steps.SetHeaders;
 import io.fabric8.funktion.runtime.designer.SingleMessageRoutePolicyFactory;
@@ -138,9 +138,9 @@ public class FunktionRouteBuilder extends RouteBuilder {
         int validActions = 0;
         if (actions != null) {
             for (Step item : actions) {
-                if (item instanceof InvokeFunction) {
-                    InvokeFunction invokeFunction = (InvokeFunction) item;
-                    String action = invokeFunction.getName();
+                if (item instanceof Function) {
+                    Function function = (Function) item;
+                    String action = function.getName();
                     if (!Strings.isEmpty(action)) {
                         String method = null;
                         int idx = action.indexOf("::");
@@ -164,8 +164,8 @@ public class FunktionRouteBuilder extends RouteBuilder {
                         route.to(action);
                         validActions++;
                     }
-                } else if (item instanceof InvokeEndpoint) {
-                    InvokeEndpoint invokeEndpoint = (InvokeEndpoint) item;
+                } else if (item instanceof Endpoint) {
+                    Endpoint invokeEndpoint = (Endpoint) item;
                     String chain = invokeEndpoint.getUrl();
                     if (!Strings.isEmpty(chain)) {
                         // lets configure the http component

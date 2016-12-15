@@ -20,34 +20,38 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
- * Invokes an endpoint (typically HTTP or HTTPS) with the payload
+ * Invokes a function with the current payload
  */
 @JsonDeserialize(
     using = JsonDeserializer.None.class
 )
-public class InvokeEndpoint extends Step {
-    private String url;
+public class Function extends Step {
+    private String name;
 
-    public InvokeEndpoint() {
-        super("endpoint");
+    public Function() {
+        super("function");
     }
 
-    public InvokeEndpoint(String url) {
+    public Function(String name) {
         this();
-        this.url = url;
+        this.name = name;
     }
 
     @Override
     public String toString() {
-        return "Endpoint: " + url;
+        return "Function: " + name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getName() {
+        return name;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getKind() {
+        return "function";
     }
 
 }

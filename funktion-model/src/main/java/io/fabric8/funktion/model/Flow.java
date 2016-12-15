@@ -17,8 +17,8 @@
 package io.fabric8.funktion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.fabric8.funktion.model.steps.InvokeEndpoint;
-import io.fabric8.funktion.model.steps.InvokeFunction;
+import io.fabric8.funktion.model.steps.Endpoint;
+import io.fabric8.funktion.model.steps.Function;
 import io.fabric8.funktion.model.steps.SetBody;
 import io.fabric8.funktion.model.steps.SetHeaders;
 import io.fabric8.funktion.model.steps.Step;
@@ -69,12 +69,12 @@ public class Flow extends DtoSupport {
 
     // Steps
     //-------------------------------------------------------------------------
-    public Flow addEndpoint(String url) {
-        return addStep(new InvokeEndpoint(url));
+    public Flow endpoint(String url) {
+        return addStep(new Endpoint(url));
     }
 
-    public Flow addFunction(String name) {
-        return addStep(new InvokeFunction(name));
+    public Flow function(String name) {
+        return addStep(new Function(name));
     }
 
     public Flow setBody(String body) {

@@ -17,8 +17,8 @@
 package io.fabric8.funktion.model;
 
 import io.fabric8.funktion.model.steps.Step;
-import io.fabric8.funktion.model.steps.InvokeEndpoint;
-import io.fabric8.funktion.model.steps.InvokeFunction;
+import io.fabric8.funktion.model.steps.Endpoint;
+import io.fabric8.funktion.model.steps.Function;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,8 +56,8 @@ public class ModelUnmarshalTest {
         assertThat(actualRuleActions).hasSize(1);
 
         Step actualAction1 = actualRuleActions.get(0);
-        assertThat(actualAction1).isInstanceOf(InvokeFunction.class);
-        InvokeFunction actualFunction = (InvokeFunction) actualAction1;
+        assertThat(actualAction1).isInstanceOf(Function.class);
+        Function actualFunction = (Function) actualAction1;
         assertThat(actualFunction.getName()).isEqualTo("io.fabric8.funktion.example.Main::cheese");
         assertThat(actualFunction.getKind()).isEqualTo("function");
 
@@ -69,8 +69,8 @@ public class ModelUnmarshalTest {
         assertThat(actualRuleActions2).hasSize(1);
 
         Step actualAction2 = actualRuleActions2.get(0);
-        assertThat(actualAction2).isInstanceOf(InvokeEndpoint.class);
-        InvokeEndpoint actualEndpoint = (InvokeEndpoint) actualAction2;
+        assertThat(actualAction2).isInstanceOf(Endpoint.class);
+        Endpoint actualEndpoint = (Endpoint) actualAction2;
         assertThat(actualEndpoint.getUrl()).isEqualTo("activemq:whatnot");
         assertThat(actualEndpoint.getKind()).isEqualTo("endpoint");
     }

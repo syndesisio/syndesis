@@ -17,8 +17,8 @@
 package io.fabric8.funktion.model;
 
 import io.fabric8.funktion.model.steps.Step;
-import io.fabric8.funktion.model.steps.InvokeEndpoint;
-import io.fabric8.funktion.model.steps.InvokeFunction;
+import io.fabric8.funktion.model.steps.Endpoint;
+import io.fabric8.funktion.model.steps.Function;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +43,8 @@ public class ModelMarshalTest {
         Flow expectedRule = expected.createFlow();
         expectedRule.setName(expectedName);
         expectedRule.setTrigger(expectedTrigger);
-        expectedRule.addStep(new InvokeFunction(expectedFunctionName));
-        expectedRule.addStep(new InvokeEndpoint(expectedEndpointUrl));
+        expectedRule.addStep(new Function(expectedFunctionName));
+        expectedRule.addStep(new Endpoint(expectedEndpointUrl));
 
         String yaml = Funktions.toYaml(expected);
 
@@ -63,16 +63,16 @@ public class ModelMarshalTest {
         assertThat(actualRuleActions).hasSize(2);
 
         Step actualAction1 = actualRuleActions.get(0);
-        assertThat(actualAction1).isInstanceOf(InvokeFunction.class);
+        assertThat(actualAction1).isInstanceOf(Function.class);
 
         Step actualAction2 = actualRuleActions.get(1);
-        assertThat(actualAction2).isInstanceOf(InvokeEndpoint.class);
+        assertThat(actualAction2).isInstanceOf(Endpoint.class);
 
-        InvokeFunction actualFunction = (InvokeFunction) actualAction1;
+        Function actualFunction = (Function) actualAction1;
         assertThat(actualFunction.getName()).isEqualTo(expectedFunctionName);
         assertThat(actualFunction.getKind()).isEqualTo("function");
 
-        InvokeEndpoint actualEndpoint = (InvokeEndpoint) actualAction2;
+        Endpoint actualEndpoint = (Endpoint) actualAction2;
         assertThat(actualEndpoint.getUrl()).isEqualTo(expectedEndpointUrl);
         assertThat(actualEndpoint.getKind()).isEqualTo("endpoint");
     }
