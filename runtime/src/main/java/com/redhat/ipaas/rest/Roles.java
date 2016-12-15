@@ -36,9 +36,6 @@ public class Roles {
     @Inject
     private DataManager dataMgr;
 
-    @Context
-    private UriInfo uri;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List roles")
@@ -52,7 +49,7 @@ public class Roles {
                                         "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
 
     })
-    public Collection<Role> list() {
+    public Collection<Role> list(@Context UriInfo uri) {
         return dataMgr.fetchAll(Role.KIND,
             new ReflectiveSorter<>(Role.class, new SortOptionsFromQueryParams(uri)));
     }

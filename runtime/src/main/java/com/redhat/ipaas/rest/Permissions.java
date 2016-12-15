@@ -36,9 +36,6 @@ public class Permissions {
     @Inject
     private DataManager dataMgr;
 
-    @Context
-    private UriInfo uri;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List permissions")
@@ -52,7 +49,7 @@ public class Permissions {
                                         "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
 
     })
-    public Collection<Permission> list() {
+    public Collection<Permission> list(@Context UriInfo uri) {
         return dataMgr.fetchAll(Permission.KIND,
             new ReflectiveSorter<>(Permission.class, new SortOptionsFromQueryParams(uri)));
     }

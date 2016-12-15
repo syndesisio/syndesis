@@ -36,9 +36,6 @@ public class Users {
     @Inject
     private DataManager dataMgr;
 
-    @Context
-    private UriInfo uri;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List users")
@@ -52,7 +49,7 @@ public class Users {
                                         "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
 
     })
-    public Collection<User> list() {
+    public Collection<User> list(@Context UriInfo uri) {
         return dataMgr.fetchAll(User.KIND,
             new ReflectiveSorter<>(User.class, new SortOptionsFromQueryParams(uri)));
     }

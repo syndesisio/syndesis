@@ -41,8 +41,6 @@ public class Integrations {
     private DataManager dataMgr;
 
     @Context
-    private UriInfo uri;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List integrations")
@@ -56,7 +54,7 @@ public class Integrations {
                                         "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
 
     })
-    public Collection<Integration> list() {
+    public Collection<Integration> list(@Context UriInfo uri) {
         return dataMgr.fetchAll(Integration.KIND,
             new ReflectiveSorter<>(Integration.class, new SortOptionsFromQueryParams(uri)));
     }

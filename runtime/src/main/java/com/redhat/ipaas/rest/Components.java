@@ -37,9 +37,6 @@ public class Components {
     @Inject
     private DataManager dataMgr;
 
-    @Context
-    private UriInfo uri;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List components")
@@ -53,7 +50,7 @@ public class Components {
                                         "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
 
     })
-    public Collection<Component> list() {
+    public Collection<Component> list(@Context UriInfo uri) {
         return dataMgr.fetchAll(Component.KIND, new ReflectiveSorter<>(Component.class, new SortOptionsFromQueryParams(uri)));
     }
 

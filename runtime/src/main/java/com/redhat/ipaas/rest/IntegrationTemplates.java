@@ -40,9 +40,6 @@ public class IntegrationTemplates {
     @Inject
     private DataManager dataMgr;
 
-    @Context
-    private UriInfo uri;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List integration templates")
@@ -56,7 +53,7 @@ public class IntegrationTemplates {
                                         "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
 
     })
-    public Collection<IntegrationTemplate> list() {
+    public Collection<IntegrationTemplate> list(@Context UriInfo uri) {
         return dataMgr.fetchAll(IntegrationTemplate.KIND,
             new ReflectiveSorter<>(IntegrationTemplate.class, new SortOptionsFromQueryParams(uri)));
     }

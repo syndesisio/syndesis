@@ -40,9 +40,6 @@ public class Connections {
     @Inject
     private DataManager dataMgr;
 
-    @Context
-    private UriInfo uri;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List connections")
@@ -56,7 +53,7 @@ public class Connections {
                                         "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
 
     })
-    public Collection<Connection> list() {
+    public Collection<Connection> list(@Context UriInfo uri) {
         return dataMgr.fetchAll(Connection.KIND, new ReflectiveSorter<>(Connection.class, new SortOptionsFromQueryParams(uri)));
     }
 

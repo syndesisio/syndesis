@@ -37,9 +37,6 @@ public class IntegrationPatterns {
     @Inject
     private DataManager dataMgr;
 
-    @Context
-    private UriInfo uri;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List integration patterns")
@@ -53,7 +50,7 @@ public class IntegrationPatterns {
                                         "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
 
     })
-    public Collection<IntegrationPattern> list() {
+    public Collection<IntegrationPattern> list(@Context UriInfo uri) {
         return dataMgr.fetchAll(IntegrationPattern.KIND,
             new ReflectiveSorter<>(IntegrationPattern.class, new SortOptionsFromQueryParams(uri)));
     }
