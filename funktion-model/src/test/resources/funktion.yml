@@ -2,12 +2,12 @@ flows:
   - name: thingy
     steps:
     - kind: endpoint
-      url: http://0.0.0.0:8080
+      uri: http://0.0.0.0:8080
     - kind: function
       name: io.fabric8.funktion.example.Main::cheese
   - name: another
     steps:
     - kind: endpoint
-      url: http://0.0.0.0:8080
+      uri: http://0.0.0.0:8080
     - kind: endpoint
-      url: activemq:whatnot
+      uri: activemq:whatnot

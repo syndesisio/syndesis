@@ -69,8 +69,8 @@ public class Flow extends DtoSupport {
 
     // Steps
     //-------------------------------------------------------------------------
-    public Flow endpoint(String url) {
-        return addStep(new Endpoint(url));
+    public Flow endpoint(String uri) {
+        return addStep(new Endpoint(uri));
     }
 
     public Flow function(String name) {

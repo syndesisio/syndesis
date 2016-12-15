@@ -40,7 +40,7 @@ public class FunktionAssertions {
 
     public static Endpoint assertEndpointStep(Flow flow, int index, String expectedUri) {
         Endpoint step = assertFlowHasStep(flow, index, Endpoint.class);
-        assertThat(step.getUrl()).describedAs("flow " + flow + " step " + index + " endpoint " + step + " URI").isEqualTo(expectedUri);
+        assertThat(step.getUri()).describedAs("flow " + flow + " step " + index + " endpoint " + step + " URI").isEqualTo(expectedUri);
         assertThat(step.getKind()).describedAs("flow " + flow + " step " + index + " endpoint " + step + " kind").isEqualTo(StepKinds.ENDPOINT);
         return step;
     }

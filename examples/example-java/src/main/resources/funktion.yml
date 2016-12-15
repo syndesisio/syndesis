@@ -4,13 +4,13 @@ flows:
     logResult: true
     steps:
     - kind: endpoint
-      url: http
+      uri: http
     - kind: function
       name: io.fabric8.funktion.example.Main::cheese
   - name: thirsty
     logResult: true
     steps:
     - kind: endpoint
-      url: http:bar
+      uri: http:bar
     - kind: function
       name: io.fabric8.funktion.example.Main::wine

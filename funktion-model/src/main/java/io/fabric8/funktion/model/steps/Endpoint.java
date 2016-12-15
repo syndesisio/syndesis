@@ -21,34 +21,34 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.fabric8.funktion.model.StepKinds;
 
 /**
- * Invokes an endpoint (typically HTTP or HTTPS) with the payload
+ * Invokes an endpoint URI (typically HTTP or HTTPS) with the current payload
  */
 @JsonDeserialize(
     using = JsonDeserializer.None.class
 )
 public class Endpoint extends Step {
-    private String url;
+    private String uri;
 
     public Endpoint() {
         super(StepKinds.ENDPOINT);
     }
 
-    public Endpoint(String url) {
+    public Endpoint(String uri) {
         this();
-        this.url = url;
+        this.uri = uri;
     }
 
     @Override
     public String toString() {
-        return "Endpoint: " + url;
+        return "Endpoint: " + uri;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUri() {
+        return uri;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
 }

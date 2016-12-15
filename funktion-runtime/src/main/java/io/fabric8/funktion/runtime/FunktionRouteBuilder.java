@@ -126,7 +126,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
                     }
                 } else if (item instanceof Endpoint) {
                     Endpoint invokeEndpoint = (Endpoint) item;
-                    String uri = invokeEndpoint.getUrl();
+                    String uri = invokeEndpoint.getUri();
                     if (!Strings.isEmpty(uri)) {
                         // lets configure the http component
                         if (uri.startsWith("http:") || uri.startsWith("https:")) {
