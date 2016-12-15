@@ -145,8 +145,6 @@
     <module>starter-parent</module>
     <module>examples</module>
     <module>connector-generator</module>
-    <module>connectors</module>
-    <module>connector-package</module>
     <module>runtimes</module>
   </modules>
 
@@ -303,7 +301,18 @@
 
   <profiles>
     <profile>
+      <id>connectors</id>
+      <modules>
+        <module>connectors</module>
+        <module>connector-package</module>
+      </modules>
+    </profile>
+    <profile>
       <id>release</id>
+      <modules>
+        <module>connectors</module>
+        <module>connector-package</module>
+      </modules>
       <build>
         <plugins>
           <plugin>
