@@ -53,8 +53,8 @@ public class DataManagerTest {
 	@Test
 	public void getComponent() {
 	    Component component = dataManager.fetch(Component.KIND,"1");
-		System.out.println(component.name());
-		assertEquals("First Component in the deployment.json is non", "non", component.name());
+		System.out.println(component.getName());
+		assertEquals("First Component in the deployment.json is non", "non", component.getName());
 	}
 
 	@Test(expected = EntityExistsException.class)
@@ -77,7 +77,7 @@ public class DataManagerTest {
         dataManager.update(integration);
 
 		Integration i = dataManager.fetch(Integration.KIND, integration.getId().get());
-		assertEquals("Name should be updated", "new updated name", i.name());
+		assertEquals("Name should be updated", "new updated name", i.getName());
 	}
 
 }

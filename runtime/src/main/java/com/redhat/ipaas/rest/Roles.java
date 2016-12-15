@@ -16,18 +16,17 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.v1.model.Role;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.redhat.ipaas.rest.util.ReflectiveSorter;
+import io.swagger.annotations.*;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 
 @Path("/roles")
@@ -41,8 +40,18 @@ public class Roles {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List roles")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Role.class)})
-    public Collection<Role> list() {
-        return dataMgr.fetchAll(Role.KIND);
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "sort", value = "Sort the result list according to the given field value",
+            paramType = "query", dataType = "string"),
+        @ApiImplicitParam(
+            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
+                                        "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
+
+    })
+    public Collection<Role> list(@Context UriInfo uri) {
+        return dataMgr.fetchAll(Role.KIND,
+            new ReflectiveSorter<>(Role.class, new SortOptionsFromQueryParams(uri)));
     }
 
     @GET

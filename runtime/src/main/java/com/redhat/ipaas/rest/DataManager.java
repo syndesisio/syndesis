@@ -48,11 +48,13 @@ import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @ApplicationScoped
 public class DataManager {
@@ -175,9 +177,14 @@ public class DataManager {
         throw new ClassNotFoundException("No class found for model " + model);
     }
 
-    public <T> Collection<T> fetchAll(String model) {
+    @SuppressWarnings("unchecked")
+    public <T> List<T> fetchAll(String model, Function<List<T>, List<T>>... operators) {
         Map<String, WithId> entityMap = cache.computeIfAbsent(model, k -> new HashMap<>());
-        return (Collection<T>) entityMap.values();
+        List<T> result = new ArrayList<>((Collection<? extends T>) entityMap.values());
+        for (Function<List<T>, List<T>> operator : operators) {
+            result = operator.apply(result);
+        }
+        return result;
     }
 
     public <T> T fetch(String model, String id) {

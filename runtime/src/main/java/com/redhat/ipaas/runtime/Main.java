@@ -47,7 +47,7 @@ public class Main {
             setResourcePackages("com.redhat.ipaas.rest");
         JAXRSArchive jaxrs = archive.as(JAXRSArchive.class).
             setContextRoot("v1").
-            addPackage("com.redhat.ipaas.rest").
+            addPackages(true, "com.redhat.ipaas.rest").
             addClass(VersionEndpoint.class).
             addAllDependencies();
 

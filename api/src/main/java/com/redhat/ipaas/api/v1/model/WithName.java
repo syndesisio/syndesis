@@ -17,6 +17,6 @@ package com.redhat.ipaas.api.v1.model;
 
 public interface WithName {
 
-    String name();
+    String getName();
 
 }

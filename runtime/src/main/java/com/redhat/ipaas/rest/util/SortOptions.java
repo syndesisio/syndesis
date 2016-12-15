@@ -13,27 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.rest;
+package com.redhat.ipaas.rest.util;
 
-import com.redhat.ipaas.api.v1.model.Organization;
-import io.swagger.annotations.ApiOperation;
+/**
+ * @author roland
+ * @since 14/12/16
+ */
+public interface SortOptions {
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import java.util.HashSet;
-import java.util.Set;
+    String getSortField();
+    SortDirection getSortDirection();
 
-@Path("/organizations")
-public class Organizations {
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get an organization by ID")
-    public Set<Organization> doGet() {
-
-        Set<Organization> orgs = new HashSet<>();
-        return orgs;
+    enum SortDirection {
+        ASC,
+        DESC;
     }
 }

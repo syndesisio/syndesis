@@ -16,11 +16,8 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.v1.model.Integration;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.redhat.ipaas.rest.util.ReflectiveSorter;
+import io.swagger.annotations.*;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -31,7 +28,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 
 @Path("/integrations")
@@ -41,12 +40,23 @@ public class Integrations {
     @Inject
     private DataManager dataMgr;
 
+    @Context
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List integrations")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Integration.class)})
-    public Collection<Integration> list() {
-        return dataMgr.fetchAll(Integration.KIND);
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "sort", value = "Sort the result list according to the given field value",
+            paramType = "query", dataType = "string"),
+        @ApiImplicitParam(
+            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
+                                        "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
+
+    })
+    public Collection<Integration> list(@Context UriInfo uri) {
+        return dataMgr.fetchAll(Integration.KIND,
+            new ReflectiveSorter<>(Integration.class, new SortOptionsFromQueryParams(uri)));
     }
 
     @GET

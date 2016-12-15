@@ -16,6 +16,7 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.v1.model.ComponentGroup;
+import com.redhat.ipaas.rest.util.ReflectiveSorter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -24,10 +25,13 @@ import io.swagger.annotations.ApiResponses;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 
 @Path("/componentgroups")
@@ -37,12 +41,15 @@ public class ComponentGroups {
     @Inject
     private DataManager dataMgr;
 
+    @Context
+    private UriInfo uri;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "List component groups")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = ComponentGroup.class)})
     public Collection<ComponentGroup> list() {
-        return dataMgr.fetchAll(ComponentGroup.KIND);
+        return dataMgr.fetchAll(ComponentGroup.KIND, new ReflectiveSorter<>(ComponentGroup.class, new SortOptionsFromQueryParams(uri)));
     }
 
     @GET
