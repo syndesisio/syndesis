@@ -17,8 +17,8 @@
 package io.fabric8.funktion.agent;
 
 import io.fabric8.funktion.model.DtoSupport;
-import io.fabric8.funktion.model.Funktion;
 import io.fabric8.funktion.model.Flow;
+import io.fabric8.funktion.model.Funktion;
 import io.fabric8.utils.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +50,11 @@ public class SubscribeRequest extends DtoSupport {
         this.namespace = namespace;
     }
 
+    public static String getURIScheme(String text) throws URISyntaxException {
+        URI uri = new URI(text);
+        return uri.getScheme();
+    }
+
     @Override
     public String toString() {
         return "CreateFlowRequest{" +
@@ -79,12 +84,6 @@ public class SubscribeRequest extends DtoSupport {
         }
         return answer;
     }
-
-    public static String getURIScheme(String text) throws URISyntaxException {
-        URI uri = new URI(text);
-        return uri.getScheme();
-    }
-
 
     public Funktion getFunktion() {
         return funktion;

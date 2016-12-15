@@ -20,8 +20,6 @@ import io.fabric8.funktion.agent.support.CamelTester;
 import io.fabric8.funktion.agent.support.TestRouteBuilder;
 import io.fabric8.funktion.model.Funktion;
 import io.fabric8.kubernetes.api.KubernetesHelper;
-import org.apache.camel.RoutesBuilder;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -40,6 +38,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 
 /**
+ * This test case will spin up a new Funktion Subscription with a YAML file in a new Deployment then assert
+ * that the Funktion flow writes the correct data to Elasticsearch running inside Kubernetes then ensure the
+ * subscription is torn down again
  */
 public class AgentKT {
     private static final transient Logger LOG = LoggerFactory.getLogger(AgentKT.class);

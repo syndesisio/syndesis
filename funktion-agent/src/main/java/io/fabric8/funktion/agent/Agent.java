@@ -40,8 +40,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static io.fabric8.funktion.ApplicationProperties.toPropertiesString;
-import static io.fabric8.funktion.support.YamlHelper.createYamlMapper;
 import static io.fabric8.funktion.Labels.Kind.SUBSCRIPTION;
+import static io.fabric8.funktion.support.YamlHelper.createYamlMapper;
 import static io.fabric8.utils.Lists.notNullList;
 
 /**

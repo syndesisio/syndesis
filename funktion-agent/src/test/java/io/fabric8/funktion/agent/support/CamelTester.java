@@ -33,16 +33,6 @@ public class CamelTester {
     protected final TestRouteBuilder routeBuilder;
     protected final CamelContext camelContext;
 
-    public static void assertIsSatisfied(TestRouteBuilder routeBuilder) throws Exception {
-        CamelTester tester = new CamelTester(routeBuilder);
-        tester.assertIsSatisfied();
-    }
-
-    public static void assertIsSatisfied(TestRouteBuilder routeBuilder, CamelContext camelContext) throws Exception {
-        CamelTester tester = new CamelTester(routeBuilder, camelContext);
-        tester.assertIsSatisfied();
-    }
-
     public CamelTester(TestRouteBuilder routeBuilder) {
         this(routeBuilder, new DefaultCamelContext());
     }
@@ -52,6 +42,15 @@ public class CamelTester {
         this.camelContext = camelContext;
     }
 
+    public static void assertIsSatisfied(TestRouteBuilder routeBuilder) throws Exception {
+        CamelTester tester = new CamelTester(routeBuilder);
+        tester.assertIsSatisfied();
+    }
+
+    public static void assertIsSatisfied(TestRouteBuilder routeBuilder, CamelContext camelContext) throws Exception {
+        CamelTester tester = new CamelTester(routeBuilder, camelContext);
+        tester.assertIsSatisfied();
+    }
 
     /**
      * Asserts that the expectations in the <code>routeBuilder</code> are satisfied
