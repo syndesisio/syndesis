@@ -247,6 +247,7 @@
             <exclude>${integrationTestPattern}</exclude>
           </excludes>
         </configuration>
+<!--
         <executions>
           <execution>
             <id>int-test</id>
@@ -265,6 +266,7 @@
             </configuration>
           </execution>
         </executions>
+-->
       </plugin>
     </plugins>
   </build>

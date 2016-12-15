@@ -51,6 +51,14 @@ public class Agent {
 
     private KubernetesClient kubernetesClient = new DefaultKubernetesClient();
 
+    public KubernetesClient getKubernetesClient() {
+        return kubernetesClient;
+    }
+
+    public void setKubernetesClient(KubernetesClient kubernetesClient) {
+        this.kubernetesClient = kubernetesClient;
+    }
+
     public SubscribeResponse subscribe(SubscribeRequest request) throws InternalException {
         String namespace = request.getNamespace();
         Objects.notNull(namespace, "namespace");
@@ -61,8 +69,25 @@ public class Agent {
     }
 
 
+    public void unsubscribe(String namespace, String name) {
+        kubernetesClient.configMaps().inNamespace(namespace).withName(name).delete();
+    }
 
-    public ConfigMap createSubscriptionResource(SubscribeRequest request, String namespace) throws InternalException {
+    public String getCurrentNamespace() {
+        String answer = kubernetesClient.getNamespace();
+        if (Strings.isNullOrBlank(answer)) {
+            answer = KubernetesHelper.defaultNamespace();
+        }
+        if (Strings.isNullOrBlank(answer)) {
+            answer = System.getenv("KUBERNETES_NAMESPACE");
+        }
+        if (Strings.isNullOrBlank(answer)) {
+            answer = "default";
+        }
+        return answer;
+    }
+
+    protected ConfigMap createSubscriptionResource(SubscribeRequest request, String namespace) throws InternalException {
         Map<String, String> annotations = new LinkedHashMap<>();
         Map<String, String> data = new LinkedHashMap<>();
         Map<String, String> labels = new HashMap<>();
@@ -94,7 +119,7 @@ public class Agent {
                 throw new InternalException("Failed to marshal applicationProperties " + applicationProperties + ". " + e, e);
             }
             if (Strings.isNotBlank(applicationPropertiesText)) {
-                data.put(DataKeys.Connector.ASCIIDOC, applicationPropertiesText);
+                data.put(DataKeys.Subscription.APPLICATION_PROPERTIES, applicationPropertiesText);
             }
         }
         return new ConfigMapBuilder().
@@ -118,21 +143,4 @@ public class Agent {
         }
     }
 
-    public void unsubscribe(String namespace, String name) {
-        kubernetesClient.configMaps().inNamespace(namespace).withName(name).delete();
-    }
-
-    public String getCurrentNamespace() {
-        String answer = kubernetesClient.getNamespace();
-        if (Strings.isNullOrBlank(answer)) {
-            answer = KubernetesHelper.defaultNamespace();
-        }
-        if (Strings.isNullOrBlank(answer)) {
-            answer = System.getenv("KUBERNETES_NAMESPACE");
-        }
-        if (Strings.isNullOrBlank(answer)) {
-            answer = "default";
-        }
-        return answer;
-    }
 }
