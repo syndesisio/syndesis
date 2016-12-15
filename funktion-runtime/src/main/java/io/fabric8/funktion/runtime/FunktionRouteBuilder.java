@@ -81,112 +81,74 @@ public class FunktionRouteBuilder extends RouteBuilder {
         }
     }
 
-    protected void configureRule(Flow rule, int funktionIndex) throws MalformedURLException {
-        if (rule.isTraceEnabled()) {
+    protected void configureRule(Flow flow, int funktionIndex) throws MalformedURLException {
+        if (flow.isTraceEnabled()) {
             getContext().setTracing(true);
         }
 
-        String trigger = rule.getTrigger();
-        if (Strings.isEmpty(trigger)) {
-            trigger = DEFAULT_TRIGGER_URL;
-        }
 
-        StringBuilder message =  new StringBuilder("FUNKTION ");
-        String name = rule.getName();
+        StringBuilder message =  new StringBuilder("FLOW ");
+        String name = flow.getName();
         if (Strings.isEmpty(name)) {
-            name = "funktion" + (funktionIndex + 1);
-            rule.setName(name);
+            name = "flow" + (funktionIndex + 1);
+            flow.setName(name);
         }
-        message.append(name);
-        message.append("() ");
-        message.append(trigger);
-
-        if (trigger.equals("http")) {
-            trigger = DEFAULT_HTTP_ENDPOINT_PREFIX;
-        } else if (trigger.startsWith("http:") || trigger.startsWith("https:") ||
-                   trigger.startsWith("http://") || trigger.startsWith("https://")) {
-            // lets add the HTTP endpoint prefix
-
-            // is there any context-path
-            String path = trigger.startsWith("https:") ? trigger.substring(6) : null;
-            if (path == null) {
-                path = trigger.startsWith("http:") ? trigger.substring(5) : null;
-            }
-            if (path == null) {
-                path = trigger.startsWith("https://") ? trigger.substring(8) : null;
-            }
-            if (path == null) {
-                path = trigger.startsWith("http://") ? trigger.substring(7) : null;
-            }
-
-            if (path != null) {
-                // keep only context path
-                if (path.contains("/")) {
-                    path = path.substring(path.indexOf('/'));
-                }
-            }
-            if (path != null) {
-                trigger = path;
-            }
-
-            trigger = DEFAULT_HTTP_ENDPOINT_PREFIX + "/" + trigger;
-        }
-
-        RouteDefinition route = from(trigger);
-        route.id(name);
-        List<Step> actions = rule.getSteps();
-        int validActions = 0;
-        if (actions != null) {
-            for (Step item : actions) {
+        RouteDefinition route = null;
+        List<Step> steps = flow.getSteps();
+        int validSteps = 0;
+        if (steps != null) {
+            for (Step item : steps) {
                 if (item instanceof Function) {
                     Function function = (Function) item;
-                    String action = function.getName();
-                    if (!Strings.isEmpty(action)) {
+                    String uri = function.getName();
+                    if (!Strings.isEmpty(uri)) {
                         String method = null;
-                        int idx = action.indexOf("::");
+                        int idx = uri.indexOf("::");
                         if (idx > 0) {
-                            method = action.substring(idx + 2);
-                            action = action.substring(0, idx);
+                            method = uri.substring(idx + 2);
+                            uri = uri.substring(0, idx);
                         }
 
                         message.append(" => ");
-                        message.append(action);
+                        message.append(uri);
 
                         if (method != null) {
                             message.append("." + method + "()");
-                            action += "?method=" + method;
+                            uri += "?method=" + method;
                         }
                         else {
                             message.append(".main()");
                         }
-                        action = "class:" + action;
+                        uri = "class:" + uri;
 
-                        route.to(action);
-                        validActions++;
+                        route = fromOrTo(route, name, uri, message);
+                        validSteps++;
                     }
                 } else if (item instanceof Endpoint) {
                     Endpoint invokeEndpoint = (Endpoint) item;
-                    String chain = invokeEndpoint.getUrl();
-                    if (!Strings.isEmpty(chain)) {
+                    String uri = invokeEndpoint.getUrl();
+                    if (!Strings.isEmpty(uri)) {
                         // lets configure the http component
-                        if (chain.startsWith("http:") || chain.startsWith("https:")) {
-                            HttpEndpoint endpoint = endpoint(chain, HttpEndpoint.class);
+                        if (uri.startsWith("http:") || uri.startsWith("https:")) {
+                            HttpEndpoint endpoint = endpoint(uri, HttpEndpoint.class);
                             if (endpoint != null) {
                                 // lets bridge them as a proxy
                                 endpoint.setBridgeEndpoint(true);
                                 endpoint.setThrowExceptionOnFailure(false);
                             }
                         }
-                        route.to(chain);
+                        route = fromOrTo(route, name, uri, message);
                         message.append(" => ");
-                        message.append(chain);
-                        validActions++;
+                        message.append(uri);
+                        validSteps++;
                     }
                 } else if (item instanceof SetBody) {
                     SetBody step = (SetBody) item;
+                    assertRouteNotNull(route, item);
                     route.setBody(constant(step.getBody()));
                 } else if (item instanceof SetHeaders) {
                     SetHeaders step = (SetHeaders) item;
+                    assertRouteNotNull(route, item);
                     Map<String, Object> headers = step.getHeaders();
                     if (headers != null) {
                         Set<Map.Entry<String, Object>> entries = headers.entrySet();
@@ -201,22 +163,78 @@ public class FunktionRouteBuilder extends RouteBuilder {
                 }
             }
         }
-        if (rule.isLogResultEnabled()) {
+        if (route == null || validSteps == 0) {
+            throw new IllegalStateException("No valid steps! Invalid flow " + flow);
+
+        }
+        if (flow.isLogResultEnabled()) {
             String chain = "log:" +name + "?showStreams=true";
             route.to(chain);
             message.append(" => ");
             message.append(chain);
-            validActions++;
+            validSteps++;
         }
         LOG.info(message.toString());
 
-        if (validActions == 0) {
-            throw new IllegalStateException("No valid actions! Invalid rule " + trigger);
-        }
-
-        if (rule.isSingleMessageModeEnabled()) {
+        if (flow.isSingleMessageModeEnabled()) {
             LOG.info("Enabling single message mode so that only one message is consumed for Design Mode");
             getContext().addRoutePolicyFactory(new SingleMessageRoutePolicyFactory());
         }
     }
+
+    protected void assertRouteNotNull(RouteDefinition route, Step item) {
+        if (route == null) {
+            throw new IllegalArgumentException("You cannot use a " + item.getKind() + " step before you have started a flow with an endpoint or function!");
+        }
+    }
+
+    protected RouteDefinition fromOrTo(RouteDefinition route, String name, String endpoint, StringBuilder message) {
+        if (route == null) {
+            String trigger = endpoint;
+            if (Strings.isEmpty(trigger)) {
+                trigger = DEFAULT_TRIGGER_URL;
+            }
+            message.append(name);
+            message.append("() ");
+            message.append(trigger);
+
+            if (trigger.equals("http")) {
+                trigger = DEFAULT_HTTP_ENDPOINT_PREFIX;
+            } else if (trigger.startsWith("http:") || trigger.startsWith("https:") ||
+                       trigger.startsWith("http://") || trigger.startsWith("https://")) {
+                // lets add the HTTP endpoint prefix
+
+                // is there any context-path
+                String path = trigger.startsWith("https:") ? trigger.substring(6) : null;
+                if (path == null) {
+                    path = trigger.startsWith("http:") ? trigger.substring(5) : null;
+                }
+                if (path == null) {
+                    path = trigger.startsWith("https://") ? trigger.substring(8) : null;
+                }
+                if (path == null) {
+                    path = trigger.startsWith("http://") ? trigger.substring(7) : null;
+                }
+
+                if (path != null) {
+                    // keep only context path
+                    if (path.contains("/")) {
+                        path = path.substring(path.indexOf('/'));
+                    }
+                }
+                if (path != null) {
+                    trigger = path;
+                }
+
+                trigger = DEFAULT_HTTP_ENDPOINT_PREFIX + "/" + trigger;
+            }
+            route = from(trigger);
+            route.id(name);
+        } else {
+            route.to(endpoint);
+        }
+        return route;
+    }
+
+
 }

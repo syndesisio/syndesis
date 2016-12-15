@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 
+import static io.fabric8.funktion.model.FunktionAssertions.assertEndpointStep;
+import static io.fabric8.funktion.model.FunktionAssertions.assertFlow;
+import static io.fabric8.funktion.model.FunktionAssertions.assertFunctionStep;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -44,35 +47,17 @@ public class ModelUnmarshalTest {
         }
 
 
-        List<Flow> actualRules = config.getFlows();
-        assertThat(actualRules).hasSize(2);
-
-        Flow actualRule1 = actualRules.get(0);
-        Flow actualRule2 = actualRules.get(1);
-
-        assertThat(actualRule1.getName()).describedAs("name").isEqualTo("thingy");
-        assertThat(actualRule1.getTrigger()).describedAs("trigger").isEqualTo("http://0.0.0.0:8080");
-        List<Step> actualRuleActions = actualRule1.getSteps();
-        assertThat(actualRuleActions).hasSize(1);
-
-        Step actualAction1 = actualRuleActions.get(0);
-        assertThat(actualAction1).isInstanceOf(Function.class);
-        Function actualFunction = (Function) actualAction1;
-        assertThat(actualFunction.getName()).isEqualTo("io.fabric8.funktion.example.Main::cheese");
-        assertThat(actualFunction.getKind()).isEqualTo("function");
+        Flow actualFlow1 = assertFlow(config, 0);
+        Flow actualFlow2 =  assertFlow(config, 1);
 
 
+        assertThat(actualFlow1.getName()).describedAs("name").isEqualTo("thingy");
+        assertEndpointStep(actualFlow1, 0, "http://0.0.0.0:8080");
+        assertFunctionStep(actualFlow1, 1, "io.fabric8.funktion.example.Main::cheese");
 
-        assertThat(actualRule2.getName()).describedAs("name").isEqualTo("another");
-        assertThat(actualRule2.getTrigger()).describedAs("trigger").isEqualTo("activemq:foo.bar");
-        List<Step> actualRuleActions2 = actualRule2.getSteps();
-        assertThat(actualRuleActions2).hasSize(1);
-
-        Step actualAction2 = actualRuleActions2.get(0);
-        assertThat(actualAction2).isInstanceOf(Endpoint.class);
-        Endpoint actualEndpoint = (Endpoint) actualAction2;
-        assertThat(actualEndpoint.getUrl()).isEqualTo("activemq:whatnot");
-        assertThat(actualEndpoint.getKind()).isEqualTo("endpoint");
+        assertThat(actualFlow2.getName()).describedAs("name").isEqualTo("another");
+        assertEndpointStep(actualFlow2, 0, "http://0.0.0.0:8080");
+        assertEndpointStep(actualFlow2, 1, "activemq:whatnot");
     }
 
 

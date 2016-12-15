@@ -18,6 +18,7 @@ package io.fabric8.funktion.model.steps;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.fabric8.funktion.model.StepKinds;
 
 /**
  * Invokes an endpoint (typically HTTP or HTTPS) with the payload
@@ -29,7 +30,7 @@ public class Endpoint extends Step {
     private String url;
 
     public Endpoint() {
-        super("endpoint");
+        super(StepKinds.ENDPOINT);
     }
 
     public Endpoint(String url) {

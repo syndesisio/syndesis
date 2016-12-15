@@ -36,8 +36,8 @@ public class Flow extends DtoSupport {
     private Boolean singleMessageMode;
     private List<Step> steps = new ArrayList<>();
 
-    public Flow addStep(Step action) {
-        steps.add(action);
+    public Flow addStep(Step step) {
+        steps.add(step);
         return this;
     }
 
@@ -97,9 +97,9 @@ public class Flow extends DtoSupport {
             builder.append(trigger);
         }
         if (steps != null) {
-            for (Step action : steps) {
+            for (Step step : steps) {
                 builder.append(" => ");
-                builder.append(action);
+                builder.append(step);
             }
         }
         if (isTraceEnabled()) {

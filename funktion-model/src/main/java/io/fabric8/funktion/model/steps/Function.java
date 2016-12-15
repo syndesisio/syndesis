@@ -18,6 +18,7 @@ package io.fabric8.funktion.model.steps;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.fabric8.funktion.model.StepKinds;
 
 /**
  * Invokes a function with the current payload
@@ -29,7 +30,7 @@ public class Function extends Step {
     private String name;
 
     public Function() {
-        super("function");
+        super(StepKinds.FUNCTION);
     }
 
     public Function(String name) {
@@ -48,10 +49,6 @@ public class Function extends Step {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getKind() {
-        return "function";
     }
 
 }
