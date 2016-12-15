@@ -100,28 +100,27 @@ public class FunktionRouteBuilder extends RouteBuilder {
             for (Step item : steps) {
                 if (item instanceof Function) {
                     Function function = (Function) item;
-                    String uri = function.getName();
-                    if (!Strings.isEmpty(uri)) {
+                    String functionName = function.getName();
+                    if (!Strings.isEmpty(functionName)) {
                         String method = null;
-                        int idx = uri.indexOf("::");
+                        int idx = functionName.indexOf("::");
                         if (idx > 0) {
-                            method = uri.substring(idx + 2);
-                            uri = uri.substring(0, idx);
+                            method = functionName.substring(idx + 2);
+                            functionName = functionName.substring(0, idx);
                         }
+                        String uri = "class:" + functionName;
+                        if (method != null) {
+                            uri += "?method=" + method;
+                        }
+                        route = fromOrTo(route, name, uri, message);
 
-                        message.append(" => ");
-                        message.append(uri);
-
+                        message.append(functionName);
                         if (method != null) {
                             message.append("." + method + "()");
-                            uri += "?method=" + method;
                         }
                         else {
                             message.append(".main()");
                         }
-                        uri = "class:" + uri;
-
-                        route = fromOrTo(route, name, uri, message);
                         validSteps++;
                     }
                 } else if (item instanceof Endpoint) {
@@ -138,7 +137,6 @@ public class FunktionRouteBuilder extends RouteBuilder {
                             }
                         }
                         route = fromOrTo(route, name, uri, message);
-                        message.append(" => ");
                         message.append(uri);
                         validSteps++;
                     }
@@ -196,7 +194,6 @@ public class FunktionRouteBuilder extends RouteBuilder {
             }
             message.append(name);
             message.append("() ");
-            message.append(trigger);
 
             if (trigger.equals("http")) {
                 trigger = DEFAULT_HTTP_ENDPOINT_PREFIX;
@@ -231,6 +228,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
             route = from(trigger);
             route.id(name);
         } else {
+            message.append(" => ");
             route.to(endpoint);
         }
         return route;
