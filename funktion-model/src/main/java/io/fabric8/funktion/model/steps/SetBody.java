@@ -14,44 +14,43 @@
  * permissions and limitations under the License.
  *
  */
-package io.fabric8.funktion.model;
+package io.fabric8.funktion.model.steps;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
- * Invokes a function with the current payload
+ * Sets the payload
  */
 @JsonDeserialize(
-    using = JsonDeserializer.None.class
+        using = JsonDeserializer.None.class
 )
-public class InvokeFunction extends FunktionAction {
-    private String name;
+public class SetBody extends Step {
+    private String body;
 
-    public InvokeFunction() {
-        super("function");
+    public SetBody() {
+        super("setBody");
     }
 
-    public InvokeFunction(String name) {
+    public SetBody(String body) {
         this();
-        this.name = name;
+        this.body = body;
     }
 
     @Override
     public String toString() {
-        return "Function: " + name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return "SetBody: " + body;
     }
 
     public String getKind() {
-        return "function";
+        return "setBody";
     }
 
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 }

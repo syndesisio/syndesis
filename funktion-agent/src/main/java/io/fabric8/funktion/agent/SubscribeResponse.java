@@ -14,31 +14,34 @@
  * permissions and limitations under the License.
  *
  */
-package io.fabric8.funktion.model;
+package io.fabric8.funktion.agent;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.fabric8.funktion.model.DtoSupport;
 
 /**
- * Represents the funktion configuration
  */
-public class FunktionConfig extends DtoSupport {
-    private List<FunktionRule> rules = new ArrayList<>();
+public class SubscribeResponse extends DtoSupport {
+    private final String namespace;
+    private final String name;
 
-    public List<FunktionRule> getRules() {
-        return rules;
+    public SubscribeResponse(String namespace, String name) {
+        this.namespace = namespace;
+        this.name = name;
     }
 
-    public void setRules(List<FunktionRule> rules) {
-        this.rules = rules;
+    @Override
+    public String toString() {
+        return "CreateFlowResponse{" +
+                "namespace='" + namespace + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 
-    public FunktionRule createRule() {
-        return addRule(new FunktionRule());
+    public String getNamespace() {
+        return namespace;
     }
 
-    public FunktionRule addRule(FunktionRule rule) {
-        rules.add(rule);
-        return rule;
+    public String getName() {
+        return name;
     }
 }

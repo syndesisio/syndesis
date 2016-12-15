@@ -17,27 +17,78 @@
 package io.fabric8.funktion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.fabric8.funktion.model.steps.InvokeEndpoint;
+import io.fabric8.funktion.model.steps.InvokeFunction;
+import io.fabric8.funktion.model.steps.SetBody;
+import io.fabric8.funktion.model.steps.SetHeaders;
+import io.fabric8.funktion.model.steps.Step;
 import io.fabric8.funktion.support.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class FunktionRule extends DtoSupport {
+public class Flow extends DtoSupport {
     private String name;
     private String trigger;
     private Boolean trace;
     private Boolean logResult;
     private Boolean singleMessageMode;
-    private List<FunktionAction> actions = new ArrayList<>();
+    private List<Step> steps = new ArrayList<>();
 
-    public FunktionAction addAction(FunktionAction action) {
-        actions.add(action);
-        return action;
+    public Flow addStep(Step action) {
+        steps.add(action);
+        return this;
     }
+
+
+    public Flow name(String value) {
+        setName(value);
+        return this;
+    }
+
+    public Flow trigger(String value) {
+        setTrigger(value);
+        return this;
+    }
+
+    public Flow logResult(boolean value) {
+        setLogResult(value);
+        return this;
+    }
+
+    public Flow trace(boolean value) {
+        setTrace(value);
+        return this;
+    }
+
+    public Flow singleMessageMode(boolean value) {
+        setSingleMessageMode(value);
+        return this;
+    }
+
+    // Steps
+    //-------------------------------------------------------------------------
+    public Flow addEndpoint(String url) {
+        return addStep(new InvokeEndpoint(url));
+    }
+
+    public Flow addFunction(String name) {
+        return addStep(new InvokeFunction(name));
+    }
+
+    public Flow setBody(String body) {
+        return addStep(new SetBody(body));
+    }
+
+    public Flow setHeaders(Map<String,Object> headers) {
+        return addStep(new SetHeaders(headers));
+    }
+
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("FUNKTION ");
+        StringBuilder builder = new StringBuilder("Flow ");
         if (!Strings.isEmpty(name)) {
             builder.append(name);
             builder.append(": ");
@@ -45,8 +96,8 @@ public class FunktionRule extends DtoSupport {
         if (!Strings.isEmpty(trigger)) {
             builder.append(trigger);
         }
-        if (actions != null) {
-            for (FunktionAction action : actions) {
+        if (steps != null) {
+            for (Step action : steps) {
                 builder.append(" => ");
                 builder.append(action);
             }
@@ -56,6 +107,7 @@ public class FunktionRule extends DtoSupport {
         }
         return builder.toString();
     }
+
 
     public String getName() {
         return name;
@@ -73,12 +125,12 @@ public class FunktionRule extends DtoSupport {
         this.trigger = trigger;
     }
 
-    public List<FunktionAction> getActions() {
-        return actions;
+    public List<Step> getSteps() {
+        return steps;
     }
 
-    public void setActions(List<FunktionAction> actions) {
-        this.actions = actions;
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
     }
 
 

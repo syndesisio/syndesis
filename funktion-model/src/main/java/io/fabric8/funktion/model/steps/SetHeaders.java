@@ -14,40 +14,47 @@
  * permissions and limitations under the License.
  *
  */
-package io.fabric8.funktion.model;
+package io.fabric8.funktion.model.steps;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Invokes an endpoint (typically HTTP or HTTPS) with the payload
+ * Sets headers on the payload
  */
 @JsonDeserialize(
-    using = JsonDeserializer.None.class
+        using = JsonDeserializer.None.class
 )
-public class InvokeEndpoint extends FunktionAction {
-    private String url;
+public class SetHeaders extends Step {
+    private Map<String, Object> headers;
 
-    public InvokeEndpoint() {
-        super("endpoint");
+    public SetHeaders() {
+        super("setHeaders");
+        headers = new HashMap<>();
     }
 
-    public InvokeEndpoint(String url) {
-        this();
-        this.url = url;
+    public SetHeaders(Map<String, Object> headers) {
+        super("setHeaders");
+        this.headers = headers;
+    }
+
+    public String getKind() {
+        return "setHeaders";
     }
 
     @Override
     public String toString() {
-        return "Endpoint: " + url;
+        return "SetHeaders: " + headers;
     }
 
-    public String getUrl() {
-        return url;
+    public Map<String, Object> getHeaders() {
+        return headers;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setHeaders(Map<String, Object> headers) {
+        this.headers = headers;
     }
-
 }

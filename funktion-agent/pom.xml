@@ -25,68 +25,43 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>funktion-runtime</artifactId>
+  <artifactId>funktion-agent</artifactId>
   <packaging>jar</packaging>
 
-  <name>Funktion Runtime</name>
-  <description>Funktion :: Runtime</description>
+  <name>Funktion Agent</name>
+  <description>Funktion :: Agent</description>
 
   <properties>
-    <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>io.fabric8.funktion</groupId>
       <artifactId>funktion-model</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-spring-boot-starter</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-http-starter</artifactId>
+      <groupId>io.fabric8</groupId>
+      <artifactId>fabric8-utils</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-servlet-starter</artifactId>
+      <groupId>io.fabric8</groupId>
+      <artifactId>kubernetes-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-jackson-starter</artifactId>
-    </dependency>
-
-    <!-- spring-boot -->
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>${javax.servlet-api.version}</version>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-tomcat</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-undertow</artifactId>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
 
     <!-- testing -->
@@ -95,21 +70,41 @@
       <artifactId>assertj-core</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
+      <groupId>io.fabric8.funktion</groupId>
+      <artifactId>funktion-runtime</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${exec-maven-plugin.version}</version>
+        <configuration>
+          <mainClass>io.fabric8.funktion.agent.SimpleTest</mainClass>
+          <classpathScope>test</classpathScope>
+          <systemProperties>
+            <systemProperty>
+              <key>project.version</key>
+              <value>${project.version}</value>
+            </systemProperty>
+            <systemProperty>
+              <key>basedir</key>
+              <value>${basedir}</value>
+            </systemProperty>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

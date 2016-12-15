@@ -30,8 +30,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FunktionConfigs {
-    private static final transient Logger LOG = LoggerFactory.getLogger(FunktionConfigs.class);
+public class Funktions {
+    private static final transient Logger LOG = LoggerFactory.getLogger(Funktions.class);
 
     public static final String FILE_NAME = "funktion.yml";
 
@@ -43,15 +43,15 @@ public class FunktionConfigs {
     /**
      * Tries to load the configuration file from the current directory
      */
-    public static FunktionConfig load() throws IOException {
+    public static Funktion load() throws IOException {
         return findFromFolder(new File("."));
     }
 
 
-    protected static FunktionConfig loadFromFile(File file) throws IOException {
+    protected static Funktion loadFromFile(File file) throws IOException {
         LOG.debug("Parsing funktion configuration from: " + file.getName());
         try {
-            FunktionConfig config = FunktionConfigs.parseFunktionConfig(file);
+            Funktion config = Funktions.parseFunktionConfig(file);
             return validateConfig(config, file);
         } catch (IOException e) {
             throw new IOException("Failed to parse funktion config: " + file + ". " + e, e);
@@ -59,20 +59,20 @@ public class FunktionConfigs {
     }
 
 
-    public static FunktionConfig loadFromString(String yaml) throws IOException {
+    public static Funktion loadFromString(String yaml) throws IOException {
         return parseFunktionConfig(yaml);
     }
 
-    protected static FunktionConfig validateConfig(FunktionConfig config, File file) {
-        List<FunktionRule> rules = config.getRules();
+    protected static Funktion validateConfig(Funktion config, File file) {
+        List<Flow> rules = config.getFlows();
         if (rules.isEmpty()) {
             throw new IllegalStateException("No Funktion rules defined in file: " + file.getPath());
         }
         return config;
     }
 
-    protected static FunktionConfig validateConfig(FunktionConfig config, URL url) {
-        List<FunktionRule> rules = config.getRules();
+    protected static Funktion validateConfig(Funktion config, URL url) {
+        List<Flow> rules = config.getFlows();
         if (rules.isEmpty()) {
             throw new IllegalStateException("No Funktion rules defined in URL: " + url);
         }
@@ -83,7 +83,7 @@ public class FunktionConfigs {
     /**
      * Tries to find the configuration from the current directory or a parent folder.
      */
-    public static FunktionConfig findFromFolder(File folder) throws IOException {
+    public static Funktion findFromFolder(File folder) throws IOException {
         if (folder.isDirectory()) {
             File file = new File(folder, FILE_NAME);
             if (file != null && file.exists() && file.isFile()) {
@@ -98,7 +98,7 @@ public class FunktionConfigs {
             if (parentFile != null) {
                 return findFromFolder(parentFile);
             }
-            FunktionConfig answer = tryFindConfigOnClassPath();
+            Funktion answer = tryFindConfigOnClassPath();
             if (answer != null) {
                 return answer;
             }
@@ -106,18 +106,18 @@ public class FunktionConfigs {
         } else if (folder.isFile()) {
            return loadFromFile(folder);
         }
-        FunktionConfig answer = tryFindConfigOnClassPath();
+        Funktion answer = tryFindConfigOnClassPath();
         if (answer != null) {
             return answer;
         }
         throw new IOException("Funktion configuration folder does not exist: " + folder.getPath());
     }
 
-    protected static FunktionConfig tryFindConfigOnClassPath() throws IOException {
-        URL url = FunktionConfigs.class.getClassLoader().getResource(FILE_NAME);
+    protected static Funktion tryFindConfigOnClassPath() throws IOException {
+        URL url = Funktions.class.getClassLoader().getResource(FILE_NAME);
         if (url != null) {
             try {
-                FunktionConfig config = parseFunktionConfig(url);
+                Funktion config = parseFunktionConfig(url);
                 return validateConfig(config, url);
             } catch (IOException e) {
                 throw new IOException("Failed to parse funktion config: " + url + ". " + e, e);
@@ -141,22 +141,22 @@ public class FunktionConfigs {
         return new ObjectMapper(new YAMLFactory());
     }
 
-    public static FunktionConfig parseFunktionConfig(File file) throws IOException {
+    public static Funktion parseFunktionConfig(File file) throws IOException {
         LOG.info("Loading Funktion rules from file: " + file);
-        return parseYaml(file, FunktionConfig.class);
+        return parseYaml(file, Funktion.class);
     }
 
-    public static FunktionConfig parseFunktionConfig(InputStream input) throws IOException {
-        return parseYaml(input, FunktionConfig.class);
+    public static Funktion parseFunktionConfig(InputStream input) throws IOException {
+        return parseYaml(input, Funktion.class);
     }
 
-    public static FunktionConfig parseFunktionConfig(URL url) throws IOException {
+    public static Funktion parseFunktionConfig(URL url) throws IOException {
         LOG.info("Loading Funktion rules from URL: " + url);
-        return parseYaml(url, FunktionConfig.class);
+        return parseYaml(url, Funktion.class);
     }
 
-    public static FunktionConfig parseFunktionConfig(String yaml) throws IOException {
-        return parseYaml(yaml, FunktionConfig.class);
+    public static Funktion parseFunktionConfig(String yaml) throws IOException {
+        return parseYaml(yaml, Funktion.class);
     }
 
     private static <T> T parseYaml(File file, Class<T> clazz) throws IOException {
@@ -192,8 +192,8 @@ public class FunktionConfigs {
     /**
      * Saves the funktion.yml file to the given project directory
      */
-    public static boolean saveToFolder(File basedir, FunktionConfig config, boolean overwriteIfExists) throws IOException {
-        File file = new File(basedir, FunktionConfigs.FILE_NAME);
+    public static boolean saveToFolder(File basedir, Funktion config, boolean overwriteIfExists) throws IOException {
+        File file = new File(basedir, Funktions.FILE_NAME);
         if (file.exists()) {
             if (!overwriteIfExists) {
                 LOG.warn("Not generating " + file + " as it already exists");
@@ -206,7 +206,7 @@ public class FunktionConfigs {
     /**
      * Saves the configuration as YAML in the given file
      */
-    public static boolean saveConfig(FunktionConfig config, File file) throws IOException {
+    public static boolean saveConfig(Funktion config, File file) throws IOException {
         createObjectMapper().writeValue(file, config);
         return true;
     }

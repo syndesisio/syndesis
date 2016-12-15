@@ -1,11 +1,11 @@
-rules:
+flows:
   - trigger: http://0.0.0.0:8080
     name: thingy
-    actions:
+    steps:
     - kind: function
       name: io.fabric8.funktion.example.Main::cheese
   - trigger: activemq:foo.bar
     name: another
-    actions:
+    steps:
     - kind: endpoint
       url: activemq:whatnot

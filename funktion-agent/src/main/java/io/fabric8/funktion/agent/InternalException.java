@@ -14,16 +14,28 @@
  * permissions and limitations under the License.
  *
  */
-package io.fabric8.funktion.connector.generator;
+package io.fabric8.funktion.agent;
 
 /**
+ * Thrown when an internal processing exception happens processing JSON / YAML
  */
-public class Labels {
-    public static final String KIND = "funktion.fabric8.io/kind";
-    public static final String CONNECTOR = "connector";
+public class InternalException extends Exception {
+    public InternalException() {
+    }
 
-    public static class Kind {
-        public static final String CONNECTOR = "Connector";
-        public static final String SUBSCRIPTION = "Subscription";
+    public InternalException(String message) {
+        super(message);
+    }
+
+    public InternalException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public InternalException(Throwable cause) {
+        super(cause);
+    }
+
+    public InternalException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

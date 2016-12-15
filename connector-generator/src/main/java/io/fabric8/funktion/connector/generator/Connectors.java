@@ -16,12 +16,11 @@
  */
 package io.fabric8.funktion.connector.generator;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import io.fabric8.funktion.DataKeys;
+import io.fabric8.funktion.Labels;
+import io.fabric8.funktion.support.YamlHelper;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
 import io.fabric8.kubernetes.api.model.extensions.Deployment;
@@ -35,8 +34,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static io.fabric8.funktion.connector.generator.Labels.Kind.CONNECTOR;
-import static io.fabric8.funktion.connector.generator.Labels.Kind.SUBSCRIPTION;
+import static io.fabric8.funktion.Labels.Kind.CONNECTOR;
+import static io.fabric8.funktion.Labels.Kind.SUBSCRIPTION;
 
 /**
  */
@@ -62,17 +61,17 @@ public class Connectors {
                 withNewSpec().addNewContainer().withName("connector").withImage(image).endContainer().
                 endSpec().endTemplate().endSpec().build();
         try {
-            String deploymentYaml = createYamlMapper().writeValueAsString(deployment);
-            data.put(DataConstants.DEPLOYMENT_YAML, deploymentYaml);
+            String deploymentYaml = YamlHelper.createYamlMapper().writeValueAsString(deployment);
+            data.put(DataKeys.Connector.DEPLOYMENT_YAML, deploymentYaml);
         } catch (JsonProcessingException e) {
             LOG.error("Failed to marshal Deployment " + deployment + ". " + e, e);
         }
         String schemaYaml = convertToYaml(jSonSchema);
         if (Strings.isNotBlank(schemaYaml)) {
-            data.put(DataConstants.SCHEMA_YAML, schemaYaml);
+            data.put(DataKeys.Connector.SCHEMA_YAML, schemaYaml);
         }
         if (Strings.isNotBlank(asciiDoc)) {
-            data.put(DataConstants.ASCIIDOC, asciiDoc);
+            data.put(DataKeys.Connector.ASCIIDOC, asciiDoc);
         }
 
         return new ConfigMapBuilder().
@@ -85,7 +84,7 @@ public class Connectors {
             ObjectMapper mapper = new ObjectMapper();
             Object value = mapper.readerFor(Map.class).readValue(jSonSchema);
             if (value != null) {
-                return createYamlMapper().writeValueAsString(value);
+                return YamlHelper.createYamlMapper().writeValueAsString(value);
             }
         } catch (IOException e) {
             LOG.info("Failed to convert JSON " + jSonSchema + " to YAML: " + e, e);
@@ -94,16 +93,4 @@ public class Connectors {
     }
 
 
-    public static ObjectMapper createYamlMapper() {
-        ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory()
-                .configure(YAMLGenerator.Feature.MINIMIZE_QUOTES, true)
-                .configure(YAMLGenerator.Feature.ALWAYS_QUOTE_NUMBERS_AS_STRINGS, true)
-        );
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY).
-                enable(SerializationFeature.INDENT_OUTPUT).
-                disable(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS).
-                disable(SerializationFeature.WRITE_NULL_MAP_VALUES);
-        return objectMapper;
-
-    }
 }

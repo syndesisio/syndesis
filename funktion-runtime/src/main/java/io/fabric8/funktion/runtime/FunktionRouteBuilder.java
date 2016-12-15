@@ -18,13 +18,17 @@ package io.fabric8.funktion.runtime;
 
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import io.fabric8.funktion.model.FunktionAction;
-import io.fabric8.funktion.model.FunktionConfig;
-import io.fabric8.funktion.model.FunktionConfigs;
-import io.fabric8.funktion.model.FunktionRule;
-import io.fabric8.funktion.model.InvokeEndpoint;
-import io.fabric8.funktion.model.InvokeFunction;
+import io.fabric8.funktion.model.steps.Step;
+import io.fabric8.funktion.model.Funktion;
+import io.fabric8.funktion.model.Funktions;
+import io.fabric8.funktion.model.Flow;
+import io.fabric8.funktion.model.steps.InvokeEndpoint;
+import io.fabric8.funktion.model.steps.InvokeFunction;
+import io.fabric8.funktion.model.steps.SetBody;
+import io.fabric8.funktion.model.steps.SetHeaders;
 import io.fabric8.funktion.runtime.designer.SingleMessageRoutePolicyFactory;
 import io.fabric8.funktion.support.Strings;
 import org.apache.camel.builder.RouteBuilder;
@@ -68,16 +72,16 @@ public class FunktionRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        FunktionConfig config = FunktionConfigs.load();
+        Funktion config = Funktions.load();
 
         int idx = 0;
-        List<FunktionRule> rules = config.getRules();
-        for (FunktionRule rule : rules) {
+        List<Flow> rules = config.getFlows();
+        for (Flow rule : rules) {
             configureRule(rule, idx++);
         }
     }
 
-    protected void configureRule(FunktionRule rule, int funktionIndex) throws MalformedURLException {
+    protected void configureRule(Flow rule, int funktionIndex) throws MalformedURLException {
         if (rule.isTraceEnabled()) {
             getContext().setTracing(true);
         }
@@ -130,10 +134,10 @@ public class FunktionRouteBuilder extends RouteBuilder {
 
         RouteDefinition route = from(trigger);
         route.id(name);
-        List<FunktionAction> actions = rule.getActions();
+        List<Step> actions = rule.getSteps();
         int validActions = 0;
         if (actions != null) {
-            for (FunktionAction item : actions) {
+            for (Step item : actions) {
                 if (item instanceof InvokeFunction) {
                     InvokeFunction invokeFunction = (InvokeFunction) item;
                     String action = invokeFunction.getName();
@@ -178,6 +182,22 @@ public class FunktionRouteBuilder extends RouteBuilder {
                         message.append(chain);
                         validActions++;
                     }
+                } else if (item instanceof SetBody) {
+                    SetBody step = (SetBody) item;
+                    route.setBody(constant(step.getBody()));
+                } else if (item instanceof SetHeaders) {
+                    SetHeaders step = (SetHeaders) item;
+                    Map<String, Object> headers = step.getHeaders();
+                    if (headers != null) {
+                        Set<Map.Entry<String, Object>> entries = headers.entrySet();
+                        for (Map.Entry<String, Object> entry : entries) {
+                            String key = entry.getKey();
+                            Object value = entry.getValue();
+                            route.setHeader(key, constant(value));
+                        }
+                    }
+                } else {
+                    throw new IllegalStateException("Uknown step kind: " + item + " of class: " + item.getClass().getName());
                 }
             }
         }
