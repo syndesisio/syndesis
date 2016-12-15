@@ -30,7 +30,6 @@ import java.util.Map;
 
 public class Flow extends DtoSupport {
     private String name;
-    private String trigger;
     private Boolean trace;
     private Boolean logResult;
     private Boolean singleMessageMode;
@@ -44,11 +43,6 @@ public class Flow extends DtoSupport {
 
     public Flow name(String value) {
         setName(value);
-        return this;
-    }
-
-    public Flow trigger(String value) {
-        setTrigger(value);
         return this;
     }
 
@@ -93,12 +87,14 @@ public class Flow extends DtoSupport {
             builder.append(name);
             builder.append(": ");
         }
-        if (!Strings.isEmpty(trigger)) {
-            builder.append(trigger);
-        }
         if (steps != null) {
+            boolean first = true;
             for (Step step : steps) {
-                builder.append(" => ");
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(" => ");
+                }
                 builder.append(step);
             }
         }
@@ -115,14 +111,6 @@ public class Flow extends DtoSupport {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTrigger() {
-        return trigger;
-    }
-
-    public void setTrigger(String trigger) {
-        this.trigger = trigger;
     }
 
     public List<Step> getSteps() {
