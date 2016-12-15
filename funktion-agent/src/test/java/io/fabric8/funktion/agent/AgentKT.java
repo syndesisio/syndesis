@@ -67,8 +67,10 @@ public class AgentKT {
         try {
             Funktion funktion = new Funktion();
 
-            funktion.createFlow().trigger("timer://cheese?fixedRate=true&period=5000").trace(true).logResult(true).singleMessageMode(true).
-                    setBody(body).endpoint("http://elasticsearch:9200" + elasticSearchPath);
+            funktion.createFlow().trace(true).logResult(true).singleMessageMode(true).
+                    endpoint("timer://cheese?fixedRate=true&period=5000").
+                    setBody(body).
+                    endpoint("http://elasticsearch:9200" + elasticSearchPath);
 
 
             Map<String, String> applicationProperties = new HashMap<>();

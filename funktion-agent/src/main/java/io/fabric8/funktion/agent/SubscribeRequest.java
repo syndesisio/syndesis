@@ -19,6 +19,8 @@ package io.fabric8.funktion.agent;
 import io.fabric8.funktion.model.DtoSupport;
 import io.fabric8.funktion.model.Flow;
 import io.fabric8.funktion.model.Funktion;
+import io.fabric8.funktion.model.steps.Endpoint;
+import io.fabric8.funktion.model.steps.Step;
 import io.fabric8.utils.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,13 +73,21 @@ public class SubscribeRequest extends DtoSupport {
         String answer = getConnectorName();
         if (Strings.isNullOrBlank(answer)) {
             if (funktion != null) {
-                List<Flow> rules = notNullList(funktion.getFlows());
-                for (Flow rule : rules) {
-                    String trigger = rule.getTrigger();
-                    try {
-                        return getURIScheme(trigger);
-                    } catch (URISyntaxException e) {
-                        LOG.info("Ignoring parse issue with trigger " + trigger + ". " + e, e);
+                List<Flow> flows = notNullList(funktion.getFlows());
+                for (Flow flow : flows) {
+                    List<Step> steps = notNullList(flow.getSteps());
+                    for (Step step : steps) {
+                        if (step instanceof Endpoint) {
+                            Endpoint endpoint = (Endpoint) step;
+                            String uri = endpoint.getUri();
+                            if (Strings.isNotBlank(uri)) {
+                                try {
+                                    return getURIScheme(uri);
+                                } catch (URISyntaxException e) {
+                                    LOG.info("Ignoring parse issue with Endpoint URI: " + uri + ". " + e, e);
+                                }
+                            }
+                        }
                     }
                 }
             }
