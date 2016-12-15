@@ -74,7 +74,6 @@ public class ReflectiveSorter<T> implements Function<List<T>, List<T>>, Comparat
         if (stringGetMethod != null) {
             return Comparator.comparing(k -> {
                 try {
-                    stringGetMethod.setAccessible(true);
                     return (String) stringGetMethod.invoke(k);
                 } catch (InvocationTargetException | IllegalAccessException e) {
                     throw new IllegalArgumentException("Cannot extract String value from " + stringGetMethod + " for object " + k, e);
@@ -89,7 +88,6 @@ public class ReflectiveSorter<T> implements Function<List<T>, List<T>>, Comparat
         if (intGetMethod != null) {
             return Comparator.comparingInt(k -> {
                         try {
-                            intGetMethod.setAccessible(true);
                             return (Integer) intGetMethod.invoke(k);
                         } catch (InvocationTargetException | IllegalAccessException e) {
                             throw new IllegalArgumentException("Cannot extract int value from " + intGetMethod + " for object " + k, e);
