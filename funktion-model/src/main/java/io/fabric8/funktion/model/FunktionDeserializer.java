@@ -24,8 +24,8 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.fabric8.funktion.model.steps.Step;
-import io.fabric8.funktion.model.steps.InvokeEndpoint;
-import io.fabric8.funktion.model.steps.InvokeFunction;
+import io.fabric8.funktion.model.steps.Endpoint;
+import io.fabric8.funktion.model.steps.Function;
 import io.fabric8.funktion.model.steps.SetBody;
 import io.fabric8.funktion.model.steps.SetHeaders;
 
@@ -39,8 +39,8 @@ public class FunktionDeserializer extends JsonDeserializer {
     private Map<String, Class> kinds = new HashMap<>();
 
     public FunktionDeserializer() {
-        kinds.put("function", InvokeFunction.class);
-        kinds.put("endpoint", InvokeEndpoint.class);
+        kinds.put("function", Function.class);
+        kinds.put("endpoint", Endpoint.class);
         kinds.put("setBody", SetBody.class);
         kinds.put("setHeaders", SetHeaders.class);
     }

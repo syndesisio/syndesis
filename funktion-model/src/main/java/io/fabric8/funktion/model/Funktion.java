@@ -37,8 +37,8 @@ public class Funktion extends DtoSupport {
         return addFlow(new Flow());
     }
 
-    public Flow addFlow(Flow rule) {
-        flows.add(rule);
-        return rule;
+    public Flow addFlow(Flow flow) {
+        flows.add(flow);
+        return flow;
     }
 }

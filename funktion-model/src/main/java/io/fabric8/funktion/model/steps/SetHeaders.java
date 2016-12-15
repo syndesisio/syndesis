@@ -18,6 +18,7 @@ package io.fabric8.funktion.model.steps;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.fabric8.funktion.model.StepKinds;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,17 +33,13 @@ public class SetHeaders extends Step {
     private Map<String, Object> headers;
 
     public SetHeaders() {
-        super("setHeaders");
+        super(StepKinds.SET_HEADERS);
         headers = new HashMap<>();
     }
 
     public SetHeaders(Map<String, Object> headers) {
         super("setHeaders");
         this.headers = headers;
-    }
-
-    public String getKind() {
-        return "setHeaders";
     }
 
     @Override

@@ -17,8 +17,8 @@
 package io.fabric8.funktion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.fabric8.funktion.model.steps.InvokeEndpoint;
-import io.fabric8.funktion.model.steps.InvokeFunction;
+import io.fabric8.funktion.model.steps.Endpoint;
+import io.fabric8.funktion.model.steps.Function;
 import io.fabric8.funktion.model.steps.SetBody;
 import io.fabric8.funktion.model.steps.SetHeaders;
 import io.fabric8.funktion.model.steps.Step;
@@ -36,8 +36,8 @@ public class Flow extends DtoSupport {
     private Boolean singleMessageMode;
     private List<Step> steps = new ArrayList<>();
 
-    public Flow addStep(Step action) {
-        steps.add(action);
+    public Flow addStep(Step step) {
+        steps.add(step);
         return this;
     }
 
@@ -69,12 +69,12 @@ public class Flow extends DtoSupport {
 
     // Steps
     //-------------------------------------------------------------------------
-    public Flow addEndpoint(String url) {
-        return addStep(new InvokeEndpoint(url));
+    public Flow endpoint(String uri) {
+        return addStep(new Endpoint(uri));
     }
 
-    public Flow addFunction(String name) {
-        return addStep(new InvokeFunction(name));
+    public Flow function(String name) {
+        return addStep(new Function(name));
     }
 
     public Flow setBody(String body) {
@@ -97,9 +97,9 @@ public class Flow extends DtoSupport {
             builder.append(trigger);
         }
         if (steps != null) {
-            for (Step action : steps) {
+            for (Step step : steps) {
                 builder.append(" => ");
-                builder.append(action);
+                builder.append(step);
             }
         }
         if (isTraceEnabled()) {

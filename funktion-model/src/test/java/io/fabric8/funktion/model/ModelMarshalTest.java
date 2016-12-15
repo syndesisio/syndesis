@@ -17,14 +17,17 @@
 package io.fabric8.funktion.model;
 
 import io.fabric8.funktion.model.steps.Step;
-import io.fabric8.funktion.model.steps.InvokeEndpoint;
-import io.fabric8.funktion.model.steps.InvokeFunction;
+import io.fabric8.funktion.model.steps.Endpoint;
+import io.fabric8.funktion.model.steps.Function;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static io.fabric8.funktion.model.FunktionAssertions.assertEndpointStep;
+import static io.fabric8.funktion.model.FunktionAssertions.assertFlow;
+import static io.fabric8.funktion.model.FunktionAssertions.assertFunctionStep;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -40,11 +43,7 @@ public class ModelMarshalTest {
         String expectedEndpointUrl = "http://google.com/";
 
         Funktion expected = new Funktion();
-        Flow expectedRule = expected.createFlow();
-        expectedRule.setName(expectedName);
-        expectedRule.setTrigger(expectedTrigger);
-        expectedRule.addStep(new InvokeFunction(expectedFunctionName));
-        expectedRule.addStep(new InvokeEndpoint(expectedEndpointUrl));
+        expected.createFlow().name(expectedName).endpoint(expectedTrigger).function(expectedFunctionName).endpoint(expectedEndpointUrl);
 
         String yaml = Funktions.toYaml(expected);
 
@@ -52,28 +51,10 @@ public class ModelMarshalTest {
 
 
         Funktion actual = Funktions.loadFromString(yaml);
-        List<Flow> actualRules = actual.getFlows();
-        assertThat(actualRules).hasSize(1);
 
-        Flow actualRule = actualRules.get(0);
-        assertThat(actualRule.getName()).describedAs("name").isEqualTo(expectedName);
-        assertThat(actualRule.getTrigger()).describedAs("trigger").isEqualTo(expectedTrigger);
-
-        List<Step> actualRuleActions = actualRule.getSteps();
-        assertThat(actualRuleActions).hasSize(2);
-
-        Step actualAction1 = actualRuleActions.get(0);
-        assertThat(actualAction1).isInstanceOf(InvokeFunction.class);
-
-        Step actualAction2 = actualRuleActions.get(1);
-        assertThat(actualAction2).isInstanceOf(InvokeEndpoint.class);
-
-        InvokeFunction actualFunction = (InvokeFunction) actualAction1;
-        assertThat(actualFunction.getName()).isEqualTo(expectedFunctionName);
-        assertThat(actualFunction.getKind()).isEqualTo("function");
-
-        InvokeEndpoint actualEndpoint = (InvokeEndpoint) actualAction2;
-        assertThat(actualEndpoint.getUrl()).isEqualTo(expectedEndpointUrl);
-        assertThat(actualEndpoint.getKind()).isEqualTo("endpoint");
+        Flow actualFlow = assertFlow(actual, 0);
+        assertEndpointStep(actualFlow, 0, expectedTrigger);
+        assertFunctionStep(actualFlow, 1, expectedFunctionName);
+        assertEndpointStep(actualFlow, 2, expectedEndpointUrl);
     }
 }

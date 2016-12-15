@@ -18,40 +18,37 @@ package io.fabric8.funktion.model.steps;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.fabric8.funktion.model.StepKinds;
 
 /**
- * Invokes a function with the current payload
+ * Invokes an endpoint URI (typically HTTP or HTTPS) with the current payload
  */
 @JsonDeserialize(
     using = JsonDeserializer.None.class
 )
-public class InvokeFunction extends Step {
-    private String name;
+public class Endpoint extends Step {
+    private String uri;
 
-    public InvokeFunction() {
-        super("function");
+    public Endpoint() {
+        super(StepKinds.ENDPOINT);
     }
 
-    public InvokeFunction(String name) {
+    public Endpoint(String uri) {
         this();
-        this.name = name;
+        this.uri = uri;
     }
 
     @Override
     public String toString() {
-        return "Function: " + name;
+        return "Endpoint: " + uri;
     }
 
-    public String getName() {
-        return name;
+    public String getUri() {
+        return uri;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getKind() {
-        return "function";
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
 }

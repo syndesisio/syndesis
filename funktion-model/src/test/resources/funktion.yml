@@ -1,11 +1,13 @@
 flows:
-  - trigger: http://0.0.0.0:8080
-    name: thingy
-    steps:
-    - kind: function
-      name: io.fabric8.funktion.example.Main::cheese
-  - trigger: activemq:foo.bar
-    name: another
+  - name: thingy
     steps:
     - kind: endpoint
-      url: activemq:whatnot
+      uri: http://0.0.0.0:8080
+    - kind: function
+      name: io.fabric8.funktion.example.Main::cheese
+  - name: another
+    steps:
+    - kind: endpoint
+      uri: http://0.0.0.0:8080
+    - kind: endpoint
+      uri: activemq:whatnot

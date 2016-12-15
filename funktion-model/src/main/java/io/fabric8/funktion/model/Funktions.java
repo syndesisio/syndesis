@@ -64,17 +64,17 @@ public class Funktions {
     }
 
     protected static Funktion validateConfig(Funktion config, File file) {
-        List<Flow> rules = config.getFlows();
-        if (rules.isEmpty()) {
-            throw new IllegalStateException("No Funktion rules defined in file: " + file.getPath());
+        List<Flow> flows = config.getFlows();
+        if (flows.isEmpty()) {
+            throw new IllegalStateException("No Funktion flows defined in file: " + file.getPath());
         }
         return config;
     }
 
     protected static Funktion validateConfig(Funktion config, URL url) {
-        List<Flow> rules = config.getFlows();
-        if (rules.isEmpty()) {
-            throw new IllegalStateException("No Funktion rules defined in URL: " + url);
+        List<Flow> flows = config.getFlows();
+        if (flows.isEmpty()) {
+            throw new IllegalStateException("No Funktion flows defined in URL: " + url);
         }
         return config;
     }
@@ -142,7 +142,7 @@ public class Funktions {
     }
 
     public static Funktion parseFunktionConfig(File file) throws IOException {
-        LOG.info("Loading Funktion rules from file: " + file);
+        LOG.info("Loading Funktion flows from file: " + file);
         return parseYaml(file, Funktion.class);
     }
 
@@ -151,7 +151,7 @@ public class Funktions {
     }
 
     public static Funktion parseFunktionConfig(URL url) throws IOException {
-        LOG.info("Loading Funktion rules from URL: " + url);
+        LOG.info("Loading Funktion flows from URL: " + url);
         return parseYaml(url, Funktion.class);
     }
 
