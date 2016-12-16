@@ -15,17 +15,17 @@
 #
 
 machine:
-  java:
-    version: openjdk8
+  pre:
+  - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
   services:
-    - docker
+  - docker
 
 dependencies:
   override:
-  - mvn -Pfabric8 -Dfabric8.skip -DskipTests package dependency:go-offline
+  - docker run -v $(pwd):/root/src -v ${HOME}/.m2/repository:/root/.m2/repository -w /root/src maven:3.3.9-jdk-8 mvn -Pfabric8 -Dfabric8.skip -DskipTests package dependency:go-offline
 test:
   override:
-  - mvn -Pfabric8 integration-test
+    - docker run -v $(pwd):/root/src -v ${HOME}/.m2/repository:/root/.m2/repository -v /var/run/docker.sock:/var/run/docker.sock -w /root/src maven:3.3.9-jdk-8 mvn -Pfabric8 integration-test
   post:
   - mkdir -p $CIRCLE_TEST_REPORTS/junit/
   - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
