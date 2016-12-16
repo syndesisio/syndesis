@@ -38,7 +38,7 @@ deployment:
     owner: redhat-ipaas
     branch: master
     commands:
-    - curl -sSL https://github.com/openshift/origin/releases/download/v1.4.0-rc1/openshift-origin-client-tools-v1.4.0-rc1.b4e0954-linux-64bit.tar.gz | tar xz -C /usr/bin --strip-components 1
+    - curl -sSL https://github.com/openshift/origin/releases/download/v1.4.0-rc1/openshift-origin-client-tools-v1.4.0-rc1.b4e0954-linux-64bit.tar.gz | sudo tar xz -C /usr/bin --strip-components 1
     - oc login --server=${OPENSHIFT_APISERVER} --token=${OPENSHIFT_TOKEN}
     - oc project staging
     - docker run -v ${HOME}/.kube:/root/.kube -v $(pwd):/root/src -v ${HOME}/.m2/repository:/root/.m2/repository -v /var/run/docker.sock:/var/run/docker.sock -w /root/src maven:3.3.9-jdk-8 mvn -Pfabric8 fabric8:deploy
