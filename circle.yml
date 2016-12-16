@@ -25,7 +25,7 @@ dependencies:
   - docker run -v $(pwd):/root/src -v ${HOME}/.m2/repository:/root/.m2/repository -w /root/src maven:3.3.9-jdk-8 mvn -Pfabric8 -Dfabric8.skip -DskipTests package dependency:go-offline
 test:
   override:
-  - docker run -v $(pwd):/root/src -v ${HOME}/.m2/repository:/root/.m2/repository -v /var/run/docker.sock:/var/run/docker.sock -w /root/src maven:3.3.9-jdk-8 mvn -Pfabric8 integration-test
+  - docker run -v $(pwd):/root/src -v ${HOME}/.m2/repository:/root/.m2/repository -v /var/run/docker.sock:/var/run/docker.sock -w /root/src maven:3.3.9-jdk-8 mvn -Pfabric8 install
   post:
   - mkdir -p $CIRCLE_TEST_REPORTS/junit/
   - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
