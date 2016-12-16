@@ -25,10 +25,21 @@ dependencies:
   - docker run -v $(pwd):/root/src -v ${HOME}/.m2/repository:/root/.m2/repository -w /root/src maven:3.3.9-jdk-8 mvn -Pfabric8 -Dfabric8.skip -DskipTests package dependency:go-offline
 test:
   override:
-    - docker run -v $(pwd):/root/src -v ${HOME}/.m2/repository:/root/.m2/repository -v /var/run/docker.sock:/var/run/docker.sock -w /root/src maven:3.3.9-jdk-8 mvn -Pfabric8 integration-test
+  - docker run -v $(pwd):/root/src -v ${HOME}/.m2/repository:/root/.m2/repository -v /var/run/docker.sock:/var/run/docker.sock -w /root/src maven:3.3.9-jdk-8 mvn -Pfabric8 integration-test
   post:
   - mkdir -p $CIRCLE_TEST_REPORTS/junit/
   - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
   - cp runtime/target/classes/index.html $CIRCLE_ARTIFACTS/apidocs.html
   - cp runtime/target/classes/swagger.json $CIRCLE_ARTIFACTS/
   - bash <(curl -s https://codecov.io/bash)
+
+deployment:
+  staging:
+    owner: redhat-ipaas
+    branch: master
+    commands:
+    - curl -sSL https://github.com/openshift/origin/releases/download/v1.4.0-rc1/openshift-origin-client-tools-v1.4.0-rc1.b4e0954-linux-64bit.tar.gz | tar xz -C /usr/bin --strip-components 1
+    - oc login --server=${OPENSHIFT_APISERVER} --token=${OPENSHIFT_TOKEN}
+    - oc project staging
+    - docker run -v ${HOME}/.kube:/root/.kube -v $(pwd):/root/src -v ${HOME}/.m2/repository:/root/.m2/repository -v /var/run/docker.sock:/var/run/docker.sock -w /root/src maven:3.3.9-jdk-8 mvn -Pfabric8 fabric8:deploy
+
