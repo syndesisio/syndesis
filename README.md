@@ -21,6 +21,10 @@ A _funktion_ is a regular function in any programming language which is deployed
 
 Please [Install Funktion](https://funktion.fabric8.io/docs/#install) then follow the [Getting Started Guide](https://funktion.fabric8.io/docs/#get-started) 
 
+### Documentation
+
+Please see [the website](https://funktion.fabric8.io/) and the [User Guide](https://funktion.fabric8.io/docs/) 
+
 ### License
 
 This project is [Apache Licensed](license.txt)
