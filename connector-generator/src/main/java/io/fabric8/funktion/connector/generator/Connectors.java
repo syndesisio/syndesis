@@ -25,10 +25,12 @@ import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
 import io.fabric8.kubernetes.api.model.extensions.Deployment;
 import io.fabric8.kubernetes.api.model.extensions.DeploymentBuilder;
+import io.fabric8.utils.IOHelpers;
 import io.fabric8.utils.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -42,7 +44,7 @@ import static io.fabric8.funktion.Labels.Kind.SUBSCRIPTION;
 public class Connectors {
     private static final transient Logger LOG = LoggerFactory.getLogger(Connectors.class);
 
-    public static ConfigMap createConnector(ComponentModel component, String jSonSchema, String asciiDoc, String image) {
+    public static ConfigMap createConnector(ComponentModel component, String jSonSchema, String asciiDoc, String image, File applicationPropertiesFile) {
         String componentName = component.getScheme().toLowerCase();
         Map<String, String> annotations = new LinkedHashMap<>();
         Map<String, String> labels = new LinkedHashMap<>();
@@ -72,6 +74,16 @@ public class Connectors {
         }
         if (Strings.isNotBlank(asciiDoc)) {
             data.put(DataKeys.Connector.ASCIIDOC, asciiDoc);
+        }
+        if (applicationPropertiesFile.isFile() && applicationPropertiesFile.exists()) {
+            try {
+                String applicationPropertiesText = IOHelpers.readFully(applicationPropertiesFile);
+                if (Strings.isNotBlank(applicationPropertiesText)) {
+                    data.put(DataKeys.Connector.APPLICATION_PROPERTIES, applicationPropertiesText);
+                }
+            } catch (IOException e) {
+                LOG.error("Failed to load " + applicationPropertiesFile + ". " + e, e);
+            }
         }
 
         return new ConfigMapBuilder().

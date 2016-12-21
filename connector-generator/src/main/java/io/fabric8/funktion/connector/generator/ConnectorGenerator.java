@@ -254,7 +254,8 @@ public class ConnectorGenerator {
                 String asciiDoc = camelCatalog.componentAsciiDoc(componentName);
 
                 String image = "fabric8/" + moduleName + ":${project.version}";
-                ConfigMap configMap = Connectors.createConnector(component, jSonSchema, asciiDoc, image);
+                File applicationPropertiesFile = new File(projectDir, "src/main/funktion/application.properties");
+                ConfigMap configMap = Connectors.createConnector(component, jSonSchema, asciiDoc, image, applicationPropertiesFile);
                 File configMapFile = new File(projectDir, "src/main/fabric8/" + componentName + "-cm.yml");
                 configMapFile.getParentFile().mkdirs();
 

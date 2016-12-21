@@ -24,6 +24,7 @@ public class DataKeys {
         public static final String SCHEMA_YAML = "schema.yml";
         public static final String ASCIIDOC = "documentation.adoc";
         public static final String DEPLOYMENT_YAML = "deployment.yml";
+        public static final String APPLICATION_PROPERTIES = Subscription.APPLICATION_PROPERTIES;
     }
 
     public static class Subscription {
