@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-solr</artifactId>
+      <artifactId>camel-solr-starter</artifactId>
     </dependency>
   </dependencies>
 

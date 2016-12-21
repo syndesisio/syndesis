@@ -39,7 +39,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -51,6 +53,18 @@ import static io.fabric8.utils.DomHelper.firstChild;
  */
 public class ConnectorGenerator {
     private static final transient Logger LOG = LoggerFactory.getLogger(ConnectorGenerator.class);
+
+    protected static final Set<String> notCamelStarterConnectors = new HashSet<>(Arrays.asList(
+            "asterisk",
+            "ejb",
+            "eventadmin",
+            "ibatis",
+            "jclouds",
+            "mina",
+            "paxlogging",
+            "quartz",
+            "spark-rest"
+    ));
 
     public static void main(String[] args) {
         try {
@@ -129,11 +143,15 @@ public class ConnectorGenerator {
                 File projectDir = new File(projectsDir, moduleName);
                 projectDir.mkdirs();
 
+                String starterArtifactId = artifactId;
+                if (isSpringStarterModule(componentName, artifactId)) {
+                    starterArtifactId += "-starter";
+                }
                 String dependencies = "  \n" +
                         "  <dependencies>\n" +
                         "    <dependency>\n" +
                         "      <groupId>" + groupId + "</groupId>\n" +
-                        "      <artifactId>" + artifactId + "</artifactId>\n" +
+                        "      <artifactId>" + starterArtifactId + "</artifactId>\n" +
                         "    </dependency>\n" +
                         "  </dependencies>\n";
                 if (artifactId.equals("camel-core")) {
@@ -264,6 +282,11 @@ public class ConnectorGenerator {
         LOG.info("Generated " + count + " connectors");
     }
 
+    protected boolean isSpringStarterModule(String connectorName, String artifactId) {
+        // TODO from 2.19 of camel use the catalog to know this
+        // for now lets hard code the answers
+        return !notCamelStarterConnectors.contains(connectorName);
+    }
 
     protected void updateDocument(File file, Document doc) throws FileNotFoundException, TransformerException {
         LOG.info("Updating the pom " + file);

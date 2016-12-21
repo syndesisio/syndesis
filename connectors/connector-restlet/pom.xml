@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-restlet</artifactId>
+      <artifactId>camel-restlet-starter</artifactId>
     </dependency>
   </dependencies>
 

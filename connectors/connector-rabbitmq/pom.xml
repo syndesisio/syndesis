@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-rabbitmq</artifactId>
+      <artifactId>camel-rabbitmq-starter</artifactId>
     </dependency>
   </dependencies>
 

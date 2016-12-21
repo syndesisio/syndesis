@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-jing</artifactId>
+      <artifactId>camel-jing-starter</artifactId>
     </dependency>
   </dependencies>
 

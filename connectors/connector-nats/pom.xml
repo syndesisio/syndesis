@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-nats</artifactId>
+      <artifactId>camel-nats-starter</artifactId>
     </dependency>
   </dependencies>
 

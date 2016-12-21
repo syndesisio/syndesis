@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-aws</artifactId>
+      <artifactId>camel-aws-starter</artifactId>
     </dependency>
   </dependencies>
 

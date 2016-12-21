@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-mybatis</artifactId>
+      <artifactId>camel-mybatis-starter</artifactId>
     </dependency>
   </dependencies>
 

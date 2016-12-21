@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-mongodb</artifactId>
+      <artifactId>camel-mongodb-starter</artifactId>
     </dependency>
   </dependencies>
 

@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-hdfs2</artifactId>
+      <artifactId>camel-hdfs2-starter</artifactId>
     </dependency>
   </dependencies>
 

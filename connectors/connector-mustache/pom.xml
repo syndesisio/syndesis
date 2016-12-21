@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-mustache</artifactId>
+      <artifactId>camel-mustache-starter</artifactId>
     </dependency>
   </dependencies>
 

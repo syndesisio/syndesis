@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-cache</artifactId>
+      <artifactId>camel-cache-starter</artifactId>
     </dependency>
   </dependencies>
 

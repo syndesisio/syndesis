@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-beanstalk</artifactId>
+      <artifactId>camel-beanstalk-starter</artifactId>
     </dependency>
   </dependencies>
 

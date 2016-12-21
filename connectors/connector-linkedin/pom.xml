@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-linkedin</artifactId>
+      <artifactId>camel-linkedin-starter</artifactId>
     </dependency>
   </dependencies>
 

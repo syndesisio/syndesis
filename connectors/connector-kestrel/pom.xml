@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-kestrel</artifactId>
+      <artifactId>camel-kestrel-starter</artifactId>
     </dependency>
   </dependencies>
 

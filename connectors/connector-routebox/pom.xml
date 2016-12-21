@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-routebox</artifactId>
+      <artifactId>camel-routebox-starter</artifactId>
     </dependency>
   </dependencies>
 

@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-zookeeper</artifactId>
+      <artifactId>camel-zookeeper-starter</artifactId>
     </dependency>
   </dependencies>
 

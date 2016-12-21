@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-mvel</artifactId>
+      <artifactId>camel-mvel-starter</artifactId>
     </dependency>
   </dependencies>
 

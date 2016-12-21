@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-google-mail</artifactId>
+      <artifactId>camel-google-mail-starter</artifactId>
     </dependency>
   </dependencies>
 

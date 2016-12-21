@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-lucene</artifactId>
+      <artifactId>camel-lucene-starter</artifactId>
     </dependency>
   </dependencies>
 

@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-rss</artifactId>
+      <artifactId>camel-rss-starter</artifactId>
     </dependency>
   </dependencies>
 

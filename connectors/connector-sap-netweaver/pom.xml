@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-sap-netweaver</artifactId>
+      <artifactId>camel-sap-netweaver-starter</artifactId>
     </dependency>
   </dependencies>
 

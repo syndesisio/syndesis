@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-spring-integration</artifactId>
+      <artifactId>camel-spring-integration-starter</artifactId>
     </dependency>
   </dependencies>
 

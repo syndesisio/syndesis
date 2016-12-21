@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-velocity</artifactId>
+      <artifactId>camel-velocity-starter</artifactId>
     </dependency>
   </dependencies>
 
