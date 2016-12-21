@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-context</artifactId>
+      <artifactId>camel-context-starter</artifactId>
     </dependency>
   </dependencies>
 

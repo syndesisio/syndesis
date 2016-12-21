@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-infinispan</artifactId>
+      <artifactId>camel-infinispan-starter</artifactId>
     </dependency>
   </dependencies>
 

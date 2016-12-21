@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-msv</artifactId>
+      <artifactId>camel-msv-starter</artifactId>
     </dependency>
   </dependencies>
 

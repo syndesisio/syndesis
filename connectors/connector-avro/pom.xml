@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-avro</artifactId>
+      <artifactId>camel-avro-starter</artifactId>
     </dependency>
   </dependencies>
 

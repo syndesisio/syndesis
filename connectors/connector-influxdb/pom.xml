@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-influxdb</artifactId>
+      <artifactId>camel-influxdb-starter</artifactId>
     </dependency>
   </dependencies>
 

@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-dropbox</artifactId>
+      <artifactId>camel-dropbox-starter</artifactId>
     </dependency>
   </dependencies>
 

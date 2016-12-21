@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-elsql</artifactId>
+      <artifactId>camel-elsql-starter</artifactId>
     </dependency>
   </dependencies>
 

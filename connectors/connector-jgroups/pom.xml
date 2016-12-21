@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-jgroups</artifactId>
+      <artifactId>camel-jgroups-starter</artifactId>
     </dependency>
   </dependencies>
 

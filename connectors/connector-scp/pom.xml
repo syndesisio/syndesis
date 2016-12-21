@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-jsch</artifactId>
+      <artifactId>camel-jsch-starter</artifactId>
     </dependency>
   </dependencies>
 

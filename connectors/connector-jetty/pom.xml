@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-jetty9</artifactId>
+      <artifactId>camel-jetty9-starter</artifactId>
     </dependency>
   </dependencies>
 

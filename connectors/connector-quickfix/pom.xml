@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-quickfix</artifactId>
+      <artifactId>camel-quickfix-starter</artifactId>
     </dependency>
   </dependencies>
 

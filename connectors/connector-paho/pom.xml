@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-paho</artifactId>
+      <artifactId>camel-paho-starter</artifactId>
     </dependency>
   </dependencies>
 

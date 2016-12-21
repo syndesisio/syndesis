@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-netty-http</artifactId>
+      <artifactId>camel-netty-http-starter</artifactId>
     </dependency>
   </dependencies>
 

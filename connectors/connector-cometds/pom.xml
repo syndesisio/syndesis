@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-cometd</artifactId>
+      <artifactId>camel-cometd-starter</artifactId>
     </dependency>
   </dependencies>
 

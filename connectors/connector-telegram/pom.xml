@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-telegram</artifactId>
+      <artifactId>camel-telegram-starter</artifactId>
     </dependency>
   </dependencies>
 
