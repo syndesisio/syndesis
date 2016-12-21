@@ -102,6 +102,9 @@ public class FunktionRouteBuilder extends RouteBuilder {
                     Function function = (Function) item;
                     String functionName = function.getName();
                     if (!Strings.isEmpty(functionName)) {
+                        if (route != null) {
+                            route.to("json:marshal");
+                        }
                         String method = null;
                         int idx = functionName.indexOf("::");
                         if (idx > 0) {
@@ -127,6 +130,9 @@ public class FunktionRouteBuilder extends RouteBuilder {
                     Endpoint invokeEndpoint = (Endpoint) item;
                     String uri = invokeEndpoint.getUri();
                     if (!Strings.isEmpty(uri)) {
+                        if (route != null) {
+                            route.to("json:marshal");
+                        }
                         // lets configure the http component
                         if (uri.startsWith("http:") || uri.startsWith("https:")) {
                             HttpEndpoint endpoint = endpoint(uri, HttpEndpoint.class);
