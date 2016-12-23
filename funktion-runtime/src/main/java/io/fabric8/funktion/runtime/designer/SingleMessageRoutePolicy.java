@@ -16,7 +16,6 @@
  */
 package io.fabric8.funktion.runtime.designer;
 
-import org.apache.camel.CamelException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Route;
 import org.apache.camel.RuntimeExchangeException;

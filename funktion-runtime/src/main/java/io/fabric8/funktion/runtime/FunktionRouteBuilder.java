@@ -16,23 +16,18 @@
  */
 package io.fabric8.funktion.runtime;
 
-import java.net.MalformedURLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import io.fabric8.funktion.model.steps.Step;
+import io.fabric8.funktion.model.Flow;
 import io.fabric8.funktion.model.Funktion;
 import io.fabric8.funktion.model.Funktions;
-import io.fabric8.funktion.model.Flow;
 import io.fabric8.funktion.model.steps.Endpoint;
 import io.fabric8.funktion.model.steps.Function;
 import io.fabric8.funktion.model.steps.SetBody;
 import io.fabric8.funktion.model.steps.SetHeaders;
+import io.fabric8.funktion.model.steps.Step;
 import io.fabric8.funktion.runtime.designer.SingleMessageRoutePolicyFactory;
 import io.fabric8.funktion.support.Strings;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.http.HttpEndpoint;
+import org.apache.camel.component.http4.HttpEndpoint;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.boot.FatJarRouter;
@@ -41,6 +36,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A Camel {@link RouteBuilder} which maps the Funktion rules to Camel routes
@@ -58,6 +59,13 @@ public class FunktionRouteBuilder extends RouteBuilder {
         FatJarRouter.main(args);
     }
 
+    private static String replacePrefix(String text, String prefix, String replacement) {
+        if (text.startsWith(prefix)) {
+            return replacement + text.substring(prefix.length());
+        }
+        return text;
+    }
+
     @Bean
     ServletRegistrationBean camelServlet() {
         // use a @Bean to register the Camel servlet which we need to do
@@ -72,7 +80,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        Funktion config = Funktions.load();
+        Funktion config = loadFunktion();
 
         int idx = 0;
         List<Flow> rules = config.getFlows();
@@ -81,13 +89,17 @@ public class FunktionRouteBuilder extends RouteBuilder {
         }
     }
 
+    protected Funktion loadFunktion() throws IOException {
+        return Funktions.load();
+    }
+
     protected void configureRule(Flow flow, int funktionIndex) throws MalformedURLException {
         if (flow.isTraceEnabled()) {
             getContext().setTracing(true);
         }
 
 
-        StringBuilder message =  new StringBuilder("FLOW ");
+        StringBuilder message = new StringBuilder("FLOW ");
         String name = flow.getName();
         if (Strings.isEmpty(name)) {
             name = "flow" + (funktionIndex + 1);
@@ -120,8 +132,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
                         message.append(functionName);
                         if (method != null) {
                             message.append("." + method + "()");
-                        }
-                        else {
+                        } else {
                             message.append(".main()");
                         }
                         validSteps++;
@@ -132,15 +143,6 @@ public class FunktionRouteBuilder extends RouteBuilder {
                     if (!Strings.isEmpty(uri)) {
                         if (route != null) {
                             route.to("json:marshal");
-                        }
-                        // lets configure the http component
-                        if (uri.startsWith("http:") || uri.startsWith("https:")) {
-                            HttpEndpoint endpoint = endpoint(uri, HttpEndpoint.class);
-                            if (endpoint != null) {
-                                // lets bridge them as a proxy
-                                endpoint.setBridgeEndpoint(true);
-                                endpoint.setThrowExceptionOnFailure(false);
-                            }
                         }
                         route = fromOrTo(route, name, uri, message);
                         message.append(uri);
@@ -172,7 +174,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
 
         }
         if (flow.isLogResultEnabled()) {
-            String chain = "log:" +name + "?showStreams=true";
+            String chain = "log:" + name + "?showStreams=true";
             route.to(chain);
             message.append(" => ");
             message.append(chain);
@@ -192,9 +194,9 @@ public class FunktionRouteBuilder extends RouteBuilder {
         }
     }
 
-    protected RouteDefinition fromOrTo(RouteDefinition route, String name, String endpoint, StringBuilder message) {
+    protected RouteDefinition fromOrTo(RouteDefinition route, String name, String uri, StringBuilder message) {
         if (route == null) {
-            String trigger = endpoint;
+            String trigger = uri;
             if (Strings.isEmpty(trigger)) {
                 trigger = DEFAULT_TRIGGER_URL;
             }
@@ -204,7 +206,7 @@ public class FunktionRouteBuilder extends RouteBuilder {
             if (trigger.equals("http")) {
                 trigger = DEFAULT_HTTP_ENDPOINT_PREFIX;
             } else if (trigger.startsWith("http:") || trigger.startsWith("https:") ||
-                       trigger.startsWith("http://") || trigger.startsWith("https://")) {
+                    trigger.startsWith("http://") || trigger.startsWith("https://")) {
                 // lets add the HTTP endpoint prefix
 
                 // is there any context-path
@@ -234,8 +236,20 @@ public class FunktionRouteBuilder extends RouteBuilder {
             route = from(trigger);
             route.id(name);
         } else {
+             if (uri.startsWith("http:") || uri.startsWith("https:")) {
+                 // lets use http4 for all http transports
+                 uri = replacePrefix(uri, "http:", "http4:");
+                 uri = replacePrefix(uri, "https:", "https4:");
+
+                 HttpEndpoint endpoint = endpoint(uri, HttpEndpoint.class);
+                 if (endpoint != null) {
+                     // lets bridge them as a proxy
+                     endpoint.setBridgeEndpoint(true);
+                     endpoint.setThrowExceptionOnFailure(false);
+                 }
+             }
             message.append(" => ");
-            route.to(endpoint);
+            route.to(uri);
         }
         return route;
     }

@@ -25,8 +25,8 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
-import java.io.StringReader;
 import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 
 /**
  */
@@ -37,9 +37,6 @@ public class JsonEndpointTest extends CamelTestSupport {
 
     @Produce(uri = "direct:start")
     protected ProducerTemplate template;
-
-    {
-    }
 
     @Override
     public boolean isDumpRouteCoverage() {
