@@ -39,6 +39,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,6 +57,8 @@ public class FunktionRouteBuilder extends RouteBuilder {
     // use servlet to map from http trigger to use Spring Boot servlet engine
     private static final String DEFAULT_TRIGGER_URL = "http://0.0.0.0:8080/";
     private static final String DEFAULT_HTTP_ENDPOINT_PREFIX = "servlet:funktion";
+
+    private Set<String> localHosts = new HashSet<>(Arrays.asList("localhost", "0.0.0.0", "127.0.0.1"));
 
     // must have a main method spring-boot can run
     public static void main(String[] args) {
@@ -207,31 +213,37 @@ public class FunktionRouteBuilder extends RouteBuilder {
                 trigger = DEFAULT_HTTP_ENDPOINT_PREFIX;
             } else if (trigger.startsWith("http:") || trigger.startsWith("https:") ||
                     trigger.startsWith("http://") || trigger.startsWith("https://")) {
-                // lets add the HTTP endpoint prefix
 
-                // is there any context-path
-                String path = trigger.startsWith("https:") ? trigger.substring(6) : null;
-                if (path == null) {
-                    path = trigger.startsWith("http:") ? trigger.substring(5) : null;
-                }
-                if (path == null) {
-                    path = trigger.startsWith("https://") ? trigger.substring(8) : null;
-                }
-                if (path == null) {
-                    path = trigger.startsWith("http://") ? trigger.substring(7) : null;
-                }
+                String host = getURIHost(trigger);
+                if (localHosts.contains(host)) {
+                    trigger = DEFAULT_HTTP_ENDPOINT_PREFIX;
+                } else {
 
-                if (path != null) {
-                    // keep only context path
-                    if (path.contains("/")) {
-                        path = path.substring(path.indexOf('/'));
+                    // lets add the HTTP endpoint prefix
+
+                    // is there any context-path
+                    String path = trigger.startsWith("https:") ? trigger.substring(6) : null;
+                    if (path == null) {
+                        path = trigger.startsWith("http:") ? trigger.substring(5) : null;
                     }
-                }
-                if (path != null) {
-                    trigger = path;
-                }
+                    if (path == null) {
+                        path = trigger.startsWith("https://") ? trigger.substring(8) : null;
+                    }
+                    if (path == null) {
+                        path = trigger.startsWith("http://") ? trigger.substring(7) : null;
+                    }
 
-                trigger = DEFAULT_HTTP_ENDPOINT_PREFIX + "/" + trigger;
+                    if (path != null) {
+                        // keep only context path
+                        if (path.contains("/")) {
+                            path = path.substring(path.indexOf('/'));
+                        }
+                    }
+                    if (path != null) {
+                        trigger = path;
+                    }
+                    trigger = DEFAULT_HTTP_ENDPOINT_PREFIX + "/" + trigger;
+                }
             }
             route = from(trigger);
             route.id(name);
@@ -252,6 +264,14 @@ public class FunktionRouteBuilder extends RouteBuilder {
             route.to(uri);
         }
         return route;
+    }
+
+    private String getURIHost(String uri) {
+        try {
+            return new URI(uri).getHost();
+        } catch (URISyntaxException e) {
+            return null;
+        }
     }
 
 
