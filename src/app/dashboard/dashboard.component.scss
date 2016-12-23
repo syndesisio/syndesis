@@ -1,0 +1,16 @@
+.app-dashboard {
+  //background-color: #000000;
+  .empty-state {
+    margin: 15px;
+
+    .btn {
+      margin: 10px 5px;
+      padding: 2px 20px !important;
+    }
+
+    .description {
+      margin: 25px auto;
+      max-width: 40%;
+    }
+  }
+}
