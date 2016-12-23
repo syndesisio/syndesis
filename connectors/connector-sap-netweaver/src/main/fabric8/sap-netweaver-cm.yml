@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Url to the SAP net-weaver gateway server.
+        order: 0
       flatternMap:
         kind: parameter
         group: producer
@@ -61,6 +62,7 @@ data:
         secret: false
         defaultValue: true
         description: If the JSON Map contains only a single entry then flattern by storing that single entry value as the message body.
+        order: 1
       json:
         kind: parameter
         group: producer
@@ -70,6 +72,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to return data in JSON format. If this option is false then XML is returned in Atom format.
+        order: 2
       jsonAsMap:
         kind: parameter
         group: producer
@@ -79,6 +82,7 @@ data:
         secret: false
         defaultValue: true
         description: To transform the JSON from a String to a Map in the message body.
+        order: 3
       password:
         kind: parameter
         group: producer
@@ -88,6 +92,7 @@ data:
         deprecated: false
         secret: false
         description: Password for account.
+        order: 4
       username:
         kind: parameter
         group: producer
@@ -97,6 +102,7 @@ data:
         deprecated: false
         secret: false
         description: Username for account.
+        order: 5
       synchronous:
         kind: parameter
         group: advanced
@@ -107,6 +113,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 6
   documentation.adoc: |+
     [[SAPNetWeaver-SAPNetWeaverGatewaycomponent]]
     SAP NetWeaver Gateway component

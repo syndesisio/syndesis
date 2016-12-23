@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the executable to be executed. The executable must not be empty or null.
+        order: 0
       args:
         kind: parameter
         group: producer
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: The arguments may be one or many whitespace-separated tokens.
+        order: 1
       binding:
         kind: parameter
         group: producer
@@ -68,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: A reference to a org.apache.commons.exec.ExecBinding in the Registry.
+        order: 2
       commandExecutor:
         kind: parameter
         group: producer
@@ -76,6 +79,7 @@ data:
         deprecated: false
         secret: false
         description: A reference to a org.apache.commons.exec.ExecCommandExecutor in the Registry that customizes the command execution. The default command executor utilizes the commons-exec library which adds a shutdown hook for every executed command.
+        order: 3
       outFile:
         kind: parameter
         group: producer
@@ -84,6 +88,7 @@ data:
         deprecated: false
         secret: false
         description: The name of a file created by the executable that should be considered as its output. If no outFile is set the standard output (stdout) of the executable will be used instead.
+        order: 4
       timeout:
         kind: parameter
         group: producer
@@ -92,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: The timeout in milliseconds after which the executable should be terminated. If execution has not completed within the timeout the component will send a termination request.
+        order: 5
       useStderrOnEmptyStdout:
         kind: parameter
         group: producer
@@ -101,6 +107,7 @@ data:
         secret: false
         defaultValue: false
         description: A boolean indicating that when stdout is empty this component will populate the Camel Message Body with stderr. This behavior is disabled (false) by default.
+        order: 6
       workingDir:
         kind: parameter
         group: producer
@@ -109,6 +116,7 @@ data:
         deprecated: false
         secret: false
         description: The directory in which the command should be executed. If null the working directory of the current process will be used.
+        order: 7
       synchronous:
         kind: parameter
         group: advanced
@@ -119,6 +127,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 8
   documentation.adoc: |+
     [[Exec-Execcomponent]]
     Exec component

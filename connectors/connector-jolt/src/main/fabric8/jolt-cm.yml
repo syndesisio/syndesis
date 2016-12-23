@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: Explicitly sets the Transform to use. If not set a Transform specified by the transformDsl will be created
+        order: 0
     properties:
       resourceUri:
         kind: path
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: Path to the resource or a reference to lookup a bean in the Registry to use as the resource
+        order: 0
       contentCache:
         kind: parameter
         group: producer
@@ -68,6 +70,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether to use resource content cache or not
+        order: 1
       inputType:
         kind: parameter
         group: producer
@@ -80,6 +83,7 @@ data:
         secret: false
         defaultValue: Hydrated
         description: Specifies if the input is hydrated JSON or a JSON String.
+        order: 2
       outputType:
         kind: parameter
         group: producer
@@ -92,6 +96,7 @@ data:
         secret: false
         defaultValue: Hydrated
         description: Specifies if the output should be hydrated JSON or a JSON String.
+        order: 3
       transformDsl:
         kind: parameter
         group: producer
@@ -107,6 +112,7 @@ data:
         secret: false
         defaultValue: Chainr
         description: Specifies the Transform DSL of the endpoint resource. If none is specified Chainr will be used.
+        order: 4
       synchronous:
         kind: parameter
         group: advanced
@@ -117,6 +123,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 5
   documentation.adoc: |+
     [[JOLT-JOLTComponent]]
     JOLT Component

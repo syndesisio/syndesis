@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: The URL of the MQTT broker.
+        order: 0
       clientId:
         kind: property
         type: string
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: MQTT client identifier.
+        order: 1
       connectOptions:
         kind: property
         type: object
@@ -62,6 +64,7 @@ data:
         deprecated: false
         secret: false
         description: Client connection options
+        order: 2
     properties:
       topic:
         kind: path
@@ -72,6 +75,7 @@ data:
         deprecated: false
         secret: false
         description: Name of the topic
+        order: 0
       brokerUrl:
         kind: parameter
         group: common
@@ -81,6 +85,7 @@ data:
         secret: false
         defaultValue: tcp://localhost:1883
         description: The URL of the MQTT broker.
+        order: 1
       clientId:
         kind: parameter
         group: common
@@ -89,6 +94,7 @@ data:
         deprecated: false
         secret: false
         description: MQTT client identifier.
+        order: 2
       connectOptions:
         kind: parameter
         group: common
@@ -97,6 +103,7 @@ data:
         deprecated: false
         secret: false
         description: Client connection options
+        order: 3
       filePersistenceDirectory:
         kind: parameter
         group: common
@@ -106,6 +113,7 @@ data:
         secret: false
         defaultValue: Current directory
         description: Base directory used by the file persistence provider.
+        order: 4
       persistence:
         kind: parameter
         group: common
@@ -118,6 +126,7 @@ data:
         secret: false
         defaultValue: MEMORY
         description: Client persistence to be used - memory or file.
+        order: 5
       qos:
         kind: parameter
         group: common
@@ -127,6 +136,7 @@ data:
         secret: false
         defaultValue: "2"
         description: Client quality of service level (0-2).
+        order: 6
       retained:
         kind: parameter
         group: common
@@ -136,6 +146,7 @@ data:
         secret: false
         defaultValue: false
         description: Retain option
+        order: 7
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -147,6 +158,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -157,6 +169,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -175,6 +188,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 10
       synchronous:
         kind: parameter
         group: advanced
@@ -185,6 +199,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 11
   documentation.adoc: |+
     [[Paho-PahoComponent]]
     Paho Component

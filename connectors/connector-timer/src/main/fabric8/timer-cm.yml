@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the timer
+        order: 0
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -63,6 +64,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 1
       delay:
         kind: parameter
         group: consumer
@@ -72,6 +74,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: The number of milliseconds to wait before the first event is generated. Should not be used in conjunction with the time option. The default value is 1000. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 2
       fixedRate:
         kind: parameter
         group: consumer
@@ -81,6 +84,7 @@ data:
         secret: false
         defaultValue: false
         description: Events take place at approximately regular intervals separated by the specified period.
+        order: 3
       period:
         kind: parameter
         group: consumer
@@ -90,6 +94,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: If greater than 0 generate periodic events every period milliseconds. The default value is 1000. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 4
       repeatCount:
         kind: parameter
         group: consumer
@@ -99,6 +104,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Specifies a maximum limit of number of fires. So if you set it to 1 the timer will only fire once. If you set it to 5 it will only fire five times. A value of zero or negative means fire forever.
+        order: 5
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -109,6 +115,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 6
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -127,6 +134,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default exchange pattern when creating an exchange.
+        order: 7
       daemon:
         kind: parameter
         group: advanced
@@ -137,6 +145,7 @@ data:
         secret: false
         defaultValue: true
         description: Specifies whether or not the thread associated with the timer endpoint runs as a daemon. The default value is true.
+        order: 8
       pattern:
         kind: parameter
         group: advanced
@@ -146,6 +155,7 @@ data:
         deprecated: false
         secret: false
         description: Allows you to specify a custom Date pattern to use for setting the time option using URI syntax.
+        order: 9
       synchronous:
         kind: parameter
         group: advanced
@@ -156,6 +166,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 10
       time:
         kind: parameter
         group: advanced
@@ -166,6 +177,7 @@ data:
         secret: false
         description: 'A java.util.Date the first event should be generated. If using the
           URI the pattern expected is: yyyy-MM-dd HH:mm:ss or yyyy-MM-dd''T''HH:mm:ss.'
+        order: 11
       timer:
         kind: parameter
         group: advanced
@@ -175,6 +187,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom Timer
+        order: 12
   documentation.adoc: |+
     [[Timer-TimerComponent]]
     Timer Component

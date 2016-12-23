@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Queue name or ARN
+        order: 0
       accessKey:
         kind: parameter
         group: common
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Access Key
+        order: 1
       amazonSQSClient:
         kind: parameter
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: To use the AmazonSQS as client
+        order: 2
       amazonSQSEndpoint:
         kind: parameter
         group: common
@@ -75,6 +78,7 @@ data:
         deprecated: false
         secret: false
         description: The region with which the AWS-SQS client wants to work with. Only works if Camel creates the AWS-SQS client i.e. if you explicitly set amazonSQSClient then this setting will have no effect. You would have to set it on the client you create directly
+        order: 3
       headerFilterStrategy:
         kind: parameter
         group: common
@@ -83,6 +87,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to map headers to/from Camel.
+        order: 4
       queueOwnerAWSAccountId:
         kind: parameter
         group: common
@@ -91,6 +96,7 @@ data:
         deprecated: false
         secret: false
         description: Specify the queue owner aws account id when you need to connect the queue with different account owner.
+        order: 5
       region:
         kind: parameter
         group: common
@@ -99,6 +105,7 @@ data:
         deprecated: false
         secret: false
         description: Specify the queue region which could be used with queueOwnerAWSAccountId to build the service URL.
+        order: 6
       secretKey:
         kind: parameter
         group: common
@@ -107,6 +114,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Secret Key
+        order: 7
       attributeNames:
         kind: parameter
         group: consumer
@@ -116,6 +124,7 @@ data:
         deprecated: false
         secret: false
         description: A list of attribute names to receive when consuming. Multiple names can be separated by comma.
+        order: 8
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -127,6 +136,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       concurrentConsumers:
         kind: parameter
         group: consumer
@@ -137,6 +147,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Allows you to use multiple threads to poll the sqs queue to increase throughput
+        order: 10
       defaultVisibilityTimeout:
         kind: parameter
         group: consumer
@@ -146,6 +157,7 @@ data:
         deprecated: false
         secret: false
         description: The default visibility timeout (in seconds)
+        order: 11
       deleteAfterRead:
         kind: parameter
         group: consumer
@@ -156,6 +168,7 @@ data:
         secret: false
         defaultValue: true
         description: Delete message from SQS after it has been read
+        order: 12
       deleteIfFiltered:
         kind: parameter
         group: consumer
@@ -166,6 +179,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether or not to send the DeleteMessage to the SQS queue if an exchange fails to get through a filter. If 'false' and exchange does not make it through a Camel filter upstream in the route then don't send DeleteMessage.
+        order: 13
       extendMessageVisibility:
         kind: parameter
         group: consumer
@@ -176,6 +190,7 @@ data:
         secret: false
         defaultValue: false
         description: If enabled then a scheduled background task will keep extending the message visibility on SQS. This is needed if it takes a long time to process the message. If set to true defaultVisibilityTimeout must be set. See details at Amazon docs.
+        order: 14
       maxMessagesPerPoll:
         kind: parameter
         group: consumer
@@ -185,6 +200,7 @@ data:
         deprecated: false
         secret: false
         description: Gets the maximum number of messages as a limit to poll at each polling. Is default unlimited but use 0 or negative number to disable it as unlimited.
+        order: 15
       messageAttributeNames:
         kind: parameter
         group: consumer
@@ -194,6 +210,7 @@ data:
         deprecated: false
         secret: false
         description: A list of message attribute names to receive when consuming. Multiple names can be separated by comma.
+        order: 16
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -205,6 +222,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 17
       visibilityTimeout:
         kind: parameter
         group: consumer
@@ -214,6 +232,7 @@ data:
         deprecated: false
         secret: false
         description: The duration (in seconds) that the received messages are hidden from subsequent retrieve requests after being retrieved by a ReceiveMessage request to set in the com.amazonaws.services.sqs.model.SetQueueAttributesRequest. This only make sense if its different from defaultVisibilityTimeout. It changes the queue visibility timeout attribute permanently.
+        order: 18
       waitTimeSeconds:
         kind: parameter
         group: consumer
@@ -223,6 +242,7 @@ data:
         deprecated: false
         secret: false
         description: Duration in seconds (0 to 20) that the ReceiveMessage action call will wait until a message is in the queue to include in the response.
+        order: 19
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -233,6 +253,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 20
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -251,6 +272,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 21
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -261,6 +283,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+        order: 22
       delaySeconds:
         kind: parameter
         group: producer
@@ -270,6 +293,7 @@ data:
         deprecated: false
         secret: false
         description: Delay sending messages for a number of seconds.
+        order: 23
       synchronous:
         kind: parameter
         group: advanced
@@ -280,6 +304,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 24
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -290,6 +315,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 25
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -300,6 +326,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 26
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -310,6 +337,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 27
       delay:
         kind: parameter
         group: scheduler
@@ -321,6 +349,7 @@ data:
         secret: false
         defaultValue: "500"
         description: Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 28
       greedy:
         kind: parameter
         group: scheduler
@@ -332,6 +361,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 29
       initialDelay:
         kind: parameter
         group: scheduler
@@ -343,6 +373,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 30
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -361,6 +392,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 31
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -371,6 +403,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+        order: 32
       scheduler:
         kind: parameter
         group: scheduler
@@ -386,6 +419,7 @@ data:
         secret: false
         defaultValue: none
         description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+        order: 33
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -397,6 +431,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 34
       startScheduler:
         kind: parameter
         group: scheduler
@@ -408,6 +443,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 35
       timeUnit:
         kind: parameter
         group: scheduler
@@ -427,6 +463,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 36
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -438,6 +475,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 37
       proxyHost:
         kind: parameter
         group: proxy
@@ -447,6 +485,7 @@ data:
         deprecated: false
         secret: false
         description: To define a proxy host when instantiating the SQS client
+        order: 38
       proxyPort:
         kind: parameter
         group: proxy
@@ -456,6 +495,7 @@ data:
         deprecated: false
         secret: false
         description: To define a proxy port when instantiating the SQS client
+        order: 39
       maximumMessageSize:
         kind: parameter
         group: queue
@@ -465,6 +505,7 @@ data:
         deprecated: false
         secret: false
         description: The maximumMessageSize (in bytes) an SQS message can contain for this queue.
+        order: 40
       messageRetentionPeriod:
         kind: parameter
         group: queue
@@ -474,6 +515,7 @@ data:
         deprecated: false
         secret: false
         description: The messageRetentionPeriod (in seconds) a message will be retained by SQS for this queue.
+        order: 41
       policy:
         kind: parameter
         group: queue
@@ -483,6 +525,7 @@ data:
         deprecated: false
         secret: false
         description: The policy for this queue
+        order: 42
       receiveMessageWaitTimeSeconds:
         kind: parameter
         group: queue
@@ -492,6 +535,7 @@ data:
         deprecated: false
         secret: false
         description: If you do not specify WaitTimeSeconds in the request the queue attribute ReceiveMessageWaitTimeSeconds is used to determine how long to wait.
+        order: 43
       redrivePolicy:
         kind: parameter
         group: queue
@@ -501,6 +545,7 @@ data:
         deprecated: false
         secret: false
         description: Specify the policy that send message to DeadLetter queue. See detail at Amazon docs.
+        order: 44
   documentation.adoc: "[[AWS-SQS-SQSComponent]]\nSQS Component\n~~~~~~~~~~~~~\n\n\
     *Available as of Camel 2.6*\n\nThe sqs component supports sending and receiving\
     \ messages to\nhttp://aws.amazon.com/sqs[Amazon's SQS] service.\n\nPrerequisites\n\

@@ -48,6 +48,7 @@ data:
         javaType: java.lang.String
         deprecated: false
         description: Maven coordinates to use as default to grab if the message body is empty.
+        order: 0
       exchangePattern:
         kind: parameter
         type: string
@@ -64,6 +65,7 @@ data:
         deprecated: false
         defaultValue: InOnly
         description: Sets the default exchange pattern when creating an exchange.
+        order: 1
       synchronous:
         kind: parameter
         type: boolean
@@ -71,6 +73,7 @@ data:
         deprecated: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 2
   documentation.adoc: |+
     [[Grape-GrapeComponent]]
     Grape Component

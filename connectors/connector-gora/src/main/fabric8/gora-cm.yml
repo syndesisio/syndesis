@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Instance name
+        order: 0
       dataStoreClass:
         kind: parameter
         group: common
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: The type of the dataStore
+        order: 1
       keyClass:
         kind: parameter
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: The type class of the key
+        order: 2
       valueClass:
         kind: parameter
         group: common
@@ -75,6 +78,7 @@ data:
         deprecated: false
         secret: false
         description: The type of the value
+        order: 3
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -86,6 +90,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 4
       concurrentConsumers:
         kind: parameter
         group: consumer
@@ -96,6 +101,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Number of concurrent consumers
+        order: 5
       endKey:
         kind: parameter
         group: consumer
@@ -105,6 +111,7 @@ data:
         deprecated: false
         secret: false
         description: The End Key
+        order: 6
       endTime:
         kind: parameter
         group: consumer
@@ -114,6 +121,7 @@ data:
         deprecated: false
         secret: false
         description: The End Time
+        order: 7
       fields:
         kind: parameter
         group: consumer
@@ -123,6 +131,7 @@ data:
         deprecated: false
         secret: false
         description: The Fields
+        order: 8
       keyRangeFrom:
         kind: parameter
         group: consumer
@@ -132,6 +141,7 @@ data:
         deprecated: false
         secret: false
         description: The Key Range From
+        order: 9
       keyRangeTo:
         kind: parameter
         group: consumer
@@ -141,6 +151,7 @@ data:
         deprecated: false
         secret: false
         description: The Key Range To
+        order: 10
       limit:
         kind: parameter
         group: consumer
@@ -150,6 +161,7 @@ data:
         deprecated: false
         secret: false
         description: The Limit
+        order: 11
       startKey:
         kind: parameter
         group: consumer
@@ -159,6 +171,7 @@ data:
         deprecated: false
         secret: false
         description: The Start Key
+        order: 12
       startTime:
         kind: parameter
         group: consumer
@@ -168,6 +181,7 @@ data:
         deprecated: false
         secret: false
         description: The Start Time
+        order: 13
       timeRangeFrom:
         kind: parameter
         group: consumer
@@ -177,6 +191,7 @@ data:
         deprecated: false
         secret: false
         description: The Time Range From
+        order: 14
       timeRangeTo:
         kind: parameter
         group: consumer
@@ -186,6 +201,7 @@ data:
         deprecated: false
         secret: false
         description: The Time Range To
+        order: 15
       timestamp:
         kind: parameter
         group: consumer
@@ -195,6 +211,7 @@ data:
         deprecated: false
         secret: false
         description: The Timestamp
+        order: 16
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -205,6 +222,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 17
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -223,6 +241,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 18
       flushOnEveryOperation:
         kind: parameter
         group: producer
@@ -233,6 +252,7 @@ data:
         secret: false
         defaultValue: true
         description: Flush on every operation
+        order: 19
       hadoopConfiguration:
         kind: parameter
         group: advanced
@@ -242,6 +262,7 @@ data:
         deprecated: false
         secret: false
         description: Hadoop Configuration
+        order: 20
       synchronous:
         kind: parameter
         group: advanced
@@ -252,6 +273,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 21
   documentation.adoc: |
     [[Gora-GoraComponent]]
     Gora Component

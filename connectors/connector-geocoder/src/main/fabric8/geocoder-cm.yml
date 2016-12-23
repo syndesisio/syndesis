@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: 'The geo address which should be prefixed with address:'
+        order: 0
       latlng:
         kind: path
         group: producer
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: 'The geo latitude and longitude which should be prefixed with latlng:'
+        order: 1
       clientId:
         kind: parameter
         group: producer
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: To use google premium with this client id
+        order: 2
       clientKey:
         kind: parameter
         group: producer
@@ -75,6 +78,7 @@ data:
         deprecated: false
         secret: false
         description: To use google premium with this client key
+        order: 3
       headersOnly:
         kind: parameter
         group: producer
@@ -84,6 +88,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to only enrich the Exchange with headers and leave the body as-is.
+        order: 4
       language:
         kind: parameter
         group: producer
@@ -93,6 +98,7 @@ data:
         secret: false
         defaultValue: en
         description: The language to use.
+        order: 5
       httpClientConfigurer:
         kind: parameter
         group: advanced
@@ -102,6 +108,7 @@ data:
         deprecated: false
         secret: false
         description: Register a custom configuration strategy for new HttpClient instances created by producers or consumers such as to configure authentication mechanisms etc
+        order: 6
       httpConnectionManager:
         kind: parameter
         group: advanced
@@ -111,6 +118,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HttpConnectionManager to manage connections
+        order: 7
       synchronous:
         kind: parameter
         group: advanced
@@ -121,6 +129,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 8
       proxyAuthDomain:
         kind: parameter
         group: proxy
@@ -130,6 +139,7 @@ data:
         deprecated: false
         secret: false
         description: Domain for proxy NTML authentication
+        order: 9
       proxyAuthHost:
         kind: parameter
         group: proxy
@@ -139,6 +149,7 @@ data:
         deprecated: false
         secret: false
         description: Optional host for proxy NTML authentication
+        order: 10
       proxyAuthMethod:
         kind: parameter
         group: proxy
@@ -148,6 +159,7 @@ data:
         deprecated: false
         secret: false
         description: Authentication method for proxy either as Basic Digest or NTLM.
+        order: 11
       proxyAuthPassword:
         kind: parameter
         group: proxy
@@ -157,6 +169,7 @@ data:
         deprecated: false
         secret: false
         description: Password for proxy authentication
+        order: 12
       proxyAuthUsername:
         kind: parameter
         group: proxy
@@ -166,6 +179,7 @@ data:
         deprecated: false
         secret: false
         description: Username for proxy authentication
+        order: 13
       proxyHost:
         kind: parameter
         group: proxy
@@ -175,6 +189,7 @@ data:
         deprecated: false
         secret: false
         description: The proxy host name
+        order: 14
       proxyPort:
         kind: parameter
         group: proxy
@@ -184,6 +199,7 @@ data:
         deprecated: false
         secret: false
         description: The proxy port number
+        order: 15
   documentation.adoc: |
     [[Geocoder-GeocoderComponent]]
     Geocoder Component

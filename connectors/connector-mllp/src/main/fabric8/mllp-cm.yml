@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Hostname or IP for connection for the TCP connection. The default value is null which means any local IP address
+        order: 0
       port:
         kind: path
         group: common
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Port number for the TCP connection
+        order: 1
       autoAck:
         kind: parameter
         group: common
@@ -69,6 +71,7 @@ data:
         secret: false
         defaultValue: true
         description: Enable/Disable the automatic generation of a MLLP Acknowledgement MLLP Consumers only
+        order: 2
       hl7Headers:
         kind: parameter
         group: common
@@ -78,6 +81,7 @@ data:
         secret: false
         defaultValue: true
         description: Enable/Disable the automatic generation of message headers from the HL7 Message MLLP Consumers only
+        order: 3
       keepAlive:
         kind: parameter
         group: common
@@ -87,6 +91,7 @@ data:
         secret: false
         defaultValue: true
         description: Enable/disable the SO_KEEPALIVE socket option.
+        order: 4
       reuseAddress:
         kind: parameter
         group: common
@@ -96,6 +101,7 @@ data:
         secret: false
         defaultValue: false
         description: Enable/disable the SO_REUSEADDR socket option.
+        order: 5
       tcpNoDelay:
         kind: parameter
         group: common
@@ -105,6 +111,7 @@ data:
         secret: false
         defaultValue: true
         description: Enable/disable the TCP_NODELAY socket option.
+        order: 6
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -116,6 +123,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 7
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -126,6 +134,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -144,6 +153,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 9
       backlog:
         kind: parameter
         group: advanced
@@ -154,6 +164,7 @@ data:
         secret: false
         defaultValue: "5"
         description: The maximum queue length for incoming connection indications (a request to connect) is set to the backlog parameter. If a connection indication arrives when the queue is full the connection is refused.
+        order: 10
       receiveBufferSize:
         kind: parameter
         group: advanced
@@ -163,6 +174,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the SO_RCVBUF option to the specified value (in bytes)
+        order: 11
       sendBufferSize:
         kind: parameter
         group: advanced
@@ -172,6 +184,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the SO_SNDBUF option to the specified value (in bytes)
+        order: 12
       synchronous:
         kind: parameter
         group: advanced
@@ -182,6 +195,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 13
       charsetName:
         kind: parameter
         group: codec
@@ -191,6 +205,7 @@ data:
         deprecated: false
         secret: false
         description: Set the CamelCharsetName property on the exchange
+        order: 14
       acceptTimeout:
         kind: parameter
         group: timeout
@@ -201,6 +216,7 @@ data:
         secret: false
         defaultValue: "60000"
         description: Timeout (in milliseconds) while waiting for a TCP connection TCP Server Only
+        order: 15
       bindRetryInterval:
         kind: parameter
         group: timeout
@@ -211,6 +227,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: TCP Server Only - The number of milliseconds to wait between bind attempts
+        order: 16
       bindTimeout:
         kind: parameter
         group: timeout
@@ -221,6 +238,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: TCP Server Only - The number of milliseconds to retry binding to a server port
+        order: 17
       connectTimeout:
         kind: parameter
         group: timeout
@@ -231,6 +249,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: Timeout (in milliseconds) for establishing for a TCP connection TCP Client only
+        order: 18
       maxReceiveTimeouts:
         kind: parameter
         group: timeout
@@ -241,6 +260,7 @@ data:
         secret: false
         defaultValue: -1
         description: The maximum number of timeouts (specified by receiveTimeout) allowed before the TCP Connection will be reset.
+        order: 19
       readTimeout:
         kind: parameter
         group: timeout
@@ -251,6 +271,7 @@ data:
         secret: false
         defaultValue: "500"
         description: The SO_TIMEOUT value (in milliseconds) used after the start of an MLLP frame has been received
+        order: 20
       receiveTimeout:
         kind: parameter
         group: timeout
@@ -261,6 +282,7 @@ data:
         secret: false
         defaultValue: "10000"
         description: The SO_TIMEOUT value (in milliseconds) used when waiting for the start of an MLLP frame
+        order: 21
   documentation.adoc: |+
     [[Mllp-MllpComponent]]
     MLLP Component

@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Name of javax.naming.directory.DirContext bean to lookup in the registry.
+        order: 0
       base:
         kind: parameter
         group: producer
@@ -61,6 +62,7 @@ data:
         secret: false
         defaultValue: ou=system
         description: The base DN for searches.
+        order: 1
       pageSize:
         kind: parameter
         group: producer
@@ -69,6 +71,7 @@ data:
         deprecated: false
         secret: false
         description: When specified the ldap module uses paging to retrieve all results (most LDAP Servers throw an exception when trying to retrieve more than 1000 entries in one query). To be able to use this a LdapContext (subclass of DirContext) has to be passed in as ldapServerBean (otherwise an exception is thrown)
+        order: 2
       returnedAttributes:
         kind: parameter
         group: producer
@@ -77,6 +80,7 @@ data:
         deprecated: false
         secret: false
         description: Comma-separated list of attributes that should be set in each entry of the result
+        order: 3
       scope:
         kind: parameter
         group: producer
@@ -90,6 +94,7 @@ data:
         secret: false
         defaultValue: subtree
         description: Specifies how deeply to search the tree of entries starting at the base DN.
+        order: 4
       synchronous:
         kind: parameter
         group: advanced
@@ -100,6 +105,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 5
   documentation.adoc: "[[LDAP-LDAPComponent]]\nLDAP Component\n~~~~~~~~~~~~~~\n\n\
     The *ldap* component allows you to perform searches in LDAP servers\nusing filters\
     \ as the message payload. +\n This component uses standard JNDI (`javax.naming`\

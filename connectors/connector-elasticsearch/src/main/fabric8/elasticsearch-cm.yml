@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use an existing configured Elasticsearch client instead of creating a client per endpoint.
+        order: 0
     properties:
       clusterName:
         kind: path
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: Name of cluster or use local for local mode
+        order: 0
       clientTransportSniff:
         kind: parameter
         group: producer
@@ -68,6 +70,7 @@ data:
         secret: false
         defaultValue: true
         description: Is the client allowed to sniff the rest of the cluster or not (default true). This setting map to the client.transport.sniff setting.
+        order: 1
       consistencyLevel:
         kind: parameter
         group: producer
@@ -82,6 +85,7 @@ data:
         secret: false
         defaultValue: DEFAULT
         description: The write consistency level to use with INDEX and BULK operations (can be any of ONE QUORUM ALL or DEFAULT)
+        order: 2
       data:
         kind: parameter
         group: producer
@@ -90,6 +94,7 @@ data:
         deprecated: false
         secret: false
         description: Is the node going to be allowed to allocate data (shards) to it or not. This setting map to the node.data setting.
+        order: 3
       indexName:
         kind: parameter
         group: producer
@@ -98,6 +103,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the index to act against
+        order: 4
       indexType:
         kind: parameter
         group: producer
@@ -106,6 +112,7 @@ data:
         deprecated: false
         secret: false
         description: The type of the index to act against
+        order: 5
       ip:
         kind: parameter
         group: producer
@@ -114,6 +121,7 @@ data:
         deprecated: false
         secret: false
         description: The TransportClient remote host ip to use
+        order: 6
       operation:
         kind: parameter
         group: producer
@@ -133,6 +141,7 @@ data:
         deprecated: false
         secret: false
         description: What operation to perform
+        order: 7
       pathHome:
         kind: parameter
         group: producer
@@ -142,6 +151,7 @@ data:
         secret: false
         defaultValue: ${user.home}/.elasticsearch
         description: The path.home property of ElasticSearch configuration. You need to provide a valid path otherwise the default $user.home/.elasticsearch will be used.
+        order: 8
       port:
         kind: parameter
         group: producer
@@ -151,6 +161,7 @@ data:
         secret: false
         defaultValue: "9300"
         description: The TransportClient remote port to use (defaults to 9300)
+        order: 9
       transportAddresses:
         kind: parameter
         group: producer
@@ -159,6 +170,7 @@ data:
         deprecated: false
         secret: false
         description: Comma separated list with ip:port formatted remote transport addresses to use. The ip and port options must be left blank for transportAddresses to be considered instead.
+        order: 10
       synchronous:
         kind: parameter
         group: advanced
@@ -169,6 +181,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 11
   documentation.adoc: |+
     [[ElasticSearch-ElasticSearchComponent]]
     ElasticSearch Component

@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: SMS Provider HOST with scheme
+        order: 0
       defaultFrom:
         kind: parameter
         group: producer
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: This is the sender name. The maximum length is 11 characters.
+        order: 1
       defaultMaxNumberOfParts:
         kind: parameter
         group: producer
@@ -69,6 +71,7 @@ data:
         secret: false
         defaultValue: "8"
         description: If it is a multipart message forces the max number. Message can be truncated. Technically the gateway will first check if a message is larger than 160 characters if so the message will be cut into multiple 153 characters parts limited by these parameters.
+        order: 2
       productToken:
         kind: parameter
         group: producer
@@ -78,6 +81,7 @@ data:
         deprecated: false
         secret: false
         description: The unique token to use
+        order: 3
       testConnectionOnStartup:
         kind: parameter
         group: producer
@@ -87,6 +91,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to test the connection to the SMS Gateway on startup
+        order: 4
       synchronous:
         kind: parameter
         group: advanced
@@ -97,6 +102,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 5
   documentation.adoc: "[[CM-SMS]]\nCM-SMS\n~~~~~~\n\n*Available as of Camel 2.18*\n\
     \n*Camel-Cm-Sms* is an http://camel.apache.org/[Apache Camel] component \nfor\
     \ the [CM SMS Gateway](https://www.cmtelecom.com). \n\nIt allows to integrate\

@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use a shared configured configuration as base for creating new endpoints.
+        order: 0
     properties:
       addresses:
         kind: path
@@ -58,6 +59,7 @@ data:
         secret: false
         defaultValue: localhost:22133
         description: The address(es) on which kestrel is running
+        order: 0
       queue:
         kind: path
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: The queue we are polling
+        order: 1
       concurrentConsumers:
         kind: parameter
         group: common
@@ -76,6 +79,7 @@ data:
         secret: false
         defaultValue: "1"
         description: How many concurrent listeners to schedule for the thread pool
+        order: 2
       waitTimeMs:
         kind: parameter
         group: common
@@ -85,6 +89,7 @@ data:
         secret: false
         defaultValue: "100"
         description: How long a given wait should block (server side) in milliseconds
+        order: 3
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -96,6 +101,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 4
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -106,6 +112,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 5
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -124,6 +131,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 6
       synchronous:
         kind: parameter
         group: advanced
@@ -134,6 +142,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 7
   documentation.adoc: |+
     [[Kestrel-KestrelComponent]]
     Kestrel Component

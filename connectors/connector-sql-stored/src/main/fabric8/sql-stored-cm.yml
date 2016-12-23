@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the DataSource to use to communicate with the database.
+        order: 0
     properties:
       template:
         kind: path
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the StoredProcedure template to perform
+        order: 0
       batch:
         kind: parameter
         group: producer
@@ -69,6 +71,7 @@ data:
         secret: false
         defaultValue: false
         description: Enables or disables batch mode
+        order: 1
       dataSource:
         kind: parameter
         group: producer
@@ -77,6 +80,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the DataSource to use to communicate with the database.
+        order: 2
       noop:
         kind: parameter
         group: producer
@@ -87,6 +91,7 @@ data:
         secret: false
         defaultValue: false
         description: If set will ignore the results of the template and use the existing IN message as the OUT message for the continuation of processing
+        order: 3
       outputHeader:
         kind: parameter
         group: producer
@@ -95,6 +100,7 @@ data:
         deprecated: false
         secret: false
         description: Store the template result in a header instead of the message body. By default outputHeader == null and the template result is stored in the message body any existing content in the message body is discarded. If outputHeader is set the value is used as the name of the header to store the template result and the original message body is preserved.
+        order: 4
       useMessageBodyForTemplate:
         kind: parameter
         group: producer
@@ -105,6 +111,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to use the message body as the template and then headers for parameters. If this option is enabled then the template in the uri is not used.
+        order: 5
       synchronous:
         kind: parameter
         group: advanced
@@ -115,6 +122,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 6
   documentation.adoc: |+
     [[SQLStoredProcedure-SQLStoredProcedureComponent]]
     SQL Stored Procedure Component

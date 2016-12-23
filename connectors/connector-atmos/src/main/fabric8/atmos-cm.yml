@@ -50,6 +50,7 @@ data:
         deprecated: false
         secret: false
         description: Atmos name
+        order: 0
       operation:
         kind: path
         group: common
@@ -65,6 +66,7 @@ data:
         deprecated: false
         secret: false
         description: Operation to perform
+        order: 1
       enableSslValidation:
         kind: parameter
         group: common
@@ -74,6 +76,7 @@ data:
         secret: false
         defaultValue: false
         description: Atmos SSL validation
+        order: 2
       fullTokenId:
         kind: parameter
         group: common
@@ -82,6 +85,7 @@ data:
         deprecated: false
         secret: false
         description: Atmos client fullTokenId
+        order: 3
       localPath:
         kind: parameter
         group: common
@@ -90,6 +94,7 @@ data:
         deprecated: false
         secret: false
         description: Local path to put files
+        order: 4
       newRemotePath:
         kind: parameter
         group: common
@@ -98,6 +103,7 @@ data:
         deprecated: false
         secret: false
         description: New path on Atmos when moving files
+        order: 5
       query:
         kind: parameter
         group: common
@@ -106,6 +112,7 @@ data:
         deprecated: false
         secret: false
         description: Search query on Atmos
+        order: 6
       remotePath:
         kind: parameter
         group: common
@@ -114,6 +121,7 @@ data:
         deprecated: false
         secret: false
         description: Where to put files on Atmos
+        order: 7
       secretKey:
         kind: parameter
         group: common
@@ -122,6 +130,7 @@ data:
         deprecated: false
         secret: false
         description: Atmos shared secret
+        order: 8
       uri:
         kind: parameter
         group: common
@@ -130,6 +139,7 @@ data:
         deprecated: false
         secret: false
         description: Atomos server uri
+        order: 9
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -141,6 +151,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 10
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -151,6 +162,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 11
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -169,6 +181,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 12
       synchronous:
         kind: parameter
         group: advanced
@@ -179,6 +192,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 13
   documentation.adoc: |
     [[Atmos-Atmos]]
     Atmos Component

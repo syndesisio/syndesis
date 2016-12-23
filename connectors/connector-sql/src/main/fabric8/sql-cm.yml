@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the DataSource to use to communicate with the database.
+        order: 0
       usePlaceholder:
         kind: property
         required: false
@@ -57,6 +58,7 @@ data:
         secret: false
         defaultValue: true
         description: Sets whether to use placeholder and replace all placeholder characters with sign in the SQL queries. This option is default true
+        order: 1
     properties:
       query:
         kind: path
@@ -68,6 +70,7 @@ data:
         secret: false
         description: 'Sets the SQL query to perform. You can externalize the query by
           using file: or classpath: as prefix and specify the location of the file.'
+        order: 0
       allowNamedParameters:
         kind: parameter
         group: common
@@ -77,6 +80,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to allow using named parameters in the queries.
+        order: 1
       dataSource:
         kind: parameter
         group: common
@@ -85,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the DataSource to use to communicate with the database.
+        order: 2
       dataSourceRef:
         kind: parameter
         group: common
@@ -93,6 +98,7 @@ data:
         deprecated: true
         secret: false
         description: Sets the reference to a DataSource to lookup from the registry to use for communicating with the database.
+        order: 3
       outputClass:
         kind: parameter
         group: common
@@ -101,6 +107,7 @@ data:
         deprecated: false
         secret: false
         description: Specify the full package and class name to use as conversion when outputType=SelectOne.
+        order: 4
       outputHeader:
         kind: parameter
         group: common
@@ -109,6 +116,7 @@ data:
         deprecated: false
         secret: false
         description: Store the query result in a header instead of the message body. By default outputHeader == null and the query result is stored in the message body any existing content in the message body is discarded. If outputHeader is set the value is used as the name of the header to store the query result and the original message body is preserved.
+        order: 5
       outputType:
         kind: parameter
         group: common
@@ -130,6 +138,7 @@ data:
           all the setters that match the column names. It will assume your class has a
           default constructor to create instance with. d) If the query resulted in more
           than one rows it throws an non-unique result exception.'
+        order: 6
       separator:
         kind: parameter
         group: common
@@ -139,6 +148,7 @@ data:
         secret: false
         defaultValue: ','
         description: The separator to use when parameter values is taken from message body (if the body is a String type) to be inserted at placeholders. Notice if you use named parameters then a Map type is used instead. The default value is comma.
+        order: 7
       breakBatchOnConsumeFail:
         kind: parameter
         group: consumer
@@ -149,6 +159,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether to break batch if onConsume failed.
+        order: 8
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -160,6 +171,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       expectedUpdateCount:
         kind: parameter
         group: consumer
@@ -170,6 +182,7 @@ data:
         secret: false
         defaultValue: -1
         description: Sets an expected update count to validate when using onConsume.
+        order: 10
       maxMessagesPerPoll:
         kind: parameter
         group: consumer
@@ -179,6 +192,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the maximum number of messages to poll
+        order: 11
       onConsume:
         kind: parameter
         group: consumer
@@ -188,6 +202,7 @@ data:
         deprecated: false
         secret: false
         description: After processing each row then this query can be executed if the Exchange was processed successfully for example to mark the row as processed. The query can have parameter.
+        order: 12
       onConsumeBatchComplete:
         kind: parameter
         group: consumer
@@ -197,6 +212,7 @@ data:
         deprecated: false
         secret: false
         description: After processing the entire batch this query can be executed to bulk update rows etc. The query cannot have parameters.
+        order: 13
       onConsumeFailed:
         kind: parameter
         group: consumer
@@ -206,6 +222,7 @@ data:
         deprecated: false
         secret: false
         description: After processing each row then this query can be executed if the Exchange failed for example to mark the row as failed. The query can have parameter.
+        order: 14
       routeEmptyResultSet:
         kind: parameter
         group: consumer
@@ -216,6 +233,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether empty resultset should be allowed to be sent to the next hop. Defaults to false. So the empty resultset will be filtered out.
+        order: 15
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -227,6 +245,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 16
       transacted:
         kind: parameter
         group: consumer
@@ -237,6 +256,7 @@ data:
         secret: false
         defaultValue: false
         description: Enables or disables transaction. If enabled then if processing an exchange failed then the consumer break out processing any further exchanges to cause a rollback eager
+        order: 17
       useIterator:
         kind: parameter
         group: consumer
@@ -247,6 +267,7 @@ data:
         secret: false
         defaultValue: true
         description: Sets how resultset should be delivered to route. Indicates delivery as either a list or individual object. defaults to true.
+        order: 18
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -257,6 +278,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 19
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -275,6 +297,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 20
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -285,6 +308,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+        order: 21
       processingStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -294,6 +318,7 @@ data:
         deprecated: false
         secret: false
         description: Allows to plugin to use a custom org.apache.camel.component.sql.SqlProcessingStrategy to execute queries when the consumer has processed the rows/batch.
+        order: 22
       batch:
         kind: parameter
         group: producer
@@ -304,6 +329,7 @@ data:
         secret: false
         defaultValue: false
         description: Enables or disables batch mode
+        order: 23
       noop:
         kind: parameter
         group: producer
@@ -314,6 +340,7 @@ data:
         secret: false
         defaultValue: false
         description: If set will ignore the results of the SQL query and use the existing IN message as the OUT message for the continuation of processing
+        order: 24
       useMessageBodyForSql:
         kind: parameter
         group: producer
@@ -324,6 +351,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to use the message body as the SQL and then headers for parameters. If this option is enabled then the SQL in the uri is not used.
+        order: 25
       alwaysPopulateStatement:
         kind: parameter
         group: producer (advanced)
@@ -334,6 +362,7 @@ data:
         secret: false
         defaultValue: false
         description: If enabled then the populateStatement method from org.apache.camel.component.sql.SqlPrepareStatementStrategy is always invoked also if there is no expected parameters to be prepared. When this is false then the populateStatement is only invoked if there is 1 or more expected parameters to be set; for example this avoids reading the message body/headers for SQL queries with no parameters.
+        order: 26
       parametersCount:
         kind: parameter
         group: producer (advanced)
@@ -343,6 +372,7 @@ data:
         deprecated: false
         secret: false
         description: If set greater than zero then Camel will use this count value of parameters to replace instead of querying via JDBC metadata API. This is useful if the JDBC vendor could not return correct parameters count then user may override instead.
+        order: 27
       placeholder:
         kind: parameter
         group: advanced
@@ -353,6 +383,7 @@ data:
         secret: false
         defaultValue: '#'
         description: Specifies a character that will be replaced to in SQL query. Notice that it is simple String.replaceAll() operation and no SQL parsing is involved (quoted strings will also change).
+        order: 28
       prepareStatementStrategy:
         kind: parameter
         group: advanced
@@ -362,6 +393,7 @@ data:
         deprecated: false
         secret: false
         description: Allows to plugin to use a custom org.apache.camel.component.sql.SqlPrepareStatementStrategy to control preparation of the query and prepared statement.
+        order: 29
       synchronous:
         kind: parameter
         group: advanced
@@ -372,6 +404,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 30
       templateOptions:
         kind: parameter
         group: advanced
@@ -383,6 +416,7 @@ data:
         deprecated: false
         secret: false
         description: Configures the Spring JdbcTemplate with the key/values from the Map
+        order: 31
       usePlaceholder:
         kind: parameter
         group: advanced
@@ -393,6 +427,7 @@ data:
         secret: false
         defaultValue: true
         description: Sets whether to use placeholder and replace all placeholder characters with sign in the SQL queries. This option is default true
+        order: 32
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -403,6 +438,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 33
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -413,6 +449,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 34
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -423,6 +460,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 35
       delay:
         kind: parameter
         group: scheduler
@@ -434,6 +472,7 @@ data:
         secret: false
         defaultValue: "500"
         description: Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 36
       greedy:
         kind: parameter
         group: scheduler
@@ -445,6 +484,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 37
       initialDelay:
         kind: parameter
         group: scheduler
@@ -456,6 +496,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 38
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -474,6 +515,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 39
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -484,6 +526,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+        order: 40
       scheduler:
         kind: parameter
         group: scheduler
@@ -499,6 +542,7 @@ data:
         secret: false
         defaultValue: none
         description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+        order: 41
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -510,6 +554,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 42
       startScheduler:
         kind: parameter
         group: scheduler
@@ -521,6 +566,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 43
       timeUnit:
         kind: parameter
         group: scheduler
@@ -540,6 +586,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 44
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -551,6 +598,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 45
   documentation.adoc: |
     [[SQLComponent-SQLComponent]]
     SQL Component

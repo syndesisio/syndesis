@@ -54,6 +54,7 @@ data:
         deprecated: false
         secret: false
         description: Activity or workflow
+        order: 0
       accessKey:
         kind: parameter
         group: common
@@ -62,6 +63,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Access Key.
+        order: 1
       amazonSWClient:
         kind: parameter
         group: common
@@ -70,6 +72,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given AmazonSimpleWorkflowClient as client
+        order: 2
       dataConverter:
         kind: parameter
         group: common
@@ -78,6 +81,7 @@ data:
         deprecated: false
         secret: false
         description: An instance of com.amazonaws.services.simpleworkflow.flow.DataConverter to use for serializing/deserializing the data.
+        order: 3
       domainName:
         kind: parameter
         group: common
@@ -86,6 +90,7 @@ data:
         deprecated: false
         secret: false
         description: The workflow domain to use.
+        order: 4
       eventName:
         kind: parameter
         group: common
@@ -94,6 +99,7 @@ data:
         deprecated: false
         secret: false
         description: The workflow or activity event name to use.
+        order: 5
       secretKey:
         kind: parameter
         group: common
@@ -102,6 +108,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Secret Key.
+        order: 6
       version:
         kind: parameter
         group: common
@@ -110,6 +117,7 @@ data:
         deprecated: false
         secret: false
         description: The workflow or activity event version to use.
+        order: 7
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -121,6 +129,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -131,6 +140,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -149,6 +159,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 10
       clientConfigurationParameters:
         kind: parameter
         group: advanced
@@ -160,6 +171,7 @@ data:
         deprecated: false
         secret: false
         description: To configure the ClientConfiguration using the key/values from the Map.
+        order: 11
       startWorkflowOptionsParameters:
         kind: parameter
         group: advanced
@@ -171,6 +183,7 @@ data:
         deprecated: false
         secret: false
         description: To configure the StartWorkflowOptions using the key/values from the Map.
+        order: 12
       sWClientParameters:
         kind: parameter
         group: advanced
@@ -182,6 +195,7 @@ data:
         deprecated: false
         secret: false
         description: To configure the AmazonSimpleWorkflowClient using the key/values from the Map.
+        order: 13
       synchronous:
         kind: parameter
         group: advanced
@@ -192,6 +206,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 14
       activityList:
         kind: parameter
         group: activity
@@ -201,6 +216,7 @@ data:
         deprecated: false
         secret: false
         description: The list name to consume activities from.
+        order: 15
       activitySchedulingOptions:
         kind: parameter
         group: activity
@@ -210,6 +226,7 @@ data:
         deprecated: false
         secret: false
         description: Activity scheduling options
+        order: 16
       activityThreadPoolSize:
         kind: parameter
         group: activity
@@ -220,6 +237,7 @@ data:
         secret: false
         defaultValue: "100"
         description: Maximum number of threads in work pool for activity.
+        order: 17
       activityTypeExecutionOptions:
         kind: parameter
         group: activity
@@ -229,6 +247,7 @@ data:
         deprecated: false
         secret: false
         description: Activity execution options
+        order: 18
       activityTypeRegistrationOptions:
         kind: parameter
         group: activity
@@ -238,6 +257,7 @@ data:
         deprecated: false
         secret: false
         description: Activity registration options
+        order: 19
       childPolicy:
         kind: parameter
         group: workflow
@@ -247,6 +267,7 @@ data:
         deprecated: false
         secret: false
         description: The policy to use on child workflows when terminating a workflow.
+        order: 20
       executionStartToCloseTimeout:
         kind: parameter
         group: workflow
@@ -257,6 +278,7 @@ data:
         secret: false
         defaultValue: "3600"
         description: Set the execution start to close timeout.
+        order: 21
       operation:
         kind: parameter
         group: workflow
@@ -275,6 +297,7 @@ data:
         secret: false
         defaultValue: START
         description: Workflow operation
+        order: 22
       signalName:
         kind: parameter
         group: workflow
@@ -284,6 +307,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the signal to send to the workflow.
+        order: 23
       stateResultType:
         kind: parameter
         group: workflow
@@ -293,6 +317,7 @@ data:
         deprecated: false
         secret: false
         description: The type of the result when a workflow state is queried.
+        order: 24
       taskStartToCloseTimeout:
         kind: parameter
         group: workflow
@@ -303,6 +328,7 @@ data:
         secret: false
         defaultValue: "600"
         description: Set the task start to close timeout.
+        order: 25
       terminationDetails:
         kind: parameter
         group: workflow
@@ -312,6 +338,7 @@ data:
         deprecated: false
         secret: false
         description: Details for terminating a workflow.
+        order: 26
       terminationReason:
         kind: parameter
         group: workflow
@@ -321,6 +348,7 @@ data:
         deprecated: false
         secret: false
         description: The reason for terminating a workflow.
+        order: 27
       workflowList:
         kind: parameter
         group: workflow
@@ -330,6 +358,7 @@ data:
         deprecated: false
         secret: false
         description: The list name to consume workflows from.
+        order: 28
       workflowTypeRegistrationOptions:
         kind: parameter
         group: workflow
@@ -339,6 +368,7 @@ data:
         deprecated: false
         secret: false
         description: Workflow registration options
+        order: 29
   documentation.adoc: |
     [[AWS-SWF-SWFComponent]]
     SWF Component

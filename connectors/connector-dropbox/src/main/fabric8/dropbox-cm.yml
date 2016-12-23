@@ -57,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: The specific action (typically is a CRUD action) to perform on Dropbox remote folder.
+        order: 0
       accessToken:
         kind: parameter
         group: common
@@ -66,6 +67,7 @@ data:
         deprecated: false
         secret: false
         description: The access token to make API requests for a specific Dropbox user
+        order: 1
       client:
         kind: parameter
         group: common
@@ -74,6 +76,7 @@ data:
         deprecated: false
         secret: false
         description: To use an existing DbxClient instance as DropBox client.
+        order: 2
       clientIdentifier:
         kind: parameter
         group: common
@@ -83,6 +86,7 @@ data:
         deprecated: false
         secret: false
         description: Name of the app registered to make API requests
+        order: 3
       localPath:
         kind: parameter
         group: common
@@ -91,6 +95,7 @@ data:
         deprecated: false
         secret: false
         description: Folder or file to upload on Dropbox from the local filesystem.
+        order: 4
       newRemotePath:
         kind: parameter
         group: common
@@ -99,6 +104,7 @@ data:
         deprecated: false
         secret: false
         description: Destination file or folder
+        order: 5
       query:
         kind: parameter
         group: common
@@ -107,6 +113,7 @@ data:
         deprecated: false
         secret: false
         description: A space-separated list of sub-strings to search for. A file matches only if it contains all the sub-strings. If this option is not set all files will be matched.
+        order: 6
       remotePath:
         kind: parameter
         group: common
@@ -115,6 +122,7 @@ data:
         deprecated: false
         secret: false
         description: Original file or folder to move
+        order: 7
       uploadMode:
         kind: parameter
         group: common
@@ -126,6 +134,7 @@ data:
         deprecated: false
         secret: false
         description: Which mode to upload. in case of add the new file will be renamed if a file with the same name already exists on dropbox. in case of force if a file with the same name already exists on dropbox this will be overwritten.
+        order: 8
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -137,6 +146,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -147,6 +157,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 10
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -165,6 +176,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 11
       synchronous:
         kind: parameter
         group: advanced
@@ -175,6 +187,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 12
   documentation.adoc: |
     [[Dropbox-CamelDropboxcomponent]]
     Camel Dropbox component

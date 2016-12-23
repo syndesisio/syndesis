@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Name of the binding to lookup in the Camel registry.
+        order: 0
       delegateUri:
         kind: path
         group: common
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Uri of the delegate endpoint.
+        order: 1
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -71,6 +73,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 2
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -81,6 +84,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 3
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -99,6 +103,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default exchange pattern when creating an exchange.
+        order: 4
       synchronous:
         kind: parameter
         group: advanced
@@ -109,6 +114,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 5
   documentation.adoc: |
     [[Binding-Binding]]
     Binding

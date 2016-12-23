@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: The default channel name which is used by the Spring Integration Spring context. It will equal to the inputChannel name for the Spring Integration consumer and the outputChannel name for the Spring Integration provider.
+        order: 0
       inOut:
         kind: parameter
         group: common
@@ -60,6 +61,7 @@ data:
         secret: false
         defaultValue: false
         description: The exchange pattern that the Spring integration endpoint should use. If inOut=true then a reply channel is expected either from the Spring Integration Message header or configured on the endpoint.
+        order: 1
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -71,6 +73,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 2
       inputChannel:
         kind: parameter
         group: consumer
@@ -80,6 +83,7 @@ data:
         deprecated: false
         secret: false
         description: The Spring integration input channel name that this endpoint wants to consume from Spring integration.
+        order: 3
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -90,6 +94,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 4
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -108,6 +113,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 5
       outputChannel:
         kind: parameter
         group: producer
@@ -117,6 +123,7 @@ data:
         deprecated: false
         secret: false
         description: The Spring integration output channel name that is used to send messages to Spring integration.
+        order: 6
       synchronous:
         kind: parameter
         group: advanced
@@ -127,6 +134,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 7
   documentation.adoc: |+
     [[SpringIntegration-SpringIntegrationComponent]]
     Spring Integration Component

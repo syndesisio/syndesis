@@ -54,6 +54,7 @@ data:
         deprecated: false
         secret: false
         description: Operation to perform such as create a new issue or a new comment
+        order: 0
       password:
         kind: parameter
         group: common
@@ -62,6 +63,7 @@ data:
         deprecated: false
         secret: false
         description: Password for login
+        order: 1
       serverUrl:
         kind: parameter
         group: common
@@ -71,6 +73,7 @@ data:
         deprecated: false
         secret: false
         description: URL to the JIRA server
+        order: 2
       username:
         kind: parameter
         group: common
@@ -79,6 +82,7 @@ data:
         deprecated: false
         secret: false
         description: Username for login
+        order: 3
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -90,6 +94,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 4
       delay:
         kind: parameter
         group: consumer
@@ -100,6 +105,7 @@ data:
         secret: false
         defaultValue: "6000"
         description: Delay in seconds when querying JIRA using the consumer.
+        order: 5
       jql:
         kind: parameter
         group: consumer
@@ -109,6 +115,7 @@ data:
         deprecated: false
         secret: false
         description: JQL is the query language from JIRA which allows you to retrieve the data you want. For example jql=project=MyProject Where MyProject is the product key in Jira.
+        order: 6
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -119,6 +126,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 7
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -137,6 +145,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 8
       synchronous:
         kind: parameter
         group: advanced
@@ -147,6 +156,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 9
   documentation.adoc: |
     [[JIRA-JIRA]]
     JIRA

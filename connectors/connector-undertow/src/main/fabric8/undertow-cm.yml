@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HttpBinding to control the mapping between Camel message and HttpClient.
+        order: 0
       sslContextParameters:
         kind: property
         type: object
@@ -56,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: To configure security using SSLContextParameters
+        order: 1
     properties:
       httpURI:
         kind: path
@@ -66,6 +68,7 @@ data:
         deprecated: false
         secret: false
         description: The url of the HTTP endpoint to use.
+        order: 0
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -77,6 +80,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 1
       httpMethodRestrict:
         kind: parameter
         group: consumer
@@ -86,6 +90,7 @@ data:
         deprecated: false
         secret: false
         description: Used to only allow consuming if the HttpMethod matches such as GET/POST/PUT etc. Multiple methods can be specified separated by comma.
+        order: 2
       matchOnUriPrefix:
         kind: parameter
         group: consumer
@@ -96,6 +101,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether or not the consumer should try to find a target consumer by matching the URI prefix if no exact match is found.
+        order: 3
       optionsEnabled:
         kind: parameter
         group: consumer
@@ -106,6 +112,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether to enable HTTP OPTIONS for this Servlet consumer. By default OPTIONS is turned off.
+        order: 4
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -116,6 +123,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 5
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -134,6 +142,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 6
       keepAlive:
         kind: parameter
         group: producer
@@ -144,6 +153,7 @@ data:
         secret: false
         defaultValue: true
         description: Setting to ensure socket is not closed due to inactivity
+        order: 7
       options:
         kind: parameter
         group: producer
@@ -155,6 +165,7 @@ data:
         deprecated: false
         secret: false
         description: Sets additional channel options. The options that can be used are defined in org.xnio.Options. To configure from endpoint uri then prefix each option with option. such as option.close-abort=true&option.send-buffer=8192
+        order: 8
       reuseAddresses:
         kind: parameter
         group: producer
@@ -165,6 +176,7 @@ data:
         secret: false
         defaultValue: true
         description: Setting to facilitate socket multiplexing
+        order: 9
       tcpNoDelay:
         kind: parameter
         group: producer
@@ -175,6 +187,7 @@ data:
         secret: false
         defaultValue: true
         description: Setting to improve TCP protocol performance
+        order: 10
       throwExceptionOnFailure:
         kind: parameter
         group: producer
@@ -185,6 +198,7 @@ data:
         secret: false
         defaultValue: true
         description: If the option is true HttpProducer will ignore the Exchange.HTTP_URI header and use the endpoint's URI for request. You may also set the option throwExceptionOnFailure to be false to let the producer send all the fault response back.
+        order: 11
       transferException:
         kind: parameter
         group: producer
@@ -195,6 +209,7 @@ data:
         secret: false
         defaultValue: false
         description: Option to disable throwing the HttpOperationFailedException in case of failed responses from the remote server. This allows you to get all responses regardless of the HTTP status code.
+        order: 12
       headerFilterStrategy:
         kind: parameter
         group: advanced
@@ -204,6 +219,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 13
       synchronous:
         kind: parameter
         group: advanced
@@ -214,6 +230,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 14
       undertowHttpBinding:
         kind: parameter
         group: advanced
@@ -223,6 +240,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom UndertowHttpBinding to control the mapping between Camel message and undertow.
+        order: 15
       sslContextParameters:
         kind: parameter
         group: security
@@ -232,6 +250,7 @@ data:
         deprecated: false
         secret: false
         description: To configure security using SSLContextParameters
+        order: 16
   documentation.adoc: "[[Undertow-UndertowComponent]]\nUndertow Component\n~~~~~~~~~~~~~~~~~~\n\
     \n*Available as of Camel 2.16*\n\nThe *undertow* component provides HTTP-based\n\
     link:endpoint.html[endpoints] for consuming and producing HTTP requests.\nThat\

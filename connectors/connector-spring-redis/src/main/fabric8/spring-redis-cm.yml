@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: The host where Redis server is running.
+        order: 0
       port:
         kind: path
         group: common
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Redis server port number
+        order: 1
       channels:
         kind: parameter
         group: common
@@ -68,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: List of topic names or name patterns to subscribe to. Multiple names can be separated by comma.
+        order: 2
       command:
         kind: parameter
         group: common
@@ -202,6 +205,7 @@ data:
         defaultValue: SET
         description: 'Default command which can be overridden by message header. Notice
           the consumer only supports the following commands: PSUBSCRIBE and SUBSCRIBE'
+        order: 3
       connectionFactory:
         kind: parameter
         group: common
@@ -210,6 +214,7 @@ data:
         deprecated: false
         secret: false
         description: Reference to a pre-configured RedisConnectionFactory instance to use.
+        order: 4
       listenerContainer:
         kind: parameter
         group: common
@@ -218,6 +223,7 @@ data:
         deprecated: false
         secret: false
         description: Reference to a pre-configured RedisMessageListenerContainer instance to use.
+        order: 5
       redisTemplate:
         kind: parameter
         group: common
@@ -226,6 +232,7 @@ data:
         deprecated: false
         secret: false
         description: Reference to a pre-configured RedisTemplate instance to use.
+        order: 6
       serializer:
         kind: parameter
         group: common
@@ -234,6 +241,7 @@ data:
         deprecated: false
         secret: false
         description: Reference to a pre-configured RedisSerializer instance to use.
+        order: 7
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -245,6 +253,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -255,6 +264,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -273,6 +283,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 10
       synchronous:
         kind: parameter
         group: advanced
@@ -283,6 +294,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 11
   documentation.adoc: "[[SpringRedis-SpringRedisComponent]]\nSpring Redis Component\n\
     ~~~~~~~~~~~~~~~~~~~~~~\n\n*Available as of Camel 2.11*\n\nThis component allows\
     \ sending and receiving messages from\nhttp://http//redis.io/[Redis]. Redis is\

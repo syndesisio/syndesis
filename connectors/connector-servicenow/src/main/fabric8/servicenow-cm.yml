@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: The ServiceNow default configuration
+        order: 0
       apiUrl:
         kind: property
         type: string
@@ -56,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: The ServiceNow REST API url
+        order: 1
       userName:
         kind: property
         type: string
@@ -63,6 +65,7 @@ data:
         deprecated: false
         secret: false
         description: ServiceNow user account name
+        order: 2
       password:
         kind: property
         type: string
@@ -70,6 +73,7 @@ data:
         deprecated: false
         secret: false
         description: ServiceNow account password
+        order: 3
       oauthClientId:
         kind: property
         type: string
@@ -77,6 +81,7 @@ data:
         deprecated: false
         secret: false
         description: OAuth2 ClientID
+        order: 4
       oauthClientSecret:
         kind: property
         type: string
@@ -84,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: OAuth2 ClientSecret
+        order: 5
       oauthTokenUrl:
         kind: property
         type: string
@@ -91,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: OAuth token Url
+        order: 6
     properties:
       instanceName:
         kind: path
@@ -101,6 +108,7 @@ data:
         deprecated: false
         secret: false
         description: The ServiceNow instance name
+        order: 0
       display:
         kind: parameter
         group: producer
@@ -114,6 +122,7 @@ data:
         secret: false
         defaultValue: true
         description: Set this parameter to true to return only scorecards where the indicator Display field is selected. Set this parameter to all to return scorecards with any Display field value. This parameter is true by default.
+        order: 1
       displayValue:
         kind: parameter
         group: producer
@@ -128,6 +137,7 @@ data:
         defaultValue: false
         description: 'Return the display value (true) actual value (false) or both (all)
           for reference fields (default: false)'
+        order: 2
       excludeReferenceLink:
         kind: parameter
         group: producer
@@ -136,6 +146,7 @@ data:
         deprecated: false
         secret: false
         description: 'True to exclude Table API links for reference fields (default: false)'
+        order: 3
       favorites:
         kind: parameter
         group: producer
@@ -144,6 +155,7 @@ data:
         deprecated: false
         secret: false
         description: Set this parameter to true to return only scorecards that are favorites of the querying user.
+        order: 4
       includeAggregates:
         kind: parameter
         group: producer
@@ -152,6 +164,7 @@ data:
         deprecated: false
         secret: false
         description: Set this parameter to true to always return all available aggregates for an indicator including when an aggregate has already been applied. If a value is not specified this parameter defaults to false and returns no aggregates.
+        order: 5
       includeAvailableAggregates:
         kind: parameter
         group: producer
@@ -160,6 +173,7 @@ data:
         deprecated: false
         secret: false
         description: Set this parameter to true to return all available aggregates for an indicator when no aggregate has been applied. If a value is not specified this parameter defaults to false and returns no aggregates.
+        order: 6
       includeAvailableBreakdowns:
         kind: parameter
         group: producer
@@ -168,6 +182,7 @@ data:
         deprecated: false
         secret: false
         description: Set this parameter to true to return all available breakdowns for an indicator. If a value is not specified this parameter defaults to false and returns no breakdowns.
+        order: 7
       includeScoreNotes:
         kind: parameter
         group: producer
@@ -176,6 +191,7 @@ data:
         deprecated: false
         secret: false
         description: Set this parameter to true to return all notes associated with the score. The note element contains the note text as well as the author and timestamp when the note was added.
+        order: 8
       includeScores:
         kind: parameter
         group: producer
@@ -184,6 +200,7 @@ data:
         deprecated: false
         secret: false
         description: Set this parameter to true to return all scores for a scorecard. If a value is not specified this parameter defaults to false and returns only the most recent score value.
+        order: 9
       inputDisplayValue:
         kind: parameter
         group: producer
@@ -192,6 +209,7 @@ data:
         deprecated: false
         secret: false
         description: 'True to set raw value of input fields (default: false)'
+        order: 10
       key:
         kind: parameter
         group: producer
@@ -200,6 +218,7 @@ data:
         deprecated: false
         secret: false
         description: Set this parameter to true to return only scorecards for key indicators.
+        order: 11
       perPage:
         kind: parameter
         group: producer
@@ -209,6 +228,7 @@ data:
         secret: false
         defaultValue: "10"
         description: Enter the maximum number of scorecards each query can return. By default this value is 10 and the maximum is 100.
+        order: 12
       release:
         kind: parameter
         group: producer
@@ -222,6 +242,7 @@ data:
         secret: false
         defaultValue: HELSINKI
         description: The ServiceNow release to target default to Helsinki See https://docs.servicenow.com
+        order: 13
       requestModels:
         kind: parameter
         group: producer
@@ -232,6 +253,7 @@ data:
         deprecated: false
         secret: false
         description: Defines the request model
+        order: 14
       resource:
         kind: parameter
         group: producer
@@ -240,6 +262,7 @@ data:
         deprecated: false
         secret: false
         description: The default resource can be overridden by header CamelServiceNowResource
+        order: 15
       responseModels:
         kind: parameter
         group: producer
@@ -250,6 +273,7 @@ data:
         deprecated: false
         secret: false
         description: Defines the response model
+        order: 16
       sortBy:
         kind: parameter
         group: producer
@@ -276,6 +300,7 @@ data:
         deprecated: false
         secret: false
         description: Specify the value to use when sorting results. By default queries sort records by value.
+        order: 17
       sortDir:
         kind: parameter
         group: producer
@@ -287,6 +312,7 @@ data:
         deprecated: false
         secret: false
         description: Specify the sort direction ascending or descending. By default queries sort records in descending order. Use sysparm_sortdir=asc to sort in ascending order.
+        order: 18
       suppressAutoSysField:
         kind: parameter
         group: producer
@@ -295,6 +321,7 @@ data:
         deprecated: false
         secret: false
         description: 'True to suppress auto generation of system fields (default: false)'
+        order: 19
       suppressPaginationHeader:
         kind: parameter
         group: producer
@@ -303,6 +330,7 @@ data:
         deprecated: false
         secret: false
         description: Set this value to true to remove the Link header from the response. The Link header allows you to request additional pages of data when the number of records matching your query exceeds the query limit
+        order: 20
       table:
         kind: parameter
         group: producer
@@ -311,6 +339,7 @@ data:
         deprecated: false
         secret: false
         description: The default table can be overridden by header CamelServiceNowTable
+        order: 21
       target:
         kind: parameter
         group: producer
@@ -319,6 +348,7 @@ data:
         deprecated: false
         secret: false
         description: Set this parameter to true to return only scorecards that have a target.
+        order: 22
       topLevelOnly:
         kind: parameter
         group: producer
@@ -327,6 +357,7 @@ data:
         deprecated: false
         secret: false
         description: Gets only those categories whose parent is a catalog.
+        order: 23
       apiVersion:
         kind: parameter
         group: advanced
@@ -336,6 +367,7 @@ data:
         deprecated: false
         secret: false
         description: The ServiceNow REST API version default latest
+        order: 24
       mapper:
         kind: parameter
         group: advanced
@@ -345,6 +377,7 @@ data:
         deprecated: false
         secret: false
         description: Sets Jackson's ObjectMapper to use for request/reply
+        order: 25
       synchronous:
         kind: parameter
         group: advanced
@@ -355,6 +388,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 26
       apiUrl:
         kind: parameter
         group: security
@@ -364,6 +398,7 @@ data:
         deprecated: false
         secret: false
         description: The ServiceNow REST API url
+        order: 27
       oauthClientId:
         kind: parameter
         group: security
@@ -373,6 +408,7 @@ data:
         deprecated: false
         secret: true
         description: OAuth2 ClientID
+        order: 28
       oauthClientSecret:
         kind: parameter
         group: security
@@ -382,6 +418,7 @@ data:
         deprecated: false
         secret: true
         description: OAuth2 ClientSecret
+        order: 29
       oauthTokenUrl:
         kind: parameter
         group: security
@@ -391,6 +428,7 @@ data:
         deprecated: false
         secret: true
         description: OAuth token Url
+        order: 30
       password:
         kind: parameter
         group: security
@@ -401,6 +439,7 @@ data:
         deprecated: false
         secret: false
         description: ServiceNow account password MUST be provided
+        order: 31
       userName:
         kind: parameter
         group: security
@@ -411,6 +450,7 @@ data:
         deprecated: false
         secret: false
         description: ServiceNow user account name MUST be provided
+        order: 32
   documentation.adoc: |
     [[ServiceNow-ServiceNowComponent]]
     ServiceNow Component

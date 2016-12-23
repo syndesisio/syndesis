@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Logical name for the routebox (eg like a queue name)
+        order: 0
       dispatchMap:
         kind: parameter
         group: common
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: A string representing a key in the Camel Registry matching an object value of the type HashMap. The HashMap key should contain strings that can be matched against the value set for the exchange header ROUTE_DISPATCH_KEY. The HashMap value should contain inner route consumer URI's to which requests should be directed.
+        order: 1
       dispatchStrategy:
         kind: parameter
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom RouteboxDispatchStrategy which allows to use custom dispatching instead of the default.
+        order: 2
       forkContext:
         kind: parameter
         group: common
@@ -76,6 +79,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to fork and create a new inner CamelContext instead of reusing the same CamelContext.
+        order: 3
       innerProtocol:
         kind: parameter
         group: common
@@ -88,6 +92,7 @@ data:
         secret: false
         defaultValue: direct
         description: The Protocol used internally by the Routebox component. Can be Direct or SEDA. The Routebox component currently offers protocols that are JVM bound.
+        order: 4
       queueSize:
         kind: parameter
         group: common
@@ -96,6 +101,7 @@ data:
         deprecated: false
         secret: false
         description: Create a fixed size queue to receive requests.
+        order: 5
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -107,6 +113,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 6
       pollInterval:
         kind: parameter
         group: consumer
@@ -117,6 +124,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: The timeout used when polling from seda. When a timeout occurs the consumer can check whether it is allowed to continue running. Setting a lower value allows the consumer to react more quickly upon shutdown.
+        order: 7
       threads:
         kind: parameter
         group: consumer
@@ -127,6 +135,7 @@ data:
         secret: false
         defaultValue: "20"
         description: Number of threads to be used by the routebox to receive requests.
+        order: 8
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -137,6 +146,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -155,6 +165,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 10
       connectionTimeout:
         kind: parameter
         group: producer
@@ -165,6 +176,7 @@ data:
         secret: false
         defaultValue: "20000"
         description: Timeout in millis used by the producer when sending a message.
+        order: 11
       sendToConsumer:
         kind: parameter
         group: producer
@@ -175,6 +187,7 @@ data:
         secret: false
         defaultValue: true
         description: Dictates whether a Producer endpoint sends a request to an external routebox consumer. If the setting is false the Producer creates an embedded inner context and processes requests internally.
+        order: 12
       innerContext:
         kind: parameter
         group: advanced
@@ -184,6 +197,7 @@ data:
         deprecated: false
         secret: false
         description: A string representing a key in the Camel Registry matching an object value of the type org.apache.camel.CamelContext. If a CamelContext is not provided by the user a CamelContext is automatically created for deployment of inner routes.
+        order: 13
       innerProducerTemplate:
         kind: parameter
         group: advanced
@@ -193,6 +207,7 @@ data:
         deprecated: false
         secret: false
         description: The ProducerTemplate to use by the internal embeded CamelContext
+        order: 14
       innerRegistry:
         kind: parameter
         group: advanced
@@ -202,6 +217,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom registry for the internal embedded CamelContext.
+        order: 15
       routeBuilders:
         kind: parameter
         group: advanced
@@ -211,6 +227,7 @@ data:
         deprecated: false
         secret: false
         description: A string representing a key in the Camel Registry matching an object value of the type List. If the user does not supply an innerContext pre-primed with inner routes the routeBuilders option must be provided as a non-empty list of RouteBuilders containing inner routes
+        order: 16
       synchronous:
         kind: parameter
         group: advanced
@@ -221,6 +238,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 17
   documentation.adoc: "[[Routebox-RouteboxComponent]]\nRoutebox Component\n~~~~~~~~~~~~~~~~~~\n\
     \n*Available as of Camel 2.6*\n\n*Routebox subject for change*\n\nThe Routebox\
     \ component will be revisited in upcoming releases to see if\nit can be further\

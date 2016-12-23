@@ -57,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: The type of the lookup.
+        order: 0
       synchronous:
         kind: parameter
         group: advanced
@@ -67,6 +68,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 1
   documentation.adoc: |+
     [[DNS-DNS]]
     DNS

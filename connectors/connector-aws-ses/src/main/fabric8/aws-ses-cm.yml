@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: The sender's email address.
+        order: 0
       accessKey:
         kind: parameter
         group: producer
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Access Key
+        order: 1
       amazonSESClient:
         kind: parameter
         group: producer
@@ -68,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: To use the AmazonSimpleEmailService as the client
+        order: 2
       amazonSESEndpoint:
         kind: parameter
         group: producer
@@ -76,6 +79,7 @@ data:
         deprecated: false
         secret: false
         description: The region with which the AWS-SES client wants to work with.
+        order: 3
       proxyHost:
         kind: parameter
         group: producer
@@ -84,6 +88,7 @@ data:
         deprecated: false
         secret: false
         description: To define a proxy host when instantiating the SQS client
+        order: 4
       proxyPort:
         kind: parameter
         group: producer
@@ -92,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: To define a proxy port when instantiating the SQS client
+        order: 5
       replyToAddresses:
         kind: parameter
         group: producer
@@ -100,6 +106,7 @@ data:
         deprecated: false
         secret: false
         description: List of reply-to email address(es) for the message override it using 'CamelAwsSesReplyToAddresses' header.
+        order: 6
       returnPath:
         kind: parameter
         group: producer
@@ -108,6 +115,7 @@ data:
         deprecated: false
         secret: false
         description: The email address to which bounce notifications are to be forwarded override it using 'CamelAwsSesReturnPath' header.
+        order: 7
       secretKey:
         kind: parameter
         group: producer
@@ -116,6 +124,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Secret Key
+        order: 8
       subject:
         kind: parameter
         group: producer
@@ -124,6 +133,7 @@ data:
         deprecated: false
         secret: false
         description: The subject which is used if the message header 'CamelAwsSesSubject' is not present.
+        order: 9
       to:
         kind: parameter
         group: producer
@@ -132,6 +142,7 @@ data:
         deprecated: false
         secret: false
         description: List of destination email address. Can be overriden with 'CamelAwsSesTo' header.
+        order: 10
       synchronous:
         kind: parameter
         group: advanced
@@ -142,6 +153,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 11
   documentation.adoc: |+
     [[AWS-SES-SESComponent]]
     SES Component

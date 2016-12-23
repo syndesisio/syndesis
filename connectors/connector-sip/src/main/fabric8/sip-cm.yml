@@ -53,6 +53,7 @@ data:
         secret: false
         description: 'URI of the SIP server to connect to (the username and password can
           be included such as: john:secretmyserver:9999)'
+        order: 0
       cacheConnections:
         kind: parameter
         group: common
@@ -63,6 +64,7 @@ data:
         secret: false
         defaultValue: false
         description: Should connections be cached by the SipStack to reduce cost of connection creation. This is useful if the connection is used for long running conversations.
+        order: 1
       contentSubType:
         kind: parameter
         group: common
@@ -73,6 +75,7 @@ data:
         secret: false
         defaultValue: plain
         description: Setting for contentSubType can be set to any valid MimeSubType.
+        order: 2
       contentType:
         kind: parameter
         group: common
@@ -83,6 +86,7 @@ data:
         secret: false
         defaultValue: text
         description: Setting for contentType can be set to any valid MimeType.
+        order: 3
       eventHeaderName:
         kind: parameter
         group: common
@@ -92,6 +96,7 @@ data:
         deprecated: false
         secret: false
         description: Setting for a String based event type.
+        order: 4
       eventId:
         kind: parameter
         group: common
@@ -101,6 +106,7 @@ data:
         deprecated: false
         secret: false
         description: Setting for a String based event Id. Mandatory setting unless a registry based FromHeader is specified
+        order: 5
       fromHost:
         kind: parameter
         group: common
@@ -110,6 +116,7 @@ data:
         deprecated: false
         secret: false
         description: Hostname of the message originator. Mandatory setting unless a registry based FromHeader is specified
+        order: 6
       fromPort:
         kind: parameter
         group: common
@@ -119,6 +126,7 @@ data:
         deprecated: false
         secret: false
         description: Port of the message originator. Mandatory setting unless a registry based FromHeader is specified
+        order: 7
       fromUser:
         kind: parameter
         group: common
@@ -128,6 +136,7 @@ data:
         deprecated: false
         secret: false
         description: Username of the message originator. Mandatory setting unless a registry based custom FromHeader is specified.
+        order: 8
       msgExpiration:
         kind: parameter
         group: common
@@ -138,6 +147,7 @@ data:
         secret: false
         defaultValue: "3600"
         description: The amount of time a message received at an endpoint is considered valid
+        order: 9
       receiveTimeoutMillis:
         kind: parameter
         group: common
@@ -148,6 +158,7 @@ data:
         secret: false
         defaultValue: "10000"
         description: Setting for specifying amount of time to wait for a Response and/or Acknowledgement can be received from another SIP stack
+        order: 10
       stackName:
         kind: parameter
         group: common
@@ -158,6 +169,7 @@ data:
         secret: false
         defaultValue: NAME_NOT_SET
         description: Name of the SIP Stack instance associated with an SIP Endpoint.
+        order: 11
       toHost:
         kind: parameter
         group: common
@@ -167,6 +179,7 @@ data:
         deprecated: false
         secret: false
         description: Hostname of the message receiver. Mandatory setting unless a registry based ToHeader is specified
+        order: 12
       toPort:
         kind: parameter
         group: common
@@ -176,6 +189,7 @@ data:
         deprecated: false
         secret: false
         description: Portname of the message receiver. Mandatory setting unless a registry based ToHeader is specified
+        order: 13
       toUser:
         kind: parameter
         group: common
@@ -185,6 +199,7 @@ data:
         deprecated: false
         secret: false
         description: Username of the message receiver. Mandatory setting unless a registry based custom ToHeader is specified.
+        order: 14
       transport:
         kind: parameter
         group: common
@@ -198,6 +213,7 @@ data:
         secret: false
         defaultValue: tcp
         description: Setting for choice of transport protocol. Valid choices are tcp or udp.
+        order: 15
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -209,6 +225,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 16
       consumer:
         kind: parameter
         group: consumer
@@ -219,6 +236,7 @@ data:
         secret: false
         defaultValue: false
         description: This setting is used to determine whether the kind of header (FromHeaderToHeader etc) that needs to be created for this endpoint
+        order: 17
       presenceAgent:
         kind: parameter
         group: consumer
@@ -229,6 +247,7 @@ data:
         secret: false
         defaultValue: false
         description: This setting is used to distinguish between a Presence Agent & a consumer. This is due to the fact that the SIP Camel component ships with a basic Presence Agent (for testing purposes only). Consumers have to set this flag to true.
+        order: 18
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -239,6 +258,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 19
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -257,6 +277,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 20
       addressFactory:
         kind: parameter
         group: advanced
@@ -266,6 +287,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom AddressFactory
+        order: 21
       callIdHeader:
         kind: parameter
         group: advanced
@@ -275,6 +297,7 @@ data:
         deprecated: false
         secret: false
         description: A custom Header object containing call details. Must implement the type javax.sip.header.CallIdHeader
+        order: 22
       contactHeader:
         kind: parameter
         group: advanced
@@ -284,6 +307,7 @@ data:
         deprecated: false
         secret: false
         description: An optional custom Header object containing verbose contact details (email phone number etc). Must implement the type javax.sip.header.ContactHeader
+        order: 23
       contentTypeHeader:
         kind: parameter
         group: advanced
@@ -293,6 +317,7 @@ data:
         deprecated: false
         secret: false
         description: A custom Header object containing message content details. Must implement the type javax.sip.header.ContentTypeHeader
+        order: 24
       eventHeader:
         kind: parameter
         group: advanced
@@ -302,6 +327,7 @@ data:
         deprecated: false
         secret: false
         description: A custom Header object containing event details. Must implement the type javax.sip.header.EventHeader
+        order: 25
       expiresHeader:
         kind: parameter
         group: advanced
@@ -311,6 +337,7 @@ data:
         deprecated: false
         secret: false
         description: A custom Header object containing message expiration details. Must implement the type javax.sip.header.ExpiresHeader
+        order: 26
       extensionHeader:
         kind: parameter
         group: advanced
@@ -320,6 +347,7 @@ data:
         deprecated: false
         secret: false
         description: A custom Header object containing user/application specific details. Must implement the type javax.sip.header.ExtensionHeader
+        order: 27
       fromHeader:
         kind: parameter
         group: advanced
@@ -329,6 +357,7 @@ data:
         deprecated: false
         secret: false
         description: A custom Header object containing message originator settings. Must implement the type javax.sip.header.FromHeader
+        order: 28
       headerFactory:
         kind: parameter
         group: advanced
@@ -338,6 +367,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFactory
+        order: 29
       listeningPoint:
         kind: parameter
         group: advanced
@@ -347,6 +377,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom ListeningPoint implementation
+        order: 30
       maxForwardsHeader:
         kind: parameter
         group: advanced
@@ -356,6 +387,7 @@ data:
         deprecated: false
         secret: false
         description: A custom Header object containing details on maximum proxy forwards. This header places a limit on the viaHeaders possible. Must implement the type javax.sip.header.MaxForwardsHeader
+        order: 31
       maxMessageSize:
         kind: parameter
         group: advanced
@@ -366,6 +398,7 @@ data:
         secret: false
         defaultValue: "1048576"
         description: Setting for maximum allowed Message size in bytes.
+        order: 32
       messageFactory:
         kind: parameter
         group: advanced
@@ -375,6 +408,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom MessageFactory
+        order: 33
       sipFactory:
         kind: parameter
         group: advanced
@@ -384,6 +418,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom SipFactory to create the SipStack to be used
+        order: 34
       sipStack:
         kind: parameter
         group: advanced
@@ -393,6 +428,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom SipStack
+        order: 35
       sipUri:
         kind: parameter
         group: advanced
@@ -402,6 +438,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom SipURI. If none configured then the SipUri fallback to use the options toUser toHost:toPort
+        order: 36
       synchronous:
         kind: parameter
         group: advanced
@@ -412,6 +449,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 37
       toHeader:
         kind: parameter
         group: advanced
@@ -421,6 +459,7 @@ data:
         deprecated: false
         secret: false
         description: A custom Header object containing message receiver settings. Must implement the type javax.sip.header.ToHeader
+        order: 38
       viaHeaders:
         kind: parameter
         group: advanced
@@ -430,6 +469,7 @@ data:
         deprecated: false
         secret: false
         description: List of custom Header objects of the type javax.sip.header.ViaHeader. Each ViaHeader containing a proxy address for request forwarding. (Note this header is automatically updated by each proxy when the request arrives at its listener)
+        order: 39
       implementationDebugLogFile:
         kind: parameter
         group: logging
@@ -439,6 +479,7 @@ data:
         deprecated: false
         secret: false
         description: Name of client debug log file to use for logging
+        order: 40
       implementationServerLogFile:
         kind: parameter
         group: logging
@@ -448,6 +489,7 @@ data:
         deprecated: false
         secret: false
         description: Name of server log file to use for logging
+        order: 41
       implementationTraceLevel:
         kind: parameter
         group: logging
@@ -458,6 +500,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Logging level for tracing
+        order: 42
       maxForwards:
         kind: parameter
         group: proxy
@@ -467,6 +510,7 @@ data:
         deprecated: false
         secret: false
         description: Number of maximum proxy forwards
+        order: 43
       useRouterForAllUris:
         kind: parameter
         group: proxy
@@ -477,6 +521,7 @@ data:
         secret: false
         defaultValue: false
         description: This setting is used when requests are sent to the Presence Agent via a proxy.
+        order: 44
   documentation.adoc: "[[Sip-SIPComponent]]\nSIP Component\n~~~~~~~~~~~~~\n\n*Available\
     \ as of Camel 2.5*\n\nThe *sip* component in Camel is a communication component,\
     \ based on the\nJain SIP implementation (available under the JCP license).\n\n\

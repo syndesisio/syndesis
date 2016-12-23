@@ -60,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: Endpoint mapping type if endpoint mapping is used. rootqname - Offers the option to map web service requests based on the qualified name of the root element contained in the message. soapaction - Used to map web service requests based on the SOAP action specified in the header of the message. uri - In order to map web service requests that target a specific URI. xpathresult - Used to map web service requests based on the evaluation of an XPath expression against the incoming message. The result of the evaluation should match the XPath result specified in the endpoint URI. beanname - Allows you to reference an org.apache.camel.component.spring.ws.bean.CamelEndpointDispatcher object in order to integrate with existing (legacy) endpoint mappings like PayloadRootQNameEndpointMapping SoapActionEndpointMapping etc
+        order: 0
       lookupKey:
         kind: path
         group: consumer
@@ -69,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: Endpoint mapping key if endpoint mapping is used
+        order: 1
       webServiceEndpointUri:
         kind: path
         group: producer
@@ -78,6 +80,7 @@ data:
         deprecated: false
         secret: false
         description: The default Web Service endpoint uri to use for the producer.
+        order: 2
       messageFilter:
         kind: parameter
         group: common
@@ -86,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: Option to provide a custom MessageFilter. For example when you want to process your headers or attachments by your own.
+        order: 3
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -97,6 +101,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 4
       endpointDispatcher:
         kind: parameter
         group: consumer
@@ -106,6 +111,7 @@ data:
         deprecated: false
         secret: false
         description: Spring org.springframework.ws.server.endpoint.MessageEndpoint for dispatching messages received by Spring-WS to a Camel endpoint to integrate with existing (legacy) endpoint mappings like PayloadRootQNameEndpointMapping SoapActionEndpointMapping etc.
+        order: 5
       endpointMapping:
         kind: parameter
         group: consumer
@@ -115,6 +121,7 @@ data:
         deprecated: false
         secret: false
         description: Reference to an instance of org.apache.camel.component.spring.ws.bean.CamelEndpointMapping in the Registry/ApplicationContext. Only one bean is required in the registry to serve all Camel/Spring-WS endpoints. This bean is auto-discovered by the MessageDispatcher and used to map requests to Camel endpoints based on characteristics specified on the endpoint (like root QName SOAP action etc)
+        order: 6
       expression:
         kind: parameter
         group: consumer
@@ -124,6 +131,7 @@ data:
         deprecated: false
         secret: false
         description: The XPath expression to use when option type=xpathresult. Then this option is required to be configured.
+        order: 7
       sslContextParameters:
         kind: parameter
         group: consumer
@@ -133,6 +141,7 @@ data:
         deprecated: false
         secret: false
         description: To configure security using SSLContextParameters
+        order: 8
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -143,6 +152,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -161,6 +171,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 10
       allowResponseHeaderOverride:
         kind: parameter
         group: producer
@@ -171,6 +182,7 @@ data:
         secret: false
         defaultValue: false
         description: Option to override soap response header in in/out exchange with header info from the actual service layer. If the invoked service appends or rewrites the soap header this option when set to true allows the modified soap header to be overwritten in in/out message headers
+        order: 11
       faultAction:
         kind: parameter
         group: producer
@@ -180,6 +192,7 @@ data:
         deprecated: false
         secret: false
         description: Signifies the value for the faultAction response WS-Addressing Fault Action header that is provided by the method.
+        order: 12
       faultTo:
         kind: parameter
         group: producer
@@ -189,6 +202,7 @@ data:
         deprecated: false
         secret: false
         description: Signifies the value for the faultAction response WS-Addressing FaultTo header that is provided by the method.
+        order: 13
       messageFactory:
         kind: parameter
         group: producer
@@ -198,6 +212,7 @@ data:
         deprecated: false
         secret: false
         description: Option to provide a custom WebServiceMessageFactory. For example when you want Apache Axiom to handle web service messages instead of SAAJ.
+        order: 14
       messageIdStrategy:
         kind: parameter
         group: producer
@@ -207,6 +222,7 @@ data:
         deprecated: false
         secret: false
         description: Option to provide a custom MessageIdStrategy to control generation of unique message ids.
+        order: 15
       messageSender:
         kind: parameter
         group: producer
@@ -216,6 +232,7 @@ data:
         deprecated: false
         secret: false
         description: Option to provide a custom WebServiceMessageSender. For example to perform authentication or use alternative transports
+        order: 16
       outputAction:
         kind: parameter
         group: producer
@@ -225,6 +242,7 @@ data:
         deprecated: false
         secret: false
         description: Signifies the value for the response WS-Addressing Action header that is provided by the method.
+        order: 17
       replyTo:
         kind: parameter
         group: producer
@@ -234,6 +252,7 @@ data:
         deprecated: false
         secret: false
         description: Signifies the value for the replyTo response WS-Addressing ReplyTo header that is provided by the method.
+        order: 18
       soapAction:
         kind: parameter
         group: producer
@@ -243,6 +262,7 @@ data:
         deprecated: false
         secret: false
         description: SOAP action to include inside a SOAP request when accessing remote web services
+        order: 19
       timeout:
         kind: parameter
         group: producer
@@ -260,6 +280,7 @@ data:
           is assumed that you will handle your own timeout configuration. The built-in
           message sender HttpComponentsMessageSender is considered instead of CommonsHttpMessageSender
           which has been deprecated see HttpComponentsMessageSender.setReadTimeout().'
+        order: 20
       webServiceTemplate:
         kind: parameter
         group: producer
@@ -269,6 +290,7 @@ data:
         deprecated: false
         secret: false
         description: Option to provide a custom WebServiceTemplate. This allows for full control over client-side web services handling; like adding a custom interceptor or specifying a fault resolver message sender or message factory.
+        order: 21
       wsAddressingAction:
         kind: parameter
         group: producer
@@ -278,6 +300,7 @@ data:
         deprecated: false
         secret: false
         description: WS-Addressing 1.0 action header to include when accessing web services. The To header is set to the address of the web service as specified in the endpoint URI (default Spring-WS behavior).
+        order: 22
       synchronous:
         kind: parameter
         group: advanced
@@ -288,6 +311,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 23
   documentation.adoc: "[[SpringWebServices-SpringWebServicesComponent]]\nSpring Web\
     \ Services Component\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n*Available as of Camel\
     \ 2.6*\n\nThe *spring-ws:* component allows you to integrate with\nhttp://static.springsource.org/spring-ws/sites/1.5/[Spring\

@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use the custom SchedulerFactory which is used to create the Scheduler.
+        order: 0
       scheduler:
         kind: property
         type: object
@@ -56,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: To use the custom configured Quartz scheduler instead of creating a new Scheduler.
+        order: 1
       properties:
         kind: property
         type: object
@@ -63,6 +65,7 @@ data:
         deprecated: false
         secret: false
         description: Properties to configure the Quartz scheduler.
+        order: 2
       propertiesFile:
         kind: property
         type: string
@@ -70,6 +73,7 @@ data:
         deprecated: false
         secret: false
         description: File name of the properties to load from the classpath
+        order: 3
       startDelayedSeconds:
         kind: property
         type: integer
@@ -77,6 +81,7 @@ data:
         deprecated: false
         secret: false
         description: Seconds to wait before starting the quartz scheduler.
+        order: 4
       autoStartScheduler:
         kind: property
         type: boolean
@@ -84,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: Whether or not the scheduler should be auto started. This options is default true
+        order: 5
       enableJmx:
         kind: property
         type: boolean
@@ -91,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: Whether to enable Quartz JMX which allows to manage the Quartz scheduler from JMX. This options is default true
+        order: 6
     properties:
       groupName:
         kind: path
@@ -101,6 +108,7 @@ data:
         secret: false
         defaultValue: Camel
         description: The quartz group name to use. The combination of group name and timer name should be unique.
+        order: 0
       timerName:
         kind: path
         group: consumer
@@ -110,6 +118,7 @@ data:
         deprecated: false
         secret: false
         description: The quartz timer name to use. The combination of group name and timer name should be unique.
+        order: 1
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -121,6 +130,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 2
       cron:
         kind: parameter
         group: consumer
@@ -129,6 +139,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies a cron expression to define when to trigger.
+        order: 3
       deleteJob:
         kind: parameter
         group: consumer
@@ -138,6 +149,7 @@ data:
         secret: false
         defaultValue: true
         description: If set to true then the trigger automatically delete when route stop. Else if set to false it will remain in scheduler. When set to false it will also mean user may reuse pre-configured trigger with camel Uri. Just ensure the names match. Notice you cannot have both deleteJob and pauseJob set to true.
+        order: 4
       fireNow:
         kind: parameter
         group: consumer
@@ -147,6 +159,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to fire the scheduler asap when its started using the simple trigger (this option does not support cron)
+        order: 5
       jobParameters:
         kind: parameter
         group: consumer
@@ -157,6 +170,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional options on the job.
+        order: 6
       pauseJob:
         kind: parameter
         group: consumer
@@ -166,6 +180,7 @@ data:
         secret: false
         defaultValue: false
         description: If set to true then the trigger automatically pauses when route stop. Else if set to false it will remain in scheduler. When set to false it will also mean user may reuse pre-configured trigger with camel Uri. Just ensure the names match. Notice you cannot have both deleteJob and pauseJob set to true.
+        order: 7
       startDelayedSeconds:
         kind: parameter
         group: consumer
@@ -174,6 +189,7 @@ data:
         deprecated: false
         secret: false
         description: Seconds to wait before starting the quartz scheduler.
+        order: 8
       stateful:
         kind: parameter
         group: consumer
@@ -183,6 +199,7 @@ data:
         secret: false
         defaultValue: false
         description: Uses a Quartz StatefulJob instead of the default job.
+        order: 9
       triggerParameters:
         kind: parameter
         group: consumer
@@ -193,6 +210,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional options on the trigger.
+        order: 10
       usingFixedCamelContextName:
         kind: parameter
         group: consumer
@@ -202,6 +220,7 @@ data:
         secret: false
         defaultValue: false
         description: If it is true JobDataMap uses the CamelContext name directly to reference the CamelContext if it is false JobDataMap uses use the CamelContext management name which could be changed during the deploy time.
+        order: 11
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -212,6 +231,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 12
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -230,6 +250,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 13
       synchronous:
         kind: parameter
         group: advanced
@@ -240,6 +261,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 14
   documentation.adoc: |+
     [[Quartz-QuartzComponent]]
     Quartz Component

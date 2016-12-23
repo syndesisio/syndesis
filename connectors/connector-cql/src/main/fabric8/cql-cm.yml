@@ -50,6 +50,7 @@ data:
         deprecated: false
         secret: false
         description: beanRef is defined using bean:id
+        order: 0
       hosts:
         kind: path
         group: common
@@ -58,6 +59,7 @@ data:
         deprecated: false
         secret: false
         description: Hostname(s) cassansdra server(s). Multiple hosts can be separated by comma.
+        order: 1
       port:
         kind: path
         group: common
@@ -66,6 +68,7 @@ data:
         deprecated: false
         secret: false
         description: Port number of cassansdra server(s)
+        order: 2
       keyspace:
         kind: path
         group: common
@@ -74,6 +77,7 @@ data:
         deprecated: false
         secret: false
         description: Keyspace to use
+        order: 3
       cluster:
         kind: parameter
         group: common
@@ -82,6 +86,7 @@ data:
         deprecated: false
         secret: false
         description: To use the Cluster instance (you would normally not use this option)
+        order: 4
       clusterName:
         kind: parameter
         group: common
@@ -90,6 +95,7 @@ data:
         deprecated: false
         secret: false
         description: Cluster name
+        order: 5
       consistencyLevel:
         kind: parameter
         group: common
@@ -110,6 +116,7 @@ data:
         deprecated: false
         secret: false
         description: Consistency level to use
+        order: 6
       cql:
         kind: parameter
         group: common
@@ -118,6 +125,7 @@ data:
         deprecated: false
         secret: false
         description: CQL query to perform. Can be overridden with the message header with key CamelCqlQuery.
+        order: 7
       loadBalancingPolicy:
         kind: parameter
         group: common
@@ -126,6 +134,7 @@ data:
         deprecated: false
         secret: false
         description: To use a specific LoadBalancingPolicy
+        order: 8
       password:
         kind: parameter
         group: common
@@ -134,6 +143,7 @@ data:
         deprecated: false
         secret: false
         description: Password for session authentication
+        order: 9
       prepareStatements:
         kind: parameter
         group: common
@@ -143,6 +153,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to use PreparedStatements or regular Statements
+        order: 10
       resultSetConversionStrategy:
         kind: parameter
         group: common
@@ -151,6 +162,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom class that implements logic for converting ResultSet into message body ALL ONE LIMIT_10 LIMIT_100...
+        order: 11
       session:
         kind: parameter
         group: common
@@ -159,6 +171,7 @@ data:
         deprecated: false
         secret: false
         description: To use the Session instance (you would normally not use this option)
+        order: 12
       username:
         kind: parameter
         group: common
@@ -167,6 +180,7 @@ data:
         deprecated: false
         secret: false
         description: Username for session authentication
+        order: 13
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -178,6 +192,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 14
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -188,6 +203,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 15
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -206,6 +222,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 16
       synchronous:
         kind: parameter
         group: advanced
@@ -216,6 +233,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 17
   documentation.adoc: |
     [[Cassandra-CamelCassandraComponent]]
     Camel Cassandra Component

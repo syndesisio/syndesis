@@ -55,6 +55,7 @@ data:
         deprecated: false
         secret: false
         description: The API namespace to use
+        order: 0
       path:
         kind: path
         group: common
@@ -64,6 +65,7 @@ data:
         deprecated: false
         secret: false
         description: The path the enpoint refers to
+        order: 1
       recursive:
         kind: parameter
         group: common
@@ -73,6 +75,7 @@ data:
         secret: false
         defaultValue: false
         description: To apply an action recursively.
+        order: 2
       servicePath:
         kind: parameter
         group: common
@@ -82,6 +85,7 @@ data:
         secret: false
         defaultValue: /services/
         description: The path to look for for service discovery
+        order: 3
       timeout:
         kind: parameter
         group: common
@@ -90,6 +94,7 @@ data:
         deprecated: false
         secret: false
         description: To set the maximum time an action could take to complete.
+        order: 4
       uris:
         kind: parameter
         group: common
@@ -99,6 +104,7 @@ data:
         secret: false
         defaultValue: http://localhost:2379,http://localhost:4001
         description: To set the URIs the client connects.
+        order: 5
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -110,6 +116,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 6
       sendEmptyExchangeOnTimeout:
         kind: parameter
         group: consumer
@@ -120,6 +127,7 @@ data:
         secret: false
         defaultValue: false
         description: To send an empty message in case of timeout watching for a key.
+        order: 7
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -130,6 +138,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -148,6 +157,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 9
       fromIndex:
         kind: parameter
         group: consumer (advanced)
@@ -158,6 +168,7 @@ data:
         secret: false
         defaultValue: "0"
         description: The index to watch from
+        order: 10
       timeToLive:
         kind: parameter
         group: producer
@@ -167,6 +178,7 @@ data:
         deprecated: false
         secret: false
         description: To set the lifespan of a key in milliseconds.
+        order: 11
       synchronous:
         kind: parameter
         group: advanced
@@ -177,6 +189,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 12
       password:
         kind: parameter
         group: security
@@ -186,6 +199,7 @@ data:
         deprecated: false
         secret: true
         description: The password to use for basic authentication.
+        order: 13
       sslContextParameters:
         kind: parameter
         group: security
@@ -195,6 +209,7 @@ data:
         deprecated: false
         secret: false
         description: To configure security using SSLContextParameters.
+        order: 14
       userName:
         kind: parameter
         group: security
@@ -204,6 +219,7 @@ data:
         deprecated: false
         secret: true
         description: The user name to use for basic authentication.
+        order: 15
   documentation.adoc: |+
     +[[Etcd-Etcd]]
     +Etcd

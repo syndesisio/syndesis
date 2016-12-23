@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: server url comes from the remaining endpoint
+        order: 0
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -62,6 +63,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 1
       format:
         kind: parameter
         group: consumer
@@ -76,6 +78,7 @@ data:
         description: 'URI Property: Format for the message body. Either xml or raw. If
           xml the notification is serialized to xml. If raw then the raw java object is
           set as the body.'
+        order: 2
       granularityPeriod:
         kind: parameter
         group: consumer
@@ -86,6 +89,7 @@ data:
         defaultValue: "10000"
         description: 'URI Property: monitor types only The frequency to poll the bean
           to check the monitor.'
+        order: 3
       monitorType:
         kind: parameter
         group: consumer
@@ -99,6 +103,7 @@ data:
         secret: false
         description: 'URI Property: monitor types only The type of monitor to create.
           One of string gauge counter.'
+        order: 4
       objectDomain:
         kind: parameter
         group: consumer
@@ -108,6 +113,7 @@ data:
         deprecated: false
         secret: false
         description: 'URI Property: The domain for the mbean you''re connecting to'
+        order: 5
       objectName:
         kind: parameter
         group: consumer
@@ -117,6 +123,7 @@ data:
         secret: false
         description: 'URI Property: The name key for the mbean you''re connecting to.
           This value is mutually exclusive with the object properties that get passed.'
+        order: 6
       observedAttribute:
         kind: parameter
         group: consumer
@@ -126,6 +133,7 @@ data:
         secret: false
         description: 'URI Property: monitor types only The attribute to observe for the
           monitor bean.'
+        order: 7
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -136,6 +144,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -154,6 +163,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 9
       handback:
         kind: parameter
         group: advanced
@@ -164,6 +174,7 @@ data:
         secret: false
         description: 'URI Property: Value to handback to the listener when a notification
           is received. This value will be put in the message header with the key jmx.handback'
+        order: 10
       notificationFilter:
         kind: parameter
         group: advanced
@@ -173,6 +184,7 @@ data:
         deprecated: false
         secret: false
         description: 'URI Property: Reference to a bean that implements the NotificationFilter.'
+        order: 11
       objectProperties:
         kind: parameter
         group: advanced
@@ -185,6 +197,7 @@ data:
         secret: false
         description: 'URI Property: properties for the object name. These values will
           be used if the objectName param is not set'
+        order: 12
       reconnectDelay:
         kind: parameter
         group: advanced
@@ -197,6 +210,7 @@ data:
         description: 'URI Property: The number of seconds to wait before attempting to
           retry establishment of the initial connection or attempt to reconnect a lost
           connection'
+        order: 13
       reconnectOnConnectionFailure:
         kind: parameter
         group: advanced
@@ -210,6 +224,7 @@ data:
           the JMX server when any connection failure occurs. The consumer will attempt
           to re-establish the JMX connection every ''x'' seconds until the connection
           is made-- where ''x'' is the configured reconnectionDelay'
+        order: 14
       synchronous:
         kind: parameter
         group: advanced
@@ -220,6 +235,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 15
       testConnectionOnStartup:
         kind: parameter
         group: advanced
@@ -233,6 +249,7 @@ data:
           to establish the JMX connection upon startup. If false the consumer will attempt
           to establish the JMX connection every ''x'' seconds until the connection is
           made -- where ''x'' is the configured reconnectionDelay'
+        order: 16
       initThreshold:
         kind: parameter
         group: counter
@@ -243,6 +260,7 @@ data:
         secret: false
         description: 'URI Property: counter monitor only Initial threshold for the monitor.
           The value must exceed this before notifications are fired.'
+        order: 17
       modulus:
         kind: parameter
         group: counter
@@ -253,6 +271,7 @@ data:
         secret: false
         description: 'URI Property: counter monitor only The value at which the counter
           is reset to zero'
+        order: 18
       offset:
         kind: parameter
         group: counter
@@ -263,6 +282,7 @@ data:
         secret: false
         description: 'URI Property: counter monitor only The amount to increment the threshold
           after it''s been exceeded.'
+        order: 19
       differenceMode:
         kind: parameter
         group: gauge
@@ -275,6 +295,7 @@ data:
         description: 'URI Property: counter gauge monitor only If true then the value
           reported in the notification is the difference from the threshold as opposed
           to the value itself.'
+        order: 20
       notifyHigh:
         kind: parameter
         group: gauge
@@ -286,6 +307,7 @@ data:
         defaultValue: false
         description: 'URI Property: gauge monitor only If true the gauge will fire a notification
           when the high threshold is exceeded'
+        order: 21
       notifyLow:
         kind: parameter
         group: gauge
@@ -297,6 +319,7 @@ data:
         defaultValue: false
         description: 'URI Property: gauge monitor only If true the gauge will fire a notification
           when the low threshold is exceeded'
+        order: 22
       thresholdHigh:
         kind: parameter
         group: gauge
@@ -306,6 +329,7 @@ data:
         deprecated: false
         secret: false
         description: 'URI Property: gauge monitor only Value for the gauge''s high threshold'
+        order: 23
       thresholdLow:
         kind: parameter
         group: gauge
@@ -315,6 +339,7 @@ data:
         deprecated: false
         secret: false
         description: 'URI Property: gauge monitor only Value for the gauge''s low threshold'
+        order: 24
       password:
         kind: parameter
         group: security
@@ -324,6 +349,7 @@ data:
         deprecated: false
         secret: true
         description: 'URI Property: credentials for making a remote connection'
+        order: 25
       user:
         kind: parameter
         group: security
@@ -333,6 +359,7 @@ data:
         deprecated: false
         secret: true
         description: 'URI Property: credentials for making a remote connection'
+        order: 26
       notifyDiffer:
         kind: parameter
         group: string
@@ -344,6 +371,7 @@ data:
         defaultValue: false
         description: 'URI Property: string monitor only If true the string monitor will
           fire a notification when the string attribute differs from the string to compare.'
+        order: 27
       notifyMatch:
         kind: parameter
         group: string
@@ -355,6 +383,7 @@ data:
         defaultValue: false
         description: 'URI Property: string monitor only If true the string monitor will
           fire a notification when the string attribute matches the string to compare.'
+        order: 28
       stringToCompare:
         kind: parameter
         group: string
@@ -365,6 +394,7 @@ data:
         secret: false
         description: 'URI Property: string monitor only Value for the string monitor''s
           string to compare.'
+        order: 29
   documentation.adoc: |
     ifdef::env-github[]
     :caution-caption: :boom:

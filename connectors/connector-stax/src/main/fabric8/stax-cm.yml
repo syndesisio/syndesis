@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: The FQN class name for the ContentHandler implementation to use.
+        order: 0
       synchronous:
         kind: parameter
         group: advanced
@@ -62,6 +63,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 1
   documentation.adoc: "[[StAX-StAXComponent]]\nStAX Component\n~~~~~~~~~~~~~~\n\n\
     *Available as of Camel 2.9*\n\nThe StAX component allows messages to be process\
     \ through a SAX\nhttp://download.oracle.com/javase/6/docs/api/org/xml/sax/ContentHandler.html[ContentHandler].\

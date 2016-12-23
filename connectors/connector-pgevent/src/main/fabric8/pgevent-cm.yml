@@ -51,6 +51,7 @@ data:
         secret: false
         defaultValue: localhost
         description: To connect using hostname and port to the database.
+        order: 0
       port:
         kind: path
         group: common
@@ -60,6 +61,7 @@ data:
         secret: false
         defaultValue: "5432"
         description: To connect using hostname and port to the database.
+        order: 1
       database:
         kind: path
         group: common
@@ -69,6 +71,7 @@ data:
         deprecated: false
         secret: false
         description: The database name
+        order: 2
       channel:
         kind: path
         group: common
@@ -78,6 +81,7 @@ data:
         deprecated: false
         secret: false
         description: The channel name
+        order: 3
       datasource:
         kind: parameter
         group: common
@@ -86,6 +90,7 @@ data:
         deprecated: false
         secret: false
         description: To connect using the given javax.sql.DataSource instead of using hostname and port.
+        order: 4
       pass:
         kind: parameter
         group: common
@@ -94,6 +99,7 @@ data:
         deprecated: false
         secret: false
         description: Password for login
+        order: 5
       user:
         kind: parameter
         group: common
@@ -103,6 +109,7 @@ data:
         secret: false
         defaultValue: postgres
         description: Username for login
+        order: 6
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -114,6 +121,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 7
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -124,6 +132,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -142,6 +151,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 9
       synchronous:
         kind: parameter
         group: advanced
@@ -152,6 +162,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 10
   documentation.adoc: |+
     [[PGEvent-PGEventComponentPostgresSQLEvent]]
     PGEvent Component (PostgresSQL Event)

@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use the SplunkConfigurationFactory
+        order: 0
     properties:
       name:
         kind: path
@@ -58,6 +59,7 @@ data:
         deprecated: false
         secret: false
         description: Name has no purpose
+        order: 0
       app:
         kind: parameter
         group: common
@@ -66,6 +68,7 @@ data:
         deprecated: false
         secret: false
         description: Splunk app
+        order: 1
       connectionTimeout:
         kind: parameter
         group: common
@@ -75,6 +78,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: Timeout in MS when connecting to Splunk server
+        order: 2
       host:
         kind: parameter
         group: common
@@ -84,6 +88,7 @@ data:
         secret: false
         defaultValue: localhost
         description: Splunk host.
+        order: 3
       owner:
         kind: parameter
         group: common
@@ -92,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: Splunk owner
+        order: 4
       password:
         kind: parameter
         group: common
@@ -100,6 +106,7 @@ data:
         deprecated: false
         secret: false
         description: Password for Splunk
+        order: 5
       port:
         kind: parameter
         group: common
@@ -109,6 +116,7 @@ data:
         secret: false
         defaultValue: "8089"
         description: Splunk port
+        order: 6
       scheme:
         kind: parameter
         group: common
@@ -118,6 +126,7 @@ data:
         secret: false
         defaultValue: https
         description: Splunk scheme
+        order: 7
       sslProtocol:
         kind: parameter
         group: common
@@ -132,6 +141,7 @@ data:
         secret: false
         defaultValue: TLSv1.2
         description: Set the ssl protocol to use
+        order: 8
       username:
         kind: parameter
         group: common
@@ -140,6 +150,7 @@ data:
         deprecated: false
         secret: false
         description: Username for Splunk
+        order: 9
       useSunHttpsHandler:
         kind: parameter
         group: common
@@ -149,6 +160,7 @@ data:
         secret: false
         defaultValue: false
         description: Use sun.net.www.protocol.https.Handler Https handler to establish the Splunk Connection. Can be useful when running in application servers to avoid app. server https handling.
+        order: 10
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -160,6 +172,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 11
       count:
         kind: parameter
         group: consumer
@@ -169,6 +182,7 @@ data:
         deprecated: false
         secret: false
         description: A number that indicates the maximum number of entities to return.
+        order: 12
       earliestTime:
         kind: parameter
         group: consumer
@@ -178,6 +192,7 @@ data:
         deprecated: false
         secret: false
         description: Earliest time of the search time window.
+        order: 13
       initEarliestTime:
         kind: parameter
         group: consumer
@@ -187,6 +202,7 @@ data:
         deprecated: false
         secret: false
         description: Initial start offset of the first search
+        order: 14
       latestTime:
         kind: parameter
         group: consumer
@@ -196,6 +212,7 @@ data:
         deprecated: false
         secret: false
         description: Latest time of the search time window.
+        order: 15
       savedSearch:
         kind: parameter
         group: consumer
@@ -205,6 +222,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the query saved in Splunk to run
+        order: 16
       search:
         kind: parameter
         group: consumer
@@ -214,6 +232,7 @@ data:
         deprecated: false
         secret: false
         description: The Splunk query to run
+        order: 17
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -225,6 +244,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 18
       streaming:
         kind: parameter
         group: consumer
@@ -234,6 +254,7 @@ data:
         deprecated: false
         secret: false
         description: Sets streaming mode. Streaming mode sends exchanges as they are received rather than in a batch.
+        order: 19
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -244,6 +265,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 20
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -262,6 +284,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 21
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -272,6 +295,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+        order: 22
       eventHost:
         kind: parameter
         group: producer
@@ -281,6 +305,7 @@ data:
         deprecated: false
         secret: false
         description: Override the default Splunk event host field
+        order: 23
       index:
         kind: parameter
         group: producer
@@ -290,6 +315,7 @@ data:
         deprecated: false
         secret: false
         description: Splunk index to write to
+        order: 24
       raw:
         kind: parameter
         group: producer
@@ -300,6 +326,7 @@ data:
         secret: false
         defaultValue: false
         description: Should the payload be inserted raw
+        order: 25
       source:
         kind: parameter
         group: producer
@@ -309,6 +336,7 @@ data:
         deprecated: false
         secret: false
         description: Splunk source argument
+        order: 26
       sourceType:
         kind: parameter
         group: producer
@@ -318,6 +346,7 @@ data:
         deprecated: false
         secret: false
         description: Splunk sourcetype argument
+        order: 27
       tcpReceiverPort:
         kind: parameter
         group: producer
@@ -327,6 +356,7 @@ data:
         deprecated: false
         secret: false
         description: Splunk tcp receiver port
+        order: 28
       synchronous:
         kind: parameter
         group: advanced
@@ -337,6 +367,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 29
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -347,6 +378,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 30
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -357,6 +389,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 31
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -367,6 +400,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 32
       delay:
         kind: parameter
         group: scheduler
@@ -378,6 +412,7 @@ data:
         secret: false
         defaultValue: "500"
         description: Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 33
       greedy:
         kind: parameter
         group: scheduler
@@ -389,6 +424,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 34
       initialDelay:
         kind: parameter
         group: scheduler
@@ -400,6 +436,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 35
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -418,6 +455,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 36
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -428,6 +466,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+        order: 37
       scheduler:
         kind: parameter
         group: scheduler
@@ -443,6 +482,7 @@ data:
         secret: false
         defaultValue: none
         description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+        order: 38
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -454,6 +494,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 39
       startScheduler:
         kind: parameter
         group: scheduler
@@ -465,6 +506,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 40
       timeUnit:
         kind: parameter
         group: scheduler
@@ -484,6 +526,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 41
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -495,6 +538,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 42
   documentation.adoc: "[[Splunk-SplunkComponent]]\nSplunk Component\n~~~~~~~~~~~~~~~~\n\
     \n*Available as of Camel 2.13*\n\nThe Splunk component provides access to\nhttp://docs.splunk.com/Documentation/Splunk/latest[Splunk]\
     \ using the\nSplunk provided https://github.com/splunk/splunk-sdk-java[client]\

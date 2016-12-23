@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Path to the resource or a reference to lookup a bean in the Registry to use as the resource
+        order: 0
       contentCache:
         kind: parameter
         group: producer
@@ -61,6 +62,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether to use resource content cache or not
+        order: 1
       delimiterStart:
         kind: parameter
         group: producer
@@ -70,6 +72,7 @@ data:
         secret: false
         defaultValue: <
         description: The variable start delimiter
+        order: 2
       delimiterStop:
         kind: parameter
         group: producer
@@ -79,6 +82,7 @@ data:
         secret: false
         defaultValue: '>'
         description: The variable end delimiter
+        order: 3
       synchronous:
         kind: parameter
         group: advanced
@@ -89,6 +93,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 4
   documentation.adoc: |+
     [[StringTemplate-StringTemplate]]
     String Template

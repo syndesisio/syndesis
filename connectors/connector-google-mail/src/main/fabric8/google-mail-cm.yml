@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use the shared configuration
+        order: 0
       clientFactory:
         kind: property
         type: object
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: To use the GoogleCalendarClientFactory as factory for creating the client. Will by default use BatchGoogleMailClientFactory
+        order: 1
     properties:
       apiName:
         kind: path
@@ -73,6 +75,7 @@ data:
         deprecated: false
         secret: false
         description: What kind of operation to perform
+        order: 0
       methodName:
         kind: path
         group: common
@@ -97,6 +100,7 @@ data:
         deprecated: false
         secret: false
         description: What sub operation to use for the selected operation
+        order: 1
       accessToken:
         kind: parameter
         group: common
@@ -105,6 +109,7 @@ data:
         deprecated: false
         secret: false
         description: OAuth 2 access token. This typically expires after an hour so refreshToken is recommended for long term usage.
+        order: 2
       applicationName:
         kind: parameter
         group: common
@@ -113,6 +118,7 @@ data:
         deprecated: false
         secret: false
         description: Google mail application name. Example would be camel-google-mail/1.0
+        order: 3
       clientId:
         kind: parameter
         group: common
@@ -121,6 +127,7 @@ data:
         deprecated: false
         secret: false
         description: Client ID of the mail application
+        order: 4
       clientSecret:
         kind: parameter
         group: common
@@ -129,6 +136,7 @@ data:
         deprecated: false
         secret: false
         description: Client secret of the mail application
+        order: 5
       inBody:
         kind: parameter
         group: common
@@ -137,6 +145,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the name of a parameter to be passed in the exchange In Body
+        order: 6
       refreshToken:
         kind: parameter
         group: common
@@ -145,6 +154,7 @@ data:
         deprecated: false
         secret: false
         description: OAuth 2 refresh token. Using this the Google Calendar component can obtain a new accessToken whenever the current one expires - a necessity if the application is long-lived.
+        order: 7
       scopes:
         kind: parameter
         group: common
@@ -153,6 +163,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the level of permissions you want a mail application to have to a user account. See https://developers.google.com/gmail/api/auth/scopes for more info.
+        order: 8
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -164,6 +175,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -174,6 +186,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 10
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -192,6 +205,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 11
       synchronous:
         kind: parameter
         group: advanced
@@ -202,6 +216,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 12
   documentation.adoc: "[[GoogleMail-GoogleMailComponent]]\nGoogleMail Component\n\
     ~~~~~~~~~~~~~~~~~~~~\n\n*Available as of Camel 2.15*\n\n[[GoogleMail-ComponentDescription]]\n\
     Component Description\n^^^^^^^^^^^^^^^^^^^^^\n\nThe Google Mail component provides\

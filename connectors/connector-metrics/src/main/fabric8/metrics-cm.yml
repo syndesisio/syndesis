@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom configured MetricRegistry.
+        order: 0
     properties:
       metricsType:
         kind: path
@@ -65,6 +66,7 @@ data:
         deprecated: false
         secret: false
         description: Type of metrics
+        order: 0
       metricsName:
         kind: path
         group: producer
@@ -74,6 +76,7 @@ data:
         deprecated: false
         secret: false
         description: Name of metrics
+        order: 1
       action:
         kind: parameter
         group: producer
@@ -85,6 +88,7 @@ data:
         deprecated: false
         secret: false
         description: Action when using timer type
+        order: 2
       decrement:
         kind: parameter
         group: producer
@@ -93,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: Decrement value when using counter type
+        order: 3
       increment:
         kind: parameter
         group: producer
@@ -101,6 +106,7 @@ data:
         deprecated: false
         secret: false
         description: Increment value when using counter type
+        order: 4
       mark:
         kind: parameter
         group: producer
@@ -109,6 +115,7 @@ data:
         deprecated: false
         secret: false
         description: Mark when using meter type
+        order: 5
       value:
         kind: parameter
         group: producer
@@ -117,6 +124,7 @@ data:
         deprecated: false
         secret: false
         description: Value value when using histogram type
+        order: 6
       synchronous:
         kind: parameter
         group: advanced
@@ -127,6 +135,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 7
   documentation.adoc: |
     ifdef::env-github[]
     :caution-caption: :boom:

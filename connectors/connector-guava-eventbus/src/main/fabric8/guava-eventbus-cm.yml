@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given Guava EventBus instance
+        order: 0
       listenerInterface:
         kind: property
         type: string
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: The interface with method(s) marked with the Subscribe annotation. Dynamic proxy will be created over the interface so it could be registered as the EventBus listener. Particularly useful when creating multi-event listeners and for handling DeadEvent properly. This option cannot be used together with eventClass option.
+        order: 1
     properties:
       eventBusRef:
         kind: path
@@ -64,6 +66,7 @@ data:
         deprecated: false
         secret: false
         description: To lookup the Guava EventBus from the registry with the given name
+        order: 0
       eventClass:
         kind: parameter
         group: common
@@ -72,6 +75,7 @@ data:
         deprecated: false
         secret: false
         description: If used on the consumer side of the route will filter events received from the EventBus to the instances of the class and superclasses of eventClass. Null value of this option is equal to setting it to the java.lang.Object i.e. the consumer will capture all messages incoming to the event bus. This option cannot be used together with listenerInterface option.
+        order: 1
       listenerInterface:
         kind: parameter
         group: common
@@ -80,6 +84,7 @@ data:
         deprecated: false
         secret: false
         description: The interface with method(s) marked with the Subscribe annotation. Dynamic proxy will be created over the interface so it could be registered as the EventBus listener. Particularly useful when creating multi-event listeners and for handling DeadEvent properly. This option cannot be used together with eventClass option.
+        order: 2
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -91,6 +96,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 3
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -101,6 +107,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 4
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -119,6 +126,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 5
       synchronous:
         kind: parameter
         group: advanced
@@ -129,6 +137,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 6
   documentation.adoc: |
     [[GuavaEventBus-GuavaEventBusComponent]]
     Guava EventBus Component

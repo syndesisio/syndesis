@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given CacheManagerFactory for creating the CacheManager. By default the DefaultCacheManagerFactory is used.
+        order: 0
       configuration:
         kind: property
         type: object
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the Cache configuration
+        order: 1
       configurationFile:
         kind: property
         type: string
@@ -62,6 +64,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the location of the ehcache.xml file to load from classpath or file system. By default the file is loaded from classpath:ehcache.xml
+        order: 2
     properties:
       cacheName:
         kind: path
@@ -72,6 +75,7 @@ data:
         deprecated: false
         secret: false
         description: Name of the cache
+        order: 0
       diskExpiryThreadIntervalSeconds:
         kind: parameter
         group: common
@@ -80,6 +84,7 @@ data:
         deprecated: false
         secret: false
         description: The number of seconds between runs of the disk expiry thread.
+        order: 1
       diskPersistent:
         kind: parameter
         group: common
@@ -89,6 +94,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the disk store persists between restarts of the application.
+        order: 2
       diskStorePath:
         kind: parameter
         group: common
@@ -97,6 +103,7 @@ data:
         deprecated: true
         secret: false
         description: This parameter is ignored. CacheManager sets it using setter injection.
+        order: 3
       eternal:
         kind: parameter
         group: common
@@ -106,6 +113,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether elements are eternal. If eternal timeouts are ignored and the element never expires.
+        order: 4
       key:
         kind: parameter
         group: common
@@ -114,6 +122,7 @@ data:
         deprecated: false
         secret: false
         description: The default key to use. If a key is provided in the message header then the key from the header takes precedence.
+        order: 5
       maxElementsInMemory:
         kind: parameter
         group: common
@@ -123,6 +132,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: The number of elements that may be stored in the defined cache in memory.
+        order: 6
       memoryStoreEvictionPolicy:
         kind: parameter
         group: common
@@ -136,6 +146,7 @@ data:
         secret: false
         defaultValue: LFU
         description: Which eviction strategy to use when maximum number of elements in memory is reached. The strategy defines which elements to be removed. LRU - Lest Recently Used LFU - Lest Frequently Used FIFO - First In First Out
+        order: 7
       objectCache:
         kind: parameter
         group: common
@@ -145,6 +156,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to turn on allowing to store non serializable objects in the cache. If this option is enabled then overflow to disk cannot be enabled as well.
+        order: 8
       operation:
         kind: parameter
         group: common
@@ -153,6 +165,7 @@ data:
         deprecated: false
         secret: false
         description: The default cache operation to use. If an operation in the message header then the operation from the header takes precedence.
+        order: 9
       overflowToDisk:
         kind: parameter
         group: common
@@ -162,6 +175,7 @@ data:
         secret: false
         defaultValue: true
         description: Specifies whether cache may overflow to disk
+        order: 10
       timeToIdleSeconds:
         kind: parameter
         group: common
@@ -171,6 +185,7 @@ data:
         secret: false
         defaultValue: "300"
         description: The maximum amount of time between accesses before an element expires
+        order: 11
       timeToLiveSeconds:
         kind: parameter
         group: common
@@ -180,6 +195,7 @@ data:
         secret: false
         defaultValue: "300"
         description: The maximum time between creation time and when an element expires. Is used only if the element is not eternal
+        order: 12
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -191,6 +207,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 13
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -201,6 +218,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 14
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -219,6 +237,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 15
       cacheLoaderRegistry:
         kind: parameter
         group: advanced
@@ -228,6 +247,7 @@ data:
         deprecated: false
         secret: false
         description: To configure cache loader using the CacheLoaderRegistry
+        order: 16
       cacheManagerFactory:
         kind: parameter
         group: advanced
@@ -237,6 +257,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom CacheManagerFactory for creating the CacheManager to be used by this endpoint. By default the CacheManagerFactory configured on the component is used.
+        order: 17
       eventListenerRegistry:
         kind: parameter
         group: advanced
@@ -246,6 +267,7 @@ data:
         deprecated: false
         secret: false
         description: To configure event listeners using the CacheEventListenerRegistry
+        order: 18
       synchronous:
         kind: parameter
         group: advanced
@@ -256,6 +278,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 19
   documentation.adoc: |+
     [[Cache-CacheComponent]]
     Cache Component

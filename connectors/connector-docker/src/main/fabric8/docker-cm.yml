@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use the shared docker configuration
+        order: 0
     properties:
       operation:
         kind: path
@@ -91,6 +92,7 @@ data:
         deprecated: false
         secret: false
         description: Which operation to use
+        order: 0
       email:
         kind: parameter
         group: common
@@ -99,6 +101,7 @@ data:
         deprecated: false
         secret: false
         description: Email address associated with the user
+        order: 1
       host:
         kind: parameter
         group: common
@@ -109,6 +112,7 @@ data:
         secret: false
         defaultValue: localhost
         description: Docker host
+        order: 2
       port:
         kind: parameter
         group: common
@@ -119,6 +123,7 @@ data:
         secret: false
         defaultValue: "2375"
         description: Docker port
+        order: 3
       requestTimeout:
         kind: parameter
         group: common
@@ -127,6 +132,7 @@ data:
         deprecated: false
         secret: false
         description: Request timeout for response (in seconds)
+        order: 4
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -138,6 +144,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 5
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -148,6 +155,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 6
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -166,6 +174,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 7
       followRedirectFilter:
         kind: parameter
         group: advanced
@@ -176,6 +185,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to follow redirect filter
+        order: 8
       loggingFilter:
         kind: parameter
         group: advanced
@@ -186,6 +196,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to use logging filter
+        order: 9
       maxPerRouteConnections:
         kind: parameter
         group: advanced
@@ -196,6 +207,7 @@ data:
         secret: false
         defaultValue: "100"
         description: Maximum route connections
+        order: 10
       maxTotalConnections:
         kind: parameter
         group: advanced
@@ -206,6 +218,7 @@ data:
         secret: false
         defaultValue: "100"
         description: Maximum total connections
+        order: 11
       serverAddress:
         kind: parameter
         group: advanced
@@ -216,6 +229,7 @@ data:
         secret: false
         defaultValue: https://index.docker.io/v1/
         description: Server address for docker registry.
+        order: 12
       socket:
         kind: parameter
         group: advanced
@@ -226,6 +240,7 @@ data:
         secret: false
         defaultValue: true
         description: Socket connection mode
+        order: 13
       synchronous:
         kind: parameter
         group: advanced
@@ -236,6 +251,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 14
       certPath:
         kind: parameter
         group: security
@@ -245,6 +261,7 @@ data:
         deprecated: false
         secret: false
         description: Location containing the SSL certificate chain
+        order: 15
       password:
         kind: parameter
         group: security
@@ -254,6 +271,7 @@ data:
         deprecated: false
         secret: true
         description: Password to authenticate with
+        order: 16
       secure:
         kind: parameter
         group: security
@@ -264,6 +282,7 @@ data:
         secret: false
         defaultValue: false
         description: Use HTTPS communication
+        order: 17
       tlsVerify:
         kind: parameter
         group: security
@@ -274,6 +293,7 @@ data:
         secret: false
         defaultValue: false
         description: Check TLS
+        order: 18
       username:
         kind: parameter
         group: security
@@ -283,6 +303,7 @@ data:
         deprecated: false
         secret: true
         description: User name to authenticate with
+        order: 19
   documentation.adoc: |
     [[Docker-CamelDockercomponent]]
     Camel Docker component

@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 0
     properties:
       beanId:
         kind: path
@@ -59,6 +60,7 @@ data:
         secret: false
         description: 'To lookup an existing configured CxfRsEndpoint. Must used bean:
           as prefix.'
+        order: 0
       address:
         kind: path
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: The service publish address.
+        order: 1
       features:
         kind: parameter
         group: common
@@ -75,6 +78,7 @@ data:
         deprecated: false
         secret: false
         description: Set the feature list to the CxfRs endpoint.
+        order: 2
       loggingFeatureEnabled:
         kind: parameter
         group: common
@@ -84,6 +88,7 @@ data:
         secret: false
         defaultValue: false
         description: This option enables CXF Logging Feature which writes inbound and outbound REST messages to log.
+        order: 3
       loggingSizeLimit:
         kind: parameter
         group: common
@@ -92,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: To limit the total size of number of bytes the logger will output when logging feature has been enabled.
+        order: 4
       modelRef:
         kind: parameter
         group: common
@@ -100,6 +106,7 @@ data:
         deprecated: false
         secret: false
         description: This option is used to specify the model file which is useful for the resource class without annotation. When using this option then the service class can be omitted to emulate document-only endpoints
+        order: 5
       providers:
         kind: parameter
         group: common
@@ -108,6 +115,7 @@ data:
         deprecated: false
         secret: false
         description: Set custom JAX-RS provider(s) list to the CxfRs endpoint. You can specify a string with a list of providers to lookup in the registy separated by comma.
+        order: 6
       resourceClasses:
         kind: parameter
         group: common
@@ -116,6 +124,7 @@ data:
         deprecated: false
         secret: false
         description: The resource classes which you want to export as REST service. Multiple classes can be separated by comma.
+        order: 7
       schemaLocations:
         kind: parameter
         group: common
@@ -124,6 +133,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the locations of the schema(s) which can be used to validate the incoming XML or JAXB-driven JSON.
+        order: 8
       skipFaultLogging:
         kind: parameter
         group: common
@@ -133,6 +143,7 @@ data:
         secret: false
         defaultValue: false
         description: This option controls whether the PhaseInterceptorChain skips logging the Fault that it catches.
+        order: 9
       bindingStyle:
         kind: parameter
         group: consumer
@@ -157,6 +168,7 @@ data:
           coming in from the CXF stack onto the IN message body. The user is then responsible
           for processing it according to the contract defined by the JAX-RS method signature.
           Custom: allows you to specify a custom binding through the binding option.'
+        order: 10
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -168,6 +180,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 11
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -178,6 +191,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 12
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -196,6 +210,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 13
       hostnameVerifier:
         kind: parameter
         group: producer
@@ -205,6 +220,7 @@ data:
         deprecated: false
         secret: false
         description: The hostname verifier to be used. Use the notation to reference a HostnameVerifier from the registry.
+        order: 14
       sslContextParameters:
         kind: parameter
         group: producer
@@ -214,6 +230,7 @@ data:
         deprecated: false
         secret: false
         description: The Camel SSL setting reference. Use the notation to reference the SSL Context.
+        order: 15
       throwExceptionOnFailure:
         kind: parameter
         group: producer
@@ -224,6 +241,7 @@ data:
         secret: false
         defaultValue: true
         description: This option tells the CxfRsProducer to inspect return codes and will generate an Exception if the return code is larger than 207.
+        order: 16
       httpClientAPI:
         kind: parameter
         group: producer (advanced)
@@ -234,6 +252,7 @@ data:
         secret: false
         defaultValue: true
         description: If it is true the CxfRsProducer will use the HttpClientAPI to invoke the service. If it is false the CxfRsProducer will use the ProxyClientAPI to invoke the service
+        order: 17
       ignoreDeleteMethodMessageBody:
         kind: parameter
         group: producer (advanced)
@@ -244,6 +263,7 @@ data:
         secret: false
         defaultValue: false
         description: This option is used to tell CxfRsProducer to ignore the message body of the DELETE method when using HTTP API.
+        order: 18
       maxClientCacheSize:
         kind: parameter
         group: producer (advanced)
@@ -254,6 +274,7 @@ data:
         secret: false
         defaultValue: "10"
         description: This option allows you to configure the maximum size of the cache. The implementation caches CXF clients or ClientFactoryBean in CxfProvider and CxfRsProvider.
+        order: 19
       binding:
         kind: parameter
         group: advanced
@@ -263,6 +284,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom CxfBinding to control the binding between Camel Message and CXF Message.
+        order: 20
       bus:
         kind: parameter
         group: advanced
@@ -272,6 +294,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom configured CXF Bus.
+        order: 21
       continuationTimeout:
         kind: parameter
         group: advanced
@@ -282,6 +305,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: This option is used to set the CXF continuation timeout which could be used in CxfConsumer by default when the CXF server is using Jetty or Servlet transport.
+        order: 22
       cxfRsEndpointConfigurer:
         kind: parameter
         group: advanced
@@ -291,6 +315,7 @@ data:
         deprecated: false
         secret: false
         description: This option could apply the implementation of org.apache.camel.component.cxf.jaxrs.CxfRsEndpointConfigurer which supports to configure the CXF endpoint in programmatic way. User can configure the CXF server and client by implementing configureServer/Client method of CxfEndpointConfigurer.
+        order: 23
       defaultBus:
         kind: parameter
         group: advanced
@@ -301,6 +326,7 @@ data:
         secret: false
         defaultValue: false
         description: Will set the default bus when CXF endpoint create a bus by itself
+        order: 24
       headerFilterStrategy:
         kind: parameter
         group: advanced
@@ -310,6 +336,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 25
       performInvocation:
         kind: parameter
         group: advanced
@@ -320,6 +347,7 @@ data:
         secret: false
         defaultValue: false
         description: When the option is true Camel will perform the invocation of the resource class instance and put the response object into the exchange for further processing.
+        order: 26
       propagateContexts:
         kind: parameter
         group: advanced
@@ -330,6 +358,7 @@ data:
         secret: false
         defaultValue: false
         description: When the option is true JAXRS UriInfo HttpHeaders Request and SecurityContext contexts will be available to custom CXFRS processors as typed Camel exchange properties. These contexts can be used to analyze the current requests using JAX-RS API.
+        order: 27
       synchronous:
         kind: parameter
         group: advanced
@@ -340,6 +369,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 28
   documentation.adoc: "[[CXFRS-CXFRSComponent]]\nCXFRS Component\n~~~~~~~~~~~~~~~\n\
     \n[Note]\n====\n\n\nWhen using CXF as a consumer, the link:cxf-bean-component.html[CXF\
     \ Bean\nComponent] allows you to factor out how message payloads are received\n\

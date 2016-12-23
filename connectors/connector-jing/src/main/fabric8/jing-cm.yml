@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: URL to a local resource on the classpath or a full URL to a remote resource or resource on the file system which contains the schema to validate against.
+        order: 0
       compactSyntax:
         kind: parameter
         group: producer
@@ -61,6 +62,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to validate using RelaxNG compact syntax or not. By default this is false for using RelaxNG XML Syntax (rng) And true is for using RelaxNG Compact Syntax (rnc)
+        order: 1
       synchronous:
         kind: parameter
         group: advanced
@@ -71,6 +73,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 2
   documentation.adoc: |+
     [[Jing-JingComponent]]
     Jing Component

@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: Port number. Will by default use 4567
+        order: 0
       ipAddress:
         kind: property
         type: string
@@ -56,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: Set the IP address that Spark should listen on. If not called the default address is '0.0.0.0'.
+        order: 1
       minThreads:
         kind: property
         type: integer
@@ -63,6 +65,7 @@ data:
         deprecated: false
         secret: false
         description: Minimum number of threads in Spark thread-pool (shared globally)
+        order: 2
       maxThreads:
         kind: property
         type: integer
@@ -70,6 +73,7 @@ data:
         deprecated: false
         secret: false
         description: Maximum number of threads in Spark thread-pool (shared globally)
+        order: 3
       timeOutMillis:
         kind: property
         type: integer
@@ -77,6 +81,7 @@ data:
         deprecated: false
         secret: false
         description: Thread idle timeout in millis where threads that has been idle for a longer period will be terminated from the thread pool
+        order: 4
       keystoreFile:
         kind: property
         type: string
@@ -84,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: Configures connection to be secure to use the keystore file
+        order: 5
       keystorePassword:
         kind: property
         type: string
@@ -91,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: Configures connection to be secure to use the keystore password
+        order: 6
       truststoreFile:
         kind: property
         type: string
@@ -98,6 +105,7 @@ data:
         deprecated: false
         secret: false
         description: Configures connection to be secure to use the truststore file
+        order: 7
       truststorePassword:
         kind: property
         type: string
@@ -105,6 +113,7 @@ data:
         deprecated: false
         secret: false
         description: Configures connection to be secure to use the truststore password
+        order: 8
       sparkConfiguration:
         kind: property
         type: object
@@ -112,6 +121,7 @@ data:
         deprecated: false
         secret: false
         description: To use the shared SparkConfiguration
+        order: 9
       sparkBinding:
         kind: property
         type: object
@@ -119,6 +129,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom SparkBinding to map to/from Camel message.
+        order: 10
     properties:
       verb:
         kind: path
@@ -139,6 +150,7 @@ data:
         deprecated: false
         secret: false
         description: get post put patch delete head trace connect or options.
+        order: 0
       path:
         kind: path
         group: consumer
@@ -148,6 +160,7 @@ data:
         deprecated: false
         secret: false
         description: The content path which support Spark syntax.
+        order: 1
       accept:
         kind: parameter
         group: consumer
@@ -157,6 +170,7 @@ data:
         secret: false
         description: 'Accept type such as: ''text/xml'' or ''application/json''. By default
           we accept all kinds of types.'
+        order: 2
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -168,6 +182,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 3
       disableStreamCache:
         kind: parameter
         group: consumer
@@ -177,6 +192,7 @@ data:
         secret: false
         defaultValue: false
         description: Determines whether or not the raw input stream from Spark HttpRequestgetContent() is cached or not (Camel will read the stream into a in light-weight memory based Stream caching) cache. By default Camel will cache the Netty input stream to support reading it multiple times to ensure Camel can retrieve all data from the stream. However you can set this option to true when you for example need to access the raw stream such as streaming it directly to a file or other persistent store. Mind that if you enable this option then you cannot read the Netty stream multiple times out of the box and you would need manually to reset the reader index on the Spark raw stream.
+        order: 4
       mapHeaders:
         kind: parameter
         group: consumer
@@ -186,6 +202,7 @@ data:
         secret: false
         defaultValue: true
         description: If this option is enabled then during binding from Spark to Camel Message then the headers will be mapped as well (eg added as header to the Camel Message as well). You can turn off this option to disable this. The headers can still be accessed from the org.apache.camel.component.sparkrest.SparkMessage message with the method getRequest() that returns the Spark HTTP request instance.
+        order: 5
       transferException:
         kind: parameter
         group: consumer
@@ -195,6 +212,7 @@ data:
         secret: false
         defaultValue: false
         description: If enabled and an Exchange failed processing on the consumer side and if the caused Exception was send back serialized in the response as a application/x-java-serialized-object content type. This is by default turned off. If you enable this then be aware that Java will deserialize the incoming data from the request to Java and that can be a potential security risk.
+        order: 6
       urlDecodeHeaders:
         kind: parameter
         group: consumer
@@ -204,6 +222,7 @@ data:
         secret: false
         defaultValue: false
         description: If this option is enabled then during binding from Spark to Camel Message then the header values will be URL decoded (eg 20 will be a space character.)
+        order: 7
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -214,6 +233,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -232,6 +252,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 9
       matchOnUriPrefix:
         kind: parameter
         group: advanced
@@ -242,6 +263,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether or not the consumer should try to find a target consumer by matching the URI prefix if no exact match is found.
+        order: 10
       sparkBinding:
         kind: parameter
         group: advanced
@@ -251,6 +273,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom SparkBinding to map to/from Camel message.
+        order: 11
       synchronous:
         kind: parameter
         group: advanced
@@ -261,6 +284,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 12
   documentation.adoc: |+
     [[Spark-rest-Spark-restComponent]]
     Spark-rest Component

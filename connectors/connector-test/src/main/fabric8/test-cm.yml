@@ -53,6 +53,7 @@ data:
         deprecated: false
         secret: false
         description: Name of endpoint to lookup in the registry to use for polling messages used for testing
+        order: 0
       anyOrder:
         kind: parameter
         group: producer
@@ -62,6 +63,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the expected messages should arrive in the same order or can be in any order.
+        order: 1
       assertPeriod:
         kind: parameter
         group: producer
@@ -72,6 +74,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Sets a grace period after which the mock endpoint will re-assert to ensure the preliminary assertion is still valid. This is used for example to assert that exactly a number of messages arrives. For example if link expectedMessageCount(int) was set to 5 then the assertion is satisfied when 5 or more message arrives. To ensure that exactly 5 messages arrives then you would need to wait a little period to ensure no further message arrives. This is what you can use this link setAssertPeriod(long) method for. By default this period is disabled.
+        order: 2
       delimiter:
         kind: parameter
         group: producer
@@ -80,6 +83,7 @@ data:
         deprecated: false
         secret: false
         description: The split delimiter to use when split is enabled. By default the delimiter is new line based. The delimiter can be a regular expression.
+        order: 3
       expectedCount:
         kind: parameter
         group: producer
@@ -99,6 +103,7 @@ data:
           This allows you to not use a fixed assert period to speedup testing times. If
           you want to assert that exactly n''th message arrives to this mock endpoint
           then see also the link setAssertPeriod(long) method for further details.'
+        order: 4
       reportGroup:
         kind: parameter
         group: producer
@@ -108,6 +113,7 @@ data:
         deprecated: false
         secret: false
         description: A number that is used to turn on throughput logging based on groups of the size.
+        order: 5
       resultMinimumWaitTime:
         kind: parameter
         group: producer
@@ -118,6 +124,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Sets the minimum expected amount of time (in millis) the link assertIsSatisfied() will wait on a latch until it is satisfied
+        order: 6
       resultWaitTime:
         kind: parameter
         group: producer
@@ -128,6 +135,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Sets the maximum amount of time (in millis) the link assertIsSatisfied() will wait on a latch until it is satisfied
+        order: 7
       retainFirst:
         kind: parameter
         group: producer
@@ -149,6 +157,7 @@ data:
           link expectedBodiesReceived(Object...) sets a expectation on the first number
           of bodies received. You can configure both link setRetainFirst(int) and link
           setRetainLast(int) methods to limit both the first and last received.'
+        order: 8
       retainLast:
         kind: parameter
         group: producer
@@ -170,6 +179,7 @@ data:
           sets a expectation on the first number of bodies received. You can configure
           both link setRetainFirst(int) and link setRetainLast(int) methods to limit both
           the first and last received.'
+        order: 9
       sleepForEmptyTest:
         kind: parameter
         group: producer
@@ -180,6 +190,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Allows a sleep to be specified to wait to check that this endpoint really is empty when link expectedMessageCount(int) is called with zero
+        order: 10
       split:
         kind: parameter
         group: producer
@@ -192,6 +203,7 @@ data:
           \ split using \n\r delimiters (new lines) so each line is an expected message.\
           \ For example to use a file endpoint to load a file where each line is an expected\
           \ message."
+        order: 11
       timeout:
         kind: parameter
         group: producer
@@ -201,6 +213,7 @@ data:
         secret: false
         defaultValue: "2000"
         description: The timeout to use when polling for message bodies from the URI
+        order: 12
       copyOnExchange:
         kind: parameter
         group: producer (advanced)
@@ -211,6 +224,7 @@ data:
         secret: false
         defaultValue: true
         description: Sets whether to make a deep copy of the incoming Exchange when received at this mock endpoint. Is by default true.
+        order: 13
       synchronous:
         kind: parameter
         group: advanced
@@ -221,6 +235,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 14
   documentation.adoc: |+
     [[Test-TestComponent]]
     Test Component

@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: RDD to compute against.
+        order: 0
       rddCallback:
         kind: property
         type: object
@@ -56,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: Function performing action against an RDD.
+        order: 1
     properties:
       endpointType:
         kind: path
@@ -70,6 +72,7 @@ data:
         deprecated: false
         secret: false
         description: Type of the endpoint (rdd dataframe hive).
+        order: 0
       collect:
         kind: parameter
         group: producer
@@ -79,6 +82,7 @@ data:
         secret: false
         defaultValue: true
         description: Indicates if results should be collected or counted.
+        order: 1
       dataFrame:
         kind: parameter
         group: producer
@@ -87,6 +91,7 @@ data:
         deprecated: false
         secret: false
         description: DataFrame to compute against.
+        order: 2
       dataFrameCallback:
         kind: parameter
         group: producer
@@ -95,6 +100,7 @@ data:
         deprecated: false
         secret: false
         description: Function performing action against an DataFrame.
+        order: 3
       rdd:
         kind: parameter
         group: producer
@@ -103,6 +109,7 @@ data:
         deprecated: false
         secret: false
         description: RDD to compute against.
+        order: 4
       rddCallback:
         kind: parameter
         group: producer
@@ -111,6 +118,7 @@ data:
         deprecated: false
         secret: false
         description: Function performing action against an RDD.
+        order: 5
       synchronous:
         kind: parameter
         group: advanced
@@ -121,6 +129,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 6
   documentation.adoc: |+
     [[ApacheSpark-ApacheSparkcomponent]]
     Apache Spark component

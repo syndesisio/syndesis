@@ -52,6 +52,7 @@ data:
           the resources is loaded from file system or from JAR files. For example to load
           from root classpath use classpath:. or classpath:WEB-INF/static If not configured
           (eg null) then no static resource is in use.'
+        order: 0
       host:
         kind: property
         type: string
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: The hostname. The default value is 0.0.0.0
+        order: 1
       port:
         kind: property
         type: integer
@@ -66,6 +68,7 @@ data:
         deprecated: false
         secret: false
         description: The port number. The default value is 9292
+        order: 2
       sslKeyPassword:
         kind: property
         type: string
@@ -73,6 +76,7 @@ data:
         deprecated: false
         secret: false
         description: The password for the keystore when using SSL.
+        order: 3
       sslPassword:
         kind: property
         type: string
@@ -80,6 +84,7 @@ data:
         deprecated: false
         secret: false
         description: The password when using SSL.
+        order: 4
       sslKeystore:
         kind: property
         type: string
@@ -87,6 +92,7 @@ data:
         deprecated: false
         secret: false
         description: The path to the keystore.
+        order: 5
       enableJmx:
         kind: property
         type: boolean
@@ -94,6 +100,7 @@ data:
         deprecated: false
         secret: false
         description: If this option is true Jetty JMX support will be enabled for this endpoint. See Jetty JMX support for more details.
+        order: 6
       minThreads:
         kind: property
         type: integer
@@ -101,6 +108,7 @@ data:
         deprecated: false
         secret: false
         description: To set a value for minimum number of threads in server thread pool. MaxThreads/minThreads or threadPool fields are required due to switch to Jetty9. The default values for minThreads is 1.
+        order: 7
       maxThreads:
         kind: property
         type: integer
@@ -108,6 +116,7 @@ data:
         deprecated: false
         secret: false
         description: To set a value for maximum number of threads in server thread pool. MaxThreads/minThreads or threadPool fields are required due to switch to Jetty9. The default values for maxThreads is 1 2 noCores.
+        order: 8
       threadPool:
         kind: property
         type: object
@@ -115,6 +124,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom thread pool for the server. MaxThreads/minThreads or threadPool fields are required due to switch to Jetty9.
+        order: 9
       sslContextParameters:
         kind: property
         type: object
@@ -122,6 +132,7 @@ data:
         deprecated: false
         secret: false
         description: To configure security using SSLContextParameters
+        order: 10
       socketFactory:
         kind: property
         type: object
@@ -129,6 +140,7 @@ data:
         deprecated: false
         secret: false
         description: To configure a map which contains custom WebSocketFactory for sub protocols. The key in the map is the sub protocol. The default key is reserved for the default implementation.
+        order: 11
     properties:
       host:
         kind: path
@@ -139,6 +151,7 @@ data:
         secret: false
         defaultValue: 0.0.0.0
         description: The hostname. The default value is 0.0.0.0. Setting this option on the component will use the component configured value as default.
+        order: 0
       port:
         kind: path
         group: common
@@ -148,6 +161,7 @@ data:
         secret: false
         defaultValue: "9292"
         description: The port number. The default value is 9292. Setting this option on the component will use the component configured value as default.
+        order: 1
       resourceUri:
         kind: path
         group: common
@@ -157,6 +171,7 @@ data:
         deprecated: false
         secret: false
         description: Name of the websocket channel to use
+        order: 2
       maxBinaryMessageSize:
         kind: parameter
         group: common
@@ -166,6 +181,7 @@ data:
         secret: false
         defaultValue: -1
         description: Can be used to set the size in bytes that the websocket created by the websocketServlet may be accept before closing. (Default is -1 - or unlimited)
+        order: 3
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -177,6 +193,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 4
       sessionSupport:
         kind: parameter
         group: consumer
@@ -187,6 +204,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to enable session support which enables HttpSession for each http request.
+        order: 5
       staticResources:
         kind: parameter
         group: consumer
@@ -200,6 +218,7 @@ data:
           the resources is loaded from file system or from JAR files. For example to load
           from root classpath use classpath:. or classpath:WEB-INF/static If not configured
           (eg null) then no static resource is in use.'
+        order: 6
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -210,6 +229,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 7
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -228,6 +248,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 8
       sendTimeout:
         kind: parameter
         group: producer
@@ -238,6 +259,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: Timeout in millis when sending to a websocket channel. The default timeout is 30000 (30 seconds).
+        order: 9
       sendToAll:
         kind: parameter
         group: producer
@@ -247,6 +269,7 @@ data:
         deprecated: false
         secret: false
         description: To send to all websocket subscribers. Can be used to configure on endpoint level instead of having to use the WebsocketConstants.SEND_TO_ALL header on the message.
+        order: 10
       bufferSize:
         kind: parameter
         group: advanced
@@ -257,6 +280,7 @@ data:
         secret: false
         defaultValue: "8192"
         description: Set the buffer size of the websocketServlet which is also the max frame byte size (default 8192)
+        order: 11
       maxIdleTime:
         kind: parameter
         group: advanced
@@ -267,6 +291,7 @@ data:
         secret: false
         defaultValue: "300000"
         description: Set the time in ms that the websocket created by the websocketServlet may be idle before closing. (default is 300000)
+        order: 12
       maxTextMessageSize:
         kind: parameter
         group: advanced
@@ -276,6 +301,7 @@ data:
         deprecated: false
         secret: false
         description: Can be used to set the size in characters that the websocket created by the websocketServlet may be accept before closing.
+        order: 13
       minVersion:
         kind: parameter
         group: advanced
@@ -286,6 +312,7 @@ data:
         secret: false
         defaultValue: "13"
         description: Can be used to set the minimum protocol version accepted for the websocketServlet. (Default 13 - the RFC6455 version)
+        order: 14
       synchronous:
         kind: parameter
         group: advanced
@@ -296,6 +323,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 15
       allowedOrigins:
         kind: parameter
         group: cors
@@ -305,6 +333,7 @@ data:
         deprecated: false
         secret: false
         description: The CORS allowed origins. Use to allow all.
+        order: 16
       crossOriginFilterOn:
         kind: parameter
         group: cors
@@ -315,6 +344,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to enable CORS
+        order: 17
       filterPath:
         kind: parameter
         group: cors
@@ -324,6 +354,7 @@ data:
         deprecated: false
         secret: false
         description: Context path for filtering CORS
+        order: 18
       enableJmx:
         kind: parameter
         group: monitoring
@@ -334,6 +365,7 @@ data:
         secret: false
         defaultValue: false
         description: If this option is true Jetty JMX support will be enabled for this endpoint. See Jetty JMX support for more details.
+        order: 19
       sslContextParameters:
         kind: parameter
         group: security
@@ -343,6 +375,7 @@ data:
         deprecated: false
         secret: false
         description: To configure security using SSLContextParameters
+        order: 20
   documentation.adoc: "[[Websocket-WebsocketComponent]]\nWebsocket Component\n~~~~~~~~~~~~~~~~~~~\n\
     \n*Available as of Camel 2.10*\n\nThe *websocket* component provides websocket\n\
     link:endpoint.html[endpoints] for communicating with clients using\nwebsocket.\

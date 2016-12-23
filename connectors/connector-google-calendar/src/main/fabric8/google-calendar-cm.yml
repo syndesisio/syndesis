@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use the shared configuration
+        order: 0
       clientFactory:
         kind: property
         type: object
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: To use the GoogleCalendarClientFactory as factory for creating the client. Will by default use BatchGoogleCalendarClientFactory
+        order: 1
     properties:
       apiName:
         kind: path
@@ -74,6 +76,7 @@ data:
         deprecated: false
         secret: false
         description: What kind of operation to perform
+        order: 0
       methodName:
         kind: path
         group: common
@@ -98,6 +101,7 @@ data:
         deprecated: false
         secret: false
         description: What sub operation to use for the selected operation
+        order: 1
       accessToken:
         kind: parameter
         group: common
@@ -106,6 +110,7 @@ data:
         deprecated: false
         secret: false
         description: OAuth 2 access token. This typically expires after an hour so refreshToken is recommended for long term usage.
+        order: 2
       applicationName:
         kind: parameter
         group: common
@@ -114,6 +119,7 @@ data:
         deprecated: false
         secret: false
         description: Google calendar application name. Example would be camel-google-calendar/1.0
+        order: 3
       clientId:
         kind: parameter
         group: common
@@ -122,6 +128,7 @@ data:
         deprecated: false
         secret: false
         description: Client ID of the calendar application
+        order: 4
       clientSecret:
         kind: parameter
         group: common
@@ -130,6 +137,7 @@ data:
         deprecated: false
         secret: false
         description: Client secret of the calendar application
+        order: 5
       emailAddress:
         kind: parameter
         group: common
@@ -138,6 +146,7 @@ data:
         deprecated: false
         secret: false
         description: The emailAddress of the Google Service Account.
+        order: 6
       inBody:
         kind: parameter
         group: common
@@ -146,6 +155,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the name of a parameter to be passed in the exchange In Body
+        order: 7
       p12FileName:
         kind: parameter
         group: common
@@ -154,6 +164,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the p12 file which has the private key to use with the Google Service Account.
+        order: 8
       refreshToken:
         kind: parameter
         group: common
@@ -162,6 +173,7 @@ data:
         deprecated: false
         secret: false
         description: OAuth 2 refresh token. Using this the Google Calendar component can obtain a new accessToken whenever the current one expires - a necessity if the application is long-lived.
+        order: 9
       scopes:
         kind: parameter
         group: common
@@ -171,6 +183,7 @@ data:
         secret: false
         defaultValue: https://www.googleapis.com/auth/calendar
         description: Specifies the level of permissions you want a calendar application to have to a user account. See https://developers.google.com/google-apps/calendar/auth for more info.
+        order: 10
       user:
         kind: parameter
         group: common
@@ -179,6 +192,7 @@ data:
         deprecated: false
         secret: false
         description: The email address of the user the application is trying to impersonate in the service account flow
+        order: 11
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -190,6 +204,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 12
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -200,6 +215,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 13
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -218,6 +234,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 14
       synchronous:
         kind: parameter
         group: advanced
@@ -228,6 +245,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 15
   documentation.adoc: "[[GoogleCalendar-GoogleCalendarComponent]]\nGoogleCalendar\
     \ Component\n~~~~~~~~~~~~~~~~~~~~~~~~\n\n*Available as of Camel 2.15*\n\n[[GoogleCalendar-ComponentDescription]]\n\
     Component Description\n^^^^^^^^^^^^^^^^^^^^^\n\nThe Google Calendar component\

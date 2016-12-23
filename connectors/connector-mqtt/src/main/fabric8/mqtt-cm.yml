@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: The URI of the MQTT broker to connect too - this component also supports SSL - e.g. ssl://127.0.0.1:8883
+        order: 0
       userName:
         kind: property
         type: string
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: Username to be used for authentication against the MQTT broker
+        order: 1
       password:
         kind: property
         type: string
@@ -62,6 +64,7 @@ data:
         deprecated: false
         secret: false
         description: Password to be used for authentication against the MQTT broker
+        order: 2
     properties:
       name:
         kind: path
@@ -72,6 +75,7 @@ data:
         deprecated: false
         secret: false
         description: A logical name to use which is not the topic name.
+        order: 0
       blockingExecutor:
         kind: parameter
         group: common
@@ -80,6 +84,7 @@ data:
         deprecated: false
         secret: false
         description: SSL connections perform blocking operations against internal thread pool unless you call the setBlockingExecutor method to configure that executor they will use instead.
+        order: 1
       byDefaultRetain:
         kind: parameter
         group: common
@@ -89,6 +94,7 @@ data:
         secret: false
         defaultValue: false
         description: The default retain policy to be used on messages sent to the MQTT broker
+        order: 2
       cleanSession:
         kind: parameter
         group: common
@@ -98,6 +104,7 @@ data:
         secret: false
         defaultValue: false
         description: Set to false if you want the MQTT server to persist topic subscriptions and ack positions across client sessions. Defaults to true.
+        order: 3
       clientId:
         kind: parameter
         group: common
@@ -106,6 +113,7 @@ data:
         deprecated: false
         secret: false
         description: Use to set the client Id of the session. This is what an MQTT server uses to identify a session where setCleanSession(false); is being used. The id must be 23 characters or less. Defaults to auto generated id (based on your socket address port and timestamp).
+        order: 4
       connectAttemptsMax:
         kind: parameter
         group: common
@@ -115,6 +123,7 @@ data:
         secret: false
         defaultValue: -1
         description: The maximum number of reconnect attempts before an error is reported back to the client on the first attempt by the client to connect to a server. Set to -1 to use unlimited attempts. Defaults to -1.
+        order: 5
       connectWaitInSeconds:
         kind: parameter
         group: common
@@ -124,6 +133,7 @@ data:
         secret: false
         defaultValue: "10"
         description: Delay in seconds the Component will wait for a connection to be established to the MQTT broker
+        order: 6
       disconnectWaitInSeconds:
         kind: parameter
         group: common
@@ -133,6 +143,7 @@ data:
         secret: false
         defaultValue: "5"
         description: The number of seconds the Component will wait for a valid disconnect on stop() from the MQTT broker
+        order: 7
       dispatchQueue:
         kind: parameter
         group: common
@@ -141,6 +152,7 @@ data:
         deprecated: false
         secret: false
         description: A HawtDispatch dispatch queue is used to synchronize access to the connection. If an explicit queue is not configured via the setDispatchQueue method then a new queue will be created for the connection. Setting an explicit queue might be handy if you want multiple connection to share the same queue for synchronization.
+        order: 8
       host:
         kind: parameter
         group: common
@@ -150,6 +162,7 @@ data:
         secret: false
         defaultValue: tcp://127.0.0.1:1883
         description: The URI of the MQTT broker to connect too - this component also supports SSL - e.g. ssl://127.0.0.1:8883
+        order: 9
       keepAlive:
         kind: parameter
         group: common
@@ -158,6 +171,7 @@ data:
         deprecated: false
         secret: false
         description: Configures the Keep Alive timer in seconds. Defines the maximum time interval between messages received from a client. It enables the server to detect that the network connection to a client has dropped without having to wait for the long TCP/IP timeout.
+        order: 10
       localAddress:
         kind: parameter
         group: common
@@ -166,6 +180,7 @@ data:
         deprecated: false
         secret: false
         description: The local InetAddress and port to use
+        order: 11
       maxReadRate:
         kind: parameter
         group: common
@@ -174,6 +189,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the maximum bytes per second that this transport will receive data at. This setting throttles reads so that the rate is not exceeded. Defaults to 0 which disables throttling.
+        order: 12
       maxWriteRate:
         kind: parameter
         group: common
@@ -182,6 +198,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the maximum bytes per second that this transport will send data at. This setting throttles writes so that the rate is not exceeded. Defaults to 0 which disables throttling.
+        order: 13
       mqttQosPropertyName:
         kind: parameter
         group: common
@@ -191,6 +208,7 @@ data:
         secret: false
         defaultValue: MQTTQos
         description: The property name to look for on an Exchange for an individual published message. If this is set (one of AtMostOnce AtLeastOnce or ExactlyOnce ) - then that QoS will be set on the message sent to the MQTT message broker.
+        order: 14
       mqttRetainPropertyName:
         kind: parameter
         group: common
@@ -200,6 +218,7 @@ data:
         secret: false
         defaultValue: MQTTRetain
         description: The property name to look for on an Exchange for an individual published message. If this is set (expects a Boolean value) - then the retain property will be set on the message sent to the MQTT message broker.
+        order: 15
       mqttTopicPropertyName:
         kind: parameter
         group: common
@@ -209,6 +228,7 @@ data:
         secret: false
         defaultValue: MQTTTopicPropertyName
         description: These a properties that are looked for in an Exchange - to publish to
+        order: 16
       publishTopicName:
         kind: parameter
         group: common
@@ -218,6 +238,7 @@ data:
         secret: false
         defaultValue: camel/mqtt/test
         description: The default Topic to publish messages on
+        order: 17
       qualityOfService:
         kind: parameter
         group: common
@@ -231,6 +252,7 @@ data:
         secret: false
         defaultValue: AtLeastOnce
         description: Quality of service level to use for topics.
+        order: 18
       receiveBufferSize:
         kind: parameter
         group: common
@@ -240,6 +262,7 @@ data:
         secret: false
         defaultValue: "65536"
         description: Sets the size of the internal socket receive buffer. Defaults to 65536 (64k)
+        order: 19
       reconnectAttemptsMax:
         kind: parameter
         group: common
@@ -249,6 +272,7 @@ data:
         secret: false
         defaultValue: -1
         description: The maximum number of reconnect attempts before an error is reported back to the client after a server connection had previously been established. Set to -1 to use unlimited attempts. Defaults to -1.
+        order: 20
       reconnectBackOffMultiplier:
         kind: parameter
         group: common
@@ -258,6 +282,7 @@ data:
         secret: false
         defaultValue: "2.0"
         description: The Exponential backoff be used between reconnect attempts. Set to 1 to disable exponential backoff. Defaults to 2.
+        order: 21
       reconnectDelay:
         kind: parameter
         group: common
@@ -267,6 +292,7 @@ data:
         secret: false
         defaultValue: "10"
         description: How long to wait in ms before the first reconnect attempt. Defaults to 10.
+        order: 22
       reconnectDelayMax:
         kind: parameter
         group: common
@@ -276,6 +302,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: The maximum amount of time in ms to wait between reconnect attempts. Defaults to 30000.
+        order: 23
       sendBufferSize:
         kind: parameter
         group: common
@@ -285,6 +312,7 @@ data:
         secret: false
         defaultValue: "65536"
         description: Sets the size of the internal socket send buffer. Defaults to 65536 (64k)
+        order: 24
       sendWaitInSeconds:
         kind: parameter
         group: common
@@ -294,6 +322,7 @@ data:
         secret: false
         defaultValue: "5"
         description: The maximum time the Component will wait for a receipt from the MQTT broker to acknowledge a published message before throwing an exception
+        order: 25
       sslContext:
         kind: parameter
         group: common
@@ -302,6 +331,7 @@ data:
         deprecated: false
         secret: false
         description: To configure security using SSLContext configuration
+        order: 26
       subscribeTopicName:
         kind: parameter
         group: common
@@ -310,6 +340,7 @@ data:
         deprecated: true
         secret: false
         description: These are set on the Endpoint - together with properties inherited from MQTT
+        order: 27
       subscribeTopicNames:
         kind: parameter
         group: common
@@ -318,6 +349,7 @@ data:
         deprecated: false
         secret: false
         description: A comma-delimited list of Topics to subscribe to for messages. Note that each item of this list can contain MQTT wildcards ( and/or ) in order to subscribe to topics matching a certain pattern within a hierarchy. For example is a wildcard for all topics at a level within the hierarchy so if a broker has topics topics/one and topics/two then topics/ can be used to subscribe to both. A caveat to consider here is that if the broker adds topics/three the route would also begin to receive messages from that topic.
+        order: 28
       trafficClass:
         kind: parameter
         group: common
@@ -327,6 +359,7 @@ data:
         secret: false
         defaultValue: "8"
         description: Sets traffic class or type-of-service octet in the IP header for packets sent from the transport. Defaults to 8 which means the traffic should be optimized for throughput.
+        order: 29
       version:
         kind: parameter
         group: common
@@ -336,6 +369,7 @@ data:
         secret: false
         defaultValue: "3.1"
         description: Set to 3.1.1 to use MQTT version 3.1.1. Otherwise defaults to the 3.1 protocol version.
+        order: 30
       willMessage:
         kind: parameter
         group: common
@@ -344,6 +378,7 @@ data:
         deprecated: false
         secret: false
         description: The Will message to send. Defaults to a zero length message.
+        order: 31
       willQos:
         kind: parameter
         group: common
@@ -357,6 +392,7 @@ data:
         secret: false
         defaultValue: AtMostOnce
         description: Sets the quality of service to use for the Will message. Defaults to AT_MOST_ONCE.
+        order: 32
       willRetain:
         kind: parameter
         group: common
@@ -369,6 +405,7 @@ data:
         deprecated: false
         secret: false
         description: Set to true if you want the Will to be published with the retain option.
+        order: 33
       willTopic:
         kind: parameter
         group: common
@@ -377,6 +414,7 @@ data:
         deprecated: false
         secret: false
         description: If set the server will publish the client's Will message to the specified topics if the client has an unexpected disconnection.
+        order: 34
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -388,6 +426,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 35
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -398,6 +437,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 36
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -416,6 +456,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 37
       synchronous:
         kind: parameter
         group: advanced
@@ -426,6 +467,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 38
   documentation.adoc: |+
     [[MQTT-MQTTComponent]]
     MQTT Component

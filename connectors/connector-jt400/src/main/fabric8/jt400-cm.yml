@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: Returns the default connection pool used by this component.
+        order: 0
     properties:
       userID:
         kind: path
@@ -58,6 +59,7 @@ data:
         deprecated: false
         secret: false
         description: Returns the ID of the AS/400 user.
+        order: 0
       password:
         kind: path
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: Returns the password of the AS/400 user.
+        order: 1
       systemName:
         kind: path
         group: common
@@ -76,6 +79,7 @@ data:
         deprecated: false
         secret: false
         description: Returns the name of the AS/400 system.
+        order: 2
       objectPath:
         kind: path
         group: common
@@ -85,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: Returns the fully qualified integrated file system path name of the target object of this endpoint.
+        order: 3
       type:
         kind: path
         group: common
@@ -97,6 +102,7 @@ data:
         deprecated: false
         secret: false
         description: Whether to work with data queues or remote program call
+        order: 4
       ccsid:
         kind: parameter
         group: common
@@ -105,6 +111,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the CCSID to use for the connection with the AS/400 system.
+        order: 5
       format:
         kind: parameter
         group: common
@@ -114,6 +121,7 @@ data:
         secret: false
         defaultValue: text
         description: Sets the data format for sending messages.
+        order: 6
       guiAvailable:
         kind: parameter
         group: common
@@ -123,6 +131,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether AS/400 prompting is enabled in the environment running Camel.
+        order: 7
       keyed:
         kind: parameter
         group: common
@@ -132,6 +141,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to use keyed or non-keyed data queues.
+        order: 8
       outputFieldsIdxArray:
         kind: parameter
         group: common
@@ -140,6 +150,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies which fields (program parameters) are output parameters.
+        order: 9
       outputFieldsLengthArray:
         kind: parameter
         group: common
@@ -148,6 +159,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the fields (program parameters) length as in the AS/400 program definition.
+        order: 10
       searchKey:
         kind: parameter
         group: common
@@ -156,6 +168,7 @@ data:
         deprecated: false
         secret: false
         description: Search key for keyed data queues.
+        order: 11
       searchType:
         kind: parameter
         group: common
@@ -165,6 +178,7 @@ data:
         secret: false
         defaultValue: EQ
         description: Search type such as EQ for equal etc.
+        order: 12
       secured:
         kind: parameter
         group: common
@@ -174,6 +188,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether connections to AS/400 are secured with SSL.
+        order: 13
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -185,6 +200,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 14
       readTimeout:
         kind: parameter
         group: consumer
@@ -195,6 +211,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: Timeout in millis the consumer will wait while trying to read a new message of the data queue.
+        order: 15
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -206,6 +223,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 16
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -216,6 +234,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 17
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -234,6 +253,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 18
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -244,6 +264,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+        order: 19
       synchronous:
         kind: parameter
         group: advanced
@@ -254,6 +275,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 20
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -264,6 +286,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 21
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -274,6 +297,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 22
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -284,6 +308,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 23
       delay:
         kind: parameter
         group: scheduler
@@ -295,6 +320,7 @@ data:
         secret: false
         defaultValue: "500"
         description: Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 24
       greedy:
         kind: parameter
         group: scheduler
@@ -306,6 +332,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 25
       initialDelay:
         kind: parameter
         group: scheduler
@@ -317,6 +344,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 26
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -335,6 +363,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 27
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -345,6 +374,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+        order: 28
       scheduler:
         kind: parameter
         group: scheduler
@@ -360,6 +390,7 @@ data:
         secret: false
         defaultValue: none
         description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+        order: 29
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -371,6 +402,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 30
       startScheduler:
         kind: parameter
         group: scheduler
@@ -382,6 +414,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 31
       timeUnit:
         kind: parameter
         group: scheduler
@@ -401,6 +434,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 32
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -412,6 +446,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 33
   documentation.adoc: |+
     [[JT400-JT400Component]]
     JT/400 Component
