@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Hostname of the printer
+        order: 0
       port:
         kind: path
         group: producer
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Port number of the printer
+        order: 1
       printername:
         kind: path
         group: producer
@@ -68,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: Name of the printer
+        order: 2
       copies:
         kind: parameter
         group: producer
@@ -77,6 +80,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Number of copies to print
+        order: 3
       docFlavor:
         kind: parameter
         group: producer
@@ -85,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: Sets DocFlavor to use.
+        order: 4
       flavor:
         kind: parameter
         group: producer
@@ -93,6 +98,7 @@ data:
         deprecated: false
         secret: false
         description: Sets DocFlavor to use.
+        order: 5
       mediaSize:
         kind: parameter
         group: producer
@@ -102,6 +108,7 @@ data:
         secret: false
         defaultValue: na-letter
         description: Sets the stationary as defined by enumeration names in the javax.print.attribute.standard.MediaSizeName API. The default setting is to use North American Letter sized stationary. The value's case is ignored e.g. values of iso_a4 and ISO_A4 may be used.
+        order: 6
       mediaTray:
         kind: parameter
         group: producer
@@ -110,6 +117,7 @@ data:
         deprecated: false
         secret: false
         description: Sets MediaTray supported by the javax.print.DocFlavor API for example uppermiddle etc.
+        order: 7
       mimeType:
         kind: parameter
         group: producer
@@ -118,6 +126,7 @@ data:
         deprecated: false
         secret: false
         description: Sets mimeTypes supported by the javax.print.DocFlavor API
+        order: 8
       orientation:
         kind: parameter
         group: producer
@@ -132,6 +141,7 @@ data:
         secret: false
         defaultValue: portrait
         description: Sets the page orientation.
+        order: 9
       printerPrefix:
         kind: parameter
         group: producer
@@ -140,6 +150,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the prefix name of the printer it is useful when the printer name does not start with //hostname/printer
+        order: 10
       sendToPrinter:
         kind: parameter
         group: producer
@@ -149,6 +160,7 @@ data:
         secret: false
         defaultValue: true
         description: etting this option to false prevents sending of the print data to the printer
+        order: 11
       sides:
         kind: parameter
         group: producer
@@ -164,6 +176,7 @@ data:
         secret: false
         defaultValue: one-sided
         description: Sets one sided or two sided printing based on the javax.print.attribute.standard.Sides API
+        order: 12
       synchronous:
         kind: parameter
         group: advanced
@@ -174,6 +187,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 13
   documentation.adoc: |
     [[Printer-PrinterComponent]]
     Printer Component

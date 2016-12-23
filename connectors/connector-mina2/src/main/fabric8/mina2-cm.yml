@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use the shared mina configuration.
+        order: 0
     properties:
       protocol:
         kind: path
@@ -58,6 +59,7 @@ data:
         deprecated: false
         secret: false
         description: Protocol to use
+        order: 0
       host:
         kind: path
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: Hostname to use. Use localhost or 0.0.0.0 for local server as consumer. For producer use the hostname or ip address of the remote server.
+        order: 1
       port:
         kind: path
         group: common
@@ -76,6 +79,7 @@ data:
         deprecated: false
         secret: false
         description: Port number
+        order: 2
       disconnect:
         kind: parameter
         group: common
@@ -85,6 +89,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether or not to disconnect(close) from Mina session right after use. Can be used for both consumer and producer.
+        order: 3
       minaLogger:
         kind: parameter
         group: common
@@ -94,6 +99,7 @@ data:
         secret: false
         defaultValue: false
         description: You can enable the Apache MINA logging filter. Apache MINA uses slf4j logging at INFO level to log all input and output.
+        order: 4
       sync:
         kind: parameter
         group: common
@@ -103,6 +109,7 @@ data:
         secret: false
         defaultValue: true
         description: Setting to set endpoint as one-way or request-response.
+        order: 5
       timeout:
         kind: parameter
         group: common
@@ -112,6 +119,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: You can configure the timeout that specifies how long to wait for a response from a remote server. The timeout unit is in milliseconds so 60000 is 60 seconds.
+        order: 6
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -123,6 +131,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 7
       clientMode:
         kind: parameter
         group: consumer
@@ -133,6 +142,7 @@ data:
         secret: false
         defaultValue: false
         description: If the clientMode is true mina consumer will connect the address as a TCP client.
+        order: 8
       disconnectOnNoReply:
         kind: parameter
         group: consumer (advanced)
@@ -143,6 +153,7 @@ data:
         secret: false
         defaultValue: true
         description: If sync is enabled then this option dictates MinaConsumer if it should disconnect where there is no reply to send back.
+        order: 9
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -153,6 +164,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 10
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -171,6 +183,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 11
       noReplyLogLevel:
         kind: parameter
         group: consumer (advanced)
@@ -188,6 +201,7 @@ data:
         secret: false
         defaultValue: WARN
         description: If sync is enabled this option dictates MinaConsumer which logging level to use when logging a there is no reply to send back.
+        order: 12
       cachedAddress:
         kind: parameter
         group: producer (advanced)
@@ -198,6 +212,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to create the InetAddress once and reuse. Setting this to false allows to pickup DNS changes in the network.
+        order: 13
       lazySessionCreation:
         kind: parameter
         group: producer (advanced)
@@ -208,6 +223,7 @@ data:
         secret: false
         defaultValue: true
         description: Sessions can be lazily created to avoid exceptions if the remote server is not up and running when the Camel producer is started.
+        order: 14
       maximumPoolSize:
         kind: parameter
         group: advanced
@@ -218,6 +234,7 @@ data:
         secret: false
         defaultValue: "16"
         description: Number of worker threads in the worker pool for TCP and UDP
+        order: 15
       orderedThreadPoolExecutor:
         kind: parameter
         group: advanced
@@ -228,6 +245,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to use ordered thread pool to ensure events are processed orderly on the same channel.
+        order: 16
       synchronous:
         kind: parameter
         group: advanced
@@ -238,6 +256,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 17
       transferExchange:
         kind: parameter
         group: advanced
@@ -252,6 +271,7 @@ data:
           body In headers Out headers fault headers exchange properties exchange exception.
           This requires that the objects are serializable. Camel will exclude any non-serializable
           objects and log it at WARN level.'
+        order: 18
       allowDefaultCodec:
         kind: parameter
         group: codec
@@ -262,6 +282,7 @@ data:
         secret: false
         defaultValue: true
         description: The mina component installs a default codec if both codec is null and textline is false. Setting allowDefaultCodec to false prevents the mina component from installing a default codec as the first element in the filter chain. This is useful in scenarios where another filter must be the first in the filter chain like the SSL filter.
+        order: 19
       codec:
         kind: parameter
         group: codec
@@ -271,6 +292,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom minda codec implementation.
+        order: 20
       decoderMaxLineLength:
         kind: parameter
         group: codec
@@ -281,6 +303,7 @@ data:
         secret: false
         defaultValue: "1024"
         description: To set the textline protocol decoder max line length. By default the default value of Mina itself is used which are 1024.
+        order: 21
       encoderMaxLineLength:
         kind: parameter
         group: codec
@@ -291,6 +314,7 @@ data:
         secret: false
         defaultValue: -1
         description: To set the textline protocol encoder max line length. By default the default value of Mina itself is used which are Integer.MAX_VALUE.
+        order: 22
       encoding:
         kind: parameter
         group: codec
@@ -300,6 +324,7 @@ data:
         deprecated: false
         secret: false
         description: You can configure the encoding (a charset name) to use for the TCP textline codec and the UDP protocol. If not provided Camel will use the JVM default Charset
+        order: 23
       filters:
         kind: parameter
         group: codec
@@ -309,6 +334,7 @@ data:
         deprecated: false
         secret: false
         description: You can set a list of Mina IoFilters to use.
+        order: 24
       textline:
         kind: parameter
         group: codec
@@ -319,6 +345,7 @@ data:
         secret: false
         defaultValue: false
         description: Only used for TCP. If no codec is specified you can use this flag to indicate a text line based codec; if not specified or the value is false then Object Serialization is assumed over TCP.
+        order: 25
       textlineDelimiter:
         kind: parameter
         group: codec
@@ -334,6 +361,7 @@ data:
         deprecated: false
         secret: false
         description: Only used for TCP and if textline=true. Sets the text line delimiter to use. If none provided Camel will use DEFAULT. This delimiter is used to mark the end of text.
+        order: 26
       autoStartTls:
         kind: parameter
         group: security
@@ -344,6 +372,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to auto start SSL handshake.
+        order: 27
       sslContextParameters:
         kind: parameter
         group: security
@@ -353,6 +382,7 @@ data:
         deprecated: false
         secret: false
         description: To configure SSL security.
+        order: 28
   documentation.adoc: "[[MINA2-MINA2Component]]\nMINA 2 Component\n~~~~~~~~~~~~~~~~\n\
     \n*Available as of Camel 2.10*\n\nThe *mina2:* component is a transport for working\
     \ with\nhttp://mina.apache.org/[Apache MINA 2.x]\n\nTIP: Favor using link:netty.html[Netty]\

@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: The starting directory
+        order: 0
       charset:
         kind: parameter
         group: common
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: This option is used to specify the encoding of the file. You can use this on the consumer to specify the encodings of the files which allow Camel to know the charset it should load the file content in case the file content is being accessed. Likewise when writing a file you can use this option to specify which charset to write the file as well.
+        order: 1
       doneFileName:
         kind: parameter
         group: common
@@ -75,6 +77,7 @@ data:
           you can specify a fixed name. Or you can use dynamic placeholders.The done file
           is always expected in the same folder as the original file. Only $file.name
           and $file.name.noext is supported as dynamic placeholders.'
+        order: 2
       fileName:
         kind: parameter
         group: common
@@ -95,6 +98,7 @@ data:
           header which takes precedence over any existing CamelFileName header; the CamelOverruleFileName
           is a header that is used only once and makes it easier as this avoids to temporary
           store CamelFileName and have to restore it afterwards.'
+        order: 3
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -106,6 +110,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 4
       delete:
         kind: parameter
         group: consumer
@@ -116,6 +121,7 @@ data:
         secret: false
         defaultValue: false
         description: If true the file will be deleted after it is processed successfully.
+        order: 5
       moveFailed:
         kind: parameter
         group: consumer
@@ -128,6 +134,7 @@ data:
           to move files into a .error subdirectory use: .error. Note: When moving the
           files to the fail location Camel will handle the error and will not pick up
           the file again.'
+        order: 6
       noop:
         kind: parameter
         group: consumer
@@ -138,6 +145,7 @@ data:
         secret: false
         defaultValue: false
         description: If true the file is not moved or deleted in any way. This option is good for readonly data or for ETL type requirements. If noop=true Camel will set idempotent=true as well to avoid consuming the same files over and over again.
+        order: 7
       preMove:
         kind: parameter
         group: consumer
@@ -147,6 +155,7 @@ data:
         deprecated: false
         secret: false
         description: Expression (such as File Language) used to dynamically set the filename when moving it before processing. For example to move in-progress files into the order directory set this value to order.
+        order: 8
       recursive:
         kind: parameter
         group: consumer
@@ -157,6 +166,7 @@ data:
         secret: false
         defaultValue: false
         description: If a directory will look for files in all the sub-directories as well.
+        order: 9
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -168,6 +178,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 10
       directoryMustExist:
         kind: parameter
         group: consumer (advanced)
@@ -178,6 +189,7 @@ data:
         secret: false
         defaultValue: false
         description: Similar to startingDirectoryMustExist but this applies during polling recursive sub directories.
+        order: 11
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -188,6 +200,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 12
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -206,6 +219,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default exchange pattern when creating an exchange.
+        order: 13
       extendedAttributes:
         kind: parameter
         group: consumer (advanced)
@@ -216,6 +230,7 @@ data:
         secret: false
         description: 'To define which file attributes of interest. Like posix:permissionsposix:ownerbasic:lastAccessTime
           it supports basic wildcard like posix: basic:lastAccessTime'
+        order: 14
       inProgressRepository:
         kind: parameter
         group: consumer (advanced)
@@ -225,6 +240,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable in-progress repository org.apache.camel.spi.IdempotentRepository. The in-progress repository is used to account the current in progress files being consumed. By default a memory based repository is used.
+        order: 15
       localWorkDirectory:
         kind: parameter
         group: consumer (advanced)
@@ -234,6 +250,7 @@ data:
         deprecated: false
         secret: false
         description: When consuming a local work directory can be used to store the remote file content directly in local files to avoid loading the content into memory. This is beneficial if you consume a very big remote file and thus can conserve memory.
+        order: 16
       onCompletionExceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -243,6 +260,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom org.apache.camel.spi.ExceptionHandler to handle any thrown exceptions that happens during the file on completion process where the consumer does either a commit or rollback. The default implementation will log any exception at WARN level and ignore.
+        order: 17
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -253,6 +271,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel. In other words the error occurred while the polling was gathering information for instance access to a file network failed so Camel cannot access it to scan for files. The default implementation will log the caused exception at WARN level and ignore it.
+        order: 18
       probeContentType:
         kind: parameter
         group: consumer (advanced)
@@ -263,6 +282,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to enable probing of the content type. If enable then the consumer uses link FilesprobeContentType(java.nio.file.Path) to determine the content-type of the file and store that as a header with key link ExchangeFILE_CONTENT_TYPE on the Message.
+        order: 19
       processStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -272,6 +292,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.component.file.GenericFileProcessStrategy allowing you to implement your own readLock option or similar. Can also be used when special conditions must be met before a file can be consumed such as a special ready file exists. If this option is set then the readLock option does not apply.
+        order: 20
       startingDirectoryMustExist:
         kind: parameter
         group: consumer (advanced)
@@ -282,6 +303,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the starting directory must exist. Mind that the autoCreate option is default enabled which means the starting directory is normally auto created if it doesn't exist. You can disable autoCreate and enable this to ensure the starting directory must exist. Will thrown an exception if the directory doesn't exist.
+        order: 21
       fileExist:
         kind: parameter
         group: producer
@@ -299,6 +321,7 @@ data:
         secret: false
         defaultValue: Override
         description: What to do if a file already exists with the same name. Override which is the default replaces the existing file. Append - adds content to the existing file. Fail - throws a GenericFileOperationException indicating that there is already an existing file. Ignore - silently ignores the problem and does not override the existing file but assumes everything is okay. Move - option requires to use the moveExisting option to be configured as well. The option eagerDeleteTargetFile can be used to control what to do if an moving the file and there exists already an existing file otherwise causing the move operation to fail. The Move option will move any existing files before writing the target file. TryRename Camel is only applicable if tempFileName option is in use. This allows to try renaming the file from the temporary name to the actual name without doing any exists check.This check may be faster on some file systems and especially FTP servers.
+        order: 22
       flatten:
         kind: parameter
         group: producer
@@ -309,6 +332,7 @@ data:
         secret: false
         defaultValue: false
         description: Flatten is used to flatten the file name path to strip any leading paths so it's just the file name. This allows you to consume recursively into sub-directories but when you eg write the files to another directory they will be written in a single directory. Setting this to true on the producer enforces that any file name in CamelFileName header will be stripped for any leading paths.
+        order: 23
       moveExisting:
         kind: parameter
         group: producer
@@ -324,6 +348,7 @@ data:
           and file:parent. Notice the file:parent is not supported by the FTP component
           as the FTP component can only move any existing files to a relative directory
           based on current dir as base.'
+        order: 24
       tempFileName:
         kind: parameter
         group: producer
@@ -333,6 +358,7 @@ data:
         deprecated: false
         secret: false
         description: The same as tempPrefix option but offering a more fine grained control on the naming of the temporary filename as it uses the File Language.
+        order: 25
       tempPrefix:
         kind: parameter
         group: producer
@@ -342,6 +368,7 @@ data:
         deprecated: false
         secret: false
         description: This option is used to write the file using a temporary name and then after the write is complete rename it to the real name. Can be used to identify files being written and also avoid consumers (not using exclusive read locks) reading in progress files. Is often used by FTP when uploading big files.
+        order: 26
       allowNullBody:
         kind: parameter
         group: producer (advanced)
@@ -352,6 +379,7 @@ data:
         secret: false
         defaultValue: false
         description: Used to specify if a null body is allowed during file writing. If set to true then an empty file will be created when set to false and attempting to send a null body to the file component a GenericFileWriteException of 'Cannot write null body to file.' will be thrown. If the fileExist option is set to 'Override' then the file will be truncated and if set to append the file will remain unchanged.
+        order: 27
       chmod:
         kind: parameter
         group: producer (advanced)
@@ -361,6 +389,7 @@ data:
         deprecated: false
         secret: false
         description: Specify the file permissions which is sent by the producer the chmod value must be between 000 and 777; If there is a leading digit like in 0755 we will ignore it.
+        order: 28
       chmodDirectory:
         kind: parameter
         group: producer (advanced)
@@ -370,6 +399,7 @@ data:
         deprecated: false
         secret: false
         description: Specify the directory permissions used when the producer creates missing directories the chmod value must be between 000 and 777; If there is a leading digit like in 0755 we will ignore it.
+        order: 29
       eagerDeleteTargetFile:
         kind: parameter
         group: producer (advanced)
@@ -380,6 +410,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether or not to eagerly delete any existing target file. This option only applies when you use fileExists=Override and the tempFileName option as well. You can use this to disable (set it to false) deleting the target file before the temp file is written. For example you may write big files and want the target file to exists during the temp file is being written. This ensure the target file is only deleted until the very last moment just before the temp file is being renamed to the target filename. This option is also used to control whether to delete any existing files when fileExist=Move is enabled and an existing file exists. If this option copyAndDeleteOnRenameFails false then an exception will be thrown if an existing file existed if its true then the existing file is deleted before the move operation.
+        order: 30
       forceWrites:
         kind: parameter
         group: producer (advanced)
@@ -390,6 +421,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to force syncing writes to the file system. You can turn this off if you do not want this level of guarantee for example if writing to logs / audit logs etc; this would yield better performance.
+        order: 31
       keepLastModified:
         kind: parameter
         group: producer (advanced)
@@ -405,6 +437,7 @@ data:
           timestamp exists and the option is enabled it will set this timestamp on the
           written file. Note: This option only applies to the file producer. You cannot
           use this option with any of the ftp producers.'
+        order: 32
       autoCreate:
         kind: parameter
         group: advanced
@@ -415,6 +448,7 @@ data:
         secret: false
         defaultValue: true
         description: Automatically create missing directories in the file's pathname. For the file consumer that means creating the starting directory. For the file producer it means the directory the files should be written to.
+        order: 33
       bufferSize:
         kind: parameter
         group: advanced
@@ -425,6 +459,7 @@ data:
         secret: false
         defaultValue: "131072"
         description: Write buffer sized in bytes.
+        order: 34
       copyAndDeleteOnRenameFail:
         kind: parameter
         group: advanced
@@ -435,6 +470,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to fallback and do a copy and delete file in case the file could not be renamed directly. This option is not available for the FTP component.
+        order: 35
       renameUsingCopy:
         kind: parameter
         group: advanced
@@ -445,6 +481,7 @@ data:
         secret: false
         defaultValue: false
         description: Perform rename operations using a copy and delete strategy. This is primarily used in environments where the regular rename operation is unreliable (e.g. across different file systems or networks). This option takes precedence over the copyAndDeleteOnRenameFail parameter that will automatically fall back to the copy and delete strategy but only after additional delays.
+        order: 36
       synchronous:
         kind: parameter
         group: advanced
@@ -455,6 +492,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 37
       antExclude:
         kind: parameter
         group: filter
@@ -464,6 +502,7 @@ data:
         deprecated: false
         secret: false
         description: Ant style filter exclusion. If both antInclude and antExclude are used antExclude takes precedence over antInclude. Multiple exclusions may be specified in comma-delimited format.
+        order: 38
       antFilterCaseSensitive:
         kind: parameter
         group: filter
@@ -474,6 +513,7 @@ data:
         secret: false
         defaultValue: true
         description: Sets case sensitive flag on ant fiter
+        order: 39
       antInclude:
         kind: parameter
         group: filter
@@ -483,6 +523,7 @@ data:
         deprecated: false
         secret: false
         description: Ant style filter inclusion. Multiple inclusions may be specified in comma-delimited format.
+        order: 40
       eagerMaxMessagesPerPoll:
         kind: parameter
         group: filter
@@ -493,6 +534,7 @@ data:
         secret: false
         defaultValue: true
         description: Allows for controlling whether the limit from maxMessagesPerPoll is eager or not. If eager then the limit is during the scanning of files. Where as false would scan all files and then perform sorting. Setting this option to false allows for sorting all files first and then limit the poll. Mind that this requires a higher memory usage as all file details are in memory to perform the sorting.
+        order: 41
       exclude:
         kind: parameter
         group: filter
@@ -502,6 +544,7 @@ data:
         deprecated: false
         secret: false
         description: Is used to exclude files if filename matches the regex pattern (matching is case in-senstive). Notice if you use symbols such as plus sign and others you would need to configure this using the RAW() syntax if configuring this as an endpoint uri. See more details at configuring endpoint uris
+        order: 42
       filter:
         kind: parameter
         group: filter
@@ -511,6 +554,7 @@ data:
         deprecated: false
         secret: false
         description: Pluggable filter as a org.apache.camel.component.file.GenericFileFilter class. Will skip files if filter returns false in its accept() method.
+        order: 43
       filterDirectory:
         kind: parameter
         group: filter
@@ -520,6 +564,7 @@ data:
         deprecated: false
         secret: false
         description: Filters the directory based on Simple language. For example to filter on current date you can use a simple date pattern such as $date:now:yyyMMdd
+        order: 44
       filterFile:
         kind: parameter
         group: filter
@@ -529,6 +574,7 @@ data:
         deprecated: false
         secret: false
         description: Filters the file based on Simple language. For example to filter on file size you can use $file:size 5000
+        order: 45
       idempotent:
         kind: parameter
         group: filter
@@ -539,6 +585,7 @@ data:
         secret: false
         defaultValue: false
         description: Option to use the Idempotent Consumer EIP pattern to let Camel skip already processed files. Will by default use a memory based LRUCache that holds 1000 entries. If noop=true then idempotent will be enabled as well to avoid consuming the same files over and over again.
+        order: 46
       idempotentKey:
         kind: parameter
         group: filter
@@ -550,6 +597,7 @@ data:
         description: 'To use a custom idempotent key. By default the absolute path of
           the file is used. You can use the File Language for example to use the file
           name and file size you can do: idempotentKey=$file:name-$file:size'
+        order: 47
       idempotentRepository:
         kind: parameter
         group: filter
@@ -559,6 +607,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable repository org.apache.camel.spi.IdempotentRepository which by default use MemoryMessageIdRepository if none is specified and idempotent is true.
+        order: 48
       include:
         kind: parameter
         group: filter
@@ -568,6 +617,7 @@ data:
         deprecated: false
         secret: false
         description: Is used to include files if filename matches the regex pattern (matching is case in-senstive). Notice if you use symbols such as plus sign and others you would need to configure this using the RAW() syntax if configuring this as an endpoint uri. See more details at configuring endpoint uris
+        order: 49
       maxDepth:
         kind: parameter
         group: filter
@@ -578,6 +628,7 @@ data:
         secret: false
         defaultValue: "2147483647"
         description: The maximum depth to traverse when recursively processing a directory.
+        order: 50
       maxMessagesPerPoll:
         kind: parameter
         group: filter
@@ -594,6 +645,7 @@ data:
           then only the first 500 files will be picked up and then sorted. You can use
           the eagerMaxMessagesPerPoll option and set this to false to allow to scan all
           files first and then sort afterwards.'
+        order: 51
       minDepth:
         kind: parameter
         group: filter
@@ -603,6 +655,7 @@ data:
         deprecated: false
         secret: false
         description: The minimum depth to start processing when recursively processing a directory. Using minDepth=1 means the base directory. Using minDepth=2 means the first sub directory.
+        order: 52
       move:
         kind: parameter
         group: filter
@@ -612,6 +665,7 @@ data:
         deprecated: false
         secret: false
         description: Expression (such as Simple Language) used to dynamically set the filename when moving it after processing. To move files into a .done subdirectory just enter .done.
+        order: 53
       exclusiveReadLockStrategy:
         kind: parameter
         group: lock
@@ -621,6 +675,7 @@ data:
         deprecated: false
         secret: false
         description: Pluggable read-lock as a org.apache.camel.component.file.GenericFileExclusiveReadLockStrategy implementation.
+        order: 54
       readLock:
         kind: parameter
         group: lock
@@ -661,6 +716,7 @@ data:
           support distributed file locks and so on. Using the idempotent read lock can
           support clustering if the idempotent repository supports clustering such as
           Hazelcast Component or Infinispan.'
+        order: 55
       readLockCheckInterval:
         kind: parameter
         group: lock
@@ -680,6 +736,7 @@ data:
           than the readLockCheckInterval. This is needed to ensure that amble time is
           allowed for the read lock process to try to grab the lock before the timeout
           was hit.'
+        order: 56
       readLockDeleteOrphanLockFiles:
         kind: parameter
         group: lock
@@ -690,6 +747,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether or not read lock with marker files should upon startup delete any orphan read lock files which may have been left on the file system if Camel was not properly shutdown (such as a JVM crash). If turning this option to false then any orphaned lock file will cause Camel to not attempt to pickup that file this could also be due another node is concurrently reading files from the same shared directory.
+        order: 57
       readLockLoggingLevel:
         kind: parameter
         group: lock
@@ -710,6 +768,7 @@ data:
           a WARN is logged. You can change this level for example to OFF to not have any
           logging. This option is only applicable for readLock of types: changed fileLock
           rename.'
+        order: 58
       readLockMarkerFile:
         kind: parameter
         group: lock
@@ -720,6 +779,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to use marker file with the changed rename or exclusive read lock types. By default a marker file is used as well to guard against other processes picking up the same files. This behavior can be turned off by setting this option to false. For example if you do not want to write marker files to the file systems by the Camel application.
+        order: 59
       readLockMinAge:
         kind: parameter
         group: lock
@@ -730,6 +790,7 @@ data:
         secret: false
         defaultValue: "0"
         description: This option applied only for readLock=change. This option allows to specify a minimum age the file must be before attempting to acquire the read lock. For example use readLockMinAge=300s to require the file is at last 5 minutes old. This can speedup the changed read lock as it will only attempt to acquire files which are at least that given age.
+        order: 60
       readLockMinLength:
         kind: parameter
         group: lock
@@ -740,6 +801,7 @@ data:
         secret: false
         defaultValue: "1"
         description: This option applied only for readLock=changed. This option allows you to configure a minimum file length. By default Camel expects the file to contain data and thus the default value is 1. You can set this option to zero to allow consuming zero-length files.
+        order: 61
       readLockRemoveOnCommit:
         kind: parameter
         group: lock
@@ -750,6 +812,7 @@ data:
         secret: false
         defaultValue: false
         description: This option applied only for readLock=idempotent. This option allows to specify whether to remove the file name entry from the idempotent repository when processing the file is succeeded and a commit happens. By default the file is not removed which ensures that any race-condition do not occur so another active node may attempt to grab the file. Instead the idempotent repository may support eviction strategies that you can configure to evict the file name entry after X minutes - this ensures no problems with race conditions.
+        order: 62
       readLockRemoveOnRollback:
         kind: parameter
         group: lock
@@ -760,6 +823,7 @@ data:
         secret: false
         defaultValue: true
         description: This option applied only for readLock=idempotent. This option allows to specify whether to remove the file name entry from the idempotent repository when processing the file failed and a rollback happens. If this option is false then the file name entry is confirmed (as if the file did a commit).
+        order: 63
       readLockTimeout:
         kind: parameter
         group: lock
@@ -779,6 +843,7 @@ data:
           a timeout that is at least 2 or more times higher than the readLockCheckInterval.
           This is needed to ensure that amble time is allowed for the read lock process
           to try to grab the lock before the timeout was hit.'
+        order: 64
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -789,6 +854,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 65
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -799,6 +865,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 66
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -809,6 +876,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 67
       delay:
         kind: parameter
         group: scheduler
@@ -820,6 +888,7 @@ data:
         secret: false
         defaultValue: "500"
         description: Milliseconds before the next poll. The default value is 500. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 68
       greedy:
         kind: parameter
         group: scheduler
@@ -831,6 +900,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 69
       initialDelay:
         kind: parameter
         group: scheduler
@@ -842,6 +912,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Milliseconds before the first poll starts. The default value is 1000. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 70
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -860,6 +931,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 71
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -870,6 +942,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool. This option allows you to share a thread pool among multiple consumers.
+        order: 72
       scheduler:
         kind: parameter
         group: scheduler
@@ -893,6 +966,7 @@ data:
           and use the text spring to use the Spring based; and use the text myScheduler
           to refer to a custom scheduler by its id in the Registry. See Quartz2 page for
           an example.'
+        order: 73
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -904,6 +978,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 74
       startScheduler:
         kind: parameter
         group: scheduler
@@ -915,6 +990,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 75
       timeUnit:
         kind: parameter
         group: scheduler
@@ -934,6 +1010,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 76
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -945,6 +1022,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 77
       shuffle:
         kind: parameter
         group: sort
@@ -955,6 +1033,7 @@ data:
         secret: false
         defaultValue: false
         description: To shuffle the list of files (sort in random order)
+        order: 78
       sortBy:
         kind: parameter
         group: sort
@@ -964,6 +1043,7 @@ data:
         deprecated: false
         secret: false
         description: Built-in sort by using the File Language. Supports nested sorts so you can have a sort by file name and as a 2nd group sort by modified date.
+        order: 79
       sorter:
         kind: parameter
         group: sort
@@ -973,6 +1053,7 @@ data:
         deprecated: false
         secret: false
         description: Pluggable sorter as a java.util.Comparator class.
+        order: 80
   documentation.adoc: "[[File2-FileComponent]]\nFile Component\n~~~~~~~~~~~~~~\n\n\
     The File component provides access to file systems, allowing files to be\nprocessed\
     \ by any other Camel link:components.html[Components] or\nmessages from other\

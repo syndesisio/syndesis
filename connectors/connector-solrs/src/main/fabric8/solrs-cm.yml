@@ -53,6 +53,7 @@ data:
         deprecated: false
         secret: false
         description: Hostname and port for the solr server
+        order: 0
       allowCompression:
         kind: parameter
         group: producer
@@ -61,6 +62,7 @@ data:
         deprecated: false
         secret: false
         description: Server side must support gzip or deflate for this to have any effect
+        order: 1
       connectionTimeout:
         kind: parameter
         group: producer
@@ -69,6 +71,7 @@ data:
         deprecated: false
         secret: false
         description: connectionTimeout on the underlying HttpConnectionManager
+        order: 2
       defaultMaxConnectionsPerHost:
         kind: parameter
         group: producer
@@ -77,6 +80,7 @@ data:
         deprecated: false
         secret: false
         description: maxConnectionsPerHost on the underlying HttpConnectionManager
+        order: 3
       followRedirects:
         kind: parameter
         group: producer
@@ -85,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: indicates whether redirects are used to get to the Solr server
+        order: 4
       maxRetries:
         kind: parameter
         group: producer
@@ -93,6 +98,7 @@ data:
         deprecated: false
         secret: false
         description: Maximum number of retries to attempt in the event of transient errors
+        order: 5
       maxTotalConnections:
         kind: parameter
         group: producer
@@ -101,6 +107,7 @@ data:
         deprecated: false
         secret: false
         description: maxTotalConnection on the underlying HttpConnectionManager
+        order: 6
       requestHandler:
         kind: parameter
         group: producer
@@ -109,6 +116,7 @@ data:
         deprecated: false
         secret: false
         description: Set the request handler to be used
+        order: 7
       soTimeout:
         kind: parameter
         group: producer
@@ -117,6 +125,7 @@ data:
         deprecated: false
         secret: false
         description: Read timeout on the underlying HttpConnectionManager. This is desirable for queries but probably not for indexing
+        order: 8
       streamingQueueSize:
         kind: parameter
         group: producer
@@ -126,6 +135,7 @@ data:
         secret: false
         defaultValue: "10"
         description: Set the queue size for the StreamingUpdateSolrServer
+        order: 9
       streamingThreadCount:
         kind: parameter
         group: producer
@@ -135,6 +145,7 @@ data:
         secret: false
         defaultValue: "2"
         description: Set the number of threads for the StreamingUpdateSolrServer
+        order: 10
       synchronous:
         kind: parameter
         group: advanced
@@ -145,6 +156,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 11
       collection:
         kind: parameter
         group: solrCloud
@@ -154,6 +166,7 @@ data:
         deprecated: false
         secret: false
         description: Set the collection name which the solrCloud server could use
+        order: 12
       zkHost:
         kind: parameter
         group: solrCloud
@@ -163,6 +176,7 @@ data:
         deprecated: false
         secret: false
         description: Set the ZooKeeper host information which the solrCloud could use such as zkhost=localhost:8123.
+        order: 13
   documentation.adoc: |+
     [[Solr-SolrComponent]]
     Solr Component

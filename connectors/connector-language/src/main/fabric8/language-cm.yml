@@ -77,6 +77,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the name of the language to use
+        order: 0
       resourceUri:
         kind: path
         group: producer
@@ -86,6 +87,7 @@ data:
         deprecated: false
         secret: false
         description: Path to the resource or a reference to lookup a bean in the Registry to use as the resource
+        order: 1
       binary:
         kind: parameter
         group: producer
@@ -95,6 +97,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the script is binary content or text content. By default the script is read as text content (eg java.lang.String)
+        order: 2
       cacheScript:
         kind: parameter
         group: producer
@@ -104,6 +107,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to cache the compiled script and reuse Notice reusing the script can cause side effects from processing one Camel org.apache.camel.Exchange to the next org.apache.camel.Exchange.
+        order: 3
       contentCache:
         kind: parameter
         group: producer
@@ -113,6 +117,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether to use resource content cache or not.
+        order: 4
       script:
         kind: parameter
         group: producer
@@ -121,6 +126,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the script to execute
+        order: 5
       transform:
         kind: parameter
         group: producer
@@ -130,6 +136,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether or not the result of the script should be used as message body. This options is default true.
+        order: 6
       synchronous:
         kind: parameter
         group: advanced
@@ -140,6 +147,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 7
   documentation.adoc: |+
     [[Language-Language]]
     Language

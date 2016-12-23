@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: Explicitly specifies a JobLauncher to be used.
+        order: 0
       jobRegistry:
         kind: property
         type: object
@@ -56,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: Explicitly specifies a JobRegistry to be used.
+        order: 1
     properties:
       jobName:
         kind: path
@@ -66,6 +68,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the Spring Batch job located in the registry.
+        order: 0
       jobFromHeader:
         kind: parameter
         group: producer
@@ -75,6 +78,7 @@ data:
         secret: false
         defaultValue: false
         description: Explicitly defines if the jobName should be taken from the headers instead of the URI.
+        order: 1
       jobLauncher:
         kind: parameter
         group: producer
@@ -83,6 +87,7 @@ data:
         deprecated: false
         secret: false
         description: Explicitly specifies a JobLauncher to be used.
+        order: 2
       jobRegistry:
         kind: parameter
         group: producer
@@ -91,6 +96,7 @@ data:
         deprecated: false
         secret: false
         description: Explicitly specifies a JobRegistry to be used.
+        order: 3
       synchronous:
         kind: parameter
         group: advanced
@@ -101,6 +107,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 4
   documentation.adoc: "[[SpringBatch-SpringBatchComponent]]\nSpring Batch Component\n\
     ~~~~~~~~~~~~~~~~~~~~~~\n\nThe *spring-batch:* component and support classes provide\
     \ integration\nbridge between Camel and http://www.springsource.org/spring-batch[Spring\n\

@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use the shared configuration
+        order: 0
     properties:
       apiName:
         kind: path
@@ -73,6 +74,7 @@ data:
         deprecated: false
         secret: false
         description: What kind of operation to perform
+        order: 0
       methodName:
         kind: path
         group: common
@@ -82,6 +84,7 @@ data:
         deprecated: false
         secret: false
         description: What sub operation to use for the selected operation
+        order: 1
       clientId:
         kind: parameter
         group: common
@@ -90,6 +93,7 @@ data:
         deprecated: false
         secret: false
         description: Box application client ID
+        order: 2
       inBody:
         kind: parameter
         group: common
@@ -98,6 +102,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the name of a parameter to be passed in the exchange In Body
+        order: 3
       loginTimeout:
         kind: parameter
         group: common
@@ -107,6 +112,7 @@ data:
         secret: false
         defaultValue: "30"
         description: Amount of time the component will wait for a response from Box.com default is 30 seconds
+        order: 4
       revokeOnShutdown:
         kind: parameter
         group: common
@@ -116,6 +122,7 @@ data:
         secret: false
         defaultValue: false
         description: Flag to revoke OAuth refresh token on route shutdown default false. Will require a fresh refresh token on restart using either a custom IAuthSecureStorage or automatic component login by providing a user password
+        order: 5
       sharedLink:
         kind: parameter
         group: common
@@ -124,6 +131,7 @@ data:
         deprecated: false
         secret: false
         description: Box shared link for shared endpoints can be a link for a shared comment file or folder
+        order: 6
       sharedPassword:
         kind: parameter
         group: common
@@ -132,6 +140,7 @@ data:
         deprecated: false
         secret: false
         description: Password associated with the shared link MUST be provided with sharedLink
+        order: 7
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -143,6 +152,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -153,6 +163,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -171,6 +182,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 10
       boxConfig:
         kind: parameter
         group: advanced
@@ -180,6 +192,7 @@ data:
         deprecated: false
         secret: false
         description: Custom Box SDK configuration not required normally
+        order: 11
       connectionManagerBuilder:
         kind: parameter
         group: advanced
@@ -189,6 +202,7 @@ data:
         deprecated: false
         secret: false
         description: Custom Box connection manager builder used to override default settings like max connections for underlying HttpClient.
+        order: 12
       httpParams:
         kind: parameter
         group: advanced
@@ -198,6 +212,7 @@ data:
         deprecated: false
         secret: false
         description: Custom HTTP params for settings like proxy host
+        order: 13
       refreshListener:
         kind: parameter
         group: advanced
@@ -207,6 +222,7 @@ data:
         deprecated: false
         secret: false
         description: OAuth listener for token updates if the Camel application needs to use the access token outside the route
+        order: 14
       synchronous:
         kind: parameter
         group: advanced
@@ -217,6 +233,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 15
       authSecureStorage:
         kind: parameter
         group: security
@@ -226,6 +243,7 @@ data:
         deprecated: false
         secret: false
         description: OAuth Secure Storage callback can be used to provide and or save OAuth tokens. The callback may return null on first call to allow the component to login and authorize application and obtain an OAuth token which can then be saved in the secure storage. For the component to be able to create a token automatically a user password must be provided.
+        order: 16
       clientSecret:
         kind: parameter
         group: security
@@ -235,6 +253,7 @@ data:
         deprecated: false
         secret: true
         description: Box application client secret
+        order: 17
       sslContextParameters:
         kind: parameter
         group: security
@@ -244,6 +263,7 @@ data:
         deprecated: false
         secret: false
         description: To configure security using SSLContextParameters.
+        order: 18
       userName:
         kind: parameter
         group: security
@@ -253,6 +273,7 @@ data:
         deprecated: false
         secret: true
         description: Box user name MUST be provided
+        order: 19
       userPassword:
         kind: parameter
         group: security
@@ -262,6 +283,7 @@ data:
         deprecated: false
         secret: true
         description: Box user password MUST be provided if authSecureStorage is not set or returns null on first call
+        order: 20
   documentation.adoc: "[[Box-BoxComponent]]\nBox Component\n~~~~~~~~~~~~~\n\n*Available\
     \ as of Camel 2.14*\n\nThe Box component provides access to all of the Box.com\
     \ APIs accessible\nusing https://github.com/box/box-java-sdk-v2/[box-java-sdk-v2].\

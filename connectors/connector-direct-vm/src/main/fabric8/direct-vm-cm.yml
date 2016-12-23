@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: If sending a message to a direct endpoint which has no active consumer then we can tell the producer to block and wait for the consumer to become active.
+        order: 0
       timeout:
         kind: property
         required: false
@@ -57,6 +58,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: The timeout value to use if block is enabled.
+        order: 1
       headerFilterStrategy:
         kind: property
         type: object
@@ -65,6 +67,7 @@ data:
         secret: false
         description: 'Sets a HeaderFilterStrategy that will only be applied on producer
           endpoints (on both directions: request and response). Default value: none.'
+        order: 2
       propagateProperties:
         kind: property
         required: false
@@ -75,6 +78,7 @@ data:
         defaultValue: true
         description: 'Whether to propagate or not properties from the producer side to
           the consumer side and viceversa. Default value: true.'
+        order: 3
     properties:
       name:
         kind: path
@@ -85,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: Name of direct-vm endpoint
+        order: 0
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -96,6 +101,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 1
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -106,6 +112,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 2
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -124,6 +131,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default exchange pattern when creating an exchange.
+        order: 3
       block:
         kind: parameter
         group: producer
@@ -134,6 +142,7 @@ data:
         secret: false
         defaultValue: false
         description: If sending a message to a direct endpoint which has no active consumer then we can tell the producer to block and wait for the consumer to become active.
+        order: 4
       failIfNoConsumers:
         kind: parameter
         group: producer
@@ -144,6 +153,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the producer should fail by throwing an exception when sending to a Direct-VM endpoint with no active consumers.
+        order: 5
       timeout:
         kind: parameter
         group: producer
@@ -154,6 +164,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: The timeout value to use if block is enabled.
+        order: 6
       headerFilterStrategy:
         kind: parameter
         group: producer (advanced)
@@ -164,6 +175,7 @@ data:
         secret: false
         description: 'Sets a HeaderFilterStrategy that will only be applied on producer
           endpoints (on both directions: request and response). Default value: none.'
+        order: 7
       propagateProperties:
         kind: parameter
         group: advanced
@@ -175,6 +187,7 @@ data:
         defaultValue: false
         description: 'Whether to propagate or not properties from the producer side to
           the consumer side and viceversa. Default value: true.'
+        order: 8
       synchronous:
         kind: parameter
         group: advanced
@@ -185,6 +198,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 9
   documentation.adoc: "[[Direct-VM-DirectVMComponent]]\nDirect VM Component\n~~~~~~~~~~~~~~~~~~~\n\
     \n*Available as of Camel 2.10*\n\nThe *direct-vm:* component provides direct,\
     \ synchronous invocation of\nany consumers in the JVM when a producer sends a\

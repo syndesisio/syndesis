@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Local repository path
+        order: 0
       branchName:
         kind: parameter
         group: common
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: The branch name to work on
+        order: 1
       password:
         kind: parameter
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: Remote repository password
+        order: 2
       remoteName:
         kind: parameter
         group: common
@@ -75,6 +78,7 @@ data:
         deprecated: false
         secret: false
         description: The remote repository name to use in particular operation like pull
+        order: 3
       remotePath:
         kind: parameter
         group: common
@@ -83,6 +87,7 @@ data:
         deprecated: false
         secret: false
         description: The remote repository path
+        order: 4
       tagName:
         kind: parameter
         group: common
@@ -91,6 +96,7 @@ data:
         deprecated: false
         secret: false
         description: The tag name to work on
+        order: 5
       username:
         kind: parameter
         group: common
@@ -99,6 +105,7 @@ data:
         deprecated: false
         secret: false
         description: Remote repository username
+        order: 6
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -110,6 +117,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 7
       type:
         kind: parameter
         group: consumer
@@ -123,6 +131,7 @@ data:
         deprecated: false
         secret: false
         description: The consumer type
+        order: 8
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -133,6 +142,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -151,6 +161,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 10
       operation:
         kind: parameter
         group: producer
@@ -177,6 +188,7 @@ data:
         deprecated: false
         secret: false
         description: The operation to do on the repository
+        order: 11
       synchronous:
         kind: parameter
         group: advanced
@@ -187,6 +199,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 12
   documentation.adoc: |
     [[Git-GitComponent]]
     Git Component

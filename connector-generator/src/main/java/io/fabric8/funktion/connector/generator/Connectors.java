@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static io.fabric8.funktion.Labels.Kind.CONNECTOR;
 import static io.fabric8.funktion.Labels.Kind.SUBSCRIPTION;
@@ -96,12 +97,36 @@ public class Connectors {
             ObjectMapper mapper = new ObjectMapper();
             Object value = mapper.readerFor(Map.class).readValue(jSonSchema);
             if (value != null) {
+                // lets add the order fields
+                if (value instanceof Map) {
+                    Map<?,?> map = (Map) value;
+                    for (Map.Entry entry : map.entrySet()) {
+                        Object child = entry.getValue();
+                        if (value instanceof Map) {
+                            addOrderFields((Map) child);
+                        }
+                    }
+                }
                 return YamlHelper.createYamlMapper().writeValueAsString(value);
             }
         } catch (IOException e) {
             LOG.info("Failed to convert JSON " + jSonSchema + " to YAML: " + e, e);
         }
         return null;
+    }
+
+    private static void addOrderFields(Map<?,?> map) {
+        int order = 0;
+        for (Map.Entry entry : map.entrySet()) {
+            Object value = entry.getValue();
+            if (value instanceof Map) {
+                Map childMap = (Map) value;
+                if (!childMap.containsKey("order")) {
+                    childMap.put("order", order);
+                }
+                order++;
+            }
+        }
     }
 
 

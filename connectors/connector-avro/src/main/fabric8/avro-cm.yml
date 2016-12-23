@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use a shared AvroConfiguration to configure options once
+        order: 0
     properties:
       transport:
         kind: path
@@ -61,6 +62,7 @@ data:
         deprecated: false
         secret: false
         description: Transport to use
+        order: 0
       port:
         kind: path
         group: common
@@ -70,6 +72,7 @@ data:
         deprecated: false
         secret: false
         description: Port number to use
+        order: 1
       host:
         kind: path
         group: common
@@ -79,6 +82,7 @@ data:
         deprecated: false
         secret: false
         description: Hostname to use
+        order: 2
       messageName:
         kind: path
         group: common
@@ -87,6 +91,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the message to send.
+        order: 3
       protocol:
         kind: parameter
         group: common
@@ -95,6 +100,7 @@ data:
         deprecated: false
         secret: false
         description: Avro protocol to use
+        order: 4
       protocolClassName:
         kind: parameter
         group: common
@@ -103,6 +109,7 @@ data:
         deprecated: false
         secret: false
         description: Avro protocol to use defined by the FQN class name
+        order: 5
       protocolLocation:
         kind: parameter
         group: common
@@ -111,6 +118,7 @@ data:
         deprecated: false
         secret: false
         description: Avro protocol location
+        order: 6
       reflectionProtocol:
         kind: parameter
         group: common
@@ -120,6 +128,7 @@ data:
         secret: false
         defaultValue: false
         description: If protocol object provided is reflection protocol. Should be used only with protocol parameter because for protocolClassName protocol type will be auto detected
+        order: 7
       singleParameter:
         kind: parameter
         group: common
@@ -129,6 +138,7 @@ data:
         secret: false
         defaultValue: false
         description: If true consumer parameter won't be wrapped into array. Will fail if protocol specifies more then 1 parameter for the message
+        order: 8
       uriAuthority:
         kind: parameter
         group: common
@@ -137,6 +147,7 @@ data:
         deprecated: false
         secret: false
         description: Authority to use (username and password)
+        order: 9
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -148,6 +159,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 10
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -158,6 +170,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 11
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -176,6 +189,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 12
       synchronous:
         kind: parameter
         group: advanced
@@ -186,6 +200,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 13
   documentation.adoc: |
     [[avro-AvroComponent]]
     Avro Component

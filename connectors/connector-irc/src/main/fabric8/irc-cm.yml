@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Hostname for the IRC chat server
+        order: 0
       port:
         kind: path
         group: common
@@ -61,6 +62,7 @@ data:
         secret: false
         defaultValue: 6667,6668,6669
         description: Port number for the IRC chat server
+        order: 1
       autoRejoin:
         kind: parameter
         group: common
@@ -70,6 +72,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to auto re-join when being kicked
+        order: 2
       namesOnJoin:
         kind: parameter
         group: common
@@ -79,6 +82,7 @@ data:
         secret: false
         defaultValue: false
         description: Sends NAMES command to channel after joining it. link onReply has to be true in order to process the result which will have the header value irc.num = '353'.
+        order: 3
       nickname:
         kind: parameter
         group: common
@@ -87,6 +91,7 @@ data:
         deprecated: false
         secret: false
         description: The nickname used in chat.
+        order: 4
       persistent:
         kind: parameter
         group: common
@@ -96,6 +101,7 @@ data:
         secret: false
         defaultValue: true
         description: Use persistent messages.
+        order: 5
       realname:
         kind: parameter
         group: common
@@ -104,6 +110,7 @@ data:
         deprecated: false
         secret: false
         description: The IRC user's actual name.
+        order: 6
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -115,6 +122,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 7
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -125,6 +133,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -143,6 +152,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 9
       colors:
         kind: parameter
         group: advanced
@@ -153,6 +163,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether or not the server supports color codes.
+        order: 10
       synchronous:
         kind: parameter
         group: advanced
@@ -163,6 +174,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 11
       onJoin:
         kind: parameter
         group: filter
@@ -173,6 +185,7 @@ data:
         secret: false
         defaultValue: true
         description: Handle user join events.
+        order: 12
       onKick:
         kind: parameter
         group: filter
@@ -183,6 +196,7 @@ data:
         secret: false
         defaultValue: true
         description: Handle kick events.
+        order: 13
       onMode:
         kind: parameter
         group: filter
@@ -193,6 +207,7 @@ data:
         secret: false
         defaultValue: true
         description: Handle mode change events.
+        order: 14
       onNick:
         kind: parameter
         group: filter
@@ -203,6 +218,7 @@ data:
         secret: false
         defaultValue: true
         description: Handle nickname change events.
+        order: 15
       onPart:
         kind: parameter
         group: filter
@@ -213,6 +229,7 @@ data:
         secret: false
         defaultValue: true
         description: Handle user part events.
+        order: 16
       onPrivmsg:
         kind: parameter
         group: filter
@@ -223,6 +240,7 @@ data:
         secret: false
         defaultValue: true
         description: Handle private message events.
+        order: 17
       onQuit:
         kind: parameter
         group: filter
@@ -233,6 +251,7 @@ data:
         secret: false
         defaultValue: true
         description: Handle user quit events.
+        order: 18
       onReply:
         kind: parameter
         group: filter
@@ -243,6 +262,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether or not to handle general responses to commands or informational messages.
+        order: 19
       onTopic:
         kind: parameter
         group: filter
@@ -253,6 +273,7 @@ data:
         secret: false
         defaultValue: true
         description: Handle topic change events.
+        order: 20
       nickPassword:
         kind: parameter
         group: security
@@ -262,6 +283,7 @@ data:
         deprecated: false
         secret: true
         description: Your IRC server nickname password.
+        order: 21
       password:
         kind: parameter
         group: security
@@ -271,6 +293,7 @@ data:
         deprecated: false
         secret: true
         description: The IRC server password.
+        order: 22
       sslContextParameters:
         kind: parameter
         group: security
@@ -280,6 +303,7 @@ data:
         deprecated: false
         secret: false
         description: Used for configuring security using SSL. Reference to a org.apache.camel.util.jsse.SSLContextParameters in the Registry. This reference overrides any configured SSLContextParameters at the component level. Note that this setting overrides the trustManager option.
+        order: 23
       trustManager:
         kind: parameter
         group: security
@@ -289,6 +313,7 @@ data:
         deprecated: false
         secret: false
         description: The trust manager used to verify the SSL server's certificate.
+        order: 24
       username:
         kind: parameter
         group: security
@@ -298,6 +323,7 @@ data:
         deprecated: false
         secret: true
         description: The IRC server user name.
+        order: 25
   documentation.adoc: "[[IRC-IRCComponent]]\nIRC Component\n~~~~~~~~~~~~~\n\nThe *irc*\
     \ component implements an\nhttp://en.wikipedia.org/wiki/Internet_Relay_Chat[IRC]\
     \ (Internet Relay\nChat) transport.\n\nMaven users will need to add the following\

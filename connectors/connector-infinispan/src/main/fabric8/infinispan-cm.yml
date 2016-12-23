@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the host of the cache on Infinispan instance
+        order: 0
       cacheContainer:
         kind: parameter
         group: common
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the cache Container to connect
+        order: 1
       cacheName:
         kind: parameter
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the cache name
+        order: 2
       queryBuilder:
         kind: parameter
         group: common
@@ -75,6 +78,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the query builder.
+        order: 3
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -86,6 +90,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 4
       clusteredListener:
         kind: parameter
         group: consumer
@@ -96,6 +101,7 @@ data:
         secret: false
         defaultValue: false
         description: If true the listener will be installed for the entire cluster
+        order: 5
       customListener:
         kind: parameter
         group: consumer
@@ -105,6 +111,7 @@ data:
         deprecated: false
         secret: false
         description: Returns the custom listener in use if provided
+        order: 6
       eventTypes:
         kind: parameter
         group: consumer
@@ -119,6 +126,7 @@ data:
           CACHE_ENTRY_CREATED CACHE_ENTRY_REMOVED CACHE_ENTRY_MODIFIED TRANSACTION_COMPLETED
           TRANSACTION_REGISTERED CACHE_ENTRY_INVALIDATED DATA_REHASHED TOPOLOGY_CHANGED
           PARTITION_STATUS_CHANGED'
+        order: 7
       sync:
         kind: parameter
         group: consumer
@@ -129,6 +137,7 @@ data:
         secret: false
         defaultValue: true
         description: If true the consumer will receive notifications synchronously
+        order: 8
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -139,6 +148,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -157,6 +167,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 10
       command:
         kind: parameter
         group: producer
@@ -186,6 +197,7 @@ data:
         secret: false
         defaultValue: put
         description: The operation to perform.
+        order: 11
       configurationUri:
         kind: parameter
         group: advanced
@@ -195,6 +207,7 @@ data:
         deprecated: false
         secret: false
         description: An implementation specific URI for the CacheManager
+        order: 12
       flags:
         kind: parameter
         group: advanced
@@ -204,6 +217,7 @@ data:
         deprecated: false
         secret: false
         description: A comma separated list of Flag to be applied by default on each cache invocation not applicable to remote caches.
+        order: 13
       synchronous:
         kind: parameter
         group: advanced
@@ -214,6 +228,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 14
   documentation.adoc: "[[Infinispan-InfinispanComponent]]\nInfinispan Component\n\
     ~~~~~~~~~~~~~~~~~~~~\n\n*Available as of Camel 2.13.0*\n\nThis component allows\
     \ you to interact with\nhttp://infinispan.org/[Infinispan] distributed data grid\

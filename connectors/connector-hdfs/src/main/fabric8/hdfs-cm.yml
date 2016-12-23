@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given configuration for security with JAAS.
+        order: 0
     properties:
       hostName:
         kind: path
@@ -58,6 +59,7 @@ data:
         deprecated: false
         secret: false
         description: HDFS host to use
+        order: 0
       port:
         kind: path
         group: common
@@ -67,6 +69,7 @@ data:
         secret: false
         defaultValue: "8020"
         description: HDFS port to use
+        order: 1
       path:
         kind: path
         group: common
@@ -76,6 +79,7 @@ data:
         deprecated: false
         secret: false
         description: The directory path to use
+        order: 2
       connectOnStartup:
         kind: parameter
         group: common
@@ -85,6 +89,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to connect to the HDFS file system on starting the producer/consumer. If false then the connection is created on-demand. Notice that HDFS may take up till 15 minutes to establish a connection as it has hardcoded 45 x 20 sec redelivery. By setting this option to false allows your application to startup and not block for up till 15 minutes.
+        order: 3
       fileSystemType:
         kind: parameter
         group: common
@@ -97,6 +102,7 @@ data:
         secret: false
         defaultValue: HDFS
         description: Set to LOCAL to not use HDFS but local java.io.File instead.
+        order: 4
       fileType:
         kind: parameter
         group: common
@@ -112,6 +118,7 @@ data:
         secret: false
         defaultValue: NORMAL_FILE
         description: The file type to use. For more details see Hadoop HDFS documentation about the various files types.
+        order: 5
       keyType:
         kind: parameter
         group: common
@@ -131,6 +138,7 @@ data:
         secret: false
         defaultValue: NULL
         description: The type for the key in case of sequence or map files.
+        order: 6
       owner:
         kind: parameter
         group: common
@@ -139,6 +147,7 @@ data:
         deprecated: false
         secret: false
         description: The file owner must match this owner for the consumer to pickup the file. Otherwise the file is skipped.
+        order: 7
       valueType:
         kind: parameter
         group: common
@@ -158,6 +167,7 @@ data:
         secret: false
         defaultValue: BYTES
         description: The type for the key in case of sequence or map files
+        order: 8
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -169,6 +179,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       delay:
         kind: parameter
         group: consumer
@@ -179,6 +190,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: The interval (milliseconds) between the directory scans.
+        order: 10
       initialDelay:
         kind: parameter
         group: consumer
@@ -188,6 +200,7 @@ data:
         deprecated: false
         secret: false
         description: For the consumer how much to wait (milliseconds) before to start scanning the directory.
+        order: 11
       pattern:
         kind: parameter
         group: consumer
@@ -198,6 +211,7 @@ data:
         secret: false
         defaultValue: '*'
         description: The pattern used for scanning the directory
+        order: 12
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -209,6 +223,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 13
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -219,6 +234,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 14
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -237,6 +253,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 15
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -247,6 +264,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+        order: 16
       append:
         kind: parameter
         group: producer
@@ -257,6 +275,7 @@ data:
         secret: false
         defaultValue: false
         description: Append to existing file. Notice that not all HDFS file systems support the append option.
+        order: 17
       overwrite:
         kind: parameter
         group: producer
@@ -267,6 +286,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to overwrite existing files with the same name
+        order: 18
       blockSize:
         kind: parameter
         group: advanced
@@ -277,6 +297,7 @@ data:
         secret: false
         defaultValue: "67108864"
         description: The size of the HDFS blocks
+        order: 19
       bufferSize:
         kind: parameter
         group: advanced
@@ -287,6 +308,7 @@ data:
         secret: false
         defaultValue: "4096"
         description: The buffer size used by HDFS
+        order: 20
       checkIdleInterval:
         kind: parameter
         group: advanced
@@ -297,6 +319,7 @@ data:
         secret: false
         defaultValue: "500"
         description: How often (time in millis) in to run the idle checker background task. This option is only in use if the splitter strategy is IDLE.
+        order: 21
       chunkSize:
         kind: parameter
         group: advanced
@@ -307,6 +330,7 @@ data:
         secret: false
         defaultValue: "4096"
         description: When reading a normal file this is split into chunks producing a message per chunk.
+        order: 22
       compressionCodec:
         kind: parameter
         group: advanced
@@ -321,6 +345,7 @@ data:
         secret: false
         defaultValue: DEFAULT
         description: The compression codec to use
+        order: 23
       compressionType:
         kind: parameter
         group: advanced
@@ -331,6 +356,7 @@ data:
         secret: false
         defaultValue: NONE
         description: The compression type to use (is default not in use)
+        order: 24
       openedSuffix:
         kind: parameter
         group: advanced
@@ -341,6 +367,7 @@ data:
         secret: false
         defaultValue: opened
         description: When a file is opened for reading/writing the file is renamed with this suffix to avoid to read it during the writing phase.
+        order: 25
       readSuffix:
         kind: parameter
         group: advanced
@@ -351,6 +378,7 @@ data:
         secret: false
         defaultValue: read
         description: Once the file has been read is renamed with this suffix to avoid to read it again.
+        order: 26
       replication:
         kind: parameter
         group: advanced
@@ -361,6 +389,7 @@ data:
         secret: false
         defaultValue: "3"
         description: The HDFS replication factor
+        order: 27
       splitStrategy:
         kind: parameter
         group: advanced
@@ -381,6 +410,7 @@ data:
           the old is closed when the number of written messages is more than value IDLE
           a new file is created and the old is closed when no writing happened in the
           last value milliseconds'
+        order: 28
       synchronous:
         kind: parameter
         group: advanced
@@ -391,6 +421,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 29
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -401,6 +432,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 30
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -411,6 +443,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 31
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -421,6 +454,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 32
       greedy:
         kind: parameter
         group: scheduler
@@ -432,6 +466,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 33
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -450,6 +485,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 34
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -460,6 +496,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+        order: 35
       scheduler:
         kind: parameter
         group: scheduler
@@ -475,6 +512,7 @@ data:
         secret: false
         defaultValue: none
         description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+        order: 36
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -486,6 +524,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 37
       startScheduler:
         kind: parameter
         group: scheduler
@@ -497,6 +536,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 38
       timeUnit:
         kind: parameter
         group: scheduler
@@ -516,6 +556,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 39
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -527,6 +568,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 40
   documentation.adoc: |
     [[HDFS-HDFSComponent]]
     HDFS Component

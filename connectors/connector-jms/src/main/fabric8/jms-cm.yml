@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use a shared JMS configuration
+        order: 0
       acceptMessagesWhileStopping:
         kind: property
         type: boolean
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies whether the consumer accept messages while it is stopping. You may consider enabling this option if you start and stop JMS routes at runtime while there are still messages enqued on the queue. If this option is false and you stop the JMS route then messages may be rejected and the JMS broker would have to attempt redeliveries which yet again may be rejected and eventually the message may be moved at a dead letter queue on the JMS broker. To avoid this its recommended to enable this option.
+        order: 1
       allowReplyManagerQuickStop:
         kind: property
         type: boolean
@@ -62,6 +64,7 @@ data:
         deprecated: false
         secret: false
         description: Whether the DefaultMessageListenerContainer used in the reply managers for request-reply messaging allow the DefaultMessageListenerContainer.runningAllowed flag to quick stop in case JmsConfigurationisAcceptMessagesWhileStopping is enabled and org.apache.camel.CamelContext is currently being stopped. This quick stop ability is enabled by default in the regular JMS consumers but to enable for reply managers you must enable this flag.
+        order: 2
       acknowledgementMode:
         kind: property
         type: integer
@@ -69,6 +72,7 @@ data:
         deprecated: false
         secret: false
         description: The JMS acknowledgement mode defined as an Integer. Allows you to set vendor-specific extensions to the acknowledgment mode. For the regular modes it is preferable to use the acknowledgementModeName instead.
+        order: 3
       eagerLoadingOfProperties:
         kind: property
         type: boolean
@@ -76,6 +80,7 @@ data:
         deprecated: false
         secret: false
         description: Enables eager loading of JMS properties as soon as a message is loaded which generally is inefficient as the JMS properties may not be required but sometimes can catch early any issues with the underlying JMS provider and the use of JMS properties
+        order: 4
       acknowledgementModeName:
         kind: property
         type: string
@@ -84,6 +89,7 @@ data:
         secret: false
         description: 'The JMS acknowledgement name which is one of: SESSION_TRANSACTED
           CLIENT_ACKNOWLEDGE AUTO_ACKNOWLEDGE DUPS_OK_ACKNOWLEDGE'
+        order: 5
       autoStartup:
         kind: property
         type: boolean
@@ -91,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies whether the consumer container should auto-startup.
+        order: 6
       cacheLevel:
         kind: property
         type: integer
@@ -98,6 +105,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the cache level by ID for the underlying JMS resources. See cacheLevelName option for more details.
+        order: 7
       cacheLevelName:
         kind: property
         type: string
@@ -108,6 +116,7 @@ data:
           values are: CACHE_AUTO CACHE_CONNECTION CACHE_CONSUMER CACHE_NONE and CACHE_SESSION.
           The default setting is CACHE_AUTO. See the Spring documentation and Transactions
           Cache Levels for more information.'
+        order: 8
       replyToCacheLevelName:
         kind: property
         type: string
@@ -121,6 +130,7 @@ data:
           as IBM WebSphere may require to set the replyToCacheLevelName=CACHE_NONE to
           work. Note: If using temporary queues then CACHE_NONE is not allowed and you
           must use a higher value such as CACHE_CONSUMER or CACHE_SESSION.'
+        order: 9
       clientId:
         kind: property
         type: string
@@ -128,6 +138,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the JMS client ID to use. Note that this value if specified must be unique and can only be used by a single JMS connection instance. It is typically only required for durable topic subscriptions. If using Apache ActiveMQ you may prefer to use Virtual Topics instead.
+        order: 10
       concurrentConsumers:
         kind: property
         type: integer
@@ -135,6 +146,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the default number of concurrent consumers when consuming from JMS (not for request/reply over JMS). See also the maxMessagesPerTask option to control dynamic scaling up/down of threads. When doing request/reply over JMS then the option replyToConcurrentConsumers is used to control number of concurrent consumers on the reply message listener.
+        order: 11
       replyToConcurrentConsumers:
         kind: property
         type: integer
@@ -142,6 +154,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the default number of concurrent consumers when doing request/reply over JMS. See also the maxMessagesPerTask option to control dynamic scaling up/down of threads.
+        order: 12
       connectionFactory:
         kind: property
         type: object
@@ -149,6 +162,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default connection factory to be use
+        order: 13
       username:
         kind: property
         required: false
@@ -157,6 +171,7 @@ data:
         deprecated: false
         secret: true
         description: Username to use with the ConnectionFactory. You can also configure username/password directly on the ConnectionFactory.
+        order: 14
       password:
         kind: property
         required: false
@@ -165,6 +180,7 @@ data:
         deprecated: false
         secret: true
         description: Password to use with the ConnectionFactory. You can also configure username/password directly on the ConnectionFactory.
+        order: 15
       deliveryPersistent:
         kind: property
         type: boolean
@@ -172,6 +188,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies whether persistent delivery is used by default.
+        order: 16
       deliveryMode:
         kind: property
         type: integer
@@ -179,6 +196,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the delivery mode to be used. Possible values are Possibles values are those defined by javax.jms.DeliveryMode. NON_PERSISTENT = 1 and PERSISTENT = 2.
+        order: 17
       durableSubscriptionName:
         kind: property
         type: string
@@ -186,6 +204,7 @@ data:
         deprecated: false
         secret: false
         description: The durable subscriber name for specifying durable topic subscriptions. The clientId option must be configured as well.
+        order: 18
       exceptionListener:
         kind: property
         type: object
@@ -193,6 +212,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the JMS Exception Listener that is to be notified of any underlying JMS exceptions.
+        order: 19
       errorHandler:
         kind: property
         type: object
@@ -200,6 +220,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies a org.springframework.util.ErrorHandler to be invoked in case of any uncaught exceptions thrown while processing a Message. By default these exceptions will be logged at the WARN level if no errorHandler has been configured. You can configure logging level and whether stack traces should be logged using errorHandlerLoggingLevel and errorHandlerLogStackTrace options. This makes it much easier to configure than having to code a custom errorHandler.
+        order: 20
       errorHandlerLoggingLevel:
         kind: property
         type: string
@@ -214,6 +235,7 @@ data:
         deprecated: false
         secret: false
         description: Allows to configure the default errorHandler logging level for logging uncaught exceptions.
+        order: 21
       errorHandlerLogStackTrace:
         kind: property
         type: boolean
@@ -221,6 +243,7 @@ data:
         deprecated: false
         secret: false
         description: Allows to control whether stacktraces should be logged or not by the default errorHandler.
+        order: 22
       explicitQosEnabled:
         kind: property
         type: boolean
@@ -228,6 +251,7 @@ data:
         deprecated: false
         secret: false
         description: Set if the deliveryMode priority or timeToLive qualities of service should be used when sending messages. This option is based on Spring's JmsTemplate. The deliveryMode priority and timeToLive options are applied to the current endpoint. This contrasts with the preserveMessageQos option which operates at message granularity reading QoS properties exclusively from the Camel In message headers.
+        order: 23
       exposeListenerSession:
         kind: property
         type: boolean
@@ -235,6 +259,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies whether the listener session should be exposed when consuming messages.
+        order: 24
       idleTaskExecutionLimit:
         kind: property
         type: integer
@@ -242,6 +267,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the limit for idle executions of a receive task not having received any message within its execution. If this limit is reached the task will shut down and leave receiving to other executing tasks (in the case of dynamic scheduling; see the maxConcurrentConsumers setting). There is additional doc available from Spring.
+        order: 25
       idleConsumerLimit:
         kind: property
         type: integer
@@ -249,6 +275,7 @@ data:
         deprecated: false
         secret: false
         description: Specify the limit for the number of consumers that are allowed to be idle at any given time.
+        order: 26
       maxConcurrentConsumers:
         kind: property
         type: integer
@@ -256,6 +283,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the maximum number of concurrent consumers when consuming from JMS (not for request/reply over JMS). See also the maxMessagesPerTask option to control dynamic scaling up/down of threads. When doing request/reply over JMS then the option replyToMaxConcurrentConsumers is used to control number of concurrent consumers on the reply message listener.
+        order: 27
       replyToMaxConcurrentConsumers:
         kind: property
         type: integer
@@ -263,6 +291,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the maximum number of concurrent consumers when using request/reply over JMS. See also the maxMessagesPerTask option to control dynamic scaling up/down of threads.
+        order: 28
       replyOnTimeoutToMaxConcurrentConsumers:
         kind: property
         type: integer
@@ -270,6 +299,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the maximum number of concurrent consumers for continue routing when timeout occurred when using request/reply over JMS.
+        order: 29
       maxMessagesPerTask:
         kind: property
         type: integer
@@ -277,6 +307,7 @@ data:
         deprecated: false
         secret: false
         description: The number of messages per task. -1 is unlimited. If you use a range for concurrent consumers (eg min max) then this option can be used to set a value to eg 100 to control how fast the consumers will shrink when less work is required.
+        order: 30
       messageConverter:
         kind: property
         type: object
@@ -284,6 +315,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom Spring org.springframework.jms.support.converter.MessageConverter so you can be in control how to map to/from a javax.jms.Message.
+        order: 31
       mapJmsMessage:
         kind: property
         type: boolean
@@ -291,6 +323,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies whether Camel should auto map the received JMS message to a suited payload type such as javax.jms.TextMessage to a String etc. See section about how mapping works below for more details.
+        order: 32
       messageIdEnabled:
         kind: property
         type: boolean
@@ -298,6 +331,7 @@ data:
         deprecated: false
         secret: false
         description: When sending specifies whether message IDs should be added.
+        order: 33
       messageTimestampEnabled:
         kind: property
         type: boolean
@@ -305,6 +339,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies whether timestamps should be enabled by default on sending messages.
+        order: 34
       alwaysCopyMessage:
         kind: property
         type: boolean
@@ -312,6 +347,7 @@ data:
         deprecated: false
         secret: false
         description: If true Camel will always make a JMS message copy of the message when it is passed to the producer for sending. Copying the message is needed in some situations such as when a replyToDestinationSelectorName is set (incidentally Camel will set the alwaysCopyMessage option to true if a replyToDestinationSelectorName is set)
+        order: 35
       useMessageIDAsCorrelationID:
         kind: property
         type: boolean
@@ -319,6 +355,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies whether JMSMessageID should always be used as JMSCorrelationID for InOut messages.
+        order: 36
       priority:
         kind: property
         type: integer
@@ -326,6 +363,7 @@ data:
         deprecated: false
         secret: false
         description: Values greater than 1 specify the message priority when sending (where 0 is the lowest priority and 9 is the highest). The explicitQosEnabled option must also be enabled in order for this option to have any effect.
+        order: 37
       pubSubNoLocal:
         kind: property
         type: boolean
@@ -333,6 +371,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies whether to inhibit the delivery of messages published by its own connection.
+        order: 38
       receiveTimeout:
         kind: property
         type: integer
@@ -340,6 +379,7 @@ data:
         deprecated: false
         secret: false
         description: The timeout for receiving messages (in milliseconds).
+        order: 39
       recoveryInterval:
         kind: property
         type: integer
@@ -347,6 +387,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the interval between recovery attempts i.e. when a connection is being refreshed in milliseconds. The default is 5000 ms that is 5 seconds.
+        order: 40
       subscriptionDurable:
         kind: property
         type: boolean
@@ -355,6 +396,7 @@ data:
         secret: false
         description: 'Deprecated: Enabled by default if you specify a durableSubscriptionName
           and a clientId.'
+        order: 41
       taskExecutor:
         kind: property
         type: object
@@ -362,6 +404,7 @@ data:
         deprecated: false
         secret: false
         description: Allows you to specify a custom task executor for consuming messages.
+        order: 42
       timeToLive:
         kind: property
         type: integer
@@ -369,6 +412,7 @@ data:
         deprecated: false
         secret: false
         description: When sending messages specifies the time-to-live of the message (in milliseconds).
+        order: 43
       transacted:
         kind: property
         type: boolean
@@ -376,6 +420,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies whether to use transacted mode
+        order: 44
       lazyCreateTransactionManager:
         kind: property
         type: boolean
@@ -383,6 +428,7 @@ data:
         deprecated: false
         secret: false
         description: If true Camel will create a JmsTransactionManager if there is no transactionManager injected when option transacted=true.
+        order: 45
       transactionManager:
         kind: property
         type: object
@@ -390,6 +436,7 @@ data:
         deprecated: false
         secret: false
         description: The Spring transaction manager to use.
+        order: 46
       transactionName:
         kind: property
         type: string
@@ -397,6 +444,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the transaction to use.
+        order: 47
       transactionTimeout:
         kind: property
         type: integer
@@ -404,6 +452,7 @@ data:
         deprecated: false
         secret: false
         description: The timeout value of the transaction (in seconds) if using transacted mode.
+        order: 48
       testConnectionOnStartup:
         kind: property
         type: boolean
@@ -411,6 +460,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies whether to test the connection on startup. This ensures that when Camel starts that all the JMS consumers have a valid connection to the JMS broker. If a connection cannot be granted then Camel throws an exception on startup. This ensures that Camel is not started with failed connections. The JMS producers is tested as well.
+        order: 49
       asyncStartListener:
         kind: property
         type: boolean
@@ -418,6 +468,7 @@ data:
         deprecated: false
         secret: false
         description: Whether to startup the JmsConsumer message listener asynchronously when starting a route. For example if a JmsConsumer cannot get a connection to a remote JMS broker then it may block while retrying and/or failover. This will cause Camel to block while starting routes. By setting this option to true you will let routes startup while the JmsConsumer connects to the JMS broker using a dedicated thread in asynchronous mode. If this option is used then beware that if the connection could not be established then an exception is logged at WARN level and the consumer will not be able to receive messages; You can then restart the route to retry.
+        order: 50
       asyncStopListener:
         kind: property
         type: boolean
@@ -425,6 +476,7 @@ data:
         deprecated: false
         secret: false
         description: Whether to stop the JmsConsumer message listener asynchronously when stopping a route.
+        order: 51
       forceSendOriginalMessage:
         kind: property
         type: boolean
@@ -432,6 +484,7 @@ data:
         deprecated: false
         secret: false
         description: When using mapJmsMessage=false Camel will create a new JMS message to send to a new JMS destination if you touch the headers (get or set) during the route. Set this option to true to force Camel to send the original JMS message that was received.
+        order: 52
       requestTimeout:
         kind: property
         type: integer
@@ -439,6 +492,7 @@ data:
         deprecated: false
         secret: false
         description: The timeout for waiting for a reply when using the InOut Exchange Pattern (in milliseconds). The default is 20 seconds. You can include the header CamelJmsRequestTimeout to override this endpoint configured timeout value and thus have per message individual timeout values. See also the requestTimeoutCheckerInterval option.
+        order: 53
       requestTimeoutCheckerInterval:
         kind: property
         type: integer
@@ -446,6 +500,7 @@ data:
         deprecated: false
         secret: false
         description: Configures how often Camel should check for timed out Exchanges when doing request/reply over JMS. By default Camel checks once per second. But if you must react faster when a timeout occurs then you can lower this interval to check more frequently. The timeout is determined by the option requestTimeout.
+        order: 54
       transferExchange:
         kind: property
         type: boolean
@@ -459,6 +514,7 @@ data:
           objects and log it at WARN level. You must enable this option on both the producer
           and consumer side so Camel knows the payloads is an Exchange and not a regular
           payload.'
+        order: 55
       transferException:
         kind: property
         type: boolean
@@ -466,6 +522,7 @@ data:
         deprecated: false
         secret: false
         description: If enabled and you are using Request Reply messaging (InOut) and an Exchange failed on the consumer side then the caused Exception will be send back in response as a javax.jms.ObjectMessage. If the client is Camel the returned Exception is rethrown. This allows you to use Camel JMS as a bridge in your routing - for example using persistent queues to enable robust routing. Notice that if you also have transferExchange enabled this option takes precedence. The caught exception is required to be serializable. The original Exception on the consumer side can be wrapped in an outer exception such as org.apache.camel.RuntimeCamelException when returned to the producer.
+        order: 56
       transferFault:
         kind: property
         type: boolean
@@ -473,6 +530,7 @@ data:
         deprecated: false
         secret: false
         description: If enabled and you are using Request Reply messaging (InOut) and an Exchange failed with a SOAP fault (not exception) on the consumer side then the fault flag on link org.apache.camel.MessageisFault() will be send back in the response as a JMS header with the key link JmsConstantsJMS_TRANSFER_FAULT. If the client is Camel the returned fault flag will be set on the link org.apache.camel.MessagesetFault(boolean). You may want to enable this when using Camel components that support faults such as SOAP based such as cxf or spring-ws.
+        order: 57
       jmsOperations:
         kind: property
         type: object
@@ -480,6 +538,7 @@ data:
         deprecated: false
         secret: false
         description: Allows you to use your own implementation of the org.springframework.jms.core.JmsOperations interface. Camel uses JmsTemplate as default. Can be used for testing purpose but not used much as stated in the spring API docs.
+        order: 58
       destinationResolver:
         kind: property
         type: object
@@ -487,6 +546,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.springframework.jms.support.destination.DestinationResolver that allows you to use your own resolver (for example to lookup the real destination in a JNDI registry).
+        order: 59
       replyToType:
         kind: property
         type: string
@@ -505,6 +565,7 @@ data:
           for more details and especially the notes about the implications if running
           in a clustered environment and the fact that Shared reply queues has lower performance
           than its alternatives Temporary and Exclusive.'
+        order: 60
       preserveMessageQos:
         kind: property
         type: boolean
@@ -512,6 +573,7 @@ data:
         deprecated: false
         secret: false
         description: Set to true if you want to send message using the QoS settings specified on the message instead of the QoS settings on the JMS endpoint. The following three headers are considered JMSPriority JMSDeliveryMode and JMSExpiration. You can provide all or only some of them. If not provided Camel will fall back to use the values from the endpoint instead. So when using this option the headers override the values from the endpoint. The explicitQosEnabled option by contrast will only use options set on the endpoint and not values from the message header.
+        order: 61
       asyncConsumer:
         kind: property
         type: boolean
@@ -519,6 +581,7 @@ data:
         deprecated: false
         secret: false
         description: Whether the JmsConsumer processes the Exchange asynchronously. If enabled then the JmsConsumer may pickup the next message from the JMS queue while the previous message is being processed asynchronously (by the Asynchronous Routing Engine). This means that messages may be processed not 100 strictly in order. If disabled (as default) then the Exchange is fully processed before the JmsConsumer will pickup the next message from the JMS queue. Note if transacted has been enabled then asyncConsumer=true does not run asynchronously as transaction must be executed synchronously (Camel 3.0 may support async transactions).
+        order: 62
       allowNullBody:
         kind: property
         type: boolean
@@ -526,6 +589,7 @@ data:
         deprecated: false
         secret: false
         description: Whether to allow sending messages with no body. If this option is false and the message body is null then an JMSException is thrown.
+        order: 63
       includeSentJMSMessageID:
         kind: property
         type: boolean
@@ -533,6 +597,7 @@ data:
         deprecated: false
         secret: false
         description: Only applicable when sending to JMS destination using InOnly (eg fire and forget). Enabling this option will enrich the Camel Exchange with the actual JMSMessageID that was used by the JMS client when the message was sent to the JMS destination.
+        order: 64
       includeAllJMSXProperties:
         kind: property
         type: boolean
@@ -543,6 +608,7 @@ data:
           to Camel Message. Setting this to true will include properties such as JMSXAppID
           and JMSXUserID etc. Note: If you are using a custom headerFilterStrategy then
           this option does not apply.'
+        order: 65
       defaultTaskExecutorType:
         kind: property
         type: string
@@ -560,6 +626,7 @@ data:
           pool for consumer endpoints and SimpleAsync for reply consumers. The use of
           ThreadPool is recommended to reduce thread trash in elastic configurations with
           dynamically increasing and decreasing concurrent consumers.'
+        order: 66
       jmsKeyFormatStrategy:
         kind: property
         type: object
@@ -573,6 +640,7 @@ data:
           be used for JMS brokers which do not care whether JMS header keys contain illegal
           characters. You can provide your own implementation of the org.apache.camel.component.jms.JmsKeyFormatStrategy
           and refer to it using the notation.'
+        order: 67
       applicationContext:
         kind: property
         type: object
@@ -580,6 +648,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the Spring ApplicationContext to use
+        order: 68
       queueBrowseStrategy:
         kind: property
         type: object
@@ -587,6 +656,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom QueueBrowseStrategy when browsing queues
+        order: 69
       headerFilterStrategy:
         kind: property
         type: object
@@ -594,6 +664,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 70
       messageCreatedStrategy:
         kind: property
         type: object
@@ -601,6 +672,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given MessageCreatedStrategy which are invoked when Camel creates new instances of javax.jms.Message objects when Camel is sending a JMS message.
+        order: 71
       waitForProvisionCorrelationToBeUpdatedCounter:
         kind: property
         type: integer
@@ -608,6 +680,7 @@ data:
         deprecated: false
         secret: false
         description: Number of times to wait for provisional correlation id to be updated to the actual correlation id when doing request/reply over JMS and when the option useMessageIDAsCorrelationID is enabled.
+        order: 72
       waitForProvisionCorrelationToBeUpdatedThreadSleepingTime:
         kind: property
         type: integer
@@ -615,6 +688,7 @@ data:
         deprecated: false
         secret: false
         description: Interval in millis to sleep each time while waiting for provisional correlation id to be updated.
+        order: 73
     properties:
       destinationType:
         kind: path
@@ -630,6 +704,7 @@ data:
         secret: false
         defaultValue: queue
         description: The kind of destination to use
+        order: 0
       destinationName:
         kind: path
         group: common
@@ -639,6 +714,7 @@ data:
         deprecated: false
         secret: false
         description: Name of the queue or topic to use as destination
+        order: 1
       clientId:
         kind: parameter
         group: common
@@ -647,6 +723,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the JMS client ID to use. Note that this value if specified must be unique and can only be used by a single JMS connection instance. It is typically only required for durable topic subscriptions. If using Apache ActiveMQ you may prefer to use Virtual Topics instead.
+        order: 2
       connectionFactory:
         kind: parameter
         group: common
@@ -655,6 +732,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default connection factory to be used if a connection factory is not specified for either link setTemplateConnectionFactory(ConnectionFactory) or link setListenerConnectionFactory(ConnectionFactory)
+        order: 3
       disableReplyTo:
         kind: parameter
         group: common
@@ -664,6 +742,7 @@ data:
         secret: false
         defaultValue: false
         description: If true a producer will behave like a InOnly exchange with the exception that JMSReplyTo header is sent out and not be suppressed like in the case of InOnly. Like InOnly the producer will not wait for a reply. A consumer with this flag will behave like InOnly. This feature can be used to bridge InOut requests to another queue so that a route on the other queue will send its response directly back to the original JMSReplyTo.
+        order: 4
       durableSubscriptionName:
         kind: parameter
         group: common
@@ -672,6 +751,7 @@ data:
         deprecated: false
         secret: false
         description: The durable subscriber name for specifying durable topic subscriptions. The clientId option must be configured as well.
+        order: 5
       jmsMessageType:
         kind: parameter
         group: common
@@ -689,6 +769,7 @@ data:
           for sending JMS messages. Possible values are: Bytes Map Object Stream Text.
           By default Camel would determine which JMS message type to use from the In body
           type. This option allows you to specify it.'
+        order: 6
       testConnectionOnStartup:
         kind: parameter
         group: common
@@ -698,6 +779,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether to test the connection on startup. This ensures that when Camel starts that all the JMS consumers have a valid connection to the JMS broker. If a connection cannot be granted then Camel throws an exception on startup. This ensures that Camel is not started with failed connections. The JMS producers is tested as well.
+        order: 7
       acknowledgementModeName:
         kind: parameter
         group: consumer
@@ -714,6 +796,7 @@ data:
         defaultValue: AUTO_ACKNOWLEDGE
         description: 'The JMS acknowledgement name which is one of: SESSION_TRANSACTED
           CLIENT_ACKNOWLEDGE AUTO_ACKNOWLEDGE DUPS_OK_ACKNOWLEDGE'
+        order: 8
       asyncConsumer:
         kind: parameter
         group: consumer
@@ -724,6 +807,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the JmsConsumer processes the Exchange asynchronously. If enabled then the JmsConsumer may pickup the next message from the JMS queue while the previous message is being processed asynchronously (by the Asynchronous Routing Engine). This means that messages may be processed not 100 strictly in order. If disabled (as default) then the Exchange is fully processed before the JmsConsumer will pickup the next message from the JMS queue. Note if transacted has been enabled then asyncConsumer=true does not run asynchronously as transaction must be executed synchronously (Camel 3.0 may support async transactions).
+        order: 9
       autoStartup:
         kind: parameter
         group: consumer
@@ -734,6 +818,7 @@ data:
         secret: false
         defaultValue: true
         description: Specifies whether the consumer container should auto-startup.
+        order: 10
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -745,6 +830,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 11
       cacheLevelName:
         kind: parameter
         group: consumer
@@ -764,6 +850,7 @@ data:
           values are: CACHE_AUTO CACHE_CONNECTION CACHE_CONSUMER CACHE_NONE and CACHE_SESSION.
           The default setting is CACHE_AUTO. See the Spring documentation and Transactions
           Cache Levels for more information.'
+        order: 12
       concurrentConsumers:
         kind: parameter
         group: consumer
@@ -774,6 +861,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Specifies the default number of concurrent consumers when consuming from JMS (not for request/reply over JMS). See also the maxMessagesPerTask option to control dynamic scaling up/down of threads. When doing request/reply over JMS then the option replyToConcurrentConsumers is used to control number of concurrent consumers on the reply message listener.
+        order: 13
       maxConcurrentConsumers:
         kind: parameter
         group: consumer
@@ -783,6 +871,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the maximum number of concurrent consumers when consuming from JMS (not for request/reply over JMS). See also the maxMessagesPerTask option to control dynamic scaling up/down of threads. When doing request/reply over JMS then the option replyToMaxConcurrentConsumers is used to control number of concurrent consumers on the reply message listener.
+        order: 14
       replyTo:
         kind: parameter
         group: consumer
@@ -792,6 +881,7 @@ data:
         deprecated: false
         secret: false
         description: Provides an explicit ReplyTo destination which overrides any incoming value of Message.getJMSReplyTo().
+        order: 15
       replyToDeliveryPersistent:
         kind: parameter
         group: consumer
@@ -802,6 +892,7 @@ data:
         secret: false
         defaultValue: true
         description: Specifies whether to use persistent delivery by default for replies.
+        order: 16
       selector:
         kind: parameter
         group: consumer
@@ -811,6 +902,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the JMS selector to use
+        order: 17
       acceptMessagesWhileStopping:
         kind: parameter
         group: consumer (advanced)
@@ -821,6 +913,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether the consumer accept messages while it is stopping. You may consider enabling this option if you start and stop JMS routes at runtime while there are still messages enqued on the queue. If this option is false and you stop the JMS route then messages may be rejected and the JMS broker would have to attempt redeliveries which yet again may be rejected and eventually the message may be moved at a dead letter queue on the JMS broker. To avoid this its recommended to enable this option.
+        order: 18
       allowReplyManagerQuickStop:
         kind: parameter
         group: consumer (advanced)
@@ -831,6 +924,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the DefaultMessageListenerContainer used in the reply managers for request-reply messaging allow the DefaultMessageListenerContainer.runningAllowed flag to quick stop in case link JmsConfigurationisAcceptMessagesWhileStopping() is enabled and org.apache.camel.CamelContext is currently being stopped. This quick stop ability is enabled by default in the regular JMS consumers but to enable for reply managers you must enable this flag.
+        order: 19
       consumerType:
         kind: parameter
         group: consumer (advanced)
@@ -851,6 +945,7 @@ data:
           Custom is specified the MessageListenerContainerFactory defined by the messageListenerContainerFactory
           option will determine what org.springframework.jms.listener.AbstractMessageListenerContainer
           to use.'
+        order: 20
       defaultTaskExecutorType:
         kind: parameter
         group: consumer (advanced)
@@ -870,6 +965,7 @@ data:
           pool for consumer endpoints and SimpleAsync for reply consumers. The use of
           ThreadPool is recommended to reduce thread trash in elastic configurations with
           dynamically increasing and decreasing concurrent consumers.'
+        order: 21
       eagerLoadingOfProperties:
         kind: parameter
         group: consumer (advanced)
@@ -880,6 +976,7 @@ data:
         secret: false
         defaultValue: false
         description: Enables eager loading of JMS properties as soon as a message is loaded which generally is inefficient as the JMS properties may not be required but sometimes can catch early any issues with the underlying JMS provider and the use of JMS properties
+        order: 22
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -890,6 +987,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 23
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -908,6 +1006,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 24
       exposeListenerSession:
         kind: parameter
         group: consumer (advanced)
@@ -918,6 +1017,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether the listener session should be exposed when consuming messages.
+        order: 25
       replyToSameDestinationAllowed:
         kind: parameter
         group: consumer (advanced)
@@ -928,6 +1028,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether a JMS consumer is allowed to send a reply message to the same destination that the consumer is using to consume from. This prevents an endless loop by consuming and sending back the same message to itself.
+        order: 26
       deliveryMode:
         kind: parameter
         group: producer
@@ -940,6 +1041,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the delivery mode to be used. Possibles values are those defined by javax.jms.DeliveryMode. NON_PERSISTENT = 1 and PERSISTENT = 2.
+        order: 27
       deliveryPersistent:
         kind: parameter
         group: producer
@@ -950,6 +1052,7 @@ data:
         secret: false
         defaultValue: true
         description: Specifies whether persistent delivery is used by default.
+        order: 28
       explicitQosEnabled:
         kind: parameter
         group: producer
@@ -960,6 +1063,7 @@ data:
         secret: false
         defaultValue: false
         description: Set if the deliveryMode priority or timeToLive qualities of service should be used when sending messages. This option is based on Spring's JmsTemplate. The deliveryMode priority and timeToLive options are applied to the current endpoint. This contrasts with the preserveMessageQos option which operates at message granularity reading QoS properties exclusively from the Camel In message headers.
+        order: 29
       preserveMessageQos:
         kind: parameter
         group: producer
@@ -970,6 +1074,7 @@ data:
         secret: false
         defaultValue: false
         description: Set to true if you want to send message using the QoS settings specified on the message instead of the QoS settings on the JMS endpoint. The following three headers are considered JMSPriority JMSDeliveryMode and JMSExpiration. You can provide all or only some of them. If not provided Camel will fall back to use the values from the endpoint instead. So when using this option the headers override the values from the endpoint. The explicitQosEnabled option by contrast will only use options set on the endpoint and not values from the message header.
+        order: 30
       priority:
         kind: parameter
         group: producer
@@ -990,6 +1095,7 @@ data:
         secret: false
         defaultValue: "4"
         description: Values greater than 1 specify the message priority when sending (where 0 is the lowest priority and 9 is the highest). The explicitQosEnabled option must also be enabled in order for this option to have any effect.
+        order: 31
       replyToConcurrentConsumers:
         kind: parameter
         group: producer
@@ -1000,6 +1106,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Specifies the default number of concurrent consumers when doing request/reply over JMS. See also the maxMessagesPerTask option to control dynamic scaling up/down of threads.
+        order: 32
       replyToMaxConcurrentConsumers:
         kind: parameter
         group: producer
@@ -1009,6 +1116,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the maximum number of concurrent consumers when using request/reply over JMS. See also the maxMessagesPerTask option to control dynamic scaling up/down of threads.
+        order: 33
       replyToOnTimeoutMaxConcurrentConsumers:
         kind: parameter
         group: producer
@@ -1019,6 +1127,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Specifies the maximum number of concurrent consumers for continue routing when timeout occurred when using request/reply over JMS.
+        order: 34
       replyToOverride:
         kind: parameter
         group: producer
@@ -1028,6 +1137,7 @@ data:
         deprecated: false
         secret: false
         description: Provides an explicit ReplyTo destination in the JMS message which overrides the setting of replyTo. It is useful if you want to forward the message to a remote Queue and receive the reply message from the ReplyTo destination.
+        order: 35
       replyToType:
         kind: parameter
         group: producer
@@ -1048,6 +1158,7 @@ data:
           for more details and especially the notes about the implications if running
           in a clustered environment and the fact that Shared reply queues has lower performance
           than its alternatives Temporary and Exclusive.'
+        order: 36
       requestTimeout:
         kind: parameter
         group: producer
@@ -1058,6 +1169,7 @@ data:
         secret: false
         defaultValue: "20000"
         description: The timeout for waiting for a reply when using the InOut Exchange Pattern (in milliseconds). The default is 20 seconds. You can include the header CamelJmsRequestTimeout to override this endpoint configured timeout value and thus have per message individual timeout values. See also the requestTimeoutCheckerInterval option.
+        order: 37
       timeToLive:
         kind: parameter
         group: producer
@@ -1068,6 +1180,7 @@ data:
         secret: false
         defaultValue: -1
         description: When sending messages specifies the time-to-live of the message (in milliseconds).
+        order: 38
       allowNullBody:
         kind: parameter
         group: producer (advanced)
@@ -1078,6 +1191,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to allow sending messages with no body. If this option is false and the message body is null then an JMSException is thrown.
+        order: 39
       alwaysCopyMessage:
         kind: parameter
         group: producer (advanced)
@@ -1088,6 +1202,7 @@ data:
         secret: false
         defaultValue: false
         description: If true Camel will always make a JMS message copy of the message when it is passed to the producer for sending. Copying the message is needed in some situations such as when a replyToDestinationSelectorName is set (incidentally Camel will set the alwaysCopyMessage option to true if a replyToDestinationSelectorName is set)
+        order: 40
       disableTimeToLive:
         kind: parameter
         group: producer (advanced)
@@ -1098,6 +1213,7 @@ data:
         secret: false
         defaultValue: false
         description: Use this option to force disabling time to live. For example when you do request/reply over JMS then Camel will by default use the requestTimeout value as time to live on the message being sent. The problem is that the sender and receiver systems have to have their clocks synchronized so they are in sync. This is not always so easy to archive. So you can use disableTimeToLive=true to not set a time to live value on the sent message. Then the message will not expire on the receiver system. See below in section About time to live for more details.
+        order: 41
       forceSendOriginalMessage:
         kind: parameter
         group: producer (advanced)
@@ -1108,6 +1224,7 @@ data:
         secret: false
         defaultValue: false
         description: When using mapJmsMessage=false Camel will create a new JMS message to send to a new JMS destination if you touch the headers (get or set) during the route. Set this option to true to force Camel to send the original JMS message that was received.
+        order: 42
       includeSentJMSMessageID:
         kind: parameter
         group: producer (advanced)
@@ -1118,6 +1235,7 @@ data:
         secret: false
         defaultValue: false
         description: Only applicable when sending to JMS destination using InOnly (eg fire and forget). Enabling this option will enrich the Camel Exchange with the actual JMSMessageID that was used by the JMS client when the message was sent to the JMS destination.
+        order: 43
       replyToCacheLevelName:
         kind: parameter
         group: producer (advanced)
@@ -1133,6 +1251,7 @@ data:
           as IBM WebSphere may require to set the replyToCacheLevelName=CACHE_NONE to
           work. Note: If using temporary queues then CACHE_NONE is not allowed and you
           must use a higher value such as CACHE_CONSUMER or CACHE_SESSION.'
+        order: 44
       replyToDestinationSelectorName:
         kind: parameter
         group: producer (advanced)
@@ -1142,6 +1261,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the JMS Selector using the fixed name to be used so you can filter out your own replies from the others when using a shared queue (that is if you are not using a temporary reply queue).
+        order: 45
       asyncStartListener:
         kind: parameter
         group: advanced
@@ -1152,6 +1272,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to startup the JmsConsumer message listener asynchronously when starting a route. For example if a JmsConsumer cannot get a connection to a remote JMS broker then it may block while retrying and/or failover. This will cause Camel to block while starting routes. By setting this option to true you will let routes startup while the JmsConsumer connects to the JMS broker using a dedicated thread in asynchronous mode. If this option is used then beware that if the connection could not be established then an exception is logged at WARN level and the consumer will not be able to receive messages; You can then restart the route to retry.
+        order: 46
       asyncStopListener:
         kind: parameter
         group: advanced
@@ -1162,6 +1283,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to stop the JmsConsumer message listener asynchronously when stopping a route.
+        order: 47
       destinationResolver:
         kind: parameter
         group: advanced
@@ -1171,6 +1293,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.springframework.jms.support.destination.DestinationResolver that allows you to use your own resolver (for example to lookup the real destination in a JNDI registry).
+        order: 48
       errorHandler:
         kind: parameter
         group: advanced
@@ -1180,6 +1303,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies a org.springframework.util.ErrorHandler to be invoked in case of any uncaught exceptions thrown while processing a Message. By default these exceptions will be logged at the WARN level if no errorHandler has been configured. You can configure logging level and whether stack traces should be logged using errorHandlerLoggingLevel and errorHandlerLogStackTrace options. This makes it much easier to configure than having to code a custom errorHandler.
+        order: 49
       errorHandlerLoggingLevel:
         kind: parameter
         group: advanced
@@ -1197,6 +1321,7 @@ data:
         secret: false
         defaultValue: WARN
         description: Allows to configure the default errorHandler logging level for logging uncaught exceptions.
+        order: 50
       errorHandlerLogStackTrace:
         kind: parameter
         group: advanced
@@ -1207,6 +1332,7 @@ data:
         secret: false
         defaultValue: true
         description: Allows to control whether stacktraces should be logged or not by the default errorHandler.
+        order: 51
       exceptionListener:
         kind: parameter
         group: advanced
@@ -1216,6 +1342,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the JMS Exception Listener that is to be notified of any underlying JMS exceptions.
+        order: 52
       headerFilterStrategy:
         kind: parameter
         group: advanced
@@ -1225,6 +1352,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 53
       idleConsumerLimit:
         kind: parameter
         group: advanced
@@ -1235,6 +1363,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Specify the limit for the number of consumers that are allowed to be idle at any given time.
+        order: 54
       idleTaskExecutionLimit:
         kind: parameter
         group: advanced
@@ -1245,6 +1374,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Specifies the limit for idle executions of a receive task not having received any message within its execution. If this limit is reached the task will shut down and leave receiving to other executing tasks (in the case of dynamic scheduling; see the maxConcurrentConsumers setting). There is additional doc available from Spring.
+        order: 55
       includeAllJMSXProperties:
         kind: parameter
         group: advanced
@@ -1258,6 +1388,7 @@ data:
           to Camel Message. Setting this to true will include properties such as JMSXAppID
           and JMSXUserID etc. Note: If you are using a custom headerFilterStrategy then
           this option does not apply.'
+        order: 56
       jmsKeyFormatStrategy:
         kind: parameter
         group: advanced
@@ -1276,6 +1407,7 @@ data:
           be used for JMS brokers which do not care whether JMS header keys contain illegal
           characters. You can provide your own implementation of the org.apache.camel.component.jms.JmsKeyFormatStrategy
           and refer to it using the notation.'
+        order: 57
       mapJmsMessage:
         kind: parameter
         group: advanced
@@ -1286,6 +1418,7 @@ data:
         secret: false
         defaultValue: true
         description: Specifies whether Camel should auto map the received JMS message to a suited payload type such as javax.jms.TextMessage to a String etc.
+        order: 58
       maxMessagesPerTask:
         kind: parameter
         group: advanced
@@ -1296,6 +1429,7 @@ data:
         secret: false
         defaultValue: -1
         description: The number of messages per task. -1 is unlimited. If you use a range for concurrent consumers (eg min max) then this option can be used to set a value to eg 100 to control how fast the consumers will shrink when less work is required.
+        order: 59
       messageConverter:
         kind: parameter
         group: advanced
@@ -1305,6 +1439,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom Spring org.springframework.jms.support.converter.MessageConverter so you can be in control how to map to/from a javax.jms.Message.
+        order: 60
       messageCreatedStrategy:
         kind: parameter
         group: advanced
@@ -1314,6 +1449,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given MessageCreatedStrategy which are invoked when Camel creates new instances of javax.jms.Message objects when Camel is sending a JMS message.
+        order: 61
       messageIdEnabled:
         kind: parameter
         group: advanced
@@ -1324,6 +1460,7 @@ data:
         secret: false
         defaultValue: true
         description: When sending specifies whether message IDs should be added. This is just an hint to the JMS Broker. If the JMS provider accepts this hint these messages must have the message ID set to null; if the provider ignores the hint the message ID must be set to its normal unique value
+        order: 62
       messageListenerContainerFactory:
         kind: parameter
         group: advanced
@@ -1333,6 +1470,7 @@ data:
         deprecated: false
         secret: false
         description: Registry ID of the MessageListenerContainerFactory used to determine what org.springframework.jms.listener.AbstractMessageListenerContainer to use to consume messages. Setting this will automatically set consumerType to Custom.
+        order: 63
       messageTimestampEnabled:
         kind: parameter
         group: advanced
@@ -1343,6 +1481,7 @@ data:
         secret: false
         defaultValue: true
         description: Specifies whether timestamps should be enabled by default on sending messages. This is just an hint to the JMS Broker. If the JMS provider accepts this hint these messages must have the timestamp set to zero; if the provider ignores the hint the timestamp must be set to its normal value
+        order: 64
       pubSubNoLocal:
         kind: parameter
         group: advanced
@@ -1353,6 +1492,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether to inhibit the delivery of messages published by its own connection.
+        order: 65
       receiveTimeout:
         kind: parameter
         group: advanced
@@ -1363,6 +1503,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: The timeout for receiving messages (in milliseconds).
+        order: 66
       recoveryInterval:
         kind: parameter
         group: advanced
@@ -1373,6 +1514,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: Specifies the interval between recovery attempts i.e. when a connection is being refreshed in milliseconds. The default is 5000 ms that is 5 seconds.
+        order: 67
       requestTimeoutCheckerInterval:
         kind: parameter
         group: advanced
@@ -1383,6 +1525,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Configures how often Camel should check for timed out Exchanges when doing request/reply over JMS. By default Camel checks once per second. But if you must react faster when a timeout occurs then you can lower this interval to check more frequently. The timeout is determined by the option requestTimeout.
+        order: 68
       synchronous:
         kind: parameter
         group: advanced
@@ -1393,6 +1536,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 69
       transferException:
         kind: parameter
         group: advanced
@@ -1403,6 +1547,7 @@ data:
         secret: false
         defaultValue: false
         description: If enabled and you are using Request Reply messaging (InOut) and an Exchange failed on the consumer side then the caused Exception will be send back in response as a javax.jms.ObjectMessage. If the client is Camel the returned Exception is rethrown. This allows you to use Camel JMS as a bridge in your routing - for example using persistent queues to enable robust routing. Notice that if you also have transferExchange enabled this option takes precedence. The caught exception is required to be serializable. The original Exception on the consumer side can be wrapped in an outer exception such as org.apache.camel.RuntimeCamelException when returned to the producer.
+        order: 70
       transferExchange:
         kind: parameter
         group: advanced
@@ -1419,6 +1564,7 @@ data:
           objects and log it at WARN level. You must enable this option on both the producer
           and consumer side so Camel knows the payloads is an Exchange and not a regular
           payload.'
+        order: 71
       transferFault:
         kind: parameter
         group: advanced
@@ -1429,6 +1575,7 @@ data:
         secret: false
         defaultValue: false
         description: If enabled and you are using Request Reply messaging (InOut) and an Exchange failed with a SOAP fault (not exception) on the consumer side then the fault flag on link org.apache.camel.MessageisFault() will be send back in the response as a JMS header with the key link JmsConstantsJMS_TRANSFER_FAULT. If the client is Camel the returned fault flag will be set on the link org.apache.camel.MessagesetFault(boolean). You may want to enable this when using Camel components that support faults such as SOAP based such as cxf or spring-ws.
+        order: 72
       useMessageIDAsCorrelationID:
         kind: parameter
         group: advanced
@@ -1439,6 +1586,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether JMSMessageID should always be used as JMSCorrelationID for InOut messages.
+        order: 73
       waitForProvisionCorrelationToBeUpdatedCounter:
         kind: parameter
         group: advanced
@@ -1449,6 +1597,7 @@ data:
         secret: false
         defaultValue: "50"
         description: Number of times to wait for provisional correlation id to be updated to the actual correlation id when doing request/reply over JMS and when the option useMessageIDAsCorrelationID is enabled.
+        order: 74
       waitForProvisionCorrelationToBeUpdatedThreadSleepingTime:
         kind: parameter
         group: advanced
@@ -1459,6 +1608,7 @@ data:
         secret: false
         defaultValue: "100"
         description: Interval in millis to sleep each time while waiting for provisional correlation id to be updated.
+        order: 75
       password:
         kind: parameter
         group: security
@@ -1468,6 +1618,7 @@ data:
         deprecated: false
         secret: true
         description: Password to use with the ConnectionFactory. You can also configure username/password directly on the ConnectionFactory.
+        order: 76
       username:
         kind: parameter
         group: security
@@ -1477,6 +1628,7 @@ data:
         deprecated: false
         secret: true
         description: Username to use with the ConnectionFactory. You can also configure username/password directly on the ConnectionFactory.
+        order: 77
       transacted:
         kind: parameter
         group: transaction
@@ -1487,6 +1639,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether to use transacted mode
+        order: 78
       lazyCreateTransactionManager:
         kind: parameter
         group: transaction (advanced)
@@ -1497,6 +1650,7 @@ data:
         secret: false
         defaultValue: true
         description: If true Camel will create a JmsTransactionManager if there is no transactionManager injected when option transacted=true.
+        order: 79
       transactionManager:
         kind: parameter
         group: transaction (advanced)
@@ -1506,6 +1660,7 @@ data:
         deprecated: false
         secret: false
         description: The Spring transaction manager to use.
+        order: 80
       transactionName:
         kind: parameter
         group: transaction (advanced)
@@ -1515,6 +1670,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the transaction to use.
+        order: 81
       transactionTimeout:
         kind: parameter
         group: transaction (advanced)
@@ -1525,6 +1681,7 @@ data:
         secret: false
         defaultValue: -1
         description: The timeout value of the transaction (in seconds) if using transacted mode.
+        order: 82
   documentation.adoc: |
     ifdef::env-github[]
     :icon-smile: :smiley:

@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Engine addresses. Multiple addresses can be separated by comman.
+        order: 0
       path:
         kind: path
         group: common
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Engine path
+        order: 1
       action:
         kind: parameter
         group: common
@@ -82,6 +84,7 @@ data:
         description: 'The default action to perform valid values are: - PUBLISH - PPUBLISH_AND_INDEX
           - PPUT - PGET_AND_PUT - PPUT_ALL - PPUT_IF_ABSENT - PGET - PGET_AND_REMOVE -
           PREMOVE - PIS_EMPTY - PSIZE'
+        order: 2
       filteredMapEvents:
         kind: parameter
         group: common
@@ -91,6 +94,7 @@ data:
         secret: false
         description: 'A comma separated list of Map event type to filer valid values are:
           INSERT UPDATE REMOVE.'
+        order: 3
       persistent:
         kind: parameter
         group: common
@@ -100,6 +104,7 @@ data:
         secret: false
         defaultValue: true
         description: Enable/disable data persistence
+        order: 4
       subscribeMapEvents:
         kind: parameter
         group: common
@@ -109,6 +114,7 @@ data:
         secret: false
         defaultValue: true
         description: Set if consumer should subscribe to Map events default true.
+        order: 5
       subscribeTopicEvents:
         kind: parameter
         group: common
@@ -118,6 +124,7 @@ data:
         secret: false
         defaultValue: false
         description: Set if consumer should subscribe to TopicEventsd efault false.
+        order: 6
       subscribeTopologicalEvents:
         kind: parameter
         group: common
@@ -127,6 +134,7 @@ data:
         secret: false
         defaultValue: false
         description: Set if consumer should subscribe to TopologicalEventsd efault false.
+        order: 7
       wireType:
         kind: parameter
         group: common
@@ -148,6 +156,7 @@ data:
         secret: false
         defaultValue: BINARY
         description: The Wire type to use default to binary wire.
+        order: 8
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -159,6 +168,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -169,6 +179,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 10
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -187,6 +198,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 11
       synchronous:
         kind: parameter
         group: advanced
@@ -197,6 +209,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 12
   documentation.adoc: |2+
 
     // component options: START

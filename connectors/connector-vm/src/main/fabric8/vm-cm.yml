@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default maximum capacity of the SEDA queue (i.e. the number of messages it can hold).
+        order: 0
       concurrentConsumers:
         kind: property
         required: false
@@ -57,6 +58,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Sets the default number of concurrent threads processing exchanges.
+        order: 1
       defaultQueueFactory:
         kind: property
         type: object
@@ -64,6 +66,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default queue factory.
+        order: 2
     properties:
       name:
         kind: path
@@ -74,6 +77,7 @@ data:
         deprecated: false
         secret: false
         description: Name of queue
+        order: 0
       size:
         kind: parameter
         group: common
@@ -83,6 +87,7 @@ data:
         secret: false
         defaultValue: "2147483647"
         description: The maximum capacity of the SEDA queue (i.e. the number of messages it can hold).
+        order: 1
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -94,6 +99,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 2
       concurrentConsumers:
         kind: parameter
         group: consumer
@@ -104,6 +110,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Number of concurrent threads processing exchanges.
+        order: 3
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -114,6 +121,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 4
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -132,6 +140,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default exchange pattern when creating an exchange.
+        order: 5
       limitConcurrentConsumers:
         kind: parameter
         group: consumer (advanced)
@@ -142,6 +151,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to limit the number of concurrentConsumers to the maximum of 500. By default an exception will be thrown if an endpoint is configured with a greater number. You can disable that check by turning this option off.
+        order: 6
       multipleConsumers:
         kind: parameter
         group: consumer (advanced)
@@ -152,6 +162,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether multiple consumers are allowed. If enabled you can use SEDA for Publish-Subscribe messaging. That is you can send a message to the SEDA queue and have each consumer receive a copy of the message. When enabled this option should be specified on every consumer endpoint.
+        order: 7
       pollTimeout:
         kind: parameter
         group: consumer (advanced)
@@ -162,6 +173,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: The timeout used when polling. When a timeout occurs the consumer can check whether it is allowed to continue running. Setting a lower value allows the consumer to react more quickly upon shutdown.
+        order: 8
       purgeWhenStopping:
         kind: parameter
         group: consumer (advanced)
@@ -172,6 +184,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to purge the task queue when stopping the consumer/route. This allows to stop faster as any pending messages on the queue is discarded.
+        order: 9
       blockWhenFull:
         kind: parameter
         group: producer
@@ -182,6 +195,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether a thread that sends messages to a full SEDA queue will block until the queue's capacity is no longer exhausted. By default an exception will be thrown stating that the queue is full. By enabling this option the calling thread will instead block and wait until the message can be accepted.
+        order: 10
       discardIfNoConsumers:
         kind: parameter
         group: producer
@@ -192,6 +206,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the producer should discard the message (do not add the message to the queue) when sending to a queue with no active consumers. Only one of the options discardIfNoConsumers and failIfNoConsumers can be enabled at the same time.
+        order: 11
       failIfNoConsumers:
         kind: parameter
         group: producer
@@ -202,6 +217,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the producer should fail by throwing an exception when sending to a queue with no active consumers. Only one of the options discardIfNoConsumers and failIfNoConsumers can be enabled at the same time.
+        order: 12
       timeout:
         kind: parameter
         group: producer
@@ -212,6 +228,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: Timeout (in milliseconds) before a SEDA producer will stop waiting for an asynchronous task to complete. You can disable timeout by using 0 or a negative value.
+        order: 13
       waitForTaskToComplete:
         kind: parameter
         group: producer
@@ -230,6 +247,7 @@ data:
           Always Never or IfReplyExpected. The first two values are self-explanatory.
           The last value IfReplyExpected will only wait if the message is Request Reply
           based. The default option is IfReplyExpected.'
+        order: 14
       queue:
         kind: parameter
         group: advanced
@@ -239,6 +257,7 @@ data:
         deprecated: false
         secret: false
         description: Define the queue instance which will be used by the endpoint. This option is only for rare use-cases where you want to use a custom queue instance.
+        order: 15
       synchronous:
         kind: parameter
         group: advanced
@@ -249,6 +268,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 16
   documentation.adoc: |+
     [[VM-VMComponent]]
     VM Component

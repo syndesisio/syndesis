@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use a shared custom worker pool for continue routing Exchange after kafka server has acknowledge the message that was sent to it from KafkaProducer using asynchronous non-blocking processing. If using this option then you must handle the lifecycle of the thread pool to shut the pool down when no longer needed.
+        order: 0
     properties:
       brokers:
         kind: path
@@ -58,6 +59,7 @@ data:
         deprecated: false
         secret: false
         description: This is for bootstrapping and the producer will only use it for getting metadata (topics partitions and replicas). The socket connections for sending the actual data will be established based on the broker information returned in the metadata. The format is host1:port1host2:port2 and the list can be a subset of brokers or a VIP pointing to a subset of brokers. This option is known as metadata.broker.list in the Kafka documentation.
+        order: 0
       clientId:
         kind: parameter
         group: common
@@ -66,6 +68,7 @@ data:
         deprecated: false
         secret: false
         description: The client id is a user-specified string sent in each request to help trace calls. It should logically identify the application making the request.
+        order: 1
       groupId:
         kind: parameter
         group: common
@@ -74,6 +77,7 @@ data:
         deprecated: false
         secret: false
         description: A string that uniquely identifies the group of consumer processes to which this consumer belongs. By setting the same group id multiple processes indicate that they are all part of the same consumer group.
+        order: 2
       partitioner:
         kind: parameter
         group: common
@@ -83,6 +87,7 @@ data:
         secret: false
         defaultValue: org.apache.kafka.clients.producer.internals.DefaultPartitioner
         description: The partitioner class for partitioning messages amongst sub-topics. The default partitioner is based on the hash of the key.
+        order: 3
       topic:
         kind: parameter
         group: common
@@ -92,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: Name of the topic to use.
+        order: 4
       autoCommitEnable:
         kind: parameter
         group: consumer
@@ -102,6 +108,7 @@ data:
         secret: false
         defaultValue: true
         description: If true periodically commit to ZooKeeper the offset of messages already fetched by the consumer. This committed offset will be used when the process fails as the position from which the new consumer will begin.
+        order: 5
       autoCommitIntervalMs:
         kind: parameter
         group: consumer
@@ -112,6 +119,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: The frequency in ms that the consumer offsets are committed to zookeeper.
+        order: 6
       autoOffsetReset:
         kind: parameter
         group: consumer
@@ -129,6 +137,7 @@ data:
           offset is out of range: smallest : automatically reset the offset to the smallest
           offset largest : automatically reset the offset to the largest offset fail:
           throw exception to the consumer'
+        order: 7
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -140,6 +149,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       checkCrcs:
         kind: parameter
         group: consumer
@@ -150,6 +160,7 @@ data:
         secret: false
         defaultValue: true
         description: Automatically check the CRC32 of the records consumed. This ensures no on-the-wire or on-disk corruption to the messages occurred. This check adds some overhead so it may be disabled in cases seeking extreme performance.
+        order: 9
       consumerId:
         kind: parameter
         group: consumer
@@ -159,6 +170,7 @@ data:
         deprecated: false
         secret: false
         description: Generated automatically if not set.
+        order: 10
       consumerRequestTimeoutMs:
         kind: parameter
         group: consumer
@@ -169,6 +181,7 @@ data:
         secret: false
         defaultValue: "40000"
         description: The configuration controls the maximum amount of time the client will wait for the response of a request. If the response is not received before the timeout elapses the client will resend the request if necessary or fail the request if retries are exhausted.
+        order: 11
       consumersCount:
         kind: parameter
         group: consumer
@@ -179,6 +192,7 @@ data:
         secret: false
         defaultValue: "1"
         description: The number of consumers that connect to kafka server
+        order: 12
       consumerStreams:
         kind: parameter
         group: consumer
@@ -189,6 +203,7 @@ data:
         secret: false
         defaultValue: "10"
         description: Number of concurrent consumers on the consumer
+        order: 13
       fetchMinBytes:
         kind: parameter
         group: consumer
@@ -199,6 +214,7 @@ data:
         secret: false
         defaultValue: "1024"
         description: The minimum amount of data the server should return for a fetch request. If insufficient data is available the request will wait for that much data to accumulate before answering the request.
+        order: 14
       fetchWaitMaxMs:
         kind: parameter
         group: consumer
@@ -209,6 +225,7 @@ data:
         secret: false
         defaultValue: "500"
         description: The maximum amount of time the server will block before answering the fetch request if there isn't sufficient data to immediately satisfy fetch.min.bytes
+        order: 15
       heartbeatIntervalMs:
         kind: parameter
         group: consumer
@@ -219,6 +236,7 @@ data:
         secret: false
         defaultValue: "3000"
         description: The expected time between heartbeats to the consumer coordinator when using Kafka's group management facilities. Heartbeats are used to ensure that the consumer's session stays active and to facilitate rebalancing when new consumers join or leave the group. The value must be set lower than session.timeout.ms but typically should be set no higher than 1/3 of that value. It can be adjusted even lower to control the expected time for normal rebalances.
+        order: 16
       keyDeserializer:
         kind: parameter
         group: consumer
@@ -229,6 +247,7 @@ data:
         secret: false
         defaultValue: org.apache.kafka.common.serialization.StringDeserializer
         description: Deserializer class for key that implements the Deserializer interface.
+        order: 17
       maxPartitionFetchBytes:
         kind: parameter
         group: consumer
@@ -239,6 +258,7 @@ data:
         secret: false
         defaultValue: "1048576"
         description: The maximum amount of data per-partition the server will return. The maximum total memory used for a request will be partitions max.partition.fetch.bytes. This size must be at least as large as the maximum message size the server allows or else it is possible for the producer to send messages larger than the consumer can fetch. If that happens the consumer can get stuck trying to fetch a large message on a certain partition.
+        order: 18
       maxPollRecords:
         kind: parameter
         group: consumer
@@ -249,6 +269,7 @@ data:
         secret: false
         defaultValue: "2147483647"
         description: A unique string that identifies the consumer group this consumer belongs to. This property is required if the consumer uses either the group management functionality by using subscribe(topic) or the Kafka-based offset management strategy.
+        order: 19
       partitionAssignor:
         kind: parameter
         group: consumer
@@ -259,6 +280,7 @@ data:
         secret: false
         defaultValue: org.apache.kafka.clients.consumer.RangeAssignor
         description: The class name of the partition assignment strategy that the client will use to distribute partition ownership amongst consumer instances when group management is used
+        order: 20
       pollTimeoutMs:
         kind: parameter
         group: consumer
@@ -269,6 +291,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: The timeout used when polling the KafkaConsumer.
+        order: 21
       seekToBeginning:
         kind: parameter
         group: consumer
@@ -279,6 +302,7 @@ data:
         secret: false
         defaultValue: false
         description: If the option is true then KafkaConsumer will read from beginning on startup.
+        order: 22
       sessionTimeoutMs:
         kind: parameter
         group: consumer
@@ -289,6 +313,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: The timeout used to detect failures when using Kafka's group management facilities.
+        order: 23
       valueDeserializer:
         kind: parameter
         group: consumer
@@ -299,6 +324,7 @@ data:
         secret: false
         defaultValue: org.apache.kafka.common.serialization.StringDeserializer
         description: Deserializer class for value that implements the Deserializer interface.
+        order: 24
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -309,6 +335,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 25
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -327,6 +354,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 26
       bridgeEndpoint:
         kind: parameter
         group: producer
@@ -337,6 +365,7 @@ data:
         secret: false
         defaultValue: false
         description: If the option is true then KafkaProducer will ignore the KafkaConstants.TOPIC header setting of the inbound message.
+        order: 27
       bufferMemorySize:
         kind: parameter
         group: producer
@@ -347,6 +376,7 @@ data:
         secret: false
         defaultValue: "33554432"
         description: The total bytes of memory the producer can use to buffer records waiting to be sent to the server. If records are sent faster than they can be delivered to the server the producer will either block or throw an exception based on the preference specified by block.on.buffer.full.This setting should correspond roughly to the total memory the producer will use but is not a hard bound since not all memory the producer uses is used for buffering. Some additional memory will be used for compression (if compression is enabled) as well as for maintaining in-flight requests.
+        order: 28
       compressionCodec:
         kind: parameter
         group: producer
@@ -362,6 +392,7 @@ data:
         secret: false
         defaultValue: none
         description: This parameter allows you to specify the compression codec for all data generated by this producer. Valid values are none gzip and snappy.
+        order: 29
       connectionMaxIdleMs:
         kind: parameter
         group: producer
@@ -372,6 +403,7 @@ data:
         secret: false
         defaultValue: "540000"
         description: Close idle connections after the number of milliseconds specified by this config.
+        order: 30
       keySerializerClass:
         kind: parameter
         group: producer
@@ -381,6 +413,7 @@ data:
         deprecated: false
         secret: false
         description: The serializer class for keys (defaults to the same as for messages if nothing is given).
+        order: 31
       lingerMs:
         kind: parameter
         group: producer
@@ -406,6 +439,7 @@ data:
           delay). Setting linger.ms=5 for example would have the effect of reducing the
           number of requests sent but would add up to 5ms of latency to records sent in
           the absense of load.'
+        order: 32
       maxBlockMs:
         kind: parameter
         group: producer
@@ -421,6 +455,7 @@ data:
           in fetching metadata serialization of key and value partitioning and allocation
           of buffer memory when doing a send(). In case of partitionsFor() this configuration
           imposes a maximum time threshold on waiting for metadata'
+        order: 33
       maxInFlightRequest:
         kind: parameter
         group: producer
@@ -431,6 +466,7 @@ data:
         secret: false
         defaultValue: "5"
         description: The maximum number of unacknowledged requests the client will send on a single connection before blocking. Note that if this setting is set to be greater than 1 and there are failed sends there is a risk of message re-ordering due to retries (i.e. if retries are enabled).
+        order: 34
       maxRequestSize:
         kind: parameter
         group: producer
@@ -441,6 +477,7 @@ data:
         secret: false
         defaultValue: "1048576"
         description: The maximum size of a request. This is also effectively a cap on the maximum record size. Note that the server has its own cap on record size which may be different from this. This setting will limit the number of record batches the producer will send in a single request to avoid sending huge requests.
+        order: 35
       metadataMaxAgeMs:
         kind: parameter
         group: producer
@@ -451,6 +488,7 @@ data:
         secret: false
         defaultValue: "300000"
         description: The period of time in milliseconds after which we force a refresh of metadata even if we haven't seen any partition leadership changes to proactively discover any new brokers or partitions.
+        order: 36
       metricReporters:
         kind: parameter
         group: producer
@@ -460,6 +498,7 @@ data:
         deprecated: false
         secret: false
         description: A list of classes to use as metrics reporters. Implementing the MetricReporter interface allows plugging in classes that will be notified of new metric creation. The JmxReporter is always included to register JMX statistics.
+        order: 37
       metricsSampleWindowMs:
         kind: parameter
         group: producer
@@ -470,6 +509,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: The number of samples maintained to compute metrics.
+        order: 38
       noOfMetricsSample:
         kind: parameter
         group: producer
@@ -480,6 +520,7 @@ data:
         secret: false
         defaultValue: "2"
         description: The number of samples maintained to compute metrics.
+        order: 39
       producerBatchSize:
         kind: parameter
         group: producer
@@ -490,6 +531,7 @@ data:
         secret: false
         defaultValue: "16384"
         description: The producer will attempt to batch records together into fewer requests whenever multiple records are being sent to the same partition. This helps performance on both the client and the server. This configuration controls the default batch size in bytes. No attempt will be made to batch records larger than this size.Requests sent to brokers will contain multiple batches one for each partition with data available to be sent.A small batch size will make batching less common and may reduce throughput (a batch size of zero will disable batching entirely). A very large batch size may use memory a bit more wastefully as we will always allocate a buffer of the specified batch size in anticipation of additional records.
+        order: 40
       queueBufferingMaxMessages:
         kind: parameter
         group: producer
@@ -500,6 +542,7 @@ data:
         secret: false
         defaultValue: "10000"
         description: The maximum number of unsent messages that can be queued up the producer when using async mode before either the producer must be blocked or data must be dropped.
+        order: 41
       receiveBufferBytes:
         kind: parameter
         group: producer
@@ -510,6 +553,7 @@ data:
         secret: false
         defaultValue: "32768"
         description: The size of the TCP receive buffer (SO_RCVBUF) to use when reading data.
+        order: 42
       reconnectBackoffMs:
         kind: parameter
         group: producer
@@ -520,6 +564,7 @@ data:
         secret: false
         defaultValue: "50"
         description: The amount of time to wait before attempting to reconnect to a given host. This avoids repeatedly connecting to a host in a tight loop. This backoff applies to all requests sent by the consumer to the broker.
+        order: 43
       recordMetadata:
         kind: parameter
         group: producer
@@ -530,6 +575,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the producer should store the RecordMetadata results from sending to Kafka. The results are stored in a List containing the RecordMetadata metadata's. The list is stored on a header with the key link KafkaConstantsKAFKA_RECORDMETA
+        order: 44
       requestRequiredAcks:
         kind: parameter
         group: producer
@@ -560,6 +606,7 @@ data:
           replicas to acknowledge the record. This guarantees that the record will not
           be lost as long as at least one in-sync replica remains alive. This is the strongest
           available guarantee.'
+        order: 45
       requestTimeoutMs:
         kind: parameter
         group: producer
@@ -570,6 +617,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: The amount of time the broker will wait trying to meet the request.required.acks requirement before sending back an error to the client.
+        order: 46
       retries:
         kind: parameter
         group: producer
@@ -580,6 +628,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Setting a value greater than zero will cause the client to resend any record whose send fails with a potentially transient error. Note that this retry is no different than if the client resent the record upon receiving the error. Allowing retries will potentially change the ordering of records because if two records are sent to a single partition and the first fails and is retried but the second succeeds then the second record may appear first.
+        order: 47
       retryBackoffMs:
         kind: parameter
         group: producer
@@ -590,6 +639,7 @@ data:
         secret: false
         defaultValue: "100"
         description: Before each retry the producer refreshes the metadata of relevant topics to see if a new leader has been elected. Since leader election takes a bit of time this property specifies the amount of time that the producer waits before refreshing the metadata.
+        order: 48
       sendBufferBytes:
         kind: parameter
         group: producer
@@ -600,6 +650,7 @@ data:
         secret: false
         defaultValue: "131072"
         description: Socket write buffer size
+        order: 49
       serializerClass:
         kind: parameter
         group: producer
@@ -609,6 +660,7 @@ data:
         deprecated: false
         secret: false
         description: The serializer class for messages. The default encoder takes a byte and returns the same byte. The default class is kafka.serializer.DefaultEncoder
+        order: 50
       workerPool:
         kind: parameter
         group: producer
@@ -618,6 +670,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom worker pool for continue routing Exchange after kafka server has acknowledge the message that was sent to it from KafkaProducer using asynchronous non-blocking processing.
+        order: 51
       workerPoolCoreSize:
         kind: parameter
         group: producer
@@ -628,6 +681,7 @@ data:
         secret: false
         defaultValue: "10"
         description: Number of core threads for the worker pool for continue routing Exchange after kafka server has acknowledge the message that was sent to it from KafkaProducer using asynchronous non-blocking processing.
+        order: 52
       workerPoolMaxSize:
         kind: parameter
         group: producer
@@ -638,6 +692,7 @@ data:
         secret: false
         defaultValue: "20"
         description: Maximum number of threads for the worker pool for continue routing Exchange after kafka server has acknowledge the message that was sent to it from KafkaProducer using asynchronous non-blocking processing.
+        order: 53
       synchronous:
         kind: parameter
         group: advanced
@@ -648,6 +703,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 54
       kerberosBeforeReloginMinTime:
         kind: parameter
         group: security
@@ -658,6 +714,7 @@ data:
         secret: false
         defaultValue: "60000"
         description: Login thread sleep time between refresh attempts.
+        order: 55
       kerberosInitCmd:
         kind: parameter
         group: security
@@ -668,6 +725,7 @@ data:
         secret: false
         defaultValue: /usr/bin/kinit
         description: Kerberos kinit command path. Default is /usr/bin/kinit
+        order: 56
       kerberosPrincipalToLocalRules:
         kind: parameter
         group: security
@@ -678,6 +736,7 @@ data:
         secret: false
         defaultValue: DEFAULT
         description: A list of rules for mapping from principal names to short names (typically operating system usernames). The rules are evaluated in order and the first rule that matches a principal name is used to map it to a short name. Any later rules in the list are ignored. By default principal names of the form username/hostnameREALM are mapped to username. For more details on the format please see security authorization and acls. Multiple values can be separated by comma
+        order: 57
       kerberosRenewJitter:
         kind: parameter
         group: security
@@ -688,6 +747,7 @@ data:
         secret: false
         defaultValue: "0.05"
         description: Percentage of random jitter added to the renewal time.
+        order: 58
       kerberosRenewWindowFactor:
         kind: parameter
         group: security
@@ -698,6 +758,7 @@ data:
         secret: false
         defaultValue: "0.8"
         description: Login thread will sleep until the specified window factor of time from last refresh to ticket's expiry has been reached at which time it will try to renew the ticket.
+        order: 59
       saslKerberosServiceName:
         kind: parameter
         group: security
@@ -707,6 +768,7 @@ data:
         deprecated: false
         secret: false
         description: The Kerberos principal name that Kafka runs as. This can be defined either in Kafka's JAAS config or in Kafka's config.
+        order: 60
       saslMechanism:
         kind: parameter
         group: security
@@ -717,6 +779,7 @@ data:
         secret: false
         defaultValue: GSSAPI
         description: The Simple Authentication and Security Layer (SASL) Mechanism used. For the valid values see http://www.iana.org/assignments/sasl-mechanisms/sasl-mechanisms.xhtml
+        order: 61
       securityProtocol:
         kind: parameter
         group: security
@@ -727,6 +790,7 @@ data:
         secret: false
         defaultValue: PLAINTEXT
         description: Protocol used to communicate with brokers. Currently only PLAINTEXT and SSL are supported.
+        order: 62
       sslCipherSuites:
         kind: parameter
         group: security
@@ -736,6 +800,7 @@ data:
         deprecated: false
         secret: false
         description: A list of cipher suites. This is a named combination of authentication encryption MAC and key exchange algorithm used to negotiate the security settings for a network connection using TLS or SSL network protocol.By default all the available cipher suites are supported.
+        order: 63
       sslEnabledProtocols:
         kind: parameter
         group: security
@@ -746,6 +811,7 @@ data:
         secret: false
         defaultValue: TLSv1.2,TLSv1.1,TLSv1
         description: The list of protocols enabled for SSL connections. TLSv1.2 TLSv1.1 and TLSv1 are enabled by default.
+        order: 64
       sslEndpointAlgorithm:
         kind: parameter
         group: security
@@ -755,6 +821,7 @@ data:
         deprecated: false
         secret: false
         description: The endpoint identification algorithm to validate server hostname using server certificate.
+        order: 65
       sslKeymanagerAlgorithm:
         kind: parameter
         group: security
@@ -765,6 +832,7 @@ data:
         secret: false
         defaultValue: SunX509
         description: The algorithm used by key manager factory for SSL connections. Default value is the key manager factory algorithm configured for the Java Virtual Machine.
+        order: 66
       sslKeyPassword:
         kind: parameter
         group: security
@@ -774,6 +842,7 @@ data:
         deprecated: false
         secret: false
         description: The password of the private key in the key store file. This is optional for client.
+        order: 67
       sslKeystoreLocation:
         kind: parameter
         group: security
@@ -783,6 +852,7 @@ data:
         deprecated: false
         secret: false
         description: The location of the key store file. This is optional for client and can be used for two-way authentication for client.
+        order: 68
       sslKeystorePassword:
         kind: parameter
         group: security
@@ -792,6 +862,7 @@ data:
         deprecated: false
         secret: false
         description: The store password for the key store file.This is optional for client and only needed if ssl.keystore.location is configured.
+        order: 69
       sslKeystoreType:
         kind: parameter
         group: security
@@ -802,6 +873,7 @@ data:
         secret: false
         defaultValue: JKS
         description: The file format of the key store file. This is optional for client. Default value is JKS
+        order: 70
       sslProtocol:
         kind: parameter
         group: security
@@ -812,6 +884,7 @@ data:
         secret: false
         defaultValue: TLS
         description: The SSL protocol used to generate the SSLContext. Default setting is TLS which is fine for most cases. Allowed values in recent JVMs are TLS TLSv1.1 and TLSv1.2. SSL SSLv2 and SSLv3 may be supported in older JVMs but their usage is discouraged due to known security vulnerabilities.
+        order: 71
       sslProvider:
         kind: parameter
         group: security
@@ -821,6 +894,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the security provider used for SSL connections. Default value is the default security provider of the JVM.
+        order: 72
       sslTrustmanagerAlgorithm:
         kind: parameter
         group: security
@@ -831,6 +905,7 @@ data:
         secret: false
         defaultValue: PKIX
         description: The algorithm used by trust manager factory for SSL connections. Default value is the trust manager factory algorithm configured for the Java Virtual Machine.
+        order: 73
       sslTruststoreLocation:
         kind: parameter
         group: security
@@ -840,6 +915,7 @@ data:
         deprecated: false
         secret: false
         description: The location of the trust store file.
+        order: 74
       sslTruststorePassword:
         kind: parameter
         group: security
@@ -849,6 +925,7 @@ data:
         deprecated: false
         secret: false
         description: The password for the trust store file.
+        order: 75
       sslTruststoreType:
         kind: parameter
         group: security
@@ -859,6 +936,7 @@ data:
         secret: false
         defaultValue: JKS
         description: The file format of the trust store file. Default value is JKS.
+        order: 76
   documentation.adoc: |+
     [[Kafka-KafkaComponent]]
     Kafka Component

@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: A ConnectionFactory is required to enable the SjmsBatchComponent.
+        order: 0
     properties:
       destinationName:
         kind: path
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: The destination name. Only queues are supported names may be prefixed by 'queue:'.
+        order: 0
       aggregationStrategy:
         kind: parameter
         group: consumer
@@ -68,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: The aggregation strategy to use which merges all the batched messages into a single message
+        order: 1
       allowNullBody:
         kind: parameter
         group: consumer
@@ -77,6 +80,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to allow sending messages with no body. If this option is false and the message body is null then an JMSException is thrown.
+        order: 2
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -88,6 +92,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 3
       completionInterval:
         kind: parameter
         group: consumer
@@ -97,6 +102,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: The completion interval in millis which causes batches to be completed in a scheduled fixed rate every interval. The batch may be empty if the timeout triggered and there was no messages in the batch. Notice you cannot use both completion timeout and completion interval at the same time only one can be configured.
+        order: 4
       completionPredicate:
         kind: parameter
         group: consumer
@@ -105,6 +111,7 @@ data:
         deprecated: false
         secret: false
         description: The completion predicate which causes batches to be completed when the predicate evaluates as true. The predicate can also be configured using the simple language using the string syntax. You may want to set the option eagerCheckCompletion to true to let the predicate match the incoming message as otherwise it matches the aggregated message.
+        order: 5
       completionSize:
         kind: parameter
         group: consumer
@@ -114,6 +121,7 @@ data:
         secret: false
         defaultValue: "200"
         description: The number of messages consumed at which the batch will be completed
+        order: 6
       completionTimeout:
         kind: parameter
         group: consumer
@@ -123,6 +131,7 @@ data:
         secret: false
         defaultValue: "500"
         description: The timeout in millis from receipt of the first first message when the batch will be completed. The batch may be empty if the timeout triggered and there was no messages in the batch. Notice you cannot use both completion timeout and completion interval at the same time only one can be configured.
+        order: 7
       consumerCount:
         kind: parameter
         group: consumer
@@ -132,6 +141,7 @@ data:
         secret: false
         defaultValue: "1"
         description: The number of JMS sessions to consume from
+        order: 8
       eagerCheckCompletion:
         kind: parameter
         group: consumer
@@ -141,6 +151,7 @@ data:
         secret: false
         defaultValue: false
         description: Use eager completion checking which means that the completionPredicate will use the incoming Exchange. As opposed to without eager completion checking the completionPredicate will use the aggregated Exchange.
+        order: 9
       includeAllJMSXProperties:
         kind: parameter
         group: consumer
@@ -153,6 +164,7 @@ data:
           to Camel Message. Setting this to true will include properties such as JMSXAppID
           and JMSXUserID etc. Note: If you are using a custom headerFilterStrategy then
           this option does not apply.'
+        order: 10
       mapJmsMessage:
         kind: parameter
         group: consumer
@@ -162,6 +174,7 @@ data:
         secret: false
         defaultValue: true
         description: Specifies whether Camel should auto map the received JMS message to a suited payload type such as javax.jms.TextMessage to a String etc. See section about how mapping works below for more details.
+        order: 11
       pollDuration:
         kind: parameter
         group: consumer
@@ -171,6 +184,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: The duration in milliseconds of each poll for messages. completionTimeOut will be used if it is shorter and a batch has started.
+        order: 12
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -180,6 +194,7 @@ data:
         secret: false
         defaultValue: false
         description: If using completion timeout or interval then the batch may be empty if the timeout triggered and there was no messages in the batch. If this option is true and the batch is empty then an empty message is added to the batch so an empty message is routed.
+        order: 13
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -190,6 +205,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 14
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -208,6 +224,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 15
       headerFilterStrategy:
         kind: parameter
         group: advanced
@@ -217,6 +234,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 16
       jmsKeyFormatStrategy:
         kind: parameter
         group: advanced
@@ -232,6 +250,7 @@ data:
           be used for JMS brokers which do not care whether JMS header keys contain illegal
           characters. You can provide your own implementation of the org.apache.camel.component.jms.JmsKeyFormatStrategy
           and refer to it using the notation.'
+        order: 17
       messageCreatedStrategy:
         kind: parameter
         group: advanced
@@ -241,6 +260,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given MessageCreatedStrategy which are invoked when Camel creates new instances of javax.jms.Message objects when Camel is sending a JMS message.
+        order: 18
       synchronous:
         kind: parameter
         group: advanced
@@ -251,6 +271,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 19
       timeoutCheckerExecutorService:
         kind: parameter
         group: advanced
@@ -260,6 +281,7 @@ data:
         deprecated: false
         secret: false
         description: If using the completionInterval option a background thread is created to trigger the completion interval. Set this option to provide a custom thread pool to be used rather than creating a new thread for every consumer.
+        order: 20
   documentation.adoc: |
     [[ConfluenceContent]]
     [[SJMSBatch-SJMSBatchComponent]]

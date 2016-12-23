@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: The URL to the jBPM server.
+        order: 0
       attachmentId:
         kind: parameter
         group: producer
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: attachId to use when retrieving attachments
+        order: 1
       contentId:
         kind: parameter
         group: producer
@@ -68,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: contentId to use when retrieving attachments
+        order: 2
       deploymentId:
         kind: parameter
         group: producer
@@ -77,6 +80,7 @@ data:
         deprecated: false
         secret: false
         description: The id of the deployment
+        order: 3
       event:
         kind: parameter
         group: producer
@@ -85,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: the data associated with this event when signalEvent operation is performed
+        order: 4
       eventType:
         kind: parameter
         group: producer
@@ -93,6 +98,7 @@ data:
         deprecated: false
         secret: false
         description: the type of event to use when signalEvent operation is performed
+        order: 5
       identifier:
         kind: parameter
         group: producer
@@ -101,6 +107,7 @@ data:
         deprecated: false
         secret: false
         description: identifier the global identifier
+        order: 6
       language:
         kind: parameter
         group: producer
@@ -109,6 +116,7 @@ data:
         deprecated: false
         secret: false
         description: The language to use when filtering user tasks
+        order: 7
       maxNumber:
         kind: parameter
         group: producer
@@ -117,6 +125,7 @@ data:
         deprecated: false
         secret: false
         description: the maximum number of rules that should be fired
+        order: 8
       operation:
         kind: parameter
         group: producer
@@ -127,6 +136,7 @@ data:
         secret: false
         defaultValue: startProcess
         description: The operation to perform
+        order: 9
       processId:
         kind: parameter
         group: producer
@@ -135,6 +145,7 @@ data:
         deprecated: false
         secret: false
         description: the id of the process that should be acted upon
+        order: 10
       processInstanceId:
         kind: parameter
         group: producer
@@ -143,6 +154,7 @@ data:
         deprecated: false
         secret: false
         description: the id of the process instance
+        order: 11
       targetUserId:
         kind: parameter
         group: producer
@@ -151,6 +163,7 @@ data:
         deprecated: false
         secret: false
         description: The targetUserId used when delegating a task
+        order: 12
       task:
         kind: parameter
         group: producer
@@ -159,6 +172,7 @@ data:
         deprecated: false
         secret: false
         description: The task instance to use with task operations
+        order: 13
       taskId:
         kind: parameter
         group: producer
@@ -167,6 +181,7 @@ data:
         deprecated: false
         secret: false
         description: the id of the task
+        order: 14
       timeout:
         kind: parameter
         group: producer
@@ -175,6 +190,7 @@ data:
         deprecated: false
         secret: false
         description: A timeout value
+        order: 15
       userId:
         kind: parameter
         group: producer
@@ -183,6 +199,7 @@ data:
         deprecated: false
         secret: false
         description: userId to use with task operations
+        order: 16
       value:
         kind: parameter
         group: producer
@@ -191,6 +208,7 @@ data:
         deprecated: false
         secret: false
         description: the value to assign to the global identifier
+        order: 17
       workItemId:
         kind: parameter
         group: producer
@@ -199,6 +217,7 @@ data:
         deprecated: false
         secret: false
         description: the id of the work item
+        order: 18
       entities:
         kind: parameter
         group: advanced
@@ -208,6 +227,7 @@ data:
         deprecated: false
         secret: false
         description: The potentialOwners when nominateTask operation is performed
+        order: 19
       extraJaxbClasses:
         kind: parameter
         group: advanced
@@ -217,6 +237,7 @@ data:
         deprecated: false
         secret: false
         description: To load additional classes when working with XML
+        order: 20
       parameters:
         kind: parameter
         group: advanced
@@ -226,6 +247,7 @@ data:
         deprecated: false
         secret: false
         description: the variables that should be set for various operations
+        order: 21
       synchronous:
         kind: parameter
         group: advanced
@@ -236,6 +258,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 22
       statuses:
         kind: parameter
         group: filter
@@ -245,6 +268,7 @@ data:
         deprecated: false
         secret: false
         description: The list of status to use when filtering tasks
+        order: 23
       password:
         kind: parameter
         group: security
@@ -254,6 +278,7 @@ data:
         deprecated: false
         secret: true
         description: Password for authentication
+        order: 24
       userName:
         kind: parameter
         group: security
@@ -263,6 +288,7 @@ data:
         deprecated: false
         secret: true
         description: Username for authentication
+        order: 25
   documentation.adoc: |
     [[jBPM-jBPMComponent]]
     jBPM Component

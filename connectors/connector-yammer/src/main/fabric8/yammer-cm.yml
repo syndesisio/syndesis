@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: The consumer key
+        order: 0
       consumerSecret:
         kind: property
         type: string
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: The consumer secret
+        order: 1
       accessToken:
         kind: property
         type: string
@@ -62,6 +64,7 @@ data:
         deprecated: false
         secret: false
         description: The access token
+        order: 2
       config:
         kind: property
         type: object
@@ -69,6 +72,7 @@ data:
         deprecated: false
         secret: false
         description: To use a shared yammer configuration
+        order: 3
     properties:
       function:
         kind: path
@@ -90,6 +94,7 @@ data:
         deprecated: false
         secret: false
         description: The function to use
+        order: 0
       accessToken:
         kind: parameter
         group: common
@@ -99,6 +104,7 @@ data:
         deprecated: false
         secret: false
         description: The access token
+        order: 1
       consumerKey:
         kind: parameter
         group: common
@@ -108,6 +114,7 @@ data:
         deprecated: false
         secret: false
         description: The consumer key
+        order: 2
       consumerSecret:
         kind: parameter
         group: common
@@ -117,6 +124,7 @@ data:
         deprecated: false
         secret: false
         description: The consumer secret
+        order: 3
       useJson:
         kind: parameter
         group: common
@@ -126,6 +134,7 @@ data:
         secret: false
         defaultValue: false
         description: Set to true if you want to use raw JSON rather than converting to POJOs.
+        order: 4
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -137,6 +146,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 5
       delay:
         kind: parameter
         group: consumer
@@ -147,6 +157,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: Delay between polling in millis
+        order: 6
       limit:
         kind: parameter
         group: consumer
@@ -157,6 +168,7 @@ data:
         secret: false
         defaultValue: -1
         description: Return only the specified number of messages. Works for threaded=true and threaded=extended.
+        order: 7
       newerThan:
         kind: parameter
         group: consumer
@@ -167,6 +179,7 @@ data:
         secret: false
         defaultValue: -1
         description: Returns messages newer than the message ID specified as a numeric string. This should be used when polling for new messages. If you're looking at messages and the most recent message returned is 3516 you can make a request with the parameter newerThan=3516 to ensure that you do not get duplicate copies of messages already on your page.
+        order: 8
       olderThan:
         kind: parameter
         group: consumer
@@ -177,6 +190,7 @@ data:
         secret: false
         defaultValue: -1
         description: Returns messages older than the message ID specified as a numeric string. This is useful for paginating messages. For example if you're currently viewing 20 messages and the oldest is number 2912 you could append olderThan=2912 to your request to get the 20 messages prior to those you're seeing.
+        order: 9
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -188,6 +202,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 10
       threaded:
         kind: parameter
         group: consumer
@@ -200,6 +215,7 @@ data:
         deprecated: false
         secret: false
         description: threaded=true will only return the first message in each thread. This parameter is intended for apps which display message threads collapsed. threaded=extended will return the thread starter messages in order of most recently active as well as the two most recent messages as they are viewed in the default view on the Yammer web interface.
+        order: 11
       userId:
         kind: parameter
         group: consumer
@@ -209,6 +225,7 @@ data:
         deprecated: false
         secret: false
         description: The user id
+        order: 12
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -219,6 +236,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 13
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -237,6 +255,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 14
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -247,6 +266,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+        order: 15
       synchronous:
         kind: parameter
         group: advanced
@@ -257,6 +277,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 16
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -267,6 +288,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 17
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -277,6 +299,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 18
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -287,6 +310,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 19
       greedy:
         kind: parameter
         group: scheduler
@@ -298,6 +322,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 20
       initialDelay:
         kind: parameter
         group: scheduler
@@ -309,6 +334,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 21
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -327,6 +353,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 22
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -337,6 +364,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+        order: 23
       scheduler:
         kind: parameter
         group: scheduler
@@ -352,6 +380,7 @@ data:
         secret: false
         defaultValue: none
         description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+        order: 24
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -363,6 +392,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 25
       startScheduler:
         kind: parameter
         group: scheduler
@@ -374,6 +404,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 26
       timeUnit:
         kind: parameter
         group: scheduler
@@ -393,6 +424,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 27
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -404,6 +436,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 28
   documentation.adoc: |
     [[Yammer-Yammer]]
     Yammer

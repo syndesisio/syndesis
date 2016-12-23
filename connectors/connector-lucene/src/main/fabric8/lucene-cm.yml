@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use a shared lucene configuration
+        order: 0
     properties:
       host:
         kind: path
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: The URL to the lucene server
+        order: 0
       operation:
         kind: path
         group: producer
@@ -71,6 +73,7 @@ data:
         deprecated: false
         secret: false
         description: Operation to do such as insert or query.
+        order: 1
       analyzer:
         kind: parameter
         group: producer
@@ -79,6 +82,7 @@ data:
         deprecated: false
         secret: false
         description: An Analyzer builds TokenStreams which analyze text. It thus represents a policy for extracting index terms from text. The value for analyzer can be any class that extends the abstract class org.apache.lucene.analysis.Analyzer. Lucene also offers a rich set of analyzers out of the box
+        order: 2
       indexDir:
         kind: parameter
         group: producer
@@ -87,6 +91,7 @@ data:
         deprecated: false
         secret: false
         description: A file system directory in which index files are created upon analysis of the document by the specified analyzer
+        order: 3
       maxHits:
         kind: parameter
         group: producer
@@ -95,6 +100,7 @@ data:
         deprecated: false
         secret: false
         description: An integer value that limits the result set of the search operation
+        order: 4
       srcDir:
         kind: parameter
         group: producer
@@ -103,6 +109,7 @@ data:
         deprecated: false
         secret: false
         description: An optional directory containing files to be used to be analyzed and added to the index at producer startup.
+        order: 5
       synchronous:
         kind: parameter
         group: advanced
@@ -113,6 +120,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 6
   documentation.adoc: "[[Lucene-LuceneIndexerandSearchComponent]]\nLucene (Indexer\
     \ and Search) Component\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n*Available as\
     \ of Camel 2.2*\n\nThe *lucene* component is based on the Apache Lucene project.\

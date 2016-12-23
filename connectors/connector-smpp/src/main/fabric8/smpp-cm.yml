@@ -50,6 +50,7 @@ data:
         deprecated: false
         secret: false
         description: To use the shared SmppConfiguration as configuration.
+        order: 0
     properties:
       host:
         kind: path
@@ -60,6 +61,7 @@ data:
         secret: false
         defaultValue: localhost
         description: Hostname for the SMSC server to use.
+        order: 0
       port:
         kind: path
         group: common
@@ -69,6 +71,7 @@ data:
         secret: false
         defaultValue: "2775"
         description: Port number for the SMSC server to use.
+        order: 1
       initialReconnectDelay:
         kind: parameter
         group: common
@@ -79,6 +82,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: Defines the initial delay in milliseconds after the consumer/producer tries to reconnect to the SMSC after the connection was lost.
+        order: 2
       maxReconnect:
         kind: parameter
         group: common
@@ -89,6 +93,7 @@ data:
         secret: false
         defaultValue: "2147483647"
         description: Defines the maximum number of attempts to reconnect to the SMSC if SMSC returns a negative bind response
+        order: 3
       reconnectDelay:
         kind: parameter
         group: common
@@ -99,6 +104,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: Defines the interval in milliseconds between the reconnect attempts if the connection to the SMSC was lost and the previous was not succeed.
+        order: 4
       splittingPolicy:
         kind: parameter
         group: common
@@ -118,6 +124,7 @@ data:
           parts of a message that will never be delivered. REJECT - if a message would
           need to be split it is rejected with an SMPP NegativeResponseException and the
           reason code signifying the message is too long.'
+        order: 5
       systemType:
         kind: parameter
         group: common
@@ -128,6 +135,7 @@ data:
         secret: false
         defaultValue: cp
         description: This parameter is used to categorize the type of ESME (External Short Message Entity) that is binding to the SMSC (max. 13 characters).
+        order: 6
       addressRange:
         kind: parameter
         group: consumer
@@ -137,6 +145,7 @@ data:
         deprecated: false
         secret: false
         description: You can specify the address range for the SmppConsumer as defined in section 5.2.7 of the SMPP 3.4 specification. The SmppConsumer will receive messages only from SMSC's which target an address (MSISDN or IP address) within this range.
+        order: 7
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -148,6 +157,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -158,6 +168,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -176,6 +187,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 10
       destAddr:
         kind: parameter
         group: producer
@@ -186,6 +198,7 @@ data:
         secret: false
         defaultValue: "1717"
         description: Defines the destination SME address. For mobile terminated messages this is the directory number of the recipient MS. Only for SubmitSm SubmitMulti CancelSm and DataSm.
+        order: 11
       destAddrNpi:
         kind: parameter
         group: producer
@@ -210,6 +223,7 @@ data:
           NPI values are defined: 0: Unknown 1: ISDN (E163/E164) 2: Data (X.121) 3: Telex
           (F.69) 6: Land Mobile (E.212) 8: National 9: Private 10: ERMES 13: Internet
           (IP) 18: WAP Client Id (to be defined by WAP Forum)'
+        order: 12
       destAddrTon:
         kind: parameter
         group: producer
@@ -230,6 +244,7 @@ data:
           address parameters. Only for SubmitSm SubmitMulti CancelSm and DataSm. The following
           TON values are defined: 0: Unknown 1: International 2: National 3: Network Specific
           4: Subscriber Number 5: Alphanumeric 6: Abbreviated'
+        order: 13
       lazySessionCreation:
         kind: parameter
         group: producer
@@ -240,6 +255,7 @@ data:
         secret: false
         defaultValue: false
         description: Sessions can be lazily created to avoid exceptions if the SMSC is not available when the Camel producer is started. Camel will check the in message headers 'CamelSmppSystemId' and 'CamelSmppPassword' of the first exchange. If they are present Camel will use these data to connect to the SMSC.
+        order: 14
       numberingPlanIndicator:
         kind: parameter
         group: producer
@@ -263,6 +279,7 @@ data:
           The following NPI values are defined: 0: Unknown 1: ISDN (E163/E164) 2: Data
           (X.121) 3: Telex (F.69) 6: Land Mobile (E.212) 8: National 9: Private 10: ERMES
           13: Internet (IP) 18: WAP Client Id (to be defined by WAP Forum)'
+        order: 15
       priorityFlag:
         kind: parameter
         group: producer
@@ -280,6 +297,7 @@ data:
           message. Only for SubmitSm and SubmitMulti. Four Priority Levels are supported:
           0: Level 0 (lowest) priority 1: Level 1 priority 2: Level 2 priority 3: Level
           3 (highest) priority'
+        order: 16
       protocolId:
         kind: parameter
         group: producer
@@ -289,6 +307,7 @@ data:
         deprecated: false
         secret: false
         description: The protocol id
+        order: 17
       registeredDelivery:
         kind: parameter
         group: producer
@@ -306,6 +325,7 @@ data:
           requested. 1: SMSC delivery receipt requested where final delivery outcome is
           success or failure. 2: SMSC delivery receipt requested where the final delivery
           outcome is delivery failure.'
+        order: 18
       replaceIfPresentFlag:
         kind: parameter
         group: producer
@@ -322,6 +342,7 @@ data:
           that the source address destination address and service type match the same
           fields in the new message. The following replace if present flag values are
           defined: 0: Don''t replace 1: Replace'
+        order: 19
       serviceType:
         kind: parameter
         group: producer
@@ -343,6 +364,7 @@ data:
           defined: CMT: Cellular Messaging CPT: Cellular Paging VMN: Voice Mail Notification
           VMA: Voice Mail Alerting WAP: Wireless Application Protocol USSD: Unstructured
           Supplementary Services Data'
+        order: 20
       sourceAddr:
         kind: parameter
         group: producer
@@ -353,6 +375,7 @@ data:
         secret: false
         defaultValue: "1616"
         description: Defines the address of SME (Short Message Entity) which originated this message.
+        order: 21
       sourceAddrNpi:
         kind: parameter
         group: producer
@@ -377,6 +400,7 @@ data:
           (E163/E164) 2: Data (X.121) 3: Telex (F.69) 6: Land Mobile (E.212) 8: National
           9: Private 10: ERMES 13: Internet (IP) 18: WAP Client Id (to be defined by WAP
           Forum)'
+        order: 22
       sourceAddrTon:
         kind: parameter
         group: producer
@@ -396,6 +420,7 @@ data:
         description: 'Defines the type of number (TON) to be used in the SME originator
           address parameters. The following TON values are defined: 0: Unknown 1: International
           2: National 3: Network Specific 4: Subscriber Number 5: Alphanumeric 6: Abbreviated'
+        order: 23
       typeOfNumber:
         kind: parameter
         group: producer
@@ -415,6 +440,7 @@ data:
         description: 'Defines the type of number (TON) to be used in the SME. The following
           TON values are defined: 0: Unknown 1: International 2: National 3: Network Specific
           4: Subscriber Number 5: Alphanumeric 6: Abbreviated'
+        order: 24
       enquireLinkTimer:
         kind: parameter
         group: advanced
@@ -425,6 +451,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: Defines the interval in milliseconds between the confidence checks. The confidence check is used to test the communication path between an ESME and an SMSC.
+        order: 25
       sessionStateListener:
         kind: parameter
         group: advanced
@@ -434,6 +461,7 @@ data:
         deprecated: false
         secret: false
         description: You can refer to a org.jsmpp.session.SessionStateListener in the Registry to receive callbacks when the session state changed.
+        order: 26
       synchronous:
         kind: parameter
         group: advanced
@@ -444,6 +472,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 27
       transactionTimer:
         kind: parameter
         group: advanced
@@ -454,6 +483,7 @@ data:
         secret: false
         defaultValue: "10000"
         description: Defines the maximum period of inactivity allowed after a transaction after which an SMPP entity may assume that the session is no longer active. This timer may be active on either communicating SMPP entity (i.e. SMSC or ESME).
+        order: 28
       alphabet:
         kind: parameter
         group: codec
@@ -468,6 +498,7 @@ data:
         secret: false
         description: 'Defines encoding of data according the SMPP 3.4 specification section
           5.2.19. 0: SMSC Default Alphabet 4: 8 bit Alphabet 8: UCS2 Alphabet'
+        order: 29
       dataCoding:
         kind: parameter
         group: codec
@@ -480,6 +511,7 @@ data:
           5.2.19. Example data encodings are: 0: SMSC Default Alphabet 3: Latin 1 (ISO-8859-1)
           4: Octet unspecified (8-bit binary) 8: UCS2 (ISO/IEC-10646) 13: Extended Kanji
           JIS(X 0212-1990)'
+        order: 30
       encoding:
         kind: parameter
         group: codec
@@ -490,6 +522,7 @@ data:
         secret: false
         defaultValue: ISO-8859-1
         description: Defines the encoding scheme of the short message user data. Only for SubmitSm ReplaceSm and SubmitMulti.
+        order: 31
       httpProxyHost:
         kind: parameter
         group: proxy
@@ -499,6 +532,7 @@ data:
         deprecated: false
         secret: false
         description: If you need to tunnel SMPP through a HTTP proxy set this attribute to the hostname or ip address of your HTTP proxy.
+        order: 32
       httpProxyPassword:
         kind: parameter
         group: proxy
@@ -508,6 +542,7 @@ data:
         deprecated: false
         secret: false
         description: If your HTTP proxy requires basic authentication set this attribute to the password required for your HTTP proxy.
+        order: 33
       httpProxyPort:
         kind: parameter
         group: proxy
@@ -518,6 +553,7 @@ data:
         secret: false
         defaultValue: "3128"
         description: If you need to tunnel SMPP through a HTTP proxy set this attribute to the port of your HTTP proxy.
+        order: 34
       httpProxyUsername:
         kind: parameter
         group: proxy
@@ -527,6 +563,7 @@ data:
         deprecated: false
         secret: false
         description: If your HTTP proxy requires basic authentication set this attribute to the username required for your HTTP proxy.
+        order: 35
       proxyHeaders:
         kind: parameter
         group: proxy
@@ -536,6 +573,7 @@ data:
         deprecated: false
         secret: false
         description: These headers will be passed to the proxy server while establishing the connection.
+        order: 36
       password:
         kind: parameter
         group: security
@@ -545,6 +583,7 @@ data:
         deprecated: false
         secret: true
         description: The password for connecting to SMSC server.
+        order: 37
       systemId:
         kind: parameter
         group: security
@@ -555,6 +594,7 @@ data:
         secret: true
         defaultValue: smppclient
         description: The system id (username) for connecting to SMSC server.
+        order: 38
       usingSSL:
         kind: parameter
         group: security
@@ -565,6 +605,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether using SSL with the smpps protocol
+        order: 39
   documentation.adoc: "[[SMPP-SMPPComponent]]\nSMPP Component\n~~~~~~~~~~~~~~\n\n\
     *CamelSmppFinalStatusAvailable as of Camel 2.2*\n\nThis component provides access\
     \ to an SMSC (Short Message Service Center)\nover the http://smsforum.net/SMPP_v3_4_Issue1_2.zip[SMPP]\

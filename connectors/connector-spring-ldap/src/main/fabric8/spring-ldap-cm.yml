@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Name of the Spring LDAP Template bean
+        order: 0
       operation:
         kind: parameter
         group: producer
@@ -65,6 +66,7 @@ data:
         deprecated: false
         secret: false
         description: The LDAP operation to be performed.
+        order: 1
       scope:
         kind: parameter
         group: producer
@@ -78,6 +80,7 @@ data:
         secret: false
         defaultValue: subtree
         description: The scope of the search operation.
+        order: 2
       synchronous:
         kind: parameter
         group: advanced
@@ -88,6 +91,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 3
   documentation.adoc: |+
     [[SpringLDAP-SpringLDAPComponent]]
     Spring LDAP Component

@@ -50,6 +50,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom AsyncHttpClient
+        order: 0
       binding:
         kind: property
         type: object
@@ -57,6 +58,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom AhcBinding which allows to control how to bind between AHC and Camel.
+        order: 1
       clientConfig:
         kind: property
         type: object
@@ -64,6 +66,7 @@ data:
         deprecated: false
         secret: false
         description: To configure the AsyncHttpClient to use a custom com.ning.http.client.AsyncHttpClientConfig instance.
+        order: 2
       sslContextParameters:
         kind: property
         type: object
@@ -71,6 +74,7 @@ data:
         deprecated: false
         secret: false
         description: Reference to a org.apache.camel.util.jsse.SSLContextParameters in the Registry. Note that configuring this option will override any SSL/TLS configuration options provided through the clientConfig option at the endpoint or component level.
+        order: 3
       allowJavaSerializedObject:
         kind: property
         type: boolean
@@ -78,6 +82,7 @@ data:
         deprecated: false
         secret: false
         description: Whether to allow java serialization when a request uses context-type=application/x-java-serialized-object This is by default turned off. If you enable this then be aware that Java will deserialize the incoming data from the request to Java and that can be a potential security risk.
+        order: 4
       headerFilterStrategy:
         kind: property
         type: object
@@ -85,6 +90,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 5
     properties:
       httpUri:
         kind: path
@@ -95,6 +101,7 @@ data:
         deprecated: false
         secret: false
         description: The URI to use such as http://hostname:port/path
+        order: 0
       binding:
         kind: parameter
         group: producer
@@ -103,6 +110,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom AhcBinding which allows to control how to bind between AHC and Camel.
+        order: 1
       bridgeEndpoint:
         kind: parameter
         group: producer
@@ -112,6 +120,7 @@ data:
         secret: false
         defaultValue: false
         description: If the option is true then the Exchange.HTTP_URI header is ignored and use the endpoint's URI for request. You may also set the throwExceptionOnFailure to be false to let the AhcProducer send all the fault response back.
+        order: 2
       bufferSize:
         kind: parameter
         group: producer
@@ -121,6 +130,7 @@ data:
         secret: false
         defaultValue: "4096"
         description: The initial in-memory buffer size used when transferring data between Camel and AHC Client.
+        order: 3
       connectionClose:
         kind: parameter
         group: producer
@@ -131,6 +141,7 @@ data:
         secret: false
         defaultValue: false
         description: Define if the Connection Close header has to be added to HTTP Request. This parameter is false by default
+        order: 4
       headerFilterStrategy:
         kind: parameter
         group: producer
@@ -139,6 +150,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 5
       throwExceptionOnFailure:
         kind: parameter
         group: producer
@@ -148,6 +160,7 @@ data:
         secret: false
         defaultValue: true
         description: Option to disable throwing the AhcOperationFailedException in case of failed responses from the remote server. This allows you to get all responses regardless of the HTTP status code.
+        order: 6
       transferException:
         kind: parameter
         group: producer
@@ -157,6 +170,7 @@ data:
         secret: false
         defaultValue: false
         description: If enabled and an Exchange failed processing on the consumer side and if the caused Exception was send back serialized in the response as a application/x-java-serialized-object content type (for example using Jetty or Servlet Camel components). On the producer side the exception will be deserialized and thrown as is instead of the AhcOperationFailedException. The caused exception is required to be serialized. This is by default turned off. If you enable this then be aware that Java will deserialize the incoming data from the request to Java and that can be a potential security risk.
+        order: 7
       clientConfig:
         kind: parameter
         group: advanced
@@ -166,6 +180,7 @@ data:
         deprecated: false
         secret: false
         description: To configure the AsyncHttpClient to use a custom com.ning.http.client.AsyncHttpClientConfig instance.
+        order: 8
       clientConfigOptions:
         kind: parameter
         group: advanced
@@ -177,6 +192,7 @@ data:
         deprecated: false
         secret: false
         description: To configure the AsyncHttpClientConfig using the key/values from the Map.
+        order: 9
       synchronous:
         kind: parameter
         group: advanced
@@ -187,6 +203,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 10
       sslContextParameters:
         kind: parameter
         group: security
@@ -196,6 +213,7 @@ data:
         deprecated: false
         secret: false
         description: Reference to a org.apache.camel.util.jsse.SSLContextParameters in the Registry. This reference overrides any configured SSLContextParameters at the component level. See Using the JSSE Configuration Utility. Note that configuring this option will override any SSL/TLS configuration options provided through the clientConfig option at the endpoint or component level.
+        order: 11
   documentation.adoc: |+
     [[AHC-AsyncHttpClientComponent]]
     Async Http Client Component

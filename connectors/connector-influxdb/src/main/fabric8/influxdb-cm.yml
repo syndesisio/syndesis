@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Name of org.influxdb.InfluxDB to use.
+        order: 0
       databaseName:
         kind: parameter
         group: producer
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Setter for databaseName
+        order: 1
       retentionPolicy:
         kind: parameter
         group: producer
@@ -69,6 +71,7 @@ data:
         secret: false
         defaultValue: default
         description: Setter for retentionPolicy
+        order: 2
       synchronous:
         kind: parameter
         group: advanced
@@ -79,6 +82,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 3
   documentation.adoc: |+
     [[InfluxDb-InfluxDbComponent]]
     InfluxDb Component

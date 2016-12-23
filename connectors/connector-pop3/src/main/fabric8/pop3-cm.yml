@@ -50,6 +50,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the Mail configuration
+        order: 0
       contentTypeResolver:
         kind: property
         type: object
@@ -57,6 +58,7 @@ data:
         deprecated: false
         secret: false
         description: Resolver to determine Content-Type for file attachments.
+        order: 1
     properties:
       host:
         kind: path
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: The mail server host name
+        order: 0
       port:
         kind: path
         group: common
@@ -75,6 +78,7 @@ data:
         deprecated: false
         secret: false
         description: The port number of the mail server
+        order: 1
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -86,6 +90,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 2
       closeFolder:
         kind: parameter
         group: consumer
@@ -97,6 +102,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the consumer should close the folder after polling. Setting this option to false and having disconnect=false as well then the consumer keep the folder open between polls.
+        order: 3
       copyTo:
         kind: parameter
         group: consumer
@@ -107,6 +113,7 @@ data:
         deprecated: false
         secret: false
         description: After processing a mail message it can be copied to a mail folder with the given name. You can override this configuration value with a header with the key copyTo allowing you to copy messages to folder names configured at runtime.
+        order: 4
       delete:
         kind: parameter
         group: consumer
@@ -118,6 +125,7 @@ data:
         secret: false
         defaultValue: false
         description: Deletes the messages after they have been processed. This is done by setting the DELETED flag on the mail message. If false the SEEN flag is set instead. As of Camel 2.10 you can override this configuration option by setting a header with the key delete to determine if the mail should be deleted or not.
+        order: 5
       disconnect:
         kind: parameter
         group: consumer
@@ -129,6 +137,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the consumer should disconnect after polling. If enabled this forces Camel to connect on each poll.
+        order: 6
       handleFailedMessage:
         kind: parameter
         group: consumer
@@ -140,6 +149,7 @@ data:
         secret: false
         defaultValue: false
         description: If the mail consumer cannot retrieve a given mail message then this option allows to handle the caused exception by the consumer's error handler. By enable the bridge error handler on the consumer then the Camel routing error handler can handle the exception instead. The default behavior would be the consumer throws an exception and no mails from the batch would be able to be routed by Camel.
+        order: 7
       maxMessagesPerPoll:
         kind: parameter
         group: consumer
@@ -149,6 +159,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the maximum number of messages to gather per poll. By default no maximum is set. Can be used to set a limit of e.g. 1000 to avoid downloading thousands of files when the server starts up. Set a value of 0 or negative to disable this option.
+        order: 8
       peek:
         kind: parameter
         group: consumer
@@ -160,6 +171,7 @@ data:
         secret: false
         defaultValue: true
         description: Will mark the javax.mail.Message as peeked before processing the mail message. This applies to IMAPMessage messages types only. By using peek the mail will not be eager marked as SEEN on the mail server which allows us to rollback the mail message if there is an error processing in Camel.
+        order: 9
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -171,6 +183,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 10
       skipFailedMessage:
         kind: parameter
         group: consumer
@@ -182,6 +195,7 @@ data:
         secret: false
         defaultValue: false
         description: If the mail consumer cannot retrieve a given mail message then this option allows to skip the message and move on to retrieve the next mail message. The default behavior would be the consumer throws an exception and no mails from the batch would be able to be routed by Camel.
+        order: 11
       unseen:
         kind: parameter
         group: consumer
@@ -193,6 +207,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to limit by unseen mails only.
+        order: 12
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -203,6 +218,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 13
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -221,6 +237,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 14
       fetchSize:
         kind: parameter
         group: consumer (advanced)
@@ -232,6 +249,7 @@ data:
         secret: false
         defaultValue: -1
         description: Sets the maximum number of messages to consume during a poll. This can be used to avoid overloading a mail server if a mailbox folder contains a lot of messages. Default value of -1 means no fetch size and all messages will be consumed. Setting the value to 0 is a special corner case where Camel will not consume any messages at all.
+        order: 15
       folderName:
         kind: parameter
         group: consumer (advanced)
@@ -242,6 +260,7 @@ data:
         secret: false
         defaultValue: INBOX
         description: The folder to poll.
+        order: 16
       mailUidGenerator:
         kind: parameter
         group: consumer (advanced)
@@ -251,6 +270,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable MailUidGenerator that allows to use custom logic to generate UUID of the mail message.
+        order: 17
       mapMailMessage:
         kind: parameter
         group: consumer (advanced)
@@ -261,6 +281,7 @@ data:
         secret: false
         defaultValue: true
         description: Specifies whether Camel should map the received mail message to Camel body/headers. If set to true the body of the mail message is mapped to the body of the Camel IN message and the mail headers are mapped to IN headers. If this option is set to false then the IN message contains a raw javax.mail.Message. You can retrieve this raw message by calling exchange.getIn().getBody(javax.mail.Message.class).
+        order: 18
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -271,6 +292,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+        order: 19
       postProcessAction:
         kind: parameter
         group: consumer (advanced)
@@ -280,6 +302,7 @@ data:
         deprecated: false
         secret: false
         description: Refers to an MailBoxPostProcessAction for doing post processing tasks on the mailbox once the normal processing ended.
+        order: 20
       bcc:
         kind: parameter
         group: producer
@@ -289,6 +312,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the BCC email address. Separate multiple email addresses with comma.
+        order: 21
       cc:
         kind: parameter
         group: producer
@@ -298,6 +322,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the CC email address. Separate multiple email addresses with comma.
+        order: 22
       from:
         kind: parameter
         group: producer
@@ -308,6 +333,7 @@ data:
         secret: false
         defaultValue: camel@localhost
         description: The from email address
+        order: 23
       replyTo:
         kind: parameter
         group: producer
@@ -318,6 +344,7 @@ data:
         deprecated: false
         secret: false
         description: The Reply-To recipients (the receivers of the response mail). Separate multiple email addresses with a comma.
+        order: 24
       subject:
         kind: parameter
         group: producer
@@ -329,6 +356,7 @@ data:
         secret: false
         description: 'The Subject of the message being sent. Note: Setting the subject
           in the header takes precedence over this option.'
+        order: 25
       to:
         kind: parameter
         group: producer
@@ -338,6 +366,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the To email address. Separate multiple email addresses with comma.
+        order: 26
       javaMailSender:
         kind: parameter
         group: producer (advanced)
@@ -348,6 +377,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom org.apache.camel.component.mail.JavaMailSender for sending emails.
+        order: 27
       additionalJavaMailProperties:
         kind: parameter
         group: advanced
@@ -359,6 +389,7 @@ data:
         deprecated: false
         secret: false
         description: Sets additional java mail properties that will append/override any default properties that is set based on all the other options. This is useful if you need to add some special options but want to keep the others as is.
+        order: 28
       alternativeBodyHeader:
         kind: parameter
         group: advanced
@@ -369,6 +400,7 @@ data:
         secret: false
         defaultValue: CamelMailAlternativeBody
         description: Specifies the key to an IN message header that contains an alternative email body. For example if you send emails in text/html format and want to provide an alternative mail body for non-HTML email clients set the alternative mail body with this key as a header.
+        order: 29
       attachmentsContentTransferEncodingResolver:
         kind: parameter
         group: advanced
@@ -378,6 +410,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom AttachmentsContentTransferEncodingResolver to resolve what content-type-encoding to use for attachments.
+        order: 30
       binding:
         kind: parameter
         group: advanced
@@ -387,6 +420,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the binding used to convert from a Camel message to and from a Mail message
+        order: 31
       connectionTimeout:
         kind: parameter
         group: advanced
@@ -397,6 +431,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: The connection timeout in milliseconds.
+        order: 32
       contentType:
         kind: parameter
         group: advanced
@@ -407,6 +442,7 @@ data:
         secret: false
         defaultValue: text/plain
         description: The mail message content type. Use text/html for HTML mails.
+        order: 33
       contentTypeResolver:
         kind: parameter
         group: advanced
@@ -416,6 +452,7 @@ data:
         deprecated: false
         secret: false
         description: Resolver to determine Content-Type for file attachments.
+        order: 34
       debugMode:
         kind: parameter
         group: advanced
@@ -426,6 +463,7 @@ data:
         secret: false
         defaultValue: false
         description: Enable debug mode on the underlying mail framework. The SUN Mail framework logs the debug messages to System.out by default.
+        order: 35
       headerFilterStrategy:
         kind: parameter
         group: advanced
@@ -435,6 +473,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom org.apache.camel.spi.HeaderFilterStrategy to filter headers.
+        order: 36
       ignoreUnsupportedCharset:
         kind: parameter
         group: advanced
@@ -445,6 +484,7 @@ data:
         secret: false
         defaultValue: false
         description: Option to let Camel ignore unsupported charset in the local JVM when sending mails. If the charset is unsupported then charset=XXX (where XXX represents the unsupported charset) is removed from the content-type and it relies on the platform default instead.
+        order: 37
       ignoreUriScheme:
         kind: parameter
         group: advanced
@@ -455,6 +495,7 @@ data:
         secret: false
         defaultValue: false
         description: Option to let Camel ignore unsupported charset in the local JVM when sending mails. If the charset is unsupported then charset=XXX (where XXX represents the unsupported charset) is removed from the content-type and it relies on the platform default instead.
+        order: 38
       session:
         kind: parameter
         group: advanced
@@ -464,6 +505,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the mail session that camel should use for all mail interactions. Useful in scenarios where mail sessions are created and managed by some other resource such as a JavaEE container. If this is not specified Camel automatically creates the mail session for you.
+        order: 39
       synchronous:
         kind: parameter
         group: advanced
@@ -474,6 +516,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 40
       useInlineAttachments:
         kind: parameter
         group: advanced
@@ -484,6 +527,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to use disposition inline or attachment.
+        order: 41
       idempotentRepository:
         kind: parameter
         group: filter
@@ -493,6 +537,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable repository org.apache.camel.spi.IdempotentRepository which allows to cluster consuming from the same mailbox and let the repository coordinate whether a mail message is valid for the consumer to process. By default no repository is in use.
+        order: 42
       idempotentRepositoryRemoveOnCommit:
         kind: parameter
         group: filter
@@ -503,6 +548,7 @@ data:
         secret: false
         defaultValue: true
         description: When using idempotent repository then when the mail message has been successfully processed and is committed should the message id be removed from the idempotent repository (default) or be kept in the repository. By default its assumed the message id is unique and has no value to be kept in the repository because the mail message will be marked as seen/moved or deleted to prevent it from being consumed again. And therefore having the message id stored in the idempotent repository has little value. However this option allows to store the message id for whatever reason you may have.
+        order: 43
       searchTerm:
         kind: parameter
         group: filter
@@ -514,6 +560,7 @@ data:
         deprecated: false
         secret: false
         description: Refers to a javax.mail.search.SearchTerm which allows to filter mails based on search criteria such as subject body from sent after a certain date etc.
+        order: 44
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -524,6 +571,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 45
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -534,6 +582,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 46
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -544,6 +593,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 47
       delay:
         kind: parameter
         group: scheduler
@@ -555,6 +605,7 @@ data:
         secret: false
         defaultValue: "60000"
         description: Milliseconds before the next poll.
+        order: 48
       greedy:
         kind: parameter
         group: scheduler
@@ -566,6 +617,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 49
       initialDelay:
         kind: parameter
         group: scheduler
@@ -577,6 +629,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 50
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -595,6 +648,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 51
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -605,6 +659,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+        order: 52
       scheduler:
         kind: parameter
         group: scheduler
@@ -620,6 +675,7 @@ data:
         secret: false
         defaultValue: none
         description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+        order: 53
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -631,6 +687,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 54
       startScheduler:
         kind: parameter
         group: scheduler
@@ -642,6 +699,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 55
       timeUnit:
         kind: parameter
         group: scheduler
@@ -661,6 +719,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 56
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -672,6 +731,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 57
       sortTerm:
         kind: parameter
         group: sort
@@ -681,6 +741,7 @@ data:
         deprecated: false
         secret: false
         description: Sorting order for messages. Only natively supported for IMAP. Emulated to some degree when using POP3 or when IMAP server does not have the SORT capability.
+        order: 58
       dummyTrustManager:
         kind: parameter
         group: security
@@ -691,6 +752,7 @@ data:
         secret: false
         defaultValue: false
         description: To use a dummy security setting for trusting all certificates. Should only be used for development mode and not production.
+        order: 59
       password:
         kind: parameter
         group: security
@@ -700,6 +762,7 @@ data:
         deprecated: false
         secret: true
         description: The password for login
+        order: 60
       sslContextParameters:
         kind: parameter
         group: security
@@ -709,6 +772,7 @@ data:
         deprecated: false
         secret: false
         description: To configure security using SSLContextParameters.
+        order: 61
       username:
         kind: parameter
         group: security
@@ -718,6 +782,7 @@ data:
         deprecated: false
         secret: true
         description: The username for login
+        order: 62
   documentation.adoc: |+
     [[Mail-MailComponent]]
     Mail Component

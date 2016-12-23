@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Name of endpoint to lookup in the registry.
+        order: 0
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -62,6 +63,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 1
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -72,6 +74,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 2
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -90,6 +93,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default exchange pattern when creating an exchange.
+        order: 3
       synchronous:
         kind: parameter
         group: advanced
@@ -100,6 +104,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 4
   documentation.adoc: "[[Ref-RefComponent]]\nRef Component\n~~~~~~~~~~~~~\n\nThe *ref:*\
     \ component is used for lookup of existing endpoints bound in\nthe link:registry.html[Registry].\n\
     \n[[Ref-URIformat]]\nURI format\n^^^^^^^^^^\n\n[source,java]\n----------------------\n\

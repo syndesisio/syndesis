@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: Default name of servlet to use. The default name is CamelServlet.
+        order: 0
       httpRegistry:
         kind: property
         type: object
@@ -56,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom org.apache.camel.component.servlet.HttpRegistry.
+        order: 1
       attachmentMultipartBinding:
         kind: property
         type: boolean
@@ -63,6 +65,7 @@ data:
         deprecated: false
         secret: false
         description: Whether to automatic bind multipart/form-data as attachments on the Camel Exchange. This is turn off by default as this may require servlet specific configuration to enable this when using Servlet's.
+        order: 2
       httpBinding:
         kind: property
         type: object
@@ -70,6 +73,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HttpBinding to control the mapping between Camel message and HttpClient.
+        order: 3
       httpConfiguration:
         kind: property
         type: object
@@ -77,6 +81,7 @@ data:
         deprecated: false
         secret: false
         description: To use the shared HttpConfiguration as base configuration.
+        order: 4
       allowJavaSerializedObject:
         kind: property
         type: boolean
@@ -84,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: Whether to allow java serialization when a request uses context-type=application/x-java-serialized-object This is by default turned off. If you enable this then be aware that Java will deserialize the incoming data from the request to Java and that can be a potential security risk.
+        order: 5
       headerFilterStrategy:
         kind: property
         type: object
@@ -91,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 6
     properties:
       servicePath:
         kind: path
@@ -101,6 +108,7 @@ data:
         deprecated: false
         secret: false
         description: Name of websocket endpoint
+        order: 0
       chunked:
         kind: parameter
         group: common
@@ -110,6 +118,7 @@ data:
         secret: false
         defaultValue: true
         description: If this option is false the Servlet will disable the HTTP streaming and set the content-length header on the response
+        order: 1
       disableStreamCache:
         kind: parameter
         group: common
@@ -120,6 +129,7 @@ data:
         secret: false
         defaultValue: false
         description: Determines whether or not the raw input stream from Servlet is cached or not (Camel will read the stream into a in memory/overflow to file Stream caching) cache. By default Camel will cache the Servlet input stream to support reading it multiple times to ensure it Camel can retrieve all data from the stream. However you can set this option to true when you for example need to access the raw stream such as streaming it directly to a file or other persistent store. DefaultHttpBinding will copy the request input stream into a stream cache and put it into message body if this option is false to support reading the stream multiple times. If you use Servlet to bridge/proxy an endpoint then consider enabling this option to improve performance in case you do not need to read the message payload multiple times. The http/http4 producer will by default cache the response body stream. If setting this option to true then the producers will not cache the response body stream but use the response stream as-is as the message body.
+        order: 2
       headerFilterStrategy:
         kind: parameter
         group: common
@@ -128,6 +138,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 3
       httpBinding:
         kind: parameter
         group: common
@@ -136,6 +147,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HttpBinding to control the mapping between Camel message and HttpClient.
+        order: 4
       sendToAll:
         kind: parameter
         group: common
@@ -145,6 +157,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to send to all (broadcast) or send to a single receiver.
+        order: 5
       transferException:
         kind: parameter
         group: common
@@ -154,6 +167,7 @@ data:
         secret: false
         defaultValue: false
         description: If enabled and an Exchange failed processing on the consumer side and if the caused Exception was send back serialized in the response as a application/x-java-serialized-object content type. On the producer side the exception will be deserialized and thrown as is instead of the HttpOperationFailedException. The caused exception is required to be serialized. This is by default turned off. If you enable this then be aware that Java will deserialize the incoming data from the request to Java and that can be a potential security risk.
+        order: 6
       useStreaming:
         kind: parameter
         group: common
@@ -163,6 +177,7 @@ data:
         secret: false
         defaultValue: false
         description: To enable streaming to send data as multiple text fragments.
+        order: 7
       async:
         kind: parameter
         group: consumer
@@ -173,6 +188,7 @@ data:
         secret: false
         defaultValue: false
         description: Configure the consumer to work in async mode
+        order: 8
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -184,6 +200,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       eagerCheckContentAvailable:
         kind: parameter
         group: consumer
@@ -194,6 +211,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to eager check whether the HTTP requests has content if the content-length header is 0 or not present. This can be turned on in case HTTP clients do not send streamed data.
+        order: 10
       httpMethodRestrict:
         kind: parameter
         group: consumer
@@ -203,6 +221,7 @@ data:
         deprecated: false
         secret: false
         description: Used to only allow consuming if the HttpMethod matches such as GET/POST/PUT etc. Multiple methods can be specified separated by comma.
+        order: 11
       matchOnUriPrefix:
         kind: parameter
         group: consumer
@@ -213,6 +232,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether or not the consumer should try to find a target consumer by matching the URI prefix if no exact match is found.
+        order: 12
       optionsEnabled:
         kind: parameter
         group: consumer
@@ -223,6 +243,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether to enable HTTP OPTIONS for this Servlet consumer. By default OPTIONS is turned off.
+        order: 13
       responseBufferSize:
         kind: parameter
         group: consumer
@@ -232,6 +253,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom buffer size on the javax.servlet.ServletResponse.
+        order: 14
       servletName:
         kind: parameter
         group: consumer
@@ -242,6 +264,7 @@ data:
         secret: false
         defaultValue: CamelServlet
         description: Name of the servlet to use
+        order: 15
       traceEnabled:
         kind: parameter
         group: consumer
@@ -252,6 +275,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether to enable HTTP TRACE for this Servlet consumer. By default TRACE is turned off.
+        order: 16
       attachmentMultipartBinding:
         kind: parameter
         group: consumer (advanced)
@@ -262,6 +286,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to automatic bind multipart/form-data as attachments on the Camel Exchange. This is turn off by default as this may require servlet specific configuration to enable this when using Servlet's.
+        order: 17
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -272,6 +297,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 18
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -290,6 +316,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 19
       authMethodPriority:
         kind: parameter
         group: producer
@@ -303,6 +330,7 @@ data:
         deprecated: false
         secret: false
         description: Authentication method for proxy either as Basic Digest or NTLM.
+        order: 20
       bridgeEndpoint:
         kind: parameter
         group: producer
@@ -313,6 +341,7 @@ data:
         secret: false
         defaultValue: false
         description: If the option is true HttpProducer will ignore the Exchange.HTTP_URI header and use the endpoint's URI for request. You may also set the option throwExceptionOnFailure to be false to let the HttpProducer send all the fault response back.
+        order: 21
       connectionClose:
         kind: parameter
         group: producer
@@ -323,6 +352,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether a Connection Close header must be added to HTTP Request. By default connectionClose is false.
+        order: 22
       copyHeaders:
         kind: parameter
         group: producer
@@ -333,6 +363,7 @@ data:
         secret: false
         defaultValue: true
         description: If this option is true then IN exchange headers will be copied to OUT exchange headers according to copy strategy. Setting this to false allows to only include the headers from the HTTP response (not propagating IN headers).
+        order: 23
       ignoreResponseBody:
         kind: parameter
         group: producer
@@ -343,6 +374,7 @@ data:
         secret: false
         defaultValue: false
         description: If this option is true The http producer won't read response body and cache the input stream
+        order: 24
       okStatusCodeRange:
         kind: parameter
         group: producer
@@ -353,6 +385,7 @@ data:
         secret: false
         defaultValue: 200-299
         description: The status codes which is considered a success response. The values are inclusive. The range must be defined as from-to with the dash included.
+        order: 25
       preserveHostHeader:
         kind: parameter
         group: producer
@@ -363,6 +396,7 @@ data:
         secret: false
         defaultValue: false
         description: If the option is true HttpProducer will set the Host header to the value contained in the current exchange Host header useful in reverse proxy applications where you want the Host header received by the downstream server to reflect the URL called by the upstream client this allows applications which use the Host header to generate accurate URL's for a proxied service
+        order: 26
       proxyHost:
         kind: parameter
         group: producer
@@ -372,6 +406,7 @@ data:
         deprecated: false
         secret: false
         description: The proxy host name
+        order: 27
       proxyPort:
         kind: parameter
         group: producer
@@ -381,6 +416,7 @@ data:
         deprecated: false
         secret: false
         description: The proxy port number
+        order: 28
       throwExceptionOnFailure:
         kind: parameter
         group: producer
@@ -391,6 +427,7 @@ data:
         secret: false
         defaultValue: true
         description: Option to disable throwing the HttpOperationFailedException in case of failed responses from the remote server. This allows you to get all responses regardless of the HTTP status code.
+        order: 29
       urlRewrite:
         kind: parameter
         group: producer (advanced)
@@ -400,6 +437,7 @@ data:
         deprecated: false
         secret: false
         description: Refers to a custom org.apache.camel.component.http.UrlRewrite which allows you to rewrite urls when you bridge/proxy endpoints. See more details at http://camel.apache.org/urlrewrite.html
+        order: 30
       mapHttpMessageBody:
         kind: parameter
         group: advanced
@@ -410,6 +448,7 @@ data:
         secret: false
         defaultValue: true
         description: If this option is true then IN exchange Body of the exchange will be mapped to HTTP body. Setting this to false will avoid the HTTP mapping.
+        order: 31
       mapHttpMessageFormUrlEncodedBody:
         kind: parameter
         group: advanced
@@ -420,6 +459,7 @@ data:
         secret: false
         defaultValue: true
         description: If this option is true then IN exchange Form Encoded body of the exchange will be mapped to HTTP. Setting this to false will avoid the HTTP Form Encoded body mapping.
+        order: 32
       mapHttpMessageHeaders:
         kind: parameter
         group: advanced
@@ -430,6 +470,7 @@ data:
         secret: false
         defaultValue: true
         description: If this option is true then IN exchange Headers of the exchange will be mapped to HTTP headers. Setting this to false will avoid the HTTP Headers mapping.
+        order: 33
       synchronous:
         kind: parameter
         group: advanced
@@ -440,6 +481,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 34
   documentation.adoc: |+
     [[Atmosphere-Websocket-AtmosphereWebsocketServletComponent]]
     Atmosphere Websocket Servlet Component

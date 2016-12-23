@@ -53,6 +53,7 @@ data:
         deprecated: false
         secret: false
         description: Name of data format
+        order: 0
       operation:
         kind: path
         group: producer
@@ -65,6 +66,7 @@ data:
         deprecated: false
         secret: false
         description: Operation to use either marshal or unmarshal
+        order: 1
       synchronous:
         kind: parameter
         group: advanced
@@ -75,6 +77,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 2
   documentation.adoc: |+
     [[DataFormatComponent-DataFormatComponent]]
     Data Format Component

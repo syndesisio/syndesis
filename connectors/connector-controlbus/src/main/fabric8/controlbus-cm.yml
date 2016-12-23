@@ -55,6 +55,7 @@ data:
         deprecated: false
         secret: false
         description: Command can be either route or language
+        order: 0
       language:
         kind: path
         group: producer
@@ -84,6 +85,7 @@ data:
         deprecated: false
         secret: false
         description: Allows you to specify the name of a Language to use for evaluating the message body. If there is any result from the evaluation then the result is put in the message body.
+        order: 1
       action:
         kind: parameter
         group: producer
@@ -104,6 +106,7 @@ data:
           stats to get performance statics returned in XML format; the routeId option
           can be used to define which route to get the performance stats for if routeId
           is not defined then you get statistics for the entire CamelContext.'
+        order: 2
       async:
         kind: parameter
         group: producer
@@ -115,6 +118,7 @@ data:
         description: 'Whether to execute the control bus task asynchronously. Important:
           If this option is enabled then any result from the task is not set on the Exchange.
           This is only possible if executing tasks synchronously.'
+        order: 3
       loggingLevel:
         kind: parameter
         group: producer
@@ -131,6 +135,7 @@ data:
         secret: false
         defaultValue: INFO
         description: Logging level used for logging when task is done or if any exceptions occurred during processing the task.
+        order: 4
       routeId:
         kind: parameter
         group: producer
@@ -139,6 +144,7 @@ data:
         deprecated: false
         secret: false
         description: To specify a route by its id. The special keyword current indicates the current route.
+        order: 5
       synchronous:
         kind: parameter
         group: advanced
@@ -149,6 +155,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 6
   documentation.adoc: "[[ControlBus-ControlBus]]\nControlBus\n^^^^^^^^^^\n\nThe http://www.eaipatterns.com/ControlBus.html[Control\
     \ Bus] from the\nlink:enterprise-integration-patterns.html[EIP patterns] allows\
     \ for the\nintegration system to be monitored and managed from within the\nframework.\n\

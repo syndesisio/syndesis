@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: The server url
+        order: 0
       basicEncoding:
         kind: parameter
         group: producer
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the encoding for basic authentication null means UTF-8 is chosen.
+        order: 1
       connectionTimeout:
         kind: parameter
         group: producer
@@ -68,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: Set the connection timeout in milliseconds 0 is to disable it
+        order: 2
       contentLengthOptional:
         kind: parameter
         group: producer
@@ -77,6 +80,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether a Content-Length header may be omitted. The XML-RPC specification demands that such a header be present.
+        order: 3
       defaultMethodName:
         kind: parameter
         group: producer
@@ -85,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: The method name which would be used for the xmlrpc requests by default if the Message header CamelXmlRpcMethodName is not set.
+        order: 4
       enabledForExceptions:
         kind: parameter
         group: producer
@@ -94,6 +99,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the response should contain a faultCause element in case of errors. The faultCause is an exception which the server has trapped and written into a byte stream as a serializable object.
+        order: 5
       enabledForExtensions:
         kind: parameter
         group: producer
@@ -103,6 +109,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether extensions are enabled. By default the client or server is strictly compliant to the XML-RPC specification and extensions are disabled.
+        order: 6
       encoding:
         kind: parameter
         group: producer
@@ -111,6 +118,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the requests encoding null means UTF-8 is chosen.
+        order: 7
       gzipCompressing:
         kind: parameter
         group: producer
@@ -120,6 +128,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether gzip compression is being used for transmitting the request.
+        order: 8
       gzipRequesting:
         kind: parameter
         group: producer
@@ -129,6 +138,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether gzip compression is being used for transmitting the request.
+        order: 9
       replyTimeout:
         kind: parameter
         group: producer
@@ -137,6 +147,7 @@ data:
         deprecated: false
         secret: false
         description: Set the reply timeout in milliseconds 0 is to disable it.
+        order: 10
       clientConfig:
         kind: parameter
         group: advanced
@@ -146,6 +157,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given XmlRpcClientConfigImpl as configuration for the client.
+        order: 11
       clientConfigurer:
         kind: parameter
         group: advanced
@@ -155,6 +167,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom XmlRpcClientConfigurer to configure the client
+        order: 12
       synchronous:
         kind: parameter
         group: advanced
@@ -165,6 +178,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 13
       timeZone:
         kind: parameter
         group: advanced
@@ -174,6 +188,7 @@ data:
         deprecated: false
         secret: false
         description: The timezone which is used to interpret date/time. Defaults to link TimeZonegetDefault().
+        order: 14
       userAgent:
         kind: parameter
         group: advanced
@@ -183,6 +198,7 @@ data:
         deprecated: false
         secret: false
         description: The http user agent header to set when doing xmlrpc requests
+        order: 15
       xmlRpcServer:
         kind: parameter
         group: advanced
@@ -192,6 +208,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom XmlRpcRequestProcessor as server.
+        order: 16
       basicPassword:
         kind: parameter
         group: security
@@ -201,6 +218,7 @@ data:
         deprecated: false
         secret: true
         description: The password for basic authentication.
+        order: 17
       basicUserName:
         kind: parameter
         group: security
@@ -210,6 +228,7 @@ data:
         deprecated: false
         secret: true
         description: The user name for basic authentication.
+        order: 18
   documentation.adoc: |
     [[XmlRpc-XmlRpcComponent]]
     XmlRpc Component

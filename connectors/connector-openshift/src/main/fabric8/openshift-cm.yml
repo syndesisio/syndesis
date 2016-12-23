@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: The username to login to openshift server.
+        order: 0
       password:
         kind: property
         type: string
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: The password for login to openshift server.
+        order: 1
       domain:
         kind: property
         type: string
@@ -62,6 +64,7 @@ data:
         deprecated: false
         secret: false
         description: Domain name. If not specified then the default domain is used.
+        order: 2
       server:
         kind: property
         type: string
@@ -69,6 +72,7 @@ data:
         deprecated: false
         secret: false
         description: Url to the openshift server. If not specified then the default value from the local openshift configuration file /.openshift/express.conf is used. And if that fails as well then openshift.redhat.com is used.
+        order: 3
     properties:
       clientId:
         kind: path
@@ -79,6 +83,7 @@ data:
         deprecated: false
         secret: false
         description: The client id
+        order: 0
       domain:
         kind: parameter
         group: common
@@ -87,6 +92,7 @@ data:
         deprecated: false
         secret: false
         description: Domain name. If not specified then the default domain is used.
+        order: 1
       password:
         kind: parameter
         group: common
@@ -96,6 +102,7 @@ data:
         deprecated: false
         secret: false
         description: The password for login to openshift server.
+        order: 2
       server:
         kind: parameter
         group: common
@@ -104,6 +111,7 @@ data:
         deprecated: false
         secret: false
         description: Url to the openshift server. If not specified then the default value from the local openshift configuration file /.openshift/express.conf is used. And if that fails as well then openshift.redhat.com is used.
+        order: 3
       username:
         kind: parameter
         group: common
@@ -113,6 +121,7 @@ data:
         deprecated: false
         secret: false
         description: The username to login to openshift server.
+        order: 4
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -124,6 +133,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 5
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -135,6 +145,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 6
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -145,6 +156,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 7
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -163,6 +175,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 8
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -173,6 +186,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+        order: 9
       application:
         kind: parameter
         group: producer
@@ -182,6 +196,7 @@ data:
         deprecated: false
         secret: false
         description: The application name to start stop restart or get the state.
+        order: 10
       mode:
         kind: parameter
         group: producer
@@ -194,6 +209,7 @@ data:
         deprecated: false
         secret: false
         description: Whether to output the message body as a pojo or json. For pojo the message is a List type.
+        order: 11
       operation:
         kind: parameter
         group: producer
@@ -231,6 +247,7 @@ data:
           state. The list operation returns information about all the applications in
           json format. The state operation returns the state such as: started stopped
           etc. The other operations does not return any value.'
+        order: 12
       synchronous:
         kind: parameter
         group: advanced
@@ -241,6 +258,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 13
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -251,6 +269,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 14
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -261,6 +280,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 15
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -271,6 +291,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 16
       delay:
         kind: parameter
         group: scheduler
@@ -282,6 +303,7 @@ data:
         secret: false
         defaultValue: "500"
         description: Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 17
       greedy:
         kind: parameter
         group: scheduler
@@ -293,6 +315,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 18
       initialDelay:
         kind: parameter
         group: scheduler
@@ -304,6 +327,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 19
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -322,6 +346,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 20
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -332,6 +357,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+        order: 21
       scheduler:
         kind: parameter
         group: scheduler
@@ -347,6 +373,7 @@ data:
         secret: false
         defaultValue: none
         description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+        order: 22
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -358,6 +385,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 23
       startScheduler:
         kind: parameter
         group: scheduler
@@ -369,6 +397,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 24
       timeUnit:
         kind: parameter
         group: scheduler
@@ -388,6 +417,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 25
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -399,6 +429,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 26
   documentation.adoc: |+
     [[Openshift-OpenshiftComponent]]
     Openshift Component

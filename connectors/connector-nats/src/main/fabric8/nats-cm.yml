@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: URLs to one or more NAT servers. Use comma to separate URLs when specifying multiple servers.
+        order: 0
       maxReconnectAttempts:
         kind: parameter
         group: common
@@ -60,6 +61,7 @@ data:
         secret: false
         defaultValue: "3"
         description: Max reconnection attempts
+        order: 1
       noRandomizeServers:
         kind: parameter
         group: common
@@ -69,6 +71,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether or not randomizing the order of servers for the connection attempts
+        order: 2
       pedantic:
         kind: parameter
         group: common
@@ -78,6 +81,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether or not running in pedantic mode (this affects performace)
+        order: 3
       pingInterval:
         kind: parameter
         group: common
@@ -87,6 +91,7 @@ data:
         secret: false
         defaultValue: "4000"
         description: Ping interval to be aware if connection is still alive (in milliseconds)
+        order: 4
       reconnect:
         kind: parameter
         group: common
@@ -96,6 +101,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether or not using reconnection feature
+        order: 5
       reconnectTimeWait:
         kind: parameter
         group: common
@@ -105,6 +111,7 @@ data:
         secret: false
         defaultValue: "2000"
         description: Waiting time before attempts reconnection (in milliseconds)
+        order: 6
       ssl:
         kind: parameter
         group: common
@@ -114,6 +121,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether or not using SSL
+        order: 7
       topic:
         kind: parameter
         group: common
@@ -123,6 +131,7 @@ data:
         deprecated: false
         secret: false
         description: The name of topic we want to use
+        order: 8
       verbose:
         kind: parameter
         group: common
@@ -132,6 +141,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether or not running in verbose mode
+        order: 9
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -143,6 +153,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 10
       maxMessages:
         kind: parameter
         group: consumer
@@ -152,6 +163,7 @@ data:
         deprecated: false
         secret: false
         description: Stop receiving messages from a topic we are subscribing to after maxMessages
+        order: 11
       poolSize:
         kind: parameter
         group: consumer
@@ -162,6 +174,7 @@ data:
         secret: false
         defaultValue: "10"
         description: Consumer pool size
+        order: 12
       queueName:
         kind: parameter
         group: consumer
@@ -171,6 +184,7 @@ data:
         deprecated: false
         secret: false
         description: The Queue name if we are using nats for a queue configuration
+        order: 13
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -181,6 +195,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 14
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -199,6 +214,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 15
       replySubject:
         kind: parameter
         group: producer
@@ -208,6 +224,7 @@ data:
         deprecated: false
         secret: false
         description: the subject to which subscribers should send response
+        order: 16
       synchronous:
         kind: parameter
         group: advanced
@@ -218,6 +235,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 17
   documentation.adoc: |
     [[NATS-NATSComponent]]
     NATS Component

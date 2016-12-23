@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: The Camel Rest component to use for the REST transport such as restlet spark-rest. If no component has been explicit configured then Camel will lookup if there is a Camel component that integrates with the Rest DSL or if a org.apache.camel.spi.RestConsumerFactory (consumer) or org.apache.camel.spi.RestProducerFactory (producer) is registered in the registry. If either one is found then that is being used.
+        order: 0
       apiDoc:
         kind: property
         type: string
@@ -56,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: The swagger api doc resource to use. The resource is loaded from classpath by default and must be in JSon format.
+        order: 1
       host:
         kind: property
         type: string
@@ -63,6 +65,7 @@ data:
         deprecated: false
         secret: false
         description: Host and port of HTTP service to use (override host in swagger schema)
+        order: 2
     properties:
       method:
         kind: path
@@ -84,6 +87,7 @@ data:
         deprecated: false
         secret: false
         description: HTTP method to use.
+        order: 0
       path:
         kind: path
         group: common
@@ -94,6 +98,7 @@ data:
         deprecated: false
         secret: false
         description: The base path
+        order: 1
       uriTemplate:
         kind: path
         group: common
@@ -103,6 +108,7 @@ data:
         deprecated: false
         secret: false
         description: The uri template
+        order: 2
       componentName:
         kind: parameter
         group: common
@@ -112,6 +118,7 @@ data:
         deprecated: false
         secret: false
         description: The Camel Rest component to use for the REST transport such as restlet spark-rest. If no component has been explicit configured then Camel will lookup if there is a Camel component that integrates with the Rest DSL or if a org.apache.camel.spi.RestConsumerFactory is registered in the registry. If either one is found then that is being used.
+        order: 3
       consumes:
         kind: parameter
         group: common
@@ -122,6 +129,7 @@ data:
         secret: false
         description: 'Media type such as: ''text/xml'' or ''application/json'' this REST
           service accepts. By default we accept all kinds of types.'
+        order: 4
       inType:
         kind: parameter
         group: common
@@ -131,6 +139,7 @@ data:
         deprecated: false
         secret: false
         description: To declare the incoming POJO binding type as a FQN class name
+        order: 5
       outType:
         kind: parameter
         group: common
@@ -140,6 +149,7 @@ data:
         deprecated: false
         secret: false
         description: To declare the outgoing POJO binding type as a FQN class name
+        order: 6
       produces:
         kind: parameter
         group: common
@@ -150,6 +160,7 @@ data:
         secret: false
         description: 'Media type such as: ''text/xml'' or ''application/json'' this REST
           service returns.'
+        order: 7
       routeId:
         kind: parameter
         group: common
@@ -159,6 +170,7 @@ data:
         deprecated: false
         secret: false
         description: Name of the route this REST services creates
+        order: 8
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -170,6 +182,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       description:
         kind: parameter
         group: consumer
@@ -179,6 +192,7 @@ data:
         deprecated: false
         secret: false
         description: Human description to document this REST service
+        order: 10
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -189,6 +203,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 11
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -207,6 +222,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default exchange pattern when creating an exchange.
+        order: 12
       apiDoc:
         kind: parameter
         group: producer
@@ -216,6 +232,7 @@ data:
         deprecated: false
         secret: false
         description: The swagger api doc resource to use. The resource is loaded from classpath by default and must be in JSon format.
+        order: 13
       host:
         kind: parameter
         group: producer
@@ -225,6 +242,7 @@ data:
         deprecated: false
         secret: false
         description: Host and port of HTTP service to use (override host in swagger schema)
+        order: 14
       queryParameters:
         kind: parameter
         group: producer
@@ -235,6 +253,7 @@ data:
         deprecated: false
         secret: false
         description: Query parameters for the HTTP service to call
+        order: 15
       synchronous:
         kind: parameter
         group: advanced
@@ -245,6 +264,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 16
   documentation.adoc: |+
     [[Rest-RestComponent]]
     Rest Component

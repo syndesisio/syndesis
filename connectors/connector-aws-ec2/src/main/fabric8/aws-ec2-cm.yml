@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Logical name
+        order: 0
       accessKey:
         kind: parameter
         group: producer
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Access Key
+        order: 1
       amazonEc2Client:
         kind: parameter
         group: producer
@@ -68,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: To use a existing configured AmazonEC2Client as client
+        order: 2
       amazonEc2Endpoint:
         kind: parameter
         group: producer
@@ -76,6 +79,7 @@ data:
         deprecated: false
         secret: false
         description: The region with which the AWS-EC2 client wants to work with.
+        order: 3
       operation:
         kind: parameter
         group: producer
@@ -98,6 +102,7 @@ data:
         deprecated: false
         secret: false
         description: The operation to perform. It can be createAndRunInstances startInstances stopInstances terminateInstances describeInstances describeInstancesStatus rebootInstances monitorInstances unmonitorInstances createTags or deleteTags
+        order: 4
       proxyHost:
         kind: parameter
         group: producer
@@ -106,6 +111,7 @@ data:
         deprecated: false
         secret: false
         description: To define a proxy host when instantiating the SQS client
+        order: 5
       proxyPort:
         kind: parameter
         group: producer
@@ -114,6 +120,7 @@ data:
         deprecated: false
         secret: false
         description: To define a proxy port when instantiating the SQS client
+        order: 6
       secretKey:
         kind: parameter
         group: producer
@@ -122,6 +129,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Secret Key
+        order: 7
       synchronous:
         kind: parameter
         group: advanced
@@ -132,6 +140,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 8
   documentation.adoc: |+
     [[AWS-EC2-EC2Component]]
     EC2 Component

@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: The incoming webhook URL
+        order: 0
     properties:
       channel:
         kind: path
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: The channel name (syntax name) or slackuser (syntax userName) to send a message directly to an user.
+        order: 0
       iconEmoji:
         kind: parameter
         group: producer
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: Use a Slack emoji as an avatar
+        order: 1
       iconUrl:
         kind: parameter
         group: producer
@@ -75,6 +78,7 @@ data:
         deprecated: false
         secret: false
         description: The avatar that the component will use when sending message to a channel or user.
+        order: 2
       username:
         kind: parameter
         group: producer
@@ -83,6 +87,7 @@ data:
         deprecated: false
         secret: false
         description: This is the username that the bot will have when sending messages to a channel or user.
+        order: 3
       webhookUrl:
         kind: parameter
         group: producer
@@ -91,6 +96,7 @@ data:
         deprecated: false
         secret: false
         description: The incoming webhook URL
+        order: 4
       synchronous:
         kind: parameter
         group: advanced
@@ -101,6 +107,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 5
   documentation.adoc: |+
     [[Slack-SlackComponent]]
     Slack Component

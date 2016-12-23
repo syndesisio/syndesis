@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Kubernetes Master url
+        order: 0
       apiVersion:
         kind: parameter
         group: common
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: The Kubernetes API Version to use
+        order: 1
       category:
         kind: parameter
         group: common
@@ -82,6 +84,7 @@ data:
         deprecated: false
         secret: false
         description: Kubernetes Producer and Consumer category
+        order: 2
       dnsDomain:
         kind: parameter
         group: common
@@ -90,6 +93,7 @@ data:
         deprecated: false
         secret: false
         description: The dns domain used for ServiceCall EIP
+        order: 3
       kubernetesClient:
         kind: parameter
         group: common
@@ -98,6 +102,7 @@ data:
         deprecated: false
         secret: false
         description: Default KubernetesClient to use if provided
+        order: 4
       portName:
         kind: parameter
         group: common
@@ -106,6 +111,7 @@ data:
         deprecated: false
         secret: false
         description: The port name used for ServiceCall EIP
+        order: 5
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -117,6 +123,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 6
       labelKey:
         kind: parameter
         group: consumer
@@ -126,6 +133,7 @@ data:
         deprecated: false
         secret: false
         description: The Consumer Label key when watching at some resources
+        order: 7
       labelValue:
         kind: parameter
         group: consumer
@@ -135,6 +143,7 @@ data:
         deprecated: false
         secret: false
         description: The Consumer Label value when watching at some resources
+        order: 8
       namespace:
         kind: parameter
         group: consumer
@@ -144,6 +153,7 @@ data:
         deprecated: false
         secret: false
         description: The namespace
+        order: 9
       poolSize:
         kind: parameter
         group: consumer
@@ -154,6 +164,7 @@ data:
         secret: false
         defaultValue: "1"
         description: The Consumer pool size
+        order: 10
       resourceName:
         kind: parameter
         group: consumer
@@ -163,6 +174,7 @@ data:
         deprecated: false
         secret: false
         description: The Consumer Resource Name we would like to watch
+        order: 11
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -173,6 +185,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 12
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -191,6 +204,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 13
       operation:
         kind: parameter
         group: producer
@@ -259,6 +273,7 @@ data:
         deprecated: false
         secret: false
         description: Producer operation to do on Kubernetes
+        order: 14
       synchronous:
         kind: parameter
         group: advanced
@@ -269,6 +284,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 15
       caCertData:
         kind: parameter
         group: security
@@ -278,6 +294,7 @@ data:
         deprecated: false
         secret: true
         description: The CA Cert Data
+        order: 16
       caCertFile:
         kind: parameter
         group: security
@@ -287,6 +304,7 @@ data:
         deprecated: false
         secret: true
         description: The CA Cert File
+        order: 17
       clientCertData:
         kind: parameter
         group: security
@@ -296,6 +314,7 @@ data:
         deprecated: false
         secret: true
         description: The Client Cert Data
+        order: 18
       clientCertFile:
         kind: parameter
         group: security
@@ -305,6 +324,7 @@ data:
         deprecated: false
         secret: true
         description: The Client Cert File
+        order: 19
       clientKeyAlgo:
         kind: parameter
         group: security
@@ -314,6 +334,7 @@ data:
         deprecated: false
         secret: true
         description: The Key Algorithm used by the client
+        order: 20
       clientKeyData:
         kind: parameter
         group: security
@@ -323,6 +344,7 @@ data:
         deprecated: false
         secret: true
         description: The Client Key data
+        order: 21
       clientKeyFile:
         kind: parameter
         group: security
@@ -332,6 +354,7 @@ data:
         deprecated: false
         secret: true
         description: The Client Key file
+        order: 22
       clientKeyPassphrase:
         kind: parameter
         group: security
@@ -341,6 +364,7 @@ data:
         deprecated: false
         secret: true
         description: The Client Key Passphrase
+        order: 23
       oauthToken:
         kind: parameter
         group: security
@@ -350,6 +374,7 @@ data:
         deprecated: false
         secret: true
         description: The Auth Token
+        order: 24
       password:
         kind: parameter
         group: security
@@ -359,6 +384,7 @@ data:
         deprecated: false
         secret: true
         description: Password to connect to Kubernetes
+        order: 25
       trustCerts:
         kind: parameter
         group: security
@@ -368,6 +394,7 @@ data:
         deprecated: false
         secret: true
         description: Define if the certs we used are trusted anyway or not
+        order: 26
       username:
         kind: parameter
         group: security
@@ -377,6 +404,7 @@ data:
         deprecated: false
         secret: true
         description: Username to connect to Kubernetes
+        order: 27
   documentation.adoc: |
     [[Kubernetes-KubernetesComponent]]
     Kubernetes Component

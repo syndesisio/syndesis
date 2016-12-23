@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use an existing freemarker.template.Configuration instance as the configuration.
+        order: 0
     properties:
       resourceUri:
         kind: path
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: Path to the resource or a reference to lookup a bean in the Registry to use as the resource
+        order: 0
       configuration:
         kind: parameter
         group: producer
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the Freemarker configuration to use
+        order: 1
       contentCache:
         kind: parameter
         group: producer
@@ -76,6 +79,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether to use resource content cache or not
+        order: 2
       encoding:
         kind: parameter
         group: producer
@@ -84,6 +88,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the encoding to be used for loading the template file.
+        order: 3
       templateUpdateDelay:
         kind: parameter
         group: producer
@@ -92,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: Number of seconds the loaded template resource will remain in the cache.
+        order: 4
       synchronous:
         kind: parameter
         group: advanced
@@ -102,6 +108,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 5
   documentation.adoc: |+
     [[FreeMarker-FreeMarker]]
     FreeMarker

@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Name of DataSet to lookup in the registry
+        order: 0
       dataSetIndex:
         kind: parameter
         group: common
@@ -70,6 +71,7 @@ data:
           set if it is not present = strict = the header value must be present and will
           be verified = lenient = the header value will be verified if it is present and
           will be set if it is not present'
+        order: 1
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -81,6 +83,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 2
       initialDelay:
         kind: parameter
         group: consumer
@@ -91,6 +94,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Time period in millis to wait before starting sending messages.
+        order: 3
       minRate:
         kind: parameter
         group: consumer
@@ -101,6 +105,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Wait until the DataSet contains at least this number of messages
+        order: 4
       preloadSize:
         kind: parameter
         group: consumer
@@ -111,6 +116,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Sets how many messages should be preloaded (sent) before the route completes its initialization
+        order: 5
       produceDelay:
         kind: parameter
         group: consumer
@@ -121,6 +127,7 @@ data:
         secret: false
         defaultValue: "3"
         description: Allows a delay to be specified which causes a delay when a message is sent by the consumer (to simulate slow processing)
+        order: 6
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -131,6 +138,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 7
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -149,6 +157,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the default exchange pattern when creating an exchange.
+        order: 8
       assertPeriod:
         kind: parameter
         group: producer
@@ -159,6 +168,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Sets a grace period after which the mock endpoint will re-assert to ensure the preliminary assertion is still valid. This is used for example to assert that exactly a number of messages arrives. For example if link expectedMessageCount(int) was set to 5 then the assertion is satisfied when 5 or more message arrives. To ensure that exactly 5 messages arrives then you would need to wait a little period to ensure no further message arrives. This is what you can use this link setAssertPeriod(long) method for. By default this period is disabled.
+        order: 9
       consumeDelay:
         kind: parameter
         group: producer
@@ -169,6 +179,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Allows a delay to be specified which causes a delay when a message is consumed by the producer (to simulate slow processing)
+        order: 10
       expectedCount:
         kind: parameter
         group: producer
@@ -188,6 +199,7 @@ data:
           This allows you to not use a fixed assert period to speedup testing times. If
           you want to assert that exactly n''th message arrives to this mock endpoint
           then see also the link setAssertPeriod(long) method for further details.'
+        order: 11
       reportGroup:
         kind: parameter
         group: producer
@@ -197,6 +209,7 @@ data:
         deprecated: false
         secret: false
         description: A number that is used to turn on throughput logging based on groups of the size.
+        order: 12
       resultMinimumWaitTime:
         kind: parameter
         group: producer
@@ -207,6 +220,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Sets the minimum expected amount of time (in millis) the link assertIsSatisfied() will wait on a latch until it is satisfied
+        order: 13
       resultWaitTime:
         kind: parameter
         group: producer
@@ -217,6 +231,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Sets the maximum amount of time (in millis) the link assertIsSatisfied() will wait on a latch until it is satisfied
+        order: 14
       retainFirst:
         kind: parameter
         group: producer
@@ -238,6 +253,7 @@ data:
           link expectedBodiesReceived(Object...) sets a expectation on the first number
           of bodies received. You can configure both link setRetainFirst(int) and link
           setRetainLast(int) methods to limit both the first and last received.'
+        order: 15
       retainLast:
         kind: parameter
         group: producer
@@ -259,6 +275,7 @@ data:
           sets a expectation on the first number of bodies received. You can configure
           both link setRetainFirst(int) and link setRetainLast(int) methods to limit both
           the first and last received.'
+        order: 16
       sleepForEmptyTest:
         kind: parameter
         group: producer
@@ -269,6 +286,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Allows a sleep to be specified to wait to check that this endpoint really is empty when link expectedMessageCount(int) is called with zero
+        order: 17
       copyOnExchange:
         kind: parameter
         group: producer (advanced)
@@ -279,6 +297,7 @@ data:
         secret: false
         defaultValue: true
         description: Sets whether to make a deep copy of the incoming Exchange when received at this mock endpoint. Is by default true.
+        order: 18
       synchronous:
         kind: parameter
         group: advanced
@@ -289,6 +308,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 19
   documentation.adoc: |+
     [[DataSet-DataSetComponent]]
     DataSet Component

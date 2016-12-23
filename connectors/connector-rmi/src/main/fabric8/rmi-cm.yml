@@ -51,6 +51,7 @@ data:
         secret: false
         defaultValue: localhost
         description: Hostname of RMI server
+        order: 0
       name:
         kind: path
         group: common
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Name to use when binding to RMI server
+        order: 1
       port:
         kind: path
         group: common
@@ -69,6 +71,7 @@ data:
         secret: false
         defaultValue: "1099"
         description: Port number of RMI server
+        order: 2
       method:
         kind: parameter
         group: common
@@ -77,6 +80,7 @@ data:
         deprecated: false
         secret: false
         description: You can set the name of the method to invoke.
+        order: 3
       remoteInterfaces:
         kind: parameter
         group: common
@@ -85,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: To specific the remote interfaces.
+        order: 4
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -96,6 +101,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 5
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -106,6 +112,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 6
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -124,6 +131,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 7
       synchronous:
         kind: parameter
         group: advanced
@@ -134,6 +142,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 8
   documentation.adoc: |+
     [[RMI-RMIComponent]]
     RMI Component

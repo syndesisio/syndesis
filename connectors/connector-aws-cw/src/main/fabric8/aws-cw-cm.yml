@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: The metric namespace
+        order: 0
       accessKey:
         kind: parameter
         group: producer
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Access Key
+        order: 1
       amazonCwClient:
         kind: parameter
         group: producer
@@ -68,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: To use the AmazonCloudWatch as the client
+        order: 2
       amazonCwEndpoint:
         kind: parameter
         group: producer
@@ -76,6 +79,7 @@ data:
         deprecated: false
         secret: false
         description: The region with which the AWS-CW client wants to work with.
+        order: 3
       name:
         kind: parameter
         group: producer
@@ -84,6 +88,7 @@ data:
         deprecated: false
         secret: false
         description: The metric name
+        order: 4
       proxyHost:
         kind: parameter
         group: producer
@@ -92,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: To define a proxy host when instantiating the SQS client
+        order: 5
       proxyPort:
         kind: parameter
         group: producer
@@ -100,6 +106,7 @@ data:
         deprecated: false
         secret: false
         description: To define a proxy port when instantiating the SQS client
+        order: 6
       secretKey:
         kind: parameter
         group: producer
@@ -108,6 +115,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Secret Key
+        order: 7
       timestamp:
         kind: parameter
         group: producer
@@ -116,6 +124,7 @@ data:
         deprecated: false
         secret: false
         description: The metric timestamp
+        order: 8
       unit:
         kind: parameter
         group: producer
@@ -124,6 +133,7 @@ data:
         deprecated: false
         secret: false
         description: The metric unit
+        order: 9
       value:
         kind: parameter
         group: producer
@@ -132,6 +142,7 @@ data:
         deprecated: false
         secret: false
         description: The metric value
+        order: 10
       synchronous:
         kind: parameter
         group: advanced
@@ -142,6 +153,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 11
   documentation.adoc: |+
     [[AWS-CW-CWComponent]]
     CW Component

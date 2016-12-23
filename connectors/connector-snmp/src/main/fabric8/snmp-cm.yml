@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Hostname of the SNMP enabled device
+        order: 0
       port:
         kind: path
         group: consumer
@@ -61,6 +62,7 @@ data:
         deprecated: false
         secret: false
         description: Port number of the SNMP enabled device
+        order: 1
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -72,6 +74,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 2
       delay:
         kind: parameter
         group: consumer
@@ -82,6 +85,7 @@ data:
         secret: false
         defaultValue: "60000"
         description: Sets update rate in seconds
+        order: 3
       oids:
         kind: parameter
         group: consumer
@@ -92,6 +96,7 @@ data:
         description: 'Defines which values you are interested in. Please have a look at
           the Wikipedia to get a better understanding. You may provide a single OID or
           a coma separated list of OIDs. Example: oids=1.3.6.1.2.1.1.3.01.3.6.1.2.1.25.3.2.1.5.11.3.6.1.2.1.25.3.5.1.1.11.3.6.1.2.1.43.5.1.1.11.1'
+        order: 4
       protocol:
         kind: parameter
         group: consumer
@@ -104,6 +109,7 @@ data:
         secret: false
         defaultValue: udp
         description: Here you can select which protocol to use. You can use either udp or tcp.
+        order: 5
       retries:
         kind: parameter
         group: consumer
@@ -113,6 +119,7 @@ data:
         secret: false
         defaultValue: "2"
         description: Defines how often a retry is made before canceling the request.
+        order: 6
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -124,6 +131,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 7
       snmpCommunity:
         kind: parameter
         group: consumer
@@ -133,6 +141,7 @@ data:
         secret: false
         defaultValue: public
         description: Sets the community octet string for the snmp request.
+        order: 8
       snmpContextEngineId:
         kind: parameter
         group: consumer
@@ -141,6 +150,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the context engine ID field of the scoped PDU.
+        order: 9
       snmpContextName:
         kind: parameter
         group: consumer
@@ -149,6 +159,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the context name field of this scoped PDU.
+        order: 10
       snmpVersion:
         kind: parameter
         group: consumer
@@ -162,6 +173,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Sets the snmp version for the request. The value 0 means SNMPv1 1 means SNMPv2c and the value 3 means SNMPv3
+        order: 11
       timeout:
         kind: parameter
         group: consumer
@@ -171,6 +183,7 @@ data:
         secret: false
         defaultValue: "1500"
         description: Sets the timeout value for the request in millis.
+        order: 12
       type:
         kind: parameter
         group: consumer
@@ -183,6 +196,7 @@ data:
         deprecated: false
         secret: false
         description: Which operation to perform such as poll trap etc.
+        order: 13
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -193,6 +207,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 14
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -211,6 +226,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 15
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -221,6 +237,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+        order: 16
       synchronous:
         kind: parameter
         group: advanced
@@ -231,6 +248,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 17
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -241,6 +259,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 18
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -251,6 +270,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 19
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -261,6 +281,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 20
       greedy:
         kind: parameter
         group: scheduler
@@ -272,6 +293,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 21
       initialDelay:
         kind: parameter
         group: scheduler
@@ -283,6 +305,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 22
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -301,6 +324,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 23
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -311,6 +335,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+        order: 24
       scheduler:
         kind: parameter
         group: scheduler
@@ -326,6 +351,7 @@ data:
         secret: false
         defaultValue: none
         description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+        order: 25
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -337,6 +363,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 26
       startScheduler:
         kind: parameter
         group: scheduler
@@ -348,6 +375,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 27
       timeUnit:
         kind: parameter
         group: scheduler
@@ -367,6 +395,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 28
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -378,6 +407,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 29
       authenticationPassphrase:
         kind: parameter
         group: security
@@ -387,6 +417,7 @@ data:
         deprecated: false
         secret: true
         description: The authentication passphrase. If not null authenticationProtocol must also be not null. RFC3414 11.2 requires passphrases to have a minimum length of 8 bytes. If the length of authenticationPassphrase is less than 8 bytes an IllegalArgumentException is thrown.
+        order: 30
       authenticationProtocol:
         kind: parameter
         group: security
@@ -400,6 +431,7 @@ data:
         secret: false
         description: 'Authentication protocol to use if security level is set to enable
           authentication The possible values are: MD5 SHA1'
+        order: 31
       privacyPassphrase:
         kind: parameter
         group: security
@@ -409,6 +441,7 @@ data:
         deprecated: false
         secret: true
         description: The privacy passphrase. If not null privacyProtocol must also be not null. RFC3414 11.2 requires passphrases to have a minimum length of 8 bytes. If the length of authenticationPassphrase is less than 8 bytes an IllegalArgumentException is thrown.
+        order: 32
       privacyProtocol:
         kind: parameter
         group: security
@@ -418,6 +451,7 @@ data:
         deprecated: false
         secret: true
         description: The privacy protocol ID to be associated with this user. If set to null this user only supports unencrypted messages.
+        order: 33
       securityLevel:
         kind: parameter
         group: security
@@ -441,6 +475,7 @@ data:
           Only the one with the right authentication key can create messages with this
           security level and only the one with the right encryption/decryption key can
           read the contents of the message.'
+        order: 34
       securityName:
         kind: parameter
         group: security
@@ -450,6 +485,7 @@ data:
         deprecated: false
         secret: true
         description: Sets the security name to be used with this target.
+        order: 35
   documentation.adoc: "[[SNMP-SNMPComponent]]\nSNMP Component\n~~~~~~~~~~~~~~\n\n\
     *Available as of Camel 2.1*\n\nThe *snmp:* component gives you the ability to\
     \ poll SNMP capable devices\nor receiving traps\n\nMaven users will need to add\

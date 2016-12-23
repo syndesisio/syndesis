@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Topic name or ARN
+        order: 0
       accessKey:
         kind: parameter
         group: producer
@@ -60,6 +61,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Access Key
+        order: 1
       amazonSNSClient:
         kind: parameter
         group: producer
@@ -68,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: To use the AmazonSNS as the client
+        order: 2
       amazonSNSEndpoint:
         kind: parameter
         group: producer
@@ -76,6 +79,7 @@ data:
         deprecated: false
         secret: false
         description: The region with which the AWS-SNS client wants to work with.
+        order: 3
       messageStructure:
         kind: parameter
         group: producer
@@ -84,6 +88,7 @@ data:
         deprecated: false
         secret: false
         description: The message structure to use such as json
+        order: 4
       policy:
         kind: parameter
         group: producer
@@ -92,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: The policy for this queue
+        order: 5
       proxyHost:
         kind: parameter
         group: producer
@@ -100,6 +106,7 @@ data:
         deprecated: false
         secret: false
         description: To define a proxy host when instantiating the SQS client
+        order: 6
       proxyPort:
         kind: parameter
         group: producer
@@ -108,6 +115,7 @@ data:
         deprecated: false
         secret: false
         description: To define a proxy port when instantiating the SQS client
+        order: 7
       secretKey:
         kind: parameter
         group: producer
@@ -116,6 +124,7 @@ data:
         deprecated: false
         secret: false
         description: Amazon AWS Secret Key
+        order: 8
       subject:
         kind: parameter
         group: producer
@@ -124,6 +133,7 @@ data:
         deprecated: false
         secret: false
         description: The subject which is used if the message header 'CamelAwsSnsSubject' is not present.
+        order: 9
       synchronous:
         kind: parameter
         group: advanced
@@ -134,6 +144,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 10
   documentation.adoc: |+
     [[AWS-SNS-SNSComponent]]
     SNS Component

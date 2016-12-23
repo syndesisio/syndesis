@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use the shared configuration
+        order: 0
     properties:
       host:
         kind: path
@@ -59,6 +60,7 @@ data:
         secret: false
         defaultValue: 239.2.11.71
         description: Host name for Ganglia server
+        order: 0
       port:
         kind: path
         group: producer
@@ -68,6 +70,7 @@ data:
         secret: false
         defaultValue: "8649"
         description: Port for Ganglia server
+        order: 1
       dmax:
         kind: parameter
         group: producer
@@ -77,6 +80,7 @@ data:
         secret: false
         defaultValue: "0"
         description: Minumum time in seconds before Ganglia will purge the metric value if it expires. Set to 0 and the value will remain in Ganglia indefinitely until a gmond agent restart.
+        order: 2
       groupName:
         kind: parameter
         group: producer
@@ -86,6 +90,7 @@ data:
         secret: false
         defaultValue: java
         description: The group that the metric belongs to.
+        order: 3
       metricName:
         kind: parameter
         group: producer
@@ -95,6 +100,7 @@ data:
         secret: false
         defaultValue: metric
         description: The name to use for the metric.
+        order: 4
       mode:
         kind: parameter
         group: producer
@@ -104,6 +110,7 @@ data:
         secret: false
         defaultValue: MULTICAST
         description: Send the UDP metric packets using MULTICAST or UNICAST
+        order: 5
       prefix:
         kind: parameter
         group: producer
@@ -112,6 +119,7 @@ data:
         deprecated: false
         secret: false
         description: Prefix the metric name with this string and an underscore.
+        order: 6
       slope:
         kind: parameter
         group: producer
@@ -126,6 +134,7 @@ data:
         secret: false
         defaultValue: BOTH
         description: The slope
+        order: 7
       spoofHostname:
         kind: parameter
         group: producer
@@ -134,6 +143,7 @@ data:
         deprecated: false
         secret: false
         description: Spoofing information IP:hostname
+        order: 8
       tmax:
         kind: parameter
         group: producer
@@ -143,6 +153,7 @@ data:
         secret: false
         defaultValue: "60"
         description: Maximum time in seconds that the value can be considered current. After this Ganglia considers the value to have expired.
+        order: 9
       ttl:
         kind: parameter
         group: producer
@@ -152,6 +163,7 @@ data:
         secret: false
         defaultValue: "5"
         description: If using multicast set the TTL of the packets
+        order: 10
       type:
         kind: parameter
         group: producer
@@ -171,6 +183,7 @@ data:
         secret: false
         defaultValue: STRING
         description: The type of value
+        order: 11
       units:
         kind: parameter
         group: producer
@@ -179,6 +192,7 @@ data:
         deprecated: false
         secret: false
         description: Any unit of measurement that qualifies the metric e.g. widgets litres bytes. Do not include a prefix such as k (kilo) or m (milli) other tools may scale the units later. The value should be unscaled.
+        order: 12
       wireFormat31x:
         kind: parameter
         group: producer
@@ -188,6 +202,7 @@ data:
         secret: false
         defaultValue: true
         description: Use the wire format of Ganglia 3.1.0 and later versions. Set this to false to use Ganglia 3.0.x or earlier.
+        order: 13
       synchronous:
         kind: parameter
         group: advanced
@@ -198,6 +213,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 14
   documentation.adoc: |
     [[Ganglia-Gangliacomponent]]
     Ganglia component

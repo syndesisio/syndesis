@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: DataSet to compute against.
+        order: 0
       dataStream:
         kind: property
         type: object
@@ -56,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: DataStream to compute against.
+        order: 1
       dataSetCallback:
         kind: property
         type: object
@@ -63,6 +65,7 @@ data:
         deprecated: false
         secret: false
         description: Function performing action against a DataSet.
+        order: 2
       dataStreamCallback:
         kind: property
         type: object
@@ -70,6 +73,7 @@ data:
         deprecated: false
         secret: false
         description: Function performing action against a DataStream.
+        order: 3
     properties:
       endpointType:
         kind: path
@@ -83,6 +87,7 @@ data:
         deprecated: false
         secret: false
         description: Type of the endpoint (dataset datastream).
+        order: 0
       collect:
         kind: parameter
         group: producer
@@ -92,6 +97,7 @@ data:
         secret: false
         defaultValue: true
         description: Indicates if results should be collected or counted.
+        order: 1
       dataSet:
         kind: parameter
         group: producer
@@ -100,6 +106,7 @@ data:
         deprecated: false
         secret: false
         description: DataSet to compute against.
+        order: 2
       dataSetCallback:
         kind: parameter
         group: producer
@@ -108,6 +115,7 @@ data:
         deprecated: false
         secret: false
         description: Function performing action against a DataSet.
+        order: 3
       dataStream:
         kind: parameter
         group: producer
@@ -116,6 +124,7 @@ data:
         deprecated: false
         secret: false
         description: DataStream to compute against.
+        order: 4
       dataStreamCallback:
         kind: parameter
         group: producer
@@ -124,6 +133,7 @@ data:
         deprecated: false
         secret: false
         description: Function performing action against a DataStream.
+        order: 5
       synchronous:
         kind: parameter
         group: advanced
@@ -134,6 +144,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 6
   documentation.adoc: |+
     [[camel-flink-CamelFlinkComponent]]
     Camel Flink Component

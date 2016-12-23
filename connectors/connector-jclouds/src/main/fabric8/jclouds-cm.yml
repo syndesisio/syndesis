@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given BlobStore which must be configured when using blobstore.
+        order: 0
       computeServices:
         kind: property
         type: array
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given ComputeService which must be configured when use compute.
+        order: 1
     properties:
       command:
         kind: path
@@ -68,6 +70,7 @@ data:
         deprecated: false
         secret: false
         description: What command to execute such as blobstore or compute.
+        order: 0
       providerId:
         kind: path
         group: common
@@ -77,6 +80,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the cloud provider that provides the target service (e.g. aws-s3 or aws_ec2).
+        order: 1
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -88,6 +92,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 2
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -98,6 +103,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 3
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -116,6 +122,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 4
       synchronous:
         kind: parameter
         group: advanced
@@ -126,6 +133,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 5
       blobName:
         kind: parameter
         group: blobstore
@@ -135,6 +143,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the blob.
+        order: 6
       container:
         kind: parameter
         group: blobstore
@@ -144,6 +153,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the blob container.
+        order: 7
       directory:
         kind: parameter
         group: blobstore
@@ -153,6 +163,7 @@ data:
         deprecated: false
         secret: false
         description: An optional directory name to use
+        order: 8
       group:
         kind: parameter
         group: compute
@@ -162,6 +173,7 @@ data:
         deprecated: false
         secret: false
         description: The group that will be assigned to the newly created node. Values depend on the actual cloud provider.
+        order: 9
       hardwareId:
         kind: parameter
         group: compute
@@ -171,6 +183,7 @@ data:
         deprecated: false
         secret: false
         description: The hardware that will be used for creating a node. Values depend on the actual cloud provider.
+        order: 10
       imageId:
         kind: parameter
         group: compute
@@ -180,6 +193,7 @@ data:
         deprecated: false
         secret: false
         description: The imageId that will be used for creating a node. Values depend on the actual cloud provider.
+        order: 11
       locationId:
         kind: parameter
         group: compute
@@ -189,6 +203,7 @@ data:
         deprecated: false
         secret: false
         description: The location that will be used for creating a node. Values depend on the actual cloud provider.
+        order: 12
       nodeId:
         kind: parameter
         group: compute
@@ -198,6 +213,7 @@ data:
         deprecated: false
         secret: false
         description: The id of the node that will run the script or destroyed.
+        order: 13
       nodeState:
         kind: parameter
         group: compute
@@ -214,6 +230,7 @@ data:
         deprecated: false
         secret: false
         description: To filter by node status to only select running nodes etc.
+        order: 14
       operation:
         kind: parameter
         group: compute
@@ -223,6 +240,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the type of operation that will be performed to the blobstore.
+        order: 15
       user:
         kind: parameter
         group: compute
@@ -232,6 +250,7 @@ data:
         deprecated: false
         secret: false
         description: The user on the target node that will run the script.
+        order: 16
   documentation.adoc: "[[jclouds-JcloudsComponent]]\nJclouds Component\n~~~~~~~~~~~~~~~~~\n\
     \n*Available as of Camel 2.9*\n\nThis component allows interaction with cloud\
     \ provider key-value engines\n(blobstores) and compute services. The component\

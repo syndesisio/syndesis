@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use a shared ZooKeeperConfiguration
+        order: 0
     properties:
       serverUrls:
         kind: path
@@ -58,6 +59,7 @@ data:
         deprecated: false
         secret: false
         description: The zookeeper server hosts (multiple servers can be separated by comma)
+        order: 0
       path:
         kind: path
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: The node in the ZooKeeper server (aka znode)
+        order: 1
       awaitExistence:
         kind: parameter
         group: common
@@ -76,6 +79,7 @@ data:
         secret: false
         defaultValue: true
         description: Not in use
+        order: 2
       listChildren:
         kind: parameter
         group: common
@@ -85,6 +89,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether the children of the node should be listed
+        order: 3
       timeout:
         kind: parameter
         group: common
@@ -94,6 +99,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: The time interval to wait on connection before timing out.
+        order: 4
       backoff:
         kind: parameter
         group: consumer
@@ -104,6 +110,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: The time interval to backoff for after an error before retrying.
+        order: 5
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -115,6 +122,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 6
       repeat:
         kind: parameter
         group: consumer
@@ -125,6 +133,7 @@ data:
         secret: false
         defaultValue: false
         description: Should changes to the znode be 'watched' and repeatedly processed.
+        order: 7
       sendEmptyMessageOnDelete:
         kind: parameter
         group: consumer
@@ -135,6 +144,7 @@ data:
         secret: false
         defaultValue: true
         description: Upon the delete of a znode should an empty message be send to the consumer
+        order: 8
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -145,6 +155,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -163,6 +174,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 10
       create:
         kind: parameter
         group: producer
@@ -173,6 +185,7 @@ data:
         secret: false
         defaultValue: false
         description: Should the endpoint create the node if it does not currently exist.
+        order: 11
       createMode:
         kind: parameter
         group: producer
@@ -188,6 +201,7 @@ data:
         secret: false
         defaultValue: EPHEMERAL
         description: The create mode that should be used for the newly created node
+        order: 12
       synchronous:
         kind: parameter
         group: advanced
@@ -198,6 +212,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 13
   documentation.adoc: |
     ifdef::env-github[]
     :caution-caption: :boom:

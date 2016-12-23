@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: A ConnectionFactory is required to enable the SjmsComponent. It can be set directly or set set as part of a ConnectionResource.
+        order: 0
       headerFilterStrategy:
         kind: property
         type: object
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 1
       connectionResource:
         kind: property
         type: object
@@ -62,6 +64,7 @@ data:
         deprecated: false
         secret: false
         description: A ConnectionResource is an interface that allows for customization and container control of the ConnectionFactory. See Plugable Connection Resource Management for further details.
+        order: 2
       connectionCount:
         kind: property
         type: integer
@@ -69,6 +72,7 @@ data:
         deprecated: false
         secret: false
         description: The maximum number of connections available to endpoints started under this component
+        order: 3
       jmsKeyFormatStrategy:
         kind: property
         type: object
@@ -82,6 +86,7 @@ data:
           keys contain illegal characters. You can provide your own implementation of
           the org.apache.camel.component.jms.JmsKeyFormatStrategy and refer to it using
           the notation.'
+        order: 4
       transactionCommitStrategy:
         kind: property
         type: object
@@ -89,6 +94,7 @@ data:
         deprecated: false
         secret: false
         description: To configure which kind of commit strategy to use. Camel provides two implementations out of the box default and batch.
+        order: 5
       destinationCreationStrategy:
         kind: property
         type: object
@@ -96,6 +102,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom DestinationCreationStrategy.
+        order: 6
       timedTaskManager:
         kind: property
         type: object
@@ -103,6 +110,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom TimedTaskManager
+        order: 7
       messageCreatedStrategy:
         kind: property
         type: object
@@ -110,6 +118,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given MessageCreatedStrategy which are invoked when Camel creates new instances of javax.jms.Message objects when Camel is sending a JMS message.
+        order: 8
     properties:
       destinationType:
         kind: path
@@ -123,6 +132,7 @@ data:
         secret: false
         defaultValue: queue
         description: The kind of destination to use
+        order: 0
       destinationName:
         kind: path
         group: common
@@ -132,6 +142,7 @@ data:
         deprecated: false
         secret: false
         description: DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name.
+        order: 1
       acknowledgementMode:
         kind: parameter
         group: common
@@ -147,6 +158,7 @@ data:
         defaultValue: AUTO_ACKNOWLEDGE
         description: 'The JMS acknowledgement name which is one of: SESSION_TRANSACTED
           CLIENT_ACKNOWLEDGE AUTO_ACKNOWLEDGE DUPS_OK_ACKNOWLEDGE'
+        order: 2
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -158,6 +170,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 3
       consumerCount:
         kind: parameter
         group: consumer
@@ -168,6 +181,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Sets the number of consumer listeners used for this endpoint.
+        order: 4
       durableSubscriptionId:
         kind: parameter
         group: consumer
@@ -177,6 +191,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the durable subscription Id required for durable topics.
+        order: 5
       synchronous:
         kind: parameter
         group: consumer
@@ -187,6 +202,7 @@ data:
         secret: false
         defaultValue: true
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 6
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -197,6 +213,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 7
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -215,6 +232,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 8
       messageSelector:
         kind: parameter
         group: consumer (advanced)
@@ -224,6 +242,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the JMS Message selector syntax.
+        order: 9
       namedReplyTo:
         kind: parameter
         group: producer
@@ -233,6 +252,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the reply to destination name used for InOut producer endpoints.
+        order: 10
       persistent:
         kind: parameter
         group: producer
@@ -243,6 +263,7 @@ data:
         secret: false
         defaultValue: true
         description: Flag used to enable/disable message persistence.
+        order: 11
       producerCount:
         kind: parameter
         group: producer
@@ -253,6 +274,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Sets the number of producers used for this endpoint.
+        order: 12
       ttl:
         kind: parameter
         group: producer
@@ -263,6 +285,7 @@ data:
         secret: false
         defaultValue: -1
         description: Flag used to adjust the Time To Live value of produced messages.
+        order: 13
       allowNullBody:
         kind: parameter
         group: producer (advanced)
@@ -273,6 +296,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to allow sending messages with no body. If this option is false and the message body is null then an JMSException is thrown.
+        order: 14
       prefillPool:
         kind: parameter
         group: producer (advanced)
@@ -283,6 +307,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to prefill the producer connection pool on startup or create connections lazy when needed.
+        order: 15
       responseTimeOut:
         kind: parameter
         group: producer (advanced)
@@ -293,6 +318,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: Sets the amount of time we should wait before timing out a InOut response.
+        order: 16
       asyncStartListener:
         kind: parameter
         group: advanced
@@ -303,6 +329,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to startup the consumer message listener asynchronously when starting a route. For example if a JmsConsumer cannot get a connection to a remote JMS broker then it may block while retrying and/or failover. This will cause Camel to block while starting routes. By setting this option to true you will let routes startup while the JmsConsumer connects to the JMS broker using a dedicated thread in asynchronous mode. If this option is used then beware that if the connection could not be established then an exception is logged at WARN level and the consumer will not be able to receive messages; You can then restart the route to retry.
+        order: 17
       asyncStopListener:
         kind: parameter
         group: advanced
@@ -313,6 +340,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to stop the consumer message listener asynchronously when stopping a route.
+        order: 18
       connectionCount:
         kind: parameter
         group: advanced
@@ -322,6 +350,7 @@ data:
         deprecated: false
         secret: false
         description: The maximum number of connections available to this endpoint
+        order: 19
       connectionFactory:
         kind: parameter
         group: advanced
@@ -331,6 +360,7 @@ data:
         deprecated: false
         secret: false
         description: Initializes the connectionFactory for the endpoint which takes precedence over the component's connectionFactory if any
+        order: 20
       connectionResource:
         kind: parameter
         group: advanced
@@ -340,6 +370,7 @@ data:
         deprecated: false
         secret: false
         description: Initializes the connectionResource for the endpoint which takes precedence over the component's connectionResource if any
+        order: 21
       destinationCreationStrategy:
         kind: parameter
         group: advanced
@@ -349,6 +380,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom DestinationCreationStrategy.
+        order: 22
       headerFilterStrategy:
         kind: parameter
         group: advanced
@@ -358,6 +390,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HeaderFilterStrategy to filter header to and from Camel message.
+        order: 23
       includeAllJMSXProperties:
         kind: parameter
         group: advanced
@@ -371,6 +404,7 @@ data:
           to Camel Message. Setting this to true will include properties such as JMSXAppID
           and JMSXUserID etc. Note: If you are using a custom headerFilterStrategy then
           this option does not apply.'
+        order: 24
       jmsKeyFormatStrategy:
         kind: parameter
         group: advanced
@@ -386,6 +420,7 @@ data:
           be used for JMS brokers which do not care whether JMS header keys contain illegal
           characters. You can provide your own implementation of the org.apache.camel.component.jms.JmsKeyFormatStrategy
           and refer to it using the notation.'
+        order: 25
       mapJmsMessage:
         kind: parameter
         group: advanced
@@ -396,6 +431,7 @@ data:
         secret: false
         defaultValue: true
         description: Specifies whether Camel should auto map the received JMS message to a suited payload type such as javax.jms.TextMessage to a String etc. See section about how mapping works below for more details.
+        order: 26
       messageCreatedStrategy:
         kind: parameter
         group: advanced
@@ -405,6 +441,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given MessageCreatedStrategy which are invoked when Camel creates new instances of javax.jms.Message objects when Camel is sending a JMS message.
+        order: 27
       transacted:
         kind: parameter
         group: transaction
@@ -415,6 +452,7 @@ data:
         secret: false
         defaultValue: false
         description: Specifies whether to use transacted mode
+        order: 28
       transactionBatchCount:
         kind: parameter
         group: transaction
@@ -425,6 +463,7 @@ data:
         secret: false
         defaultValue: -1
         description: If transacted sets the number of messages to process before committing a transaction.
+        order: 29
       transactionBatchTimeout:
         kind: parameter
         group: transaction
@@ -435,6 +474,7 @@ data:
         secret: false
         defaultValue: "5000"
         description: Sets timeout (in millis) for batch transactions the value should be 1000 or higher.
+        order: 30
       transactionCommitStrategy:
         kind: parameter
         group: transaction
@@ -444,6 +484,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the commit strategy.
+        order: 31
   documentation.adoc: |
     ifdef::env-github[]
     :icon-smile: :smiley:

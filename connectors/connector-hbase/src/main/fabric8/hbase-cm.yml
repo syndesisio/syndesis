@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use the shared configuration
+        order: 0
       poolMaxSize:
         kind: property
         type: integer
@@ -55,6 +56,7 @@ data:
         deprecated: false
         secret: false
         description: Maximum number of references to keep for each table in the HTable pool. The default value is 10.
+        order: 1
     properties:
       tableName:
         kind: path
@@ -65,6 +67,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the table
+        order: 0
       cellMappingStrategyFactory:
         kind: parameter
         group: common
@@ -73,6 +76,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom CellMappingStrategyFactory that is responsible for mapping cells.
+        order: 1
       filters:
         kind: parameter
         group: common
@@ -81,6 +85,7 @@ data:
         deprecated: false
         secret: false
         description: A list of filters to use.
+        order: 2
       mappingStrategyClassName:
         kind: parameter
         group: common
@@ -89,6 +94,7 @@ data:
         deprecated: false
         secret: false
         description: The class name of a custom mapping strategy implementation.
+        order: 3
       mappingStrategyName:
         kind: parameter
         group: common
@@ -101,6 +107,7 @@ data:
         secret: false
         description: 'The strategy to use for mapping Camel messages to HBase columns.
           Supported values: header or body.'
+        order: 4
       rowMapping:
         kind: parameter
         group: common
@@ -119,6 +126,7 @@ data:
           a number suffix for referring to more than one columns valueType - The value
           type. Supports a number suffix for referring to more than one columns. Supported
           operations: CamelHBaseGet and CamelHBaseScan.'
+        order: 5
       rowModel:
         kind: parameter
         group: common
@@ -127,6 +135,7 @@ data:
         deprecated: false
         secret: false
         description: An instance of org.apache.camel.component.hbase.model.HBaseRow which describes how each row should be modeled
+        order: 6
       userGroupInformation:
         kind: parameter
         group: common
@@ -135,6 +144,7 @@ data:
         deprecated: false
         secret: false
         description: Defines privileges to communicate with HBase such as using kerberos.
+        order: 7
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -146,6 +156,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 8
       maxMessagesPerPoll:
         kind: parameter
         group: consumer
@@ -155,6 +166,7 @@ data:
         deprecated: false
         secret: false
         description: Gets the maximum number of messages as a limit to poll at each polling. Is default unlimited but use 0 or negative number to disable it as unlimited.
+        order: 9
       operation:
         kind: parameter
         group: consumer
@@ -169,6 +181,7 @@ data:
         deprecated: false
         secret: false
         description: The HBase operation to perform
+        order: 10
       remove:
         kind: parameter
         group: consumer
@@ -179,6 +192,7 @@ data:
         secret: false
         defaultValue: true
         description: If the option is true Camel HBase Consumer will remove the rows which it processes.
+        order: 11
       removeHandler:
         kind: parameter
         group: consumer
@@ -188,6 +202,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom HBaseRemoveHandler that is executed when a row is to be removed.
+        order: 12
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -198,6 +213,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 13
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -216,6 +232,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 14
       maxResults:
         kind: parameter
         group: producer
@@ -226,6 +243,7 @@ data:
         secret: false
         defaultValue: "100"
         description: The maximum number of rows to scan.
+        order: 15
       synchronous:
         kind: parameter
         group: advanced
@@ -236,6 +254,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 16
   documentation.adoc: "[[hbase-HBaseComponent]]\nHBase Component\n~~~~~~~~~~~~~~~\n\
     \n*Available as of Camel 2.10*\n\nThis component provides an idemptotent repository,\
     \ producers and\nconsumers for http://hbase.apache.org/[Apache HBase].\n\nMaven\

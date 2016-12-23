@@ -48,6 +48,7 @@ data:
         deprecated: false
         secret: false
         description: To use the custom ModuleURIResolver
+        order: 0
     properties:
       resourceUri:
         kind: path
@@ -58,6 +59,7 @@ data:
         deprecated: false
         secret: false
         description: The name of the template to load from classpath or file system
+        order: 0
       allowStAX:
         kind: parameter
         group: common
@@ -67,6 +69,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to allow using StAX mode
+        order: 1
       configuration:
         kind: parameter
         group: common
@@ -75,6 +78,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom Saxon configuration
+        order: 2
       headerName:
         kind: parameter
         group: common
@@ -83,6 +87,7 @@ data:
         deprecated: false
         secret: false
         description: To use a Camel Message header as the input source instead of Message body.
+        order: 3
       moduleURIResolver:
         kind: parameter
         group: common
@@ -91,6 +96,7 @@ data:
         deprecated: false
         secret: false
         description: To use the custom ModuleURIResolver
+        order: 4
       namespacePrefixes:
         kind: parameter
         group: common
@@ -99,6 +105,7 @@ data:
         deprecated: false
         secret: false
         description: Allows to control which namespace prefixes to use for a set of namespace mappings
+        order: 5
       parameters:
         kind: parameter
         group: common
@@ -107,6 +114,7 @@ data:
         deprecated: false
         secret: false
         description: Additional parameters
+        order: 6
       properties:
         kind: parameter
         group: common
@@ -115,6 +123,7 @@ data:
         deprecated: false
         secret: false
         description: Properties to configure the serialization parameters
+        order: 7
       resultsFormat:
         kind: parameter
         group: common
@@ -132,6 +141,7 @@ data:
         secret: false
         defaultValue: DOM
         description: What output result to use
+        order: 8
       resultType:
         kind: parameter
         group: common
@@ -140,6 +150,7 @@ data:
         deprecated: false
         secret: false
         description: What output result to use defined as a class
+        order: 9
       staticQueryContext:
         kind: parameter
         group: common
@@ -148,6 +159,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom Saxon StaticQueryContext
+        order: 10
       stripsAllWhiteSpace:
         kind: parameter
         group: common
@@ -157,6 +169,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether to strip all whitespaces
+        order: 11
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -168,6 +181,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 12
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -179,6 +193,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 13
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -189,6 +204,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 14
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -207,6 +223,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 15
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -217,6 +234,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+        order: 16
       synchronous:
         kind: parameter
         group: advanced
@@ -227,6 +245,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 17
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -237,6 +256,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 18
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -247,6 +267,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 19
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -257,6 +278,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 20
       delay:
         kind: parameter
         group: scheduler
@@ -268,6 +290,7 @@ data:
         secret: false
         defaultValue: "500"
         description: Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 21
       greedy:
         kind: parameter
         group: scheduler
@@ -279,6 +302,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 22
       initialDelay:
         kind: parameter
         group: scheduler
@@ -290,6 +314,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 23
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -308,6 +333,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 24
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -318,6 +344,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+        order: 25
       scheduler:
         kind: parameter
         group: scheduler
@@ -333,6 +360,7 @@ data:
         secret: false
         defaultValue: none
         description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+        order: 26
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -344,6 +372,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 27
       startScheduler:
         kind: parameter
         group: scheduler
@@ -355,6 +384,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 28
       timeUnit:
         kind: parameter
         group: scheduler
@@ -374,6 +404,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 29
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -385,6 +416,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 30
   documentation.adoc: |
     [[XQuery-XQuery]]
     XQuery

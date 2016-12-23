@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Name of com.mongodb.Mongo to use.
+        order: 0
       bucket:
         kind: parameter
         group: common
@@ -60,6 +61,7 @@ data:
         secret: false
         defaultValue: fs
         description: Sets the name of the GridFS bucket within the database. Default is fs.
+        order: 1
       database:
         kind: parameter
         group: common
@@ -69,6 +71,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the name of the MongoDB database to target
+        order: 2
       readPreference:
         kind: parameter
         group: common
@@ -77,6 +80,7 @@ data:
         deprecated: false
         secret: false
         description: Sets a MongoDB ReadPreference on the Mongo connection. Read preferences set directly on the connection will be overridden by this setting. The link com.mongodb.ReadPreferencevalueOf(String) utility method is used to resolve the passed readPreference value. Some examples for the possible values are nearest primary or secondary etc.
+        order: 3
       writeConcern:
         kind: parameter
         group: common
@@ -94,6 +98,7 @@ data:
         deprecated: false
         secret: false
         description: Set the WriteConcern for write operations on MongoDB using the standard ones. Resolved from the fields of the WriteConcern class by calling the link WriteConcernvalueOf(String) method.
+        order: 4
       writeConcernRef:
         kind: parameter
         group: common
@@ -102,6 +107,7 @@ data:
         deprecated: false
         secret: false
         description: Set the WriteConcern for write operations on MongoDB passing in the bean ref to a custom WriteConcern which exists in the Registry. You can also use standard WriteConcerns by passing in their key. See the link setWriteConcern(String) setWriteConcern method.
+        order: 5
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -113,6 +119,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 6
       delay:
         kind: parameter
         group: consumer
@@ -123,6 +130,7 @@ data:
         secret: false
         defaultValue: "500"
         description: Sets the delay between polls within the Consumer. Default is 500ms
+        order: 7
       fileAttributeName:
         kind: parameter
         group: consumer
@@ -133,6 +141,7 @@ data:
         secret: false
         defaultValue: camel-processed
         description: If the QueryType uses a FileAttribute this sets the name of the attribute that is used. Default is camel-processed.
+        order: 8
       initialDelay:
         kind: parameter
         group: consumer
@@ -143,6 +152,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Sets the initialDelay before the consumer will start polling. Default is 1000ms
+        order: 9
       persistentTSCollection:
         kind: parameter
         group: consumer
@@ -153,6 +163,7 @@ data:
         secret: false
         defaultValue: camel-timestamps
         description: If the QueryType uses a persistent timestamp this sets the name of the collection within the DB to store the timestamp.
+        order: 10
       persistentTSObject:
         kind: parameter
         group: consumer
@@ -163,6 +174,7 @@ data:
         secret: false
         defaultValue: camel-timestamp
         description: If the QueryType uses a persistent timestamp this is the ID of the object in the collection to store the timestamp.
+        order: 11
       query:
         kind: parameter
         group: consumer
@@ -172,6 +184,7 @@ data:
         deprecated: false
         secret: false
         description: Additional query parameters (in JSON) that are used to configure the query used for finding files in the GridFsConsumer
+        order: 12
       queryStrategy:
         kind: parameter
         group: consumer
@@ -182,6 +195,7 @@ data:
         secret: false
         defaultValue: TimeStamp
         description: Sets the QueryStrategy that is used for polling for new files. Default is Timestamp
+        order: 13
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -192,6 +206,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 14
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -210,6 +225,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 15
       operation:
         kind: parameter
         group: producer
@@ -219,6 +235,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the operation this endpoint will execute against GridRS.
+        order: 16
       synchronous:
         kind: parameter
         group: advanced
@@ -229,6 +246,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 17
   documentation.adoc: |+
     [[MongoDBGridFS-CamelMongoDBGridFScomponent]]
     Camel MongoDB GridFS component

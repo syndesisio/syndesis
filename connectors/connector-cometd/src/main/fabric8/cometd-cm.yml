@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: The password for the keystore when using SSL.
+        order: 0
       sslPassword:
         kind: property
         type: string
@@ -56,6 +57,7 @@ data:
         deprecated: false
         secret: false
         description: The password when using SSL.
+        order: 1
       sslKeystore:
         kind: property
         type: string
@@ -63,6 +65,7 @@ data:
         deprecated: false
         secret: false
         description: The path to the keystore.
+        order: 2
       securityPolicy:
         kind: property
         type: object
@@ -70,6 +73,7 @@ data:
         deprecated: false
         secret: false
         description: To use a custom configured SecurityPolicy to control authorization
+        order: 3
       extensions:
         kind: property
         type: array
@@ -77,6 +81,7 @@ data:
         deprecated: false
         secret: false
         description: To use a list of custom BayeuxServer.Extension that allows modifying incoming and outgoing requests.
+        order: 4
       sslContextParameters:
         kind: property
         type: object
@@ -84,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: To configure security using SSLContextParameters
+        order: 5
     properties:
       host:
         kind: path
@@ -94,6 +100,7 @@ data:
         deprecated: false
         secret: false
         description: Hostname
+        order: 0
       port:
         kind: path
         group: common
@@ -103,6 +110,7 @@ data:
         deprecated: false
         secret: false
         description: Host port number
+        order: 1
       channelName:
         kind: path
         group: common
@@ -112,6 +120,7 @@ data:
         deprecated: false
         secret: false
         description: The channelName represents a topic that can be subscribed to by the Camel endpoints.
+        order: 2
       allowedOrigins:
         kind: parameter
         group: common
@@ -121,6 +130,7 @@ data:
         secret: false
         defaultValue: '*'
         description: The origins domain that support to cross if the crosssOriginFilterOn is true
+        order: 3
       baseResource:
         kind: parameter
         group: common
@@ -132,6 +142,7 @@ data:
           file: or classpath: depending if you want that the component loads the resource
           from file system or classpath. Classpath is required for OSGI deployment where
           the resources are packaged in the jar'
+        order: 4
       crossOriginFilterOn:
         kind: parameter
         group: common
@@ -141,6 +152,7 @@ data:
         secret: false
         defaultValue: false
         description: If true the server will support for cross-domain filtering
+        order: 5
       filterPath:
         kind: parameter
         group: common
@@ -149,6 +161,7 @@ data:
         deprecated: false
         secret: false
         description: The filterPath will be used by the CrossOriginFilter if the crosssOriginFilterOn is true
+        order: 6
       interval:
         kind: parameter
         group: common
@@ -157,6 +170,7 @@ data:
         deprecated: false
         secret: false
         description: The client side poll timeout in milliseconds. How long a client will wait between reconnects
+        order: 7
       jsonCommented:
         kind: parameter
         group: common
@@ -166,6 +180,7 @@ data:
         secret: false
         defaultValue: true
         description: If true the server will accept JSON wrapped in a comment and will generate JSON wrapped in a comment. This is a defence against Ajax Hijacking.
+        order: 8
       logLevel:
         kind: parameter
         group: common
@@ -179,6 +194,7 @@ data:
         secret: false
         defaultValue: "1"
         description: Logging level. 0=none 1=info 2=debug.
+        order: 9
       maxInterval:
         kind: parameter
         group: common
@@ -188,6 +204,7 @@ data:
         secret: false
         defaultValue: "30000"
         description: The max client side poll timeout in milliseconds. A client will be removed if a connection is not received in this time.
+        order: 10
       multiFrameInterval:
         kind: parameter
         group: common
@@ -197,6 +214,7 @@ data:
         secret: false
         defaultValue: "1500"
         description: The client side poll timeout if multiple connections are detected from the same browser.
+        order: 11
       timeout:
         kind: parameter
         group: common
@@ -206,6 +224,7 @@ data:
         secret: false
         defaultValue: "240000"
         description: The server side poll timeout in milliseconds. This is how long the server will hold a reconnect request before responding.
+        order: 12
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -217,6 +236,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 13
       sessionHeadersEnabled:
         kind: parameter
         group: consumer
@@ -227,6 +247,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to include the server session headers in the Camel message when creating a Camel Message for incoming requests.
+        order: 14
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -237,6 +258,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 15
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -255,6 +277,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 16
       disconnectLocalSession:
         kind: parameter
         group: producer
@@ -265,6 +288,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether to disconnect local sessions after publishing a message to its channel. Disconnecting local session is needed as they are not swept by default by CometD and therefore you can run out of memory.
+        order: 17
       synchronous:
         kind: parameter
         group: advanced
@@ -275,6 +299,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 18
   documentation.adoc: |+
     [[Cometd-CometdComponent]]
     Cometd Component

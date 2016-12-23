@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use the VelocityEngine otherwise a new engine is created
+        order: 0
     properties:
       resourceUri:
         kind: path
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: Path to the resource or a reference to lookup a bean in the Registry to use as the resource
+        order: 0
       contentCache:
         kind: parameter
         group: producer
@@ -68,6 +70,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether to use resource content cache or not
+        order: 1
       encoding:
         kind: parameter
         group: producer
@@ -76,6 +79,7 @@ data:
         deprecated: false
         secret: false
         description: Character encoding of the resource content.
+        order: 2
       loaderCache:
         kind: parameter
         group: producer
@@ -85,6 +89,7 @@ data:
         secret: false
         defaultValue: true
         description: Enables / disables the velocity resource loader cache which is enabled by default
+        order: 3
       propertiesFile:
         kind: parameter
         group: producer
@@ -93,6 +98,7 @@ data:
         deprecated: false
         secret: false
         description: The URI of the properties file which is used for VelocityEngine initialization.
+        order: 4
       synchronous:
         kind: parameter
         group: advanced
@@ -103,6 +109,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 5
   documentation.adoc: |+
     [[Velocity-Velocity]]
     Velocity

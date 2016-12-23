@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: The API endpoint
+        order: 0
       connectTimeoutMillis:
         kind: parameter
         group: common
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: Connect timeout for OkHttpClient
+        order: 1
       dc:
         kind: parameter
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: false
         description: The data center
+        order: 2
       key:
         kind: parameter
         group: common
@@ -75,6 +78,7 @@ data:
         deprecated: false
         secret: false
         description: The default key. Can be overridden by CamelConsulKey
+        order: 3
       pingInstance:
         kind: parameter
         group: common
@@ -84,6 +88,7 @@ data:
         secret: false
         defaultValue: true
         description: Configure if the AgentClient should attempt a ping before returning the Consul instance
+        order: 4
       readTimeoutMillis:
         kind: parameter
         group: common
@@ -92,6 +97,7 @@ data:
         deprecated: false
         secret: false
         description: Read timeout for OkHttpClient
+        order: 5
       tags:
         kind: parameter
         group: common
@@ -100,6 +106,7 @@ data:
         deprecated: false
         secret: false
         description: Set tags. You can separate multiple tags by comma.
+        order: 6
       url:
         kind: parameter
         group: common
@@ -108,6 +115,7 @@ data:
         deprecated: false
         secret: false
         description: The Consul agent URL
+        order: 7
       writeTimeoutMillis:
         kind: parameter
         group: common
@@ -116,6 +124,7 @@ data:
         deprecated: false
         secret: false
         description: Write timeout for OkHttpClient
+        order: 8
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -127,6 +136,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 9
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -137,6 +147,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 10
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -155,6 +166,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 11
       action:
         kind: parameter
         group: producer
@@ -164,6 +176,7 @@ data:
         deprecated: false
         secret: false
         description: The default action. Can be overridden by CamelConsulAction
+        order: 12
       valueAsString:
         kind: parameter
         group: producer
@@ -174,6 +187,7 @@ data:
         secret: false
         defaultValue: false
         description: Default to transform values retrieved from Consul i.e. on KV endpoint to string.
+        order: 13
       synchronous:
         kind: parameter
         group: advanced
@@ -184,6 +198,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 14
       blockSeconds:
         kind: parameter
         group: watch
@@ -194,6 +209,7 @@ data:
         secret: false
         defaultValue: "10"
         description: The second to wait for a watch event default 10 seconds
+        order: 15
       firstIndex:
         kind: parameter
         group: watch
@@ -204,6 +220,7 @@ data:
         secret: false
         defaultValue: "0"
         description: The first index for watch for default 0
+        order: 16
       recursive:
         kind: parameter
         group: watch
@@ -214,6 +231,7 @@ data:
         secret: false
         defaultValue: false
         description: Recursively watch default false
+        order: 17
       aclToken:
         kind: parameter
         group: security
@@ -223,6 +241,7 @@ data:
         deprecated: false
         secret: true
         description: Sets the ACL token to be used with Consul
+        order: 18
       password:
         kind: parameter
         group: security
@@ -232,6 +251,7 @@ data:
         deprecated: false
         secret: true
         description: Sets the password to be used for basic authentication
+        order: 19
       sslContextParameters:
         kind: parameter
         group: security
@@ -241,6 +261,7 @@ data:
         deprecated: false
         secret: false
         description: SSL configuration using an org.apache.camel.util.jsse.SSLContextParameters instance.
+        order: 20
       userName:
         kind: parameter
         group: security
@@ -250,6 +271,7 @@ data:
         deprecated: false
         secret: true
         description: Sets the username to be used for basic authentication
+        order: 21
   documentation.adoc: |
     [[Consul-ConsulComponent]]
     Consul Component

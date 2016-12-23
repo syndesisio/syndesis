@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Path of the datastore is the relative path of the folder that krati will use for its datastore.
+        order: 0
       hashFunction:
         kind: parameter
         group: common
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: The hash function to use.
+        order: 1
       initialCapacity:
         kind: parameter
         group: common
@@ -68,6 +70,7 @@ data:
         secret: false
         defaultValue: "100"
         description: The inital capcity of the store.
+        order: 2
       keySerializer:
         kind: parameter
         group: common
@@ -76,6 +79,7 @@ data:
         deprecated: false
         secret: false
         description: The serializer that will be used to serialize the key.
+        order: 3
       segmentFactory:
         kind: parameter
         group: common
@@ -84,6 +88,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the segment factory of the target store.
+        order: 4
       segmentFileSize:
         kind: parameter
         group: common
@@ -93,6 +98,7 @@ data:
         secret: false
         defaultValue: "64"
         description: Data store segments size in MB.
+        order: 5
       valueSerializer:
         kind: parameter
         group: common
@@ -101,6 +107,7 @@ data:
         deprecated: false
         secret: false
         description: The serializer that will be used to serialize the value.
+        order: 6
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -112,6 +119,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 7
       maxMessagesPerPoll:
         kind: parameter
         group: consumer
@@ -121,6 +129,7 @@ data:
         deprecated: false
         secret: false
         description: The maximum number of messages which can be received in one poll. This can be used to avoid reading in too much data and taking up too much memory.
+        order: 8
       sendEmptyMessageWhenIdle:
         kind: parameter
         group: consumer
@@ -132,6 +141,7 @@ data:
         secret: false
         defaultValue: false
         description: If the polling consumer did not poll any files you can enable this option to send an empty message (no body) instead.
+        order: 9
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -142,6 +152,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 10
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -160,6 +171,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 11
       pollStrategy:
         kind: parameter
         group: consumer (advanced)
@@ -170,6 +182,7 @@ data:
         deprecated: false
         secret: false
         description: A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.
+        order: 12
       key:
         kind: parameter
         group: producer
@@ -179,6 +192,7 @@ data:
         deprecated: false
         secret: false
         description: The key.
+        order: 13
       operation:
         kind: parameter
         group: producer
@@ -193,6 +207,7 @@ data:
         deprecated: false
         secret: false
         description: Specifies the type of operation that will be performed to the datastore.
+        order: 14
       value:
         kind: parameter
         group: producer
@@ -202,6 +217,7 @@ data:
         deprecated: false
         secret: false
         description: The Value.
+        order: 15
       synchronous:
         kind: parameter
         group: advanced
@@ -212,6 +228,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 16
       backoffErrorThreshold:
         kind: parameter
         group: scheduler
@@ -222,6 +239,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.
+        order: 17
       backoffIdleThreshold:
         kind: parameter
         group: scheduler
@@ -232,6 +250,7 @@ data:
         deprecated: false
         secret: false
         description: The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.
+        order: 18
       backoffMultiplier:
         kind: parameter
         group: scheduler
@@ -242,6 +261,7 @@ data:
         deprecated: false
         secret: false
         description: To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.
+        order: 19
       delay:
         kind: parameter
         group: scheduler
@@ -253,6 +273,7 @@ data:
         secret: false
         defaultValue: "500"
         description: Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 20
       greedy:
         kind: parameter
         group: scheduler
@@ -264,6 +285,7 @@ data:
         secret: false
         defaultValue: false
         description: If greedy is enabled then the ScheduledPollConsumer will run immediately again if the previous run polled 1 or more messages.
+        order: 21
       initialDelay:
         kind: parameter
         group: scheduler
@@ -275,6 +297,7 @@ data:
         secret: false
         defaultValue: "1000"
         description: Milliseconds before the first poll starts. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).
+        order: 22
       runLoggingLevel:
         kind: parameter
         group: scheduler
@@ -293,6 +316,7 @@ data:
         secret: false
         defaultValue: TRACE
         description: The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.
+        order: 23
       scheduledExecutorService:
         kind: parameter
         group: scheduler
@@ -303,6 +327,7 @@ data:
         deprecated: false
         secret: false
         description: Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.
+        order: 24
       scheduler:
         kind: parameter
         group: scheduler
@@ -318,6 +343,7 @@ data:
         secret: false
         defaultValue: none
         description: To use a cron scheduler from either camel-spring or camel-quartz2 component
+        order: 25
       schedulerProperties:
         kind: parameter
         group: scheduler
@@ -329,6 +355,7 @@ data:
         deprecated: false
         secret: false
         description: To configure additional properties when using a custom scheduler or any of the Quartz2 Spring based scheduler.
+        order: 26
       startScheduler:
         kind: parameter
         group: scheduler
@@ -340,6 +367,7 @@ data:
         secret: false
         defaultValue: true
         description: Whether the scheduler should be auto started.
+        order: 27
       timeUnit:
         kind: parameter
         group: scheduler
@@ -359,6 +387,7 @@ data:
         secret: false
         defaultValue: MILLISECONDS
         description: Time unit for initialDelay and delay options.
+        order: 28
       useFixedDelay:
         kind: parameter
         group: scheduler
@@ -370,6 +399,7 @@ data:
         secret: false
         defaultValue: true
         description: Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.
+        order: 29
   documentation.adoc: "[[Krati-KratiComponent]]\nKrati Component\n~~~~~~~~~~~~~~~\n\
     \n*Available as of Camel 2.9*\n\nThis component allows the use krati datastores\
     \ and datasets inside\nCamel. Krati is a simple persistent data store with very\

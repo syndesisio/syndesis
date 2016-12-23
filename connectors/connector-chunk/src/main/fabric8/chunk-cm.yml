@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: Path to the resource or a reference to lookup a bean in the Registry to use as the resource
+        order: 0
       contentCache:
         kind: parameter
         group: producer
@@ -61,6 +62,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether to use resource content cache or not
+        order: 1
       encoding:
         kind: parameter
         group: producer
@@ -69,6 +71,7 @@ data:
         deprecated: false
         secret: false
         description: Define the encoding of the body
+        order: 2
       extension:
         kind: parameter
         group: producer
@@ -77,6 +80,7 @@ data:
         deprecated: false
         secret: false
         description: Define the file extension of the template
+        order: 3
       themeFolder:
         kind: parameter
         group: producer
@@ -85,6 +89,7 @@ data:
         deprecated: false
         secret: false
         description: Define the themes folder to scan
+        order: 4
       themeLayer:
         kind: parameter
         group: producer
@@ -93,6 +98,7 @@ data:
         deprecated: false
         secret: false
         description: Define the theme layer to elaborate
+        order: 5
       themeSubfolder:
         kind: parameter
         group: producer
@@ -101,6 +107,7 @@ data:
         deprecated: false
         secret: false
         description: Define the themes subfolder to scan
+        order: 6
       synchronous:
         kind: parameter
         group: advanced
@@ -111,6 +118,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 7
   documentation.adoc: |+
     [[Chunk-Chunk]]
     Chunk

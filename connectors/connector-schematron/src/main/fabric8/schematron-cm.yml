@@ -52,6 +52,7 @@ data:
         deprecated: false
         secret: false
         description: The path to the schematron rules file. Can either be in class path or location in the file system.
+        order: 0
       abort:
         kind: parameter
         group: producer
@@ -61,6 +62,7 @@ data:
         secret: false
         defaultValue: false
         description: Flag to abort the route and throw a schematron validation exception.
+        order: 1
       rules:
         kind: parameter
         group: producer
@@ -69,6 +71,7 @@ data:
         deprecated: false
         secret: false
         description: To use the given schematron rules instead of loading from the path
+        order: 2
       synchronous:
         kind: parameter
         group: advanced
@@ -79,6 +82,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 3
       uriResolver:
         kind: parameter
         group: advanced
@@ -88,6 +92,7 @@ data:
         deprecated: false
         secret: false
         description: Set the URIResolver to be used for resolving schematron includes in the rules file.
+        order: 4
   documentation.adoc: "[[Schematron-SchematronComponent]]\nSchematron Component\n\
     ~~~~~~~~~~~~~~~~~~~~\n\n*Available as of Camel 2.14*\n\nhttp://www.schematron.com/index.html[Schematron]\_\
     is an XML-based\nlanguage for validating XML instance documents. It is used to\

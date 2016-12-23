@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: Logical name
+        order: 0
       hostname:
         kind: parameter
         group: common
@@ -59,6 +60,7 @@ data:
         deprecated: false
         secret: false
         description: The hostname of the asterix server
+        order: 1
       password:
         kind: parameter
         group: common
@@ -67,6 +69,7 @@ data:
         deprecated: false
         secret: true
         description: Login password
+        order: 2
       username:
         kind: parameter
         group: common
@@ -75,6 +78,7 @@ data:
         deprecated: false
         secret: true
         description: Login username
+        order: 3
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -86,6 +90,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 4
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -96,6 +101,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 5
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -114,6 +120,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 6
       action:
         kind: parameter
         group: producer
@@ -127,6 +134,7 @@ data:
         deprecated: false
         secret: false
         description: What action to perform such as getting queue status sip peers or extension state.
+        order: 7
       synchronous:
         kind: parameter
         group: advanced
@@ -137,6 +145,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 8
   documentation.adoc: |
     [[AsteriskComponent-AsteriskComponent]]
     Asterisk Component

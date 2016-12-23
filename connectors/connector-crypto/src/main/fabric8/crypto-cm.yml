@@ -49,6 +49,7 @@ data:
         deprecated: false
         secret: false
         description: To use the shared DigitalSignatureConfiguration as configuration
+        order: 0
     properties:
       cryptoOperation:
         kind: path
@@ -62,6 +63,7 @@ data:
         deprecated: false
         secret: false
         description: Set the Crypto operation from that supplied after the crypto scheme in the endpoint uri e.g. crypto:sign sets sign as the operation.
+        order: 0
       name:
         kind: path
         group: producer
@@ -71,6 +73,7 @@ data:
         deprecated: false
         secret: false
         description: The logical name of this operation.
+        order: 1
       algorithm:
         kind: parameter
         group: producer
@@ -80,6 +83,7 @@ data:
         secret: false
         defaultValue: SHA1WithDSA
         description: Sets the JCE name of the Algorithm that should be used for the signer.
+        order: 2
       alias:
         kind: parameter
         group: producer
@@ -88,6 +92,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the alias used to query the KeyStore for keys and link java.security.cert.Certificate Certificates to be used in signing and verifying exchanges. This value can be provided at runtime via the message header link org.apache.camel.component.crypto.DigitalSignatureConstantsKEYSTORE_ALIAS
+        order: 3
       certificateName:
         kind: parameter
         group: producer
@@ -96,6 +101,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the reference name for a PrivateKey that can be fond in the registry.
+        order: 4
       keystore:
         kind: parameter
         group: producer
@@ -104,6 +110,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the KeyStore that can contain keys and Certficates for use in signing and verifying exchanges. A KeyStore is typically used with an alias either one supplied in the Route definition or dynamically via the message header CamelSignatureKeyStoreAlias. If no alias is supplied and there is only a single entry in the Keystore then this single entry will be used.
+        order: 5
       keystoreName:
         kind: parameter
         group: producer
@@ -112,6 +119,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the reference name for a Keystore that can be fond in the registry.
+        order: 6
       privateKey:
         kind: parameter
         group: producer
@@ -120,6 +128,7 @@ data:
         deprecated: false
         secret: true
         description: Set the PrivateKey that should be used to sign the exchange
+        order: 7
       privateKeyName:
         kind: parameter
         group: producer
@@ -128,6 +137,7 @@ data:
         deprecated: false
         secret: true
         description: Sets the reference name for a PrivateKey that can be fond in the registry.
+        order: 8
       provider:
         kind: parameter
         group: producer
@@ -136,6 +146,7 @@ data:
         deprecated: false
         secret: false
         description: Set the id of the security provider that provides the configured Signature algorithm.
+        order: 9
       publicKeyName:
         kind: parameter
         group: producer
@@ -144,6 +155,7 @@ data:
         deprecated: false
         secret: false
         description: references that should be resolved when the context changes
+        order: 10
       secureRandomName:
         kind: parameter
         group: producer
@@ -152,6 +164,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the reference name for a SecureRandom that can be fond in the registry.
+        order: 11
       signatureHeaderName:
         kind: parameter
         group: producer
@@ -160,6 +173,7 @@ data:
         deprecated: false
         secret: false
         description: Set the name of the message header that should be used to store the base64 encoded signature. This defaults to 'CamelDigitalSignature'
+        order: 12
       bufferSize:
         kind: parameter
         group: advanced
@@ -170,6 +184,7 @@ data:
         secret: false
         defaultValue: "2048"
         description: Set the size of the buffer used to read in the Exchange payload data.
+        order: 13
       certificate:
         kind: parameter
         group: advanced
@@ -179,6 +194,7 @@ data:
         deprecated: false
         secret: false
         description: Set the Certificate that should be used to verify the signature in the exchange based on its payload.
+        order: 14
       clearHeaders:
         kind: parameter
         group: advanced
@@ -189,6 +205,7 @@ data:
         secret: false
         defaultValue: true
         description: Determines if the Signature specific headers be cleared after signing and verification. Defaults to true and should only be made otherwise at your extreme peril as vital private information such as Keys and passwords may escape if unset.
+        order: 15
       keyStoreParameters:
         kind: parameter
         group: advanced
@@ -198,6 +215,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the KeyStore that can contain keys and Certficates for use in signing and verifying exchanges based on the given KeyStoreParameters. A KeyStore is typically used with an alias either one supplied in the Route definition or dynamically via the message header CamelSignatureKeyStoreAlias. If no alias is supplied and there is only a single entry in the Keystore then this single entry will be used.
+        order: 16
       publicKey:
         kind: parameter
         group: advanced
@@ -207,6 +225,7 @@ data:
         deprecated: false
         secret: false
         description: Set the PublicKey that should be used to verify the signature in the exchange.
+        order: 17
       secureRandom:
         kind: parameter
         group: advanced
@@ -216,6 +235,7 @@ data:
         deprecated: false
         secret: true
         description: Set the SecureRandom used to initialize the Signature service
+        order: 18
       synchronous:
         kind: parameter
         group: advanced
@@ -226,6 +246,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 19
       password:
         kind: parameter
         group: security
@@ -235,6 +256,7 @@ data:
         deprecated: false
         secret: true
         description: Sets the password used to access an aliased PrivateKey in the KeyStore.
+        order: 20
   documentation.adoc: "[[Crypto-Crypto]]\nCrypto\n~~~~~~\n\n*Available as of Camel\
     \ 2.3* \n*PGP Available as of Camel 2.9*\n\nThe Crypto link:data-format.html[Data\
     \ Format] integrates the Java\nCryptographic Extension into Camel, allowing simple\

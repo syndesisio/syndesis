@@ -51,6 +51,7 @@ data:
         deprecated: false
         secret: false
         description: the cache name
+        order: 0
       managementEnabled:
         kind: parameter
         group: common
@@ -60,6 +61,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether management gathering is enabled
+        order: 1
       readThrough:
         kind: parameter
         group: common
@@ -69,6 +71,7 @@ data:
         secret: false
         defaultValue: false
         description: If read-through caching should be used
+        order: 2
       statisticsEnabled:
         kind: parameter
         group: common
@@ -78,6 +81,7 @@ data:
         secret: false
         defaultValue: false
         description: Whether statistics gathering is enabled
+        order: 3
       storeByValue:
         kind: parameter
         group: common
@@ -87,6 +91,7 @@ data:
         secret: false
         defaultValue: true
         description: If cache should use store-by-value or store-by-reference semantics
+        order: 4
       writeThrough:
         kind: parameter
         group: common
@@ -96,6 +101,7 @@ data:
         secret: false
         defaultValue: false
         description: If write-through caching should be used
+        order: 5
       bridgeErrorHandler:
         kind: parameter
         group: consumer
@@ -107,6 +113,7 @@ data:
         secret: false
         defaultValue: false
         description: Allows for bridging the consumer to the Camel routing Error Handler which mean any exceptions occurred while the consumer is trying to pickup incoming messages or the likes will now be processed as a message and handled by the routing Error Handler. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 6
       filteredEvents:
         kind: parameter
         group: consumer
@@ -121,6 +128,7 @@ data:
         deprecated: false
         secret: false
         description: Events a consumer should filter. If using filteredEvents option then eventFilters one will be ignored
+        order: 7
       oldValueRequired:
         kind: parameter
         group: consumer
@@ -131,6 +139,7 @@ data:
         secret: false
         defaultValue: false
         description: if the old value is required for events
+        order: 8
       synchronous:
         kind: parameter
         group: consumer
@@ -141,6 +150,7 @@ data:
         secret: false
         defaultValue: false
         description: if the the event listener should block the thread causing the event
+        order: 9
       eventFilters:
         kind: parameter
         group: consumer (advanced)
@@ -150,6 +160,7 @@ data:
         deprecated: false
         secret: false
         description: The CacheEntryEventFilter. If using eventFilters option then filteredEvents one will be ignored
+        order: 10
       exceptionHandler:
         kind: parameter
         group: consumer (advanced)
@@ -160,6 +171,7 @@ data:
         deprecated: false
         secret: false
         description: To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this options is not in use. By default the consumer will deal with exceptions that will be logged at WARN/ERROR level and ignored.
+        order: 11
       exchangePattern:
         kind: parameter
         group: consumer (advanced)
@@ -178,6 +190,7 @@ data:
         deprecated: false
         secret: false
         description: Sets the exchange pattern when the consumer creates an exchange.
+        order: 12
       action:
         kind: parameter
         group: producer
@@ -187,6 +200,7 @@ data:
         deprecated: false
         secret: false
         description: To configure using a cache operation by default. If an operation in the message header then the operation from the header takes precedence.
+        order: 13
       cacheConfiguration:
         kind: parameter
         group: advanced
@@ -196,6 +210,7 @@ data:
         deprecated: false
         secret: false
         description: A Configuration for the Cache
+        order: 14
       cacheConfigurationProperties:
         kind: parameter
         group: advanced
@@ -205,6 +220,7 @@ data:
         deprecated: false
         secret: false
         description: The Properties for the javax.cache.spi.CachingProvider to create the CacheManager
+        order: 15
       cacheLoaderFactory:
         kind: parameter
         group: advanced
@@ -214,6 +230,7 @@ data:
         deprecated: false
         secret: false
         description: The CacheLoader factory
+        order: 16
       cacheWriterFactory:
         kind: parameter
         group: advanced
@@ -223,6 +240,7 @@ data:
         deprecated: false
         secret: false
         description: The CacheWriter factory
+        order: 17
       cachingProvider:
         kind: parameter
         group: advanced
@@ -233,6 +251,7 @@ data:
         deprecated: false
         secret: false
         description: The fully qualified class name of the javax.cache.spi.CachingProvider
+        order: 18
       configurationUri:
         kind: parameter
         group: advanced
@@ -242,6 +261,7 @@ data:
         deprecated: false
         secret: false
         description: An implementation specific URI for the CacheManager
+        order: 19
       createCacheIfNotExists:
         kind: parameter
         group: advanced
@@ -252,6 +272,7 @@ data:
         secret: false
         defaultValue: true
         description: Configure if a cache need to be created if it does exist or can't be pre-configured.
+        order: 20
       expiryPolicyFactory:
         kind: parameter
         group: advanced
@@ -261,6 +282,7 @@ data:
         deprecated: false
         secret: false
         description: The ExpiryPolicy factory
+        order: 21
       lookupProviders:
         kind: parameter
         group: advanced
@@ -271,6 +293,7 @@ data:
         secret: false
         defaultValue: false
         description: Configure if a camel-cache should try to find implementations of jcache api in runtimes like OSGi.
+        order: 22
   documentation.adoc: |+
     [[JCache-JCache]]
     JCache

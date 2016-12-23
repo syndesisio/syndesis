@@ -63,6 +63,7 @@ data:
         deprecated: false
         secret: false
         description: The primary output format is PDF but other output formats are also supported.
+        order: 0
       fopFactory:
         kind: parameter
         group: producer
@@ -71,6 +72,7 @@ data:
         deprecated: false
         secret: false
         description: Allows to use a custom configured or implementation of org.apache.fop.apps.FopFactory.
+        order: 1
       userConfigURL:
         kind: parameter
         group: producer
@@ -79,6 +81,7 @@ data:
         deprecated: false
         secret: false
         description: The location of a configuration file which can be loaded from classpath or file system.
+        order: 2
       synchronous:
         kind: parameter
         group: advanced
@@ -89,6 +92,7 @@ data:
         secret: false
         defaultValue: false
         description: Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported).
+        order: 3
   documentation.adoc: |+
     [[FOP-FOPComponent]]
     FOP Component
