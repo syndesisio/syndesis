@@ -1,11 +1,12 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, ViewEncapsulation } from '@angular/core';
 
 import { ConfigService } from './config.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
   name = 'Red Hat iPaaS';
@@ -22,9 +23,22 @@ export class AppComponent {
   url = 'https://www.twitter.com/jboss';
   loggedIn = true;
 
-  constructor(private _config: ConfigService) { }
+  constructor(private _config: ConfigService, private _elementRef: ElementRef) { }
 
   ngOnInit() {
     console.log('Config', this._config.getSettings());
+  }
+
+  ngAfterViewInit() {
+    $(document).ready(function () {
+      // matchHeight the contents of each .card-pf and then the .card-pf itself
+      $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
+
+      // Initialize the vertical navigation
+      $().setupVerticalNavigation(true);
+    });
   }
 }

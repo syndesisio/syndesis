@@ -23,6 +23,11 @@
         "styles.scss"
       ],
       "scripts": [
+        "../node_modules/jquery/dist/jquery.js",
+        "../node_modules/jquery-match-height/dist/jquery.matchHeight.js",
+        "../node_modules/tether/dist/js/tether.js",
+        "../node_modules/bootstrap/dist/js/bootstrap.js",
+        "../node_modules/patternfly/dist/js/patternfly.js"
       ],
       "environments": {
         "source": "environments/environment.ts",
@@ -31,10 +36,8 @@
       }
     }
   ],
-  "addons": [
-  ],
-  "packages": [
-  ],
+  "addons": [],
+  "packages": [],
   "e2e": {
     "protractor": {
       "config": "./protractor.conf.js"

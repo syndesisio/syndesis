@@ -12,11 +12,11 @@
   <nav class="navbar navbar-pf-vertical">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" (click)="isCollapsed = !isCollapsed">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+      </button>
       <a [routerLink]=" ['/'] " class="navbar-brand">
         <!--
                 <img class="navbar-brand-icon"
@@ -52,7 +52,7 @@
 
 
 <!-- Sidebar -->
-<div class="nav-pf-vertical hide-nav-pf hidden-icons-pf" [ngbCollapse]="isCollapsed" [ngClass]="{'collapsed': isCollapsed}">
+<div class="nav-pf-vertical hidden-icons-pf">
   <ul class="list-group">
     <li class="list-group-item" routerLinkActive="active">
       <a [routerLink]=" ['dashboard'] ">
@@ -89,17 +89,3 @@
 <main class="container-fluid container-pf-nav-pf-vertical" [ngClass]="{'collapsed-nav': isCollapsed}">
   <router-outlet></router-outlet>
 </main>
-
-<!-- PF Cards and Vertical Navigation Stuff -->
-<script>
-  $(document).ready(function () {
-    // matchHeight the contents of each .card-pf and then the .card-pf itself
-    $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
-
-    // Initialize the vertical navigation
-    $().setupVerticalNavigation(true);
-  });
-</script>
