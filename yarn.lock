@@ -31,7 +31,7 @@
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-2.4.1.tgz#62b4fbfc53c934bd5def78db594cbf245b3f446a"
 
-"@angular/core@^2.3.1", "@angular/core@^2.4.1":
+"@angular/core@^2.0.0", "@angular/core@^2.3.1", "@angular/core@^2.4.1":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-2.4.1.tgz#3a6d2dc7fd86fdebe4febae7eb28abad7d04c76a"
 
@@ -39,7 +39,7 @@
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-2.4.1.tgz#440ff9b864b3b79c55423c9ce5863030a25767ce"
 
-"@angular/http@^2.4.1":
+"@angular/http@^2.0.0", "@angular/http@^2.4.1":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@angular/http/-/http-2.4.1.tgz#f06067e370c44d025ed00a03ef704f6c46ea59ac"
 
@@ -47,7 +47,7 @@
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.4.1.tgz#5fb72038f76c1e3646cea95f5b4722d67a4419dd"
 
-"@angular/platform-browser@^2.4.1":
+"@angular/platform-browser@^2.0.0", "@angular/platform-browser@^2.4.1":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-2.4.1.tgz#4eaa829b450be34f0029796b6c3b99e27d3d5740"
 
@@ -3962,6 +3962,16 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
+ng2-restangular@^0.1.23:
+  version "0.1.23"
+  resolved "https://registry.yarnpkg.com/ng2-restangular/-/ng2-restangular-0.1.23.tgz#c295649098e9293a8da4fad345e33adcd9d5e8cf"
+  dependencies:
+    "@angular/core" "^2.0.0"
+    "@angular/http" "^2.0.0"
+    "@angular/platform-browser" "^2.0.0"
+    lodash "^4.0.0"
+    rxjs "^5.0.0-beta.12"
+
 no-case@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-2.3.0.tgz#ca2825ccb76b18e6f79d573dcfbf1eace33dd164"
@@ -5197,7 +5207,7 @@ rx-lite@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
 
-rxjs@^5.0.1:
+rxjs@^5.0.0-beta.12, rxjs@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.0.1.tgz#3a69bdf9f0ca0a986303370d4708f72bdfac8356"
   dependencies:
