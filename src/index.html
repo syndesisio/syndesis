@@ -8,11 +8,28 @@
 
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/manifest.webapp">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#cc0000">
+  <meta name="apple-mobile-web-app-title" content="Red Hat iPaaS">
+  <meta name="application-name" content="Red Hat iPaaS">
+  <meta name="theme-color" content="#ffffff">
 </head>
 
 <body class="cards-pf">
   <app-root>Loading...</app-root>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
+        console.log('Service Worker registered');
+      }).catch(function (err) {
+        console.log('Service Worker registration failed: ', err);
+      });
+    }
+  </script>
 </body>
 
 </html>
