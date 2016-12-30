@@ -7,8 +7,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RestangularModule, Restangular } from 'ng2-restangular';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
-import { AppComponent } from './app.component';
 import { AppRoutingModule } from './approuting/approuting.module';
+import { StoreModule } from './store/store.module';
+
+import { AppComponent } from './app.component';
 import { ConfigService, configServiceInitializer } from './config.service';
 
 export function restangularProviderConfigurer(restangularProvider: any, config: ConfigService) {
@@ -26,7 +28,8 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     RestangularModule.forRoot([ConfigService], restangularProviderConfigurer),
     NgbModule.forRoot(),
     StoreDevtoolsModule.instrumentOnlyWithExtension(),
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule
   ],
   providers: [
     ConfigService,
