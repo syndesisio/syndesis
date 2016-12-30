@@ -5,20 +5,19 @@ import { HttpModule, Http } from '@angular/http';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RestangularModule, Restangular } from 'ng2-restangular';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './approuting/approuting.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { ConfigService, configServiceInitializer } from './config.service';
 
-export function restangularProviderConfigurer(restangularProvider: any, config: ConfigService, ) {
+export function restangularProviderConfigurer(restangularProvider: any, config: ConfigService) {
   restangularProvider.setBaseUrl(config.getSettings().apiEndpoint);
 }
 
 @NgModule({
   declarations: [
-    AppComponent,
-    DashboardComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -26,6 +25,7 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     HttpModule,
     RestangularModule.forRoot([ConfigService], restangularProviderConfigurer),
     NgbModule.forRoot(),
+    StoreDevtoolsModule.instrumentOnlyWithExtension(),
     AppRoutingModule
   ],
   providers: [
