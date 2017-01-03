@@ -29,7 +29,7 @@ test:
   override:
   - rm -Rf $CIRCLE_ARTIFACTS/coverage $CIRCLE_TEST_REPORTS/junit
   - mkdir $CIRCLE_ARTIFACTS/coverage $CIRCLE_TEST_REPORTS/junit
-  - ng test --watch=false -cc --progress=false
+  - ng test --lint --watch=false -cc --progress=false
 
 deployment:
   latest:
