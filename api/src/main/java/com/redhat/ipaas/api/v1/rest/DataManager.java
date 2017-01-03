@@ -15,8 +15,6 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.api.v1.model.Component;
 import com.redhat.ipaas.api.v1.model.ComponentGroup;
@@ -96,37 +94,27 @@ public class DataManager {
                 for (ModelData modelData : mdList) {
                     addToCache(modelData);
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 logger.error("Cannot read dummy startup data due to: " + e.getMessage(), e);
             }
 
         }
     }
 
-    public void addToCache(ModelData modelData) {
-        try {
-            Class<? extends WithId> clazz = getClass(modelData.getModel());
-            Map<String, WithId> entityMap = cache.computeIfAbsent(modelData.getModel().toLowerCase(), k -> new HashMap<>());
-            logger.debug(modelData.getModel() + ":" + modelData.getData());
-            WithId entity = clazz.cast(mapper.readValue(modelData.getData(), clazz));
-            Optional<String> id = entity.getId();
-            String idVal;
-            if (!id.isPresent()) {
-                idVal = generatePK(entityMap);
-                entity = entity.withId(idVal);
-            } else {
-                idVal = id.get();
-            }
-            entityMap.put(idVal, entity);
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+    public void addToCache(ModelData modelData) throws ClassNotFoundException, IOException {
+        Class<? extends WithId> clazz = getClass(modelData.getModel());
+        Map<String, WithId> entityMap = cache.computeIfAbsent(modelData.getModel().toLowerCase(), k -> new HashMap<>());
+        logger.debug(modelData.getModel() + ":" + modelData.getData());
+        WithId entity = clazz.cast(mapper.readValue(modelData.getData(), clazz));
+        Optional<String> id = entity.getId();
+        String idVal;
+        if (!id.isPresent()) {
+            idVal = generatePK(entityMap);
+            entity = entity.withId(idVal);
+        } else {
+            idVal = id.get();
         }
+        entityMap.put(idVal, entity);
     }
 
     /**
@@ -203,7 +191,7 @@ public class DataManager {
     public <T> T fetch(String model, String id) {
         Map<String, WithId> entityMap = cache.computeIfAbsent(model, k -> new HashMap<>());
         if (entityMap.get(id) == null) {
-            return null;
+            throw new EntityNotFoundException("Can not find " + model + " with id " + id);
         }
         return (T) entityMap.get(id);
     }
