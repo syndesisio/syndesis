@@ -9,8 +9,6 @@ import { Integrations } from '../../store/integration/integration.model';
 })
 export class IntegrationsListComponent {
 
-  @Input() errorMessage: string;
-
   @Input() integrations: Integrations;
 
 }

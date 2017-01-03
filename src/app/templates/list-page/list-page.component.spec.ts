@@ -1,15 +1,21 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TemplatesListPage } from './list-page.component';
+import { StoreModule } from '@ngrx/store';
 
-describe('TemplatesListPageComponent', () => {
+import { TemplatesListPage } from './list-page.component';
+import { TemplatesListComponent } from '../list/list.component';
+import { ListToolbarComponent } from '../list-toolbar/list-toolbar.component';
+import { reducers } from '../../store/store';
+
+describe('TemplatesListPage', () => {
   let component: TemplatesListPage;
   let fixture: ComponentFixture<TemplatesListPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [TemplatesListPage],
+      imports: [StoreModule.provideStore(reducers)],
+      declarations: [TemplatesListPage, ListToolbarComponent, TemplatesListComponent],
     })
       .compileComponents();
   }));

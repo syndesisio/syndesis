@@ -13,7 +13,9 @@ module.exports = function (config) {
       require('karma-junit-reporter'),
     ],
     files: [
-      { pattern: './src/test.ts', watched: false }
+      { pattern: './src/test.ts', watched: false },
+      './node_modules/jquery/dist/jquery.min.js',
+      './node_modules/jquery-match-height/dist/jquery.matchHeight-min.js'
     ],
     preprocessors: {
       './src/test.ts': ['angular-cli']
