@@ -1,6 +1,6 @@
-import { BaseResource } from './baseresource.model';
+import { BaseEntity, Entities } from '../entity/entity.model';
 
-export interface Integration extends BaseResource {
+export interface Integration extends BaseEntity {
   configuredProperties: any;
   createdBy: string;
   createdOn: Date;
@@ -14,3 +14,5 @@ export interface Integration extends BaseResource {
 }
 
 export type Integrations = Array<Integration>;
+
+export type IntegrationEntities = Entities<Integration>;

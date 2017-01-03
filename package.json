@@ -23,6 +23,8 @@
     "@angular/router": "^3.4.1",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.15",
     "@ngrx/core": "^1.2.0",
+    "@ngrx/effects": "^2.0.0",
+    "@ngrx/router-store": "^1.2.5",
     "@ngrx/store": "^2.2.1",
     "@ngrx/store-devtools": "^3.2.2",
     "bootstrap": "next",
@@ -31,6 +33,7 @@
     "lodash": "^4.17.2",
     "ng2-restangular": "^0.1.23",
     "patternfly": "^3.17.0",
+    "reselect": "^2.5.4",
     "rxjs": "^5.0.1",
     "tether": "^1.4.0",
     "ts-helpers": "^1.1.2",
@@ -55,7 +58,7 @@
     "sass-lint": "^1.10.2",
     "sw-precache": "^4.2.3",
     "ts-node": "^1.7.2",
-    "tslint": "^4.1.1",
+    "tslint": "^4.2.0",
     "typescript": "^2.1.4",
     "webdriver-manager": "^11.1.0"
   }

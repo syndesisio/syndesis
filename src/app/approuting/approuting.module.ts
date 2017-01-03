@@ -4,15 +4,16 @@ import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'dashboard', loadChildren: '../dashboard/dashboard.module#DashboardModule' },
-  { path: 'integrations', loadChildren: '../integrations/integrations.module#IntegrationsModule' }
+  { path: 'integrations', loadChildren: '../integrations/integrations.module#IntegrationsModule' },
+  { path: 'templates', loadChildren: '../templates/templates.module#TemplatesModule' },
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
   ],
   exports: [
-    RouterModule
-  ]
+    RouterModule,
+  ],
 })
 export class AppRoutingModule { }

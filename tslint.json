@@ -42,14 +42,17 @@
     "no-duplicate-variable": true,
     "no-empty": false,
     "no-eval": true,
-    "no-inferrable-types": true,
+    "no-inferrable-types": [
+      true,
+      "ignore-params"
+    ],
     "no-reference": true,
     "no-shadowed-variable": true,
     "no-string-literal": false,
-    "no-switch-case-fall-through": true,
+    "no-switch-case-fall-through": false,
     "no-trailing-whitespace": true,
     "no-unused-expression": true,
-    "no-unused-variable": true,
+    "no-unused-variable": false,
     "no-use-before-declare": true,
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
@@ -102,13 +105,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "app",
+      "ipaas",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "app",
+      "ipaas",
       "kebab-case"
     ],
     "use-input-property-decorator": true,
@@ -118,7 +121,11 @@
     "no-output-rename": true,
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
-    "component-class-suffix": true,
+    "component-class-suffix": [
+      true,
+      "Component",
+      "Page"
+    ],
     "directive-class-suffix": true,
     "no-access-missing-member": true,
     "templates-use-public": true,

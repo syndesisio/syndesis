@@ -1,14 +1,12 @@
-import { Component, ElementRef, ChangeDetectionStrategy } from '@angular/core';
-
-import { ConfigService } from './config.service';
+import { Component, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
+  selector: 'ipaas-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   name = 'Red Hat iPaaS';
 
   // White BG
@@ -22,12 +20,6 @@ export class AppComponent {
   title = 'Red Hat iPaaS';
   url = 'https://www.twitter.com/jboss';
   loggedIn = true;
-
-  constructor(private _config: ConfigService, private _elementRef: ElementRef) { }
-
-  ngOnInit() {
-    console.log('Config', this._config.getSettings());
-  }
 
   ngAfterViewInit() {
     $(document).ready(function () {

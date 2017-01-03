@@ -1,17 +1,25 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 
+import { StoreModule as NgRxStoreModule } from '@ngrx/store';
+import { RouterStoreModule } from '@ngrx/router-store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { RestangularModule } from 'ng2-restangular';
 
-import { IntegrationsService } from './model/integrations.service';
+import { reducers } from './store';
+import { IntegrationService } from './integration/integration.service';
+import { TemplateService } from './template/template.service';
 
 @NgModule({
   imports: [
-    RestangularModule
+    RestangularModule,
+    NgRxStoreModule.provideStore(reducers),
+    RouterStoreModule.connectRouter(),
+    StoreDevtoolsModule.instrumentOnlyWithExtension(),
   ],
   providers: [
-    IntegrationsService
+    IntegrationService,
+    TemplateService,
   ],
-  declarations: []
 })
 export class StoreModule {
 

@@ -7,7 +7,7 @@ import { ConfigService } from './config.service';
 describe('ConfigService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ConfigService, Http]
+      providers: [ConfigService, Http],
     });
   });
 

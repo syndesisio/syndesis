@@ -1,27 +1,24 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import { Restangular } from 'ng2-restangular';
+import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
+
+import { State, getTemplates } from '../store/store';
+import { Templates } from '../store/template/template.model';
 
 @Component({
   selector: 'ipaas-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
 
-  errorMessage: string;
+  templates: Observable<Templates>;
 
-  templates: any[] = [];
-
-  constructor(private restangular: Restangular) { }
+  constructor(private store: Store<State>) { }
 
   ngOnInit() {
-    this.restangular.all('integrationtemplates').getList().subscribe(
-      (templates) => {
-        this.templates = templates;
-      },
-      (error) => this.errorMessage = <any>error
-    );
+    this.templates = this.store.select(getTemplates);
   }
 
 }

@@ -1,21 +1,21 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IntegrationsListComponent } from './list.component';
+import { IntegrationsCreatePage } from './create-page.component';
 
-describe('IntegrationsListComponent', () => {
-  let component: IntegrationsListComponent;
-  let fixture: ComponentFixture<IntegrationsListComponent>;
+describe('IntegrationsCreateComponent', () => {
+  let component: IntegrationsCreatePage;
+  let fixture: ComponentFixture<IntegrationsCreatePage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [IntegrationsListComponent],
+      declarations: [IntegrationsCreatePage],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IntegrationsListComponent);
+    fixture = TestBed.createComponent(IntegrationsCreatePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
