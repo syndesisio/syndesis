@@ -3263,6 +3263,13 @@ karma-jasmine@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-1.1.0.tgz#22e4c06bf9a182e5294d1f705e3733811b810acf"
 
+karma-junit-reporter@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/karma-junit-reporter/-/karma-junit-reporter-1.2.0.tgz#4f9c40cedfb1a395f8aef876abf96189917c6396"
+  dependencies:
+    path-is-absolute "^1.0.0"
+    xmlbuilder "8.2.2"
+
 karma-remap-istanbul@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/karma-remap-istanbul/-/karma-remap-istanbul-0.4.0.tgz#1f26ff34081acc063c8fd1a5e026de5fd9d0a081"
@@ -5971,21 +5978,7 @@ tslint-loader@^3.3.0:
     object-assign "^4.0.1"
     rimraf "^2.4.4"
 
-tslint@^4.0.2:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/tslint/-/tslint-4.1.1.tgz#ae15c9478d92eb2f01d5102c69c493ec02d7e7e4"
-  dependencies:
-    babel-code-frame "^6.20.0"
-    colors "^1.1.2"
-    diff "^3.0.1"
-    findup-sync "~0.3.0"
-    glob "^7.1.1"
-    optimist "~0.6.0"
-    resolve "^1.1.7"
-    underscore.string "^3.3.4"
-    update-notifier "^1.0.2"
-
-tslint@^4.2.0:
+tslint@^4.0.2, tslint@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/tslint/-/tslint-4.2.0.tgz#b9f5c5b871b784ab2f4809e704ade42d62f523ad"
   dependencies:
@@ -6483,7 +6476,7 @@ xml2js@0.4.4:
     sax "0.6.x"
     xmlbuilder ">=1.0.0"
 
-xmlbuilder@>=1.0.0:
+xmlbuilder@8.2.2, xmlbuilder@>=1.0.0:
   version "8.2.2"
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-8.2.2.tgz#69248673410b4ba42e1a6136551d2922335aa773"
 
