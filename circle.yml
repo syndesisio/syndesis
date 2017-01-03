@@ -20,7 +20,7 @@ dependencies:
       curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version $YARN_VERSION
     fi
   override:
-  - yarn install
+  - yarn install --no-progress
   cache_directories:
   - ~/.yarn
   - ~/.cache/yarn
@@ -29,7 +29,7 @@ test:
   override:
   - rm -Rf $CIRCLE_ARTIFACTS/coverage $CIRCLE_TEST_REPORTS/junit
   - mkdir $CIRCLE_ARTIFACTS/coverage $CIRCLE_TEST_REPORTS/junit
-  - ng test --watch=false -cc
+  - ng test --watch=false -cc --progress=false
 
 deployment:
   latest:
@@ -60,7 +60,7 @@ deployment:
     owner: redhat-ipaas
     branch: component-store-refactor
     commands:
-    - ng build --aot --prod
+    - ng build --aot --prod --progress=false
     - docker build -t rhipaas/ipaas-client:component-store-refactor . | cat -
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
     - docker push rhipaas/ipaas-client:component-store-refactor | cat -
