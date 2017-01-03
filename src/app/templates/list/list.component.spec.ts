@@ -1,21 +1,21 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IntegrationsListToolbarComponent } from './list-toolbar.component';
+import { IntegrationsListComponent } from './list.component';
 
-describe('ListToolbarComponent', () => {
-  let component: IntegrationsListToolbarComponent;
-  let fixture: ComponentFixture<IntegrationsListToolbarComponent>;
+describe('IntegrationsListComponent', () => {
+  let component: IntegrationsListComponent;
+  let fixture: ComponentFixture<IntegrationsListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [IntegrationsListToolbarComponent],
+      declarations: [IntegrationsListComponent],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IntegrationsListToolbarComponent);
+    fixture = TestBed.createComponent(IntegrationsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

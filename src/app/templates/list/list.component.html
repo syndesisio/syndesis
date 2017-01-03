@@ -1,0 +1,49 @@
+<div class="container-cards-pf">
+  <div class="row row-cards-pf">
+
+    <!-- Template Card -->
+
+    <div class="col-xs-12 col-sm-3 col-md-2 card" *ngFor="let template of templates">
+      <div class="card-pf card-pf-view card-pf-view-xs">
+        <div class="card-pf-body">
+
+          <!-- Card Dropdown -->
+
+          <div class="card-pf-heading-kebab">
+            <div class="dropdown pull-right dropdown-kebab-pf card-pf-time-frame-filter">
+              <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+                  <span class="fa fa-ellipsis-v"></span>
+                </button>
+              <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li>
+                  <a>View</a>
+                </li>
+                <li>
+                  <a>Edit</a>
+                </li>
+                <li>
+                  <a>Duplicate</a>
+                </li>
+                <li>
+                  <a>Delete</a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Card Title & Icon -->
+
+            <h2 class="card-pf-title">
+              <span class="fa {{ template.icon }}"></span>
+            </h2>
+            <div class="card-title">{{ template.name }}
+            </div>
+          </div>
+
+          <!-- Card Description -->
+
+          <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,6 +7,7 @@ import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
 import { PopularTemplatesComponent } from './populartemplates.component';
 import { TemplateEffects } from '../store/template/template.effects';
+import { SharedModule } from '../shared/shared.module';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' },
@@ -17,6 +18,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     EffectsModule.run(TemplateEffects),
+    SharedModule,
   ],
   declarations: [
     DashboardComponent,
