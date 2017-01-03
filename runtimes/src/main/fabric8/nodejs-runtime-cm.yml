@@ -5,6 +5,8 @@ metadata:
   name: "nodejs"
   labels:
     funktion.fabric8.io/kind: "Runtime"
+  annotations:
+    funktion.fabric8.io/fileExtensions: "js"
 data:
   deployment: |
     metadata:
