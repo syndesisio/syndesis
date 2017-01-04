@@ -6,6 +6,8 @@ import { IntegrationEntities } from './integration/integration.model';
 import * as fromIntegrations from './integration/integration.reducer';
 import { TemplateEntities } from './template/template.model';
 import * as fromTemplates from './template/template.reducer';
+import { ConnectionEntities } from './connection/connection.model';
+import * as fromConnections from './connection/connection.reducer';
 /**
  * Treat each reducer like a table in a database. This means
  * our top level state interface is just a map of keys to inner state types.
@@ -13,12 +15,14 @@ import * as fromTemplates from './template/template.reducer';
 export interface State {
   integrations: IntegrationEntities;
   templates: TemplateEntities;
+  connections: ConnectionEntities;
   router: RouterState;
 }
 
 export const reducers = {
   integrations: fromIntegrations.reducer,
   templates: fromTemplates.reducer,
+  connections: fromConnections.reducer,
   router: routerReducer,
 };
 
@@ -39,5 +43,15 @@ export const getTemplateIds = createSelector(getTemplatesState, fromTemplates.ge
 export const getSelectedTemplateId = createSelector(getTemplatesState, fromTemplates.getSelectedId);
 export const getSelectedTemplate = createSelector(getTemplatesState, fromTemplates.getSelected);
 export const getTemplates = createSelector(getTemplateEntities, getTemplateIds, (entities, ids) => {
+  return ids.map(id => entities[id]);
+});
+
+export const getConnectionsState = (state: State) => state.connections;
+
+export const getConnectionEntities = createSelector(getConnectionsState, fromConnections.getEntities);
+export const getConnectionIds = createSelector(getConnectionsState, fromConnections.getIds);
+export const getSelectedConnectionId = createSelector(getConnectionsState, fromConnections.getSelectedId);
+export const getSelectedConnection = createSelector(getConnectionsState, fromConnections.getSelected);
+export const getConnections = createSelector(getConnectionEntities, getConnectionIds, (entities, ids) => {
   return ids.map(id => entities[id]);
 });

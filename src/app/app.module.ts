@@ -8,6 +8,7 @@ import { RestangularModule } from 'ng2-restangular';
 
 import { AppRoutingModule } from './approuting/approuting.module';
 import { StoreModule } from './store/store.module';
+import { IPaaSCommonModule } from './common/common.module';
 
 import { AppComponent } from './app.component';
 import { ConfigService, configServiceInitializer } from './config.service';
@@ -28,6 +29,7 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     NgbModule.forRoot(),
     AppRoutingModule,
     StoreModule,
+    IPaaSCommonModule,
   ],
   providers: [
     ConfigService,

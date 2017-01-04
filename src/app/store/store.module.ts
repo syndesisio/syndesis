@@ -8,6 +8,7 @@ import { RestangularModule } from 'ng2-restangular';
 import { reducers } from './store';
 import { IntegrationService } from './integration/integration.service';
 import { TemplateService } from './template/template.service';
+import { ConnectionService } from './connection/connection.service';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { TemplateService } from './template/template.service';
   providers: [
     IntegrationService,
     TemplateService,
+    ConnectionService,
   ],
 })
 export class StoreModule {
