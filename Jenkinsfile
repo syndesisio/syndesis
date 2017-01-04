@@ -1,11 +1,11 @@
 #!/usr/bin/groovy
-@Library('github.com/rawlingsj/fabric8-pipeline-library@master')
+@Library('github.com/fabric8io/fabric8-pipeline-library@master')
 def test = 'dummy'
 mavenNode {
   dockerNode {
     ws{
       checkout scm
-      sh "git remote set-url origin git@github.com:fabric8io/funktion.git"
+      sh "git remote set-url origin git@github.com:funktionio/funktion-connectors.git"
 
       def pipeline = load 'release.groovy'
       def dockerImages = load 'releaseImages.groovy'
