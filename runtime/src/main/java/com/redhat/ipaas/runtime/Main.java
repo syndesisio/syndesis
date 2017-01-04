@@ -19,6 +19,7 @@ import com.redhat.ipaas.rest.VersionEndpoint;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.wildfly.swarm.Swarm;
 import org.wildfly.swarm.jaxrs.JAXRSArchive;
+import org.wildfly.swarm.keycloak.Secured;
 import org.wildfly.swarm.swagger.SwaggerArchive;
 import org.wildfly.swarm.swagger.webapp.SwaggerWebAppFraction;
 import org.wildfly.swarm.undertow.WARArchive;
@@ -45,6 +46,12 @@ public class Main {
             setPrettyPrint(true).
             setTitle("Red Hat iPaaS API").
             setResourcePackages("com.redhat.ipaas.rest");
+        
+//        archive.as(Secured.class).
+//            protect( "/components/*").
+//            withMethod( "GET" ).
+//            withRole( "citizen_developer" );
+        
         JAXRSArchive jaxrs = archive.as(JAXRSArchive.class).
             setContextRoot("v1").
             addPackages(true, "com.redhat.ipaas.rest").
