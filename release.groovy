@@ -1,6 +1,6 @@
 #!/usr/bin/groovy
 def repo(){
- return 'fabric8io/funktion'
+ return 'funktionio/funktion-connectors'
 }
 
 
@@ -27,7 +27,7 @@ def release(project, promoteImages){
     useGitTagForNextVersion = true
     helmPush = false
     groupId = 'io.fabric8.funktion'
-    githubOrganisation = 'fabric8io'
+    githubOrganisation = 'funktionio'
     artifactIdToWatchInCentral = 'funktion-runtime'
     artifactExtensionToWatchInCentral = 'jar'
     imagesToPromoteToDockerHub = promoteImages
