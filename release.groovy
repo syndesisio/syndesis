@@ -1,6 +1,6 @@
 #!/usr/bin/groovy
 def repo(){
- return 'fabric8io/funktion'
+ return 'funktionio/funktion-connectors'
 }
 
 
