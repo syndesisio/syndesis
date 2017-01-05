@@ -53,7 +53,7 @@ data:
   service: |
     metadata:
       annotations:
-        fabric8.io/iconUrl: "https://github.com/fabric8io/funktion/raw/master/docs/images/icon.png"
+        fabric8.io/iconUrl: "https://funktion.fabric8.io/img/profile.png"
     spec:
       ports:
       - port: 80
