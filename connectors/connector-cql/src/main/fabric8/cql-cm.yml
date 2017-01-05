@@ -23,7 +23,7 @@ data:
             connector: cql
         spec:
           containers:
-          - image: fabric8/connector-cql:${project.version}
+          - image: funktion/connector-cql:${project.version}
             name: connector
   schema.yml: |
     ---

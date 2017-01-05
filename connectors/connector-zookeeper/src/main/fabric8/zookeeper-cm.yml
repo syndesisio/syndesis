@@ -23,7 +23,7 @@ data:
             connector: zookeeper
         spec:
           containers:
-          - image: fabric8/connector-zookeeper:${project.version}
+          - image: funktion/connector-zookeeper:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: vm
         spec:
           containers:
-          - image: fabric8/connector-vm:${project.version}
+          - image: funktion/connector-vm:${project.version}
             name: connector
   schema.yml: |
     ---

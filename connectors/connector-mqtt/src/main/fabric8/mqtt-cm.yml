@@ -23,7 +23,7 @@ data:
             connector: mqtt
         spec:
           containers:
-          - image: fabric8/connector-mqtt:${project.version}
+          - image: funktion/connector-mqtt:${project.version}
             name: connector
   schema.yml: |
     ---

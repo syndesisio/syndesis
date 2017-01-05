@@ -23,7 +23,7 @@ data:
             connector: nats
         spec:
           containers:
-          - image: fabric8/connector-nats:${project.version}
+          - image: funktion/connector-nats:${project.version}
             name: connector
   schema.yml: |
     ---

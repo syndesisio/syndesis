@@ -23,7 +23,7 @@ data:
             connector: hazelcast
         spec:
           containers:
-          - image: fabric8/connector-hazelcast:${project.version}
+          - image: funktion/connector-hazelcast:${project.version}
             name: connector
   schema.yml: |
     ---

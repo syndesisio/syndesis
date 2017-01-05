@@ -23,7 +23,7 @@ data:
             connector: lpr
         spec:
           containers:
-          - image: fabric8/connector-lpr:${project.version}
+          - image: funktion/connector-lpr:${project.version}
             name: connector
   schema.yml: |
     ---

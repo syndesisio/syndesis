@@ -23,7 +23,7 @@ data:
             connector: smtps
         spec:
           containers:
-          - image: fabric8/connector-smtps:${project.version}
+          - image: funktion/connector-smtps:${project.version}
             name: connector
   schema.yml: |
     ---

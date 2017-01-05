@@ -23,7 +23,7 @@ data:
             connector: pop3
         spec:
           containers:
-          - image: fabric8/connector-pop3:${project.version}
+          - image: funktion/connector-pop3:${project.version}
             name: connector
   schema.yml: |
     ---

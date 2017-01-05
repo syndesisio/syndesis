@@ -23,7 +23,7 @@ data:
             connector: ldap
         spec:
           containers:
-          - image: fabric8/connector-ldap:${project.version}
+          - image: funktion/connector-ldap:${project.version}
             name: connector
   schema.yml: |
     ---

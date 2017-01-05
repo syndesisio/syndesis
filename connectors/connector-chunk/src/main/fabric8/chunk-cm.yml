@@ -23,7 +23,7 @@ data:
             connector: chunk
         spec:
           containers:
-          - image: fabric8/connector-chunk:${project.version}
+          - image: funktion/connector-chunk:${project.version}
             name: connector
   schema.yml: |
     ---

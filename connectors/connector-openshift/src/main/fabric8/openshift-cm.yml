@@ -23,7 +23,7 @@ data:
             connector: openshift
         spec:
           containers:
-          - image: fabric8/connector-openshift:${project.version}
+          - image: funktion/connector-openshift:${project.version}
             name: connector
   schema.yml: |
     ---

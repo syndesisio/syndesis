@@ -23,7 +23,7 @@ data:
             connector: hbase
         spec:
           containers:
-          - image: fabric8/connector-hbase:${project.version}
+          - image: funktion/connector-hbase:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: nagios
         spec:
           containers:
-          - image: fabric8/connector-nagios:${project.version}
+          - image: funktion/connector-nagios:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: telegram
         spec:
           containers:
-          - image: fabric8/connector-telegram:${project.version}
+          - image: funktion/connector-telegram:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: restlet
         spec:
           containers:
-          - image: fabric8/connector-restlet:${project.version}
+          - image: funktion/connector-restlet:${project.version}
             name: connector
   schema.yml: |
     ---

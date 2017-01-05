@@ -23,7 +23,7 @@ data:
             connector: jclouds
         spec:
           containers:
-          - image: fabric8/connector-jclouds:${project.version}
+          - image: funktion/connector-jclouds:${project.version}
             name: connector
   schema.yml: |
     ---

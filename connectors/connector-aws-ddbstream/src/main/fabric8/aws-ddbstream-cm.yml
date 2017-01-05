@@ -23,7 +23,7 @@ data:
             connector: aws-ddbstream
         spec:
           containers:
-          - image: fabric8/connector-aws-ddbstream:${project.version}
+          - image: funktion/connector-aws-ddbstream:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: sql-stored
         spec:
           containers:
-          - image: fabric8/connector-sql-stored:${project.version}
+          - image: funktion/connector-sql-stored:${project.version}
             name: connector
   schema.yml: |
     ---

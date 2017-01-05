@@ -23,7 +23,7 @@ data:
             connector: hipchat
         spec:
           containers:
-          - image: fabric8/connector-hipchat:${project.version}
+          - image: funktion/connector-hipchat:${project.version}
             name: connector
   schema.yml: |
     ---

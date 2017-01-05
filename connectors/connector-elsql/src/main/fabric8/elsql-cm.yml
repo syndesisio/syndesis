@@ -23,7 +23,7 @@ data:
             connector: elsql
         spec:
           containers:
-          - image: fabric8/connector-elsql:${project.version}
+          - image: funktion/connector-elsql:${project.version}
             name: connector
   schema.yml: |
     ---

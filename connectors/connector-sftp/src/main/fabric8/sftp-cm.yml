@@ -23,7 +23,7 @@ data:
             connector: sftp
         spec:
           containers:
-          - image: fabric8/connector-sftp:${project.version}
+          - image: funktion/connector-sftp:${project.version}
             name: connector
   schema.yml: |
     ---

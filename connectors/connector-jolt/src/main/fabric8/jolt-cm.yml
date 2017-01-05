@@ -23,7 +23,7 @@ data:
             connector: jolt
         spec:
           containers:
-          - image: fabric8/connector-jolt:${project.version}
+          - image: funktion/connector-jolt:${project.version}
             name: connector
   schema.yml: |
     ---

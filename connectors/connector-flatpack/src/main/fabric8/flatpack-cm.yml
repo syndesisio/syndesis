@@ -23,7 +23,7 @@ data:
             connector: flatpack
         spec:
           containers:
-          - image: fabric8/connector-flatpack:${project.version}
+          - image: funktion/connector-flatpack:${project.version}
             name: connector
   schema.yml: |
     ---

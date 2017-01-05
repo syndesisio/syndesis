@@ -23,7 +23,7 @@ data:
             connector: spring-event
         spec:
           containers:
-          - image: fabric8/connector-spring-event:${project.version}
+          - image: funktion/connector-spring-event:${project.version}
             name: connector
   schema.yml: |
     ---

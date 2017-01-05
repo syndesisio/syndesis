@@ -23,7 +23,7 @@ data:
             connector: dataformat
         spec:
           containers:
-          - image: fabric8/connector-dataformat:${project.version}
+          - image: funktion/connector-dataformat:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: https
         spec:
           containers:
-          - image: fabric8/connector-https:${project.version}
+          - image: funktion/connector-https:${project.version}
             name: connector
   schema.yml: |
     ---

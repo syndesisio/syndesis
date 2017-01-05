@@ -23,7 +23,7 @@ data:
             connector: aws-ec2
         spec:
           containers:
-          - image: fabric8/connector-aws-ec2:${project.version}
+          - image: funktion/connector-aws-ec2:${project.version}
             name: connector
   schema.yml: |
     ---

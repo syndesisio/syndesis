@@ -23,7 +23,7 @@ data:
             connector: guava-eventbus
         spec:
           containers:
-          - image: fabric8/connector-guava-eventbus:${project.version}
+          - image: funktion/connector-guava-eventbus:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: github
         spec:
           containers:
-          - image: fabric8/connector-github:${project.version}
+          - image: funktion/connector-github:${project.version}
             name: connector
   schema.yml: |
     ---

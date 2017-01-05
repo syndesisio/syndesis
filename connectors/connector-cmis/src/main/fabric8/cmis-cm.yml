@@ -23,7 +23,7 @@ data:
             connector: cmis
         spec:
           containers:
-          - image: fabric8/connector-cmis:${project.version}
+          - image: funktion/connector-cmis:${project.version}
             name: connector
   schema.yml: |
     ---

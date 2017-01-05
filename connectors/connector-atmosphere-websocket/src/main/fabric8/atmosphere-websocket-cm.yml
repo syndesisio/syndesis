@@ -23,7 +23,7 @@ data:
             connector: atmosphere-websocket
         spec:
           containers:
-          - image: fabric8/connector-atmosphere-websocket:${project.version}
+          - image: funktion/connector-atmosphere-websocket:${project.version}
             name: connector
   schema.yml: |
     ---

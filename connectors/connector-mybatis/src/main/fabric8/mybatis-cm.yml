@@ -23,7 +23,7 @@ data:
             connector: mybatis
         spec:
           containers:
-          - image: fabric8/connector-mybatis:${project.version}
+          - image: funktion/connector-mybatis:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: quickfix
         spec:
           containers:
-          - image: fabric8/connector-quickfix:${project.version}
+          - image: funktion/connector-quickfix:${project.version}
             name: connector
   schema.yml: |
     ---

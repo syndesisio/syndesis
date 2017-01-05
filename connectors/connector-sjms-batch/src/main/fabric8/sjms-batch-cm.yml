@@ -23,7 +23,7 @@ data:
             connector: sjms-batch
         spec:
           containers:
-          - image: fabric8/connector-sjms-batch:${project.version}
+          - image: funktion/connector-sjms-batch:${project.version}
             name: connector
   schema.yml: |
     ---

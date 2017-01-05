@@ -23,7 +23,7 @@ data:
             connector: javaspace
         spec:
           containers:
-          - image: fabric8/connector-javaspace:${project.version}
+          - image: funktion/connector-javaspace:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: kafka
         spec:
           containers:
-          - image: fabric8/connector-kafka:${project.version}
+          - image: funktion/connector-kafka:${project.version}
             name: connector
   schema.yml: |
     ---

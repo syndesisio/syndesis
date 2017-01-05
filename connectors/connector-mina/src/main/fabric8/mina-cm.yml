@@ -23,7 +23,7 @@ data:
             connector: mina
         spec:
           containers:
-          - image: fabric8/connector-mina:${project.version}
+          - image: funktion/connector-mina:${project.version}
             name: connector
   schema.yml: |
     ---

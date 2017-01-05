@@ -23,7 +23,7 @@ data:
             connector: jetty
         spec:
           containers:
-          - image: fabric8/connector-jetty:${project.version}
+          - image: funktion/connector-jetty:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: yammer
         spec:
           containers:
-          - image: fabric8/connector-yammer:${project.version}
+          - image: funktion/connector-yammer:${project.version}
             name: connector
   schema.yml: |
     ---

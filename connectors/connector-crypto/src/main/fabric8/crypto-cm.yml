@@ -23,7 +23,7 @@ data:
             connector: crypto
         spec:
           containers:
-          - image: fabric8/connector-crypto:${project.version}
+          - image: funktion/connector-crypto:${project.version}
             name: connector
   schema.yml: |
     ---
