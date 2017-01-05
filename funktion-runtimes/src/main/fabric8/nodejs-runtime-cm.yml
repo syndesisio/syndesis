@@ -7,11 +7,12 @@ metadata:
     funktion.fabric8.io/kind: "Runtime"
   annotations:
     funktion.fabric8.io/fileExtensions: "js"
+    fabric8.io/iconUrl: "https://funktion.fabric8.io/img/profile.png"
 data:
   deployment: |
     metadata:
       annotations:
-        fabric8.io/iconUrl: "https://github.com/fabric8io/funktion/raw/master/docs/images/icon.png"
+        fabric8.io/iconUrl: "https://funktion.fabric8.io/img/profile.png"
       labels:
         kind: function
         name: hello
@@ -52,7 +53,7 @@ data:
   service: |
     metadata:
       annotations:
-        fabric8.io/iconUrl: "https://github.com/fabric8io/funktion/raw/master/docs/images/icon.png"
+        fabric8.io/iconUrl: "https://funktion.fabric8.io/img/profile.png"
     spec:
       ports:
       - port: 80

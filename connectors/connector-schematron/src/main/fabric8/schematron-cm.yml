@@ -23,7 +23,7 @@ data:
             connector: schematron
         spec:
           containers:
-          - image: fabric8/connector-schematron:${project.version}
+          - image: funktion/connector-schematron:${project.version}
             name: connector
   schema.yml: |
     ---

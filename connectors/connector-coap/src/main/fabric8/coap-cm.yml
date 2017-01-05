@@ -23,7 +23,7 @@ data:
             connector: coap
         spec:
           containers:
-          - image: fabric8/connector-coap:${project.version}
+          - image: funktion/connector-coap:${project.version}
             name: connector
   schema.yml: |
     ---

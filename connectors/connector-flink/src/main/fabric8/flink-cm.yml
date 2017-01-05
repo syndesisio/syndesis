@@ -23,7 +23,7 @@ data:
             connector: flink
         spec:
           containers:
-          - image: fabric8/connector-flink:${project.version}
+          - image: funktion/connector-flink:${project.version}
             name: connector
   schema.yml: |
     ---

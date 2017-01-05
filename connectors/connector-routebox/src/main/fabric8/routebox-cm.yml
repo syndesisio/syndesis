@@ -23,7 +23,7 @@ data:
             connector: routebox
         spec:
           containers:
-          - image: fabric8/connector-routebox:${project.version}
+          - image: funktion/connector-routebox:${project.version}
             name: connector
   schema.yml: |
     ---

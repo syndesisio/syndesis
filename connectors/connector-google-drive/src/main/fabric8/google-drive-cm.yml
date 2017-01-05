@@ -23,7 +23,7 @@ data:
             connector: google-drive
         spec:
           containers:
-          - image: fabric8/connector-google-drive:${project.version}
+          - image: funktion/connector-google-drive:${project.version}
             name: connector
   schema.yml: |
     ---

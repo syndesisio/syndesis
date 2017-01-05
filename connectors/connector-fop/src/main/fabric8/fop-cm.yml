@@ -23,7 +23,7 @@ data:
             connector: fop
         spec:
           containers:
-          - image: fabric8/connector-fop:${project.version}
+          - image: funktion/connector-fop:${project.version}
             name: connector
   schema.yml: |
     ---

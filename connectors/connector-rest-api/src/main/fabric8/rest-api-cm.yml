@@ -23,7 +23,7 @@ data:
             connector: rest-api
         spec:
           containers:
-          - image: fabric8/connector-rest-api:${project.version}
+          - image: funktion/connector-rest-api:${project.version}
             name: connector
   schema.yml: |
     ---

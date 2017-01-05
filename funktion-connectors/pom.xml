@@ -23,7 +23,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>connector-package</artifactId>
+  <artifactId>funktion-connectors</artifactId>
   <packaging>jar</packaging>
 
   <name>Funktion Connector Package</name>

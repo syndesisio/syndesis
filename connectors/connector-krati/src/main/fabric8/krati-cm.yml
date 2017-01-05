@@ -23,7 +23,7 @@ data:
             connector: krati
         spec:
           containers:
-          - image: fabric8/connector-krati:${project.version}
+          - image: funktion/connector-krati:${project.version}
             name: connector
   schema.yml: |
     ---

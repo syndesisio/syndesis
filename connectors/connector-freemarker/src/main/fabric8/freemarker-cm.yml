@@ -23,7 +23,7 @@ data:
             connector: freemarker
         spec:
           containers:
-          - image: fabric8/connector-freemarker:${project.version}
+          - image: funktion/connector-freemarker:${project.version}
             name: connector
   schema.yml: |
     ---

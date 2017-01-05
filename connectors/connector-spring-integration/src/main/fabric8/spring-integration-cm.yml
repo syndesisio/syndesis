@@ -23,7 +23,7 @@ data:
             connector: spring-integration
         spec:
           containers:
-          - image: fabric8/connector-spring-integration:${project.version}
+          - image: funktion/connector-spring-integration:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -109,7 +109,7 @@ public class ConnectorGenerator {
             modules = DomHelper.addChildElement(componentsPom.getDocumentElement(), "modules");
         }
 
-        File componentPackagePomFile = new File(getBaseDir(), "../connector-package/pom.xml");
+        File componentPackagePomFile = new File(getBaseDir(), "../funktion-connectors/pom.xml");
         Document componentPackagePom = parseDocument(componentPackagePomFile);
         Element packageBuild = getOrCreateFirstChild(componentPackagePom.getDocumentElement(), "build");
         Element packagePlugins = getOrCreateFirstChild(packageBuild, "plugins");
@@ -219,7 +219,7 @@ public class ConnectorGenerator {
                         "          <generator>\n" +
                         "            <config>\n" +
                         "              <spring-boot>\n" +
-                        "                <name>fabric8/%a:%v</name>\n" +
+                        "                <name>funktion/%a:%v</name>\n" +
                         "                <alias>funktor</alias>\n" +
                         "              </spring-boot>\n" +
                         "            </config>\n" +
@@ -253,7 +253,7 @@ public class ConnectorGenerator {
                 String jSonSchema = camelCatalog.componentJSonSchema(componentName);
                 String asciiDoc = camelCatalog.componentAsciiDoc(componentName);
 
-                String image = "fabric8/" + moduleName + ":${project.version}";
+                String image = "funktion/" + moduleName + ":${project.version}";
                 File applicationPropertiesFile = new File(projectDir, "src/main/funktion/application.properties");
                 ConfigMap configMap = Connectors.createConnector(component, jSonSchema, asciiDoc, image, applicationPropertiesFile);
                 File configMapFile = new File(projectDir, "src/main/fabric8/" + componentName + "-cm.yml");

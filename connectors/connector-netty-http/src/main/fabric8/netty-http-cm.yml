@@ -23,7 +23,7 @@ data:
             connector: netty-http
         spec:
           containers:
-          - image: fabric8/connector-netty-http:${project.version}
+          - image: funktion/connector-netty-http:${project.version}
             name: connector
   schema.yml: |
     ---

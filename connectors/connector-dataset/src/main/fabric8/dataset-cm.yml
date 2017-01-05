@@ -23,7 +23,7 @@ data:
             connector: dataset
         spec:
           containers:
-          - image: fabric8/connector-dataset:${project.version}
+          - image: funktion/connector-dataset:${project.version}
             name: connector
   schema.yml: |
     ---

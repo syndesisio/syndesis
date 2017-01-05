@@ -23,7 +23,7 @@ data:
             connector: ssh
         spec:
           containers:
-          - image: fabric8/connector-ssh:${project.version}
+          - image: funktion/connector-ssh:${project.version}
             name: connector
   schema.yml: |
     ---

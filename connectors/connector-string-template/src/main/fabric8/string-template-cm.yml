@@ -23,7 +23,7 @@ data:
             connector: string-template
         spec:
           containers:
-          - image: fabric8/connector-string-template:${project.version}
+          - image: funktion/connector-string-template:${project.version}
             name: connector
   schema.yml: |
     ---

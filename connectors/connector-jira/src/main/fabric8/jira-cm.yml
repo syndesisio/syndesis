@@ -23,7 +23,7 @@ data:
             connector: jira
         spec:
           containers:
-          - image: fabric8/connector-jira:${project.version}
+          - image: funktion/connector-jira:${project.version}
             name: connector
   schema.yml: |
     ---

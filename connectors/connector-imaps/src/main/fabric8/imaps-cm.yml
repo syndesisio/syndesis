@@ -23,7 +23,7 @@ data:
             connector: imaps
         spec:
           containers:
-          - image: fabric8/connector-imaps:${project.version}
+          - image: funktion/connector-imaps:${project.version}
             name: connector
   schema.yml: |
     ---

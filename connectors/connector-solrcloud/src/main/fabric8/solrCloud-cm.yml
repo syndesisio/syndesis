@@ -23,7 +23,7 @@ data:
             connector: solrcloud
         spec:
           containers:
-          - image: fabric8/connector-solrcloud:${project.version}
+          - image: funktion/connector-solrcloud:${project.version}
             name: connector
   schema.yml: |
     ---

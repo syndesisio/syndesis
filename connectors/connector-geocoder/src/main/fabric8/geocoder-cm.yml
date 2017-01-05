@@ -23,7 +23,7 @@ data:
             connector: geocoder
         spec:
           containers:
-          - image: fabric8/connector-geocoder:${project.version}
+          - image: funktion/connector-geocoder:${project.version}
             name: connector
   schema.yml: |
     ---

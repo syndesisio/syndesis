@@ -23,7 +23,7 @@ data:
             connector: smpp
         spec:
           containers:
-          - image: fabric8/connector-smpp:${project.version}
+          - image: funktion/connector-smpp:${project.version}
             name: connector
   schema.yml: |
     ---

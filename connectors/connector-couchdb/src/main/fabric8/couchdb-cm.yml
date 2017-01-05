@@ -23,7 +23,7 @@ data:
             connector: couchdb
         spec:
           containers:
-          - image: fabric8/connector-couchdb:${project.version}
+          - image: funktion/connector-couchdb:${project.version}
             name: connector
   schema.yml: |
     ---

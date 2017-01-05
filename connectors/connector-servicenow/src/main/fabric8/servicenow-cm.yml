@@ -23,7 +23,7 @@ data:
             connector: servicenow
         spec:
           containers:
-          - image: fabric8/connector-servicenow:${project.version}
+          - image: funktion/connector-servicenow:${project.version}
             name: connector
   schema.yml: |
     ---

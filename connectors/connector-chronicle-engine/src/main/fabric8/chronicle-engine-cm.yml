@@ -23,7 +23,7 @@ data:
             connector: chronicle-engine
         spec:
           containers:
-          - image: fabric8/connector-chronicle-engine:${project.version}
+          - image: funktion/connector-chronicle-engine:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: cometd
         spec:
           containers:
-          - image: fabric8/connector-cometd:${project.version}
+          - image: funktion/connector-cometd:${project.version}
             name: connector
   schema.yml: |
     ---

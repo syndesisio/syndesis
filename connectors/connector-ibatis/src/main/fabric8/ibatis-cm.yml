@@ -23,7 +23,7 @@ data:
             connector: ibatis
         spec:
           containers:
-          - image: fabric8/connector-ibatis:${project.version}
+          - image: funktion/connector-ibatis:${project.version}
             name: connector
   schema.yml: |
     ---

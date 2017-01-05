@@ -23,7 +23,7 @@ data:
             connector: xquery
         spec:
           containers:
-          - image: fabric8/connector-xquery:${project.version}
+          - image: funktion/connector-xquery:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: ehcache
         spec:
           containers:
-          - image: fabric8/connector-ehcache:${project.version}
+          - image: funktion/connector-ehcache:${project.version}
             name: connector
   schema.yml: |
     ---

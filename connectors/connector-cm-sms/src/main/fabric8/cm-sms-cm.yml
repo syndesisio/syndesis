@@ -23,7 +23,7 @@ data:
             connector: cm-sms
         spec:
           containers:
-          - image: fabric8/connector-cm-sms:${project.version}
+          - image: funktion/connector-cm-sms:${project.version}
             name: connector
   schema.yml: |
     ---

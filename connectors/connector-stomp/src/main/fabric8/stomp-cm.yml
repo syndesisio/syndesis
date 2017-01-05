@@ -23,7 +23,7 @@ data:
             connector: stomp
         spec:
           containers:
-          - image: fabric8/connector-stomp:${project.version}
+          - image: funktion/connector-stomp:${project.version}
             name: connector
   schema.yml: |
     ---

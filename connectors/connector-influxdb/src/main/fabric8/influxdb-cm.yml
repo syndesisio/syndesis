@@ -23,7 +23,7 @@ data:
             connector: influxdb
         spec:
           containers:
-          - image: fabric8/connector-influxdb:${project.version}
+          - image: funktion/connector-influxdb:${project.version}
             name: connector
   schema.yml: |
     ---

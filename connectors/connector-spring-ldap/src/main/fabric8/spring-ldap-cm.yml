@@ -23,7 +23,7 @@ data:
             connector: spring-ldap
         spec:
           containers:
-          - image: fabric8/connector-spring-ldap:${project.version}
+          - image: funktion/connector-spring-ldap:${project.version}
             name: connector
   schema.yml: |
     ---

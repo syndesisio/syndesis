@@ -23,7 +23,7 @@ data:
             connector: jbpm
         spec:
           containers:
-          - image: fabric8/connector-jbpm:${project.version}
+          - image: funktion/connector-jbpm:${project.version}
             name: connector
   schema.yml: |
     ---

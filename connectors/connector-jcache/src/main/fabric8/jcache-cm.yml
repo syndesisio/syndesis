@@ -23,7 +23,7 @@ data:
             connector: jcache
         spec:
           containers:
-          - image: fabric8/connector-jcache:${project.version}
+          - image: funktion/connector-jcache:${project.version}
             name: connector
   schema.yml: |
     ---

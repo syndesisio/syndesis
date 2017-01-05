@@ -23,7 +23,7 @@ data:
             connector: ganglia
         spec:
           containers:
-          - image: fabric8/connector-ganglia:${project.version}
+          - image: funktion/connector-ganglia:${project.version}
             name: connector
   schema.yml: |
     ---

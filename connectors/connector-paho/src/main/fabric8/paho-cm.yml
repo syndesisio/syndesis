@@ -23,7 +23,7 @@ data:
             connector: paho
         spec:
           containers:
-          - image: fabric8/connector-paho:${project.version}
+          - image: funktion/connector-paho:${project.version}
             name: connector
   schema.yml: |
     ---

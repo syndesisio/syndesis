@@ -23,7 +23,7 @@ data:
             connector: aws-swf
         spec:
           containers:
-          - image: fabric8/connector-aws-swf:${project.version}
+          - image: funktion/connector-aws-swf:${project.version}
             name: connector
   schema.yml: |
     ---

@@ -23,7 +23,7 @@ data:
             connector: etcd
         spec:
           containers:
-          - image: fabric8/connector-etcd:${project.version}
+          - image: funktion/connector-etcd:${project.version}
             name: connector
   schema.yml: |
     ---

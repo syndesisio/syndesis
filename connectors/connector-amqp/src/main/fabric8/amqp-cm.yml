@@ -23,7 +23,7 @@ data:
             connector: amqp
         spec:
           containers:
-          - image: fabric8/connector-amqp:${project.version}
+          - image: funktion/connector-amqp:${project.version}
             name: connector
   schema.yml: |
     ---

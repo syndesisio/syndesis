@@ -23,7 +23,7 @@ data:
             connector: seda
         spec:
           containers:
-          - image: fabric8/connector-seda:${project.version}
+          - image: funktion/connector-seda:${project.version}
             name: connector
   schema.yml: |
     ---

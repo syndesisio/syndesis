@@ -23,7 +23,7 @@ data:
             connector: google-mail
         spec:
           containers:
-          - image: fabric8/connector-google-mail:${project.version}
+          - image: funktion/connector-google-mail:${project.version}
             name: connector
   schema.yml: |
     ---

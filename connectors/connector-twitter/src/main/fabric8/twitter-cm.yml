@@ -23,7 +23,7 @@ data:
             connector: twitter
         spec:
           containers:
-          - image: fabric8/connector-twitter:${project.version}
+          - image: funktion/connector-twitter:${project.version}
             name: connector
   schema.yml: |
     ---

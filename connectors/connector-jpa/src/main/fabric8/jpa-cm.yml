@@ -23,7 +23,7 @@ data:
             connector: jpa
         spec:
           containers:
-          - image: fabric8/connector-jpa:${project.version}
+          - image: funktion/connector-jpa:${project.version}
             name: connector
   schema.yml: |
     ---
