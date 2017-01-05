@@ -6,10 +6,10 @@ metadata:
   labels:
     funktion.fabric8.io/kind: "Runtime"
   annotations:
-    funktion.fabric8.io/fileExtensions: "js"
-    funktion.fabric8.io/sourceMountPath: "/usr/src/app/funktion"
     fabric8.io/iconUrl: "https://funktion.fabric8.io/img/profile.png"
 data:
+  fileExtensions: "js"
+  debugPort: 5858
   deployment: |
     metadata:
       annotations:
@@ -27,13 +27,60 @@ data:
         spec:
           terminationGracePeriodSeconds: 1
           containers:
-          - image: funktion/funktion-nodejs-runtime:1.0.2
+          - image: funktion/funktion-nodejs-runtime:1.0.3
             name: connector
             imagePullPolicy: IfNotPresent
             volumeMounts:
               - name: source
                 readOnly: true
-                mountPath: /funktion
+                mountPath: /usr/src/app/funktion
+            livenessProbe:
+              httpGet:
+                path: "/healthz"
+                port: 8888
+              initialDelaySeconds: 30
+            readinessProbe:
+              httpGet:
+                path: "/healthz"
+                port: 8888
+              initialDelaySeconds: 2
+          volumes:
+          - name: source
+            configMap:
+              name: hello
+              items:
+              - key: source
+                path: source.js
+  deploymentDebug: |
+    metadata:
+      annotations:
+        fabric8.io/iconUrl: "https://funktion.fabric8.io/img/profile.png"
+      labels:
+        kind: function
+        name: hello
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            kind: function
+            name: hello
+        spec:
+          terminationGracePeriodSeconds: 1
+          containers:
+          - image: funktion/funktion-nodejs-runtime:1.0.3
+            command:
+            - node
+            - '--inspect'
+            - '--debug=5858'
+            - server.js
+            - '--codepath=./funktion/source.js'
+            name: connector
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+              - name: source
+                readOnly: true
+                mountPath: /usr/src/app/funktion
             livenessProbe:
               httpGet:
                 path: "/healthz"
