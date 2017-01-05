@@ -14,8 +14,7 @@
   ~ permissions and limitations under the License.
   ~
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -61,7 +60,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <assertj.version>2.4.1</assertj.version>
-    <fabric8.version>2.2.183</fabric8.version>
+    <fabric8.version>2.2.190</fabric8.version>
     <fabric8.ipaas.version>2.2.164</fabric8.ipaas.version>
     <rest-assured.version>3.0.0</rest-assured.version>
     <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
