@@ -51,5 +51,14 @@ def pushDependencyUpdates(newVersion){
     projects = parentPomProjects
     version = newVersion
   }
+
+  pushPomPropertyChangePR {
+    propertyName = 'funktion-connectors.version'
+    projects = [
+            'fabric8io/fabric8-platform'
+    ]
+    version = newVersion
+  }
 }
 return this;
+
