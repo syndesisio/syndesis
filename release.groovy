@@ -32,7 +32,7 @@ def release(project, promoteImages){
     artifactExtensionToWatchInCentral = 'jar'
     imagesToPromoteToDockerHub = promoteImages
     promoteToDockerRegistry = 'docker.io'
-    dockerOrganisation = 'fabric8'
+    dockerOrganisation = 'funktion'
   }
 }
 
