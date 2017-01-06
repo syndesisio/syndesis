@@ -432,7 +432,7 @@
       "componentGroupId": 2,
       "description": "consectetur duis ea ad tempor laborum sint occaecat aliquip culpa",
       "properties": "{\"excepteur\":{\"name\":\"excepteur\",\"title\":\"excepteur\",\"description\":\"reprehenderit qui duis cupidatat incididunt\",\"type\":\"number\",\"enabled\":true,\"required\":false},\"Lorem\":{\"name\":\"Lorem\",\"title\":\"Lorem\",\"description\":\"sunt mollit ex anim ut\",\"type\":\"boolean\",\"enabled\":true,\"required\":true},\"consectetur\":{\"name\":\"consectetur\",\"title\":\"consectetur\",\"description\":\"amet laboris reprehenderit eu ad\",\"type\":\"password\",\"enabled\":true,\"required\":false},\"culpa\":{\"name\":\"culpa\",\"title\":\"culpa\",\"description\":\"veniam ex officia deserunt eiusmod\",\"type\":\"number\",\"enabled\":true,\"required\":false},\"pariatur\":{\"name\":\"pariatur\",\"title\":\"pariatur\",\"description\":\"elit nisi est anim sit\",\"type\":\"boolean\",\"enabled\":true,\"required\":true},\"tempor\":{\"name\":\"tempor\",\"title\":\"tempor\",\"description\":\"cillum sunt anim ex eu\",\"type\":\"number\",\"enabled\":true,\"required\":false}}",
-      "icon": "fa-flicker",
+      "icon": "fa-flickr",
       "name": "commodo",
       "id": 6
     },
@@ -465,7 +465,7 @@
       "componentGroupId": 1,
       "description": "dolor velit sint aliqua ea incididunt sint occaecat cupidatat tempor",
       "properties": "{\"sint\":{\"name\":\"sint\",\"title\":\"sint\",\"description\":\"ea dolor id commodo ad\",\"type\":\"string\",\"enabled\":true,\"required\":false},\"eiusmod\":{\"name\":\"eiusmod\",\"title\":\"eiusmod\",\"description\":\"velit id amet cupidatat do\",\"type\":\"password\",\"enabled\":true,\"required\":true},\"ipsum\":{\"name\":\"ipsum\",\"title\":\"ipsum\",\"description\":\"excepteur quis non eiusmod nisi\",\"type\":\"boolean\",\"enabled\":true,\"required\":false},\"commodo\":{\"name\":\"commodo\",\"title\":\"commodo\",\"description\":\"reprehenderit exercitation officia consequat officia\",\"type\":\"number\",\"enabled\":true,\"required\":true},\"mollit\":{\"name\":\"mollit\",\"title\":\"mollit\",\"description\":\"dolor veniam ipsum laborum enim\",\"type\":\"boolean\",\"enabled\":true,\"required\":false},\"deserunt\":{\"name\":\"deserunt\",\"title\":\"deserunt\",\"description\":\"irure anim nisi minim proident\",\"type\":\"number\",\"enabled\":true,\"required\":true}}",
-      "icon": "fa-flicker",
+      "icon": "fa-flickr",
       "name": "ex",
       "id": 9
     },
@@ -487,7 +487,7 @@
       "componentGroupId": 11,
       "description": "ea cupidatat minim ex et veniam irure duis quis tempor",
       "properties": "{\"eiusmod\":{\"name\":\"eiusmod\",\"title\":\"eiusmod\",\"description\":\"duis laborum quis dolor ex\",\"type\":\"password\",\"enabled\":true,\"required\":false},\"aute\":{\"name\":\"aute\",\"title\":\"aute\",\"description\":\"enim ullamco ex ullamco ut\",\"type\":\"boolean\",\"enabled\":true,\"required\":true},\"sunt\":{\"name\":\"sunt\",\"title\":\"sunt\",\"description\":\"elit laboris do occaecat elit\",\"type\":\"boolean\",\"enabled\":true,\"required\":false},\"quis\":{\"name\":\"quis\",\"title\":\"quis\",\"description\":\"do voluptate aliquip cillum in\",\"type\":\"boolean\",\"enabled\":true,\"required\":true},\"irure\":{\"name\":\"irure\",\"title\":\"irure\",\"description\":\"nostrud minim Lorem ex labore\",\"type\":\"boolean\",\"enabled\":true,\"required\":true},\"nulla\":{\"name\":\"nulla\",\"title\":\"nulla\",\"description\":\"magna nisi esse in consequat\",\"type\":\"password\",\"enabled\":true,\"required\":true},\"laborum\":{\"name\":\"laborum\",\"title\":\"laborum\",\"description\":\"labore ad reprehenderit velit ut\",\"type\":\"string\",\"enabled\":true,\"required\":false},\"veniam\":{\"name\":\"veniam\",\"title\":\"veniam\",\"description\":\"incididunt et deserunt dolor ea\",\"type\":\"boolean\",\"enabled\":true,\"required\":true}}",
-      "icon": "fa-flicker",
+      "icon": "fa-flickr",
       "name": "irure",
       "id": 11
     },
@@ -630,7 +630,7 @@
       "componentGroupId": 11,
       "description": "pariatur eiusmod culpa consectetur commodo excepteur aliqua Lorem adipisicing exercitation",
       "properties": "{\"quis\":{\"name\":\"quis\",\"title\":\"quis\",\"description\":\"ad officia dolor nulla ad\",\"type\":\"password\",\"enabled\":true,\"required\":true},\"incididunt\":{\"name\":\"incididunt\",\"title\":\"incididunt\",\"description\":\"tempor eiusmod voluptate ut magna\",\"type\":\"password\",\"enabled\":true,\"required\":true},\"est\":{\"name\":\"est\",\"title\":\"est\",\"description\":\"veniam dolore aute ad do\",\"type\":\"password\",\"enabled\":true,\"required\":false},\"adipisicing\":{\"name\":\"adipisicing\",\"title\":\"adipisicing\",\"description\":\"officia deserunt amet labore anim\",\"type\":\"password\",\"enabled\":true,\"required\":true},\"eu\":{\"name\":\"eu\",\"title\":\"eu\",\"description\":\"et quis sit non mollit\",\"type\":\"number\",\"enabled\":true,\"required\":false},\"nulla\":{\"name\":\"nulla\",\"title\":\"nulla\",\"description\":\"id aliqua eu commodo consectetur\",\"type\":\"string\",\"enabled\":true,\"required\":false},\"sunt\":{\"name\":\"sunt\",\"title\":\"sunt\",\"description\":\"ea duis tempor id non\",\"type\":\"password\",\"enabled\":true,\"required\":true},\"ullamco\":{\"name\":\"ullamco\",\"title\":\"ullamco\",\"description\":\"aute veniam aliqua incididunt pariatur\",\"type\":\"password\",\"enabled\":true,\"required\":false},\"sit\":{\"name\":\"sit\",\"title\":\"sit\",\"description\":\"in nulla amet elit sint\",\"type\":\"number\",\"enabled\":true,\"required\":false}}",
-      "icon": "fa-flicker",
+      "icon": "fa-flickr",
       "name": "consequat",
       "id": 24
     },
@@ -729,7 +729,7 @@
       "componentGroupId": 13,
       "description": "ipsum anim ex deserunt anim labore culpa duis non velit",
       "properties": "{\"anim\":{\"name\":\"anim\",\"title\":\"anim\",\"description\":\"velit magna magna consectetur occaecat\",\"type\":\"password\",\"enabled\":true,\"required\":false},\"deserunt\":{\"name\":\"deserunt\",\"title\":\"deserunt\",\"description\":\"anim irure sit tempor fugiat\",\"type\":\"boolean\",\"enabled\":true,\"required\":true},\"nisi\":{\"name\":\"nisi\",\"title\":\"nisi\",\"description\":\"eu adipisicing officia excepteur quis\",\"type\":\"boolean\",\"enabled\":true,\"required\":true},\"amet\":{\"name\":\"amet\",\"title\":\"amet\",\"description\":\"tempor consectetur nulla anim ea\",\"type\":\"number\",\"enabled\":true,\"required\":false},\"esse\":{\"name\":\"esse\",\"title\":\"esse\",\"description\":\"cillum pariatur tempor nulla consectetur\",\"type\":\"password\",\"enabled\":true,\"required\":true},\"cupidatat\":{\"name\":\"cupidatat\",\"title\":\"cupidatat\",\"description\":\"dolore voluptate officia aliqua ad\",\"type\":\"boolean\",\"enabled\":true,\"required\":false},\"aute\":{\"name\":\"aute\",\"title\":\"aute\",\"description\":\"et tempor veniam qui ut\",\"type\":\"number\",\"enabled\":true,\"required\":true},\"et\":{\"name\":\"et\",\"title\":\"et\",\"description\":\"nostrud dolore minim velit veniam\",\"type\":\"password\",\"enabled\":true,\"required\":true},\"dolor\":{\"name\":\"dolor\",\"title\":\"dolor\",\"description\":\"minim occaecat non nisi tempor\",\"type\":\"string\",\"enabled\":true,\"required\":false},\"labore\":{\"name\":\"labore\",\"title\":\"labore\",\"description\":\"incididunt quis nulla commodo ut\",\"type\":\"boolean\",\"enabled\":true,\"required\":false}}",
-      "icon": "fa-flicker",
+      "icon": "fa-flickr",
       "name": "amet",
       "id": 33
     },
@@ -751,7 +751,7 @@
       "componentGroupId": 22,
       "description": "exercitation duis fugiat voluptate excepteur voluptate cupidatat Lorem dolor veniam",
       "properties": "{\"amet\":{\"name\":\"amet\",\"title\":\"amet\",\"description\":\"aute eu amet sunt consequat\",\"type\":\"number\",\"enabled\":true,\"required\":false},\"irure\":{\"name\":\"irure\",\"title\":\"irure\",\"description\":\"labore cillum in occaecat culpa\",\"type\":\"password\",\"enabled\":true,\"required\":true},\"pariatur\":{\"name\":\"pariatur\",\"title\":\"pariatur\",\"description\":\"sint tempor cillum ipsum nulla\",\"type\":\"number\",\"enabled\":true,\"required\":false},\"laboris\":{\"name\":\"laboris\",\"title\":\"laboris\",\"description\":\"occaecat do in exercitation sit\",\"type\":\"number\",\"enabled\":true,\"required\":true},\"excepteur\":{\"name\":\"excepteur\",\"title\":\"excepteur\",\"description\":\"irure nisi officia enim cupidatat\",\"type\":\"boolean\",\"enabled\":true,\"required\":false},\"laborum\":{\"name\":\"laborum\",\"title\":\"laborum\",\"description\":\"incididunt incididunt dolore ad irure\",\"type\":\"string\",\"enabled\":true,\"required\":true},\"exercitation\":{\"name\":\"exercitation\",\"title\":\"exercitation\",\"description\":\"proident reprehenderit laboris nisi ipsum\",\"type\":\"string\",\"enabled\":true,\"required\":true}}",
-      "icon": "fa-flicker",
+      "icon": "fa-flickr",
       "name": "enim",
       "id": 35
     },
@@ -1112,7 +1112,7 @@
       "componentId": 50,
       "position": "From",
       "description": "pariatur Lorem occaecat quis qui minim et sit in nostrud",
-      "icon": "fa-flicker",
+      "icon": "fa-flickr",
       "name": "velit",
       "id": 14
     },
@@ -1238,7 +1238,7 @@
       "componentId": 1,
       "position": "From",
       "description": "ullamco minim et pariatur dolore consectetur irure mollit exercitation ullamco",
-      "icon": "fa-flicker",
+      "icon": "fa-flickr",
       "name": "aliqua",
       "id": 23
     },
