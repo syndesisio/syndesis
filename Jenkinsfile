@@ -10,11 +10,11 @@ mavenNode {
       // lets purge old releases
       def purgeFolder = "/root/.mvnrepo/io/fabric8/funktion/connector"
       sh """
-echo file counts in connectors mvn repo:
-find ${purgeFolder} -name | wc
+echo file count in connectors mvn repo:
+find ${purgeFolder} -print | wc -l
 rm -rf ${purgeFolder}
-echo files after purge
-find ${purgeFolder} -name | wc
+echo file count after purge:
+find ${purgeFolder} -print | wc -l
 """
 
       def pipeline = load 'release.groovy'
