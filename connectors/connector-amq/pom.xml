@@ -58,7 +58,7 @@
           <generator>
             <config>
               <spring-boot>
-                <name>fabric8/%a:%v</name>
+                <name>funktion/%a:%v</name>
                 <alias>funktor</alias>
               </spring-boot>
             </config>
