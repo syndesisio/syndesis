@@ -29,6 +29,7 @@
     "@ngrx/store-devtools": "^3.2.2",
     "bootstrap": "next",
     "core-js": "^2.4.1",
+    "immutable": "^3.8.1",
     "jquery": "^3.1.1",
     "lodash": "^4.17.2",
     "ng2-restangular": "^0.1.23",
