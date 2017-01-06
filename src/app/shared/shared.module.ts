@@ -14,6 +14,6 @@ import { TemplatesListComponent } from '../templates/list/list.component';
   ],
   exports: [
     TemplatesListComponent,
-  ]
+  ],
 })
 export class SharedModule { }

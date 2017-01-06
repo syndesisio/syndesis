@@ -9,9 +9,14 @@ import { ConnectionsListPage } from './list-page/list-page.component';
 import { ConnectionsListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { ConnectionsListComponent } from './list/list.component';
 import { ConnectionEffects } from '../store/connection/connection.effects';
+import { ConnectionViewPage } from './view-page/view-page.component';
+import { ConnectionViewWrapperComponent } from './view-wrapper/view-wrapper.component';
+import { ConnectionViewToolbarComponent } from './view-toolbar/view-toolbar.component';
+import { ConnectionViewComponent } from './view/view.component';
 
 const routes: Routes = [
   { path: '', component: ConnectionsListPage, pathMatch: 'full' },
+  { path: ':id', component: ConnectionViewPage, pathMatch: 'full' },
 ];
 
 @NgModule({
@@ -26,6 +31,10 @@ const routes: Routes = [
     ConnectionsListPage,
     ConnectionsListToolbarComponent,
     ConnectionsListComponent,
+    ConnectionViewPage,
+    ConnectionViewWrapperComponent,
+    ConnectionViewToolbarComponent,
+    ConnectionViewComponent,
   ],
 })
 export class ConnectionsModule { }

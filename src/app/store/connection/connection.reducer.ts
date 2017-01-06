@@ -43,6 +43,14 @@ export function reducer(
       };
     }
 
+    case ActionTypes.SELECT: {
+      return {
+        ids: state.ids,
+        entities: state.entities,
+        selectedEntityId: action.payload,
+      };
+    }
+
     default: return state;
   }
 }

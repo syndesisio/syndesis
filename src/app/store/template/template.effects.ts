@@ -18,15 +18,15 @@ import { ActionTypes, LoadAction, LoadSuccessAction, LoadFailureAction } from '.
 export class TemplateEffects {
 
   @Effect()
-  loadData$: Observable<Action> = this.actions$
+  loadData: Observable<Action> = this.actions
     .ofType(ActionTypes.LOAD)
     .startWith(new LoadAction())
     .switchMap(() =>
       this.templateService.list()
         .map((fetched: Templates) => new LoadSuccessAction(fetched))
         .catch(error => Observable.of(new LoadFailureAction(error))),
-    );
+  );
 
-  constructor(private actions$: Actions, private templateService: TemplateService) { }
+  constructor(private actions: Actions, private templateService: TemplateService) { }
 
 }

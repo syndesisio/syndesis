@@ -1,0 +1,26 @@
+<div class="row toolbar-pf">
+  <div class="col-sm-12">
+    <div class="toolbar-pf-actions">
+      <div class="form-group">
+        <ol class="breadcrumb">
+          <li>
+            <a [routerLink]=" ['/home'] ">Home</a>
+          </li>
+          <li>
+            <a [routerLink]=" ['/connections'] ">Connections</a>
+          </li>
+          <li class='active'><strong>Connection Details</strong></li>
+        </ol>
+      </div>
+      <div class="toolbar-pf-action-right" *ngIf="connection">
+        <div class="form-group">
+          <a [routerLink]="['/connections', connection.id, 'edit']">
+            <button class="btn btn-link" type="button">
+              <span class="fa fa-edit"></span>
+            </button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

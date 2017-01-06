@@ -1,0 +1,38 @@
+<div class="row row-cards-pf center" *ngIf="connection">
+  <div class="col-xs-4">
+    <div class="card-pf">
+      <div class="card-pf-body">
+        <div class="icon">
+          <span class="fa {{connection.icon}}"></span>
+        </div>
+        <div class="name">
+          <h2 class="card-pf-title">{{connection.name}}</h2>
+        </div>
+        <div class="description">{{connection.description}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-8">
+    <div class="card-pf">
+      <h2 class="card-pf-title">Connection Fields</h2>
+      <div class="card-pf-body">
+        <form class="form-horizontal">
+          <!-- replacing id with data-id to pass build errors -->
+          <div class="form-group required">
+            <label class="col-sm-4 control-label">Connection Name</label>
+            <div class="col-sm-8">
+              <input type="text" name="nameInput" data-id="nameInput" [value]="connection.name" [disabled]="true" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 control-label">Description</label>
+            <div class="col-sm-8">
+              <textarea data-id="descriptionInput" name="descriptionInput" class="form-control" [disabled]="true" [value]="connection.description" rows="2"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,7 +16,7 @@ describe('ConfigService', () => {
         {
           provide: Http, useFactory: (backend, options) => {
             return new Http(backend, options);
-          }, deps: [MockBackend, RequestOptions]
+          }, deps: [MockBackend, RequestOptions],
         }],
     });
   });

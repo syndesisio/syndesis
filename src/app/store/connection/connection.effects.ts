@@ -18,7 +18,7 @@ import { ActionTypes, LoadAction, LoadSuccessAction, LoadFailureAction } from '.
 export class ConnectionEffects {
 
   @Effect()
-  loadData$: Observable<Action> = this.actions$
+  loadData: Observable<Action> = this.actions
     .ofType(ActionTypes.LOAD)
     .startWith(new LoadAction())
     .switchMap(() =>
@@ -27,6 +27,6 @@ export class ConnectionEffects {
         .catch(error => Observable.of(new LoadFailureAction(error))),
   );
 
-  constructor(private actions$: Actions, private connectionService: ConnectionService) { }
+  constructor(private actions: Actions, private connectionService: ConnectionService) { }
 
 }

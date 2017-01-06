@@ -21,6 +21,6 @@ const routes: Routes = [
   declarations: [
     TemplatesListPage,
     ListToolbarComponent,
-  ]
+  ],
 })
 export class TemplatesModule { }

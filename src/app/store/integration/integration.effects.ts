@@ -18,7 +18,7 @@ import { ActionTypes, LoadAction, LoadSuccessAction, LoadFailureAction } from '.
 export class IntegrationEffects {
 
   @Effect()
-  loadData$: Observable<Action> = this.actions$
+  loadData: Observable<Action> = this.actions
     .ofType(ActionTypes.LOAD)
     .startWith(new LoadAction())
     .switchMap(() =>
@@ -27,6 +27,6 @@ export class IntegrationEffects {
         .catch(error => Observable.of(new LoadFailureAction(error))),
   );
 
-  constructor(private actions$: Actions, private integrationService: IntegrationService) { }
+  constructor(private actions: Actions, private integrationService: IntegrationService) { }
 
 }

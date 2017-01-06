@@ -1,10 +1,6 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
-@Pipe({
-  name: 'integrationsFilter',
-})
+@Pipe({name: 'integrationsFilter'})
 export class IntegrationsFilterPipe implements PipeTransform {
-
   transform = () => null;
-
 }

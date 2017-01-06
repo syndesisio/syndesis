@@ -6,6 +6,7 @@ export const ActionTypes = {
   LOAD: '[Connection] Load',
   LOAD_SUCCESS: '[Connection] Load Success',
   LOAD_FAILURE: '[Connection] Load Failure',
+  SELECT: '[Connection] Select',
 };
 
 export class LoadAction implements Action {
@@ -27,7 +28,14 @@ export class LoadFailureAction implements Action {
   constructor(public payload: any) { }
 }
 
+export class SelectAction implements Action {
+  type = ActionTypes.SELECT;
+
+  constructor(public payload: string) { }
+}
+
 export type Actions
   = LoadAction
   | LoadSuccessAction
-  | LoadFailureAction;
+  | LoadFailureAction
+  | SelectAction;
