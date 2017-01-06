@@ -47,6 +47,11 @@
         <version>${wildfly.swarm.version}</version>
         <configuration>
           <mainClass>com.redhat.ipaas.runtime.Main</mainClass>
+          <jvmArguments>
+            <jvmArgument>-server</jvmArgument>
+            <jvmArgument>-Xms256m</jvmArgument>
+            <jvmArgument>-Xmx512m</jvmArgument>
+          </jvmArguments>
         </configuration>
         <executions>
           <execution>
