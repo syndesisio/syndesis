@@ -36,6 +36,11 @@ find ${purgeFolder} -print | wc -l
       stage 'Push Update Dependencies'
       def newVersion = stagedProject[1]
       pipeline.pushDependencyUpdates(newVersion)
+
+      sh """
+echo purging local maven repo:
+rm -rf ${purgeFolder}
+"""
     }
   }
 }
