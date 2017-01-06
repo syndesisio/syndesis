@@ -7,6 +7,16 @@ mavenNode {
       checkout scm
       sh "git remote set-url origin git@github.com:funktionio/funktion-connectors.git"
 
+      // lets purge old releases
+      def purgeFolder = "/root/.mvnrepo/io/fabric8/funktion/connector"
+      sh """
+echo file counts in connectors mvn repo:
+find ${purgeFolder} -name | wc
+rm -rf ${purgeFolder}
+echo files after purge
+find ${purgeFolder} -name | wc
+"""
+
       def pipeline = load 'release.groovy'
       def dockerImages = load 'releaseImages.groovy'
 
