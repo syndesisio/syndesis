@@ -1,13 +1,14 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-
-import { StoreModule } from '@ngrx/store';
+import { MockBackend } from '@angular/http/testing';
+import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
+import { RestangularModule } from 'ng2-restangular';
 
 import { IntegrationsListPage } from './list-page.component';
 import { IntegrationsListComponent } from '../list/list.component';
 import { IntegrationsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
-import { reducers } from '../../store/store';
+import { StoreModule } from '../../store/store.module';
 
 describe('IntegrationsListPage', () => {
   let component: IntegrationsListPage;
@@ -15,8 +16,17 @@ describe('IntegrationsListPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [StoreModule.provideStore(reducers), RouterTestingModule.withRoutes([])],
+      imports: [StoreModule, RouterTestingModule.withRoutes([]), RestangularModule.forRoot()],
       declarations: [IntegrationsListPage, IntegrationsListComponent, IntegrationsListToolbarComponent],
+      providers: [
+        MockBackend,
+        { provide: RequestOptions, useClass: BaseRequestOptions },
+        {
+          provide: Http, useFactory: (backend, options) => {
+            return new Http(backend, options);
+          }, deps: [MockBackend, RequestOptions],
+        },
+      ],
     })
       .compileComponents();
   }));

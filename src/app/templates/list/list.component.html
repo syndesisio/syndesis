@@ -12,14 +12,14 @@
           <div class="card-pf-heading-kebab">
             <div class="dropdown pull-right dropdown-kebab-pf card-pf-time-frame-filter">
               <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-                  <span class="fa fa-ellipsis-v"></span>
-                </button>
+                <span class="fa fa-ellipsis-v"></span>
+              </button>
               <ul class="dropdown-menu dropdown-menu-right" role="menu">
                 <li>
-                  <a>View</a>
+                  <a [routerLink]="[template.id]">View</a>
                 </li>
                 <li>
-                  <a>Edit</a>
+                  <a [routerLink]="[template.id, 'edit']">Edit</a>
                 </li>
                 <li>
                   <a>Duplicate</a>
@@ -33,10 +33,9 @@
             <!-- Card Title & Icon -->
 
             <h2 class="card-pf-title">
-              <span class="fa {{ template.icon }}"></span>
+              <span class="fa {{ template.icon }}" *ngIf="template.icon"></span>
+              <a [routerLink]="[template.id]" class="card-title">{{ template.name }}</a>
             </h2>
-            <div class="card-title">{{ template.name }}
-            </div>
           </div>
 
           <!-- Card Description -->

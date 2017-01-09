@@ -1,18 +1,18 @@
-import { BaseEntity, Entities } from '../entity/entity.model';
+import { Moment } from 'moment';
+
+import { BaseEntity } from '../entity/entity.model';
 
 export interface Integration extends BaseEntity {
-  configuredProperties: any;
+  configuredProperties: Map<string, string>;
   createdBy: string;
-  createdOn: Date;
+  createdOn: Moment;
   description: string;
   icon: string;
   modifiedBy: string;
-  modifiedOn: Date;
+  modifiedOn: Moment;
   name: string;
   position: string;
   type: string;
 }
 
 export type Integrations = Array<Integration>;
-
-export type IntegrationEntities = Entities<Integration>;

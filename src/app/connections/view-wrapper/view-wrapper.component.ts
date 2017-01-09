@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
-
-import { State, getSelectedConnection } from '../../store/store';
 
 import { Connection } from '../../store/connection/connection.model';
+import { ConnectionStore } from '../../store/connection/connection.store';
 
 @Component({
   selector: 'ipaas-connection-view-wrapper',
@@ -13,13 +10,9 @@ import { Connection } from '../../store/connection/connection.model';
   styleUrls: ['./view-wrapper.component.scss'],
 })
 export class ConnectionViewWrapperComponent implements OnInit {
-
   connection: Observable<Connection>;
 
-  constructor(private store: Store<State>) { }
+  constructor(private store: ConnectionStore) { }
 
-  ngOnInit() {
-    this.connection = this.store.select(getSelectedConnection);
-  }
-
+  ngOnInit() { this.connection = this.store.resource; }
 }

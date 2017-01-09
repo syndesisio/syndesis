@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
 
-import { State, getIntegrations } from '../../store/store';
+import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integrations } from '../../store/integration/integration.model';
 
 @Component({
@@ -15,10 +13,11 @@ export class IntegrationsListPage implements OnInit {
 
   integrations: Observable<Integrations>;
 
-  constructor(private store: Store<State>) { }
+  constructor(private store: IntegrationStore) { }
 
   ngOnInit() {
-    this.integrations = this.store.select(getIntegrations);
+    this.integrations = this.store.list;
+    this.store.loadAll();
   }
 
 }

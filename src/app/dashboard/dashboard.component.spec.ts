@@ -3,14 +3,15 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-
-import { StoreModule } from '@ngrx/store';
+import { MockBackend } from '@angular/http/testing';
+import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
+import { RestangularModule } from 'ng2-restangular';
 
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
 import { PopularTemplatesComponent } from './populartemplates.component';
 import { TemplatesListComponent } from '../templates/list/list.component';
-import { reducers } from '../store/store';
+import { StoreModule } from '../store/store.module';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -18,8 +19,17 @@ describe('DashboardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [StoreModule.provideStore(reducers), RouterTestingModule.withRoutes([])],
+      imports: [StoreModule, RouterTestingModule.withRoutes([]), RestangularModule.forRoot()],
       declarations: [DashboardComponent, EmptyStateComponent, PopularTemplatesComponent, TemplatesListComponent],
+      providers: [
+        MockBackend,
+        { provide: RequestOptions, useClass: BaseRequestOptions },
+        {
+          provide: Http, useFactory: (backend, options) => {
+            return new Http(backend, options);
+          }, deps: [MockBackend, RequestOptions],
+        },
+      ],
     })
       .compileComponents();
   }));

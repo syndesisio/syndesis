@@ -1,18 +1,18 @@
-import { BaseEntity, Entities } from '../entity/entity.model';
+import * as moment from 'moment';
+
+import { BaseEntity } from '../entity/entity.model';
 
 export interface Connection extends BaseEntity {
-  configuredProperties: any;
+  configuredProperties: Map<string, string>;
   createdBy: string;
-  createdOn: Date;
+  createdOn: moment.Moment;
   description: string;
   icon: string;
   modifiedBy: string;
-  modifiedOn: Date;
+  modifiedOn: moment.Moment;
   name: string;
-  position: string;
   type: string;
 }
 
-export type Connections = Array<Connection>;
 
-export type ConnectionEntities = Entities<Connection>;
+export type Connections = Array<Connection>;

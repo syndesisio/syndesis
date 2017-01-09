@@ -15,4 +15,6 @@ export class ConnectionsListComponent {
 
   @Input() connections: Connections;
 
+  @Input() loading: boolean;
+
 }

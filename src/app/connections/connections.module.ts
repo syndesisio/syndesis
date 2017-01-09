@@ -2,13 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { EffectsModule } from '@ngrx/effects';
 
 import { IPaaSCommonModule } from '../common/common.module';
 import { ConnectionsListPage } from './list-page/list-page.component';
 import { ConnectionsListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { ConnectionsListComponent } from './list/list.component';
-import { ConnectionEffects } from '../store/connection/connection.effects';
 import { ConnectionViewPage } from './view-page/view-page.component';
 import { ConnectionViewWrapperComponent } from './view-wrapper/view-wrapper.component';
 import { ConnectionViewToolbarComponent } from './view-toolbar/view-toolbar.component';
@@ -24,7 +22,6 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     RouterModule.forChild(routes),
-    EffectsModule.run(ConnectionEffects),
     IPaaSCommonModule,
   ],
   declarations: [
@@ -37,4 +34,5 @@ const routes: Routes = [
     ConnectionViewComponent,
   ],
 })
-export class ConnectionsModule { }
+export class ConnectionsModule {
+}

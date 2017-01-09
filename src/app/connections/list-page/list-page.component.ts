@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
 
-import { State, getConnections } from '../../store/store';
+import { ConnectionStore } from '../../store/connection/connection.store';
 import { Connections } from '../../store/connection/connection.model';
 
 @Component({
@@ -15,10 +13,15 @@ export class ConnectionsListPage implements OnInit {
 
   connections: Observable<Connections>;
 
-  constructor(private store: Store<State>) { }
+  loading: Observable<boolean>;
+
+  constructor(private store: ConnectionStore) {
+    this.loading = store.loading;
+    this.connections = store.list;
+  }
 
   ngOnInit() {
-    this.connections = this.store.select(getConnections);
+    this.store.loadAll();
   }
 
 }

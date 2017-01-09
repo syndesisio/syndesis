@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
 
-import { State, getTemplates } from '../../store/store';
+import { TemplateStore } from '../../store/template/template.store';
 import { Templates } from '../../store/template/template.model';
 
 @Component({
@@ -15,10 +13,11 @@ export class TemplatesListPage implements OnInit {
 
   templates: Observable<Templates>;
 
-  constructor(private store: Store<State>) { }
+  constructor(private store: TemplateStore) { }
 
   ngOnInit() {
-    this.templates = this.store.select(getTemplates);
+    this.templates = this.store.list;
+    this.store.loadAll();
   }
 
 }

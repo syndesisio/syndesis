@@ -1,11 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { ActivatedRoute } from '@angular/router';
-import '@ngrx/core/add/operator/select';
 
-import * as fromRoot from '../../store/store';
-import { SelectAction } from '../../store/connection/connection.actions';
+import { ConnectionStore } from '../../store/connection/connection.store';
 
 @Component({
   selector: 'ipaas-connection-view-page',
@@ -13,17 +10,13 @@ import { SelectAction } from '../../store/connection/connection.actions';
   styleUrls: ['./view-page.component.scss'],
 })
 export class ConnectionViewPage implements OnDestroy {
-  actionsSubscription: Subscription;
+  private idSubscription: Subscription;
 
-  constructor(store: Store<fromRoot.State>, route: ActivatedRoute) {
-    this.actionsSubscription = route.params
-      .select<string>('id')
-      .map(id => new SelectAction(id))
-      .subscribe(store);
+  constructor(store: ConnectionStore, route: ActivatedRoute) {
+    this.idSubscription = route.params.pluck<Params, string>('id')
+      .map((id) => store.load(id))
+      .subscribe();
   }
 
-  ngOnDestroy() {
-    this.actionsSubscription.unsubscribe();
-  }
-
+  ngOnDestroy() { this.idSubscription.unsubscribe(); }
 }
