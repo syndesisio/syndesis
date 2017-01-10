@@ -5,7 +5,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'dashboard', loadChildren: '../dashboard/dashboard.module#DashboardModule' },
   { path: 'integrations', loadChildren: '../integrations/integrations.module#IntegrationsModule' },
-  { path: 'templates', loadChildren: '../templates/templates.module#TemplatesModule' },
+  { path: 'templates', loadChildren: '../templates/templates-routes.module#TemplateRoutesModule' },
   { path: 'connections', loadChildren: '../connections/connections.module#ConnectionsModule' },
 ];
 
