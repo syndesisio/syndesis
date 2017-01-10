@@ -14,8 +14,11 @@ export class DashboardComponent implements OnInit {
 
   templates: Observable<Templates>;
 
+  loading: Observable<boolean>;
+
   constructor(private store: TemplateStore) {
     this.templates = this.store.list;
+    this.loading = this.store.loading;
   }
 
   ngOnInit() {

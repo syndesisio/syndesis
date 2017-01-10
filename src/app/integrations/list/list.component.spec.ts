@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
+import { IPaaSCommonModule } from '../../common/common.module';
 import { IntegrationsListComponent } from './list.component';
 
 describe('IntegrationsListComponent', () => {
@@ -11,6 +12,7 @@ describe('IntegrationsListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [IPaaSCommonModule],
       declarations: [IntegrationsListComponent],
     })
       .compileComponents();

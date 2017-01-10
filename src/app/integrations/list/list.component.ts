@@ -11,4 +11,6 @@ export class IntegrationsListComponent {
 
   @Input() integrations: Integrations;
 
+  @Input() loading: boolean;
+
 }

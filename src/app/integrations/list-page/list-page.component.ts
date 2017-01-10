@@ -11,12 +11,15 @@ import { Integrations } from '../../store/integration/integration.model';
 })
 export class IntegrationsListPage implements OnInit {
 
-  integrations: Observable<Integrations>;
+  private readonly integrations: Observable<Integrations>;
+  private readonly loading: Observable<boolean>;
 
-  constructor(private store: IntegrationStore) { }
+  constructor(private store: IntegrationStore) {
+    this.integrations = this.store.list;
+    this.loading = this.store.loading;
+  }
 
   ngOnInit() {
-    this.integrations = this.store.list;
     this.store.loadAll();
   }
 
