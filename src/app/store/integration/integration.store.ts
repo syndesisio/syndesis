@@ -9,4 +9,6 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
   constructor(integrationService: IntegrationService) {
     super(integrationService, [], <Integration>{});
   }
+
+  protected get kind() { return 'Integration'; }
 }

@@ -1,4 +1,5 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { plural } from 'pluralize';
 
 import { RESTService } from './rest.service';
 import { BaseEntity } from './entity.model';
@@ -17,7 +18,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
     this._current = new BehaviorSubject(initialCurrent);
   }
 
-  protected abstract get kind();
+  protected abstract get kind(): string;
 
   get list() { return this._list.asObservable(); }
 
@@ -33,7 +34,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         this._loading.next(false);
       },
       (error) => {
-        console.log('Error retrieving Connections: ' + error);
+        console.log('Error retrieving ' + plural(this.kind) + ': ' + error);
         this._loading.next(false);
       });
   }
@@ -46,7 +47,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         this._loading.next(false);
       },
       (error) => {
-        console.log('Error retrieving Connection: ' + error);
+        console.log('Error retrieving ' + this.kind + ': ' + error);
         this._loading.next(false);
       });
   }
