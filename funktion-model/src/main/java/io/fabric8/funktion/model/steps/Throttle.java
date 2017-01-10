@@ -16,16 +16,13 @@
  */
 package io.fabric8.funktion.model.steps;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.fabric8.funktion.model.StepKinds;
 
 /**
  * Throttles the flow
  */
-/*
-@JsonDeserialize(
-        using = JsonDeserializer.None.class
-)
-*/
+@JsonPropertyOrder({"maximumRequests", "periodMillis"})
 public class Throttle extends ChildSteps<Throttle> {
     private long maximumRequests;
     private Long periodMillis;

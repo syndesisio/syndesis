@@ -27,19 +27,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.naming.Context;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 
 /**
  */
 public class ThrottleTest extends FunktionTestSupport {
-    private static final transient Logger LOG = LoggerFactory.getLogger(ThrottleTest.class);
-
     public static final String START_URI = "direct:start";
     public static final String RESULTS_URI = "mock:results";
-
+    private static final transient Logger LOG = LoggerFactory.getLogger(ThrottleTest.class);
     private static final int MESSAGE_COUNT = 9;
 
 
@@ -47,7 +43,7 @@ public class ThrottleTest extends FunktionTestSupport {
     protected MockEndpoint resultEndpoint;
 
     @Test
-    public void testFilter() throws Exception {
+    public void testStep() throws Exception {
         // TODO
         // resultEndpoint.expectedMessageCount(3);
         resultEndpoint.expectedMinimumMessageCount(3);
@@ -71,14 +67,15 @@ public class ThrottleTest extends FunktionTestSupport {
         return answer;
     }
 
-    public static class TimerBean {
-        public String time(String body) {
-            return "{ \"payload\": " + body + ", \"time\": " + new Date() + " }";
-        }
-    }
     @Override
     protected void addFunktionFlows(Funktion funktion) {
         Flow flow = funktion.createFlow().endpoint(START_URI);
         flow.throttle(3, 10000).endpoint("bean:addTime").endpoint(RESULTS_URI);
+    }
+
+    public static class TimerBean {
+        public String time(String body) {
+            return "{ \"payload\": " + body + ", \"time\": " + new Date() + " }";
+        }
     }
 }

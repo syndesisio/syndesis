@@ -16,16 +16,13 @@
  */
 package io.fabric8.funktion.model.steps;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.fabric8.funktion.model.StepKinds;
 
 /**
  * If a filter expression is matched then it invokes the child steps
  */
-/*
-@JsonDeserialize(
-        using = JsonDeserializer.None.class
-)
-*/
+@JsonPropertyOrder({"expression", "steps"})
 public class Filter extends ChildSteps<Filter> {
     private String expression;
 

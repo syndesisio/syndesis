@@ -16,8 +16,6 @@
  */
 package io.fabric8.funktion.model.steps;
 
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.fabric8.funktion.model.StepKinds;
 
 import java.util.List;
@@ -25,9 +23,6 @@ import java.util.List;
 /**
  * Represents the otherwise clause in a {@link Choice}
  */
-@JsonDeserialize(
-        using = JsonDeserializer.None.class
-)
 public class Otherwise extends ChildSteps<Otherwise> {
     public Otherwise() {
         super(StepKinds.OTHERWISE);

@@ -34,14 +34,12 @@ import java.util.List;
 /**
  */
 public class ChoiceTest extends FunktionTestSupport {
-    private static final transient Logger LOG = LoggerFactory.getLogger(ChoiceTest.class);
-
     public static final String START_URI = "direct:start";
     public static final String MATCHED_JAMES_URI = "mock:matchedJames";
     public static final String MATCHED_JIMMI_URI = "mock:matchedJimmi";
     public static final String OTHERWISE_URI = "mock:matchedOtherwise";
     public static final String ALL_MESSAGES_URI = "mock:allMessages";
-
+    private static final transient Logger LOG = LoggerFactory.getLogger(ChoiceTest.class);
     @EndpointInject(uri = MATCHED_JAMES_URI)
     protected MockEndpoint matchedEndpoint;
 
@@ -55,7 +53,6 @@ public class ChoiceTest extends FunktionTestSupport {
     protected MockEndpoint allMessagesEndpoint;
 
 
-
     protected List<String> matchedJames = Arrays.asList(
             "{ \"name\": \"James\" }"
     );
@@ -67,7 +64,7 @@ public class ChoiceTest extends FunktionTestSupport {
     );
 
     @Test
-    public void testFilter() throws Exception {
+    public void testStep() throws Exception {
         List<String> allMessages = new ArrayList<>(matchedJames);
         allMessages.addAll(matchedJimmi);
         allMessages.addAll(otherwiseMessages);

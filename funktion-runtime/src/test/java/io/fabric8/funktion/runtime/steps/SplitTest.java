@@ -17,7 +17,6 @@
 package io.fabric8.funktion.runtime.steps;
 
 import io.fabric8.funktion.FunktionTestSupport;
-import io.fabric8.funktion.model.Flow;
 import io.fabric8.funktion.model.Funktion;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -32,11 +31,9 @@ import java.util.List;
 /**
  */
 public class SplitTest extends FunktionTestSupport {
-    private static final transient Logger LOG = LoggerFactory.getLogger(SplitTest.class);
-
     public static final String START_URI = "direct:start";
     public static final String RESULTS_URI = "mock:results";
-
+    private static final transient Logger LOG = LoggerFactory.getLogger(SplitTest.class);
     @EndpointInject(uri = RESULTS_URI)
     protected MockEndpoint resultsEndpoint;
 
@@ -49,7 +46,7 @@ public class SplitTest extends FunktionTestSupport {
     );
 
     @Test
-    public void testFilter() throws Exception {
+    public void testStep() throws Exception {
         resultsEndpoint.expectedBodiesReceived(expectedMessages);
 
         for (Object body : messages) {

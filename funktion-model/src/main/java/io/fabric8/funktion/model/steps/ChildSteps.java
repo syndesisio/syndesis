@@ -23,11 +23,6 @@ import java.util.Map;
 /**
  * Reuable base class for steps which contain nested steps
  */
-/*
-@JsonDeserialize(
-        using = FunktionDeserializer.class
-)
-*/
 public abstract class ChildSteps<T extends ChildSteps> extends Step {
     protected List<Step> steps = new ArrayList<>();
 

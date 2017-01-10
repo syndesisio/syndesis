@@ -16,18 +16,11 @@
  */
 package io.fabric8.funktion.model.steps;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.fabric8.funktion.model.StepKinds;
 
 /**
  * Invokes an endpoint URI (typically HTTP or HTTPS) with the current payload
  */
-/*
-@JsonDeserialize(
-        using = JsonDeserializer.None.class
-)
-*/
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "kind")
 public class Endpoint extends Step {
     private String uri;
 

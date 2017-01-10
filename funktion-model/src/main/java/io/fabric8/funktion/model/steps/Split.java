@@ -16,16 +16,13 @@
  */
 package io.fabric8.funktion.model.steps;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.fabric8.funktion.model.StepKinds;
 
 /**
  * Splits the payload into multiple messages
  */
-/*
-@JsonDeserialize(
-        using = JsonDeserializer.None.class
-)
-*/
+@JsonPropertyOrder({"expression", "steps"})
 public class Split extends ChildSteps<Split> {
     private String expression;
 

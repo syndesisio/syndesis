@@ -16,11 +16,15 @@
  */
 package io.fabric8.funktion.model.steps;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.fabric8.funktion.model.StepKinds;
 
+/**
+ * Defines the a step in a funktion flow
+ */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "kind")
 @JsonSubTypes({
@@ -44,6 +48,7 @@ public abstract class Step {
         this.kind = kind;
     }
 
+    @JsonIgnore
     public String getKind() {
         return kind;
     }

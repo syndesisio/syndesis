@@ -29,18 +29,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 
 /**
  */
 public class FilterTest extends FunktionTestSupport {
-    private static final transient Logger LOG = LoggerFactory.getLogger(FilterTest.class);
-
     public static final String START_URI = "direct:start";
     public static final String MATCHED_URI = "mock:matched";
     public static final String ALL_MESSAGES_URI = "mock:allMessages";
-
+    private static final transient Logger LOG = LoggerFactory.getLogger(FilterTest.class);
     @EndpointInject(uri = MATCHED_URI)
     protected MockEndpoint matchedEndpoint;
 
@@ -55,7 +51,7 @@ public class FilterTest extends FunktionTestSupport {
     );
 
     @Test
-    public void testFilter() throws Exception {
+    public void testStep() throws Exception {
         List<String> allMessages = new ArrayList<>(matchingMessages);
         allMessages.addAll(notMatchingMessages);
 

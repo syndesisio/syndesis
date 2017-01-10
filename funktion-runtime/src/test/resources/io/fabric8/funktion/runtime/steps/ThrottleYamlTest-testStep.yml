@@ -1,0 +1,13 @@
+---
+flows:
+- steps:
+  - kind: "endpoint"
+    uri: "direct:start"
+  - kind: "throttle"
+    maximumRequests: 3
+    periodMillis: 10000
+    steps:
+    - kind: "endpoint"
+      uri: "bean:addTime"
+    - kind: "endpoint"
+      uri: "mock:results"

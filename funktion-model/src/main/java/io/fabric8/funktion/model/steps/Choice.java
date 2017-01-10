@@ -16,6 +16,7 @@
  */
 package io.fabric8.funktion.model.steps;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.fabric8.funktion.model.StepKinds;
 
 import java.util.ArrayList;
@@ -26,11 +27,7 @@ import java.util.List;
  * <p>
  * Finds and evaluates the first {@link Filter} or invokes the otherwise steps
  */
-/*
-@JsonDeserialize(
-        using = JsonDeserializer.None.class
-)
-*/
+@JsonPropertyOrder({"filters", "otherwise"})
 public class Choice extends Step {
     private List<Filter> filters = new ArrayList<>();
     private Otherwise otherwise;

@@ -14,10 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.fabric8.funktion.model.steps;
+package io.fabric8.funktion.runtime.steps;
+
+import io.fabric8.funktion.model.Funktion;
+
+import java.io.IOException;
 
 /**
+ * Loads the test flow YAML file from src/test/resources/*.yml on the classpath
  */
-public interface HasSteps<T extends HasSteps> {
-    T addStep(Step step);
+public class ThrottleYamlTest extends ThrottleTest {
+
+    @Override
+    protected Funktion createFunktion() throws IOException {
+        return loadTestYaml();
+    }
+
 }

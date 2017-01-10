@@ -1,0 +1,12 @@
+---
+flows:
+- steps:
+  - kind: "endpoint"
+    uri: "direct:start"
+  - kind: "filter"
+    expression: "$.[?(@.name == 'James')]"
+    steps:
+    - kind: "endpoint"
+      uri: "mock:matched"
+  - kind: "endpoint"
+    uri: "mock:allMessages"
