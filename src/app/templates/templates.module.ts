@@ -1,17 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
+import { IPaaSCommonModule } from '../common/common.module';
 import { TemplatesListPage } from './list-page/list-page.component';
 import { ListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { TemplatesListComponent } from './list/list.component';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     RouterModule,
+    IPaaSCommonModule,
   ],
   declarations: [
     TemplatesListPage,
@@ -20,6 +22,6 @@ import { RouterModule } from '@angular/router';
   ],
   exports: [
     TemplatesListComponent,
-  ]
+  ],
 })
 export class TemplatesModule { }

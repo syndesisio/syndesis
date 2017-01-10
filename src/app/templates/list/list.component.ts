@@ -11,4 +11,6 @@ export class TemplatesListComponent {
 
   @Input() templates: Templates;
 
+  @Input() loading: boolean;
+
 }

@@ -11,4 +11,6 @@ export class PopularTemplatesComponent {
 
   @Input() templates: Templates;
 
+  @Input() loading: boolean;
+
 }

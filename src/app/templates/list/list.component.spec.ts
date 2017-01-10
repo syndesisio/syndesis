@@ -2,6 +2,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
+import { IPaaSCommonModule } from '../../common/common.module';
 import { TemplatesListComponent } from './list.component';
 
 describe('TemplatesListComponent', () => {
@@ -10,7 +11,7 @@ describe('TemplatesListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([])],
+      imports: [IPaaSCommonModule, RouterTestingModule.withRoutes([])],
       declarations: [TemplatesListComponent],
     })
       .compileComponents();

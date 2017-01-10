@@ -11,12 +11,16 @@ import { Templates } from '../../store/template/template.model';
 })
 export class TemplatesListPage implements OnInit {
 
-  templates: Observable<Templates>;
+  private templates: Observable<Templates>;
 
-  constructor(private store: TemplateStore) { }
+  private loading: Observable<boolean>;
+
+  constructor(private store: TemplateStore) {
+    this.templates = this.store.list;
+    this.loading = this.store.loading;
+  }
 
   ngOnInit() {
-    this.templates = this.store.list;
     this.store.loadAll();
   }
 
