@@ -17,7 +17,6 @@
 package io.fabric8.funktion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.fabric8.funktion.model.steps.ChildSteps;
 import io.fabric8.funktion.model.steps.Choice;
 import io.fabric8.funktion.model.steps.Endpoint;
 import io.fabric8.funktion.model.steps.Filter;
@@ -26,13 +25,12 @@ import io.fabric8.funktion.model.steps.SetBody;
 import io.fabric8.funktion.model.steps.SetHeaders;
 import io.fabric8.funktion.model.steps.Split;
 import io.fabric8.funktion.model.steps.Step;
+import io.fabric8.funktion.model.steps.Throttle;
 import io.fabric8.funktion.support.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static io.fabric8.funktion.model.StepKinds.FLOW;
 
 public class Flow extends DtoSupport {
     private String name;
@@ -123,6 +121,18 @@ public class Flow extends DtoSupport {
 
     public Choice choice() {
         Choice step = new Choice();
+        addStep(step);
+        return step;
+    }
+
+    public Throttle throttle(long maximumRequests) {
+        Throttle step = new Throttle(maximumRequests);
+        addStep(step);
+        return step;
+    }
+
+    public Throttle throttle(long maximumRequests, long periodMillis) {
+        Throttle step = new Throttle(maximumRequests, periodMillis);
         addStep(step);
         return step;
     }

@@ -28,6 +28,7 @@ import io.fabric8.funktion.model.steps.SetBody;
 import io.fabric8.funktion.model.steps.SetHeaders;
 import io.fabric8.funktion.model.steps.Split;
 import io.fabric8.funktion.model.steps.Step;
+import io.fabric8.funktion.model.steps.Throttle;
 import io.fabric8.funktion.runtime.designer.SingleMessageRoutePolicyFactory;
 import io.fabric8.funktion.support.Strings;
 import org.apache.camel.Expression;
@@ -40,6 +41,7 @@ import org.apache.camel.model.FilterDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.SplitDefinition;
+import org.apache.camel.model.ThrottleDefinition;
 import org.apache.camel.spi.Language;
 import org.apache.camel.spring.boot.FatJarRouter;
 import org.slf4j.Logger;
@@ -233,6 +235,14 @@ public class FunktionRouteBuilder extends RouteBuilder {
         } else if (item instanceof SetBody) {
             SetBody step = (SetBody) item;
             route.setBody(constant(step.getBody()));
+        } else if (item instanceof Throttle) {
+            Throttle step = (Throttle) item;
+            ThrottleDefinition throttle = route.throttle(step.getMaximumRequests());
+            Long period = step.getPeriodMillis();
+            if (period != null) {
+                throttle.timePeriodMillis(period);
+            }
+            addSteps(throttle, step.getSteps());
         } else if (item instanceof SetHeaders) {
             SetHeaders step = (SetHeaders) item;
             Map<String, Object> headers = step.getHeaders();

@@ -17,8 +17,6 @@
 package io.fabric8.funktion.model.steps;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.fabric8.funktion.model.StepKinds;
 
 /**

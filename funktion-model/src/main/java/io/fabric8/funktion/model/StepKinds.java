@@ -28,4 +28,5 @@ public class StepKinds {
     public static final String SET_BODY = "setBody";
     public static final String SET_HEADERS = "setHeaders";
     public static final String SPLIT = "split";
+    public static final String THROTTLE = "throttle";
 }

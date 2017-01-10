@@ -19,18 +19,20 @@ package io.fabric8.funktion.model.steps;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.fabric8.funktion.model.StepKinds;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "kind")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = Choice.class, name = "choice"),
-        @JsonSubTypes.Type(value = Endpoint.class, name = "endpoint"),
-        @JsonSubTypes.Type(value = Filter.class, name = "filter"),
-        @JsonSubTypes.Type(value = Function.class, name = "function"),
-        @JsonSubTypes.Type(value = Otherwise.class, name = "otherwise"),
-        @JsonSubTypes.Type(value = SetBody.class, name = "setBody"),
-        @JsonSubTypes.Type(value = SetHeaders.class, name = "setHeaders"),
-        @JsonSubTypes.Type(value = Split.class, name = "split")}
+        @JsonSubTypes.Type(value = Choice.class, name = StepKinds.CHOICE),
+        @JsonSubTypes.Type(value = Endpoint.class, name = StepKinds.ENDPOINT),
+        @JsonSubTypes.Type(value = Filter.class, name = StepKinds.FILTER),
+        @JsonSubTypes.Type(value = Function.class, name = StepKinds.FUNCTION),
+        @JsonSubTypes.Type(value = Otherwise.class, name = StepKinds.OTHERWISE),
+        @JsonSubTypes.Type(value = SetBody.class, name = StepKinds.SET_BODY),
+        @JsonSubTypes.Type(value = SetHeaders.class, name = StepKinds.SET_HEADERS),
+        @JsonSubTypes.Type(value = Split.class, name = StepKinds.SPLIT),
+        @JsonSubTypes.Type(value = Throttle.class, name = StepKinds.THROTTLE)}
 )
 public abstract class Step {
     private String kind;

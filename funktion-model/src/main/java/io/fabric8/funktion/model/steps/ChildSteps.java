@@ -16,9 +16,6 @@
  */
 package io.fabric8.funktion.model.steps;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.fabric8.funktion.model.FunktionDeserializer;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +80,21 @@ public abstract class ChildSteps<T extends ChildSteps> extends Step {
         addStep(step);
         return step;
     }
+
+    public Throttle throttle(long maximumRequests) {
+        Throttle step = new Throttle(maximumRequests);
+        addStep(step);
+        return step;
+    }
+
+    public Throttle throttle(long maximumRequests, long periodMillis) {
+        Throttle step = new Throttle(maximumRequests, periodMillis);
+        addStep(step);
+        return step;
+    }
+
+    // Properties
+    //-------------------------------------------------------------------------
 
     public List<Step> getSteps() {
         return steps;
