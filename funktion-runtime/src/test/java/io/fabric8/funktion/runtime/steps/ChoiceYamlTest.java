@@ -14,19 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.fabric8.funktion.model;
+package io.fabric8.funktion.runtime.steps;
+
+import io.fabric8.funktion.model.Funktion;
+
+import java.io.IOException;
 
 /**
+ * Loads the test flow YAML file from src/test/resources/*.yml on the classpath
  */
-public class StepKinds {
-    public static final String CHOICE = "choice";
-    public static final String ENDPOINT = "endpoint";
-    public static final String FILTER = "filter";
-    public static final String FUNCTION = "function";
-    public static final String FLOW = "flow";
-    public static final String OTHERWISE = "otherwise";
-    public static final String SET_BODY = "setBody";
-    public static final String SET_HEADERS = "setHeaders";
-    public static final String SPLIT = "split";
-    public static final String THROTTLE = "throttle";
+public class ChoiceYamlTest extends ChoiceTest {
+
+    @Override
+    protected Funktion createFunktion() throws IOException {
+        return loadTestYaml();
+    }
+
 }

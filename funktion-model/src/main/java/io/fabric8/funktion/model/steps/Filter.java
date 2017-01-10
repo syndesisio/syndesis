@@ -16,34 +16,40 @@
  */
 package io.fabric8.funktion.model.steps;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.fabric8.funktion.model.StepKinds;
 
 /**
- * Invokes an endpoint URI (typically HTTP or HTTPS) with the current payload
+ * If a filter expression is matched then it invokes the child steps
  */
-public class Endpoint extends Step {
-    private String uri;
+@JsonPropertyOrder({"expression", "steps"})
+public class Filter extends ChildSteps<Filter> {
+    private String expression;
 
-    public Endpoint() {
-        super(StepKinds.ENDPOINT);
+    public Filter() {
+        super(StepKinds.FILTER);
     }
 
-    public Endpoint(String uri) {
+    public Filter(String expression) {
         this();
-        this.uri = uri;
+        this.expression = expression;
     }
 
     @Override
     public String toString() {
-        return "Endpoint: " + uri;
+        return "Filter: " + expression + " => " + getSteps();
     }
 
-    public String getUri() {
-        return uri;
+    public String getKind() {
+        return StepKinds.FILTER;
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public String getExpression() {
+        return expression;
+    }
+
+    public void setExpression(String expression) {
+        this.expression = expression;
     }
 
 }

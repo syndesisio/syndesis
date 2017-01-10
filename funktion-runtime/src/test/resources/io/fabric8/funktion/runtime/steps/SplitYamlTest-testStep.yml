@@ -1,0 +1,10 @@
+---
+flows:
+- steps:
+  - kind: "endpoint"
+    uri: "direct:start"
+  - kind: "split"
+    expression: "$.lineItems"
+    steps:
+    - kind: "endpoint"
+      uri: "mock:results"

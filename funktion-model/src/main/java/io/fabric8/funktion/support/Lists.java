@@ -14,19 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.fabric8.funktion.model;
+package io.fabric8.funktion.support;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  */
-public class StepKinds {
-    public static final String CHOICE = "choice";
-    public static final String ENDPOINT = "endpoint";
-    public static final String FILTER = "filter";
-    public static final String FUNCTION = "function";
-    public static final String FLOW = "flow";
-    public static final String OTHERWISE = "otherwise";
-    public static final String SET_BODY = "setBody";
-    public static final String SET_HEADERS = "setHeaders";
-    public static final String SPLIT = "split";
-    public static final String THROTTLE = "throttle";
+public class Lists {
+
+    /**
+     * Returns an empty list if the given list is null
+     */
+    public static <T> List<T> notNullList(List<T> list) {
+        if (list == null) {
+            return Collections.EMPTY_LIST;
+        } else {
+            return list;
+        }
+    }
 }

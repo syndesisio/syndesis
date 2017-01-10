@@ -16,16 +16,11 @@
  */
 package io.fabric8.funktion.model.steps;
 
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.fabric8.funktion.model.StepKinds;
 
 /**
  * Invokes a function with the current payload
  */
-@JsonDeserialize(
-    using = JsonDeserializer.None.class
-)
 public class Function extends Step {
     private String name;
 

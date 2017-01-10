@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Funktions {
-    private static final transient Logger LOG = LoggerFactory.getLogger(Funktions.class);
-
     public static final String FILE_NAME = "funktion.yml";
+    private static final transient Logger LOG = LoggerFactory.getLogger(Funktions.class);
 
     protected static String toYaml(Object dto) throws JsonProcessingException {
         ObjectMapper mapper = createObjectMapper();
@@ -61,6 +61,10 @@ public class Funktions {
 
     public static Funktion loadFromString(String yaml) throws IOException {
         return parseFunktionConfig(yaml);
+    }
+
+    public static Funktion loadFromURL(URL resource) throws IOException {
+        return parseFunktionConfig(resource);
     }
 
     protected static Funktion validateConfig(Funktion config, File file) {
@@ -104,7 +108,7 @@ public class Funktions {
             }
             throw new IOException("Funktion configuration file does not exist: " + file.getPath());
         } else if (folder.isFile()) {
-           return loadFromFile(folder);
+            return loadFromFile(folder);
         }
         Funktion answer = tryFindConfigOnClassPath();
         if (answer != null) {
@@ -138,7 +142,9 @@ public class Funktions {
      * Creates a configured Jackson object mapper for parsing YAML
      */
     public static ObjectMapper createObjectMapper() {
-        return new ObjectMapper(new YAMLFactory());
+        YAMLFactory yamlFactory = new YAMLFactory();
+        yamlFactory.configure(YAMLGenerator.Feature.USE_NATIVE_TYPE_ID, false);
+        return new ObjectMapper(yamlFactory);
     }
 
     public static Funktion parseFunktionConfig(File file) throws IOException {
@@ -209,6 +215,14 @@ public class Funktions {
     public static boolean saveConfig(Funktion config, File file) throws IOException {
         createObjectMapper().writeValue(file, config);
         return true;
+    }
+
+    /**
+     * Saves the configuration as JSON in the given file
+     */
+    public static void saveConfigJSON(Funktion funktion, File file) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writerWithDefaultPrettyPrinter().writeValue(file, funktion);
     }
 
 }

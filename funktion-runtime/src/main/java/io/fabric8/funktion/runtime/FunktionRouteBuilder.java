@@ -19,17 +19,30 @@ package io.fabric8.funktion.runtime;
 import io.fabric8.funktion.model.Flow;
 import io.fabric8.funktion.model.Funktion;
 import io.fabric8.funktion.model.Funktions;
+import io.fabric8.funktion.model.steps.Choice;
 import io.fabric8.funktion.model.steps.Endpoint;
+import io.fabric8.funktion.model.steps.Filter;
 import io.fabric8.funktion.model.steps.Function;
+import io.fabric8.funktion.model.steps.Otherwise;
 import io.fabric8.funktion.model.steps.SetBody;
 import io.fabric8.funktion.model.steps.SetHeaders;
+import io.fabric8.funktion.model.steps.Split;
 import io.fabric8.funktion.model.steps.Step;
+import io.fabric8.funktion.model.steps.Throttle;
 import io.fabric8.funktion.runtime.designer.SingleMessageRoutePolicyFactory;
 import io.fabric8.funktion.support.Strings;
+import org.apache.camel.Expression;
+import org.apache.camel.Predicate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http4.HttpEndpoint;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
+import org.apache.camel.model.ChoiceDefinition;
+import org.apache.camel.model.FilterDefinition;
+import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.SplitDefinition;
+import org.apache.camel.model.ThrottleDefinition;
+import org.apache.camel.spi.Language;
 import org.apache.camel.spring.boot.FatJarRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +58,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+
+import static io.fabric8.funktion.support.Lists.notNullList;
 
 /**
  * A Camel {@link RouteBuilder} which maps the Funktion rules to Camel routes
@@ -154,24 +170,9 @@ public class FunktionRouteBuilder extends RouteBuilder {
                         message.append(uri);
                         validSteps++;
                     }
-                } else if (item instanceof SetBody) {
-                    SetBody step = (SetBody) item;
-                    assertRouteNotNull(route, item);
-                    route.setBody(constant(step.getBody()));
-                } else if (item instanceof SetHeaders) {
-                    SetHeaders step = (SetHeaders) item;
-                    assertRouteNotNull(route, item);
-                    Map<String, Object> headers = step.getHeaders();
-                    if (headers != null) {
-                        Set<Map.Entry<String, Object>> entries = headers.entrySet();
-                        for (Map.Entry<String, Object> entry : entries) {
-                            String key = entry.getKey();
-                            Object value = entry.getValue();
-                            route.setHeader(key, constant(value));
-                        }
-                    }
                 } else {
-                    throw new IllegalStateException("Uknown step kind: " + item + " of class: " + item.getClass().getName());
+                    addStep(route, item);
+                    validSteps++;
                 }
             }
         }
@@ -194,7 +195,122 @@ public class FunktionRouteBuilder extends RouteBuilder {
         }
     }
 
-    protected void assertRouteNotNull(RouteDefinition route, Step item) {
+
+    protected void addSteps(ProcessorDefinition route, Iterable<Step> steps) {
+        if (route != null && steps != null) {
+            for (Step item : steps) {
+                route = addStep(route, item);
+            }
+        }
+    }
+
+    private ProcessorDefinition addStep(ProcessorDefinition route, Step item) {
+        assertRouteNotNull(route, item);
+        if (item instanceof Function) {
+            Function function = (Function) item;
+            String functionName = function.getName();
+            if (!Strings.isEmpty(functionName)) {
+                route.to("json:marshal");
+                String method = null;
+                int idx = functionName.indexOf("::");
+                if (idx > 0) {
+                    method = functionName.substring(idx + 2);
+                    functionName = functionName.substring(0, idx);
+                }
+                String uri = "class:" + functionName;
+                if (method != null) {
+                    uri += "?method=" + method;
+                }
+                uri = convertEndpointURI(uri);
+                route = route.to(uri);
+            }
+        } else if (item instanceof Endpoint) {
+            Endpoint invokeEndpoint = (Endpoint) item;
+            String uri = invokeEndpoint.getUri();
+            if (!Strings.isEmpty(uri)) {
+                uri = convertEndpointURI(uri);
+                route = route.to("json:marshal");
+                route = route.to(uri);
+            }
+        } else if (item instanceof SetBody) {
+            SetBody step = (SetBody) item;
+            route.setBody(constant(step.getBody()));
+        } else if (item instanceof Throttle) {
+            Throttle step = (Throttle) item;
+            ThrottleDefinition throttle = route.throttle(step.getMaximumRequests());
+            Long period = step.getPeriodMillis();
+            if (period != null) {
+                throttle.timePeriodMillis(period);
+            }
+            addSteps(throttle, step.getSteps());
+        } else if (item instanceof SetHeaders) {
+            SetHeaders step = (SetHeaders) item;
+            Map<String, Object> headers = step.getHeaders();
+            if (headers != null) {
+                Set<Map.Entry<String, Object>> entries = headers.entrySet();
+                for (Map.Entry<String, Object> entry : entries) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    route.setHeader(key, constant(value));
+                }
+            }
+        } else if (item instanceof Filter) {
+            Filter step = (Filter) item;
+            Predicate predicate = getMandatoryPredicate(step, step.getExpression());
+            FilterDefinition filter = route.filter(predicate);
+            addSteps(filter, step.getSteps());
+        } else if (item instanceof Split) {
+            Split step = (Split) item;
+            Expression expression = getMandatoryExpression(step, step.getExpression());
+            SplitDefinition split = route.split(expression);
+            addSteps(split, step.getSteps());
+        } else if (item instanceof Choice) {
+            Choice step = (Choice) item;
+            ChoiceDefinition choice = route.choice();
+            List<Filter> filters = notNullList(step.getFilters());
+            for (Filter filter : filters) {
+                Predicate predicate = getMandatoryPredicate(filter, filter.getExpression());
+                ChoiceDefinition when = choice.when(predicate);
+                addSteps(when, filter.getSteps());
+            }
+            Otherwise otherwiseStep = step.getOtherwise();
+            if (otherwiseStep != null) {
+                List<Step> otherwiseSteps = notNullList(otherwiseStep.getSteps());
+                if (!otherwiseSteps.isEmpty()) {
+                    ChoiceDefinition otherwise = choice.otherwise();
+                    addSteps(otherwise, otherwiseSteps);
+                }
+            }
+        } else {
+            throw new IllegalStateException("Unknown step kind: " + item + " of class: " + item.getClass().getName());
+        }
+        return route;
+    }
+
+    protected Predicate getMandatoryPredicate(Step step, String expression) {
+        Objects.requireNonNull(expression, "No expression specified for step " + step);
+        Language jsonpath = getLanguage();
+        Predicate answer = jsonpath.createPredicate(expression);
+        Objects.requireNonNull(answer, "No predicate created from: " + expression);
+        return answer;
+    }
+
+    protected Expression getMandatoryExpression(Step step, String expression) {
+        Objects.requireNonNull(expression, "No expression specified for step " + step);
+        Language jsonpath = getLanguage();
+        Expression answer = jsonpath.createExpression(expression);
+        Objects.requireNonNull(answer, "No expression created from: " + expression);
+        return answer;
+    }
+
+    protected Language getLanguage() {
+        String languageName = "jsonpath";
+        Language answer = getContext().resolveLanguage(languageName);
+        Objects.requireNonNull(answer, "The language `" + languageName + "` cound not be resolved!");
+        return answer;
+    }
+
+    protected void assertRouteNotNull(ProcessorDefinition route, Step item) {
         if (route == null) {
             throw new IllegalArgumentException("You cannot use a " + item.getKind() + " step before you have started a flow with an endpoint or function!");
         }
@@ -248,22 +364,27 @@ public class FunktionRouteBuilder extends RouteBuilder {
             route = from(trigger);
             route.id(name);
         } else {
-             if (uri.startsWith("http:") || uri.startsWith("https:")) {
-                 // lets use http4 for all http transports
-                 uri = replacePrefix(uri, "http:", "http4:");
-                 uri = replacePrefix(uri, "https:", "https4:");
-
-                 HttpEndpoint endpoint = endpoint(uri, HttpEndpoint.class);
-                 if (endpoint != null) {
-                     // lets bridge them as a proxy
-                     endpoint.setBridgeEndpoint(true);
-                     endpoint.setThrowExceptionOnFailure(false);
-                 }
-             }
+            uri = convertEndpointURI(uri);
             message.append(" => ");
             route.to(uri);
         }
         return route;
+    }
+
+    private String convertEndpointURI(String uri) {
+        if (uri.startsWith("http:") || uri.startsWith("https:")) {
+            // lets use http4 for all http transports
+            uri = replacePrefix(uri, "http:", "http4:");
+            uri = replacePrefix(uri, "https:", "https4:");
+
+            HttpEndpoint endpoint = endpoint(uri, HttpEndpoint.class);
+            if (endpoint != null) {
+                // lets bridge them as a proxy
+                endpoint.setBridgeEndpoint(true);
+                endpoint.setThrowExceptionOnFailure(false);
+            }
+        }
+        return uri;
     }
 
     private String getURIHost(String uri) {

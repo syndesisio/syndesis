@@ -16,34 +16,39 @@
  */
 package io.fabric8.funktion.model.steps;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.fabric8.funktion.model.StepKinds;
 
 /**
- * Invokes an endpoint URI (typically HTTP or HTTPS) with the current payload
+ * Splits the payload into multiple messages
  */
-public class Endpoint extends Step {
-    private String uri;
+@JsonPropertyOrder({"expression", "steps"})
+public class Split extends ChildSteps<Split> {
+    private String expression;
 
-    public Endpoint() {
-        super(StepKinds.ENDPOINT);
+    public Split() {
+        super(StepKinds.SPLIT);
     }
 
-    public Endpoint(String uri) {
+    public Split(String expression) {
         this();
-        this.uri = uri;
+        this.expression = expression;
     }
 
     @Override
     public String toString() {
-        return "Endpoint: " + uri;
+        return "Split: " + expression;
     }
 
-    public String getUri() {
-        return uri;
+    public String getKind() {
+        return StepKinds.SPLIT;
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public String getExpression() {
+        return expression;
     }
 
+    public void setExpression(String expression) {
+        this.expression = expression;
+    }
 }

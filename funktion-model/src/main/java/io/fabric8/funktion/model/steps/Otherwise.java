@@ -14,12 +14,32 @@
  * permissions and limitations under the License.
  *
  */
-package io.fabric8.funktion.model;
+package io.fabric8.funktion.model.steps;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import io.fabric8.funktion.model.StepKinds;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-public abstract class DtoSupport {
+import java.util.List;
+
+/**
+ * Represents the otherwise clause in a {@link Choice}
+ */
+public class Otherwise extends ChildSteps<Otherwise> {
+    public Otherwise() {
+        super(StepKinds.OTHERWISE);
+    }
+
+    public Otherwise(List<Step> steps) {
+        super(StepKinds.OTHERWISE, steps);
+    }
+
+    @Override
+    public String toString() {
+        return "Otherwise: " + getSteps();
+    }
+
+    public String getKind() {
+        return StepKinds.OTHERWISE;
+    }
 
 
 }

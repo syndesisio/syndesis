@@ -23,11 +23,15 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.fabric8.funktion.model.steps.Step;
+import io.fabric8.funktion.model.steps.Choice;
 import io.fabric8.funktion.model.steps.Endpoint;
+import io.fabric8.funktion.model.steps.Filter;
 import io.fabric8.funktion.model.steps.Function;
+import io.fabric8.funktion.model.steps.Otherwise;
 import io.fabric8.funktion.model.steps.SetBody;
 import io.fabric8.funktion.model.steps.SetHeaders;
+import io.fabric8.funktion.model.steps.Split;
+import io.fabric8.funktion.model.steps.Step;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,14 +43,19 @@ public class FunktionDeserializer extends JsonDeserializer {
     private Map<String, Class> kinds = new HashMap<>();
 
     public FunktionDeserializer() {
-        kinds.put("function", Function.class);
+        kinds.put("choice", Choice.class);
         kinds.put("endpoint", Endpoint.class);
+        kinds.put("filter", Filter.class);
+        kinds.put("flow", Flow.class);
+        kinds.put("function", Function.class);
+        kinds.put("otherwise", Otherwise.class);
         kinds.put("setBody", SetBody.class);
         kinds.put("setHeaders", SetHeaders.class);
+        kinds.put("split", Split.class);
     }
 
     @Override
-    public Step deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Object deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
         ObjectNode node = jp.readValueAsTree();
         JsonNode kind = node.get("kind");
         if (kind == null) {
