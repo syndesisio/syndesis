@@ -21,39 +21,39 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.fabric8.funktion.model.StepKinds;
 
 /**
- * Sets the payload
+ * Splits the payload into multiple messages
  */
 /*
 @JsonDeserialize(
         using = JsonDeserializer.None.class
 )
 */
-public class SetBody extends Step {
-    private String body;
+public class Split extends ChildSteps<Split> {
+    private String expression;
 
-    public SetBody() {
-        super(StepKinds.SET_BODY);
+    public Split() {
+        super(StepKinds.SPLIT);
     }
 
-    public SetBody(String body) {
+    public Split(String expression) {
         this();
-        this.body = body;
+        this.expression = expression;
     }
 
     @Override
     public String toString() {
-        return "SetBody: " + body;
+        return "Split: " + expression;
     }
 
     public String getKind() {
-        return "setBody";
+        return StepKinds.SPLIT;
     }
 
-    public String getBody() {
-        return body;
+    public String getExpression() {
+        return expression;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setExpression(String expression) {
+        this.expression = expression;
     }
 }

@@ -16,11 +16,21 @@
  */
 package io.fabric8.funktion.model.steps;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.fabric8.funktion.model.FunktionDeserializer;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonDeserialize(
-        using = FunktionDeserializer.class
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "kind")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Choice.class, name = "choice"),
+        @JsonSubTypes.Type(value = Endpoint.class, name = "endpoint"),
+        @JsonSubTypes.Type(value = Filter.class, name = "filter"),
+        @JsonSubTypes.Type(value = Function.class, name = "function"),
+        @JsonSubTypes.Type(value = Otherwise.class, name = "otherwise"),
+        @JsonSubTypes.Type(value = SetBody.class, name = "setBody"),
+        @JsonSubTypes.Type(value = SetHeaders.class, name = "setHeaders"),
+        @JsonSubTypes.Type(value = Split.class, name = "split")}
 )
 public abstract class Step {
     private String kind;

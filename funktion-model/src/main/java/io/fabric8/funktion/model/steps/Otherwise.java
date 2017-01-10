@@ -20,40 +20,31 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.fabric8.funktion.model.StepKinds;
 
+import java.util.List;
+
 /**
- * Sets the payload
+ * Represents the otherwise clause in a {@link Choice}
  */
-/*
 @JsonDeserialize(
         using = JsonDeserializer.None.class
 )
-*/
-public class SetBody extends Step {
-    private String body;
-
-    public SetBody() {
-        super(StepKinds.SET_BODY);
+public class Otherwise extends ChildSteps<Otherwise> {
+    public Otherwise() {
+        super(StepKinds.OTHERWISE);
     }
 
-    public SetBody(String body) {
-        this();
-        this.body = body;
+    public Otherwise(List<Step> steps) {
+        super(StepKinds.OTHERWISE, steps);
     }
 
     @Override
     public String toString() {
-        return "SetBody: " + body;
+        return "Otherwise: " + getSteps();
     }
 
     public String getKind() {
-        return "setBody";
+        return StepKinds.OTHERWISE;
     }
 
-    public String getBody() {
-        return body;
-    }
 
-    public void setBody(String body) {
-        this.body = body;
-    }
 }

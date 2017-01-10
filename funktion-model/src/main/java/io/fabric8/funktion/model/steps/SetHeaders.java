@@ -26,9 +26,11 @@ import java.util.Map;
 /**
  * Sets headers on the payload
  */
+/*
 @JsonDeserialize(
         using = JsonDeserializer.None.class
 )
+*/
 public class SetHeaders extends Step {
     private Map<String, Object> headers;
 

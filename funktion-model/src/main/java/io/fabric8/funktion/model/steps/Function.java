@@ -16,6 +16,7 @@
  */
 package io.fabric8.funktion.model.steps;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.fabric8.funktion.model.StepKinds;
@@ -23,9 +24,12 @@ import io.fabric8.funktion.model.StepKinds;
 /**
  * Invokes a function with the current payload
  */
+/*
 @JsonDeserialize(
-    using = JsonDeserializer.None.class
+        using = JsonDeserializer.None.class
 )
+*/
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "kind")
 public class Function extends Step {
     private String name;
 

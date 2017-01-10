@@ -14,18 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.fabric8.funktion.model;
+package io.fabric8.funktion.model.steps;
 
 /**
  */
-public class StepKinds {
-    public static final String CHOICE = "choice";
-    public static final String ENDPOINT = "endpoint";
-    public static final String FILTER = "filter";
-    public static final String FUNCTION = "function";
-    public static final String FLOW = "flow";
-    public static final String OTHERWISE = "otherwise";
-    public static final String SET_BODY = "setBody";
-    public static final String SET_HEADERS = "setHeaders";
-    public static final String SPLIT = "split";
+public interface HasSteps<T extends HasSteps> {
+    T addStep(Step step);
 }

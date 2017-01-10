@@ -31,9 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Funktions {
-    private static final transient Logger LOG = LoggerFactory.getLogger(Funktions.class);
-
     public static final String FILE_NAME = "funktion.yml";
+    private static final transient Logger LOG = LoggerFactory.getLogger(Funktions.class);
 
     protected static String toYaml(Object dto) throws JsonProcessingException {
         ObjectMapper mapper = createObjectMapper();
@@ -104,7 +103,7 @@ public class Funktions {
             }
             throw new IOException("Funktion configuration file does not exist: " + file.getPath());
         } else if (folder.isFile()) {
-           return loadFromFile(folder);
+            return loadFromFile(folder);
         }
         Funktion answer = tryFindConfigOnClassPath();
         if (answer != null) {

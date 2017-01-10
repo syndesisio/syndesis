@@ -21,39 +21,40 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.fabric8.funktion.model.StepKinds;
 
 /**
- * Sets the payload
+ * If a filter expression is matched then it invokes the child steps
  */
 /*
 @JsonDeserialize(
         using = JsonDeserializer.None.class
 )
 */
-public class SetBody extends Step {
-    private String body;
+public class Filter extends ChildSteps<Filter> {
+    private String expression;
 
-    public SetBody() {
-        super(StepKinds.SET_BODY);
+    public Filter() {
+        super(StepKinds.FILTER);
     }
 
-    public SetBody(String body) {
+    public Filter(String expression) {
         this();
-        this.body = body;
+        this.expression = expression;
     }
 
     @Override
     public String toString() {
-        return "SetBody: " + body;
+        return "Filter: " + expression + " => " + getSteps();
     }
 
     public String getKind() {
-        return "setBody";
+        return StepKinds.FILTER;
     }
 
-    public String getBody() {
-        return body;
+    public String getExpression() {
+        return expression;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setExpression(String expression) {
+        this.expression = expression;
     }
+
 }

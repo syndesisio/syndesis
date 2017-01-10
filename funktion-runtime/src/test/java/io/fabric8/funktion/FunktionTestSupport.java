@@ -18,10 +18,14 @@ package io.fabric8.funktion;
 
 import io.fabric8.funktion.model.Funktion;
 import io.fabric8.funktion.runtime.FunktionRouteBuilder;
+import org.apache.camel.Exchange;
 import org.apache.camel.RoutesBuilder;
+import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
+import org.assertj.core.api.Assertions;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  */
@@ -38,6 +42,11 @@ public abstract class FunktionTestSupport extends CamelTestSupport {
 
     }
 
+    @Override
+    public boolean isDumpRouteCoverage() {
+        return true;
+    }
+
     /**
      * Factory method to create the funktion flows for the test case
      */
@@ -45,6 +54,20 @@ public abstract class FunktionTestSupport extends CamelTestSupport {
         Funktion funktion = new Funktion();
         addFunktionFlows(funktion);
         return funktion;
+    }
+
+    protected void logMessagesReceived(MockEndpoint... mockEndpoints) {
+        System.out.println();
+        for (MockEndpoint mockEndpoint : mockEndpoints) {
+            System.out.println("Messages received on endpoint " + mockEndpoint.getEndpointUri());
+            List<Exchange> exchanges = mockEndpoint.getExchanges();
+            Assertions.assertThat(exchanges).describedAs("exchanges on " + mockEndpoint).isNotNull();
+            int count = 0;
+            for (Exchange exchange : exchanges) {
+                System.out.println("  " + count++ + " = " + exchange.getIn().getBody(String.class));
+            }
+            System.out.println();
+        }
     }
 
     /**

@@ -17,8 +17,6 @@
 package io.fabric8.funktion.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public abstract class DtoSupport {

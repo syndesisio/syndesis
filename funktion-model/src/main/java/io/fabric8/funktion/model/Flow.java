@@ -17,16 +17,22 @@
 package io.fabric8.funktion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.fabric8.funktion.model.steps.ChildSteps;
+import io.fabric8.funktion.model.steps.Choice;
 import io.fabric8.funktion.model.steps.Endpoint;
+import io.fabric8.funktion.model.steps.Filter;
 import io.fabric8.funktion.model.steps.Function;
 import io.fabric8.funktion.model.steps.SetBody;
 import io.fabric8.funktion.model.steps.SetHeaders;
+import io.fabric8.funktion.model.steps.Split;
 import io.fabric8.funktion.model.steps.Step;
 import io.fabric8.funktion.support.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static io.fabric8.funktion.model.StepKinds.FLOW;
 
 public class Flow extends DtoSupport {
     private String name;
@@ -39,7 +45,6 @@ public class Flow extends DtoSupport {
         steps.add(step);
         return this;
     }
-
 
     public Flow name(String value) {
         setName(value);
@@ -59,24 +64,6 @@ public class Flow extends DtoSupport {
     public Flow singleMessageMode(boolean value) {
         setSingleMessageMode(value);
         return this;
-    }
-
-    // Steps
-    //-------------------------------------------------------------------------
-    public Flow endpoint(String uri) {
-        return addStep(new Endpoint(uri));
-    }
-
-    public Flow function(String name) {
-        return addStep(new Function(name));
-    }
-
-    public Flow setBody(String body) {
-        return addStep(new SetBody(body));
-    }
-
-    public Flow setHeaders(Map<String,Object> headers) {
-        return addStep(new SetHeaders(headers));
     }
 
 
@@ -104,14 +91,44 @@ public class Flow extends DtoSupport {
         return builder.toString();
     }
 
-
-    public String getName() {
-        return name;
+    // DSL
+    //-------------------------------------------------------------------------
+    public Flow endpoint(String uri) {
+        return addStep(new Endpoint(uri));
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Flow function(String name) {
+        return addStep(new Function(name));
     }
+
+    public Flow setBody(String body) {
+        return addStep(new SetBody(body));
+    }
+
+    public Flow setHeaders(Map<String, Object> headers) {
+        return addStep(new SetHeaders(headers));
+    }
+
+    public Split split(String expression) {
+        Split step = new Split(expression);
+        addStep(step);
+        return step;
+    }
+
+    public Filter filter(String expression) {
+        Filter step = new Filter(expression);
+        addStep(step);
+        return step;
+    }
+
+    public Choice choice() {
+        Choice step = new Choice();
+        addStep(step);
+        return step;
+    }
+
+    // Properties
+    //-------------------------------------------------------------------------
 
     public List<Step> getSteps() {
         return steps;
@@ -119,6 +136,14 @@ public class Flow extends DtoSupport {
 
     public void setSteps(List<Step> steps) {
         this.steps = steps;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 
@@ -161,5 +186,4 @@ public class Flow extends DtoSupport {
     public boolean isSingleMessageModeEnabled() {
         return singleMessageMode != null && singleMessageMode.booleanValue();
     }
-
 }
