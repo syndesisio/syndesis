@@ -1,0 +1,5 @@
+{
+  "message": "@pullRequester, thanks! @reviewers, please review this.",
+  "assignToReviewer": true,
+  "createReviewRequest": true
+}
