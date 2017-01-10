@@ -6,7 +6,7 @@
   "skipAlreadyAssignedPR": true,
   "skipAlreadyMentionedPR": true,
   "fallbackNotifyForPaths": [{
-    "user": "kahboom",
+    "name": "kahboom",
     "files": ["**/*"]
   }]
 }
