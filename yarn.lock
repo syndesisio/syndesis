@@ -106,6 +106,10 @@
   version "6.0.52"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.52.tgz#1ac3a99b42320f9e463482f25af4c2359473aaa6"
 
+"@types/pluralize@^0.0.27":
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/@types/pluralize/-/pluralize-0.0.27.tgz#087354a791ce027db1101ff399db6111fc9275f7"
+
 "@types/q@^0.0.32":
   version "0.0.32"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-0.0.32.tgz#bd284e57c84f1325da702babfc82a5328190c0c5"
@@ -4518,6 +4522,10 @@ pluralize@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-1.2.1.tgz#d1a21483fd22bb41e58a12fa3421823140897c45"
 
+pluralize@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-3.1.0.tgz#84213d0a12356069daa84060c559242633161368"
+
 portfinder@1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.9.tgz#b1ac8755d092afc0433f1c4832fa17d6d1f5d830"
@@ -5982,21 +5990,7 @@ tslint-loader@^3.3.0:
     object-assign "^4.0.1"
     rimraf "^2.4.4"
 
-tslint@^4.0.2:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/tslint/-/tslint-4.2.0.tgz#b9f5c5b871b784ab2f4809e704ade42d62f523ad"
-  dependencies:
-    babel-code-frame "^6.20.0"
-    colors "^1.1.2"
-    diff "^3.0.1"
-    findup-sync "~0.3.0"
-    glob "^7.1.1"
-    optimist "~0.6.0"
-    resolve "^1.1.7"
-    underscore.string "^3.3.4"
-    update-notifier "^1.0.2"
-
-tslint@^4.3.1:
+tslint@^4.0.2, tslint@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/tslint/-/tslint-4.3.1.tgz#28f679c53ca4b273688bcb6fcf0dde7ff1bb2169"
   dependencies:
