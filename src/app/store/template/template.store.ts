@@ -9,4 +9,6 @@ export class TemplateStore extends AbstractStore<Template, Templates, TemplateSe
   constructor(integrationService: TemplateService) {
     super(integrationService, [], <Template>{});
   }
+
+  protected get kind() { return 'Template'; }
 }

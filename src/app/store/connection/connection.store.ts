@@ -9,4 +9,6 @@ export class ConnectionStore extends AbstractStore<Connection, Connections, Conn
   constructor(connectionService: ConnectionService) {
     super(connectionService, [], <Connection>{});
   }
+
+  protected get kind() { return 'Connection'; }
 }
