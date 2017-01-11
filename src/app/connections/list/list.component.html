@@ -1,7 +1,6 @@
-<div class="container-cards-pf">
-  <div class="row row-cards-pf">
-
-    <ipaas-loading [loading]="loading">
+<ipaas-loading [loading]="loading">
+  <div class="container-cards-pf">
+    <div class="row row-cards-pf">
       <div class="col-xs-12 col-sm-3 col-md-2 card" *ngFor="let connection of connections">
         <div class="card-pf card-pf-view card-pf-view-xs">
           <div class="card-pf-body">
@@ -43,6 +42,6 @@
           </div>
         </div>
       </div>
-    </ipaas-loading>
+    </div>
   </div>
-</div>
+</ipaas-loading>
