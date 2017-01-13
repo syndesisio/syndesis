@@ -15,4 +15,4 @@
 #
 
 deployment:
-  file: com/redhat/ipaas/rest/deployment.json
+  file: com/redhat/ipaas/api/v1/deployment.json
