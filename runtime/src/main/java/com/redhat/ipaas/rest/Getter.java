@@ -15,23 +15,21 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.v1.model.User;
-import io.swagger.annotations.Api;
+import com.redhat.ipaas.api.v1.model.WithId;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-@Path("/users")
-@Api(value = "users")
-public class Users extends BaseHandler implements Lister<User>, Getter<User> {
+public interface Getter<T extends WithId> extends Resource<T>, WithDataManager {
 
-    @Override
-    public Class<User> resourceClass() {
-        return User.class;
-    }
-
-    @Override
-    public String resourceKind() {
-        return User.KIND;
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}")
+    default T get(@PathParam("id") String id) {
+        return getDataManager().fetch(resourceKind(), id);
     }
 
 }

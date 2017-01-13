@@ -15,23 +15,16 @@
  */
 package com.redhat.ipaas.rest;
 
-import com.redhat.ipaas.api.v1.model.User;
-import io.swagger.annotations.Api;
+import javax.inject.Inject;
 
-import javax.ws.rs.Path;
+public class BaseHandler implements WithDataManager {
 
-@Path("/users")
-@Api(value = "users")
-public class Users extends BaseHandler implements Lister<User>, Getter<User> {
+    @Inject
+    private DataManager dataMgr;
 
     @Override
-    public Class<User> resourceClass() {
-        return User.class;
-    }
-
-    @Override
-    public String resourceKind() {
-        return User.KIND;
+    public DataManager getDataManager() {
+        return dataMgr;
     }
 
 }

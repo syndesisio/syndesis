@@ -16,84 +16,22 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.v1.model.Connection;
-import com.redhat.ipaas.rest.util.ReflectiveSorter;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-import java.util.Collection;
 
 @Path("/connections")
 @Api(value = "connections")
-public class Connections {
+public class Connections extends BaseHandler implements Lister<Connection>, Getter<Connection>, Creator<Connection>, Deleter<Connection>, Updater<Connection> {
 
-    @Inject
-    private DataManager dataMgr;
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "List connections")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Connection.class)})
-    @ApiImplicitParams({
-        @ApiImplicitParam(
-            name = "sort", value = "Sort the result list according to the given field value",
-            paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
-                                        "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
-
-    })
-    public Collection<Connection> list(@Context UriInfo uri) {
-        return dataMgr.fetchAll(Connection.KIND, new ReflectiveSorter<>(Connection.class, new SortOptionsFromQueryParams(uri)));
+    @Override
+    public Class<Connection> resourceClass() {
+        return Connection.class;
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/{id}")
-    @ApiOperation(value = "Get connection by ID")
-    public Connection get(
-        @ApiParam(value = "id of the connection", required = true) @PathParam("id") String id) {
-        return dataMgr.fetch(Connection.KIND, id);
+    @Override
+    public String resourceKind() {
+        return Connection.KIND;
     }
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes("application/json")
-    @ApiOperation(value = "Create a new connection")
-    public Connection create(Connection connection) {
-        return dataMgr.create(connection);
-    }
-
-    @PUT
-    @Path(value = "/{id}")
-    @Consumes("application/json")
-    @ApiOperation(value = "Update a connection")
-    public void update(
-        @ApiParam(value = "id of the connection", required = true) @PathParam("id") String id,
-        Connection connection) {
-        dataMgr.update(connection);
-
-    }
-
-    @DELETE
-    @Consumes("application/json")
-    @Path(value = "/{id}")
-    @ApiOperation(value = "Delete a connection")
-    public void delete(
-        @ApiParam(value = "id of the connection", required = true) @PathParam("id") String id) {
-        dataMgr.delete(Connection.KIND, id);
-
-    }
-
 
 }

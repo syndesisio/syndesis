@@ -16,53 +16,22 @@
 package com.redhat.ipaas.rest;
 
 import com.redhat.ipaas.api.v1.model.Permission;
-import com.redhat.ipaas.rest.util.ReflectiveSorter;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-import java.util.Collection;
 
 @Path("/permissions")
 @Api(value = "permissions")
-public class Permissions {
+public class Permissions extends BaseHandler implements Lister<Permission>, Getter<Permission> {
 
-    @Inject
-    private DataManager dataMgr;
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "List permissions")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Permission.class)})
-    @ApiImplicitParams({
-        @ApiImplicitParam(
-            name = "sort", value = "Sort the result list according to the given field value",
-            paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
-                                        "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
-
-    })
-    public Collection<Permission> list(@Context UriInfo uri) {
-        return dataMgr.fetchAll(Permission.KIND,
-            new ReflectiveSorter<>(Permission.class, new SortOptionsFromQueryParams(uri)));
+    @Override
+    public Class<Permission> resourceClass() {
+        return Permission.class;
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/{id}")
-    @ApiOperation(value = "Get a permission by ID")
-    public Permission get(
-        @ApiParam(value = "id of the Permission", required = true) @PathParam("id") String id) {
-        Permission permission = dataMgr.fetch(Permission.KIND, id);
-
-        return permission;
+    @Override
+    public String resourceKind() {
+        return Permission.KIND;
     }
 
 }
