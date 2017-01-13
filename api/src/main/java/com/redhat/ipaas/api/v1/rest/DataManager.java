@@ -36,6 +36,8 @@ import com.redhat.ipaas.api.v1.model.Step;
 import com.redhat.ipaas.api.v1.model.Tag;
 import com.redhat.ipaas.api.v1.model.User;
 import com.redhat.ipaas.api.v1.model.WithId;
+import com.redhat.ipaas.api.v1.rest.exception.IPaasServerException;
+
 import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,20 +104,27 @@ public class DataManager {
         }
     }
 
-    public void addToCache(ModelData modelData) throws ClassNotFoundException, IOException {
-        Class<? extends WithId> clazz = getClass(modelData.getModel());
-        Map<String, WithId> entityMap = cache.computeIfAbsent(modelData.getModel().toLowerCase(), k -> new HashMap<>());
-        logger.debug(modelData.getModel() + ":" + modelData.getData());
-        WithId entity = clazz.cast(mapper.readValue(modelData.getData(), clazz));
-        Optional<String> id = entity.getId();
-        String idVal;
-        if (!id.isPresent()) {
-            idVal = generatePK(entityMap);
-            entity = entity.withId(idVal);
-        } else {
-            idVal = id.get();
+    public void addToCache(ModelData modelData) {
+        try {
+            Class<? extends WithId> clazz;
+            clazz = getClass(modelData.getModel());
+            Map<String, WithId> entityMap = cache.computeIfAbsent(modelData.getModel().toLowerCase(), k -> new HashMap<>());
+            logger.debug(modelData.getModel() + ":" + modelData.getData());
+            WithId entity = clazz.cast(mapper.readValue(modelData.getData(), clazz));
+            Optional<String> id = entity.getId();
+            String idVal;
+            if (!id.isPresent()) {
+                idVal = generatePK(entityMap);
+                entity = entity.withId(idVal);
+            } else {
+                idVal = id.get();
+            }
+            entityMap.put(idVal, entity);
+        } catch (ClassNotFoundException e) {
+            throw new IPaasServerException(e.getMessage(),e);
+        } catch (IOException e) {
+            throw new IPaasServerException(e.getMessage(),e);
         }
-        entityMap.put(idVal, entity);
     }
 
     /**

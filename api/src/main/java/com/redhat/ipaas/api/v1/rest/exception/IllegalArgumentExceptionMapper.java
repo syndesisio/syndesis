@@ -15,7 +15,6 @@
  */
 package com.redhat.ipaas.api.v1.rest.exception;
 
-import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -24,14 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Provider
-public class EntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotFoundException> {
+public class IllegalArgumentExceptionMapper implements ExceptionMapper<IllegalArgumentException> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(EntityNotFoundExceptionMapper.class);
+	private static final Logger LOG = LoggerFactory.getLogger(IllegalArgumentExceptionMapper.class);
 	
 	@Override
-	public Response toResponse(EntityNotFoundException e) {
+	public Response toResponse(IllegalArgumentException e) {
 		LOG.error(e.getMessage(),e);
-		RestError error = new RestError("Entity Not Found Exception " + e.getMessage(), "Please check your request data", 400);
+		RestError error = new RestError("Illegal Argument on Call " + e.getMessage(), "Please check your sorting arguments", 400);
 		return Response.status(error.errorCode).entity(error).build();
 	}
 	
