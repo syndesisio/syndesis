@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.rest.exception;
+package com.redhat.ipaas.api.v1.rest.exception;
 
 public class RestError {
 	
