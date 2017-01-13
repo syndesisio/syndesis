@@ -75,7 +75,7 @@
           <apiSources>
             <apiSource>
               <locations>
-                <location>com.redhat.ipaas.rest</location>
+                <location>com.redhat.ipaas.api.v1.rest</location>
               </locations>
               <swaggerDirectory>${apidocs.output.dir}</swaggerDirectory>
               <schemes>
@@ -176,13 +176,6 @@
       <groupId>com.redhat.ipaas</groupId>
       <artifactId>swagger-ui</artifactId>
     </dependency>
-    <!-- Java EE 7 dependency -->
-    <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <version>7.0</version>
-      <scope>provided</scope>
-    </dependency>
     <!--WildFly Swarm Fractions -->
     <dependency>
       <groupId>org.wildfly.swarm</groupId>
@@ -220,16 +213,15 @@
       <groupId>org.wildfly.swarm</groupId>
       <artifactId>keycloak-server</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
+    </dependency>
     <!-- Test -->
     <dependency>
       <groupId>org.wildfly.swarm</groupId>
       <artifactId>arquillian</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.10</version>
     </dependency>
   </dependencies>
 
@@ -251,6 +243,21 @@
                 </goals>
               </execution>
             </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>debug</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>wildfly-swarm-plugin</artifactId>
+            <configuration>
+              <mainClass>com.redhat.ipaas.runtime.Main</mainClass>
+              <debugPort>5005</debugPort>
+            </configuration>
           </plugin>
         </plugins>
       </build>
