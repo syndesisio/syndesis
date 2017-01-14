@@ -25,7 +25,8 @@ import org.immutables.value.Value;
     depluralize = true,
     typeAbstract = "*",
     allParameters = true,
-    from = "createFrom"
+    from = "createFrom",
+    validationMethod = Value.Style.ValidationMethod.VALIDATION_API
 )
 public @interface ImmutablesStyle {
 }

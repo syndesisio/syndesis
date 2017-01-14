@@ -114,7 +114,7 @@
 
     <wildfly.swarm.version>2016.11.0</wildfly.swarm.version>
     <version.infinispan>9.0.0.Alpha4</version.infinispan>
-    <immuutables.version>2.3.10</immuutables.version>
+    <immutables.version>2.4.0</immutables.version>
     <swagger.annotations.version>1.5.10</swagger.annotations.version>
     <jackson.version>2.7.8</jackson.version>
     <slf4j.api.version>1.7.10</slf4j.api.version>
@@ -136,6 +136,7 @@
 
     <fabric8.maven.plugin.version>3.2.8</fabric8.maven.plugin.version>
     <javaee.api.version>7.0</javaee.api.version>
+    <hibernate.validator.version>5.3.4.Final</hibernate.validator.version>
   </properties>
 
   <modules>
@@ -194,13 +195,19 @@
       <dependency>
         <groupId>org.immutables</groupId>
         <artifactId>value</artifactId>
-        <version>${immuutables.version}</version>
+        <version>${immutables.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>io.swagger</groupId>
         <artifactId>swagger-annotations</artifactId>
         <version>${swagger.annotations.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${hibernate.validator.version}</version>
       </dependency>
 
       <dependency>
