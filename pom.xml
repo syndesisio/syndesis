@@ -128,7 +128,7 @@
     <maven.resources.plugin.version>3.0.1</maven.resources.plugin.version>
     <maven.source.plugin.version>2.4</maven.source.plugin.version>
     <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
-    <maven.dependency.plugin.version>3.0.0-SNAPSHOT</maven.dependency.plugin.version>
+    <maven.dependency.plugin.version>3.0.0</maven.dependency.plugin.version>
     <maven.swagger.plugin.version>3.1.4</maven.swagger.plugin.version>
     <templating.maven.plugin.version>1.0.0</templating.maven.plugin.version>
     <maven.jacoco.plugin.version>0.7.8</maven.jacoco.plugin.version>
