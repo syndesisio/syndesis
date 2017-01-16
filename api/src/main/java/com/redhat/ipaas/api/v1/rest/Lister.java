@@ -15,10 +15,10 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
+import com.redhat.ipaas.api.v1.model.ListResult;
 import com.redhat.ipaas.api.v1.model.WithId;
-import com.redhat.ipaas.api.v1.rest.SortOptionsFromQueryParams;
+import com.redhat.ipaas.api.v1.rest.util.PaginationFilter;
 import com.redhat.ipaas.api.v1.rest.util.ReflectiveSorter;
-
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 
@@ -27,7 +27,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import java.util.Collection;
 
 public interface Lister<T extends WithId> extends Resource<T>, WithDataManager {
 
@@ -39,11 +38,19 @@ public interface Lister<T extends WithId> extends Resource<T>, WithDataManager {
             paramType = "query", dataType = "string"),
         @ApiImplicitParam(
             name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
-            "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string")
+            "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string"),
+        @ApiImplicitParam(
+            name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
+        @ApiImplicitParam(
+            name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer", defaultValue = "20")
 
     })
-    default Collection<T> list(@Context UriInfo uriInfo) {
-        return getDataManager().fetchAll(resourceKind(), new ReflectiveSorter<>(resourceClass(), new SortOptionsFromQueryParams(uriInfo)));
+    default ListResult<T> list(@Context UriInfo uriInfo) {
+        return getDataManager().fetchAll(
+            resourceKind(),
+            new ReflectiveSorter<>(resourceClass(), new SortOptionsFromQueryParams(uriInfo)),
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
+        );
     }
 
 }

@@ -28,6 +28,7 @@ import com.redhat.ipaas.api.v1.model.IntegrationPatternGroup;
 import com.redhat.ipaas.api.v1.model.IntegrationRuntime;
 import com.redhat.ipaas.api.v1.model.IntegrationTemplate;
 import com.redhat.ipaas.api.v1.model.IntegrationTemplateConnectionStep;
+import com.redhat.ipaas.api.v1.model.ListResult;
 import com.redhat.ipaas.api.v1.model.Organization;
 import com.redhat.ipaas.api.v1.model.Permission;
 import com.redhat.ipaas.api.v1.model.Role;
@@ -179,13 +180,14 @@ public class DataManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> List<T> fetchAll(String model, Function<List<T>, List<T>>... operators) {
+    public <T extends WithId> ListResult<T> fetchAll(String model, Function<List<T>, List<T>>... operators) {
         Map<String, WithId> entityMap = cache.computeIfAbsent(model, k -> new HashMap<>());
         List<T> result = new ArrayList<>((Collection<? extends T>) entityMap.values());
+        int totalCount = result.size();
         for (Function<List<T>, List<T>> operator : operators) {
             result = operator.apply(result);
         }
-        return result;
+        return new ListResult.Builder<T>().totalCount(totalCount).items(result).build();
     }
 
     public <T> T fetch(String model, String id) {
