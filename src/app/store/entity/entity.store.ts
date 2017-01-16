@@ -1,4 +1,6 @@
+import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import { plural } from 'pluralize';
 
 import { RESTService } from './rest.service';
@@ -50,6 +52,30 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         console.log('Error retrieving ' + this.kind + ': ' + error);
         this._loading.next(false);
       });
+  }
+
+  create(entity: T): Observable<T> {
+    const created = new Subject<T>();
+    this.service.create(entity).subscribe(
+      (e) => {
+        created.next(e);
+      },
+      (error) => {
+        console.log('Error creating ' + this.kind + ' (' + entity + ')' + ': ' + error);
+      });
+    return created.share();
+  }
+
+  update(entity: T): Observable<T> {
+    const updated = new Subject<T>();
+    this.service.update(entity).subscribe(
+      (e) => {
+        updated.next(e);
+      },
+      (error) => {
+        console.log('Error updating ' + this.kind + ' (' + entity + ')' + ': ' + error);
+      });
+    return updated.share();
   }
 
 }
