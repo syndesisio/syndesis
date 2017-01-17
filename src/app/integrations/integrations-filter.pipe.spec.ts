@@ -5,7 +5,7 @@ import { IntegrationsFilterPipe } from './integrations-filter.pipe';
 
 describe('IntegrationsFilterPipe', () => {
   it('create an instance', () => {
-    let pipe = new IntegrationsFilterPipe();
+    const pipe = new IntegrationsFilterPipe();
     expect(pipe).toBeTruthy();
   });
 });
