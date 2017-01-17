@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 
+import { AuthGuard } from './auth-guard.service';
+
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'dashboard', loadChildren: '../dashboard/dashboard.module#DashboardModule' },
-  { path: 'integrations', loadChildren: '../integrations/integrations.module#IntegrationsModule' },
-  { path: 'templates', loadChildren: '../templates/templates-routes.module#TemplateRoutesModule' },
-  { path: 'connections', loadChildren: '../connections/connections.module#ConnectionsModule' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full', canActivate: [AuthGuard] },
+  { path: 'dashboard', loadChildren: '../dashboard/dashboard.module#DashboardModule', canActivate: [AuthGuard] },
+  { path: 'integrations', loadChildren: '../integrations/integrations.module#IntegrationsModule', canActivate: [AuthGuard] },
+  { path: 'templates', loadChildren: '../templates/templates-routes.module#TemplateRoutesModule', canActivate: [AuthGuard] },
+  { path: 'connections', loadChildren: '../connections/connections.module#ConnectionsModule', canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -15,6 +17,9 @@ const routes: Routes = [
   ],
   exports: [
     RouterModule,
+  ],
+  providers: [
+    AuthGuard,
   ],
 })
 export class AppRoutingModule { }

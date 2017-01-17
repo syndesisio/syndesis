@@ -1,4 +1,4 @@
-<header>
+<header *ngIf="loggedIn">
 
   <!-- Navbar: Logged Out -->
   <nav class="navbar navbar-fixed-top navbar-light loggedOut" *ngIf="!loggedIn">
@@ -36,7 +36,7 @@
         <!-- User Dropdown -->
         <li class="dropdown">
           <a class="dropdown-toggle nav-item-iconic" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span title="Username" class="fa pficon-user"></span>&nbsp;Clint Eastwood
+            <span title="Username" class="fa pficon-user"></span>&nbsp;{{(userService.user | async)?.fullName}}
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -51,7 +51,7 @@
 </header>
 
 <!-- Sidebar -->
-<div class="nav-pf-vertical hidden-icons-pf">
+<div class="nav-pf-vertical hidden-icons-pf" *ngIf="loggedIn">
   <ul class="list-group">
     <li class="list-group-item" routerLinkActive="active">
       <a [routerLink]=" ['dashboard'] ">

@@ -1,14 +1,30 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async } from '@angular/core/testing';
+import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 import { AppComponent } from './app.component';
+import { ConfigService } from './config.service';
+import { UserService } from './common/user.service';
 
 describe('AppComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([])],
+      imports: [RouterTestingModule.withRoutes([]), OAuthModule.forRoot()],
+      providers: [
+        ConfigService,
+        UserService,
+        MockBackend,
+        { provide: RequestOptions, useClass: BaseRequestOptions },
+        {
+          provide: Http, useFactory: (backend, options) => {
+            return new Http(backend, options);
+          }, deps: [MockBackend, RequestOptions],
+        },
+      ],
       declarations: [
         AppComponent,
       ],
