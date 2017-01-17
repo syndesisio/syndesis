@@ -17,12 +17,15 @@ package com.redhat.ipaas.api.v1.rest;
 
 import com.redhat.ipaas.api.v1.model.Component;
 import com.redhat.ipaas.api.v1.model.Integration;
+import com.redhat.ipaas.api.v1.model.ListResult;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import javax.persistence.EntityExistsException;
-import java.util.Collection;
+
+import java.util.List;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -42,11 +45,26 @@ public class DataManagerTest {
 
     @Test
     public void getComponents() {
-        Collection<Component> components = dataManager.fetchAll(Component.KIND);
-        for (Component component : components) {
+        ListResult<Component> components = dataManager.fetchAll(Component.KIND);
+        for (Component component : components.getItems()) {
             System.out.print(component.getId().get() + ",");
         }
-        assertTrue(components.size() > 10);
+        assertTrue(components.getTotalCount() > 10);
+        assertTrue(components.getItems().size() > 10);
+        assertEquals(components.getTotalCount(), components.getItems().size());
+    }
+
+    @Test
+    public void getComponentsWithFilterFunction() {
+        ListResult<Component> components = dataManager.fetchAll(
+            Component.KIND,
+            (Function<List<Component>, List<Component>>) componentList -> componentList.subList(0, 1)
+        );
+        for (Component component : components.getItems()) {
+            System.out.print(component.getId().get() + ",");
+        }
+        assertTrue(components.getTotalCount() > 10);
+        assertEquals(1, components.getItems().size());
     }
 
     @Test
