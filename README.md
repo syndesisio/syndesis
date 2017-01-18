@@ -119,17 +119,18 @@ What you need to run this app:
 
 ### Running
 
-After you have installed all dependencies you can now run the app. Run `ng serve` to start a local server which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:4200` (or if you prefer IPv6, then it's `http://[::1]:4200/`).
+After you have installed all dependencies you can now run the app. Run `npm start` to start a local server which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:4200` (or if you prefer IPv6, then it's `http://[::1]:4200/`).
 
 #### Development
 
-```bash
-ng serve
+```
+npm start
 ```
 
 #### Production
+Requires having `angular-cli` installed globally.
 
-```bash
+```
 ng serve --prod -aot
 ```
 
@@ -139,13 +140,14 @@ For a list of common commands, see [here](/docs/commands.md).
 
 ### Watch and Run Tests
 
-```bash
-ng test
+```
+npm test
 ```
 
 ### Run Tests
+Requires having `angular-cli` installed globally.
 
-```bash
+```
 ng test --watch=false
 ```
 
