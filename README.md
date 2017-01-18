@@ -12,7 +12,6 @@ Included in this stack are the following technologies:
 * Framework: [Angular 2](https://angular.io/)
 * Module Bundler: [Angular CLI](https://cli.angular.io)
 * Design Patterns: [PatternFly](https://www.patternfly.org/)
-* Data Visualization: [C3](http://c3js.org/)
 * Testing: [Jasmine](http://jasmine.github.io/) (BDD Unit Test Framework), [Karma](https://karma-runner.github.io/1.0/index.html) (Unit Test Runner), [Protractor](http://www.protractortest.org/#/) (E2E Framework), [Istanbul](https://github.com/gotwarlost/istanbul) (Code Coverage)
 * Linting: [TsLint](https://github.com/palantir/tslint) (Linting for TypeScript)
 * Logging: [js-Logger](https://github.com/jonnyreeves/js-logger) (JavaScript Logger)
