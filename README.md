@@ -1,10 +1,10 @@
-# Red Hat iPaaS Client
+# Red Hat iPaaS UI
 
-[![CircleCI](https://circleci.com/gh/redhat-ipaas/ipaas-client.svg?style=svg)](https://circleci.com/gh/redhat-ipaas/ipaas-client)
+[![CircleCI](https://circleci.com/gh/redhat-ipaas/ipaas-ui.svg?style=svg)](https://circleci.com/gh/redhat-ipaas/ipaas-ui)
 
-The front end application for Red Hat iPaaS - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages Red Hat's existing product architecture using OpenShift Online/Dedicated and Fuse Integration Services.
+The front end application or UI for Red Hat iPaaS - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages Red Hat's existing product architecture using OpenShift Online/Dedicated and Fuse Integration Services.
 
-For the middle tier API that this client communicates with, please see [this](https://github.com/redhat-ipaas/ipaas-api-java) repo.
+For the middle tier API that this client communicates with, please see [this](https://github.com/redhat-ipaas/ipaas-api) repo.
 
 Included in this stack are the following technologies:
 
@@ -26,10 +26,10 @@ Clone/download the repo start editing `app.component.ts` inside [`/src/app/`](/s
 
 ```bash
 # clone our repo
-git clone https://github.com/redhat-ipaas/ipaas-client.git
+git clone https://github.com/redhat-ipaas/ipaas-ui.git
 
 # change directory to iPaaS
-cd ipaas-client
+cd ipaas-ui
 
 # install the dependencies
 yarn
