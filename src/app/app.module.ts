@@ -15,6 +15,18 @@ import { ConfigService, configServiceInitializer } from './config.service';
 
 export function restangularProviderConfigurer(restangularProvider: any, config: ConfigService) {
   restangularProvider.setBaseUrl(config.getSettings().apiEndpoint);
+  restangularProvider.addResponseInterceptor((data: any, operation: string) => {
+    if (operation === 'getList' && Array.isArray(data.items)) {
+      const pagingData = data.items;
+      if (!!pagingData.totalCount) {
+        pagingData.totalCount = data.totalCount;
+      } else {
+        pagingData.totalCount = pagingData.length;
+      }
+      return pagingData;
+    }
+    return data;
+  });
 }
 
 @NgModule({
