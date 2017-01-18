@@ -24,9 +24,6 @@ import org.junit.Test;
 
 import javax.persistence.EntityExistsException;
 
-import java.util.List;
-import java.util.function.Function;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -58,7 +55,7 @@ public class DataManagerTest {
     public void getComponentsWithFilterFunction() {
         ListResult<Component> components = dataManager.fetchAll(
             Component.KIND,
-            (Function<List<Component>, List<Component>>) componentList -> componentList.subList(0, 1)
+            resultList -> new ListResult.Builder<Component>().createFrom(resultList).items(resultList.getItems().subList(0, 1)).build()
         );
         for (Component component : components.getItems()) {
             System.out.print(component.getId().get() + ",");

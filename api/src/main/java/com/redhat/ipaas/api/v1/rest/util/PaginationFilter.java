@@ -15,6 +15,8 @@
  */
 package com.redhat.ipaas.api.v1.rest.util;
 
+import com.redhat.ipaas.api.v1.model.ListResult;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -24,7 +26,7 @@ import java.util.function.Function;
  *
  * @param <T> The type of the elements in the filtered list.
  */
-public class PaginationFilter<T> implements Function<List<T>, List<T>> {
+public class PaginationFilter<T> implements Function<ListResult<T>, ListResult<T>> {
 
     private final int startIndex;
     private final int endIndex;
@@ -49,15 +51,18 @@ public class PaginationFilter<T> implements Function<List<T>, List<T>> {
     /**
      * Applies the filter to the provided list.
      *
-     * @param list The list to filter.
+     * @param result The result to filter.
      * @return The relevant page of the provided list. Returns an empty list if the requested page would be outside of the provided list range.
      */
     @Override
-    public List<T> apply(List<T> list) {
+    public ListResult<T> apply(ListResult<T> result) {
+        List<T> list = result.getItems();
         if (startIndex >= list.size()) {
-            return Collections.emptyList();
+            list = Collections.emptyList();
+        } else {
+            list = list.subList(startIndex, Math.min(list.size(), endIndex));
         }
-        return list.subList(startIndex, Math.min(list.size(), endIndex));
+        return new ListResult.Builder<T>().createFrom(result).items(list).build();
     }
 
 }
