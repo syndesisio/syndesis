@@ -35,7 +35,7 @@ cd ipaas-client
 yarn
 
 # start the server
-ng serve
+npm start
 ```
 
 Go to [http://0.0.0.0:4200](http://0.0.0.0:4200) or [http://localhost:4200](http://localhost:4200) in your browser.
