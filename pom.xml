@@ -27,10 +27,10 @@
   </parent>
 
   <groupId>com.redhat.ipaas</groupId>
-  <artifactId>ipaas-api-java-project</artifactId>
+  <artifactId>ipaas-rest-project</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>iPaaS API Java :: Project</name>
+  <name>iPaaS REST :: Project</name>
 
   <inceptionYear>2016</inceptionYear>
 

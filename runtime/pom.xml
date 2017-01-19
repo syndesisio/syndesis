@@ -21,12 +21,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.redhat.ipaas</groupId>
-    <artifactId>ipaas-api-java-project</artifactId>
+    <artifactId>ipaas-rest-project</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>runtime</artifactId>
-  <name>iPaaS API Java :: Runtime</name>
+  <name>iPaaS REST :: Runtime</name>
   <packaging>jar</packaging>
 
   <properties>
