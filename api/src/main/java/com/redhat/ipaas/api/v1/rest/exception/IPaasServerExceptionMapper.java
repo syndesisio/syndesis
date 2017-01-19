@@ -22,9 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Provider
-public class ClassNotFoundExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<ClassNotFoundException> {
+public class IPaasServerExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<ClassNotFoundException> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ClassNotFoundExceptionMapper.class);
+	private static final Logger LOG = LoggerFactory.getLogger(IPaasServerExceptionMapper.class);
 	
 	@Override
 	public Response toResponse(ClassNotFoundException e) {
