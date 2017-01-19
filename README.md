@@ -34,7 +34,10 @@ cd ipaas-ui
 yarn
 
 # start the server
-npm start
+yarn start
+
+# or start the server with angular-cli:
+ng serve
 ```
 
 Go to [http://0.0.0.0:4200](http://0.0.0.0:4200) or [http://localhost:4200](http://localhost:4200) in your browser.
@@ -107,31 +110,34 @@ What you need to run this app:
 
 * `node` (`brew install node` for OS X users)
 * `yarn` (see [https://yarnpkg.com/en/docs/install](https://yarnpkg.com/en/docs/install))
+* `angular-cli` (optional, but useful for development. see [here](https://cli.angular.io/))
 * Ensure you're running the latest versions Node `v6.x.x`+ and Yarn
+
+You do *not* need to install Angular CLI globally, but we recommend it if you'd like to use the [convenient commands](https://cli.angular.io/reference.pdf) it provides, or any of the `ng` commands we reference below.
 
 ### Installing
 
 * `fork` the ipaas repo
 * `clone` your fork
 * `yarn` to install all dependencies
-* `ng serve` to start the dev server
+* `yarn start` or `ng serve` to start the dev server
 
 ### Running
 
-After you have installed all dependencies you can now run the app. Run `npm start` to start a local server which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:4200` (or if you prefer IPv6, then it's `http://[::1]:4200/`).
+After you have installed all dependencies you can now run the app. Run `yarn start` or `ng serve` to start a local server which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:4200` (or if you prefer IPv6, then it's `http://[::1]:4200/`).
 
 #### Development
 
-```
-npm start
-```
+`yarn start`
+
+Or, with angular-cli:
+
+`ng serve`
 
 #### Production
-Requires having `angular-cli` installed globally.
+*Requires having `angular-cli` installed globally.*
 
-```
-ng serve --prod -aot
-```
+`ng serve --prod -aot`
 
 For a list of common commands, see [here](/docs/commands.md).
 
@@ -139,16 +145,11 @@ For a list of common commands, see [here](/docs/commands.md).
 
 ### Watch and Run Tests
 
-```
-npm test
-```
+`ng test` or `yarn test`
 
-### Run Tests
-Requires having `angular-cli` installed globally.
+### Run Tests without Watch
 
-```
-ng test --watch=false
-```
+`ng test --watch=false`
 
 For a list of common commands, see [here](/docs/commands.md).
 
