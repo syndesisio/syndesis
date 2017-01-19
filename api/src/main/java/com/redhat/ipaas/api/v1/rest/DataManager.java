@@ -120,10 +120,8 @@ public class DataManager {
                 idVal = id.get();
             }
             entityMap.put(idVal, entity);
-        } catch (ClassNotFoundException e) {
-            throw new IPaasServerException(e.getMessage(),e);
-        } catch (IOException e) {
-            throw new IPaasServerException(e.getMessage(),e);
+        } catch (Exception e) {
+            IPaasServerException.launderThrowable(e);
         }
     }
 
