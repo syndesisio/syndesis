@@ -49,7 +49,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -187,14 +186,16 @@ public class DataManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends WithId> ListResult<T> fetchAll(String model, Function<List<T>, List<T>>... operators) {
+    public <T extends WithId> ListResult<T> fetchAll(String model, Function<ListResult<T>, ListResult<T>>... operators) {
         Map<String, WithId> entityMap = cache.computeIfAbsent(model, k -> new HashMap<>());
-        List<T> result = new ArrayList<>((Collection<? extends T>) entityMap.values());
-        int totalCount = result.size();
-        for (Function<List<T>, List<T>> operator : operators) {
+        ListResult<T> result = new ListResult.Builder<T>()
+            .items((Collection<T>) entityMap.values())
+            .totalCount(entityMap.values().size())
+            .build();
+        for (Function<ListResult<T>, ListResult<T>> operator : operators) {
             result = operator.apply(result);
         }
-        return new ListResult.Builder<T>().totalCount(totalCount).items(result).build();
+        return result;
     }
 
     public <T> T fetch(String model, String id) {

@@ -15,15 +15,13 @@
  */
 package com.redhat.ipaas.api.v1.rest.util;
 
+import com.redhat.ipaas.api.v1.model.ListResult;
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
-
-import org.junit.Test;
-
-import com.redhat.ipaas.api.v1.rest.util.ReflectiveSorter;
-import com.redhat.ipaas.api.v1.rest.util.SortOptions;
 
 import static org.junit.Assert.assertEquals;
 
@@ -88,8 +86,9 @@ public class ReflectiveSorterTest {
 
     @Test
     public void noParams() {
-        List<TestPersonInterface> toSort = getTestData();
-        Function<List<TestPersonInterface>, List<TestPersonInterface>> operator = new ReflectiveSorter<>(TestPersonInterface.class, getOptions(null, null));
+        ListResult<TestPersonInterface> toSort = new ListResult.Builder<TestPersonInterface>().items(getTestData()).totalCount(getTestData().size()).build();
+        Function<ListResult<TestPersonInterface>, ListResult<TestPersonInterface>> operator =
+            new ReflectiveSorter<>(TestPersonInterface.class, getOptions(null, null));
         operator.apply(toSort);
 
         String[] expectedNames = {
@@ -100,8 +99,9 @@ public class ReflectiveSorterTest {
         };
 
         for (int i = 0; i < expectedNames.length; i++) {
-            assertEquals(toSort.get(i).getLastName(), expectedNames[i]);
+            assertEquals(toSort.getItems().get(i).getLastName(), expectedNames[i]);
         }
+        assertEquals(getTestData().size(), toSort.getTotalCount());
 
     }
 

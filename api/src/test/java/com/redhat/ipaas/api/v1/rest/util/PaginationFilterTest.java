@@ -15,6 +15,7 @@
  */
 package com.redhat.ipaas.api.v1.rest.util;
 
+import com.redhat.ipaas.api.v1.model.ListResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -52,7 +53,7 @@ public class PaginationFilterTest {
     @Test
     public void apply() throws Exception {
         try {
-            List<Integer> filtered = new PaginationFilter<Integer>(new PaginationOptions() {
+            ListResult<Integer> filtered = new PaginationFilter<Integer>(new PaginationOptions() {
                 @Override
                 public int getPage() {
                     return PaginationFilterTest.this.parameter.page;
@@ -62,9 +63,10 @@ public class PaginationFilterTest {
                 public int getPerPage() {
                     return PaginationFilterTest.this.parameter.perPage;
                 }
-            }).apply(parameter.inputList);
+            }).apply(new ListResult.Builder<Integer>().items(parameter.inputList).totalCount(parameter.inputList.size()).build());
 
-            assertEquals(parameter.outputList, filtered);
+            assertEquals(parameter.outputList, filtered.getItems());
+            assertEquals(parameter.inputList.size(), filtered.getTotalCount());
         } catch (Exception e) {
             if (parameter.expectedException == null) {
                 throw e;

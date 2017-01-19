@@ -17,7 +17,7 @@ package com.redhat.ipaas.api.v1.model;
 
 import org.immutables.value.Value;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Holds the result of a list, including the total count of elements. This is used by the client for working out paging
@@ -26,7 +26,7 @@ import java.util.Collection;
  * @param <T> The type of the elements in the returned list.
  */
 @Value.Immutable
-public interface ListResult<T extends WithId> {
+public interface ListResult<T> {
 
     /**
      *
@@ -38,9 +38,9 @@ public interface ListResult<T extends WithId> {
      *
      * @return The filtered list of items. Depending on operations, this will contain at most getTotalCount elements.
      */
-    Collection<T> getItems();
+    List<T> getItems();
 
-    class Builder<T extends WithId> extends ImmutableListResult.Builder<T> {
+    class Builder<T> extends ImmutableListResult.Builder<T> {
     }
 
 }

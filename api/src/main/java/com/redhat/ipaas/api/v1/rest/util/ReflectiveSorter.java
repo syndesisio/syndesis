@@ -15,6 +15,8 @@
  */
 package com.redhat.ipaas.api.v1.rest.util;
 
+import com.redhat.ipaas.api.v1.model.ListResult;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Comparator;
@@ -27,17 +29,18 @@ import java.util.function.Function;
  * @author roland
  * @since 13/12/16
  */
-public class ReflectiveSorter<T> implements Function<List<T>, List<T>>, Comparator<T> {
+public class ReflectiveSorter<T> implements Function<ListResult<T>, ListResult<T>>, Comparator<T> {
 
     private Comparator<T> delegate;
 
     @Override
-    public List<T> apply(List<T> list) {
+    public ListResult<T> apply(ListResult<T> result) {
+        List<T> list = result.getItems();
         if (delegate != null) {
             // We are sorting inline when a delegate is given. Otherwise its a no-op
             list.sort(this);
         }
-        return list;
+        return new ListResult.Builder<T>().createFrom(result).items(list).build();
     }
 
     public ReflectiveSorter(Class<T> modelClass, SortOptions options) {
