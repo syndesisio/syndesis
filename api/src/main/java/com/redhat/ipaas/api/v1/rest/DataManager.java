@@ -48,7 +48,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -59,16 +59,16 @@ import java.util.function.Function;
 @ApplicationScoped
 public class DataManager {
 
-    private static Logger logger = LoggerFactory.getLogger(DataManager.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class.getName());
 
-    private ObjectMapper mapper = ObjectMapperHolder.OBJECT_MAPPER;
+    private ObjectMapper mapper;
+    private Cache<String, Map<String, WithId>> cache;
 
     // Inject optional data file by field injection.
     @Inject
     @ConfigurationValue("deployment.file")
     private String dataFileName;
 
-    private Cache<String, Map<String, WithId>> cache;
 
     // This is needed by CDI to create a proxy, but the actual instance created will use the constructor below which
     // has properly configured constructor injection.
@@ -76,14 +76,15 @@ public class DataManager {
     }
 
     // Constructor to help with testing.
-    public DataManager(String dataFileName, Cache<String, Map<String, WithId>> cache) {
-        this(cache);
+    public DataManager(Cache<String, Map<String, WithId>> cache, ObjectMapper mapper, String dataFileName) {
+        this(cache, mapper);
         this.dataFileName = dataFileName;
     }
 
     // Inject mandatory via constructor injection.
     @Inject
-    public DataManager(Cache<String, Map<String, WithId>> cache) {
+    public DataManager(Cache<String, Map<String, WithId>> cache, ObjectMapper mapper) {
+        this.mapper = mapper;
         this.cache = cache;
     }
 
@@ -97,7 +98,7 @@ public class DataManager {
                     addToCache(modelData);
                 }
             } catch (Exception e) {
-                logger.error("Cannot read dummy startup data due to: " + e.getMessage(), e);
+                LOGGER.error("Cannot read dummy startup data due to: " + e.getMessage(), e);
             }
 
         }
@@ -106,9 +107,9 @@ public class DataManager {
     public void addToCache(ModelData modelData) {
         try {
             Class<? extends WithId> clazz;
-            clazz = getClass(modelData.getModel());
-            Map<String, WithId> entityMap = cache.computeIfAbsent(modelData.getModel().toLowerCase(), k -> new HashMap<>());
-            logger.debug(modelData.getModel() + ":" + modelData.getData());
+            clazz = getClass(modelData.getKind());
+            Map<String, WithId> entityMap = cache.computeIfAbsent(modelData.getKind().toLowerCase(), k -> new HashMap<>());
+            LOGGER.debug(modelData.getKind() + ":" + modelData.getData());
             WithId entity = clazz.cast(mapper.readValue(modelData.getData(), clazz));
             Optional<String> id = entity.getId();
             String idVal;
@@ -141,8 +142,8 @@ public class DataManager {
         }
     }
 
-    public Class<? extends WithId> getClass(String model) throws ClassNotFoundException {
-        switch (model.toLowerCase()) {
+    public Class<? extends WithId> getClass(String kind) throws ClassNotFoundException {
+        switch (kind.toLowerCase()) {
             case "component":
                 return Component.class;
             case "componentgroup":
@@ -182,33 +183,34 @@ public class DataManager {
             default:
                 break;
         }
-        throw new ClassNotFoundException("No class found for model " + model);
+        throw new ClassNotFoundException("No class found for model " + kind);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends WithId> ListResult<T> fetchAll(String model, Function<ListResult<T>, ListResult<T>>... operators) {
-        Map<String, WithId> entityMap = cache.computeIfAbsent(model, k -> new HashMap<>());
+    public <T extends WithId> ListResult<T> fetchAll(String kind, Function<ListResult<T>, ListResult<T>>... operators) {
+        Map<String, WithId> entityMap = cache.computeIfAbsent(kind, k -> new HashMap<>());
         ListResult<T> result = new ListResult.Builder<T>()
             .items((Collection<T>) entityMap.values())
             .totalCount(entityMap.values().size())
             .build();
+
         for (Function<ListResult<T>, ListResult<T>> operator : operators) {
             result = operator.apply(result);
         }
         return result;
     }
 
-    public <T> T fetch(String model, String id) {
-        Map<String, WithId> entityMap = cache.computeIfAbsent(model, k -> new HashMap<>());
+    public <T> T fetch(String kind, String id) {
+        Map<String, WithId> entityMap = cache.computeIfAbsent(kind, k -> new HashMap<>());
         if (entityMap.get(id) == null) {
-            throw new EntityNotFoundException("Can not find " + model + " with id " + id);
+            throw new EntityNotFoundException("Can not find " + kind + " with id " + id);
         }
         return (T) entityMap.get(id);
     }
 
     public <T extends WithId> T create(T entity) {
-        String model = entity.kind();
-        Map<String, WithId> entityMap = cache.computeIfAbsent(model, k -> new HashMap<>());
+        String kind = entity.kind();
+        Map<String, WithId> entityMap = cache.computeIfAbsent(kind, k -> new HashMap<>());
         Optional<String> id = entity.getId();
         String idVal;
         if (!id.isPresent()) {
@@ -218,7 +220,7 @@ public class DataManager {
             idVal = id.get();
             if (entityMap.keySet().contains(idVal)) {
                 throw new EntityExistsException("There already exists a "
-                    + model + " with id " + idVal);
+                    + kind + " with id " + idVal);
             }
         }
         entityMap.put(idVal, entity);
@@ -242,12 +244,13 @@ public class DataManager {
         entityMap.put(idVal, entity);
     }
 
-    public void delete(String model, String id) {
-        Map<String, WithId> entityMap = cache.get(model);
+
+    public void delete(String kind, String id) {
+        Map<String, WithId> entityMap = cache.get(kind);
         if (id == null || id.equals(""))
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
         if (entityMap == null || !entityMap.containsKey(id))
-            throw new EntityNotFoundException("Can not find " + model + " with id " + id);
+            throw new EntityNotFoundException("Can not find " + kind + " with id " + id);
         //TODO interact with the back-end system
         entityMap.remove(id);
     }
