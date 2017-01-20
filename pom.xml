@@ -112,6 +112,8 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
+    <kubernetes.client.version>1.4.33</kubernetes.client.version>
+    <mockwebserver.version>0.0.4</mockwebserver.version>
     <wildfly.swarm.version>2016.11.0</wildfly.swarm.version>
     <version.infinispan>9.0.0.Alpha4</version.infinispan>
     <immutables.version>2.4.0</immutables.version>
@@ -147,6 +149,14 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- Import Boms -->
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-client-bom-with-deps</artifactId>
+        <version>${kubernetes.client.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
       <dependency>
         <groupId>org.wildfly.swarm</groupId>
         <artifactId>bom-all</artifactId>
@@ -169,6 +179,7 @@
         <type>pom</type>
       </dependency>
 
+      <!-- Internal Dependencies -->
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
         <artifactId>api</artifactId>
@@ -216,12 +227,29 @@
         <version>${slf4j.api.version}</version>
       </dependency>
 
+      <!-- Testing Dependencies -->
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
+
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-client</artifactId>
+        <version>${kubernetes.client.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>mockwebserver</artifactId>
+        <version>${mockwebserver.version}</version>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

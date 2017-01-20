@@ -17,7 +17,6 @@ package com.redhat.ipaas.api.v1.rest;
 
 import javax.inject.Inject;
 
-import com.redhat.ipaas.api.v1.rest.DataManager;
 
 public class BaseHandler implements WithDataManager {
 

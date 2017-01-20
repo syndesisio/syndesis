@@ -23,7 +23,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityExistsException;
+
+import io.fabric8.kubernetes.api.model.ConfigMap;
+import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
+import io.fabric8.kubernetes.server.mock.KubernetesMockServer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -36,9 +43,16 @@ public class DataManagerTest {
     private ObjectMapper objectMapper = new ObjectMapperProducer().create();
     private DataManager dataManager = null;
 
+    private final List<DataAccessObject> dataAccessObjects = new ArrayList<>();
+
+    private static final KubernetesMockServer MOCK = new KubernetesMockServer();
+
+
     @Before
-    public void setupCache() {
-        dataManager = new DataManager(infinispan.getCaches(), objectMapper, "com/redhat/ipaas/api/v1/deployment.json");
+    public void setup() {
+        dataAccessObjects.add(new IntegrationDAO(MOCK.createClient()));
+        //Create Data Manager
+        dataManager = new DataManager(infinispan.getCaches(), objectMapper, dataAccessObjects, "com/redhat/ipaas/api/v1/deployment.json");
         dataManager.init();
     }
 
@@ -75,18 +89,44 @@ public class DataManagerTest {
 
     @Test(expected = EntityExistsException.class)
     public void createIntegration() {
+        ConfigMap configMap1 = new ConfigMapBuilder()
+            .withNewMetadata()
+            .withName("integration1")
+            .addToLabels(Integration.LABEL_ID, "id1")
+            .addToLabels(Integration.LABEL_NAME, "integration one")
+            .endMetadata()
+            .addToData(IntegrationDAO.CONFIGURATION_KEY, "someconfig")
+            .build();
+
+
+        MOCK.expect().post().withPath("/api/v1/namespaces/test/configmaps").andReturn(201, configMap1).once();
+        MOCK.expect().get().withPath("/api/v1/namespaces/test/configmaps/integration1").andReturn(201, configMap1).once();
+
         Integration integration = new Integration.Builder().name("new integration name").build();
         integration = dataManager.create(integration);
         assertTrue("A new ID should be created", integration.getId().isPresent());
-        System.out.println("id=" + integration.getId().get());
 
         dataManager.create(integration);
-        fail("We just created the entity with this id, so this should fail");
+        fail("We just created the entity with this id:["+ integration.getId().orElse("")+"], so this should fail");
     }
 
     @Test
     public void updateIntegration() {
-        Integration integration = new Integration.Builder().name("new integration name").build();
+        ConfigMap configMap2 = new ConfigMapBuilder()
+            .withNewMetadata()
+            .withName("integration2")
+            .addToLabels(Integration.LABEL_ID, "id2")
+            .addToLabels(Integration.LABEL_NAME, "integration two")
+            .endMetadata()
+            .addToData(IntegrationDAO.CONFIGURATION_KEY, "someconfig")
+            .build();
+
+
+        MOCK.expect().post().withPath("/api/v1/namespaces/test/configmaps").andReturn(201, configMap2).once();
+        MOCK.expect().get().withPath("/api/v1/namespaces/test/configmaps/integration2").andReturn(200, configMap2).once();
+        MOCK.expect().put().withPath("/api/v1/namespaces/test/configmaps/integration2").andReturn(200, configMap2).once();
+
+        Integration integration = new Integration.Builder().id("integration2").name("new integration name").build();
         integration = dataManager.create(integration);
         assertTrue("A new ID should be created", integration.getId().isPresent());
         integration = new Integration.Builder().createFrom(integration).name("new updated name").build();

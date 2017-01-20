@@ -50,6 +50,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +59,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @ApplicationScoped
-public class DataManager {
+public class DataManager implements DataAccessObjectRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class.getName());
 
@@ -70,6 +71,8 @@ public class DataManager {
     @ConfigurationValue("deployment.file")
     private String dataFileName;
 
+    private final List<DataAccessObject> dataAccessObjects = new ArrayList<>();
+    private final Map<Class, DataAccessObject> dataAccessObjectMapping = new HashMap<>();
 
     // This is needed by CDI to create a proxy, but the actual instance created will use the constructor below which
     // has properly configured constructor injection.
@@ -77,16 +80,19 @@ public class DataManager {
     }
 
     // Constructor to help with testing.
-    public DataManager(CacheContainer caches, ObjectMapper mapper, String dataFileName) {
-        this(caches, mapper);
+    public DataManager(CacheContainer caches, ObjectMapper mapper, List<DataAccessObject> dataAccessObjects, String dataFileName) {
+        this(caches, mapper, dataAccessObjects);
         this.dataFileName = dataFileName;
     }
 
     // Inject mandatory via constructor injection.
     @Inject
-    public DataManager(CacheContainer caches, ObjectMapper mapper) {
+    public DataManager(CacheContainer caches, ObjectMapper mapper, List<DataAccessObject> dataAccessObjects) {
         this.mapper = mapper;
         this.caches = caches;
+        if (dataAccessObjects != null) {
+            this.dataAccessObjects.addAll(dataAccessObjects);
+        }
     }
 
     @PostConstruct
@@ -99,9 +105,12 @@ public class DataManager {
                     addToCache(modelData);
                 }
             } catch (Exception e) {
-                LOGGER.error("Cannot read dummy startup data due to: " + e.getMessage(), e);
+                throw new IllegalStateException("Cannot read dummy startup data due to: " + e.getMessage(), e);
             }
+        }
 
+        for (DataAccessObject dataAccessObject : dataAccessObjects) {
+            registerDataAccessObject(dataAccessObject);
         }
     }
 
@@ -144,7 +153,7 @@ public class DataManager {
         }
     }
 
-    public Class<? extends WithId> getClass(String kind) throws ClassNotFoundException {
+    public Class<? extends WithId> getClass(String kind) {
         switch (kind.toLowerCase()) {
             case "component":
                 return Component.class;
@@ -185,15 +194,16 @@ public class DataManager {
             default:
                 break;
         }
-        throw new ClassNotFoundException("No class found for model " + kind);
+        throw IPaasServerException.launderThrowable(new IllegalArgumentException("No matching class found for model " + kind));
     }
 
     @SuppressWarnings("unchecked")
     public <T extends WithId> ListResult<T> fetchAll(String kind, Function<ListResult<T>, ListResult<T>>... operators) {
-        Map<String, WithId> entityMap = caches.getCache(kind);
+        Map<String, WithId> cache = caches.getCache(kind);
+
         ListResult<T> result = new ListResult.Builder<T>()
-            .items((Collection<T>) entityMap.values())
-            .totalCount(entityMap.values().size())
+            .items((Collection<T>) cache.values())
+            .totalCount(cache.values().size())
             .build();
 
         for (Function<ListResult<T>, ListResult<T>> operator : operators) {
@@ -202,12 +212,9 @@ public class DataManager {
         return result;
     }
 
-    public <T> T fetch(String kind, String id) {
+    public <T extends WithId> T fetch(String kind, String id) {
         Map<String, WithId> cache = caches.getCache(kind);
-        if (cache.get(id) == null) {
-            throw new EntityNotFoundException("Can not find " + kind + " with id " + id);
-        }
-        return (T) cache.get(id);
+        return (T) cache.computeIfAbsent(id, i -> doWithDataAccessObject(kind, d -> (T) d.fetch(i)));
     }
 
     public <T extends WithId> T create(T entity) {
@@ -225,36 +232,68 @@ public class DataManager {
                     + kind + " with id " + idVal);
             }
         }
-        cache.put(idVal, entity);
-        //TODO interact with the back-end system
+
+        T finalEntity = entity;
+        cache.put(idVal, (T) doWithDataAccessObject(kind, d -> d.create(finalEntity)));
         return entity;
     }
 
     public void update(WithId entity) {
-        String model = entity.kind();
-        Map<String, WithId> cache = caches.getCache(model);
+        String kind = entity.kind();
+        Map<String, WithId> cache = caches.getCache(kind);
+
         Optional<String> id = entity.getId();
         if (!id.isPresent()) {
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
         }
+
         String idVal = id.get();
-        if (cache == null || !cache.containsKey(idVal)) {
-            throw new EntityNotFoundException("Can not find " + model + " with id " + idVal);
+        if (!cache.containsKey(idVal)) {
+            throw new EntityNotFoundException("Can not find " + kind + " with id " + idVal);
         }
-        //TODO 1. properly merge the data ? + add data validation in the REST Resource
-        //TODO 2. interact with the back-end system
+
+        doWithDataAccessObject(kind, d -> d.update(entity));
         cache.put(idVal, entity);
+        //TODO 1. properly merge the data ? + add data validation in the REST Resource
     }
 
 
-    public void delete(String kind, String id) {
-        Map<String, WithId> entityMap = caches.getCache(kind);
+    public boolean delete(String kind, String id) {
+        Map<String, WithId> cache = caches.getCache(kind);
         if (id == null || id.equals(""))
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
-        if (entityMap == null || !entityMap.containsKey(id))
+        if (!cache.containsKey(id))
             throw new EntityNotFoundException("Can not find " + kind + " with id " + id);
-        //TODO interact with the back-end system
-        entityMap.remove(id);
+
+        WithId entity = cache.get(id);
+        if (entity != null && doWithDataAccessObject(kind, d -> d.delete(entity))) {
+            cache.remove(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Map<Class, DataAccessObject> getDataAccessObjectMapping() {
+        return dataAccessObjectMapping;
+    }
+
+
+    /**
+     * Perform a simple action if a {@link DataAccessObject} for the specified kind exists.
+     * This is just a way to avoid, duplivating the dao lookup and chekcs, which are going to change.
+     * @param kind          The kind of the {@link DataAccessObject}.
+     * @param function      The function to perfom on the {@link DataAccessObject}.
+     * @param <O>           The return type.
+     * @return              The outcome of the function.
+     */
+    private <O> O doWithDataAccessObject(String kind, Function<DataAccessObject, O> function) {
+        DataAccessObject dataAccessObject = getDataAccessObject(getClass(kind));
+        if (dataAccessObject != null) {
+            return function.apply(dataAccessObject);
+        }
+        return null;
     }
 
 }
