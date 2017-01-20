@@ -1,8 +1,8 @@
 # Red Hat iPaaS API
 
-[![CircleCI](https://img.shields.io/circleci/project/github/redhat-ipaas/ipaas-api-java.svg)](https://circleci.com/gh/redhat-ipaas/ipaas-api-java)
-[![Maven Central](https://img.shields.io/maven-central/v/com.redhat.ipaas/ipaas-api-java.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22redhat-ipaas%22%20AND%20a%3A%22ipaas-api-java%22)
-[![Dependency Status](https://dependencyci.com/github/redhat-ipaas/ipaas-api-java/badge)](https://dependencyci.com/github/redhat-ipaas/ipaas-api-java)
+[![CircleCI](https://img.shields.io/circleci/project/github/redhat-ipaas/ipaas-rest.svg)](https://circleci.com/gh/redhat-ipaas/ipaas-rest)
+[![Maven Central](https://img.shields.io/maven-central/v/com.redhat.ipaas/ipaas-rest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22redhat-ipaas%22%20AND%20a%3A%22ipaas-rest%22)
+[![Dependency Status](https://dependencyci.com/github/redhat-ipaas/ipaas-rest/badge)](https://dependencyci.com/github/redhat-ipaas/ipaas-rest)
 
 - [Building](#building)
 - [Running](#run-in-development-mode)
@@ -10,7 +10,7 @@
 - [Endpoints](#endpoints)
 
 ### Swagger
-[![Swagger](http://dgrechka.net/swagger_validator_content_type_proxy.php?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-api-java/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)](https://online.swagger.io/validator/debug?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-api-java/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)
+[![Swagger](http://dgrechka.net/swagger_validator_content_type_proxy.php?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-rest/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)](https://online.swagger.io/validator/debug?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-rest/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)
 
 # Building
 

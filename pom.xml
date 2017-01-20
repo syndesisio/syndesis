@@ -59,10 +59,10 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:redhat-ipaas/ipaas-api-java.git</connection>
-    <developerConnection>scm:git:git@github.com:redhat-ipaas/ipaas-api-java.git
+    <connection>scm:git:git@github.com:redhat-ipaas/ipaas-rest.git</connection>
+    <developerConnection>scm:git:git@github.com:redhat-ipaas/ipaas-rest.git
     </developerConnection>
-    <url>http://github.com/redhat-ipaas/ipaas-api-java/</url>
+    <url>http://github.com/redhat-ipaas/ipaas-rest/</url>
     <tag>${project.version}</tag>
   </scm>
 
