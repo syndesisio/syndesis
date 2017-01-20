@@ -39,6 +39,7 @@ import com.redhat.ipaas.api.v1.model.WithId;
 import com.redhat.ipaas.api.v1.rest.exception.IPaasServerException;
 
 import org.infinispan.Cache;
+import org.infinispan.manager.CacheContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wildfly.swarm.spi.runtime.annotations.ConfigurationValue;
@@ -62,7 +63,7 @@ public class DataManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class.getName());
 
     private ObjectMapper mapper;
-    private Cache<String, Map<String, WithId>> cache;
+    private CacheContainer caches;
 
     // Inject optional data file by field injection.
     @Inject
@@ -76,21 +77,21 @@ public class DataManager {
     }
 
     // Constructor to help with testing.
-    public DataManager(Cache<String, Map<String, WithId>> cache, ObjectMapper mapper, String dataFileName) {
-        this(cache, mapper);
+    public DataManager(CacheContainer caches, ObjectMapper mapper, String dataFileName) {
+        this(caches, mapper);
         this.dataFileName = dataFileName;
     }
 
     // Inject mandatory via constructor injection.
     @Inject
-    public DataManager(Cache<String, Map<String, WithId>> cache, ObjectMapper mapper) {
+    public DataManager(CacheContainer caches, ObjectMapper mapper) {
         this.mapper = mapper;
-        this.cache = cache;
+        this.caches = caches;
     }
 
     @PostConstruct
     public void init() {
-        if (cache.isEmpty() && dataFileName != null) {
+        if (dataFileName != null) {
             ReadApiClientData reader = new ReadApiClientData();
             try {
                 List<ModelData> mdList = reader.readDataFromFile(dataFileName);
@@ -108,18 +109,19 @@ public class DataManager {
         try {
             Class<? extends WithId> clazz;
             clazz = getClass(modelData.getKind());
-            Map<String, WithId> entityMap = cache.computeIfAbsent(modelData.getKind().toLowerCase(), k -> new HashMap<>());
+            Cache<String, WithId> cache = caches.getCache(modelData.getKind().toLowerCase());
+
             LOGGER.debug(modelData.getKind() + ":" + modelData.getData());
             WithId entity = clazz.cast(mapper.readValue(modelData.getData(), clazz));
             Optional<String> id = entity.getId();
             String idVal;
             if (!id.isPresent()) {
-                idVal = generatePK(entityMap);
+                idVal = generatePK(cache);
                 entity = entity.withId(idVal);
             } else {
                 idVal = id.get();
             }
-            entityMap.put(idVal, entity);
+            cache.put(idVal, entity);
         } catch (Exception e) {
             IPaasServerException.launderThrowable(e);
         }
@@ -132,7 +134,7 @@ public class DataManager {
      * @param entityMap
      * @return
      */
-    public String generatePK(Map<String, WithId> entityMap) {
+    public String generatePK(Cache<String, WithId> entityMap) {
         int counter = 1;
         while (true) {
             String pk = String.valueOf(entityMap.size() + counter++);
@@ -188,7 +190,7 @@ public class DataManager {
 
     @SuppressWarnings("unchecked")
     public <T extends WithId> ListResult<T> fetchAll(String kind, Function<ListResult<T>, ListResult<T>>... operators) {
-        Map<String, WithId> entityMap = cache.computeIfAbsent(kind, k -> new HashMap<>());
+        Map<String, WithId> entityMap = caches.getCache(kind);
         ListResult<T> result = new ListResult.Builder<T>()
             .items((Collection<T>) entityMap.values())
             .totalCount(entityMap.values().size())
@@ -201,52 +203,52 @@ public class DataManager {
     }
 
     public <T> T fetch(String kind, String id) {
-        Map<String, WithId> entityMap = cache.computeIfAbsent(kind, k -> new HashMap<>());
-        if (entityMap.get(id) == null) {
+        Map<String, WithId> cache = caches.getCache(kind);
+        if (cache.get(id) == null) {
             throw new EntityNotFoundException("Can not find " + kind + " with id " + id);
         }
-        return (T) entityMap.get(id);
+        return (T) cache.get(id);
     }
 
     public <T extends WithId> T create(T entity) {
         String kind = entity.kind();
-        Map<String, WithId> entityMap = cache.computeIfAbsent(kind, k -> new HashMap<>());
+        Cache<String, WithId> cache = caches.getCache(kind);
         Optional<String> id = entity.getId();
         String idVal;
         if (!id.isPresent()) {
-            idVal = generatePK(entityMap);
+            idVal = generatePK(cache);
             entity = (T) entity.withId(idVal);
         } else {
             idVal = id.get();
-            if (entityMap.keySet().contains(idVal)) {
+            if (cache.keySet().contains(idVal)) {
                 throw new EntityExistsException("There already exists a "
                     + kind + " with id " + idVal);
             }
         }
-        entityMap.put(idVal, entity);
+        cache.put(idVal, entity);
         //TODO interact with the back-end system
         return entity;
     }
 
     public void update(WithId entity) {
         String model = entity.kind();
-        Map<String, WithId> entityMap = cache.get(model);
+        Map<String, WithId> cache = caches.getCache(model);
         Optional<String> id = entity.getId();
         if (!id.isPresent()) {
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
         }
         String idVal = id.get();
-        if (entityMap == null || !entityMap.containsKey(idVal)) {
+        if (cache == null || !cache.containsKey(idVal)) {
             throw new EntityNotFoundException("Can not find " + model + " with id " + idVal);
         }
         //TODO 1. properly merge the data ? + add data validation in the REST Resource
         //TODO 2. interact with the back-end system
-        entityMap.put(idVal, entity);
+        cache.put(idVal, entity);
     }
 
 
     public void delete(String kind, String id) {
-        Map<String, WithId> entityMap = cache.get(kind);
+        Map<String, WithId> entityMap = caches.getCache(kind);
         if (id == null || id.equals(""))
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
         if (entityMap == null || !entityMap.containsKey(id))

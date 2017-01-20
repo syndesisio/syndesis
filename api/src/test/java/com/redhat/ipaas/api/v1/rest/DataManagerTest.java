@@ -38,7 +38,7 @@ public class DataManagerTest {
 
     @Before
     public void setupCache() {
-        dataManager = new DataManager(infinispan.getCache(), objectMapper, "com/redhat/ipaas/api/v1/deployment.json");
+        dataManager = new DataManager(infinispan.getCaches(), objectMapper, "com/redhat/ipaas/api/v1/deployment.json");
         dataManager.init();
     }
 
