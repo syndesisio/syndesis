@@ -15,6 +15,7 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.api.v1.model.Component;
 import com.redhat.ipaas.api.v1.model.Integration;
 import com.redhat.ipaas.api.v1.model.ListResult;
@@ -32,11 +33,12 @@ public class DataManagerTest {
 
     @Rule
     public InfinispanCache infinispan = new InfinispanCache();
+    private ObjectMapper objectMapper = new ObjectMapperProducer().create();
     private DataManager dataManager = null;
 
     @Before
     public void setupCache() {
-        dataManager = new DataManager("com/redhat/ipaas/api/v1/deployment.json", infinispan.getCache());
+        dataManager = new DataManager(infinispan.getCache(), objectMapper, "com/redhat/ipaas/api/v1/deployment.json");
         dataManager.init();
     }
 
