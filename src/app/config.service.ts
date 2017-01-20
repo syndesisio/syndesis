@@ -13,7 +13,7 @@ const defaults = Object.freeze({
     authorize: 'https://api.rh-idev.openshift.com/oauth/authorize',
     userInfo: 'https://api.rh-idev.openshift.com/oapi/v1/users/~',
     clientId: 'system:serviceaccount:staging:ipaas-client',
-    scopes: ['user:info', 'user:check-access'],
+    scopes: ['user:info', 'user:check-access', 'role:edit:staging:!'],
   },
 });
 
