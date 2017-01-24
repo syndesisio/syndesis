@@ -80,18 +80,18 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     // Constructor to help with testing.
-    public DataManager(CacheContainer caches, ObjectMapper mapper, List<DataAccessObject> dataAccessObjects, String dataFileName) {
+    public DataManager(CacheContainer caches, ObjectMapper mapper, DataAccessObjectProvider dataAccessObjects, String dataFileName) {
         this(caches, mapper, dataAccessObjects);
         this.dataFileName = dataFileName;
     }
 
     // Inject mandatory via constructor injection.
     @Inject
-    public DataManager(CacheContainer caches, ObjectMapper mapper, List<DataAccessObject> dataAccessObjects) {
+    public DataManager(CacheContainer caches, ObjectMapper mapper,  DataAccessObjectProvider dataAccessObjects) {
         this.mapper = mapper;
         this.caches = caches;
         if (dataAccessObjects != null) {
-            this.dataAccessObjects.addAll(dataAccessObjects);
+            this.dataAccessObjects.addAll(dataAccessObjects.getDataAccessObjects());
         }
     }
 

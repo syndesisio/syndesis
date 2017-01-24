@@ -21,9 +21,20 @@ import org.immutables.value.Value;
 import java.io.Serializable;
 import java.util.Optional;
 
+import io.fabric8.funktion.model.StepKinds;
+
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationPattern.Builder.class)
 public interface IntegrationPattern extends WithId<IntegrationPattern>, WithName, Serializable {
+
+    IntegrationPattern CHOICE = new IntegrationPattern.Builder().id(StepKinds.OTHERWISE).name("Choice").build();
+    IntegrationPattern OTHERWISE = new IntegrationPattern.Builder().id(StepKinds.OTHERWISE).name("Otherwise").build();
+    IntegrationPattern MESSAGE_FILTER = new IntegrationPattern.Builder().id(StepKinds.FILTER).name("Message Filter").build();
+    IntegrationPattern SPLITTER = new IntegrationPattern.Builder().id(StepKinds.SPLIT).name("Splitter").build();
+    IntegrationPattern THROTTLER = new IntegrationPattern.Builder().id(StepKinds.THROTTLE).name("Throttler").build();
+
+    IntegrationPattern SET_BODY = new IntegrationPattern.Builder().id(StepKinds.SET_BODY).name("Set Body").build();
+    IntegrationPattern SET_HEDER = new IntegrationPattern.Builder().id(StepKinds.SET_HEADERS).name("Set Headers").build();
 
     String KIND = "integrationpattern";
 
