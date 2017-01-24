@@ -80,18 +80,18 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     // Constructor to help with testing.
-    public DataManager(CacheContainer caches, ObjectMapper mapper, List<DataAccessObject> dataAccessObjects, String dataFileName) {
+    public DataManager(CacheContainer caches, ObjectMapper mapper, DataAccessObjectProvider dataAccessObjects, String dataFileName) {
         this(caches, mapper, dataAccessObjects);
         this.dataFileName = dataFileName;
     }
 
     // Inject mandatory via constructor injection.
     @Inject
-    public DataManager(CacheContainer caches, ObjectMapper mapper, List<DataAccessObject> dataAccessObjects) {
+    public DataManager(CacheContainer caches, ObjectMapper mapper,  DataAccessObjectProvider dataAccessObjects) {
         this.mapper = mapper;
         this.caches = caches;
         if (dataAccessObjects != null) {
-            this.dataAccessObjects.addAll(dataAccessObjects);
+            this.dataAccessObjects.addAll(dataAccessObjects.getDataAccessObjects());
         }
     }
 
@@ -199,7 +199,13 @@ public class DataManager implements DataAccessObjectRegistry {
 
     @SuppressWarnings("unchecked")
     public <T extends WithId> ListResult<T> fetchAll(String kind, Function<ListResult<T>, ListResult<T>>... operators) {
-        Map<String, WithId> cache = caches.getCache(kind);
+        Cache<String, WithId> cache = caches.getCache(kind);
+
+        //TODO: This is currently broken and needs to be properly addressed.
+        //... until then just use the cache for pre-loaded data.
+        if (cache.isEmpty()) {
+            return (ListResult<T>) doWithDataAccessObject(kind, d -> d.fetchAll());
+        }
 
         ListResult<T> result = new ListResult.Builder<T>()
             .items((Collection<T>) cache.values())

@@ -24,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
@@ -43,16 +44,20 @@ public class DataManagerTest {
     private ObjectMapper objectMapper = new ObjectMapperProducer().create();
     private DataManager dataManager = null;
 
-    private final List<DataAccessObject> dataAccessObjects = new ArrayList<>();
 
     private static final KubernetesMockServer MOCK = new KubernetesMockServer();
 
 
     @Before
     public void setup() {
-        dataAccessObjects.add(new IntegrationDAO(MOCK.createClient()));
+        DataAccessObjectProvider dataAccessObjectProvider = new DataAccessObjectProvider() {
+            @Override
+            public List<DataAccessObject> getDataAccessObjects() {
+                return Arrays.asList(new IntegrationDAO(MOCK.createClient()));
+            }
+        };
         //Create Data Manager
-        dataManager = new DataManager(infinispan.getCaches(), objectMapper, dataAccessObjects, "com/redhat/ipaas/api/v1/deployment.json");
+        dataManager = new DataManager(infinispan.getCaches(), objectMapper, dataAccessObjectProvider, "com/redhat/ipaas/api/v1/deployment.json");
         dataManager.init();
     }
 
