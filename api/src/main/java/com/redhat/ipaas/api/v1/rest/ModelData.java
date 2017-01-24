@@ -24,23 +24,26 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class ModelData {
 
-	private String model;
+	private String kind;
 	private Object data;
-	
-	
-	public ModelData(String model, Object data) {
+
+    public ModelData() {
+        super();
+    }
+
+	public ModelData(String kind, Object data) {
 		super();
-		this.model = model;
+		this.kind = kind;
 		this.data = data;
 	}
 
 
-	public String getModel() {
-		return model;
+	public String getKind() {
+		return kind;
 	}
 
-	public void setModel(String model) {
-		this.model = model;
+	public void setKind(String kind) {
+		this.kind = kind;
 	}
 
 	@JsonRawValue
@@ -51,9 +54,4 @@ public class ModelData {
 	public void setData(JsonNode data) {
 		this.data = data;
 	}
-
-	public ModelData() {
-		super();
-	}
-	
 }

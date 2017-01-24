@@ -17,7 +17,6 @@ package com.redhat.ipaas.api.v1.rest;
 
 import com.redhat.ipaas.api.v1.model.Integration;
 import io.swagger.annotations.Api;
-
 import javax.ws.rs.Path;
 
 @Path("/integrations")

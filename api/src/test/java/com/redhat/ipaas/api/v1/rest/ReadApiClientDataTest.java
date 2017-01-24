@@ -59,7 +59,7 @@ public class ReadApiClientDataTest {
 		assertTrue("We should find some ModelData", 0 < modelDataList.size());
 		List<ComponentGroup> componentGroupList = new ArrayList<ComponentGroup>();
 		for (ModelData md : modelDataList) {
-			if (md.getModel().equalsIgnoreCase("componentgroup")) {
+			if (md.getKind().equalsIgnoreCase("componentgroup")) {
 				ComponentGroup cg = mapper.readValue(md.getData(), ComponentGroup.class);
 				componentGroupList.add(cg);
 			}

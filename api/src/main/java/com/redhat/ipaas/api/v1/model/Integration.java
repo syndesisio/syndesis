@@ -28,6 +28,21 @@ public interface Integration extends WithId<Integration>, WithName, Serializable
 
     String KIND = "integration";
 
+    /**
+     *Required Labels
+     */
+    String LABEL_NAME = "ipaas.redhat.com/integration-name";
+
+    /**
+     * Optional Labels
+     */
+
+    //The integration id
+    String LABEL_ID = "ipaas.redhat.com/integration-id";
+
+    //The integration template id
+    String LABEL_TEMPLATE_ID = "ipaas.redhat.com/template-id";
+
     @Override
     default String kind() {
         return KIND;

@@ -15,17 +15,17 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
-class ObjectMapperHolder {
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
 
-    static final ObjectMapper OBJECT_MAPPER = createObjectMapper();
+@ApplicationScoped
+public class KubernetesClientProducer {
 
-    private static ObjectMapper createObjectMapper() {
-        ObjectMapper om = new ObjectMapper();
-        om.registerModule(new Jdk8Module());
-        return om;
+    @Produces
+    public KubernetesClient create() {
+        return new DefaultKubernetesClient();
     }
-
 }

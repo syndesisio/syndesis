@@ -15,17 +15,19 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
-import javax.inject.Inject;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
-public class BaseHandler implements WithDataManager {
+@ApplicationScoped
+public class ObjectMapperProducer {
 
-    @Inject
-    private DataManager dataMgr;
-
-    @Override
-    public DataManager getDataManager() {
-        return dataMgr;
+    @Produces
+    public ObjectMapper create() {
+        ObjectMapper om = new ObjectMapper();
+        om.registerModule(new Jdk8Module());
+        return om;
     }
-
 }

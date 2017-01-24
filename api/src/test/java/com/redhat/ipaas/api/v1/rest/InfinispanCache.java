@@ -15,31 +15,25 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
-import com.redhat.ipaas.api.v1.model.WithId;
-import org.infinispan.Cache;
+import org.infinispan.manager.CacheContainer;
 import org.infinispan.manager.DefaultCacheManager;
-import org.infinispan.manager.EmbeddedCacheManager;
 import org.junit.rules.ExternalResource;
-
-import java.util.Map;
 
 public class InfinispanCache extends ExternalResource {
 
-    private EmbeddedCacheManager cacheManager;
-    private Cache<String, Map<String, WithId>> cache;
+    private CacheContainer caches;
 
     @Override
     protected void before() throws Throwable {
-        cacheManager = new DefaultCacheManager();
-        cache = cacheManager.getCache();
+        caches = new DefaultCacheManager();
     }
 
     @Override
     protected void after() {
-        cacheManager.stop();
+        caches.stop();
     }
 
-    public Cache<String, Map<String, WithId>> getCache() {
-        return cache;
+    public CacheContainer getCaches() {
+        return caches;
     }
 }
