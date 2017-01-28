@@ -1,6 +1,6 @@
 import { IpaasClientCliPage } from './app.po';
 
-describe('ipaas-client-cli App', function() {
+describe('ipaas-ui App', function() {
   let page: IpaasClientCliPage;
 
   beforeEach(() => {
