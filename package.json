@@ -8,6 +8,7 @@
     "lint": "tslint \"src/**/*.ts\"",
     "lint:fix": "tslint --fix \"src/**/*.ts\"",
     "test": "ng test",
+    "test:xvfb": "docker run --rm -v `pwd`:/ipaas-ui:z -w /ipaas-ui -u `id -u` docker.io/rhipaas/karma-xvfb ./karma-xvfb.sh",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
     "sw": "sw-precache --root=dist --config=sw-precache-config.js"

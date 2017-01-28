@@ -43,7 +43,13 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['Chrome_no_sandbox_disable_gpu'],
+    customLaunchers: {
+      Chrome_no_sandbox_disable_gpu: {
+        base: 'Chrome',
+        flags: ['--no-sandbox', '--disable-gpu']
+      }
+    },
     singleRun: false
   });
 };
