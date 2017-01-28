@@ -65,6 +65,15 @@
         <groupId>io.fabric8</groupId>
         <artifactId>fabric8-maven-plugin</artifactId>
         <version>${fabric8.maven.plugin.version}</version>
+        <configuration>
+          <generator>
+            <config>
+              <wildfly-swarm>
+                <name>rhipaas/ipaas-rest:%l</name>
+              </wildfly-swarm>
+            </config>
+          </generator>
+        </configuration>
       </plugin>
 
       <plugin>
