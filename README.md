@@ -60,7 +60,7 @@ Go to [http://0.0.0.0:4200](http://0.0.0.0:4200) or [http://localhost:4200](http
 We use the component approach in our starter. This is the new standard for developing Angular apps and a great way to ensure maintainable code by encapsulation of our behavior logic. A component is basically a self contained app, usually in a single file or a folder with each concern as a file: style, template, specs, e2e, and component class.
 
 ```plain
-ipaas-client/
+ipaas-ui/
  │
  ├──docs/                         * our documentation
  |   ├──commands.md               * additional cli commands available to us
