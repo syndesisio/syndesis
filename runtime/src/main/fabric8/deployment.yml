@@ -19,7 +19,10 @@ spec:
   template:
     spec:
       containers:
-      - resources:
+      - env:
+        - name: JAVA_OPTIONS
+          value: "-Djava.net.preferIPv4Stack=true"
+        resources:
           limits:
             cpu: 1000m
             memory: 612Mi

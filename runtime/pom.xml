@@ -36,6 +36,8 @@
     <apidocs.output.dir>${project.build.outputDirectory}</apidocs.output.dir>
 
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+
+    <java-image.version>1.2</java-image.version>
   </properties>
 
   <build>
@@ -65,6 +67,16 @@
         <groupId>io.fabric8</groupId>
         <artifactId>fabric8-maven-plugin</artifactId>
         <version>${fabric8.maven.plugin.version}</version>
+        <configuration>
+          <generator>
+            <config>
+              <wildfly-swarm>
+                <name>rhipaas/ipaas-rest:%l</name>
+                <from>fabric8/java-jboss-openjdk8-jdk:${java-image.version}</from>
+              </wildfly-swarm>
+            </config>
+          </generator>
+        </configuration>
       </plugin>
 
       <plugin>
