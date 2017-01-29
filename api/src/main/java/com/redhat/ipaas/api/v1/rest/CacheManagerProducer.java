@@ -22,25 +22,36 @@ import org.infinispan.configuration.global.GlobalConfigurationBuilder;
 import org.infinispan.eviction.EvictionStrategy;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
+import org.wildfly.swarm.spi.runtime.annotations.ConfigurationValue;
+
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 
 @ApplicationScoped
 public class CacheManagerProducer {
+
+    @Inject
+    @ConfigurationValue("cache.cluster.name")
+    private String clusterName;
+
+    @Inject
+    @ConfigurationValue("cache.max.entries")
+    private int maxEntries;
 
     @Produces
     public EmbeddedCacheManager create() {
         GlobalConfiguration g = new GlobalConfigurationBuilder()
             .clusteredDefault()
             .transport()
-            .clusterName("InfinispanCluster")
+            .clusterName(clusterName)
             .build();
 
         Configuration cfg = new ConfigurationBuilder()
             .eviction()
             .strategy(EvictionStrategy.LRU)
-            .maxEntries(150)
+            .maxEntries(maxEntries)
             .build();
 
         return new DefaultCacheManager(g, cfg);

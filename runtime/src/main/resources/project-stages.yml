@@ -16,3 +16,9 @@
 
 deployment:
   file: com/redhat/ipaas/api/v1/deployment.json
+
+cache:
+  cluster:
+    name: IPaaSCluster
+  max:
+    entries: 10
