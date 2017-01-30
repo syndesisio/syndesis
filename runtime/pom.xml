@@ -44,25 +44,22 @@
     <finalName>runtime</finalName>
     <plugins>
       <plugin>
-        <groupId>org.wildfly.swarm</groupId>
-        <artifactId>wildfly-swarm-plugin</artifactId>
-        <version>${wildfly.swarm.version}</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot.version}</version>
         <configuration>
-          <mainClass>com.redhat.ipaas.runtime.Main</mainClass>
-          <jvmArguments>
-            <jvmArgument>-server</jvmArgument>
-            <jvmArgument>-Xms256m</jvmArgument>
-            <jvmArgument>-Xmx512m</jvmArgument>
-          </jvmArguments>
+          <jvmArguments>-server -Xms256m -Xmx512m</jvmArguments>
         </configuration>
         <executions>
           <execution>
+            <id>repackage</id>
             <goals>
-              <goal>package</goal>
+              <goal>repackage</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <groupId>io.fabric8</groupId>
         <artifactId>fabric8-maven-plugin</artifactId>
@@ -70,10 +67,10 @@
         <configuration>
           <generator>
             <config>
-              <wildfly-swarm>
+              <spring-boot>
                 <name>rhipaas/ipaas-rest:%l</name>
                 <from>fabric8/java-jboss-openjdk8-jdk:${java-image.version}</from>
-              </wildfly-swarm>
+              </spring-boot>
             </config>
           </generator>
         </configuration>
@@ -185,55 +182,36 @@
       <artifactId>api</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.redhat.ipaas</groupId>
-      <artifactId>swagger-ui</artifactId>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
     </dependency>
-    <!--WildFly Swarm Fractions -->
+
     <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>jaxrs-cdi</artifactId>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>keycloak</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-undertow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.paypal.springboot</groupId>
+      <artifactId>resteasy-spring-boot-starter</artifactId>
     </dependency>
     <dependency>
       <groupId>org.infinispan</groupId>
       <artifactId>infinispan-embedded</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>infinispan</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.cache</groupId>
-      <artifactId>cache-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>jpa</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>swagger</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>swagger-webapp</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>keycloak-server</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jdk8</artifactId>
-    </dependency>
-    <!-- Test -->
-    <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>arquillian</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -255,21 +233,6 @@
                 </goals>
               </execution>
             </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>debug</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.wildfly.swarm</groupId>
-            <artifactId>wildfly-swarm-plugin</artifactId>
-            <configuration>
-              <mainClass>com.redhat.ipaas.runtime.Main</mainClass>
-              <debugPort>5005</debugPort>
-            </configuration>
           </plugin>
         </plugins>
       </build>

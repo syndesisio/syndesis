@@ -16,10 +16,12 @@
 package com.redhat.ipaas.api.v1.rest;
 
 import com.redhat.ipaas.api.v1.model.Organization;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
 
 @Path("/organizations")
+@Component
 public class Organizations  extends BaseHandler implements Lister<Organization>, Getter<Organization> {
 
     @Override

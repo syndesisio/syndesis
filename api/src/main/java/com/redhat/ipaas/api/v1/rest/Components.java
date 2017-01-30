@@ -22,6 +22,7 @@ import javax.ws.rs.Path;
 
 @Path("/components")
 @Api(value = "components")
+@org.springframework.stereotype.Component
 public class Components extends BaseHandler implements Lister<Component>, Getter<Component> {
 
     @Override

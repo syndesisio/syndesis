@@ -15,8 +15,11 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
+import org.infinispan.configuration.cache.ConfigurationBuilder;
+import org.infinispan.eviction.EvictionType;
 import org.infinispan.manager.CacheContainer;
 import org.infinispan.manager.DefaultCacheManager;
+import org.infinispan.manager.EmbeddedCacheManager;
 import org.junit.rules.ExternalResource;
 
 public class InfinispanCache extends ExternalResource {
@@ -25,7 +28,10 @@ public class InfinispanCache extends ExternalResource {
 
     @Override
     protected void before() throws Throwable {
-        caches = new DefaultCacheManager();
+        EmbeddedCacheManager manager = new DefaultCacheManager(new ConfigurationBuilder()
+            .memory().evictionType(EvictionType.COUNT).size(100)
+            .build());
+        caches = manager;
     }
 
     @Override

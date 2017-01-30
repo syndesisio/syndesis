@@ -115,10 +115,8 @@
     <funktion.version>1.1.44</funktion.version>
     <kubernetes.client.version>1.4.33</kubernetes.client.version>
     <mockwebserver.version>0.0.4</mockwebserver.version>
-    <wildfly.swarm.version>2016.11.0</wildfly.swarm.version>
-    <version.infinispan>9.0.0.Alpha4</version.infinispan>
+    <version.infinispan>9.0.0.Beta2</version.infinispan>
     <immutables.version>2.4.0</immutables.version>
-    <swagger.annotations.version>1.5.10</swagger.annotations.version>
     <jackson.version>2.7.8</jackson.version>
     <slf4j.api.version>1.7.10</slf4j.api.version>
     <junit.version>4.12</junit.version>
@@ -140,12 +138,15 @@
     <fabric8.maven.plugin.version>3.2.15</fabric8.maven.plugin.version>
     <javaee.api.version>7.0</javaee.api.version>
     <hibernate.validator.version>5.3.4.Final</hibernate.validator.version>
+    <spring-boot.version>1.5.1.RELEASE</spring-boot.version>
+    <resteasy-spring-boot-starter.version>2.2.1-RELEASE</resteasy-spring-boot-starter.version>
+    <javax.ws.rs-api.version>2.0</javax.ws.rs-api.version>
+    <swagger.version>1.5.12</swagger.version>
   </properties>
 
   <modules>
-    <module>runtime</module>
     <module>api</module>
-    <module>swagger-ui</module>
+    <module>runtime</module>
   </modules>
 
   <dependencyManagement>
@@ -159,9 +160,9 @@
         <type>pom</type>
       </dependency>
       <dependency>
-        <groupId>org.wildfly.swarm</groupId>
-        <artifactId>bom-all</artifactId>
-        <version>${wildfly.swarm.version}</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -169,13 +170,6 @@
         <groupId>org.infinispan</groupId>
         <artifactId>infinispan-bom</artifactId>
         <version>${version.infinispan}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>com/fasterxml.jackson</groupId>
-        <artifactId>jackson-bom</artifactId>
-        <version>${jackson.version}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -191,11 +185,6 @@
         <artifactId>runtime</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>com.redhat.ipaas</groupId>
-        <artifactId>swagger-ui</artifactId>
-        <version>${project.version}</version>
-      </dependency>
 
       <!-- Funktion -->
       <dependency>
@@ -208,7 +197,6 @@
         <groupId>javax</groupId>
         <artifactId>javaee-api</artifactId>
         <version>${javaee.api.version}</version>
-        <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -220,7 +208,7 @@
       <dependency>
         <groupId>io.swagger</groupId>
         <artifactId>swagger-annotations</artifactId>
-        <version>${swagger.annotations.version}</version>
+        <version>${swagger.version}</version>
       </dependency>
 
       <dependency>
@@ -256,6 +244,22 @@
         <artifactId>mockwebserver</artifactId>
         <version>${mockwebserver.version}</version>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.paypal.springboot</groupId>
+        <artifactId>resteasy-spring-boot-starter</artifactId>
+        <version>${resteasy-spring-boot-starter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>javax.ws.rs-api</artifactId>
+        <version>${javax.ws.rs-api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-jaxrs</artifactId>
+        <version>${swagger.version}</version>
       </dependency>
 
     </dependencies>
@@ -334,6 +338,7 @@
             <exclude>.editorconfig</exclude>
             <exclude>license.txt</exclude>
             <exclude>**/*.adoc</exclude>
+            <exclude>.mention-bot</exclude>
           </excludes>
         </configuration>
       </plugin>

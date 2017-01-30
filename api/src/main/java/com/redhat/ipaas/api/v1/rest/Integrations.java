@@ -17,10 +17,13 @@ package com.redhat.ipaas.api.v1.rest;
 
 import com.redhat.ipaas.api.v1.model.Integration;
 import io.swagger.annotations.Api;
+import org.springframework.stereotype.Component;
+
 import javax.ws.rs.Path;
 
 @Path("/integrations")
 @Api(value = "integrations")
+@Component
 public class Integrations extends BaseHandler implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration> {
 
     @Override

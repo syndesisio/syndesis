@@ -17,11 +17,13 @@ package com.redhat.ipaas.api.v1.rest;
 
 import com.redhat.ipaas.api.v1.model.Connection;
 import io.swagger.annotations.Api;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
 
 @Path("/connections")
 @Api(value = "connections")
+@Component
 public class Connections extends BaseHandler implements Lister<Connection>, Getter<Connection>, Creator<Connection>, Deleter<Connection>, Updater<Connection> {
 
     @Override

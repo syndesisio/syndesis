@@ -17,11 +17,13 @@ package com.redhat.ipaas.api.v1.rest;
 
 import com.redhat.ipaas.api.v1.model.IntegrationTemplate;
 import io.swagger.annotations.Api;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
 
 @Path("/integrationtemplates")
 @Api(value = "integrationtemplates")
+@Component
 public class IntegrationTemplates extends BaseHandler implements Lister<IntegrationTemplate>, Getter<IntegrationTemplate>, Creator<IntegrationTemplate>, Deleter<IntegrationTemplate>, Updater<IntegrationTemplate> {
 
     @Override

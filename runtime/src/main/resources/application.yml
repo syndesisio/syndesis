@@ -17,8 +17,18 @@
 deployment:
   file: com/redhat/ipaas/api/v1/deployment.json
 
+resteasy:
+  jaxrs:
+    app:
+      registration: property
+      classes: com.redhat.ipaas.api.v1.rest.V1Application
+
+cors:
+  allowedOrigins:
+  - http://localhost:4200
+
 cache:
   cluster:
     name: IPaaSCluster
   max:
-    entries: 10
+    entries: 100
