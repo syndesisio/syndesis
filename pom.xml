@@ -109,6 +109,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
@@ -142,6 +143,9 @@
     <resteasy-spring-boot-starter.version>2.2.1-RELEASE</resteasy-spring-boot-starter.version>
     <javax.ws.rs-api.version>2.0</javax.ws.rs-api.version>
     <swagger.version>1.5.12</swagger.version>
+    <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
+    <build-helper-maven-plugin.version>1.12</build-helper-maven-plugin.version>
+    <swagger2markup-maven-plugin.version>1.1.0</swagger2markup-maven-plugin.version>
   </properties>
 
   <modules>
@@ -266,6 +270,45 @@
   </dependencyManagement>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>fabric8-maven-plugin</artifactId>
+          <version>${fabric8.maven.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>com.github.kongchen</groupId>
+          <artifactId>swagger-maven-plugin</artifactId>
+          <version>${maven.swagger.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>io.github.swagger2markup</groupId>
+          <artifactId>swagger2markup-maven-plugin</artifactId>
+          <version>${swagger2markup-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.asciidoctor</groupId>
+          <artifactId>asciidoctor-maven-plugin</artifactId>
+          <version>${asciidoctor-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${build-helper-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.19.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -313,13 +356,9 @@
           <execution>
             <goals>
               <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report</id>
-            <phase>test</phase>
-            <goals>
+              <goal>prepare-agent-integration</goal>
               <goal>report</goal>
+              <goal>report-integration</goal>
             </goals>
           </execution>
         </executions>

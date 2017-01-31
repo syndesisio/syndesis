@@ -15,6 +15,7 @@
  */
 package com.redhat.ipaas.api.v1.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.List;
  * @param <T> The type of the elements in the returned list.
  */
 @Value.Immutable
+@JsonDeserialize(builder = ListResult.Builder.class)
 public interface ListResult<T> {
 
     /**

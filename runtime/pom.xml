@@ -46,7 +46,6 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
         <configuration>
           <jvmArguments>-server -Xms256m -Xmx512m</jvmArguments>
         </configuration>
@@ -57,13 +56,34 @@
               <goal>repackage</goal>
             </goals>
           </execution>
+          <execution>
+            <id>pre-integration-test</id>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <skip>${skipITs}</skip>
+              <arguments>
+                <argument>--server.port=${server.port}</argument>
+              </arguments>
+              <maxAttempts>180</maxAttempts>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-integration-test</id>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+            <configuration>
+              <skip>${skipITs}</skip>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
       <plugin>
         <groupId>io.fabric8</groupId>
         <artifactId>fabric8-maven-plugin</artifactId>
-        <version>${fabric8.maven.plugin.version}</version>
         <configuration>
           <generator>
             <config>
@@ -79,7 +99,6 @@
       <plugin>
         <groupId>com.github.kongchen</groupId>
         <artifactId>swagger-maven-plugin</artifactId>
-        <version>${maven.swagger.plugin.version}</version>
         <configuration>
           <apiSources>
             <apiSource>
@@ -127,7 +146,6 @@
       <plugin>
         <groupId>io.github.swagger2markup</groupId>
         <artifactId>swagger2markup-maven-plugin</artifactId>
-        <version>1.1.0</version>
         <configuration>
           <swaggerInput>${apidocs.output.dir}/swagger.json</swaggerInput>
           <outputDir>${apidocs.dir}/asciidoc</outputDir>
@@ -147,7 +165,6 @@
       <plugin>
         <groupId>org.asciidoctor</groupId>
         <artifactId>asciidoctor-maven-plugin</artifactId>
-        <version>1.5.3</version>
         <configuration>
           <sourceDirectory>${project.basedir}/src/docs/asciidoc</sourceDirectory>
           <sourceDocumentName>index.adoc</sourceDocumentName>
@@ -171,6 +188,42 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>reserve-boot-port</id>
+            <goals>
+              <goal>reserve-network-port</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <portNames>
+                <portName>server.port</portName>
+              </portNames>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <systemPropertyVariables>
+            <local.server.port>${server.port}</local.server.port>
+            <context-path>/api/v1</context-path>
+          </systemPropertyVariables>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -204,6 +257,11 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-undertow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.paypal.springboot</groupId>
