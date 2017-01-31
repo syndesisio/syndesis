@@ -41,11 +41,32 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
       });
   }
 
+  newInstance():T {
+    throw "No `newInstance()` defined for " + this.kind;
+  }
+
+  loadOrCreate(id?: string) {
+    if (id) {
+      this.load(id);
+    } else {
+      this._current.next(this.newInstance());
+      this._loading.next(false);
+    }
+  }
+
+  private plain(entity:T):T {
+    if ('plain' in entity) {
+      return (<any>entity).plain();
+    } else {
+      return entity;
+    }
+  }
+
   load(id: string) {
     this._loading.next(true);
     this.service.get(id).subscribe(
       (entity) => {
-        this._current.next(entity);
+        this._current.next(this.plain(entity));
         this._loading.next(false);
       },
       (error) => {
@@ -58,7 +79,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
     const created = new Subject<T>();
     this.service.create(entity).subscribe(
       (e) => {
-        created.next(e);
+        created.next(this.plain(e));
       },
       (error) => {
         console.log('Error creating ' + this.kind + ' (' + entity + ')' + ': ' + error);
@@ -70,7 +91,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
     const updated = new Subject<T>();
     this.service.update(entity).subscribe(
       (e) => {
-        updated.next(e);
+        updated.next(this.plain(e));
       },
       (error) => {
         console.log('Error updating ' + this.kind + ' (' + entity + ')' + ': ' + error);

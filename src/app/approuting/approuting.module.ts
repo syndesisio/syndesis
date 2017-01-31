@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: 'dashboard', loadChildren: '../dashboard/dashboard.module#DashboardModule', canActivate: [AuthGuard] },
   { path: 'integrations', loadChildren: '../integrations/integrations.module#IntegrationsModule', canActivate: [AuthGuard] },
   { path: 'templates', loadChildren: '../templates/templates-routes.module#TemplateRoutesModule', canActivate: [AuthGuard] },
-  { path: 'connections', loadChildren: '../connections/connections.module#ConnectionsModule', canActivate: [AuthGuard] },
+  { path: 'connections', loadChildren: '../connections/connections-routes.module#ConnectionsRoutesModule', canActivate: [AuthGuard] },
 ];
 
 @NgModule({

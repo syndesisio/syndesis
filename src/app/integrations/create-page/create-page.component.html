@@ -1,3 +1,20 @@
 <div class="integrations create">
-  <h1>Create an Integration</h1>
+  <div class="wizard-pf-row">
+    <div class="wizard-pf-sidebar">
+      <ipaas-integrations-flow-view 
+        [integration]="integration"></ipaas-integrations-flow-view>
+    </div>
+    <div class="wizard-pf-main">
+      <ol class="breadcrumb">
+        <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
+        <li class="active">Create an integration</li>
+      </ol>
+      <h1>Create an integration</h1>
+      <router-outlet></router-outlet>
+      <!-- Wizard Footer -->
+      <div class='wizard-pf-footer'>
+        <button type='button' class='btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss'>Cancel</button>
+      </div>
+    </div>
+  </div>
 </div>
