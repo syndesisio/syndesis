@@ -271,10 +271,6 @@
       <groupId>com.paypal.springboot</groupId>
       <artifactId>resteasy-spring-boot-starter</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-embedded</artifactId>
-    </dependency>
   </dependencies>
 
   <profiles>

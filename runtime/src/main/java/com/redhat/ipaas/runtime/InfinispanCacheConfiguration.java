@@ -36,8 +36,7 @@ public class InfinispanCacheConfiguration {
     @Bean
     public EmbeddedCacheManager embeddedCacheManager() {
         return new DefaultCacheManager(
-            new GlobalConfigurationBuilder()
-                .transport().clusterName(clusterName)
+            new GlobalConfigurationBuilder().nonClusteredDefault()
                 .globalJmxStatistics().enable()
                 .defaultCacheName("ipaas-cache")
                 .build(),
