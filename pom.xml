@@ -405,6 +405,8 @@
             <exclude>license.txt</exclude>
             <exclude>**/*.adoc</exclude>
             <exclude>.mention-bot</exclude>
+            <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
+            <exclude>mvnw*</exclude>
           </excludes>
         </configuration>
       </plugin>
