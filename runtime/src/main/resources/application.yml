@@ -36,3 +36,16 @@ cache:
 spring:
   zipkin:
     enabled: false
+
+security:
+  basic:
+    enabled: false
+
+management:
+  port: 8181
+  security:
+    enabled: true
+
+endpoints:
+  health:
+    sensitive: false
