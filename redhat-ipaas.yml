@@ -245,7 +245,7 @@ objects:
             httpGet:
               path: "/health"
               port: 8181
-            initialDelaySeconds: 5  
+            initialDelaySeconds: 5
           ports:
           - containerPort: 8080
             name: http
@@ -325,7 +325,7 @@ objects:
     name: ipaas-rest
   spec:
     host: ${ROUTE_HOSTNAME}
-    path: /v1
+    path: /api/v1
     port:
       targetPort: 8080
     tls:
@@ -901,5 +901,5 @@ objects:
   data:
     config.json: |
       {
-        "apiEndpoint": "https://${ROUTE_HOSTNAME}/v1"
+        "apiEndpoint": "https://${ROUTE_HOSTNAME}/api/v1"
       }
