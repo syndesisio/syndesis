@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RestangularModule } from 'ng2-restangular';
+import { OAuthService, OAuthModule } from 'angular-oauth2-oidc';
 
 import { AppRoutingModule } from './approuting/approuting.module';
 import { StoreModule } from './store/store.module';
@@ -13,8 +14,15 @@ import { IPaaSCommonModule } from './common/common.module';
 import { AppComponent } from './app.component';
 import { ConfigService, configServiceInitializer } from './config.service';
 
-export function restangularProviderConfigurer(restangularProvider: any, config: ConfigService) {
+export function restangularProviderConfigurer(restangularProvider: any, config: ConfigService, oauthService: OAuthService) {
   restangularProvider.setBaseUrl(config.getSettings().apiEndpoint);
+
+  restangularProvider.addFullRequestInterceptor((_element, _operation, _path, _url, headers) => {
+    return {
+      headers: Object.assign({}, headers, { Authorization: 'Bearer ' + oauthService.getAccessToken() }),
+    };
+  });
+
   restangularProvider.addResponseInterceptor((data: any, operation: string) => {
     if (operation === 'getList' && Array.isArray(data.items)) {
       const pagingData = data.items;
@@ -37,11 +45,12 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     BrowserModule,
     FormsModule,
     HttpModule,
-    RestangularModule.forRoot([ConfigService], restangularProviderConfigurer),
+    RestangularModule.forRoot([ConfigService, OAuthService], restangularProviderConfigurer),
     NgbModule.forRoot(),
     AppRoutingModule,
     StoreModule,
-    IPaaSCommonModule,
+    IPaaSCommonModule.forRoot(),
+    OAuthModule.forRoot(),
   ],
   providers: [
     ConfigService,

@@ -9,6 +9,12 @@ import 'rxjs/add/operator/toPromise';
 const defaults = Object.freeze({
   apiEndpoint: 'http://localhost:8080/v1',
   title: 'Red Hat iPaaS',
+  oauth: {
+    authorize: 'https://api.rh-idev.openshift.com/oauth/authorize',
+    userInfo: 'https://api.rh-idev.openshift.com/oapi/v1/users/~',
+    clientId: 'system:serviceaccount:staging:ipaas-client',
+    scopes: ['user:info', 'user:check-access', 'role:edit:staging:!'],
+  },
 });
 
 const defaultConfigJson = '/config.json';
