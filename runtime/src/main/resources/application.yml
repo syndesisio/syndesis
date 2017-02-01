@@ -32,3 +32,7 @@ cache:
     name: IPaaSCluster
   max:
     entries: 100
+
+spring:
+  zipkin:
+    enabled: false

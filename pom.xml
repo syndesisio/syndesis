@@ -139,13 +139,14 @@
     <fabric8.maven.plugin.version>3.2.15</fabric8.maven.plugin.version>
     <javaee.api.version>7.0</javaee.api.version>
     <hibernate.validator.version>5.3.4.Final</hibernate.validator.version>
-    <spring-boot.version>1.5.1.RELEASE</spring-boot.version>
+    <spring-boot.version>1.4.4.RELEASE</spring-boot.version>
     <resteasy-spring-boot-starter.version>2.2.1-RELEASE</resteasy-spring-boot-starter.version>
     <javax.ws.rs-api.version>2.0</javax.ws.rs-api.version>
     <swagger.version>1.5.12</swagger.version>
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
     <build-helper-maven-plugin.version>1.12</build-helper-maven-plugin.version>
     <swagger2markup-maven-plugin.version>1.1.0</swagger2markup-maven-plugin.version>
+    <spring-cloud.version>Camden.SR4</spring-cloud.version>
   </properties>
 
   <modules>
@@ -176,6 +177,13 @@
         <version>${version.infinispan}</version>
         <scope>import</scope>
         <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <!-- Internal Dependencies -->
@@ -265,7 +273,6 @@
         <artifactId>swagger-jaxrs</artifactId>
         <version>${swagger.version}</version>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
 

@@ -15,12 +15,12 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class BaseHandler implements WithDataManager {
 
-    @Inject
+    @Autowired
     private DataManager dataMgr;
 
     @Override
