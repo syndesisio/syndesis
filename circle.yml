@@ -43,5 +43,5 @@ deployment:
     - curl -sSL https://github.com/openshift/origin/releases/download/v1.4.1/openshift-origin-client-tools-v1.4.1-3f9807a-linux-64bit.tar.gz | sudo tar xz -C /usr/bin --strip-components 1
     - oc login --server=${OPENSHIFT_APISERVER} --token=${OPENSHIFT_TOKEN}
     - oc project staging
-    - oc import-image rhipaas/ipaas-rest
+    - oc import-image rhipaas/ipaas-rest:latest
 
