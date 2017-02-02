@@ -1,3 +1,3 @@
 {
-  "apiEndpoint": "https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v1"
+  "apiEndpoint": "https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/api/v1"
 }
