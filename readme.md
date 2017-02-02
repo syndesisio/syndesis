@@ -19,7 +19,7 @@
 # Run in development mode
 
     cd runtime
-    mvn clean package wildfly-swarm:run
+    mvn clean package spring-boot:run
 
 # Deploying to Kubernetes
 
@@ -33,26 +33,10 @@
     Swagger doc:  http://localhost:8080/v1/swagger.json
     SwaggerUI:    http://localhost:8080/swagger-ui/
 
-There is a [Demo endpoint](http://runtime-kurt.b6ff.rh-idev.openshiftapps.com/swagger-ui/) on OpenShift dedicated.
+There is a [Demo endpoint](https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v1/) on OpenShift dedicated, along with the [Swagger JSON](https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v1/swagger.json).
+
 This demo endpoint has some preloaded data and can be used for testing and demoing purposes.
 
 # Authentication
 
-Authentication is provided by KeyCloak. At the moment authentication is turned off. To enable it uncomment 
-
-....archive.as(Secured.class).
-....protect( "/components/*").
-....withMethod( "GET" ).
-....withRole( "citizen_developer" );
-
-in the Main.java to enable protection for doing a GET on 'components'. 
-
-Currently the KeyCloak server is running on this very same swarm instance. The runtime is configured to use the 'ipaas-auth' realm via the settings in the src/main/resources/keycloak.json file. When the server is first started, at 'http://localhost:8080/auth', the user is prompted to create an admin user for the 'master' realm. Once the admin account is created and the user is logged in, the ipaas-auth realm should be created using the 'Add realm' button that shows up when hovering over the 'Master' realm in top left of the admin UI. Click this button and select to import the ipaas-realm.json file from your filesystem.
-
-At this point your browser will redirect to the login page when navigating to 'http://localhost:8080/v1/components'. You can login with nyc/citizen. A token will be set in your browser but it is also possible to explicitly obtain this token using
-
-....curl --data "grant_type=password&client_id=ipaas-auth-service&username=nyc&password=citizen" http://localhost:8080/auth/realms/ipaas-auth/protocol/openid-connect/token
-
-See also http://blog.keycloak.org/2015/10/getting-started-with-keycloak-securing.html
-
-
+Authentication is provided by KeyCloak. At the moment authentication is turned on and you will need to allow access to OpenShift using your GitHub account.
