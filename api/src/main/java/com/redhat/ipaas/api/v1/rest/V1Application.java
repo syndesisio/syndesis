@@ -15,13 +15,24 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
+import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.jaxrs.listing.ApiListingResource;
+import io.swagger.jaxrs.listing.SwaggerSerializers;
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath("/")
+@ApplicationPath("/api/v1")
 public class V1Application extends Application {
 
     public V1Application() {
+        BeanConfig beanConfig = new BeanConfig();
+        beanConfig.setVersion("v1");
+        beanConfig.setSchemes(new String[]{"http", "https"});
+        beanConfig.setHost("localhost:8080");
+        beanConfig.setBasePath("/api/v1");
+        beanConfig.setResourcePackage(getClass().getPackage().getName());
+        beanConfig.setScan(true);
     }
 
 }

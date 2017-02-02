@@ -19,25 +19,22 @@ import com.redhat.ipaas.api.v1.model.Integration;
 import com.redhat.ipaas.api.v1.model.ListResult;
 import com.redhat.ipaas.api.v1.model.WithId;
 import com.redhat.ipaas.api.v1.rest.exception.IPaasServerException;
+import io.fabric8.kubernetes.api.model.ConfigMap;
+import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
+import io.fabric8.kubernetes.api.model.ConfigMapList;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.inject.Named;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
-import io.fabric8.kubernetes.api.model.ConfigMapList;
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
-import io.fabric8.kubernetes.client.KubernetesClient;
-
 @Named(Integration.KIND)
-@ApplicationScoped
+@Service
 public class IntegrationDAO implements DataAccessObject<Integration> {
 
     //The configuration key
@@ -45,11 +42,7 @@ public class IntegrationDAO implements DataAccessObject<Integration> {
 
     private KubernetesClient kubernetesClient;
 
-    public IntegrationDAO() {
-        this(new DefaultKubernetesClient());
-    }
-
-    @Inject
+    @Autowired
     public IntegrationDAO(KubernetesClient kubernetesClient) {
         this.kubernetesClient = kubernetesClient;
     }

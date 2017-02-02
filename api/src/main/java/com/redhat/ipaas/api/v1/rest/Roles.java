@@ -17,11 +17,13 @@ package com.redhat.ipaas.api.v1.rest;
 
 import com.redhat.ipaas.api.v1.model.Role;
 import io.swagger.annotations.Api;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
 
 @Path("/roles")
 @Api(value = "roles")
+@Component
 public class Roles extends BaseHandler implements Lister<Role>, Getter<Role> {
 
     @Override

@@ -17,11 +17,13 @@ package com.redhat.ipaas.api.v1.rest;
 
 import com.redhat.ipaas.api.v1.model.User;
 import io.swagger.annotations.Api;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
 
 @Path("/users")
 @Api(value = "users")
+@Component
 public class Users extends BaseHandler implements Lister<User>, Getter<User> {
 
     @Override

@@ -37,19 +37,17 @@ import com.redhat.ipaas.api.v1.model.Tag;
 import com.redhat.ipaas.api.v1.model.User;
 import com.redhat.ipaas.api.v1.model.WithId;
 import com.redhat.ipaas.api.v1.rest.exception.IPaasServerException;
-
 import org.infinispan.Cache;
 import org.infinispan.manager.CacheContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wildfly.swarm.spi.runtime.annotations.ConfigurationValue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -58,7 +56,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-@ApplicationScoped
+@Service
 public class DataManager implements DataAccessObjectRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class.getName());
@@ -66,18 +64,11 @@ public class DataManager implements DataAccessObjectRegistry {
     private ObjectMapper mapper;
     private CacheContainer caches;
 
-    // Inject optional data file by field injection.
-    @Inject
-    @ConfigurationValue("deployment.file")
+    @Value("${deployment.file}")
     private String dataFileName;
 
     private final List<DataAccessObject> dataAccessObjects = new ArrayList<>();
     private final Map<Class, DataAccessObject> dataAccessObjectMapping = new HashMap<>();
-
-    // This is needed by CDI to create a proxy, but the actual instance created will use the constructor below which
-    // has properly configured constructor injection.
-    public DataManager() {
-    }
 
     // Constructor to help with testing.
     public DataManager(CacheContainer caches, ObjectMapper mapper, DataAccessObjectProvider dataAccessObjects, String dataFileName) {
@@ -86,7 +77,7 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     // Inject mandatory via constructor injection.
-    @Inject
+    @Autowired
     public DataManager(CacheContainer caches, ObjectMapper mapper,  DataAccessObjectProvider dataAccessObjects) {
         this.mapper = mapper;
         this.caches = caches;

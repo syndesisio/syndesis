@@ -17,11 +17,13 @@ package com.redhat.ipaas.api.v1.rest;
 
 import com.redhat.ipaas.api.v1.model.Permission;
 import io.swagger.annotations.Api;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
 
 @Path("/permissions")
 @Api(value = "permissions")
+@Component
 public class Permissions extends BaseHandler implements Lister<Permission>, Getter<Permission> {
 
     @Override

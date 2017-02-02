@@ -15,8 +15,6 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
-import com.redhat.ipaas.api.v1.rest.DataManager;
-
 public interface WithDataManager {
 
     DataManager getDataManager();

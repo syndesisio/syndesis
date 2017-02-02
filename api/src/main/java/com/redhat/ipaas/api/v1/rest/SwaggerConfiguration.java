@@ -15,21 +15,22 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
-import org.jboss.resteasy.plugins.interceptors.CorsFilter;
+import io.swagger.jaxrs.listing.ApiListingResource;
+import io.swagger.jaxrs.listing.SwaggerSerializers;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.ext.Provider;
+@Configuration
+public class SwaggerConfiguration {
 
-@Provider
-public class CorsFeature implements Feature {
+    @Bean
+    public ApiListingResource apiListingResource() {
+        return new ApiListingResource();
+    }
 
-    @Override
-    public boolean configure(FeatureContext context) {
-        CorsFilter corsFilter = new CorsFilter();
-        corsFilter.getAllowedOrigins().add("*");
-        context.register(corsFilter);
-        return true;
+    @Bean
+    public SwaggerSerializers swaggerSerializers() {
+        return new SwaggerSerializers();
     }
 
 }

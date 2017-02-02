@@ -15,20 +15,24 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.Arrays;
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-@ApplicationScoped
+@Component
 public class DefaultDataAccessObjectProvider implements DataAccessObjectProvider {
 
-    @Inject
-    private IntegrationDAO integrationDAO;
+    private final IntegrationDAO integrationDAO;
 
-    @Inject
-    private IntegrationPatternDAO integrationPatternDAO;
+    private final IntegrationPatternDAO integrationPatternDAO;
+
+    @Autowired
+    public DefaultDataAccessObjectProvider(IntegrationDAO integrationDAO, IntegrationPatternDAO integrationPatternDAO) {
+        this.integrationDAO = integrationDAO;
+        this.integrationPatternDAO = integrationPatternDAO;
+    }
 
     public List<DataAccessObject> getDataAccessObjects() {
         return Arrays.asList(integrationDAO, integrationPatternDAO);

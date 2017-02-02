@@ -15,17 +15,17 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@ApplicationScoped
-public class KubernetesClientProducer {
+@Configuration
+public class KubernetesClientConfiguration {
 
-    @Produces
-    public KubernetesClient create() {
+    @Bean
+    public KubernetesClient kubernetesClient() {
         return new DefaultKubernetesClient();
     }
+
 }

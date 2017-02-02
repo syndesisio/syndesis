@@ -18,10 +18,13 @@ package com.redhat.ipaas.api.v1.rest;
 import com.redhat.ipaas.api.v1.model.ComponentGroup;
 
 import io.swagger.annotations.Api;
+import org.springframework.stereotype.Component;
+
 import javax.ws.rs.Path;
 
 @Path("/componentgroups")
 @Api(value = "componentgroups")
+@Component
 public class ComponentGroups extends BaseHandler implements Lister<ComponentGroup>, Getter<ComponentGroup> {
 
     @Override

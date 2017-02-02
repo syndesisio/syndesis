@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.swaggerui;
+package com.redhat.ipaas.runtime;
 
-public final class Version {
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.ComponentScan;
 
-    private Version() {
+@SpringBootApplication
+@ComponentScan({"com.redhat.ipaas.api.v1.rest", "com.redhat.ipaas.runtime"})
+public class Application extends SpringBootServletInitializer {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
     }
-
-    public static String getVersion() {
-        return "${project.version}";
-    }
-
 
 }
