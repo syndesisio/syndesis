@@ -38,6 +38,9 @@
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 
     <java-image.version>1.2</java-image.version>
+
+    <keycloak.start.script>standalone.sh</keycloak.start.script>
+    <keycloak.cli.script>jboss-cli.sh</keycloak.cli.script>
   </properties>
 
   <build>
