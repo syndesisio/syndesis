@@ -3,9 +3,14 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RestangularModule } from 'ng2-restangular';
 import { OAuthService, OAuthModule } from 'angular-oauth2-oidc';
+
+import { TabsModule } from 'ng2-bootstrap';
+import { ModalModule } from 'ng2-bootstrap';
+import { DropdownModule } from 'ng2-bootstrap';
+import { CollapseModule } from 'ng2-bootstrap';
+import { AlertModule } from 'ng2-bootstrap';
 
 import { AppRoutingModule } from './approuting/approuting.module';
 import { StoreModule } from './store/store.module';
@@ -46,7 +51,11 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     FormsModule,
     HttpModule,
     RestangularModule.forRoot([ConfigService, OAuthService], restangularProviderConfigurer),
-    NgbModule.forRoot(),
+    TabsModule.forRoot(),
+    ModalModule.forRoot(),
+    DropdownModule.forRoot(),
+    CollapseModule.forRoot(),
+    AlertModule.forRoot(),
     AppRoutingModule,
     StoreModule,
     IPaaSCommonModule.forRoot(),
