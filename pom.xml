@@ -122,6 +122,7 @@
     <javax.ws.rs-api.version>2.0</javax.ws.rs-api.version>
     <javaee.api.version>7.0</javaee.api.version>
     <junit.version>4.12</junit.version>
+    <keycloak.version>2.5.1.Final</keycloak.version>
     <kubernetes.client.version>1.4.33</kubernetes.client.version>
     <mockwebserver.version>0.0.4</mockwebserver.version>
     <resteasy-spring-boot-starter.version>2.2.1-RELEASE</resteasy-spring-boot-starter.version>
@@ -146,10 +147,12 @@
     <!-- third party plugin version -->
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
     <build-helper-maven-plugin.version>1.12</build-helper-maven-plugin.version>
+    <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
     <fabric8-maven-plugin.version>3.2.15</fabric8-maven-plugin.version>
     <git-commit-id-plugin.version>2.2.2</git-commit-id-plugin.version>
     <jacoco-maven-plugin.version>0.7.8</jacoco-maven-plugin.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
+    <process-exec-maven-plugin.version>0.8</process-exec-maven-plugin.version>
     <swagger-maven-plugin.version>1.0.0</swagger-maven-plugin.version>
     <swagger2markup-maven-plugin.version>1.1.0</swagger2markup-maven-plugin.version>
     <templating-maven-plugin.version>1.0.0</templating-maven-plugin.version>
@@ -295,6 +298,11 @@
         <version>${assertj-core.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-spring-security-adapter</artifactId>
+        <version>${keycloak.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -358,6 +366,16 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
           <version>${maven-dependency-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>com.bazaarvoice.maven.plugins</groupId>
+          <artifactId>process-exec-maven-plugin</artifactId>
+          <version>${process-exec-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${exec-maven-plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>

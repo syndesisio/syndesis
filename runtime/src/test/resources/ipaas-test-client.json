@@ -1,0 +1,7 @@
+{
+  "realm": "ipaas-test",
+  "bearer-only": true,
+  "auth-server-url": "http://localhost:${server.port}/auth",
+  "ssl-required": "external",
+  "resource": "ipaas-test"
+}

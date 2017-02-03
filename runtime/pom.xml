@@ -45,6 +45,14 @@
 
   <build>
     <finalName>runtime</finalName>
+
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+      </testResource>
+    </testResources>
+
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -199,6 +207,11 @@
             <configuration>
               <portNames>
                 <portName>server.port</portName>
+                <portName>jboss.management.http.port</portName>
+                <portName>jboss.management.https.port</portName>
+                <portName>jboss.ajp.port</portName>
+                <portName>jboss.http.port</portName>
+                <portName>jboss.https.port</portName>
               </portNames>
             </configuration>
           </execution>
@@ -215,12 +228,86 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-keycloak</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
-          <systemPropertyVariables>
-            <local.server.port>${server.port}</local.server.port>
-            <context-path>/api/v1</context-path>
-          </systemPropertyVariables>
+          <skip>${skipITs}</skip>
+          <artifactItems>
+            <artifactItem>
+              <groupId>org.keycloak</groupId>
+              <artifactId>keycloak-server-dist</artifactId>
+              <version>${keycloak.version}</version>
+              <type>tar.gz</type>
+              <outputDirectory>${project.build.directory}/keycloak</outputDirectory>
+            </artifactItem>
+          </artifactItems>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.bazaarvoice.maven.plugins</groupId>
+        <artifactId>process-exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>start-keycloak</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <name>Keycloak</name>
+              <workingDir>${project.build.directory}/keycloak/keycloak-${keycloak.version}</workingDir>
+              <healthcheckUrl>http://localhost:${jboss.http.port}/auth</healthcheckUrl>
+              <waitAfterLaunch>180</waitAfterLaunch>
+              <arguments>
+                <argument>bin/${keycloak.start.script}</argument>
+                <argument>-Djboss.management.http.port=${jboss.management.http.port}</argument>
+                <argument>-Djboss.management.https.port=${jboss.management.https.port}</argument>
+                <argument>-Djboss.ajp.port=${jboss.ajp.port}</argument>
+                <argument>-Djboss.http.port=${jboss.http.port}</argument>
+                <argument>-Djboss.https.port=${jboss.https.port}</argument>
+                <argument>-Dkeycloak.import=${project.basedir}/src/test/resources/ipaas-keycloak-realm.json</argument>
+              </arguments>
+              <skip>${skipITs}</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>stop-keycloak</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>bin/${keycloak.cli.script}</executable>
+              <workingDirectory>${project.build.directory}/keycloak/keycloak-${keycloak.version}</workingDirectory>
+              <arguments>
+                <argument>--connect</argument>
+                <argument>--controller=localhost:${jboss.management.http.port}</argument>
+                <argument>command=:shutdown</argument>
+              </arguments>
+              <skip>${skipITs}</skip>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -268,6 +355,10 @@
       <artifactId>spring-cloud-starter-zipkin</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-security</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
@@ -279,6 +370,10 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-spring-security-adapter</artifactId>
     </dependency>
   </dependencies>
 
@@ -303,6 +398,18 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>windows</id>
+      <activation>
+        <os>
+          <family>windows</family>
+        </os>
+      </activation>
+      <properties>
+        <keycloak.start.script>standalone.bat</keycloak.start.script>
+        <keycloak.cli.script>jboss-cli.bat</keycloak.cli.script>
+      </properties>
     </profile>
   </profiles>
 </project>
