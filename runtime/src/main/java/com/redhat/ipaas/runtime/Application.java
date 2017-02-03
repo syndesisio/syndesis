@@ -15,13 +15,14 @@
  */
 package com.redhat.ipaas.runtime;
 
+import com.redhat.ipaas.api.v1.rest.V1Application;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan({"com.redhat.ipaas.api.v1.rest", "com.redhat.ipaas.runtime"})
+@ComponentScan(basePackageClasses = {V1Application.class, Application.class})
 public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
