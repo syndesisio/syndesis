@@ -199,7 +199,7 @@
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>reserve-boot-port</id>
+            <id>reserve-ports</id>
             <goals>
               <goal>reserve-network-port</goal>
             </goals>
@@ -207,11 +207,11 @@
             <configuration>
               <portNames>
                 <portName>server.port</portName>
-                <portName>jboss.management.http.port</portName>
-                <portName>jboss.management.https.port</portName>
-                <portName>jboss.ajp.port</portName>
-                <portName>jboss.http.port</portName>
-                <portName>jboss.https.port</portName>
+                <portName>keycloak.management.http.port</portName>
+                <portName>keycloak.management.https.port</portName>
+                <portName>keycloak.ajp.port</portName>
+                <portName>keycloak.http.port</portName>
+                <portName>keycloak.https.port</portName>
               </portNames>
             </configuration>
           </execution>
@@ -226,6 +226,11 @@
               <goal>integration-test</goal>
               <goal>verify</goal>
             </goals>
+            <configuration>
+              <systemProperties>
+                <keycloak.http.port>${keycloak.http.port}</keycloak.http.port>
+              </systemProperties>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -259,6 +264,22 @@
       <plugin>
         <groupId>com.bazaarvoice.maven.plugins</groupId>
         <artifactId>process-exec-maven-plugin</artifactId>
+        <configuration>
+          <name>Keycloak</name>
+          <workingDir>${project.build.directory}/keycloak/keycloak-${keycloak.version}</workingDir>
+          <healthcheckUrl>http://localhost:${keycloak.http.port}/auth</healthcheckUrl>
+          <waitAfterLaunch>180</waitAfterLaunch>
+          <arguments>
+            <argument>bin/${keycloak.start.script}</argument>
+            <argument>-Djboss.management.http.port=${keycloak.management.http.port}</argument>
+            <argument>-Djboss.management.https.port=${keycloak.management.https.port}</argument>
+            <argument>-Djboss.ajp.port=${keycloak.ajp.port}</argument>
+            <argument>-Djboss.http.port=${keycloak.http.port}</argument>
+            <argument>-Djboss.https.port=${keycloak.https.port}</argument>
+            <argument>-Dkeycloak.import=${project.basedir}/src/test/resources/ipaas-keycloak-realm.json</argument>
+          </arguments>
+          <skip>${skipITs}</skip>
+        </configuration>
         <executions>
           <execution>
             <id>start-keycloak</id>
@@ -266,22 +287,6 @@
             <goals>
               <goal>start</goal>
             </goals>
-            <configuration>
-              <name>Keycloak</name>
-              <workingDir>${project.build.directory}/keycloak/keycloak-${keycloak.version}</workingDir>
-              <healthcheckUrl>http://localhost:${jboss.http.port}/auth</healthcheckUrl>
-              <waitAfterLaunch>180</waitAfterLaunch>
-              <arguments>
-                <argument>bin/${keycloak.start.script}</argument>
-                <argument>-Djboss.management.http.port=${jboss.management.http.port}</argument>
-                <argument>-Djboss.management.https.port=${jboss.management.https.port}</argument>
-                <argument>-Djboss.ajp.port=${jboss.ajp.port}</argument>
-                <argument>-Djboss.http.port=${jboss.http.port}</argument>
-                <argument>-Djboss.https.port=${jboss.https.port}</argument>
-                <argument>-Dkeycloak.import=${project.basedir}/src/test/resources/ipaas-keycloak-realm.json</argument>
-              </arguments>
-              <skip>${skipITs}</skip>
-            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -301,7 +306,7 @@
               <workingDirectory>${project.build.directory}/keycloak/keycloak-${keycloak.version}</workingDirectory>
               <arguments>
                 <argument>--connect</argument>
-                <argument>--controller=localhost:${jboss.management.http.port}</argument>
+                <argument>--controller=localhost:${keycloak.management.http.port}</argument>
                 <argument>command=:shutdown</argument>
               </arguments>
               <skip>${skipITs}</skip>
@@ -409,6 +414,16 @@
       <properties>
         <keycloak.start.script>standalone.bat</keycloak.start.script>
         <keycloak.cli.script>jboss-cli.bat</keycloak.cli.script>
+      </properties>
+    </profile>
+    <profile>
+      <id>keycloak-default</id>
+      <properties>
+        <keycloak.management.http.port>9990</keycloak.management.http.port>
+        <keycloak.management.https.port>9993</keycloak.management.https.port>
+        <keycloak.ajp.port>8009</keycloak.ajp.port>
+        <keycloak.http.port>8080</keycloak.http.port>
+        <keycloak.https.port>8443</keycloak.https.port>
       </properties>
     </profile>
   </profiles>
