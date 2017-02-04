@@ -29,6 +29,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
@@ -49,8 +51,7 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
     }
 
     @Bean
-    public FilterRegistrationBean keycloakAuthenticationProcessingFilterRegistrationBean(
-        KeycloakAuthenticationProcessingFilter filter) {
+    public FilterRegistrationBean keycloakAuthenticationProcessingFilterRegistrationBean(KeycloakAuthenticationProcessingFilter filter) {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean(filter);
         registrationBean.setEnabled(false);
         return registrationBean;
@@ -65,13 +66,12 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .sessionAuthenticationStrategy(sessionAuthenticationStrategy())
-            .and()
-            .authorizeRequests()
-            .antMatchers("/api/v1/**").authenticated()
-            .anyRequest().permitAll();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .sessionAuthenticationStrategy(sessionAuthenticationStrategy()).and()
+            .addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class)
+            .addFilterBefore(keycloakAuthenticationProcessingFilter(), X509AuthenticationFilter.class)
+            .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()).and().authorizeRequests()
+            .antMatchers("/api/v1/**").authenticated().anyRequest().permitAll();
     }
 
 }

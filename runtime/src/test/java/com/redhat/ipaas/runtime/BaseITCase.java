@@ -47,8 +47,6 @@ public abstract class BaseITCase {
         return restTemplate;
     }
 
-
-
     final class YamlJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
         YamlJackson2HttpMessageConverter() {
             super(new YAMLMapper(), MediaType.parseMediaType("application/yaml"));
