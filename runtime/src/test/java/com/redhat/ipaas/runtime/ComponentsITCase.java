@@ -15,7 +15,6 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.redhat.ipaas.api.v1.model.Component;
 import com.redhat.ipaas.api.v1.model.ListResult;
 import org.junit.Test;
@@ -24,27 +23,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("keycloak")
 public class ComponentsITCase extends BaseITCase {
-
-    private int keycloakPort = Integer.parseUnsignedInt(System.getProperty("keycloak.http.port", "8080"));
-
-    private String token() {
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("username", "user");
-        map.add("password", "password");
-        map.add("grant_type", "password");
-        map.add("client_id", "admin-cli");
-        ResponseEntity<JsonNode> json = restTemplate().postForEntity("http://localhost:" + keycloakPort + "/auth/realms/ipaas-test/protocol/openid-connect/token", map, JsonNode.class);
-        assertThat(json.getStatusCode()).as("get token status code").isEqualTo(HttpStatus.OK);
-        String token = json.getBody().get("access_token").textValue();
-        assertThat(token).as("access token").isNotEmpty();
-        return token;
-    }
 
     @Test
     public void componentsListWithoutToken() {
@@ -53,12 +37,13 @@ public class ComponentsITCase extends BaseITCase {
     }
 
     @Test
+    public void componentsListWithExpiredToken() {
+        get("/api/v1/components", ListResult.class, tokenRule.expiredToken(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
     public void componentsListWithValidToken() {
-        String token = token();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-        ResponseEntity<ListResult> response = restTemplate().exchange("/api/v1/components", HttpMethod.GET, new HttpEntity<>(headers), ListResult.class);
-        assertThat(response.getStatusCode()).as("components list status code").isEqualTo(HttpStatus.OK);
+        ResponseEntity<ListResult> response = get("/api/v1/components", ListResult.class);
         ListResult<Component> result = response.getBody();
         assertThat(result.getTotalCount()).as("components total").isEqualTo(50);
         assertThat(result.getItems()).as("components list").hasSize(20);
@@ -66,7 +51,8 @@ public class ComponentsITCase extends BaseITCase {
 
     @Test
     public void componentsGetTest() {
-        Component result = restTemplate().getForObject("/api/v1/components/1", Component.class);
+        ResponseEntity<Component> response = get("/api/v1/components/1", Component.class);
+        Component result = response.getBody();
         assertThat(result).isNotNull();
         assertThat(result.getId()).contains("1");
     }

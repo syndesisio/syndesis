@@ -21,10 +21,17 @@ import org.junit.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseITCase {
@@ -37,14 +44,33 @@ public abstract class BaseITCase {
 
     private TestRestTemplate restTemplate;
 
+    @Rule
+    public final APITokenRule tokenRule = new APITokenRule();
+
+    public TestRestTemplate restTemplate() {
+        return restTemplate;
+    }
+
     @Autowired
     public void setRestTemplate(TestRestTemplate testRestTemplate) {
         testRestTemplate.getRestTemplate().getMessageConverters().add(new YamlJackson2HttpMessageConverter());
         this.restTemplate = testRestTemplate;
     }
 
-    public TestRestTemplate restTemplate() {
-        return restTemplate;
+    protected <T> ResponseEntity<T> get(String url, Class<T> responseClass) {
+        return get(url, responseClass, tokenRule.validToken(), HttpStatus.OK);
+    }
+
+    protected <T> ResponseEntity<T> get(String url, Class<T> responseClass, String token) {
+        return get(url, responseClass, token, HttpStatus.OK);
+    }
+
+    protected <T> ResponseEntity<T> get(String url, Class<T> responseClass, String token, HttpStatus expectedStatus) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        ResponseEntity<T> response = restTemplate().exchange(url, HttpMethod.GET, new HttpEntity<>(headers), responseClass);
+        assertThat(response.getStatusCode()).as("status code").isEqualTo(expectedStatus);
+        return response;
     }
 
     final class YamlJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {

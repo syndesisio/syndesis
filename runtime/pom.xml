@@ -424,6 +424,7 @@
         <keycloak.ajp.port>8009</keycloak.ajp.port>
         <keycloak.http.port>8080</keycloak.http.port>
         <keycloak.https.port>8443</keycloak.https.port>
+        <exec.waitForInterrupt>true</exec.waitForInterrupt>
       </properties>
     </profile>
   </profiles>
