@@ -126,6 +126,7 @@
     <resteasy-spring-boot-starter.version>2.2.1-RELEASE</resteasy-spring-boot-starter.version>
     <spring-boot.version>1.4.4.RELEASE</spring-boot.version>
     <spring-cloud.version>Camden.SR4</spring-cloud.version>
+    <spring-cloud-kubernetes.version>0.1.1</spring-cloud-kubernetes.version>
     <slf4j.api.version>1.7.10</slf4j.api.version>
     <swagger.version>1.5.12</swagger.version>
 
@@ -188,6 +189,15 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>spring-cloud-kubernetes-bom</artifactId>
+        <version>${spring-cloud-kubernetes.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
 
       <!-- Internal Dependencies -->
       <dependency>
