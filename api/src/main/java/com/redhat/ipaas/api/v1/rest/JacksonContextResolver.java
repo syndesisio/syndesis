@@ -18,6 +18,7 @@ package com.redhat.ipaas.api.v1.rest;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import org.springframework.stereotype.Service;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -27,6 +28,7 @@ import javax.ws.rs.ext.Provider;
 // Customized {@code ContextResolver} implementation to pass ObjectMapper to use
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
+@Service
 public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
     private ObjectMapper objectMapper;
 
