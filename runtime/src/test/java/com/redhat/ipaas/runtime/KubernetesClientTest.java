@@ -13,19 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.api.v1.rest;
+package com.redhat.ipaas.runtime;
 
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import io.fabric8.kubernetes.client.KubernetesClient;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import static org.junit.Assert.assertNotNull;
 
-@Configuration
-public class KubernetesClientConfiguration {
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = { KubernetesClient.class})
+public class KubernetesClientTest {
 
-    @Bean
-    public KubernetesClient kubernetesClient() {
-        return new DefaultKubernetesClient();
+
+    @Autowired
+    private KubernetesClient client;
+
+    @Test
+    public void clientShouldNotBeNull() {
+        assertNotNull(client);
     }
 
 }
