@@ -33,7 +33,7 @@
     <failOnMissingWebXml>false</failOnMissingWebXml>
 
     <apidocs.dir>${project.build.directory}/api-docs</apidocs.dir>
-    <apidocs.output.dir>${project.build.outputDirectory}</apidocs.output.dir>
+    <apidocs.output.dir>${project.build.outputDirectory}/static</apidocs.output.dir>
 
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 
@@ -62,28 +62,6 @@
               <goal>build-info</goal>
             </goals>
           </execution>
-          <execution>
-            <id>pre-integration-test</id>
-            <goals>
-              <goal>start</goal>
-            </goals>
-            <configuration>
-              <skip>${skipITs}</skip>
-              <arguments>
-                <argument>--server.port=${server.port}</argument>
-              </arguments>
-              <maxAttempts>180</maxAttempts>
-            </configuration>
-          </execution>
-          <execution>
-            <id>post-integration-test</id>
-            <goals>
-              <goal>stop</goal>
-            </goals>
-            <configuration>
-              <skip>${skipITs}</skip>
-            </configuration>
-          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -107,43 +85,49 @@
       </plugin>
 
       <plugin>
-        <groupId>com.github.kongchen</groupId>
+        <groupId>dk.nykredit.swagger</groupId>
         <artifactId>swagger-maven-plugin</artifactId>
         <configuration>
-          <apiSources>
-            <apiSource>
-              <locations>
-                <location>com.redhat.ipaas.api.v1.rest</location>
-              </locations>
-              <swaggerDirectory>${apidocs.output.dir}</swaggerDirectory>
-              <schemes>
-                <scheme>http</scheme>
-                <scheme>https</scheme>
-              </schemes>
-              <host>localhost:8080</host>
-              <basePath>/v1</basePath>
-              <info>
-                <title>Red Hat iPaaS API</title>
-                <version>v1</version>
-                <description>
-                  The Red Hat iPaaS REST API connects to back-end services on the IPaaS and provides a single entry
-                  point for the IpaaS Console. For console developement it can run in off-line mode where it only serves
-                  responses from the response cache.
-                </description>
-                <license>
-                  <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-                  <name>Apache 2.0</name>
-                </license>
-                <contact>
-                  <email>ipaas-dev@redhat.com</email>
-                  <name>The Red Hat iPaaS Developers</name>
-                  <url>https://redhat-ipaas.github.io</url>
-                </contact>
-              </info>
-              <attachSwaggerArtifact>true</attachSwaggerArtifact>
-            </apiSource>
-          </apiSources>
+          <outputDirectory>${apidocs.output.dir}</outputDirectory>
+          <outputFormats>
+            <outputFormat>JSON</outputFormat>
+            <outputFormat>YAML</outputFormat>
+          </outputFormats>
+          <attachSwaggerArtifact>true</attachSwaggerArtifact>
+          <resourcePackages>
+            <resourcePackage>com.redhat.ipaas.api.v1.rest</resourcePackage>
+          </resourcePackages>
+          <swaggerConfig>
+            <info>
+              <title>Red Hat iPaaS API</title>
+              <version>v1</version>
+              <description>
+                The Red Hat iPaaS REST API connects to back-end services on the iPaaS and provides a single entry
+                point for the IpaaS Console. For console developement it can run in off-line mode where it only serves
+                responses from the response cache.
+              </description>
+              <license>
+                <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+                <name>Apache 2.0</name>
+              </license>
+              <contact>
+                <email>ipaas-dev@redhat.com</email>
+                <name>The Red Hat iPaaS Developers</name>
+                <url>https://redhat-ipaas.github.io</url>
+              </contact>
+            </info>
+            <schemes>http,https</schemes>
+            <host>localhost:8080</host>
+            <basePath>/api/v1</basePath>
+          </swaggerConfig>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>api</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <phase>compile</phase>
