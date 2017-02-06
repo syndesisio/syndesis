@@ -16,22 +16,19 @@
 package com.redhat.ipaas.api.v1.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.redhat.ipaas.api.v1.model.Component;
 import com.redhat.ipaas.api.v1.model.Integration;
 import com.redhat.ipaas.api.v1.model.ListResult;
+import io.fabric8.kubernetes.api.model.ConfigMap;
+import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
+import io.fabric8.kubernetes.server.mock.KubernetesMockServer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import javax.persistence.EntityExistsException;
-
-import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
-import io.fabric8.kubernetes.server.mock.KubernetesMockServer;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -41,21 +38,16 @@ public class DataManagerTest {
 
     @Rule
     public InfinispanCache infinispan = new InfinispanCache();
-    private ObjectMapper objectMapper = new ObjectMapperProducer().create();
+
     private DataManager dataManager = null;
 
+    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new Jdk8Module());
 
     private static final KubernetesMockServer MOCK = new KubernetesMockServer();
 
-
     @Before
     public void setup() {
-        DataAccessObjectProvider dataAccessObjectProvider = new DataAccessObjectProvider() {
-            @Override
-            public List<DataAccessObject> getDataAccessObjects() {
-                return Arrays.asList(new IntegrationDAO(MOCK.createClient()));
-            }
-        };
+        DataAccessObjectProvider dataAccessObjectProvider = () -> Arrays.asList(new IntegrationDAO(MOCK.createClient()));
         //Create Data Manager
         dataManager = new DataManager(infinispan.getCaches(), objectMapper, dataAccessObjectProvider, "com/redhat/ipaas/api/v1/deployment.json");
         dataManager.init();

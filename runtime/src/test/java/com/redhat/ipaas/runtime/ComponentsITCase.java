@@ -40,4 +40,11 @@ public class ComponentsITCase {
         assertThat(results.getTotalCount()).isEqualTo(50);
     }
 
+    @Test
+    public void componentsGetTest() {
+        Component result = this.restTemplate.getForObject("/api/v1/components/1", Component.class);
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).contains("1");
+    }
+
 }
