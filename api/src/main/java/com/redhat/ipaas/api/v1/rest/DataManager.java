@@ -16,8 +16,8 @@
 package com.redhat.ipaas.api.v1.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.ipaas.api.v1.model.Component;
-import com.redhat.ipaas.api.v1.model.ComponentGroup;
+import com.redhat.ipaas.api.v1.model.Connector;
+import com.redhat.ipaas.api.v1.model.ConnectorGroup;
 import com.redhat.ipaas.api.v1.model.Connection;
 import com.redhat.ipaas.api.v1.model.Environment;
 import com.redhat.ipaas.api.v1.model.EnvironmentType;
@@ -146,41 +146,41 @@ public class DataManager implements DataAccessObjectRegistry {
 
     public Class<? extends WithId> getClass(String kind) {
         switch (kind.toLowerCase()) {
-            case "component":
-                return Component.class;
-            case "componentgroup":
-                return ComponentGroup.class;
-            case "connection":
+            case Connector.KIND:
+                return Connector.class;
+            case ConnectorGroup.KIND:
+                return ConnectorGroup.class;
+            case Connection.KIND:
                 return Connection.class;
-            case "environment":
+            case Environment.KIND:
                 return Environment.class;
-            case "environmenttype":
+            case EnvironmentType.KIND:
                 return EnvironmentType.class;
-            case "integration":
+            case Integration.KIND:
                 return Integration.class;
-            case "integrationconnectionstep":
+            case IntegrationConnectionStep.KIND:
                 return IntegrationConnectionStep.class;
-            case "integrationpattern":
+            case IntegrationPattern.KIND:
                 return IntegrationPattern.class;
-            case "integrationpatterngroup":
+            case IntegrationPatternGroup.KIND:
                 return IntegrationPatternGroup.class;
-            case "integrationruntime":
+            case IntegrationRuntime.KIND:
                 return IntegrationRuntime.class;
-            case "integrationtemplate":
+            case IntegrationTemplate.KIND:
                 return IntegrationTemplate.class;
-            case "integrationtemplateconnectionstep":
+            case IntegrationTemplateConnectionStep.KIND:
                 return IntegrationTemplateConnectionStep.class;
-            case "organization":
+            case Organization.KIND:
                 return Organization.class;
-            case "permission":
+            case Permission.KIND:
                 return Permission.class;
-            case "role":
+            case Role.KIND:
                 return Role.class;
-            case "step":
+            case Step.KIND:
                 return Step.class;
-            case "tag":
+            case Tag.KIND:
                 return Tag.class;
-            case "user":
+            case User.KIND:
                 return User.class;
             default:
                 break;

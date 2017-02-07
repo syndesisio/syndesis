@@ -17,9 +17,13 @@ package com.redhat.ipaas.api.v1.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.redhat.ipaas.api.v1.model.Component;
+import com.google.common.collect.ImmutableCollection;
+import com.redhat.ipaas.api.v1.model.Connection;
+import com.redhat.ipaas.api.v1.model.Connector;
 import com.redhat.ipaas.api.v1.model.Integration;
 import com.redhat.ipaas.api.v1.model.ListResult;
+import com.redhat.ipaas.api.v1.model.Tag;
+
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
 import io.fabric8.kubernetes.server.mock.KubernetesMockServer;
@@ -52,38 +56,49 @@ public class DataManagerTest {
         dataManager = new DataManager(infinispan.getCaches(), objectMapper, dataAccessObjectProvider, "com/redhat/ipaas/api/v1/deployment.json");
         dataManager.init();
     }
-
+    
     @Test
-    public void getComponents() {
-        ListResult<Component> components = dataManager.fetchAll(Component.KIND);
-        for (Component component : components.getItems()) {
-            System.out.print(component.getId().get() + ",");
+    public void getConnectors() {
+        ListResult<Connector> connectors = dataManager.fetchAll(Connector.KIND);
+        for (Connector connector : connectors.getItems()) {
+            System.out.print(connector.getId().get() + ",");
         }
-        assertTrue(components.getTotalCount() > 10);
-        assertTrue(components.getItems().size() > 10);
-        assertEquals(components.getTotalCount(), components.getItems().size());
+        assertTrue(connectors.getTotalCount() > 1);
+        assertTrue(connectors.getItems().size() > 1);
+        assertEquals(connectors.getTotalCount(), connectors.getItems().size());
+    }
+    
+    @Test
+    public void getConnections() {
+        ListResult<Connection> connections = dataManager.fetchAll(Connection.KIND);
+        for (Connection connection : connections.getItems()) {
+            System.out.print(connection.getId().get() + ",");
+        }
+        assertTrue(connections.getTotalCount() > 1);
+        assertTrue(connections.getItems().size() > 1);
+        assertEquals(connections.getTotalCount(), connections.getItems().size());
     }
 
     @Test
-    public void getComponentsWithFilterFunction() {
-        ListResult<Component> components = dataManager.fetchAll(
-            Component.KIND,
-            resultList -> new ListResult.Builder<Component>().createFrom(resultList).items(resultList.getItems().subList(0, 1)).build()
+    public void getConnectorsWithFilterFunction() {
+        ListResult<Connector> connectors = dataManager.fetchAll(
+            Connector.KIND,
+            resultList -> new ListResult.Builder<Connector>().createFrom(resultList).items(resultList.getItems().subList(0, 1)).build()
         );
-        for (Component component : components.getItems()) {
-            System.out.print(component.getId().get() + ",");
+        for (Connector connector : connectors.getItems()) {
+            System.out.print(connector.getId().get() + ",");
         }
-        assertTrue(components.getTotalCount() > 10);
-        assertEquals(1, components.getItems().size());
+        assertTrue(connectors.getTotalCount() > 1);
+        assertEquals(1, connectors.getItems().size());
     }
 
     @Test
-    public void getComponent() {
-        Component component = dataManager.fetch(Component.KIND, "1");
-        System.out.println(component.getName());
-        assertEquals("First Component in the deployment.json is non", "non", component.getName());
+    public void getConnector() {
+        Connector connector = dataManager.fetch(Connector.KIND, "org.foo_twitter-mention-connector_1.0");
+        System.out.println(connector.getName());
+        assertEquals("First Connector in the deployment.json is TwitterMention", "TwitterMention", connector.getName());
     }
-
+    
     @Test(expected = EntityExistsException.class)
     public void createIntegration() {
         ConfigMap configMap1 = new ConfigMapBuilder()
