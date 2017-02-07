@@ -27,7 +27,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("keycloak")
 public class ComponentsITCase extends BaseITCase {
 
     @Test

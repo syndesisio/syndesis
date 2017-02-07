@@ -71,6 +71,7 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
             .addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class)
             .addFilterBefore(keycloakAuthenticationProcessingFilter(), X509AuthenticationFilter.class)
             .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()).and().authorizeRequests()
+            .antMatchers("/api/v1/swagger.*").permitAll()
             .antMatchers("/api/v1/**").authenticated().anyRequest().permitAll();
     }
 

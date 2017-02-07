@@ -34,6 +34,13 @@ public class APIDocsITCase extends BaseITCase {
     }
 
     @Test
+    public void testSwaggerJsonWithToken() {
+        ResponseEntity<JsonNode> response = get("/api/v1/swagger.json", JsonNode.class);
+        assertThat(response.getStatusCode()).as("swagger json response code").isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().get("paths").size()).as("swagger json number of paths").isPositive();
+    }
+
+    @Test
     public void testSwaggerYaml() {
         ResponseEntity<Map> response = restTemplate().getForEntity("/api/v1/swagger.yaml", Map.class);
         assertThat(response.getStatusCode()).as("swagger yaml response code").isEqualTo(HttpStatus.OK);
@@ -41,8 +48,23 @@ public class APIDocsITCase extends BaseITCase {
     }
 
     @Test
+    public void testSwaggerYamlWithToken() {
+        ResponseEntity<Map> response = get("/api/v1/swagger.yaml", Map.class);
+        assertThat(response.getStatusCode()).as("swagger yaml response code").isEqualTo(HttpStatus.OK);
+        assertThat(((Map) response.getBody().get("paths")).size()).as("swagger json number of paths").isPositive();
+    }
+
+    @Test
     public void testSwaggerDocsIndex() {
         ResponseEntity<String> response = restTemplate().getForEntity("/index.html", String.class);
+        assertThat(response.getStatusCode()).as("swagger docs index.html response code").isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().length()).as("swagger index.html length").isPositive();
+        assertThat(response.getBody()).as("swagger index.html example path").contains("/components/{id}");
+    }
+
+    @Test
+    public void testSwaggerDocsIndexWithToken() {
+        ResponseEntity<String> response = get("/index.html", String.class);
         assertThat(response.getStatusCode()).as("swagger docs index.html response code").isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().length()).as("swagger index.html length").isPositive();
         assertThat(response.getBody()).as("swagger index.html example path").contains("/components/{id}");
