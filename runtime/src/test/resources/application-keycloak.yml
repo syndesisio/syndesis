@@ -15,4 +15,5 @@
 #
 
 keycloak:
+  enabled: true
   configurationFile: classpath:/ipaas-test-client.json
