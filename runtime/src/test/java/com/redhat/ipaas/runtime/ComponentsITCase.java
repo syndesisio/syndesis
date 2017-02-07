@@ -18,31 +18,21 @@ package com.redhat.ipaas.runtime;
 import com.redhat.ipaas.api.v1.model.Component;
 import com.redhat.ipaas.api.v1.model.ListResult;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ITConfig.class)
-public class ComponentsITCase {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
+public class ComponentsITCase extends BaseITCase {
 
     @Test
     public void componentsListTest() {
-        ListResult<Component> results = this.restTemplate.getForObject("/api/v1/components", ListResult.class);
+        ListResult<Component> results = restTemplate().getForObject("/api/v1/components", ListResult.class);
         assertThat(results.getItems()).hasSize(20);
         assertThat(results.getTotalCount()).isEqualTo(50);
     }
 
     @Test
     public void componentsGetTest() {
-        Component result = this.restTemplate.getForObject("/api/v1/components/1", Component.class);
+        Component result = restTemplate().getForObject("/api/v1/components/1", Component.class);
         assertThat(result).isNotNull();
         assertThat(result.getId()).contains("1");
     }

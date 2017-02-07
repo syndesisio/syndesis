@@ -16,6 +16,7 @@
 package com.redhat.ipaas.api.v1.rest;
 
 import com.redhat.ipaas.api.v1.model.WithId;
+import io.swagger.annotations.ApiParam;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,7 +29,7 @@ public interface Getter<T extends WithId> extends Resource<T>, WithDataManager {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
-    default T get(@PathParam("id") String id) {
+    default T get(@PathParam("id") @ApiParam(required = true) String id) {
         return getDataManager().fetch(resourceKind(), id);
     }
 

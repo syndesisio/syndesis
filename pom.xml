@@ -134,6 +134,7 @@
     <!-- maven plugin version -->
     <maven-dependency-plugin.version>3.0.0</maven-dependency-plugin.version>
     <maven-enforcer-plugin.version>1.3.1</maven-enforcer-plugin.version>
+    <!-- Stick to 2.18.1 until 2.19.2 is out due to https://issues.apache.org/jira/browse/SUREFIRE-1198 -->
     <maven-failsafe-plugin.version>2.18.1</maven-failsafe-plugin.version>
     <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
     <maven-jar-plugin.version>3.0.1</maven-jar-plugin.version>
@@ -149,7 +150,7 @@
     <git-commit-id-plugin.version>2.2.2</git-commit-id-plugin.version>
     <jacoco-maven-plugin.version>0.7.8</jacoco-maven-plugin.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
-    <swagger-maven-plugin.version>3.1.4</swagger-maven-plugin.version>
+    <swagger-maven-plugin.version>1.0.0</swagger-maven-plugin.version>
     <swagger2markup-maven-plugin.version>1.1.0</swagger2markup-maven-plugin.version>
     <templating-maven-plugin.version>1.0.0</templating-maven-plugin.version>
   </properties>
@@ -311,7 +312,7 @@
           <version>${fabric8-maven-plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>com.github.kongchen</groupId>
+          <groupId>dk.nykredit.swagger</groupId>
           <artifactId>swagger-maven-plugin</artifactId>
           <version>${swagger-maven-plugin.version}</version>
         </plugin>
