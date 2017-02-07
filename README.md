@@ -19,8 +19,13 @@
 
 # Run in development mode
 
-    cd runtime
-    mvn clean package spring-boot:run
+Linux:
+
+    ./start-with-keycloak.sh
+    
+Windows:
+
+    start-with-keycloak
 
 # Deploying to Kubernetes
 

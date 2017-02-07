@@ -1,0 +1,2 @@
+keycloak:
+  configurationFile: file:target/test-classes/ipaas-test-client.json
