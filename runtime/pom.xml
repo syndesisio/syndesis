@@ -415,6 +415,67 @@
         <keycloak.start.script>.\standalone.bat</keycloak.start.script>
         <keycloak.cli.script>.\jboss-cli.bat</keycloak.cli.script>
       </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.bazaarvoice.maven.plugins</groupId>
+            <artifactId>process-exec-maven-plugin</artifactId>
+            <configuration>
+              <name>Keycloak</name>
+              <workingDir>${project.build.directory}/keycloak/keycloak-${keycloak.version}/bin</workingDir>
+              <healthcheckUrl>http://localhost:${keycloak.http.port}/auth</healthcheckUrl>
+              <waitAfterLaunch>180</waitAfterLaunch>
+              <arguments>
+                <argument>cmd.exe</argument>
+                <argument>/C</argument>
+                <argument>${keycloak.start.script}</argument>
+                <argument>-Djboss.management.http.port=${keycloak.management.http.port}</argument>
+                <argument>-Djboss.management.https.port=${keycloak.management.https.port}</argument>
+                <argument>-Djboss.ajp.port=${keycloak.ajp.port}</argument>
+                <argument>-Djboss.http.port=${keycloak.http.port}</argument>
+                <argument>-Djboss.https.port=${keycloak.https.port}</argument>
+                <argument>-Dkeycloak.import=${project.basedir}/src/test/resources/ipaas-keycloak-realm.json</argument>
+              </arguments>
+              <skip>${skipITs}</skip>
+            </configuration>
+            <executions>
+              <execution>
+                <id>start-keycloak</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>start</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>stop-keycloak</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>cmd.exe</executable>
+                  <workingDirectory>${project.build.directory}/keycloak/keycloak-${keycloak.version}/bin</workingDirectory>
+                  <arguments>
+                    <argument>/C</argument>
+                    <argument>${keycloak.cli.script}</argument>
+                    <argument>--connect</argument>
+                    <argument>--controller=localhost:${keycloak.management.http.port}</argument>
+                    <argument>command=:shutdown</argument>
+                  </arguments>
+                  <skip>${skipITs}</skip>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>keycloak-default</id>
