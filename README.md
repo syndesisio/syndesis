@@ -1,6 +1,7 @@
 # Red Hat iPaaS API
 
 [![CircleCI](https://img.shields.io/circleci/project/github/redhat-ipaas/ipaas-rest.svg)](https://circleci.com/gh/redhat-ipaas/ipaas-rest)
+[![AppVeyor](https://img.shields.io/appveyor/ci/jimmidyson/ipaas-rest/master.svg)](https://ci.appveyor.com/project/jimmidyson/ipaas-rest/)
 [![Maven Central](https://img.shields.io/maven-central/v/com.redhat.ipaas/ipaas-rest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22redhat-ipaas%22%20AND%20a%3A%22ipaas-rest%22)
 [![Dependency Status](https://dependencyci.com/github/redhat-ipaas/ipaas-rest/badge)](https://dependencyci.com/github/redhat-ipaas/ipaas-rest)
 
