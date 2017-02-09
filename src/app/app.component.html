@@ -1,5 +1,5 @@
 <header *ngIf="loggedIn">
-
+  
   <!-- Navbar: Logged Out -->
   <nav class="navbar navbar-fixed-top navbar-light loggedOut" *ngIf="!loggedIn">
     <!-- Logo -->
@@ -7,15 +7,15 @@
       <img src="{{ logoWhiteBg }}">
     </a>
   </nav>
-
+  
   <!-- Navbar: Logged In -->
   <nav class="navbar navbar-pf-vertical">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
       </button>
       <a [routerLink]=" ['/'] " class="navbar-brand">
         <!--
@@ -32,11 +32,11 @@
     </div>
     <nav class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right navbar-iconic">
-
+        
         <!-- User Dropdown -->
         <li class="dropdown">
           <a class="dropdown-toggle nav-item-iconic" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span title="Username" class="fa pficon-user"></span>&nbsp;{{(userService.user | async)?.fullName}}
+            <span title="Username" class="fa pficon-user"></span>&nbsp;{{( user | async)?.fullName}}
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -77,12 +77,14 @@
         <span class="list-group-item-value">Connections</span>
       </a>
     </li>
+    <!--
     <li class="list-group-item" routerLinkActive="active">
       <a [routerLink]=" ['admin'] ">
         <span class="fa fa-lock" data-toggle="tooltip" title="Admin"></span>
         <span class="list-group-item-value">Admin</span>
       </a>
     </li>
+    -->
   </ul>
 </div>
 <main class="container-fluid container-pf-nav-pf-vertical">

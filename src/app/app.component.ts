@@ -25,6 +25,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   url = 'https://www.twitter.com/jboss';
   loggedIn = false;
 
+  user;
+
   constructor(configService: ConfigService, private oauthService: OAuthService, private userService: UserService) {
     // URL of the SPA to redirect the user to after login
     oauthService.redirectUri = window.location.origin + '/dashboard';
@@ -51,6 +53,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         });
       },
     });
+
+    this.user = userService.user;
   }
 
   ngOnInit() {
