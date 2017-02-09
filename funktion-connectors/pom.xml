@@ -1133,6 +1133,26 @@
             <groupId>io.fabric8.funktion.connector</groupId>
             <artifactId>connector-solrcloud</artifactId>
             <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.fabric8.funktion.connector</groupId>
+            <artifactId>connector-k8amq</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.fabric8.funktion.connector</groupId>
+            <artifactId>connector-k8elasticsearch</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.fabric8.funktion.connector</groupId>
+            <artifactId>connector-k8kafka</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.fabric8.funktion.connector</groupId>
+            <artifactId>connector-k8nats</artifactId>
+            <version>${project.version}</version>
           </dependency></dependencies>
       </plugin>
     </plugins>

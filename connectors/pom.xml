@@ -249,7 +249,11 @@
       <module>connector-xslt</module>
       <module>connector-yammer</module>
       <module>connector-zookeeper</module>
-  </modules>
+  
+      <module>connector-k8amq</module>
+      <module>connector-k8elasticsearch</module>
+      <module>connector-k8kafka</module>
+      <module>connector-k8nats</module></modules>
 
     <dependencies>
       <dependency>
