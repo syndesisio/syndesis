@@ -6,6 +6,10 @@ import * as _ from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
+import { log, getCategory } from './logging';
+
+const category = getCategory('ConfigService');
+
 const defaults = Object.freeze({
   apiEndpoint: 'http://localhost:8080/v1',
   title: 'Red Hat iPaaS',
@@ -34,6 +38,7 @@ export class ConfigService {
     return this._http.get(configJson).map(res => res.json())
       .toPromise()
       .then((config) => {
+        log.infoc(() => 'Received config: ' + JSON.stringify(config, undefined, 2), category);
         this.settingsRepository = Object.freeze(_.merge({}, this.settingsRepository, config));
         return this;
       })
