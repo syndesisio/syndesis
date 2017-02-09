@@ -11,9 +11,8 @@ import { Templates } from '../../store/template/template.model';
 })
 export class TemplatesListPage implements OnInit {
 
-  private templates: Observable<Templates>;
-
-  private loading: Observable<boolean>;
+  templates: Observable<Templates>;
+  loading: Observable<boolean>;
 
   constructor(private store: TemplateStore) {
     this.templates = this.store.list;

@@ -11,8 +11,8 @@ import { Integrations } from '../../store/integration/integration.model';
 })
 export class IntegrationsListPage implements OnInit {
 
-  private readonly integrations: Observable<Integrations>;
-  private readonly loading: Observable<boolean>;
+  integrations: Observable<Integrations>;
+  loading: Observable<boolean>;
 
   constructor(private store: IntegrationStore) {
     this.integrations = this.store.list;

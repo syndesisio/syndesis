@@ -14,7 +14,7 @@ Included in this stack are the following technologies:
 * Design Patterns: [PatternFly](https://www.patternfly.org/)
 * Testing: [Jasmine](http://jasmine.github.io/) (BDD Unit Test Framework), [Karma](https://karma-runner.github.io/1.0/index.html) (Unit Test Runner), [Protractor](http://www.protractortest.org/#/) (E2E Framework), [Istanbul](https://github.com/gotwarlost/istanbul) (Code Coverage)
 * Linting: [TsLint](https://github.com/palantir/tslint) (Linting for TypeScript)
-* Logging: [js-Logger](https://github.com/jonnyreeves/js-logger) (JavaScript Logger)
+* Logging: [typescript-logging](https://github.com/mreuvers/typescript-logging) (TypeScript Logging)
 * Code Analysis: [Codelyzer](https://github.com/mgechev/codelyzer) (TsLint rules for static code analysis of Angular 2 TypeScript projects)
 
 ## Quick Start
@@ -153,6 +153,10 @@ For a list of common commands, see [here](/docs/commands.md).
 
 For a list of common commands, see [here](/docs/commands.md).
 
+### Linting
+
+To run the linter: `yarn lint`
+
 ## Configuring
 
 Configuration files live in `/config`. Configuration files are currently available for Webpack, Karma, and Protractor.
@@ -160,16 +164,6 @@ Configuration files live in `/config`. Configuration files are currently availab
 ## Contributing
 
 Pull requests are always welcome. Please read through our [Contribution](/docs/contributing.md) guidelines in the `/docs` directory.
-
-## Resources
-
-Resources used in planning and developing this project.
-
-* [Backend of iPaaS](https://github.com/fabric8io/fabric8-forge)
-* [Design Prototype](https://projects.invisionapp.com/share/4P84NS9K6#/screens)
-* [Entity Relationships](/docs/entities.md)
-* [Google Drive iPaaS Folder](https://drive.google.com/drive/folders/0B8Kpb4FsPn_fQ3NsOVRlNzIzZTg?usp=sharing)
-* [User Flow](https://drive.google.com/a/redhat.com/file/d/0B5uwxxDGbUVzNTl4aFQ4NVNnWlE/view)
 
 ## Frequently Asked Questions (FAQ)
 
