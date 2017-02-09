@@ -52,6 +52,26 @@
       <artifactId>camel-catalog</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.fabric8.funktion.camel-k8</groupId>
+      <artifactId>k8amq</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.fabric8.funktion.camel-k8</groupId>
+      <artifactId>k8elasticsearch</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.fabric8.funktion.camel-k8</groupId>
+      <artifactId>k8kafka</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.fabric8.funktion.camel-k8</groupId>
+      <artifactId>k8nats</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
     </dependency>
@@ -62,6 +82,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.10</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -103,6 +128,10 @@
         </executions>
         <configuration>
           <mainClass>io.fabric8.funktion.connector.generator.ConnectorGenerator</mainClass>
+          <arguments>
+            <argument>-classpath</argument>
+            <classpath/>
+          </arguments>
           <classpathScope>test</classpathScope>
           <systemProperties>
             <systemProperty>

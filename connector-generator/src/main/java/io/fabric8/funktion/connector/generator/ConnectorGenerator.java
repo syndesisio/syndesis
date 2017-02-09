@@ -16,8 +16,10 @@
  */
 package io.fabric8.funktion.connector.generator;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Predicate;
 import io.fabric8.funktion.support.Strings;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.utils.DomHelper;
@@ -25,6 +27,11 @@ import io.fabric8.utils.IOHelpers;
 import io.fabric8.utils.XmlUtils;
 import org.apache.camel.catalog.CamelCatalog;
 import org.apache.camel.catalog.DefaultCamelCatalog;
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -38,6 +45,7 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,6 +53,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import static io.fabric8.funktion.support.YamlHelper.createYamlMapper;
 import static io.fabric8.utils.DomHelper.firstChild;
@@ -83,7 +92,7 @@ public class ConnectorGenerator {
     }
 
     public void generate() throws IOException, ParserConfigurationException, SAXException, TransformerException {
-        CamelCatalog camelCatalog = new DefaultCamelCatalog(true);
+        CamelCatalog camelCatalog = createCamelCatalog();
         List<String> componentNames = camelCatalog.findComponentNames();
         Collections.sort(componentNames);
 
@@ -360,5 +369,37 @@ public class ConnectorGenerator {
         DomHelper.addChildElement(dependency, "version", "${project.version}");
         dependency.appendChild(dependencies.getOwnerDocument().createTextNode("\n          "));
         return true;
+    }
+
+    private CamelCatalog createCamelCatalog() throws IOException{
+        CamelCatalog result = new DefaultCamelCatalog(true);
+        //add funktion camel components
+
+        Predicate<String> filter = new FilterBuilder().includePackage("io.fabric8.funktion.camel");
+        Reflections resources = new Reflections(new ConfigurationBuilder()
+                                                    .filterInputsBy(filter)
+                                                    .setScanners(new ResourcesScanner())
+                                                    .setUrls(ClasspathHelper.forJavaClassPath()));
+
+
+        Set<String> jsonFiles = resources.getResources(Pattern.compile(".*\\.json"));
+
+
+        LOG.info("Processing Funktion Camel components ...");
+        for (String jsonFile: jsonFiles){
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(jsonFile);
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(inputStream);
+            JsonNode component = root.path("component");
+            if (!component.isMissingNode()) {
+                String scheme = component.path("scheme").asText();
+                String componentName = component.path("javaType").asText();
+                result.addComponent(scheme,componentName);
+                LOG.info("Processed component " + scheme);
+            }else{
+                LOG.error("Failed to find Component for " + jsonFile);
+            }
+        }
+        return result;
     }
 }
