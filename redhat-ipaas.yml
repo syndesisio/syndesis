@@ -241,6 +241,11 @@ objects:
           image: ' '
           imagePullPolicy: Always
           name: ipaas-rest
+          readinessProbe:
+            httpGet:
+              path: "/api/v1/version"
+              port: 8080
+            initialDelaySeconds: 5  
           ports:
           - containerPort: 8080
             name: http
