@@ -243,8 +243,8 @@ objects:
           name: ipaas-rest
           readinessProbe:
             httpGet:
-              path: "/api/v1/version"
-              port: 8080
+              path: "/health"
+              port: 8181
             initialDelaySeconds: 5  
           ports:
           - containerPort: 8080
