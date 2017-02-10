@@ -6,6 +6,10 @@ import { plural } from 'pluralize';
 import { RESTService } from './rest.service';
 import { BaseEntity } from './entity.model';
 
+import { log, getCategory } from '../../logging';
+
+const category = getCategory('AbstractStore');
+
 export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
   R extends RESTService<T, L>> {
 
@@ -36,7 +40,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         this._loading.next(false);
       },
       (error) => {
-        console.log('Error retrieving ' + plural(this.kind) + ': ' + error);
+        log.errorc(() => 'Error retrieving ' + plural(this.kind) + ': ' + error, category);
         this._loading.next(false);
       });
   }
@@ -70,7 +74,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         this._loading.next(false);
       },
       (error) => {
-        console.log('Error retrieving ' + this.kind + ': ' + error);
+        log.errorc(() => 'Error retrieving ' + this.kind + ': ' + error, category);
         this._loading.next(false);
       });
   }
@@ -82,7 +86,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         created.next(this.plain(e));
       },
       (error) => {
-        console.log('Error creating ' + this.kind + ' (' + entity + ')' + ': ' + error);
+        log.errorc(() => 'Error creating ' + this.kind + ' (' + JSON.stringify(entity, null, 2) + ')' + ': ' + error, category);
       });
     return created.share();
   }
@@ -94,7 +98,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         updated.next(this.plain(e));
       },
       (error) => {
-        console.log('Error updating ' + this.kind + ' (' + entity + ')' + ': ' + error);
+        log.errorc(() => 'Error updating ' + this.kind + ' (' + JSON.stringify(entity, null, 2) + ')' + ': ' + error, category);
       });
     return updated.share();
   }

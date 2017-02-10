@@ -43,7 +43,7 @@ export class ConfigService {
         return this;
       })
       .catch(() => {
-        console.log('Error: Configuration service unreachable!');
+        log.warnc(() => 'Error: Configuration service unreachable!', category);
       });
   }
 

@@ -40,7 +40,10 @@
       "info",
       "time",
       "timeEnd",
-      "trace"
+      "trace",
+      "log",
+      "error",
+      "warn"
     ],
     "no-construct": true,
     "no-debugger": true,
