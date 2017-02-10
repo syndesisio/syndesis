@@ -1,4 +1,4 @@
 <div class='connections list'>
   <ipaas-connections-list-toolbar></ipaas-connections-list-toolbar>
-  <ipaas-connections-list [connections]="connections | async" [loading]="loading | async"></ipaas-connections-list>
+  <ipaas-connections-list [connections]="connections | async" [loading]="loading | async" (onSelected)="onSelected($event)"></ipaas-connections-list>
 </div>
