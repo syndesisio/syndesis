@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import { IPaaSCommonModule } from '../common/common.module';
 import { ConnectionsListPage } from './list-page/list-page.component';
@@ -12,17 +12,12 @@ import { ConnectionViewWrapperComponent } from './view-wrapper/view-wrapper.comp
 import { ConnectionViewToolbarComponent } from './view-toolbar/view-toolbar.component';
 import { ConnectionViewComponent } from './view/view.component';
 
-const routes: Routes = [
-  { path: '', component: ConnectionsListPage, pathMatch: 'full' },
-  { path: ':id', component: ConnectionViewPage, pathMatch: 'full' },
-];
-
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule.forChild(routes),
-    IPaaSCommonModule,
+    RouterModule,
+    IPaaSCommonModule
   ],
   declarations: [
     ConnectionsListPage,
@@ -33,6 +28,11 @@ const routes: Routes = [
     ConnectionViewToolbarComponent,
     ConnectionViewComponent,
   ],
+  exports: [
+    ConnectionsListToolbarComponent,
+    ConnectionsListComponent,
+    ConnectionViewToolbarComponent,
+    ConnectionViewComponent,
+  ]
 })
-export class ConnectionsModule {
-}
+export class ConnectionsModule { }

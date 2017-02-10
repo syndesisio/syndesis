@@ -11,4 +11,21 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
   }
 
   protected get kind() { return 'Integration'; }
+
+  newInstance():Integration {
+    return <Integration> {
+          id: undefined,
+          createdBy: undefined,
+          createdOn: undefined,
+          description: undefined,
+          icon: undefined,
+          modifiedBy: undefined,
+          modifiedOn: undefined,
+          name: '',
+          kind: 'integration',
+          configuredProperties: <Map<string, string>>{},
+          steps: []
+        };
+  }
+
 }

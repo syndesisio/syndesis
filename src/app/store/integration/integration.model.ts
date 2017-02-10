@@ -2,8 +2,12 @@ import { Moment } from 'moment';
 
 import { BaseEntity } from '../entity/entity.model';
 
+export interface Step extends BaseEntity {
+  configuredProperties: Map<string, any>;
+}
+
 export interface Integration extends BaseEntity {
-  configuredProperties: Map<string, string>;
+  configuredProperties: Map<string, any>;
   createdBy: string;
   createdOn: Moment;
   description: string;
@@ -11,8 +15,7 @@ export interface Integration extends BaseEntity {
   modifiedBy: string;
   modifiedOn: Moment;
   name: string;
-  position: string;
-  type: string;
+  steps: Array<Step>;
 }
 
 export type Integrations = Array<Integration>;
