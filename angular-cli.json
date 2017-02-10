@@ -1,6 +1,6 @@
 {
   "project": {
-    "version": "1.0.0-beta.24",
+    "version": "1.0.0-beta.28.3",
     "name": "ipaas-ui"
   },
   "apps": [
@@ -22,6 +22,7 @@
       ],
       "index": "index.html",
       "main": "main.ts",
+      "polyfills": "polyfills.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.json",
       "prefix": "app",
@@ -53,6 +54,16 @@
       "config": "./protractor.conf.js"
     }
   },
+  "lint": [
+    {
+      "files": "src/**/*.ts",
+      "project": "src/tsconfig.json"
+    },
+    {
+      "files": "e2e/**/*.ts",
+      "project": "e2e/tsconfig.json"
+    }
+  ],
   "test": {
     "karma": {
       "config": "./karma.conf.js"

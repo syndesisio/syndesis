@@ -6,7 +6,7 @@ import { Integration } from '../../../store/integration/integration.model';
 @Component({
   selector: 'ipaas-integrations-flow-view',
   templateUrl: './flow-view.component.html',
-  styleUrls: ['./flow-view.component.scss']
+  styleUrls: ['./flow-view.component.scss'],
 })
 export class FlowViewComponent implements OnInit {
 

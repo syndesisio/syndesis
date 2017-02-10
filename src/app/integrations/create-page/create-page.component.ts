@@ -27,10 +27,10 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.route.params.pluck<Params, string>('integrationId')
-      .map((integrationId:string) => this.store.loadOrCreate(integrationId))
+      .map((integrationId: string) => this.store.loadOrCreate(integrationId))
       .subscribe();
-    this.integration.subscribe((i:Integration) => {
-      console.log("Integration: ", i);
+    this.integration.subscribe((i: Integration) => {
+      console.log('Integration: ', i);
       if (!i.steps || !i.steps.length || i.steps.length > 2) {
         this.router.navigate(['connection-select', 1], { relativeTo: this.route });
       }

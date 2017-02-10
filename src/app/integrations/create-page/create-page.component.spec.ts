@@ -25,29 +25,29 @@ describe('IntegrationsCreateComponent', () => {
       imports: [
         CommonModule,
         FormsModule,
-        IPaaSCommonModule, 
+        IPaaSCommonModule,
         StoreModule,
-        RouterTestingModule.withRoutes([]), 
-        RestangularModule.forRoot()
+        RouterTestingModule.withRoutes([]),
+        RestangularModule.forRoot(),
       ],
       declarations: [
         IntegrationsCreatePage,
         ConnectionsListComponent,
         ConnectionsListToolbarComponent,
-        FlowViewComponent
+        FlowViewComponent,
       ],
       providers: [
         MockBackend,
-        { 
-          provide: RequestOptions, 
-          useClass: BaseRequestOptions 
+        {
+          provide: RequestOptions,
+          useClass: BaseRequestOptions,
         },
         {
           provide: Http, useFactory: (backend, options) => {
             return new Http(backend, options);
           }, deps: [MockBackend, RequestOptions],
         },
-      ],      
+      ],
     })
       .compileComponents();
   }));

@@ -21,13 +21,13 @@ const routes: Routes = [
 
 // Set up routes for creating and editing using the same controllers
 ['create', 'edit/:integrationId'].forEach((route) => {
-  routes.push({ 
-    path: route, 
-    component: IntegrationsCreatePage, 
+  routes.push({
+    path: route,
+    component: IntegrationsCreatePage,
     children: [
       { path: 'connection-select/:connectionId', component: IntegrationsSelectConnectionComponent },
       { path: 'connection-configure/:connectionId', component: IntegrationsConfigureConnectionComponent },
-    ]
+    ],
   });
 });
 
@@ -49,7 +49,7 @@ const routes: Routes = [
     IntegrationsListComponent,
     IntegrationsFilterPipe,
     FlowViewComponent,
-  ]
+  ],
 })
 export class IntegrationsModule {
 }

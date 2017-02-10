@@ -17,7 +17,7 @@ import { ConnectionViewComponent } from './view/view.component';
     CommonModule,
     FormsModule,
     RouterModule,
-    IPaaSCommonModule
+    IPaaSCommonModule,
   ],
   declarations: [
     ConnectionsListPage,
@@ -33,6 +33,6 @@ import { ConnectionViewComponent } from './view/view.component';
     ConnectionsListComponent,
     ConnectionViewToolbarComponent,
     ConnectionViewComponent,
-  ]
+  ],
 })
 export class ConnectionsModule { }

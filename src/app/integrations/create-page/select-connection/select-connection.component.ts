@@ -5,12 +5,12 @@ import { log, getCategory } from '../../../logging';
 import { ConnectionStore } from '../../../store/connection/connection.store';
 import { Connections, Connection } from '../../../store/connection/connection.model';
 
-const category = getCategory("Integrations");
+const category = getCategory('Integrations');
 
 @Component({
   moduleId: module.id,
   selector: 'ipaas-integrations-select-connection',
-  templateUrl: 'select-connection.component.html'
+  templateUrl: 'select-connection.component.html',
 })
 export class IntegrationsSelectConnectionComponent implements OnInit {
 
@@ -22,8 +22,8 @@ export class IntegrationsSelectConnectionComponent implements OnInit {
     this.connections = store.list;
   }
 
-  onSelected(connection:Connection) {
-    log.debugc(() => "Selected connection: " + connection.name, category);
+  onSelected(connection: Connection) {
+    log.debugc(() => 'Selected connection: ' + connection.name, category);
   }
 
   ngOnInit() {

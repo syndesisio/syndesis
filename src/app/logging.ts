@@ -11,7 +11,7 @@ const rootCategory = new Category('root');
 const categories = {};
 
 // files/modules can import this function to create their own logging category
-export function getCategory(name:string) {
+export function getCategory(name: string) {
   if (name in categories) {
     return categories[name];
   } else {

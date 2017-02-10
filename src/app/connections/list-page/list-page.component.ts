@@ -29,7 +29,7 @@ export class ConnectionsListPage implements OnInit {
     this.store.loadAll();
   }
 
-  onSelected(connection:Connection) {
+  onSelected(connection: Connection) {
     this.router.navigate(['connections', connection.id]);
   }
 
