@@ -41,8 +41,8 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
       });
   }
 
-  newInstance():T {
-    throw "No `newInstance()` defined for " + this.kind;
+  newInstance(): T {
+    throw new Error('No `newInstance()` defined for ' + this.kind);
   }
 
   loadOrCreate(id?: string) {
@@ -54,7 +54,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
     }
   }
 
-  private plain(entity:T):T {
+  private plain(entity: T): T {
     if ('plain' in entity) {
       return (<any>entity).plain();
     } else {

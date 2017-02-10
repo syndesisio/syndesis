@@ -16,8 +16,8 @@ const routes: Routes = [
     ConnectionsModule,
   ],
   exports: [
-    RouterModule
-  ]
+    RouterModule,
+  ],
 })
 export class ConnectionsRoutesModule { }
 

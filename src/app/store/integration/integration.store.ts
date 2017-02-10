@@ -12,7 +12,7 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
 
   protected get kind() { return 'Integration'; }
 
-  newInstance():Integration {
+  newInstance(): Integration {
     return <Integration> {
           id: undefined,
           createdBy: undefined,
@@ -24,7 +24,7 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
           name: '',
           kind: 'integration',
           configuredProperties: <Map<string, string>>{},
-          steps: []
+          steps: [],
         };
   }
 

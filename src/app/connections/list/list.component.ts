@@ -20,14 +20,14 @@ export class ConnectionsListComponent {
   @Input() loading: boolean;
   @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
 
-  onSelect(connection:Connection) {
-    log.debugc(() => "Selected connection (list): " + connection.name, category);
+  onSelect(connection: Connection) {
+    log.debugc(() => 'Selected connection (list): ' + connection.name, category);
     this.selectedId = connection.id;
     this.onSelected.emit(connection);
   }
 
-  isSelected(connection:Connection) {
-    return connection.id == this.selectedId;
+  isSelected(connection: Connection) {
+    return connection.id === this.selectedId;
   }
 
 
