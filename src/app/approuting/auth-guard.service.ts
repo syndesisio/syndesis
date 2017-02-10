@@ -10,16 +10,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   constructor(private oauthService: OAuthService, private userService: UserService) { }
 
   canActivate(): boolean {
-    const loggedIn = this.oauthService.hasValidAccessToken();
-    if (!loggedIn) {
-      this.oauthService.initImplicitFlow();
-    } else {
-      this.oauthService.loadUserProfile().then(() => {
-        this.userService.setUser(this.oauthService.getIdentityClaims());
-      });
-    }
-
-    return loggedIn;
+    return this.oauthService.hasValidAccessToken();
   }
 
   canActivateChild(): boolean {

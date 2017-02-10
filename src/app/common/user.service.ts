@@ -6,7 +6,7 @@ import { User } from './user.model';
 @Injectable()
 export class UserService {
 
-  private _user = new BehaviorSubject({});
+  private _user = new BehaviorSubject(<User>{});
 
   get user() { return this._user.asObservable(); }
 
