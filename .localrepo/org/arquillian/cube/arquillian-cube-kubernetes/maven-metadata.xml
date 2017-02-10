@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.arquillian.cube</groupId>
+  <artifactId>arquillian-cube-kubernetes</artifactId>
+  <versioning>
+    <release>1.0.0.Alpha17-ipaas</release>
+    <versions>
+      <version>1.0.0.Alpha17-ipaas</version>
+    </versions>
+    <lastUpdated>20170210104928</lastUpdated>
+  </versioning>
+</metadata>

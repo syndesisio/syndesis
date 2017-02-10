@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <!-- Parent -->
+    <parent>
+        <groupId>org.arquillian.cube</groupId>
+        <artifactId>arquillian-cube-parent</artifactId>
+        <version>1.0.0.Alpha17-ipaas</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <!-- Model Version -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Artifact Configuration -->
+    <artifactId>arquillian-cube-requirement</artifactId>
+    <packaging>jar</packaging>
+    <name>Arquillian Cube Requirement</name>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.arquillian.cube</groupId>
+            <artifactId>arquillian-cube-spi</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+        </dependency>
+    </dependencies>
+</project>
