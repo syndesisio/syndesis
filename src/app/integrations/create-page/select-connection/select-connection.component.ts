@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { log, getCategory } from '../../../logging';
 import { ConnectionStore } from '../../../store/connection/connection.store';
-import { Connections } from '../../../store/connection/connection.model';
+import { Connections, Connection } from '../../../store/connection/connection.model';
+
+const category = getCategory("Integrations");
 
 @Component({
   moduleId: module.id,
@@ -17,6 +20,10 @@ export class IntegrationsSelectConnectionComponent implements OnInit {
   constructor(private store: ConnectionStore) {
     this.loading = store.loading;
     this.connections = store.list;
+  }
+
+  onSelected(connection:Connection) {
+    log.debugc(() => "Selected connection: " + connection.name, category);
   }
 
   ngOnInit() {
