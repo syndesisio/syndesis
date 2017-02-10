@@ -6,6 +6,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integration } from '../../store/integration/integration.model';
 
+import { log, getCategory } from '../../logging';
+
+const category = getCategory('IntegrationsCreatePage');
+
 @Component({
   selector: 'ipaas-integrations-create-page',
   templateUrl: './create-page.component.html',
@@ -30,7 +34,7 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
       .map((integrationId: string) => this.store.loadOrCreate(integrationId))
       .subscribe();
     this.integration.subscribe((i: Integration) => {
-      console.log('Integration: ', i);
+      log.debugc(() => 'Integration: ' + JSON.stringify(i, null, 2), category);
       if (!i.steps || !i.steps.length || i.steps.length > 2) {
         this.router.navigate(['connection-select', 1], { relativeTo: this.route });
       }
