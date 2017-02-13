@@ -1,3 +1,3 @@
 <p>Choose a connection to start</p>
-<ipaas-connections-list-toolbar></ipaas-connections-list-toolbar>
-<ipaas-connections-list [connections]="connections | async" [loading]="loading | async" (onSelected)="onSelected($event)"></ipaas-connections-list>
+<ipaas-connections-list-toolbar  [(filter)]="filter" [(sort)]="sort"></ipaas-connections-list-toolbar>
+<ipaas-connections-list [connections]="connections | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async" (onSelected)="onSelected($event)"></ipaas-connections-list>
