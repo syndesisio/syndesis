@@ -3,6 +3,8 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { log, getCategory } from '../../logging';
+import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
+import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
 import { ConnectionStore } from '../../store/connection/connection.store';
 import { Connections, Connection } from '../../store/connection/connection.model';
 
@@ -18,6 +20,16 @@ export class ConnectionsListPage implements OnInit {
   connections: Observable<Connections>;
 
   loading: Observable<boolean>;
+
+  filter: ObjectPropertyFilterConfig = {
+    filter: '',
+    propertyName: 'name',
+  };
+
+  sort: ObjectPropertySortConfig = {
+    sortField: 'name',
+    descending: false,
+  };
 
   constructor(private store: ConnectionStore,
               private router: Router) {
