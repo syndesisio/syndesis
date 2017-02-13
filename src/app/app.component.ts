@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 
 import { UserService } from './common/user.service';
 import { User } from './common/user.model';

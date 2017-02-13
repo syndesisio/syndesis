@@ -4,7 +4,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { OAuthModule } from 'angular-oauth2-oidc';
+import { OAuthModule } from 'angular-oauth2-oidc-hybrid';
 
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';

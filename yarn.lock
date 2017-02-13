@@ -251,9 +251,9 @@ angular-cli@1.0.0-beta.28.3:
     webpack-sources "^0.1.3"
     zone.js "^0.7.2"
 
-angular-oauth2-oidc@1.0.20:
+angular-oauth2-oidc-hybrid@1.0.20:
   version "1.0.20"
-  resolved "https://registry.yarnpkg.com/angular-oauth2-oidc/-/angular-oauth2-oidc-1.0.20.tgz#9b82944e2215c4efc95a223d318b85443948b641"
+  resolved "https://registry.yarnpkg.com/angular-oauth2-oidc-hybrid/-/angular-oauth2-oidc-hybrid-1.0.20.tgz#5430fc3e1aecc790d704e5801388d276ecc2f11b"
   dependencies:
     base64-js "^1.2.0"
     js-base64 "^2.1.9"

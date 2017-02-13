@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild } from '@angular/router';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 
 import { UserService } from '../common/user.service';
 

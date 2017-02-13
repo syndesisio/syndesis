@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { RestangularModule } from 'ng2-restangular';
-import { OAuthService, OAuthModule } from 'angular-oauth2-oidc';
+import { OAuthService, OAuthModule } from 'angular-oauth2-oidc-hybrid';
 
 import { TabsModule, ModalModule, DropdownModule, CollapseModule, AlertModule } from 'ng2-bootstrap';
 
