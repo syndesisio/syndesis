@@ -1,16 +1,16 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 
 import { log, getCategory } from '../../logging';
 import { Connections, Connection } from '../../store/connection/connection.model';
 
-const category = getCategory('Connections');
+let category = getCategory('Connections');
 
 @Component({
   selector: 'ipaas-connections-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
 })
-export class ConnectionsListComponent {
+export class ConnectionsListComponent implements OnInit {
 
   truncateLimit = 80;
   truncateTrail = '…';
@@ -30,5 +30,9 @@ export class ConnectionsListComponent {
     return connection.id === this.selectedId;
   }
 
+
+  ngOnInit() {
+    log.debugc(() => 'Got connections: ' + JSON.stringify(this.connections, undefined, 2), category);
+  }
 
 }
