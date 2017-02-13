@@ -18,11 +18,11 @@ export class IntegrationsSelectConnectionComponent implements OnInit {
 
   connections: Observable<Connections>;
   loading: Observable<boolean>;
-  filter:ObjectPropertyFilterConfig = {
+  filter: ObjectPropertyFilterConfig = {
     filter: '',
     propertyName: 'name',
   };
-  sort:ObjectPropertySortConfig = {
+  sort: ObjectPropertySortConfig = {
     sortField: 'name',
     descending: false,
   };
