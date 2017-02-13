@@ -23,12 +23,12 @@ export class ConnectionsListPage implements OnInit {
 
   filter: ObjectPropertyFilterConfig = {
     filter: '',
-    propertyName: 'name'
+    propertyName: 'name',
   };
 
   sort: ObjectPropertySortConfig = {
     sortField: 'name',
-    descending: false
+    descending: false,
   };
 
   constructor(private store: ConnectionStore,

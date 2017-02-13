@@ -3,7 +3,7 @@ import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { log, getCategory } from '../../logging';
 import { Connections, Connection } from '../../store/connection/connection.model';
 
-let category = getCategory('Connections');
+const category = getCategory('Connections');
 
 @Component({
   selector: 'ipaas-connections-list',
@@ -29,7 +29,6 @@ export class ConnectionsListComponent implements OnInit {
   isSelected(connection: Connection) {
     return connection.id === this.selectedId;
   }
-
 
   ngOnInit() {
     log.debugc(() => 'Got connections: ' + JSON.stringify(this.connections, undefined, 2), category);

@@ -13,7 +13,7 @@ export class ConnectionsListToolbarComponent {
   @Input()
   filter: ObjectPropertyFilterConfig = {
     filter: '',
-    propertyName: 'name'
+    propertyName: 'name',
   };
   @Output()
   filterChange = new EventEmitter<ObjectPropertyFilterConfig>();
@@ -21,19 +21,19 @@ export class ConnectionsListToolbarComponent {
   @Input()
   sort: ObjectPropertySortConfig = {
     sortField: 'name',
-    descending: false 
+    descending: false ,
   };
   @Output()
   sortChange = new EventEmitter<ObjectPropertySortConfig>();
 
   constructor() { }
 
-  setPropertyName(propertyName:string) {
+  setPropertyName(propertyName: string) {
     this.filter.propertyName = propertyName;
     this.filterChange.emit(this.filter);
   }
 
-  setSortField(propertyName:string) {
+  setSortField(propertyName: string) {
     this.sort.sortField = propertyName;
     this.sortChange.emit(this.sort);
   }
@@ -43,7 +43,7 @@ export class ConnectionsListToolbarComponent {
     this.sortChange.emit(this.sort);
   }
 
-  filterInputChange(value:string) {
+  filterInputChange(value: string) {
     this.filter.filter = value;
     this.filterChange.emit(this.filter);
   }

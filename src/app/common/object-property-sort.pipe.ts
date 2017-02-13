@@ -9,15 +9,15 @@ export class ObjectPropertySortConfig {
   name: 'objectPropertySort',
 })
 export class ObjectPropertySortPipe {
-  transform(objects:any[], config:ObjectPropertySortConfig) {
+  transform(objects: any[], config: ObjectPropertySortConfig) {
     if (!config || !('sortField' in config)) {
       return objects;
     }
     // operate on a clone
-    let answer = objects.slice(0).sort((a, b) => {
-      let propA = a[config.sortField];
-      let propB = b[config.sortField];
-      switch(typeof propA) {
+    const answer = objects.slice(0).sort((a, b) => {
+      const propA = a[config.sortField];
+      const propB = b[config.sortField];
+      switch (typeof propA) {
         case 'string':
           return (<string>propA).localeCompare(propB);
         case 'number':
@@ -30,7 +30,7 @@ export class ObjectPropertySortPipe {
           return 1;
       }
     });
-    if(config.descending) {
+    if (config.descending) {
       answer.reverse();
     }
     return answer;
