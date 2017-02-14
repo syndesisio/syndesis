@@ -1,2 +1,3 @@
-# connectors
-Apache Camel Connectors for the iPaaS
+# iPaaS Connectors
+
+Apache Camel Connectors for Red Hat iPaaS
