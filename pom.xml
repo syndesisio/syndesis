@@ -140,6 +140,7 @@
 
   <modules>
     <module>connectors</module>
+    <module>examples</module>
   </modules>
 
   <dependencyManagement>
