@@ -7,25 +7,13 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { log, getCategory } from './logging';
+import { environment } from '../environments/environment';
 
 const category = getCategory('ConfigService');
 
-const defaults = Object.freeze({
-  apiEndpoint: 'http://localhost:8080/v1',
-  title: 'Red Hat iPaaS',
-  oauth: {
-    authorize: 'https://api.rh-idev.openshift.com/oauth/authorize',
-    userInfo: 'https://api.rh-idev.openshift.com/oapi/v1/users/~',
-    clientId: 'system:serviceaccount:staging:ipaas-client',
-    scopes: ['user:info', 'user:check-access', 'role:edit:staging:!'],
-  },
-});
+const defaults = environment.config;
 
 const defaultConfigJson = '/config.json';
-
-export function configServiceInitializer(config: ConfigService) {
-  return () => config.load();
-}
 
 @Injectable()
 export class ConfigService {
@@ -38,12 +26,13 @@ export class ConfigService {
     return this._http.get(configJson).map(res => res.json())
       .toPromise()
       .then((config) => {
-        log.infoc(() => 'Received config: ' + JSON.stringify(config, undefined, 2), category);
+        log.debugc(() => 'Received config: ' + JSON.stringify(config, undefined, 2), category);
         this.settingsRepository = Object.freeze(_.merge({}, this.settingsRepository, config));
+        log.debugc(() => 'Using merged config: ' + JSON.stringify(this.settingsRepository, undefined, 2), category);
         return this;
       })
       .catch(() => {
-        log.warnc(() => 'Error: Configuration service unreachable!', category);
+        log.warnc(() => 'Error: Configuration service unreachable! Using defaults: ' + JSON.stringify(this.settingsRepository), category);
       });
   }
 
@@ -60,7 +49,7 @@ export class ConfigService {
       return this.settingsRepository[group];
     }
 
-    if (!this.settingsRepository[group][key]) {
+    if (this.settingsRepository[group][key] === undefined) {
       throw new Error(`Error: No setting found with the specified group/key [${group}/${key}]!`);
     }
 

@@ -4,7 +4,7 @@ import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { AuthGuard } from './auth-guard.service';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full', canActivate: [AuthGuard] },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'dashboard', loadChildren: '../dashboard/dashboard.module#DashboardModule', canActivate: [AuthGuard] },
   { path: 'integrations', loadChildren: '../integrations/integrations.module#IntegrationsModule', canActivate: [AuthGuard] },
   { path: 'templates', loadChildren: '../templates/templates-routes.module#TemplateRoutesModule', canActivate: [AuthGuard] },

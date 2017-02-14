@@ -1,8 +1,9 @@
 import { Component, ChangeDetectionStrategy, OnInit, AfterViewInit } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { Observable } from 'rxjs/Observable';
+import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 
-import { ConfigService } from './config.service';
 import { UserService } from './common/user.service';
+import { User } from './common/user.model';
 
 @Component({
   selector: 'ipaas-root',
@@ -11,7 +12,6 @@ import { UserService } from './common/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  name = 'Red Hat iPaaS';
 
   // White BG
   logoWhiteBg = 'assets/images/rh_ipaas_small.svg';
@@ -25,40 +25,14 @@ export class AppComponent implements OnInit, AfterViewInit {
   url = 'https://www.twitter.com/jboss';
   loggedIn = false;
 
-  user;
+  user: Observable<User>;
 
-  constructor(configService: ConfigService, private oauthService: OAuthService, private userService: UserService) {
-    // URL of the SPA to redirect the user to after login
-    oauthService.redirectUri = window.location.origin + '/dashboard';
-
-    // The SPA's id. The SPA is registerd with this id at the auth-server
-    oauthService.clientId = configService.getSettings('oauth', 'clientId');
-
-    // set the scope for the permissions the client should request
-    // The first three are defined by OIDC. The 4th is a usecase-specific one
-    oauthService.scope = (configService.getSettings('oauth', 'scopes') as string[]).join(' ');
-
-    // Use setStorage to use sessionStorage or another implementation of the TS-type Storage
-    // instead of localStorage
-    oauthService.setStorage(sessionStorage);
-
-    // Login-Url
-    oauthService.loginUrl = configService.getSettings('oauth', 'authorize');
-    this.oauthService.userinfoEndpoint = configService.getSettings('oauth', 'userInfo');
-
-    this.oauthService.tryLogin({
-      onTokenReceived: (_context) => {
-        this.oauthService.loadUserProfile().then(() => {
-          this.userService.setUser(this.oauthService.getIdentityClaims());
-        });
-      },
-    });
-
-    this.user = userService.user;
+  constructor(private oauthService: OAuthService, private userService: UserService) {
   }
 
   ngOnInit() {
     this.loggedIn = this.oauthService.hasValidAccessToken();
+    this.user = this.userService.user;
   }
 
   ngAfterViewInit() {
