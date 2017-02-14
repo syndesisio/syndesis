@@ -20,7 +20,7 @@ parameters:
   from: "[a-zA-Z0-9]{40}"
   required: true
 - name: KEYCLOAK_IPAAS_REALM_NAME
-  description: iPaaS realm name
+  description: Keycloak iPaaS realm name
   value: ipaas
   required: true
 - name: KEYCLOAK_IPAAS_REST_CLIENT_SECRET
@@ -29,7 +29,7 @@ parameters:
   from: "[a-zA-Z0-9]{64}"
   required: true
 - name: OPENSHIFT_MASTER
-  description: Public OpenShift master adress
+  description: Public OpenShift master address
   value: https://localhost:8443
   required: true
 - name: OPENSHIFT_OAUTH_CLIENT_ID
