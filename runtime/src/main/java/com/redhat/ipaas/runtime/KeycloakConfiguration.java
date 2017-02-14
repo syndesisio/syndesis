@@ -25,6 +25,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -71,6 +72,7 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
             .addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class)
             .addFilterBefore(keycloakAuthenticationProcessingFilter(), X509AuthenticationFilter.class)
             .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()).and().authorizeRequests()
+            .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers("/api/v1/swagger.*").permitAll()
             .antMatchers("/api/v1/**").authenticated().anyRequest().permitAll();
     }
