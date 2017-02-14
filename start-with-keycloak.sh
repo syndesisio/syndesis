@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Copyright (C) 2016 Red Hat, Inc.
 #
@@ -14,10 +15,6 @@
 # limitations under the License.
 #
 
-version: '{build}'
-pull_requests:
-  do_not_increment_build_number: true
-build_script:
-- mvnw clean package -DskipTests
-test_script:
-- mvnw clean install
+
+cd runtime
+exec ../mvnw -Pkeycloak-default -Dexec.waitForInterrupt=false dependency:unpack process-exec:start spring-boot:run -Drun.arguments="--spring.profiles.active=keycloak"

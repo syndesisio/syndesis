@@ -1,7 +1,7 @@
 # Red Hat iPaaS API
 
-[![CircleCI](https://img.shields.io/circleci/project/github/redhat-ipaas/ipaas-rest.svg)](https://circleci.com/gh/redhat-ipaas/ipaas-rest)
-[![AppVeyor](https://img.shields.io/appveyor/ci/jimmidyson/ipaas-rest/master.svg)](https://ci.appveyor.com/project/jimmidyson/ipaas-rest/)
+[![CircleCI](https://circleci.com/gh/redhat-ipaas/ipaas-rest.png)](https://circleci.com/gh/redhat-ipaas/ipaas-rest)
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/v6ycvs9nw6o2t821/branch/master?svg=true)](https://ci.appveyor.com/project/jimmidyson/ipaas-rest/)
 [![Maven Central](https://img.shields.io/maven-central/v/com.redhat.ipaas/ipaas-rest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22redhat-ipaas%22%20AND%20a%3A%22ipaas-rest%22)
 [![Dependency Status](https://dependencyci.com/github/redhat-ipaas/ipaas-rest/badge)](https://dependencyci.com/github/redhat-ipaas/ipaas-rest)
 
@@ -9,6 +9,7 @@
 - [Running](#run-in-development-mode)
 - [Deploying](#deploying-to-kubernetes)
 - [Endpoints](#endpoints)
+- [Authentication](#authentication)
 
 ### Swagger
 [![Swagger](http://dgrechka.net/swagger_validator_content_type_proxy.php?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-rest/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)](https://online.swagger.io/validator/debug?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-rest/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)
@@ -19,8 +20,13 @@
 
 # Run in development mode
 
-    cd runtime
-    mvn clean package spring-boot:run
+Linux:
+
+    ./start-with-keycloak.sh
+    
+Windows:
+
+    start-with-keycloak
 
 # Deploying to Kubernetes
 
@@ -39,4 +45,33 @@ This demo endpoint has some preloaded data and can be used for testing and demoi
 
 # Authentication
 
-Authentication is provided by KeyCloak. At the moment authentication is turned on and you will need to allow access to OpenShift using your GitHub account.
+The REST API is protected via an OAuth 2.0 Bearer Token. The REST API server is a resource server as defined in
+[The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://tools.ietf.org/html/rfc6750). This requires all requests
+include a valid access token in the `Authorization` header of the request (there are other methods but they are discouraged).
+The header should look like:
+
+    Authorization: Bearer MDQyODExLCJpc3MiOi...
+
+The current implementation uses [Keycloak](http://keycloak.org/) as an OAuth Authorization Server. Keycloak provides the capability
+to broker multiple identity providers and this allows the iPaaS to be independent of identity providers.
+
+## Getting an access token locally
+
+If you want to try out the REST API manually, try the following steps (note that this requires installation of the amazing [`jq`]()):
+
+```bash
+$ ./start-with-keycloak.sh
+
+# In another terminal... get a token from keycloak authenticating with `user`/`password`
+$ TOKEN=$(curl \                                                                
+    -d "client_id=admin-cli" \ 
+    -d "username=user" \
+    -d "password=password" \
+    -d "grant_type=password" \
+    "http://localhost:8282/auth/realms/ipaas-test/protocol/openid-connect/token" | jq -r .access_token)
+    
+$ curl http://localhost:8080/api/v1/components -H "Authorization: Bearer $TOKEN"
+
+# Validate the REST API requires the valid token - should return a 401
+$ curl http://localhost:8080/api/v1/components
+```

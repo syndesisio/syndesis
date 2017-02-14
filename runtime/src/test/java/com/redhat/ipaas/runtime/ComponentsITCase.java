@@ -18,21 +18,40 @@ package com.redhat.ipaas.runtime;
 import com.redhat.ipaas.api.v1.model.Component;
 import com.redhat.ipaas.api.v1.model.ListResult;
 import org.junit.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ComponentsITCase extends BaseITCase {
 
     @Test
-    public void componentsListTest() {
-        ListResult<Component> results = restTemplate().getForObject("/api/v1/components", ListResult.class);
-        assertThat(results.getItems()).hasSize(20);
-        assertThat(results.getTotalCount()).isEqualTo(50);
+    public void componentsListWithoutToken() {
+        ResponseEntity<ListResult> response = restTemplate().getForEntity("/api/v1/components", ListResult.class);
+        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void componentsListWithExpiredToken() {
+        get("/api/v1/components", ListResult.class, tokenRule.expiredToken(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void componentsListWithValidToken() {
+        ResponseEntity<ListResult> response = get("/api/v1/components", ListResult.class);
+        ListResult<Component> result = response.getBody();
+        assertThat(result.getTotalCount()).as("components total").isEqualTo(50);
+        assertThat(result.getItems()).as("components list").hasSize(20);
     }
 
     @Test
     public void componentsGetTest() {
-        Component result = restTemplate().getForObject("/api/v1/components/1", Component.class);
+        ResponseEntity<Component> response = get("/api/v1/components/1", Component.class);
+        Component result = response.getBody();
         assertThat(result).isNotNull();
         assertThat(result.getId()).contains("1");
     }
