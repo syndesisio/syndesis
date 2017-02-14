@@ -12,6 +12,7 @@ import { IntegrationsListToolbarComponent } from './list-toolbar/list-toolbar.co
 import { IntegrationsFilterPipe } from './integrations-filter.pipe';
 import { IntegrationsListComponent } from './list/list.component';
 import { FlowViewComponent } from './create-page/flow-view/flow-view.component';
+import { CurrentFlow } from './create-page/current-flow.service';
 import { IPaaSCommonModule } from '../common/common.module';
 import { ConnectionsModule } from '../connections/connections.module';
 
@@ -25,8 +26,8 @@ const routes: Routes = [
     path: route,
     component: IntegrationsCreatePage,
     children: [
-      { path: 'connection-select/:connectionId', component: IntegrationsSelectConnectionComponent },
-      { path: 'connection-configure/:connectionId', component: IntegrationsConfigureConnectionComponent },
+      { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
+      { path: 'connection-configure/:position', component: IntegrationsConfigureConnectionComponent },
     ],
   });
 });
@@ -49,6 +50,9 @@ const routes: Routes = [
     IntegrationsListComponent,
     IntegrationsFilterPipe,
     FlowViewComponent,
+  ],
+  providers: [
+    CurrentFlow,
   ],
 })
 export class IntegrationsModule {
