@@ -7,7 +7,7 @@ parameters:
   description: The external hostname to access the iPaaS
   value: ipaas-dev.127.0.0.1.nip.io
 - name: KEYCLOAK_ROUTE_HOSTNAME
-  description: The external hostname to access the iPaaS Keycloak
+  description: The external hostname to access the iPaaS Keycloak directly
   value: ipaas-keycloak-dev.127.0.0.1.nip.io
   required: true
 - name: KEYCLOAK_ADMIN_USERNAME
@@ -208,8 +208,7 @@ objects:
             - key: ipaas-realm.json
               path: config/ipaas-realm.json
         - name: ipaas-keycloak-tls
-          emptyDir:
-            medium: Memory
+          emptyDir: {}
     triggers:
     - type: ConfigChange
 - apiVersion: v1

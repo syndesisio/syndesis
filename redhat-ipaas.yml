@@ -261,8 +261,7 @@ objects:
             - key: ipaas-realm.json
               path: config/ipaas-realm.json
         - name: ipaas-keycloak-tls
-          emptyDir:
-            medium: Memory
+          emptyDir: {}
     triggers:
     - imageChangeParams:
         automatic: true
