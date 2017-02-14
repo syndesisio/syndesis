@@ -5,7 +5,7 @@
   "baseVersion": "2.19.0-SNAPSHOT",
   "name": "TwitterMention",
   "scheme": "twitter-mention",
-  "javaType": "com.redhat.ipaas.connector.TwitterMentionComponent",
+  "javaType": "com.redhat.ipaas.connector.twitter.TwitterMentionComponent",
   "groupId": "com.redhat.ipaas",
   "artifactId": "twitter-mention-connector",
   "version": "1.0",

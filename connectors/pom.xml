@@ -33,7 +33,7 @@
 
   <modules>
     <module>twitter-mention-connector</module>
+    <module>salesforce-upsert-contact-connector</module>
   </modules>
-
 
 </project>

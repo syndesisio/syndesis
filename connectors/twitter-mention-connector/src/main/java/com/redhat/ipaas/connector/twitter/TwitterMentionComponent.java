@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.connector;
+package com.redhat.ipaas.connector.twitter;
 
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
@@ -23,7 +23,7 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
 public class TwitterMentionComponent extends DefaultConnectorComponent {
     
     public TwitterMentionComponent() {
-        super("twitter-mention", "com.redhat.ipaas.connector.TwitterMentionComponent");
+        super("twitter-mention", "com.redhat.ipaas.connector.twitter.TwitterMentionComponent");
     }
 
 }
