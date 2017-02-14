@@ -1,0 +1,26 @@
+{
+  "component": {
+    "kind": "component",
+    "baseScheme": "twitter",
+    "scheme": "twitter-mention",
+    "syntax": "twitter-mention:kind",
+    "title": "TwitterMention",
+    "description": "Connection from twitter when anyone mention you",
+    "label": "twitter",
+    "deprecated": "false",
+    "async": "false",
+    "consumerOnly": "true",
+    "javaType": "org.foo.mention.TwitterMentionComponent",
+    "groupId": "com.redhat.ipaas",
+    "artifactId": "twitter-mention-connector",
+    "version": "0.1-SNAPSHOT"
+  },
+  "componentProperties": {
+    "accessToken": {"kind":"property","group":"security","label":"security","required":"false","type":"string","javaType":"java.lang.String","deprecated":"false","secret":"true","description":"The access token"},
+    "accessTokenSecret": {"kind":"property","group":"security","label":"security","required":"false","type":"string","javaType":"java.lang.String","deprecated":"false","secret":"true","description":"The access token secret"},
+    "consumerKey": {"kind":"property","group":"security","label":"security","required":"false","type":"string","javaType":"java.lang.String","deprecated":"false","secret":"true","description":"The consumer key"},
+    "consumerSecret": {"kind":"property","group":"security","label":"security","required":"false","type":"string","javaType":"java.lang.String","deprecated":"false","secret":"true","description":"The consumer secret"}
+  },
+  "properties": {
+  }
+}

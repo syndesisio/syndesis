@@ -135,8 +135,6 @@
     <git-commit-id-plugin.version>2.2.2</git-commit-id-plugin.version>
     <jacoco-maven-plugin.version>0.7.8</jacoco-maven-plugin.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
-    <swagger-maven-plugin.version>1.0.0</swagger-maven-plugin.version>
-    <swagger2markup-maven-plugin.version>1.1.0</swagger2markup-maven-plugin.version>
     <templating-maven-plugin.version>1.0.0</templating-maven-plugin.version>
   </properties>
 

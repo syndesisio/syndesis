@@ -19,6 +19,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <parent>
     <groupId>com.redhat.ipaas</groupId>
     <artifactId>ipaas-connectors-project</artifactId>
@@ -29,5 +30,10 @@
   <artifactId>connectors</artifactId>
   <name>iPaaS Connectors :: Connectors</name>
   <packaging>pom</packaging>
+
+  <modules>
+    <module>twitter-mention-connector</module>
+  </modules>
+
 
 </project>
