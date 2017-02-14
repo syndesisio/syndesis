@@ -10,7 +10,7 @@
     "deprecated": "false",
     "async": "false",
     "consumerOnly": "true",
-    "javaType": "org.foo.mention.TwitterMentionComponent",
+    "javaType": "com.redhat.ipaas.connector.twitter.TwitterMentionComponent",
     "groupId": "com.redhat.ipaas",
     "artifactId": "twitter-mention-connector",
     "version": "0.1-SNAPSHOT"

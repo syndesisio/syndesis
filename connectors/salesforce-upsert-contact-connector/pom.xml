@@ -202,7 +202,7 @@
                 <configuration>
                   <version>37.0</version>
                   <outputDirectory>src/generated/java</outputDirectory>
-                  <packageName>org.foo.salesforce.upsert.contact</packageName>
+                  <packageName>com.redhat.ipaas.connector.salesforce</packageName>
                   <includes>Contact</includes>
                 </configuration>
               </execution>
