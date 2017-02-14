@@ -24,7 +24,7 @@
     "@angular/platform-browser": "2.4.3",
     "@angular/platform-browser-dynamic": "2.4.3",
     "@angular/router": "3.4.3",
-    "angular-oauth2-oidc-hybrid": "1.0.20",
+    "angular-oauth2-oidc-hybrid": "^1.0.22",
     "bootstrap": "3.3.7",
     "core-js": "2.4.1",
     "immutable": "3.8.1",
