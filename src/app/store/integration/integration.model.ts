@@ -3,7 +3,7 @@ import { Moment } from 'moment';
 import { BaseEntity } from '../entity/entity.model';
 
 export interface Step extends BaseEntity {
-  configuredProperties: Map<string, any>;
+  configuredProperties: string;
 }
 
 export interface Integration extends BaseEntity {

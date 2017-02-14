@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
+import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { TabsModule } from 'ng2-bootstrap';
 
 import { IntegrationsCreatePage } from './create-page/create-page.component';
@@ -36,6 +39,9 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
+    DynamicFormsCoreModule,
+    DynamicFormsBootstrapUIModule,
     RouterModule.forChild(routes),
     ConnectionsModule,
     TabsModule,
