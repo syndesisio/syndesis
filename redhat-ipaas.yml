@@ -214,6 +214,20 @@ objects:
               }]
             }]
       spec:
+        initContainers:
+        - name: openshift-ca-pemtokeystore
+          image: ${PEMTOKEYSTORE_IMAGE}
+          imagePullPolicy: IfNotPresent
+          args:
+          - -keystore
+          - /tls-keystore/openshift-truststore.jks
+          - -ca-file
+          - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          - -ca-file
+          - /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+          volumeMounts:
+          - name: ipaas-keycloak-tls
+            mountPath: /tls-keystore
         containers:
         - name: ipaas-keycloak
           args:
