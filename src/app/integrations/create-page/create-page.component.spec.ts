@@ -13,6 +13,7 @@ import { FlowViewComponent } from './flow-view/flow-view.component';
 import { ConnectionsListComponent } from '../../connections/list/list.component';
 import { ConnectionsListToolbarComponent } from '../../connections/list-toolbar/list-toolbar.component';
 import { StoreModule } from '../../store/store.module';
+import { CurrentFlow } from './current-flow.service';
 
 import { IntegrationsCreatePage } from './create-page.component';
 
@@ -47,6 +48,7 @@ describe('IntegrationsCreateComponent', () => {
             return new Http(backend, options);
           }, deps: [MockBackend, RequestOptions],
         },
+        CurrentFlow,
       ],
     })
       .compileComponents();

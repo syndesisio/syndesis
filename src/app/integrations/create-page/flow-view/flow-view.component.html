@@ -27,10 +27,10 @@
           <i class="fa fa-chevron-down"></i> Set up this connection
           <ul>
             <li>
-              Choose a connection
+              <span [class]="getClass('connection-select', 0)">Choose a connection</span>
             </li>
             <li>
-              Configure the connection
+              <span [class]="getClass('connection-configure', 0)">Configure the connection</span>              
             </li>
           </ul>
         </li>
@@ -40,9 +40,14 @@
       <h5>Finish</h5>
       <ul>
         <li>
-          <i class="fa fa-chevron-right"></i> Set up this connection
+          <i class="fa fa-chevron-down"></i> Set up this connection
           <ul>
-            <li></li>
+            <li>
+              <span [class]="getClass('connection-select', 1)">Choose a connection</span>
+            </li>
+            <li>
+              <span [class]="getClass('connection-configure', 1)">Configure the connection</span>              
+            </li>                            
           </ul>
         </li>
       </ul>

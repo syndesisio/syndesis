@@ -1,8 +1,7 @@
 <div class="integrations create">
   <div class="wizard-pf-row">
     <div class="wizard-pf-sidebar">
-      <ipaas-integrations-flow-view 
-        [integration]="integration"></ipaas-integrations-flow-view>
+      <ipaas-integrations-flow-view></ipaas-integrations-flow-view>
     </div>
     <div class="wizard-pf-main">
       <ol class="breadcrumb">
@@ -13,7 +12,10 @@
       <router-outlet></router-outlet>
       <!-- Wizard Footer -->
       <div class='wizard-pf-footer'>
-        <button type='button' class='btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss'>Cancel</button>
+        <button type='button' class='btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss' (click)="cancel()">Cancel</button>
+        <button type="button" class="btn btn-primary" [disabled]="!canContinue" (click)="continue()" *ngIf="!(getCurrentChild() === 'connection-configure' && position === 1)">Next</button>
+        <!-- TODO hiding showing hack -->        
+        <button type="button" class="btn btn-primary" *ngIf="getCurrentChild() === 'connection-configure' && position === 1" (click)="finish()">Finish</button>
       </div>
     </div>
   </div>
