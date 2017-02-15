@@ -12,16 +12,22 @@ export class FormFactoryService {
       }
       const value: any = properties[key];
       let formField: any;
+      let type = (value.type || '').toLowerCase();
       switch (value.type.toLowerCase()) {
         case 'string':
         case 'text':
         case 'number':
-        case 'boolean': // TODO
+        case 'boolean':
+        case 'password':
         case 'java.lang.string':
+          if (type === 'java.lang.string') {
+            type = 'text';
+          }
           formField = new DynamicInputModel({
-            id: value.name,
-            label: value.title,
+            id: value.name || key,
+            label: value.title || value.label,
             hint: value.description,
+            inputType: type,
           });
           break;
         default:
