@@ -41,7 +41,7 @@ const routes: Routes = [
     ConnectionsModule,
     TabsModule,
     IPaaSCommonModule,
-    CollapseModule.forRoot(),
+    CollapseModule,
   ],
   declarations: [
     IntegrationsCreatePage,
