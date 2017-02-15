@@ -27,6 +27,7 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
   urls: UrlSegment[];
   _canContinue = false;
   position: number;
+  pageTitle = 'Create an integration';
 
   constructor(
     private currentFlow: CurrentFlow,
@@ -43,7 +44,31 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
   }
 
   showNext() {
+    if (this.getCurrentChild() === 'connection-select') {
+      return false;
+    }
     return !(this.getCurrentChild() === 'connection-configure' && this.position === 1);
+  }
+
+  showBack() {
+    return this.getCurrentChild() === 'connection-configure';
+  }
+
+  goBack() {
+    const child = this.getCurrentChild();
+    switch (child) {
+      case 'connection-select':
+        // uh...
+        break;
+      case 'connection-configure':
+        // TODO hard-coding this to just go to the next connection
+        this.router.navigate(['connection-select', this.position], { relativeTo: this.route });
+        break;
+      default:
+        // who knows...
+        break;
+    }
+
   }
 
   showFinish() {
@@ -106,6 +131,14 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
         break;
       case 'integration-connection-select':
         this.position = event['position'];
+        if (this.position === 0 && this.currentFlow.isEmpty()) {
+          this.pageTitle = 'Create an integration';
+        } else if (this.currentFlow.atEnd(this.position)) {
+          this.pageTitle = 'Select end connection';
+        } else {
+          this.pageTitle = 'Add a connection';
+        }
+
         if (!this.currentFlow.integration.steps[this.position]) {
           this._canContinue = false;
         }
@@ -118,6 +151,14 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
           connection: event['connection'],
         });
         this._canContinue = true;
+        this.continue();
+        break;
+      case 'integration-connection-configure':
+        this.position = event['position'];
+        const connection = this.currentFlow.getStep(this.position);
+        if (connection) {
+          this.pageTitle = 'Configure ' + connection['name'];
+        }
         break;
     }
   }

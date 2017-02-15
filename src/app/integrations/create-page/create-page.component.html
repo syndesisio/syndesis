@@ -6,16 +6,17 @@
     <div class="wizard-pf-main">
       <ol class="breadcrumb">
         <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
-        <li class="active">Create an Integration</li>
+        <li class="active">{{ pageTitle }}</li>
       </ol>
-      <h1>Create an integration</h1>
+      <h1>{{ pageTitle }}</h1>
       <router-outlet></router-outlet>
       <!-- Wizard Footer -->
       <div class='wizard-pf-footer'>
         <button type='button' class='btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss' (click)="cancel()">Cancel</button>
-        <button type="button" class="btn btn-primary" *ngIf="showNext()" [disabled]="!canContinue()" (click)="continue()" >Next</button>
+        <button type="button" class="btn btn-default" *ngIf="showBack()" (click)="goBack()"><i class="fa fa-chevron-left"></i> Back</button>        
+        <button type="button" class="btn btn-primary" *ngIf="showNext()" [disabled]="!canContinue()" (click)="continue()" >Next <i class="fa fa-chevron-right"></i></button>
         <!-- TODO hiding showing hack -->        
-        <button type="button" class="btn btn-primary" *ngIf="showFinish()" [disabled]="!canFinish()" (click)="finish()">Finish</button>
+        <button type="button" class="btn btn-primary" *ngIf="showFinish()" [disabled]="!canFinish()" (click)="finish()">Create</button>
       </div>
     </div>
   </div>
