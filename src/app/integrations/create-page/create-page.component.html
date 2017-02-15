@@ -6,7 +6,7 @@
     <div class="wizard-pf-main">
       <ol class="breadcrumb">
         <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
-        <li class="active">Create an integration</li>
+        <li class="active">Create an Integration</li>
       </ol>
       <h1>Create an integration</h1>
       <router-outlet></router-outlet>
@@ -17,6 +17,8 @@
         <!-- TODO hiding showing hack -->        
         <button type="button" class="btn btn-primary" *ngIf="getCurrentChild() === 'connection-configure' && position === 1" (click)="finish()">Finish</button>
       </div>
+      <h1>Create an integration</h1>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>

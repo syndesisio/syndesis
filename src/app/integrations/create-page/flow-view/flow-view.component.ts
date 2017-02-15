@@ -22,14 +22,13 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   urls: UrlSegment[];
   currentPosition: number;
   currentState: string;
+  isCollapsed: boolean = false;
 
   constructor(
     private currentFlow: CurrentFlow,
     private route: ActivatedRoute,
     private router: Router,
-  ) {
-
-  }
+  ) {}
 
   getClass(state, position) {
     if (state === this.currentState && position === this.currentPosition) {
@@ -63,6 +62,14 @@ export class FlowViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.flowSubscription.unsubscribe();
+  }
+
+  collapsed(event: any): void {
+    log.debugc(() => 'Event' + event);
+  }
+
+  expanded(event: any): void {
+    log.debugc(() => 'Event' + event);
   }
 
 }

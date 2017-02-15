@@ -18,6 +18,7 @@ import { FlowViewComponent } from './create-page/flow-view/flow-view.component';
 import { CurrentFlow } from './create-page/current-flow.service';
 import { IPaaSCommonModule } from '../common/common.module';
 import { ConnectionsModule } from '../connections/connections.module';
+import { CollapseModule } from 'ng2-bootstrap';
 
 const routes: Routes = [
   { path: '', component: IntegrationsListPage, pathMatch: 'full' },
@@ -46,6 +47,7 @@ const routes: Routes = [
     ConnectionsModule,
     TabsModule,
     IPaaSCommonModule,
+    CollapseModule,
   ],
   declarations: [
     IntegrationsCreatePage,

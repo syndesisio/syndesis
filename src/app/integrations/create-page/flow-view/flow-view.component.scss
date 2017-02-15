@@ -1,3 +1,68 @@
-.bold {
-  font-weight: bold;
+.flow-view {
+  ul {
+    list-style-type: none;
+    -webkit-margin-before: 0;
+
+    li {
+      list-style-type: none;
+    }
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .cube {
+    .round {
+      -moz-border-radius: 100px;
+      border-radius: 100px;
+      padding: 7px;
+
+      &.active {
+        border: 3px solid #1487CB;
+      }
+
+      &.inactive {
+        border: 3px solid #D0D0D0;
+      }
+    }
+  }
+
+  .search {}
+
+  .steps {
+    ul {
+      padding-right: 35px;
+      -webkit-padding-start: 0;
+
+      li {
+        padding-left: 5px;
+      }
+    }
+
+    .cube-line {
+      text-align: center;
+
+      .fa.fa-cube {
+        color: #D1D1D1;
+        font-size: x-large;
+      }
+    }
+
+    .start, .finish {
+      background-color: #EDEDED;
+      display: inline;
+      padding: 5px;
+      text-transform: uppercase;
+    }
+
+    .vertical {
+      border: 2px solid #D0D0D0;
+      height: 200px;
+      left: 40px;
+      margin-top: -10px;
+      position: absolute;
+      width: 0;
+    }
+  }
 }
