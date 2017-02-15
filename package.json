@@ -2,17 +2,17 @@
   "name": "ipaas-ui",
   "version": "0.0.0",
   "license": "MIT",
-  "angular-cli": {},
   "scripts": {
-    "start": "ng serve",
+    "start": "yarn ng serve",
     "lint": "tslint \"src/**/*.ts\"",
     "lint:fix": "tslint --fix \"src/**/*.ts\"",
-    "test": "ng test",
+    "test": "yarn ng test",
+    "test:cc": "yarn ng test -- --watch=false --cc",
     "test:xvfb": "docker run --rm -v `pwd`:/ipaas-ui:z -w /ipaas-ui -u `id -u` docker.io/rhipaas/karma-xvfb ./karma-xvfb.sh",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
     "sw": "sw-precache --root=dist --config=sw-precache-config.js",
-    "docker:build": "ng build --aot --prod && docker build -t rhipaas/ipaas-ui:latest ."
+    "docker:build": "yarn ng build -- --aot --prod && docker build -t rhipaas/ipaas-ui:latest ."
   },
   "private": true,
   "dependencies": {
@@ -44,12 +44,12 @@
     "zone.js": "0.7.6"
   },
   "devDependencies": {
+    "@angular/cli": "1.0.0-beta.31",
     "@angular/compiler-cli": "2.4.3",
     "@types/jasmine": "2.5.40",
     "@types/lodash": "4.14.50",
     "@types/node": "7.0.0",
     "@types/pluralize": "0.0.27",
-    "angular-cli": "1.0.0-beta.28.3",
     "awesome-typescript-loader": "3.0.0-beta.18",
     "codelyzer": "2.0.0-beta.4",
     "jasmine-core": "2.5.2",
@@ -57,9 +57,9 @@
     "karma": "1.4.0",
     "karma-chrome-launcher": "2.0.0",
     "karma-cli": "1.0.1",
+    "karma-coverage-istanbul-reporter": "^0.2.0",
     "karma-jasmine": "1.1.0",
     "karma-junit-reporter": "1.2.0",
-    "karma-remap-istanbul": "0.4.0",
     "protractor": "5.0.0",
     "sass-lint": "1.10.2",
     "sw-precache": "4.3.0",

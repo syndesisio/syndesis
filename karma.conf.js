@@ -4,12 +4,12 @@ const REPORT_OUTPUT_DIR = process.env.CIRCLE_TEST_REPORTS || '.';
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['jasmine', 'angular-cli'],
+    frameworks: ['jasmine', '@angular/cli'],
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
-      require('karma-remap-istanbul'),
-      require('angular-cli/plugins/karma'),
+      require('karma-coverage-istanbul-reporter'),
+      require('@angular/cli/plugins/karma'),
       require('karma-junit-reporter'),
     ],
     files: [
@@ -18,16 +18,14 @@ module.exports = function (config) {
       './node_modules/jquery-match-height/dist/jquery.matchHeight-min.js'
     ],
     preprocessors: {
-      './src/test.ts': ['angular-cli']
+      './src/test.ts': ['@angular/cli']
     },
     mime: {
       'text/x-typescript': ['ts', 'tsx']
     },
     remapIstanbulReporter: {
-      reports: {
-        html: COVERAGE_OUTPUT_DIR + '/coverage',
-        lcovonly: COVERAGE_OUTPUT_DIR + '/coverage/coverage.lcov',
-      }
+      reports: [ 'html', 'lcovonly' ],
+      fixWebpackSourcePaths: true
     },
     junitReporter: {
       outputDir: REPORT_OUTPUT_DIR + '/junit'
@@ -37,7 +35,7 @@ module.exports = function (config) {
       environment: 'dev'
     },
     reporters: config.angularCli && config.angularCli.codeCoverage
-      ? ['progress', 'karma-remap-istanbul', 'junit']
+      ? ['progress', 'coverage-istanbul', 'junit']
       : ['progress'],
     port: 9876,
     colors: true,
