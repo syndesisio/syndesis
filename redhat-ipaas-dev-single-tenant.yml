@@ -47,7 +47,7 @@ parameters:
   required: true
 - name: PEMTOKEYSTORE_IMAGE
   description: PEM to keystore init container image
-  value: jimmidyson/pemtokeystore:v0.1.0
+  value: jimmidyson/pemtokeystore:v0.2.0
   required: true
 message: |-
   Red Hat iPaaS is deployed to ${ROUTE_HOSTNAME}.
@@ -172,6 +172,7 @@ objects:
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
                 "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
                 "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt"
+                "-ca-dir", "/usr/share/ca-certificates/mozilla"
               ],
               "volumeMounts": [{
                 "name": "ipaas-keycloak-tls",
@@ -190,6 +191,8 @@ objects:
           - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
           - -ca-file
           - /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+          - -ca-dir
+          - /usr/share/ca-certificates/mozilla
           volumeMounts:
           - name: ipaas-keycloak-tls
             mountPath: /tls-keystore
