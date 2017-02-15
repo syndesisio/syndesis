@@ -22,14 +22,13 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   urls: UrlSegment[];
   currentPosition: number;
   currentState: string;
+  isCollapsed: boolean = false;
 
   constructor(
     private currentFlow: CurrentFlow,
     private route: ActivatedRoute,
     private router: Router,
-  ) {
-
-  }
+  ) {}
 
   getClass(state, position) {
     if (state === this.currentState && position === this.currentPosition) {
@@ -65,13 +64,11 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     this.flowSubscription.unsubscribe();
   }
 
-  public isCollapsed: boolean = false;
-
-  public collapsed(event: any): void {
+  collapsed(event: any): void {
     log.debugc(() => 'Event' + event);
   }
 
-  public expanded(event: any): void {
+  expanded(event: any): void {
     log.debugc(() => 'Event' + event);
   }
 
