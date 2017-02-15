@@ -68,11 +68,11 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   public isCollapsed:boolean = false;
 
   public collapsed(event:any):void {
-    console.log(event);
+    log.debugc(() => 'Event' + event);
   }
 
   public expanded(event:any):void {
-    console.log(event);
+    log.debugc(() => 'Event' + event);
   }
 
 }
