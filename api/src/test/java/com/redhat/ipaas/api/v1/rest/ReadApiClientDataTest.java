@@ -17,7 +17,7 @@ package com.redhat.ipaas.api.v1.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.redhat.ipaas.api.v1.model.ComponentGroup;
+import com.redhat.ipaas.api.v1.model.ConnectorGroup;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -42,8 +42,8 @@ public class ReadApiClientDataTest {
 	public void deserializeModelDataTest() throws IOException {
 
 		//serialize
-		ComponentGroup cg = new ComponentGroup.Builder().id("label").name("label").build();
-		ModelData mdIn = new ModelData(ComponentGroup.KIND,  mapper.writeValueAsString(cg));
+		ConnectorGroup cg = new ConnectorGroup.Builder().id("label").name("label").build();
+		ModelData mdIn = new ModelData(ConnectorGroup.KIND,  mapper.writeValueAsString(cg));
 		assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdIn.getData());
 
 		//deserialize
@@ -57,15 +57,15 @@ public class ReadApiClientDataTest {
 		List<ModelData> modelDataList = new ReadApiClientData().readDataFromFile("com/redhat/ipaas/api/v1/deployment.json");
 		System.out.println("Found " + modelDataList.size() + " entities.");
 		assertTrue("We should find some ModelData", 0 < modelDataList.size());
-		List<ComponentGroup> componentGroupList = new ArrayList<ComponentGroup>();
+		List<ConnectorGroup> connectorGroupList = new ArrayList<ConnectorGroup>();
 		for (ModelData md : modelDataList) {
-			if (md.getKind().equalsIgnoreCase("componentgroup")) {
-				ComponentGroup cg = mapper.readValue(md.getData(), ComponentGroup.class);
-				componentGroupList.add(cg);
+			if (md.getKind().equalsIgnoreCase("connectorgroup")) {
+				ConnectorGroup cg = mapper.readValue(md.getData(), ConnectorGroup.class);
+				connectorGroupList.add(cg);
 			}
 		}
-		System.out.println("Found " + componentGroupList.size() + " ComponentGroups");
-		assertTrue("We should find some ComponentGroups", 0 < componentGroupList.size());
+		System.out.println("Found " + connectorGroupList.size() + " ConnectorGroups");
+		assertTrue("We should find some ConnectorGroups", 0 < connectorGroupList.size());
 	}
 
 }

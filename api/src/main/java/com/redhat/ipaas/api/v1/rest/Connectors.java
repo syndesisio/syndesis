@@ -15,24 +15,24 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
-import com.redhat.ipaas.api.v1.model.Component;
+import com.redhat.ipaas.api.v1.model.Connector;
 import io.swagger.annotations.Api;
 
 import javax.ws.rs.Path;
 
-@Path("/components")
-@Api(value = "components")
+@Path("/connectors")
+@Api(value = "connectors")
 @org.springframework.stereotype.Component
-public class Components extends BaseHandler implements Lister<Component>, Getter<Component> {
+public class Connectors extends BaseHandler implements Lister<Connector>, Getter<Connector> {
 
     @Override
-    public Class<Component> resourceClass() {
-        return Component.class;
+    public Class<Connector> resourceClass() {
+        return Connector.class;
     }
 
     @Override
     public String resourceKind() {
-        return Component.KIND;
+        return Connector.KIND;
     }
 
 }

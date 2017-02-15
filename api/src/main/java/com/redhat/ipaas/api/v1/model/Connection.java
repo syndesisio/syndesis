@@ -41,9 +41,9 @@ public interface Connection extends WithId<Connection>, WithName, Serializable {
 
     Optional<String> getOrganizationId();
 
-    Optional<Component> getComponent();
+    Optional<Connector> getConnector();
 
-    Optional<String> getComponentId();
+    Optional<String> getConnectorId();
 
     String getConfiguredProperties();
 
@@ -53,7 +53,7 @@ public interface Connection extends WithId<Connection>, WithName, Serializable {
 
     String getPosition();
 
-    List<Tag> getTags();
+    Optional<List<Tag>> getTags();
 
     Optional<String> getUserId();
 

@@ -19,32 +19,35 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 import java.io.Serializable;
+import java.util.Optional;
 
-/**
- * ComponentGroups are labels in Camel.
- *
- * https://github.com/apache/camel/blob/master/platforms/catalog/src/main/java/org/apache/camel/catalog/CamelCatalog.java#L233
- *
- * @author kstam
- *
- */
 @Value.Immutable
-@JsonDeserialize(builder = ComponentGroup.Builder.class)
-public interface ComponentGroup extends WithId<ComponentGroup>, WithName, Serializable {
+@JsonDeserialize(builder = Connector.Builder.class)
+public interface Connector extends WithId<Connector>, WithName, Serializable {
 
-    String KIND = "componentgroup";
+    String KIND = "connector";
 
     @Override
     default String kind() {
         return KIND;
     }
 
+    Optional<ConnectorGroup> getConnectorGroup();
+
+    Optional<String> getConnectorGroupId();
+
+    String getIcon();
+
+    String getProperties();
+
+    String getDescription();
+
     @Override
-    default ComponentGroup withId(String id) {
+    default Connector withId(String id) {
         return new Builder().createFrom(this).id(id).build();
     }
 
-    class Builder extends ImmutableComponentGroup.Builder {
+    class Builder extends ImmutableConnector.Builder {
     }
 
 }

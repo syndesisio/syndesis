@@ -15,26 +15,26 @@
  */
 package com.redhat.ipaas.api.v1.rest;
 
-import com.redhat.ipaas.api.v1.model.ComponentGroup;
+import com.redhat.ipaas.api.v1.model.ConnectorGroup;
 
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
 
-@Path("/componentgroups")
-@Api(value = "componentgroups")
+@Path("/connectorgroups")
+@Api(value = "connectorgroups")
 @Component
-public class ComponentGroups extends BaseHandler implements Lister<ComponentGroup>, Getter<ComponentGroup> {
+public class ConnectorGroups extends BaseHandler implements Lister<ConnectorGroup>, Getter<ConnectorGroup> {
 
     @Override
-    public Class<ComponentGroup> resourceClass() {
-        return ComponentGroup.class;
+    public Class<ConnectorGroup> resourceClass() {
+        return ConnectorGroup.class;
     }
 
     @Override
     public String resourceKind() {
-        return ComponentGroup.KIND;
+        return ConnectorGroup.KIND;
     }
 
 }

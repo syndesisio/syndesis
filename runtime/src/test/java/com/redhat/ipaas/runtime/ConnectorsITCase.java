@@ -15,8 +15,11 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.redhat.ipaas.api.v1.model.Component;
+import com.redhat.ipaas.api.v1.model.Connection;
+import com.redhat.ipaas.api.v1.model.Connector;
 import com.redhat.ipaas.api.v1.model.ListResult;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,33 +30,33 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ComponentsITCase extends BaseITCase {
+public class ConnectorsITCase extends BaseITCase {
 
     @Test
-    public void componentsListWithoutToken() {
-        ResponseEntity<ListResult> response = restTemplate().getForEntity("/api/v1/components", ListResult.class);
+    public void connectorsListWithoutToken() {
+        ResponseEntity<ListResult> response = restTemplate().getForEntity("/api/v1/connectors", ListResult.class);
         assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
-    public void componentsListWithExpiredToken() {
-        get("/api/v1/components", ListResult.class, tokenRule.expiredToken(), HttpStatus.UNAUTHORIZED);
+    public void connectorListWithExpiredToken() {
+        get("/api/v1/connectors", ListResult.class, tokenRule.expiredToken(), HttpStatus.UNAUTHORIZED);
     }
 
     @Test
-    public void componentsListWithValidToken() {
-        ResponseEntity<ListResult> response = get("/api/v1/components", ListResult.class);
-        ListResult<Component> result = response.getBody();
-        assertThat(result.getTotalCount()).as("components total").isEqualTo(50);
-        assertThat(result.getItems()).as("components list").hasSize(20);
+    public void connectorListWithValidToken() {
+        ResponseEntity<ListResult> response = get("/api/v1/connectors", ListResult.class);
+        ListResult<Connector> result = response.getBody();
+        assertThat(result.getTotalCount()).as("connectors total").isEqualTo(2);
+        assertThat(result.getItems()).as("connector list").hasSize(2);
     }
-
+    
     @Test
-    public void componentsGetTest() {
-        ResponseEntity<Component> response = get("/api/v1/components/1", Component.class);
-        Component result = response.getBody();
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).contains("1");
+    public void connectorsGetTest() {
+        ResponseEntity<Connector> result = get("/api/v1/connectors/org.foo_twitter-mention-connector_1.0", Connector.class);
+        Connector connector = result.getBody();
+        assertThat(connector).isNotNull();
+        assertThat(connector.getId()).contains("org.foo_twitter-mention-connector_1.0");
     }
 
 }
