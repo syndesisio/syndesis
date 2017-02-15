@@ -42,7 +42,7 @@ deployment:
     - docker push rhipaas/ipaas-ui:latest | cat -
     - curl -sSL https://github.com/openshift/origin/releases/download/v1.4.0-rc1/openshift-origin-client-tools-v1.4.0-rc1.b4e0954-linux-64bit.tar.gz | sudo tar xz -C /usr/bin --strip-components 1
     - oc login --server=${OPENSHIFT_APISERVER} --token=${OPENSHIFT_TOKEN}
-    - oc project staging
+    - oc project ipaas-staging
     - oc import-image rhipaas/ipaas-ui:latest
   release:
     owner: redhat-ipaas
@@ -54,5 +54,5 @@ deployment:
     - docker push rhipaas/ipaas-ui:$CIRCLE_TAG} | cat -
     - curl -sSL https://github.com/openshift/origin/releases/download/v1.4.0-rc1/openshift-origin-client-tools-v1.4.0-rc1.b4e0954-linux-64bit.tar.gz | sudo tar xz -C /usr/bin --strip-components 1
     - oc login --server=${OPENSHIFT_APISERVER} --token=${OPENSHIFT_TOKEN}
-    - oc project staging
+    - oc project ipaas-staging
     - oc import-image rhipaas/ipaas-ui:$CIRCLE_TAG}
