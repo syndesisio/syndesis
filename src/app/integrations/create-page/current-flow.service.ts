@@ -48,7 +48,9 @@ export class CurrentFlow {
       break;
       case 'integration-save':
         log.debugc(() => 'Saving integration: ' + this._integration);
-        this.store.create(this.integration).toPromise().then((i: Integration) => {
+        // poor man's clone in case we need to munge the data
+        const integration = JSON.parse(JSON.stringify(this._integration));
+        this.store.create(integration).toPromise().then((i: Integration) => {
           log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
           const action = event['action'];
           if (action && typeof action === 'function') {
@@ -59,7 +61,7 @@ export class CurrentFlow {
         });
       break;
     }
-    log.debugc(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);
+    // log.debugc(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);
   }
 
   get integration() {
