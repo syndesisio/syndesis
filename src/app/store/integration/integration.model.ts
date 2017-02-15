@@ -7,7 +7,7 @@ export interface Step extends BaseEntity {
 }
 
 export interface Integration extends BaseEntity {
-  configuredProperties: Map<string, any>;
+  configuration: string;
   createdBy: string;
   createdOn: Moment;
   description: string;

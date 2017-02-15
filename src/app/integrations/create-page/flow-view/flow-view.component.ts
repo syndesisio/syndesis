@@ -23,6 +23,7 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   currentPosition: number;
   currentState: string;
   isCollapsed: boolean = false;
+  integrationName: string = '';
 
   constructor(
     private currentFlow: CurrentFlow,
@@ -38,10 +39,18 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  integrationNameChanged($event) {
+    this.currentFlow.events.emit({
+      kind: 'integration-set-name',
+      name: $event,
+    });
+  }
+
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
       case 'integration-updated':
         this.i = event['integration'];
+        this.integrationName = this.i.name;
         break;
       case 'integration-connection-select':
         this.currentState = 'connection-select';

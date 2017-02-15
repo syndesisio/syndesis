@@ -1,6 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
+import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integration } from '../../store/integration/integration.model';
 import { log, getCategory } from '../../logging';
 
@@ -19,8 +20,15 @@ export class CurrentFlow {
 
   events = new EventEmitter<FlowEvent>();
 
-  constructor() {
+  constructor(
+    private store: IntegrationStore,
+    ) {
     this.subscription = this.events.subscribe((event: FlowEvent) => this.handleEvent(event));
+  }
+
+  isValid() {
+    // TODO more validations on the integration
+    return (this._integration.name && this._integration.name.length);
   }
 
   handleEvent(event: FlowEvent) {
@@ -34,6 +42,21 @@ export class CurrentFlow {
       const connection = event['connection'];
       this._integration.steps[position] = connection;
       log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
+      break;
+      case 'integration-set-name':
+      this._integration.name = event['name'];
+      break;
+      case 'integration-save':
+        log.debugc(() => 'Saving integration: ' + this._integration);
+        this.store.create(this.integration).toPromise().then((i: Integration) => {
+          log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
+          const action = event['action'];
+          if (action && typeof action === 'function') {
+            action(i);
+          }
+        }).catch((reason: any) => {
+          log.debugc(() => 'Error saving integration: ' + JSON.stringify(reason, undefined, 2), category);
+        });
       break;
     }
     log.debugc(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);

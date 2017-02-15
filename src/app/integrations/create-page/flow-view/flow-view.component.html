@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="form-group">
         <p></p>
-        <input type="text" id="integrationName" class="form-control" placeholder="Enter integration name..." [ngModel]="i.name">
+        <input type="text" id="integrationName" class="form-control" placeholder="Enter integration name..." [ngModel]="integrationName" (ngModelChange)="integrationNameChanged($event)">
       </div>
     </div>
   </div>

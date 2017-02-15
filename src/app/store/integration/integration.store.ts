@@ -23,7 +23,7 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
           modifiedOn: undefined,
           name: '',
           kind: 'integration',
-          configuredProperties: <Map<string, string>>{},
+          configuration: '',
           steps: [],
         };
   }
