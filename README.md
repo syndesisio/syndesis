@@ -89,10 +89,15 @@ $ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-template
 You can now use the template and the ServiceAccount created above to deploy the single tenant iPaaS:
 
 ```bash
-$ oc new-app redhat-ipaas-dev-single-tenant -p ROUTE_HOSTNAME=<EXTERNAL_HOSTNAME> -p OPENSHIFT_MASTER=<PUBLIC_MASTER_ADDRESS> -p OPENSHIFT_OAUTH_CLIENT_ID=system:serviceaccount:ipaas-single-tenant:ipaas-oauth-client -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token ipaas-oauth-client) -p 'OPENSHIFT_OAUTH_DEFAULT_SCOPES=user:info user:check-access role:edit:ipaas-single-tenant:!'
+$ oc new-app redhat-ipaas-dev-single-tenant \
+    -p ROUTE_HOSTNAME=<EXTERNAL_HOSTNAME> \
+    -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
+    -p OPENSHIFT_OAUTH_CLIENT_ID=system:serviceaccount:$(oc project -q):ipaas-oauth-client \
+    -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token ipaas-oauth-client) \
+    -p OPENSHIFT_OAUTH_DEFAULT_SCOPES="user:info user:check-access role:edit:$(oc project -q):\!"
 ```
 
-Replace `EXTERNAL_HOSTNAME` and `PUBLIC_MASTER_ADDRESS` appropriately with your public iPaaS address and OpenShift master URL, e.g. `https://myopenshiftmaster.com:8443`, respectively.
+Replace `EXTERNAL_HOSTNAME` appropriately with your public iPaaS address (something like `ipaas.127.0.0.1.nip.io` works great if you are using `oc cluster up` locally).
 
 ### Log in
 
