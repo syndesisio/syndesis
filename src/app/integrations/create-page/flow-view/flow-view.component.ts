@@ -65,13 +65,13 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     this.flowSubscription.unsubscribe();
   }
 
-  public isCollapsed:boolean = false;
+  public isCollapsed: boolean = false;
 
-  public collapsed(event:any):void {
+  public collapsed(event: any): void {
     log.debugc(() => 'Event' + event);
   }
 
-  public expanded(event:any):void {
+  public expanded(event: any): void {
     log.debugc(() => 'Event' + event);
   }
 
