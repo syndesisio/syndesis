@@ -25,7 +25,7 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
   childRouteSubscription: Subscription;
   flowSubscription: Subscription;
   urls: UrlSegment[];
-  canContinue = false;
+  _canContinue = false;
   position: number;
 
   constructor(
@@ -42,8 +42,30 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
     this.router.navigate(['/integrations']);
   }
 
+  showNext() {
+    return !(this.getCurrentChild() === 'connection-configure' && this.position === 1);
+  }
+
+  showFinish() {
+    return this.getCurrentChild() === 'connection-configure' && this.position === 1;
+  }
+
+  canFinish() {
+    return this.currentFlow.isValid();
+  }
+
+  canContinue() {
+    return this._canContinue;
+  }
+
   finish() {
-    this.router.navigate(['/integrations']);
+    const router = this.router;
+    this.currentFlow.events.emit({
+      kind: 'integration-save',
+      action: () => {
+        router.navigate(['/integrations']);
+      },
+    });
   }
 
   continue() {
@@ -82,6 +104,12 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
           this.router.navigate(['connection-select', 0], { relativeTo: this.route });
         }
         break;
+      case 'integration-connection-select':
+        this.position = event['position'];
+        if (!this.currentFlow.integration.steps[this.position]) {
+          this._canContinue = false;
+        }
+        break;
       case 'integration-selected-connection':
         this.position = event['position'];
         this.currentFlow.events.emit({
@@ -89,7 +117,7 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
           position: this.position,
           connection: event['connection'],
         });
-        this.canContinue = true;
+        this._canContinue = true;
         break;
     }
   }

@@ -13,12 +13,10 @@
       <!-- Wizard Footer -->
       <div class='wizard-pf-footer'>
         <button type='button' class='btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss' (click)="cancel()">Cancel</button>
-        <button type="button" class="btn btn-primary" [disabled]="!canContinue" (click)="continue()" *ngIf="!(getCurrentChild() === 'connection-configure' && position === 1)">Next</button>
+        <button type="button" class="btn btn-primary" *ngIf="showNext()" [disabled]="!canContinue()" (click)="continue()" >Next</button>
         <!-- TODO hiding showing hack -->        
-        <button type="button" class="btn btn-primary" *ngIf="getCurrentChild() === 'connection-configure' && position === 1" (click)="finish()">Finish</button>
+        <button type="button" class="btn btn-primary" *ngIf="showFinish()" [disabled]="!canFinish()" (click)="finish()">Finish</button>
       </div>
-      <h1>Create an integration</h1>
-      <router-outlet></router-outlet>
     </div>
   </div>
 </div>

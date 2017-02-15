@@ -8,6 +8,8 @@ import { TabsModule } from 'ng2-bootstrap';
 import { RestangularModule } from 'ng2-restangular';
 
 import { FlowViewComponent } from './flow-view.component';
+import { IntegrationStore } from '../../../store/integration/integration.store';
+import { IntegrationService } from '../../../store/integration/integration.service';
 import { CurrentFlow } from '../current-flow.service';
 import { IPaaSCommonModule } from '../../../common/common.module';
 import { ConnectionsModule } from '../../../connections/connections.module';
@@ -44,6 +46,8 @@ describe('IntegrationsCreateComponent', () => {
         }, deps: [MockBackend, RequestOptions],
         },
         CurrentFlow,
+        IntegrationStore,
+        IntegrationService,
       ],
     })
       .compileComponents();
