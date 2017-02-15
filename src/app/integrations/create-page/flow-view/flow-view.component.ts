@@ -22,14 +22,17 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   urls: UrlSegment[];
   currentPosition: number;
   currentState: string;
-  isCollapsed: boolean = false;
   integrationName: string = '';
+  finishIsCollapsed: boolean = false;
+  startIsCollapsed: boolean = false;
 
   constructor(
     private currentFlow: CurrentFlow,
     private route: ActivatedRoute,
     private router: Router,
-  ) {}
+  ) {
+    this.i.name = 'Integration Name';
+  }
 
   getClass(state, position) {
     if (state === this.currentState && position === this.currentPosition) {
@@ -67,6 +70,8 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
     });
+
+    log.debugc(() => 'Integration: ' + JSON.stringify(this.i));
   }
 
   ngOnDestroy() {
