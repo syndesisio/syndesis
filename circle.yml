@@ -2,11 +2,11 @@ machine:
   pre:
   - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
   node:
-    version: 6.9.1
+    version: 6.9.5
   services:
   - docker
   environment:
-    YARN_VERSION: 0.18.1
+    YARN_VERSION: 0.19.1
     PATH: "${PATH}:${HOME}/.yarn/bin:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
 
 general:
