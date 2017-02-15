@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import { BaseEntity } from '../entity/entity.model';
 
 export interface Connection extends BaseEntity {
-  configuredProperties: Map<string, string>;
+  configuredProperties: string;
   createdBy: string;
   createdOn: moment.Moment;
   description: string;
