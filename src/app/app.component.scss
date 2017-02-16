@@ -48,6 +48,14 @@
           border: 0;
         }
       }
+
+      .user {
+        margin-right: 20px;
+
+        .username {
+          margin: 0 5px;
+        }
+      }
     }
   }
 
@@ -56,4 +64,11 @@
 
   // <div> container when sidebar is collapsed
   .nav-pf-vertical.hidden-icons-pf.collapsed {}
+
+  .nav-pf-vertical .list-group-item > a,
+  .nav-pf-vertical .list-group-item.active > a,
+  .nav-pf-vertical .list-group-item:hover > a {
+    font-weight: inherit;
+    text-decoration: none;
+  }
 }

@@ -33,9 +33,10 @@
         <ul class="nav navbar-nav navbar-right navbar-iconic">
           
           <!-- User Dropdown -->
-          <li class="dropdown">
+          <li class="dropdown user">
             <a class="dropdown-toggle nav-item-iconic" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span title="Username" class="fa pficon-user"></span>&nbsp;{{( user | async)?.name}}
+              <span title="Username" class="fa pficon-user"></span>
+              <span class="username">{{( user | async)?.name}}</span>
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
