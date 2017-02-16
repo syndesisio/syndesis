@@ -13,12 +13,22 @@
       cursor: pointer;
     }
 
+    .list-view-pf-actions {}
+
     .list-view-pf-checkbox {
       display: none;
     }
 
     .list-view-pf-main-info {
       cursor: default;
+
+      .list-view-pf-left {
+        span.fa {
+          margin: 0 7px;
+        }
+      }
+
+      .list-view-pf-body {}
     }
   }
 }
