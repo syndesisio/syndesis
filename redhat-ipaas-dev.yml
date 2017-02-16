@@ -49,6 +49,10 @@ parameters:
   description: PEM to keystore init container image
   value: jimmidyson/pemtokeystore:v0.2.0
   required: true
+- name: IMAGE_PULL_POLICY
+  description: ImagePullPolicy configuration on rhipaas images
+  value: "IfNotPresent"
+  required: true
 message: |-
   Red Hat iPaaS is deployed to ${ROUTE_HOSTNAME}.
 
@@ -114,7 +118,7 @@ objects:
         containers:
         - name: ipaas-ui
           image: rhipaas/ipaas-ui:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: ${IMAGE_PULL_POLICY}
           readinessProbe:
             httpGet:
               path: "/"
@@ -287,7 +291,7 @@ objects:
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true"
           image: rhipaas/ipaas-rest:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: ${IMAGE_PULL_POLICY}
           readinessProbe:
             httpGet:
               path: "/health"
