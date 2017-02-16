@@ -44,9 +44,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
       $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
       $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
-
-      // Initialize the vertical navigation
-      $().setupVerticalNavigation(true);
     });
   }
 
