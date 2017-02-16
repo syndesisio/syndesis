@@ -21,20 +21,22 @@
 
   // Steps on left-hand side
   .steps {
+    //margin-right: 65px;
     padding-top: 20px;
-
-    ul {
-      padding-right: 35px;
-      -webkit-padding-start: 0;
-
-      li {
-        padding-left: 5px;
-      }
-    }
 
     // Left-hand side design with the cube and line
     .cube-line {
+      //padding-right: 0;
       text-align: center;
+
+      ul {
+        padding-right: 35px;
+        -webkit-padding-start: 0;
+
+        li {
+          padding-left: 5px;
+        }
+      }
 
       // Used for the containing <div> around any cubes to make e2e testing easier
       .cube {
@@ -72,12 +74,17 @@
 
     // Right-hand side collapsible text menu
     .text {
+      padding-right: 35px;
       padding-top: 15px;
 
       ul {
         cursor: pointer;
+        //padding-right: 35px;
+        -webkit-padding-start: 0;
 
         li {
+          padding-left: 5px;
+
           &:hover {
             //background-color:
           }
@@ -90,8 +97,6 @@
         display: inline;
         padding: 5px;
         text-transform: uppercase;
-
-
       }
     }
   }
