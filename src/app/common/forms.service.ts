@@ -25,7 +25,7 @@ export class FormFactoryService {
           }
           formField = new DynamicInputModel({
             id: value.name || key,
-            label: value.title || value.label,
+            label: value.title || value.displayName || value.name || key,
             hint: value.description,
             inputType: type,
           });
