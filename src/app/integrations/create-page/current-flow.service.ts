@@ -44,7 +44,7 @@ export class CurrentFlow {
 
   isEmpty() {
     this.createSteps();
-    return this._integration.steps.length === 0; l;
+    return this._integration.steps.length === 0;
   }
 
   atEnd(position: number) {

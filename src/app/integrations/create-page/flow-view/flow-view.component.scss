@@ -1,4 +1,6 @@
 .flow-view {
+  width: 300px;
+
   ul {
     list-style-type: none;
     -webkit-margin-before: 0;
@@ -14,9 +16,10 @@
 
   // Integration Name Editor
   .name {
-    padding-bottom: 5px;
     border-bottom: 2px solid #D0D0D0;
+    font-style: italic;
     margin-top: -10px;
+    padding-bottom: 5px;
   }
 
   // Steps on left-hand side
@@ -74,16 +77,16 @@
 
     // Right-hand side collapsible text menu
     .text {
-      padding-right: 35px;
+      padding-right: 0;
       padding-top: 15px;
 
       ul {
         cursor: pointer;
-        //padding-right: 35px;
+        padding-right: 35px;
         -webkit-padding-start: 0;
 
         li {
-          padding-left: 5px;
+          //padding-left: 5px;
 
           &:hover {
             //background-color:
@@ -92,11 +95,38 @@
       }
 
       .start, .finish {
-        background-color: #EDEDED;
-        cursor: pointer;
-        display: inline;
-        padding: 5px;
-        text-transform: uppercase;
+        h5 {
+          background-color: #EDEDED;
+          cursor: pointer;
+          display: inline;
+          padding: 5px;
+          text-transform: uppercase;
+        }
+
+        ul {
+          min-width: 160px;
+          padding: 10px 0;
+
+          // Sub-Menu Items
+          &.collapse {
+            margin-top: 5px;
+            padding: 5px 0;
+
+            li {
+              padding: 5px 5px 5px 15px;
+
+              &.active {
+                background-color: #D6EEFA;
+                border-bottom: 1px solid #B8DFF3;
+                border-top: 1px solid #B8DFF3;
+              }
+
+              &.inactive {
+                color: #D1D1D1;
+              }
+            }
+          }
+        }
       }
     }
   }
