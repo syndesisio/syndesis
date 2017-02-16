@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -15,7 +15,7 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './create-page.component.html',
   styleUrls: ['./create-page.component.scss'],
 })
-export class IntegrationsCreatePage implements OnInit, OnDestroy {
+export class IntegrationsCreatePage implements OnInit, OnDestroy, AfterViewInit {
 
   integration: Observable<Integration>;
   private readonly loading: Observable<boolean>;
@@ -28,6 +28,7 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
   _canContinue = false;
   position: number;
   pageTitle = 'Create an integration';
+  sidebarCollapsed: boolean = true;
 
   constructor(
     private currentFlow: CurrentFlow,
@@ -179,6 +180,10 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
     this.integrationSubscription.unsubscribe();
     this.routeSubscription.unsubscribe();
     this.flowSubscription.unsubscribe();
+  }
+
+  ngAfterViewInit() {
+    this.sidebarCollapsed = true;
   }
 
 }
