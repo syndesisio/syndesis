@@ -2,7 +2,12 @@
   <div class="row name">
     <div class="col-md-12">
       <div class="form-group">
-        <input type="text" id="integrationName" class="form-control" placeholder="Enter integration name..." [ngModel]="integrationName" (ngModelChange)="integrationNameChanged($event)">
+        <input type="text"
+               id="integrationName"
+               class="form-control"
+               placeholder="Enter integration name..."
+               [ngModel]="integrationName"
+               (ngModelChange)="integrationNameChanged($event)">
       </div>
     </div>
   </div>
@@ -14,8 +19,8 @@
     <div class="col-md-3 progress-line">
       <!-- Cube Line: Cube -->
       <div class="icon">
-        <p class="round active">
-          <i class="fa fa-cube"></i>
+        <p [class]="'round ' + getActiveClass(undefined, 0)">
+          <i [class]="getIconClass(0)"></i>
         </p>
       </div>
       
@@ -23,9 +28,10 @@
       <div class="vertical"></div>
       
       <!-- Progress Line: Icon -->
-      <div class="icon" style="margin-top: 200px;">
-        <p class="round inactive">
-          <i class="fa fa-cube"></i>
+      <div class="icon"
+           style="margin-top: 200px;">
+        <p [class]="'round ' + getActiveClass(undefined, 1)">
+          <i [class]="getIconClass(1)"></i>
         </p>
       </div>
     </div>
@@ -35,16 +41,20 @@
       <div class="start">
         <h5>Start</h5>
         <ul>
-          <li (click)="startIsCollapsed = !startIsCollapsed">
-            <i class="fa fa-chevron-down"></i> Set up this connection
-            <ul (collapsed)="collapsed($event)"
-                (expanded)="expanded($event)"
-                [collapse]="startIsCollapsed">
-              <li>
-                <span [class]="getClass('connection-select', 0)">Choose a connection</span>
+          <!-- TODO this should eventually be an *ngFor driven by the currentFlow's steps -->
+          <li>
+            <span [class]="getTextClass(undefined, 0)">
+              <i *ngIf="!isCollapsed(0)"
+                 class="fa fa-chevron-down"></i>
+              <i *ngIf="isCollapsed(0)"
+                 class="fa fa-chevron-right"></i>
+              {{ getConnectionText(0) }}</span>
+            <ul [collapse]="isCollapsed(0)">
+              <li [class]="getActiveClass('connection-select', 0)">
+                <span [class]="getTextClass('connection-select', 0)">Choose a connection</span>
               </li>
-              <li>
-                <span [class]="getClass('connection-configure', 0)">Configure the connection</span>
+              <li [class]="getActiveClass('connection-configure', 0)">
+                <span [class]="getTextClass('connection-configure', 0)">Configure the connection</span>
               </li>
             </ul>
           </li>
@@ -53,16 +63,19 @@
       <div class="finish">
         <h5>Finish</h5>
         <ul>
-          <li (click)="finishIsCollapsed = !finishIsCollapsed">
-            <i class="fa fa-chevron-down"></i> Set up this connection
-            <ul (collapsed)="collapsed($event)"
-                (expanded)="expanded($event)"
-                [collapse]="finishIsCollapsed">
-              <li class="active">
-                <span [class]="getClass('connection-select', 1)">Choose a connection</span>
+          <li>
+            <span [class]="getTextClass(undefined, 1)">
+              <i *ngIf="!isCollapsed(0)"
+                 class="fa fa-chevron-down"></i>
+              <i *ngIf="isCollapsed(0)"
+                 class="fa fa-chevron-right"></i>
+              {{ getConnectionText(1) }}</span>
+            <ul [collapse]="isCollapsed(1)">
+              <li [class]="getActiveClass('connection-select', 1)">
+                <span [class]="getTextClass('connection-select', 1)">Choose a connection</span>
               </li>
-              <li class="inactive">
-                <span [class]="getClass('connection-configure', 1)">Configure the connection</span>
+              <li [class]="getActiveClass('connection-configure', 1)">
+                <span [class]="getTextClass('connection-configure', 1)">Configure the connection</span>
               </li>
             </ul>
           </li>

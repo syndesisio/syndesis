@@ -94,7 +94,9 @@
       -->
     </ul>
   </div>
-  <main class="container-fluid container-pf-nav-pf-vertical" *ngIf="loggedIn">
+  <main class="container-fluid"
+        [class.container-pf-nav-pf-vertical]="sidebarCollapsed==false"
+        *ngIf="loggedIn">
     <router-outlet></router-outlet>
   </main>
 
