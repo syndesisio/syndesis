@@ -210,18 +210,8 @@
       "configuration": "{}",
       "userId": 8,
       "organizationId": 1,
-      "name": "ea",
+      "name": "twitter-to-salesforce-template-test",
       "id": 1
-    },
-    "kind": "IntegrationTemplate"
-  },
-  {
-    "data": {
-      "configuration": "{}",
-      "userId": 7,
-      "organizationId": 1,
-      "name": "ea",
-      "id": 10
     },
     "kind": "IntegrationTemplate"
   },
@@ -229,19 +219,9 @@
     "data": {
       "configuration": "{}",
       "userId": 9,
-      "integrationTemplateId": 8,
-      "name": "deserunt",
+      "integrationTemplateId": 1,
+      "name": "twitter-to-salesforce-test",
       "id": 1
-    },
-    "kind": "Integration"
-  },
-  {
-    "data": {
-      "configuration": "{}",
-      "userId": 7,
-      "integrationTemplateId": 2,
-      "name": "minim",
-      "id": 10
     },
     "kind": "Integration"
   }
