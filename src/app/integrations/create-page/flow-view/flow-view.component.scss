@@ -28,7 +28,7 @@
     //padding-top: 20px;
 
     // Left-hand side design with the cube and line
-    .cube-line {
+    .progress-line {
       //padding-right: 0;
       text-align: center;
 
@@ -42,9 +42,9 @@
       }
 
       // Used for the containing <div> around any cubes to make e2e testing easier
-      .cube {
+      .icon {
         // Overriding the actual cube icon's colors
-        .fa.fa-cube {
+        .fa {
           color: #D1D1D1;
           font-size: x-large;
         }
