@@ -16,7 +16,7 @@
   {
     "data": {
       "name": "Expert User",
-       "id": 2
+      "id": 2
     },
     "kind": "Role"
   },
@@ -216,14 +216,52 @@
     "kind": "IntegrationTemplate"
   },
   {
+    "kind": "Integration",
     "data": {
-      "configuration": "{}",
-      "userId": 9,
-      "integrationTemplateId": 1,
-      "name": "Twitter to Salesforce Example",
-      "id": 1,
-      "description": "This is an example of a Twitter to Salesforce integration"
-    },
-    "kind": "Integration"
+      "configuration": "",
+      "userId": null,
+      "users": [],
+      "tags": [],
+      "connections": [
+        {
+          "organizationId": "1",
+          "connectorId": "org.foo_twitter-mention-connector_1.0",
+          "configuredProperties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
+          "icon": "fa-twitter",
+          "description": "Connection from twitter when anyone mention you",
+          "position": "start",
+          "userId": "4",
+          "id": "1",
+          "name": "Twitter Mention"
+        },
+        {
+          "organization": null,
+          "organizationId": "1",
+          "connector": null,
+          "connectorId": "org.foo_salesforce-upsert-contact-connector_1.0",
+          "configuredProperties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}",
+          "icon": "fa-puzzle-piece",
+          "description": "Connection to Create or Update Salesforce Contact SObject",
+          "position": "end",
+          "tags": null,
+          "userId": "1",
+          "id": "2",
+          "name": "Salesforce Upsert Contact"
+        }
+      ],
+      "steps": [
+        {
+          "configuredProperties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
+          "id": "1"
+        },
+        {
+          "configuredProperties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}",
+          "id": "2"
+        }
+      ],
+      "description": "This is an example of a Twitter to Salesforce integration",
+      "id": "1",
+      "name": "Twitter to Salesforce Example"
+    }
   }
 ]
