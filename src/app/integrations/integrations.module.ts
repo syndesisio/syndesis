@@ -22,19 +22,23 @@ import { CollapseModule } from 'ng2-bootstrap';
 
 const routes: Routes = [
   { path: '', component: IntegrationsListPage, pathMatch: 'full' },
-];
-
-// Set up routes for creating and editing using the same controllers
-['create', 'edit/:integrationId'].forEach((route) => {
-  routes.push({
-    path: route,
+  {
+    path: 'create',
     component: IntegrationsCreatePage,
     children: [
       { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
       { path: 'connection-configure/:position', component: IntegrationsConfigureConnectionComponent },
     ],
-  });
-});
+  },
+  {
+    path: 'edit/:integrationId',
+    component: IntegrationsCreatePage,
+    children: [
+      { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
+      { path: 'connection-configure/:position', component: IntegrationsConfigureConnectionComponent },
+    ],
+  },
+];
 
 @NgModule({
   imports: [
