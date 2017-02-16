@@ -31,13 +31,32 @@ export class CurrentFlow {
     return (this._integration.name && this._integration.name.length);
   }
 
+  private createSteps() {
+    if (!this._integration.steps) {
+      this._integration.steps = [];
+    }
+  }
+
+  getStep(position: number) {
+    this.createSteps();
+    return this._integration.steps[position];    
+  }
+
+  isEmpty() {
+    this.createSteps();
+    return this._integration.steps.length === 0; l;
+  }
+
+  atEnd(position: number) {
+    this.createSteps();
+    return position >= this._integration.steps.length;
+  }
+
   handleEvent(event: FlowEvent) {
     log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
     switch (event.kind) {
       case 'integration-set-connection':
-      if (!this._integration.steps) {
-        this._integration.steps = [];
-      }
+      this.createSteps();
       const position = +event['position'];
       const connection = event['connection'];
       this._integration.steps[position] = connection;
