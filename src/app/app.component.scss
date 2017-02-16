@@ -2,12 +2,14 @@
   header {
     // Navigation Bar
     nav {
-      //.navbar-pf-vertical .navbar-toggle {
+      a:hover, a:focus {
+        text-decoration: none;
+      }
+
       .toggle-nav {
         background-color: rgba(0, 0, 0, 0);
         background-image: none;
         border: 0;
-        //border: 1px solid #363636;
         border-radius: 1px;
         display: block;
         float: left;
