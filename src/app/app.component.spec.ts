@@ -6,6 +6,8 @@ import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OAuthModule } from 'angular-oauth2-oidc-hybrid';
 
+import { CollapseModule } from 'ng2-bootstrap';
+
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';
 import { UserService } from './common/user.service';
@@ -13,7 +15,11 @@ import { UserService } from './common/user.service';
 describe('AppComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([]), OAuthModule.forRoot()],
+      imports: [
+        RouterTestingModule.withRoutes([]),
+        OAuthModule.forRoot(),
+        CollapseModule,
+      ],
       providers: [
         ConfigService,
         UserService,

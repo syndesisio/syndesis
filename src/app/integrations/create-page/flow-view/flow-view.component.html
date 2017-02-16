@@ -2,35 +2,40 @@
   <div class="row name">
     <div class="col-md-12">
       <div class="form-group">
-        <input type="text" id="integrationName" class="form-control" placeholder="Enter integration name..." [ngModel]="integrationName"
-          (ngModelChange)="integrationNameChanged($event)">
+        <input type="text"
+               id="integrationName"
+               class="form-control"
+               placeholder="Enter integration name..."
+               [ngModel]="integrationName"
+               (ngModelChange)="integrationNameChanged($event)">
       </div>
     </div>
   </div>
-
+  
   <!-- Steps -->
   <div class="row steps">
-
+    
     <!-- Cube Line -->
-    <div class="col-md-3 cube-line">
+    <div class="col-md-3 progress-line">
       <!-- Cube Line: Cube -->
-      <div class="cube">
+      <div class="icon">
         <p [class]="'round ' + getActiveClass(undefined, 0)">
           <i [class]="getIconClass(0)"></i>
         </p>
       </div>
-
-      <!-- Cube Line: Line -->
+      
+      <!-- Progress Line: Line -->
       <div class="vertical"></div>
-
-      <!-- Cube Line: Cube -->
-      <div class="cube" style="margin-top: 200px;">
+      
+      <!-- Progress Line: Icon -->
+      <div class="icon"
+           style="margin-top: 200px;">
         <p [class]="'round ' + getActiveClass(undefined, 1)">
           <i [class]="getIconClass(1)"></i>
         </p>
       </div>
     </div>
-
+    
     <!-- Text Collapse Steps -->
     <div class="col-md-9 text">
       <div class="start">
@@ -39,8 +44,10 @@
           <!-- TODO this should eventually be an *ngFor driven by the currentFlow's steps -->
           <li>
             <span [class]="getTextClass(undefined, 0)">
-              <i *ngIf="!isCollapsed(0)" class="fa fa-chevron-down"></i>
-              <i *ngIf="isCollapsed(0)" class="fa fa-chevron-right"></i>
+              <i *ngIf="!isCollapsed(0)"
+                 class="fa fa-chevron-down"></i>
+              <i *ngIf="isCollapsed(0)"
+                 class="fa fa-chevron-right"></i>
               {{ getConnectionText(0) }}</span>
             <ul [collapse]="isCollapsed(0)">
               <li [class]="getActiveClass('connection-select', 0)">
@@ -58,8 +65,10 @@
         <ul>
           <li>
             <span [class]="getTextClass(undefined, 1)">
-              <i *ngIf="!isCollapsed(0)" class="fa fa-chevron-down"></i>
-              <i *ngIf="isCollapsed(0)" class="fa fa-chevron-right"></i>
+              <i *ngIf="!isCollapsed(0)"
+                 class="fa fa-chevron-down"></i>
+              <i *ngIf="isCollapsed(0)"
+                 class="fa fa-chevron-right"></i>
               {{ getConnectionText(1) }}</span>
             <ul [collapse]="isCollapsed(1)">
               <li [class]="getActiveClass('connection-select', 1)">

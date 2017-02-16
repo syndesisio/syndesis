@@ -2,6 +2,8 @@ import { Component, ChangeDetectionStrategy, OnInit, AfterViewInit } from '@angu
 import { Observable } from 'rxjs/Observable';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 
+import { log } from './logging';
+
 import { UserService } from './common/user.service';
 import { User } from './common/user.model';
 
@@ -21,10 +23,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   logoDarkBg = 'assets/images/rh_ipaas_small.svg';
   iconDarkBg = 'assets/images/glasses_logo.svg';
 
+  loggedIn = false;
+  sidebarCollapsed: boolean = false;
   title = 'Red Hat iPaaS';
   url = 'https://www.twitter.com/jboss';
-  loggedIn = false;
-
   user: Observable<User>;
 
   constructor(private oauthService: OAuthService, private userService: UserService) {
@@ -42,9 +44,14 @@ export class AppComponent implements OnInit, AfterViewInit {
       $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
       $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
       $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
-
-      // Initialize the vertical navigation
-      $().setupVerticalNavigation(true);
     });
+  }
+
+  collapsed(event: any): void {
+    log.debugc(() => 'Sidebar Toggle Event: ' + event);
+  }
+
+  expanded(event: any): void {
+    log.debugc(() => 'Sidebar Toggle Event: ' + event);
   }
 }
