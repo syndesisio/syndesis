@@ -1,24 +1,13 @@
 <div class="flow-view">
-  <div class="row search">
+  <div class="row name">
     <div class="col-md-12">
       <div class="form-group">
-        <p></p>
         <input type="text" id="integrationName" class="form-control" placeholder="Enter integration name..." [ngModel]="integrationName" (ngModelChange)="integrationNameChanged($event)">
       </div>
     </div>
   </div>
-  <!--
-  <button type="button" class="btn btn-primary"
-          (click)="isCollapsed = !isCollapsed">Toggle collapse
-  </button>
-  <hr>
-  <div (collapsed)="collapsed($event)"
-       (expanded)="expanded($event)"
-       [collapse]="isCollapsed"
-       class="card card-block card-header">
-    <div class="well well-lg">Some content</div>
-  </div>
-  -->
+  
+  <!-- Steps -->
   <div class="row steps">
     
     <!-- Cube Line -->
@@ -41,16 +30,16 @@
       </div>
     </div>
     
-    <!-- Dropdown -->
-    <div class="col-md-9">
-      <div>
-        <h5 class="start">Start</h5>
+    <!-- Text Collapse Steps -->
+    <div class="col-md-9 text">
+      <div class="start">
+        <h5>Start</h5>
         <ul>
-          <li (click)="isCollapsed = !isCollapsed">
+          <li (click)="startIsCollapsed = !startIsCollapsed">
             <i class="fa fa-chevron-down"></i> Set up this connection
             <ul (collapsed)="collapsed($event)"
                 (expanded)="expanded($event)"
-                [collapse]="isCollapsed">
+                [collapse]="startIsCollapsed">
               <li>
                 <span [class]="getClass('connection-select', 0)">Choose a connection</span>
               </li>
@@ -61,16 +50,18 @@
           </li>
         </ul>
       </div>
-      <div>
-        <h5 class="finish">Finish</h5>
+      <div class="finish">
+        <h5>Finish</h5>
         <ul>
-          <li>
+          <li (click)="finishIsCollapsed = !finishIsCollapsed">
             <i class="fa fa-chevron-down"></i> Set up this connection
-            <ul>
-              <li>
+            <ul (collapsed)="collapsed($event)"
+                (expanded)="expanded($event)"
+                [collapse]="finishIsCollapsed">
+              <li class="active">
                 <span [class]="getClass('connection-select', 1)">Choose a connection</span>
               </li>
-              <li>
+              <li class="inactive">
                 <span [class]="getClass('connection-configure', 1)">Configure the connection</span>
               </li>
             </ul>
