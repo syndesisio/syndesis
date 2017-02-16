@@ -8,7 +8,9 @@
         <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
         <li class="active">{{ pageTitle }}</li>
       </ol>
-      <h1>{{ pageTitle }}</h1>
+      <div class="title">
+        <h1>{{ pageTitle }}</h1>
+      </div>
       <router-outlet></router-outlet>
       <!-- Wizard Footer -->
       <div class='wizard-pf-footer'>

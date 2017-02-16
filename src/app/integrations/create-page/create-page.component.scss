@@ -1,6 +1,21 @@
 .integrations.create {
   margin-left: -20px;
 
+  .title {
+    border-bottom: 1px solid #D7D6D7;
+    margin: auto -20px;
+    margin-bottom: 15px;
+
+    h1 {
+      padding: 0 20px;
+    }
+  }
+
+  // This does not get inherited by the directive
+  .toolbar-pf {
+    background: none;
+  }
+
   .wizard-pf-row {
     bottom: 0;
     overflow: hidden;
@@ -14,7 +29,7 @@
     margin-left: 325px;
     margin-right: -15px;
     overflow: auto;
-    padding: 3em;
+    padding: 15px 3em 3em 3em;
     vertical-align: top;
   }
 
