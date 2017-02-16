@@ -1,5 +1,11 @@
 .toolbar-pf {
-  .form-group.sort {
+  .search {
+    input {
+      font-style: italic !important;
+    }
+  }
+
+  .sort {
     border-right: 0 !important;
   }
 }
