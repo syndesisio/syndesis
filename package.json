@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "start": "yarn ng serve",
-    "lint": "tslint \"src/**/*.ts\"",
-    "lint:fix": "tslint --fix \"src/**/*.ts\"",
+    "lint": "yarn ng lint",
+    "lint:fix": "yarn ng lint -- --fix",
     "test": "yarn ng test",
     "test:cc": "yarn ng test -- --watch=false --cc",
     "test:xvfb": "docker run --rm -v `pwd`:/ipaas-ui:z -w /ipaas-ui -u `id -u` docker.io/rhipaas/karma-xvfb ./karma-xvfb.sh",
