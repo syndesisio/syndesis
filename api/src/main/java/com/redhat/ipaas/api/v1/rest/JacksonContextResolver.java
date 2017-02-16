@@ -35,7 +35,7 @@ public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
     public JacksonContextResolver() throws Exception {
         this.objectMapper = new ObjectMapper().
             registerModule(new Jdk8Module()).
-            setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
     }
 
     public ObjectMapper getContext(Class<?> objectType) {
