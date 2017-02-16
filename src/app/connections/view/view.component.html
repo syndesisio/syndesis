@@ -21,7 +21,7 @@
           <div *ngFor="let field of getFormFields(connection)">
             <dl class="dl-horizontal">
               <dt>
-                {{ field.name }}
+                {{ field.title || field.displayName || field.name }}
               </dt>
               <dd>
                 {{ field.value || "&lt;not set&gt;" }}
