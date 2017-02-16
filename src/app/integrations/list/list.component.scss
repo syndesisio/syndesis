@@ -1,4 +1,5 @@
 .integrations.list {
+  color: #656565;
   margin-top: 25px;
 
   .integration {
@@ -43,6 +44,7 @@
     }
 
     .name {
+      font-weight: 700;
       padding: 7px;
     }
   }
