@@ -230,8 +230,7 @@ public class DataManager implements DataAccessObjectRegistry {
             }
         }
 
-        T finalEntity = entity;
-        cache.put(idVal, (T) doWithDataAccessObject(kind, d -> d.create(finalEntity)));
+        cache.put(idVal, entity);
         return entity;
     }
 
