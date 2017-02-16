@@ -87,6 +87,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
       },
       (error) => {
         log.errorc(() => 'Error creating ' + this.kind + ' (' + JSON.stringify(entity, null, 2) + ')' + ': ' + error, category);
+        created.error(error);
       });
     return created.share();
   }

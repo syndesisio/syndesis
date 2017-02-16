@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integration } from '../../store/integration/integration.model';
@@ -38,16 +39,25 @@ export class CurrentFlow {
   }
 
   getStep(position: number) {
+    if (!this._integration) {
+      return undefined;
+    }
     this.createSteps();
     return this._integration.steps[position];
   }
 
   isEmpty() {
+    if (!this._integration) {
+      return true;
+    }
     this.createSteps();
     return this._integration.steps.length === 0;
   }
 
   atEnd(position: number) {
+    if (!this._integration) {
+      return true;
+    }
     this.createSteps();
     return position >= this._integration.steps.length;
   }
@@ -69,14 +79,26 @@ export class CurrentFlow {
         log.debugc(() => 'Saving integration: ' + this._integration);
         // poor man's clone in case we need to munge the data
         const integration = JSON.parse(JSON.stringify(this._integration));
-        this.store.create(integration).toPromise().then((i: Integration) => {
+        // TODO munging connection objects for now
+        const steps = integration.steps;
+        const newSteps = [];
+        for (const step of steps) {
+          newSteps.push({
+            configuredProperties: step['configuredProperties'],
+            id: step['id'],
+            kind: 'endpoint',
+          });
+        }
+        integration.steps = newSteps;
+        this.store.create(integration).map((i: Integration) => {
           log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
           const action = event['action'];
           if (action && typeof action === 'function') {
             action(i);
           }
-        }).catch((reason: any) => {
+        }).catch((reason: any, caught: Observable<void>): Observable<{}> => {
           log.debugc(() => 'Error saving integration: ' + JSON.stringify(reason, undefined, 2), category);
+          return undefined;
         });
       break;
     }

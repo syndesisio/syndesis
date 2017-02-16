@@ -44,7 +44,7 @@
       // Used for the containing <div> around any cubes to make e2e testing easier
       .cube {
         // Overriding the actual cube icon's colors
-        .fa.fa-cube {
+        .fa {
           color: #D1D1D1;
           font-size: x-large;
         }

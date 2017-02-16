@@ -61,7 +61,7 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
         // uh...
         break;
       case 'connection-configure':
-        // TODO hard-coding this to just go to the next connection
+        // TODO hard-coding this to just go to the previous connection
         this.router.navigate(['connection-select', this.position], { relativeTo: this.route });
         break;
       default:
@@ -101,6 +101,10 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy {
         break;
       case 'connection-configure':
         // TODO hard-coding this to just go to the next connection
+        this.currentFlow.events.emit({
+          kind: 'integration-connection-configured',
+          position: this.position,
+        });
         this.router.navigate(['connection-select', this.position + 1], { relativeTo: this.route });
         break;
       default:
