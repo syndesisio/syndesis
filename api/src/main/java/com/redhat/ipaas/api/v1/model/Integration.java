@@ -59,10 +59,12 @@ public interface Integration extends WithId<Integration>, WithName, Serializable
     List<User> getUsers();
 
     List<Tag> getTags();
-    
+
     Optional<List<Connection>> getConnections();
-    
+
     Optional<List<Step>> getSteps();
+
+    Optional<String> getDescription();
 
     @Override
     default Integration withId(String id) {
