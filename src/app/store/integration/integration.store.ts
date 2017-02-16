@@ -25,6 +25,7 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
           kind: 'integration',
           configuration: '',
           steps: [],
+          connections: [],
         };
   }
 

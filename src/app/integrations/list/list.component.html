@@ -12,9 +12,9 @@
       <!-- Icons -->
       <div class="col-xs-2 icons">
         <div class="list-view-pf-left">
-          <span class="fa fa-plane list-view-pf-icon-sm"></span>
+          <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
           <span class="fa fa-angle-right"></span>
-          <span class="fa fa-plane list-view-pf-icon-sm"></span>
+          <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
         </div>
       </div>
       
