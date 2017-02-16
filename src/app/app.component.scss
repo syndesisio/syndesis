@@ -2,8 +2,13 @@
   header {
     // Navigation Bar
     nav {
-      a:hover, a:focus {
-        text-decoration: none;
+      li {
+        border: 0;
+
+        a, a:hover, a:focus {
+          outline: none;
+          text-decoration: none;
+        }
       }
 
       .toggle-nav {
