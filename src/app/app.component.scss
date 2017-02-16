@@ -1,0 +1,46 @@
+.app {
+  header {
+    // Navigation Bar
+    nav {
+      //.navbar-pf-vertical .navbar-toggle {
+      .toggle-nav {
+        background-color: rgba(0, 0, 0, 0);
+        background-image: none;
+        border: 0;
+        //border: 1px solid #363636;
+        border-radius: 1px;
+        display: block;
+        float: left;
+        margin: 9px 15px;
+        padding: 9px 10px;
+        position: relative;
+
+        .icon-bar {
+          background: #d1d1d1;
+          border-radius: 1px;
+          display: block;
+          height: 2px;
+          margin-top: 4px;
+          width: 22px;
+        }
+
+        .sr-only {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          margin: -1px;
+          padding: 0;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          border: 0;
+        }
+      }
+    }
+  }
+
+  // Main body
+  main {}
+
+  // <div> container when sidebar is collapsed
+  .nav-pf-vertical.hidden-icons-pf.collapsed {}
+}
