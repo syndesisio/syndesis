@@ -27,6 +27,7 @@ Once all pods are started up, you should be able to access the iPaaS at `https:/
 * `OPENSHIFT_OAUTH_CLIENT_SECRET`: OpenShift OAuth client secret
 * `OPENSHIFT_OAUTH_DEFAULT_SCOPES`: OpenShift OAuth default scopes
 * `PEMTOKEYSTORE_IMAGE`: PEM to keystore init container image
+* `IMAGE_PULL_POLICY`: ImagePullPolicy configuration on rhipaas images
 
 Only `ROUTE_HOSTNAME` is required, others have sane defaults that work for most cases.
 
