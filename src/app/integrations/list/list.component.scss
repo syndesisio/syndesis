@@ -1,34 +1,49 @@
-.list.integrations {
-  .cards-pf .row-cards-pf:first-child {
-    padding-top: 0;
-  }
-
-  .card {
-    width: 25%;
-    max-height: 200px;
-  }
+.integrations.list {
+  margin-top: 25px;
 
   .integration {
-    ul {
-      cursor: pointer;
+    background: #FFFFFF;
+    cursor: default;
+    padding: 20px;
+
+    .actions {
+      padding: 5px;
+
+      ul {
+        cursor: pointer;
+      }
     }
 
-    .list-view-pf-actions {}
+    .active-inactive {
+      padding: 5px;
 
-    .list-view-pf-checkbox {
-      display: none;
+      .btn.btn-primary {
+        background: #199BD1;
+        border: none;
+        font-family: inherit;
+        font-weight: 100;
+        padding: 1px 10px;
+      }
     }
 
-    .list-view-pf-main-info {
-      cursor: default;
+    .description {
+      padding: 5px;
+    }
 
-      .list-view-pf-left {
-        span.fa {
-          margin: 0 7px;
+    .icons {
+      padding: 1px;
+
+      .fa {
+        margin-right: 15px;
+
+        &.fa-angle-right {
+          font-size: 18px;
         }
       }
+    }
 
-      .list-view-pf-body {}
+    .name {
+      padding: 7px;
     }
   }
 }
