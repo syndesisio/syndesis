@@ -7,4 +7,18 @@
     width: 25%;
     max-height: 200px;
   }
+
+  .integration {
+    ul {
+      cursor: pointer;
+    }
+
+    .list-view-pf-checkbox {
+      display: none;
+    }
+
+    .list-view-pf-main-info {
+      cursor: default;
+    }
+  }
 }
