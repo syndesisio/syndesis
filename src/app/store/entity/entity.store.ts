@@ -40,7 +40,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         this._loading.next(false);
       },
       (error) => {
-        log.errorc(() => 'Error retrieving ' + plural(this.kind) + ': ' + error, category);
+        log.debugc(() => 'Error retrieving ' + plural(this.kind) + ': ' + error, category);
         this._loading.next(false);
       });
   }
@@ -74,7 +74,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         this._loading.next(false);
       },
       (error) => {
-        log.errorc(() => 'Error retrieving ' + this.kind + ': ' + error, category);
+        log.debugc(() => 'Error retrieving ' + this.kind + ': ' + error, category);
         this._loading.next(false);
       });
   }
@@ -86,7 +86,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         created.next(this.plain(e));
       },
       (error) => {
-        log.errorc(() => 'Error creating ' + this.kind + ' (' + JSON.stringify(entity, null, 2) + ')' + ': ' + error, category);
+        log.debugc(() => 'Error creating ' + this.kind + ' (' + JSON.stringify(entity, null, 2) + ')' + ': ' + error, category);
         created.error(error);
       });
     return created.share();
@@ -99,7 +99,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         updated.next(this.plain(e));
       },
       (error) => {
-        log.errorc(() => 'Error updating ' + this.kind + ' (' + JSON.stringify(entity, null, 2) + ')' + ': ' + error, category);
+        log.debugc(() => 'Error updating ' + this.kind + ' (' + JSON.stringify(entity, null, 2) + ')' + ': ' + error, category);
       });
     return updated.share();
   }
