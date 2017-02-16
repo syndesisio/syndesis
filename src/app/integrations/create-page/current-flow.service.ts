@@ -90,15 +90,18 @@ export class CurrentFlow {
           });
         }
         integration.steps = newSteps;
-        this.store.create(integration).map((i: Integration) => {
+        this.store.create(integration).toPromise().then((i: Integration) => {
           log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
           const action = event['action'];
           if (action && typeof action === 'function') {
             action(i);
           }
-        }).catch((reason: any, caught: Observable<void>): Observable<{}> => {
+        }).catch((reason: any) => {
           log.debugc(() => 'Error saving integration: ' + JSON.stringify(reason, undefined, 2), category);
-          return undefined;
+          const errorAction = event['error'];
+          if (errorAction && typeof errorAction === 'function') {
+            errorAction(reason);
+          }
         });
       break;
     }

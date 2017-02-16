@@ -88,7 +88,10 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy, AfterViewInit 
     const router = this.router;
     this.currentFlow.events.emit({
       kind: 'integration-save',
-      action: () => {
+      action: (i: Integration) => {
+        router.navigate(['/integrations']);
+      },
+      error: (error) => {
         router.navigate(['/integrations']);
       },
     });

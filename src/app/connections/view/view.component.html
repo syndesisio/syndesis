@@ -17,21 +17,22 @@
     <div class="card-pf">
       <h2 class="card-pf-title">Connection Fields</h2>
       <div class="card-pf-body">
-        <form class="form-horizontal">
-          <!-- replacing id with data-id to pass build errors -->
-          <div class="form-group required">
-            <label class="col-sm-4 control-label">Connection Name</label>
-            <div class="col-sm-8">
-              <input type="text" name="nameInput" data-id="nameInput" [value]="connection.name" [disabled]="true" class="form-control">
-            </div>
+        <div *ngIf="mode === 'view'">
+          <div *ngFor="let field of getFormFields(connection)">
+            <dl class="dl-horizontal">
+              <dt>
+                {{ field.name }}
+              </dt>
+              <dd>
+                {{ field.value || "&lt;not set&gt;" }}
+              </dd>
+            </dl>
+
           </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label">Description</label>
-            <div class="col-sm-8">
-              <textarea data-id="descriptionInput" name="descriptionInput" class="form-control" [disabled]="true" [value]="connection.description" rows="2"></textarea>
-            </div>
-          </div>
-        </form>
+        </div>
+        <div *ngIf="mode === 'edit'">
+          <p>edit></p>
+        </div>
       </div>
     </div>
   </div>
