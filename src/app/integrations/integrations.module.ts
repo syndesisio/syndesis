@@ -5,7 +5,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
+import { ModalModule } from 'ng2-bootstrap/modal';
 import { TabsModule } from 'ng2-bootstrap';
+import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 import { IntegrationsCreatePage } from './create-page/create-page.component';
 import { IntegrationsSelectConnectionComponent } from './create-page/select-connection/select-connection.component';
@@ -52,6 +54,8 @@ const routes: Routes = [
     TabsModule,
     IPaaSCommonModule,
     CollapseModule,
+    ToasterModule,
+    ModalModule,
   ],
   declarations: [
     IntegrationsCreatePage,

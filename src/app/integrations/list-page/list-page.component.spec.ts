@@ -5,6 +5,9 @@ import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ng2-restangular';
 
+import { ModalModule } from 'ng2-bootstrap/modal';
+import { ToasterModule } from 'angular2-toaster';
+
 import { IPaaSCommonModule } from '../../common/common.module';
 import { IntegrationsListPage } from './list-page.component';
 import { IntegrationsListComponent } from '../list/list.component';
@@ -17,8 +20,19 @@ describe('IntegrationsListPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [IPaaSCommonModule, StoreModule, RouterTestingModule.withRoutes([]), RestangularModule.forRoot()],
-      declarations: [IntegrationsListPage, IntegrationsListComponent, IntegrationsListToolbarComponent],
+      imports: [
+        IPaaSCommonModule,
+        StoreModule,
+        RouterTestingModule.withRoutes([]),
+        RestangularModule.forRoot(),
+        ModalModule,
+        ToasterModule,
+      ],
+      declarations: [
+        IntegrationsListPage,
+        IntegrationsListComponent,
+        IntegrationsListToolbarComponent,
+      ],
       providers: [
         MockBackend,
         { provide: RequestOptions, useClass: BaseRequestOptions },

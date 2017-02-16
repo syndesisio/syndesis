@@ -7,6 +7,10 @@
     cursor: default;
     padding: 20px;
 
+    &:hover {
+      background: rgba(214, 238, 250, 0.36);
+    }
+
     .actions {
       padding: 5px;
 
@@ -39,6 +43,19 @@
 
         &.fa-angle-right {
           font-size: 18px;
+        }
+      }
+    }
+
+    .modal {
+      .modal-footer {
+        .btn {
+          border: 0;
+          margin: 5px 10px 5px 0;
+
+          &.btn-cancel {
+            background: #DADADA;
+          }
         }
       }
     }
