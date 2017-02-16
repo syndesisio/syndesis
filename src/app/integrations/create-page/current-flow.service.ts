@@ -43,7 +43,15 @@ export class CurrentFlow {
       return undefined;
     }
     this.createSteps();
-    return this._integration.steps[position];
+    const step = this._integration.steps[position];
+    if (!step) {
+      return undefined;
+    }
+    if (step.kind === 'connection') {
+      return this._integration.connections[position];
+    } else {
+      return step;
+    }
   }
 
   isEmpty() {
@@ -68,8 +76,16 @@ export class CurrentFlow {
       case 'integration-set-connection':
       this.createSteps();
       const position = +event['position'];
-      const connection = event['connection'];
-      this._integration.steps[position] = connection;
+      let connection = event['connection'];
+      if (connection.plain && typeof connection.plain === 'function') {
+        connection = connection.plain();
+      }
+      this._integration.connections[position] = connection;
+      this._integration.steps[position] = {
+        configuredProperties: connection['configuredProperties'],
+        id: connection['id'],
+        kind: 'connection',
+      };
       log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
       break;
       case 'integration-set-name':
@@ -80,16 +96,15 @@ export class CurrentFlow {
         // poor man's clone in case we need to munge the data
         const integration = JSON.parse(JSON.stringify(this._integration));
         // TODO munging connection objects for now
+        /*
         const steps = integration.steps;
         const newSteps = [];
         for (const step of steps) {
-          newSteps.push({
-            configuredProperties: step['configuredProperties'],
-            id: step['id'],
-            kind: 'endpoint',
-          });
+          newSteps.push();
         }
         integration.steps = newSteps;
+        integration.connections = steps;
+        */
         this.store.create(integration).subscribe((i: Integration) => {
           log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
           const action = event['action'];
