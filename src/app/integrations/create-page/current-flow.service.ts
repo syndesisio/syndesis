@@ -90,13 +90,13 @@ export class CurrentFlow {
           });
         }
         integration.steps = newSteps;
-        this.store.create(integration).toPromise().then((i: Integration) => {
+        this.store.create(integration).subscribe((i: Integration) => {
           log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
           const action = event['action'];
           if (action && typeof action === 'function') {
             action(i);
           }
-        }).catch((reason: any) => {
+        }, (reason: any) => {
           log.debugc(() => 'Error saving integration: ' + JSON.stringify(reason, undefined, 2), category);
           const errorAction = event['error'];
           if (errorAction && typeof errorAction === 'function') {
