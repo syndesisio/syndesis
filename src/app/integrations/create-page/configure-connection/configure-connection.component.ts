@@ -56,19 +56,7 @@ export class IntegrationsConfigureConnectionComponent implements OnInit, OnDestr
           try {
             formConfig = JSON.parse(configString);
           } catch (err) {
-            log.debugc(() => 'Error parsing form config, fudging', category);
-          }
-          if (!formConfig) {
-            formConfig = {
-              username: {
-                title: 'User Name',
-                type: 'text',
-              },
-              password: {
-                title: 'Password',
-                type: 'password',
-              },
-            };
+            log.debugc(() => 'Error parsing form config', category);
           }
           log.debugc(() => 'Form config: ' + JSON.stringify(formConfig, undefined, 2), category);
           this.formModel = this.formFactory.createFormModel(formConfig);
