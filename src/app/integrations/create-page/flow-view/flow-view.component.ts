@@ -23,8 +23,6 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   currentPosition: number;
   currentState: string;
   integrationName: string = '';
-  finishIsCollapsed: boolean = false;
-  startIsCollapsed: boolean = false;
 
   constructor(
     private currentFlow: CurrentFlow,
@@ -34,8 +32,25 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     this.i.name = 'Integration Name';
   }
 
-  getClass(state, position) {
-    if (state === this.currentState && position === this.currentPosition) {
+  getIconClass(position) {
+    const step = this.currentFlow.getStep(position);
+    if (!step || !step['icon']) {
+      return 'fa fa-cube';
+    } else {
+      return 'fa ' + step['icon'];
+    }
+  }
+
+  getActiveClass(state, position) {
+    if ((!state || state === this.currentState) && position === this.currentPosition) {
+      return 'active';
+    } else {
+      return 'inactive';
+    }
+  }
+
+  getTextClass(state, position) {
+    if ((!state || state === this.currentState) && position === this.currentPosition) {
       return 'bold';
     } else {
       return '';
@@ -66,6 +81,18 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  getConnectionText(position: number) {
+    const step = this.currentFlow.getStep(position);
+    if (step) {
+      return 'Set up ' + step['name'];
+    }
+    return 'Set up this connection';
+  }
+
+  isCollapsed(position: number) {
+    return this.currentFlow.getStep(position) !== undefined;
+  }
+
   ngOnInit() {
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
@@ -76,14 +103,6 @@ export class FlowViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.flowSubscription.unsubscribe();
-  }
-
-  collapsed(event: any): void {
-    log.debugc(() => 'Event' + event);
-  }
-
-  expanded(event: any): void {
-    log.debugc(() => 'Event' + event);
   }
 
 }

@@ -72,6 +72,17 @@ export class IntegrationsSelectConnectionComponent implements OnInit, OnDestroy 
         });
       })
       .subscribe();
+    this.connections.map((connections: Connections) => {
+      const config = this.currentFlow.getStep(this.position);
+      if (config) {
+        const id = config.id;
+        for (const connection of connections) {
+          if (connection.id === id) {
+            log.debugc(() => 'Found connection: ' + connection.name, category);
+          }
+        }
+      }
+    });
     this.store.loadAll();
   }
 
