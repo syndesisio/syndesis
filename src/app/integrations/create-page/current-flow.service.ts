@@ -39,7 +39,7 @@ export class CurrentFlow {
 
   getStep(position: number) {
     this.createSteps();
-    return this._integration.steps[position];    
+    return this._integration.steps[position];
   }
 
   isEmpty() {
