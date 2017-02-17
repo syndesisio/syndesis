@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "generate": "node scripts/generate-ts.js",
     "start": "yarn ng serve",
     "lint": "yarn ng lint",
     "lint:fix": "yarn ng lint -- --fix",
@@ -64,6 +65,7 @@
     "protractor": "5.0.0",
     "sass-lint": "1.10.2",
     "sw-precache": "4.3.0",
+    "swagger-js-codegen": "^1.7.12",
     "ts-node": "2.0.0",
     "tslint": "4.3.1",
     "typescript": "2.1.5",
