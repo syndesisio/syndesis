@@ -24,7 +24,7 @@ resteasy:
       classes: com.redhat.ipaas.api.v1.rest.V1Application
 
 cors:
-  allowedOrigins: http://localhost:4200
+  allowedOrigins: "*"
 
 cache:
   cluster:

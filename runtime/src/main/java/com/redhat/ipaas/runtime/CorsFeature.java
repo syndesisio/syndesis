@@ -14,22 +14,32 @@
  * limitations under the License.
  */
 package com.redhat.ipaas.runtime;
+import com.redhat.ipaas.api.AllowedOrigins;
 import org.jboss.resteasy.plugins.interceptors.CorsFilter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.Feature;
+import javax.ws.rs.container.*;
 import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.ext.Provider;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @EnableConfigurationProperties
 @ConfigurationProperties("cors")
 @Provider
-public class CorsFeature implements Feature {
+public class CorsFeature implements DynamicFeature {
+
+    /**
+     * The @Prematching on CorsFilter does not work well with dynamic features. So extend here
+     * to ommit the @Prematching behaviour.
+     */
+    public static class NonPrematchingCorsFilter extends CorsFilter {
+    }
 
     private List<String> allowedOrigins = Arrays.asList("*");
 
@@ -42,11 +52,21 @@ public class CorsFeature implements Feature {
     }
 
     @Override
-    public boolean configure(FeatureContext context) {
-        CorsFilter corsFilter = new CorsFilter();
-        corsFilter.getAllowedOrigins().addAll(allowedOrigins);
-        context.register(corsFilter);
-        return true;
-    }
+    public void configure(ResourceInfo resourceInfo, FeatureContext context) {
+        AllowedOrigins ao = resourceInfo.getResourceClass().getAnnotation(AllowedOrigins.class);
+        AllowedOrigins mao = resourceInfo.getResourceMethod().getAnnotation(AllowedOrigins.class);
+        if( mao!=null ) {
+            ao = mao;
+        }
 
+        NonPrematchingCorsFilter corsFilter = new NonPrematchingCorsFilter();
+        if (ao!=null) {
+            corsFilter.getAllowedOrigins().addAll(Arrays.asList(ao.value()));
+            context.register(corsFilter);
+        } else {
+            corsFilter.getAllowedOrigins().addAll(allowedOrigins);
+            context.register(corsFilter);
+        }
+
+    }
 }
