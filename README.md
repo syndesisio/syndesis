@@ -37,7 +37,7 @@ Windows:
 # Endpoints
 
     REST service: http://localhost:8080/api/v1/
-    Swagger doc:  http://localhost:8080/api/v1/swagger.json
+    Swagger doc:  http://localhost:8080/api/v1/swagger.json [View in Swagger UI](http://petstore.swagger.io/?url=http://localhost:8080/api/v1/swagger.json)
 
 There is a [staging URL](https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/api/v1/) on OpenShift dedicated that you can test with, along with the [Swagger JSON](https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/api/v1/swagger.json).
 
