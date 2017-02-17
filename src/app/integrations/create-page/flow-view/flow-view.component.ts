@@ -22,7 +22,7 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   urls: UrlSegment[];
   currentPosition: number;
   currentState: string;
-  integrationName: string = '';
+  integrationName = '';
 
   constructor(
     private currentFlow: CurrentFlow,

@@ -24,7 +24,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   iconDarkBg = 'assets/images/glasses_logo.svg';
 
   loggedIn = false;
-  sidebarCollapsed: boolean = false;
+  sidebarCollapsed = false;
   title = 'Red Hat iPaaS';
   url = 'https://www.twitter.com/jboss';
   user: Observable<User>;

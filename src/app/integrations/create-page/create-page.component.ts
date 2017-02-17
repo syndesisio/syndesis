@@ -28,7 +28,7 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy, AfterViewInit 
   _canContinue = false;
   position: number;
   pageTitle = 'Create an integration';
-  sidebarCollapsed: boolean = true;
+  sidebarCollapsed = true;
 
   constructor(
     private currentFlow: CurrentFlow,
