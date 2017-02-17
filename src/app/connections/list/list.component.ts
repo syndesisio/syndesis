@@ -1,7 +1,7 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 
 import { log, getCategory } from '../../logging';
-import { Connections, Connection } from '../../store/connection/connection.model';
+import { Connections, Connection } from '../../model';
 
 const category = getCategory('Connections');
 

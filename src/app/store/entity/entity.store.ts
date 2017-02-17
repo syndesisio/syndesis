@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { plural } from 'pluralize';
 
 import { RESTService } from './rest.service';
-import { BaseEntity } from './entity.model';
+import { BaseEntity } from '../../model';
 
 import { log, getCategory } from '../../logging';
 

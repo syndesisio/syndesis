@@ -3,7 +3,7 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Integrations, Integration } from '../../store/integration/integration.model';
+import { Integrations, Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 
 import { log, getCategory } from '../../logging';

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Connection } from '../../store/connection/connection.model';
+import { Connection } from '../../model';
 import { ConnectionStore } from '../../store/connection/connection.store';
 
 @Component({

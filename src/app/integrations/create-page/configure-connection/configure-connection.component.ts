@@ -6,7 +6,7 @@ import { DynamicFormControlModel, DynamicFormService } from '@ng2-dynamic-forms/
 
 import { FormFactoryService } from '../../../common/forms.service';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Connection } from '../../../store/connection/connection.model';
+import { Connection } from '../../../model';
 import { log, getCategory } from '../../../logging';
 
 const category = getCategory('IntegrationsCreatePage');
@@ -48,7 +48,7 @@ export class IntegrationsConfigureConnectionComponent implements OnInit, OnDestr
     this.routeSubscription = this.route.params.pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
-        this.connection = <Connection> this.currentFlow.integration.steps[this.position];
+        this.connection = <Connection> this.currentFlow.getStep(this.position);
         if (this.connection && this.connection.configuredProperties) {
           const configString = this.connection.configuredProperties;
           // TODO giant hack so we see something on the config page

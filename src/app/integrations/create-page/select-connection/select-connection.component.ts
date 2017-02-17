@@ -6,7 +6,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { ConnectionStore } from '../../../store/connection/connection.store';
-import { Connections, Connection } from '../../../store/connection/connection.model';
+import { Connections, Connection } from '../../../model';
 import { ObjectPropertyFilterConfig } from '../../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../../common/object-property-sort.pipe';
 

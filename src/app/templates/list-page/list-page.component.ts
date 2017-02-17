@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { TemplateStore } from '../../store/template/template.store';
-import { Templates } from '../../store/template/template.model';
+import { IntegrationTemplates } from '../../model';
 
 @Component({
   selector: 'ipaas-templates-list-page',
@@ -11,7 +11,7 @@ import { Templates } from '../../store/template/template.model';
 })
 export class TemplatesListPage implements OnInit {
 
-  templates: Observable<Templates>;
+  templates: Observable<IntegrationTemplates>;
   loading: Observable<boolean>;
 
   constructor(private store: TemplateStore) {

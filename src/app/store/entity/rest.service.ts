@@ -1,7 +1,7 @@
 import { Restangular } from 'ng2-restangular';
 import { Observable } from 'rxjs/Observable';
 
-import { BaseEntity } from './entity.model';
+import { BaseEntity } from '../../model';
 
 export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
 

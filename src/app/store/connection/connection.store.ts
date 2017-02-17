@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConnectionService } from './connection.service';
-import { Connections, Connection } from './connection.model';
+import { Connections, Connection } from '../../model';
 
 import { AbstractStore } from '../entity/entity.store';
 
