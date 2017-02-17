@@ -277,7 +277,40 @@ objects:
           app: redhat-ipaas
           component: ipaas-rest
           deploymentconfig: ipaas-rest
+        annotations:
+          pod.beta.kubernetes.io/init-containers: |-
+            [{
+              "name": "openshift-ca-pemtokeystore",
+              "image": "${PEMTOKEYSTORE_IMAGE}",
+              "imagePullPolicy": "IfNotPresent",
+              "args": [
+                "-keystore", "/tls-keystore/openshift-truststore.jks",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
+                "-ca-dir", "/usr/share/ca-certificates/mozilla"
+              ],
+              "volumeMounts": [{
+                "name": "ipaas-rest-tls",
+                "mountPath": "/tls-keystore"
+              }]
+            }]
       spec:
+        initContainers:
+        - name: openshift-ca-pemtokeystore
+          image: ${PEMTOKEYSTORE_IMAGE}
+          imagePullPolicy: IfNotPresent
+          args:
+          - -keystore
+          - /tls-keystore/openshift-truststore.jks
+          - -ca-file
+          - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          - -ca-file
+          - /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+          - -ca-dir
+          - /usr/share/ca-certificates/mozilla
+          volumeMounts:
+          - name: ipaas-rest-tls
+            mountPath: /tls-keystore
         serviceAccountName: ipaas-rest
         containers:
         - name: ipaas-rest
@@ -289,7 +322,7 @@ objects:
           - name: AB_OFF
             value: "true"
           - name: JAVA_OPTIONS
-            value: "-Djava.net.preferIPv4Stack=true"
+            value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks"
           image: rhipaas/ipaas-rest:latest
           imagePullPolicy: ${IMAGE_PULL_POLICY}
           readinessProbe:
@@ -304,6 +337,11 @@ objects:
             name: prometheus
           - containerPort: 8778
             name: jolokia
+          volumeMounts:
+          - name: ipaas-rest-tls
+            mountPath: /tls-keystore
+          - name: config-volume
+            mountPath: /deployments/config
           resources:
             limits:
               cpu: 2000m
@@ -311,6 +349,12 @@ objects:
             requests:
               cpu: 200m
               memory: 612Mi
+        volumes:
+        - name: ipaas-rest-tls
+          emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: ipaas-rest-config
     triggers:
     - type: ConfigChange
 - apiVersion: v1
@@ -1429,4 +1473,51 @@ objects:
           "hybrid": true,
           "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}"
         }
+      }
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: redhat-ipaas
+      component: ipaas-rest
+    name: ipaas-rest-config
+  data:
+    application.yml: |-
+      deployment:
+        file: com/redhat/ipaas/api/v1/deployment.json
+      resteasy:
+        jaxrs:
+          app:
+            registration: property
+            classes: com.redhat.ipaas.api.v1.rest.V1Application
+      cors:
+        allowedOrigins: http://localhost:4200, https://${ROUTE_HOSTNAME}
+      cache:
+        cluster:
+          name: IPaaSCluster
+        max:
+          entries: 100
+      spring:
+        zipkin:
+          enabled: false
+      security:
+        basic:
+          enabled: false
+      management:
+        port: 8181
+        security:
+          enabled: true
+      endpoints:
+        health:
+          sensitive: false
+      keycloak:
+        enabled: true
+        configurationFile: file:config/ipaas-client.json
+    ipaas-client.json: |-
+      {
+        "realm": "${KEYCLOAK_IPAAS_REALM_NAME}",
+        "bearer-only": true,
+        "auth-server-url": "https://${ROUTE_HOSTNAME}/auth",
+        "ssl-required": "external",
+        "resource": "ipaas-rest"
       }
