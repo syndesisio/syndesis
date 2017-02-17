@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { TemplateStore } from '../store/template/template.store';
-import { Templates } from '../store/template/template.model';
+import { IntegrationTemplates } from '../model';
 
 @Component({
   selector: 'ipaas-dashboard',
@@ -12,7 +12,7 @@ import { Templates } from '../store/template/template.model';
 })
 export class DashboardComponent implements OnInit {
 
-  templates: Observable<Templates>;
+  templates: Observable<IntegrationTemplates>;
 
   loading: Observable<boolean>;
 

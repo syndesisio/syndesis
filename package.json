@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "generate": "node scripts/generate-ts.js",
+    "generate": "node ./scripts/generate-ts.js",
     "start": "yarn ng serve",
     "lint": "yarn ng lint",
     "lint:fix": "yarn ng lint -- --fix",

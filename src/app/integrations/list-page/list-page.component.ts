@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IntegrationStore } from '../../store/integration/integration.store';
-import { Integrations } from '../../store/integration/integration.model';
+import { Integrations } from '../../model';
 
 @Component({
   selector: 'ipaas-integrations-list-page',

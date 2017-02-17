@@ -1,20 +1,31 @@
-export interface ListResult {
+/* tslint:disable */
+
+export interface BaseEntity {
+    readonly id ? : string;
+    // TODO we'll make this optional for now
+    kind ? : string;
+}
+
+export interface ListResult extends BaseEntity {
     items: Array < {} >
     ;
     totalCount: number;
 };
+export type ListResults = Array < ListResult > ;
 
-export interface ListResultWithId {
+export interface ListResultWithId extends BaseEntity {
     items: Array < WithId >
     ;
     totalCount: number;
 };
+export type ListResultWithIds = Array < ListResultWithId > ;
 
-export interface WithId {
+export interface WithId extends BaseEntity {
     id: string;
 };
+export type WithIds = Array < WithId > ;
 
-export interface Connection {
+export interface Connection extends BaseEntity {
     position: string;
     organization: Organization;
     icon: string;
@@ -29,8 +40,9 @@ export interface Connection {
     id: string;
     name: string;
 };
+export type Connections = Array < Connection > ;
 
-export interface Connector {
+export interface Connector extends BaseEntity {
     icon: string;
     connectorGroup: ConnectorGroup;
     connectorGroupId: string;
@@ -39,18 +51,21 @@ export interface Connector {
     id: string;
     name: string;
 };
+export type Connectors = Array < Connector > ;
 
-export interface ConnectorGroup {
+export interface ConnectorGroup extends BaseEntity {
     id: string;
     name: string;
 };
+export type ConnectorGroups = Array < ConnectorGroup > ;
 
-export interface Environment {
+export interface Environment extends BaseEntity {
     id: string;
     name: string;
 };
+export type Environments = Array < Environment > ;
 
-export interface Integration {
+export interface Integration extends BaseEntity {
     tags: Array < Tag >
     ;
     description: string;
@@ -67,8 +82,9 @@ export interface Integration {
     id: string;
     name: string;
 };
+export type Integrations = Array < Integration > ;
 
-export interface IntegrationPattern {
+export interface IntegrationPattern extends BaseEntity {
     icon: string;
     integrationPatternGroupId: string;
     integrationPatternGroup: IntegrationPatternGroup;
@@ -76,13 +92,15 @@ export interface IntegrationPattern {
     id: string;
     name: string;
 };
+export type IntegrationPatterns = Array < IntegrationPattern > ;
 
-export interface IntegrationPatternGroup {
+export interface IntegrationPatternGroup extends BaseEntity {
     id: string;
     name: string;
 };
+export type IntegrationPatternGroups = Array < IntegrationPatternGroup > ;
 
-export interface IntegrationTemplate {
+export interface IntegrationTemplate extends BaseEntity {
     organization: Organization;
     configuration: string;
     userId: string;
@@ -90,8 +108,9 @@ export interface IntegrationTemplate {
     id: string;
     name: string;
 };
+export type IntegrationTemplates = Array < IntegrationTemplate > ;
 
-export interface Organization {
+export interface Organization extends BaseEntity {
     users: Array < User >
     ;
     environments: Array < Environment >
@@ -99,14 +118,16 @@ export interface Organization {
     id: string;
     name: string;
 };
+export type Organizations = Array < Organization > ;
 
-export interface Step {
+export interface Step extends BaseEntity {
     configuredProperties: string;
     integrationPattern: IntegrationPattern;
     id: string;
 };
+export type Steps = Array < Step > ;
 
-export interface Tag {
+export interface Tag extends BaseEntity {
     integrationTemplate: Array < IntegrationTemplate >
     ;
     connections: Array < Connection >
@@ -114,8 +135,9 @@ export interface Tag {
     id: string;
     name: string;
 };
+export type Tags = Array < Tag > ;
 
-export interface User {
+export interface User extends BaseEntity {
     fullName: string;
     username: string;
     lastName: string;
@@ -127,3 +149,4 @@ export interface User {
     name: string;
     id: string;
 };
+export type Users = Array < User > ;

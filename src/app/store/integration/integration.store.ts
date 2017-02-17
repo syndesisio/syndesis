@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IntegrationService } from './integration.service';
-import { Integrations, Integration } from './integration.model';
+import { Integrations, Integration } from '../../model';
 
 import { AbstractStore } from '../entity/entity.store';
 
@@ -13,6 +13,7 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
   protected get kind() { return 'Integration'; }
 
   newInstance(): Integration {
+    // TODO maybe generate this too
     return <Integration> {
           id: undefined,
           createdBy: undefined,
@@ -26,6 +27,11 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
           configuration: '',
           steps: [],
           connections: [],
+          tags: [],
+          users: [],
+          integrationTemplate: undefined,
+          userId: undefined,
+          integrationTemplateId: undefined,
         };
   }
 

@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
 import { IntegrationStore } from '../../store/integration/integration.store';
-import { Integration } from '../../store/integration/integration.model';
+import { Integration, Step, Connection } from '../../model';
 import { log, getCategory } from '../../logging';
 
 const category = getCategory('CurrentFlow');
@@ -38,7 +38,7 @@ export class CurrentFlow {
     }
   }
 
-  getStep(position: number) {
+  getStep(position: number): Step | Connection {
     if (!this._integration) {
       return undefined;
     }
@@ -54,7 +54,7 @@ export class CurrentFlow {
     }
   }
 
-  isEmpty() {
+  isEmpty(): boolean {
     if (!this._integration) {
       return true;
     }
@@ -62,7 +62,7 @@ export class CurrentFlow {
     return this._integration.steps.length === 0;
   }
 
-  atEnd(position: number) {
+  atEnd(position: number): boolean {
     if (!this._integration) {
       return true;
     }
@@ -70,7 +70,7 @@ export class CurrentFlow {
     return position >= this._integration.steps.length;
   }
 
-  handleEvent(event: FlowEvent) {
+  handleEvent(event: FlowEvent): void {
     log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
     switch (event.kind) {
       case 'integration-set-connection':
@@ -81,7 +81,7 @@ export class CurrentFlow {
         connection = connection.plain();
       }
       this._integration.connections[position] = connection;
-      this._integration.steps[position] = {
+      this._integration.steps[position] = <Step> {
         configuredProperties: connection['configuredProperties'],
         id: connection['id'],
         kind: 'connection',
@@ -123,7 +123,7 @@ export class CurrentFlow {
     // log.debugc(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);
   }
 
-  get integration() {
+  get integration(): Integration {
     return this._integration;
   }
 

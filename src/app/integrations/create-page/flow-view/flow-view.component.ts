@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Integration } from '../../../store/integration/integration.model';
+import { Integration } from '../../../model';
 
 const category = getCategory('IntegrationsCreatePage');
 

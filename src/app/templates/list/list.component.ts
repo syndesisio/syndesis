@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { Templates } from '../../store/template/template.model';
+import { IntegrationTemplates } from '../../model';
 
 @Component({
   selector: 'ipaas-templates-list',
@@ -9,7 +9,7 @@ import { Templates } from '../../store/template/template.model';
 })
 export class TemplatesListComponent {
 
-  @Input() templates: Templates;
+  @Input() templates: IntegrationTemplates;
 
   @Input() loading: boolean;
 

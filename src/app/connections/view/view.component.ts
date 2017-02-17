@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Connection } from '../../store/connection/connection.model';
+import { Connection } from '../../model';
 
 @Component({
   selector: 'ipaas-connection-view',

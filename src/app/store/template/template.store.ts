@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { TemplateService } from './template.service';
-import { Templates, Template } from './template.model';
+import { IntegrationTemplate } from '../../model';
 
 import { AbstractStore } from '../entity/entity.store';
 
 @Injectable()
-export class TemplateStore extends AbstractStore<Template, Templates, TemplateService> {
+export class TemplateStore extends AbstractStore<IntegrationTemplate, Array<IntegrationTemplate>, TemplateService> {
   constructor(integrationService: TemplateService) {
-    super(integrationService, [], <Template>{});
+    super(integrationService, [], <IntegrationTemplate>{});
   }
 
   protected get kind() { return 'Template'; }

@@ -1,5 +1,13 @@
+/* tslint:disable */
+
+export interface BaseEntity {
+  readonly id?: string;
+  // TODO we'll make this optional for now
+  kind?: string;
+}
 
 {{#definitions}}
-export interface {{&name}} {{#tsType}}{{> type}}{{/tsType}};
+export interface {{&name}} extends BaseEntity {{#tsType}}{{> type}}{{/tsType}};
+export type {{&name}}s = Array<{{&name}}>;
 
 {{/definitions}}

@@ -246,7 +246,7 @@ angular-oauth2-oidc-hybrid@1.0.22:
     js-base64 "^2.1.9"
     sha256 "^0.2.0"
 
-angular2-toaster@^2.0.0:
+angular2-toaster@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/angular2-toaster/-/angular2-toaster-2.0.0.tgz#a42764dd4d470dee0e1209d6b0bd585b24e708c0"
 
