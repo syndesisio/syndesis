@@ -1,30 +1,43 @@
 <ipaas-loading [loading]="loading">
   <div class="container-cards-pf">
     <div class="row row-cards-pf">
-      <div class="col-xs-12 col-sm-3 col-md-2 card" *ngFor="let connection of connections" (click)="onSelect(connection)">
-        <div class="card-pf card-pf-view card-pf-view-xs card-pf-view-select card-pf-view-single-select" [class.active]="isSelected(connection)">
+      <div class="col-xs-12 col-sm-3 col-md-2 card"
+           *ngFor="let connection of connections"
+           (click)="onSelect(connection)">
+        <div class="card-pf card-pf-view card-pf-view-xs card-pf-view-select card-pf-view-single-select"
+             [class.active]="isSelected(connection)">
           <div class="card-pf-body">
 
             <!-- Card Heading -->
             <div class="card-pf-heading-kebab">
-              <!-- Card Actions -->
               <!--
-              <div class="dropdown pull-right dropdown-kebab-pf card-pf-time-frame-filter">
-                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+          
+              <!-- Card Actions --
+              <div class="dropdown pull-right dropdown-kebab-pf card-pf-time-frame-filter"
+                   (onToggle)="toggled($event)">
+                <button type="button"
+                        class="btn btn-link"
+                        id="kebab"
+                        dropdownToggle>
                   <span class="fa fa-ellipsis-v"></span>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                  <li>
-                    <a [routerLink]="[connection.id]">View</a>
+                <ul class="dropdown-menu dropdown-menu-right"
+                    dropdownMenu
+                    aria-labelledby="kebab"
+                    role="menu">
+                  <li role="menuitem">
+                    <a [routerLink]="[connection.id]"
+                       class="dropdown-item">View</a>
                   </li>
-                  <li>
-                    <a [routerLink]="[connection.id, 'edit']">Edit</a>
+                  <li role="menuitem">
+                    <a [routerLink]="[connection.id, 'edit']"
+                       class="dropdown-item">Edit</a>
                   </li>
-                  <li>
-                    <a>Duplicate</a>
+                  <li role="menuitem">
+                    <a class="dropdown-item">Duplicate</a>
                   </li>
-                  <li>
-                    <a>Delete</a>
+                  <li role="menuitem">
+                    <a class="dropdown-item">Delete</a>
                   </li>
                 </ul>
               </div>

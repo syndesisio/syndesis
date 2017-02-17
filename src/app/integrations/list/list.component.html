@@ -8,6 +8,49 @@
     <!--<tab heading='All'>-->
     <div class="integration col-xs-12"
          *ngFor="let integration of integrations">
+  
+      <!-- Toast Notification Container -->
+      <toaster-container></toaster-container>
+  
+      <!-- Modal Container -->
+      <div bsModal
+           #childModal="bs-modal"
+           class="modal fade"
+           tabindex="-1"
+           role="dialog"
+           aria-labelledby="deleteModal"
+           aria-hidden="true">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">Confirm Delete</h4>
+              <button type="button"
+                      class="close pull-right"
+                      aria-label="Close"
+                      (click)="hideModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <p>Are you sure you would like to delete the following integration?</p>
+              </div>
+              <div style="text-align: center; font-weight: 700">
+                <p>{{ integration['name'] }}</p>
+              </div>
+              <div>
+                <p><b style="color: red;">NOTE:</b> This action <i>cannot</i> be undone.</p>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="pull-right btn btn-primary"
+                      (click)="deleteAction(integration)">Delete</button>
+              <button class="pull-right btn btn-cancel"
+                      (click)="hideModal()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
       
       <!-- Icons -->
       <div class="col-xs-2 icons">
@@ -34,6 +77,7 @@
       <div class="col-xs-1 active-inactive">
         <div class="list-view-pf-additional-info-item">
           <a class="btn btn-primary">Active</a>
+          <a class="btn btn-cancel" *ngIf="integration.active === false">Inactive</a>
         </div>
       </div>
       
@@ -60,7 +104,7 @@
               <a>Duplicate</a>
             </li>
             <li>
-              <a>Delete</a>
+              <a (click)="requestDelete(integration)">Delete</a>
             </li>
           </ul>
         </div>

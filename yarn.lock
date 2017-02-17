@@ -112,11 +112,11 @@
   dependencies:
     tsickle "^0.2"
 
-"@ng2-dynamic-forms/core@^1.3.13":
+"@ng2-dynamic-forms/core@1.3.13":
   version "1.3.13"
   resolved "https://registry.yarnpkg.com/@ng2-dynamic-forms/core/-/core-1.3.13.tgz#07901f19f9729ce67a841e8e1fd5e9bb684d9df6"
 
-"@ng2-dynamic-forms/ui-bootstrap@^1.3.13":
+"@ng2-dynamic-forms/ui-bootstrap@1.3.13":
   version "1.3.13"
   resolved "https://registry.yarnpkg.com/@ng2-dynamic-forms/ui-bootstrap/-/ui-bootstrap-1.3.13.tgz#1bd9ac62f18fa5664de5e375c64ee2fb398067a4"
 
@@ -238,13 +238,17 @@ amdefine@>=0.0.4:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.0.tgz#fd17474700cb5cc9c2b709f0be9d23ce3c198c33"
 
-angular-oauth2-oidc-hybrid@^1.0.22:
+angular-oauth2-oidc-hybrid@1.0.22:
   version "1.0.22"
   resolved "https://registry.yarnpkg.com/angular-oauth2-oidc-hybrid/-/angular-oauth2-oidc-hybrid-1.0.22.tgz#072fc438b7c294dab0d12e94e98f3aab23b84d66"
   dependencies:
     base64-js "^1.2.0"
     js-base64 "^2.1.9"
     sha256 "^0.2.0"
+
+angular2-toaster@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/angular2-toaster/-/angular2-toaster-2.0.0.tgz#a42764dd4d470dee0e1209d6b0bd585b24e708c0"
 
 ansi-align@^1.1.0:
   version "1.1.0"
@@ -3040,7 +3044,7 @@ karma-cli@1.0.1:
   dependencies:
     resolve "^1.1.6"
 
-karma-coverage-istanbul-reporter@^0.2.0:
+karma-coverage-istanbul-reporter@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/karma-coverage-istanbul-reporter/-/karma-coverage-istanbul-reporter-0.2.0.tgz#5766263338adeb0026f7e4ac7a89a5f056c5642c"
   dependencies:

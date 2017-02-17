@@ -30,6 +30,10 @@ export class ConnectionsListComponent implements OnInit {
     return connection.id === this.selectedId;
   }
 
+  toggled(open): void {
+    log.debugc(() => 'Dropdown is now: ' + open);
+  }
+
   ngOnInit() {
     log.debugc(() => 'Got connections: ' + JSON.stringify(this.connections, undefined, 2), category);
   }

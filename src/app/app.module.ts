@@ -10,6 +10,7 @@ import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 
 import { TabsModule, ModalModule, DropdownModule, CollapseModule, AlertModule } from 'ng2-bootstrap';
+import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 import { AppRoutingModule } from './approuting/approuting.module';
 import { StoreModule } from './store/store.module';
@@ -91,6 +92,7 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     StoreModule,
     IPaaSCommonModule.forRoot(),
     OAuthModule.forRoot(),
+    ToasterModule,
   ],
   providers: [
     ConfigService,

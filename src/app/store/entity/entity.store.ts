@@ -104,4 +104,12 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
     return updated.share();
   }
 
+  /*
+  deleteEntity(id?: string) {
+    if(id) {
+      this.service.delete(id);
+    }
+  }
+  */
+
 }
