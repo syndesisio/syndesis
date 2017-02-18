@@ -18,7 +18,8 @@
         "mstile-150x150.png",
         "safari-pinned-tab.svg",
         "manifest.webapp",
-        "browserconfig.xml"
+        "browserconfig.xml",
+        "config.json"
       ],
       "index": "index.html",
       "main": "main.ts",
