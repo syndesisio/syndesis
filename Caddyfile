@@ -2,7 +2,7 @@
 log stdout
 errors {
   log stdout
-  404 /index.html
+  404 index.html
 }
 gzip
 prometheus
