@@ -8,6 +8,7 @@ import { RestangularModule } from 'ng2-restangular';
 import { OAuthService, OAuthModule } from 'angular-oauth2-oidc-hybrid';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
+import { Observable } from 'rxjs/Observable';
 
 import { TabsModule, ModalModule, DropdownModule, CollapseModule, AlertModule } from 'ng2-bootstrap';
 import { ToasterModule, ToasterService } from 'angular2-toaster';
@@ -19,6 +20,7 @@ import { IPaaSCommonModule } from './common/common.module';
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';
 import { UserService } from './common/user.service';
+import { log } from './logging';
 
 export function appInitializer(configService: ConfigService, oauthService: OAuthService, userService: UserService) {
   return () => {
@@ -41,6 +43,14 @@ export function appInitializer(configService: ConfigService, oauthService: OAuth
       }
       oauthService.loadUserProfile().then(() => {
         userService.setUser(oauthService.getIdentityClaims());
+
+        Observable.interval(1000 * 60).subscribe(
+          () => {
+            oauthService.refreshToken().catch(
+              (reason) => log.errorc(() => 'Failed to refresh token', () => new Error(reason)),
+            );
+          },
+        );
       });
     });
   };
@@ -50,7 +60,6 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
   restangularProvider.setBaseUrl(config.getSettings().apiEndpoint);
 
   restangularProvider.addFullRequestInterceptor((_element, _operation, _path, _url, headers) => {
-    oauthService.refreshToken();
     const accessToken = oauthService.getAccessToken();
     return {
       headers: Object.assign({}, headers, { Authorization: 'Bearer ' + accessToken }),
