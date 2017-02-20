@@ -130,7 +130,6 @@
           <mainClass>io.fabric8.funktion.connector.generator.ConnectorGenerator</mainClass>
           <arguments>
             <argument>-classpath</argument>
-            <classpath/>
           </arguments>
           <classpathScope>test</classpathScope>
           <systemProperties>
