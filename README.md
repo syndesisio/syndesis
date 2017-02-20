@@ -36,10 +36,10 @@ Windows:
 
 # Endpoints
 
-    REST service: http://localhost:8080/api/v1/
-    Swagger doc:  http://localhost:8080/api/v1/swagger.json [View in Swagger UI](http://petstore.swagger.io/?url=http://localhost:8080/api/v1/swagger.json)
+* REST service: [http://localhost:8080/api/v1/](http://localhost:8080/api/v1/)
+* Swagger doc:  [http://localhost:8080/api/v1/swagger.json](http://localhost:8080/api/v1/swagger.json)
 
-There is a [staging URL](https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/api/v1/) on OpenShift dedicated that you can test with, along with the [Swagger JSON](https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/api/v1/swagger.json).
+There is a [staging URL](https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/api/v1/) on OpenShift dedicated that you can test with, along with the [Swagger JSON](https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/api/v1/swagger.json) [![Swagger UI](http://petstore.swagger.io/images/logo_small.png)](http://petstore.swagger.io/?url=https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/api/v1/swagger.json).
 
 This demo endpoint has some preloaded data and can be used for testing and demoing purposes.
 
