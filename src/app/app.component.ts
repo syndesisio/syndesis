@@ -5,7 +5,7 @@ import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 import { log } from './logging';
 
 import { UserService } from './common/user.service';
-import { User } from './common/user.model';
+import { User } from './model';
 
 @Component({
   selector: 'ipaas-root',
