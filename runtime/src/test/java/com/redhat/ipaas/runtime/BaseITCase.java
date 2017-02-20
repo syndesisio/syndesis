@@ -68,9 +68,25 @@ public abstract class BaseITCase {
     }
 
     protected <T> ResponseEntity<T> get(String url, Class<T> responseClass, String token, HttpStatus expectedStatus) {
+        return http(HttpMethod.GET, url, null, responseClass, token, expectedStatus);
+    }
+
+    protected <T> ResponseEntity<T> post(String url, Object body,  Class<T> responseClass) {
+        return post(url, body, responseClass, tokenRule.validToken(), HttpStatus.OK);
+    }
+
+    protected <T> ResponseEntity<T> post(String url, Object body, Class<T> responseClass, String token) {
+        return post(url, body, responseClass, token, HttpStatus.OK);
+    }
+
+    protected <T> ResponseEntity<T> post(String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {
+        return http(HttpMethod.POST, url, body, responseClass, token, expectedStatus);
+    }
+
+    protected <T> ResponseEntity<T> http(HttpMethod method, String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-        ResponseEntity<T> response = restTemplate().exchange(url, HttpMethod.GET, new HttpEntity<>(headers), responseClass);
+        ResponseEntity<T> response = restTemplate().exchange(url, method, new HttpEntity<>(body, headers), responseClass);
         assertThat(response.getStatusCode()).as("status code").isEqualTo(expectedStatus);
         return response;
     }

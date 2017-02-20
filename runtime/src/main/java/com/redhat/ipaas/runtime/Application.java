@@ -16,9 +16,12 @@
 package com.redhat.ipaas.runtime;
 
 import com.redhat.ipaas.rest.v1.V1Application;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
@@ -27,6 +30,14 @@ public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+    }
+
+    @Bean
+    @Autowired
+    public UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory(SimpleEventBus bus, EventBusToServerSentEvents sseUndertowCustomizer) {
+        UndertowEmbeddedServletContainerFactory factory = new UndertowEmbeddedServletContainerFactory();
+        factory.addDeploymentInfoCustomizers(sseUndertowCustomizer);
+        return factory;
     }
 
 }
