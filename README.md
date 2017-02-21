@@ -4,7 +4,7 @@
 
 The front end application or UI for Red Hat iPaaS - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages Red Hat's existing product architecture using OpenShift Online/Dedicated and Fuse Integration Services.
 
-For the middle tier API that this client communicates with, please see [this](https://github.com/redhat-ipaas/ipaas-api) repo.
+For the middle tier API that this client communicates with, please see the [ipaas-rest](https://github.com/redhat-ipaas/ipaas-rest) repo.
 
 Included in this stack are the following technologies:
 
