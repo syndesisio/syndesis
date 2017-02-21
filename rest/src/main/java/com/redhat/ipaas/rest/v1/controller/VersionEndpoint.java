@@ -13,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.runtime;
+package com.redhat.ipaas.rest.v1.controller;
 
-import com.redhat.ipaas.rest.v1.V1Application;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
+import com.redhat.ipaas.rest.Version;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.stereotype.Component;
 
-@SpringBootApplication
-@ComponentScan(basePackageClasses = {V1Application.class, Application.class})
-public class Application extends SpringBootServletInitializer {
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+@Path("/version")
+@Component
+public class VersionEndpoint {
+
+    @GET
+    @Produces("text/plain")
+    @ApiOperation(value = "Get the version")
+    public Response doGet() {
+        return Response.ok(Version.getVersion()).build();
     }
-
 }

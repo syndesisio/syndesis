@@ -27,10 +27,10 @@
   </parent>
 
   <groupId>com.redhat.ipaas</groupId>
-  <artifactId>ipaas-rest-project</artifactId>
+  <artifactId>ipaas-rest-parent</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>iPaaS REST :: Project</name>
+  <name>iPaaS REST :: Parent</name>
 
   <inceptionYear>2016</inceptionYear>
 
@@ -159,7 +159,7 @@
   </properties>
 
   <modules>
-    <module>api</module>
+    <module>rest</module>
     <module>runtime</module>
   </modules>
 
@@ -207,7 +207,7 @@
       <!-- Internal Dependencies -->
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
-        <artifactId>api</artifactId>
+        <artifactId>rest</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -235,6 +235,7 @@
         <version>${immutables.version}</version>
         <scope>provided</scope>
       </dependency>
+
       <dependency>
         <groupId>io.swagger</groupId>
         <artifactId>swagger-annotations</artifactId>

@@ -15,18 +15,12 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.redhat.ipaas.api.v1.model.Connection;
-import com.redhat.ipaas.api.v1.model.Connector;
-import com.redhat.ipaas.api.v1.model.ListResult;
+import com.redhat.ipaas.rest.v1.model.connection.Connector;
+import com.redhat.ipaas.rest.v1.model.ListResult;
 
-import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,7 +44,7 @@ public class ConnectorsITCase extends BaseITCase {
         assertThat(result.getTotalCount()).as("connectors total").isEqualTo(2);
         assertThat(result.getItems()).as("connector list").hasSize(2);
     }
-    
+
     @Test
     public void connectorsGetTest() {
         ResponseEntity<Connector> result = get("/api/v1/connectors/org.foo_twitter-mention-connector_1.0", Connector.class);

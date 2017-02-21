@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.runtime;
+package com.redhat.ipaas.rest.v1;
 
-import com.redhat.ipaas.rest.v1.V1Application;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
+import io.swagger.jaxrs.config.BeanConfig;
 
-@SpringBootApplication
-@ComponentScan(basePackageClasses = {V1Application.class, Application.class})
-public class Application extends SpringBootServletInitializer {
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+@ApplicationPath("/api/v1")
+public class V1Application extends Application {
+
+    public V1Application() {
+        BeanConfig beanConfig = new BeanConfig();
+        beanConfig.setVersion("v1");
+        beanConfig.setSchemes(new String[]{"http", "https"});
+        beanConfig.setHost("localhost:8080");
+        beanConfig.setBasePath("/api/v1");
+        beanConfig.setResourcePackage(getClass().getPackage().getName());
+        beanConfig.setScan(true);
     }
 
 }

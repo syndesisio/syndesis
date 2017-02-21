@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.redhat.ipaas</groupId>
-    <artifactId>ipaas-rest-project</artifactId>
+    <artifactId>ipaas-rest-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
 
@@ -106,7 +106,10 @@
           </outputFormats>
           <attachSwaggerArtifact>true</attachSwaggerArtifact>
           <resourcePackages>
-            <resourcePackage>com.redhat.ipaas.api.v1.rest</resourcePackage>
+            <resourcePackage>com.redhat.ipaas.rest.v1.controller.handler.connection</resourcePackage>
+            <resourcePackage>com.redhat.ipaas.rest.v1.controller.handler.environment</resourcePackage>
+            <resourcePackage>com.redhat.ipaas.rest.v1.controller.handler.integration</resourcePackage>
+            <resourcePackage>com.redhat.ipaas.rest.v1.controller.handler.user</resourcePackage>
           </resourcePackages>
           <swaggerConfig>
             <info>
@@ -135,7 +138,7 @@
         <dependencies>
           <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>api</artifactId>
+            <artifactId>rest</artifactId>
             <version>${project.version}</version>
           </dependency>
         </dependencies>
@@ -321,7 +324,7 @@
     <!-- internal -->
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
-      <artifactId>api</artifactId>
+      <artifactId>rest</artifactId>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
