@@ -13,20 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.runtime;
+package com.redhat.ipaas.rest.v1.model;
 
-import com.redhat.ipaas.rest.v1.V1Application;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
+public interface WithName {
 
-@SpringBootApplication
-@ComponentScan(basePackageClasses = {V1Application.class, Application.class})
-public class Application extends SpringBootServletInitializer {
-
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+    String getName();
 
 }

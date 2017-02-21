@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.runtime;
+package com.redhat.ipaas.rest.v1.controller.operations;
 
-import com.redhat.ipaas.rest.v1.V1Application;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
+import com.redhat.ipaas.rest.v1.dao.WithDataManager;
+import com.redhat.ipaas.rest.v1.model.WithId;
 
-@SpringBootApplication
-@ComponentScan(basePackageClasses = {V1Application.class, Application.class})
-public class Application extends SpringBootServletInitializer {
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+public interface Deleter<T extends WithId> extends Resource<T>, WithDataManager {
+
+    @DELETE
+    @Consumes("application/json")
+    @Path(value = "/{id}")
+    default void delete(@PathParam("id") String id) {
+        getDataManager().delete(resourceKind(), id);
     }
 
 }

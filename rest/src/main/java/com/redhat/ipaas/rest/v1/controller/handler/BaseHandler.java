@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.runtime;
+package com.redhat.ipaas.rest.v1.controller.handler;
 
-import com.redhat.ipaas.rest.v1.V1Application;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
+import com.redhat.ipaas.rest.v1.dao.DataManager;
+import com.redhat.ipaas.rest.v1.dao.WithDataManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@SpringBootApplication
-@ComponentScan(basePackageClasses = {V1Application.class, Application.class})
-public class Application extends SpringBootServletInitializer {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+public class BaseHandler implements WithDataManager {
+
+    @Autowired
+    private DataManager dataMgr;
+
+    @Override
+    public DataManager getDataManager() {
+        return dataMgr;
     }
 
 }

@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.runtime;
+package com.redhat.ipaas.rest.v1.util;
 
-import com.redhat.ipaas.rest.v1.V1Application;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
+/**
+ * @author roland
+ * @since 14/12/16
+ */
+public interface SortOptions {
 
-@SpringBootApplication
-@ComponentScan(basePackageClasses = {V1Application.class, Application.class})
-public class Application extends SpringBootServletInitializer {
+    String getSortField();
+    SortDirection getSortDirection();
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+    enum SortDirection {
+        ASC,
+        DESC;
     }
-
 }

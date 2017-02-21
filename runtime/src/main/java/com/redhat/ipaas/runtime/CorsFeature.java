@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package com.redhat.ipaas.runtime;
-import com.redhat.ipaas.api.AllowedOrigins;
+import com.redhat.ipaas.rest.AllowedOrigins;
 import org.jboss.resteasy.plugins.interceptors.CorsFilter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,10 +23,9 @@ import org.springframework.stereotype.Service;
 import javax.ws.rs.container.*;
 import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @EnableConfigurationProperties
