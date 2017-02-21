@@ -30,7 +30,7 @@ Once all pods are started up, you should be able to access the iPaaS at `https:/
 * `PEMTOKEYSTORE_IMAGE`: PEM to keystore init container image
 * `IMAGE_PULL_POLICY`: ImagePullPolicy configuration on rhipaas images
 
-Only `ROUTE_HOSTNAME` is required, others have sane defaults that work for most cases.
+No parameter is required. Most of the the parameters have sane default, however you might want to customize `ROUTE_HOSTNAME` which has a default of `ipaas.127.0.0.1.nip.io` (which is also used in the description below).
 
 ## Running locally for development
 
