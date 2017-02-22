@@ -1,0 +1,16 @@
+{
+  "baseScheme": "http4",
+  "baseGroupId": "org.apache.camel",
+  "baseArtifactId": "camel-http4",
+  "baseVersion": "2.19.0-SNAPSHOT",
+  "name": "Http",
+  "scheme": "http-pull-push",
+  "javaType": "com.redhat.ipaas.connector.http.HttpComponent",
+  "groupId": "com.redhat.ipaas",
+  "artifactId": "http-connector",
+  "version": "1.0",
+  "description": "HTTP Connector",
+  "labels" : [ "http" ],
+  "pattern": "To",
+  "endpointOptions" : [ "httpUri" ]
+}
