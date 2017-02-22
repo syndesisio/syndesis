@@ -12,8 +12,7 @@ $ oc new-app redhat-ipaas -p ROUTE_HOSTNAME=<external hostname>
 
 Replace _<external hostname>_ with a value that will resolve to the address of the OpenShift router.
 
-You should choose for _<external hostname>_ a address which is routable on your system and leads to your OpenShift router. This can be done by modifying your address resolution configuration (e.g. by editing `/etc/hosts`) or by using an external DNS resolving service like xip.io or nip.io without touching your system's configuration (that's the easisest way).
-
+You have to chose an address or _<external hostname>_ which is routable on your system (and also resolvable from inside your cluster). For a development setup you can use an external DNS resolving service like xip.io or nip.io:
 Assuming that your OpenShift cluster is reachable under the IP address _ip_ then use `ipaas.`_ip_`.nip.io`.) (e.g. `ipass.127.0.0.1.nip.io` if your cluster is listening on localhost). With minishift you can retrieve the IP of the cluster with `minishift ip`.
 
 Once all pods are started up, you should be able to access the iPaaS at `https://`_<external hostname>_`/`.
