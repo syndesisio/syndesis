@@ -1553,12 +1553,12 @@ objects:
   data:
     application.yml: |-
       deployment:
-        file: com/redhat/ipaas/api/v1/deployment.json
+        file: com/redhat/ipaas/rest/v1/deployment.json
       resteasy:
         jaxrs:
           app:
             registration: property
-            classes: com.redhat.ipaas.api.v1.rest.V1Application
+            classes: com.redhat.ipaas.rest.v1.V1Application
       cors:
         allowedOrigins: https://${ROUTE_HOSTNAME}
       cache:
