@@ -1,5 +1,6 @@
 # Red Hat iPaaS API
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/daf25eee770345c9b72a2b8aecb90182)](https://www.codacy.com/app/jimmidyson/ipaas-rest?utm_source=github.com&utm_medium=referral&utm_content=redhat-ipaas/ipaas-rest&utm_campaign=badger)
 [![CircleCI](https://circleci.com/gh/redhat-ipaas/ipaas-rest.png)](https://circleci.com/gh/redhat-ipaas/ipaas-rest)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/v6ycvs9nw6o2t821/branch/master?svg=true)](https://ci.appveyor.com/project/jimmidyson/ipaas-rest/)
 [![Maven Central](https://img.shields.io/maven-central/v/com.redhat.ipaas/ipaas-rest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22redhat-ipaas%22%20AND%20a%3A%22ipaas-rest%22)
