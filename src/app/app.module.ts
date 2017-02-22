@@ -104,7 +104,6 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     ToasterModule,
   ],
   providers: [
-    ConfigService,
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,

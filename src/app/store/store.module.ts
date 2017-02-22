@@ -8,6 +8,7 @@ import { ConnectionService } from './connection/connection.service';
 import { IntegrationStore } from './integration/integration.store';
 import { TemplateStore } from './template/template.store';
 import { ConnectionStore } from './connection/connection.store';
+import {EventsService} from './entity/events.service';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { ConnectionStore } from './connection/connection.store';
   providers: [
     IntegrationService,
     TemplateService,
+    EventsService,
     ConnectionService,
     IntegrationStore,
     TemplateStore,

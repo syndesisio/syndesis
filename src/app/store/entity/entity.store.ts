@@ -1,4 +1,6 @@
 import { Observable } from 'rxjs/Observable';
+import {Observer} from 'rxjs/Observer';
+
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { plural } from 'pluralize';
@@ -7,6 +9,7 @@ import { RESTService } from './rest.service';
 import { BaseEntity } from '../../model';
 
 import { log, getCategory } from '../../logging';
+import {EventsService, ChangeEvent} from './events.service';
 
 const category = getCategory('AbstractStore');
 
@@ -19,18 +22,39 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
 
   private _loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  constructor(private service: R, initialList: L, initialCurrent: T) {
-    this._list = new BehaviorSubject(initialList);
-    this._current = new BehaviorSubject(initialCurrent);
+  private changeEvents: Observable<ChangeEvent>;
+
+  constructor(private service: R, private eventService: EventsService, initialList: L, initialCurrent: T) {
+    this._list = new BehaviorSubject<L>(initialList);
+    this._current = new BehaviorSubject<T>(initialCurrent);
+
+    this.changeEvents = this.eventService.changeEvents.filter((x) => {
+      return x.kind === this.service.kind;
+    });
+
   }
 
   protected abstract get kind(): string;
 
-  get list() { return this._list.asObservable(); }
+  get list() {
+    // Give back the _list,
+    // but also update it if we get notified the a change occurred.
+    return Observable.merge(
+      this._list,
+      this.changeEvents.flatMap((event) => {
+        // We could probably get fancy one day an only fetch the entry that matches event.id
+        return this.service.list();
+      }),
+    ).share();
+  }
 
-  get resource() { return this._current.asObservable(); }
+  get resource() {
+    return this._current.asObservable();
+  }
 
-  get loading() { return this._loading.asObservable(); }
+  get loading() {
+    return this._loading.asObservable();
+  }
 
   loadAll() {
     this._loading.next(true);
@@ -105,11 +129,11 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
   }
 
   /*
-  deleteEntity(id?: string) {
-    if(id) {
-      this.service.delete(id);
-    }
-  }
-  */
+   deleteEntity(id?: string) {
+   if(id) {
+   this.service.delete(id);
+   }
+   }
+   */
 
 }

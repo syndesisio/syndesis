@@ -15,6 +15,7 @@ import { CurrentFlow } from '../current-flow.service';
 import { IPaaSCommonModule } from '../../../common/common.module';
 import { ConnectionsModule } from '../../../connections/connections.module';
 import { CollapseModule } from 'ng2-bootstrap';
+import {EventsService} from '../../../store/entity/events.service';
 
 describe('IntegrationsCreateComponent', () => {
   let component: FlowViewComponent;
@@ -50,6 +51,7 @@ describe('IntegrationsCreateComponent', () => {
         CurrentFlow,
         IntegrationStore,
         IntegrationService,
+        EventsService,
       ],
     })
       .compileComponents();

@@ -12,6 +12,7 @@ import { ConnectionViewWrapperComponent } from '../view-wrapper/view-wrapper.com
 import { ConnectionViewToolbarComponent } from '../view-toolbar/view-toolbar.component';
 import { ConnectionViewComponent } from '../view/view.component';
 import { StoreModule } from '../../store/store.module';
+import {IPaaSCommonModule} from '../../common/common.module';
 
 describe('ConnectionViewPage', () => {
   let component: ConnectionViewPage;
@@ -21,6 +22,7 @@ describe('ConnectionViewPage', () => {
     TestBed
       .configureTestingModule({
         imports: [
+          IPaaSCommonModule,
           StoreModule,
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),
