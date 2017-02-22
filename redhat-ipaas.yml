@@ -5,7 +5,7 @@ metadata:
 parameters:
 - name: ROUTE_HOSTNAME
   description: The external hostname to access the iPaaS
-  value: ipaas.127.0.0.1.nip.io
+  required: true
 - name: KEYCLOAK_ROUTE_HOSTNAME
   description: The external hostname to access the iPaaS Keycloak
   value: ipaas-keycloak.127.0.0.1.nip.io
