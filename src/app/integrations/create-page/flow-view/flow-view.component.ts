@@ -1,11 +1,11 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Integration } from '../../../model';
+import { Integration, Step } from '../../../model';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -28,14 +28,25 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     private currentFlow: CurrentFlow,
     private route: ActivatedRoute,
     private router: Router,
+    private detector: ChangeDetectorRef,
   ) {
     this.i.name = 'Integration Name';
+  }
+
+  getRowClass(position) {
+    if (position === 0) {
+      return 'start';
+    }
+    if (this.currentFlow.atEnd(position)) {
+      return 'finish';
+    }
+    return '';
   }
 
   getIconClass(position) {
     const step = this.currentFlow.getStep(position);
     if (!step || !step['icon']) {
-      return 'fa fa-cube';
+      return 'fa fa-plus';
     } else {
       return 'fa ' + step['icon'];
     }
@@ -57,6 +68,18 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  getSteps() {
+    const steps = (this.i || <Integration>{}).steps || [];
+    // TODO hack, this is a new or partially defined integration
+    if (!steps.length) {
+      return [0, 0];
+    }
+    if (steps.length === 1) {
+      return steps.concat(<Step>{});
+    }
+    return steps;
+  }
+
   integrationNameChanged($event) {
     this.currentFlow.events.emit({
       kind: 'integration-set-name',
@@ -69,6 +92,7 @@ export class FlowViewComponent implements OnInit, OnDestroy {
       case 'integration-updated':
         this.i = event['integration'];
         this.integrationName = this.i.name;
+        this.detector.detectChanges();
         break;
       case 'integration-connection-select':
         this.currentState = 'connection-select';
@@ -84,7 +108,14 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   getConnectionText(position: number) {
     const step = this.currentFlow.getStep(position);
     if (step) {
-      return 'Set up ' + step['name'];
+      return step['name'];
+    }
+    // TODO this is wonky :-)
+    if (position === 0) {
+      return 'Start';
+    }
+    if (this.currentFlow.atEnd(position)) {
+      return 'Finish';
     }
     return 'Set up this connection';
   }
@@ -97,7 +128,6 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
     });
-
     log.debugc(() => 'Integration: ' + JSON.stringify(this.i));
   }
 

@@ -38,6 +38,13 @@ export class CurrentFlow {
     }
   }
 
+  getConnection(id: string): Connection {
+    const connections = this._integration.connections;
+    return connections.find((connection) => {
+      return connection.id === id;
+    });
+  }
+
   getStep(position: number): Step | Connection {
     if (!this._integration) {
       return undefined;
@@ -47,8 +54,9 @@ export class CurrentFlow {
     if (!step) {
       return undefined;
     }
-    if (step.kind === 'connection') {
-      return this._integration.connections[position];
+    // TODO the backend isn't saving the 'kind' field. fudge it
+    if (step.kind === 'endpoint' || step.kind === 'connection' || !step.kind) {
+      return this.getConnection(step.id);
     } else {
       return step;
     }
@@ -84,7 +92,7 @@ export class CurrentFlow {
       this._integration.steps[position] = <Step> {
         configuredProperties: connection['configuredProperties'],
         id: connection['id'],
-        kind: 'connection',
+        kind: 'endpoint',
       };
       log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
       break;

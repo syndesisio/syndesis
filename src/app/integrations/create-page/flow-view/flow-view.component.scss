@@ -1,6 +1,13 @@
 .flow-view {
   width: 300px;
 
+  .flow-view-container {
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
   ul {
     list-style-type: none;
     -webkit-margin-before: 0;
@@ -43,6 +50,7 @@
 
       // Used for the containing <div> around any cubes to make e2e testing easier
       .icon {
+        padding-top: 0px;
         // Overriding the actual cube icon's colors
         .fa {
           color: #D1D1D1;
@@ -52,7 +60,9 @@
         .round {
           -moz-border-radius: 100px;
           border-radius: 100px;
-          padding: 7px;
+          padding: 11px;
+          width: 55px;
+          height: 55px;
 
           &.active {
             border: 3px solid #1487CB;
@@ -77,6 +87,7 @@
 
     // Right-hand side collapsible text menu
     .text {
+      padding-left: 0;
       padding-right: 0;
       padding-top: 15px;
 
