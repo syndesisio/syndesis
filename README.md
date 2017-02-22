@@ -7,12 +7,16 @@ Run the following commands:
 
 ```bash
 $ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas.yml
-$ oc new-app redhat-ipaas -p ROUTE_HOSTNAME=<EXTERNAL_HOSTNAME>
+$ oc new-app redhat-ipaas -p ROUTE_HOSTNAME=<external hostname>
 ```
 
-Replace `EXTERNAL_HOSTNAME` with a value that will resolve to the address of the OpenShift router.
+Replace _<external hostname>_ with a value that will resolve to the address of the OpenShift router.
 
-Once all pods are started up, you should be able to access the iPaaS at `https://<EXTERNAL_HOSTNAME>/`.
+You should choose for _<external hostname>_ a address which is routable on your system and leads to your OpenShift router. This can be done by modifying your address resolution configuration (e.g. by editing `/etc/hosts`) or by using an external DNS resolving service like xip.io or nip.io without touching your system's configuration (that's the easisest way).
+
+Assuming that your OpenShift cluster is reachable under the IP address _ip_ then use `ipaas.`_ip_`.nip.io`.) (e.g. `ipass.127.0.0.1.nip.io` if your cluster is listening on localhost). With minishift you can retrieve the IP of the cluster with `minishift ip`.
+
+Once all pods are started up, you should be able to access the iPaaS at `https://`_<external hostname>_`/`.
 
 ## Template parameters
 
@@ -30,7 +34,8 @@ Once all pods are started up, you should be able to access the iPaaS at `https:/
 * `PEMTOKEYSTORE_IMAGE`: PEM to keystore init container image
 * `IMAGE_PULL_POLICY`: ImagePullPolicy configuration on rhipaas images
 
-No parameter is required. Most of the the parameters have sane default, however you might want to customize `ROUTE_HOSTNAME` which has a default of `ipaas.127.0.0.1.nip.io` (which is also used in the description below).
+`ROUTE_HOSTNAME` is the only parameter required. Most of the other parameters have sane defaults.
+
 
 ## Running locally for development
 
