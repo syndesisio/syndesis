@@ -2,8 +2,8 @@
   "component": {
     "kind": "component",
     "baseScheme": "timer",
-    "scheme": "timer",
-    "syntax": "timer:timerName",
+    "scheme": "periodic-timer",
+    "syntax": "periodic-timer:timerName",
     "title": "Timer",
     "description": "Periodic timer which runs every N'th milli seconds",
     "label": "timer",
@@ -11,7 +11,7 @@
     "async": false,
     "consumerOnly": true,
     "lenientProperties": false,
-    "javaType": "null",
+    "javaType": "com.redhat.ipaas.connector.timer.PeriodicTimerComponent",
     "groupId": "com.redhat.ipaas",
     "artifactId": "timer-connector",
     "version": "0.1-SNAPSHOT"
