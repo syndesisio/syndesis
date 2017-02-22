@@ -28,6 +28,10 @@ parameters:
   generate: expression
   from: "[a-zA-Z0-9]{64}"
   required: true
+- name: KEYCLOAK_ALLOW_ANY_HOSTNAME
+  description: The Keycloack parameter to disable hostname validation on certificate
+  value: "true"
+  required: true
 - name: OPENSHIFT_MASTER
   description: Public OpenShift master address
   value: https://localhost:8443
@@ -1519,5 +1523,6 @@ objects:
         "bearer-only": true,
         "auth-server-url": "https://${ROUTE_HOSTNAME}/auth",
         "ssl-required": "external",
-        "resource": "ipaas-rest"
+        "resource": "ipaas-rest",
+        "allow-any-hostname" : ${KEYCLOAK_ALLOW_ANY_HOSTNAME}
       }

@@ -22,6 +22,7 @@ Once all pods are started up, you should be able to access the iPaaS at `https:/
 * `KEYCLOAK_ADMIN_PASSWORD`: The Keycloak admin password
 * `KEYCLOAK_IPAAS_REALM_NAME`: iPaaS Keycloak realm name
 * `KEYCLOAK_IPAAS_REST_CLIENT_SECRET`: iPaaS REST service client secret
+* `KEYCLOAK_ALLOW_ANY_HOSTNAME`: The Keycloack parameter to disable hostname validation on certificate
 * `OPENSHIFT_MASTER`: Public OpenShift master address
 * `OPENSHIFT_OAUTH_CLIENT_ID`: OpenShift OAuth client ID
 * `OPENSHIFT_OAUTH_CLIENT_SECRET`: OpenShift OAuth client secret
