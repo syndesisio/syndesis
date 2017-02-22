@@ -76,6 +76,11 @@
       <artifactId>timer-connector</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>http-connector</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- testing -->
     <dependency>
