@@ -1,0 +1,24 @@
+{
+  "component": {
+    "kind": "component",
+    "baseScheme": "timer",
+    "scheme": "timer",
+    "syntax": "timer:timerName",
+    "title": "Timer",
+    "description": "Periodic timer which runs every N'th milli seconds",
+    "label": "timer",
+    "deprecated": false,
+    "async": false,
+    "consumerOnly": true,
+    "lenientProperties": false,
+    "javaType": "null",
+    "groupId": "com.redhat.ipaas",
+    "artifactId": "timer-connector",
+    "version": "0.1-SNAPSHOT"
+  },
+  "componentProperties": {
+  },
+  "properties": {
+    "period": { "kind": "parameter", "displayName": "Period", "group": "consumer", "required": false, "type": "integer", "javaType": "long", "deprecated": false, "secret": false, "defaultValue": 10000, "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)." }
+  }
+}

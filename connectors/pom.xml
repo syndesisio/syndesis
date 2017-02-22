@@ -32,6 +32,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>timer-connector</module>
     <module>twitter-mention-connector</module>
     <module>salesforce-upsert-contact-connector</module>
   </modules>
