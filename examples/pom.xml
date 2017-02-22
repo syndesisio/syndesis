@@ -32,6 +32,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>http-pull-push-example</module>
     <module>twitter-salesforce-example</module>
   </modules>
 
