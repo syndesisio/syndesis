@@ -27,7 +27,6 @@ public class V1Application extends Application {
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setVersion("v1");
         beanConfig.setSchemes(new String[]{"http", "https"});
-        beanConfig.setHost("localhost:8080");
         beanConfig.setBasePath("/api/v1");
         beanConfig.setResourcePackage(getClass().getPackage().getName());
         beanConfig.setScan(true);
