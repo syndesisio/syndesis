@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>0d31c85d-b746-41d9-93e3-ffdee7598608</OriginalElement>
+  <nodes>
+    <node x="413.0" y="174.5">0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.connector</node>
+    <node x="-7.0" y="175.5">0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.action</node>
+    <node x="401.0" y="-56.5">0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.configured_connector</node>
+    <node x="-29.5" y="520.0">0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.action_configuration_property</node>
+    <node x="393.0" y="472.5">0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.configuration_property</node>
+    <node x="377.0" y="350.0">0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.connector_configuration_property</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.action_configuration_property" target="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.configuration_property">
+      <point x="109.5" y="-0.0" />
+      <point x="-87.5" y="-0.0" />
+    </edge>
+    <edge source="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.connector_configuration_property" target="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.configuration_property">
+      <point x="0.0" y="40.0" />
+      <point x="0.0" y="-52.5" />
+    </edge>
+    <edge source="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.action" target="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.connector">
+      <point x="77.0" y="-0.0" />
+      <point x="-77.0" y="-0.0" />
+    </edge>
+    <edge source="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.action_configuration_property" target="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.action">
+      <point x="0.0" y="-40.0" />
+      <point x="0.0" y="52.5" />
+    </edge>
+    <edge source="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.connector_configuration_property" target="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.connector">
+      <point x="0.0" y="-40.0" />
+      <point x="0.0" y="52.5" />
+    </edge>
+    <edge source="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.configured_connector" target="0d31c85d-b746-41d9-93e3-ffdee7598608.TABLE:postgres.public.connector">
+      <point x="0.0" y="76.5" />
+      <point x="0.0" y="-52.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="295.5" y="297.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+  </Categories>
+</Diagram>
+
