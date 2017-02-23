@@ -17,6 +17,7 @@ import { IntegrationsListToolbarComponent } from './list-toolbar/list-toolbar.co
 import { IntegrationsFilterPipe } from './integrations-filter.pipe';
 import { IntegrationsListComponent } from './list/list.component';
 import { FlowViewComponent } from './create-page/flow-view/flow-view.component';
+import { FlowViewStepComponent } from './create-page/flow-view/flow-view-step.component';
 import { CurrentFlow } from './create-page/current-flow.service';
 import { IPaaSCommonModule } from '../common/common.module';
 import { ConnectionsModule } from '../connections/connections.module';
@@ -66,6 +67,7 @@ const routes: Routes = [
     IntegrationsListComponent,
     IntegrationsFilterPipe,
     FlowViewComponent,
+    FlowViewStepComponent,
   ],
   providers: [
     CurrentFlow,

@@ -9,6 +9,7 @@ import { RestangularModule } from 'ng2-restangular';
 
 import { IPaaSCommonModule } from '../../common/common.module';
 import { FlowViewComponent } from './flow-view/flow-view.component';
+import { FlowViewStepComponent } from './flow-view/flow-view-step.component';
 import { ConnectionsListComponent } from '../../connections/list/list.component';
 import { ConnectionsListToolbarComponent } from '../../connections/list-toolbar/list-toolbar.component';
 import { StoreModule } from '../../store/store.module';
@@ -38,6 +39,7 @@ describe('IntegrationsCreateComponent', () => {
         ConnectionsListComponent,
         ConnectionsListToolbarComponent,
         FlowViewComponent,
+        FlowViewStepComponent,
       ],
       providers: [
         MockBackend,

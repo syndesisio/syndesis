@@ -16,13 +16,13 @@ const category = getCategory('IntegrationsCreatePage');
 })
 export class FlowViewComponent implements OnInit, OnDestroy {
 
-  i: Integration = <Integration>{};
+  i: Integration;
   flowSubscription: Subscription;
   childRouteSubscription: Subscription;
   urls: UrlSegment[];
   currentPosition: number;
   currentState: string;
-  integrationName = '';
+  integrationName = 'Integration Name';
 
   constructor(
     private currentFlow: CurrentFlow,
@@ -30,54 +30,34 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     private router: Router,
     private detector: ChangeDetectorRef,
   ) {
-    this.i.name = 'Integration Name';
+    // Hmmmmm, this needs to be set here to deal with new integrations
+    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
+      this.handleFlowEvent(event);
+    });
   }
 
-  getRowClass(position) {
-    if (position === 0) {
-      return 'start';
-    }
-    if (this.currentFlow.atEnd(position)) {
-      return 'finish';
-    }
-    return '';
+  loaded() {
+    return this.i === undefined;
   }
 
-  getIconClass(position) {
-    const step = this.currentFlow.getStep(position);
-    if (!step || !step['icon']) {
-      return 'fa fa-plus';
-    } else {
-      return 'fa ' + step['icon'];
-    }
+  startConnection() {
+    return this.currentFlow.getStartConnection();
   }
 
-  getActiveClass(state, position) {
-    if ((!state || state === this.currentState) && position === this.currentPosition) {
-      return 'active';
-    } else {
-      return 'inactive';
-    }
+  endConnection() {
+    return this.currentFlow.getEndConnection();
   }
 
-  getTextClass(state, position) {
-    if ((!state || state === this.currentState) && position === this.currentPosition) {
-      return 'bold';
-    } else {
-      return '';
-    }
+  firstPosition() {
+    return this.currentFlow.getFirstPosition();
   }
 
-  getSteps() {
-    const steps = (this.i || <Integration>{}).steps || [];
-    // TODO hack, this is a new or partially defined integration
-    if (!steps.length) {
-      return [0, 0];
-    }
-    if (steps.length === 1) {
-      return steps.concat(<Step>{});
-    }
-    return steps;
+  lastPosition() {
+    return this.currentFlow.getLastPosition();
+  }
+
+  getMiddleSteps() {
+    return this.currentFlow.getMiddleSteps();
   }
 
   integrationNameChanged($event) {
@@ -92,7 +72,6 @@ export class FlowViewComponent implements OnInit, OnDestroy {
       case 'integration-updated':
         this.i = event['integration'];
         this.integrationName = this.i.name;
-        this.detector.detectChanges();
         break;
       case 'integration-connection-select':
         this.currentState = 'connection-select';
@@ -103,32 +82,11 @@ export class FlowViewComponent implements OnInit, OnDestroy {
         this.currentPosition = event['position'];
         break;
     }
-  }
-
-  getConnectionText(position: number) {
-    const step = this.currentFlow.getStep(position);
-    if (step) {
-      return step['name'];
-    }
-    // TODO this is wonky :-)
-    if (position === 0) {
-      return 'Start';
-    }
-    if (this.currentFlow.atEnd(position)) {
-      return 'Finish';
-    }
-    return 'Set up this connection';
-  }
-
-  isCollapsed(position: number) {
-    return this.currentFlow.getStep(position) !== undefined;
+    this.detector.detectChanges();
   }
 
   ngOnInit() {
-    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
-      this.handleFlowEvent(event);
-    });
-    log.debugc(() => 'Integration: ' + JSON.stringify(this.i));
+
   }
 
   ngOnDestroy() {

@@ -1,117 +1,41 @@
 <div class="flow-view">
-  <div class="row name">
-    <div class="col-md-12">
-      <div class="form-group">
-        <input type="text"
-               id="integrationName"
-               class="form-control"
-               placeholder="Enter integration name..."
-               [ngModel]="integrationName"
-               (ngModelChange)="integrationNameChanged($event)">
-      </div>
-    </div>
-  </div>
-
-  <div class="flow-view-container">
-    <div *ngFor="let step of getSteps(); let position = index;" [class]="'row steps ' + getRowClass(position)">
-      <div class="col-md-3 progress-line">
-        <!-- Cube Line: Cube -->
-        <div class="icon">
-          <p [class]="'round ' + getActiveClass(undefined, position)">
-            <i [class]="getIconClass(position)"></i>
-          </p>
+  <ipaas-loading [loading]="loaded()">
+    <div class="row name">
+      <div class="col-md-12">
+        <div class="form-group">
+          <input type="text"
+                id="integrationName"
+                class="form-control"
+                placeholder="Enter integration name..."
+                [ngModel]="integrationName"
+                (ngModelChange)="integrationNameChanged($event)">
         </div>
       </div>
-      <div class="col-md-9 text">
-        <span [class]="getTextClass(undefined, position)">
-                      <i *ngIf="!isCollapsed(position)"
-                        class="fa fa-chevron-down"></i>
-                      <i *ngIf="isCollapsed(position)"
-                        class="fa fa-chevron-right"></i>
-                      {{ getConnectionText(position) }}</span>
-        <ul [collapse]="isCollapsed(position)">
-          <li [class]="getActiveClass('connection-select', position)">
-            <span [class]="getTextClass('connection-select', position)">Choose a connection</span>
-          </li>
-          <li [class]="getActiveClass('connection-configure', position)">
-            <span [class]="getTextClass('connection-configure', position)">Configure the connection</span>
-          </li>      
-        </ul>
+    </div>
+
+    <div class="flow-view-container" *ngIf="i && i.steps">
+      <div class="row steps start">
+        <ipaas-integrations-flow-view-step   
+          [step]="startConnection()" 
+          [position]="0" 
+          [currentPosition]="currentPosition" 
+          [currentState]="currentState"></ipaas-integrations-flow-view-step >
+      </div>
+      <div class="row steps" *ngFor="let step of getMiddleSteps(); let position = index;">
+        <ipaas-integrations-flow-view-step   
+          [step]="step" 
+          [position]="position" 
+          [currentPosition]="currentPosition" 
+          [currentState]="currentState"></ipaas-integrations-flow-view-step >
+      </div>
+      <div class="row steps finish">
+        <ipaas-integrations-flow-view-step   
+          [step]="endConnection()" 
+          [position]="-1" 
+          [currentPosition]="currentPosition" 
+          [currentState]="currentState"></ipaas-integrations-flow-view-step >
       </div>
     </div>
-  </div>
+  </ipaas-loading>
   
-  
-  <!-- Steps -/->
-  <div class="row steps" style="display: none;">
-    
-    <!-- Cube Line -/->
-    <div class="col-md-3 progress-line">
-      <!-- Cube Line: Cube -/->
-      <div class="icon">
-        <p [class]="'round ' + getActiveClass(undefined, 0)">
-          <i [class]="getIconClass(0)"></i>
-        </p>
-      </div>
-      
-      <!-- Progress Line: Line -/->
-      <div class="vertical"></div>
-      
-      <!-- Progress Line: Icon -/->
-      <div class="icon"
-           style="margin-top: 200px;">
-        <p [class]="'round ' + getActiveClass(undefined, 1)">
-          <i [class]="getIconClass(1)"></i>
-        </p>
-      </div>
-    </div>
-    
-    <!-- Text Collapse Steps -/->
-    <div class="col-md-9 text">
-      <div class="start">
-        <h5>Start</h5>
-        <ul>
-          <!-- TODO this should eventually be an *ngFor driven by the currentFlow's steps -/->
-          <li>
-            <span [class]="getTextClass(undefined, 0)">
-              <i *ngIf="!isCollapsed(0)"
-                 class="fa fa-chevron-down"></i>
-              <i *ngIf="isCollapsed(0)"
-                 class="fa fa-chevron-right"></i>
-              {{ getConnectionText(0) }}</span>
-            <ul [collapse]="isCollapsed(0)">
-              <li [class]="getActiveClass('connection-select', 0)">
-                <span [class]="getTextClass('connection-select', 0)">Choose a connection</span>
-              </li>
-              <li [class]="getActiveClass('connection-configure', 0)">
-                <span [class]="getTextClass('connection-configure', 0)">Configure the connection</span>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-      <div class="finish">
-        <h5>Finish</h5>
-        <ul>
-          <li>
-            <span [class]="getTextClass(undefined, 1)">
-              <i *ngIf="!isCollapsed(0)"
-                 class="fa fa-chevron-down"></i>
-              <i *ngIf="isCollapsed(0)"
-                 class="fa fa-chevron-right"></i>
-              {{ getConnectionText(1) }}</span>
-            <ul [collapse]="isCollapsed(1)">
-              <li [class]="getActiveClass('connection-select', 1)">
-                <span [class]="getTextClass('connection-select', 1)">Choose a connection</span>
-              </li>
-              <li [class]="getActiveClass('connection-configure', 1)">
-                <span [class]="getTextClass('connection-configure', 1)">Configure the connection</span>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  -->
 </div>
