@@ -6,9 +6,6 @@ mavenNode(mavenImage: "maven:${mavenVersion}", serviceAccount: 'jenkins') {
 
     stage 'Build'
     container(name: 'maven') {
-        sh "ls -al"
-        pom = readMavenPom(file: 'pom.xml')
-        version = pom.version.replaceAll("SNAPSHOT", "${versionSuffix}")
         sh "mvn clean install"
     }
 }
