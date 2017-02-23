@@ -25,7 +25,7 @@ public class PullPushRoute extends RouteBuilder {
     public void configure() throws Exception {
         from("periodic-timer")
             .log("Timer is triggered")
-            .to("http-pull-push:www.redhat.com/en")
+            .to("http-pull-push:http://www.redhat.com/en")
             .log("The redhat website: ${body}");
     }
 }
