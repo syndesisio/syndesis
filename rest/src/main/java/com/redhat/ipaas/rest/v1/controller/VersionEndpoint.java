@@ -24,6 +24,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import static java.util.concurrent.TimeUnit.HOURS;
+
+@CacheFor(value=1, unit=HOURS)
 @Path("/version")
 @Component
 public class VersionEndpoint {
