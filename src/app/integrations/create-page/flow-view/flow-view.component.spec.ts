@@ -8,6 +8,7 @@ import { TabsModule } from 'ng2-bootstrap';
 import { RestangularModule } from 'ng2-restangular';
 
 import { FlowViewComponent } from './flow-view.component';
+import { FlowViewStepComponent } from './flow-view-step.component';
 import { IntegrationStore } from '../../../store/integration/integration.store';
 import { IntegrationService } from '../../../store/integration/integration.service';
 import { CurrentFlow } from '../current-flow.service';
@@ -33,6 +34,7 @@ describe('IntegrationsCreateComponent', () => {
       ],
       declarations: [
         FlowViewComponent,
+        FlowViewStepComponent,
       ],
       providers: [
         MockBackend,

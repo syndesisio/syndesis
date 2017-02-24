@@ -1,0 +1,24 @@
+<div class="col-md-3 progress-line">
+  <!-- Icon Line: Plus -->
+  <div class="icon">
+    <p [class]="'round ' + getActiveClass(undefined, position)">
+      <i [class]="getIconClass(position)"></i>
+    </p>
+  </div>
+</div>
+<div class="col-md-9 text">
+  <span [class]="getTextClass(undefined, position)">
+                      <i *ngIf="!isCollapsed(position)"
+                        class="fa fa-chevron-down"></i>                     
+                      <i *ngIf="isCollapsed(position)"
+                        class="fa fa-chevron-right"></i>
+                      {{ getConnectionText(position) }}</span>
+  <ul [collapse]="isCollapsed(position)">
+    <li [class]="getActiveClass('connection-select', position)">
+      <span [class]="getTextClass('connection-select', position)">Choose a connection</span>
+    </li>
+    <li [class]="getActiveClass('connection-configure', position)">
+      <span [class]="getTextClass('connection-configure', position)">Configure the connection</span>
+    </li>
+  </ul>
+</div>

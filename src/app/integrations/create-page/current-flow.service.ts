@@ -29,62 +29,109 @@ export class CurrentFlow {
 
   isValid() {
     // TODO more validations on the integration
-    return (this._integration.name && this._integration.name.length);
+    return (this.integration.name && this.integration.name.length);
   }
 
-  private createSteps() {
-    if (!this._integration.steps) {
-      this._integration.steps = [];
-    }
-  }
-
-  getStep(position: number): Step | Connection {
-    if (!this._integration) {
+  getConnection(id: string): Connection {
+    if (!this.integration) {
       return undefined;
     }
-    this.createSteps();
-    const step = this._integration.steps[position];
+    return this.connections.find((connection) => {
+      return connection.id === id;
+    });
+  }
+
+  getStartConnection(): Connection {
+    return <Connection> this.getStep(this.getFirstPosition());
+  }
+
+  getEndConnection(): Connection {
+    const lastPosition = this.getLastPosition();
+    if (lastPosition < 1) {
+      return undefined;
+    }
+    return <Connection> this.getStep(this.getLastPosition());
+  }
+
+  getMiddleSteps(): Array<any> {
+    const answer: Array<any> = [];
+    if (this.getLastPosition() < 2) {
+      return answer;
+    }
+    if (!this.steps) {
+      return answer;
+    }
+    const middle = this.steps.slice(1, -1);
+    for (const s of middle) {
+      answer.push(this.stepToConnection(<Step> s));
+    }
+    return answer;
+  }
+
+  getFirstPosition(): number {
+    if (!this.integration) {
+      return undefined;
+    }
+    return 0;
+  }
+
+  getLastPosition(): number {
+    if (!this.integration) {
+      return undefined;
+    }
+    if (this.steps.length <= 1) {
+      return 1;
+    }
+    return this.steps.length - 1;
+  }
+
+  stepToConnection(step: Step) {
     if (!step) {
       return undefined;
     }
-    if (step.kind === 'connection') {
-      return this._integration.connections[position];
+    // TODO the backend isn't saving the 'kind' field. fudge it
+    if (step.kind === 'endpoint' || step.kind === 'connection' || !step.kind) {
+      return this.getConnection(step.id);
     } else {
       return step;
     }
   }
 
+  getStep(position: number): Step | Connection {
+    if (!this.integration) {
+      return undefined;
+    }
+    return this.stepToConnection(<Step> this.steps[position]);
+  }
+
   isEmpty(): boolean {
-    if (!this._integration) {
+    if (!this.integration) {
       return true;
     }
-    this.createSteps();
-    return this._integration.steps.length === 0;
+    return this.steps.length === 0;
   }
 
   atEnd(position: number): boolean {
-    if (!this._integration) {
+    if (!this.integration) {
       return true;
     }
-    this.createSteps();
-    return position >= this._integration.steps.length;
+    return position >= this.steps.length;
   }
 
   handleEvent(event: FlowEvent): void {
     log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
     switch (event.kind) {
       case 'integration-set-connection':
-      this.createSteps();
       const position = +event['position'];
       let connection = event['connection'];
       if (connection.plain && typeof connection.plain === 'function') {
         connection = connection.plain();
       }
-      this._integration.connections[position] = connection;
-      this._integration.steps[position] = <Step> {
+      this.connections[position] = connection;
+      this.steps[position] = <Step> {
         configuredProperties: connection['configuredProperties'],
         id: connection['id'],
-        kind: 'connection',
+        kind: 'endpoint',
       };
       log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
       break;
@@ -92,9 +139,9 @@ export class CurrentFlow {
       this._integration.name = event['name'];
       break;
       case 'integration-save':
-        log.debugc(() => 'Saving integration: ' + this._integration);
+        log.debugc(() => 'Saving integration: ' + this.integration);
         // poor man's clone in case we need to munge the data
-        const integration = JSON.parse(JSON.stringify(this._integration));
+        const integration = JSON.parse(JSON.stringify(this.integration));
         // TODO munging connection objects for now
         /*
         const steps = integration.steps;
@@ -124,17 +171,42 @@ export class CurrentFlow {
   }
 
   get integration(): Integration {
+    if (!this._integration) {
+      return undefined;
+    }
     return this._integration;
   }
 
+  get connections(): Array<Connection> {
+    if (!this._integration) {
+      return undefined;
+    } else {
+      if (!this._integration.connections) {
+        this._integration.connections = [];
+      }
+      return this._integration.connections;
+    }
+  }
+
+  get steps(): Array<Step | Connection> {
+    if (!this._integration) {
+      return undefined;
+    } else {
+      if (!this._integration.steps) {
+        this._integration.steps = [];
+      }
+      return this._integration.steps;
+    }
+  }
+
   set integration(i: Integration) {
-    this._integration = i;
+    this._integration = <Integration> i;
     log.debugc(() => 'Integration reset for current flow', category);
     this.events.emit({
       kind: 'integration-updated',
-      integration: this._integration,
+      integration: this.integration,
     });
-    if (!i.steps || !i.steps.length) {
+    if (!this.steps || !this.steps.length) {
       log.debugc(() => 'Integration has no steps, assuming it\'s new', category);
       this.events.emit({
         kind: 'integration-no-connections',

@@ -1,11 +1,11 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Integration } from '../../../model';
+import { Integration, Step } from '../../../model';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -16,45 +16,48 @@ const category = getCategory('IntegrationsCreatePage');
 })
 export class FlowViewComponent implements OnInit, OnDestroy {
 
-  i: Integration = <Integration>{};
+  i: Integration;
   flowSubscription: Subscription;
   childRouteSubscription: Subscription;
   urls: UrlSegment[];
   currentPosition: number;
   currentState: string;
-  integrationName = '';
+  integrationName = 'Integration Name';
 
   constructor(
     private currentFlow: CurrentFlow,
     private route: ActivatedRoute,
     private router: Router,
+    private detector: ChangeDetectorRef,
   ) {
-    this.i.name = 'Integration Name';
+    // Hmmmmm, this needs to be set here to deal with new integrations
+    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
+      this.handleFlowEvent(event);
+    });
   }
 
-  getIconClass(position) {
-    const step = this.currentFlow.getStep(position);
-    if (!step || !step['icon']) {
-      return 'fa fa-cube';
-    } else {
-      return 'fa ' + step['icon'];
-    }
+  loaded() {
+    return this.i === undefined;
   }
 
-  getActiveClass(state, position) {
-    if ((!state || state === this.currentState) && position === this.currentPosition) {
-      return 'active';
-    } else {
-      return 'inactive';
-    }
+  startConnection() {
+    return this.currentFlow.getStartConnection();
   }
 
-  getTextClass(state, position) {
-    if ((!state || state === this.currentState) && position === this.currentPosition) {
-      return 'bold';
-    } else {
-      return '';
-    }
+  endConnection() {
+    return this.currentFlow.getEndConnection();
+  }
+
+  firstPosition() {
+    return this.currentFlow.getFirstPosition();
+  }
+
+  lastPosition() {
+    return this.currentFlow.getLastPosition();
+  }
+
+  getMiddleSteps() {
+    return this.currentFlow.getMiddleSteps();
   }
 
   integrationNameChanged($event) {
@@ -79,26 +82,11 @@ export class FlowViewComponent implements OnInit, OnDestroy {
         this.currentPosition = event['position'];
         break;
     }
-  }
-
-  getConnectionText(position: number) {
-    const step = this.currentFlow.getStep(position);
-    if (step) {
-      return 'Set up ' + step['name'];
-    }
-    return 'Set up this connection';
-  }
-
-  isCollapsed(position: number) {
-    return this.currentFlow.getStep(position) !== undefined;
+    this.detector.detectChanges();
   }
 
   ngOnInit() {
-    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
-      this.handleFlowEvent(event);
-    });
 
-    log.debugc(() => 'Integration: ' + JSON.stringify(this.i));
   }
 
   ngOnDestroy() {
