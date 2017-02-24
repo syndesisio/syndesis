@@ -16,6 +16,9 @@
 
 CREATE EXTENSION hstore;
 
+-- ===== Meta data ====================================================
+
+-- A connector groups actions and of a specific type ("twitter")
 CREATE TABLE connector
 (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -25,51 +28,73 @@ CREATE TABLE connector
 );
 CREATE UNIQUE INDEX connector_name_uindex ON connector (name);
 
-CREATE TABLE configuration_property
+-- A connector property describes a single configuration option of connector
+-- which are shared by all actions belonging to the connector (meta data)
+CREATE TABLE connector_property
 (
     id SERIAL PRIMARY KEY NOT NULL,
+    connector_id INTEGER NOT NULL,
     name VARCHAR(256) NOT NULL,
     description VARCHAR(2048),
     secret BOOLEAN DEFAULT false NOT NULL,
     type VARCHAR(32) DEFAULT 'string' NOT NULL,
-    default_value TEXT
+    default_value TEXT,
+    CONSTRAINT connector_property_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id)
 );
 
-CREATE TABLE connector_configuration_property
-(
-    connector_id INTEGER NOT NULL,
-    configuration_property_id INTEGER NOT NULL,
-    CONSTRAINT connector_configuration_property_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id),
-    CONSTRAINT connector_configuration_property_configuration_property_id_fk FOREIGN KEY (configuration_property_id) REFERENCES configuration_property (id)
-);
-CREATE UNIQUE INDEX connector_configuration_property_configuration_property_id_uind ON connector_configuration_property (configuration_property_id);
-
-CREATE TABLE configured_connector
-(
-    id SERIAL PRIMARY KEY NOT NULL,
-    name VARCHAR(256) NOT NULL,
-    connector_id INTEGER,
-    description VARCHAR(2048),
-    properties HSTORE NOT NULL,
-    CONSTRAINT connector_properties_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id)
-);
-CREATE UNIQUE INDEX connector_properties_name_connector_id_uindex ON configured_connector (name, connector_id);
-
+-- A action specifies a specific action on a connector ("twitter_mention" belonging to connector
+-- "twitter")
 CREATE TABLE action
 (
     id SERIAL PRIMARY KEY NOT NULL,
-    name VARCHAR(256) NOT NULL,
     connector_id INTEGER NOT NULL,
+    name VARCHAR(256) NOT NULL,
     description VARCHAR(2048),
     CONSTRAINT action_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id)
 );
 CREATE UNIQUE INDEX action_name_connector_id_uindex ON action (name, connector_id);
 
-CREATE TABLE action_configuration_property
+-- A action property describes a single configuration option for an action
+-- It is not shared and individual for an action (meta data)
+CREATE TABLE action_property
 (
+    id SERIAL PRIMARY KEY NOT NULL,
     action_id INTEGER NOT NULL,
-    configuration_property_id INTEGER NOT NULL,
-    CONSTRAINT action_configuration_property_action_id_fk FOREIGN KEY (action_id) REFERENCES action (id),
-    CONSTRAINT action_configuration_property_configuration_property_id_fk FOREIGN KEY (configuration_property_id) REFERENCES configuration_property (id)
+    name VARCHAR(256) NOT NULL,
+    description VARCHAR(2048),
+    secret BOOLEAN DEFAULT false NOT NULL,
+    type VARCHAR(32) DEFAULT 'string' NOT NULL,
+    default_value TEXT,
+    CONSTRAINT action_property_action_id_fk FOREIGN KEY (action_id) REFERENCES action (id)
 );
-CREATE UNIQUE INDEX action_configuration_property_configuration_property_id_uindex ON action_configuration_property (configuration_property_id);
+
+-- ==== Instances ====================================================================
+
+-- The actual configuration values for connector. The keys correspond to the names of
+-- configuration_property for the same connector. (value)
+CREATE TABLE configured_connector
+(
+    id SERIAL PRIMARY KEY NOT NULL,
+    connector_id INTEGER,
+    name VARCHAR(256) NOT NULL,
+    description VARCHAR(2048),
+    -- connector specific properties:
+    properties HSTORE NOT NULL,
+    CONSTRAINT connector_properties_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id)
+);
+CREATE UNIQUE INDEX connector_properties_name_connector_id_uindex ON configured_connector (name, connector_id);
+
+-- An action instance is the single entry point in this sub domain. It is referenced
+-- by an integration and has all configuration needed for creating an instance of
+-- a fully configured Camel connector
+CREATE TABLE action_instance
+(
+    id SERIAL PRIMARY KEY NOT NULL,
+    action_id INTEGER,
+    configured_connector_id INTEGER,
+    -- action specific properties here:
+    properties HSTORE NOT NULL,
+    CONSTRAINT action_instance_action_id_fk FOREIGN KEY (action_id) REFERENCES action (id),
+    CONSTRAINT action_instance_configured_connector_id_fk FOREIGN KEY (configured_connector_id) REFERENCES configured_connector (id)
+);
+
