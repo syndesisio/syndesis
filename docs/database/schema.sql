@@ -22,11 +22,13 @@ CREATE EXTENSION hstore;
 CREATE TABLE connector
 (
     id SERIAL PRIMARY KEY NOT NULL,
-    name VARCHAR(256) NOT NULL,
-    description VARCHAR(2048),
-    icon VARCHAR(2048)
+    name TEXT NOT NULL,
+    description TEXT,
+    icon TEXT,
+    tags TEXT[]
 );
 CREATE UNIQUE INDEX connector_name_uindex ON connector (name);
+CREATE INDEX connector_tags_index ON connector USING GIN(tags);
 
 -- A connector property describes a single configuration option of connector
 -- which are shared by all actions belonging to the connector (meta data)
@@ -34,10 +36,10 @@ CREATE TABLE connector_property
 (
     id SERIAL PRIMARY KEY NOT NULL,
     connector_id INTEGER NOT NULL,
-    name VARCHAR(256) NOT NULL,
-    description VARCHAR(2048),
+    name TEXT NOT NULL,
+    description TEXT,
     secret BOOLEAN DEFAULT false NOT NULL,
-    type VARCHAR(32) DEFAULT 'string' NOT NULL,
+    type TEXT DEFAULT 'string' NOT NULL,
     default_value TEXT,
     required BOOLEAN DEFAULT false NOT NULL,
     property_index SMALLINT NOT NULL,
@@ -51,11 +53,13 @@ CREATE TABLE action
 (
     id SERIAL PRIMARY KEY NOT NULL,
     connector_id INTEGER NOT NULL,
-    name VARCHAR(256) NOT NULL,
-    description VARCHAR(2048),
+    name TEXT NOT NULL,
+    description TEXT,
+    tags TEXT[],
     CONSTRAINT action_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id)
 );
 CREATE UNIQUE INDEX action_name_connector_id_uindex ON action (name, connector_id);
+CREATE INDEX action_tags_index ON action USING GIN(tags);
 
 -- A action property describes a single configuration option for an action
 -- It is not shared and individual for an action (meta data)
@@ -63,10 +67,10 @@ CREATE TABLE action_property
 (
     id SERIAL PRIMARY KEY NOT NULL,
     action_id INTEGER NOT NULL,
-    name VARCHAR(256) NOT NULL,
-    description VARCHAR(2048),
+    name TEXT NOT NULL,
+    description TEXT,
     secret BOOLEAN DEFAULT false NOT NULL,
-    type VARCHAR(32) DEFAULT 'string' NOT NULL,
+    type TEXT DEFAULT 'string' NOT NULL,
     default_value TEXT,
     property_index SMALLINT NOT NULL,
     CONSTRAINT action_property_action_id_fk FOREIGN KEY (action_id) REFERENCES action (id)
@@ -81,13 +85,15 @@ CREATE TABLE configured_connector
 (
     id SERIAL PRIMARY KEY NOT NULL,
     connector_id INTEGER,
-    name VARCHAR(256) NOT NULL,
-    description VARCHAR(2048),
+    name TEXT NOT NULL,
+    description TEXT,
     -- connector specific properties:
     properties HSTORE NOT NULL,
+    tags TEXT[],
     CONSTRAINT connector_properties_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id)
 );
 CREATE UNIQUE INDEX connector_properties_name_connector_id_uindex ON configured_connector (name, connector_id);
+CREATE INDEX configured_connector_tags_index ON configured_connector USING GIN(tags);
 
 -- An action instance is the single entry point in this sub domain. It is referenced
 -- by an integration and has all configuration needed for creating an instance of
@@ -107,10 +113,12 @@ CREATE TABLE action_instance
 CREATE TABLE integration
 (
     id SERIAL PRIMARY KEY NOT NULL,
-    name VARCHAR(256) NOT NULL,
-    description VARCHAR(2048)
+    name TEXT NOT NULL,
+    description TEXT,
+    tags TEXT[]
 );
 CREATE UNIQUE INDEX integration_name_uindex ON integration (name);
+CREATE INDEX integration_tags_index ON integration USING GIN(tags);
 
 -- An integration step is the definition of a single step in an integration. It contains configuration
 -- for each and every step in the integration flow.
@@ -121,7 +129,7 @@ CREATE TABLE integration_step
     integration_id INTEGER NOT NULL,
     action_instance_id INTEGER,
     step_index SMALLINT NOT NULL,
-    step_type VARCHAR(32) NOT NULL,
+    step_type TEXT NOT NULL,
     -- integration step specific properties here:
     properties HSTORE NOT NULL,
     CONSTRAINT integration_step_integration_id_fk FOREIGN KEY (integration_id) REFERENCES integration (id),
