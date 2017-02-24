@@ -51,15 +51,16 @@ CREATE UNIQUE INDEX connector_property_connector_id_property_index_uindex ON con
 -- "twitter")
 CREATE TABLE action
 (
-    id SERIAL PRIMARY KEY NOT NULL,
+    id INTEGER DEFAULT nextval('action_id_seq'::regclass) PRIMARY KEY NOT NULL,
     connector_id INTEGER NOT NULL,
     name TEXT NOT NULL,
     description TEXT,
     tags TEXT[],
+    camel_connector_maven_gav TEXT NOT NULL,
     CONSTRAINT action_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id)
 );
 CREATE UNIQUE INDEX action_name_connector_id_uindex ON action (name, connector_id);
-CREATE INDEX action_tags_index ON action USING GIN(tags);
+CREATE INDEX action_tags_index ON action (tags);
 
 -- A action property describes a single configuration option for an action
 -- It is not shared and individual for an action (meta data)
