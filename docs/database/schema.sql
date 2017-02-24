@@ -39,8 +39,11 @@ CREATE TABLE connector_property
     secret BOOLEAN DEFAULT false NOT NULL,
     type VARCHAR(32) DEFAULT 'string' NOT NULL,
     default_value TEXT,
+    required BOOLEAN DEFAULT false NOT NULL,
+    property_index SMALLINT NOT NULL,
     CONSTRAINT connector_property_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id)
 );
+CREATE UNIQUE INDEX connector_property_connector_id_property_index_uindex ON connector_property (connector_id, property_index);
 
 -- A action specifies a specific action on a connector ("twitter_mention" belonging to connector
 -- "twitter")
@@ -65,8 +68,10 @@ CREATE TABLE action_property
     secret BOOLEAN DEFAULT false NOT NULL,
     type VARCHAR(32) DEFAULT 'string' NOT NULL,
     default_value TEXT,
+    property_index SMALLINT NOT NULL,
     CONSTRAINT action_property_action_id_fk FOREIGN KEY (action_id) REFERENCES action (id)
 );
+CREATE INDEX action_property_action_id_property_index_index ON action_property (action_id, property_index);
 
 -- ==== Instances ====================================================================
 
@@ -90,8 +95,8 @@ CREATE UNIQUE INDEX connector_properties_name_connector_id_uindex ON configured_
 CREATE TABLE action_instance
 (
     id SERIAL PRIMARY KEY NOT NULL,
-    action_id INTEGER,
-    configured_connector_id INTEGER,
+    action_id INTEGER NOT NULL,
+    configured_connector_id INTEGER NOT NULL,
     -- action specific properties here:
     properties HSTORE NOT NULL,
     CONSTRAINT action_instance_action_id_fk FOREIGN KEY (action_id) REFERENCES action (id),
