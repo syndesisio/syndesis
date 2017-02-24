@@ -20,6 +20,6 @@
   },
   "properties": {
     "httpUri": { "kind": "path", "displayName": "Http Uri", "group": "producer", "label": "producer", "required": true, "type": "string", "javaType": "java.net.URI", "deprecated": false, "secret": false, "description": "The url of the HTTP endpoint to call." },
-    "httpMethod": { "kind": "parameter", "displayName": "Http Method", "group": "producer", "label": "producer", "required": false, "type": "string", "javaType": "java.lang.String", "enum": [ "GET", "POST" ], "deprecated": false, "secret": false, "description": "HTTP method to use. If not configured then the connector will automatic chose between GET or POST to use the best suited in the situation." }
+    "httpMethod": { "kind": "parameter", "displayName": "Http Method", "group": "producer", "label": "producer", "required": false, "type": "object", "javaType": "org.apache.camel.http.common.HttpMethods", "enum": [ "GET", "POST" ], "deprecated": false, "secret": false, "description": "HTTP method to use. If not configured then the connector will automatic chose between GET or POST to use the best suited in the situation." }
   }
 }
