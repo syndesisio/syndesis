@@ -117,6 +117,7 @@
     <spring-boot.version>1.5.1.RELEASE</spring-boot.version>
     <spring-cloud.version>Camden.SR5</spring-cloud.version>
     <spring-cloud-kubernetes.version>0.1.4</spring-cloud-kubernetes.version>
+    <okhttp-eventsource.version>1.1.1</okhttp-eventsource.version>
     <swagger.version>1.5.12</swagger.version>
 
     <!-- maven plugin version -->
@@ -275,6 +276,12 @@
         </exclusions>
       </dependency>
 
+      <dependency>
+        <groupId>com.launchdarkly</groupId>
+        <artifactId>okhttp-eventsource</artifactId>
+        <scope>test</scope>
+        <version>${okhttp-eventsource.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>

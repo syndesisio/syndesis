@@ -16,27 +16,21 @@
 package com.redhat.ipaas.rest.v1.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.ipaas.rest.EventBus;
+import com.redhat.ipaas.rest.v1.controller.handler.exception.IPaasServerException;
+import com.redhat.ipaas.rest.v1.model.ChangeEvent;
+import com.redhat.ipaas.rest.v1.model.ListResult;
+import com.redhat.ipaas.rest.v1.model.WithId;
+import com.redhat.ipaas.rest.v1.model.connection.Connection;
 import com.redhat.ipaas.rest.v1.model.connection.Connector;
 import com.redhat.ipaas.rest.v1.model.connection.ConnectorGroup;
-import com.redhat.ipaas.rest.v1.model.connection.Connection;
 import com.redhat.ipaas.rest.v1.model.environment.Environment;
 import com.redhat.ipaas.rest.v1.model.environment.EnvironmentType;
-import com.redhat.ipaas.rest.v1.model.integration.Integration;
-import com.redhat.ipaas.rest.v1.model.integration.IntegrationConnectionStep;
-import com.redhat.ipaas.rest.v1.model.integration.IntegrationPattern;
-import com.redhat.ipaas.rest.v1.model.integration.IntegrationPatternGroup;
-import com.redhat.ipaas.rest.v1.model.integration.IntegrationRuntime;
-import com.redhat.ipaas.rest.v1.model.integration.IntegrationTemplate;
-import com.redhat.ipaas.rest.v1.model.integration.IntegrationTemplateConnectionStep;
-import com.redhat.ipaas.rest.v1.model.ListResult;
 import com.redhat.ipaas.rest.v1.model.environment.Organization;
+import com.redhat.ipaas.rest.v1.model.integration.*;
 import com.redhat.ipaas.rest.v1.model.user.Permission;
 import com.redhat.ipaas.rest.v1.model.user.Role;
-import com.redhat.ipaas.rest.v1.model.integration.Step;
-import com.redhat.ipaas.rest.v1.model.integration.Tag;
 import com.redhat.ipaas.rest.v1.model.user.User;
-import com.redhat.ipaas.rest.v1.model.WithId;
-import com.redhat.ipaas.rest.v1.controller.handler.exception.IPaasServerException;
 import org.infinispan.Cache;
 import org.infinispan.manager.CacheContainer;
 import org.slf4j.Logger;
@@ -45,15 +39,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -63,6 +53,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
     private ObjectMapper mapper;
     private CacheContainer caches;
+    private final EventBus eventBus;
 
     @Value("${deployment.file}")
     private String dataFileName;
@@ -72,15 +63,16 @@ public class DataManager implements DataAccessObjectRegistry {
 
     // Constructor to help with testing.
     public DataManager(CacheContainer caches, ObjectMapper mapper, DataAccessObjectProvider dataAccessObjects, String dataFileName) {
-        this(caches, mapper, dataAccessObjects);
+        this(caches, mapper, dataAccessObjects, (EventBus)null);
         this.dataFileName = dataFileName;
     }
 
     // Inject mandatory via constructor injection.
     @Autowired
-    public DataManager(CacheContainer caches, ObjectMapper mapper,  DataAccessObjectProvider dataAccessObjects) {
+    public DataManager(CacheContainer caches, ObjectMapper mapper, DataAccessObjectProvider dataAccessObjects, @Nullable  EventBus eventBus) {
         this.mapper = mapper;
         this.caches = caches;
+        this.eventBus = eventBus;
         if (dataAccessObjects != null) {
             this.dataAccessObjects.addAll(dataAccessObjects.getDataAccessObjects());
         }
@@ -231,6 +223,7 @@ public class DataManager implements DataAccessObjectRegistry {
         }
 
         cache.put(idVal, entity);
+        broadcast("created", kind, idVal);
         return entity;
     }
 
@@ -250,6 +243,8 @@ public class DataManager implements DataAccessObjectRegistry {
 
         doWithDataAccessObject(kind, d -> d.update(entity));
         cache.put(idVal, entity);
+        broadcast("updated", kind, idVal);
+
         //TODO 1. properly merge the data ? + add data validation in the REST Resource
     }
 
@@ -264,6 +259,7 @@ public class DataManager implements DataAccessObjectRegistry {
         WithId entity = cache.get(id);
         if (entity != null && doWithDataAccessObject(kind, d -> d.delete(entity))) {
             cache.remove(id);
+            broadcast("deleted", kind, id);
             return true;
         } else {
             return false;
@@ -290,6 +286,12 @@ public class DataManager implements DataAccessObjectRegistry {
             return function.apply(dataAccessObject);
         }
         return null;
+    }
+
+    private void broadcast(String event, String type, String id) {
+        if( eventBus !=null ) {
+            eventBus.broadcast("change-event", ChangeEvent.of(event, type, id).toJson());
+        }
     }
 
 }
