@@ -51,12 +51,12 @@ CREATE UNIQUE INDEX connector_property_connector_id_property_index_uindex ON con
 -- "twitter")
 CREATE TABLE action
 (
-    id INTEGER DEFAULT nextval('action_id_seq'::regclass) PRIMARY KEY NOT NULL,
+    id SERIAL PRIMARY KEY NOT NULL,
     connector_id INTEGER NOT NULL,
     name TEXT NOT NULL,
     description TEXT,
     tags TEXT[],
-    camel_connector_maven_gav TEXT NOT NULL,
+    camel_connector_gav TEXT NOT NULL,
     CONSTRAINT action_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id)
 );
 CREATE UNIQUE INDEX action_name_connector_id_uindex ON action (name, connector_id);
