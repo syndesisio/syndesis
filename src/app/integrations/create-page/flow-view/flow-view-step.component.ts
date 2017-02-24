@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,7 +14,7 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './flow-view-step.component.html',
   styleUrls: ['./flow-view-step.component.scss'],
 })
-export class FlowViewStepComponent implements OnInit, OnDestroy {
+export class FlowViewStepComponent {
 
   // the step object in the current flow
   @Input()
@@ -34,7 +34,6 @@ export class FlowViewStepComponent implements OnInit, OnDestroy {
 
   constructor(
     private currentFlow: CurrentFlow,
-    private detector: ChangeDetectorRef,
   ) {
 
   }
@@ -84,10 +83,10 @@ export class FlowViewStepComponent implements OnInit, OnDestroy {
     if (this.step) {
       return this.step['name'];
     }
-    if (position === this.currentFlow.getFirstPosition()) {
+    if (position === 0) {
       return 'Start';
     }
-    if (position === this.currentFlow.getLastPosition()) {
+    if (position === -1) {
       return 'Finish';
     }
     return 'Set up this connection';
@@ -96,16 +95,4 @@ export class FlowViewStepComponent implements OnInit, OnDestroy {
   isCollapsed(position: number) {
     return this.step !== undefined;
   }
-
-  ngOnInit() {
-
-  }
-
-  ngOnDestroy() {
-
-  }
-
-
-
-
 }
