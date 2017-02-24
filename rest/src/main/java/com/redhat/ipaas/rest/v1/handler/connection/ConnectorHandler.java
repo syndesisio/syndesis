@@ -15,24 +15,32 @@
  */
 package com.redhat.ipaas.rest.v1.handler.connection;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.connection.Connector;
+import com.redhat.ipaas.rest.v1.dto.VConnectionConfiguration;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
+import com.redhat.ipaas.verifier.Verifier;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
+
 
 @Path("/connectors")
 @Api(value = "connectors")
 @org.springframework.stereotype.Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector> {
 
-    public ConnectorHandler(DataManager dataMgr) {
+    // Verify connector without connections
+    private Verifier verifier;
+
+    public ConnectorHandler(DataManager dataMgr, Verifier verifier) {
         super(dataMgr);
+        this.verifier = verifier;
     }
 
     @Override
@@ -45,4 +53,11 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         return new ConnectorActionHandler(getDataManager(), connectorId);
     }
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/verifier/{scope}")
+    public Verifier.Result verifyConnectionParameters(@ApiParam(required = true) VConnectionConfiguration connectionConfig,
+                                                      @PathParam("scope") @ApiParam(required = true) Verifier.Scope scope) {
+        return verifier.verify(connectionConfig.getConnectorId(), scope, connectionConfig.getOptions());
+    }
 }

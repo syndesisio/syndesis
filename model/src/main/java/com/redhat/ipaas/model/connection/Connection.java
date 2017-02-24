@@ -50,6 +50,12 @@ public interface Connection extends WithId<Connection>, WithName, Serializable {
 
     Map<String, String> getConfiguredProperties();
 
+    /**
+     * Actual options how this connection is configured
+     * @return list of options
+     */
+    Map<String, String> getOptions();
+
     String getIcon();
 
     String getDescription();
