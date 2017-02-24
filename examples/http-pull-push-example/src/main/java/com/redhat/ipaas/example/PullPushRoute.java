@@ -25,7 +25,9 @@ public class PullPushRoute extends RouteBuilder {
     public void configure() throws Exception {
         from("periodic-timer")
             .log("Timer is triggered")
-            .to("http-pull-push:http://www.redhat.com/en?httpMethod=GET")
-            .log("The redhat website: ${body}");
+            .to("http-pull-push:http:localhost:8080/hello?httpMethod=GET")
+            .log("GET: ${body}")
+            .transform().constant("{ \"message\": \"iPaaS was here\" }")
+            .to("http-pull-push:http:localhost:8080/bye?httpMethod=POST");
     }
 }

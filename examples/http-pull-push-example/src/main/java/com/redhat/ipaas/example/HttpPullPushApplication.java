@@ -18,7 +18,6 @@ package com.redhat.ipaas.example;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//CHECKSTYLE:OFF
 @SpringBootApplication
 public class HttpPullPushApplication {
 
@@ -29,4 +28,4 @@ public class HttpPullPushApplication {
         SpringApplication.run(HttpPullPushApplication.class, args);
     }
 }
-//CHECKSTYLE:ON
+
