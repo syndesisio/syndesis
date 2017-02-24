@@ -4,7 +4,7 @@
     "baseScheme": "http4",
     "scheme": "http-pull-push",
     "syntax": "http-pull-push:httpUri",
-    "title": "Http",
+    "title": "HTTP",
     "description": "HTTP Connector",
     "label": "http",
     "deprecated": false,

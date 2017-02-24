@@ -3,7 +3,7 @@
   "baseGroupId": "org.apache.camel",
   "baseArtifactId": "camel-http4",
   "baseVersion": "2.19.0-SNAPSHOT",
-  "name": "Http",
+  "name": "HTTP",
   "scheme": "http-pull-push",
   "javaType": "com.redhat.ipaas.connector.http.HttpComponent",
   "groupId": "com.redhat.ipaas",
