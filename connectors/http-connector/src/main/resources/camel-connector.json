@@ -12,5 +12,8 @@
   "description": "HTTP Connector",
   "labels" : [ "http" ],
   "pattern": "To",
-  "endpointOptions" : [ "httpUri" ]
+  "endpointOptions" : [ "httpUri", "httpMethod" ],
+  "endpointOverrides" : {
+    "httpMethod": { "enum": [ "GET", "POST" ], "description": "HTTP method to use. If not configured then the connector will automatic chose between GET or POST to use the best suited in the situation." }
+  }
 }

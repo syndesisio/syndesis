@@ -20,7 +20,7 @@ import java.util.Map;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
 /**
- * Camel periodic timer connector
+ * Camel HTTP connector
  */
 public class HttpComponent extends DefaultConnectorComponent {
     
