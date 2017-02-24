@@ -16,37 +16,6 @@
 
 CREATE EXTENSION hstore;
 
--- ==== Instances ====================================================================
-
--- An action instance is the single entry point in this sub domain. It is referenced
--- by an integration and has all configuration needed for creating an instance of
--- a fully configured Camel connector
-CREATE TABLE action_instance
-(
-    id SERIAL PRIMARY KEY NOT NULL,
-    action_id INTEGER,
-    configured_connector_id INTEGER,
-    -- action specific properties here:
-    properties HSTORE NOT NULL,
-    CONSTRAINT action_instance_action_id_fk FOREIGN KEY (action_id) REFERENCES action (id)
-    CONSTRAINT action_instance_configured_connector_id_fk FOREIGN KEY (configured_connector_id) REFERENCES configured_connector (id)
-);
-
--- The actual configuration values for connector. The keys correspond to the names of
--- configuration_property for the same connector. (value)
-CREATE TABLE configured_connector
-(
-    id SERIAL PRIMARY KEY NOT NULL,
-    connector_id INTEGER,
-    -- connector specific properties:
-    properties HSTORE NOT NULL,
-    -- Not sure whether these are needed:     
-    name VARCHAR(256) NOT NULL,
-    description VARCHAR(2048),
-    CONSTRAINT connector_properties_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id)
-);
-CREATE UNIQUE INDEX connector_properties_name_connector_id_uindex ON configured_connector (name, connector_id);
-
 -- ===== Meta data ====================================================
 
 -- A connector groups actions and of a specific type ("twitter")
@@ -97,5 +66,36 @@ CREATE TABLE action_property
     type VARCHAR(32) DEFAULT 'string' NOT NULL,
     default_value TEXT,
     CONSTRAINT action_property_action_id_fk FOREIGN KEY (action_id) REFERENCES action (id)
+);
+
+-- ==== Instances ====================================================================
+
+-- The actual configuration values for connector. The keys correspond to the names of
+-- configuration_property for the same connector. (value)
+CREATE TABLE configured_connector
+(
+    id SERIAL PRIMARY KEY NOT NULL,
+    connector_id INTEGER,
+    -- connector specific properties:
+    properties HSTORE NOT NULL,
+    -- Not sure whether these are needed:
+    name VARCHAR(256) NOT NULL,
+    description VARCHAR(2048),
+    CONSTRAINT connector_properties_connector_id_fk FOREIGN KEY (connector_id) REFERENCES connector (id)
+);
+CREATE UNIQUE INDEX connector_properties_name_connector_id_uindex ON configured_connector (name, connector_id);
+
+-- An action instance is the single entry point in this sub domain. It is referenced
+-- by an integration and has all configuration needed for creating an instance of
+-- a fully configured Camel connector
+CREATE TABLE action_instance
+(
+    id SERIAL PRIMARY KEY NOT NULL,
+    action_id INTEGER,
+    configured_connector_id INTEGER,
+    -- action specific properties here:
+    properties HSTORE NOT NULL,
+    CONSTRAINT action_instance_action_id_fk FOREIGN KEY (action_id) REFERENCES action (id),
+    CONSTRAINT action_instance_configured_connector_id_fk FOREIGN KEY (configured_connector_id) REFERENCES configured_connector (id)
 );
 
