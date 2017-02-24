@@ -103,3 +103,28 @@ CREATE TABLE action_instance
     CONSTRAINT action_instance_configured_connector_id_fk FOREIGN KEY (configured_connector_id) REFERENCES configured_connector (id)
 );
 
+-- An integration is the integration definition. It contains a list of integration steps.
+CREATE TABLE integration
+(
+    id SERIAL PRIMARY KEY NOT NULL,
+    name VARCHAR(256) NOT NULL,
+    description VARCHAR(2048)
+);
+CREATE UNIQUE INDEX integration_name_uindex ON integration (name);
+
+-- An integration step is the definition of a single step in an integration. It contains configuration
+-- for each and every step in the integration flow.
+-- This can reference an action instance or be a supported integration pattern (e.g. log, wiretap, choice, etc).
+CREATE TABLE integration_step
+(
+    id SERIAL PRIMARY KEY NOT NULL,
+    integration_id INTEGER NOT NULL,
+    action_instance_id INTEGER,
+    step_index SMALLINT NOT NULL,
+    step_type VARCHAR(32) NOT NULL,
+    -- integration step specific properties here:
+    properties HSTORE NOT NULL,
+    CONSTRAINT integration_step_integration_id_fk FOREIGN KEY (integration_id) REFERENCES integration (id),
+    CONSTRAINT integration_step_action_instance_id_fk FOREIGN KEY (action_instance_id) REFERENCES action_instance (id)
+);
+CREATE UNIQUE INDEX integration_step_integration_id_step_index_uindex ON integration_step (integration_id, step_index);
