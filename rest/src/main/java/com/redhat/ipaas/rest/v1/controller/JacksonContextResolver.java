@@ -15,9 +15,8 @@
  */
 package com.redhat.ipaas.rest.v1.controller;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.redhat.ipaas.rest.v1.util.Json;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.Produces;
@@ -33,9 +32,7 @@ public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
     private ObjectMapper objectMapper;
 
     public JacksonContextResolver() throws Exception {
-        this.objectMapper = new ObjectMapper().
-            registerModule(new Jdk8Module()).
-            setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
+        this.objectMapper = Json.mapper();
     }
 
     public ObjectMapper getContext(Class<?> objectType) {

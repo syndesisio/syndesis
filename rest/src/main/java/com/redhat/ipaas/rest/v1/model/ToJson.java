@@ -16,10 +16,8 @@
 package com.redhat.ipaas.rest.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.redhat.ipaas.rest.v1.util.Json;
 
 public interface ToJson {
 
@@ -32,10 +30,7 @@ public interface ToJson {
     @JsonIgnore
     default String toJson() {
         try {
-            ObjectMapper mapper = new ObjectMapper()
-                .registerModule(new Jdk8Module())
-                .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
-            return mapper.writeValueAsString(this);
+            return Json.mapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
             throw new JsonProcessingRuntimeException(e);
         }

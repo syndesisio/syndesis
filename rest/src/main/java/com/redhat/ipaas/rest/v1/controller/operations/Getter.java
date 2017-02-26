@@ -19,11 +19,9 @@ import com.redhat.ipaas.rest.v1.dao.WithDataManager;
 import com.redhat.ipaas.rest.v1.model.WithId;
 import io.swagger.annotations.ApiParam;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 public interface Getter<T extends WithId> extends Resource<T>, WithDataManager {
 
@@ -31,7 +29,11 @@ public interface Getter<T extends WithId> extends Resource<T>, WithDataManager {
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
     default T get(@PathParam("id") @ApiParam(required = true) String id) {
-        return getDataManager().fetch(resourceKind(), id);
+        T result = getDataManager().fetch(resourceKind(), id);
+        if( result == null ) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        return result;
     }
 
 }

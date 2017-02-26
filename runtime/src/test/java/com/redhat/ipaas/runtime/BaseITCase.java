@@ -16,18 +16,14 @@
 package com.redhat.ipaas.runtime;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.redhat.ipaas.jsondb.impl.SqlJsonDB;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
@@ -36,8 +32,11 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("keycloak")
+@ActiveProfiles("test")
 public abstract class BaseITCase {
+
+    @Autowired
+    protected SqlJsonDB rtdb;
 
     @BeforeClass
     public static void envSetup() {
@@ -46,6 +45,14 @@ public abstract class BaseITCase {
         if( System.getProperty("keycloak.http.port")==null ) {
             System.setProperty("keycloak.http.port", "8282");
         }
+    }
+
+    protected void databaseReset() {
+        try {
+            this.rtdb.dropTables();
+        } catch (Exception e) {
+        }
+        this.rtdb.createTables();
     }
 
     @ClassRule
@@ -67,6 +74,23 @@ public abstract class BaseITCase {
     public void setRestTemplate(TestRestTemplate testRestTemplate) {
         testRestTemplate.getRestTemplate().getMessageConverters().add(new YamlJackson2HttpMessageConverter());
         this.restTemplate = testRestTemplate;
+    }
+
+
+    protected <T> ResponseEntity<T> delete(String url) {
+        return delete(url, null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
+    }
+
+    protected <T> ResponseEntity<T> delete(String url, Class<T> responseClass) {
+        return delete(url, responseClass, tokenRule.validToken(), HttpStatus.NO_CONTENT);
+    }
+
+    protected <T> ResponseEntity<T> delete(String url, Class<T> responseClass, String token) {
+        return delete(url, responseClass, token, HttpStatus.NO_CONTENT);
+    }
+
+    protected <T> ResponseEntity<T> delete(String url, Class<T> responseClass, String token, HttpStatus expectedStatus) {
+        return http(HttpMethod.DELETE, url, null, responseClass, token, expectedStatus);
     }
 
     protected <T> ResponseEntity<T> get(String url, Class<T> responseClass) {
@@ -97,7 +121,9 @@ public abstract class BaseITCase {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         ResponseEntity<T> response = restTemplate().exchange(url, method, new HttpEntity<>(body, headers), responseClass);
-        assertThat(response.getStatusCode()).as("status code").isEqualTo(expectedStatus);
+        if( expectedStatus!=null ) {
+            assertThat(response.getStatusCode()).as("status code").isEqualTo(expectedStatus);
+        }
         return response;
     }
 

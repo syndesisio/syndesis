@@ -13,28 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.rest.v1.dao;
+package com.redhat.ipaas.rest.v1.controller.handler.jsondb;
 
+import com.redhat.ipaas.jsondb.JsonDB;
+import com.redhat.ipaas.jsondb.rest.JsonDBResource;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
+import javax.ws.rs.Path;
 
+@Path("/jsondb")
+@Api(value = "jsondb")
 @Component
-public class DefaultDataAccessObjectProvider implements DataAccessObjectProvider {
-
-    private final IntegrationDAO integrationDAO;
-
-    private final IntegrationPatternDAO integrationPatternDAO;
-
-    @Autowired
-    public DefaultDataAccessObjectProvider(IntegrationDAO integrationDAO, IntegrationPatternDAO integrationPatternDAO) {
-        this.integrationDAO = integrationDAO;
-        this.integrationPatternDAO = integrationPatternDAO;
-    }
-
-    public List<DataAccessObject> getDataAccessObjects() {
-        return Arrays.asList(integrationDAO, integrationPatternDAO);
+@Configuration
+@ConditionalOnProperty(value = "endpoints.jsondb.enabled")
+public class JsonDBHandler extends JsonDBResource {
+    public JsonDBHandler(@Autowired JsonDB rtdb) {
+        super(rtdb);
     }
 }

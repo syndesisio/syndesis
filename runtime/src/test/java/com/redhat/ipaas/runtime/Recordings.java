@@ -28,7 +28,9 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Created by chirino on 2/24/17.
+ * This class allows you to proxy other objects and record all
+ * method invocation done on those objects so that your test cases
+ * can assert the your object has been called as expected.
  */
 public class Recordings {
 

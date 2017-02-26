@@ -16,7 +16,7 @@
 package com.redhat.ipaas.rest.v1.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.ipaas.rest.EventBus;
+import com.redhat.ipaas.jsondb.impl.EventBus;
 import com.redhat.ipaas.rest.v1.controller.handler.exception.IPaasServerException;
 import com.redhat.ipaas.rest.v1.model.ChangeEvent;
 import com.redhat.ipaas.rest.v1.model.ListResult;
@@ -62,59 +62,61 @@ public class DataManager implements DataAccessObjectRegistry {
     private final Map<Class, DataAccessObject> dataAccessObjectMapping = new HashMap<>();
 
     // Constructor to help with testing.
-    public DataManager(CacheContainer caches, ObjectMapper mapper, DataAccessObjectProvider dataAccessObjects, String dataFileName) {
+    public DataManager(CacheContainer caches, ObjectMapper mapper, List<DataAccessObject> dataAccessObjects, String dataFileName) {
         this(caches, mapper, dataAccessObjects, (EventBus)null);
         this.dataFileName = dataFileName;
     }
 
     // Inject mandatory via constructor injection.
     @Autowired
-    public DataManager(CacheContainer caches, ObjectMapper mapper, DataAccessObjectProvider dataAccessObjects, @Nullable  EventBus eventBus) {
+    public DataManager(CacheContainer caches, ObjectMapper mapper, List<DataAccessObject> dataAccessObjects, @Nullable EventBus eventBus) {
         this.mapper = mapper;
         this.caches = caches;
         this.eventBus = eventBus;
         if (dataAccessObjects != null) {
-            this.dataAccessObjects.addAll(dataAccessObjects.getDataAccessObjects());
+            this.dataAccessObjects.addAll(dataAccessObjects);
         }
     }
 
     @PostConstruct
     public void init() {
+        for (DataAccessObject dataAccessObject : dataAccessObjects) {
+            registerDataAccessObject(dataAccessObject);
+        }
+
         if (dataFileName != null) {
             ReadApiClientData reader = new ReadApiClientData();
             try {
                 List<ModelData> mdList = reader.readDataFromFile(dataFileName);
                 for (ModelData modelData : mdList) {
-                    addToCache(modelData);
+                    store(modelData);
                 }
             } catch (Exception e) {
                 throw new IllegalStateException("Cannot read dummy startup data due to: " + e.getMessage(), e);
             }
         }
 
-        for (DataAccessObject dataAccessObject : dataAccessObjects) {
-            registerDataAccessObject(dataAccessObject);
-        }
     }
 
-    public void addToCache(ModelData modelData) {
+    public void store(ModelData modelData) {
         try {
-            Class<? extends WithId> clazz;
-            clazz = getClass(modelData.getKind());
-            Cache<String, WithId> cache = caches.getCache(modelData.getKind().toLowerCase());
+            Class<? extends WithId> clazz = getClass(modelData.getKind());
+            String kind = modelData.getKind().toLowerCase();
 
             LOGGER.debug(modelData.getKind() + ":" + modelData.getData());
             WithId entity = clazz.cast(mapper.readValue(modelData.getData(), clazz));
             Optional<String> id = entity.getId();
-            String idVal;
             if (!id.isPresent()) {
-                idVal = generatePK(cache);
-                entity = entity.withId(idVal);
+                LOGGER.warn("Cannot load entity from file since it's missing an id: " + modelData.toJson());
             } else {
-                idVal = id.get();
+                if (fetch(kind, id.get()) == null) {
+                    create(entity);
+                } else {
+                    update(entity);
+                }
             }
-            cache.put(idVal, entity);
         } catch (Exception e) {
+            LOGGER.warn("Cannot load entity from file: " + e);
             IPaasServerException.launderThrowable(e);
         }
     }
@@ -184,16 +186,11 @@ public class DataManager implements DataAccessObjectRegistry {
     public <T extends WithId> ListResult<T> fetchAll(String kind, Function<ListResult<T>, ListResult<T>>... operators) {
         Cache<String, WithId> cache = caches.getCache(kind);
 
-        //TODO: This is currently broken and needs to be properly addressed.
-        //... until then just use the cache for pre-loaded data.
-        if (cache.isEmpty()) {
-            return (ListResult<T>) doWithDataAccessObject(kind, d -> d.fetchAll());
+        ListResult<T> result = (ListResult<T>) doWithDataAccessObject(kind, d -> d.fetchAll());
+        if( result == null ) {
+            // fall back to using the cache for getting values..
+            result = ListResult.of((Collection<T>) cache.values());
         }
-
-        ListResult<T> result = new ListResult.Builder<T>()
-            .items((Collection<T>) cache.values())
-            .totalCount(cache.values().size())
-            .build();
 
         for (Function<ListResult<T>, ListResult<T>> operator : operators) {
             result = operator.apply(result);
@@ -203,7 +200,17 @@ public class DataManager implements DataAccessObjectRegistry {
 
     public <T extends WithId> T fetch(String kind, String id) {
         Map<String, WithId> cache = caches.getCache(kind);
-        return (T) cache.computeIfAbsent(id, i -> doWithDataAccessObject(kind, d -> (T) d.fetch(i)));
+
+        // TODO: report bug in cache.computeIfAbsent, it breaks if the mappingFunction returns null
+        // return (T) cache.computeIfAbsent(id, i -> doWithDataAccessObject(kind, d -> (T) d.fetch(i)));
+        T value = (T) cache.get(id);
+        if ( value == null) {
+            value = doWithDataAccessObject(kind, d -> (T) d.fetch(id));
+            if (value != null) {
+                cache.put(id, value);
+            }
+        }
+        return value;
     }
 
     public <T extends WithId> T create(T entity) {
@@ -222,9 +229,11 @@ public class DataManager implements DataAccessObjectRegistry {
             }
         }
 
-        cache.put(idVal, entity);
+        T finalEntity = entity;
+        doWithDataAccessObject(kind, d -> d.create(finalEntity));
+        cache.put(idVal, finalEntity);
         broadcast("created", kind, idVal);
-        return entity;
+        return finalEntity;
     }
 
     public void update(WithId entity) {
@@ -253,12 +262,16 @@ public class DataManager implements DataAccessObjectRegistry {
         Map<String, WithId> cache = caches.getCache(kind);
         if (id == null || id.equals(""))
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
-        if (!cache.containsKey(id))
-            throw new EntityNotFoundException("Can not find " + kind + " with id " + id);
 
-        WithId entity = cache.get(id);
-        if (entity != null && doWithDataAccessObject(kind, d -> d.delete(entity))) {
-            cache.remove(id);
+        // Remove it out of the cache
+        WithId entity = cache.remove(id);
+        // And out of the DAO
+        boolean deletedInDAO = Optional.ofNullable(
+            doWithDataAccessObject(kind, d -> d.delete(entity))
+        ).orElse(Boolean.FALSE).booleanValue();
+
+        // Return true if the entity was found in any of the two.
+        if ( deletedInDAO || entity != null ) {
             broadcast("deleted", kind, id);
             return true;
         } else {

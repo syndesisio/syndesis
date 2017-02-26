@@ -16,10 +16,8 @@
 package com.redhat.ipaas.rest.v1.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.redhat.ipaas.rest.v1.dao.ModelData;
-import com.redhat.ipaas.rest.v1.dao.ReadApiClientData;
 import com.redhat.ipaas.rest.v1.model.connection.ConnectorGroup;
+import com.redhat.ipaas.rest.v1.util.Json;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -32,13 +30,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ReadApiClientDataTest {
 
-    private final static ObjectMapper mapper = getObjectMapper();
-
-	private static ObjectMapper getObjectMapper() {
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    objectMapper.registerModule(new Jdk8Module());
-	    return objectMapper;
-    }
+    private final static ObjectMapper mapper = Json.mapper();
 
 	@Test
 	public void deserializeModelDataTest() throws IOException {
@@ -61,7 +53,7 @@ public class ReadApiClientDataTest {
 		assertTrue("We should find some ModelData", 0 < modelDataList.size());
 		List<ConnectorGroup> connectorGroupList = new ArrayList<ConnectorGroup>();
 		for (ModelData md : modelDataList) {
-			if (md.getKind().equalsIgnoreCase("connectorgroup")) {
+			if (md.getKind().equalsIgnoreCase("connector-group")) {
 				ConnectorGroup cg = mapper.readValue(md.getData(), ConnectorGroup.class);
 				connectorGroupList.add(cg);
 			}

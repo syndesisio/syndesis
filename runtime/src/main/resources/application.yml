@@ -56,3 +56,9 @@ management:
 endpoints:
   health:
     sensitive: false
+  jsondb:
+    enabled: true
+
+dao:
+  kind: jsondb
+

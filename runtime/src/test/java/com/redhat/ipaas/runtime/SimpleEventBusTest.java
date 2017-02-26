@@ -15,7 +15,7 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.redhat.ipaas.rest.EventBus;
+import com.redhat.ipaas.jsondb.impl.EventBus;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;

@@ -13,11 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.rest.v1.dao;
+package com.redhat.ipaas.jsondb.impl;
 
-import java.util.List;
+/**
+ * Interface for subscribing/unsubscribing clients and publishing events to them.
+ */
+public interface EventBus {
 
-public interface DataAccessObjectProvider {
+    public interface Subscription {
+        void onEvent(String event, String data);
+    }
 
-    List<DataAccessObject> getDataAccessObjects();
+    public Subscription subscribe(String subscriberId, Subscription handler);
+    public Subscription unsubscribe(String subscriberId);
+
+    public void broadcast(String event, String data);
+    public void send(String subscriberId, String event, String data);
 }
