@@ -9,7 +9,7 @@
   "groupId": "com.redhat.ipaas",
   "artifactId": "http-connector",
   "version": "1.0",
-  "description": "HTTP Connector",
+  "description": "To call a HTTP service",
   "labels" : [ "http" ],
   "pattern": "To",
   "endpointOptions" : [ "httpUri", "httpMethod" ],

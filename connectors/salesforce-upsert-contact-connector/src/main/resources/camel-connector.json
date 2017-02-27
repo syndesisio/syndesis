@@ -9,7 +9,7 @@
   "groupId": "com.redhat.ipaas",
   "artifactId": "salesforce-upsert-contact-connector",
   "version": "1.0",
-  "description": "Create or update Salesforce Contact SObject",
+  "description": "Create or update Salesforce contact",
   "labels" : [ "salesforce" ],
   "pattern": "To",
   "globalOptions": [ "loginUrl", "clientId", "clientSecret", "refreshToken" ],

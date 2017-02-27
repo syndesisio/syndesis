@@ -9,7 +9,7 @@
   "groupId": "com.redhat.ipaas",
   "artifactId": "timer-connector",
   "version": "1.0",
-  "description": "Periodic timer which runs every N'th milli seconds",
+  "description": "Periodic timer which runs at specified intervals",
   "labels" : [ "timer" ],
   "pattern": "From",
   "endpointOptions" : [ "period" ],
