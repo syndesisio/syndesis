@@ -16,6 +16,7 @@
 package com.redhat.ipaas.runtime;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("keycloak")
 public abstract class BaseITCase {
+
+    @BeforeClass
+    public static void envSetup() {
+        // If the keycloak.http.port is not configured.. configure it now so that
+        // our test cases work in an IDE without having to do additional config.
+        if( System.getProperty("keycloak.http.port")==null ) {
+            System.setProperty("keycloak.http.port", "8282");
+        }
+    }
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
