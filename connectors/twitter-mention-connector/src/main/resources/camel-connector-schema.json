@@ -5,7 +5,7 @@
     "scheme": "twitter-mention",
     "syntax": "twitter-mention:kind",
     "title": "TwitterMention",
-    "description": "Connection from twitter when anyone mention you",
+    "description": "Receive notifications when you are mentioned on Twitter",
     "label": "twitter",
     "deprecated": false,
     "async": false,

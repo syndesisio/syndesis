@@ -5,7 +5,7 @@
     "scheme": "periodic-timer",
     "syntax": "periodic-timer:timerName",
     "title": "Timer",
-    "description": "Periodic timer which runs every N'th milli seconds",
+    "description": "Periodic timer which runs at specified intervals",
     "label": "timer",
     "deprecated": false,
     "async": false,

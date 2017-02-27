@@ -5,7 +5,7 @@
     "scheme": "salesforce-upsert-contact",
     "syntax": "salesforce-upsert-contact:operationName:topicName",
     "title": "SalesforceUpsertContact",
-    "description": "Create or update Salesforce Contact SObject",
+    "description": "Create or update Salesforce contact",
     "label": "salesforce",
     "deprecated": false,
     "async": false,

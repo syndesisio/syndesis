@@ -5,7 +5,7 @@
     "scheme": "http-pull-push",
     "syntax": "http-pull-push:httpUri",
     "title": "HTTP",
-    "description": "HTTP Connector",
+    "description": "To call a HTTP service",
     "label": "http",
     "deprecated": false,
     "async": false,
