@@ -65,4 +65,8 @@ public class EventReservationsHandler {
         return reservedEventStreams.remove(reservation);
     }
 
+    public Reservation existsReservation(String reservation) {
+        return reservedEventStreams.get(reservation);
+    }
+
 }
