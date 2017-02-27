@@ -378,9 +378,24 @@
       <groupId>org.keycloak</groupId>
       <artifactId>keycloak-spring-security-adapter</artifactId>
     </dependency>
+
+    <!-- we got some wonky okhttp deps going on.. WebSocket client
+         was failing to load properly uless the following 3 deps were put
+         in this order -->
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>3.6.0</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>com.launchdarkly</groupId>
       <artifactId>okhttp-eventsource</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp-ws</artifactId>
       <scope>test</scope>
     </dependency>
 

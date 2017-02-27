@@ -21,7 +21,13 @@ import com.launchdarkly.eventsource.MessageEvent;
 import com.redhat.ipaas.rest.v1.model.ChangeEvent;
 import com.redhat.ipaas.rest.v1.model.EventMessage;
 import com.redhat.ipaas.rest.v1.model.integration.Integration;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -113,4 +119,65 @@ public class EventsITCase extends BaseITCase {
 
     }
 
+    @Test
+    public void wsEventsWithToken() throws Exception {
+        OkHttpClient client = new OkHttpClient();
+
+        String url = resolveURI("/wsevents").toString().replaceFirst("^http", "ws");
+        Request request = new Request.Builder()
+            .url(url)
+            .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRule.validToken())
+            .build();
+
+        // lets setup an event handler that we can inspect events on..
+        WebSocketListener listener = recorder(mock(WebSocketListener.class), WebSocketListener.class);
+        List<Recordings.Invocation> invocations = recordedInvocations(listener);
+        CountDownLatch countDownLatch = resetRecorderLatch(listener, 2);
+
+        WebSocket ws = client.newWebSocket(request, listener);
+
+        // We auto get a message letting us know we connected.
+        assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
+        assertThat(invocations.get(0).getMethod().getName()).isEqualTo("onOpen");
+        assertThat(invocations.get(1).getMethod().getName()).isEqualTo("onMessage");
+        assertThat(invocations.get(1).getArgs()[1]).isEqualTo(EventMessage.of("message", "connected").toJson());
+
+        /////////////////////////////////////////////////////
+        // Test that we get notified of created entities
+        /////////////////////////////////////////////////////
+        invocations.clear();
+        countDownLatch = resetRecorderLatch(listener, 1);
+
+        Integration integration = new Integration.Builder().id("1002").name("test").build();
+        post("/api/v1/integrations", integration, Integration.class);
+
+        assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
+        assertThat(invocations.get(0).getMethod().getName()).isEqualTo("onMessage");
+        assertThat(invocations.get(0).getArgs()[1]).isEqualTo(EventMessage.of("change-event", ChangeEvent.of("created", "integration", "1002").toJson()).toJson());
+
+        ws.close(1000, "closing");
+    }
+
+    @Ignore("Not yet working.. don't think security is being applied to the /wsevents endpoints.")
+    public void wsEventsWithoutToken() throws Exception {
+
+        OkHttpClient client = new OkHttpClient();
+
+        String url = resolveURI("/wsevents").toString().replaceFirst("^http", "ws");
+        Request request = new Request.Builder().url(url).build();
+
+        // lets setup an event handler that we can inspect events on..
+        WebSocketListener listener = recorder(mock(WebSocketListener.class), WebSocketListener.class);
+        List<Recordings.Invocation> invocations = recordedInvocations(listener);
+        CountDownLatch countDownLatch = resetRecorderLatch(listener, 2);
+
+        WebSocket ws = client.newWebSocket(request, listener);
+
+        // We auto get a message letting us know we connected.
+        assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
+        assertThat(invocations.get(0).getMethod().getName()).isEqualTo("onFailure");
+        assertThat(invocations.get(0).getArgs()[0].toString())
+            .isEqualTo("com.launchdarkly.eventsource.UnsuccessfulResponseException: Unsuccessful response code received from stream: 404");
+
+    }
 }

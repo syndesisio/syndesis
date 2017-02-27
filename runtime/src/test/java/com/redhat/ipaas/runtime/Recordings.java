@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2016 Red Hat, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 package com.redhat.ipaas.runtime;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocket;
+import org.springframework.cglib.proxy.Enhancer;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationHandler;
@@ -58,8 +63,7 @@ public class Recordings {
         }
     }
 
-    private static class RecordingInvocationHandler implements InvocationHandler {
-
+    public static class RecordingInvocationHandler implements InvocationHandler {
         private final Object target;
         private final List<Invocation> recordedInvocations = Collections.synchronizedList(new ArrayList<>());
         private volatile CountDownLatch latch = new CountDownLatch(1);
@@ -70,12 +74,18 @@ public class Recordings {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+            if (method.getName().equals("__getInvocationHandler__")) {
+                RecordingInvocationHandler rc = this;
+                return rc;
+            }
+
             Invocation invocation = new Invocation(method, args);
 
             // Skip over toString since this could get hit as a byproduct of
             // running in a debugger.
             boolean skipped = true;
-            if( !method.getName().equals("toString") ) {
+            if (!method.getName().equals("toString")) {
                 recordedInvocations.add(invocation);
                 skipped = false;
             }
@@ -85,7 +95,7 @@ public class Recordings {
                 invocation.error = e.getTargetException();
                 throw invocation.error;
             } finally {
-                if( !skipped ) {
+                if (!skipped) {
                     latch.countDown();
                 }
             }
@@ -93,20 +103,51 @@ public class Recordings {
         }
     }
 
+    public interface RecordingProxy {
+        public RecordingInvocationHandler __getInvocationHandler__();
+    }
+
     static public <T> T recorder(Object object, Class<T> as) {
-        return as.cast(Proxy.newProxyInstance(as.getClassLoader(), new Class[]{as}, new RecordingInvocationHandler(object)));
+        if (as.isInterface()) {
+            // If it's just an interface, use standard java reflect proxying
+            return as.cast(Proxy.newProxyInstance(as.getClassLoader(), new Class[]{as}, new RecordingInvocationHandler(object)));
+        } else {
+            // If it's a class then use gclib to implement a subclass to implement proxying
+            RecordingInvocationHandler ih = new RecordingInvocationHandler(object);
+            Enhancer enhancer = new Enhancer();
+            enhancer.setSuperclass(as);
+            enhancer.setInterfaces(new Class[]{RecordingProxy.class});
+            enhancer.setCallback(new org.springframework.cglib.proxy.InvocationHandler() {
+                @Override
+                public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+                    return ih.invoke(o, method, objects);
+                }
+            });
+            return as.cast(enhancer.create());
+        }
     }
 
     static public CountDownLatch resetRecorderLatch(Object object, int count) {
-        RecordingInvocationHandler ih = (RecordingInvocationHandler)Proxy.getInvocationHandler(object);
+        RecordingInvocationHandler ih = null;
+        if (object instanceof RecordingProxy) {
+            ih = ((RecordingProxy) object).__getInvocationHandler__();
+        } else {
+            ih = (RecordingInvocationHandler) Proxy.getInvocationHandler(object);
+        }
         CountDownLatch latch = new CountDownLatch(count);
         ih.latch = latch;
         return latch;
     }
 
     static public List<Invocation> recordedInvocations(Object object) {
-        RecordingInvocationHandler ih = (RecordingInvocationHandler)Proxy.getInvocationHandler(object);
+        RecordingInvocationHandler ih = null;
+        if (object instanceof RecordingProxy) {
+            ih = ((RecordingProxy) object).__getInvocationHandler__();
+        } else {
+            ih = (RecordingInvocationHandler) Proxy.getInvocationHandler(object);
+        }
         return ih.recordedInvocations;
     }
+
 
 }
