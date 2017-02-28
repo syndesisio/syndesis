@@ -54,19 +54,7 @@ public class EventBusToServerSentEvents implements UndertowDeploymentInfoCustomi
         @Override
         public void connected(ServerSentEventConnection connection, String lastEventId) {
             String uri = connection.getRequestURI();
-            if( uri.indexOf(path+"/") != 0 ) {
-                connection.send("Invalid path", "error", null, null);
-                connection.shutdown();
-                return;
-            }
-
             final String subscriptionId = uri.substring(path.length()+1);
-            if( subscriptionId.isEmpty() ) {
-                connection.send("Invalid subscription: not set", "error", null, null);
-                connection.shutdown();
-                return;
-            }
-
             EventReservationsHandler.Reservation reservation = eventReservationsHandler.claimReservation(subscriptionId);
             if( reservation==null ) {
                 connection.send("Invalid subscription: not reserved", "error", null, null);
@@ -109,6 +97,25 @@ public class EventBusToServerSentEvents implements UndertowDeploymentInfoCustomi
                     if (value != null)
                         responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_METHODS), value);
                 }
+
+                String uri = exchange.getRequestURI();
+                if( uri.indexOf(path+"/") != 0 ) {
+                    exchange.setStatusCode(404);
+                    return;
+                }
+
+                final String subscriptionId = uri.substring(path.length()+1);
+                if( subscriptionId.isEmpty() ) {
+                    exchange.setStatusCode(404);
+                    return;
+                }
+
+                EventReservationsHandler.Reservation reservation = eventReservationsHandler.existsReservation(subscriptionId);
+                if( reservation==null ) {
+                    exchange.setStatusCode(404);
+                    return;
+                }
+
                 super.handleRequest(exchange);
             }
         };
