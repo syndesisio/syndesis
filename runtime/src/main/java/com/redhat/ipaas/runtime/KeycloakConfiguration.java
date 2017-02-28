@@ -74,7 +74,9 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
             .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()).and().authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers("/api/v1/swagger.*").permitAll()
-            .antMatchers("/api/v1/**").authenticated().anyRequest().permitAll();
+            .antMatchers("/api/v1/**").authenticated()
+            .antMatchers("/wsevents").authenticated()
+            .anyRequest().permitAll();
 
         http.csrf().disable();
     }
