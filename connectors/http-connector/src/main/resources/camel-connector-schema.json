@@ -5,7 +5,7 @@
     "scheme": "http-pull-push",
     "syntax": "http-pull-push:httpUri",
     "title": "HTTP",
-    "description": "To call a HTTP service",
+    "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL.",
     "label": "http",
     "deprecated": false,
     "async": false,

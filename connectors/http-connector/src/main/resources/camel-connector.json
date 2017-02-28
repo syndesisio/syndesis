@@ -9,7 +9,7 @@
   "groupId": "com.redhat.ipaas",
   "artifactId": "http-connector",
   "version": "1.0",
-  "description": "To call a HTTP service",
+  "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL.",
   "labels" : [ "http" ],
   "pattern": "To",
   "endpointOptions" : [ "httpUri", "httpMethod" ],
