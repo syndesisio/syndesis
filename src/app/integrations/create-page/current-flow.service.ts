@@ -152,7 +152,7 @@ export class CurrentFlow {
         integration.steps = newSteps;
         integration.connections = steps;
         */
-        this.store.create(integration).subscribe((i: Integration) => {
+        this.store.updateOrCreate(integration).subscribe((i: Integration) => {
           log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
           const action = event['action'];
           if (action && typeof action === 'function') {
