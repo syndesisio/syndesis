@@ -25,8 +25,6 @@ import { log } from './logging';
 export function appInitializer(configService: ConfigService, oauthService: OAuthService, userService: UserService) {
   return () => {
     return configService.load().then(() => {
-      // URL of the SPA to redirect the user to after login
-      oauthService.redirectUri = window.location.origin + '/dashboard';
       oauthService.clientId = configService.getSettings('oauth', 'clientId');
       oauthService.scope = (configService.getSettings('oauth', 'scopes') as string[]).join(' ');
       oauthService.oidc = configService.getSettings('oauth', 'oidc');
@@ -36,21 +34,68 @@ export function appInitializer(configService: ConfigService, oauthService: OAuth
 
       return oauthService.loadDiscoveryDocument();
     }).then(() => {
+      // If we don't have a valid token, then let's try to get one. This means we haven't logged in at all.
       if (!oauthService.hasValidAccessToken()) {
-        if (!oauthService.tryLogin({})) {
+        // Let's get the current location for the redirect URI.
+        let currentLocation = window.location.href;
+        const hashIndex = currentLocation.indexOf('#');
+        if (hashIndex > 0) {
+           currentLocation = currentLocation.substring(0, hashIndex);
+        }
+        oauthService.redirectUri = currentLocation;
+
+        // If this is the first flow, authenticating against OpenShift, then we shouldn't
+        // do the hybrid flow. Let's store whether this is the first IDP in session storage
+        // so it survives the multiple required redirects.
+        let firstIDP = sessionStorage.getItem('ipaas-first-idp');
+        if (!firstIDP) {
+          firstIDP = 'true';
+          sessionStorage.setItem('ipaas-first-idp', firstIDP);
+        }
+
+        // Store whether the oidc client was configured as hybrid so we can enable token refreshes.
+        const originalHybrid = oauthService.hybrid;
+        oauthService.hybrid = oauthService.hybrid && firstIDP !== 'true';
+
+        // Before we kick off the implicit flow, we should check that this isn't a redirect back from the auth server
+        // and the token isn't present in the location hash - tryLogin does that.
+        if (!oauthService.tryLogin()) {
+          // There is no token stored or in location hash so kick off implicit flow.
           return oauthService.initImplicitFlow();
         }
+
+        // Set this back so that second flow through we do the proper code flow to get a refresh token.
+        sessionStorage.setItem('ipaas-first-idp', 'false');
+        oauthService.hybrid = originalHybrid;
+
+        // If this wasn't the autolink flow then rekick off flow with state set to autolink.
+        if (oauthService.state !== 'autolink') {
+          // Client suggested IDP works great with Keycloak.
+          oauthService.loginUrl += '?kc_idp_hint=github';
+          // Clear session storage before trying again.
+          oauthService.logOut(true);
+          // And kick off the login flow again.
+          return oauthService.initImplicitFlow('autolink');
+        }
       }
+
+      // Remove this marker from session storage as it has served it's purpose.
+      sessionStorage.removeItem('ipaas-first-idp');
+
+      // Use the token to load our user details and set up the refresh token flow.
       oauthService.loadUserProfile().then(() => {
         userService.setUser(oauthService.getIdentityClaims());
 
-        Observable.interval(1000 * 60).subscribe(
-          () => {
-            oauthService.refreshToken().catch(
-              (reason) => log.errorc(() => 'Failed to refresh token', () => new Error(reason)),
-            );
-          },
-        );
+        // Only do refreshes if we're doing a hybrid oauth flow.
+        if (oauthService.hybrid) {
+          Observable.interval(1000 * 60).subscribe(
+            () => {
+              oauthService.refreshToken().catch(
+                (reason) => log.errorc(() => 'Failed to refresh token', () => new Error(reason)),
+              );
+            },
+          );
+        }
       });
     });
   };
