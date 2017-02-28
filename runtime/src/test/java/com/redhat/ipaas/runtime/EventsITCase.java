@@ -25,7 +25,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -53,8 +52,7 @@ public class EventsITCase extends BaseITCase {
         String uuid = (String) r1.getBody().getData().get();
         assertThat(uuid).as("data").isNotNull();
 
-        String uriTemplate = "/api/v1/event/streams/" + uuid;
-        URI uri = resolveURI(uriTemplate);
+        URI uri = resolveURI(EventBusToServerSentEvents.DEFAULT_PATH + "/" + uuid);
 
         // lets setup an event handler that we can inspect events on..
         EventHandler handler = recorder(mock(EventHandler.class), EventHandler.class);
@@ -107,7 +105,8 @@ public class EventsITCase extends BaseITCase {
 
         // Using a random uuid should not work either.
         String uuid = UUID.randomUUID().toString();
-        EventSource eventSource = new EventSource.Builder(handler, resolveURI("/api/v1/event/streams/" + uuid)).build();
+        URI uri = resolveURI(EventBusToServerSentEvents.DEFAULT_PATH + "/" + uuid);
+        EventSource eventSource = new EventSource.Builder(handler, uri).build();
         eventSource.start();
 
         assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
@@ -123,7 +122,14 @@ public class EventsITCase extends BaseITCase {
     public void wsEventsWithToken() throws Exception {
         OkHttpClient client = new OkHttpClient();
 
-        String url = resolveURI("/wsevents").toString().replaceFirst("^http", "ws");
+        ResponseEntity<EventMessage> r1 = post("/api/v1/event/reservations", null, EventMessage.class);
+        assertThat(r1.getBody().getEvent().get()).as("event").isEqualTo("uuid");
+        String uuid = (String) r1.getBody().getData().get();
+        assertThat(uuid).as("data").isNotNull();
+
+        String uriTemplate = EventBusToWebSocket.DEFAULT_PATH + "/" + uuid;
+        String url = resolveURI(uriTemplate).toString().replaceFirst("^http", "ws");
+
         Request request = new Request.Builder()
             .url(url)
             .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + tokenRule.validToken())
@@ -163,7 +169,11 @@ public class EventsITCase extends BaseITCase {
 
         OkHttpClient client = new OkHttpClient();
 
-        String url = resolveURI("/wsevents").toString().replaceFirst("^http", "ws");
+        // Using a random uuid should not work to connect
+        String uuid = UUID.randomUUID().toString();
+
+        String uriTemplate = EventBusToWebSocket.DEFAULT_PATH + "/" + uuid;
+        String url = resolveURI(uriTemplate).toString().replaceFirst("^http", "ws");
         Request request = new Request.Builder().url(url).build();
 
         // lets setup an event handler that we can inspect events on..
@@ -177,7 +187,7 @@ public class EventsITCase extends BaseITCase {
         assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
         assertThat(invocations.get(0).getMethod().getName()).isEqualTo("onFailure");
         assertThat(invocations.get(0).getArgs()[1].toString())
-            .isEqualTo("java.net.ProtocolException: Expected HTTP 101 response but was '401 Unauthorized'");
+            .isEqualTo("java.net.ProtocolException: Expected HTTP 101 response but was '404 Not Found'");
 
         ws.close(1000, "closing");
     }

@@ -16,82 +16,116 @@
 package com.redhat.ipaas.runtime;
 
 import com.redhat.ipaas.rest.EventBus;
+import com.redhat.ipaas.rest.v1.controller.handler.events.EventReservationsHandler;
 import com.redhat.ipaas.rest.v1.model.EventMessage;
+import io.undertow.Handlers;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.server.handlers.sse.ServerSentEventConnection;
+import io.undertow.server.handlers.sse.ServerSentEventConnectionCallback;
+import io.undertow.servlet.api.DeploymentInfo;
+import io.undertow.websockets.WebSocketConnectionCallback;
+import io.undertow.websockets.WebSocketProtocolHandshakeHandler;
+import io.undertow.websockets.core.WebSocketChannel;
+import io.undertow.websockets.core.WebSockets;
+import io.undertow.websockets.spi.WebSocketHttpExchange;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
- * Connects a WebSocket endpoint to the EventBus
+ * Connects the the EventBus to an Undertow WebSocket Event handler
+ * at the "/api/v1/events.ws/{:subscription}" path.
  */
-@Configuration
-@EnableWebSocket
-@EnableScheduling
-public class EventBusToWebSocket implements WebSocketConfigurer {
+@Component
+public class EventBusToWebSocket extends EventBusToServerSentEvents {
 
-    private final IPaaSCorsConfiguration cors;
-    private final EventBus bus;
+    public static final String DEFAULT_PATH = "/api/v1/event/streams.ws";
+
 
     @Autowired
-    public EventBusToWebSocket(IPaaSCorsConfiguration cors, EventBus bus) {
-        this.cors = cors;
-        this.bus = bus;
+    public EventBusToWebSocket(IPaaSCorsConfiguration cors, EventBus bus, EventReservationsHandler eventReservationsHandler) {
+        super(cors, bus, eventReservationsHandler);
+        path = DEFAULT_PATH;
     }
 
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        List<String> allowedOrigins = cors.getAllowedOrigins();
-        String[] origins = allowedOrigins.toArray(new String[allowedOrigins.size()]);
+    public void customize(DeploymentInfo deploymentInfo) {
+        deploymentInfo.addInitialHandlerChainWrapper(handler -> {
+                return Handlers.path()
+                    .addPrefixPath("/", handler)
+                    .addPrefixPath(path, new WebSocketProtocolHandshakeHandler(new WSHandler()) {
+                        @Override
+                        public void handleRequest(HttpServerExchange exchange) throws Exception {
+                            if (reservationCheck(exchange)) {
+                                super.handleRequest(exchange);
+                            }
+                        }
+                    });
+            }
+        );
+    }
 
-        registry.addHandler(new TextWebSocketHandler() {
+    public class SSEHandler implements ServerSentEventConnectionCallback {
 
-            WebSocketSession session;
-
-            @Override
-            public void afterConnectionEstablished(WebSocketSession session) {
-                this.session = session;
-
-                String subscriptionId = session.getId();
-                if( subscriptionId.isEmpty() ) {
-                    send(session, "error", "Invalid subscription id");
-                    try {
-                        session.close();
-                    } catch (IOException e) {
-                    }
-                    return;
+        @Override
+        public void connected(ServerSentEventConnection connection, String lastEventId) {
+            String uri = connection.getRequestURI();
+            final String subscriptionId = uri.substring(path.length() + 1);
+            EventReservationsHandler.Reservation reservation = eventReservationsHandler.claimReservation(subscriptionId);
+            if (reservation == null) {
+                connection.send("Invalid subscription: not reserved", "error", null, null);
+                connection.shutdown();
+                return;
+            }
+            System.out.println("Principal is: " + reservation.getPrincipal());
+            connection.send("connected", "message", null, null);
+            bus.subscribe(subscriptionId, (type, data) -> {
+                if (connection.isOpen()) {
+                    connection.send(data, type, null, null);
+                } else {
+                    bus.unsubscribe(subscriptionId);
                 }
+            });
+        }
 
-                send(session, "message", "connected");
-                bus.subscribe(subscriptionId, (type, data)->{
-                    send(session, type, data);
-                });
+    }
 
+    public class WSHandler implements WebSocketConnectionCallback {
+
+        @Override
+        public void onConnect(WebSocketHttpExchange exchange, WebSocketChannel channel) {
+
+            String uri = exchange.getRequestURI();
+            final String subscriptionId = uri.substring(path.length() + 1);
+            EventReservationsHandler.Reservation reservation = eventReservationsHandler.claimReservation(subscriptionId);
+            if (reservation == null) {
+                send(channel, "error", "Invalid subscription: not reserved");
+                safeClose(channel);
+                return;
             }
-
-            @Override
-            public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-                bus.unsubscribe(session.getId());
-                super.afterConnectionClosed(session, status);
-            }
-
-            private void send(WebSocketSession session, String type, String data) {
-                try {
-                    session.sendMessage(new TextMessage(EventMessage.of(type, data).toJson()));
-                } catch (IOException e) {
+            System.out.println("Principal is: " + reservation.getPrincipal());
+            send(channel, "message", "connected");
+            bus.subscribe(subscriptionId, (type, data) -> {
+                if (channel.isOpen()) {
+                    send(channel, type, data);
+                } else {
+                    bus.unsubscribe(subscriptionId);
                 }
-            }
+            });
+        }
 
-        }, "/wsevents").setAllowedOrigins(origins);
+        private void safeClose(WebSocketChannel channel) {
+            try {
+                channel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void send(WebSocketChannel channel, String type, String data) {
+            WebSockets.sendText(EventMessage.of(type, data).toJson(), channel, null);
+        }
     }
 
 }
