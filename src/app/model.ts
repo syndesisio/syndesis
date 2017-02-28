@@ -26,15 +26,15 @@ export interface WithId extends BaseEntity {
 export type WithIds = Array < WithId > ;
 
 export interface Connection extends BaseEntity {
-    position: string;
-    organization: Organization;
     icon: string;
+    organization: Organization;
     tags: Array < Tag >
     ;
-    configuredProperties: string;
+    position: string;
     description: string;
-    userId: string;
     connector: Connector;
+    userId: string;
+    configuredProperties: string;
     connectorId: string;
     organizationId: string;
     id: string;
@@ -44,9 +44,9 @@ export type Connections = Array < Connection > ;
 
 export interface Connector extends BaseEntity {
     icon: string;
+    description: string;
     connectorGroup: ConnectorGroup;
     connectorGroupId: string;
-    description: string;
     properties: string;
     id: string;
     name: string;
@@ -68,17 +68,17 @@ export type Environments = Array < Environment > ;
 export interface Integration extends BaseEntity {
     tags: Array < Tag >
     ;
-    description: string;
-    users: Array < User >
-    ;
-    configuration: string;
-    integrationTemplate: IntegrationTemplate;
-    userId: string;
     steps: Array < Step >
     ;
     integrationTemplateId: string;
+    description: string;
     connections: Array < Connection >
     ;
+    configuration: string;
+    userId: string;
+    users: Array < User >
+    ;
+    integrationTemplate: IntegrationTemplate;
     id: string;
     name: string;
 };
@@ -86,8 +86,8 @@ export type Integrations = Array < Integration > ;
 
 export interface IntegrationPattern extends BaseEntity {
     icon: string;
-    integrationPatternGroupId: string;
     integrationPatternGroup: IntegrationPatternGroup;
+    integrationPatternGroupId: string;
     properties: string;
     id: string;
     name: string;
@@ -128,9 +128,9 @@ export interface Step extends BaseEntity {
 export type Steps = Array < Step > ;
 
 export interface Tag extends BaseEntity {
-    integrationTemplate: Array < IntegrationTemplate >
-    ;
     connections: Array < Connection >
+    ;
+    integrationTemplate: Array < IntegrationTemplate >
     ;
     id: string;
     name: string;
@@ -138,15 +138,181 @@ export interface Tag extends BaseEntity {
 export type Tags = Array < Tag > ;
 
 export interface User extends BaseEntity {
-    fullName: string;
     username: string;
+    fullName: string;
+    organizationId: string;
     lastName: string;
     firstName: string;
     integrations: Array < Integration >
     ;
     roleId: string;
-    organizationId: string;
     name: string;
     id: string;
 };
 export type Users = Array < User > ;
+
+export interface EventMessage extends BaseEntity {
+    data: {};
+    event: string;
+};
+export type EventMessages = Array < EventMessage > ;
+
+class TypeFactoryClass {
+    createListResult() {
+        return <ListResult > {
+            items: undefined,
+            totalCount: undefined,
+        };
+    };
+
+    createListResultWithId() {
+        return <ListResultWithId > {
+            items: undefined,
+            totalCount: undefined,
+        };
+    };
+
+    createWithId() {
+        return <WithId > {
+            id: undefined,
+        };
+    };
+
+    createConnection() {
+        return <Connection > {
+            icon: undefined,
+            organization: undefined,
+            tags: undefined,
+            position: undefined,
+            description: undefined,
+            connector: undefined,
+            userId: undefined,
+            configuredProperties: undefined,
+            connectorId: undefined,
+            organizationId: undefined,
+            id: undefined,
+            name: undefined,
+        };
+    };
+
+    createConnector() {
+        return <Connector > {
+            icon: undefined,
+            description: undefined,
+            connectorGroup: undefined,
+            connectorGroupId: undefined,
+            properties: undefined,
+            id: undefined,
+            name: undefined,
+        };
+    };
+
+    createConnectorGroup() {
+        return <ConnectorGroup > {
+            id: undefined,
+            name: undefined,
+        };
+    };
+
+    createEnvironment() {
+        return <Environment > {
+            id: undefined,
+            name: undefined,
+        };
+    };
+
+    createIntegration() {
+        return <Integration > {
+            tags: undefined,
+            steps: undefined,
+            integrationTemplateId: undefined,
+            description: undefined,
+            connections: undefined,
+            configuration: undefined,
+            userId: undefined,
+            users: undefined,
+            integrationTemplate: undefined,
+            id: undefined,
+            name: undefined,
+        };
+    };
+
+    createIntegrationPattern() {
+        return <IntegrationPattern > {
+            icon: undefined,
+            integrationPatternGroup: undefined,
+            integrationPatternGroupId: undefined,
+            properties: undefined,
+            id: undefined,
+            name: undefined,
+        };
+    };
+
+    createIntegrationPatternGroup() {
+        return <IntegrationPatternGroup > {
+            id: undefined,
+            name: undefined,
+        };
+    };
+
+    createIntegrationTemplate() {
+        return <IntegrationTemplate > {
+            organization: undefined,
+            configuration: undefined,
+            userId: undefined,
+            organizationId: undefined,
+            id: undefined,
+            name: undefined,
+        };
+    };
+
+    createOrganization() {
+        return <Organization > {
+            users: undefined,
+            environments: undefined,
+            id: undefined,
+            name: undefined,
+        };
+    };
+
+    createStep() {
+        return <Step > {
+            configuredProperties: undefined,
+            integrationPattern: undefined,
+            id: undefined,
+        };
+    };
+
+    createTag() {
+        return <Tag > {
+            connections: undefined,
+            integrationTemplate: undefined,
+            id: undefined,
+            name: undefined,
+        };
+    };
+
+    createUser() {
+        return <User > {
+            username: undefined,
+            fullName: undefined,
+            organizationId: undefined,
+            lastName: undefined,
+            firstName: undefined,
+            integrations: undefined,
+            roleId: undefined,
+            name: undefined,
+            id: undefined,
+        };
+    };
+
+    createEventMessage() {
+        return <EventMessage > {
+            data: undefined,
+            event: undefined,
+        };
+    };
+
+};
+
+export const TypeFactory = new TypeFactoryClass();

@@ -128,6 +128,14 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
     return updated.share();
   }
 
+  updateOrCreate(entity: T): Observable<T> {
+    if (entity.id) {
+      return this.update(entity);
+    } else {
+      return this.create(entity);
+    }
+  }
+
   /*
    deleteEntity(id?: string) {
    if(id) {
