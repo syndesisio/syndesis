@@ -158,7 +158,7 @@ public class EventsITCase extends BaseITCase {
         ws.close(1000, "closing");
     }
 
-    @Ignore("Not yet working.. don't think security is being applied to the /wsevents endpoints.")
+    @Test
     public void wsEventsWithoutToken() throws Exception {
 
         OkHttpClient client = new OkHttpClient();
@@ -169,15 +169,15 @@ public class EventsITCase extends BaseITCase {
         // lets setup an event handler that we can inspect events on..
         WebSocketListener listener = recorder(mock(WebSocketListener.class), WebSocketListener.class);
         List<Recordings.Invocation> invocations = recordedInvocations(listener);
-        CountDownLatch countDownLatch = resetRecorderLatch(listener, 2);
+        CountDownLatch countDownLatch = resetRecorderLatch(listener, 1);
 
         WebSocket ws = client.newWebSocket(request, listener);
 
         // We auto get a message letting us know we connected.
         assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
         assertThat(invocations.get(0).getMethod().getName()).isEqualTo("onFailure");
-        assertThat(invocations.get(0).getArgs()[0].toString())
-            .isEqualTo("com.launchdarkly.eventsource.UnsuccessfulResponseException: Unsuccessful response code received from stream: 404");
+        assertThat(invocations.get(0).getArgs()[1].toString())
+            .isEqualTo("java.net.ProtocolException: Expected HTTP 101 response but was '401 Unauthorized'");
 
         ws.close(1000, "closing");
     }
