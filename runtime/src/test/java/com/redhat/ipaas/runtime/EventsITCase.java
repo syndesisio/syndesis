@@ -179,5 +179,6 @@ public class EventsITCase extends BaseITCase {
         assertThat(invocations.get(0).getArgs()[0].toString())
             .isEqualTo("com.launchdarkly.eventsource.UnsuccessfulResponseException: Unsuccessful response code received from stream: 404");
 
+        ws.close(1000, "closing");
     }
 }

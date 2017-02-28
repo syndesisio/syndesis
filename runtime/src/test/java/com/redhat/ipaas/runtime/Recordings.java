@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2016 Red Hat, Inc.
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,9 +15,6 @@
  */
 package com.redhat.ipaas.runtime;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.WebSocket;
 import org.springframework.cglib.proxy.Enhancer;
 
 import javax.annotation.Nonnull;
@@ -75,7 +72,7 @@ public class Recordings {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-            if (method.getName().equals("__getInvocationHandler__")) {
+            if (method.getName().equals("getInvocationHandler$$$")) {
                 RecordingInvocationHandler rc = this;
                 return rc;
             }
@@ -104,7 +101,8 @@ public class Recordings {
     }
 
     public interface RecordingProxy {
-        public RecordingInvocationHandler __getInvocationHandler__();
+        // Use a weird method name to avoid conflicts with other methods the proxied class might declare.
+        public RecordingInvocationHandler getInvocationHandler$$$();
     }
 
     static public <T> T recorder(Object object, Class<T> as) {
@@ -130,7 +128,7 @@ public class Recordings {
     static public CountDownLatch resetRecorderLatch(Object object, int count) {
         RecordingInvocationHandler ih = null;
         if (object instanceof RecordingProxy) {
-            ih = ((RecordingProxy) object).__getInvocationHandler__();
+            ih = ((RecordingProxy) object).getInvocationHandler$$$();
         } else {
             ih = (RecordingInvocationHandler) Proxy.getInvocationHandler(object);
         }
@@ -142,7 +140,7 @@ public class Recordings {
     static public List<Invocation> recordedInvocations(Object object) {
         RecordingInvocationHandler ih = null;
         if (object instanceof RecordingProxy) {
-            ih = ((RecordingProxy) object).__getInvocationHandler__();
+            ih = ((RecordingProxy) object).getInvocationHandler$$$();
         } else {
             ih = (RecordingInvocationHandler) Proxy.getInvocationHandler(object);
         }
