@@ -5,7 +5,7 @@
     http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
     <extension qualifier="kubernetes">
-      <property name="env.config.url">https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas.yml</property>
+      <property name="env.config.url">https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-single-tenant.yml</property>
     </extension>
 
 </arquillian>
