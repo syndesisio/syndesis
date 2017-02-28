@@ -113,6 +113,7 @@
     <keycloak.version>2.5.1.Final</keycloak.version>
     <kubernetes.client.version>1.4.35</kubernetes.client.version>
     <mockwebserver.version>0.0.4</mockwebserver.version>
+    <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <resteasy-spring-boot-starter.version>2.3.0-RELEASE</resteasy-spring-boot-starter.version>
     <spring-boot.version>1.5.1.RELEASE</spring-boot.version>
     <spring-cloud.version>Camden.SR5</spring-cloud.version>
@@ -292,6 +293,11 @@
         <groupId>org.keycloak</groupId>
         <artifactId>keycloak-spring-security-adapter</artifactId>
         <version>${keycloak.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${postgresql.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
