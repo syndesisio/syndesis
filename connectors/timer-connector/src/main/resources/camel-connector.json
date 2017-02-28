@@ -9,7 +9,7 @@
   "groupId": "com.redhat.ipaas",
   "artifactId": "timer-connector",
   "version": "1.0",
-  "description": "Periodic timer which runs at specified intervals",
+  "description": "Set a timer that fires at intervals that you specify. This can cause some action, such as querying your Salesforce data.",
   "labels" : [ "timer" ],
   "pattern": "From",
   "endpointOptions" : [ "period" ],

@@ -9,7 +9,7 @@
   "groupId": "com.redhat.ipaas",
   "artifactId": "twitter-mention-connector",
   "version": "1.0",
-  "description": "Receive notifications when you are mentioned on Twitter",
+  "description": "Send a notification when a name you specify is mentioned on Twitter.",
   "labels" : [ "twitter" ],
   "pattern": "From",
   "globalOptions": [ "accessToken", "accessTokenSecret", "consumerKey", "consumerSecret" ],
