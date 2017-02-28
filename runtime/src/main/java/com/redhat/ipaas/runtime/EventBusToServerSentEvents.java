@@ -31,16 +31,17 @@ import org.springframework.boot.context.embedded.undertow.UndertowDeploymentInfo
 import org.springframework.stereotype.Component;
 
 /**
- * Connects the the EventBus to an Undertow Sever Side Event handler at the "/api/v1/events/{:subscription}" path.
+ * Connects the the EventBus to an Undertow Sever Side Event handler
+ * at the "/api/v1/events/{:subscription}" path.
  */
 @Component
 public class EventBusToServerSentEvents implements UndertowDeploymentInfoCustomizer {
 
-    private final IPaaSCorsConfiguration cors;
-    private final EventBus bus;
-    private final EventReservationsHandler eventReservationsHandler;
-
-    private String path = "/api/v1/event/streams";
+    public static final String DEFAULT_PATH = "/api/v1/event/streams";
+    protected final IPaaSCorsConfiguration cors;
+    protected final EventBus bus;
+    protected final EventReservationsHandler eventReservationsHandler;
+    protected String path = DEFAULT_PATH;
 
     @Autowired
     public EventBusToServerSentEvents(IPaaSCorsConfiguration cors, EventBus bus, EventReservationsHandler eventReservationsHandler) {
@@ -76,54 +77,58 @@ public class EventBusToServerSentEvents implements UndertowDeploymentInfoCustomi
 
     @Override
     public void customize(DeploymentInfo deploymentInfo) {
-        final ServerSentEventHandler sseHandler = new ServerSentEventHandler(new EventBusHandler()){
-            @Override
-            public void handleRequest(HttpServerExchange exchange) throws Exception {
-                HeaderMap requestHeaders = exchange.getRequestHeaders();
-                String origin = requestHeaders.getFirst(CorsHeaders.ORIGIN);
-                if (cors.getAllowedOrigins().contains("*") || cors.getAllowedOrigins().contains(origin)) {
-                    HeaderMap responseHeaders = exchange.getResponseHeaders();
-                    responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_ORIGIN), origin);
-
-                    String value = requestHeaders.getFirst(CorsHeaders.ACCESS_CONTROL_REQUEST_HEADERS);
-                    if (value != null)
-                        responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_HEADERS), value);
-
-                    value = requestHeaders.getFirst(CorsHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS);
-                    if (value != null)
-                        responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS), value);
-
-                    value = requestHeaders.getFirst(CorsHeaders.ACCESS_CONTROL_REQUEST_METHOD);
-                    if (value != null)
-                        responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_METHODS), value);
-                }
-
-                String uri = exchange.getRequestURI();
-                if( uri.indexOf(path+"/") != 0 ) {
-                    exchange.setStatusCode(404);
-                    return;
-                }
-
-                final String subscriptionId = uri.substring(path.length()+1);
-                if( subscriptionId.isEmpty() ) {
-                    exchange.setStatusCode(404);
-                    return;
-                }
-
-                EventReservationsHandler.Reservation reservation = eventReservationsHandler.existsReservation(subscriptionId);
-                if( reservation==null ) {
-                    exchange.setStatusCode(404);
-                    return;
-                }
-
-                super.handleRequest(exchange);
-            }
-        };
         deploymentInfo.addInitialHandlerChainWrapper(handler -> {
                 return Handlers.path()
                     .addPrefixPath("/", handler)
-                    .addPrefixPath(path, sseHandler);
+                    .addPrefixPath(path, new ServerSentEventHandler(new EventBusHandler()){
+                        @Override
+                        public void handleRequest(HttpServerExchange exchange) throws Exception {
+                            if( reservationCheck(exchange) ) {
+                                super.handleRequest(exchange);
+                            }
+                        }
+                    });
             }
         );
+    }
+
+    protected boolean reservationCheck(HttpServerExchange exchange) {
+        HeaderMap requestHeaders = exchange.getRequestHeaders();
+        String origin = requestHeaders.getFirst(CorsHeaders.ORIGIN);
+        if (cors.getAllowedOrigins().contains("*") || cors.getAllowedOrigins().contains(origin)) {
+            HeaderMap responseHeaders = exchange.getResponseHeaders();
+            responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_ORIGIN), origin);
+
+            String value = requestHeaders.getFirst(CorsHeaders.ACCESS_CONTROL_REQUEST_HEADERS);
+            if (value != null)
+                responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_HEADERS), value);
+
+            value = requestHeaders.getFirst(CorsHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS);
+            if (value != null)
+                responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS), value);
+
+            value = requestHeaders.getFirst(CorsHeaders.ACCESS_CONTROL_REQUEST_METHOD);
+            if (value != null)
+                responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_METHODS), value);
+        }
+
+        String uri = exchange.getRequestURI();
+        if (uri.indexOf(path + "/") != 0) {
+            exchange.setStatusCode(404);
+            return false;
+        }
+
+        final String subscriptionId = uri.substring(path.length() + 1);
+        if (subscriptionId.isEmpty()) {
+            exchange.setStatusCode(404);
+            return false;
+        }
+
+        EventReservationsHandler.Reservation reservation = eventReservationsHandler.existsReservation(subscriptionId);
+        if (reservation == null) {
+            exchange.setStatusCode(404);
+            return false;
+        }
+        return true;
     }
 }

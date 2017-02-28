@@ -19,10 +19,13 @@ import com.redhat.ipaas.rest.v1.V1Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.embedded.undertow.UndertowDeploymentInfoCustomizer;
 import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+
+import java.util.List;
 
 @SpringBootApplication
 @ComponentScan(basePackageClasses = {V1Application.class, Application.class})
@@ -34,9 +37,11 @@ public class Application extends SpringBootServletInitializer {
 
     @Bean
     @Autowired
-    public UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory(SimpleEventBus bus, EventBusToServerSentEvents sseUndertowCustomizer) {
+    public UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory(SimpleEventBus bus, List<UndertowDeploymentInfoCustomizer> customizers) {
         UndertowEmbeddedServletContainerFactory factory = new UndertowEmbeddedServletContainerFactory();
-        factory.addDeploymentInfoCustomizers(sseUndertowCustomizer);
+        for (UndertowDeploymentInfoCustomizer customizer : customizers) {
+            factory.addDeploymentInfoCustomizers(customizer);
+        }
         return factory;
     }
 
