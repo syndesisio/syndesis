@@ -9,7 +9,7 @@ import { Integration, Integrations } from '../../model';
 export class IntegrationService extends RESTService<Integration, Integrations> {
 
   constructor(restangular: Restangular) {
-    super(restangular.service('integrations'));
+    super(restangular.service('integrations'), 'integration');
   }
 
 }

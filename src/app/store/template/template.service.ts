@@ -9,7 +9,7 @@ import { IntegrationTemplate } from '../../model';
 export class TemplateService extends RESTService<IntegrationTemplate, Array<IntegrationTemplate>> {
 
   constructor(restangular: Restangular) {
-    super(restangular.service('integrationtemplates'));
+    super(restangular.service('integrationtemplates'), 'integrationtemplate');
   }
 
 }

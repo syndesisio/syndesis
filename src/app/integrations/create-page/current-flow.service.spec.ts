@@ -7,17 +7,21 @@ import { CurrentFlow, FlowEvent } from './current-flow.service';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationService } from '../../store/integration/integration.service';
 import { Connection, Integration, Step } from '../../model';
+import { EventsService } from '../../store/entity/events.service';
+import { IPaaSCommonModule } from '../../common/common.module';
 
 describe('ConfigService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RestangularModule.forRoot(),
+        IPaaSCommonModule,
       ],
       providers: [
         CurrentFlow,
         IntegrationStore,
         IntegrationService,
+        EventsService,
         MockBackend,
         { provide: RequestOptions, useClass: BaseRequestOptions },
         {

@@ -255,6 +255,10 @@ angular2-toaster@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/angular2-toaster/-/angular2-toaster-2.0.0.tgz#a42764dd4d470dee0e1209d6b0bd585b24e708c0"
 
+angular2-uuid@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/angular2-uuid/-/angular2-uuid-1.1.1.tgz#72f03cd532b7f40032eb1ecfb9f8457384be956e"
+
 ansi-align@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-1.1.0.tgz#2f0c1658829739add5ebb15e6b0c6e3423f016ba"

@@ -8,6 +8,7 @@ import { TruncateWordsPipe } from './truncate-words.pipe';
 import { LoadingComponent } from './loading/loading.component';
 import { UserService } from './user.service';
 import { FormFactoryService } from './forms.service';
+import { ConfigService } from '../config.service';
 
 @NgModule({
   imports: [
@@ -27,6 +28,9 @@ import { FormFactoryService } from './forms.service';
     TruncateWordsPipe,
     LoadingComponent,
   ],
+  providers: [
+    ConfigService,
+  ],
 })
 export class IPaaSCommonModule {
 
@@ -36,6 +40,7 @@ export class IPaaSCommonModule {
       providers: [
         UserService,
         FormFactoryService,
+        ConfigService,
       ],
     };
   }

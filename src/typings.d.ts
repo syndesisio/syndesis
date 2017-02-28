@@ -3,3 +3,28 @@
 
 declare var jQuery: any;
 declare var $: any;
+
+declare interface EventSourceInit {
+  withCredentials?: boolean;
+}
+
+declare class EventSource {
+
+  url: string;
+  withCredentials: boolean;
+  CONNECTING: number;
+  OPEN: number;
+  CLOSED: number;
+  readyState: number;
+
+  onmessage: (event: any) => void;
+
+  close: () => void;
+
+  constructor(url: string, eventSourceInitDict?: EventSourceInit);
+
+  addEventListener(event: string, cb: (event: any) => void);
+
+  removeEventListener(event: string, cb: (event: any) => void);
+
+}

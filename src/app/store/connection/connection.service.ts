@@ -8,7 +8,7 @@ import { Connection, Connections } from '../../model';
 export class ConnectionService extends RESTService<Connection, Connections> {
 
   constructor(restangular: Restangular) {
-    super(restangular.service('connections'));
+    super(restangular.service('connections'), 'connection');
   }
 
 }
