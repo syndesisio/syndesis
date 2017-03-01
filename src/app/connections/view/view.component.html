@@ -1,5 +1,5 @@
 <div class="row row-cards-pf center" *ngIf="connection">
-  <div class="col-xs-4">
+  <div class="col-xs-4" *ngIf="mode !== 'create'">
     <div class="card-pf">
       <div class="card-pf-body">
         <div class="icon">
@@ -31,7 +31,10 @@
           </div>
         </div>
         <div *ngIf="mode === 'edit'">
-          <p>edit></p>
+          <p>Edit</p>
+        </div>
+        <div *ngIf="mode === 'create'">
+          <p>Create</p>
         </div>
       </div>
     </div>

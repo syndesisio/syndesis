@@ -1,0 +1,54 @@
+<div class="connections create">
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <!-- Toolbar: Breadcrumbs -->
+    <div class="row toolbar-pf breadcrumbs">
+      <div class="col-sm-12">
+        <ol class="breadcrumb">
+          <li>
+            <a [routerLink]=" ['/'] ">Home</a>
+          </li>
+          <li>
+            <a [routerLink]=" ['..'] ">Connections</a>
+          </li>
+          <li class="active"><strong>Create Connection</strong></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="wizard-pf-body clearfix">
+      <!-- Wizard Progress Bar-->
+      <div class="wizard-pf-steps">
+        <!-- hidden -->
+        <ul class="wizard-pf-steps-indicator">
+          <li class="wizard-pf-step">
+            <a class="disabled" [routerLink]=" ['connection-basics'] " routerLinkActive="active">
+              <span class="wizard-pf-step-number">1</span>
+              <span class="wizard-pf-step-title">Define Connection Basics</span>
+            </a>
+          </li>
+          <li class="wizard-pf-step">
+            <a class="disabled" [routerLink]=" ['configure-fields'] " routerLinkActive="active">
+              <span class="wizard-pf-step-number">2</span>
+              <span class="wizard-pf-step-title">Select and Configure Fields</span>
+            </a>
+          </li>
+          <li class="wizard-pf-step">
+            <a class="disabled" [routerLink]=" ['review'] " routerLinkActive="active">
+              <span class="wizard-pf-step-number">3</span>
+              <span class="wizard-pf-step-title">Review</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Wizard Content -->
+      <div class="row">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

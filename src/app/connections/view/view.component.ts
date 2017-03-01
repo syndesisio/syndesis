@@ -10,7 +10,7 @@ import { Connection } from '../../model';
 export class ConnectionViewComponent implements OnInit {
 
   @Input() connection: Connection;
-  mode = 'view';
+  @Input() mode = 'view';
 
   constructor() {
 
