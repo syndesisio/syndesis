@@ -67,7 +67,7 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
   });
 
   restangularProvider.addResponseInterceptor((data: any, operation: string) => {
-    if (operation === 'getList' && Array.isArray(data.items)) {
+    if (operation === 'getList' && data && Array.isArray(data.items)) {
       const pagingData = data.items;
       if (!!pagingData.totalCount) {
         pagingData.totalCount = data.totalCount;
@@ -75,6 +75,9 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
         pagingData.totalCount = pagingData.length;
       }
       return pagingData;
+    }
+    if (!data) {
+      return [];
     }
     return data;
   });
