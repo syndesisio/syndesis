@@ -36,6 +36,7 @@ testem.log
 # e2e
 /e2e/*.js
 /e2e/*.map
+/e2e/cucumber-reports
 
 #System Files
 .DS_Store
@@ -45,3 +46,4 @@ Thumbs.db
 /yarn-error.log
 
 src/config.json
+users.json
