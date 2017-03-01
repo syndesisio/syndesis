@@ -19,10 +19,10 @@
             </ul>
           </div>
           <input #filterInput 
-                  (keyup)="filterInputChange(filterInput.value)"
+                  (keyup)="filterInputChange(filterInput?.value)"
                   type="text" 
                   class="form-control"
-                  placeholder="Filter By {{filter.propertyName}}..." autocomplete="off" id="filterInput">
+                  placeholder="Filter By {{filter?.propertyName}}..." autocomplete="off" id="filterInput">
         </div>
       </div>
 

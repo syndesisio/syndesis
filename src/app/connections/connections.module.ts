@@ -15,6 +15,7 @@ import { ConnectionViewPage } from './view-page/view-page.component';
 import { ConnectionViewWrapperComponent } from './view-wrapper/view-wrapper.component';
 import { ConnectionViewToolbarComponent } from './view-toolbar/view-toolbar.component';
 import { ConnectionViewComponent } from './view/view.component';
+import { CurrentConnectionService } from './create-page/current-connection';
 
 @NgModule({
   imports: [
@@ -41,6 +42,9 @@ import { ConnectionViewComponent } from './view/view.component';
     ConnectionsListComponent,
     ConnectionViewToolbarComponent,
     ConnectionViewComponent,
+  ],
+  providers: [
+    CurrentConnectionService,
   ],
 })
 export class ConnectionsModule { }
