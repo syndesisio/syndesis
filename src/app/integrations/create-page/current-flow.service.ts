@@ -152,18 +152,20 @@ export class CurrentFlow {
         integration.steps = newSteps;
         integration.connections = steps;
         */
-        this.store.updateOrCreate(integration).subscribe((i: Integration) => {
+        const sub = this.store.updateOrCreate(integration).subscribe((i: Integration) => {
           log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
           const action = event['action'];
           if (action && typeof action === 'function') {
             action(i);
           }
+          sub.unsubscribe();
         }, (reason: any) => {
           log.debugc(() => 'Error saving integration: ' + JSON.stringify(reason, undefined, 2), category);
           const errorAction = event['error'];
           if (errorAction && typeof errorAction === 'function') {
             errorAction(reason);
           }
+          sub.unsubscribe();
         });
       break;
     }

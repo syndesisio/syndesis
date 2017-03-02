@@ -5,3 +5,9 @@
 .inline-block {
   display: inline-block;
 }
+
+/* use this class to disable an anchor that uses routerLink/routerActiveClass */
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}

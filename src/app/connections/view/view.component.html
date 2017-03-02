@@ -1,22 +1,26 @@
 <div class="row row-cards-pf center" *ngIf="connection">
-  <div class="col-xs-4">
+  <div class="col-xs-4" *ngIf="mode !== 'create'">
     <div class="card-pf">
       <div class="card-pf-body">
         <div class="icon">
           <span class="fa {{connection.icon}}"></span>
         </div>
         <div class="name">
-          <h2 class="card-pf-title">{{connection.name}}</h2>
+          <h2 class="card-pf-title">{{name}}</h2>
         </div>
-        <div class="description">{{connection.description}}</div>
+        <div class="description">{{description}}</div>
+        <div>
+          <span class="badge" *ngFor="let tag of tagsArray">{{tag}}</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="col-xs-8">
+  <div [class]="columnClass()">
     <div class="card-pf">
       <h2 class="card-pf-title">Connection Fields</h2>
       <div class="card-pf-body">
+        <!-- Viewing the connection configuration -->
         <div *ngIf="mode === 'view'">
           <div *ngFor="let field of getFormFields(connection)">
             <dl class="dl-horizontal">
@@ -27,12 +31,46 @@
                 {{ field.value || "&lt;not set&gt;" }}
               </dd>
             </dl>
-
           </div>
         </div>
+        <!-- end Viewing -->
+        <!-- Editing the connection configuration -->
         <div *ngIf="mode === 'edit'">
-          <p>edit></p>
+          <p>Edit</p>
         </div>
+        <!-- end Editing -->
+        <!-- Creating the connection -->
+        <div *ngIf="mode === 'create'">
+          <form class="form-horizontal">
+            <!-- replacing id with data-id to pass build errors -->
+            <div class="form-group required">
+              <label class="col-sm-4 control-label">Connection Name&nbsp;
+                          <span style="color: red">*</span>
+                        </label>
+              <div class="col-sm-8">
+                <input type="text" name="nameInput" data-id="nameInput" placeholder="{{ name }}" [(ngModel)]="name" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-4 control-label">Description&nbsp;
+                          <span style="color: red">*</span>
+                        </label>
+              <div class="col-sm-8">
+                <textarea data-id="descriptionInput" name="descriptionInput" class="form-control" [(ngModel)]="description" rows="2"></textarea>
+              </div>
+            </div>
+            <div class="form-group required">
+              <label class="col-sm-4 control-label">Tag(s)</label>
+              <div class="col-sm-8">
+                <input type="text" name="tagsInput" data-id="tagsInput" [(ngModel)]="tags" class="form-control">
+              </div>
+            </div>
+          </form>
+            <ipaas-connections-list-toolbar [(filter)]="filter" [(sort)]="sort" [showCreate]="false"></ipaas-connections-list-toolbar>
+            <ipaas-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async"
+              (onSelected)="onSelected($event)"></ipaas-connections-list>
+        </div>
+        <!-- end Creating -->
       </div>
     </div>
   </div>

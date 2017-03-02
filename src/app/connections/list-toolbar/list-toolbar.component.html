@@ -18,11 +18,11 @@
               -->
             </ul>
           </div>
-          <input #filterInput 
-                  (keyup)="filterInputChange(filterInput.value)"
-                  type="text" 
+          <input #filterInput
+                  (keyup)="filterInputChange(filterInput?.value)"
+                  type="text"
                   class="form-control"
-                  placeholder="Filter By {{filter.propertyName}}..." autocomplete="off" id="filterInput">
+                  placeholder="Filter By {{filter?.propertyName}}..." autocomplete="off" id="filterInput">
         </div>
       </div>
 
@@ -45,10 +45,8 @@
           </button>
       </div>
       <div class="toolbar-pf-action-right">
-        <!--
-        <button type="button" class="btn btn-primary dropdown-toggle" [routerLink]="['create']">Create
+        <button *ngIf="showCreate" type="button" class="btn btn-primary" [routerLink]="['create']">Create
           </button>
-          -->
       </div>
     </div>
   </div>

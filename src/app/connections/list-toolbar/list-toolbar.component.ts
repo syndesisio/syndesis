@@ -26,6 +26,9 @@ export class ConnectionsListToolbarComponent {
   @Output()
   sortChange = new EventEmitter<ObjectPropertySortConfig>();
 
+  @Input()
+  showCreate = true;
+
   constructor() { }
 
   setPropertyName(propertyName: string) {
