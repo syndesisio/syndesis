@@ -6,6 +6,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MockBackend } from '@angular/http/testing';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
+import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ng2-restangular';
@@ -29,6 +32,9 @@ describe('ConnectionViewPage', () => {
         imports: [
           CommonModule,
           FormsModule,
+          ReactiveFormsModule,
+          DynamicFormsCoreModule.forRoot(),
+          DynamicFormsBootstrapUIModule,
           IPaaSCommonModule,
           StoreModule,
           RouterTestingModule.withRoutes([]),

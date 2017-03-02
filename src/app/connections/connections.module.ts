@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
+import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 
 import { IPaaSCommonModule } from '../common/common.module';
 import { ConnectionsCreatePage } from './create-page/create-page.component';
@@ -21,6 +24,9 @@ import { CurrentConnectionService } from './create-page/current-connection';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
+    DynamicFormsCoreModule,
+    DynamicFormsBootstrapUIModule,
     RouterModule,
     IPaaSCommonModule,
   ],

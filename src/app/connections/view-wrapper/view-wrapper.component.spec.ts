@@ -8,6 +8,9 @@ import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ng2-restangular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
+import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 
 import { ConnectionViewWrapperComponent } from './view-wrapper.component';
 import { ConnectionViewToolbarComponent } from '../view-toolbar/view-toolbar.component';
@@ -27,6 +30,9 @@ describe('ConnectionViewWrapperComponent', () => {
         imports: [
           CommonModule,
           FormsModule,
+          ReactiveFormsModule,
+          DynamicFormsCoreModule.forRoot(),
+          DynamicFormsBootstrapUIModule,
           IPaaSCommonModule,
           StoreModule,
           RouterTestingModule.withRoutes([]),
