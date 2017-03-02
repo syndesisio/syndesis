@@ -4,15 +4,20 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockBackend } from '@angular/http/testing';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ng2-restangular';
 
 import { ConnectionViewPage } from './view-page.component';
 import { ConnectionViewWrapperComponent } from '../view-wrapper/view-wrapper.component';
 import { ConnectionViewToolbarComponent } from '../view-toolbar/view-toolbar.component';
+import { ConnectionsListComponent } from '../list/list.component';
+import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
 import { ConnectionViewComponent } from '../view/view.component';
 import { StoreModule } from '../../store/store.module';
-import {IPaaSCommonModule} from '../../common/common.module';
+import { IPaaSCommonModule } from '../../common/common.module';
 
 describe('ConnectionViewPage', () => {
   let component: ConnectionViewPage;
@@ -22,6 +27,8 @@ describe('ConnectionViewPage', () => {
     TestBed
       .configureTestingModule({
         imports: [
+          CommonModule,
+          FormsModule,
           IPaaSCommonModule,
           StoreModule,
           RouterTestingModule.withRoutes([]),
@@ -32,6 +39,8 @@ describe('ConnectionViewPage', () => {
           ConnectionViewWrapperComponent,
           ConnectionViewToolbarComponent,
           ConnectionViewComponent,
+          ConnectionsListComponent,
+          ConnectionsListToolbarComponent,
         ],
         providers: [
           MockBackend,
