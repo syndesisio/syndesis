@@ -383,14 +383,6 @@
       <artifactId>keycloak-spring-security-adapter</artifactId>
     </dependency>
 
-    <!-- we got some wonky okhttp deps going on.. WebSocket client
-         was failing to load properly uless the following 3 deps were put
-         in this order -->
-    <dependency>
-      <groupId>com.squareup.okhttp3</groupId>
-      <artifactId>okhttp</artifactId>
-      <version>3.6.0</version>
-    </dependency>
     <dependency>
       <groupId>postgresql</groupId>
       <artifactId>postgresql</artifactId>
