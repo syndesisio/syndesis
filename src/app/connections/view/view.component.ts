@@ -79,7 +79,15 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   }
 
   onSelected(connector: Connector) {
-    this.connection.connector = connector;
+    // TODO maybe a helper function for this...
+    const plain = connector['plain'];
+    if (plain && typeof plain === 'function') {
+      this.connection.connector = plain();
+    } else {
+      this.connection.connector = connector;
+    }
+    this.connection.icon = connector.icon;
+    this.connection.connectorId = connector.id;
     this.connectionChange.emit(this.connection);
   }
 
