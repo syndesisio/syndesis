@@ -24,40 +24,39 @@ export class EventsService {
   changeEvents: Subject<ChangeEvent> = new Subject<ChangeEvent>();
 
   constructor(config: ConfigService, restangular: Restangular) {
-    // If we have trouble setting up the EventSource
-    if (!this.connectEventSource( restangular, config.getSettings().apiEndpoint )) {
-      // , fallback to using a WebSocket
-      let wsurl = config.getSettings().apiEndpoint;
-      // I know hacky!  need to figure out how to put the wsevents resource under the apiEndpoint
-      wsurl = wsurl.replace( /^http/, 'ws' ).replace( /\/api\/v\d+$/, '/wsevents' );
-      this.connectWebSocket( wsurl );
-    }
+    // Setup an event stream reservation first..
+    restangular.all('event/reservations').customPOST().subscribe( response => {
+      let apiEndpoint = config.getSettings().apiEndpoint;
+      const reservation = response.data;
+      try {
+        // First try to connect via an EventSource (not supported on IE)
+        this.connectEventSource(  apiEndpoint + '/event/streams/' + reservation );
+      } catch ( error ) {
+        // Then fallback to using WebSockets
+        apiEndpoint = apiEndpoint.replace( /^http/, 'ws' );
+        this.connectWebSocket( apiEndpoint + '/event/streams.ws/' + reservation  );
+      }
+    });
   }
 
-  private connectEventSource(restangular: Restangular, url: string): boolean {
-    if (typeof(EventSource) !== 'undefined') {
-      return false;
-    }
-    restangular.all('event/reservations').customPOST().subscribe( registration => {
-      const eventSource = new EventSource( url + '/event/streams/' + registration.data );
+  private connectEventSource(url: string) {
+    const eventSource = new EventSource( url);
 
 
-      eventSource.addEventListener( 'message', (event) => {
-        //console.log('sse.message', event.data)
-        this.messageEvents.next( event.data );
-      } );
-      eventSource.addEventListener( 'change-event', (event) => {
-        const value = JSON.parse( event.data ) as ChangeEvent;
-        //console.log('sse.change-event', value)
-        this.changeEvents.next( value );
-      } );
-      eventSource.addEventListener( 'close', (event) => {
-        //console.log('sse.close', event)
-        // TODO: reconnect?
-      } );
-      this.eventSource = eventSource;
-    });
-    return true;
+    eventSource.addEventListener( 'message', (event) => {
+      //console.log('sse.message', event.data)
+      this.messageEvents.next( event.data );
+    } );
+    eventSource.addEventListener( 'change-event', (event) => {
+      const value = JSON.parse( event.data ) as ChangeEvent;
+      //console.log('sse.change-event', value)
+      this.changeEvents.next( value );
+    } );
+    eventSource.addEventListener( 'close', (event) => {
+      //console.log('sse.close', event)
+      // TODO: reconnect?
+    } );
+    this.eventSource = eventSource;
   }
 
   private connectWebSocket(url) {
@@ -78,7 +77,6 @@ export class EventsService {
         //console.log('ws.onmessage', event)
       }
     };
-
     ws.onclose = (event) => {
       //console.log('ws.onclose', event)
       // TODO: reconnect?
