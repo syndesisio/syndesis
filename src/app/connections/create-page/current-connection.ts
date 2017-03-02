@@ -51,7 +51,7 @@ export class CurrentConnectionService {
 
   saveConnection(event: ConnectionEvent) {
     // poor man's clone
-    const connection =JSON.parse(JSON.stringify(event['connection'] || this.connection));
+    const connection = JSON.parse(JSON.stringify(event['connection'] || this.connection));
     const sub = this.store.updateOrCreate(connection).subscribe((c: Connection) => {
       log.debugc(() => 'Saved connection: ' + JSON.stringify(c, undefined, 2), category);
       const action = event['action'];
