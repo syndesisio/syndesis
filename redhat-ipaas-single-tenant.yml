@@ -53,6 +53,16 @@ parameters:
   description: PEM to keystore init container image
   value: jimmidyson/pemtokeystore:v0.2.0
   required: true
+- name: GITHUB_OAUTH_CLIENT_ID
+  description: GitHub OAuth client ID
+  required: true
+- name: GITHUB_OAUTH_CLIENT_SECRET
+  description: GitHub OAuth client secret
+  required: true
+- name: GITHUB_OAUTH_DEFAULT_SCOPES
+  description: GitHub OAuth default scopes
+  value: "user:email public_repo"
+  required: true
 message: |-
   Red Hat iPaaS is deployed to ${ROUTE_HOSTNAME}.
 
@@ -84,10 +94,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/jimmidyson/keycloak-openshift:2.5.1.Final
+        name: docker.io/jimmidyson/keycloak-openshift:2.5.4.Final
       importPolicy:
         scheduled: true
-      name: 2.5.1.Final
+      name: 2.5.4.Final
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -254,8 +264,7 @@ objects:
           - name: ipaas-keycloak-tls
             mountPath: /tls-keystore
         containers:
-        - name: ipaas-keycloak
-          args:
+        - args:
           - -b
           - 0.0.0.0
           - -Dkeycloak.import=/opt/jboss/keycloak/standalone/configuration/ipaas-realm.json
@@ -273,6 +282,7 @@ objects:
                 key: password
                 name: ipaas-keycloak-admin
           image: ' '
+          name: ipaas-keycloak
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
@@ -308,7 +318,7 @@ objects:
         - ipaas-keycloak
         from:
           kind: ImageStreamTag
-          name: ipaas-keycloak:2.5.1.Final
+          name: ipaas-keycloak:2.5.4.Final
       type: ImageChange
     - type: ConfigChange
 - apiVersion: v1
@@ -1144,6 +1154,22 @@ objects:
             "defaultScope": "${OPENSHIFT_OAUTH_DEFAULT_SCOPES}",
             "useJwksUrl": "true"
           }
+        }, {
+          "alias": "github",
+          "providerId": "github",
+          "enabled": true,
+          "updateProfileFirstLoginMode": "on",
+          "trustEmail": true,
+          "storeToken": true,
+          "addReadTokenRoleOnCreate": true,
+          "authenticateByDefault": true,
+          "firstBrokerLoginFlowAlias": "auto link idp flow",
+          "config": {
+            "clientSecret": "${GITHUB_OAUTH_CLIENT_SECRET}",
+            "clientId": "${GITHUB_OAUTH_CLIENT_ID}",
+            "defaultScope": "${GITHUB_OAUTH_DEFAULT_SCOPES}",
+            "useJwksUrl": "true"
+          }
         }],
         "requiredCredentials": [ "password" ],
         "passwordPolicy": "hashIterations(20000)",
@@ -1153,6 +1179,19 @@ objects:
         "otpPolicyDigits": 6,
         "otpPolicyLookAheadWindow": 1,
         "otpPolicyPeriod": 30,
+        "clientScopeMappings": {
+          "realm-management": [{
+            "client": "admin-cli",
+            "roles": ["realm-admin"]
+          }, {
+            "client": "security-admin-console",
+            "roles": ["realm-admin"]
+          } ],
+          "broker": [{
+            "client": "ipaas-ui",
+            "roles": ["read-token"]
+          }]
+        },
         "clients": [{
           "clientId": "ipaas-rest",
           "surrogateAuthRequired": false,
@@ -1222,13 +1261,13 @@ objects:
           "builtIn": true,
           "authenticationExecutions": [{
             "authenticator": "idp-confirm-link",
-            "requirement": "REQUIRED",
+            "requirement": "DISABLED",
             "priority": 10,
             "userSetupAllowed": false,
             "autheticatorFlow": false
           }, {
             "authenticator": "idp-email-verification",
-            "requirement": "ALTERNATIVE",
+            "requirement": "DISABLED",
             "priority": 20,
             "userSetupAllowed": false,
             "autheticatorFlow": false
@@ -1468,6 +1507,25 @@ objects:
             "priority": 10,
             "userSetupAllowed": false,
             "autheticatorFlow": false
+          }]
+        }, {
+          "alias" : "auto link idp flow",
+          "description" : "",
+          "providerId" : "basic-flow",
+          "topLevel" : true,
+          "builtIn" : false,
+          "authenticationExecutions" : [{
+            "authenticator": "auth-cookie",
+            "requirement": "ALTERNATIVE",
+            "priority": 1,
+            "userSetupAllowed": false,
+            "autheticatorFlow": false
+          }, {
+            "authenticator" : "autolink-idp-login-authenticator",
+            "requirement" : "REQUIRED",
+            "priority" : 2,
+            "userSetupAllowed" : false,
+            "autheticatorFlow" : false
           }]
         }],
         "authenticatorConfig": [{
