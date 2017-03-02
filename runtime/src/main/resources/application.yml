@@ -47,6 +47,9 @@ security:
 
 management:
   port: 8181
+  health:
+    db:
+      enabled: false
   security:
     enabled: true
 
