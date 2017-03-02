@@ -390,7 +390,6 @@
       <groupId>com.squareup.okhttp3</groupId>
       <artifactId>okhttp</artifactId>
       <version>3.6.0</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>postgresql</groupId>
@@ -399,11 +398,6 @@
     <dependency>
       <groupId>com.launchdarkly</groupId>
       <artifactId>okhttp-eventsource</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.squareup.okhttp3</groupId>
-      <artifactId>okhttp-ws</artifactId>
       <scope>test</scope>
     </dependency>
 
