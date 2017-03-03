@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService } from '@ng2-dynamic-forms/core';
+import { DynamicFormControlModel, DynamicFormService, DynamicInputModel } from '@ng2-dynamic-forms/core';
 
 import { FormFactoryService } from '../../common/forms.service';
 import { ConnectorStore } from '../../store/connector/connector.store';
@@ -35,6 +36,8 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   };
   _formModel: DynamicFormControlModel[];
   _formGroup: FormGroup;
+  formChangesSubscription: Subscription;
+  configuredProperties: any;
 
   constructor(
     private store: ConnectorStore,
@@ -117,10 +120,13 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
 
   getConfigString(connection: Connection) {
     // TODO this will need adjusting once this is an object
-    if (this.connection.connector) {
+    if (this.connection.configuredProperties) {
+      return this.connection.configuredProperties;
+    } else if (this.connection.connector.properties) {
       return this.connection.connector.properties;
     } else {
-      return this.connection.configuredProperties;
+      // um...
+      return '{}';
     }
   }
 
@@ -134,7 +140,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     const configString = this.getConfigString(this.connection);
     if (configString) {
       try {
-        const formConfig = JSON.parse(configString);
+        const formConfig = this.configuredProperties = JSON.parse(configString);
         log.debugc(() => 'Form config: ' + JSON.stringify(formConfig, undefined, 2), category);
         this._formModel = this.formFactory.createFormModel(formConfig);
         return this._formModel;
@@ -152,6 +158,19 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     const formModel = this.formModel;
     if (formModel) {
       this._formGroup = this.formService.createFormGroup(formModel);
+      this.formChangesSubscription = this._formGroup.valueChanges.subscribe((data) => {
+        for (const key in data) {
+          if (!data.hasOwnProperty(key)) {
+            continue;
+          }
+          const value: any = data[key];
+          const prop = this.configuredProperties[key];
+          prop.value = value;
+        }
+        const propString = JSON.stringify(this.configuredProperties);
+        this.connection.configuredProperties = propString;
+        this.connectionChange.emit(this.connection);
+      });
       return this._formGroup;
     } else {
       return undefined;
@@ -178,7 +197,9 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-
+    if (this.formChangesSubscription) {
+      this.formChangesSubscription.unsubscribe();
+    }
   }
 
 }

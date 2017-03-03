@@ -28,6 +28,7 @@ export class FormFactoryService {
             label: value.title || value.displayName || value.name || key,
             hint: value.description,
             inputType: type,
+            value: value.value || value.defaultValue,
           });
           break;
         default:
