@@ -1,10 +1,16 @@
 import { Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { FormGroup } from '@angular/forms';
+import { DynamicFormControlModel, DynamicFormService } from '@ng2-dynamic-forms/core';
 
+import { FormFactoryService } from '../../common/forms.service';
 import { ConnectorStore } from '../../store/connector/connector.store';
 import { Connection, Connectors, Connector, Tag, TypeFactory } from '../../model';
 import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
+import { log, getCategory } from '../../logging';
+
+const category = getCategory('Connections');
 
 @Component({
   selector: 'ipaas-connection-view',
@@ -16,6 +22,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   @Input() connection: Connection = TypeFactory.createConnection();
   @Output() connectionChange = new EventEmitter<Connection>();
   @Input() mode = 'view';
+  @Input() showName = true;
   connectors: Observable<Connectors>;
   loading: Observable<boolean>;
   filter: ObjectPropertyFilterConfig = {
@@ -26,9 +33,13 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     sortField: 'name',
     descending: false,
   };
+  _formModel: DynamicFormControlModel[];
+  _formGroup: FormGroup;
 
   constructor(
     private store: ConnectorStore,
+    private formFactory: FormFactoryService,
+    private formService: DynamicFormService,
   ) {
     this.loading = store.loading;
     this.connectors = store.list;
@@ -67,15 +78,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   }
 
   columnClass(): string {
-    switch (this.mode) {
-      case 'view':
-      case 'edit':
-        return 'col-xs-8';
-      case 'create':
-        return 'col-md-12';
-      default:
-        return 'col-xs-8';
-    }
+    return this.showName ? 'col-xs-8' : 'col-md-12';
   }
 
   onSelected(connector: Connector) {
@@ -95,7 +98,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     const answer = [];
     let formFields = undefined;
     try {
-      formFields = JSON.parse(connection.configuredProperties);
+      formFields = JSON.parse(this.getConfigString(this.connection));
     } catch (err) {
       // silently fail
     }
@@ -112,10 +115,63 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     return answer;
   }
 
+  getConfigString(connection: Connection) {
+    // TODO this will need adjusting once this is an object
+    if (this.connection.connector) {
+      return this.connection.connector.properties;
+    } else {
+      return this.connection.configuredProperties;
+    }
+  }
+
+  get formModel() {
+    if (this._formModel) {
+      return this._formModel;
+    }
+    if (!this.connection) {
+      return undefined;
+    }
+    const configString = this.getConfigString(this.connection);
+    if (configString) {
+      try {
+        const formConfig = JSON.parse(configString);
+        log.debugc(() => 'Form config: ' + JSON.stringify(formConfig, undefined, 2), category);
+        this._formModel = this.formFactory.createFormModel(formConfig);
+        return this._formModel;
+      } catch (err) {
+        log.debugc(() => 'Error parsing form config', category);
+      }
+    }
+    return undefined;
+  }
+
+  get formGroup() {
+    if (this._formGroup) {
+      return this._formGroup;
+    }
+    const formModel = this.formModel;
+    if (formModel) {
+      this._formGroup = this.formService.createFormGroup(formModel);
+      return this._formGroup;
+    } else {
+      return undefined;
+    }
+  }
+
+  set formModel(formModel: DynamicFormControlModel[]) {
+    this._formModel = formModel;
+  }
+
+  set formGroup(formGroup: FormGroup) {
+    this._formGroup = formGroup;
+  }
+
   ngOnInit() {
     switch (this.mode) {
       case 'create':
         this.store.loadAll();
+      break;
+      case 'edit':
       break;
     }
 

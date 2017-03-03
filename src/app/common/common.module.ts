@@ -30,6 +30,7 @@ import { ConfigService } from '../config.service';
   ],
   providers: [
     ConfigService,
+    FormFactoryService,
   ],
 })
 export class IPaaSCommonModule {
