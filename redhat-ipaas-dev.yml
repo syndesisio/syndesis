@@ -489,6 +489,8 @@ objects:
     labels:
       app: redhat-ipaas
       component: ipaas-ui
+    annotations:
+      service.alpha.openshift.io/serving-cert-secret-name: ipaas-ui-tls
     name: ipaas-ui
   spec:
     ports:
@@ -504,6 +506,8 @@ objects:
     labels:
       app: redhat-ipaas
       component: ipaas-keycloak
+    annotations:
+      service.alpha.openshift.io/serving-cert-secret-name: ipaas-keycloak-tls
     name: ipaas-keycloak
   spec:
     ports:
@@ -519,6 +523,8 @@ objects:
     labels:
       app: redhat-ipaas
       component: ipaas-rest
+    annotations:
+      service.alpha.openshift.io/serving-cert-secret-name: ipaas-rest-tls
     name: ipaas-rest
   spec:
     ports:
