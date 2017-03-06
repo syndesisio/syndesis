@@ -117,7 +117,7 @@ public class DataManager implements DataAccessObjectRegistry {
             }
         } catch (Exception e) {
             LOGGER.warn("Cannot load entity from file: " + e);
-            IPaasServerException.launderThrowable(e);
+            throw IPaasServerException.launderThrowable(e);
         }
     }
 
