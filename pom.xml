@@ -173,6 +173,15 @@
           <groupId>io.fabric8</groupId>
           <artifactId>fabric8-maven-plugin</artifactId>
           <version>${fabric8.maven.plugin.version}</version>
+          <configuration>
+            <generator>
+               <config>
+                 <spring-boot>
+                   <mainClass>io.fabric8.funktion.runtime.Main</mainClass>
+                 </spring-boot>
+               </config>
+            </generator>
+          </configuration>
           <executions>
             <execution>
               <goals>
@@ -192,6 +201,7 @@
                       <layout>ZIP</layout>
             -->
           </configuration>
+<!--
           <executions>
             <execution>
               <goals>
@@ -199,6 +209,7 @@
               </goals>
             </execution>
           </executions>
+-->
         </plugin>
       </plugins>
     </pluginManagement>
