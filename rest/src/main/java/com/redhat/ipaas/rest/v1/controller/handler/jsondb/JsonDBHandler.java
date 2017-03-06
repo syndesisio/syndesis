@@ -31,7 +31,7 @@ import javax.ws.rs.Path;
 @Configuration
 @ConditionalOnProperty(value = "endpoints.jsondb.enabled")
 public class JsonDBHandler extends JsonDBResource {
-    public JsonDBHandler(@Autowired JsonDB rtdb) {
-        super(rtdb);
+    public JsonDBHandler(@Autowired JsonDB jsondb) {
+        super(jsondb);
     }
 }

@@ -40,13 +40,13 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  * This API aims to be very similar Firebase REST API:
  * https://firebase.google.com/docs/database/rest/start
  */
-@Path("/rtdb")
+@Path("/jsondb")
 public class JsonDBResource {
     public static final String APPLICATION_JAVASCRIPT = "application/javascript";
-    private final JsonDB rtdb;
+    private final JsonDB jsondb;
 
-    public JsonDBResource(JsonDB rtdb) {
-        this.rtdb = rtdb;
+    public JsonDBResource(JsonDB jsondb) {
+        this.jsondb = jsondb;
     }
 
     @Produces({APPLICATION_JSON, APPLICATION_JAVASCRIPT})
@@ -62,7 +62,7 @@ public class JsonDBResource {
         if ("pretty".equals(print)) {
             optionsBuilder.prettyPrint(true);
         } else if ("silent".equals(print)) {
-            if( rtdb.exists(path) ) {
+            if( jsondb.exists(path) ) {
                 return Response.noContent().build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -78,7 +78,7 @@ public class JsonDBResource {
             optionsBuilder.callback(callback);
         }
 
-        Consumer<OutputStream> stream = rtdb.getAsStreamingOutput(path, optionsBuilder.build());
+        Consumer<OutputStream> stream = jsondb.getAsStreamingOutput(path, optionsBuilder.build());
         if( stream == null ) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -91,7 +91,7 @@ public class JsonDBResource {
     @Consumes(APPLICATION_JSON)
     @PUT
     public void set(@PathParam("path") String path, InputStream body) throws IOException {
-        rtdb.set(path, body);
+        jsondb.set(path, body);
     }
 
     @Path("/{path: .*}.json")
@@ -100,7 +100,7 @@ public class JsonDBResource {
     @POST
     public HashMap<String, String> push(@PathParam("path") String path, InputStream body) throws IOException {
         HashMap<String, String> result = new HashMap<>();
-        result.put("name", rtdb.push(path, body));
+        result.put("name", jsondb.push(path, body));
         return result;
     }
 
@@ -110,7 +110,7 @@ public class JsonDBResource {
     @DELETE
     public Response delete(@PathParam("path") String path) throws IOException {
         Response.Status status;
-        if( rtdb.delete(path) ) {
+        if( jsondb.delete(path) ) {
             status = Response.Status.NO_CONTENT;
         } else {
             status = Response.Status.NOT_FOUND;

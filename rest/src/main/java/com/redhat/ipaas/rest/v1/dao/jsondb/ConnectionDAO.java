@@ -28,8 +28,8 @@ import org.springframework.stereotype.Service;
 public class ConnectionDAO extends JsonDBDAO<Connection> {
 
     @Autowired
-    public ConnectionDAO(JsonDB rtdb) {
-        super(rtdb);
+    public ConnectionDAO(JsonDB jsondb) {
+        super(jsondb);
     }
 
     @Override

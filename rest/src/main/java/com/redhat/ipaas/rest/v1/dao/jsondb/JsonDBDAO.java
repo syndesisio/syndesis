@@ -34,10 +34,10 @@ import java.util.LinkedHashMap;
  */
 abstract public class JsonDBDAO<T extends WithId> implements DataAccessObject<T> {
 
-    private final JsonDB rtdb;
+    private final JsonDB jsondb;
 
-    public JsonDBDAO(JsonDB rtdb) {
-        this.rtdb = rtdb;
+    public JsonDBDAO(JsonDB jsondb) {
+        this.jsondb = jsondb;
     }
 
     abstract public String getCollectionPath();
@@ -46,7 +46,7 @@ abstract public class JsonDBDAO<T extends WithId> implements DataAccessObject<T>
     public T fetch(String id) {
         try {
             String dbPath = getCollectionPath()+"/:"+id;
-            byte[] json = rtdb.getAsByteArray(dbPath);
+            byte[] json = jsondb.getAsByteArray(dbPath);
             if( json==null || json.length == 0 ) {
                 return null;
             }
@@ -60,7 +60,7 @@ abstract public class JsonDBDAO<T extends WithId> implements DataAccessObject<T>
     public ListResult<T> fetchAll() {
         try {
             // get the data out..
-            byte[] json = rtdb.getAsByteArray(getCollectionPath());
+            byte[] json = jsondb.getAsByteArray(getCollectionPath());
             if( json!=null && json.length > 0 ) {
 
                 // Lets use jackson to parse the map of keys to our model instances
@@ -85,12 +85,12 @@ abstract public class JsonDBDAO<T extends WithId> implements DataAccessObject<T>
             String dbPath = getCollectionPath()+"/:"+entity.getId().get();
 
             // Only create if it did not exist.
-            if( rtdb.exists(dbPath) ) {
+            if( jsondb.exists(dbPath) ) {
                 return null;
             }
 
             byte[] json = Json.mapper().writeValueAsBytes(entity);
-            rtdb.set(dbPath, json);
+            jsondb.set(dbPath, json);
 
             return entity;
 
@@ -108,7 +108,7 @@ abstract public class JsonDBDAO<T extends WithId> implements DataAccessObject<T>
             if( previousValue !=null ) {
                 String dbPath = getCollectionPath()+"/:"+entity.getId().get();
                 byte[] json = Json.mapper().writeValueAsBytes(entity);
-                rtdb.set(dbPath, json);
+                jsondb.set(dbPath, json);
             }
             return previousValue;
 
@@ -129,7 +129,7 @@ abstract public class JsonDBDAO<T extends WithId> implements DataAccessObject<T>
                 throw new IllegalArgumentException("id not set");
             }
             String dbPath = getCollectionPath()+"/:"+id;
-            return rtdb.delete(dbPath);
+            return jsondb.delete(dbPath);
         } catch (RuntimeException e) {
             throw IPaasServerException.launderThrowable(e);
         }
