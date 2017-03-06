@@ -15,7 +15,7 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.redhat.ipaas.rest.EventBus;
+import com.redhat.ipaas.jsondb.impl.EventBus;
 import com.redhat.ipaas.rest.v1.controller.handler.events.EventReservationsHandler;
 import io.undertow.Handlers;
 import io.undertow.server.HttpServerExchange;

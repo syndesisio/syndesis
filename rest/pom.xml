@@ -30,6 +30,12 @@
   <name>iPaaS REST :: REST</name>
 
   <dependencies>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>jsondb</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>

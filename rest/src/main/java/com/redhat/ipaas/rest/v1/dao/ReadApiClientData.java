@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.rest.v1.dao.ModelData;
+import com.redhat.ipaas.rest.v1.util.Json;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -56,8 +57,7 @@ public class ReadApiClientData {
 
 		//InputStream is = this.getClass().getClassLoader().getResourceAsStream(fileName);
 		if (is==null) throw new FileNotFoundException("Cannot find file " + fileName + " on classpath");
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(is, new TypeReference<List<ModelData>>(){});
+		return Json.mapper().readValue(is, new TypeReference<List<ModelData>>(){});
 	}
 
 }

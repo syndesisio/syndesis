@@ -13,28 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.rest.v1.dao;
+package com.redhat.ipaas.rest.v1.dao.jsondb;
 
+import com.redhat.ipaas.jsondb.JsonDB;
+import com.redhat.ipaas.rest.v1.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-
-@Component
-public class DefaultDataAccessObjectProvider implements DataAccessObjectProvider {
-
-    private final IntegrationDAO integrationDAO;
-
-    private final IntegrationPatternDAO integrationPatternDAO;
+@Service
+@Configuration
+@ConditionalOnProperty(value = "dao.kind", havingValue = "jsondb")
+public class UserDAO extends JsonDBDAO<User> {
 
     @Autowired
-    public DefaultDataAccessObjectProvider(IntegrationDAO integrationDAO, IntegrationPatternDAO integrationPatternDAO) {
-        this.integrationDAO = integrationDAO;
-        this.integrationPatternDAO = integrationPatternDAO;
+    public UserDAO(JsonDB rtdb) {
+        super(rtdb);
     }
 
-    public List<DataAccessObject> getDataAccessObjects() {
-        return Arrays.asList(integrationDAO, integrationPatternDAO);
+    @Override
+    public Class<User> getType() {
+        return User.class;
     }
+
+    @Override
+    public String getCollectionPath() {
+        return "/users";
+    }
+
 }

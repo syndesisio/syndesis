@@ -103,6 +103,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <assertj-core.version>3.6.2</assertj-core.version>
+    <jdbi.version>2.78</jdbi.version>
     <funktion.version>1.1.44</funktion.version>
     <hibernate.validator.version>5.3.4.Final</hibernate.validator.version>
     <immutables.version>2.4.0</immutables.version>
@@ -148,6 +149,7 @@
   </properties>
 
   <modules>
+    <module>jsondb</module>
     <module>rest</module>
     <module>runtime</module>
   </modules>
@@ -194,6 +196,11 @@
 
 
       <!-- Internal Dependencies -->
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>jsondb</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
         <artifactId>rest</artifactId>
@@ -295,10 +302,21 @@
         <version>${keycloak.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-common</artifactId>
+        <version>${keycloak.version}</version>
+      </dependency>
+      <dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>${postgresql.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.jdbi</groupId>
+        <artifactId>jdbi</artifactId>
+        <version>${jdbi.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

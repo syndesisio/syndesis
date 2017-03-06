@@ -18,6 +18,7 @@ package com.redhat.ipaas.rest.v1.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -44,5 +45,10 @@ public interface ListResult<T> {
 
     class Builder<T> extends ImmutableListResult.Builder<T> {
     }
+
+    static <T> ListResult<T> of(Collection<T> items) {
+        return new Builder().items(items).totalCount(items.size()).build();
+    }
+
 
 }

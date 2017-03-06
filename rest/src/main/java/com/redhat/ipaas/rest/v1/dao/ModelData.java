@@ -17,12 +17,13 @@ package com.redhat.ipaas.rest.v1.dao;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.redhat.ipaas.rest.v1.model.ToJson;
 
 /**
  * Used to read the deployment.json file from the client GUI project
  *
  */
-public class ModelData {
+public class ModelData implements ToJson {
 
 	private String kind;
 	private Object data;
