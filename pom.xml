@@ -20,11 +20,11 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
+  <!--parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>9</version>
-  </parent>
+  </parent-->
 
   <groupId>com.redhat.ipaas</groupId>
   <artifactId>ipaas-connectors-project</artifactId>
@@ -292,7 +292,7 @@
       <id>release</id>
       <build>
         <plugins>
-          <plugin>
+          <!--plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
             <executions>
@@ -304,7 +304,7 @@
                 </goals>
               </execution>
             </executions>
-          </plugin>
+          </plugin-->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
