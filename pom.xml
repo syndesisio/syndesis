@@ -138,7 +138,7 @@
   </pluginRepositories>
 
   <modules>
-	<module>camel-k8</module>  
+	  <module>camel-k8</module>  
     <module>funktion-model</module>
     <module>funktion-runtime</module>
     <module>funktion-agent</module>
