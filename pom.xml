@@ -138,6 +138,7 @@
     <maven-resources-plugin.version>3.0.1</maven-resources-plugin.version>
     <maven-source-plugin.version>2.4</maven-source-plugin.version>
     <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+    <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
 
     <!-- third party plugin version -->
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
@@ -215,6 +216,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>${maven-dependency-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>${maven-release-plugin.version}</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
