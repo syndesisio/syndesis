@@ -17,15 +17,7 @@
 package io.fabric8.funktion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.fabric8.funktion.model.steps.Choice;
-import io.fabric8.funktion.model.steps.Endpoint;
-import io.fabric8.funktion.model.steps.Filter;
-import io.fabric8.funktion.model.steps.Function;
-import io.fabric8.funktion.model.steps.SetBody;
-import io.fabric8.funktion.model.steps.SetHeaders;
-import io.fabric8.funktion.model.steps.Split;
-import io.fabric8.funktion.model.steps.Step;
-import io.fabric8.funktion.model.steps.Throttle;
+import io.fabric8.funktion.model.steps.*;
 import io.fabric8.funktion.support.Strings;
 
 import java.util.ArrayList;
@@ -133,6 +125,12 @@ public class Flow extends DtoSupport {
 
     public Throttle throttle(long maximumRequests, long periodMillis) {
         Throttle step = new Throttle(maximumRequests, periodMillis);
+        addStep(step);
+        return step;
+    }
+
+    public Log log(String message, String loggingLevel, String logger, String marker) {
+        Log step = new Log(message, loggingLevel, logger, marker);
         addStep(step);
         return step;
     }

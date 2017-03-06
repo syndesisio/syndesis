@@ -36,7 +36,8 @@ import io.fabric8.funktion.model.StepKinds;
         @JsonSubTypes.Type(value = SetBody.class, name = StepKinds.SET_BODY),
         @JsonSubTypes.Type(value = SetHeaders.class, name = StepKinds.SET_HEADERS),
         @JsonSubTypes.Type(value = Split.class, name = StepKinds.SPLIT),
-        @JsonSubTypes.Type(value = Throttle.class, name = StepKinds.THROTTLE)}
+        @JsonSubTypes.Type(value = Throttle.class, name = StepKinds.THROTTLE),
+        @JsonSubTypes.Type(value = Log.class, name = StepKinds.LOG)}
 )
 public abstract class Step {
     private String kind;

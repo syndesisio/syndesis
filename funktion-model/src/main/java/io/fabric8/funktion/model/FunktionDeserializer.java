@@ -23,15 +23,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.fabric8.funktion.model.steps.Choice;
-import io.fabric8.funktion.model.steps.Endpoint;
-import io.fabric8.funktion.model.steps.Filter;
-import io.fabric8.funktion.model.steps.Function;
-import io.fabric8.funktion.model.steps.Otherwise;
-import io.fabric8.funktion.model.steps.SetBody;
-import io.fabric8.funktion.model.steps.SetHeaders;
-import io.fabric8.funktion.model.steps.Split;
-import io.fabric8.funktion.model.steps.Step;
+import io.fabric8.funktion.model.steps.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -52,6 +44,7 @@ public class FunktionDeserializer extends JsonDeserializer {
         kinds.put("setBody", SetBody.class);
         kinds.put("setHeaders", SetHeaders.class);
         kinds.put("split", Split.class);
+        kinds.put("log", Log.class);
     }
 
     @Override

@@ -19,19 +19,11 @@ package io.fabric8.funktion.runtime;
 import io.fabric8.funktion.model.Flow;
 import io.fabric8.funktion.model.Funktion;
 import io.fabric8.funktion.model.Funktions;
-import io.fabric8.funktion.model.steps.Choice;
-import io.fabric8.funktion.model.steps.Endpoint;
-import io.fabric8.funktion.model.steps.Filter;
-import io.fabric8.funktion.model.steps.Function;
-import io.fabric8.funktion.model.steps.Otherwise;
-import io.fabric8.funktion.model.steps.SetBody;
-import io.fabric8.funktion.model.steps.SetHeaders;
-import io.fabric8.funktion.model.steps.Split;
-import io.fabric8.funktion.model.steps.Step;
-import io.fabric8.funktion.model.steps.Throttle;
+import io.fabric8.funktion.model.steps.*;
 import io.fabric8.funktion.runtime.designer.SingleMessageRoutePolicyFactory;
 import io.fabric8.funktion.support.Strings;
 import org.apache.camel.Expression;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.Predicate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http4.HttpEndpoint;
@@ -281,6 +273,13 @@ public class FunktionRouteBuilder extends RouteBuilder {
                     addSteps(otherwise, otherwiseSteps);
                 }
             }
+        } else if (item instanceof Log) {
+            Log step = (Log) item;
+            LoggingLevel loggingLevel = LoggingLevel.INFO;
+            if (step.getLoggingLevel() != null) {
+                loggingLevel = LoggingLevel.valueOf(step.getLoggingLevel());
+            }
+            route.log(loggingLevel, step.getLogger(), step.getMarker(), step.getMessage());
         } else {
             throw new IllegalStateException("Unknown step kind: " + item + " of class: " + item.getClass().getName());
         }
