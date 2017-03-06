@@ -17,12 +17,10 @@ package com.redhat.ipaas.runtime;
 
 import com.redhat.ipaas.jsondb.JsonDB;
 import com.redhat.ipaas.jsondb.impl.SqlJsonDB;
-import com.redhat.ipaas.rest.EventBus;
 import org.skife.jdbi.v2.DBI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 

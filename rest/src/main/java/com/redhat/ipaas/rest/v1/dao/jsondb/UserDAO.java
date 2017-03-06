@@ -16,14 +16,11 @@
 package com.redhat.ipaas.rest.v1.dao.jsondb;
 
 import com.redhat.ipaas.jsondb.JsonDB;
-import com.redhat.ipaas.rest.v1.dao.jsondb.JsonDBDAO;
 import com.redhat.ipaas.rest.v1.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
-
-import javax.inject.Named;
 
 @Service
 @Configuration
