@@ -35,10 +35,12 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.SplitDefinition;
 import org.apache.camel.model.ThrottleDefinition;
 import org.apache.camel.spi.Language;
-import org.apache.camel.spring.boot.FatJarRouter;
+import org.apache.camel.spring.boot.CamelSpringBootApplicationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -70,7 +72,9 @@ public class FunktionRouteBuilder extends RouteBuilder {
 
     // must have a main method spring-boot can run
     public static void main(String[] args) {
-        FatJarRouter.main(args);
+        ApplicationContext applicationContext = new SpringApplication(FunktionRouteBuilder.class).run(args);
+        CamelSpringBootApplicationController ctx = applicationContext.getBean(CamelSpringBootApplicationController.class);
+        ctx.run();
     }
 
     private static String replacePrefix(String text, String prefix, String replacement) {
