@@ -124,7 +124,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/rhipaas/token-rp:v0.3.0
+        name: docker.io/rhipaas/token-rp:v0.3.1
       importPolicy:
         scheduled: true
       name: v0.2.0
