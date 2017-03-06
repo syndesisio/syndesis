@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class BaseITCase {
 
     @Autowired
-    protected SqlJsonDB rtdb;
+    protected SqlJsonDB jsondb;
 
     @BeforeClass
     public static void envSetup() {
@@ -49,10 +49,10 @@ public abstract class BaseITCase {
 
     protected void databaseReset() {
         try {
-            this.rtdb.dropTables();
+            this.jsondb.dropTables();
         } catch (Exception e) {
         }
-        this.rtdb.createTables();
+        this.jsondb.createTables();
     }
 
     @ClassRule

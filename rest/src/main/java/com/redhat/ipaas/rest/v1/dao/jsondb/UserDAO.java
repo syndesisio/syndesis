@@ -28,8 +28,8 @@ import org.springframework.stereotype.Service;
 public class UserDAO extends JsonDBDAO<User> {
 
     @Autowired
-    public UserDAO(JsonDB rtdb) {
-        super(rtdb);
+    public UserDAO(JsonDB jsondb) {
+        super(jsondb);
     }
 
     @Override

@@ -28,8 +28,8 @@ import org.springframework.stereotype.Service;
 public class IntegrationDAO extends JsonDBDAO<Integration> {
 
     @Autowired
-    public IntegrationDAO(JsonDB rtdb) {
-        super(rtdb);
+    public IntegrationDAO(JsonDB jsondb) {
+        super(jsondb);
     }
 
     @Override

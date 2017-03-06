@@ -21,7 +21,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.jsondb.GetOptions;
 import com.redhat.ipaas.jsondb.JsonDBException;
-import com.redhat.ipaas.jsondb.impl.SqlJsonDB;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class JsonDBTest {
 
-    private SqlJsonDB rtdb;
+    private SqlJsonDB jsondb;
     private ObjectMapper mapper = new ObjectMapper()
         .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
 
@@ -55,23 +54,23 @@ public class JsonDBTest {
         ds.setUser("sa");
         ds.setPassword("sa");
         DBI dbi = new DBI(ds);
-        this.rtdb = new SqlJsonDB(dbi, null);
+        this.jsondb = new SqlJsonDB(dbi, null);
 
         try {
-            this.rtdb.dropTables();
+            this.jsondb.dropTables();
         } catch (Exception e) {
         }
-        this.rtdb.createTables();
+        this.jsondb.createTables();
     }
 
     @Test
     public void testGetMissingKey() throws IOException {
 
-        rtdb.set("/test", mapper.writeValueAsString(map(
+        jsondb.set("/test", mapper.writeValueAsString(map(
             "name", "Hiram Chirino"
         )));
 
-        String json = rtdb.getAsString("/bar");
+        String json = jsondb.getAsString("/bar");
         assertThat(json).isNull();
 
     }
@@ -79,11 +78,11 @@ public class JsonDBTest {
     @Test
     public void testGetCallback() throws IOException {
 
-        rtdb.set("/test", mapper.writeValueAsString(map(
+        jsondb.set("/test", mapper.writeValueAsString(map(
             "name", "Hiram Chirino"
         )));
 
-        String json = rtdb.getAsString("/", GetOptions.builder().callback("myfunction").build());
+        String json = jsondb.getAsString("/", GetOptions.builder().callback("myfunction").build());
         assertThat(json).isEqualTo("myfunction({\"test\":{\"name\":\"Hiram Chirino\"}})");
 
     }
@@ -91,12 +90,12 @@ public class JsonDBTest {
     @Test
     public void testGetPrettyPrint() throws IOException {
 
-        rtdb.set("/test", mapper.writeValueAsString(map(
+        jsondb.set("/test", mapper.writeValueAsString(map(
             "name", "Hiram Chirino"
         )));
 
         // Check that the result is pretty printed
-        String json = rtdb.getAsString("/", GetOptions.builder().prettyPrint(true).build());
+        String json = jsondb.getAsString("/", GetOptions.builder().prettyPrint(true).build());
         assertThat(json).isEqualTo("{\n" +
             "  \"test\" : {\n" +
             "    \"name\" : \"Hiram Chirino\"\n" +
@@ -104,25 +103,25 @@ public class JsonDBTest {
             "}");
 
         // Check that the result is not pretty printed
-        json = rtdb.getAsString("/", GetOptions.builder().prettyPrint(false).build());
+        json = jsondb.getAsString("/", GetOptions.builder().prettyPrint(false).build());
         assertThat(json).isEqualTo("{\"test\":{\"name\":\"Hiram Chirino\"}}");
 
         // We default to not pretty printing
-        json = rtdb.getAsString("/");
+        json = jsondb.getAsString("/");
         assertThat(json).isEqualTo("{\"test\":{\"name\":\"Hiram Chirino\"}}");
     }
 
     @Test
     public void testPush() throws IOException {
 
-        rtdb.push("/test", mapper.writeValueAsString(map(
+        jsondb.push("/test", mapper.writeValueAsString(map(
             "name", "Hiram Chirino"
         )));
-        rtdb.push("/test", mapper.writeValueAsString(map(
+        jsondb.push("/test", mapper.writeValueAsString(map(
             "name", "Ana Chirino"
         )));
 
-        String json = rtdb.getAsString("/test", prettyPrint);
+        String json = jsondb.getAsString("/test", prettyPrint);
         ArrayList<Map> items = new ArrayList<Map>(mapper.readValue(json, LinkedHashMap.class).values());
         assertThat(items).hasSize(2);
         assertThat(((Map) items.get(0)).get("name")).isEqualTo("Hiram Chirino");
@@ -131,9 +130,9 @@ public class JsonDBTest {
 
     @Test
     public void testCreateKey() throws IOException {
-        String lastkey = rtdb.createKey();
+        String lastkey = jsondb.createKey();
         for (int i = 0; i < 20000; i++) {
-            String key = rtdb.createKey();
+            String key = jsondb.createKey();
             assertThat(lastkey.compareTo(key) < 0).as("lastkey < key").isTrue();
             lastkey = key;
         }
@@ -144,8 +143,8 @@ public class JsonDBTest {
         Object[] original = new Object[]{map(
             "id", "foo"
         )};
-        rtdb.set("/test", mapper.writeValueAsString(original));
-        String result1 = rtdb.getAsString("", prettyPrint).trim();
+        jsondb.set("/test", mapper.writeValueAsString(original));
+        String result1 = jsondb.getAsString("", prettyPrint).trim();
         assertThat(result1).isEqualTo("{\n" +
             "  \"test\" : [ {\n" +
             "    \"id\" : \"foo\"\n" +
@@ -165,23 +164,23 @@ public class JsonDBTest {
             "token", null
         );
 
-        rtdb.set("/users/u1000", mapper.writeValueAsString(user));
-        String result1 = rtdb.getAsString("", prettyPrint).trim();
+        jsondb.set("/users/u1000", mapper.writeValueAsString(user));
+        String result1 = jsondb.getAsString("", prettyPrint).trim();
         assertThat(result1).isEqualTo(load("result1.json").trim());
 
-        String result2 = rtdb.getAsString("/", prettyPrint).trim();
+        String result2 = jsondb.getAsString("/", prettyPrint).trim();
         assertThat(result2).isEqualTo(result1);
 
-        String result3 = rtdb.getAsString("/users/u1000", prettyPrint).trim();
+        String result3 = jsondb.getAsString("/users/u1000", prettyPrint).trim();
         assertThat(result3).isEqualTo(load("result3.json").trim());
 
-        assertThat(rtdb.getAsString("/users/u1000/name")).isEqualTo("\"Joe\"");
-        assertThat(rtdb.getAsString("/users/u1000/developer")).isEqualTo("false");
-        assertThat(rtdb.getAsString("/users/u1000/admin")).isEqualTo("true");
-        assertThat(rtdb.getAsString("/users/u1000/age")).isEqualTo("25");
-        assertThat(rtdb.getAsString("/users/u1000/gpa")).isEqualTo("3.52");
-        assertThat(rtdb.getAsString("/users/u1000/token")).isEqualTo("null");
-        assertThat(rtdb.getAsString("/users/u1000/error")).isNull();
+        assertThat(jsondb.getAsString("/users/u1000/name")).isEqualTo("\"Joe\"");
+        assertThat(jsondb.getAsString("/users/u1000/developer")).isEqualTo("false");
+        assertThat(jsondb.getAsString("/users/u1000/admin")).isEqualTo("true");
+        assertThat(jsondb.getAsString("/users/u1000/age")).isEqualTo("25");
+        assertThat(jsondb.getAsString("/users/u1000/gpa")).isEqualTo("3.52");
+        assertThat(jsondb.getAsString("/users/u1000/token")).isEqualTo("null");
+        assertThat(jsondb.getAsString("/users/u1000/error")).isNull();
 
     }
 
@@ -197,14 +196,14 @@ public class JsonDBTest {
             "token", null
         );
 
-        rtdb.set("/", mapper.writeValueAsString(user));
-        String result3 = rtdb.getAsString("", prettyPrint).trim();
+        jsondb.set("/", mapper.writeValueAsString(user));
+        String result3 = jsondb.getAsString("", prettyPrint).trim();
         assertThat(result3).isEqualTo(load("result3.json").trim());
 
         // Verify that if we write over an existing /developer value, it get replaced
         // with an object
-        rtdb.set("/developer/users/u1000", mapper.writeValueAsString(user));
-        String result4 = rtdb.getAsString("", prettyPrint).trim();
+        jsondb.set("/developer/users/u1000", mapper.writeValueAsString(user));
+        String result4 = jsondb.getAsString("", prettyPrint).trim();
         assertThat(result4).isEqualTo(load("result4.json").trim());
 
 
@@ -213,8 +212,8 @@ public class JsonDBTest {
             "name", "Hiram",
             "city", "Tampa"
         );
-        rtdb.set("/", mapper.writeValueAsString(user2));
-        String result5 = rtdb.getAsString("", prettyPrint).trim();
+        jsondb.set("/", mapper.writeValueAsString(user2));
+        String result5 = jsondb.getAsString("", prettyPrint).trim();
         assertThat(result5).isEqualTo(load("result5.json").trim());
 
     }
@@ -222,23 +221,23 @@ public class JsonDBTest {
     @Test
     public void testArrays() throws IOException {
 
-        rtdb.set("/", mapper.writeValueAsString(new Object[]{"hi", 100}));
-        assertThat(rtdb.getAsString("", prettyPrint).trim()).isEqualTo("[ \"hi\", 100 ]");
+        jsondb.set("/", mapper.writeValueAsString(new Object[]{"hi", 100}));
+        assertThat(jsondb.getAsString("", prettyPrint).trim()).isEqualTo("[ \"hi\", 100 ]");
 
         HashMap<String, Object> user = map(
             "data", new Object[]{"hi", 100, "other"}
         );
-        rtdb.set("/", mapper.writeValueAsString(user));
-        String result6 = rtdb.getAsString("", prettyPrint).trim();
+        jsondb.set("/", mapper.writeValueAsString(user));
+        String result6 = jsondb.getAsString("", prettyPrint).trim();
         assertThat(result6).isEqualTo(load("result6.json").trim());
 
-        rtdb.set("/data/1", mapper.writeValueAsString("update"));
-        String result7 = rtdb.getAsString("", prettyPrint).trim();
+        jsondb.set("/data/1", mapper.writeValueAsString("update"));
+        String result7 = jsondb.getAsString("", prettyPrint).trim();
         assertThat(result7).isEqualTo(load("result7.json").trim());
 
         // Validate the large arrays stay sorted.
-        rtdb.set("/", mapper.writeValueAsString(new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}));
-        String result8 = rtdb.getAsString("", prettyPrint).trim();
+        jsondb.set("/", mapper.writeValueAsString(new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}));
+        String result8 = jsondb.getAsString("", prettyPrint).trim();
         assertThat(result8).isEqualTo(load("result8.json").trim());
 
     }
@@ -251,16 +250,16 @@ public class JsonDBTest {
             "developer", false
         );
 
-        rtdb.set("/", mapper.writeValueAsString(user));
-        HashMap result = mapper.readValue(rtdb.getAsString(""), HashMap.class);
+        jsondb.set("/", mapper.writeValueAsString(user));
+        HashMap result = mapper.readValue(jsondb.getAsString(""), HashMap.class);
         assertThat(result).hasSize(2);
 
-        assertThat(rtdb.delete("/badpath")).isFalse();
-        result = mapper.readValue(rtdb.getAsString(""), HashMap.class);
+        assertThat(jsondb.delete("/badpath")).isFalse();
+        result = mapper.readValue(jsondb.getAsString(""), HashMap.class);
         assertThat(result).hasSize(2);
 
-        assertThat(rtdb.delete("/name")).isTrue();
-        result = mapper.readValue(rtdb.getAsString(""), HashMap.class);
+        assertThat(jsondb.delete("/name")).isTrue();
+        result = mapper.readValue(jsondb.getAsString(""), HashMap.class);
         assertThat(result).hasSize(1);
 
     }
@@ -272,10 +271,10 @@ public class JsonDBTest {
             "name", "Joe",
             "developer", false
         );
-        rtdb.set("/", mapper.writeValueAsString(user));
+        jsondb.set("/", mapper.writeValueAsString(user));
 
-        assertThat(rtdb.exists("/badpath")).isFalse();
-        assertThat(rtdb.exists("/name")).isTrue();
+        assertThat(jsondb.exists("/badpath")).isFalse();
+        assertThat(jsondb.exists("/name")).isTrue();
 
     }
 

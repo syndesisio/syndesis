@@ -42,12 +42,12 @@ public class StoreConfiguration {
         return init(new SqlJsonDB(dbi, null));
     }
 
-    private SqlJsonDB init(SqlJsonDB rtdb) {
+    private SqlJsonDB init(SqlJsonDB jsondb) {
         try {
-            rtdb.createTables();
+            jsondb.createTables();
         } catch (Exception ignore) {
         }
-        return rtdb;
+        return jsondb;
     }
 
 }

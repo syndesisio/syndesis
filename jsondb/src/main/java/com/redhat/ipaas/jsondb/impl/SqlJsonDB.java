@@ -62,13 +62,13 @@ public class SqlJsonDB implements JsonDB {
 
     public void createTables() {
         withTransaction(dbi -> {
-            dbi.update("CREATE TABLE rtdb (path VARCHAR PRIMARY KEY, value VARCHAR, kind INT)");
+            dbi.update("CREATE TABLE jsondb (path VARCHAR PRIMARY KEY, value VARCHAR, kind INT)");
         });
     }
 
     public void dropTables() {
         withTransaction(dbi -> {
-            dbi.update("DROP TABLE rtdb");
+            dbi.update("DROP TABLE jsondb");
         });
     }
 
@@ -115,7 +115,7 @@ public class SqlJsonDB implements JsonDB {
         Consumer<OutputStream> result = null;
         final Handle h = dbi.open();
         try {
-            ResultIterator<JsonRecord> iterator = h.createQuery("select path,value,kind from rtdb where path LIKE :like")
+            ResultIterator<JsonRecord> iterator = h.createQuery("select path,value,kind from jsondb where path LIKE :like")
                 .bind("like", like)
                 .map(JsonRecordMapper.INSTANCE)
                 .iterator();
@@ -153,7 +153,7 @@ public class SqlJsonDB implements JsonDB {
             rc[0] = deleteJsonRecords(dbi, baseDBPath, like) > 0;
         });
         if( bus!=null && rc[0] ) {
-            bus.broadcast("rtdb-deleted", Strings.prefix(Strings.trimSuffix(path, "/"), "/"));
+            bus.broadcast("jsondb-deleted", Strings.prefix(Strings.trimSuffix(path, "/"), "/"));
         }
         return rc[0];
     }
@@ -186,7 +186,7 @@ public class SqlJsonDB implements JsonDB {
             deleteJsonRecords(dbi, baseDBPath, like);
 
             long byteSize[] = {0};
-            PreparedBatch pb = dbi.prepareBatch("INSERT into rtdb (path, value, kind) values (:path, :value, :kind)");
+            PreparedBatch pb = dbi.prepareBatch("INSERT into jsondb (path, value, kind) values (:path, :value, :kind)");
             try {
                 JsonRecordSupport.jsonStreamToRecords(baseDBPath, body, r -> {
                     pb.bind("path", r.getPath())
@@ -210,7 +210,7 @@ public class SqlJsonDB implements JsonDB {
             }
         });
         if( bus!=null ) {
-            bus.broadcast("rtdb-updated", Strings.prefix(Strings.trimSuffix(path, "/"), "/"));
+            bus.broadcast("jsondb-updated", Strings.prefix(Strings.trimSuffix(path, "/"), "/"));
         }
     }
 
@@ -228,7 +228,7 @@ public class SqlJsonDB implements JsonDB {
             params.add(current+"/");
         }
 
-        String sql = "DELETE from rtdb where path LIKE ?";
+        String sql = "DELETE from jsondb where path LIKE ?";
         if( !params.isEmpty() ) {
             sql += " OR path in ( ";
             sql += params.stream().map(x->"?").collect(Collectors.joining(", "));
@@ -240,7 +240,7 @@ public class SqlJsonDB implements JsonDB {
     }
 
     private int countJsonRecords(Handle dbi, String like) {
-        Integer result = dbi.createQuery("SELECT COUNT(*) from rtdb where path LIKE ?")
+        Integer result = dbi.createQuery("SELECT COUNT(*) from jsondb where path LIKE ?")
             .bind(0, like)
             .map(IntegerColumnMapper.PRIMITIVE).first();
         return result.intValue();
