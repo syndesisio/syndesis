@@ -52,7 +52,7 @@
   <developers>
     <developer>
       <id>ipaas</id>
-      <name>IpaaS Development Team</name>
+      <name>iPaaS Development Team</name>
       <organization>redhat</organization>
       <organizationUrl>http://redhat.com/</organizationUrl>
     </developer>
@@ -68,9 +68,9 @@
 
   <distributionManagement>
     <repository>
-      <id>oss-sonatype-staging</id>
-      <name>Sonatype Staging Repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+      <id>bintray-redhat-ipaas-maven</id>
+      <name>redhat-ipaas-maven</name>
+      <url>https://api.bintray.com/maven/redhat-ipaas/maven/connectors/;publish=1</url>
     </repository>
   </distributionManagement>
 
