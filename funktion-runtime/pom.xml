@@ -33,7 +33,8 @@
 
   <properties>
     <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
-    <camel-version>2.19.0-SNAPSHOT</camel-version>
+    <!-- Camel version to use -->
+    <camel-version>2.18.2</camel-version>
   </properties>
 
   <dependencies>
