@@ -63,8 +63,8 @@
     <fabric8.version>2.2.200</fabric8.version>
     <fabric8.ipaas.version>2.2.164</fabric8.ipaas.version>
     <rest-assured.version>3.0.0</rest-assured.version>
-    <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
-    <spring-boot-plugin.version>1.4.1.RELEASE</spring-boot-plugin.version>
+    <spring-boot.version>1.4.5.RELEASE</spring-boot.version>
+    <spring-boot-plugin.version>1.4.5.RELEASE</spring-boot-plugin.version>
 
     <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
     <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
