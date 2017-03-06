@@ -26,7 +26,7 @@
 
   <groupId>com.redhat.ipaas</groupId>
   <artifactId>ipaas-connectors-project</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>iPaaS Connectors :: Project</name>
 
@@ -61,7 +61,7 @@
     <developerConnection>scm:git:git@github.com:redhat-ipaas/connectors.git
     </developerConnection>
     <url>http://github.com/redhat-ipaas/connectors/</url>
-    <tag>0.1.0</tag>
+    <tag>${project.version}</tag>
   </scm>
 
   <distributionManagement>
