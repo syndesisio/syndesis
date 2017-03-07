@@ -7,6 +7,7 @@ import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationsConfigureActionComponent } from './configure-action/configure-action.component';
 import { IntegrationsSaveOrAddStepComponent } from './save-or-add-step/save-or-add-step.component';
 import { IntegrationsSelectActionComponent } from './select-action/select-action.component';
+import { IntegrationsSelectConnectionComponent } from './select-connection/select-connection.component';
 
 import { Integration } from '../../model';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
@@ -17,6 +18,7 @@ const category = getCategory('IntegrationsEditPage');
 export let editIntegrationChildRoutes = [
   { path: 'action-select/:position', component: IntegrationsSelectActionComponent },
   { path: 'action-configure/:position', component: IntegrationsConfigureActionComponent },
+  { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
   { path: 'save-or-add-step/:position', component: IntegrationsSaveOrAddStepComponent },
 ];
 
@@ -53,20 +55,21 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
   }
 
   showNext() {
-    if (this.getCurrentChild() === 'action-select') {
+    if (this.getCurrentChild() === ('action-select' || 'connection-select')) {
       return false;
     }
-    return !(this.getCurrentChild() === 'action-configure' && this.position === 1);
+    return !(this.getCurrentChild() === ('action-configure') && this.position === 1);
   }
 
   showBack() {
-    return this.getCurrentChild() === 'action-configure';
+    return this.getCurrentChild() === ('action-configure' );
   }
 
   goBack() {
     const child = this.getCurrentChild();
     switch (child) {
       case 'action-select':
+      case 'connection-select':
         // uh...
         break;
       case 'action-configure':
@@ -119,6 +122,9 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
         });
         this.router.navigate(['action-select', this.position + 1], { relativeTo: this.route });
         break;
+      case 'connection-select':
+        this.router.navigate(['connection-select', this.position], { relativeTo: this.route });
+        break;
       default:
         // who knows...
         break;
@@ -140,6 +146,7 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
   handleFlowEvent(event: FlowEvent) {
     const child = this.getCurrentChild();
     switch (event.kind) {
+      // This needs to support actions as well
       case 'integration-updated':
         // no start connection set
         if (!this.currentFlow.getStartConnection()) {
@@ -159,7 +166,13 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
           this.router.navigate(['action-select', 0], { relativeTo: this.route });
         }
         break;
+      case 'integration-no-connections':
+        if (child !== 'connection-select') {
+          this.router.navigate(['connection-select', 0], { relativeTo: this.route });
+        }
+        break;
       case 'integration-action-select':
+      case 'integration-connection-select':
         if (!this.currentFlow.integration.steps[this.position]) {
           this._canContinue = false;
         }
@@ -170,6 +183,16 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
           kind: 'integration-set-action',
           position: this.position,
           action: event['action'],
+        });
+        this._canContinue = true;
+        this.continue();
+        break;
+      case 'integration-selected-connection':
+        this.position = event['position'];
+        this.currentFlow.events.emit({
+          kind: 'integration-set-connection',
+          position: this.position,
+          action: event['connection'],
         });
         this._canContinue = true;
         this.continue();
