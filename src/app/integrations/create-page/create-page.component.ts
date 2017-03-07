@@ -27,7 +27,6 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy, AfterViewInit 
   urls: UrlSegment[];
   _canContinue = false;
   position: number;
-  pageTitle = 'Create an integration';
   sidebarCollapsed = true;
 
   constructor(
@@ -138,15 +137,6 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy, AfterViewInit 
         }
         break;
       case 'integration-connection-select':
-        this.position = event['position'];
-        if (this.position === 0 && this.currentFlow.isEmpty()) {
-          this.pageTitle = 'Create an integration';
-        } else if (this.currentFlow.atEnd(this.position)) {
-          this.pageTitle = 'Select end connection';
-        } else {
-          this.pageTitle = 'Add a connection';
-        }
-
         if (!this.currentFlow.integration.steps[this.position]) {
           this._canContinue = false;
         }
@@ -162,11 +152,6 @@ export class IntegrationsCreatePage implements OnInit, OnDestroy, AfterViewInit 
         this.continue();
         break;
       case 'integration-connection-configure':
-        this.position = event['position'];
-        const connection = this.currentFlow.getStep(this.position);
-        if (connection) {
-          this.pageTitle = 'Configure ' + connection['name'];
-        }
         break;
     }
   }

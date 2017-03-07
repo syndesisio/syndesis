@@ -1,3 +1,10 @@
+<ol class="breadcrumb">
+  <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
+  <li class="active">Select {{ atEnd() ? 'end' : 'start' }} connection</li>
+</ol>
+<div class="title">
+  <h1>Select {{ atEnd() ? 'end' : 'start' }} connection</h1>
+</div>
 <p>Choose a connection to start</p>
 <ipaas-connections-list-toolbar  [(filter)]="filter" [(sort)]="sort"></ipaas-connections-list-toolbar>
 <ipaas-connections-list [connections]="connections | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async" (onSelected)="onSelected($event)"></ipaas-connections-list>

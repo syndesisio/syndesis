@@ -52,6 +52,14 @@ export class IntegrationsSelectConnectionComponent implements OnInit, OnDestroy 
     });
   }
 
+  atEnd() {
+    if (this.currentFlow.isEmpty()) {
+      // if it's empty, we're always at the start connection step
+      return false;
+    }
+    return this.currentFlow.atEnd(this.position);
+  }
+
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
       case 'integration-no-connection':
