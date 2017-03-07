@@ -12,6 +12,7 @@ import { ToasterModule, ToasterService } from 'angular2-toaster';
 import { IntegrationsEditPage, editIntegrationChildRoutes } from './edit-page/edit-page.component';
 import { IntegrationsSelectConnectionComponent } from './edit-page/select-connection/select-connection.component';
 import { IntegrationsConfigureConnectionComponent } from './edit-page/configure-connection/configure-connection.component';
+import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
 import { IntegrationsListPage } from './list-page/list-page.component';
 import { IntegrationsListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { IntegrationsFilterPipe } from './integrations-filter.pipe';
@@ -56,6 +57,7 @@ const routes: Routes = [
     IntegrationsEditPage,
     IntegrationsSelectConnectionComponent,
     IntegrationsConfigureConnectionComponent,
+    IntegrationsSaveOrAddStepComponent,
     IntegrationsListPage,
     IntegrationsListToolbarComponent,
     IntegrationsListComponent,

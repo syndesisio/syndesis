@@ -85,6 +85,16 @@ export class CurrentFlow {
     return this.steps.length - 1;
   }
 
+  getMiddlePosition(): number {
+    const last = this.getLastPosition();
+    if (last !== undefined) {
+      // TODO yes, this
+      return Math.round(last / 2);
+    } else {
+      return undefined;
+    }
+  }
+
   stepToConnection(step: Step) {
     if (!step) {
       return undefined;
