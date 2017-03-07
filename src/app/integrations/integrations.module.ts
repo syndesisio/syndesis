@@ -9,7 +9,7 @@ import { ModalModule } from 'ng2-bootstrap/modal';
 import { TabsModule } from 'ng2-bootstrap';
 import { ToasterModule, ToasterService } from 'angular2-toaster';
 
-import { IntegrationsEditPage } from './edit-page/edit-page.component';
+import { IntegrationsEditPage, editIntegrationChildRoutes } from './edit-page/edit-page.component';
 import { IntegrationsSelectConnectionComponent } from './edit-page/select-connection/select-connection.component';
 import { IntegrationsConfigureConnectionComponent } from './edit-page/configure-connection/configure-connection.component';
 import { IntegrationsListPage } from './list-page/list-page.component';
@@ -26,20 +26,14 @@ import { CollapseModule } from 'ng2-bootstrap';
 const routes: Routes = [
   { path: '', component: IntegrationsListPage, pathMatch: 'full' },
   {
-    path: 'edit',
+    path: 'create',
     component: IntegrationsEditPage,
-    children: [
-      { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
-      { path: 'connection-configure/:position', component: IntegrationsConfigureConnectionComponent },
-    ],
+    children: editIntegrationChildRoutes,
   },
   {
     path: 'edit/:integrationId',
     component: IntegrationsEditPage,
-    children: [
-      { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
-      { path: 'connection-configure/:position', component: IntegrationsConfigureConnectionComponent },
-    ],
+    children: editIntegrationChildRoutes,
   },
 ];
 
