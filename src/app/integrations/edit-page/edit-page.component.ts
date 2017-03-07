@@ -189,14 +189,14 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
     this.integrationSubscription = this.integration.subscribe((i: Integration) => {
       this.currentFlow.integration = i;
     });
-    $.fn.setupVerticalNavigation().hideMenu();
+    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().hideMenu() : '';
   }
 
   ngOnDestroy() {
     this.integrationSubscription.unsubscribe();
     this.routeSubscription.unsubscribe();
     this.flowSubscription.unsubscribe();
-    $.fn.setupVerticalNavigation().showMenu();
+    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().showMenu() : '';
   }
 
 }

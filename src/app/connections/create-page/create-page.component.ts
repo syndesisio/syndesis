@@ -108,10 +108,10 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     if (this.getCurrentPage() !== 'connection-basics') {
       this.router.navigate(['connection-basics'], { relativeTo: this.route });
     }
-    $.fn.setupVerticalNavigation().hideMenu();
+    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().hideMenu() : '';
   }
 
   ngOnDestroy() {
-    $.fn.setupVerticalNavigation().showMenu();
+    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().showMenu() : '';
   }
 }
