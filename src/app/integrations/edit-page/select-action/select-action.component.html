@@ -1,0 +1,10 @@
+<ol class="breadcrumb">
+  <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
+  <li class="active">Select {{ atEnd() ? 'end' : 'start' }} Action</li>
+</ol>
+<div class="title">
+  <h1>Select {{ atEnd() ? 'end' : 'start' }} Action</h1>
+</div>
+<p>Select an Action</p>
+<ipaas-actions-list-toolbar  [(filter)]="filter" [(sort)]="sort"></ipaas-actions-list-toolbar>
+<ipaas-actions-list [actions]="actions | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async" (onSelected)="onSelected($event)"></ipaas-actions-list>

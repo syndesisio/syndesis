@@ -10,6 +10,7 @@ import { TabsModule } from 'ng2-bootstrap';
 import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 import { IntegrationsEditPage, editIntegrationChildRoutes } from './edit-page/edit-page.component';
+import { IntegrationsSelectActionComponent } from './edit-page/select-action/select-action.component';
 import { IntegrationsSelectConnectionComponent } from './edit-page/select-connection/select-connection.component';
 import { IntegrationsConfigureConnectionComponent } from './edit-page/configure-connection/configure-connection.component';
 import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
@@ -55,6 +56,7 @@ const routes: Routes = [
   ],
   declarations: [
     IntegrationsEditPage,
+    IntegrationsSelectActionComponent,
     IntegrationsSelectConnectionComponent,
     IntegrationsConfigureConnectionComponent,
     IntegrationsSaveOrAddStepComponent,
