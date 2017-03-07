@@ -36,6 +36,7 @@
     <dependency>
       <groupId>io.fabric8.funktion.camel-k8</groupId>
       <artifactId>k8elasticsearch-starter</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
