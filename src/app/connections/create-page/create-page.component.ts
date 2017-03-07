@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CurrentConnectionService } from './current-connection';
@@ -11,7 +11,7 @@ const category = getCategory('Connections');
   selector: 'ipaas-connection-create-page',
   templateUrl: 'create-page.component.html',
 })
-export class ConnectionsCreatePage implements OnInit {
+export class ConnectionsCreatePage implements OnInit, OnDestroy {
   constructor(
     private current: CurrentConnectionService,
     private route: ActivatedRoute,
@@ -108,5 +108,10 @@ export class ConnectionsCreatePage implements OnInit {
     if (this.getCurrentPage() !== 'connection-basics') {
       this.router.navigate(['connection-basics'], { relativeTo: this.route });
     }
+    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().hideMenu() : '';
+  }
+
+  ngOnDestroy() {
+    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().showMenu() : '';
   }
 }
