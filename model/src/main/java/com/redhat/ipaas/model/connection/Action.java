@@ -13,36 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.model.integration;
+package com.redhat.ipaas.model.connection;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.redhat.ipaas.model.WithId;
-import com.redhat.ipaas.model.connection.Action;
+import com.redhat.ipaas.model.WithName;
 import org.immutables.value.Value;
 
 import java.io.Serializable;
 
 @Value.Immutable
-@JsonDeserialize(builder = Step.Builder.class)
-public interface Step extends WithId<Step>, Serializable {
+@JsonDeserialize(builder = Action.Builder.class)
+public interface Action extends WithId<Action>, WithName, Serializable {
 
-    String KIND = "step";
+    String KIND = "action";
 
     @Override
     default String getKind() {
         return KIND;
     }
 
-    Action getAction();
+    String getConnectorId();
 
-    String getConfiguredProperties();
+    String getProperties();
+
+    String getDescription();
 
     @Override
-    default Step withId(String id) {
+    default Action withId(String id) {
         return new Builder().createFrom(this).id(id).build();
     }
 
-    class Builder extends ImmutableStep.Builder {
+    class Builder extends ImmutableAction.Builder {
     }
 
 }

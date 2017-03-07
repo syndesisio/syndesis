@@ -25,6 +25,13 @@ public class BaseHandler implements WithDataManager {
     @Autowired
     private DataManager dataMgr;
 
+    public BaseHandler() {
+    }
+
+    public BaseHandler(DataManager dataMgr) {
+        this.dataMgr = dataMgr;
+    }
+
     @Override
     public DataManager getDataManager() {
         return dataMgr;

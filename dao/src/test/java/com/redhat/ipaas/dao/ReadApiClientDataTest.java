@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.core.Json;
 import com.redhat.ipaas.dao.init.ModelData;
 import com.redhat.ipaas.dao.init.ReadApiClientData;
+import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.connection.ConnectorGroup;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,15 +52,15 @@ public class ReadApiClientDataTest {
 		List<ModelData> modelDataList = new ReadApiClientData().readDataFromFile("com/redhat/ipaas/dao/deployment.json");
 		System.out.println("Found " + modelDataList.size() + " entities.");
 		Assert.assertTrue("We should find some ModelData", 0 < modelDataList.size());
-		List<ConnectorGroup> connectorGroupList = new ArrayList<ConnectorGroup>();
+        List<Connector> connectorList = new ArrayList<>();
 		for (ModelData md : modelDataList) {
-			if (md.getKind().equalsIgnoreCase("connector-group")) {
-				ConnectorGroup cg = mapper.readValue(md.getData(), ConnectorGroup.class);
-				connectorGroupList.add(cg);
+			if (md.getKind().equalsIgnoreCase("connector")) {
+				Connector cg = mapper.readValue(md.getData(), Connector.class);
+				connectorList.add(cg);
 			}
 		}
-		System.out.println("Found " + connectorGroupList.size() + " ConnectorGroups");
-		Assert.assertTrue("We should find some ConnectorGroups", 0 < connectorGroupList.size());
+		System.out.println("Found " + connectorList.size() + " Connectors");
+		Assert.assertTrue("We should find some Connectors", 0 < connectorList.size());
 	}
 
 }
