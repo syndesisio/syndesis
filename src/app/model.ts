@@ -25,16 +25,25 @@ export interface WithId extends BaseEntity {
 };
 export type WithIds = Array < WithId > ;
 
+export interface Action extends BaseEntity {
+    description: string;
+    connectorId: string;
+    properties: string;
+    id: string;
+    name: string;
+};
+export type Actions = Array < Action > ;
+
 export interface Connection extends BaseEntity {
-    icon: string;
     organization: Organization;
     tags: Array < Tag >
     ;
+    icon: string;
     position: string;
     description: string;
     connector: Connector;
-    userId: string;
     configuredProperties: string;
+    userId: string;
     connectorId: string;
     organizationId: string;
     id: string;
@@ -45,8 +54,8 @@ export type Connections = Array < Connection > ;
 export interface Connector extends BaseEntity {
     icon: string;
     description: string;
-    connectorGroup: ConnectorGroup;
     connectorGroupId: string;
+    connectorGroup: ConnectorGroup;
     properties: string;
     id: string;
     name: string;
@@ -68,37 +77,21 @@ export type Environments = Array < Environment > ;
 export interface Integration extends BaseEntity {
     tags: Array < Tag >
     ;
-    steps: Array < Step >
-    ;
-    integrationTemplateId: string;
-    description: string;
     connections: Array < Connection >
     ;
+    description: string;
     configuration: string;
-    userId: string;
+    integrationTemplate: IntegrationTemplate;
     users: Array < User >
     ;
-    integrationTemplate: IntegrationTemplate;
+    userId: string;
+    integrationTemplateId: string;
+    steps: Array < Step >
+    ;
     id: string;
     name: string;
 };
 export type Integrations = Array < Integration > ;
-
-export interface IntegrationPattern extends BaseEntity {
-    icon: string;
-    integrationPatternGroup: IntegrationPatternGroup;
-    integrationPatternGroupId: string;
-    properties: string;
-    id: string;
-    name: string;
-};
-export type IntegrationPatterns = Array < IntegrationPattern > ;
-
-export interface IntegrationPatternGroup extends BaseEntity {
-    id: string;
-    name: string;
-};
-export type IntegrationPatternGroups = Array < IntegrationPatternGroup > ;
 
 export interface IntegrationTemplate extends BaseEntity {
     organization: Organization;
@@ -121,8 +114,8 @@ export interface Organization extends BaseEntity {
 export type Organizations = Array < Organization > ;
 
 export interface Step extends BaseEntity {
+    action: Action;
     configuredProperties: string;
-    integrationPattern: IntegrationPattern;
     id: string;
 };
 export type Steps = Array < Step > ;
@@ -139,23 +132,33 @@ export type Tags = Array < Tag > ;
 
 export interface User extends BaseEntity {
     username: string;
-    fullName: string;
-    organizationId: string;
-    lastName: string;
     firstName: string;
+    fullName: string;
+    lastName: string;
     integrations: Array < Integration >
     ;
     roleId: string;
+    organizationId: string;
     name: string;
     id: string;
 };
 export type Users = Array < User > ;
+
+export interface ListResultAction extends BaseEntity {
+    items: Array < Action >
+    ;
+    totalCount: number;
+};
+export type ListResultActions = Array < ListResultAction > ;
 
 export interface EventMessage extends BaseEntity {
     data: {};
     event: string;
 };
 export type EventMessages = Array < EventMessage > ;
+
+export interface InputStream extends BaseEntity {};
+export type InputStreams = Array < InputStream > ;
 
 class TypeFactoryClass {
     createListResult() {
@@ -178,16 +181,26 @@ class TypeFactoryClass {
         };
     };
 
+    createAction() {
+        return <Action > {
+            description: undefined,
+            connectorId: undefined,
+            properties: undefined,
+            id: undefined,
+            name: undefined,
+        };
+    };
+
     createConnection() {
         return <Connection > {
-            icon: undefined,
             organization: undefined,
             tags: undefined,
+            icon: undefined,
             position: undefined,
             description: undefined,
             connector: undefined,
-            userId: undefined,
             configuredProperties: undefined,
+            userId: undefined,
             connectorId: undefined,
             organizationId: undefined,
             id: undefined,
@@ -199,8 +212,8 @@ class TypeFactoryClass {
         return <Connector > {
             icon: undefined,
             description: undefined,
-            connectorGroup: undefined,
             connectorGroupId: undefined,
+            connectorGroup: undefined,
             properties: undefined,
             id: undefined,
             name: undefined,
@@ -224,32 +237,14 @@ class TypeFactoryClass {
     createIntegration() {
         return <Integration > {
             tags: undefined,
-            steps: undefined,
-            integrationTemplateId: undefined,
-            description: undefined,
             connections: undefined,
+            description: undefined,
             configuration: undefined,
-            userId: undefined,
-            users: undefined,
             integrationTemplate: undefined,
-            id: undefined,
-            name: undefined,
-        };
-    };
-
-    createIntegrationPattern() {
-        return <IntegrationPattern > {
-            icon: undefined,
-            integrationPatternGroup: undefined,
-            integrationPatternGroupId: undefined,
-            properties: undefined,
-            id: undefined,
-            name: undefined,
-        };
-    };
-
-    createIntegrationPatternGroup() {
-        return <IntegrationPatternGroup > {
+            users: undefined,
+            userId: undefined,
+            integrationTemplateId: undefined,
+            steps: undefined,
             id: undefined,
             name: undefined,
         };
@@ -277,8 +272,8 @@ class TypeFactoryClass {
 
     createStep() {
         return <Step > {
+            action: undefined,
             configuredProperties: undefined,
-            integrationPattern: undefined,
             id: undefined,
         };
     };
@@ -295,14 +290,21 @@ class TypeFactoryClass {
     createUser() {
         return <User > {
             username: undefined,
-            fullName: undefined,
-            organizationId: undefined,
-            lastName: undefined,
             firstName: undefined,
+            fullName: undefined,
+            lastName: undefined,
             integrations: undefined,
             roleId: undefined,
+            organizationId: undefined,
             name: undefined,
             id: undefined,
+        };
+    };
+
+    createListResultAction() {
+        return <ListResultAction > {
+            items: undefined,
+            totalCount: undefined,
         };
     };
 
@@ -311,6 +313,10 @@ class TypeFactoryClass {
             data: undefined,
             event: undefined,
         };
+    };
+
+    createInputStream() {
+        return <InputStream > {};
     };
 
 };
