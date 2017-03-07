@@ -36,6 +36,7 @@ public @Data class ConnectorProperty implements Serializable{
     private Long id;
     private String name;
     private String description;
+    private String type;
     @Column(name = "secret")
     private boolean isSecret;
     private String defaultValue;

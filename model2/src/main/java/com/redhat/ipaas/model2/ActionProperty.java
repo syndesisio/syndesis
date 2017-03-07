@@ -36,6 +36,7 @@ public @Data class ActionProperty implements Serializable {
     private Long id;
     private String name;
     private String description;
+    private String type;
     @Column(name = "secret")
     private boolean isSecret;
     @Column(name = "default_value")
