@@ -7,13 +7,13 @@ import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { ModalModule } from 'ng2-bootstrap/modal';
 import { TabsModule } from 'ng2-bootstrap';
-import { ToasterModule, ToasterService } from 'angular2-toaster';
+import { ToasterModule } from 'angular2-toaster';
 
 import { IntegrationsEditPage, editIntegrationChildRoutes } from './edit-page/edit-page.component';
+import { IntegrationsConfigureActionComponent } from './edit-page/configure-action/configure-action.component';
+import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
 import { IntegrationsSelectActionComponent } from './edit-page/select-action/select-action.component';
 import { IntegrationsSelectConnectionComponent } from './edit-page/select-connection/select-connection.component';
-import { IntegrationsConfigureConnectionComponent } from './edit-page/configure-connection/configure-connection.component';
-import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
 import { IntegrationsListPage } from './list-page/list-page.component';
 import { IntegrationsListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { IntegrationsFilterPipe } from './integrations-filter.pipe';
@@ -55,15 +55,16 @@ const routes: Routes = [
     ModalModule,
   ],
   declarations: [
-    IntegrationsEditPage,
-    IntegrationsSelectActionComponent,
-    IntegrationsSelectConnectionComponent,
+    IntegrationsConfigureActionComponent,
     IntegrationsConfigureConnectionComponent,
-    IntegrationsSaveOrAddStepComponent,
+    IntegrationsEditPage,
+    IntegrationsFilterPipe,
+    IntegrationsListComponent,
     IntegrationsListPage,
     IntegrationsListToolbarComponent,
-    IntegrationsListComponent,
-    IntegrationsFilterPipe,
+    IntegrationsSaveOrAddStepComponent,
+    IntegrationsSelectActionComponent,
+    IntegrationsSelectConnectionComponent,
     FlowViewComponent,
     FlowViewStepComponent,
   ],

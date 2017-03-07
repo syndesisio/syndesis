@@ -6,21 +6,21 @@ import { DynamicFormControlModel, DynamicFormService } from '@ng2-dynamic-forms/
 
 import { FormFactoryService } from '../../../common/forms.service';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Connection } from '../../../model';
+import { Action } from '../../../model';
 import { log, getCategory } from '../../../logging';
 
 const category = getCategory('IntegrationsCreatePage');
 
 @Component({
-  selector: 'ipaas-integrations-configure-connection',
-  templateUrl: 'configure-connection.component.html',
+  selector: 'ipaas-integrations-configure-action',
+  templateUrl: 'configure-action.component.html',
 })
-export class IntegrationsConfigureConnectionComponent implements OnInit, OnDestroy {
+export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
 
   flowSubscription: Subscription;
   routeSubscription: Subscription;
   position: number;
-  connection: Connection = <Connection>{ };
+  action: Action = <Action>{ };
   formModel: DynamicFormControlModel[];
   formGroup: FormGroup;
 
@@ -36,7 +36,7 @@ export class IntegrationsConfigureConnectionComponent implements OnInit, OnDestr
 
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
-      case 'integration-no-connection':
+      case 'integration-no-action':
         break;
     }
   }
@@ -48,9 +48,9 @@ export class IntegrationsConfigureConnectionComponent implements OnInit, OnDestr
     this.routeSubscription = this.route.params.pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
-        this.connection = <Connection> this.currentFlow.getStep(this.position);
-        if (this.connection && this.connection.configuredProperties) {
-          const configString = this.connection.configuredProperties;
+        this.action = <Action> this.currentFlow.getStep(this.position);
+        if (this.action && this.action.properties) {
+          const configString = this.action.properties;
           // TODO giant hack so we see something on the config page
           let formConfig = undefined;
           try {
@@ -68,7 +68,7 @@ export class IntegrationsConfigureConnectionComponent implements OnInit, OnDestr
           this.formGroup = undefined;
         }
         this.currentFlow.events.emit({
-          kind: 'integration-connection-configure',
+          kind: 'integration-action-configure',
           position: this.position,
         });
       })
