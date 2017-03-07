@@ -14,6 +14,7 @@ import { IntegrationsConfigureActionComponent } from './edit-page/configure-acti
 import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
 import { IntegrationsSelectActionComponent } from './edit-page/select-action/select-action.component';
 import { IntegrationsSelectConnectionComponent } from './edit-page/select-connection/select-connection.component';
+import { ListActionsComponent } from './edit-page/list-actions/list-actions.component';
 import { IntegrationsListPage } from './list-page/list-page.component';
 import { IntegrationsListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { IntegrationsFilterPipe } from './integrations-filter.pipe';
@@ -67,6 +68,7 @@ const routes: Routes = [
     IntegrationsSelectConnectionComponent,
     FlowViewComponent,
     FlowViewStepComponent,
+    ListActionsComponent,
   ],
   providers: [
     CurrentFlow,

@@ -12,16 +12,16 @@ const category = getCategory('Actions');
 @Component({
   selector: 'ipaas-list-actions',
   templateUrl: './list-actions.component.html',
-  styleUrls: ['./list.component.scss'],
+  styleUrls: ['./list-actions.component.scss'],
 })
 export class ListActionsComponent implements OnInit {
 
-  loading: Observable<boolean>;
   truncateLimit = 80;
   truncateTrail = '…';
   selectedId = undefined;
   private toasterService: ToasterService;
   @Input() actions: Actions;
+  @Input() loading: boolean;
   @Output() onSelected: EventEmitter<Action> = new EventEmitter();
   filter: ObjectPropertyFilterConfig = {
     filter: '',
