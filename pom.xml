@@ -312,22 +312,22 @@
       <!-- camel-k8 module -->
       <dependency>
         <groupId>io.fabric8.funktion</groupId>
-        <artifactId>k8amq-starter</artifactId>
+        <artifactId>k8amq</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.fabric8.funktion</groupId>
-        <artifactId>k8elasticsearch-starter</artifactId>
+        <artifactId>k8elasticsearch</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.fabric8.funktion</groupId>
-        <artifactId>k8kafka-starter</artifactId>
+        <artifactId>k8kafka</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.fabric8.funktion</groupId>
-        <artifactId>k8nats-starter</artifactId>
+        <artifactId>k8nats</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>
     </dependencies>
