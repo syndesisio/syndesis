@@ -15,10 +15,9 @@
  */
 package com.redhat.ipaas.jsondb.impl;
 
-import com.redhat.ipaas.jsondb.impl.JsonRecordSupport;
-import org.junit.Test;
-
 import java.io.IOException;
+
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

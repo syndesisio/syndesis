@@ -149,6 +149,9 @@
   </properties>
 
   <modules>
+    <module>core</module>
+    <module>model</module>
+    <module>dao</module>
     <module>jsondb</module>
     <module>rest</module>
     <module>runtime</module>
@@ -196,16 +199,37 @@
 
 
       <!-- Internal Dependencies -->
+
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>dao</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
         <artifactId>jsondb</artifactId>
         <version>${project.version}</version>
       </dependency>
+
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
         <artifactId>rest</artifactId>
         <version>${project.version}</version>
       </dependency>
+
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
         <artifactId>runtime</artifactId>
@@ -244,6 +268,12 @@
         <version>${hibernate.validator.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>3.0.1</version>
+      </dependency>
+
       <!-- Testing Dependencies -->
       <dependency>
         <groupId>junit</groupId>
@@ -266,6 +296,7 @@
         <version>${mockwebserver.version}</version>
         <scope>test</scope>
       </dependency>
+
       <dependency>
         <groupId>com.paypal.springboot</groupId>
         <artifactId>resteasy-spring-boot-starter</artifactId>

@@ -15,10 +15,6 @@
  */
 package com.redhat.ipaas.jsondb.impl;
 
-import com.fasterxml.jackson.core.*;
-import com.redhat.ipaas.jsondb.GetOptions;
-import com.redhat.ipaas.jsondb.JsonDBException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,6 +24,10 @@ import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.*;
+import com.redhat.ipaas.jsondb.GetOptions;
+import com.redhat.ipaas.jsondb.JsonDBException;
 
 import static com.fasterxml.jackson.core.JsonToken.*;
 

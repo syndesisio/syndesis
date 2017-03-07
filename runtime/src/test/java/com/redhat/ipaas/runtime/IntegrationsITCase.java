@@ -15,14 +15,14 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.redhat.ipaas.rest.v1.model.ListResult;
-import com.redhat.ipaas.rest.v1.model.integration.Integration;
+import java.util.ArrayList;
+
+import com.redhat.ipaas.model.ListResult;
+import com.redhat.ipaas.model.integration.Integration;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

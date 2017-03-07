@@ -15,18 +15,19 @@
  */
 package com.redhat.ipaas.jsondb.rest;
 
-import com.redhat.ipaas.jsondb.GetOptions;
-import com.redhat.ipaas.jsondb.ImmutableGetOptions;
-import com.redhat.ipaas.jsondb.JsonDB;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.function.Consumer;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+
+import com.redhat.ipaas.jsondb.GetOptions;
+import com.redhat.ipaas.jsondb.ImmutableGetOptions;
+import com.redhat.ipaas.jsondb.JsonDB;
 
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;

@@ -106,10 +106,10 @@
           </outputFormats>
           <attachSwaggerArtifact>true</attachSwaggerArtifact>
           <resourcePackages>
-            <resourcePackage>com.redhat.ipaas.rest.v1.controller.handler.connection</resourcePackage>
-            <resourcePackage>com.redhat.ipaas.rest.v1.controller.handler.environment</resourcePackage>
-            <resourcePackage>com.redhat.ipaas.rest.v1.controller.handler.integration</resourcePackage>
-            <resourcePackage>com.redhat.ipaas.rest.v1.controller.handler.user</resourcePackage>
+            <resourcePackage>com.redhat.ipaas.rest.v1.handler.connection</resourcePackage>
+            <resourcePackage>com.redhat.ipaas.rest.v1.handler.environment</resourcePackage>
+            <resourcePackage>com.redhat.ipaas.rest.v1.handler.integration</resourcePackage>
+            <resourcePackage>com.redhat.ipaas.rest.v1.handler.user</resourcePackage>
           </resourcePackages>
           <swaggerConfig>
             <info>
@@ -321,11 +321,32 @@
   </build>
 
   <dependencies>
-    <!-- internal -->
+    <!-- === Internal dependencies (don't touch without discussion) ========================== -->
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>model</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>dao</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>jsondb</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
       <artifactId>rest</artifactId>
     </dependency>
+    <!-- ===================================================================================== -->
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -401,6 +422,16 @@
       <artifactId>h2</artifactId>
       <version>1.4.193</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>kubernetes-client</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>spring-cloud-kubernetes-core</artifactId>
     </dependency>
 
   </dependencies>
