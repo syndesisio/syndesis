@@ -116,7 +116,7 @@
     <mockwebserver.version>0.0.12</mockwebserver.version>
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <resteasy-spring-boot-starter.version>2.3.0-RELEASE</resteasy-spring-boot-starter.version>
-    <spring-boot.version>1.5.1.RELEASE</spring-boot.version>
+    <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
     <spring-cloud.version>Camden.SR5</spring-cloud.version>
     <spring-cloud-kubernetes.version>0.1.5</spring-cloud-kubernetes.version>
     <okhttp-eventsource.version>1.1.1</okhttp-eventsource.version>
