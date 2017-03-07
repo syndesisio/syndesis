@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { ToasterService } from 'angular2-toaster';
 
 import { Actions, Action } from '../../../model';
 import { log, getCategory } from '../../../logging';
+import { ObjectPropertyFilterConfig } from '../../../common/object-property-filter.pipe';
+import { ObjectPropertySortConfig } from '../../../common/object-property-sort.pipe';
 
 const category = getCategory('Actions');
 
@@ -13,12 +16,22 @@ const category = getCategory('Actions');
 })
 export class ListActionsComponent implements OnInit {
 
+  loading: Observable<boolean>;
   truncateLimit = 80;
   truncateTrail = '…';
   selectedId = undefined;
   private toasterService: ToasterService;
   @Input() actions: Actions;
   @Output() onSelected: EventEmitter<Action> = new EventEmitter();
+  filter: ObjectPropertyFilterConfig = {
+    filter: '',
+    propertyName: 'name',
+  };
+
+  sort: ObjectPropertySortConfig = {
+    sortField: 'name',
+    descending: false,
+  };
 
   onSelect(action: Action) {
     log.debugc(() => 'Selected action (list): ' + action.name, category);
