@@ -53,25 +53,25 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
   }
 
   showNext() {
-    if (this.getCurrentChild() === 'connection-select') {
+    if (this.getCurrentChild() === 'action-select') {
       return false;
     }
-    return !(this.getCurrentChild() === 'connection-configure' && this.position === 1);
+    return !(this.getCurrentChild() === 'action-configure' && this.position === 1);
   }
 
   showBack() {
-    return this.getCurrentChild() === 'connection-configure';
+    return this.getCurrentChild() === 'action-configure';
   }
 
   goBack() {
     const child = this.getCurrentChild();
     switch (child) {
-      case 'connection-select':
+      case 'action-select':
         // uh...
         break;
-      case 'connection-configure':
-        // TODO hard-coding this to just go to the previous connection
-        this.router.navigate(['connection-select', this.position], { relativeTo: this.route });
+      case 'action-configure':
+        // TODO hard-coding this to just go to the previous action
+        this.router.navigate(['action-select', this.position], { relativeTo: this.route });
         break;
       default:
         // who knows...
@@ -81,7 +81,7 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
   }
 
   showFinish() {
-    return this.getCurrentChild() === 'connection-configure' && this.position === 1;
+    return this.getCurrentChild() === 'action-configure' && this.position === 1;
   }
 
   canFinish() {
@@ -108,16 +108,16 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
   continue() {
     const child = this.getCurrentChild();
     switch (child) {
-      case 'connection-select':
-        this.router.navigate(['connection-configure', this.position], { relativeTo: this.route });
+      case 'action-select':
+        this.router.navigate(['action-configure', this.position], { relativeTo: this.route });
         break;
-      case 'connection-configure':
-        // TODO hard-coding this to just go to the next connection
+      case 'action-configure':
+        // TODO hard-coding this to just go to the next action
         this.currentFlow.events.emit({
-          kind: 'integration-connection-configured',
+          kind: 'integration-action-configured',
           position: this.position,
         });
-        this.router.navigate(['connection-select', this.position + 1], { relativeTo: this.route });
+        this.router.navigate(['action-select', this.position + 1], { relativeTo: this.route });
         break;
       default:
         // who knows...
@@ -154,27 +154,27 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
         // prompt the user what next?
         this.router.navigate(['save-or-add-step', this.currentFlow.getMiddlePosition()], { relativeTo: this.route });
         break;
-      case 'integration-no-connections':
-        if (child !== 'connection-select') {
-          this.router.navigate(['connection-select', 0], { relativeTo: this.route });
+      case 'integration-no-actions':
+        if (child !== 'action-select') {
+          this.router.navigate(['action-select', 0], { relativeTo: this.route });
         }
         break;
-      case 'integration-connection-select':
+      case 'integration-action-select':
         if (!this.currentFlow.integration.steps[this.position]) {
           this._canContinue = false;
         }
         break;
-      case 'integration-selected-connection':
+      case 'integration-selected-action':
         this.position = event['position'];
         this.currentFlow.events.emit({
-          kind: 'integration-set-connection',
+          kind: 'integration-set-action',
           position: this.position,
-          connection: event['connection'],
+          action: event['action'],
         });
         this._canContinue = true;
         this.continue();
         break;
-      case 'integration-connection-configure':
+      case 'integration-action-configure':
         break;
     }
   }
