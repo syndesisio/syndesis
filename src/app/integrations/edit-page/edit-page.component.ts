@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationsSelectConnectionComponent } from './select-connection/select-connection.component';
 import { IntegrationsConfigureConnectionComponent } from './configure-connection/configure-connection.component';
+import { IntegrationsSaveOrAddStepComponent } from './save-or-add-step/save-or-add-step.component';
 
 import { Integration } from '../../model';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
@@ -16,6 +17,7 @@ const category = getCategory('IntegrationsEditPage');
 export let editIntegrationChildRoutes = [
   { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
   { path: 'connection-configure/:position', component: IntegrationsConfigureConnectionComponent },
+  { path: 'save-or-add-step/:position', component: IntegrationsSaveOrAddStepComponent },
 ];
 
 @Component({
@@ -139,6 +141,20 @@ export class IntegrationsEditPage implements OnInit, OnDestroy, AfterViewInit {
   handleFlowEvent(event: FlowEvent) {
     const child = this.getCurrentChild();
     switch (event.kind) {
+      case 'integration-updated':
+        // no start connection set
+        if (!this.currentFlow.getStartConnection()) {
+          this.router.navigate(['connection-select', 0], { relativeTo: this.route });
+          return;
+        }
+        // no end connection set
+        if (!this.currentFlow.getEndConnection()) {
+          this.router.navigate(['connection-select', this.currentFlow.getLastPosition()], { relativeTo: this.route });
+          return;
+        }
+        // prompt the user what next?
+        this.router.navigate(['save-or-add-step', this.currentFlow.getMiddlePosition()], { relativeTo: this.route });
+        break;
       case 'integration-no-connections':
         if (child !== 'connection-select') {
           this.router.navigate(['connection-select', 0], { relativeTo: this.route });

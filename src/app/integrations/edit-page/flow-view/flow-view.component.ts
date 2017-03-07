@@ -21,6 +21,7 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   childRouteSubscription: Subscription;
   urls: UrlSegment[];
   currentPosition: number;
+  @Input()
   currentState: string;
   integrationName = 'Integration Name';
 
@@ -74,11 +75,9 @@ export class FlowViewComponent implements OnInit, OnDestroy {
         this.integrationName = this.i.name;
         break;
       case 'integration-connection-select':
-        this.currentState = 'connection-select';
         this.currentPosition = event['position'];
         break;
       case 'integration-connection-configure':
-        this.currentState = 'connection-configure';
         this.currentPosition = event['position'];
         break;
     }
