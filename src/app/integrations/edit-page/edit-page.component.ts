@@ -4,11 +4,19 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IntegrationStore } from '../../store/integration/integration.store';
+import { IntegrationsSelectConnectionComponent } from './select-connection/select-connection.component';
+import { IntegrationsConfigureConnectionComponent } from './configure-connection/configure-connection.component';
+
 import { Integration } from '../../model';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
 import { log, getCategory } from '../../logging';
 
 const category = getCategory('IntegrationsEditPage');
+
+export let editIntegrationChildRoutes = [
+  { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
+  { path: 'connection-configure/:position', component: IntegrationsConfigureConnectionComponent },
+];
 
 @Component({
   selector: 'ipaas-integrations-edit-page',
