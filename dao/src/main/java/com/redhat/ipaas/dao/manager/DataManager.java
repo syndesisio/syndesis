@@ -291,7 +291,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
     /**
      * Perform a simple action if a {@link DataAccessObject} for the specified kind exists.
-     * This is just a way to avoid, duplivating the dao lookup and chekcs, which are going to change.
+     * This is just a way to avoid, duplicating the dao lookup and checks, which are going to change.
      * @param kind          The kind of the {@link DataAccessObject}.
      * @param function      The function to perfom on the {@link DataAccessObject}.
      * @param <O>           The return type.

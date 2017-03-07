@@ -46,10 +46,10 @@ public class ConnectorsITCase extends BaseITCase {
 
     @Test
     public void connectorsGetTest() {
-        ResponseEntity<Connector> result = get("/api/v1/connectors/org.foo_twitter-mention-connector_1.0", Connector.class);
+        ResponseEntity<Connector> result = get("/api/v1/connectors/twitter", Connector.class);
         Connector connector = result.getBody();
         assertThat(connector).isNotNull();
-        assertThat(connector.getId()).contains("org.foo_twitter-mention-connector_1.0");
+        assertThat(connector.getId()).contains("twitter");
     }
 
 }
