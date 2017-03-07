@@ -116,7 +116,7 @@ public class SqlJsonDB implements JsonDB {
         Consumer<OutputStream> result = null;
         final Handle h = dbi.open();
         try {
-            ResultIterator<JsonRecord> iterator = h.createQuery("select path,value,kind from jsondb where path LIKE :like")
+            ResultIterator<JsonRecord> iterator = h.createQuery("select path,value,kind from jsondb where path LIKE :like order by path")
                 .bind("like", like)
                 .map(JsonRecordMapper.INSTANCE)
                 .iterator();
