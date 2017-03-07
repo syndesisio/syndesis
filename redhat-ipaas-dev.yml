@@ -1709,7 +1709,7 @@ objects:
   data:
     application.yml: |-
       deployment:
-        file: com/redhat/ipaas/rest/v1/deployment.json
+        file: com/redhat/ipaas/dao/deployment.json
       resteasy:
         jaxrs:
           app:
