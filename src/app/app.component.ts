@@ -24,7 +24,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   iconDarkBg = 'assets/images/glasses_logo.svg';
 
   loggedIn = false;
-  sidebarCollapsed = false;
   title = 'Red Hat iPaaS';
   url = 'https://www.twitter.com/jboss';
   user: Observable<User>;
@@ -45,13 +44,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
       $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
     });
+    $.fn.setupVerticalNavigation();
   }
 
-  collapsed(event: any): void {
-    log.debugc(() => 'Sidebar Toggle Event: ' + event);
-  }
-
-  expanded(event: any): void {
-    log.debugc(() => 'Sidebar Toggle Event: ' + event);
-  }
 }

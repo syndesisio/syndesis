@@ -1,6 +1,6 @@
 <div class="app">
   <header *ngIf="loggedIn">
-    
+
     <!-- Navbar: Logged Out -->
     <nav class="navbar navbar-fixed-top navbar-light loggedOut" *ngIf="!loggedIn">
       <!-- Logo -->
@@ -8,30 +8,30 @@
         <img src="{{ logoWhiteBg }}">
       </a>
     </nav>
-    
+
     <!-- Navbar: Logged In -->
     <nav class="navbar navbar-pf-vertical">
       <div class="navbar-header">
-        
+
         <!-- Toggle Sidebar-->
-        <button type="button" class="toggle-nav" (click)="sidebarCollapsed = !sidebarCollapsed">
+        <button type="button" class="navbar-toggle">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        
+
         <!-- Logo -->
         <a [routerLink]=" ['/'] " class="navbar-brand">
           <img class="navbar-brand-icon" [src]="iconDarkBg" alt="" />
           <img class="navbar-brand-name" [src]="logoDarkBg" alt="iPaaS" />
         </a>
       </div>
-      
+
       <!-- Top Navbar -->
       <nav>
         <ul class="nav navbar-nav navbar-right navbar-iconic">
-          
+
           <!-- User Dropdown -->
           <li class="dropdown user">
             <a class="dropdown-toggle nav-item-iconic" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -51,13 +51,10 @@
     </nav>
     <!--/.navbar-->
   </header>
-  
+
   <!-- Sidebar -->
   <div class="nav-pf-vertical hidden-icons-pf"
-       *ngIf="loggedIn"
-       (collapsed)="collapsed($event)"
-       (expanded)="expanded($event)"
-       [collapse]="sidebarCollapsed">
+       *ngIf="loggedIn">
     <ul class="list-group">
       <li class="list-group-item" routerLinkActive="active">
         <a [routerLink]=" ['dashboard'] ">
@@ -95,9 +92,7 @@
       -->
     </ul>
   </div>
-  <main class="container-fluid"
-        [class.container-pf-nav-pf-vertical]="sidebarCollapsed==false"
-        *ngIf="loggedIn">
+  <main class="container-fluid container-pf-nav-pf-vertical" *ngIf="loggedIn">
     <router-outlet></router-outlet>
   </main>
 

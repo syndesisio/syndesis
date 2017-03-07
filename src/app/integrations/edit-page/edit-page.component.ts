@@ -25,7 +25,7 @@ export let editIntegrationChildRoutes = [
   templateUrl: './edit-page.component.html',
   styleUrls: ['./edit-page.component.scss'],
 })
-export class IntegrationsEditPage implements OnInit, OnDestroy, AfterViewInit {
+export class IntegrationsEditPage implements OnInit, OnDestroy {
 
   integration: Observable<Integration>;
   private readonly loading: Observable<boolean>;
@@ -37,7 +37,6 @@ export class IntegrationsEditPage implements OnInit, OnDestroy, AfterViewInit {
   urls: UrlSegment[];
   _canContinue = false;
   position: number;
-  sidebarCollapsed = true;
 
   constructor(
     private currentFlow: CurrentFlow,
@@ -190,16 +189,14 @@ export class IntegrationsEditPage implements OnInit, OnDestroy, AfterViewInit {
     this.integrationSubscription = this.integration.subscribe((i: Integration) => {
       this.currentFlow.integration = i;
     });
+    $.fn.setupVerticalNavigation().hideMenu();
   }
 
   ngOnDestroy() {
     this.integrationSubscription.unsubscribe();
     this.routeSubscription.unsubscribe();
     this.flowSubscription.unsubscribe();
-  }
-
-  ngAfterViewInit() {
-    this.sidebarCollapsed = true;
+    $.fn.setupVerticalNavigation().showMenu();
   }
 
 }
