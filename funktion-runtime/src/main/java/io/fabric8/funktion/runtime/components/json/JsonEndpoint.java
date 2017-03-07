@@ -112,14 +112,13 @@ public class JsonEndpoint extends DefaultEndpoint {
                     if (text != null) {
                         if (isJsonLookingString(text.trim())) {
                             in.setHeader(Exchange.CONTENT_TYPE, JSON_CONTENT_TYPE);
-                            in.setBody(text);
-                            return;
                         }
+                        in.setBody(text);
+                        return;
                     }
                 } catch (Exception e) {
                     // ignore
                 }
-
             }
 
             in.setHeader(Exchange.CONTENT_TYPE, JSON_CONTENT_TYPE);

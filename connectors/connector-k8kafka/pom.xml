@@ -36,7 +36,6 @@
     <dependency>
       <groupId>io.fabric8.funktion.camel-k8</groupId>
       <artifactId>k8kafka-starter</artifactId>
-      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
