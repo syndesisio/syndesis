@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>io.fabric8.funktion</groupId>
-      <artifactId>k8amq-starter</artifactId>
+      <artifactId>k8amq</artifactId>
     </dependency>
   </dependencies>
 

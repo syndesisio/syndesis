@@ -54,22 +54,18 @@
     <dependency>
       <groupId>io.fabric8.funktion</groupId>
       <artifactId>k8amq</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.fabric8.funktion</groupId>
       <artifactId>k8elasticsearch</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.fabric8.funktion</groupId>
       <artifactId>k8kafka</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.fabric8.funktion</groupId>
       <artifactId>k8nats</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
