@@ -17,16 +17,22 @@ package com.redhat.ipaas.rest.v1.handler.integration;
 
 import javax.ws.rs.Path;
 
+import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Path("/integrations")
 @Api(value = "integrations")
 @Component
 public class IntegrationHandler extends BaseHandler implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration> {
+
+    public IntegrationHandler(@Autowired DataManager dataMgr) {
+        super(dataMgr);
+    }
 
     @Override
     public Class<Integration> resourceClass() {

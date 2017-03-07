@@ -15,13 +15,6 @@
  */
 package com.redhat.ipaas.dao.manager;
 
-import java.util.*;
-import java.util.function.Function;
-
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.core.EventBus;
 import com.redhat.ipaas.core.IPaasServerException;
@@ -30,6 +23,7 @@ import com.redhat.ipaas.dao.init.ReadApiClientData;
 import com.redhat.ipaas.model.ChangeEvent;
 import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.WithId;
+import com.redhat.ipaas.model.connection.Action;
 import com.redhat.ipaas.model.connection.Connection;
 import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.connection.ConnectorGroup;
@@ -47,6 +41,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import java.util.*;
+import java.util.function.Function;
 
 @Service
 public class DataManager implements DataAccessObjectRegistry {
@@ -178,6 +178,8 @@ public class DataManager implements DataAccessObjectRegistry {
                 return Tag.class;
             case User.KIND:
                 return User.class;
+            case Action.KIND:
+                return Action.class;
             default:
                 break;
         }
@@ -289,7 +291,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
     /**
      * Perform a simple action if a {@link DataAccessObject} for the specified kind exists.
-     * This is just a way to avoid, duplivating the dao lookup and chekcs, which are going to change.
+     * This is just a way to avoid, duplicating the dao lookup and checks, which are going to change.
      * @param kind          The kind of the {@link DataAccessObject}.
      * @param function      The function to perfom on the {@link DataAccessObject}.
      * @param <O>           The return type.

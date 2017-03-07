@@ -17,17 +17,23 @@ package com.redhat.ipaas.rest.v1.handler.user;
 
 import javax.ws.rs.Path;
 
+import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.user.User;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Path("/users")
 @Api(value = "users")
 @Component
 public class UserHandler extends BaseHandler implements Lister<User>, Getter<User> {
+
+    public UserHandler(@Autowired DataManager dataMgr) {
+        super(dataMgr);
+    }
 
     @Override
     public Class<User> resourceClass() {

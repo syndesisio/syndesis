@@ -17,15 +17,21 @@ package com.redhat.ipaas.rest.v1.handler.environment;
 
 import javax.ws.rs.Path;
 
+import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.environment.Organization;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Path("/organizations")
 @Component
 public class Organizations extends BaseHandler implements Lister<Organization>, Getter<Organization> {
+
+    public Organizations(@Autowired DataManager dataMgr) {
+        super(dataMgr);
+    }
 
     @Override
     public Class<Organization> resourceClass() {

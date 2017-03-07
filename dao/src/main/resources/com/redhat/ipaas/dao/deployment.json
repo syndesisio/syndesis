@@ -1,202 +1,33 @@
 [
   {
     "data": {
-      "name": "Acme",
-      "id": 1
-    },
-    "kind": "organization"
-  },
-  {
-    "data": {
-      "name": "iPaaS Administrator",
-      "id": 1
-    },
-    "kind": "role"
-  },
-  {
-    "data": {
-      "name": "Expert User",
-      "id": 2
-    },
-    "kind": "role"
-  },
-  {
-    "data": {
-      "name": "Citizen User",
-      "id": 3
-    },
-    "kind": "role"
-  },
-  {
-    "data": {
-      "id":1,
-      "organizationId": 1,
-      "roleId": 3,
-      "username": "pfreeman",
-      "lastName": "Freeman",
-      "firstName": "Pearson"
-    },
-    "kind": "user"
-  },
-  {
-    "data": {
-      "id":2,
-      "organizationId": 1,
-      "roleId": 2,
-      "username": "syang",
-      "lastName": "Yang",
-      "firstName": "Sargent"
-    },
-    "kind": "user"
-  },
-  {
-    "data": {
-      "id":3,
-      "organizationId": 1,
-      "roleId": 2,
-      "username": "sgamble",
-      "lastName": "Gamble",
-      "firstName": "Sally"
-    },
-    "kind": "user"
-  },
-  {
-    "data": {
-      "id":4,
-      "organizationId": 1,
-      "roleId": 2,
-      "username": "jdonovan",
-      "lastName": "Donovan",
-      "firstName": "Jodi"
-    },
-    "kind": "user"
-  },
-  {
-    "data": {
-      "id":5,
-      "organizationId": 1,
-      "roleId": 1,
-      "username": "rwall",
-      "lastName": "Wall",
-      "firstName": "Ruthie"
-    },
-    "kind": "user"
-  },
-  {
-    "data": {
-      "id":6,
-      "organizationId": 1,
-      "roleId": 1,
-      "username": "fsingleton",
-      "lastName": "Singleton",
-      "firstName": "Fitzgerald"
-    },
-    "kind": "user"
-  },
-  {
-    "data": {
-      "id":7,
-      "organizationId": 1,
-      "roleId": 2,
-      "username": "lsargent",
-      "lastName": "Sargent",
-      "firstName": "Lynn"
-    },
-    "kind": "user"
-  },
-  {
-    "data": {
-      "id":8,
-      "organizationId": 1,
-      "roleId": 1,
-      "username": "jhogan",
-      "lastName": "Hogan",
-      "firstName": "Jenkins"
-    },
-    "kind": "user"
-  },
-  {
-    "data": {
-      "id":9,
-      "organizationId": 1,
-      "roleId": 3,
-      "username": "mgonzales",
-      "lastName": "Gonzales",
-      "firstName": "Melendez"
-    },
-    "kind": "user"
-  },
-  {
-    "data": {
-      "id":10,
-      "organizationId": 1,
-      "roleId": 3,
-      "username": "lgriffith",
-      "lastName": "Griffith",
-      "firstName": "Lowery"
-    },
-    "kind": "user"
-  },
-  {
-    "data": {
-      "name": "twitter",
-      "id": 1
-    },
-    "kind": "connector-group"
-  },
-  {
-    "data": {
-      "name": "salesforce",
-      "id": 2
-    },
-    "kind": "connector-group"
-  },
-  {
-    "data": {
-      "name": "exercitation",
-      "id": 1
-    },
-    "kind": "integration-pattern-group"
-  },
-  {
-    "data": {
-      "name": "consequat",
-      "id": 10
-    },
-    "kind": "integration-pattern-group"
-  },
-  {
-    "data": {
-      "connectorGroupId": "1",
-      "description": "Connection from twitter when anyone mention you",
+      "description": "Twitter connector",
       "properties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
       "icon": "fa-twitter",
-      "name": "TwitterMention",
-      "id": "org.foo_twitter-mention-connector_1.0"
+      "name": "Twitter",
+      "id": "twitter"
     },
     "kind": "connector"
   },
   {
     "data": {
       "connectorGroupId": "2",
-      "description": "Connection to Create or Update Salesforce Contact SObject",
+      "description": "Salesforce connector",
       "properties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}",
       "icon": "fa-puzzle-piece",
-      "name": "SalesforceUpsertContact",
-      "id": "org.foo_salesforce-upsert-contact-connector_1.0"
+      "name": "Salesforce",
+      "id": "salesforce"
     },
     "kind": "connector"
   },
   {
     "data": {
       "configuredProperties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
-      "userId": 4,
-      "organizationId": 1,
-      "connectorId": "org.foo_twitter-mention-connector_1.0",
+      "connectorId": "twitter",
       "position": "start",
-      "description": "Connection from twitter when anyone mention you",
+      "description": "Twitter Connection",
       "icon": "fa-twitter",
-      "name": "Twitter Mention",
+      "name": "Twitter Example",
       "id": 1
     },
     "kind": "connection"
@@ -204,34 +35,39 @@
   {
     "data": {
       "configuredProperties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}",
-      "userId": 1,
-      "organizationId": 1,
-      "connectorId": "org.foo_salesforce-upsert-contact-connector_1.0",
+      "connectorId": "salesforce",
       "position": "end",
-      "description": "Connection to Create or Update Salesforce Contact SObject",
+      "description": "Salesforce Connection",
       "icon": "fa-puzzle-piece",
-      "name": "Salesforce Upsert Contact",
+      "name": "Salesforce Example",
       "id": 2
     },
     "kind": "connection"
   },
   {
     "data": {
-      "configuration": "{}",
-      "userId": 8,
-      "organizationId": 1,
-      "name": "twitter-to-salesforce-template-test",
-      "id": 1
+      "connectorId": "twitter",
+      "description": "Connection from twitter when anyone mention you",
+      "properties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
+      "name": "TwitterMention",
+      "id": "org.foo_twitter-mention-connector_1.0"
     },
-    "kind": "integration-template"
+    "kind": "action"
+  },
+  {
+    "data": {
+      "connectorId": "salesforce",
+      "description": "Connection to Create or Update Salesforce Contact SObject",
+      "properties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}",
+      "name": "SalesforceUpsertContact",
+      "id": "org.foo_salesforce-upsert-contact-connector_1.0"
+    },
+    "kind": "action"
   },
   {
     "kind": "integration",
     "data": {
       "configuration": "",
-      "userId": null,
-      "users": [],
-      "tags": [],
       "connections": [
         {
           "organizationId": "1",
@@ -279,9 +115,6 @@
     "kind": "integration",
     "data": {
       "configuration": "",
-      "userId": null,
-      "users": [],
-      "tags": [],
       "connections": [
         {
           "organizationId": "1",

@@ -15,8 +15,6 @@
  */
 package com.redhat.ipaas.dao;
 
-import java.util.ArrayList;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.core.Json;
 import com.redhat.ipaas.dao.manager.DataManager;
@@ -24,6 +22,8 @@ import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.connection.Connection;
 import com.redhat.ipaas.model.connection.Connector;
 import org.junit.*;
+
+import java.util.ArrayList;
 
 @Ignore
 public class DataManagerTest {
@@ -79,9 +79,9 @@ public class DataManagerTest {
 
     @Test
     public void getConnector() {
-        Connector connector = dataManager.fetch(Connector.KIND, "org.foo_twitter-mention-connector_1.0");
+        Connector connector = dataManager.fetch(Connector.KIND, "twitter");
         System.out.println(connector.getName());
-        Assert.assertEquals("First Connector in the deployment.json is TwitterMention", "TwitterMention", connector.getName());
+        Assert.assertEquals("First Connector in the deployment.json is Twitter", "Twitter", connector.getName());
     }
 
 }

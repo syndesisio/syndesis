@@ -39,6 +39,7 @@ public class ConnectorsITCase extends BaseITCase {
     @Test
     public void connectorListWithValidToken() {
         ResponseEntity<ListResult> response = get("/api/v1/connectors", ListResult.class);
+        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
         ListResult<Connector> result = response.getBody();
         assertThat(result.getTotalCount()).as("connectors total").isEqualTo(2);
         assertThat(result.getItems()).as("connector list").hasSize(2);
@@ -46,10 +47,11 @@ public class ConnectorsITCase extends BaseITCase {
 
     @Test
     public void connectorsGetTest() {
-        ResponseEntity<Connector> result = get("/api/v1/connectors/org.foo_twitter-mention-connector_1.0", Connector.class);
-        Connector connector = result.getBody();
+        ResponseEntity<Connector> response = get("/api/v1/connectors/twitter", Connector.class);
+        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
+        Connector connector = response.getBody();
         assertThat(connector).isNotNull();
-        assertThat(connector.getId()).contains("org.foo_twitter-mention-connector_1.0");
+        assertThat(connector.getId()).contains("twitter");
     }
 
 }

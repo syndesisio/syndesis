@@ -17,17 +17,23 @@ package com.redhat.ipaas.rest.v1.handler.user;
 
 import javax.ws.rs.Path;
 
+import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.user.Role;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Path("/roles")
 @Api(value = "roles")
 @Component
 public class RoleHandler extends BaseHandler implements Lister<Role>, Getter<Role> {
+
+    public RoleHandler(@Autowired DataManager dataMgr) {
+        super(dataMgr);
+    }
 
     @Override
     public Class<Role> resourceClass() {

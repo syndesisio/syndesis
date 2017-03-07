@@ -23,7 +23,7 @@ import com.redhat.ipaas.rest.util.PaginationOptions;
 /**
  * Extracts the pagination options from the request.
  */
-class PaginationOptionsFromQueryParams implements PaginationOptions {
+public class PaginationOptionsFromQueryParams implements PaginationOptions {
 
     private final int page;
     private final int perPage;
@@ -32,7 +32,7 @@ class PaginationOptionsFromQueryParams implements PaginationOptions {
      *  Extracts the pagination options from the request.
      * @param uri The request context.
      */
-    PaginationOptionsFromQueryParams(UriInfo uri) {
+    public PaginationOptionsFromQueryParams(UriInfo uri) {
         MultivaluedMap<String, String> queryParams = uri.getQueryParameters();
         String pageQuery = queryParams.getFirst("page");
         if (pageQuery == null || pageQuery.isEmpty()) {

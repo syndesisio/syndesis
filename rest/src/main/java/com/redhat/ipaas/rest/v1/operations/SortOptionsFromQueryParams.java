@@ -25,12 +25,12 @@ import com.redhat.ipaas.rest.util.SortOptions;
  * @author roland
  * @since 14/12/16
  */
-class SortOptionsFromQueryParams implements SortOptions {
+public class SortOptionsFromQueryParams implements SortOptions {
 
     private final String sortField;
     private final SortDirection sortDirection;
 
-    SortOptionsFromQueryParams(UriInfo uri) {
+    public SortOptionsFromQueryParams(UriInfo uri) {
         MultivaluedMap<String, String> queryParams = uri.getQueryParameters();
         sortField = queryParams.getFirst("sort");
         String dir = queryParams.getFirst("direction");
