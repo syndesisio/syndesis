@@ -151,6 +151,7 @@
   <modules>
     <module>core</module>
     <module>model</module>
+    <module>model2</module>
     <module>dao</module>
     <module>jsondb</module>
     <module>rest</module>
