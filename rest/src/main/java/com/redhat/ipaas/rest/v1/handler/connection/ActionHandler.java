@@ -15,11 +15,13 @@
  */
 package com.redhat.ipaas.rest.v1.handler.connection;
 
+import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.connection.Action;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.Path;
 
@@ -27,6 +29,10 @@ import javax.ws.rs.Path;
 @Api(value = "actions")
 @org.springframework.stereotype.Component
 public class ActionHandler extends BaseHandler implements Lister<Action>, Getter<Action> {
+
+    public ActionHandler(@Autowired DataManager dataMgr) {
+        super(dataMgr);
+    }
 
     @Override
     public Class<Action> resourceClass() {

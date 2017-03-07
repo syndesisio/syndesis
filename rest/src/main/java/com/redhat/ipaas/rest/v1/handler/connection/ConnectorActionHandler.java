@@ -25,7 +25,7 @@ import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
 import com.redhat.ipaas.rest.v1.operations.PaginationOptionsFromQueryParams;
 import com.redhat.ipaas.rest.v1.operations.SortOptionsFromQueryParams;
-import com.redhat.ipaas.rest.v1.util.ResultFilter;
+import com.redhat.ipaas.rest.v1.util.PredicateFilter;
 import io.swagger.annotations.Api;
 
 import javax.ws.rs.WebApplicationException;
@@ -69,7 +69,7 @@ public class ConnectorActionHandler extends BaseHandler implements Lister<Action
     public ListResult<Action> list(UriInfo uriInfo) {
         return getDataManager().fetchAll(
             resourceKind(),
-            new ResultFilter<>((o) -> o.getConnectorId().equals(connectorId)),
+            new PredicateFilter<>((o) -> o.getConnectorId().equals(connectorId)),
             new ReflectiveSorter<>(resourceClass(), new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
         );

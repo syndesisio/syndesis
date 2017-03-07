@@ -18,16 +18,22 @@ package com.redhat.ipaas.rest.v1.handler.connection;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Path("/connectors")
 @Api(value = "connectors")
 @org.springframework.stereotype.Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector> {
+
+    public ConnectorHandler(@Autowired DataManager dataMgr) {
+        super(dataMgr);
+    }
 
     @Override
     public Class<Connector> resourceClass() {

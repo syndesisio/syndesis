@@ -20,15 +20,11 @@ import com.redhat.ipaas.dao.manager.WithDataManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-public class BaseHandler implements WithDataManager {
+public abstract class BaseHandler implements WithDataManager {
 
-    @Autowired
     private DataManager dataMgr;
 
-    public BaseHandler() {
-    }
-
-    public BaseHandler(DataManager dataMgr) {
+    protected BaseHandler(DataManager dataMgr) {
         this.dataMgr = dataMgr;
     }
 

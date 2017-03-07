@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * Generic filter that removes items that do not match predicate
  */
-public class ResultFilter<T> implements Function<ListResult<T>, ListResult<T>> {
+public class PredicateFilter<T> implements Function<ListResult<T>, ListResult<T>> {
 
     private final Predicate<T> filter;
 
@@ -37,7 +37,7 @@ public class ResultFilter<T> implements Function<ListResult<T>, ListResult<T>> {
         return new ListResult.Builder<T>().createFrom(result).items(list).totalCount(list.size()).build();
     }
 
-    public ResultFilter(Predicate<T> filter) {
+    public PredicateFilter(Predicate<T> filter) {
         this.filter = filter;
     }
 
