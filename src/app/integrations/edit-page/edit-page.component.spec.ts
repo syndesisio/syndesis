@@ -17,11 +17,11 @@ import { CurrentFlow } from './current-flow.service';
 
 import { CollapseModule } from 'ng2-bootstrap';
 
-import { IntegrationsCreatePage } from './create-page.component';
+import { IntegrationsEditPage } from './edit-page.component';
 
-describe('IntegrationsCreateComponent', () => {
-  let component: IntegrationsCreatePage;
-  let fixture: ComponentFixture<IntegrationsCreatePage>;
+describe('IntegrationsEditComponent', () => {
+  let component: IntegrationsEditPage;
+  let fixture: ComponentFixture<IntegrationsEditPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -35,7 +35,7 @@ describe('IntegrationsCreateComponent', () => {
         StoreModule,
       ],
       declarations: [
-        IntegrationsCreatePage,
+        IntegrationsEditPage,
         ConnectionsListComponent,
         ConnectionsListToolbarComponent,
         FlowViewComponent,
@@ -58,8 +58,9 @@ describe('IntegrationsCreateComponent', () => {
       .compileComponents();
   }));
 
+  // TODO: Add separate test for editing
   beforeEach(() => {
-    fixture = TestBed.createComponent(IntegrationsCreatePage);
+    fixture = TestBed.createComponent(IntegrationsEditPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

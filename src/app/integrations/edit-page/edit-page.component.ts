@@ -8,14 +8,14 @@ import { Integration } from '../../model';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
 import { log, getCategory } from '../../logging';
 
-const category = getCategory('IntegrationsCreatePage');
+const category = getCategory('IntegrationsEditPage');
 
 @Component({
-  selector: 'ipaas-integrations-create-page',
-  templateUrl: './create-page.component.html',
-  styleUrls: ['./create-page.component.scss'],
+  selector: 'ipaas-integrations-edit-page',
+  templateUrl: './edit-page.component.html',
+  styleUrls: ['./edit-page.component.scss'],
 })
-export class IntegrationsCreatePage implements OnInit, OnDestroy, AfterViewInit {
+export class IntegrationsEditPage implements OnInit, OnDestroy, AfterViewInit {
 
   integration: Observable<Integration>;
   private readonly loading: Observable<boolean>;
