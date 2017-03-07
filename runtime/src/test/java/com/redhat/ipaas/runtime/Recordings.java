@@ -15,17 +15,15 @@
  */
 package com.redhat.ipaas.runtime;
 
-import org.springframework.cglib.proxy.Enhancer;
-
-import javax.annotation.Nonnull;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+
+import javax.annotation.Nonnull;
+
+import org.springframework.cglib.proxy.Enhancer;
 
 /**
  * This class allows you to proxy other objects and record all

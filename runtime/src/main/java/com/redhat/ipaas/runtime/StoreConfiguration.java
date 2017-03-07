@@ -15,14 +15,14 @@
  */
 package com.redhat.ipaas.runtime;
 
+import javax.sql.DataSource;
+
 import com.redhat.ipaas.jsondb.JsonDB;
 import com.redhat.ipaas.jsondb.impl.SqlJsonDB;
 import org.skife.jdbi.v2.DBI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.sql.DataSource;
 
 /**
  * Creates and configures a DBI object

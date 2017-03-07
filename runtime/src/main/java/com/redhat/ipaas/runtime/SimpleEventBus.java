@@ -15,11 +15,11 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.redhat.ipaas.jsondb.impl.EventBus;
-import org.springframework.stereotype.Component;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.redhat.ipaas.core.EventBus;
+import org.springframework.stereotype.Component;
 
 /**
  * A simple event bus to abstract registering/sending Server Sent Events to browser clients

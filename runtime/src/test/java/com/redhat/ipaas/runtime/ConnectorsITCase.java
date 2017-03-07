@@ -15,9 +15,8 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.redhat.ipaas.rest.v1.model.connection.Connector;
-import com.redhat.ipaas.rest.v1.model.ListResult;
-
+import com.redhat.ipaas.model.ListResult;
+import com.redhat.ipaas.model.connection.Connector;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

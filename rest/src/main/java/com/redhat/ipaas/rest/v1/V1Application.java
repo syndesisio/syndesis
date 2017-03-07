@@ -15,10 +15,10 @@
  */
 package com.redhat.ipaas.rest.v1;
 
-import io.swagger.jaxrs.config.BeanConfig;
-
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+
+import io.swagger.jaxrs.config.BeanConfig;
 
 @ApplicationPath("/api/v1")
 public class V1Application extends Application {

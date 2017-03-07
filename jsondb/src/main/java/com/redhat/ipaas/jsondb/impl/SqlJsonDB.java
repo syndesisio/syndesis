@@ -15,14 +15,6 @@
  */
 package com.redhat.ipaas.jsondb.impl;
 
-import com.redhat.ipaas.jsondb.GetOptions;
-import com.redhat.ipaas.jsondb.JsonDB;
-import com.redhat.ipaas.jsondb.JsonDBException;
-import org.keycloak.common.util.Base64;
-import org.skife.jdbi.v2.*;
-import org.skife.jdbi.v2.tweak.ResultSetMapper;
-import org.skife.jdbi.v2.util.IntegerColumnMapper;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,6 +26,15 @@ import java.util.Random;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.redhat.ipaas.core.EventBus;
+import com.redhat.ipaas.jsondb.GetOptions;
+import com.redhat.ipaas.jsondb.JsonDB;
+import com.redhat.ipaas.jsondb.JsonDBException;
+import org.keycloak.common.util.Base64;
+import org.skife.jdbi.v2.*;
+import org.skife.jdbi.v2.tweak.ResultSetMapper;
+import org.skife.jdbi.v2.util.IntegerColumnMapper;
 
 /**
  * Implements the JsonDB via DBI/JDBC

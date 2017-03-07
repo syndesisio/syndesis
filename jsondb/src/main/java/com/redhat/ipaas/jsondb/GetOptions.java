@@ -15,10 +15,10 @@
  */
 package com.redhat.ipaas.jsondb;
 
-import org.immutables.value.Value;
-
 import java.io.Serializable;
 import java.util.Optional;
+
+import org.immutables.value.Value;
 
 /**
  * Options that can be configured on the {@link JsonDB#getAsString(String, GetOptions)}.

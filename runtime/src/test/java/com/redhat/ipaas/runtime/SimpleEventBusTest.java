@@ -15,11 +15,11 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.redhat.ipaas.jsondb.impl.EventBus;
-import org.junit.Test;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import com.redhat.ipaas.core.EventBus;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 

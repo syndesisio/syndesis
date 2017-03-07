@@ -15,26 +15,23 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.launchdarkly.eventsource.EventHandler;
-import com.launchdarkly.eventsource.EventSource;
-import com.launchdarkly.eventsource.MessageEvent;
-import com.redhat.ipaas.rest.v1.model.ChangeEvent;
-import com.redhat.ipaas.rest.v1.model.EventMessage;
-import com.redhat.ipaas.rest.v1.model.integration.Integration;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
-import org.junit.Test;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import com.launchdarkly.eventsource.EventHandler;
+import com.launchdarkly.eventsource.EventSource;
+import com.launchdarkly.eventsource.MessageEvent;
+import com.redhat.ipaas.model.ChangeEvent;
+import com.redhat.ipaas.model.EventMessage;
+import com.redhat.ipaas.model.integration.Integration;
+import okhttp3.*;
+import org.junit.Test;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import static com.redhat.ipaas.runtime.Recordings.*;
 import static org.assertj.core.api.Assertions.assertThat;

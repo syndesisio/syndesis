@@ -15,9 +15,11 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.redhat.ipaas.jsondb.impl.EventBus;
-import com.redhat.ipaas.rest.v1.controller.handler.events.EventReservationsHandler;
-import com.redhat.ipaas.rest.v1.model.EventMessage;
+import java.io.IOException;
+
+import com.redhat.ipaas.core.EventBus;
+import com.redhat.ipaas.model.EventMessage;
+import com.redhat.ipaas.rest.v1.handler.events.EventReservationsHandler;
 import io.undertow.Handlers;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.sse.ServerSentEventConnection;
@@ -30,8 +32,6 @@ import io.undertow.websockets.core.WebSockets;
 import io.undertow.websockets.spi.WebSocketHttpExchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 /**
  * Connects the the EventBus to an Undertow WebSocket Event handler

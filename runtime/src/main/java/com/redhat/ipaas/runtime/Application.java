@@ -15,6 +15,10 @@
  */
 package com.redhat.ipaas.runtime;
 
+import java.util.List;
+
+import com.redhat.ipaas.dao.manager.DataManager;
+import com.redhat.ipaas.jsondb.JsonDB;
 import com.redhat.ipaas.rest.v1.V1Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -25,10 +29,13 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
-import java.util.List;
-
 @SpringBootApplication
-@ComponentScan(basePackageClasses = {V1Application.class, Application.class})
+@ComponentScan(basePackageClasses = {
+    V1Application.class,
+    Application.class,
+    DataManager.class,
+    JsonDB.class
+})
 public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
