@@ -6,7 +6,7 @@ import { DynamicFormControlModel, DynamicFormService } from '@ng2-dynamic-forms/
 
 import { FormFactoryService } from '../../../common/forms.service';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Action } from '../../../model';
+import { Action, Step } from '../../../model';
 import { log, getCategory } from '../../../logging';
 
 const category = getCategory('IntegrationsCreatePage');
@@ -21,6 +21,7 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   position: number;
   action: Action = <Action>{ };
+  step: Step = <Step>{ };
   formModel: DynamicFormControlModel[];
   formGroup: FormGroup;
 
@@ -48,7 +49,8 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
     this.routeSubscription = this.route.params.pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
-        this.action = <Action> this.currentFlow.getStep(this.position);
+        const step = <Step> this.currentFlow.getStep(this.position);
+        const action = step.action;
         if (this.action && this.action.properties) {
           const configString = this.action.properties;
           // TODO giant hack so we see something on the config page
