@@ -36,9 +36,9 @@ spring:
   zipkin:
     enabled: false
   datasource:
-    url: jdbc:postgresql://localhost:26257/ipaas?sslmode=disable
-    username: root
-    password:
+    url: jdbc:postgresql://localhost:5432/ipaas?sslmode=disable
+    username: postgres
+    password: password
     driver-class-name: org.postgresql.Driver
 
 security:
