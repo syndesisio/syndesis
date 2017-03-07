@@ -6,5 +6,5 @@
   <h1>Select {{ atEnd() ? 'end' : 'start' }} Action</h1>
 </div>
 <p>Select an Action</p>
-<ipaas-actions-list-toolbar  [(filter)]="filter" [(sort)]="sort"></ipaas-actions-list-toolbar>
-<ipaas-actions-list [actions]="actions | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async" (onSelected)="onSelected($event)"></ipaas-actions-list>
+<ipaas-integratations-list-toolbar  [(filter)]="filter" [(sort)]="sort"></ipaas-integratations-list-toolbar>
+<ipaas-list-actions [actions]="actions | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async" (onSelected)="onSelected($event)"></ipaas-list-actions>
