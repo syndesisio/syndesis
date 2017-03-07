@@ -52,22 +52,22 @@
       <artifactId>camel-catalog</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.fabric8.funktion.camel-k8</groupId>
+      <groupId>io.fabric8.funktion</groupId>
       <artifactId>k8amq</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.fabric8.funktion.camel-k8</groupId>
+      <groupId>io.fabric8.funktion</groupId>
       <artifactId>k8elasticsearch</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.fabric8.funktion.camel-k8</groupId>
+      <groupId>io.fabric8.funktion</groupId>
       <artifactId>k8kafka</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.fabric8.funktion.camel-k8</groupId>
+      <groupId>io.fabric8.funktion</groupId>
       <artifactId>k8nats</artifactId>
       <version>${project.version}</version>
     </dependency>
