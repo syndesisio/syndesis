@@ -17,11 +17,14 @@
 package com.redhat.ipaas.github;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.redhat.ipaas.github.extended.ExtendedContentsService;
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryContents;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,15 +40,16 @@ import org.springframework.stereotype.Service;
 public class GitHubServiceImpl implements GitHubService {
 
     private RepositoryService repoService;
+    private ExtendedContentsService contentsService;
 
     @Value("github.service")
     private String gitHubHost;
 
     @PostConstruct
     public void init() {
-        // Maybe make the service name configurable ?
         GitHubClient client = new GitHubClient(gitHubHost != null ? gitHubHost : "ipaas-github-proxy");
         repoService = new RepositoryService(client);
+        contentsService = new ExtendedContentsService(client);
     }
 
 
@@ -70,8 +74,10 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     @Override
-    public void createOrUpdate(String repo, Map<String, byte[]> files) {
-        // TODO: Still to implement
+    public void createOrUpdate(String repo, String message, Map<String, byte[]> files) throws IOException {
+        for (Map.Entry<String, byte[]> entry : files.entrySet()) {
+            createOrUpdate(repo, message, entry.getKey(), entry.getValue());
+        }
     }
 
     // =====================================================================================
@@ -79,7 +85,7 @@ public class GitHubServiceImpl implements GitHubService {
     private boolean isValidRepoChar(int c) {
         return (c >= 'a' && c <= 'z') ||
                (c >= '0' && c <= '9') ||
-               c == '-';
+               (c == '-');
     }
 
     private void createRepo(String name) throws IOException {
@@ -88,13 +94,55 @@ public class GitHubServiceImpl implements GitHubService {
         repoService.createRepository(repo);
     }
 
-
     private boolean hasRepo(String name) throws IOException {
+        return getRepository(name) != null;
+    }
+
+    private Repository getRepository(String name) throws IOException {
         for (Repository repo : repoService.getRepositories()) {
             if (name.equals(repo.getName())) {
-                return true;
+                return repo;
             }
         }
-        return false;
+        return null;
+    }
+
+    private Repository getMandatoryRepository(String repo, String path) throws IOException {
+        Repository repository = getRepository(repo);
+        if (repository == null) {
+            throw new IOException("No repo " + repo + " exists for looking up file " + path);
+        }
+        return repository;
+    }
+
+    private void createOrUpdate(String repo, String message, String path, byte[] content) throws IOException {
+        String sha = getFileSha(repo, path);
+        if (sha != null) {
+            updateFile(repo, message, path, sha, content);
+        } else {
+            createFile(repo, message, path, content);
+        }
+    }
+
+    private String getFileSha(String repo, String path) throws IOException {
+        Repository repository = getMandatoryRepository(repo, path);
+        List<RepositoryContents> contents = contentsService.getContents(repository, path);
+        if (contents ==  null) {
+            return null;
+        }
+        if (contents.size() > 1) {
+            throw new IllegalArgumentException("Given path " + path + " doesn't specify a file");
+        }
+        return contents.get(0).getSha();
+    }
+
+    private void createFile(String repo, String message, String path, byte[] content) throws IOException {
+        Repository repository = getMandatoryRepository(repo, path);
+        contentsService.createFile(repository, message, path, content);
+    }
+
+    private void updateFile(String repo, String message, String path, String sha, byte[] content) throws IOException {
+        Repository repository = getMandatoryRepository(repo, path);
+        contentsService.updateFile(repository, message, path, sha, content);
     }
 }

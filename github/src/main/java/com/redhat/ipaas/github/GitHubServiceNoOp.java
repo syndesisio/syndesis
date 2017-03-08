@@ -41,7 +41,7 @@ public class GitHubServiceNoOp implements GitHubService {
     }
 
     @Override
-    public void createOrUpdate(String repo, Map<String, byte[]> files) {
+    public void createOrUpdate(String repo, String message, Map<String, byte[]> files) {
         // intentional empty
     }
 }

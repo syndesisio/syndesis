@@ -45,8 +45,9 @@ public interface GitHubService {
      * Create or update file in a given repo on the fly.
      *
      * @param repo to update
+     * @param message commit message to use
      * @param files map of files with the keys being relative paths within the the repo
      *              and the values is the content in bytes.
      */
-    void createOrUpdate(String repo, Map<String, byte[]> files);
+    void createOrUpdate(String repo, String message, Map<String, byte[]> files) throws IOException;
 }
