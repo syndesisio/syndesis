@@ -22,6 +22,17 @@
   },
   {
     "data": {
+      "connectorGroupId": "3",
+      "description": "HTTP connector",
+      "properties": "",
+      "icon": "fa-globe",
+      "name": "HTTP",
+      "id": "http"
+    },
+    "kind": "connector"
+  },
+  {
+    "data": {
       "configuredProperties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
       "connectorId": "twitter",
       "position": "start",
@@ -38,9 +49,21 @@
       "connectorId": "salesforce",
       "position": "end",
       "description": "Salesforce Connection",
-      "icon": "fa-puzzle-piece",
+      "icon": "fa-globe",
       "name": "Salesforce Example",
       "id": 2
+    },
+    "kind": "connection"
+  },
+  {
+    "data": {
+      "configuredProperties": "{}",
+      "connectorId": "http",
+      "position": "end",
+      "description": "HTTP Connection",
+      "icon": "fa-globe",
+      "name": "HTTP",
+      "id": 3
     },
     "kind": "connection"
   },
@@ -50,7 +73,9 @@
       "description": "Connection from twitter when anyone mention you",
       "properties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
       "name": "TwitterMention",
-      "id": "org.foo_twitter-mention-connector_1.0"
+      "id": "org.foo_twitter-mention-connector_1.0",
+      "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:0.2.0",
+      "camelConnectorPrefix": "twitter-mention"
     },
     "kind": "action"
   },
@@ -60,7 +85,33 @@
       "description": "Connection to Create or Update Salesforce Contact SObject",
       "properties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}",
       "name": "SalesforceUpsertContact",
-      "id": "org.foo_salesforce-upsert-contact-connector_1.0"
+      "id": "org.foo_salesforce-upsert-contact-connector_1.0",
+      "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:0.2.0",
+      "camelConnectorPrefix": "salesforce-upsert-contact"
+    },
+    "kind": "action"
+  },
+  {
+    "data": {
+      "connectorId": "http",
+      "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+      "properties": "{\"httpUri\": { \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+      "name": "HTTP GET",
+      "id": "com.redhat.ipaas:http-get-connector:0.2.0",
+      "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.0",
+      "camelConnectorPrefix": "http-get"
+    },
+    "kind": "action"
+  },
+  {
+    "data": {
+      "connectorId": "http",
+      "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+      "properties": "{\"httpUri\": { \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+      "name": "HTTP GET",
+      "id": "com.redhat.ipaas:http-post-connector:0.2.0",
+      "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.0",
+      "camelConnectorPrefix": "http-post"
     },
     "kind": "action"
   },

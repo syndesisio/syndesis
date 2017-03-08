@@ -70,6 +70,8 @@ public interface Integration extends WithId<Integration>, WithName, Serializable
 
     Optional<String> getDescription();
 
+    Optional<String> getGitRepo();
+
     @Override
     default Integration withId(String id) {
         return new Builder().createFrom(this).id(id).build();
