@@ -14,7 +14,7 @@
     "javaType": "com.redhat.ipaas.connector.http.HttpGetComponent",
     "groupId": "com.redhat.ipaas",
     "artifactId": "http-get-connector",
-    "version": "0.1.1-SNAPSHOT"
+    "version": "0.1-SNAPSHOT"
   },
   "componentProperties": {
   },

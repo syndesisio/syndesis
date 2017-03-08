@@ -32,16 +32,7 @@ public class HttpGetComponent extends DefaultConnectorComponent {
     public void addConnectorOption(Map<String, String> options, String name, String value) {
         if (name.equals("httpUri")) {
             // need to remove any http:// prefix from the http uri option as http4 component wont expect this
-            if (value.startsWith("http://")) {
-                value = value.substring(7);
-            } else if (value.startsWith("http:")) {
-                value = value.substring(5);
-            }
-            if (value.startsWith("https://")) {
-                value = value.substring(8);
-            } else if (value.startsWith("https:")) {
-                value = value.substring(6);
-            }
+            value = value.replaceFirst("^https?:(?://)?", "");
         }
 
         super.addConnectorOption(options, name, value);
