@@ -1,0 +1,32 @@
+<ipaas-loading [loading]="loading">
+  <div class="integrations list-actions">
+    
+    <div class="action col-xs-12"
+         *ngFor="let action of actions"
+         (click)="onSelect(action)"
+         [class.active]="isSelected(action)">
+  
+      <!-- Toast Notification Container -->
+      <toaster-container></toaster-container>
+  
+      <!-- Radio Buttons -->
+      <div class="col-xs-2 icons">
+        <div class="list-view-pf-left">
+          <input type="radio">
+        </div>
+      </div>
+      
+      <!-- Name -->
+      <div class="col-xs-3 name">
+        {{ action.name }}
+      </div>
+      
+      <!-- Description -->
+      <div class="col-xs-5 description">
+        <div class="list-group-item-text">
+          {{ action.description | truncate : truncateLimit : truncateTrail }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ipaas-loading>

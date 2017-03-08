@@ -1,11 +1,11 @@
 <ol class="breadcrumb">
   <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
-  <li class="active">Configure {{ connection.name }}</li>
+  <li class="active">Configure {{ action.name }}</li>
 </ol>
 <div class="title">
-  <h1>Configure {{ connection.name }}</h1>
+  <h1>Configure {{ action.name }}</h1>
 </div>
-<p>Fill out the fields associated with the selected connection.</p>
+<p>Fill out the fields associated with the selected action.</p>
 <div *ngIf="formGroup">
   <form [formGroup]="formGroup">
     <dynamic-form-bootstrap-control *ngFor="let controlModel of formModel"
