@@ -108,7 +108,7 @@
       "connectorId": "http",
       "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
       "properties": "{\"httpUri\": { \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
-      "name": "HTTP GET",
+      "name": "HTTP POST",
       "id": "com.redhat.ipaas:http-post-connector:0.2.0",
       "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.0",
       "camelConnectorPrefix": "http-post"
