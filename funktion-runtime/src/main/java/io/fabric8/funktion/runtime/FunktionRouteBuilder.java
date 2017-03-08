@@ -112,10 +112,11 @@ public class FunktionRouteBuilder extends RouteBuilder {
     }
 
     protected void configureRule(Flow flow, int funktionIndex) throws MalformedURLException {
+        getContext().setStreamCaching(true);
+
         if (flow.isTraceEnabled()) {
             getContext().setTracing(true);
         }
-
 
         StringBuilder message = new StringBuilder("FLOW ");
         String name = flow.getName();
