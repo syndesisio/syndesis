@@ -63,6 +63,34 @@ parameters:
   description: GitHub OAuth default scopes
   value: "user:email public_repo"
   required: true
+- description: Maximum amount of memory the PostgreSQL container can use.
+  displayName: Memory Limit
+  name: POSTGRESQL_MEMORY_LIMIT
+  value: 512Mi
+- description: The OpenShift Namespace where the PostgreSQL ImageStream resides.
+  displayName: Namespace
+  name: POSTGRESQL_IMAGE_STREAM_NAMESPACE
+  value: openshift
+- description: Username for PostgreSQL user that will be used for accessing the database.
+  displayName: PostgreSQL Connection Username
+  name: POSTGRESQL_USER
+  value: ipaas
+- description: Password for the PostgreSQL connection user.
+  displayName: PostgreSQL Connection Password
+  from: '[a-zA-Z0-9]{16}'
+  generate: expression
+  name: POSTGRESQL_PASSWORD
+  required: true
+- description: Name of the PostgreSQL database accessed.
+  displayName: PostgreSQL Database Name
+  name: POSTGRESQL_DATABASE
+  required: true
+  value: ipaas
+- description: Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi.
+  displayName: Volume Capacity
+  name: POSTGRESQL_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
 message: |-
   Red Hat iPaaS is deployed to ${ROUTE_HOSTNAME}.
 
@@ -581,6 +609,77 @@ objects:
       type: ImageChange
     - type: ConfigChange
 - apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ipaas-db
+    labels:
+      app: redhat-ipaas
+      component: ipaas-db
+  spec:
+    replicas: 1
+    selector:
+      app: redhat-ipaas
+      component: ipaas-db
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: redhat-ipaas
+          component: ipaas-db
+      spec:
+        containers:
+        - capabilities: {}
+          env:
+          - name: POSTGRESQL_USER
+            value: ${POSTGRESQL_USER}
+          - name: POSTGRESQL_PASSWORD
+            value: ${POSTGRESQL_PASSWORD}
+          - name: POSTGRESQL_DATABASE
+            value: ${POSTGRESQL_DATABASE}
+          image: ' '
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            initialDelaySeconds: 10
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: ${POSTGRESQL_MEMORY_LIMIT}
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: ipaas-db-data
+        volumes:
+        - name: ipaas-db-data
+          persistentVolumeClaim:
+            claimName: ipaas-db
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
+          namespace: ${POSTGRESQL_IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
   kind: Service
   metadata:
     labels:
@@ -665,6 +764,40 @@ objects:
     selector:
       app: redhat-ipaas
       component: ipaas-github-proxy
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ipaas-db
+    labels:
+      app: redhat-ipaas
+      component: ipaas-db
+  spec:
+    ports:
+    - name: postgresql
+      nodePort: 0
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: redhat-ipaas
+      component: ipaas-db
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ipaas-db
+    labels:
+      app: redhat-ipaas
+      component: ipaas-db
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${POSTGRESQL_VOLUME_CAPACITY}
 - apiVersion: v1
   kind: Route
   metadata:
@@ -1811,6 +1944,11 @@ objects:
       spring:
         zipkin:
           enabled: false
+        datasource:
+          url: jdbc:postgresql://ipaas-db:5432/ipaas?sslmode=disable
+          username: ${POSTGRESQL_USER}
+          password: ${POSTGRESQL_PASSWORD}
+          driver-class-name: org.postgresql.Driver
       security:
         basic:
           enabled: false
@@ -1821,9 +1959,13 @@ objects:
       endpoints:
         health:
           sensitive: false
+        jsondb:
+          enabled: true
       keycloak:
         enabled: true
         configurationFile: file:config/ipaas-client.json
+      dao:
+        kind: jsondb
     ipaas-client.json: |-
       {
         "realm": "${KEYCLOAK_IPAAS_REALM_NAME}",

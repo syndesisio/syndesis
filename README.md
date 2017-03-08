@@ -35,6 +35,12 @@ Once all pods are started up, you should be able to access the iPaaS at `https:/
 * `GITHUB_OAUTH_CLIENT_ID` GitHub OAuth client ID
 * `GITHUB_OAUTH_CLIENT_SECRET` GitHub OAuth client secret
 * `GITHUB_OAUTH_DEFAULT_SCOPES` GitHub OAuth default scopes
+* `POSTGRESQL_MEMORY_LIMIT` Maximum amount of memory the PostgreSQL container can use
+* `POSTGRESQL_IMAGE_STREAM_NAMESPACE` The OpenShift Namespace where the PostgreSQL ImageStream resides
+* `POSTGRESQL_USER` Username for PostgreSQL user that will be used for accessing the database
+* `POSTGRESQL_PASSWORD` Password for the PostgreSQL connection user
+* `POSTGRESQL_DATABASE` Name of the PostgreSQL database accessed
+* `POSTGRESQL_VOLUME_CAPACITY` Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi
 
 ## Running locally for development
 
