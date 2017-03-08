@@ -100,7 +100,7 @@ export class CurrentFlow {
       return undefined;
     }
     // TODO the backend isn't saving the 'kind' field. fudge it
-    if (step.kind === 'endpoint' || step.kind === 'connection' || !step.kind) {
+    if (step.kind === ('endpoint' || 'connection') || !step.kind) {
       return this.getConnection(step.id);
     } else {
       return step;
@@ -132,22 +132,22 @@ export class CurrentFlow {
     log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
     switch (event.kind) {
       case 'integration-set-connection':
-      const position = +event['position'];
-      let connection = event['connection'];
-      if (connection.plain && typeof connection.plain === 'function') {
-        connection = connection.plain();
-      }
-      this.connections[position] = connection;
-      this.steps[position] = <Step> {
+        const position = +event[ 'position' ];
+        let connection = event[ 'connection' ];
+        if (connection.plain && typeof connection.plain === 'function') {
+          connection = connection.plain();
+        }
+        this.connections[ position ] = connection;
+        this.steps[position] = <Step> {
         configuredProperties: connection['configuredProperties'],
         id: connection['id'],
         kind: 'endpoint',
-      };
-      log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
-      break;
+        };
+        log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
+        break;
       case 'integration-set-name':
-      this._integration.name = event['name'];
-      break;
+        this._integration.name = event['name'];
+        break;
       case 'integration-save':
         log.debugc(() => 'Saving integration: ' + this.integration);
         // poor man's clone in case we need to munge the data
@@ -177,7 +177,7 @@ export class CurrentFlow {
           }
           sub.unsubscribe();
         });
-      break;
+        break;
     }
     // log.debugc(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);
   }

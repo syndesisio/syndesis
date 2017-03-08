@@ -192,7 +192,7 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
         this.currentFlow.events.emit({
           kind: 'integration-set-connection',
           position: this.position,
-          action: event['connection'],
+          connection: event['connection'],
         });
         this._canContinue = true;
         this.continue();
