@@ -131,17 +131,31 @@ export class CurrentFlow {
   handleEvent(event: FlowEvent): void {
     log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
     switch (event.kind) {
-      case 'integration-set-connection':
-        const position = +event[ 'position' ];
+      case 'integration-selected-action':
+        let position = +event[ 'position' ];
+        let action = event[ 'action' ];
+        if (action.plain && typeof action.plain === 'function') {
+          action = action.plain();
+        }
+        //this.actions[ position ] = action;
+        this.steps[position] = <Step> {
+          configuredProperties: action['properties'],
+          id: action['id'],
+          kind: 'endpoint',
+        };
+        log.debugc(() => 'Set action ' + action.name + ' at position: ' + position, category);
+        break;
+      case 'integration-selected-connection':
+        position = +event[ 'position' ];
         let connection = event[ 'connection' ];
         if (connection.plain && typeof connection.plain === 'function') {
           connection = connection.plain();
         }
         this.connections[ position ] = connection;
         this.steps[position] = <Step> {
-        configuredProperties: connection['configuredProperties'],
-        id: connection['id'],
-        kind: 'endpoint',
+          configuredProperties: connection['configuredProperties'],
+          id: connection['id'],
+          kind: 'endpoint',
         };
         log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
         break;
@@ -188,6 +202,21 @@ export class CurrentFlow {
     }
     return this._integration;
   }
+
+
+  // Actions are not assignable to Integrations
+  /*
+  get actions(): Array<Action> {
+    if (!this._integration) {
+      return undefined;
+    } else {
+      if (!this._integration.actions) {
+        this._integration.actions = [];
+      }
+      return this._integration.actions;
+    }
+  }
+  */
 
   get connections(): Array<Connection> {
     if (!this._integration) {
