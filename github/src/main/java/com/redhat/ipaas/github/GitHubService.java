@@ -18,24 +18,11 @@ package com.redhat.ipaas.github;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.RepositoryService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GitHubService {
-
-    private final RepositoryService repoService;
-
-    public GitHubService() {
-        // Maybe make the service name configurable ?
-        GitHubClient client = new GitHubClient("ipaas-github-proxy");
-        repoService = new RepositoryService(client);
-    }
+public interface GitHubService {
 
     /**
      * Ensure that a given repository name exists. If it does not exist,
@@ -44,11 +31,7 @@ public class GitHubService {
      * @param name name of the repository to create. This name should
      *             be already a valid repo name. Must not be null.
      */
-    public void ensureRepository(String name) throws IOException {
-        if (!hasRepo(name)) {
-            createRepo(name);
-        }
-    }
+    void ensureRepository(String name) throws IOException;
 
     /**
      * Convert a given name to GitHub acceptable repo name.
@@ -56,14 +39,7 @@ public class GitHubService {
      * @param name to sanitize, must not be null
      * @return sanitized name.
      */
-    public String sanitizeRepoName(String name) {
-        String ret = name.length() > 100 ? name.substring(0,100) : name;
-        ret = ret.replace(" ","-");
-        Pattern VALID_CHAR = Pattern.compile("^[a-zA-Z0-9\\-]$");
-        return Pattern.compile("").splitAsStream(ret)
-                      .filter(s -> VALID_CHAR.matcher(s).matches())
-                      .collect(Collectors.joining());
-    }
+    String sanitizeRepoName(String name);
 
     /**
      * Create or update file in a given repo on the fly.
@@ -72,25 +48,5 @@ public class GitHubService {
      * @param files map of files with the keys being relative paths within the the repo
      *              and the values is the content in bytes.
      */
-    public void createOrUpdate(String repo, Map<String,byte[]> files) {
-
-    }
-
-    // =====================================================================================
-
-    private void createRepo(String name) throws IOException {
-        Repository repo = new Repository();
-        repo.setName(name);
-        repoService.createRepository(repo);
-    }
-
-
-    private boolean hasRepo(String name) throws IOException {
-        for (Repository repo : repoService.getRepositories()) {
-            if (name.equals(repo.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+    void createOrUpdate(String repo, Map<String, byte[]> files);
 }

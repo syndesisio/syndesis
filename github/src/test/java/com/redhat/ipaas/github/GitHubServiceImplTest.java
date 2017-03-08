@@ -20,13 +20,13 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class GitHubServiceTest {
+public class GitHubServiceImplTest {
 
 
 
     @Test
     public void sanitizeRepoName() throws Exception {
-        GitHubService service = new GitHubService();
+        GitHubService service = new GitHubServiceImpl();
 
         String data[] = {
             "bla", "bla",
