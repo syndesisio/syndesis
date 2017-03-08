@@ -14,7 +14,7 @@
     "javaType": "com.redhat.ipaas.connector.salesforce.SalesforceUpsertContactComponent",
     "groupId": "com.redhat.ipaas",
     "artifactId": "salesforce-upsert-contact-connector",
-    "version": "0.1-SNAPSHOT"
+    "version": "0.2.1"
   },
   "componentProperties": {
     "loginUrl": { "kind": "property", "displayName": "Login Url", "group": "security", "label": "security", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "defaultValue": "https://login.salesforce.com", "description": "Salesforce login URL defaults to https://login.salesforce.com" },

@@ -14,7 +14,7 @@
     "javaType": "com.redhat.ipaas.connector.http.HttpPostComponent",
     "groupId": "com.redhat.ipaas",
     "artifactId": "http-post-connector",
-    "version": "0.1-SNAPSHOT"
+    "version": "0.2.1"
   },
   "componentProperties": {
   },
