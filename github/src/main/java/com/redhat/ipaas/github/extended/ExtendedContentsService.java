@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2017 Red Hat, Inc.
+/**
+ * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.redhat.ipaas.github.extended;
 
 import java.io.IOException;
@@ -21,7 +20,6 @@ import java.io.IOException;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.ContentsService;
-import org.springframework.stereotype.Service;
 
 import static org.eclipse.egit.github.core.client.IGitHubConstants.*;
 
