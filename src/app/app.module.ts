@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, NgZone, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -22,7 +22,7 @@ import { ConfigService } from './config.service';
 import { UserService } from './common/user.service';
 import { log } from './logging';
 
-export function appInitializer(configService: ConfigService, oauthService: OAuthService, userService: UserService) {
+export function appInitializer(configService: ConfigService, oauthService: OAuthService, userService: UserService, ngZone: NgZone) {
   return () => {
     return configService.load().then(() => {
       oauthService.clientId = configService.getSettings('oauth', 'clientId');
@@ -88,13 +88,19 @@ export function appInitializer(configService: ConfigService, oauthService: OAuth
 
         // Only do refreshes if we're doing a hybrid oauth flow.
         if (oauthService.hybrid) {
-          Observable.interval(1000 * 60).subscribe(
-            () => {
-              oauthService.refreshToken().catch(
-                (reason) => log.errorc(() => 'Failed to refresh token', () => new Error(reason)),
-              );
-            },
-          );
+          ngZone.runOutsideAngular(() => {
+            // see https://christianliebel.com/2016/11/angular-2-protractor-timeout-heres-fix/
+            // registered observable / timeout makes protractor wait forever
+            Observable.interval(1000 * 60).subscribe(
+              () => {
+                ngZone.run(() => {
+                  oauthService.refreshToken().catch(
+                    (reason) => log.errorc(() => 'Failed to refresh token', () => new Error(reason)),
+                  );
+                });
+              },
+            );
+          });
         }
       });
     });
@@ -155,7 +161,7 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
-      deps: [ConfigService, OAuthService, UserService],
+      deps: [ConfigService, OAuthService, UserService, NgZone],
       multi: true,
     },
   ],
