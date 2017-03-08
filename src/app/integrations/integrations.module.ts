@@ -10,9 +10,9 @@ import { TabsModule } from 'ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
 
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
-import { IntegrationsSelectConnectionComponent } from './edit-page/select-connection/select-connection.component';
-import { IntegrationsConfigureActionComponent } from './edit-page/configure-action/configure-action.component';
-import { IntegrationsSelectActionComponent } from './edit-page/select-action/select-action.component';
+import { IntegrationsSelectConnectionComponent } from './edit-page/connection-select/connection-select.component';
+import { IntegrationsConfigureActionComponent } from './edit-page/action-configure/action-configure.component';
+import { IntegrationsSelectActionComponent } from './edit-page/action-select/action-select.component';
 import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
 import { IntegrationsStepSelectComponent } from './edit-page/step-select/step-select.component';
 import { IntegrationsStepConfigureComponent } from './edit-page/step-configure/step-configure.component';
