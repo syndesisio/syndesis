@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
 import { IntegrationStore } from '../../store/integration/integration.store';
-import { Integration, Step, Connection } from '../../model';
+import { Action, Integration, Step, Connection } from '../../model';
 import { log, getCategory } from '../../logging';
 
 const category = getCategory('CurrentFlow');
@@ -21,15 +21,30 @@ export class CurrentFlow {
 
   events = new EventEmitter<FlowEvent>();
 
-  constructor(
-    private store: IntegrationStore,
-    ) {
+  constructor( private store: IntegrationStore ) {
     this.subscription = this.events.subscribe((event: FlowEvent) => this.handleEvent(event));
   }
 
   isValid() {
     // TODO more validations on the integration
     return (this.integration.name && this.integration.name.length);
+  }
+
+  getAction(id: string): Action {
+    if (!this.integration) {
+      return undefined;
+    }
+    return this.actions.find((action) => {
+      return action.id === id;
+    });
+  }
+
+  getStartAction(): Action {
+    return;
+  }
+
+  getEndAction(): Action {
+    return;
   }
 
   getConnection(id: string): Connection {
@@ -100,7 +115,7 @@ export class CurrentFlow {
       return undefined;
     }
     // TODO the backend isn't saving the 'kind' field. fudge it
-    if (step.kind === ('endpoint' || 'connection') || !step.kind) {
+    if (step.kind === ('endpoint' || 'connection' || 'action') || !step.kind) {
       return this.getConnection(step.id);
     } else {
       return step;
@@ -111,7 +126,7 @@ export class CurrentFlow {
     if (!this.integration) {
       return undefined;
     }
-    return this.stepToConnection(<Step> this.steps[position]);
+    return this.stepToConnection(<Step> this.steps[ position ]);
   }
 
   isEmpty(): boolean {
@@ -138,9 +153,9 @@ export class CurrentFlow {
           action = action.plain();
         }
         //this.actions[ position ] = action;
-        this.steps[position] = <Step> {
-          configuredProperties: action['properties'],
-          id: action['id'],
+        this.steps[ position ] = <Step> {
+          configuredProperties: action[ 'properties' ],
+          id: action[ 'id' ],
           kind: 'endpoint',
         };
         log.debugc(() => 'Set action ' + action.name + ' at position: ' + position, category);
@@ -152,15 +167,15 @@ export class CurrentFlow {
           connection = connection.plain();
         }
         this.connections[ position ] = connection;
-        this.steps[position] = <Step> {
-          configuredProperties: connection['configuredProperties'],
-          id: connection['id'],
+        this.steps[ position ] = <Step> {
+          configuredProperties: connection[ 'configuredProperties' ],
+          id: connection[ 'id' ],
           kind: 'endpoint',
         };
         log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
         break;
       case 'integration-set-name':
-        this._integration.name = event['name'];
+        this._integration.name = event[ 'name' ];
         break;
       case 'integration-save':
         log.debugc(() => 'Saving integration: ' + this.integration);
@@ -168,24 +183,24 @@ export class CurrentFlow {
         const integration = JSON.parse(JSON.stringify(this.integration));
         // TODO munging connection objects for now
         /*
-        const steps = integration.steps;
-        const newSteps = [];
-        for (const step of steps) {
-          newSteps.push();
-        }
-        integration.steps = newSteps;
-        integration.connections = steps;
-        */
+         const steps = integration.steps;
+         const newSteps = [];
+         for (const step of steps) {
+         newSteps.push();
+         }
+         integration.steps = newSteps;
+         integration.connections = steps;
+         */
         const sub = this.store.updateOrCreate(integration).subscribe((i: Integration) => {
           log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
-          const action = event['action'];
+          action = event[ 'action' ];
           if (action && typeof action === 'function') {
             action(i);
           }
           sub.unsubscribe();
         }, (reason: any) => {
           log.debugc(() => 'Error saving integration: ' + JSON.stringify(reason, undefined, 2), category);
-          const errorAction = event['error'];
+          const errorAction = event[ 'error' ];
           if (errorAction && typeof errorAction === 'function') {
             errorAction(reason);
           }
@@ -205,18 +220,18 @@ export class CurrentFlow {
 
 
   // Actions are not assignable to Integrations
-  /*
   get actions(): Array<Action> {
     if (!this._integration) {
       return undefined;
     } else {
+      /*
       if (!this._integration.actions) {
         this._integration.actions = [];
       }
       return this._integration.actions;
+      */
     }
   }
-  */
 
   get connections(): Array<Connection> {
     if (!this._integration) {
