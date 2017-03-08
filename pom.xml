@@ -151,6 +151,7 @@
   <modules>
     <module>connectors</module>
     <module>examples</module>
+    <module>catalog</module>
   </modules>
 
   <dependencyManagement>
