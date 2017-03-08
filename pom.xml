@@ -156,6 +156,7 @@
     <module>jsondb</module>
     <module>rest</module>
     <module>runtime</module>
+    <module>github</module>
   </modules>
 
   <dependencyManagement>
@@ -228,6 +229,12 @@
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
         <artifactId>rest</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>github</artifactId>
         <version>${project.version}</version>
       </dependency>
 

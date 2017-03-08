@@ -346,6 +346,11 @@
       <groupId>com.redhat.ipaas</groupId>
       <artifactId>rest</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>github</artifactId>
+    </dependency>
     <!-- ===================================================================================== -->
 
     <dependency>
