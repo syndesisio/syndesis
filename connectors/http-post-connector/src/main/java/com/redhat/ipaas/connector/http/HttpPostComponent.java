@@ -20,12 +20,12 @@ import java.util.Map;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
 /**
- * Camel HTTP connector
+ * Camel HTTP POST connector
  */
-public class HttpComponent extends DefaultConnectorComponent {
+public class HttpPostComponent extends DefaultConnectorComponent {
     
-    public HttpComponent() {
-        super("http-pull-push", "com.redhat.ipaas.connector.http.HttpComponent");
+    public HttpPostComponent() {
+        super("http-post", "com.redhat.ipaas.connector.http.HttpPostComponent");
     }
 
     @Override

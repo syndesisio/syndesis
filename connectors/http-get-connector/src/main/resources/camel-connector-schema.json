@@ -1,0 +1,24 @@
+{
+  "component": {
+    "kind": "component",
+    "baseScheme": "http4",
+    "scheme": "http-get",
+    "syntax": "http-get:httpUri",
+    "title": "HTTP",
+    "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL.",
+    "label": "http",
+    "deprecated": false,
+    "async": false,
+    "producerOnly": true,
+    "lenientProperties": true,
+    "javaType": "com.redhat.ipaas.connector.http.HttpGetComponent",
+    "groupId": "com.redhat.ipaas",
+    "artifactId": "http-get-connector",
+    "version": "0.1.1-SNAPSHOT"
+  },
+  "componentProperties": {
+  },
+  "properties": {
+    "httpUri": { "kind": "path", "displayName": "Http Uri", "group": "producer", "label": "producer", "required": true, "type": "string", "javaType": "java.net.URI", "deprecated": false, "secret": false, "description": "The url of the HTTP endpoint to call." }
+  }
+}

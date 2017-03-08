@@ -1,0 +1,19 @@
+{
+  "baseScheme": "http4",
+  "baseGroupId": "org.apache.camel",
+  "baseArtifactId": "camel-http4",
+  "baseVersion": "2.19.0-SNAPSHOT",
+  "name": "HTTP",
+  "scheme": "http-post",
+  "javaType": "com.redhat.ipaas.connector.http.HttpPostComponent",
+  "groupId": "com.redhat.ipaas",
+  "artifactId": "http-port-connector",
+  "version": "1.0",
+  "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL.",
+  "labels" : [ "http" ],
+  "pattern": "To",
+  "endpointOptions" : [ "httpUri" ],
+  "endpointValues" : {
+    "httpMethod": "POST"
+  }
+}
