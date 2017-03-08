@@ -18,8 +18,6 @@ package com.redhat.ipaas.github;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -61,19 +59,28 @@ public class GitHubServiceImpl implements GitHubService {
     @Override
     public String sanitizeRepoName(String name) {
         String ret = name.length() > 100 ? name.substring(0,100) : name;
-        ret = ret.replace(" ","-");
-        Pattern VALID_CHAR = Pattern.compile("^[a-zA-Z0-9\\-]$");
-        return Pattern.compile("").splitAsStream(ret)
-                      .filter(s -> VALID_CHAR.matcher(s).matches())
-                      .collect(Collectors.joining());
+        return ret.replace(" ","-")
+                  .toLowerCase()
+                  .chars()
+                  .filter(this::isValidRepoChar)
+                  .collect(StringBuilder::new,
+                           StringBuilder::appendCodePoint,
+                           StringBuilder::append)
+                  .toString();
     }
 
     @Override
     public void createOrUpdate(String repo, Map<String, byte[]> files) {
-
+        // TODO: Still to implement
     }
 
     // =====================================================================================
+
+    private boolean isValidRepoChar(int c) {
+        return (c >= 'a' && c <= 'z') ||
+               (c >= '0' && c <= '9') ||
+               c == '-';
+    }
 
     private void createRepo(String name) throws IOException {
         Repository repo = new Repository();

@@ -36,7 +36,9 @@ public class GitHubServiceImplTest {
 
             "how-are-you", "how are you?",
 
-            "yet-sth--with--spaceS", "yet sth  with !#ä spaceS",
+            "yet-sth--with--spaces", "yet sth  with !#ä spaceS",
+
+            "aaa-big-and-small-zzz", "AaA BIG and Small ZzZ",
         };
 
         for (int i = 0; i < data.length; i +=2) {
