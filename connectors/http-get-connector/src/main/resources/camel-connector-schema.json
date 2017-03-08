@@ -2,8 +2,8 @@
   "component": {
     "kind": "component",
     "baseScheme": "http4",
-    "scheme": "http-get-pull-push",
-    "syntax": "http-get-pull-push:httpUri",
+    "scheme": "http-get",
+    "syntax": "http-get:httpUri",
     "title": "HTTP",
     "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL.",
     "label": "http",
@@ -11,7 +11,7 @@
     "async": false,
     "producerOnly": true,
     "lenientProperties": true,
-    "javaType": "null",
+    "javaType": "com.redhat.ipaas.connector.http.HttpGetComponent",
     "groupId": "com.redhat.ipaas",
     "artifactId": "http-get-connector",
     "version": "0.1.1-SNAPSHOT"

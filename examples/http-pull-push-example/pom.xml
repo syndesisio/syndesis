@@ -77,7 +77,12 @@
     </dependency>
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
-      <artifactId>http-connector</artifactId>
+      <artifactId>http-get-connector</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>http-post-connector</artifactId>
       <version>${project.version}</version>
     </dependency>
 
