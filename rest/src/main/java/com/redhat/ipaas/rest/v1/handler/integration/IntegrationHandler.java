@@ -36,7 +36,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     private GitHubService gitHubService;
 
-    public IntegrationHandler(@Autowired DataManager dataMgr, @Autowired GitHubService gitHubService) {
+    public IntegrationHandler(DataManager dataMgr, GitHubService gitHubService) {
         super(dataMgr);
         this.gitHubService = gitHubService;
     }

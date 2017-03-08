@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PermissionHandler extends BaseHandler implements Lister<Permission>, Getter<Permission> {
 
-    public PermissionHandler(@Autowired DataManager dataMgr) {
+    public PermissionHandler(DataManager dataMgr) {
         super(dataMgr);
     }
 

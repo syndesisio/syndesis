@@ -51,4 +51,20 @@ class FileContent {
         }
         return new String(Base64.getEncoder().encode(content));
     }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getSha() {
+        return sha;
+    }
 }

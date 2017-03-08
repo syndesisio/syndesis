@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Configuration
 @ConditionalOnProperty(value = "endpoints.jsondb.enabled")
 public class JsonDBHandler extends JsonDBResource {
-    public JsonDBHandler(@Autowired JsonDB jsondb) {
+    public JsonDBHandler(JsonDB jsondb) {
         super(jsondb);
     }
 }
