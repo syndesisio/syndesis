@@ -41,8 +41,8 @@ public class ConnectorsITCase extends BaseITCase {
         ResponseEntity<ListResult> response = get("/api/v1/connectors", ListResult.class);
         assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
         ListResult<Connector> result = response.getBody();
-        assertThat(result.getTotalCount()).as("connectors total").isEqualTo(2);
-        assertThat(result.getItems()).as("connector list").hasSize(2);
+        assertThat(result.getTotalCount()).as("connectors total").isGreaterThan(2);
+        assertThat(result.getItems().size()).as("connector list").isGreaterThan(2);
     }
 
     @Test
