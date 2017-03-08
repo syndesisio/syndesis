@@ -9,12 +9,15 @@ import { ModalModule } from 'ng2-bootstrap/modal';
 import { TabsModule } from 'ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
 
-import { IntegrationsEditPage, editIntegrationChildRoutes } from './edit-page/edit-page.component';
-import { IntegrationsConfigureActionComponent } from './edit-page/configure-action/configure-action.component';
-import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
-import { IntegrationsSelectActionComponent } from './edit-page/select-action/select-action.component';
+import { IntegrationsEditPage } from './edit-page/edit-page.component';
 import { IntegrationsSelectConnectionComponent } from './edit-page/select-connection/select-connection.component';
+import { IntegrationsConfigureActionComponent } from './edit-page/configure-action/configure-action.component';
+import { IntegrationsSelectActionComponent } from './edit-page/select-action/select-action.component';
+import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
+import { IntegrationsStepSelectComponent } from './edit-page/step-select/step-select.component';
+import { IntegrationsStepConfigureComponent } from './edit-page/step-configure/step-configure.component';
 import { ListActionsComponent } from './edit-page/list-actions/list-actions.component';
+
 import { IntegrationsListPage } from './list-page/list-page.component';
 import { IntegrationsListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { IntegrationsFilterPipe } from './integrations-filter.pipe';
@@ -25,6 +28,15 @@ import { CurrentFlow } from './edit-page/current-flow.service';
 import { IPaaSCommonModule } from '../common/common.module';
 import { ConnectionsModule } from '../connections/connections.module';
 import { CollapseModule } from 'ng2-bootstrap';
+
+const editIntegrationChildRoutes = [
+  { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
+  { path: 'action-select/:position', component: IntegrationsSelectActionComponent },
+  { path: 'action-configure/:position', component: IntegrationsConfigureActionComponent },
+  { path: 'save-or-add-step/:position', component: IntegrationsSaveOrAddStepComponent },
+  { path: 'step-select/:position', component: IntegrationsStepSelectComponent },
+  { path: 'step-configure/:position', component: IntegrationsStepConfigureComponent },
+];
 
 const routes: Routes = [
   { path: '', component: IntegrationsListPage, pathMatch: 'full' },
@@ -60,6 +72,10 @@ const routes: Routes = [
     IntegrationsEditPage,
     IntegrationsFilterPipe,
     IntegrationsListComponent,
+    IntegrationsSelectConnectionComponent,
+    IntegrationsSaveOrAddStepComponent,
+    IntegrationsStepSelectComponent,
+    IntegrationsStepConfigureComponent,
     IntegrationsListPage,
     IntegrationsListToolbarComponent,
     IntegrationsSaveOrAddStepComponent,

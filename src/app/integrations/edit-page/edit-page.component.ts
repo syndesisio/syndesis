@@ -4,23 +4,11 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IntegrationStore } from '../../store/integration/integration.store';
-import { IntegrationsConfigureActionComponent } from './configure-action/configure-action.component';
-import { IntegrationsSaveOrAddStepComponent } from './save-or-add-step/save-or-add-step.component';
-import { IntegrationsSelectActionComponent } from './select-action/select-action.component';
-import { IntegrationsSelectConnectionComponent } from './select-connection/select-connection.component';
-
 import { Integration } from '../../model';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
 import { log, getCategory } from '../../logging';
 
 const category = getCategory('IntegrationsEditPage');
-
-export let editIntegrationChildRoutes = [
-  { path: 'action-select/:position', component: IntegrationsSelectActionComponent },
-  { path: 'action-configure/:position', component: IntegrationsConfigureActionComponent },
-  { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
-  { path: 'save-or-add-step/:position', component: IntegrationsSaveOrAddStepComponent },
-];
 
 @Component({
   selector: 'ipaas-integrations-edit-page',
