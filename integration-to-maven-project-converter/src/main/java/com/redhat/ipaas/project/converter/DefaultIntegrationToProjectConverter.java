@@ -17,6 +17,7 @@ package com.redhat.ipaas.project.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
@@ -40,6 +41,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 @Service
@@ -124,10 +126,35 @@ public class DefaultIntegrationToProjectConverter implements IntegrationToProjec
     }
 
     private io.fabric8.funktion.model.steps.Step createEndpointStep(String camelConnector, String connectionConfiguredProperties, String configuredProperties) throws IOException, URISyntaxException {
-        Map<String, String> props = OBJECT_MAPPER.readValue(connectionConfiguredProperties, MAP_TYPE_REFERENCE);
-        props.putAll(OBJECT_MAPPER.readValue(configuredProperties, MAP_TYPE_REFERENCE));
+        Map<String, String> props = readConfiguredProperties(connectionConfiguredProperties, configuredProperties);
+
+        // TODO Remove this hack... when we can read endpointValues from connector schema then we should use those as initial properties.
+        if (camelConnector.equals("periodic-timer")) {
+            props.put("timerName", "every");
+        }
+
         String endpointUri = connectorCatalog.buildEndpointUri(camelConnector, props);
         return new Endpoint(endpointUri);
+    }
+
+    private Map<String, String> readConfiguredProperties(String... configuredProperties) throws IOException {
+        Map<String, String> configuredProps = new HashMap<>();
+        for (String props : configuredProperties) {
+            JsonNode properties = OBJECT_MAPPER.readTree(props);
+            for (Iterator<Map.Entry<String, JsonNode>> it = properties.fields(); it.hasNext(); ) {
+                Map.Entry<String, JsonNode> jsonProp = it.next();
+                JsonNode value = jsonProp.getValue();
+                if (value.isTextual()) {
+                    configuredProps.put(jsonProp.getKey(), value.textValue());
+                } else {
+                    JsonNode valueNode = value.get("value");
+                    if (valueNode != null && valueNode.isTextual()) {
+                        configuredProps.put(jsonProp.getKey(), valueNode.textValue());
+                    }
+                }
+            }
+        }
+        return configuredProps;
     }
 
     private byte[] generate(Integration integration, Mustache template) throws IOException {

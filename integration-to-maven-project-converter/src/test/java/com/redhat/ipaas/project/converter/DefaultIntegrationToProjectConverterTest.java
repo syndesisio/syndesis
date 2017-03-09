@@ -15,6 +15,9 @@
  */
 package com.redhat.ipaas.project.converter;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.redhat.ipaas.connector.catalog.ConnectorCatalog;
 import com.redhat.ipaas.connector.catalog.ConnectorCatalogProperties;
 import com.redhat.ipaas.model.connection.Action;
@@ -43,7 +46,7 @@ public class DefaultIntegrationToProjectConverterTest {
                 .gitRepo("https://ourgithhost.somewhere/test.git")
                 .steps(
                     Arrays.asList(
-                        new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{\"timerName\": \"every\"}").build()).configuredProperties("{\"period\": \"5000\"}").action(new Action.Builder().camelConnectorPrefix("periodic-timer").camelConnectorGAV("com.redhat.ipaas:timer-connector:0.2.1").build()).build(),
+                        new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"period\": \"5000\"}").action(new Action.Builder().camelConnectorPrefix("periodic-timer").camelConnectorGAV("com.redhat.ipaas:timer-connector:0.2.1").build()).build(),
                         new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"httpUri\": \"http://localhost:8080/hello\"}").action(new Action.Builder().camelConnectorPrefix("http-get").camelConnectorGAV("com.redhat.ipaas:http-get-connector:0.2.1").build()).build(),
                         new Step.Builder().stepKind("log").configuredProperties("{\"message\": \"Hello World! ${body}\"}").build(),
                         new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"httpUri\": \"http://localhost:8080/bye\"}").action(new Action.Builder().camelConnectorPrefix("http-post").camelConnectorGAV("com.redhat.ipaas:http-post-connector:0.2.1").build()).build()
@@ -63,6 +66,18 @@ public class DefaultIntegrationToProjectConverterTest {
                 Paths.get(this.getClass().getResource(expectedFileName).toURI())
             ), StandardCharsets.UTF_8)
         );
+    }
+
+    @Test
+    public void testConvertFromJson() throws Exception {
+        JsonNode json = new ObjectMapper().readTree(this.getClass().getResourceAsStream("test-integration.json"));
+        Map<String, byte[]> files = new DefaultIntegrationToProjectConverter(new ConnectorCatalog(new ConnectorCatalogProperties())).convert(
+            new ObjectMapper().registerModule(new Jdk8Module()).readValue(json.get("data").toString(), Integration.class)
+        );
+        assertFileContents(files.get("README.md"), "test-pull-push-README.md");
+        assertFileContents(files.get("src/main/java/com/redhat/ipaas/example/Application.java"), "test-Application.java");
+        assertFileContents(files.get("src/main/resources/application.yml"), "test-pull-push-application.yml");
+        assertFileContents(files.get("src/main/resources/funktion.yml"), "test-pull-push-funktion.yml");
     }
 
 }
