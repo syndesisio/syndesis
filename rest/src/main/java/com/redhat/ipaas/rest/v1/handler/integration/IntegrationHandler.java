@@ -18,6 +18,7 @@ package com.redhat.ipaas.rest.v1.handler.integration;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.ws.rs.Path;
 
@@ -58,23 +59,28 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     @Override
     public Integration create(Integration integration) {
-        Optional<String> repoName = integration.getGitRepo();
-        if (!repoName.isPresent()) {
-            String generatedRepoName = gitHubService.sanitizeRepoName(integration.getName());
-            integration = new Integration.Builder().createFrom(integration).gitRepo(generatedRepoName).build();
-        }
-        ensureRepositoryWithContents(integration);
+        ensureGitHubSetup(integration);
         return Creator.super.create(integration);
     }
 
     // ==========================================================================
 
-    private void ensureRepositoryWithContents(Integration integration) {
-        String repoName = integration.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
+    private void ensureGitHubSetup(Integration integration) {
         try {
-            gitHubService.ensureRepository(repoName);
+            Optional<String> repoNameOptional = integration.getGitRepo();
+            if (!repoNameOptional.isPresent()) {
+                String generatedRepoName = gitHubService.sanitizeRepoName(integration.getName());
+                integration = new Integration.Builder().createFrom(integration).gitRepo(generatedRepoName).build();
+            }
+            String repoName = integration.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
+            gitHubService.createRepositoryIfMissing(repoName);
+
             Map<String, byte[]> fileContents = projectConverter.convert(integration);
             gitHubService.createOrUpdate(repoName, generateCommitMessage(), fileContents);
+
+            if (gitHubService.createRepositoryIfMissing(repoName)) {
+                setupBuild(repoName);
+            }
         } catch (IOException e) {
             throw IPaasServerException.launderThrowable(e);
         }
@@ -83,5 +89,14 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     private String generateCommitMessage() {
         // TODO Let's generate some nice message...
         return "Updated";
+    }
+
+    private void setupBuild(String repoName) throws IOException {
+        String secret = createSecret();
+        gitHubService.buildTriggerAsWebHook(repoName, repoName /* use repo as buildconfig name for now */, secret);
+    }
+
+    private String createSecret() {
+        return UUID.randomUUID().toString();
     }
 }

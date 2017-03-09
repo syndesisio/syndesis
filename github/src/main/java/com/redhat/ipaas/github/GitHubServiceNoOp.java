@@ -29,8 +29,9 @@ import org.springframework.stereotype.Service;
 public class GitHubServiceNoOp implements GitHubService {
 
     @Override
-    public void ensureRepository(String name) throws IOException {
+    public boolean createRepositoryIfMissing(String name) throws IOException {
         // Intentional empty
+        return false;
     }
 
     @Override
@@ -42,5 +43,10 @@ public class GitHubServiceNoOp implements GitHubService {
     @Override
     public void createOrUpdate(String repo, String message, Map<String, byte[]> files) {
         // intentional empty
+    }
+
+    @Override
+    public boolean buildTriggerAsWebHook(String repoName, String bcName, String secret) throws IOException {
+        return false;
     }
 }

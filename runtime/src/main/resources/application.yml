@@ -65,4 +65,9 @@ dao:
 github:
   enabled: true
   service: ipaas-github-proxy
-
+  webHook:
+    enabled: true
+    # The base URL of the OpenShit API in order to delvier a webhook
+    callbackBaseUrl: "http://openshift"
+    # The namespace in which the build configs are created
+    namespace: "myproject"

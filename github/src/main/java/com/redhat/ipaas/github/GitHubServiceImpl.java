@@ -15,11 +15,18 @@
  */
 package com.redhat.ipaas.github;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.redhat.ipaas.github.backend.ExtendedContentsService;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryContents;
+import org.eclipse.egit.github.core.RepositoryHook;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -41,15 +48,27 @@ public class GitHubServiceImpl implements GitHubService {
     private final RepositoryService repositoryService;
     private final ExtendedContentsService contentsService;
 
+    @Value("${github.webhook.callbackBaseUrl}")
+    private String openShiftBaseUrl;
+
+    @Value("${github.webhook.namespace}")
+    private String namespace;
+
+    @Value("${github.webhook.enabled}")
+    private boolean webhookEnabled;
+
     public GitHubServiceImpl(RepositoryService repositoryService, ExtendedContentsService contentsService) {
         this.repositoryService = repositoryService;
         this.contentsService = contentsService;
     }
 
     @Override
-    public void ensureRepository(String name) throws IOException {
+    public boolean createRepositoryIfMissing(String name) throws IOException {
         if (!hasRepo(name)) {
             createRepo(name);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -73,6 +92,17 @@ public class GitHubServiceImpl implements GitHubService {
         }
     }
 
+    @Override
+    public boolean buildTriggerAsWebHook(String repoName, String bcName, String secret) throws IOException {
+        if (webhookEnabled && openShiftBaseUrl.length() > 0) {
+            Repository repo = getMandatoryRepository(repoName);
+            RepositoryHook hook = prepareRepositoryHookRequest(bcName, secret);
+            repositoryService.createHook(repo, hook);
+            return true;
+        }
+        return false;
+    }
+
     // =====================================================================================
 
     private Repository getRepository(String name) throws IOException {
@@ -84,16 +114,30 @@ public class GitHubServiceImpl implements GitHubService {
         return null;
     }
 
-    private Repository getMandatoryRepository(String repo, String path) throws IOException {
+    private Repository getMandatoryRepository(String repo) throws IOException {
         Repository repository = getRepository(repo);
         if (repository == null) {
-            throw new IOException("No repo " + repo + " exists for looking up file " + path);
+            throw new IOException("No repo " + repo + " exists");
         }
         return repository;
     }
 
     private boolean hasRepo(String name) throws IOException {
         return getRepository(name) != null;
+    }
+
+    private RepositoryHook prepareRepositoryHookRequest(String bcName, String secret) {
+        RepositoryHook hook = new RepositoryHook();
+        Map<String, String> config = new HashMap<>();
+        String openShiftUrl = String.format(
+            "%s/oapi1/v1/namespaces/%s/buildconfigs/%s/webhooks/%s/github",openShiftBaseUrl,bcName,secret);
+        config.put("url", openShiftUrl);
+        config.put("content_type", "json");
+        config.put("secret", "secret");
+        hook.setConfig(config);
+        hook.setName("web");
+        hook.setActive(true);
+        return hook;
     }
 
     private void createRepo(String name) throws IOException {
@@ -119,17 +163,17 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     private void createFile(String repo, String message, String path, byte[] content) throws IOException {
-        Repository repository = getMandatoryRepository(repo, path);
+        Repository repository = getMandatoryRepository(repo);
         contentsService.createFile(repository, message, path, content);
     }
 
     private void updateFile(String repo, String message, String path, String sha, byte[] content) throws IOException {
-        Repository repository = getMandatoryRepository(repo, path);
+        Repository repository = getMandatoryRepository(repo);
         contentsService.updateFile(repository, message, path, sha, content);
     }
 
     private String getFileSha(String repo, String path) throws IOException {
-        Repository repository = getMandatoryRepository(repo, path);
+        Repository repository = getMandatoryRepository(repo);
         List<RepositoryContents> contents = contentsService.getContents(repository, path);
         if (contents ==  null) {
             return null;

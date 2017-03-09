@@ -26,8 +26,9 @@ public interface GitHubService {
      *
      * @param name name of the repository to create. This name should
      *             be already a valid repo name. Must not be null.
+     * @return true if a repository has been created, false if it already exists
      */
-    void ensureRepository(String name) throws IOException;
+    boolean createRepositoryIfMissing(String name) throws IOException;
 
     /**
      * Convert a given name to GitHub acceptable repo name.
@@ -46,4 +47,15 @@ public interface GitHubService {
      *              and the values is the content in bytes.
      */
     void createOrUpdate(String repo, String message, Map<String, byte[]> files) throws IOException;
-}
+
+    /**
+     * Create a GitHub web hook for triggering a build on an initial commit
+     *
+     * @param repoName repository name
+     * @param bcName build config name
+     * @param secret secret to use for the trigger
+     *
+     * @return true if a web hook has been created, false if setting webhooks is disabled.
+     */
+    boolean buildTriggerAsWebHook(String repoName, String bcName, String secret) throws IOException;
+    }
