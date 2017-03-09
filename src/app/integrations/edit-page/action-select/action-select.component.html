@@ -7,7 +7,7 @@
         <div class="inline-block">
           <ol class="breadcrumb">
             <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
-            <li class="active">Select {{ atEnd() ? 'end' : 'start' }} Action</li>
+            <li class="active">Create an Integration</li>
           </ol>
         </div>
         <div class="toolbar-pf-action-right">
@@ -20,11 +20,11 @@
 </div>
 <div class="wizard-pf-body clearfix">
   <div class="title">
-    <h1>Select {{ atEnd() ? 'end' : 'start' }} Action</h1>
+    <h1>Choose an Action</h1>
   </div>
   <div *ngIf="actions">
-    <p>Select an Action</p>
-    <ipaas-integrations-list-toolbar [(filter)]="filter" [(sort)]="sort"></ipaas-integrations-list-toolbar>
+    <p>Choose an action for the integration.</p>
+    
     <ipaas-list-actions [actions]="actions | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async"
       (onSelected)="onSelected($event)"></ipaas-list-actions>
   </div>
