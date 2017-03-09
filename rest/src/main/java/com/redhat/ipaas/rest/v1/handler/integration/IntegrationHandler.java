@@ -30,6 +30,7 @@ import com.redhat.ipaas.project.converter.IntegrationToProjectConverter;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Path("/integrations")
@@ -40,6 +41,12 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     private final GitHubService gitHubService;
 
     private final IntegrationToProjectConverter projectConverter;
+
+    @Value("${openshift.apiBaseUrl}")
+    private String openshiftApiBaseUrl;
+
+    @Value("${openshift.namespace}")
+    private String namespace;
 
     public IntegrationHandler(DataManager dataMgr, GitHubService gitHubService, IntegrationToProjectConverter projectConverter) {
         super(dataMgr);
@@ -70,21 +77,25 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             integration = ensureGitRepoName(integration);
             String repoName = integration.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
 
-            if (gitHubService.createRepositoryIfMissing(repoName)) {
-                setupBuild(repoName);
-            }
+            Map<String, byte[]> fileContents = projectConverter.convert(integration);
 
-            updateProjectFiles(repoName, integration);
+            // Secret to be used in the build trigger
+            String secret = createSecret();
+            String webHookUrl = createWebHookUrl(repoName, secret);
+
+            // Do all github stuff at once
+            gitHubService.createOrUpdateProjectFiles(repoName, generateCommitMessage(), fileContents, webHookUrl);
 
         } catch (IOException e) {
             throw IPaasServerException.launderThrowable(e);
         }
     }
 
-    private void updateProjectFiles(String repoName, Integration integration) throws IOException {
-        Map<String, byte[]> fileContents = projectConverter.convert(integration);
-        gitHubService.createOrUpdate(repoName, generateCommitMessage(), fileContents);
+    private String createWebHookUrl(String bcName, String secret) {
+        return String.format(
+            "%s/namespaces/%s/buildconfigs/%s/webhooks/%s/github", openshiftApiBaseUrl, namespace, bcName, secret);
     }
+
 
     private Integration ensureGitRepoName(Integration integration) {
         Optional<String> repoNameOptional = integration.getGitRepo();
@@ -98,11 +109,6 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     private String generateCommitMessage() {
         // TODO Let's generate some nice message...
         return "Updated";
-    }
-
-    private void setupBuild(String repoName) throws IOException {
-        String secret = createSecret();
-        gitHubService.buildTriggerAsWebHook(repoName, repoName /* use repo as buildconfig name for now */, secret);
     }
 
     private String createSecret() {

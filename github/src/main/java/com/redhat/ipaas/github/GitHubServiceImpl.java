@@ -44,28 +44,19 @@ public class GitHubServiceImpl implements GitHubService {
     private final RepositoryService repositoryService;
     private final ExtendedContentsService contentsService;
 
-    @Value("${github.webhook.callbackBaseUrl}")
-    private String openShiftBaseUrl;
-
-    @Value("${github.webhook.namespace}")
-    private String namespace;
-
-    @Value("${github.webhook.enabled}")
-    private boolean webhookEnabled;
-
     public GitHubServiceImpl(RepositoryService repositoryService, ExtendedContentsService contentsService) {
         this.repositoryService = repositoryService;
         this.contentsService = contentsService;
     }
 
     @Override
-    public boolean createRepositoryIfMissing(String name) throws IOException {
-        if (!hasRepo(name)) {
-            createRepo(name);
-            return true;
-        } else {
-            return false;
+    public void createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
+        Repository repository = getRepository(repoName);
+        if (repository == null) {
+            repository = createRepo(repoName);
+            buildTriggerAsWebHook(repository, webHookUrl);
         }
+        createOrUpdateFiles(repository, commitMessage, fileContents);
     }
 
     @Override
@@ -81,25 +72,6 @@ public class GitHubServiceImpl implements GitHubService {
                   .toString();
     }
 
-    @Override
-    public void createOrUpdate(String repoName, String message, Map<String, byte[]> files) throws IOException {
-        Repository repo = getMandatoryRepository(repoName);
-        for (Map.Entry<String, byte[]> entry : files.entrySet()) {
-            createOrUpdate(repo, message, entry.getKey(), entry.getValue());
-        }
-    }
-
-    @Override
-    public boolean buildTriggerAsWebHook(String repoName, String bcName, String secret) throws IOException {
-        if (webhookEnabled && openShiftBaseUrl.length() > 0) {
-            Repository repo = getMandatoryRepository(repoName);
-            RepositoryHook hook = prepareRepositoryHookRequest(bcName, secret);
-            repositoryService.createHook(repo, hook);
-            return true;
-        }
-        return false;
-    }
-
     // =====================================================================================
 
     private Repository getRepository(String name) throws IOException {
@@ -111,39 +83,37 @@ public class GitHubServiceImpl implements GitHubService {
         return null;
     }
 
-    private Repository getMandatoryRepository(String repo) throws IOException {
-        Repository repository = getRepository(repo);
-        if (repository == null) {
-            throw new IOException("No repo " + repo + " exists");
+    private Repository createRepo(String name) throws IOException {
+        Repository repo = new Repository();
+        repo.setName(name);
+        return repositoryService.createRepository(repo);
+    }
+
+    private void createOrUpdateFiles(Repository repo, String message, Map<String, byte[]> files) throws IOException {
+        for (Map.Entry<String, byte[]> entry : files.entrySet()) {
+            createOrUpdateFiles(repo, message, entry.getKey(), entry.getValue());
         }
-        return repository;
     }
 
-    private boolean hasRepo(String name) throws IOException {
-        return getRepository(name) != null;
+    private void buildTriggerAsWebHook(Repository repository, String url) throws IOException {
+        if (url != null && url.length() > 0) {
+            RepositoryHook hook = prepareRepositoryHookRequest(url);
+            repositoryService.createHook(repository, hook);
+        }
     }
 
-    private RepositoryHook prepareRepositoryHookRequest(String bcName, String secret) {
+    private RepositoryHook prepareRepositoryHookRequest(String url) {
         RepositoryHook hook = new RepositoryHook();
         Map<String, String> config = new HashMap<>();
-        String openShiftUrl = String.format(
-            "%s/oapi1/v1/namespaces/%s/buildconfigs/%s/webhooks/%s/github",openShiftBaseUrl,namespace,bcName,secret);
-        config.put("url", openShiftUrl);
+        config.put("url", url);
         config.put("content_type", "json");
-        config.put("secret", "secret");
         hook.setConfig(config);
         hook.setName("web");
         hook.setActive(true);
         return hook;
     }
 
-    private void createRepo(String name) throws IOException {
-        Repository repo = new Repository();
-        repo.setName(name);
-        repositoryService.createRepository(repo);
-    }
-
-    private void createOrUpdate(Repository repo, String message, String path, byte[] content) throws IOException {
+    private void createOrUpdateFiles(Repository repo, String message, String path, byte[] content) throws IOException {
         String sha = getFileSha(repo, path);
         if (sha != null) {
             contentsService.updateFile(repo, message, path, sha, content);
