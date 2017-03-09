@@ -1,7 +1,6 @@
 package com.redhat.ipaas.project.converter;
 
 import com.redhat.ipaas.connector.catalog.ConnectorCatalog;
-import org.apache.camel.catalog.CamelCatalog;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
