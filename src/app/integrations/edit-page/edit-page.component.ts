@@ -145,24 +145,39 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
     }
   }
 
+  getCurrentPosition(): number {
+    const child = this.route.firstChild;
+    if (child && child.snapshot) {
+      const path = child.snapshot.url;
+      // log.debugc(() => 'path from root: ' + path, category);
+      const position = path[1].path;
+      if (position === 'new') {
+        return undefined;
+      } else {
+        return +position;
+      }
+    } else {
+      // log.debugc(() => 'no current child', category);
+      return undefined;
+    }
+  }
+
   handleFlowEvent(event: FlowEvent) {
     const child = this.getCurrentChild();
     switch (event.kind) {
       case 'integration-updated':
-        if (!child) {
-          // no start connection set
-          if (!this.currentFlow.getStartConnection()) {
-            this.router.navigate(['connection-select', 0], { relativeTo: this.route });
-            return;
-          }
-          // no end connection set
-          if (!this.currentFlow.getEndConnection()) {
-            this.router.navigate(['connection-select', this.currentFlow.getLastPosition()], { relativeTo: this.route });
-            return;
-          }
-          // prompt the user what next?
-          this.router.navigate(['save-or-add-step', this.currentFlow.getMiddlePosition()], { relativeTo: this.route });
+        // no start connection set
+        if (!this.currentFlow.getStartConnection()) {
+          this.router.navigate(['connection-select', 0], { relativeTo: this.route });
+          return;
         }
+        // no end connection set
+        if (!this.currentFlow.getEndConnection()) {
+          this.router.navigate(['connection-select', this.currentFlow.getLastPosition()], { relativeTo: this.route });
+          return;
+        }
+        // prompt the user what next?
+        this.router.navigate(['save-or-add-step', 'new'], { relativeTo: this.route });
         break;
       case 'integration-no-actions':
         if (child !== 'action-select') {
@@ -216,12 +231,12 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
     });
-    this.routeSubscription = this.route.params.pluck<Params, string>('integrationId')
-      .map((integrationId: string) => this.store.loadOrCreate(integrationId))
-      .subscribe();
     this.integrationSubscription = this.integration.subscribe((i: Integration) => {
       this.currentFlow.integration = i;
     });
+    this.routeSubscription = this.route.params.pluck<Params, string>('integrationId')
+      .map((integrationId: string) => this.store.loadOrCreate(integrationId))
+      .subscribe();
     $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().hideMenu() : '';
   }
 

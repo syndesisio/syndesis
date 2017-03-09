@@ -49,50 +49,69 @@ export class FlowViewStepComponent {
     };
   }
 
-  getIconClass(position) {
-    if (!this.step || !this.step['icon']) {
+  getStepKind(step) {
+    if (step) {
+      return step.stepKind;
+    }
+    return undefined;
+  }
+
+  getIconClass() {
+    if (!this.step) {
       return 'fa fa-plus';
-    } else {
-      return 'fa ' + this.step['icon'];
+    }
+    const step = this.step;
+    switch ( step.stepKind ) {
+      case 'endpoint':
+        return this.step.connection.icon ? 'fa ' + step.connection.icon : 'fa fa-airplane';
+      case 'log':
+        return 'fa fa-newspaper-o';
+      default:
+        return 'fa fa-plus';
     }
   }
 
-  getActiveClass(state, position) {
+  getPosition() {
+    let position = this.position;
     if (this.position === -1) {
       position = this.currentFlow.getLastPosition();
     }
-    if ((!state || state === this.currentState) && position === this.currentPosition) {
+    return position;
+  }
+
+  getActiveClass(state) {
+    if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
       return 'active';
     } else {
       return 'inactive';
     }
   }
 
-  getTextClass(state, position) {
-    if (this.position === -1) {
-      position = this.currentFlow.getLastPosition();
-    }
-    if ((!state || state === this.currentState) && position === this.currentPosition) {
+  getTextClass(state) {
+    if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
       return 'bold';
     } else {
       return '';
     }
   }
 
-  getConnectionText(position: number) {
-    if (this.step) {
-      return this.step['name'];
+  getStepText() {
+    if (!this.step) {
+      return 'Set up this step';
     }
-    if (position === 0) {
-      return 'Start';
+    switch (this.step.stepKind) {
+      case 'endpoint':
+        return this.step.connection.name;
+      default:
+        if (this.step.stepKind) {
+          return this.step.stepKind;
+        } else {
+          return 'Set up this step';
+        }
     }
-    if (position === -1) {
-      return 'Finish';
-    }
-    return 'Set up this connection';
   }
 
-  isCollapsed(position: number) {
-    return this.step !== undefined;
+  isCollapsed() {
+    return this.getPosition() !== this.currentPosition;
   }
 }

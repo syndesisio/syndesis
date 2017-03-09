@@ -1,24 +1,45 @@
-<div class="col-md-3 progress-line">
-  <!-- Icon Line: Plus -->
-  <div class="icon">
-    <p [class]="'round ' + getActiveClass(undefined, position)">
-      <i [class]="getIconClass(position)"></i>
-    </p>
+<div *ngIf="step">
+  <div class="col-md-3 progress-line">
+    <!-- Icon Line: Plus -->
+    <div class="icon">
+      <p [class]="'round ' + getActiveClass()">
+        <i [class]="getIconClass()"></i>
+      </p>
+    </div>
   </div>
-</div>
-<div class="col-md-9 text">
-  <span [class]="getTextClass(undefined, position)">
-                      <i *ngIf="!isCollapsed(position)"
-                        class="fa fa-chevron-down"></i>                     
-                      <i *ngIf="isCollapsed(position)"
-                        class="fa fa-chevron-right"></i>
-                      {{ getConnectionText(position) }}</span>
-  <ul [collapse]="isCollapsed(position)">
-    <li [class]="getActiveClass('connection-select', position)">
-      <span [class]="getTextClass('connection-select', position)">Choose a connection</span>
-    </li>
-    <li [class]="getActiveClass('connection-configure', position)">
-      <span [class]="getTextClass('connection-configure', position)">Configure the connection</span>
-    </li>
-  </ul>
+  <div class="col-md-9 text" [ngSwitch]="step.stepKind">
+    <div *ngSwitchCase="'endpoint'">
+      <span [class]="getTextClass()">
+        <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
+        <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
+        {{ getStepText() }}
+      </span>
+      <ul [collapse]="isCollapsed()">
+        <li [class]="getActiveClass('connection-select')">
+          <span [class]="getTextClass('connection-select')">Choose a connection</span>
+        </li>
+        <li [class]="getActiveClass('action-select')">
+          <span [class]="getTextClass('action-select')">Choose an action</span>
+        </li>
+        <li [class]="getActiveClass('action-configure')">
+          <span [class]="getTextClass('action-configure')">Configure the action</span>
+        </li>
+      </ul>
+    </div>
+    <div *ngSwitchDefault>
+      <span [class]="getTextClass()">
+        <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
+        <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
+        {{ getStepText() }}
+      </span>
+      <ul [collapse]="isCollapsed()">
+        <li [class]="getActiveClass('step-select')">
+          <span [class]="getTextClass('step-select')">Choose a step</span>
+        </li>
+        <li [class]="getActiveClass('step-configure')">
+          <span [class]="getTextClass('step-configure')">Configure the step</span>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
