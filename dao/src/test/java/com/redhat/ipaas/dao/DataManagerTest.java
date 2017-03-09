@@ -17,7 +17,6 @@ package com.redhat.ipaas.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.core.Json;
-import com.redhat.ipaas.dao.manager.DataAccessObject;
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.connection.Connection;
@@ -27,7 +26,6 @@ import com.redhat.ipaas.model.integration.Integration;
 import org.junit.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DataManagerTest {
 
