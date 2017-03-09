@@ -1,4 +1,3 @@
-
 package com.redhat.ipaas.example;
 
 import org.springframework.boot.SpringApplication;

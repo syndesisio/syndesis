@@ -1,4 +1,3 @@
-
 # Timed Pull to Post Example
 
 This is an example of a Timed Pull to Post Integration

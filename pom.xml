@@ -554,6 +554,7 @@
             <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
             <exclude>mvnw*</exclude>
             <exclude>**/resources/**/test-*</exclude>
+            <exclude>**/*.mustache</exclude>
           </excludes>
         </configuration>
       </plugin>
