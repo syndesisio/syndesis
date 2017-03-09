@@ -1,25 +1,29 @@
 .connection-select {
-  .toolbar-pf {
-    background: none !important;
-    border: none !important;
-    margin: 0;
-    padding: 0;
+  .toolbar {
+    margin: 0 -20px;
 
-    .breadcrumb {
-      padding: 0;
+    .toolbar-pf {
+      background: none !important;
+      border: none !important;
       margin: 0;
-    }
+      padding: 0 0 10px 0;
 
-    .search {
-      width: 50%;
-
-      .input-group {
-        width: 80%;
+      .breadcrumb {
+        padding: 0;
+        margin: 0;
       }
-    }
 
-    .toolbar-pf-actions {
-      margin-bottom: 0;
+      .search {
+        width: 50%;
+
+        .input-group {
+          width: 80%;
+        }
+      }
+
+      .toolbar-pf-actions {
+        margin-bottom: 0;
+      }
     }
   }
 }
