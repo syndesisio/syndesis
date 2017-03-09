@@ -85,7 +85,6 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
       .map((position: string) => {
         this.position = Number.parseInt(position);
         const step = this.currentFlow.getStep(this.position);
-        console.log('Step: ', step);
         if (step && step.connection) {
           this.connectorStore.load(step.connection.connectorId);
         }
