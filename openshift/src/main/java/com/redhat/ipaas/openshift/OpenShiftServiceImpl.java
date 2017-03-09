@@ -46,6 +46,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         openShiftClient.deploymentConfigs().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata()
             .withNewSpec()
+            .withReplicas(1)
             .addToSelector("integration", projectName)
             .withNewTemplate()
             .withNewMetadata().addToLabels("integration", projectName).endMetadata()
