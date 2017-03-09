@@ -1,31 +1,72 @@
-<!-- Toolbar -->
-<div class="toolbar">
-  <!-- Toolbar: Breadcrumbs -->
-  <div class="row toolbar-pf">
-    <div class="col-sm-12">
-      <div class="toolbar-pf-actions">
-        <div class="inline-block">
-          <ol class="breadcrumb">
-            <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
-            <li class="active">Create an Integration</li>
-          </ol>
-        </div>
-        <div class="toolbar-pf-action-right">
-          <button class="btn btn-default" (click)="cancel()">Cancel</button> &nbsp;
-          <button class="btn btn-default" (click)="goBack()"><i class="fa fa-chevron-left"></i> Back</button>
+<div class="action-select">
+  
+  <!-- Toolbar -->
+  <div class="toolbar">
+  
+    <!-- Toolbar: Breadcrumbs -->
+    <div class="row toolbar-pf">
+      <div class="col-sm-12">
+        <div class="toolbar-pf-actions">
+          <div class="inline-block">
+            <ol class="breadcrumb">
+              <li>
+                <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a>
+              </li>
+              <li class="active">Create an Integration</li>
+            </ol>
+          </div>
+          <div class="toolbar-pf-action-right">
+            <button class="btn btn-default"
+                    (click)="cancel()">Cancel
+            </button>
+            &nbsp;
+            <button class="btn btn-default"
+                    (click)="goBack()"><i class="fa fa-chevron-left"></i> Back
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<div class="wizard-pf-body clearfix">
-  <div class="title">
-    <h1>Choose an Action</h1>
-  </div>
-  <div *ngIf="actions">
-    <p>Choose an action for the integration.</p>
+  
+  <div class="wizard-pf-body clearfix">
+    <div class="title">
+      <h1>Choose an Action</h1>
+    </div>
     
-    <ipaas-list-actions [actions]="actions | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async"
-      (onSelected)="onSelected($event)"></ipaas-list-actions>
+    <!-- Actions -->
+    
+    <div *ngIf="actions">
+      <p>Choose an action for the integration.</p>
+      
+      <!-- Toolbar -->
+      <div class="row toolbar-pf">
+        <div class="col-sm-12">
+          <div class="toolbar-pf-actions">
+            
+            <!-- Toolbar: Search -->
+            
+            <div class="form-group toolbar-pf-filter search">
+              <label class="sr-only">Name</label>
+              <div class="input-group">
+                <input #filterInput
+                       (keyup)="filterInputChange(filterInput?.value)"
+                       type="text"
+                       class="form-control"
+                       placeholder="Filter By {{filter?.propertyName}}..."
+                       autocomplete="off"
+                       id="filterInput">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Action List -->
+      
+      <ipaas-list-actions [actions]="actions | objectPropertyFilter:filter | objectPropertySort:sort"
+                          [loading]="loading | async"
+                          (onSelected)="onSelected($event)"></ipaas-list-actions>
+    </div>
   </div>
 </div>
