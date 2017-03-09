@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -31,11 +31,12 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
   constructor( private currentFlow: CurrentFlow,
               private store: IntegrationStore,
               private route: ActivatedRoute,
-              private router: Router ) {
+              private router: Router,
+              private detector: ChangeDetectorRef,
+               ) {
     this.integration = this.store.resource;
     this.loading = this.store.loading;
   }
-
 
   getCurrentChild(): string {
     const child = this.route.firstChild;
@@ -72,6 +73,7 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
     switch (event.kind) {
       case 'integration-updated':
         this.router.navigate(['save-or-add-step'], { relativeTo: this.route });
+        this.detector.detectChanges();
         break;
       case 'integration-no-actions':
         break;

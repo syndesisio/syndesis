@@ -12,7 +12,6 @@
         </div>
       </div>
     </div>
-
     <div class="flow-view-container" *ngIf="i && i.steps">
       <div class="row steps start">
         <ipaas-integrations-flow-view-step
@@ -21,17 +20,27 @@
           [currentPosition]="currentPosition"
           [currentState]="currentState"></ipaas-integrations-flow-view-step >
       </div>
-      <div class="row steps" *ngFor="let step of getMiddleSteps(); let position = index;">
-        <div *ngIf="currentPosition === 'new'">
-          New</div>
+      <div class="row steps" *ngIf="currentState === 'save-or-add-step'">
+        <ul>
+          <li><a (click)="insertStepAfter(0)">Add a step</a></li>
+          <li><a (click)="insertConnectionAfter(0)">Add a connection</a></li>
+        </ul>
+      </div>
+      <template ngFor let-step [ngForOf]="getMiddleSteps()" let-position="index">
+      <div class="row steps">
         <ipaas-integrations-flow-view-step
           [step]="step"
           [position]="position + 1"
           [currentPosition]="currentPosition"
           [currentState]="currentState"></ipaas-integrations-flow-view-step >
-        <div *ngIf="currentPosition === 'new'">
-          New</div>
       </div>
+      <div class="row steps" *ngIf="currentState === 'save-or-add-step'">
+        <ul>
+          <li><a (click)="insertStepAfter(position + 1)">Add a step</a></li>
+          <li><a (click)="insertConnectionAfter(position + 1)">Add a connection</a></li>
+        </ul>
+      </div>
+      </template>
       <div class="row steps finish">
         <ipaas-integrations-flow-view-step
           [step]="endConnection()"
