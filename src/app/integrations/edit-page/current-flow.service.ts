@@ -102,10 +102,28 @@ export class CurrentFlow {
     return position >= this.steps.length;
   }
 
+  private maybeDoAction(thing: any) {
+    if (thing && typeof thing === 'function') {
+      thing();
+    }
+  }
+
   handleEvent(event: FlowEvent): void {
     log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
     switch (event.kind) {
-      case 'integration-selected-action':
+      case 'integration-set-properties':
+        {
+          const position = +event['position'];
+          const action = event['action'];
+          const properties = event['properties'];
+          const step = this.steps[position] || TypeFactory.createStep();
+          step.configuredProperties = properties;
+          this.steps[position] = step;
+          this.maybeDoAction(event['onSave']);
+          log.debugc(() => 'Set properties at position: ' + position, category);
+        }
+        break;
+      case 'integration-set-action':
         {
           const position = +event[ 'position' ];
           const action = event[ 'action' ];
@@ -114,10 +132,11 @@ export class CurrentFlow {
           step.action = action;
           step.stepKind = 'endpoint';
           this.steps[position] = step;
+          this.maybeDoAction(event['onSave']);
           log.debugc(() => 'Set action ' + action.name + ' at position: ' + position, category);
         }
         break;
-      case 'integration-selected-connection':
+      case 'integration-set-connection':
         {
           const position = +event[ 'position' ];
           const connection = event[ 'connection' ];
@@ -125,6 +144,7 @@ export class CurrentFlow {
           step.stepKind = 'endpoint';
           step.connection = connection;
           this.steps[position] = step;
+          this.maybeDoAction(event['onSave']);
           log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
         }
         break;

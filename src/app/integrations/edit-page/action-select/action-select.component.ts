@@ -49,9 +49,12 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
   onSelected(action: Action) {
     log.debugc(() => 'Selected action: ' + action.name, category);
     this.currentFlow.events.emit({
-      kind: 'integration-selected-action',
+      kind: 'integration-set-action',
       position: this.position,
       action: action,
+      onSave: () => {
+        this.router.navigate(['action-configure', this.position], { relativeTo: this.route.parent });
+      },
     });
   }
 
@@ -68,6 +71,14 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
       case 'integration-no-action':
         break;
     }
+  }
+
+  cancel() {
+    this.router.navigate(['..'], { relativeTo: this.route.parent });
+  }
+
+  goBack() {
+    this.router.navigate(['connection-select', this.position], { relativeTo: this.route.parent });
   }
 
   ngOnInit() {
@@ -87,6 +98,9 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
         const step = this.currentFlow.getStep(this.position);
         if (step && step.connection) {
           this.connectorStore.load(step.connection.connectorId);
+        } else {
+          this.router.navigate(['connection-select', this.position], { relativeTo: this.route.parent });
+          return;
         }
         this.currentFlow.events.emit({
           kind: 'integration-action-select',
