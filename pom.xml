@@ -360,6 +360,11 @@
         <artifactId>h2</artifactId>
         <version>1.4.193</version>
       </dependency>
+      <dependency>
+        <groupId>org.eclipse.mylyn.github</groupId>
+        <artifactId>org.eclipse.egit.github.core</artifactId>
+        <version>2.1.5</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
