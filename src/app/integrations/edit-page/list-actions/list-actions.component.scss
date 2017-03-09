@@ -1,22 +1,18 @@
 .list-actions {
+  background-color: #FFFFFF;
   color: #656565;
-  margin-top: 25px;
+  cursor: default;
+  height: 100%;
+  margin: 25px 0;
+  overflow: auto;
 
-  .integration {
-    background: #FFFFFF;
-    cursor: default;
+  .action {
     padding: 20px;
+    margin: 0;
 
     &:hover {
       background: rgba(214, 238, 250, 0.36);
-    }
-
-    .actions {
-      padding: 5px;
-
-      ul {
-        cursor: pointer;
-      }
+      cursor: pointer;
     }
 
     .active-inactive {

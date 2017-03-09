@@ -1,6 +1,10 @@
 .flow-view {
   width: 300px;
 
+  .bold {
+    font-weight: bold;
+  }
+
   .flow-view-container {
     min-height: 400px;
     display: flex;
@@ -8,12 +12,28 @@
     justify-content: space-between;
   }
 
-  .bold {
-    font-weight: bold;
-  }
-
   .name {
-    font-style: italic;
+
+    .integration-name {
+      background-color: rgba(0, 0, 0, 0);
+      border: none;
+      box-shadow: none;
+      color: #363636;
+      font-size: 14px;
+      font-style: normal;
+
+      &.ng-invalid {
+        color: #FF0000;
+      }
+
+      &.ng-pristine {
+        //color:
+      }
+
+      &.ng-touched {
+        //color:
+      }
+    }
   }
 
   // Steps on left-hand side

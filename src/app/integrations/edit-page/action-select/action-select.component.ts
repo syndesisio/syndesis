@@ -1,39 +1,40 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnDestroy, Output, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { ActionStore } from '../../../store/action/action.store';
 import { ConnectorStore } from '../../../store/connector/connector.store';
 import { Actions, Action } from '../../../model';
-import { Connector, Connectors } from '../../../model';
+import { Connector } from '../../../model';
 import { ObjectPropertyFilterConfig } from '../../../common/object-property-filter.pipe';
-import { ObjectPropertySortConfig } from '../../../common/object-property-sort.pipe';
 
 const category = getCategory('Integrations');
 
 @Component({
   selector: 'ipaas-integrations-action-select',
   templateUrl: 'action-select.component.html',
+  styleUrls: [ './action-select.component.scss' ],
 })
 export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
 
   actions: Actions;
   connector: Observable<Connector>;
   loading: Observable<boolean>;
+  flowSubscription: Subscription;
+  routeSubscription: Subscription;
+  position: number;
+
+
+  @Input()
   filter: ObjectPropertyFilterConfig = {
     filter: '',
     propertyName: 'name',
   };
-  sort: ObjectPropertySortConfig = {
-    sortField: 'name',
-    descending: false,
-  };
-  flowSubscription: Subscription;
-  routeSubscription: Subscription;
-  position: number;
+  @Output()
+  filterChange = new EventEmitter<ObjectPropertyFilterConfig>();
+
 
   constructor(
     private connectorStore: ConnectorStore,
@@ -58,6 +59,7 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
     });
   }
 
+  /*
   atEnd() {
     if (this.currentFlow.isEmpty()) {
       // if it's empty, we're always at the start action step
@@ -65,6 +67,7 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
     }
     return this.currentFlow.atEnd(this.position);
   }
+  */
 
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
@@ -113,6 +116,11 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.routeSubscription.unsubscribe();
     this.flowSubscription.unsubscribe();
+  }
+
+  filterInputChange(value: string) {
+    this.filter.filter = value;
+    this.filterChange.emit(this.filter);
   }
 
 }

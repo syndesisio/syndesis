@@ -1,0 +1,30 @@
+.connection-select {
+  .toolbar {
+    margin: 0 -20px;
+
+    .toolbar-pf {
+      background: none !important;
+      border: none !important;
+      margin: 0;
+      padding: 0 0 10px 0;
+
+      .breadcrumb {
+        padding: 0;
+        margin: 0;
+      }
+
+      .search {
+        width: 50%;
+
+        .input-group {
+          width: 80%;
+        }
+      }
+
+      .toolbar-pf-actions {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+

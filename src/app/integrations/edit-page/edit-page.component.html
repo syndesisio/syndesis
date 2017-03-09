@@ -1,10 +1,16 @@
 <div class="integrations edit">
   <div class="wizard-pf-row">
+    
+    <!-- Sidebar -->
     <div class="wizard-pf-sidebar">
       <ipaas-integrations-flow-view [currentState]="getCurrentChild()" [currentPosition]="getCurrentPosition()"></ipaas-integrations-flow-view>
     </div>
+    
+    
+    <!-- Add/Edit Integration -->
     <div class="wizard-pf-main">
       <router-outlet></router-outlet>
+      
       <!-- Wizard Footer -->
       <!--
       <div class='wizard-pf-footer'>
