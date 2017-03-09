@@ -22,10 +22,9 @@ import static org.junit.Assert.*;
 public class GitHubServiceImplTest {
 
 
-
     @Test
     public void sanitizeRepoName() throws Exception {
-        GitHubService service = new GitHubServiceImpl();
+        GitHubService service = new GitHubServiceImpl(null, null);
 
         String data[] = {
             "bla", "bla",

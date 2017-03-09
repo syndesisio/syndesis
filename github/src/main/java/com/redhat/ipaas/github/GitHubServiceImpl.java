@@ -19,38 +19,35 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
-import com.redhat.ipaas.github.extended.ExtendedContentsService;
+import com.redhat.ipaas.github.backend.ExtendedContentsService;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryContents;
-import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.RequestScope;
 
 /**
  * @author roland
  * @since 08/03/2017
  */
 @Service
+@RequestScope
 @ConditionalOnProperty(value = "github.enabled", matchIfMissing = true, havingValue = "true")
 public class GitHubServiceImpl implements GitHubService {
 
-    private RepositoryService repoService;
-    private ExtendedContentsService contentsService;
+    @Value("${github.service}")
+    private String gitHubHost = "ipaas-github-proxy";
 
-    @Value("github.service")
-    private String gitHubHost;
+    private final RepositoryService repositoryService;
+    private final ExtendedContentsService contentsService;
 
-    @PostConstruct
-    public void init() {
-        GitHubClient client = new GitHubClient(gitHubHost != null ? gitHubHost : "ipaas-github-proxy");
-        repoService = new RepositoryService(client);
-        contentsService = new ExtendedContentsService(client);
+    public GitHubServiceImpl(RepositoryService repositoryService, ExtendedContentsService contentsService) {
+        this.repositoryService = repositoryService;
+        this.contentsService = contentsService;
     }
-
 
     @Override
     public void ensureRepository(String name) throws IOException {
@@ -81,24 +78,8 @@ public class GitHubServiceImpl implements GitHubService {
 
     // =====================================================================================
 
-    private boolean isValidRepoChar(int c) {
-        return (c >= 'a' && c <= 'z') ||
-               (c >= '0' && c <= '9') ||
-               (c == '-');
-    }
-
-    private void createRepo(String name) throws IOException {
-        Repository repo = new Repository();
-        repo.setName(name);
-        repoService.createRepository(repo);
-    }
-
-    private boolean hasRepo(String name) throws IOException {
-        return getRepository(name) != null;
-    }
-
     private Repository getRepository(String name) throws IOException {
-        for (Repository repo : repoService.getRepositories()) {
+        for (Repository repo : repositoryService.getRepositories()) {
             if (name.equals(repo.getName())) {
                 return repo;
             }
@@ -114,6 +95,16 @@ public class GitHubServiceImpl implements GitHubService {
         return repository;
     }
 
+    private boolean hasRepo(String name) throws IOException {
+        return getRepository(name) != null;
+    }
+
+    private void createRepo(String name) throws IOException {
+        Repository repo = new Repository();
+        repo.setName(name);
+        repositoryService.createRepository(repo);
+    }
+
     private void createOrUpdate(String repo, String message, String path, byte[] content) throws IOException {
         String sha = getFileSha(repo, path);
         if (sha != null) {
@@ -121,6 +112,16 @@ public class GitHubServiceImpl implements GitHubService {
         } else {
             createFile(repo, message, path, content);
         }
+    }
+
+    private void createFile(String repo, String message, String path, byte[] content) throws IOException {
+        Repository repository = getMandatoryRepository(repo, path);
+        contentsService.createFile(repository, message, path, content);
+    }
+
+    private void updateFile(String repo, String message, String path, String sha, byte[] content) throws IOException {
+        Repository repository = getMandatoryRepository(repo, path);
+        contentsService.updateFile(repository, message, path, sha, content);
     }
 
     private String getFileSha(String repo, String path) throws IOException {
@@ -135,13 +136,9 @@ public class GitHubServiceImpl implements GitHubService {
         return contents.get(0).getSha();
     }
 
-    private void createFile(String repo, String message, String path, byte[] content) throws IOException {
-        Repository repository = getMandatoryRepository(repo, path);
-        contentsService.createFile(repository, message, path, content);
-    }
-
-    private void updateFile(String repo, String message, String path, String sha, byte[] content) throws IOException {
-        Repository repository = getMandatoryRepository(repo, path);
-        contentsService.updateFile(repository, message, path, sha, content);
+    private boolean isValidRepoChar(int c) {
+        return (c >= 'a' && c <= 'z') ||
+               (c >= '0' && c <= '9') ||
+               (c == '-');
     }
 }

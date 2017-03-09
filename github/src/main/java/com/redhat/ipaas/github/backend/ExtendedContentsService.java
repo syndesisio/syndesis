@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.github.extended;
+package com.redhat.ipaas.github.backend;
 
 import java.io.IOException;
 
@@ -39,7 +39,7 @@ public class ExtendedContentsService extends ContentsService {
 
 	public void updateFile(IRepositoryIdProvider repository, String message, String path, String sha, byte[] content) throws IOException {
 		StringBuilder uri = createContentsUri(repository, path);
-		client.post(uri.toString(), new FileContent(path, message, content, sha),null /* no response serialization */);
+		client.put(uri.toString(), new FileContent(path, message, content, sha),null /* no response serialization */);
     }
 
 	private StringBuilder createContentsUri(IRepositoryIdProvider repository, String path) {

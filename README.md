@@ -19,6 +19,15 @@
 
     mvn clean install
 
+# Start a PostgreSQL DB in a Docker container
+
+   docker run -d --rm \
+              -p 5432:5432 \
+              -e POSTGRES_USER=postgres \
+              -e POSTGRES_PASSWORD=password \
+              -e POSTGRES_DB=ipaas \
+              postgres
+
 # Run in development mode
 
 Linux:

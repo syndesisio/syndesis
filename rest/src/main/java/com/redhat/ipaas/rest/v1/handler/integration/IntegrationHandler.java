@@ -18,6 +18,9 @@ package com.redhat.ipaas.rest.v1.handler.integration;
 import java.io.IOException;
 
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.UriInfo;
 
 import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.dao.manager.DataManager;

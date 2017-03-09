@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.github.extended;
+package com.redhat.ipaas.github.backend;
 
 import java.util.Base64;
 
