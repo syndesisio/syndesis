@@ -18,6 +18,7 @@ package com.redhat.ipaas.rest.v1.handler.integration;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.ws.rs.Path;
 
@@ -29,6 +30,7 @@ import com.redhat.ipaas.project.converter.IntegrationToProjectConverter;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Path("/integrations")
@@ -39,6 +41,12 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     private final GitHubService gitHubService;
 
     private final IntegrationToProjectConverter projectConverter;
+
+    @Value("${openshift.apiBaseUrl}")
+    private String openshiftApiBaseUrl;
+
+    @Value("${openshift.namespace}")
+    private String namespace;
 
     public IntegrationHandler(DataManager dataMgr, GitHubService gitHubService, IntegrationToProjectConverter projectConverter) {
         super(dataMgr);
@@ -58,30 +66,52 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     @Override
     public Integration create(Integration integration) {
-        Optional<String> repoName = integration.getGitRepo();
-        if (!repoName.isPresent()) {
-            String generatedRepoName = gitHubService.sanitizeRepoName(integration.getName());
-            integration = new Integration.Builder().createFrom(integration).gitRepo(generatedRepoName).build();
-        }
-        ensureRepositoryWithContents(integration);
+        ensureGitHubSetup(integration);
         return Creator.super.create(integration);
     }
 
     // ==========================================================================
 
-    private void ensureRepositoryWithContents(Integration integration) {
-        String repoName = integration.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
+    private void ensureGitHubSetup(Integration integration) {
         try {
-            gitHubService.ensureRepository(repoName);
+            integration = ensureGitRepoName(integration);
+            String repoName = integration.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
+
             Map<String, byte[]> fileContents = projectConverter.convert(integration);
-            gitHubService.createOrUpdate(repoName, generateCommitMessage(), fileContents);
+
+            // Secret to be used in the build trigger
+            String secret = createSecret();
+            String webHookUrl = createWebHookUrl(repoName, secret);
+
+            // Do all github stuff at once
+            gitHubService.createOrUpdateProjectFiles(repoName, generateCommitMessage(), fileContents, webHookUrl);
+
         } catch (IOException e) {
             throw IPaasServerException.launderThrowable(e);
         }
     }
 
+    private String createWebHookUrl(String bcName, String secret) {
+        return String.format(
+            "%s/namespaces/%s/buildconfigs/%s/webhooks/%s/github", openshiftApiBaseUrl, namespace, bcName, secret);
+    }
+
+
+    private Integration ensureGitRepoName(Integration integration) {
+        Optional<String> repoNameOptional = integration.getGitRepo();
+        if (!repoNameOptional.isPresent()) {
+            String generatedRepoName = gitHubService.sanitizeRepoName(integration.getName());
+            integration = new Integration.Builder().createFrom(integration).gitRepo(generatedRepoName).build();
+        }
+        return integration;
+    }
+
     private String generateCommitMessage() {
         // TODO Let's generate some nice message...
         return "Updated";
+    }
+
+    private String createSecret() {
+        return UUID.randomUUID().toString();
     }
 }

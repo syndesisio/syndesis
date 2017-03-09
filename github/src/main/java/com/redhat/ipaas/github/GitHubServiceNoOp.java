@@ -29,18 +29,12 @@ import org.springframework.stereotype.Service;
 public class GitHubServiceNoOp implements GitHubService {
 
     @Override
-    public void ensureRepository(String name) throws IOException {
+    public void createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
         // Intentional empty
     }
 
     @Override
     public String sanitizeRepoName(String name) {
-        // No mangling
         return name;
-    }
-
-    @Override
-    public void createOrUpdate(String repo, String message, Map<String, byte[]> files) {
-        // intentional empty
     }
 }

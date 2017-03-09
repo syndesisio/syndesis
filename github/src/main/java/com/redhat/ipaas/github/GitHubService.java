@@ -21,13 +21,17 @@ import java.util.Map;
 public interface GitHubService {
 
     /**
-     * Ensure that a given repository name exists. If it does not exist,
-     * it will be created as a public repository
+     * Create or update project files at a given GitHub repo. This typically consists of several steps. This
+     * method is not supposed to be transactional in the sense in case of an error some changes at GitHub might
+     * still persists.
      *
-     * @param name name of the repository to create. This name should
-     *             be already a valid repo name. Must not be null.
+     * @param repoName repo to either create if not existent or to update
+     * @param commitMessage the message to use for committing files.
+     * @param fileContents map of files to add or update. Key are pathes within the repo, values is the content to write
+     * @param webHookUrl an optional Webhook URL. If non-null a webhook is created with this url as callback URL
+     * @throws IOException if interaction with GitHub fails.
      */
-    void ensureRepository(String name) throws IOException;
+    void createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException;
 
     /**
      * Convert a given name to GitHub acceptable repo name.
@@ -36,14 +40,4 @@ public interface GitHubService {
      * @return sanitized name.
      */
     String sanitizeRepoName(String name);
-
-    /**
-     * Create or update file in a given repo on the fly.
-     *
-     * @param repo to update
-     * @param message commit message to use
-     * @param files map of files with the keys being relative paths within the the repo
-     *              and the values is the content in bytes.
-     */
-    void createOrUpdate(String repo, String message, Map<String, byte[]> files) throws IOException;
 }

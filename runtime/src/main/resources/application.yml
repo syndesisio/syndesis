@@ -62,7 +62,14 @@ endpoints:
 dao:
   kind: jsondb
 
+# OpenShift infra value
+openshift:
+  # Base API Url up to the api version number (i.e. ending in sth like "oapi1/v1"
+  apiBaseUrl: "http://openshift/oapi1/v1"
+  # The namespace in which the build configs are created
+  namespace: "myproject"
+
+# GitHub service specific config
 github:
   enabled: true
   service: ipaas-github-proxy
-

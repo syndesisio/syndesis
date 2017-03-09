@@ -85,3 +85,46 @@ $ curl http://localhost:8080/api/v1/components -H "Authorization: Bearer $TOKEN"
 # Validate the REST API requires the valid token - should return a 401
 $ curl http://localhost:8080/api/v1/components
 ```
+
+
+## Roland's random notes
+
+* Create image
+
+```
+eval $(minishift docker-env)
+cd runtime
+mvn fabric8:build -Dfabric8.mode=kubernetes
+```
+
+Ignore warning about not being able to remove old image.
+
+* Kill Pod for `ipaas-rest`
+
+```
+oc delete pod $(oc get pods | awk '{ print $1 }' | grep ipaas-rest)
+```
+
+* Edit config 
+
+```
+oc edit cm ipaas-rest-config
+```
+
+* Get Token from developer-tool in Chrome when having the UI open
+
+```
+TOKEN="...."
+```
+
+* Call the REST API with curl
+
+```
+curl -k -v https://ipaas.192.168.64.3.xip.io/api/v1/integrations -H "Authorization: Bearer $TOKEN" -H "Accept: application/json" -H "Content-Type: application/json" -d '{ "name": "ipass-test-repo" }'
+```
+
+* Port forward for remote debugging (set JAVA_OPTIONS in your DC to enable it)
+
+```
+oc port-forward $(oc get pods | awk '{ print $1 }' | grep ipaas-rest) 8000:8000
+```

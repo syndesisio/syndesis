@@ -15,19 +15,21 @@
  */
 package com.redhat.ipaas.github;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.redhat.ipaas.github.backend.ExtendedContentsService;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryContents;
+import org.eclipse.egit.github.core.RepositoryHook;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author roland
@@ -47,15 +49,24 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     @Override
-    public void ensureRepository(String name) throws IOException {
-        if (!hasRepo(name)) {
-            createRepo(name);
+    public void createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
+        Repository repository = getRepository(repoName);
+        if (repository == null) {
+            // New Repo
+            repository = createRepo(repoName);
+            // Add files
+            createOrUpdateFiles(repository, commitMessage, fileContents);
+            // Set WebHook
+            createWebHookAsBuildTrigger(repository, webHookUrl);
+        } else {
+            // Only create or update files
+            createOrUpdateFiles(repository, commitMessage, fileContents);
         }
     }
 
     @Override
     public String sanitizeRepoName(String name) {
-        String ret = name.length() > 100 ? name.substring(0,100) : name;
+        String ret = name.length() > 100 ? name.substring(0, 100) : name;
         return ret.replace(" ","-")
                   .toLowerCase()
                   .chars()
@@ -64,13 +75,6 @@ public class GitHubServiceImpl implements GitHubService {
                            StringBuilder::appendCodePoint,
                            StringBuilder::append)
                   .toString();
-    }
-
-    @Override
-    public void createOrUpdate(String repo, String message, Map<String, byte[]> files) throws IOException {
-        for (Map.Entry<String, byte[]> entry : files.entrySet()) {
-            createOrUpdate(repo, message, entry.getKey(), entry.getValue());
-        }
     }
 
     // =====================================================================================
@@ -84,60 +88,61 @@ public class GitHubServiceImpl implements GitHubService {
         return null;
     }
 
-    private Repository getMandatoryRepository(String repo, String path) throws IOException {
-        Repository repository = getRepository(repo);
-        if (repository == null) {
-            throw new IOException("No repo " + repo + " exists for looking up file " + path);
-        }
-        return repository;
-    }
-
-    private boolean hasRepo(String name) throws IOException {
-        return getRepository(name) != null;
-    }
-
-    private void createRepo(String name) throws IOException {
+    private Repository createRepo(String name) throws IOException {
         Repository repo = new Repository();
         repo.setName(name);
-        repositoryService.createRepository(repo);
+        return repositoryService.createRepository(repo);
     }
 
-    private void createOrUpdate(String repo, String message, String path, byte[] content) throws IOException {
-        String sha = null;
+    private void createOrUpdateFiles(Repository repo, String message, Map<String, byte[]> files) throws IOException {
+        for (Map.Entry<String, byte[]> entry : files.entrySet()) {
+            createOrUpdateFiles(repo, message, entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void createWebHookAsBuildTrigger(Repository repository, String url) throws IOException {
+        if (url != null && url.length() > 0) {
+            RepositoryHook hook = prepareRepositoryHookRequest(url);
+            repositoryService.createHook(repository, hook);
+        }
+    }
+
+    private RepositoryHook prepareRepositoryHookRequest(String url) {
+        RepositoryHook hook = new RepositoryHook();
+        Map<String, String> config = new HashMap<>();
+        config.put("url", url);
+        config.put("content_type", "json");
+        hook.setConfig(config);
+        hook.setName("web");
+        hook.setActive(true);
+        return hook;
+    }
+
+    private void createOrUpdateFiles(Repository repo, String message, String path, byte[] content) throws IOException {
+        String sha = getFileSha(repo, path);
+        if (sha != null) {
+            contentsService.updateFile(repo, message, path, sha, content);
+        } else {
+            contentsService.createFile(repo, message, path, content);
+        }
+    }
+
+    private String getFileSha(Repository repository, String path) throws IOException {
         try {
-            sha = getFileSha(repo, path);
+            List<RepositoryContents> contents = contentsService.getContents(repository, path);
+            if (contents ==  null) {
+                return null;
+            }
+            if (contents.size() > 1) {
+                throw new IllegalArgumentException("Given path " + path + " doesn't specify a file");
+            }
+            return contents.get(0).getSha();
         } catch (RequestException e) {
             if (e.getStatus() != HttpStatus.NOT_FOUND.value()) {
                 throw e;
             }
-        }
-        if (sha != null) {
-            updateFile(repo, message, path, sha, content);
-        } else {
-            createFile(repo, message, path, content);
-        }
-    }
-
-    private void createFile(String repo, String message, String path, byte[] content) throws IOException {
-        Repository repository = getMandatoryRepository(repo, path);
-        contentsService.createFile(repository, message, path, content);
-    }
-
-    private void updateFile(String repo, String message, String path, String sha, byte[] content) throws IOException {
-        Repository repository = getMandatoryRepository(repo, path);
-        contentsService.updateFile(repository, message, path, sha, content);
-    }
-
-    private String getFileSha(String repo, String path) throws IOException {
-        Repository repository = getMandatoryRepository(repo, path);
-        List<RepositoryContents> contents = contentsService.getContents(repository, path);
-        if (contents ==  null) {
             return null;
         }
-        if (contents.size() > 1) {
-            throw new IllegalArgumentException("Given path " + path + " doesn't specify a file");
-        }
-        return contents.get(0).getSha();
     }
 
     private boolean isValidRepoChar(int c) {
