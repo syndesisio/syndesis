@@ -17,7 +17,6 @@ package com.redhat.ipaas.project.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
@@ -35,7 +34,10 @@ import io.fabric8.funktion.model.steps.Log;
 import io.fabric8.funktion.support.YamlHelper;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
