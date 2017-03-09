@@ -13,16 +13,23 @@
         margin: 0;
       }
 
-      .search {
-        width: 50%;
-
-        .input-group {
-          width: 80%;
-        }
-      }
-
       .toolbar-pf-actions {
         margin-bottom: 0;
+      }
+    }
+  }
+
+  .pre-content {
+    .toolbar-pf {
+      background: none !important;
+      border: none !important;
+
+      .search {
+        width: 50% !important;
+
+        .input-group {
+          width: 80% !important;
+        }
       }
     }
   }
