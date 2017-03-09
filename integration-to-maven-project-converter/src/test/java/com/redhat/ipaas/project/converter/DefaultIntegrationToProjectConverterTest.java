@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DefaultIntegrationToProjectConverterTest {
 
     @Test
-    public void convert() throws Exception {
+    public void testConvert() throws Exception {
         Map<String, byte[]> files = new DefaultIntegrationToProjectConverter(new ConnectorCatalog(new ConnectorCatalogProperties())).convert(
             new Integration.Builder()
                 .id("test-integration")
@@ -43,10 +43,10 @@ public class DefaultIntegrationToProjectConverterTest {
                 .gitRepo("https://ourgithhost.somewhere/test.git")
                 .steps(
                     Arrays.asList(
-                        new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{\"timerName\": \"every\"}").build()).configuredProperties("{\"period\": \"5000\"}").action(new Action.Builder().camelConnectorPrefix("periodic-timer").build()).build(),
-                        new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"httpUri\": \"http://localhost:8080/hello\"}").action(new Action.Builder().camelConnectorPrefix("http-get").build()).build(),
+                        new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{\"timerName\": \"every\"}").build()).configuredProperties("{\"period\": \"5000\"}").action(new Action.Builder().camelConnectorPrefix("periodic-timer").camelConnectorGAV("com.redhat.ipaas:timer-connector:0.2.1").build()).build(),
+                        new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"httpUri\": \"http://localhost:8080/hello\"}").action(new Action.Builder().camelConnectorPrefix("http-get").camelConnectorGAV("com.redhat.ipaas:http-get-connector:0.2.1").build()).build(),
                         new Step.Builder().stepKind("log").configuredProperties("{\"message\": \"Hello World! ${body}\"}").build(),
-                        new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"httpUri\": \"http://localhost:8080/bye\"}").action(new Action.Builder().camelConnectorPrefix("http-post").build()).build()
+                        new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"httpUri\": \"http://localhost:8080/bye\"}").action(new Action.Builder().camelConnectorPrefix("http-post").camelConnectorGAV("com.redhat.ipaas:http-post-connector:0.2.1").build()).build()
                     )
                 )
                 .build()

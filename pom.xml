@@ -547,6 +547,7 @@
             <exclude>.mention-bot</exclude>
             <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
             <exclude>mvnw*</exclude>
+            <exclude>**/resources/**/test-*</exclude>
           </excludes>
         </configuration>
       </plugin>

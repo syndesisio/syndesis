@@ -46,7 +46,7 @@ public class ConnectorCatalog {
         }
     }
 
-    private void addConnector(String gav) {
+    public void addConnector(String gav) {
         String[] splitGAV = gav.split(":");
         if (splitGAV.length == 3) {
             String groupId = splitGAV[0];

@@ -72,6 +72,12 @@ public class DefaultIntegrationToProjectConverter implements IntegrationToProjec
 
     @Override
     public Map<String, byte[]> convert(Integration integration) throws IOException {
+        integration.getSteps().ifPresent(steps -> {
+            for (Step step : steps) {
+                step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
+            }
+        });
+
         Map<String, byte[]> contents = new HashMap<>();
         contents.put("README.md", generate(integration, readmeMustache));
         contents.put("src/main/java/com/redhat/ipaas/example/Application.java", generate(integration, applicationJavaMustache));

@@ -34,12 +34,6 @@ public class ConnectorCatalogProperties {
     public ConnectorCatalogProperties() {
         this.mavenRepos.put("bintray", "https://dl.bintray.com/redhat-ipaas/maven/");
         this.mavenRepos.put("jcenter", "https://jcenter.bintray.com");
-
-        connectorGAVs.add("com.redhat.ipaas:http-get-connector:0.2.1");
-        connectorGAVs.add("com.redhat.ipaas:http-post-connector:0.2.1");
-        connectorGAVs.add("com.redhat.ipaas:timer-connector:0.2.1");
-        connectorGAVs.add("com.redhat.ipaas:twitter-mention-connector:0.2.1");
-        connectorGAVs.add("com.redhat.ipaas:salesforce-upsert-contact-connector:0.2.1");
     }
 
     public Map<String, String> getMavenRepos() {
