@@ -67,23 +67,32 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     private void ensureGitHubSetup(Integration integration) {
         try {
-            Optional<String> repoNameOptional = integration.getGitRepo();
-            if (!repoNameOptional.isPresent()) {
-                String generatedRepoName = gitHubService.sanitizeRepoName(integration.getName());
-                integration = new Integration.Builder().createFrom(integration).gitRepo(generatedRepoName).build();
-            }
+            integration = ensureGitRepoName(integration);
             String repoName = integration.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
-            gitHubService.createRepositoryIfMissing(repoName);
-
-            Map<String, byte[]> fileContents = projectConverter.convert(integration);
-            gitHubService.createOrUpdate(repoName, generateCommitMessage(), fileContents);
 
             if (gitHubService.createRepositoryIfMissing(repoName)) {
                 setupBuild(repoName);
             }
+
+            updateProjectFiles(repoName, integration);
+
         } catch (IOException e) {
             throw IPaasServerException.launderThrowable(e);
         }
+    }
+
+    private void updateProjectFiles(String repoName, Integration integration) throws IOException {
+        Map<String, byte[]> fileContents = projectConverter.convert(integration);
+        gitHubService.createOrUpdate(repoName, generateCommitMessage(), fileContents);
+    }
+
+    private Integration ensureGitRepoName(Integration integration) {
+        Optional<String> repoNameOptional = integration.getGitRepo();
+        if (!repoNameOptional.isPresent()) {
+            String generatedRepoName = gitHubService.sanitizeRepoName(integration.getName());
+            integration = new Integration.Builder().createFrom(integration).gitRepo(generatedRepoName).build();
+        }
+        return integration;
     }
 
     private String generateCommitMessage() {

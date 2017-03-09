@@ -58,4 +58,4 @@ public interface GitHubService {
      * @return true if a web hook has been created, false if setting webhooks is disabled.
      */
     boolean buildTriggerAsWebHook(String repoName, String bcName, String secret) throws IOException;
-    }
+}
