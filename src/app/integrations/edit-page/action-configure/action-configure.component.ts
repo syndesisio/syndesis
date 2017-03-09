@@ -50,7 +50,7 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
       .map((position: string) => {
         this.position = Number.parseInt(position);
         const step = <Step> this.currentFlow.getStep(this.position);
-        const action = step.action;
+        this.action = step.action;
         if (this.action && this.action.properties) {
           const configString = this.action.properties;
           // TODO giant hack so we see something on the config page
