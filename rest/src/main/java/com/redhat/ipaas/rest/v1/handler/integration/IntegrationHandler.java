@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2016 Red Hat, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,7 @@ import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.github.GitHubService;
 import com.redhat.ipaas.model.integration.Integration;
+import com.redhat.ipaas.openshift.OpenShiftService;
 import com.redhat.ipaas.project.converter.IntegrationToProjectConverter;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
@@ -48,10 +49,13 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Value("${openshift.namespace}")
     private String namespace;
 
-    public IntegrationHandler(DataManager dataMgr, GitHubService gitHubService, IntegrationToProjectConverter projectConverter) {
+    private final OpenShiftService openShiftService;
+
+    public IntegrationHandler(DataManager dataMgr, GitHubService gitHubService, IntegrationToProjectConverter projectConverter, OpenShiftService openShiftService) {
         super(dataMgr);
         this.gitHubService = gitHubService;
         this.projectConverter = projectConverter;
+        this.openShiftService = openShiftService;
     }
 
     @Override
@@ -66,21 +70,29 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     @Override
     public Integration create(Integration integration) {
-        ensureGitHubSetup(integration);
-        return Creator.super.create(integration);
+        Integration requestedIntegration = integration;
+        Optional<String> repoName = requestedIntegration.getGitRepo();
+        if (!repoName.isPresent()) {
+            String generatedRepoName = gitHubService.sanitizeRepoName(integration.getName());
+            requestedIntegration = new Integration.Builder().createFrom(requestedIntegration).gitRepo(generatedRepoName).build();
+        }
+
+        String secret = createSecret();
+        ensureGitHubSetup(requestedIntegration, secret);
+        ensureOpenShiftResources(requestedIntegration, secret);
+        return Creator.super.create(requestedIntegration);
     }
 
     // ==========================================================================
 
-    private void ensureGitHubSetup(Integration integration) {
+    private void ensureGitHubSetup(Integration integration, String secret) {
         try {
-            integration = ensureGitRepoName(integration);
+            Integration integrationWithGitRepoName = ensureGitRepoName(integration);
             String repoName = integration.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
 
-            Map<String, byte[]> fileContents = projectConverter.convert(integration);
+            Map<String, byte[]> fileContents = projectConverter.convert(integrationWithGitRepoName);
 
             // Secret to be used in the build trigger
-            String secret = createSecret();
             String webHookUrl = createWebHookUrl(repoName, secret);
 
             // Do all github stuff at once
@@ -113,5 +125,9 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     private String createSecret() {
         return UUID.randomUUID().toString();
+    }
+
+    private void ensureOpenShiftResources(Integration integration, String secret) {
+        integration.getGitRepo().ifPresent(gitRepo -> openShiftService.createOpenShiftResources(integration.getName(), gitRepo, secret));
     }
 }

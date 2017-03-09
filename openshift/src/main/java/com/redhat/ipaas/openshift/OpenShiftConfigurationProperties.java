@@ -1,0 +1,47 @@
+package com.redhat.ipaas.openshift;
+
+import io.fabric8.openshift.client.OpenShiftConfig;
+import io.fabric8.openshift.client.OpenShiftConfigBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties("openshift")
+public class OpenShiftConfigurationProperties {
+
+    public static final String SERVICE_CA_CERT_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt";
+
+    private boolean enabled;
+
+    private String openShiftHost = "https://ipaas-openshift-proxy." + new OpenShiftConfigBuilder().build().getNamespace() + ".svc";
+
+    private OpenShiftConfig openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(openShiftHost).withCaCertFile(SERVICE_CA_CERT_FILE).build();
+
+    private String builderImage = "fabric8/s2i-java:2.0.0";
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getOpenShiftHost() {
+        return openShiftHost;
+    }
+
+    public void setOpenShiftHost(String openShiftHost) {
+        this.openShiftHost = openShiftHost;
+    }
+
+    public OpenShiftConfig getOpenShiftClientConfiguration() {
+        return openShiftClientConfig;
+    }
+
+    public String getBuilderImage() {
+        return builderImage;
+    }
+
+    public void setBuilderImage(String builderImage) {
+        this.builderImage = builderImage;
+    }
+}
