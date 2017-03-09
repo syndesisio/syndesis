@@ -129,7 +129,7 @@ public class DefaultIntegrationToProjectConverter implements IntegrationToProjec
         Map<String, String> props = readConfiguredProperties(connectionConfiguredProperties, configuredProperties);
 
         // TODO Remove this hack... when we can read endpointValues from connector schema then we should use those as initial properties.
-        if (camelConnector.equals("periodic-timer")) {
+        if ("periodic-timer".equals(camelConnector)) {
             props.put("timerName", "every");
         }
 
