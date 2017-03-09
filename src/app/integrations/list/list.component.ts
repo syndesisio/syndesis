@@ -38,23 +38,16 @@ export class IntegrationsListComponent {
     setTimeout(this.popToast(), 1000);
   }
 
-  // TODO this is all super last-minute hacky
-  private getConnection(integration: Integration, position: number) {
-    if (integration) {
-      return (integration.connections || [])[position];
-    } else {
-      return undefined;
-    }
-  }
-
   getStartIcon(integration: Integration) {
-    const connection = this.getConnection(integration, 0);
+    const connection = integration.steps[0].connection;
+    console.log('Integration: ', integration);
+    const icon = 'fa fa-plane';
+
     return (connection || {})['icon'] || 'fa-plane';
   }
 
   getFinishIcon(integration: Integration) {
-    // TODO should be the last connection
-    const connection = this.getConnection(integration, 1);
+    const connection = integration.steps[integration.steps.length - 1].connection;
     return (connection || {})['icon'] || 'fa-plane';
   }
 

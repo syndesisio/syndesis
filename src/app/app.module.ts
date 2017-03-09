@@ -108,6 +108,7 @@ export function appInitializer(configService: ConfigService, oauthService: OAuth
 }
 
 export function restangularProviderConfigurer(restangularProvider: any, config: ConfigService, oauthService: OAuthService) {
+  restangularProvider.setPlainByDefault(true);
   restangularProvider.setBaseUrl(config.getSettings().apiEndpoint);
 
   restangularProvider.addFullRequestInterceptor((_element, _operation, _path, _url, headers) => {
