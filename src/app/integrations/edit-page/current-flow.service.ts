@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
 import { IntegrationStore } from '../../store/integration/integration.store';
-import { Action, Integration, Step, Connection } from '../../model';
+import { Action, Integration, Step, Connection, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
 
 const category = getCategory('CurrentFlow');
@@ -106,60 +106,62 @@ export class CurrentFlow {
     log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
     switch (event.kind) {
       case 'integration-selected-action':
-        let position = +event[ 'position' ];
-        let action = event[ 'action' ];
-        //this.actions[ position ] = action;
-        this.steps[ position ] = <Step> {
-          action: action,
-          configuredProperties: action[ 'properties' ],
-          id: action[ 'id' ],
-          kind: 'endpoint',
-        };
-        log.debugc(() => 'Set action ' + action.name + ' at position: ' + position, category);
+        {
+          const position = +event[ 'position' ];
+          const action = event[ 'action' ];
+          // TODO no step here should really raise an error
+          const step = this.steps[position] || TypeFactory.createStep();
+          step.action = action;
+          step.stepKind = 'endpoint';
+          this.steps[position] = step;
+          log.debugc(() => 'Set action ' + action.name + ' at position: ' + position, category);
+        }
         break;
       case 'integration-selected-connection':
-        position = +event[ 'position' ];
-        const connection = event[ 'connection' ];
-        this.steps[ position ] = <Step> {
-          connection: connection,
-          configuredProperties: connection[ 'configuredProperties' ],
-          id: connection[ 'id' ],
-          kind: 'endpoint',
-        };
-        log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
+        {
+          const position = +event[ 'position' ];
+          const connection = event[ 'connection' ];
+          const step = TypeFactory.createStep();
+          step.stepKind = 'endpoint';
+          step.connection = connection;
+          this.steps[position] = step;
+          log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
+        }
         break;
       case 'integration-set-name':
         this._integration.name = event[ 'name' ];
         break;
       case 'integration-save':
+        {
         log.debugc(() => 'Saving integration: ' + this.integration);
-        // poor man's clone in case we need to munge the data
-        const integration = JSON.parse(JSON.stringify(this.integration));
-        // TODO munging connection objects for now
-        /*
-         const steps = integration.steps;
-         const newSteps = [];
-         for (const step of steps) {
-         newSteps.push();
-         }
-         integration.steps = newSteps;
-         integration.connections = steps;
-         */
-        const sub = this.store.updateOrCreate(integration).subscribe((i: Integration) => {
-          log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
-          action = event[ 'action' ];
-          if (action && typeof action === 'function') {
-            action(i);
+          // poor man's clone in case we need to munge the data
+          const integration = JSON.parse(JSON.stringify(this.integration));
+          // TODO munging connection objects for now
+          /*
+          const steps = integration.steps;
+          const newSteps = [];
+          for (const step of steps) {
+          newSteps.push();
           }
-          sub.unsubscribe();
-        }, (reason: any) => {
-          log.debugc(() => 'Error saving integration: ' + JSON.stringify(reason, undefined, 2), category);
-          const errorAction = event[ 'error' ];
-          if (errorAction && typeof errorAction === 'function') {
-            errorAction(reason);
-          }
-          sub.unsubscribe();
-        });
+          integration.steps = newSteps;
+          integration.connections = steps;
+          */
+          const sub = this.store.updateOrCreate(integration).subscribe((i: Integration) => {
+            log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
+            const action = event[ 'action' ];
+            if (action && typeof action === 'function') {
+              action(i);
+            }
+            sub.unsubscribe();
+          }, (reason: any) => {
+            log.debugc(() => 'Error saving integration: ' + JSON.stringify(reason, undefined, 2), category);
+            const errorAction = event[ 'error' ];
+            if (errorAction && typeof errorAction === 'function') {
+              errorAction(reason);
+            }
+            sub.unsubscribe();
+          });
+        }
         break;
     }
     // log.debugc(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -6,20 +6,22 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { ActionStore } from '../../../store/action/action.store';
+import { ConnectorStore } from '../../../store/connector/connector.store';
 import { Actions, Action } from '../../../model';
+import { Connector, Connectors } from '../../../model';
 import { ObjectPropertyFilterConfig } from '../../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../../common/object-property-sort.pipe';
 
 const category = getCategory('Integrations');
 
 @Component({
-  moduleId: module.id,
   selector: 'ipaas-integrations-action-select',
   templateUrl: 'action-select.component.html',
 })
 export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
 
-  actions: Observable<Actions>;
+  actions: Actions;
+  connector: Observable<Connector>;
   loading: Observable<boolean>;
   filter: ObjectPropertyFilterConfig = {
     filter: '',
@@ -34,13 +36,14 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
   position: number;
 
   constructor(
-    private store: ActionStore,
+    private connectorStore: ConnectorStore,
     private currentFlow: CurrentFlow,
     private route: ActivatedRoute,
     private router: Router,
+    private changeDetectorRef: ChangeDetectorRef,
     ) {
-    this.loading = store.loading;
-    this.actions = store.list;
+      this.connector = connectorStore.resource;
+      this.loading = connectorStore.loading;
   }
 
   onSelected(action: Action) {
@@ -71,27 +74,27 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
     });
+    this.connector.subscribe((connector: Connector) => {
+      this.actions = connector.actions;
+      // TODO oh no, why is this needed...
+      setTimeout(() => {
+        this.changeDetectorRef.detectChanges();
+      }, 10);
+    });
     this.routeSubscription = this.route.params.pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
+        const step = this.currentFlow.getStep(this.position);
+        console.log('Step: ', step);
+        if (step && step.connection) {
+          this.connectorStore.load(step.connection.connectorId);
+        }
         this.currentFlow.events.emit({
           kind: 'integration-action-select',
           position: this.position,
         });
       })
       .subscribe();
-    this.actions.map((actions: Actions) => {
-      const config = this.currentFlow.getStep(this.position);
-      if (config) {
-        const id = config.id;
-        for (const action of actions) {
-          if (action.id === id) {
-            log.debugc(() => 'Found action: ' + action.name, category);
-          }
-        }
-      }
-    });
-    this.store.loadAll();
   }
 
   ngOnDestroy() {

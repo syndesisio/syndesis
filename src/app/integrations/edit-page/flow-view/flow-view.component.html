@@ -22,11 +22,15 @@
           [currentState]="currentState"></ipaas-integrations-flow-view-step >
       </div>
       <div class="row steps" *ngFor="let step of getMiddleSteps(); let position = index;">
+        <div *ngIf="currentPosition === 'new'">
+          New</div>
         <ipaas-integrations-flow-view-step
           [step]="step"
           [position]="position + 1"
           [currentPosition]="currentPosition"
           [currentState]="currentState"></ipaas-integrations-flow-view-step >
+        <div *ngIf="currentPosition === 'new'">
+          New</div>
       </div>
       <div class="row steps finish">
         <ipaas-integrations-flow-view-step
