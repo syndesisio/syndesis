@@ -39,9 +39,14 @@ public class KeycloakTokenAwareGitHubClient extends GitHubClient {
     }
 
     @Override
+    protected String configureUri(final String uri) {
+        return uri;
+	}
+
+    @Override
     protected HttpURLConnection configureRequest(final HttpURLConnection request) {
         super.configureRequest(request);
-        request.setRequestProperty(HEADER_AUTHORIZATION, "Bearer: " + getAuthenticationTokenString());
+        request.setRequestProperty(HEADER_AUTHORIZATION, "Bearer " + getAuthenticationTokenString());
 		return request;
 	}
 
