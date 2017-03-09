@@ -31,6 +31,10 @@ import org.immutables.value.Value;
 public interface Integration extends WithId<Integration>, WithName, Serializable {
 
     String KIND = "integration";
+    
+    public enum Type {Activated, Deactivated};
+    
+    public enum Phase {Pending, Running, Succeeded, Failed, Unknown};
 
     /**
      *Required Labels
@@ -71,6 +75,10 @@ public interface Integration extends WithId<Integration>, WithName, Serializable
     Optional<String> getDescription();
 
     Optional<String> getGitRepo();
+
+    Optional<Enum<Type>> getStatusType();
+
+    Optional<Enum<Phase>> getStatusPhase();
 
     @Override
     default Integration withId(String id) {
