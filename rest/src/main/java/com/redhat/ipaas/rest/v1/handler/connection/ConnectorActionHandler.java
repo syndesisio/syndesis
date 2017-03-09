@@ -37,7 +37,7 @@ public class ConnectorActionHandler extends BaseHandler implements Lister<Action
 
     private String connectorId;
 
-    public ConnectorActionHandler(DataManager dataMgr, String connectorId) {
+    ConnectorActionHandler(DataManager dataMgr, String connectorId) {
         super(dataMgr);
         this.connectorId = connectorId;
     }

@@ -156,6 +156,7 @@
     <module>jsondb</module>
     <module>rest</module>
     <module>runtime</module>
+    <module>github</module>
   </modules>
 
   <dependencyManagement>
@@ -228,6 +229,12 @@
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
         <artifactId>rest</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>github</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -352,6 +359,11 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>1.4.193</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.mylyn.github</groupId>
+        <artifactId>org.eclipse.egit.github.core</artifactId>
+        <version>2.1.5</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

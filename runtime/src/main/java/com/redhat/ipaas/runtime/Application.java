@@ -18,6 +18,7 @@ package com.redhat.ipaas.runtime;
 import java.util.List;
 
 import com.redhat.ipaas.dao.manager.DataManager;
+import com.redhat.ipaas.github.GitHubService;
 import com.redhat.ipaas.jsondb.JsonDB;
 import com.redhat.ipaas.rest.v1.V1Application;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,8 @@ import org.springframework.context.annotation.ComponentScan;
     V1Application.class,
     Application.class,
     DataManager.class,
-    JsonDB.class
+    JsonDB.class,
+    GitHubService.class,
 })
 public class Application extends SpringBootServletInitializer {
 

@@ -13,25 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.rest.v1.handler.jsondb;
+package com.redhat.ipaas.github;
 
-import javax.ws.rs.Path;
+import java.io.IOException;
+import java.util.Map;
 
-import com.redhat.ipaas.jsondb.JsonDB;
-import com.redhat.ipaas.jsondb.rest.JsonDBResource;
-import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Path("/jsondb")
-@Api(value = "jsondb")
-@Component
-@Configuration
-@ConditionalOnProperty(value = "endpoints.jsondb.enabled")
-public class JsonDBHandler extends JsonDBResource {
-    public JsonDBHandler(JsonDB jsondb) {
-        super(jsondb);
+/**
+ * No-op implementation of a GitHubService
+ */
+@Service
+@ConditionalOnProperty(value = "github.enabled", havingValue = "false")
+public class GitHubServiceNoOp implements GitHubService {
+
+    @Override
+    public void ensureRepository(String name) throws IOException {
+        // Intentional empty
+    }
+
+    @Override
+    public String sanitizeRepoName(String name) {
+        // No mangling
+        return name;
+    }
+
+    @Override
+    public void createOrUpdate(String repo, String message, Map<String, byte[]> files) {
+        // intentional empty
     }
 }

@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConnectorGroupHandler extends BaseHandler implements Lister<ConnectorGroup>, Getter<ConnectorGroup> {
 
-    public ConnectorGroupHandler(@Autowired DataManager dataMgr) {
+    public ConnectorGroupHandler(DataManager dataMgr) {
         super(dataMgr);
     }
 

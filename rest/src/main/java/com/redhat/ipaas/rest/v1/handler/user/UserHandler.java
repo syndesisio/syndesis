@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserHandler extends BaseHandler implements Lister<User>, Getter<User> {
 
-    public UserHandler(@Autowired DataManager dataMgr) {
+    public UserHandler(DataManager dataMgr) {
         super(dataMgr);
     }
 

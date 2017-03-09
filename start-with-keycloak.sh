@@ -16,5 +16,8 @@
 #
 
 
+# Start a postgres db before:
+# docker run -d --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=ipaas postgres
+
 cd runtime
 exec ../mvnw -Pkeycloak-default -Dexec.waitForInterrupt=false dependency:unpack process-exec:start spring-boot:run -Drun.arguments="--spring.profiles.active=keycloak"

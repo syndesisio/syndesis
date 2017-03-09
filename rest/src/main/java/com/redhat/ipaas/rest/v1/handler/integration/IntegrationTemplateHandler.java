@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class IntegrationTemplateHandler extends BaseHandler implements Lister<IntegrationTemplate>, Getter<IntegrationTemplate>, Creator<IntegrationTemplate>, Deleter<IntegrationTemplate>, Updater<IntegrationTemplate> {
 
-    public IntegrationTemplateHandler(@Autowired DataManager dataMgr) {
+    public IntegrationTemplateHandler(DataManager dataMgr) {
         super(dataMgr);
     }
 

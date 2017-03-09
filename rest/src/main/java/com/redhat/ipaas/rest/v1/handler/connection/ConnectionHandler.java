@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConnectionHandler extends BaseHandler implements Lister<Connection>, Getter<Connection>, Creator<Connection>, Deleter<Connection>, Updater<Connection> {
 
-    public ConnectionHandler(@Autowired DataManager dataMgr) {
+    public ConnectionHandler(DataManager dataMgr) {
         super(dataMgr);
     }
 

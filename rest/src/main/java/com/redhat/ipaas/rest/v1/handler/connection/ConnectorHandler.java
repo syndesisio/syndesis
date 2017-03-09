@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @org.springframework.stereotype.Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector> {
 
-    public ConnectorHandler(@Autowired DataManager dataMgr) {
+    public ConnectorHandler(DataManager dataMgr) {
         super(dataMgr);
     }
 

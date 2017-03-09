@@ -26,27 +26,12 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>rest</artifactId>
-  <name>iPaaS REST :: REST</name>
+  <artifactId>github</artifactId>
+  <name>iPaaS REST :: GitHub Access</name>
 
   <dependencies>
 
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
-    <dependency>
-      <groupId>com.redhat.ipaas</groupId>
-      <artifactId>core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.redhat.ipaas</groupId>
-      <artifactId>github</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.redhat.ipaas</groupId>
-      <artifactId>jsondb</artifactId>
-    </dependency>
-
     <!-- ===================================================================================== -->
 
     <dependency>
@@ -60,13 +45,13 @@
     </dependency>
 
     <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-annotations</artifactId>
+      <groupId>org.eclipse.mylyn.github</groupId>
+      <artifactId>org.eclipse.egit.github.core</artifactId>
     </dependency>
-
+    
     <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-jaxrs</artifactId>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-spring-security-adapter</artifactId>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->

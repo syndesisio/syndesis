@@ -346,6 +346,11 @@
       <groupId>com.redhat.ipaas</groupId>
       <artifactId>rest</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>github</artifactId>
+    </dependency>
     <!-- ===================================================================================== -->
 
     <dependency>
@@ -540,6 +545,20 @@
         <keycloak.https.port>8443</keycloak.https.port>
         <exec.waitForInterrupt>true</exec.waitForInterrupt>
       </properties>
+    </profile>
+    <profile>
+      <id>debug</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+              <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 -server -Xms256m -Xmx512m</jvmArguments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>

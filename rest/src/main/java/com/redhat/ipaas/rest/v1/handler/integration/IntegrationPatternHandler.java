@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class IntegrationPatternHandler extends BaseHandler implements Lister<IntegrationPattern>, Getter<IntegrationPattern> {
 
-    public IntegrationPatternHandler(@Autowired DataManager dataMgr) {
+    public IntegrationPatternHandler(DataManager dataMgr) {
         super(dataMgr);
     }
 

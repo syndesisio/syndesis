@@ -30,7 +30,7 @@ import javax.ws.rs.Path;
 @org.springframework.stereotype.Component
 public class ActionHandler extends BaseHandler implements Lister<Action>, Getter<Action> {
 
-    public ActionHandler(@Autowired DataManager dataMgr) {
+    public ActionHandler(DataManager dataMgr) {
         super(dataMgr);
     }
 

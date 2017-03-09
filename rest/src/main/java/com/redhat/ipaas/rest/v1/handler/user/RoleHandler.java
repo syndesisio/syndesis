@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoleHandler extends BaseHandler implements Lister<Role>, Getter<Role> {
 
-    public RoleHandler(@Autowired DataManager dataMgr) {
+    public RoleHandler(DataManager dataMgr) {
         super(dataMgr);
     }
 
