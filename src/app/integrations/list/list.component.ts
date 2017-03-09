@@ -40,7 +40,6 @@ export class IntegrationsListComponent {
 
   getStartIcon(integration: Integration) {
     const connection = integration.steps[0].connection;
-    console.log('Integration: ', integration);
     const icon = 'fa fa-plane';
 
     return (connection || {})['icon'] || 'fa-plane';
