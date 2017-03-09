@@ -15,17 +15,19 @@
  */
 package com.redhat.ipaas.github;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 import com.redhat.ipaas.github.backend.ExtendedContentsService;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryContents;
+import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author roland
@@ -101,7 +103,14 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     private void createOrUpdate(String repo, String message, String path, byte[] content) throws IOException {
-        String sha = getFileSha(repo, path);
+        String sha = null;
+        try {
+            sha = getFileSha(repo, path);
+        } catch (RequestException e) {
+            if (e.getStatus() != HttpStatus.NOT_FOUND.value()) {
+                throw e;
+            }
+        }
         if (sha != null) {
             updateFile(repo, message, path, sha, content);
         } else {
