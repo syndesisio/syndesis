@@ -64,7 +64,7 @@
       
       <!-- Action List -->
       
-      <ipaas-list-actions [actions]="actions | objectPropertyFilter:filter | objectPropertySort:sort"
+      <ipaas-list-actions [actions]="actions | objectPropertyFilter:filter"
                           [loading]="loading | async"
                           (onSelected)="onSelected($event)"></ipaas-list-actions>
     </div>
