@@ -276,7 +276,13 @@
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
         <artifactId>connector-catalog</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>integration-to-maven-project-converter</artifactId>
+        <version>${project.version}</version>
       </dependency>
 
       <!-- Funktion -->

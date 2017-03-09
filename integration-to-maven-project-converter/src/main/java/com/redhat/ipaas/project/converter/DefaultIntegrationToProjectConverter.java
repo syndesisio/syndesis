@@ -44,13 +44,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@Service
 public class DefaultIntegrationToProjectConverter implements IntegrationToProjectConverter {
 
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private final static ObjectMapper YAML_OBJECT_MAPPER = YamlHelper.createYamlMapper();
-    public static final TypeReference<Map<String, String>> MAP_TYPE_REFERENCE = new TypeReference<Map<String, String>>() {
-    };
 
     private MustacheFactory mf = new DefaultMustacheFactory();
 

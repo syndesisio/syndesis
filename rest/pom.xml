@@ -47,6 +47,11 @@
       <artifactId>jsondb</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>integration-to-maven-project-converter</artifactId>
+    </dependency>
+    
     <!-- ===================================================================================== -->
 
     <dependency>
