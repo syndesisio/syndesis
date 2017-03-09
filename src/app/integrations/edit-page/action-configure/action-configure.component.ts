@@ -63,7 +63,7 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
-      configuredProperties: JSON.stringify(this.formConfig),
+      properties: JSON.stringify(this.formConfig),
       onSave: () => {
         this.router.navigate(['save-or-add-step', 'new'], { relativeTo: this.route.parent });
       },
@@ -86,7 +86,6 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
         this.action = step.action;
         if (this.action && this.action.properties) {
           const configString = this.action.properties;
-          // TODO giant hack so we see something on the config page
           this.formConfig = undefined;
           try {
             this.formConfig = JSON.parse(configString);

@@ -32,8 +32,12 @@ export class FlowViewStepComponent {
   @Input()
   currentState: string;
 
+  collapsed: boolean = undefined;
+
   constructor(
     private currentFlow: CurrentFlow,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {
 
   }
@@ -95,6 +99,10 @@ export class FlowViewStepComponent {
     }
   }
 
+  goto(page: string) {
+    this.router.navigate([page, this.getPosition()], { relativeTo: this.route });
+  }
+
   getStepText() {
     if (!this.step) {
       return 'Set up this step';
@@ -111,7 +119,14 @@ export class FlowViewStepComponent {
     }
   }
 
+  toggleCollapsed() {
+    this.collapsed = !this.collapsed;
+  }
+
   isCollapsed() {
-    return this.getPosition() !== this.currentPosition;
+    if (this.collapsed === undefined) {
+      this.collapsed = this.getPosition() !== this.currentPosition;
+    }
+    return this.collapsed;
   }
 }

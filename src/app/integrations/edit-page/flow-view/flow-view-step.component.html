@@ -9,34 +9,34 @@
   </div>
   <div class="col-md-9 text" [ngSwitch]="step.stepKind">
     <div *ngSwitchCase="'endpoint'">
-      <span [class]="getTextClass()">
+      <span [class]="getTextClass()" (click)="toggleCollapsed()">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
       </span>
       <ul [collapse]="isCollapsed()">
-        <li [class]="getActiveClass('connection-select')">
+        <li [class]="getActiveClass('connection-select')" (click)="goto('connection-select')">
           <span [class]="getTextClass('connection-select')">Choose a connection</span>
         </li>
-        <li [class]="getActiveClass('action-select')">
+        <li [class]="getActiveClass('action-select')" (click)="goto('action-select')">
           <span [class]="getTextClass('action-select')">Choose an action</span>
         </li>
-        <li [class]="getActiveClass('action-configure')">
+        <li [class]="getActiveClass('action-configure')" (click)="goto('action-configure')">
           <span [class]="getTextClass('action-configure')">Configure the action</span>
         </li>
       </ul>
     </div>
     <div *ngSwitchDefault>
-      <span [class]="getTextClass()">
+      <span [class]="getTextClass()" (click)="toggleCollapsed()">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
       </span>
       <ul [collapse]="isCollapsed()">
-        <li [class]="getActiveClass('step-select')">
+        <li [class]="getActiveClass('step-select')" (click)="goto('step-select')">
           <span [class]="getTextClass('step-select')">Choose a step</span>
         </li>
-        <li [class]="getActiveClass('step-configure')">
+        <li [class]="getActiveClass('step-configure')" (click)="goto('step-configure')">
           <span [class]="getTextClass('step-configure')">Configure the step</span>
         </li>
       </ul>
