@@ -16,6 +16,7 @@
 package com.redhat.ipaas.model.connection;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -43,6 +44,8 @@ public interface Connector extends WithId<Connector>, WithName, Serializable {
     String getProperties();
 
     String getDescription();
+
+    List<Action> getActions();
 
     @Override
     default Connector withId(String id) {

@@ -18,9 +18,12 @@ package com.redhat.ipaas.model.integration;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.connection.Action;
+import com.redhat.ipaas.model.connection.Connection;
+
 import org.immutables.value.Value;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(builder = Step.Builder.class)
@@ -33,7 +36,11 @@ public interface Step extends WithId<Step>, Serializable {
         return KIND;
     }
 
-    Action getAction();
+    Optional<Action> getAction();
+
+    Optional<Connection> getConnection();
+
+    String getStepKind();
 
     String getConfiguredProperties();
 
