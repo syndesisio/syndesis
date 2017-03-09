@@ -124,7 +124,7 @@
     <javaee.api.version>7.0</javaee.api.version>
     <junit.version>4.12</junit.version>
     <keycloak.version>2.5.1.Final</keycloak.version>
-    <kubernetes.client.version>2.2.0</kubernetes.client.version>
+    <kubernetes.client.version>2.2.3</kubernetes.client.version>
     <mockwebserver.version>0.0.12</mockwebserver.version>
     <okhttp-eventsource.version>1.1.1</okhttp-eventsource.version>
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
@@ -171,6 +171,7 @@
     <module>github</module>
     <module>integration-to-maven-project-converter</module>
     <module>connector-catalog</module>
+    <module>openshift</module>
   </modules>
 
   <dependencyManagement>
@@ -282,6 +283,12 @@
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
         <artifactId>integration-to-maven-project-converter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>openshift</artifactId>
         <version>${project.version}</version>
       </dependency>
 

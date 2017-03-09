@@ -27,3 +27,6 @@ spring:
 
 github:
   enabled: false
+
+openshift:
+  enabled: false
