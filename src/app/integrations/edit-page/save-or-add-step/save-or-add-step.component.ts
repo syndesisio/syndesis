@@ -74,7 +74,7 @@ export class IntegrationsSaveOrAddStepComponent implements OnInit, OnDestroy {
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
     });
-    this.validateFlow();
+    //this.validateFlow();
   }
 
   ngOnDestroy() {

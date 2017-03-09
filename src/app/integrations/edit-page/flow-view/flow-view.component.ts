@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Integration, Step } from '../../../model';
+import { Integration, Step, TypeFactory } from '../../../model';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -60,6 +60,21 @@ export class FlowViewComponent implements OnInit, OnDestroy {
 
   getMiddleSteps() {
     return this.currentFlow.getMiddleSteps();
+  }
+
+  insertStepAfter(position: number) {
+    const target = position + 1;
+    const step = TypeFactory.createStep();
+    this.currentFlow.steps.splice(target, 0, step);
+    this.router.navigate(['step-select', target], { relativeTo: this.route });
+  }
+
+  insertConnectionAfter(position: number) {
+    const target = position + 1;
+    const step = TypeFactory.createStep();
+    step.stepKind = 'endpoint';
+    this.currentFlow.steps.splice(target, 0, step);
+    this.router.navigate(['connection-select', target], { relativeTo: this.route });
   }
 
   integrationNameChanged($event) {
