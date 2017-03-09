@@ -1,19 +1,36 @@
-<ol class="breadcrumb">
-  <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
-  <li class="active">Create an integration</li>
-</ol>
-<div class="blank-slate-pf">
-  <div class="blank-slate-pf-icon">
-    <span class="pficon pficon pficon-add-circle-o"></span>
+<!-- Toolbar -->
+<div class="toolbar">
+  <!-- Toolbar: Breadcrumbs -->
+  <div class="row toolbar-pf">
+    <div class="col-sm-12">
+      <div class="toolbar-pf-actions">
+        <div class="inline-block">
+          <ol class="breadcrumb">
+            <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
+            <li class="active">Create an integration</li>
+          </ol>
+        </div>
+        <div class="toolbar-pf-action-right">
+          <button class="btn btn-default" (click)="cancel()">Cancel</button> &nbsp;
+          <button type="button" class="btn btn-primary" (click)="save()">Save</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <h1>
-    Add to Integration
-  </h1>
-  <p>Now you can add additional connections as well as steps to your integration.</p>
-  <p>You can interact with the left hand panel to continue adding steps and connections to your integration as well</p>
-  <div class="blank-slate-pf-secondary-action">
-    <button class="btn btn-default"> Add a Step </button>
-    &nbsp;&nbsp;&nbsp;
-    <button class="btn btn-default"> Add a Connection </button>
+</div>
+<div class="wizard-pf-body clearfix">
+  <div class="blank-slate-pf">
+    <div class="blank-slate-pf-icon">
+      <span class="pficon pficon pficon-add-circle-o"></span>
+    </div>
+    <h1>
+      Add to Integration
+    </h1>
+    <p>Now you can add additional connections as well as steps to your integration.</p>
+    <p>You can interact with the left hand panel to continue adding steps and connections to your integration as well</p>
+    <div class="blank-slate-pf-secondary-action">
+      <button class="btn btn-default"> Add a Step </button> &nbsp;&nbsp;&nbsp;
+      <button class="btn btn-default"> Add a Connection </button>
+    </div>
   </div>
 </div>

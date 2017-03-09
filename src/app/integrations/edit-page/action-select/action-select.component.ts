@@ -74,7 +74,7 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.router.navigate(['..'], { relativeTo: this.route.parent });
+    this.router.navigate(['integrations']);
   }
 
   goBack() {

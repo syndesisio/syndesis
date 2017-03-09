@@ -67,6 +67,9 @@ export class FlowViewStepComponent {
     const step = this.step;
     switch ( step.stepKind ) {
       case 'endpoint':
+        if (!this.step.connection) {
+          return 'fa fa-plus';
+        }
         return this.step.connection.icon ? 'fa ' + step.connection.icon : 'fa fa-airplane';
       case 'log':
         return 'fa fa-newspaper-o';
@@ -85,6 +88,9 @@ export class FlowViewStepComponent {
 
   getActiveClass(state) {
     if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
+      if (this.collapsed) {
+        this.collapsed = false;
+      }
       return 'active';
     } else {
       return 'inactive';
@@ -109,6 +115,9 @@ export class FlowViewStepComponent {
     }
     switch (this.step.stepKind) {
       case 'endpoint':
+        if (!this.step.connection) {
+          return 'Set up this connection';
+        }
         return this.step.connection.name;
       default:
         if (this.step.stepKind) {
