@@ -1,30 +1,41 @@
-<!-- Toolbar -->
-<div class="toolbar">
-  <!-- Toolbar: Breadcrumbs -->
-  <div class="row toolbar-pf">
-    <div class="col-sm-12">
-      <div class="toolbar-pf-actions">
-        <div class="inline-block">
-          <ol class="breadcrumb">
-            <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
-            <li class="active">Select {{ positionText() }} connection</li>
-          </ol>
-        </div>
-        <div class="toolbar-pf-action-right">
-          <button class="btn btn-default" (click)="cancel()">Cancel</button> &nbsp;
-          <button class="btn btn-default" (click)="goBack()"><i class="fa fa-chevron-left"></i> Back</button>
+<div class="connection-select">
+  
+  <!-- Toolbar -->
+  <div class="toolbar">
+    
+    <!-- Toolbar: Breadcrumbs -->
+    <div class="row toolbar-pf">
+      <div class="col-sm-12">
+        <div class="toolbar-pf-actions">
+          <div class="inline-block">
+            <ol class="breadcrumb">
+              <li>
+                <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a>
+              </li>
+              <li class="active">Create an Integration</li>
+            </ol>
+          </div>
+          <div class="toolbar-pf-action-right">
+            <button class="btn btn-default"
+                    (click)="cancel()">Cancel
+            </button>
+            &nbsp;
+            <button class="btn btn-default"
+                    (click)="goBack()"><i class="fa fa-chevron-left"></i> Back
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<div class="wizard-pf-body clearfix">
-  <div class="title">
-    <h1>Select {{ positionText() }} connection</h1>
+  
+  <div class="wizard-pf-body clearfix">
+    <div class="title">
+      <h1>Choose a Connection</h1>
+    </div>
+    <p>Choose a connection to start.</p>
+    <ipaas-connections-list [connections]="connections | async | objectPropertyFilter:filter | objectPropertySort:sort"
+                            [loading]="loading | async"
+                            (onSelected)="onSelected($event)"></ipaas-connections-list>
   </div>
-  <p>Choose a connection</p>
-  <ipaas-connections-list-toolbar [(filter)]="filter" [(sort)]="sort"></ipaas-connections-list-toolbar>
-  <ipaas-connections-list [connections]="connections | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async"
-    (onSelected)="onSelected($event)"></ipaas-connections-list>
 </div>
