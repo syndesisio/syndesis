@@ -2,6 +2,13 @@
   .toolbar-pf {
     background: none !important;
     border: none !important;
+    padding-bottom: 10px;
+    padding-top: 0;
+
+    .breadcrumbs {
+      padding: 0;
+      margin: 0;
+    }
 
     .search {
       width: 50%;
@@ -9,6 +16,10 @@
       .input-group {
         width: 80%;
       }
+    }
+
+    .toolbar-pf-actions {
+      margin-bottom: 0;
     }
   }
 }
