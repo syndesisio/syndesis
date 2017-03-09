@@ -541,7 +541,7 @@ objects:
         - ipaas-rest
         from:
           kind: ImageStreamTag
-          name: ipaas-token-rp:v0.2.0
+          name: ipaas-token-rp:v0.3.1
       type: ImageChange
     - type: ConfigChange
 - apiVersion: v1
@@ -605,7 +605,7 @@ objects:
         - ipaas-rest
         from:
           kind: ImageStreamTag
-          name: ipaas-token-rp:v0.2.0
+          name: ipaas-token-rp:v0.3.1
       type: ImageChange
     - type: ConfigChange
 - apiVersion: v1
