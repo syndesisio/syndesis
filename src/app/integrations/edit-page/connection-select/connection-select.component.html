@@ -33,7 +33,9 @@
     <div class="title">
       <h1>Choose a Connection</h1>
     </div>
+    
     <p>Choose a connection to start.</p>
+    
     <ipaas-connections-list [connections]="connections | async | objectPropertyFilter:filter | objectPropertySort:sort"
                             [loading]="loading | async"
                             (onSelected)="onSelected($event)"></ipaas-connections-list>
