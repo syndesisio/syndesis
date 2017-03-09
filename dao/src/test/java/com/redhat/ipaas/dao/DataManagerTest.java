@@ -21,11 +21,12 @@ import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.connection.Connection;
 import com.redhat.ipaas.model.connection.Connector;
+import com.redhat.ipaas.model.integration.Integration;
+
 import org.junit.*;
 
 import java.util.ArrayList;
 
-@Ignore
 public class DataManagerTest {
 
     @Rule
@@ -82,6 +83,15 @@ public class DataManagerTest {
         Connector connector = dataManager.fetch(Connector.KIND, "twitter");
         System.out.println(connector.getName());
         Assert.assertEquals("First Connector in the deployment.json is Twitter", "Twitter", connector.getName());
+        Assert.assertEquals(1, connector.getActions().size());
+    }
+    
+    @Test
+    public void getIntegration() {
+        Integration integration = dataManager.fetch(Integration.KIND, "1");
+        System.out.println(integration.getName());
+        Assert.assertEquals("Example Integration", "Twitter to Salesforce Example", integration.getName());
+        Assert.assertEquals(2, integration.getSteps().get().size());
     }
 
 }
