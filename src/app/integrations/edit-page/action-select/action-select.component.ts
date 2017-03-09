@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, OnDestroy, Output, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
@@ -40,6 +40,7 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
     private connectorStore: ConnectorStore,
     private currentFlow: CurrentFlow,
     private route: ActivatedRoute,
+    private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     ) {
       this.connector = connectorStore.resource;
