@@ -18,9 +18,6 @@ package com.redhat.ipaas.rest.v1.handler.integration;
 import java.io.IOException;
 
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.dao.manager.DataManager;
@@ -29,7 +26,6 @@ import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Path("/integrations")

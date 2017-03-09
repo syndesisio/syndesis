@@ -23,9 +23,7 @@ import com.redhat.ipaas.github.backend.ExtendedContentsService;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryContents;
 import org.eclipse.egit.github.core.service.RepositoryService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -37,9 +35,6 @@ import org.springframework.web.context.annotation.RequestScope;
 @RequestScope
 @ConditionalOnProperty(value = "github.enabled", matchIfMissing = true, havingValue = "true")
 public class GitHubServiceImpl implements GitHubService {
-
-    @Value("${github.service}")
-    private String gitHubHost = "ipaas-github-proxy";
 
     private final RepositoryService repositoryService;
     private final ExtendedContentsService contentsService;
