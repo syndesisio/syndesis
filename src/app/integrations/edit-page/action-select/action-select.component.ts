@@ -14,8 +14,8 @@ const category = getCategory('Integrations');
 
 @Component({
   moduleId: module.id,
-  selector: 'ipaas-integrations-select-action',
-  templateUrl: 'select-action.component.html',
+  selector: 'ipaas-integrations-action-select',
+  templateUrl: 'action-select.component.html',
 })
 export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
 

@@ -12,8 +12,8 @@ import { log, getCategory } from '../../../logging';
 const category = getCategory('IntegrationsCreatePage');
 
 @Component({
-  selector: 'ipaas-integrations-configure-action',
-  templateUrl: 'configure-action.component.html',
+  selector: 'ipaas-integrations-action-configure',
+  templateUrl: 'action-configure.component.html',
 })
 export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
 
