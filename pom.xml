@@ -76,6 +76,17 @@
 
   <repositories>
     <repository>
+      <id>apache.snapshots</id>
+      <name>Apache Development Snapshot Repository</name>
+      <url>https://repository.apache.org/content/repositories/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
@@ -103,8 +114,9 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <assertj-core.version>3.6.2</assertj-core.version>
+    <camel.version>2.19.0-SNAPSHOT</camel.version>
     <jdbi.version>2.78</jdbi.version>
-    <funktion.version>1.1.44</funktion.version>
+    <funktion.version>1.1.55</funktion.version>
     <hibernate.validator.version>5.3.4.Final</hibernate.validator.version>
     <immutables.version>2.4.0</immutables.version>
     <infinispan.version>9.0.0.Beta2</infinispan.version>
@@ -114,12 +126,12 @@
     <keycloak.version>2.5.1.Final</keycloak.version>
     <kubernetes.client.version>2.2.0</kubernetes.client.version>
     <mockwebserver.version>0.0.12</mockwebserver.version>
+    <okhttp-eventsource.version>1.1.1</okhttp-eventsource.version>
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <resteasy-spring-boot-starter.version>2.3.0-RELEASE</resteasy-spring-boot-starter.version>
     <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
     <spring-cloud.version>Camden.SR5</spring-cloud.version>
     <spring-cloud-kubernetes.version>0.1.5</spring-cloud-kubernetes.version>
-    <okhttp-eventsource.version>1.1.1</okhttp-eventsource.version>
     <swagger.version>1.5.12</swagger.version>
 
     <!-- maven plugin version -->
@@ -157,11 +169,20 @@
     <module>rest</module>
     <module>runtime</module>
     <module>github</module>
+    <module>integration-to-maven-project-converter</module>
+    <module>connector-catalog</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
       <!-- Import Boms -->
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
       <dependency>
         <groupId>io.fabric8</groupId>
         <artifactId>kubernetes-client-bom-with-deps</artifactId>
@@ -197,6 +218,14 @@
         <version>${spring-cloud-kubernetes.version}</version>
         <scope>import</scope>
         <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-spring-boot-dependencies</artifactId>
+        <version>${camel.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
 
@@ -241,6 +270,18 @@
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
         <artifactId>runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>connector-catalog</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>integration-to-maven-project-converter</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -364,6 +405,11 @@
         <groupId>org.eclipse.mylyn.github</groupId>
         <artifactId>org.eclipse.egit.github.core</artifactId>
         <version>2.1.5</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.spullara.mustache.java</groupId>
+        <artifactId>compiler</artifactId>
+        <version>0.9.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -507,6 +553,8 @@
             <exclude>.mention-bot</exclude>
             <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
             <exclude>mvnw*</exclude>
+            <exclude>**/resources/**/test-*</exclude>
+            <exclude>**/*.mustache</exclude>
           </excludes>
         </configuration>
       </plugin>

@@ -26,59 +26,67 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>rest</artifactId>
-  <name>iPaaS REST :: REST</name>
+  <artifactId>integration-to-maven-project-converter</artifactId>
+  <name>iPaaS REST :: Integration to Maven Project Converter</name>
+
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>ipaas-releases</id>
+      <name>ipaas-releases</name>
+      <url>https://dl.bintray.com/redhat-ipaas/maven/</url>
+    </repository>
+    <repository>
+      <id>apache.snapshots</id>
+      <name>Apache Development Snapshot Repository</name>
+      <url>https://repository.apache.org/content/repositories/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>jcenter-releases</id>
+      <name>jcenter</name>
+      <url>https://jcenter.bintray.com</url>
+    </repository>
+  </repositories>
 
   <dependencies>
-
-    <!-- === Internal dependencies (don't touch without discussion) ========================== -->
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>model</artifactId>
     </dependency>
-
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
-      <artifactId>github</artifactId>
+      <artifactId>connector-catalog</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.fabric8.funktion</groupId>
+      <artifactId>funktion-model</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.redhat.ipaas</groupId>
-      <artifactId>jsondb</artifactId>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.redhat.ipaas</groupId>
-      <artifactId>integration-to-maven-project-converter</artifactId>
+      <groupId>com.github.spullara.mustache.java</groupId>
+      <artifactId>compiler</artifactId>
     </dependency>
-    
-    <!-- ===================================================================================== -->
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-annotations</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-jaxrs</artifactId>
-    </dependency>
-
-    <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -87,5 +95,11 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+
 </project>

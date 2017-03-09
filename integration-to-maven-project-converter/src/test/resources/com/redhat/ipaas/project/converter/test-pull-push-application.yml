@@ -1,0 +1,4 @@
+## name of CamelContext
+camel.springboot.name=2
+
+camel.springboot.streamCachingEnabled = true

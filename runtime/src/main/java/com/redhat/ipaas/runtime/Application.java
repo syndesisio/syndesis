@@ -15,8 +15,6 @@
  */
 package com.redhat.ipaas.runtime;
 
-import java.util.List;
-
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.github.GitHubService;
 import com.redhat.ipaas.jsondb.JsonDB;
@@ -29,6 +27,8 @@ import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServle
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+
+import java.util.List;
 
 @SpringBootApplication
 @ComponentScan(basePackageClasses = {
