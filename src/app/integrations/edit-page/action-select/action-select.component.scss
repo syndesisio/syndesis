@@ -3,8 +3,12 @@
     background: none !important;
     border: none !important;
 
-    .form-group.sort {
-      border-right: 0 !important;
+    .search {
+      width: 50%;
+
+      .input-group {
+        width: 80%;
+      }
     }
   }
 }
