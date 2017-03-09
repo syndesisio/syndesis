@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
+import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integrations } from '../../model';
 
@@ -12,7 +14,18 @@ import { Integrations } from '../../model';
 export class IntegrationsListPage implements OnInit {
 
   integrations: Observable<Integrations>;
+
   loading: Observable<boolean>;
+
+  filter: ObjectPropertyFilterConfig = {
+    filter: '',
+    propertyName: 'name',
+  };
+
+  sort: ObjectPropertySortConfig = {
+    sortField: 'name',
+    descending: false,
+  };
 
   constructor(private store: IntegrationStore) {
     this.integrations = this.store.list;
