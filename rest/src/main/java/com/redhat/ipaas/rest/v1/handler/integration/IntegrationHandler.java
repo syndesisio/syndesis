@@ -16,6 +16,8 @@
 package com.redhat.ipaas.rest.v1.handler.integration;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.ws.rs.Path;
 
@@ -23,6 +25,7 @@ import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.github.GitHubService;
 import com.redhat.ipaas.model.integration.Integration;
+import com.redhat.ipaas.project.converter.IntegrationToProjectConverter;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
 import io.swagger.annotations.Api;
@@ -33,11 +36,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class IntegrationHandler extends BaseHandler implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration> {
 
-    private GitHubService gitHubService;
+    private final GitHubService gitHubService;
 
-    public IntegrationHandler(DataManager dataMgr, GitHubService gitHubService) {
+    private final IntegrationToProjectConverter projectConverter;
+
+    public IntegrationHandler(DataManager dataMgr, GitHubService gitHubService, IntegrationToProjectConverter projectConverter) {
         super(dataMgr);
         this.gitHubService = gitHubService;
+        this.projectConverter = projectConverter;
     }
 
     @Override
@@ -52,18 +58,30 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     @Override
     public Integration create(Integration integration) {
-        ensureRepository(integration);
+        Optional<String> repoName = integration.getGitRepo();
+        if (!repoName.isPresent()) {
+            String generatedRepoName = gitHubService.sanitizeRepoName(integration.getName());
+            integration = new Integration.Builder().createFrom(integration).gitRepo(generatedRepoName).build();
+        }
+        ensureRepositoryWithContents(integration);
         return Creator.super.create(integration);
     }
 
     // ==========================================================================
 
-    private void ensureRepository(Integration integration) {
-        String repoName = gitHubService.sanitizeRepoName(integration.getName());
+    private void ensureRepositoryWithContents(Integration integration) {
+        String repoName = integration.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
         try {
             gitHubService.ensureRepository(repoName);
+            Map<String, byte[]> fileContents = projectConverter.convert(integration);
+            gitHubService.createOrUpdate(repoName, generateCommitMessage(), fileContents);
         } catch (IOException e) {
             throw IPaasServerException.launderThrowable(e);
         }
+    }
+
+    private String generateCommitMessage() {
+        // TODO Let's generate some nice message...
+        return "Updated";
     }
 }
