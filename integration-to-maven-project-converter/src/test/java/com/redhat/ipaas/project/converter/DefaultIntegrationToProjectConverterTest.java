@@ -38,20 +38,19 @@ public class DefaultIntegrationToProjectConverterTest {
 
     @Test
     public void testConvert() throws Exception {
+        
+        Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"period\": \"5000\"}").action(new Action.Builder().camelConnectorPrefix("periodic-timer").camelConnectorGAV("com.redhat.ipaas:timer-connector:0.2.1").build()).build();
+        Step step2 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"httpUri\": \"http://localhost:8080/hello\"}").action(new Action.Builder().camelConnectorPrefix("http-get").camelConnectorGAV("com.redhat.ipaas:http-get-connector:0.2.1").build()).build();
+        Step step3 = new Step.Builder().stepKind("log").configuredProperties("{\"message\": \"Hello World! ${body}\"}").build();
+        Step step4 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"httpUri\": \"http://localhost:8080/bye\"}").action(new Action.Builder().camelConnectorPrefix("http-post").camelConnectorGAV("com.redhat.ipaas:http-post-connector:0.2.1").build()).build();
+        
         Map<String, byte[]> files = new DefaultIntegrationToProjectConverter(new ConnectorCatalog(new ConnectorCatalogProperties())).convert(
             new Integration.Builder()
                 .id("test-integration")
                 .name("Test Integration")
                 .description("This is a test integration!")
                 .gitRepo("https://ourgithhost.somewhere/test.git")
-                .steps(
-                    Arrays.asList(
-                        new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"period\": \"5000\"}").action(new Action.Builder().camelConnectorPrefix("periodic-timer").camelConnectorGAV("com.redhat.ipaas:timer-connector:0.2.1").build()).build(),
-                        new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"httpUri\": \"http://localhost:8080/hello\"}").action(new Action.Builder().camelConnectorPrefix("http-get").camelConnectorGAV("com.redhat.ipaas:http-get-connector:0.2.1").build()).build(),
-                        new Step.Builder().stepKind("log").configuredProperties("{\"message\": \"Hello World! ${body}\"}").build(),
-                        new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"httpUri\": \"http://localhost:8080/bye\"}").action(new Action.Builder().camelConnectorPrefix("http-post").camelConnectorGAV("com.redhat.ipaas:http-post-connector:0.2.1").build()).build()
-                    )
-                )
+                .steps( Arrays.asList(step1, step2, step3, step4))
                 .build()
         );
         assertFileContents(files.get("README.md"), "test-README.md");
