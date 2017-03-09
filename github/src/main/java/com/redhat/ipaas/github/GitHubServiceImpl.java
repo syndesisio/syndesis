@@ -26,7 +26,6 @@ import org.eclipse.egit.github.core.RepositoryContents;
 import org.eclipse.egit.github.core.RepositoryHook;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.RepositoryService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -53,15 +52,21 @@ public class GitHubServiceImpl implements GitHubService {
     public void createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
         Repository repository = getRepository(repoName);
         if (repository == null) {
+            // New Repo
             repository = createRepo(repoName);
-            buildTriggerAsWebHook(repository, webHookUrl);
+            // Add files
+            createOrUpdateFiles(repository, commitMessage, fileContents);
+            // Set WebHook
+            createWebHookAsBuildTrigger(repository, webHookUrl);
+        } else {
+            // Only create or update files
+            createOrUpdateFiles(repository, commitMessage, fileContents);
         }
-        createOrUpdateFiles(repository, commitMessage, fileContents);
     }
 
     @Override
     public String sanitizeRepoName(String name) {
-        String ret = name.length() > 100 ? name.substring(0,100) : name;
+        String ret = name.length() > 100 ? name.substring(0, 100) : name;
         return ret.replace(" ","-")
                   .toLowerCase()
                   .chars()
@@ -95,7 +100,7 @@ public class GitHubServiceImpl implements GitHubService {
         }
     }
 
-    private void buildTriggerAsWebHook(Repository repository, String url) throws IOException {
+    private void createWebHookAsBuildTrigger(Repository repository, String url) throws IOException {
         if (url != null && url.length() > 0) {
             RepositoryHook hook = prepareRepositoryHookRequest(url);
             repositoryService.createHook(repository, hook);
