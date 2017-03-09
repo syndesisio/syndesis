@@ -1,3 +1,4 @@
+/* tslint:disable */
 import { TestBed, async, inject } from '@angular/core/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
@@ -10,7 +11,7 @@ import { Connection, Integration, Step } from '../../model';
 import { EventsService } from '../../store/entity/events.service';
 import { IPaaSCommonModule } from '../../common/common.module';
 
-describe('ConfigService', () => {
+describe('CurrentFlow', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -34,114 +35,116 @@ describe('ConfigService', () => {
 
   function getDummyIntegration(): Integration {
     return <Integration>{
-      connections: [
-        {
-          id: '1',
-          kind: 'connection',
-        },
-        {
-          id: '2',
-          kind: 'connection',
-        }],
-      steps: [
-        {
-          id: '1',
-          kind: 'endpoint',
-        },
-        {
-          id: '6',
-          kind: 'whatever',
-        },
-        {
-          id: '9',
-          kind: 'sumthin\' else',
-        },
-        {
-          id: '2',
-          kind: 'endpoint',
-        },
+      "configuration": "",
+      "users": [
+
       ],
-    };
+      "tags": [
+
+      ],
+      "steps": [
+        {
+          "action": {
+            "properties": "{\"period\": { \"kind\": \"parameter\", \"displayName\": \"Period\", \"group\": \"consumer\", \"required\": false, \"type\": \"integer\", \"javaType\": \"long\", \"deprecated\": false, \"secret\": false, \"defaultValue\": 10000, \"description\": \"Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second).\" }}",
+            "description": "Set a timer that fires at intervals that you specify",
+            "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
+            "camelConnectorPrefix": "periodic-timer",
+            "id": "com.redhat.ipaas_timer-connector_0.2.1",
+            "name": "PeriodicTimer"
+          },
+          "connection": {
+            "connectorId": "timer",
+            "configuredProperties": "{}",
+            "icon": "fa-globe",
+            "description": "Timer Connection",
+            "position": "start",
+            "id": "4",
+            "name": "Timer Example"
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": "{\"period\": { \"value\": \"5000\", \"kind\": \"parameter\", \"displayName\": \"Period\", \"group\": \"consumer\", \"required\": false, \"type\": \"integer\", \"javaType\": \"long\", \"deprecated\": false, \"secret\": false, \"defaultValue\": 10000, \"description\": \"Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second).\" }}",
+          "id": "3"
+        },
+        {
+          "action": {
+            "properties": "{\"httpUri\": { \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.1",
+            "camelConnectorPrefix": "http-get",
+            "id": "com.redhat.ipaas:http-get-connector:0.2.1",
+            "name": "HTTP GET"
+          },
+          "connection": {
+            "connectorId": "http",
+            "configuredProperties": "{}",
+            "icon": "fa-globe",
+            "description": "HTTP Connection",
+            "position": "any",
+            "id": "3",
+            "name": "HTTP Example"
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": "{\"httpUri\": { \"value\": \"http:\/\/localhost:8080\/hello\", \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+          "id": "3"
+        },
+        {
+          "stepKind": "log",
+          "configuredProperties": "{ \"message\": \"Hello World! ${body}\",\"loggingLevel\": \"INFO\" }",
+          "id": "4"
+        },
+        {
+          "action": {
+            "properties": "{\"httpUri\": { \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.1",
+            "camelConnectorPrefix": "http-post",
+            "id": "com.redhat.ipaas:http-post-connector:0.2.1",
+            "name": "HTTP POST"
+          },
+          "connection": {
+            "connectorId": "http",
+            "configuredProperties": "{}",
+            "icon": "fa-globe",
+            "description": "HTTP Connection",
+            "position": "end",
+            "id": "3",
+            "name": "HTTP Example"
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": "{\"httpUri\": { \"value\": \"http:\/\/localhost:8080\/bye\", \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+          "id": "5"
+        }
+      ],
+      "description": "This is an example of a Timed Pull to Post Integration",
+      "id": "2",
+      "name": "Timed Pull to Post Example"
+    }
   }
 
   it('should return the first step in the flow', inject([CurrentFlow], (service: CurrentFlow) => {
     service.integration = getDummyIntegration();
-    const step: any = service.getStartConnection();
-    expect(step['id']).toEqual('1');
-    expect(step['kind']).toEqual('connection');
+    const conn = service.getStartConnection();
+    expect(conn.connectorId).toEqual('timer');
   }));
 
   it('should return the last step in the flow', inject([CurrentFlow], (service: CurrentFlow) => {
     service.integration = getDummyIntegration();
-    const step: any = service.getEndConnection();
-    expect(step['id']).toEqual('2');
-    expect(step['kind']).toEqual('connection');
+    const conn = service.getEndConnection();
+    expect(conn.connectorId).toEqual('http');
   }));
 
   it('should return the middle steps in the flow', inject([CurrentFlow], (service: CurrentFlow) => {
     service.integration = getDummyIntegration();
-    const steps: any[] = service.getMiddleSteps();
+    const steps: Step[] = service.getMiddleSteps();
     expect(steps.length).toEqual(2);
-    expect(steps[0]['id']).toEqual('6');
-    expect(steps[0]['kind']).toEqual('whatever');
+    expect(steps[0].id).toEqual('3');
+    expect(steps[0].stepKind).toEqual('endpoint');
   }));
 
   it('Should return an undefined start and end connection with an empty integration', inject([CurrentFlow], (service: CurrentFlow) => {
     service.integration = <Integration> {};
     expect(service.getStartConnection()).toBeUndefined();
     expect(service.getEndConnection()).toBeUndefined();
-    expect(service.getFirstPosition()).toEqual(0);
-    expect(service.getLastPosition()).toEqual(1);
-  }));
-
-  it('Should give me an undefined end connection when I add a start connection', inject([CurrentFlow], (service: CurrentFlow) => {
-    service.integration = <Integration> {};
-    service.connections.push(<Connection> {
-      id: '1',
-      kind: 'connection',
-      name: 'foo',
-    });
-    service.steps.push(<Step>{
-      id: '1',
-      kind: 'endpoint',
-    });
-    const start = service.getStartConnection();
-    expect(start.id).toBe('1');
-    expect(start.name).toBe('foo');
-    const end = service.getEndConnection();
-    expect(end).toBeUndefined();
-    expect(service.getFirstPosition()).toEqual(0);
-    expect(service.getLastPosition()).toEqual(1);
-  }));
-
-  it('Should give me the right end connection when I add start and end connections', inject([CurrentFlow], (service: CurrentFlow) => {
-    service.integration = <Integration>{};
-    // start connection;
-    service.connections.push(<Connection>{
-      id: '1',
-      kind: 'connection',
-      name: 'foo',
-    });
-    service.steps.push(<Step>{
-      id: '1',
-      kind: 'endpoint',
-    });
-    // start connection;
-    service.connections.push(<Connection>{
-      id: '2',
-      kind: 'connection',
-      name: 'bar',
-    });
-    service.steps.push(<Step>{
-      id: '2',
-      kind: 'endpoint',
-    });
-    const start = service.getStartConnection();
-    expect(start.id).toBe('1');
-    expect(start.name).toBe('foo');
-    const end = service.getEndConnection();
-    expect(end.id).toBe('2');
-    expect(end.name).toBe('bar');
     expect(service.getFirstPosition()).toEqual(0);
     expect(service.getLastPosition()).toEqual(1);
   }));

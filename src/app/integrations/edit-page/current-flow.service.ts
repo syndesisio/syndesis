@@ -30,34 +30,9 @@ export class CurrentFlow {
     return (this.integration.name && this.integration.name.length);
   }
 
-  getAction(id: string): Action {
-    if (!this.integration) {
-      return undefined;
-    }
-    return this.actions.find((action) => {
-      return action.id === id;
-    });
-  }
-
-  getStartAction(): Action {
-    return;
-  }
-
-  getEndAction(): Action {
-    return;
-  }
-
-  getConnection(id: string): Connection {
-    if (!this.integration) {
-      return undefined;
-    }
-    return this.connections.find((connection) => {
-      return connection.id === id;
-    });
-  }
-
   getStartConnection(): Connection {
-    return <Connection> this.getStep(this.getFirstPosition());
+    const step = this.getStep(this.getFirstPosition());
+    return step ? step.connection : undefined;
   }
 
   getEndConnection(): Connection {
@@ -65,22 +40,18 @@ export class CurrentFlow {
     if (lastPosition < 1) {
       return undefined;
     }
-    return <Connection> this.getStep(this.getLastPosition());
+    const step = this.getStep(this.getLastPosition());
+    return step ? step.connection : undefined;
   }
 
-  getMiddleSteps(): Array<any> {
-    const answer: Array<any> = [];
+  getMiddleSteps(): Array<Step> {
     if (this.getLastPosition() < 2) {
-      return answer;
+      return [];
     }
     if (!this.steps) {
-      return answer;
+      return [];
     }
-    const middle = this.steps.slice(1, -1);
-    for (const s of middle) {
-      answer.push(this.stepToConnection(<Step> s));
-    }
-    return answer;
+    return this.steps.slice(1, -1);
   }
 
   getFirstPosition(): number {
@@ -110,23 +81,11 @@ export class CurrentFlow {
     }
   }
 
-  stepToConnection(step: Step) {
-    if (!step) {
-      return undefined;
-    }
-    // TODO the backend isn't saving the 'kind' field. fudge it
-    if (step.kind === ('endpoint' || 'connection' || 'action') || !step.kind) {
-      return this.getConnection(step.id);
-    } else {
-      return step;
-    }
-  }
-
-  getStep(position: number): Step | Connection {
+  getStep(position: number): Step {
     if (!this.integration) {
       return undefined;
     }
-    return this.stepToConnection(<Step> this.steps[ position ]);
+    return this.steps[position];
   }
 
   isEmpty(): boolean {
@@ -149,11 +108,9 @@ export class CurrentFlow {
       case 'integration-selected-action':
         let position = +event[ 'position' ];
         let action = event[ 'action' ];
-        if (action.plain && typeof action.plain === 'function') {
-          action = action.plain();
-        }
         //this.actions[ position ] = action;
         this.steps[ position ] = <Step> {
+          action: action,
           configuredProperties: action[ 'properties' ],
           id: action[ 'id' ],
           kind: 'endpoint',
@@ -162,12 +119,9 @@ export class CurrentFlow {
         break;
       case 'integration-selected-connection':
         position = +event[ 'position' ];
-        let connection = event[ 'connection' ];
-        if (connection.plain && typeof connection.plain === 'function') {
-          connection = connection.plain();
-        }
-        this.connections[ position ] = connection;
+        const connection = event[ 'connection' ];
         this.steps[ position ] = <Step> {
+          connection: connection,
           configuredProperties: connection[ 'configuredProperties' ],
           id: connection[ 'id' ],
           kind: 'endpoint',
@@ -218,33 +172,7 @@ export class CurrentFlow {
     return this._integration;
   }
 
-
-  // Actions are not assignable to Integrations
-  get actions(): Array<Action> {
-    if (!this._integration) {
-      return undefined;
-    } else {
-      /*
-      if (!this._integration.actions) {
-        this._integration.actions = [];
-      }
-      return this._integration.actions;
-      */
-    }
-  }
-
-  get connections(): Array<Connection> {
-    if (!this._integration) {
-      return undefined;
-    } else {
-      if (!this._integration.connections) {
-        this._integration.connections = [];
-      }
-      return this._integration.connections;
-    }
-  }
-
-  get steps(): Array<Step | Connection> {
+  get steps(): Array<Step> {
     if (!this._integration) {
       return undefined;
     } else {

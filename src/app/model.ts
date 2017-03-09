@@ -28,6 +28,8 @@ export type WithIds = Array < WithId > ;
 export interface Action extends BaseEntity {
     description: string;
     connectorId: string;
+    camelConnectorGAV: string;
+    camelConnectorPrefix: string;
     properties: string;
     id: string;
     name: string;
@@ -35,17 +37,17 @@ export interface Action extends BaseEntity {
 export type Actions = Array < Action > ;
 
 export interface Connection extends BaseEntity {
+    position: string;
     organization: Organization;
     tags: Array < Tag >
     ;
     icon: string;
-    position: string;
     description: string;
     connector: Connector;
     configuredProperties: string;
-    userId: string;
-    connectorId: string;
     organizationId: string;
+    connectorId: string;
+    userId: string;
     id: string;
     name: string;
 };
@@ -57,6 +59,8 @@ export interface Connector extends BaseEntity {
     connectorGroupId: string;
     connectorGroup: ConnectorGroup;
     properties: string;
+    actions: Array < Action >
+    ;
     id: string;
     name: string;
 };
@@ -77,16 +81,17 @@ export type Environments = Array < Environment > ;
 export interface Integration extends BaseEntity {
     tags: Array < Tag >
     ;
-    connections: Array < Connection >
-    ;
     description: string;
     configuration: string;
+    gitRepo: string;
+    integrationTemplateId: string;
     integrationTemplate: IntegrationTemplate;
+    userId: string;
+    steps: Array < Step >
+    ;
     users: Array < User >
     ;
-    userId: string;
-    integrationTemplateId: string;
-    steps: Array < Step >
+    connections: Array < Connection >
     ;
     id: string;
     name: string;
@@ -96,8 +101,8 @@ export type Integrations = Array < Integration > ;
 export interface IntegrationTemplate extends BaseEntity {
     organization: Organization;
     configuration: string;
-    userId: string;
     organizationId: string;
+    userId: string;
     id: string;
     name: string;
 };
@@ -114,16 +119,18 @@ export interface Organization extends BaseEntity {
 export type Organizations = Array < Organization > ;
 
 export interface Step extends BaseEntity {
+    connection: Connection;
     action: Action;
     configuredProperties: string;
+    stepKind: string;
     id: string;
 };
 export type Steps = Array < Step > ;
 
 export interface Tag extends BaseEntity {
-    connections: Array < Connection >
-    ;
     integrationTemplate: Array < IntegrationTemplate >
+    ;
+    connections: Array < Connection >
     ;
     id: string;
     name: string;
@@ -131,13 +138,13 @@ export interface Tag extends BaseEntity {
 export type Tags = Array < Tag > ;
 
 export interface User extends BaseEntity {
-    username: string;
-    firstName: string;
     fullName: string;
+    username: string;
     lastName: string;
     integrations: Array < Integration >
     ;
     roleId: string;
+    firstName: string;
     organizationId: string;
     name: string;
     id: string;
@@ -185,6 +192,8 @@ class TypeFactoryClass {
         return <Action > {
             description: undefined,
             connectorId: undefined,
+            camelConnectorGAV: undefined,
+            camelConnectorPrefix: undefined,
             properties: undefined,
             id: undefined,
             name: undefined,
@@ -193,16 +202,16 @@ class TypeFactoryClass {
 
     createConnection() {
         return <Connection > {
+            position: undefined,
             organization: undefined,
             tags: undefined,
             icon: undefined,
-            position: undefined,
             description: undefined,
             connector: undefined,
             configuredProperties: undefined,
-            userId: undefined,
-            connectorId: undefined,
             organizationId: undefined,
+            connectorId: undefined,
+            userId: undefined,
             id: undefined,
             name: undefined,
         };
@@ -215,6 +224,7 @@ class TypeFactoryClass {
             connectorGroupId: undefined,
             connectorGroup: undefined,
             properties: undefined,
+            actions: undefined,
             id: undefined,
             name: undefined,
         };
@@ -237,14 +247,15 @@ class TypeFactoryClass {
     createIntegration() {
         return <Integration > {
             tags: undefined,
-            connections: undefined,
             description: undefined,
             configuration: undefined,
-            integrationTemplate: undefined,
-            users: undefined,
-            userId: undefined,
+            gitRepo: undefined,
             integrationTemplateId: undefined,
+            integrationTemplate: undefined,
+            userId: undefined,
             steps: undefined,
+            users: undefined,
+            connections: undefined,
             id: undefined,
             name: undefined,
         };
@@ -254,8 +265,8 @@ class TypeFactoryClass {
         return <IntegrationTemplate > {
             organization: undefined,
             configuration: undefined,
-            userId: undefined,
             organizationId: undefined,
+            userId: undefined,
             id: undefined,
             name: undefined,
         };
@@ -272,16 +283,18 @@ class TypeFactoryClass {
 
     createStep() {
         return <Step > {
+            connection: undefined,
             action: undefined,
             configuredProperties: undefined,
+            stepKind: undefined,
             id: undefined,
         };
     };
 
     createTag() {
         return <Tag > {
-            connections: undefined,
             integrationTemplate: undefined,
+            connections: undefined,
             id: undefined,
             name: undefined,
         };
@@ -289,12 +302,12 @@ class TypeFactoryClass {
 
     createUser() {
         return <User > {
-            username: undefined,
-            firstName: undefined,
             fullName: undefined,
+            username: undefined,
             lastName: undefined,
             integrations: undefined,
             roleId: undefined,
+            firstName: undefined,
             organizationId: undefined,
             name: undefined,
             id: undefined,
