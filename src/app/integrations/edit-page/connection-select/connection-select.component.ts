@@ -56,19 +56,21 @@ export class IntegrationsSelectConnectionComponent implements OnInit, OnDestroy 
   }
 
   cancel() {
-    this.router.navigate(['..'], { relativeTo: this.route.parent });
+    this.router.navigate(['integrations']);
   }
 
   goBack() {
     this.router.navigate(['save-or-add-step', 'new'], { relativeTo: this.route.parent });
   }
 
-  atEnd() {
-    if (this.currentFlow.isEmpty()) {
-      // if it's empty, we're always at the start connection step
-      return false;
+  positionText() {
+    if (this.position === 0) {
+      return 'start';
     }
-    return this.currentFlow.atEnd(this.position);
+    if (this.position === this.currentFlow.getLastPosition()) {
+      return 'end';
+    }
+    return '';
   }
 
   handleFlowEvent(event: FlowEvent) {

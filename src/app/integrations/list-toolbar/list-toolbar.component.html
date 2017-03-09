@@ -1,9 +1,9 @@
 <div class="row toolbar-pf">
   <div class="col-sm-12">
     <div class="toolbar-pf-actions">
-      
+
       <!-- Toolbar: Search -->
-      
+
       <div class="form-group toolbar-pf-filter search">
         <label class="sr-only">Name</label>
         <div class="input-group">
@@ -25,9 +25,9 @@
                  placeholder="Filter By {{filter?.propertyName}}..." autocomplete="off" id="filterInput">
         </div>
       </div>
-      
+
       <!-- Toolbar: Sort -->
-      
+
       <div class="form-group sort">
         <div class="dropdown btn-group">
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Name&nbsp;<span class="caret"></span>
@@ -45,7 +45,7 @@
         </button>
       </div>
       <div class="toolbar-pf-action-right">
-        <button *ngIf="showCreate" type="button" class="btn btn-primary" [routerLink]="['create']">Create
+        <button *ngIf="showCreate" type="button" class="btn btn-primary" [routerLink]="['create', 'save-or-add-step']">Create
         </button>
       </div>
     </div>

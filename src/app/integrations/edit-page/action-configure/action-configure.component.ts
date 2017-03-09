@@ -45,7 +45,7 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.router.navigate(['..'], { relativeTo: this.route.parent });
+    this.router.navigate(['integrations']);
   }
 
   goBack() {
@@ -65,7 +65,7 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
       position: this.position,
       properties: JSON.stringify(this.formConfig),
       onSave: () => {
-        this.router.navigate(['save-or-add-step', 'new'], { relativeTo: this.route.parent });
+        this.router.navigate(['save-or-add-step'], { relativeTo: this.route.parent });
       },
     });
 

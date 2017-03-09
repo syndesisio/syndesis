@@ -30,10 +30,10 @@ import { ConnectionsModule } from '../connections/connections.module';
 import { CollapseModule } from 'ng2-bootstrap';
 
 const editIntegrationChildRoutes = [
+  { path: 'save-or-add-step', component: IntegrationsSaveOrAddStepComponent },
   { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
   { path: 'action-select/:position', component: IntegrationsSelectActionComponent },
   { path: 'action-configure/:position', component: IntegrationsConfigureActionComponent },
-  { path: 'save-or-add-step/:position', component: IntegrationsSaveOrAddStepComponent },
   { path: 'step-select/:position', component: IntegrationsStepSelectComponent },
   { path: 'step-configure/:position', component: IntegrationsStepConfigureComponent },
 ];
