@@ -20,6 +20,7 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   flowSubscription: Subscription;
   childRouteSubscription: Subscription;
   urls: UrlSegment[];
+  @Input()
   currentPosition: number;
   @Input()
   currentState: string;
@@ -42,11 +43,11 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   }
 
   startConnection() {
-    return this.currentFlow.getStartConnection();
+    return this.currentFlow.getStep(this.firstPosition());
   }
 
   endConnection() {
-    return this.currentFlow.getEndConnection();
+    return this.currentFlow.getStep(this.lastPosition());
   }
 
   firstPosition() {
@@ -75,10 +76,8 @@ export class FlowViewComponent implements OnInit, OnDestroy {
         this.integrationName = this.i.name;
         break;
       case 'integration-connection-select':
-        this.currentPosition = event['position'];
         break;
       case 'integration-connection-configure':
-        this.currentPosition = event['position'];
         break;
     }
     this.detector.detectChanges();
