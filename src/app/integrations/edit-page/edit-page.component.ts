@@ -36,58 +36,6 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
     this.loading = this.store.loading;
   }
 
-  cancel() {
-    this.router.navigate([ '/integrations' ]);
-  }
-
-  showNext() {
-    /*
-    if (this.getCurrentChild() === ('action-select' || 'connection-select')) {
-      return false;
-    }
-    return !(this.getCurrentChild() === ('action-configure') && this.position === 1);
-    */
-    // TODO let's just always show this for now
-    return true;
-  }
-
-  showBack() {
-    /*
-    return this.getCurrentChild() === ('action-configure' );
-    */
-    // TODO let's just always show this for now
-    return true;
-  }
-
-  goBack() {
-    const child = this.getCurrentChild();
-    switch (child) {
-      case 'action-select':
-      case 'connection-select':
-        // TODO uh...
-        break;
-      case 'action-configure':
-        // TODO hard-coding this to just go to the previous action
-        this.router.navigate([ 'action-select', this.position ], { relativeTo: this.route });
-        break;
-      default:
-        // TODO who knows...
-        break;
-    }
-
-  }
-
-  showFinish() {
-    return this.getCurrentChild() === ('action-configure' || 'connection-selected') && this.position === 1;
-  }
-
-  canFinish() {
-    return this.currentFlow.isValid();
-  }
-
-  canContinue() {
-    return this._canContinue;
-  }
 
   finish() {
     const router = this.router;
@@ -180,9 +128,11 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
         this.router.navigate(['save-or-add-step', 'new'], { relativeTo: this.route });
         break;
       case 'integration-no-actions':
+        /*
         if (child !== 'action-select') {
           this.router.navigate(['action-select', 0], { relativeTo: this.route });
         }
+        */
         break;
       case 'integration-no-connections':
         /*
@@ -202,6 +152,7 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
         */;
         break;
       case 'integration-selected-action':
+        /*
         this.position = event[ 'position' ];
         this.currentFlow.events.emit({
           kind: 'integration-set-action',
@@ -210,8 +161,10 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
         });
         this._canContinue = true;
         this.continue();
+        */
         break;
       case 'integration-selected-connection':
+      /*
         this.position = event[ 'position' ];
         this.currentFlow.events.emit({
           kind: 'integration-set-connection',
@@ -220,6 +173,7 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
         });
         this._canContinue = true;
         this.continue();
+        */
         break;
       case 'integration-action-configure':
       case 'integration-connection-configure':

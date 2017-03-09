@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
@@ -24,6 +24,7 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
   step: Step = <Step>{ };
   formModel: DynamicFormControlModel[];
   formGroup: FormGroup;
+  formConfig: any;
 
   constructor(
     private currentFlow: CurrentFlow,
@@ -31,6 +32,7 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
     private router: Router,
     private formFactory: FormFactoryService,
     private formService: DynamicFormService,
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
 
   }
@@ -42,6 +44,33 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
     }
   }
 
+  cancel() {
+    this.router.navigate(['..'], { relativeTo: this.route.parent });
+  }
+
+  goBack() {
+    this.router.navigate(['action-select', this.position], { relativeTo: this.route.parent });
+  }
+
+  continue() {
+    const data = this.formGroup.value;
+    for (const key in data) {
+      if (!data.hasOwnProperty(key)) {
+        continue;
+      }
+      this.formConfig[key].value = data[key];
+    }
+    this.currentFlow.events.emit({
+      kind: 'integration-set-properties',
+      position: this.position,
+      configuredProperties: JSON.stringify(this.formConfig),
+      onSave: () => {
+        this.router.navigate(['save-or-add-step', 'new'], { relativeTo: this.route.parent });
+      },
+    });
+
+  }
+
   ngOnInit() {
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
@@ -50,24 +79,33 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
       .map((position: string) => {
         this.position = Number.parseInt(position);
         const step = <Step> this.currentFlow.getStep(this.position);
+        if (!step) {
+          this.router.navigate(['connection-select', this.position], { relativeTo: this.route.parent });
+          return;
+        }
         this.action = step.action;
         if (this.action && this.action.properties) {
           const configString = this.action.properties;
           // TODO giant hack so we see something on the config page
-          let formConfig = undefined;
+          this.formConfig = undefined;
           try {
-            formConfig = JSON.parse(configString);
+            this.formConfig = JSON.parse(configString);
+            if (step.configuredProperties) {
+              this.formConfig = JSON.parse(step.configuredProperties);
+            }
           } catch (err) {
             log.debugc(() => 'Error parsing form config', category);
           }
-          log.debugc(() => 'Form config: ' + JSON.stringify(formConfig, undefined, 2), category);
-          this.formModel = this.formFactory.createFormModel(formConfig);
+          log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
+          this.formModel = this.formFactory.createFormModel(this.formConfig);
           log.debugc(() => 'Form model: ' + JSON.stringify(this.formModel, undefined, 2), category);
           this.formGroup = this.formService.createFormGroup(this.formModel);
+          setTimeout(() => {
+            this.changeDetectorRef.detectChanges();
+          }, 30);
         } else {
-          // TODO this case needs to be dealt with
-          this.formModel = undefined;
-          this.formGroup = undefined;
+          this.router.navigate(['action-select', this.position], { relativeTo: this.route.parent });
+          return;
         }
         this.currentFlow.events.emit({
           kind: 'integration-action-configure',

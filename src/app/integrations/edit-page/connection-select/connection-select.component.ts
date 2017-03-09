@@ -46,10 +46,21 @@ export class IntegrationsSelectConnectionComponent implements OnInit, OnDestroy 
   onSelected(connection: Connection) {
     log.debugc(() => 'Selected connection: ' + connection.name, category);
     this.currentFlow.events.emit({
-      kind: 'integration-selected-connection',
+      kind: 'integration-set-connection',
       position: this.position,
       connection: connection,
+      onSave: () => {
+        this.router.navigate(['action-select', this.position], { relativeTo: this.route.parent });
+      },
     });
+  }
+
+  cancel() {
+    this.router.navigate(['..'], { relativeTo: this.route.parent });
+  }
+
+  goBack() {
+    this.router.navigate(['save-or-add-step', 'new'], { relativeTo: this.route.parent });
   }
 
   atEnd() {
