@@ -16,6 +16,7 @@ import { log, getCategory } from '../../logging';
 export class IntegrationsListComponent {
 
   private toasterService: ToasterService;
+  private toast;
 
   @ViewChild('childModal') public childModal: ModalDirective;
 
@@ -27,6 +28,35 @@ export class IntegrationsListComponent {
     this.toasterService = toasterService;
   }
 
+  //-----  Activate/Deactivate ------------------->>
+
+  // Open modal to confirm delete
+  requestToggleActivation(integration: Integrations) {
+    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
+    this.showModal();
+  }
+
+  // Actual activate/deactivate action once the user confirms
+  toggleActivateAction(integration: Integrations) {
+    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
+
+    this.hideModal();
+
+    //this.store.deleteEntity(integration['id']);
+
+    this.toast = {
+      type: 'success',
+      title: '',
+      body: '',
+    };
+
+    setTimeout(this.popToast(this.toast), 1000);
+  }
+
+
+
+  //-----  Delete ------------------->>
+
   // Actual delete action once the user confirms
   deleteAction(integration: Integrations) {
     log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
@@ -35,8 +65,22 @@ export class IntegrationsListComponent {
 
     //this.store.deleteEntity(integration['id']);
 
-    setTimeout(this.popToast(), 1000);
+    this.toast = {
+      type: 'success',
+      title: 'Delete Successful',
+      body: 'Integration successfully deleted.',
+    };
+
+    setTimeout(this.popToast(this.toast), 1000);
   }
+
+  // Open modal to confirm delete
+  requestDelete(integration: Integrations) {
+    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
+    this.showModal();
+  }
+
+  //-----  Icons ------------------->>
 
   getStartIcon(integration: Integration) {
     const connection = integration.steps[0].connection;
@@ -50,22 +94,8 @@ export class IntegrationsListComponent {
     return (connection || {})['icon'] || 'fa-plane';
   }
 
-  // Open modal to confirm delete
-  requestDelete(integration: Integrations) {
-    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
-    this.showModal();
-  }
 
-  // Show toast notification
-  popToast() {
-    const toast = {
-      type: 'success',
-      title: 'Delete Successful',
-      body: 'Integration successfully deleted.',
-    };
-
-    this.toasterService.pop(toast);
-  }
+  //-----  Modals ------------------->>
 
   public showModal(): void {
     this.childModal.show();
@@ -73,5 +103,12 @@ export class IntegrationsListComponent {
 
   public hideModal(): void {
     this.childModal.hide();
+  }
+
+  //-----  Toast ------------------->>
+
+  // Show toast notification
+  popToast(toast) {
+    this.toasterService.pop(toast);
   }
 }

@@ -10,6 +10,7 @@ import { Integration, Step, TypeFactory } from '../../../model';
 @Component({
   selector: 'ipaas-integrations-save-or-add-step',
   templateUrl: 'save-or-add-step.component.html',
+  styleUrls: ['./save-or-add-step.component.scss'],
 })
 export class IntegrationsSaveOrAddStepComponent implements OnInit, OnDestroy {
 
