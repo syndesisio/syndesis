@@ -100,12 +100,16 @@
     }
 
     .parent-step {
-      background-color: #158ACC;
-      color: #FFFFFF;
+      background-color: #E7E7E7;
       cursor: pointer;
       display: inline;
       padding: 12px 100% 12px 8px;
       text-transform: uppercase;
+
+      &.bold {
+        background-color: #158ACC;
+        color: #FFFFFF;
+      }
     }
   }
 

@@ -17,7 +17,7 @@
     
     <div *ngSwitchCase="'endpoint'">
       
-      <span class="parent-step" (click)="toggleCollapsed()">
+      <span class="parent-step" [class]="getTextClass(null, 'parent-step')" (click)="toggleCollapsed()">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
