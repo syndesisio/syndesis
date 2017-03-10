@@ -11,6 +11,80 @@
 
       <!-- Toast Notification Container -->
       <toaster-container></toaster-container>
+  
+      <!-- Activate Modal Container -->
+      <div bsModal
+           #childModal="bs-modal"
+           class="modal fade"
+           tabindex="-1"
+           role="dialog"
+           aria-labelledby="activateModal"
+           aria-hidden="true">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">Confirm Activation</h4>
+              <button type="button"
+                      class="close pull-right"
+                      aria-label="Close"
+                      (click)="hideModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <p>Are you sure you would like to activate the following integration?</p>
+              </div>
+              <div style="text-align: center; font-weight: 700">
+                <p>{{ integration['name'] }}</p>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="pull-right btn btn-primary"
+                      (click)="activateAction(integration)">Activate</button>
+              <button class="pull-right btn btn-cancel"
+                      (click)="hideModal()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Deactivate Modal Container -->
+      <div bsModal
+           #childModal="bs-modal"
+           class="modal fade"
+           tabindex="-1"
+           role="dialog"
+           aria-labelledby="deactivateModal"
+           aria-hidden="true">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">Confirm Deactivation</h4>
+              <button type="button"
+                      class="close pull-right"
+                      aria-label="Close"
+                      (click)="hideModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <p>Are you sure you would like to deactivate the following integration?</p>
+              </div>
+              <div style="text-align: center; font-weight: 700">
+                <p>{{ integration['name'] }}</p>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="pull-right btn btn-primary"
+                      (click)="deactivateAction(integration)">Deactivate</button>
+              <button class="pull-right btn btn-cancel"
+                      (click)="hideModal()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Delete Modal Container -->
       <div bsModal
@@ -98,14 +172,17 @@
               <a [routerLink]=" ['edit', integration.id, 'save-or-add-step'] ">Edit</a>
             </li>
             <li>
-              <a>Deactivate</a>
+              <a (click)="requestDeactivate(integration)">Deactivate</a>
             </li>
-            <li *ngIf="integration.active === false">
+            <li *ngIf="integration.active === false"
+                (click)="requestActivate(integration)">
               <a>Activate</a>
             </li>
+            <!--
             <li>
               <a>Duplicate</a>
             </li>
+            -->
             <li>
               <a (click)="requestDelete(integration)">Delete</a>
             </li>
