@@ -106,7 +106,7 @@ $ oc new-app redhat-ipaas-dev-single-tenant \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p OPENSHIFT_OAUTH_CLIENT_ID=system:serviceaccount:$(oc project -q):ipaas-oauth-client \
     -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token ipaas-oauth-client) \
-    -p OPENSHIFT_OAUTH_DEFAULT_SCOPES="user:info user:check-access role:edit:$(oc project -q):\!"
+    -p OPENSHIFT_OAUTH_DEFAULT_SCOPES="user:info user:check-access role:edit:$(oc project -q):\! role:system:build-strategy-source:$(oc project -q)"
 ```
 
 Replace `EXTERNAL_HOSTNAME` appropriately with your public iPaaS address (something like `ipaas.127.0.0.1.nip.io` works great if you are using `oc cluster up` locally).
