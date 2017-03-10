@@ -1,0 +1,32 @@
+<!-- Toolbar -->
+<div class="toolbar">
+  <!-- Toolbar: Breadcrumbs -->
+  <div class="row toolbar-pf">
+    <div class="col-sm-12">
+      <div class="toolbar-pf-actions">
+        <div class="inline-block">
+          <ol class="breadcrumb">
+            <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
+            <li class="active">Configure {{ step?.stepKind }}</li>
+          </ol>
+        </div>
+        <div class="toolbar-pf-action-right">
+          <button class="btn btn-default" (click)="cancel()">Cancel</button> &nbsp;
+          <button class="btn btn-default" (click)="goBack()"><i class="fa fa-chevron-left"></i> Back</button>
+          <button type="button" class="btn btn-primary" (click)="continue()">Next <i class="fa fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wizard-pf-body clearfix">
+  <div class="title">
+    <h1>Configure {{ step?.stepKind }}</h1>
+  </div>
+  <p>Fill out the fields associated with the selected step.</p>
+  <div *ngIf="formGroup">
+    <form [formGroup]="formGroup">
+      <dynamic-form-bootstrap-control *ngFor="let controlModel of formModel" [controlGroup]="formGroup" [model]="controlModel"></dynamic-form-bootstrap-control>
+    </form>
+  </div>
+</div>

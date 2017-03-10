@@ -21,8 +21,8 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
   flowSubscription: Subscription;
   routeSubscription: Subscription;
   position: number;
-  action: Action = <Action>{ };
-  step: Step = <Step>{ };
+  action: Action = <Action>{};
+  step: Step = <Step>{};
   formModel: DynamicFormControlModel[];
   formGroup: FormGroup;
   formConfig: any;

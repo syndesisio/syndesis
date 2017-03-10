@@ -111,6 +111,15 @@ export class CurrentFlow {
   handleEvent(event: FlowEvent): void {
     log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
     switch (event.kind) {
+      case 'integration-set-step':
+        {
+          const position = +event['position'];
+          const step = event['step'];
+          this.steps[position] = step;
+          this.maybeDoAction(event['onSave']);
+          log.debugc(() => 'Set step at position: ' + position, category);
+        }
+        break;
       case 'integration-set-properties':
         {
           const position = +event['position'];

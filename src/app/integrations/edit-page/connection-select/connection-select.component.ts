@@ -61,7 +61,7 @@ export class IntegrationsSelectConnectionComponent implements OnInit, OnDestroy 
   }
 
   goBack() {
-    this.router.navigate(['save-or-add-step', 'new'], { relativeTo: this.route.parent });
+    this.router.navigate(['save-or-add-step'], { relativeTo: this.route.parent });
   }
 
   positionText() {
