@@ -76,6 +76,19 @@
   // Steps on left-hand side
   .steps {
     flex-wrap: nowrap;
+
+    .square-icon {
+      padding: 10px;
+
+      .fa.fa-plus-square {
+        color: #158ACC;
+        font-size: x-large;
+      }
+    }
+
+    .text {
+      border: 1px #363636 solid;
+    }
   }
 
 }
