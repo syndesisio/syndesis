@@ -66,7 +66,7 @@ export class IntegrationsStepConfigureComponent implements OnInit, OnDestroy {
     this.routeSubscription = this.route.params.pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
-        const step = <Step>this.currentFlow.getStep(this.position);
+        const step = this.step = <Step>this.currentFlow.getStep(this.position);
         if (!step || !step.configuredProperties) {
           this.router.navigate(['step-select', this.position], { relativeTo: this.route.parent });
           return;
