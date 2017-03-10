@@ -163,12 +163,12 @@ public class DefaultIntegrationToProjectConverter implements IntegrationToProjec
             for (Iterator<Map.Entry<String, JsonNode>> it = properties.fields(); it.hasNext(); ) {
                 Map.Entry<String, JsonNode> jsonProp = it.next();
                 JsonNode value = jsonProp.getValue();
-                if (value.isTextual()) {
-                    configuredProps.put(jsonProp.getKey(), value.textValue());
+                if (value.isValueNode()) {
+                    configuredProps.put(jsonProp.getKey(), value.asText());
                 } else {
                     JsonNode valueNode = value.get("value");
-                    if (valueNode != null && valueNode.isTextual()) {
-                        configuredProps.put(jsonProp.getKey(), valueNode.textValue());
+                    if (valueNode != null && valueNode.isValueNode()) {
+                        configuredProps.put(jsonProp.getKey(), valueNode.asText());
                     }
                 }
             }

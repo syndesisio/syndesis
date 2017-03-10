@@ -26,7 +26,7 @@
           "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
           "camelConnectorPrefix": "periodic-timer"
         },
-        "configuredProperties": "{\"period\": { \"value\": \"5000\", \"kind\": \"parameter\", \"displayName\": \"Period\", \"group\": \"consumer\", \"required\": false, \"type\": \"integer\", \"javaType\": \"long\", \"deprecated\": false, \"secret\": false, \"defaultValue\": 10000, \"description\": \"Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second).\" }}"
+        "configuredProperties": "{\"period\": { \"value\": 5000, \"kind\": \"parameter\", \"displayName\": \"Period\", \"group\": \"consumer\", \"required\": false, \"type\": \"integer\", \"javaType\": \"long\", \"deprecated\": false, \"secret\": false, \"defaultValue\": 10000, \"description\": \"Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second).\" }}"
       },
       {
         "id": "3",
