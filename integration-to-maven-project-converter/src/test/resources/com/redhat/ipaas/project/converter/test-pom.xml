@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.redhat.ipaas.integrations</groupId>
-  <artifactId>test-integration</artifactId>
+  <artifactId>project</artifactId>
   <version>0.1-SNAPSHOT</version>
   <name>iPaaS Integrations :: Test Integration</name>
   <description>This is a test integration!</description>
