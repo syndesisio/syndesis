@@ -14,6 +14,7 @@ const category = getCategory('IntegrationsCreatePage');
 @Component({
   selector: 'ipaas-integrations-action-configure',
   templateUrl: 'action-configure.component.html',
+  styleUrls: [ './action-configure.component.scss' ],
 })
 export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
 
