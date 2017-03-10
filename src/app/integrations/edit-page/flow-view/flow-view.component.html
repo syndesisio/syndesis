@@ -34,14 +34,23 @@
       
       <div class="row steps"
            *ngIf="currentState === 'save-or-add-step'">
-        <ul>
-          <li>
-            <a (click)="insertStepAfter(0)">Add a step</a>
-          </li>
-          <li>
-            <a (click)="insertConnectionAfter(0)">Add a connection</a>
-          </li>
-        </ul>
+        <div class="col-xs-1 col-xs-offset-1 square-icon">
+          <div class="icon">
+            <p [class]="getActiveClass()">
+              <i class="fa fa-plus-square"></i>
+            </p>
+          </div>
+        </div>
+        <div class="col-xs-7 col-xs-offset-1 text">
+          <ul>
+            <li>
+              <a (click)="insertStepAfter(0)">Add a step</a>
+            </li>
+            <li>
+              <a (click)="insertConnectionAfter(0)">Add a connection</a>
+            </li>
+          </ul>
+        </div>
       </div>
       
       <template ngFor
