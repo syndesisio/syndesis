@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { CurrentConnectionService } from '../current-connection';
 import { Connection } from '../../../model';
@@ -10,6 +11,8 @@ import { Connection } from '../../../model';
 export class ConnectionsConfigureFieldsComponent implements OnInit {
   constructor(
     private current: CurrentConnectionService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   get connection(): Connection {

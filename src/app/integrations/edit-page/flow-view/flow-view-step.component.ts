@@ -93,6 +93,9 @@ export class FlowViewStepComponent {
       }
       return 'active';
     } else {
+      if (!this.collapsed) {
+        this.collapsed = true;
+      }
       return 'inactive';
     }
   }
@@ -129,6 +132,9 @@ export class FlowViewStepComponent {
   }
 
   toggleCollapsed() {
+    if (this.getPosition() === this.currentPosition) {
+      return;
+    }
     this.collapsed = !this.collapsed;
   }
 

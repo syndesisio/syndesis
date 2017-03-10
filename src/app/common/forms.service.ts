@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DynamicFormControlModel, DynamicInputModel } from '@ng2-dynamic-forms/core';
+import { DynamicFormControlModel, DynamicCheckboxModel, DynamicInputModel } from '@ng2-dynamic-forms/core';
 
 @Injectable()
 export class FormFactoryService {
@@ -13,27 +13,41 @@ export class FormFactoryService {
       const value: any = properties[key];
       let formField: any;
       let type = (value.type || '').toLowerCase();
-      switch (value.type.toLowerCase()) {
-        case 'string':
-        case 'text':
-        case 'number':
+      // first normalize the type
+      switch (type.toLowerCase()) {
         case 'boolean':
+          type = 'checkbox';
+          break;
+        case 'number':
+        case 'integer':
+        case 'long':
+          type = 'number';
+          break;
         case 'password':
-        case 'java.lang.string':
-          if (type === 'java.lang.string') {
-            type = 'text';
-          }
-          formField = new DynamicInputModel({
-            id: value.name || key,
-            label: value.title || value.displayName || value.name || key,
-            hint: value.description,
-            inputType: type,
-            value: value.value || value.defaultValue,
-          });
+          type = 'password';
           break;
         default:
+          type = 'text';
           break;
       }
+      // then use the appropriate ng2 dynamic forms constructor
+      if (type === 'checkbox') {
+        formField = new DynamicCheckboxModel({
+          id: value.name || key,
+          label: value.title || value.displayName || value.name || key,
+          hint: value.description,
+          value: value.value || value.defaultValue,
+        });
+      } else {
+        formField = new DynamicInputModel({
+          id: value.name || key,
+          label: value.title || value.displayName || value.name || key,
+          hint: value.description,
+          inputType: type,
+          value: value.value || value.defaultValue,
+        });
+      }
+
       if (formField) {
         answer.push(formField);
       }
