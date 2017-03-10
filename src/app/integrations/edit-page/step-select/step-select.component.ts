@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
+import { StepStore } from '../../../store/step/step.store';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { Step, Steps, TypeFactory } from '../../../model';
 
@@ -12,36 +13,7 @@ import { Step, Steps, TypeFactory } from '../../../model';
 })
 export class IntegrationsStepSelectComponent implements OnInit {
 
-  // TODO not this here
-  steps: Step[] = [
-    {
-      id: undefined,
-      connection: undefined,
-      action: undefined,
-      stepKind: 'log',
-      configuredProperties: JSON.stringify({
-        message: {
-          type: 'string',
-          displayName: 'Log Message',
-          required: true,
-        },
-        loggingLevel: {
-          type: 'string',
-          displayName: 'Level',
-          required: true,
-        },
-      }),
-    }, {
-      id: undefined,
-      connection: undefined,
-      action: undefined,
-      stepKind: 'datamapper',
-      configuredProperties: JSON.stringify({
-
-      }),
-    },
-  ];
-
+  steps: Steps;
   routeSubscription: Subscription;
   position: number;
 
@@ -49,7 +21,10 @@ export class IntegrationsStepSelectComponent implements OnInit {
     private currentFlow: CurrentFlow,
     private route: ActivatedRoute,
     private router: Router,
-  ) { }
+    private stepStore: StepStore,
+  ) {
+    this.steps = stepStore.getSteps();
+  }
 
   cancel() {
     this.router.navigate(['integrations']);
@@ -84,15 +59,12 @@ export class IntegrationsStepSelectComponent implements OnInit {
   }
 
   onSelect(step: Step) {
-    // TODO hack to use the existing step in the flow if it matches
-    const _step = this.currentFlow.getStep(this.position);
-    if (_step && _step.stepKind === step.stepKind) {
-      step = _step;
-    }
     this.currentFlow.events.emit({
       kind: 'integration-set-step',
       position: this.position,
-      step: step,
+      step: {
+        stepKind: step.stepKind,
+      },
       onSave: () => {
         this.router.navigate(['step-configure', this.position], { relativeTo: this.route.parent });
       },

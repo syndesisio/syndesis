@@ -14,6 +14,7 @@ import { ConnectionStore } from './connection/connection.store';
 import { ConnectorStore } from './connector/connector.store';
 import { IntegrationStore } from './integration/integration.store';
 import { TemplateStore } from './template/template.store';
+import { StepStore } from './step/step.store';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import { TemplateStore } from './template/template.store';
     ConnectorStore,
     IntegrationStore,
     TemplateStore,
+    StepStore,
   ],
 })
 export class StoreModule {

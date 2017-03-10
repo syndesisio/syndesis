@@ -4,6 +4,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { DynamicFormControlModel, DynamicFormService } from '@ng2-dynamic-forms/core';
 
+import { StepStore } from '../../../store/step/step.store';
 import { FormFactoryService } from '../../../common/forms.service';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { Action, Step } from '../../../model';
@@ -21,7 +22,6 @@ export class IntegrationsStepConfigureComponent implements OnInit, OnDestroy {
   flowSubscription: Subscription;
   routeSubscription: Subscription;
   position: number;
-  action: Action = <Action>{};
   step: Step = <Step>{};
   formModel: DynamicFormControlModel[];
   formGroup: FormGroup;
@@ -34,6 +34,7 @@ export class IntegrationsStepConfigureComponent implements OnInit, OnDestroy {
     private formFactory: FormFactoryService,
     private formService: DynamicFormService,
     private changeDetectorRef: ChangeDetectorRef,
+    private stepStore: StepStore,
   ) { }
 
   cancel() {
@@ -46,16 +47,17 @@ export class IntegrationsStepConfigureComponent implements OnInit, OnDestroy {
 
   continue() {
     const data = this.formGroup.value;
+    const properties = {};
     for (const key in data) {
       if (!data.hasOwnProperty(key)) {
         continue;
       }
-      this.formConfig[key].value = data[key];
+      properties[key] = data[key];
     }
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
-      properties: JSON.stringify(this.formConfig),
+      properties: JSON.stringify(properties),
       onSave: () => {
         this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
       },
@@ -67,21 +69,39 @@ export class IntegrationsStepConfigureComponent implements OnInit, OnDestroy {
       .map((position: string) => {
         this.position = Number.parseInt(position);
         const step = this.step = <Step>this.currentFlow.getStep(this.position);
-        if (!step || !step.configuredProperties) {
+        if (!step) {
           this.router.navigate(['step-select', this.position], { relativeTo: this.route.parent });
           return;
         }
-        this.action = step.action;
-        const configString = step.configuredProperties;
+        const stepDef = this.stepStore.getStepConfig(step.stepKind);
+        if (!stepDef) {
+          // TODO if we don't have a definition for this step then ???
+          return;
+        }
+        const configString = stepDef.configuredProperties;
         this.formConfig = undefined;
         try {
           this.formConfig = JSON.parse(configString);
+          const values = JSON.parse(step.configuredProperties);
+          for ( const key in values ) {
+            if (!values.hasOwnProperty(key)) {
+              continue;
+            }
+            // TODO hack to handle an unconfigured step
+            const value = values[key];
+            if (typeof value === 'object') {
+              continue;
+            }
+            const item = this.formConfig[key];
+            if (item) {
+              item.value = value;
+            }
+          }
         } catch (err) {
           log.debugc(() => 'Error parsing form config', category);
         }
         log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
         this.formModel = this.formFactory.createFormModel(this.formConfig);
-        log.debugc(() => 'Form model: ' + JSON.stringify(this.formModel, undefined, 2), category);
         this.formGroup = this.formService.createFormGroup(this.formModel);
         setTimeout(() => {
           this.changeDetectorRef.detectChanges();
