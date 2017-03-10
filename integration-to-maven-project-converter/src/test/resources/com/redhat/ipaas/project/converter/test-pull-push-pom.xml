@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.redhat.ipaas.integrations</groupId>
-  <artifactId>2</artifactId>
+  <artifactId>project</artifactId>
   <version>0.1-SNAPSHOT</version>
   <name>iPaaS Integrations :: Timed Pull to Post Example</name>
   <description>This is an example of a Timed Pull to Post Integration</description>
