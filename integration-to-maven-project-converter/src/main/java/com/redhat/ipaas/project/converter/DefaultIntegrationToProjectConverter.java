@@ -159,16 +159,18 @@ public class DefaultIntegrationToProjectConverter implements IntegrationToProjec
     private Map<String, String> readConfiguredProperties(String... configuredProperties) throws IOException {
         Map<String, String> configuredProps = new HashMap<>();
         for (String props : configuredProperties) {
-            JsonNode properties = OBJECT_MAPPER.readTree(props);
-            for (Iterator<Map.Entry<String, JsonNode>> it = properties.fields(); it.hasNext(); ) {
-                Map.Entry<String, JsonNode> jsonProp = it.next();
-                JsonNode value = jsonProp.getValue();
-                if (value.isValueNode()) {
-                    configuredProps.put(jsonProp.getKey(), value.asText());
-                } else {
-                    JsonNode valueNode = value.get("value");
-                    if (valueNode != null && valueNode.isValueNode()) {
-                        configuredProps.put(jsonProp.getKey(), valueNode.asText());
+            if (props != null && !props.isEmpty()) {
+                JsonNode properties = OBJECT_MAPPER.readTree(props);
+                for (Iterator<Map.Entry<String, JsonNode>> it = properties.fields(); it.hasNext(); ) {
+                    Map.Entry<String, JsonNode> jsonProp = it.next();
+                    JsonNode value = jsonProp.getValue();
+                    if (value.isValueNode()) {
+                        configuredProps.put(jsonProp.getKey(), value.asText());
+                    } else {
+                        JsonNode valueNode = value.get("value");
+                        if (valueNode != null && valueNode.isValueNode()) {
+                            configuredProps.put(jsonProp.getKey(), valueNode.asText());
+                        }
                     }
                 }
             }
