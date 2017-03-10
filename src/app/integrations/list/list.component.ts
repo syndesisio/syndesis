@@ -30,24 +30,49 @@ export class IntegrationsListComponent {
 
   //-----  Activate/Deactivate ------------------->>
 
-  // Open modal to confirm delete
-  requestToggleActivation(integration: Integrations) {
-    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
+  // TODO: Refactor into single method for both cases
+  // Open modal to confirm activation
+  requestActivate(integration: Integrations) {
+    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration['id']));
     this.showModal();
   }
 
+  // Open modal to confirm deactivation
+  requestDeactivate(integration: Integrations) {
+    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration['id']));
+    this.showModal();
+  }
+
+  // TODO: Refactor into single method for both cases
   // Actual activate/deactivate action once the user confirms
-  toggleActivateAction(integration: Integrations) {
-    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
+  activateAction(integration: Integrations) {
+    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration['id']));
 
     this.hideModal();
 
-    //this.store.deleteEntity(integration['id']);
+    //this.store.activate(integration['id']);
 
     this.toast = {
       type: 'success',
-      title: '',
-      body: '',
+      title: 'Integration is activating',
+      body: 'Please allow a moment for the integration to fully activate.',
+    };
+
+    setTimeout(this.popToast(this.toast), 1000);
+  }
+
+  // Actual activate/deactivate action once the user confirms
+  deactivateAction(integration: Integrations) {
+    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration['id']));
+
+    this.hideModal();
+
+    //this.store.deactivate(integration['id']);
+
+    this.toast = {
+      type: 'success',
+      title: 'Integration is deactivating',
+      body: 'Please allow a moment for the integration to be deactivated.',
     };
 
     setTimeout(this.popToast(this.toast), 1000);
