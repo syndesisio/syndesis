@@ -49,7 +49,7 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     @Override
-    public void createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
+    public String createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
         Repository repository = getRepository(repoName);
         if (repository == null) {
             // New Repo
@@ -62,6 +62,7 @@ public class GitHubServiceImpl implements GitHubService {
             // Only create or update files
             createOrUpdateFiles(repository, commitMessage, fileContents);
         }
+        return repository.getCloneUrl();
     }
 
     @Override

@@ -29,9 +29,10 @@ public interface GitHubService {
      * @param commitMessage the message to use for committing files.
      * @param fileContents map of files to add or update. Key are pathes within the repo, values is the content to write
      * @param webHookUrl an optional Webhook URL. If non-null a webhook is created with this url as callback URL
+     * @return the repositories clone URL
      * @throws IOException if interaction with GitHub fails.
      */
-    void createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException;
+    String createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException;
 
     /**
      * Convert a given name to GitHub acceptable repo name.
