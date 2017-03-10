@@ -24,7 +24,7 @@ public class GitHubServiceImplTest {
 
     @Test
     public void sanitizeRepoName() throws Exception {
-        GitHubService service = new GitHubServiceImpl(null, null);
+        GitHubService service = new GitHubServiceImpl(null, null, null);
 
         String data[] = {
             "bla", "bla",
