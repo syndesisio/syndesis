@@ -1,3 +1,11 @@
+/deep/ .popover {
+  margin-top: -7px;
+}
+
+.popover-body > div {
+  padding: 5px;
+}
+
 .flow-view {
   width: 300px;
 
@@ -75,6 +83,7 @@
 
   // Steps on left-hand side
   .steps {
+
     flex-wrap: nowrap;
 
     .square-icon {
@@ -90,5 +99,6 @@
       border: 1px #363636 solid;
     }
   }
+
 
 }

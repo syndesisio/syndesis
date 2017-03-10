@@ -5,6 +5,9 @@ import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TabsModule } from 'ng2-bootstrap';
+import { CollapseModule } from 'ng2-bootstrap';
+import { PopoverModule } from 'ng2-bootstrap';
+
 import { RestangularModule } from 'ng2-restangular';
 
 import { FlowViewComponent } from './flow-view.component';
@@ -14,8 +17,7 @@ import { IntegrationService } from '../../../store/integration/integration.servi
 import { CurrentFlow } from '../current-flow.service';
 import { IPaaSCommonModule } from '../../../common/common.module';
 import { ConnectionsModule } from '../../../connections/connections.module';
-import { CollapseModule } from 'ng2-bootstrap';
-import {EventsService} from '../../../store/entity/events.service';
+import { EventsService } from '../../../store/entity/events.service';
 
 describe('IntegrationsCreateComponent', () => {
   let component: FlowViewComponent;
@@ -29,7 +31,9 @@ describe('IntegrationsCreateComponent', () => {
         RouterTestingModule.withRoutes([]),
         RestangularModule.forRoot(),
         ConnectionsModule,
-        TabsModule,
+        TabsModule.forRoot(),
+        PopoverModule.forRoot(),
+        CollapseModule.forRoot(),
         IPaaSCommonModule,
         CollapseModule,
       ],
