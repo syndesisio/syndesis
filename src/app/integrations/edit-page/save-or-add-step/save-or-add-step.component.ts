@@ -45,19 +45,13 @@ export class IntegrationsSaveOrAddStepComponent implements OnInit, OnDestroy {
   }
 
   validateFlow() {
-    let targetPosition = -1;
-    if (this.currentFlow.getEndConnection() === undefined) {
-      this.currentFlow.steps[1] = TypeFactory.createStep();
-      this.currentFlow.steps[1].stepKind = 'endpoint';
-      targetPosition = 1;
-    }
     if (this.currentFlow.getStartConnection() === undefined) {
-      this.currentFlow.steps[0] = TypeFactory.createStep();
-      this.currentFlow.steps[0].stepKind = 'endpoint';
-      targetPosition = 0;
+      this.router.navigate(['connection-select', this.currentFlow.getFirstPosition()], { relativeTo: this.route.parent });
+      return;
     }
-    if (targetPosition >= 0) {
-      this.router.navigate(['connection-select', targetPosition], { relativeTo: this.route.parent });
+    if (this.currentFlow.getEndConnection() === undefined) {
+      this.router.navigate(['connection-select', this.currentFlow.getLastPosition()], { relativeTo: this.route.parent });
+      return;
     }
   }
 
@@ -67,14 +61,16 @@ export class IntegrationsSaveOrAddStepComponent implements OnInit, OnDestroy {
         this.validateFlow();
         break;
     }
-
   }
 
   ngOnInit() {
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
     });
-    //this.validateFlow();
+    const validate = this.route.queryParams.map(params => params['validate'] || false);
+    if (validate) {
+      this.validateFlow();
+    }
   }
 
   ngOnDestroy() {

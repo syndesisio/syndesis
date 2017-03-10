@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import {Observer} from 'rxjs/Observer';
+import { Observer } from 'rxjs/Observer';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
@@ -9,7 +9,7 @@ import { RESTService } from './rest.service';
 import { BaseEntity } from '../../model';
 
 import { log, getCategory } from '../../logging';
-import {EventsService, ChangeEvent} from './events.service';
+import { EventsService, ChangeEvent } from './events.service';
 
 const category = getCategory('AbstractStore');
 
@@ -77,8 +77,11 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
     if (id) {
       this.load(id);
     } else {
-      this._current.next(this.newInstance());
-      this._loading.next(false);
+      // This should happen async too for consistency
+      setTimeout(() => {
+        this._current.next(this.newInstance());
+        this._loading.next(false);
+      }, 1);
     }
   }
 

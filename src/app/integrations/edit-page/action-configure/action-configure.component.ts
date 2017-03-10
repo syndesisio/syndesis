@@ -65,7 +65,7 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
       position: this.position,
       properties: JSON.stringify(this.formConfig),
       onSave: () => {
-        this.router.navigate(['save-or-add-step'], { relativeTo: this.route.parent });
+        this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
       },
     });
 
