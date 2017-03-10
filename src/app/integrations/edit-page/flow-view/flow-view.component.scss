@@ -10,51 +10,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  }
-
-  .name {
-
-    .integration-name {
-      background-color: rgba(0, 0, 0, 0);
-      border: none;
-      box-shadow: none;
-      color: #363636;
-      font-size: 14px;
-      font-style: normal;
-
-      &.ng-invalid {
-        color: #FF0000;
-      }
-
-      &.ng-pristine {
-        //color:
-      }
-
-      &.ng-touched {
-        //color:
-      }
-    }
-
-    .pficon.pficon-edit {
-      margin-top: -20px;
-    }
-  }
-
-  // Steps on left-hand side
-  .steps {
-    flex-wrap: nowrap;
-  }
-
-  .text {
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 15px;
-
-    ul {
-      cursor: pointer;
-      padding-right: 35px;
-      -webkit-padding-start: 0;
-    }
 
     .start, .finish {
       h5 {
@@ -64,9 +19,11 @@
         padding: 5px;
         text-transform: uppercase;
       }
+
       ul {
         min-width: 160px;
         padding: 10px 0;
+
         // Sub-Menu Items
         &.collapse {
           margin-top: 5px;
@@ -85,11 +42,36 @@
           }
         }
       }
+
       .fa {
         font-size: x-small;
         padding-right: 5px;
       }
     }
+  }
+
+  .name {
+    .integration-name {
+      background: none;
+      border: none;
+      box-shadow: none;
+      color: #363636;
+      font-size: 14px;
+      font-style: normal;
+
+      &.ng-invalid {
+        color: #FF0000;
+      }
+    }
+
+    .pficon.pficon-edit {
+      margin-top: -20px;
+    }
+  }
+
+  // Steps on left-hand side
+  .steps {
+    flex-wrap: nowrap;
   }
 
 }

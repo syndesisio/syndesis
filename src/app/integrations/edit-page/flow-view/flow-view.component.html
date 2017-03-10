@@ -1,54 +1,85 @@
 <div class="flow-view">
   <ipaas-loading [loading]="loaded()">
+    
+    <!-- Header -->
     <div class="row name">
       <div class="col-md-12">
         <div class="form-group">
           <input type="text"
-                id="integrationName"
-                class="form-control integration-name"
-                placeholder="Enter integration name..."
-                [ngModel]="integrationName"
-                (ngModelChange)="integrationNameChanged($event)">
+                 id="integrationName"
+                 class="form-control integration-name"
+                 placeholder="Enter integration name..."
+                 [ngModel]="integrationName"
+                 (ngModelChange)="integrationNameChanged($event)">
           <span class="pficon pficon-edit pull-right"></span>
         </div>
       </div>
     </div>
-    <div class="flow-view-container" *ngIf="i && i.steps">
+    
+    <div class="flow-view-container"
+         *ngIf="i && i.steps">
+      
+      <!-- Start -->
+      
       <div class="row steps start">
         <ipaas-integrations-flow-view-step
-          [step]="startConnection()"
-          [position]="0"
-          [currentPosition]="currentPosition"
-          [currentState]="currentState"></ipaas-integrations-flow-view-step >
+            [step]="startConnection()"
+            [position]="0"
+            [currentPosition]="currentPosition"
+            [currentState]="currentState"></ipaas-integrations-flow-view-step>
       </div>
-      <div class="row steps" *ngIf="currentState === 'save-or-add-step'">
+      
+      
+      <!-- Steps -->
+      
+      <div class="row steps"
+           *ngIf="currentState === 'save-or-add-step'">
         <ul>
-          <li><a (click)="insertStepAfter(0)">Add a step</a></li>
-          <li><a (click)="insertConnectionAfter(0)">Add a connection</a></li>
+          <li>
+            <a (click)="insertStepAfter(0)">Add a step</a>
+          </li>
+          <li>
+            <a (click)="insertConnectionAfter(0)">Add a connection</a>
+          </li>
         </ul>
       </div>
-      <template ngFor let-step [ngForOf]="getMiddleSteps()" let-position="index">
-      <div class="row steps">
+      
+      <template ngFor
+                let-step
+                [ngForOf]="getMiddleSteps()"
+                let-position="index">
+        
         <ipaas-integrations-flow-view-step
-          [step]="step"
-          [position]="position + 1"
-          [currentPosition]="currentPosition"
-          [currentState]="currentState"></ipaas-integrations-flow-view-step >
-      </div>
-      <div class="row steps" *ngIf="currentState === 'save-or-add-step'">
-        <ul>
-          <li><a (click)="insertStepAfter(position + 1)">Add a step</a></li>
-          <li><a (click)="insertConnectionAfter(position + 1)">Add a connection</a></li>
-        </ul>
-      </div>
+            [step]="step"
+            [position]="position + 1"
+            [currentPosition]="currentPosition"
+            [currentState]="currentState"></ipaas-integrations-flow-view-step>
+        
+        
+        <!-- Save or Add Step -->
+        
+        <div class="row steps"
+             *ngIf="currentState === 'save-or-add-step'">
+          <ul>
+            <li>
+              <a (click)="insertStepAfter(position + 1)">Add a step</a>
+            </li>
+            <li>
+              <a (click)="insertConnectionAfter(position + 1)">Add a connection</a>
+            </li>
+          </ul>
+        </div>
+        
       </template>
-      <div class="row steps finish">
-        <ipaas-integrations-flow-view-step
+      
+      
+      <!-- Finish -->
+      
+      <ipaas-integrations-flow-view-step
           [step]="endConnection()"
           [position]="-1"
           [currentPosition]="currentPosition"
-          [currentState]="currentState"></ipaas-integrations-flow-view-step >
-      </div>
+          [currentState]="currentState"></ipaas-integrations-flow-view-step>
     </div>
   </ipaas-loading>
 

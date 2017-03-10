@@ -1,106 +1,117 @@
-.bold {
-  font-weight: bold;
-}
+.flow-view-step {
+  flex-wrap: nowrap;
 
-ul {
-  list-style-type: none;
-  -webkit-margin-before: 0;
-
-  li {
-    list-style-type: none;
+  .bold {
+    font-weight: bold;
   }
-}
-
-// Left-hand side design with the icon and line
-.progress-line {
-  //padding-right: 0;
-  text-align: center;
 
   ul {
-    padding-right: 35px;
-    -webkit-padding-start: 0;
+    list-style-type: none;
+    -webkit-margin-before: 0;
 
     li {
-      padding-left: 5px;
+      list-style-type: none;
     }
   }
 
-  // Line that connects cubes
-  .vertical {
-    border: 2px solid #D0D0D0;
-    height: 200px;
-    left: 40px;
-    margin-top: -10px;
-    position: absolute;
-    width: 0;
-  }
-  .icon {
-    padding-top: 0;
-    // Overriding the actual cube icon's colors
-    .fa {
-      color: #D1D1D1;
-      font-size: x-large;
-    }
+  // Left-hand side design with the icon and line
+  .progress-line {
+    //padding-right: 0;
+    text-align: center;
 
-    .round {
-      -moz-border-radius: 100px;
-      border-radius: 100px;
-      padding: 11px;
-      width: 55px;
-      height: 55px;
-
-      &.active {
-        border: 3px solid #1487CB;
-      }
-
-      &.inactive {
-        border: 3px solid #D0D0D0;
-      }
-    }
-  }
-}
-
-.text {
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 15px;
-  ul {
-    cursor: pointer;
-    padding-right: 35px;
-    -webkit-padding-start: 0;
-  }
-  .start, .finish {
-    h5 {
-      background-color: #EDEDED;
-      cursor: pointer;
-      display: inline;
-      padding: 5px;
-      text-transform: uppercase;
-    }
     ul {
-      min-width: 160px;
-      padding: 10px 0;
-      // Sub-Menu Items
-      &.collapse {
-        margin-top: 5px;
-        padding: 5px 0;
+      padding-right: 35px;
+      -webkit-padding-start: 0;
 
-        li {
-          padding: 5px 5px 5px 17px;
-          &.active {
-            background-color: #D6EEFA;
-            border-bottom: 1px solid #B8DFF3;
-            border-top: 1px solid #B8DFF3;
-          }
-          &.inactive {
-            color: #D1D1D1;
-          }
+      li {
+        padding-left: 5px;
+      }
+    }
+
+    // Line that connects cubes
+    .vertical {
+      border: 2px solid #D0D0D0;
+      height: 200px;
+      left: 40px;
+      margin-top: -10px;
+      position: absolute;
+      width: 0;
+    }
+
+    .icon {
+      padding-top: 0;
+      // Overriding the actual cube icon's colors
+      .fa {
+        color: #D1D1D1;
+        font-size: x-large;
+      }
+
+      .round {
+        -moz-border-radius: 100px;
+        border-radius: 100px;
+        padding: 11px;
+        width: 55px;
+        height: 55px;
+
+        &.active {
+          border: 3px solid #1487CB;
+        }
+
+        &.inactive {
+          border: 3px solid #D0D0D0;
         }
       }
     }
-    .fa {
-      font-size: x-small;
-      padding-right: 5px;
+  }
+
+  .text {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 15px;
+
+    ul {
+      cursor: pointer;
+      padding-right: 35px;
+      -webkit-padding-start: 0;
+    }
+
+    .start, .finish {
+      h5 {
+        background-color: #EDEDED;
+        cursor: pointer;
+        display: inline;
+        padding: 5px;
+        text-transform: uppercase;
+      }
+
+      ul {
+        min-width: 160px;
+        padding: 10px 0;
+
+        // Sub-Menu Items
+        &.collapse {
+          margin-top: 5px;
+          padding: 5px 0;
+
+          li {
+            padding: 5px 5px 5px 17px;
+            &.active {
+              background-color: #D6EEFA;
+              border-bottom: 1px solid #B8DFF3;
+              border-top: 1px solid #B8DFF3;
+            }
+            &.inactive {
+              color: #D1D1D1;
+            }
+          }
+        }
+      }
+
+      .fa {
+        font-size: x-small;
+        padding-right: 5px;
+      }
     }
   }
+
 }
