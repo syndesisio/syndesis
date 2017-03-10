@@ -122,7 +122,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     // TODO this will need adjusting once this is an object
     if (this.connection.configuredProperties) {
       return this.connection.configuredProperties;
-    } else if (this.connection.connector.properties) {
+    } else if (this.connection.connector && this.connection.connector.properties) {
       return this.connection.connector.properties;
     } else {
       // um...

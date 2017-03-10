@@ -61,7 +61,11 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
         target.push('connection-basics');
         break;
       case 'review':
-        target.push('configure-fields');
+        if (!this.current.connection.connector.properties || this.current.connection.connector.properties === '') {
+          target.push('connection-basics');
+        } else {
+          target.push('configure-fields');
+        }
         break;
       default:
         break;
@@ -71,12 +75,17 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     }
   }
 
+  // TODO this is terrible, the page flow should be handled in the individual steps
   goForward() {
     const page = this.getCurrentPage();
     const target = [];
     switch (page) {
       case 'connection-basics':
-        target.push('configure-fields');
+        if (!this.current.connection.connector.properties || this.current.connection.connector.properties === '') {
+          target.push('review');
+        } else {
+          target.push('configure-fields');
+        }
         break;
       case 'configure-fields':
         target.push('review');
