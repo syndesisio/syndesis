@@ -12,7 +12,7 @@
       <!-- Toast Notification Container -->
       <toaster-container></toaster-container>
 
-      <!-- Modal Container -->
+      <!-- Delete Modal Container -->
       <div bsModal
            #childModal="bs-modal"
            class="modal fade"
@@ -99,6 +99,9 @@
             </li>
             <li>
               <a>Deactivate</a>
+            </li>
+            <li *ngIf="integration.active === false">
+              <a>Activate</a>
             </li>
             <li>
               <a>Duplicate</a>
