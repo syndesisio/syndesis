@@ -14,7 +14,12 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
   protected get kind() { return 'Integration'; }
 
   newInstance(): Integration {
-    return TypeFactory.createIntegration();
+    const integration = TypeFactory.createIntegration();
+    const start = TypeFactory.createStep();
+    const end = TypeFactory.createStep();
+    start.stepKind = end.stepKind = 'endpoint';
+    integration.steps = [start, end];
+    return integration;
   }
 
 }
