@@ -44,4 +44,52 @@
   .steps {
     flex-wrap: nowrap;
   }
+
+  .text {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 15px;
+
+    ul {
+      cursor: pointer;
+      padding-right: 35px;
+      -webkit-padding-start: 0;
+    }
+
+    .start, .finish {
+      h5 {
+        background-color: #EDEDED;
+        cursor: pointer;
+        display: inline;
+        padding: 5px;
+        text-transform: uppercase;
+      }
+      ul {
+        min-width: 160px;
+        padding: 10px 0;
+        // Sub-Menu Items
+        &.collapse {
+          margin-top: 5px;
+          padding: 5px 0;
+
+          li {
+            padding: 5px 5px 5px 17px;
+            &.active {
+              background-color: #D6EEFA;
+              border-bottom: 1px solid #B8DFF3;
+              border-top: 1px solid #B8DFF3;
+            }
+            &.inactive {
+              color: #D1D1D1;
+            }
+          }
+        }
+      }
+      .fa {
+        font-size: x-small;
+        padding-right: 5px;
+      }
+    }
+  }
+
 }
