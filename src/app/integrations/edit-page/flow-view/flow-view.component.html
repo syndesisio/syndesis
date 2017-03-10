@@ -69,17 +69,19 @@
             </li>
           </ul>
         </div>
-        
+      
       </template>
       
       
       <!-- Finish -->
       
-      <ipaas-integrations-flow-view-step
-          [step]="endConnection()"
-          [position]="-1"
-          [currentPosition]="currentPosition"
-          [currentState]="currentState"></ipaas-integrations-flow-view-step>
+      <div class="row steps finish">
+        <ipaas-integrations-flow-view-step
+            [step]="endConnection()"
+            [position]="-1"
+            [currentPosition]="currentPosition"
+            [currentState]="currentState"></ipaas-integrations-flow-view-step>
+      </div>
     </div>
   </ipaas-loading>
 
