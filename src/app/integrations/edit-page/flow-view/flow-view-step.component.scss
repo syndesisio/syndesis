@@ -1,10 +1,6 @@
 .flow-view-step {
   flex-wrap: nowrap;
 
-  .bold {
-    font-weight: bold;
-  }
-
   ul {
     list-style-type: none;
     -webkit-margin-before: 0;
@@ -16,7 +12,6 @@
 
   // Left-hand side design with the icon and line
   .progress-line {
-    //padding-right: 0;
     text-align: center;
 
     ul {
@@ -106,7 +101,7 @@
       padding: 12px 100% 12px 8px;
       text-transform: uppercase;
 
-      &.bold {
+      &.current {
         background-color: #158ACC;
         color: #FFFFFF;
       }

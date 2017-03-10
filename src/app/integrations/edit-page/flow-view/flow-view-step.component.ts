@@ -99,7 +99,7 @@ export class FlowViewStepComponent {
 
   getTextClass(state, addlClasses) {
     if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
-      return 'bold' + ' ' + addlClasses;
+      return 'current' + ' ' + addlClasses;
     } else {
       return addlClasses || '';
     }
