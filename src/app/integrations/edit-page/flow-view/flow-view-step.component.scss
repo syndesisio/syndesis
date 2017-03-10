@@ -99,14 +99,12 @@
       padding-right: 5px;
     }
 
-    .start, .finish {
-      h5 {
-        background-color: #EDEDED;
-        cursor: pointer;
-        display: inline;
-        padding: 5px;
-        text-transform: uppercase;
-      }
+    .parent-step {
+      background-color: #EDEDED;
+      cursor: pointer;
+      display: inline;
+      padding: 5px;
+      text-transform: uppercase;
     }
   }
 
