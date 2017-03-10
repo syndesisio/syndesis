@@ -30,8 +30,8 @@ public class GitHubServiceNoOp implements GitHubService {
 
     @Override
     public String createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
-        // Intentional empty
-        return null;
+        // Dummy value
+        return "https://this.doesnt.exist/promise.git";
     }
 
     @Override

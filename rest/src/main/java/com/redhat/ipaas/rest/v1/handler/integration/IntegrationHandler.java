@@ -70,25 +70,21 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     @Override
     public Integration create(Integration integration) {
-        Integration requestedIntegration = integration;
-        Optional<String> repoName = requestedIntegration.getGitRepo();
-        if (!repoName.isPresent()) {
-            String generatedRepoName = gitHubService.sanitizeRepoName(integration.getName());
-            requestedIntegration = new Integration.Builder().createFrom(requestedIntegration).gitRepo(generatedRepoName).build();
-        }
 
         String secret = createSecret();
-        ensureGitHubSetup(requestedIntegration, secret);
+        String gitCloneUrl = ensureGitHubSetup(integration, secret);
+
+        Integration requestedIntegration = new Integration.Builder().createFrom(integration).gitRepo(gitCloneUrl).build();
         ensureOpenShiftResources(requestedIntegration, secret);
         return Creator.super.create(requestedIntegration);
     }
 
     // ==========================================================================
 
-    private void ensureGitHubSetup(Integration integration, String secret) {
+    private String ensureGitHubSetup(Integration integration, String secret) {
         try {
             Integration integrationWithGitRepoName = ensureGitRepoName(integration);
-            String repoName = integration.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
+            String repoName = integrationWithGitRepoName.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
 
             Map<String, byte[]> fileContents = projectConverter.convert(integrationWithGitRepoName);
 
@@ -96,7 +92,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             String webHookUrl = createWebHookUrl(repoName, secret);
 
             // Do all github stuff at once
-            gitHubService.createOrUpdateProjectFiles(repoName, generateCommitMessage(), fileContents, webHookUrl);
+            return gitHubService.createOrUpdateProjectFiles(repoName, generateCommitMessage(), fileContents, webHookUrl);
 
         } catch (IOException e) {
             throw IPaasServerException.launderThrowable(e);
