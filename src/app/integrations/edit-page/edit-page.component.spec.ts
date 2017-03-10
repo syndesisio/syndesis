@@ -16,6 +16,7 @@ import { StoreModule } from '../../store/store.module';
 import { CurrentFlow } from './current-flow.service';
 
 import { CollapseModule } from 'ng2-bootstrap';
+import { PopoverModule } from 'ng2-bootstrap';
 
 import { IntegrationsEditPage } from './edit-page.component';
 
@@ -32,6 +33,8 @@ describe('IntegrationsEditComponent', () => {
         IPaaSCommonModule,
         RestangularModule.forRoot(),
         RouterTestingModule.withRoutes([]),
+        PopoverModule.forRoot(),
+        CollapseModule.forRoot(),
         StoreModule,
       ],
       declarations: [

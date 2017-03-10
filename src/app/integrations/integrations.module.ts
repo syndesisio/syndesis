@@ -7,6 +7,7 @@ import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { ModalModule } from 'ng2-bootstrap/modal';
 import { TabsModule } from 'ng2-bootstrap';
+import { PopoverModule } from 'ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
 
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
@@ -66,6 +67,7 @@ const routes: Routes = [
     CollapseModule,
     ToasterModule,
     ModalModule,
+    PopoverModule,
   ],
   declarations: [
     IntegrationsConfigureActionComponent,

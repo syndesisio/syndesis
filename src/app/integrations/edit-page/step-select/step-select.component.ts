@@ -59,12 +59,15 @@ export class IntegrationsStepSelectComponent implements OnInit {
   }
 
   onSelect(step: Step) {
+    // TODO hack to use the existing step in the flow if it matches
+    const _step = this.currentFlow.getStep(this.position);
+    if (_step && _step.stepKind === step.stepKind) {
+      step = _step;
+    }
     this.currentFlow.events.emit({
       kind: 'integration-set-step',
       position: this.position,
-      step: {
-        stepKind: step.stepKind,
-      },
+      step: step,
       onSave: () => {
         this.router.navigate(['step-configure', this.position], { relativeTo: this.route.parent });
       },
