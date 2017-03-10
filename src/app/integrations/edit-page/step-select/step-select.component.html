@@ -1,0 +1,44 @@
+<div class="step-select">
+  <!-- Toolbar -->
+  <div class="toolbar">
+
+    <!-- Toolbar: Breadcrumbs -->
+    <div class="row toolbar-pf">
+      <div class="col-sm-12">
+        <div class="toolbar-pf-actions">
+          <div class="inline-block">
+            <ol class="breadcrumb">
+              <li>
+                <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a>
+              </li>
+              <li class="active">Create an Integration</li>
+            </ol>
+          </div>
+          <div class="toolbar-pf-action-right">
+            <button class="btn btn-default" (click)="cancel()">Cancel
+            </button> &nbsp;
+            <button class="btn btn-default" (click)="goBack()"><i class="fa fa-chevron-left"></i> Back
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wizard-pf-body clearfix">
+    <div class="title">
+      <h1>Add a step</h1>
+    </div>
+    <p>Choose a step from below</p>
+      <div class="list-group list-view-pf list-view-pf-view">
+        <div class="list-group-item" *ngFor="let step of steps" (click)="onSelect(step)" [class.active]="isSelected(step)">
+          <div class="list-view-pf-main-info">
+            <div class="list-view-pf-body">
+              <div class="list-group-item-heading">{{ getName(step) }}</div>
+              <div class="list-group-item-text">{{ getDescription(step) }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+  </div>
+</div>
