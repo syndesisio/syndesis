@@ -29,8 +29,9 @@ import org.springframework.stereotype.Service;
 public class GitHubServiceNoOp implements GitHubService {
 
     @Override
-    public void createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
+    public String createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
         // Intentional empty
+        return null;
     }
 
     @Override
