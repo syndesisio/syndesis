@@ -120,10 +120,10 @@
   <properties>
 
     <arquillian.version>1.1.12.Final</arquillian.version>
-    <arquillian-cube.version>1.0.0.Alpha20-ipaas-002</arquillian-cube.version>
+    <arquillian-cube.version>1.0.0.Alpha20-ipaas-0011</arquillian-cube.version>
 
     <junit.version>4.12</junit.version>
-    <kubernetes-client.version>2.1.2</kubernetes-client.version>
+    <kubernetes-client.version>2.2.6</kubernetes-client.version>
   </properties>
 
   <dependencyManagement>
@@ -192,7 +192,7 @@
       <id>snapshot</id>
       <properties>
         <arquillian-cube.version>1.0.0.Final-SNAPSHOT</arquillian-cube.version>
-        <kubernetes-client.version>2.1-SNAPSHOT</kubernetes-client.version>
+        <kubernetes-client.version>2.2-SNAPSHOT</kubernetes-client.version>
       </properties>
     </profile>
   </profiles>

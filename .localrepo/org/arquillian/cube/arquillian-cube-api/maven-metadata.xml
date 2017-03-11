@@ -3,10 +3,10 @@
   <groupId>org.arquillian.cube</groupId>
   <artifactId>arquillian-cube-api</artifactId>
   <versioning>
-    <release>1.0.0.Alpha20-ipaas-002</release>
+    <release>1.0.0.Alpha20-ipaas-0011</release>
     <versions>
-      <version>1.0.0.Alpha20-ipaas-002</version>
+      <version>1.0.0.Alpha20-ipaas-0011</version>
     </versions>
-    <lastUpdated>20170228173100</lastUpdated>
+    <lastUpdated>20170311143046</lastUpdated>
   </versioning>
 </metadata>
