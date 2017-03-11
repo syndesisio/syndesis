@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Installing IPaaS in ${KUBERNETES_NAMESPACE}"
+oc new-project ${KUBERNETES_NAMESPACE} || oc project ${KUBERNETES_NAMESPACE}
 oc update -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/serviceaccount-as-oauthclient-single-tenant.yml || oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/serviceaccount-as-oauthclient-single-tenant.yml
 oc update -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-dev-single-tenant.yml || oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-dev-single-tenant.yml
 oc new-app redhat-ipaas-dev-single-tenant \
