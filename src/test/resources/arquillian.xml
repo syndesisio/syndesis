@@ -5,7 +5,10 @@
     http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
     <extension qualifier="kubernetes">
-      <property name="env.config.url">https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-single-tenant.yml</property>
+      <property name="env.setup.script.url">setup.sh</property>
+      <property name="env.teardown.script.url">teardown.sh</property>
+      <property name="wait.for.service.list">ipaas-rest ipaas-ui ipaas-keycloak</property>
+      <property name="wait.timeout">500000</property>
     </extension>
 
 </arquillian>
