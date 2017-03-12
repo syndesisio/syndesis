@@ -124,7 +124,7 @@
     <javaee.api.version>7.0</javaee.api.version>
     <junit.version>4.12</junit.version>
     <keycloak.version>2.5.1.Final</keycloak.version>
-    <kubernetes.client.version>2.2.3</kubernetes.client.version>
+    <kubernetes.client.version>2.2.7</kubernetes.client.version>
     <mockwebserver.version>0.0.12</mockwebserver.version>
     <okhttp-eventsource.version>1.1.1</okhttp-eventsource.version>
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
@@ -150,7 +150,7 @@
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
     <build-helper-maven-plugin.version>1.12</build-helper-maven-plugin.version>
     <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
-    <fabric8-maven-plugin.version>3.2.15</fabric8-maven-plugin.version>
+    <fabric8-maven-plugin.version>3.2.30</fabric8-maven-plugin.version>
     <git-commit-id-plugin.version>2.2.2</git-commit-id-plugin.version>
     <jacoco-maven-plugin.version>0.7.8</jacoco-maven-plugin.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
