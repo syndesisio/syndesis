@@ -17,6 +17,7 @@ package com.redhat.ipaas.model.connection;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -49,7 +50,7 @@ public interface Connection extends WithId<Connection>, WithName, Serializable {
 
     Optional<String> getConnectorId();
 
-    String getConfiguredProperties();
+    Map<String, String> getConfiguredProperties();
 
     String getIcon();
 

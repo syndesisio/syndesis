@@ -111,7 +111,15 @@ public class DataManager implements DataAccessObjectRegistry {
             if (!id.isPresent()) {
                 LOGGER.warn("Cannot load entity from file since it's missing an id: " + modelData.toJson());
             } else {
-                if (fetch(kind, id.get()) == null) {
+                WithId prev = null;
+                try {
+                    prev = fetch(kind, id.get());
+                } catch (RuntimeException e) {
+                    // Lets try to wipe out the previous record in case
+                    // we are running into something like a schema change.
+                    delete(kind, id.get());
+                }
+                if (prev == null) {
                     create(entity);
                 } else {
                     update(entity);

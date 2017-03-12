@@ -10,7 +10,7 @@
         "id": "3",
         "stepKind": "endpoint",
         "connection": {
-          "configuredProperties": "{}",
+          "configuredProperties": {},
           "connectorId": "timer",
           "position": "start",
           "description": "Timer Connection",
@@ -20,19 +20,34 @@
         },
         "action": {
           "description": "Set a timer that fires at intervals that you specify",
-          "properties": "{\"period\": { \"kind\": \"parameter\", \"displayName\": \"Period\", \"group\": \"consumer\", \"required\": false, \"type\": \"integer\", \"javaType\": \"long\", \"deprecated\": false, \"secret\": false, \"defaultValue\": 10000, \"description\": \"Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second).\" }}",
+          "properties": {
+            "period": {
+              "kind": "parameter",
+              "displayName": "Period",
+              "group": "consumer",
+              "required": false,
+              "type": "integer",
+              "javaType": "long",
+              "deprecated": false,
+              "secret": false,
+              "defaultValue": 10000,
+              "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+            }
+          },
           "name": "PeriodicTimer",
           "id": "com.redhat.ipaas_timer-connector_0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
           "camelConnectorPrefix": "periodic-timer"
         },
-        "configuredProperties": "{\"period\": { \"value\": 5000, \"kind\": \"parameter\", \"displayName\": \"Period\", \"group\": \"consumer\", \"required\": false, \"type\": \"integer\", \"javaType\": \"long\", \"deprecated\": false, \"secret\": false, \"defaultValue\": 10000, \"description\": \"Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second).\" }}"
+        "configuredProperties": {
+          "period": "5000"
+        }
       },
       {
         "id": "3",
         "stepKind": "endpoint",
         "connection": {
-          "configuredProperties": "{}",
+          "configuredProperties": {},
           "connectorId": "http",
           "position": "any",
           "description": "HTTP Connection",
@@ -42,24 +57,42 @@
         },
         "action": {
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-          "properties": "{\"httpUri\": { \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+          "properties": {
+            "httpUri": {
+              "kind": "path",
+              "displayName": "Http Uri",
+              "group": "producer",
+              "label": "producer",
+              "required": true,
+              "type": "string",
+              "javaType": "java.net.URI",
+              "deprecated": false,
+              "secret": false,
+              "description": "The url of the HTTP endpoint to call."
+            }
+          },
           "name": "HTTP GET",
           "id": "com.redhat.ipaas:http-get-connector:0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.1",
           "camelConnectorPrefix": "http-get"
         },
-        "configuredProperties": "{\"httpUri\": { \"value\": \"http://localhost:8080/hello\", \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}"
+        "configuredProperties": {
+          "httpUri": "http://localhost:8080/hello"
+        }
       },
       {
         "id": "4",
         "stepKind": "log",
-        "configuredProperties": "{ \"message\": \"Hello World! ${body}\",\"loggingLevel\": \"INFO\" }"
+        "configuredProperties": {
+          "message": "Hello World! ${body}",
+          "loggingLevel": "INFO"
+        }
       },
       {
         "id": "5",
         "stepKind": "endpoint",
         "connection": {
-          "configuredProperties": "{}",
+          "configuredProperties": {},
           "connectorId": "http",
           "position": "end",
           "description": "HTTP Connection",
@@ -69,13 +102,28 @@
         },
         "action": {
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-          "properties": "{\"httpUri\": { \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+          "properties": {
+            "httpUri": {
+              "kind": "path",
+              "displayName": "Http Uri",
+              "group": "producer",
+              "label": "producer",
+              "required": true,
+              "type": "string",
+              "javaType": "java.net.URI",
+              "deprecated": false,
+              "secret": false,
+              "description": "The url of the HTTP endpoint to call."
+            }
+          },
           "name": "HTTP POST",
           "id": "com.redhat.ipaas:http-post-connector:0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.1",
           "camelConnectorPrefix": "http-post"
         },
-        "configuredProperties": "{\"httpUri\": { \"value\": \"http://localhost:8080/bye\", \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}"
+        "configuredProperties": {
+          "httpUri": "http://localhost:8080/bye"
+        }
       }
     ]
   }
