@@ -25,12 +25,15 @@ import com.redhat.ipaas.model.connection.Connection;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.model.integration.Step;
 
+import groovy.grape.GrapeIvy;
+
 import org.junit.Assume;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -43,7 +46,8 @@ public class DefaultIntegrationToProjectConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        Assume.assumeFalse(isUrlEncoded(new File( "." ).getCanonicalPath()));
+        Assume.assumeFalse(hasOrNeedsUrlEncoding(GrapeIvy.class.getResource("defaultGrapeConfig.xml").getFile()));
+
         Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"period\": \"5000\"}").action(new Action.Builder().camelConnectorPrefix("periodic-timer").camelConnectorGAV("com.redhat.ipaas:timer-connector:0.2.1").build()).build();
         Step step2 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties("{}").build()).configuredProperties("{\"httpUri\": \"http://localhost:8080/hello\"}").action(new Action.Builder().camelConnectorPrefix("http-get").camelConnectorGAV("com.redhat.ipaas:http-get-connector:0.2.1").build()).build();
         Step step3 = new Step.Builder().stepKind("log").configuredProperties("{\"message\": \"Hello World! ${body}\"}").build();
@@ -75,7 +79,7 @@ public class DefaultIntegrationToProjectConverterTest {
 
     @Test
     public void testConvertFromJson() throws Exception {
-        Assume.assumeFalse(isUrlEncoded(new File( "." ).getCanonicalPath()));
+        Assume.assumeFalse(hasOrNeedsUrlEncoding(GrapeIvy.class.getResource("defaultGrapeConfig.xml").getFile()));
 
         JsonNode json = new ObjectMapper().readTree(this.getClass().getResourceAsStream("test-integration.json"));
         Map<String, byte[]> files = new DefaultIntegrationToProjectConverter(new ConnectorCatalog(new ConnectorCatalogProperties())).convert(
@@ -89,9 +93,7 @@ public class DefaultIntegrationToProjectConverterTest {
     }
 
 
-    private static Boolean isUrlEncoded(String path) throws UnsupportedEncodingException {
-        String encoded = URLDecoder.decode(path, "UTF-8");
-        return !path.equals(encoded);
-
+    private static Boolean hasOrNeedsUrlEncoding(String path) throws UnsupportedEncodingException {
+        return !path.equals(URLDecoder.decode(path, "UTF-8")) || !path.equals(URLEncoder.encode(path, "UTF-8"));
     }
 }
