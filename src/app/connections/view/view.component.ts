@@ -99,12 +99,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
 
   getFormFields(connection: Connection) {
     const answer = [];
-    let formFields = undefined;
-    try {
-      formFields = JSON.parse(this.getConfigString(this.connection));
-    } catch (err) {
-      // silently fail
-    }
+    const formFields = this.getFormConfig(this.connection);
     if (formFields) {
       for (const key in formFields) {
         if (!formFields.hasOwnProperty(key)) {
@@ -116,6 +111,19 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
       }
     }
     return answer;
+  }
+
+  getFormConfig(connection: Connection) {
+    const config = this.getConfigString(connection);
+    if (typeof config === 'string') {
+      try {
+        return JSON.parse(config);
+      } catch (err) {
+        log.debugc(() => 'Failed to parse JSON config: ' + err, category);
+      }
+    } else {
+      return config;
+    }
   }
 
   getConfigString(connection: Connection) {
@@ -137,16 +145,10 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     if (!this.connection) {
       return undefined;
     }
-    const configString = this.getConfigString(this.connection);
-    if (configString) {
-      try {
-        const formConfig = this.configuredProperties = JSON.parse(configString);
-        log.debugc(() => 'Form config: ' + JSON.stringify(formConfig, undefined, 2), category);
-        this._formModel = this.formFactory.createFormModel(formConfig);
-        return this._formModel;
-      } catch (err) {
-        log.debugc(() => 'Error parsing form config', category);
-      }
+    const config = this.getFormConfig(this.connection);
+    if (config) {
+      this._formModel = this.formFactory.createFormModel(config);
+      return this._formModel;
     }
     return undefined;
   }
@@ -159,16 +161,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     if (formModel) {
       this._formGroup = this.formService.createFormGroup(formModel);
       this.formChangesSubscription = this._formGroup.valueChanges.subscribe((data) => {
-        for (const key in data) {
-          if (!data.hasOwnProperty(key)) {
-            continue;
-          }
-          const value: any = data[key];
-          const prop = this.configuredProperties[key];
-          prop.value = value;
-        }
-        const propString = JSON.stringify(this.configuredProperties);
-        this.connection.configuredProperties = propString;
+        this.connection.configuredProperties = data;
         this.connectionChange.emit(this.connection);
       });
       return this._formGroup;

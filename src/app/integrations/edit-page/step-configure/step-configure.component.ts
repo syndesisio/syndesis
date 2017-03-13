@@ -64,6 +64,14 @@ export class IntegrationsStepConfigureComponent implements OnInit, OnDestroy {
     });
   }
 
+  getConfiguredProperties(props: any) {
+    if (typeof props === 'string') {
+      return JSON.parse(props);
+    } else {
+      return props;
+    }
+  }
+
   ngOnInit() {
     this.routeSubscription = this.route.params.pluck<Params, string>('position')
       .map((position: string) => {
@@ -78,27 +86,21 @@ export class IntegrationsStepConfigureComponent implements OnInit, OnDestroy {
           // TODO if we don't have a definition for this step then ???
           return;
         }
-        const configString = stepDef.configuredProperties;
-        this.formConfig = undefined;
-        try {
-          this.formConfig = JSON.parse(configString);
-          const values = JSON.parse(step.configuredProperties);
-          for ( const key in values ) {
-            if (!values.hasOwnProperty(key)) {
-              continue;
-            }
-            // TODO hack to handle an unconfigured step
-            const value = values[key];
-            if (typeof value === 'object') {
-              continue;
-            }
-            const item = this.formConfig[key];
-            if (item) {
-              item.value = value;
-            }
+        this.formConfig = JSON.parse(JSON.stringify(stepDef.properties));
+        const values: any = this.getConfiguredProperties(step.configuredProperties);
+        for (const key in values) {
+          if (!values.hasOwnProperty(key)) {
+            continue;
           }
-        } catch (err) {
-          log.debugc(() => 'Error parsing form config', category);
+          // TODO hack to handle an unconfigured step
+          const value = values[key];
+          if (typeof value === 'object') {
+            continue;
+          }
+          const item = this.formConfig[key];
+          if (item) {
+            item.value = value;
+          }
         }
         log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
         this.formModel = this.formFactory.createFormModel(this.formConfig);

@@ -4,13 +4,14 @@ import { Step, Steps, TypeFactory } from '../../model';
 @Injectable()
 export class StepStore {
 
-  steps: Steps = [
+  steps: any[] = [
     {
       id: undefined,
       connection: undefined,
       action: undefined,
       stepKind: 'log',
-      configuredProperties: JSON.stringify({
+      configuredProperties: undefined,
+      properties: {
         message: {
           type: 'string',
           displayName: 'Log Message',
@@ -21,15 +22,14 @@ export class StepStore {
           displayName: 'Level',
           required: true,
         },
-      }),
+      },
     }, {
       id: undefined,
       connection: undefined,
       action: undefined,
       stepKind: 'datamapper',
-      configuredProperties: JSON.stringify({
-
-      }),
+      properties: {},
+      configuredProperties: undefined,
     },
   ];
 
