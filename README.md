@@ -9,6 +9,14 @@ To run the test locally:
 
     mvn clean test
 
+#### Running the tests against restricted environments
+
+In restricted environments, creating a new project for the purpose of testing can be sometimes problematic, due to lack of permissions.
+In such cases you can create a new project on manually and run the tests inside that project:
+
+    oc new-project testing
+    mvn clean test -Dnamespace.to.use=testing
+
 
 #### The testing framework
 
