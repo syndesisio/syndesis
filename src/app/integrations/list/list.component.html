@@ -11,7 +11,7 @@
 
       <!-- Toast Notification Container -->
       <toaster-container></toaster-container>
-  
+
       <!-- Activate Modal Container -->
       <div bsModal
            #childModal="bs-modal"
@@ -48,7 +48,7 @@
           </div>
         </div>
       </div>
-  
+
       <!-- Deactivate Modal Container -->
       <div bsModal
            #childModal="bs-modal"
@@ -150,8 +150,8 @@
       <!-- Active/Inactive -->
       <div class="col-xs-1 active-inactive">
         <div class="list-view-pf-additional-info-item">
-          <a class="btn btn-primary">Active</a>
-          <a class="btn btn-cancel" *ngIf="integration.active === false">Inactive</a>
+          <button type="button" class="btn btn-primary" class="btn btn-primary">Active</button>
+          <button type="button" class="btn btn-cancel" *ngIf="integration.active === false">Inactive</button>
         </div>
       </div>
 
