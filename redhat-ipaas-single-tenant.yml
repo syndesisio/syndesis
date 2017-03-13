@@ -186,6 +186,26 @@ objects:
   - kind: ServiceAccount
     name: ipaas-rest
 - apiVersion: v1
+  kind: RoleBinding
+  metadata:
+    name: ipaas:admins
+    labels:
+      app: redhat-ipaas
+roleRef:
+  name: admin
+subjects:
+- kind: ServiceAccount
+  name: ipaas-deployer
+  namespace: ipaas-staging
+- kind: ServiceAccount
+  name: jenkins
+  namespace: ipaas-ci
+- kind: Group
+  name: dedicated-admins
+userNames:
+- system:serviceaccount:ipaas-staging:ipaas-deployer
+- system:serviceaccount:ipaas-ci:jenkins
+- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
