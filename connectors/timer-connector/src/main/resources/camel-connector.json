@@ -12,6 +12,8 @@
   "description": "Set a timer that fires at intervals that you specify. This can cause some action, such as querying your Salesforce data.",
   "labels" : [ "timer" ],
   "pattern": "From",
+  "inputDataType": "none",
+  "outputDataType": "*",
   "endpointOptions" : [ "period" ],
   "endpointValues" : {
     "timerName": "every",

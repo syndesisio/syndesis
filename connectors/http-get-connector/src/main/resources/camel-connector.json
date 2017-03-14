@@ -12,6 +12,8 @@
   "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL.",
   "labels" : [ "http" ],
   "pattern": "To",
+  "inputDataType": "none",
+  "outputDataType": "*",
   "endpointOptions" : [ "httpUri" ],
   "endpointValues" : {
     "httpMethod": "GET"
