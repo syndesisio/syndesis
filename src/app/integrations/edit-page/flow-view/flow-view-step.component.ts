@@ -40,17 +40,6 @@ export class FlowViewStepComponent {
 
   }
 
-  getState() {
-    return {
-      step: this.step,
-      position: this.position,
-      currentPosition: this.currentPosition,
-      currentState: this.currentState,
-      firstPosition: this.currentFlow.getFirstPosition(),
-      lastPosition: this.currentFlow.getLastPosition(),
-    };
-  }
-
   getStepKind(step) {
     if (step) {
       return step.stepKind;
@@ -84,20 +73,58 @@ export class FlowViewStepComponent {
     return position;
   }
 
-  getActiveClass(state) {
-    if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
-      return 'active';
-    } else {
-      return 'inactive';
+  getParentClass() {
+    let clazz = '';
+    switch (this.step.stepKind) {
+      case 'endpoint':
+        if (this.step.connection && this.step.connection && this.step.configuredProperties) {
+          clazz = 'current';
+        }
+        break;
+      default:
+        if (this.step.configuredProperties) {
+          clazz = 'current';
+        }
+        break;
     }
+    return 'parent-step ' + clazz;
   }
 
-  getTextClass(state, addlClasses) {
+  getActiveClass(state: string) {
     if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
-      return 'current' + ' ' + addlClasses;
-    } else {
-      return addlClasses || '';
+      return 'active';
     }
+    return 'inactive';
+  }
+
+  getTextClass(state: string) {
+    switch (state) {
+      case 'connection-select':
+        if (this.step.connection) {
+          return 'current';
+        }
+        break;
+      case 'action-select':
+        if (this.step.action) {
+          return 'current';
+        }
+        break;
+      case 'action-configure':
+      case 'step-configure':
+        if (this.step.configuredProperties) {
+          return 'current';
+        }
+        break;
+      case 'step-select':
+        if (this.step.stepKind) {
+          return 'current';
+        }
+        break;
+    }
+    if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
+      return 'current';
+    }
+    return '';
   }
 
   goto(page: string) {

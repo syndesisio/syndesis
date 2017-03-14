@@ -85,6 +85,9 @@
           &.inactive {
             color: #D1D1D1;
           }
+          > .current {
+            color: #363636;
+          }
         }
       }
     }
