@@ -1,7 +1,7 @@
 <div *ngIf="step" class="flow-view-step steps">
-  
+
   <!-- Icon Progress Line -->
-  
+
   <div class="col-md-3 progress-line">
     <div class="icon">
       <p [class]="'round ' + getActiveClass()">
@@ -9,20 +9,20 @@
       </p>
     </div>
   </div>
-  
-  
+
+
   <!-- Progress Menu -->
-  
+
   <div class="col-md-9 text" [ngSwitch]="step.stepKind">
-    
+
     <div *ngSwitchCase="'endpoint'">
-      
-      <span class="parent-step" [class]="getTextClass(null, 'parent-step')" (click)="toggleCollapsed()">
+
+      <span class="parent-step" [class]="getTextClass(null, 'parent-step')" (click)="goto()">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
       </span>
-      
+
       <ul [collapse]="isCollapsed()">
         <li [class]="getActiveClass('connection-select')" (click)="goto('connection-select')">
           <span [class]="getTextClass('connection-select')">Choose a connection</span>
@@ -34,16 +34,16 @@
           <span [class]="getTextClass('action-configure')">Configure the action</span>
         </li>
       </ul>
-      
+
     </div>
-    
+
     <div *ngSwitchDefault>
-      <span [class]="getTextClass()" (click)="toggleCollapsed()">
+      <span [class]="getTextClass()" (click)="goto()">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
       </span>
-      
+
       <ul [collapse]="isCollapsed()">
         <li [class]="getActiveClass('step-select')" (click)="goto('step-select')">
           <span [class]="getTextClass('step-select')">Choose a step</span>
@@ -53,6 +53,6 @@
         </li>
       </ul>
     </div>
-    
+
   </div>
 </div>

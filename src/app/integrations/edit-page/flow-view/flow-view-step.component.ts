@@ -32,8 +32,6 @@ export class FlowViewStepComponent {
   @Input()
   currentState: string;
 
-  collapsed: boolean = undefined;
-
   constructor(
     private currentFlow: CurrentFlow,
     private route: ActivatedRoute,
@@ -88,14 +86,8 @@ export class FlowViewStepComponent {
 
   getActiveClass(state) {
     if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
-      if (this.collapsed) {
-        this.collapsed = false;
-      }
       return 'active';
     } else {
-      if (!this.collapsed) {
-        this.collapsed = true;
-      }
       return 'inactive';
     }
   }
@@ -109,6 +101,21 @@ export class FlowViewStepComponent {
   }
 
   goto(page: string) {
+    if (!page) {
+      if (!this.isCollapsed()) {
+        // this means we're actually in this step, so don't change the view
+        return;
+      }
+      // TODO wonder will there be more choices?
+      switch (this.step.stepKind) {
+        case 'endpoint':
+          page = 'connection-select';
+          break;
+        default:
+          page = 'step-select';
+          break;
+      }
+    }
     this.router.navigate([page, this.getPosition()], { relativeTo: this.route });
   }
 
@@ -131,17 +138,7 @@ export class FlowViewStepComponent {
     }
   }
 
-  toggleCollapsed() {
-    if (this.getPosition() === this.currentPosition) {
-      return;
-    }
-    this.collapsed = !this.collapsed;
-  }
-
   isCollapsed() {
-    if (this.collapsed === undefined) {
-      this.collapsed = this.getPosition() !== this.currentPosition;
-    }
-    return this.collapsed;
+    return this.getPosition() !== this.currentPosition;
   }
 }
