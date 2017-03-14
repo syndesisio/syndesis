@@ -12,6 +12,7 @@
   "description": "Create or update Salesforce contact",
   "labels" : [ "salesforce" ],
   "pattern": "To",
+  "inputType": "java:org.foo.salesforce.upsert.contact.Contact",
   "globalOptions": [ "loginUrl", "clientId", "clientSecret", "refreshToken" ],
   "componentOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken" ],
   "endpointValues" : {
