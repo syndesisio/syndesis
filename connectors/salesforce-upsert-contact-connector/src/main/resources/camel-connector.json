@@ -14,7 +14,7 @@
   "pattern": "To",
   "inputType": "java:org.foo.salesforce.upsert.contact.Contact",
   "inputDataType": "java:org.foo.salesforce.upsert.contact.Contact",
-  "outputDataType": "java:org.apache.camel.component.salesforce.api.dto.CreateSObjectResult",
+  "outputDataType": "none",
   "globalOptions": [ "loginUrl", "clientId", "clientSecret", "refreshToken" ],
   "componentOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken" ],
   "endpointValues" : {
