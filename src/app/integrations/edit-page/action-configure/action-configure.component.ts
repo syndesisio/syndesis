@@ -55,21 +55,28 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
 
   continue() {
     const data = this.formGroup.value;
-    for (const key in data) {
-      if (!data.hasOwnProperty(key)) {
-        continue;
-      }
-      this.formConfig[key].value = data[key];
-    }
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
-      properties: JSON.stringify(this.formConfig),
+      properties: data,
       onSave: () => {
         this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
       },
     });
 
+  }
+
+  getActionProperties(props: any) {
+    if (typeof props === 'string') {
+      try {
+        return JSON.parse(props);
+      } catch (err) {
+        log.debugc(() => 'failed to parse JSON: ' + err, category);
+        return undefined;
+      }
+    } else {
+      return props;
+    }
   }
 
   ngOnInit() {
@@ -86,15 +93,17 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
         }
         this.action = step.action;
         if (this.action && this.action.properties) {
-          const configString = this.action.properties;
-          this.formConfig = undefined;
-          try {
-            this.formConfig = JSON.parse(configString);
-            if (step.configuredProperties) {
-              this.formConfig = JSON.parse(step.configuredProperties);
+          this.formConfig = this.getActionProperties(this.action.properties);
+          if (!this.formConfig) {
+            return;
+          }
+          if (step.configuredProperties) {
+            for (const key in <any>step.configuredProperties) {
+              if (!step.configuredProperties.hasOwnProperty(key)) {
+                continue;
+              }
+              this.formConfig[key]['value'] = step.configuredProperties[key];
             }
-          } catch (err) {
-            log.debugc(() => 'Error parsing form config', category);
           }
           log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
           this.formModel = this.formFactory.createFormModel(this.formConfig);
