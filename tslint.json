@@ -142,7 +142,7 @@
       "Page"
     ],
     "directive-class-suffix": true,
-    "no-access-missing-member": true,
+    "no-access-missing-member": false,
     "templates-use-public": true,
     "invoke-injectable": true
   }
