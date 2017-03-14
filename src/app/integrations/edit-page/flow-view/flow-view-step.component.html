@@ -17,7 +17,7 @@
 
     <div *ngSwitchCase="'endpoint'">
 
-      <span class="parent-step" [class]="getTextClass(null, 'parent-step')" (click)="goto()">
+      <span [class]="getParentClass()" (click)="goto()">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
@@ -38,7 +38,7 @@
     </div>
 
     <div *ngSwitchDefault>
-      <span [class]="getTextClass()" (click)="goto()">
+      <span [class]="getParentClass()" (click)="goto()">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
