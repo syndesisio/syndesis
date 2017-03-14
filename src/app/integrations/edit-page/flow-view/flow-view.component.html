@@ -22,7 +22,7 @@
 
       <!-- Steps -->
 
-      <div class="row steps" *ngIf="currentState === 'save-or-add-step'">
+      <div class="row steps" *ngIf="currentState === 'save-or-add-step'" (click)="pop1.toggle()" (mouseover)="pop1.show()" (mouseleave)="pop1.hide()">
         <template #firstPopTemplate>
           <div class="popover-body">
             <div>
@@ -33,7 +33,7 @@
             </div>
           </div>
         </template>
-        <div class="col-md-2 col-xs-offset-1 square-icon" [popover]="firstPopTemplate" triggers="mouseenter" placement="right">
+        <div class="col-md-2 col-xs-offset-1 square-icon" [popover]="firstPopTemplate"  placement="right" #pop1="bs-popover">
           <p>
             <i class="fa fa-plus-square"></i>
           </p>
@@ -48,7 +48,7 @@
 
         <!-- Save or Add Step -->
 
-        <div class="row steps" *ngIf="currentState === 'save-or-add-step'">
+        <div class="row steps" *ngIf="currentState === 'save-or-add-step'" (click)="pop.toggle()" (mouseover)="pop.show()" (mouseleave)="pop.hide()">
           <template #firstPopTemplate>
             <div class="popover-body">
               <div>
@@ -59,7 +59,7 @@
               </div>
             </div>
           </template>
-          <div class="col-md-2 col-xs-offset-1 square-icon" [popover]="firstPopTemplate" triggers="mouseenter" placement="right">
+          <div class="col-md-2 col-xs-offset-1 square-icon" [popover]="firstPopTemplate" placement="right" #pop="bs-popover">
             <p>
               <i class="fa fa-plus-square"></i>
             </p>
