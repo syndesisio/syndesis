@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { StepStore } from '../../../store/step/step.store';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
+import { FlowPage } from '../flow-page';
 import { Step, Steps, TypeFactory } from '../../../model';
 
 @Component({
@@ -11,27 +12,24 @@ import { Step, Steps, TypeFactory } from '../../../model';
   templateUrl: './step-select.component.html',
   styleUrls: ['./step-select.component.scss'],
 })
-export class IntegrationsStepSelectComponent implements OnInit {
+export class IntegrationsStepSelectComponent extends FlowPage implements OnInit {
 
   steps: Steps;
   routeSubscription: Subscription;
   position: number;
 
   constructor(
-    private currentFlow: CurrentFlow,
-    private route: ActivatedRoute,
-    private router: Router,
-    private stepStore: StepStore,
+    public currentFlow: CurrentFlow,
+    public route: ActivatedRoute,
+    public router: Router,
+    public stepStore: StepStore,
   ) {
+    super(currentFlow, route, router);
     this.steps = stepStore.getSteps();
   }
 
-  cancel() {
-    this.router.navigate(['integrations']);
-  }
-
   goBack() {
-    this.router.navigate(['save-or-add-step'], { relativeTo: this.route.parent });
+    super.goBack(['save-or-add-step']);
   }
 
   getName(step: Step) {

@@ -7,6 +7,7 @@ import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { ConnectionStore } from '../../../store/connection/connection.store';
 import { Connections, Connection } from '../../../model';
+import { FlowPage } from '../flow-page';
 import { ObjectPropertyFilterConfig } from '../../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../../common/object-property-sort.pipe';
 
@@ -18,7 +19,7 @@ const category = getCategory('Integrations');
   templateUrl: 'connection-select.component.html',
   styleUrls: [ './connection-select.component.scss' ],
 })
-export class IntegrationsSelectConnectionComponent implements OnInit, OnDestroy {
+export class IntegrationsSelectConnectionComponent extends FlowPage implements OnInit, OnDestroy {
 
   connections: Observable<Connections>;
   loading: Observable<boolean>;
@@ -30,16 +31,16 @@ export class IntegrationsSelectConnectionComponent implements OnInit, OnDestroy 
     sortField: 'name',
     descending: false,
   };
-  flowSubscription: Subscription;
   routeSubscription: Subscription;
   position: number;
 
   constructor(
-    private store: ConnectionStore,
-    private currentFlow: CurrentFlow,
-    private route: ActivatedRoute,
-    private router: Router,
+    public store: ConnectionStore,
+    public currentFlow: CurrentFlow,
+    public route: ActivatedRoute,
+    public router: Router,
     ) {
+    super(currentFlow, route, router);
     this.loading = store.loading;
     this.connections = store.list;
   }
@@ -56,12 +57,8 @@ export class IntegrationsSelectConnectionComponent implements OnInit, OnDestroy 
     });
   }
 
-  cancel() {
-    this.router.navigate(['integrations']);
-  }
-
   goBack() {
-    this.router.navigate(['save-or-add-step'], { relativeTo: this.route.parent });
+    super.goBack(['save-or-add-step']);
   }
 
   positionText() {
@@ -74,17 +71,7 @@ export class IntegrationsSelectConnectionComponent implements OnInit, OnDestroy 
     return '';
   }
 
-  handleFlowEvent(event: FlowEvent) {
-    switch (event.kind) {
-      case 'integration-no-connection':
-        break;
-    }
-  }
-
   ngOnInit() {
-    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
-      this.handleFlowEvent(event);
-    });
     this.routeSubscription = this.route.params.pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
@@ -110,7 +97,6 @@ export class IntegrationsSelectConnectionComponent implements OnInit, OnDestroy 
 
   ngOnDestroy() {
     this.routeSubscription.unsubscribe();
-    this.flowSubscription.unsubscribe();
   }
 
 }

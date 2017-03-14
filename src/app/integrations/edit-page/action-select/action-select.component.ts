@@ -3,11 +3,12 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
+import { Actions, Action } from '../../../model';
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { ConnectorStore } from '../../../store/connector/connector.store';
-import { Actions, Action } from '../../../model';
 import { Connector } from '../../../model';
+import { FlowPage } from '../flow-page';
 import { ObjectPropertyFilterConfig } from '../../../common/object-property-filter.pipe';
 
 const category = getCategory('Integrations');
@@ -17,12 +18,11 @@ const category = getCategory('Integrations');
   templateUrl: 'action-select.component.html',
   styleUrls: [ './action-select.component.scss' ],
 })
-export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
+export class IntegrationsSelectActionComponent extends FlowPage implements OnInit, OnDestroy {
 
   actions: Actions;
   connector: Observable<Connector>;
   loading: Observable<boolean>;
-  flowSubscription: Subscription;
   routeSubscription: Subscription;
   position: number;
 
@@ -37,12 +37,13 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private connectorStore: ConnectorStore,
-    private currentFlow: CurrentFlow,
-    private route: ActivatedRoute,
-    private router: Router,
-    private changeDetectorRef: ChangeDetectorRef,
+    public connectorStore: ConnectorStore,
+    public currentFlow: CurrentFlow,
+    public route: ActivatedRoute,
+    public router: Router,
+    public changeDetectorRef: ChangeDetectorRef,
     ) {
+      super(currentFlow, route, router);
       this.connector = connectorStore.resource;
       this.loading = connectorStore.loading;
   }
@@ -59,29 +60,8 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
     });
   }
 
-  /*
-  atEnd() {
-    if (this.currentFlow.isEmpty()) {
-      // if it's empty, we're always at the start action step
-      return false;
-    }
-    return this.currentFlow.atEnd(this.position);
-  }
-  */
-
-  handleFlowEvent(event: FlowEvent) {
-    switch (event.kind) {
-      case 'integration-no-action':
-        break;
-    }
-  }
-
-  cancel() {
-    this.router.navigate(['integrations']);
-  }
-
   goBack() {
-    this.router.navigate(['connection-select', this.position], { relativeTo: this.route.parent });
+    super.goBack(['connection-select', this.position]);
   }
 
   ngOnInit() {
@@ -115,7 +95,6 @@ export class IntegrationsSelectActionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.routeSubscription.unsubscribe();
-    this.flowSubscription.unsubscribe();
   }
 
   filterInputChange(value: string) {
