@@ -4,6 +4,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { DynamicFormControlModel, DynamicFormService } from '@ng2-dynamic-forms/core';
 
+import { FlowPage } from '../flow-page';
 import { StepStore } from '../../../store/step/step.store';
 import { FormFactoryService } from '../../../common/forms.service';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
@@ -17,9 +18,8 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './step-configure.component.html',
   styleUrls: ['./step-configure.component.scss'],
 })
-export class IntegrationsStepConfigureComponent implements OnInit, OnDestroy {
+export class IntegrationsStepConfigureComponent extends FlowPage implements OnInit, OnDestroy {
 
-  flowSubscription: Subscription;
   routeSubscription: Subscription;
   position: number;
   step: Step = <Step>{};
@@ -28,21 +28,19 @@ export class IntegrationsStepConfigureComponent implements OnInit, OnDestroy {
   formConfig: any;
 
   constructor(
-    private currentFlow: CurrentFlow,
-    private route: ActivatedRoute,
-    private router: Router,
-    private formFactory: FormFactoryService,
-    private formService: DynamicFormService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private stepStore: StepStore,
-  ) { }
-
-  cancel() {
-    this.router.navigate(['integrations']);
+    public currentFlow: CurrentFlow,
+    public route: ActivatedRoute,
+    public router: Router,
+    public formFactory: FormFactoryService,
+    public formService: DynamicFormService,
+    public changeDetectorRef: ChangeDetectorRef,
+    public stepStore: StepStore,
+  ) {
+    super(currentFlow, route, router);
   }
 
   goBack() {
-    this.router.navigate(['step-select', this.position], { relativeTo: this.route.parent });
+    super.goBack(['step-select', this.position]);
   }
 
   continue() {

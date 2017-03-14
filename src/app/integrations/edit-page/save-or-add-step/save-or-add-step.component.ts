@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IntegrationStore } from '../../../store/integration/integration.store';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
+import { FlowPage } from '../flow-page';
 import { Integration, Step, TypeFactory } from '../../../model';
 
 @Component({
@@ -12,25 +13,20 @@ import { Integration, Step, TypeFactory } from '../../../model';
   templateUrl: 'save-or-add-step.component.html',
   styleUrls: ['./save-or-add-step.component.scss'],
 })
-export class IntegrationsSaveOrAddStepComponent implements OnInit, OnDestroy {
+export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnInit, OnDestroy {
 
   integration: Integration;
-  flowSubscription: Subscription;
 
   constructor(
-    private currentFlow: CurrentFlow,
-    private store: IntegrationStore,
-    private route: ActivatedRoute,
-    private router: Router,
+    public currentFlow: CurrentFlow,
+    public store: IntegrationStore,
+    public route: ActivatedRoute,
+    public router: Router,
   ) {
-    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
-      this.handleFlowEvent(event);
-    });
+    super(currentFlow, route, router);
   }
 
-  cancel() {
-    this.router.navigate(['integrations']);
-  }
+  goBack() { /* this should be a no-op */ }
 
   save() {
     const router = this.router;
@@ -65,16 +61,10 @@ export class IntegrationsSaveOrAddStepComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
-      this.handleFlowEvent(event);
-    });
     const validate = this.route.queryParams.map(params => params['validate'] || false);
     if (validate) {
       this.validateFlow();
     }
   }
 
-  ngOnDestroy() {
-    this.flowSubscription.unsubscribe();
-  }
 }

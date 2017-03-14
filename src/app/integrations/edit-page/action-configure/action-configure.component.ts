@@ -4,9 +4,10 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { DynamicFormControlModel, DynamicFormService } from '@ng2-dynamic-forms/core';
 
-import { FormFactoryService } from '../../../common/forms.service';
-import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { Action, Step } from '../../../model';
+import { CurrentFlow, FlowEvent } from '../current-flow.service';
+import { FlowPage } from '../flow-page';
+import { FormFactoryService } from '../../../common/forms.service';
 import { log, getCategory } from '../../../logging';
 
 const category = getCategory('IntegrationsCreatePage');
@@ -16,9 +17,8 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: 'action-configure.component.html',
   styleUrls: [ './action-configure.component.scss' ],
 })
-export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
+export class IntegrationsConfigureActionComponent extends FlowPage implements OnInit, OnDestroy {
 
-  flowSubscription: Subscription;
   routeSubscription: Subscription;
   position: number;
   action: Action = <Action>{};
@@ -28,29 +28,18 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
   formConfig: any;
 
   constructor(
-    private currentFlow: CurrentFlow,
-    private route: ActivatedRoute,
-    private router: Router,
-    private formFactory: FormFactoryService,
-    private formService: DynamicFormService,
-    private changeDetectorRef: ChangeDetectorRef,
+    public currentFlow: CurrentFlow,
+    public route: ActivatedRoute,
+    public router: Router,
+    public formFactory: FormFactoryService,
+    public formService: DynamicFormService,
+    public changeDetectorRef: ChangeDetectorRef,
   ) {
-
-  }
-
-  handleFlowEvent(event: FlowEvent) {
-    switch (event.kind) {
-      case 'integration-no-action':
-        break;
-    }
-  }
-
-  cancel() {
-    this.router.navigate(['integrations']);
+    super(currentFlow, route, router);
   }
 
   goBack() {
-    this.router.navigate(['action-select', this.position], { relativeTo: this.route.parent });
+    super.goBack(['action-select', this.position]);
   }
 
   continue() {
@@ -80,9 +69,6 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
-      this.handleFlowEvent(event);
-    });
     this.routeSubscription = this.route.params.pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
@@ -126,6 +112,5 @@ export class IntegrationsConfigureActionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.routeSubscription.unsubscribe();
-    this.flowSubscription.unsubscribe();
   }
 }
