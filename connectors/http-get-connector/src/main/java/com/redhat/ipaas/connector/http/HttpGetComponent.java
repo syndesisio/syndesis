@@ -15,8 +15,6 @@
  */
 package com.redhat.ipaas.connector.http;
 
-import java.util.Map;
-
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
 /**
@@ -26,16 +24,6 @@ public class HttpGetComponent extends DefaultConnectorComponent {
     
     public HttpGetComponent() {
         super("http-get", "com.redhat.ipaas.connector.http.HttpGetComponent");
-    }
-
-    @Override
-    public void addConnectorOption(Map<String, String> options, String name, String value) {
-        if (name.equals("httpUri")) {
-            // need to remove any http:// prefix from the http uri option as http4 component wont expect this
-            value = value.replaceFirst("^https?:(?://)?", "");
-        }
-
-        super.addConnectorOption(options, name, value);
     }
 
 }

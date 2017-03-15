@@ -1,13 +1,12 @@
 /**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ * Copyright (C) 2017 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +17,9 @@ package com.redhat.ipaas.component;
 
 import org.apache.camel.Endpoint;
 import org.apache.camel.spi.Metadata;
+import org.apache.camel.util.FileUtil;
+import org.apache.camel.util.ObjectHelper;
+import org.apache.camel.util.StringHelper;
 
 @Metadata(label = "verifiers", enums = "PARAMETERS,CONNECTIVITY")
 public class HttpComponent extends org.apache.camel.component.http4.HttpComponent {
@@ -32,22 +34,42 @@ public class HttpComponent extends org.apache.camel.component.http4.HttpComponen
     private String path;
 
     @Override
+    public void doStart() throws Exception {
+        // required options
+        StringHelper.notEmpty(scheme, "scheme");
+        StringHelper.notEmpty(hostname, "hostname");
+
+        super.doStart();
+    }
+
+    @Override
     public Endpoint createEndpoint(String uri) throws Exception {
-        // build together from component level and uri which has the additional context path only
+        // build together from component level and given uri that has additional context path to append
         String build = scheme + "://" + hostname;
         if (port != null) {
             build += ":" + port;
         }
         if (path != null) {
+            build = FileUtil.stripTrailingSeparator(build);
             build += "/" + path;
+        }
+
+        String query = null;
+        if (uri.contains("?")) {
+            query = StringHelper.after(uri, "?");
+            uri = StringHelper.before(uri, "?");
+            uri = StringHelper.after(uri, "://");
         }
 
         // remaining is to be appending
         if (uri != null) {
+            build = FileUtil.stripTrailingSeparator(build);
             build += "/" + uri;
         }
 
-        // TODO: leading path problems, eg double path
+        if (query != null) {
+            build += "?" + query;
+        }
 
         return super.createEndpoint(build);
     }

@@ -30,12 +30,12 @@ public class HelloRestController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HelloRestController.class);
 
-    @RequestMapping(value = "/hello", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/myservice/hello", method = RequestMethod.GET, produces = "application/json")
     public String hello() {
         return "{ \"message\": \"Hello World\" }";
     }
 
-    @RequestMapping(value = "/bye", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/myservice/bye", method = RequestMethod.POST, consumes = "application/json")
     public void bye(@RequestBody String body) {
         LOG.info("HTTP POST received: {}", body);
     }
