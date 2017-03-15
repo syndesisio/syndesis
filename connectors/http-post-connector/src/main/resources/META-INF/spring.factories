@@ -1,0 +1,3 @@
+
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.redhat.ipaas.connector.http.springboot.HttpPostConnectorAutoConfiguration

@@ -26,13 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
  * Used for simulating a rest service which we can run locally inside Spring Boot
  */
 @RestController
-public class HelloRestController {
+public class ByeRestController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HelloRestController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ByeRestController.class);
 
-    @RequestMapping(value = "/myservice/hello", method = RequestMethod.GET, produces = "application/json")
-    public String hello() {
-        return "{ \"message\": \"Hello World\" }";
+    @RequestMapping(value = "/myotherservice/bye", method = RequestMethod.POST, consumes = "application/json")
+    public void bye(@RequestBody String body) {
+        LOG.info("HTTP POST received: {}", body);
     }
-
 }

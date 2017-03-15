@@ -47,13 +47,9 @@
 
     <!-- base component to use for this connector -->
     <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-http4</artifactId>
-    </dependency>
-    <!-- add spring-boot support -->
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-http4-starter</artifactId>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>http-component</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <!-- camel-connector -->
