@@ -149,6 +149,7 @@
   </properties>
 
   <modules>
+    <module>components</module>
     <module>connectors</module>
     <module>examples</module>
     <module>catalog</module>
