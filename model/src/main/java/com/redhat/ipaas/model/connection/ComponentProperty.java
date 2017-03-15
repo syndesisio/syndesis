@@ -15,45 +15,26 @@
  */
 package com.redhat.ipaas.model.connection;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.redhat.ipaas.model.WithId;
-import com.redhat.ipaas.model.WithName;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(builder = Connector.Builder.class)
-public interface Connector extends WithId<Connector>, WithName, Serializable {
+@JsonDeserialize(builder = ComponentProperty.Builder.class)
+public interface ComponentProperty {
 
-    String KIND = "connector";
-
-    @Override
-    default String getKind() {
-        return KIND;
-    }
-
-    Optional<ConnectorGroup> getConnectorGroup();
-
-    Optional<String> getConnectorGroupId();
-
-    String getIcon();
-
-    Map<String, ComponentProperty> getProperties();
-
+    String getKind();
+    String getDisplayName();
+    String getGroup();
+    String getLabel();
+    Boolean getRequired();
+    String getType();
+    String getJavaType();
+    Boolean getDeprecated();
+    Boolean getSecret();
     String getDescription();
+    String getDefaultValue();
 
-    List<Action> getActions();
-
-    @Override
-    default Connector withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
-    }
-
-    class Builder extends ImmutableConnector.Builder {
+    class Builder extends ImmutableComponentProperty.Builder {
     }
 
 }

@@ -2,14 +2,112 @@
   {
     "data": {
       "description": "Twitter connector",
-      "properties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
+      "properties": {
+        "accessToken": {
+          "kind": "property",
+          "displayName": "Access Token",
+          "group": "security",
+          "label": "security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description": "The access token"
+        },
+        " accessTokenSecret": {
+          "kind": "property",
+          "displayName": "Access Token Secret",
+          "group": "security",
+          "label": "security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description": "The access token secret"
+        },
+        " consumerKey": {
+          "kind": "property",
+          "displayName": "Consumer Key",
+          "group": "security",
+          "label": "security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description": "The consumer key"
+        },
+        " consumerSecret": {
+          "kind": "property",
+          "displayName": "Consumer Secret",
+          "group": "security",
+          "label": "security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description": "The consumer secret"
+        }
+      },
       "icon": "fa-twitter",
       "name": "Twitter",
       "id": "twitter",
       "actions": [
         {
           "description": "Connection from twitter when anyone mention you",
-          "properties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
+          "properties": {
+            "accessToken": {
+              "kind": "property",
+              "displayName": "Access Token",
+              "group": "security",
+              "label": "security",
+              "required": false,
+              "type": "string",
+              "javaType": "java.lang.String",
+              "deprecated": false,
+              "secret": true,
+              "description": "The access token"
+            },
+            " accessTokenSecret": {
+              "kind": "property",
+              "displayName": "Access Token Secret",
+              "group": "security",
+              "label": "security",
+              "required": false,
+              "type": "string",
+              "javaType": "java.lang.String",
+              "deprecated": false,
+              "secret": true,
+              "description": "The access token secret"
+            },
+            " consumerKey": {
+              "kind": "property",
+              "displayName": "Consumer Key",
+              "group": "security",
+              "label": "security",
+              "required": false,
+              "type": "string",
+              "javaType": "java.lang.String",
+              "deprecated": false,
+              "secret": true,
+              "description": "The consumer key"
+            },
+            " consumerSecret": {
+              "kind": "property",
+              "displayName": "Consumer Secret",
+              "group": "security",
+              "label": "security",
+              "required": false,
+              "type": "string",
+              "javaType": "java.lang.String",
+              "deprecated": false,
+              "secret": true,
+              "description": "The consumer secret"
+            }
+          },
           "name": "TwitterMention",
           "id": "org.foo_twitter-mention-connector_1.0",
           "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:0.2.1",
@@ -22,14 +120,114 @@
   {
     "data": {
       "description": "Salesforce connector",
-      "properties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}",
+      "properties": {
+        "loginUrl": {
+          "kind": "property",
+          "displayName": "Login Url",
+          "group": "security",
+          "label": "security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "defaultValue": "https://login.salesforce.com",
+          "description": "Salesforce login URL defaults to https://login.salesforce.com"
+        },
+        "clientId": {
+          "kind": "property",
+          "displayName": "Client Id",
+          "group": "security",
+          "label": "security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description": "Salesforce connected application Consumer Key"
+        },
+        "clientSecret": {
+          "kind": "property",
+          "displayName": "Client Secret",
+          "group": "security",
+          "label": "security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description": "Salesforce connected application Consumer Secret"
+        },
+        "refreshToken": {
+          "kind": "property",
+          "displayName": "Refresh Token",
+          "group": "security",
+          "label": "security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description": "Salesforce connected application Consumer token"
+        }
+      },
       "icon": "fa-puzzle-piece",
       "name": "Salesforce",
       "id": "salesforce",
       "actions": [
         {
           "description": "Connection to Create or Update Salesforce Contact SObject",
-          "properties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}",
+          "properties": {
+            "loginUrl": {
+              "kind": "property",
+              "displayName": "Login Url",
+              "group": "security",
+              "label": "security",
+              "required": false,
+              "type": "string",
+              "javaType": "java.lang.String",
+              "deprecated": false,
+              "secret": false,
+              "defaultValue": "https://login.salesforce.com",
+              "description": "Salesforce login URL defaults to https://login.salesforce.com"
+            },
+            "clientId": {
+              "kind": "property",
+              "displayName": "Client Id",
+              "group": "security",
+              "label": "security",
+              "required": false,
+              "type": "string",
+              "javaType": "java.lang.String",
+              "deprecated": false,
+              "secret": true,
+              "description": "Salesforce connected application Consumer Key"
+            },
+            "clientSecret": {
+              "kind": "property",
+              "displayName": "Client Secret",
+              "group": "security",
+              "label": "security",
+              "required": false,
+              "type": "string",
+              "javaType": "java.lang.String",
+              "deprecated": false,
+              "secret": true,
+              "description": "Salesforce connected application Consumer Secret"
+            },
+            "refreshToken": {
+              "kind": "property",
+              "displayName": "Refresh Token",
+              "group": "security",
+              "label": "security",
+              "required": false,
+              "type": "string",
+              "javaType": "java.lang.String",
+              "deprecated": false,
+              "secret": true,
+              "description": "Salesforce connected application Consumer token"
+            }
+          },
           "name": "SalesforceUpsertContact",
           "id": "org.foo_salesforce-upsert-contact-connector_1.0",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:0.2.1",
@@ -42,14 +240,27 @@
   {
     "data": {
       "description": "HTTP connector",
-      "properties": "",
+      "properties": {},
       "icon": "fa-globe",
       "name": "HTTP",
       "id": "http",
       "actions": [
         {
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-          "properties": "{\"httpUri\": { \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+          "properties": {
+            "httpUri": {
+              "kind": "path",
+              "displayName": "Http Uri",
+              "group": "producer",
+              "label": "producer",
+              "required": true,
+              "type": "string",
+              "javaType": "java.net.URI",
+              "deprecated": false,
+              "secret": false,
+              "description": "The url of the HTTP endpoint to call."
+            }
+          },
           "name": "HTTP GET",
           "id": "com.redhat.ipaas:http-get-connector:0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.1",
@@ -57,7 +268,20 @@
         },
         {
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-          "properties": "{\"httpUri\": { \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+          "properties": {
+            "httpUri": {
+              "kind": "path",
+              "displayName": "Http Uri",
+              "group": "producer",
+              "label": "producer",
+              "required": true,
+              "type": "string",
+              "javaType": "java.net.URI",
+              "deprecated": false,
+              "secret": false,
+              "description": "The url of the HTTP endpoint to call."
+            }
+          },
           "name": "HTTP POST",
           "id": "com.redhat.ipaas:http-post-connector:0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.1",
@@ -70,14 +294,27 @@
   {
     "data": {
       "description": "Timer Connector",
-      "properties": "{}",
+      "properties": {},
       "icon": "fa-puzzle-piece",
       "name": "Timer",
       "id": "timer",
       "actions": [
         {
           "description": "Set a timer that fires at intervals that you specify",
-          "properties": "{\"period\": { \"kind\": \"parameter\", \"displayName\": \"Period\", \"group\": \"consumer\", \"required\": false, \"type\": \"integer\", \"javaType\": \"long\", \"deprecated\": false, \"secret\": false, \"defaultValue\": 10000, \"description\": \"Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second).\" }}",
+          "properties": {
+            "period": {
+              "kind": "parameter",
+              "displayName": "Period",
+              "group": "consumer",
+              "required": false,
+              "type": "integer",
+              "javaType": "long",
+              "deprecated": false,
+              "secret": false,
+              "defaultValue": 10000,
+              "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+            }
+          },
           "name": "PeriodicTimer",
           "id": "com.redhat.ipaas_timer-connector_0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
@@ -89,7 +326,12 @@
   },
   {
     "data": {
-      "configuredProperties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
+      "configuredProperties": {
+        "accessToken": "",
+        "accessTokenSecret": "",
+        "consumerKey": "",
+        "consumerSecret": ""
+      },
       "connectorId": "twitter",
       "position": "start",
       "description": "Twitter Connection",
@@ -101,7 +343,12 @@
   },
   {
     "data": {
-      "configuredProperties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}",
+      "configuredProperties": {
+        "loginUrl": "https://login.salesforce.com",
+        "clientId": "",
+        "clientSecret": "",
+        "refreshToken": ""
+      },
       "connectorId": "salesforce",
       "position": "end",
       "description": "Salesforce Connection",
@@ -113,7 +360,7 @@
   },
   {
     "data": {
-      "configuredProperties": "{}",
+      "configuredProperties": {},
       "connectorId": "http",
       "position": "end",
       "description": "HTTP Connection",
@@ -125,7 +372,7 @@
   },
   {
     "data": {
-      "configuredProperties": "{}",
+      "configuredProperties": {},
       "connectorId": "timer",
       "position": "start",
       "description": "Timer Connection",
@@ -147,7 +394,12 @@
           "id": "1",
           "stepKind": "endpoint",
           "connection": {
-            "configuredProperties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
+            "configuredProperties": {
+              "accessToken": "",
+              "accessTokenSecret": "",
+              "consumerKey": "",
+              "consumerSecret": ""
+            },
             "connectorId": "twitter",
             "description": "Twitter Connection",
             "position": "start",
@@ -156,20 +408,79 @@
           },
           "action": {
             "connectorId": "org.foo_twitter-mention-connector_1.0",
-            "properties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}",
+            "properties": {
+              "accessToken": {
+                "kind": "property",
+                "displayName": "Access Token",
+                "group": "security",
+                "label": "security",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": true,
+                "description": "The access token"
+              },
+              " accessTokenSecret": {
+                "kind": "property",
+                "displayName": "Access Token Secret",
+                "group": "security",
+                "label": "security",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": true,
+                "description": "The access token secret"
+              },
+              " consumerKey": {
+                "kind": "property",
+                "displayName": "Consumer Key",
+                "group": "security",
+                "label": "security",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": true,
+                "description": "The consumer key"
+              },
+              " consumerSecret": {
+                "kind": "property",
+                "displayName": "Consumer Secret",
+                "group": "security",
+                "label": "security",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": true,
+                "description": "The consumer secret"
+              }
+            },
             "description": "Connection from twitter when anyone mention you",
             "id": "1",
             "name": "Twitter Mention",
             "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:0.2.1",
             "camelConnectorPrefix": "twitter-mention"
           },
-          "configuredProperties": "{\"accessToken\": { \"kind\": \"property\", \"displayName\": \"Access Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token\" }, \" accessTokenSecret\": { \"kind\": \"property\", \"displayName\": \"Access Token Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The access token secret\" }, \" consumerKey\": { \"kind\": \"property\", \"displayName\": \"Consumer Key\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer key\" }, \" consumerSecret\": { \"kind\": \"property\", \"displayName\": \"Consumer Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"The consumer secret\" }}"
+          "configuredProperties": {
+            "accessToken": "",
+            "accessTokenSecret": "",
+            "consumerKey": "",
+            "consumerSecret": ""
+          }
         },
         {
           "id": "2",
           "stepKind": "endpoint",
           "connection": {
-            "configuredProperties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}",
+            "configuredProperties": {
+              "loginUrl": "https://login.salesforce.com",
+              "clientId": "",
+              "clientSecret": "",
+              "refreshToken": ""
+            },
             "connectorId": "salesforce",
             "position": "end",
             "description": "Salesforce Connection",
@@ -178,14 +489,69 @@
           },
           "action": {
             "connectorId": "org.foo_salesforce-upsert-contact-connector_1.0",
-            "properties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}",
+            "properties": {
+              "loginUrl": {
+                "kind": "property",
+                "displayName": "Login Url",
+                "group": "security",
+                "label": "security",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": false,
+                "defaultValue": "https://login.salesforce.com",
+                "description": "Salesforce login URL defaults to https://login.salesforce.com"
+              },
+              "clientId": {
+                "kind": "property",
+                "displayName": "Client Id",
+                "group": "security",
+                "label": "security",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": true,
+                "description": "Salesforce connected application Consumer Key"
+              },
+              "clientSecret": {
+                "kind": "property",
+                "displayName": "Client Secret",
+                "group": "security",
+                "label": "security",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": true,
+                "description": "Salesforce connected application Consumer Secret"
+              },
+              "refreshToken": {
+                "kind": "property",
+                "displayName": "Refresh Token",
+                "group": "security",
+                "label": "security",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": true,
+                "description": "Salesforce connected application Consumer token"
+              }
+            },
             "description": "Connection to Create or Update Salesforce Contact SObject",
             "id": "2",
             "name": "Salesforce Upsert Contact",
             "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:0.2.1",
             "camelConnectorPrefix": "salesforce-upsert-contact"
           },
-          "configuredProperties": "{\"loginUrl\": { \"kind\": \"property\", \"displayName\": \"Login Url\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": false, \"defaultValue\": \"https://login.salesforce.com\", \"description\": \"Salesforce login URL defaults to https://login.salesforce.com\" }, \"clientId\": { \"kind\": \"property\", \"displayName\": \"Client Id\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Key\" }, \"clientSecret\": { \"kind\": \"property\", \"displayName\": \"Client Secret\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer Secret\" }, \"refreshToken\": { \"kind\": \"property\", \"displayName\": \"Refresh Token\", \"group\": \"security\", \"label\": \"security\", \"required\": false, \"type\": \"string\", \"javaType\": \"java.lang.String\", \"deprecated\": false, \"secret\": true, \"description\": \"Salesforce connected application Consumer token\" }}"
+          "configuredProperties": {
+            "loginUrl": "https://login.salesforce.com",
+            "clientId": "",
+            "clientSecret": "",
+            "refreshToken": ""
+          }
         }
       ]
     }
@@ -202,7 +568,7 @@
           "id": "3",
           "stepKind": "endpoint",
           "connection": {
-            "configuredProperties": "{}",
+            "configuredProperties": {},
             "connectorId": "timer",
             "position": "start",
             "description": "Timer Connection",
@@ -212,19 +578,34 @@
           },
           "action": {
             "description": "Set a timer that fires at intervals that you specify",
-            "properties": "{\"period\": { \"kind\": \"parameter\", \"displayName\": \"Period\", \"group\": \"consumer\", \"required\": false, \"type\": \"integer\", \"javaType\": \"long\", \"deprecated\": false, \"secret\": false, \"defaultValue\": 10000, \"description\": \"Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second).\" }}",
+            "properties": {
+              "period": {
+                "kind": "parameter",
+                "displayName": "Period",
+                "group": "consumer",
+                "required": false,
+                "type": "integer",
+                "javaType": "long",
+                "deprecated": false,
+                "secret": false,
+                "defaultValue": 10000,
+                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+              }
+            },
             "name": "PeriodicTimer",
             "id": "com.redhat.ipaas_timer-connector_0.2.1",
             "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
             "camelConnectorPrefix": "periodic-timer"
           },
-          "configuredProperties": "{\"period\": { \"value\": \"5000\", \"kind\": \"parameter\", \"displayName\": \"Period\", \"group\": \"consumer\", \"required\": false, \"type\": \"integer\", \"javaType\": \"long\", \"deprecated\": false, \"secret\": false, \"defaultValue\": 10000, \"description\": \"Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second).\" }}"
+          "configuredProperties": {
+            "period": "500"
+          }
         },
         {
           "id": "3",
           "stepKind": "endpoint",
           "connection": {
-            "configuredProperties": "{}",
+            "configuredProperties": {},
             "connectorId": "http",
             "position": "any",
             "description": "HTTP Connection",
@@ -234,24 +615,42 @@
           },
           "action": {
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "properties": "{\"httpUri\": { \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            },
             "name": "HTTP GET",
             "id": "com.redhat.ipaas:http-get-connector:0.2.1",
             "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.1",
             "camelConnectorPrefix": "http-get"
           },
-          "configuredProperties": "{\"httpUri\": { \"value\": \"http://localhost:8080/hello\", \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}"
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/hello"
+          }
         },
         {
           "id": "4",
           "stepKind": "log",
-          "configuredProperties": "{ \"message\": \"Hello World! ${body}\",\"loggingLevel\": \"INFO\" }"
+          "configuredProperties": {
+            "message": "Hello World! ${body}",
+            "loggingLevel": "INFO"
+          }
         },
         {
           "id": "5",
           "stepKind": "endpoint",
           "connection": {
-            "configuredProperties": "{}",
+            "configuredProperties": {},
             "connectorId": "http",
             "position": "end",
             "description": "HTTP Connection",
@@ -261,13 +660,28 @@
           },
           "action": {
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "properties": "{\"httpUri\": { \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            },
             "name": "HTTP POST",
             "id": "com.redhat.ipaas:http-post-connector:0.2.1",
             "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.1",
             "camelConnectorPrefix": "http-post"
           },
-          "configuredProperties": "{\"httpUri\": { \"value\": \"http://localhost:8080/bye\", \"kind\": \"path\", \"displayName\": \"Http Uri\", \"group\": \"producer\", \"label\": \"producer\", \"required\": true, \"type\": \"string\", \"javaType\": \"java.net.URI\", \"deprecated\": false, \"secret\": false, \"description\": \"The url of the HTTP endpoint to call.\" }}"
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/bye"
+          }
         }
       ]
     }

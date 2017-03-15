@@ -22,6 +22,7 @@ import com.redhat.ipaas.model.connection.Connection;
 import org.immutables.value.Value;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Optional;
 
 @Value.Immutable
@@ -41,7 +42,7 @@ public interface Step extends WithId<Step>, Serializable {
 
     String getStepKind();
 
-    String getConfiguredProperties();
+    Map<String, String> getConfiguredProperties();
 
     @Override
     default Step withId(String id) {

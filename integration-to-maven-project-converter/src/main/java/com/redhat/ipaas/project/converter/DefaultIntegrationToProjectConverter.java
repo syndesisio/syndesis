@@ -16,21 +16,18 @@
 package com.redhat.ipaas.project.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.redhat.ipaas.connector.catalog.ConnectorCatalog;
+import com.redhat.ipaas.core.Json;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.model.integration.Step;
 import io.fabric8.funktion.model.Flow;
 import io.fabric8.funktion.model.Funktion;
 import io.fabric8.funktion.model.StepKinds;
 import io.fabric8.funktion.model.steps.Endpoint;
-import io.fabric8.funktion.model.steps.Log;
 import io.fabric8.funktion.support.YamlHelper;
 
 import java.io.ByteArrayOutputStream;
@@ -38,11 +35,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class DefaultIntegrationToProjectConverter implements IntegrationToProjectConverter {
 
-    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private final static ObjectMapper YAML_OBJECT_MAPPER = YamlHelper.createYamlMapper();
 
     private MustacheFactory mf = new DefaultMustacheFactory();
@@ -128,11 +127,11 @@ public class DefaultIntegrationToProjectConverter implements IntegrationToProjec
                 }
 
                 try {
-                    ObjectNode stepNode = (ObjectNode) OBJECT_MAPPER.readTree(step.getConfiguredProperties());
-                    stepNode.set("kind", new TextNode(step.getStepKind()));
-                    if (step.getStepKind().equals(StepKinds.LOG)) {
-                        flow.addStep(OBJECT_MAPPER.readValue(stepNode.toString(), Log.class));
-                    }
+                    HashMap<String, Object> stepJSON = new HashMap<>(step.getConfiguredProperties());
+                    stepJSON.put("kind", step.getStepKind());
+                    String json = Json.mapper().writeValueAsString(stepJSON);
+                    flow.addStep(Json.mapper().readValue(json, io.fabric8.funktion.model.steps.Step.class));
+                    continue;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -144,7 +143,7 @@ public class DefaultIntegrationToProjectConverter implements IntegrationToProjec
         return YAML_OBJECT_MAPPER.writeValueAsBytes(funktion);
     }
 
-    private io.fabric8.funktion.model.steps.Step createEndpointStep(String camelConnector, String connectionConfiguredProperties, String configuredProperties) throws IOException, URISyntaxException {
+    private io.fabric8.funktion.model.steps.Step createEndpointStep(String camelConnector, Map<String, String> connectionConfiguredProperties, Map<String, String> configuredProperties) throws IOException, URISyntaxException {
         Map<String, String> props = readConfiguredProperties(connectionConfiguredProperties, configuredProperties);
 
         // TODO Remove this hack... when we can read endpointValues from connector schema then we should use those as initial properties.
@@ -156,24 +155,10 @@ public class DefaultIntegrationToProjectConverter implements IntegrationToProjec
         return new Endpoint(endpointUri);
     }
 
-    private Map<String, String> readConfiguredProperties(String... configuredProperties) throws IOException {
+    private Map<String, String> readConfiguredProperties(Map<String, String> ... configuredProperties) throws IOException {
         Map<String, String> configuredProps = new HashMap<>();
-        for (String props : configuredProperties) {
-            if (props != null && !props.isEmpty()) {
-                JsonNode properties = OBJECT_MAPPER.readTree(props);
-                for (Iterator<Map.Entry<String, JsonNode>> it = properties.fields(); it.hasNext(); ) {
-                    Map.Entry<String, JsonNode> jsonProp = it.next();
-                    JsonNode value = jsonProp.getValue();
-                    if (value.isValueNode()) {
-                        configuredProps.put(jsonProp.getKey(), value.asText());
-                    } else {
-                        JsonNode valueNode = value.get("value");
-                        if (valueNode != null && valueNode.isValueNode()) {
-                            configuredProps.put(jsonProp.getKey(), valueNode.asText());
-                        }
-                    }
-                }
-            }
+        for (Map<String, String> props : configuredProperties) {
+            configuredProps.putAll(props);
         }
         return configuredProps;
     }

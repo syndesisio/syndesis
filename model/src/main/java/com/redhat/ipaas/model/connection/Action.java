@@ -21,6 +21,7 @@ import com.redhat.ipaas.model.WithName;
 import org.immutables.value.Value;
 
 import java.io.Serializable;
+import java.util.Map;
 
 @Value.Immutable
 @JsonDeserialize(builder = Action.Builder.class)
@@ -35,7 +36,7 @@ public interface Action extends WithId<Action>, WithName, Serializable {
 
     String getConnectorId();
 
-    String getProperties();
+    Map<String, ComponentProperty> getProperties();
 
     String getDescription();
 
