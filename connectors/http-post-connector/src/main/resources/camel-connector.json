@@ -15,6 +15,7 @@
   "pattern": "To",
   "inputDataType": "*",
   "outputDataType": "*",
+  "globalOptions" : [ "scheme", "hostname", "port", "path" ],
   "componentOptions" : [ "scheme", "hostname", "port", "path" ],
   "endpointOptions" : [ "serviceName" ],
   "endpointValues" : {
