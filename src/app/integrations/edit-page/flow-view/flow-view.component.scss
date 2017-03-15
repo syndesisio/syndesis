@@ -1,5 +1,6 @@
 /deep/ .popover {
-  margin-top: -7px;
+  margin-top: -2px;
+  margin-left: 20px !important;
 }
 
 .popover-body > div {
@@ -14,7 +15,7 @@
   }
 
   .flow-view-container {
-    min-height: 400px;
+    min-height: 500px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -82,21 +83,51 @@
   }
 
   // Steps on left-hand side
-  .steps {
-
-    flex-wrap: nowrap;
-
-    .square-icon {
-      padding: 10px;
-
-      .fa.fa-plus-square {
-        color: #158ACC;
-        font-size: x-large;
+  .step-insert {
+    position: relative;
+    top: -47px;
+    height: 50px;
+    .popover-body {
+      a {
+        cursor: pointer;
       }
     }
+    .square-icon {
+      .fa.fa-plus-square {
+        color: #158ACC;
+        background-color: white;
+        font-size: x-large;
+        margin: 0;
+        margin-left: 17px;
+        margin-top: 10px;
+      }
+    }
+    .step-line {
+      position: absolute;
+      height: 150px;
+      top: 0;
+      left: 46px;
+      width: 2px;
+      background-color: #d4d4d4;
+    }
+  }
 
-    .text {
-      border: 1px #363636 solid;
+  .steps {
+    position: relative;
+    height: 150px;
+    flex-wrap: nowrap;
+    .step-line {
+      position: absolute;
+      height: 150px;
+      top: 0;
+      left: 46px;
+      width: 2px;
+      background-color: #d4d4d4;
+    }
+    &.finish {
+      .step-line {
+        height: 10px;
+      }
     }
   }
 

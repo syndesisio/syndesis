@@ -47,6 +47,7 @@
         padding: 11px;
         width: 55px;
         height: 55px;
+        background-color: white;
 
         &.active {
           border: 3px solid #1487CB;
@@ -62,7 +63,7 @@
   .text {
     padding-left: 0;
     padding-right: 0;
-    padding-top: 15px;
+    padding-top: 19px;
 
     ul {
       cursor: pointer;
