@@ -12,6 +12,10 @@ slave {
 
                     stage 'System Tests'
                     test(component: 'ipaas-rest', namespace: 'ipaas-testing', serviceAccount: 'jenkins')
+
+                    stage 'Rollout'
+                    tag(imageStream: 'ipaas-rest')
+                    rollout(deploymentConfig: 'ipaas-rest', namespace: 'ipaas-staging')
                  }
 
         }
