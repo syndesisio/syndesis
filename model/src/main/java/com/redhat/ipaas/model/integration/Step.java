@@ -44,6 +44,8 @@ public interface Step extends WithId<Step>, Serializable {
 
     Map<String, String> getConfiguredProperties();
 
+    String getName();
+
     @Override
     default Step withId(String id) {
         return new Builder().createFrom(this).id(id).build();
