@@ -62,12 +62,17 @@
       <artifactId>camel-connector</artifactId>
     </dependency>
 
-    <!-- support camel documentation -->
+    <!-- camel and spring boot compiler plugins -->
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>apt</artifactId>
     </dependency>
-    
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <version>${spring-boot.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -123,6 +128,15 @@
         <artifactId>camel-connector-maven-plugin</artifactId>
         <version>${camel.version}</version>
         <executions>
+          <execution>
+            <id>boot</id>
+            <goals>
+              <goal>prepare-spring-boot-auto-configuration</goal>
+            </goals>
+            <configuration>
+              <includeLicenseHeader>false</includeLicenseHeader>
+            </configuration>
+          </execution>
           <execution>
             <id>connector</id>
             <goals>
