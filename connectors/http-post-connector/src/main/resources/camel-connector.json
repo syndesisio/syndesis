@@ -1,8 +1,9 @@
 {
-  "baseScheme": "http4",
-  "baseGroupId": "org.apache.camel",
-  "baseArtifactId": "camel-http4",
-  "baseVersion": "2.19.0-SNAPSHOT",
+  "baseScheme": "ipaas-http",
+  "baseGroupId": "com.redhat.ipaas",
+  "baseArtifactId": "http-component",
+  "baseVersion": "0.2-SNAPSHOT",
+  "baseJavaType": "com.redhat.ipaas.component.HttpComponent",
   "name": "HTTP",
   "scheme": "http-post",
   "javaType": "com.redhat.ipaas.connector.http.HttpPostComponent",
@@ -14,7 +15,8 @@
   "pattern": "To",
   "inputDataType": "*",
   "outputDataType": "*",
-  "endpointOptions" : [ "httpUri" ],
+  "componentOptions" : [ "scheme", "hostname", "port", "path" ],
+  "endpointOptions" : [ "serviceName" ],
   "endpointValues" : {
     "httpMethod": "POST"
   }

@@ -28,6 +28,6 @@ public class PullPushRoute extends RouteBuilder {
             .to("http-get:hello")
             .log("GET: ${body}")
             .transform().constant("{ \"message\": \"iPaaS was here\" }")
-            .to("http-post:http:localhost:8080/myservice/bye");
+            .to("http-post:bye");
     }
 }
