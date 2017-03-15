@@ -271,7 +271,7 @@
             }
           },
           "name": "SalesforceUpsertContact",
-          "id": "org.foo_salesforce-upsert-contact-connector_0.2.1",
+          "id": "org.foo_salesforce-upsert-contact-connector_1.0",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-upsert-contact"
         }
@@ -530,7 +530,7 @@
             "id": 2
           },
           "action": {
-            "connectorId": "org.foo_salesforce-upsert-contact-connector_0.2.1",
+            "connectorId": "org.foo_salesforce-upsert-contact-connector_1.0",
             "properties": {
               "loginUrl": {
                 "kind": "property",
