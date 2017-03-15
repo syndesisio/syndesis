@@ -83,7 +83,7 @@ public class DataManagerTest {
         Connector connector = dataManager.fetch(Connector.KIND, "twitter");
         System.out.println(connector.getName());
         Assert.assertEquals("First Connector in the deployment.json is Twitter", "Twitter", connector.getName());
-        Assert.assertEquals(1, connector.getActions().size());
+        Assert.assertEquals(7, connector.getActions().size());
     }
     
     @Test
