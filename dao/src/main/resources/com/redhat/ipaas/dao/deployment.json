@@ -109,9 +109,51 @@
             }
           },
           "name": "TwitterMention",
-          "id": "org.foo_twitter-mention-connector_1.0",
+          "id": "org.foo_twitter-mention-connector_0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:0.2.1",
           "camelConnectorPrefix": "twitter-mention"
+        },
+        {
+          "description": "Search tweets based one or more keywords",
+          "name": "TwitterSearch",
+          "id": "org.foo_twitter-search-connector_0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-search-connector:0.2.1",
+          "camelConnectorPrefix": "twitter-search"
+        },
+        {
+          "description": "Create a new tweet",
+          "name": "TwitterTweet",
+          "id": "org.foo_twitter-tweet-connector_0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-tweet-connector:0.2.1",
+          "camelConnectorPrefix": "twitter-tweet"
+        },
+        {
+          "description": "Direct message a specific user",
+          "name": "TwitterDirectMessage",
+          "id": "org.foo_twitter-directmessage-connector_0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-directmessage-connector:0.2.1",
+          "camelConnectorPrefix": "twitter-directmessage"
+        },
+        {
+          "description": "Retrieve tweets from my timeline",
+          "name": "TwitterMyTimeline",
+          "id": "org.foo_twitter-mytimeline-connector_0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-mytimeline-connector:0.2.1",
+          "camelConnectorPrefix": "twitter-mytimeline"
+        },
+        {
+          "description": "Retrieve tweets from another user's timeline",
+          "name": "TwitterUserTimeline",
+          "id": "org.foo_twitter-usertimeline-connector_0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-usertimeline-connector:0.2.1",
+          "camelConnectorPrefix": "twitter-usertimeline"
+        },
+        {
+          "description": "Retrieve tweets which retweet one of my tweets",
+          "name": "TwitterRetweets",
+          "id": "org.foo_twitter-retweets-connector_0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-retweets-connector:0.2.1",
+          "camelConnectorPrefix": "twitter-retweets"
         }
       ]
     },
@@ -407,7 +449,7 @@
             "id": 1
           },
           "action": {
-            "connectorId": "org.foo_twitter-mention-connector_1.0",
+            "connectorId": "org.foo_twitter-mention-connector_0.2.1",
             "properties": {
               "accessToken": {
                 "kind": "property",
