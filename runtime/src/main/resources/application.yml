@@ -61,6 +61,8 @@ endpoints:
 
 dao:
   kind: jsondb
+  schema:
+    version: 1 # changing this will reset all the DB data.
 
 # OpenShift infra value
 openshift:
