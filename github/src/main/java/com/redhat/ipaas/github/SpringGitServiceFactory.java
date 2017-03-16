@@ -18,6 +18,7 @@ package com.redhat.ipaas.github;
 import com.redhat.ipaas.github.backend.ExtendedContentsService;
 import com.redhat.ipaas.github.backend.KeycloakTokenAwareGitHubClient;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.eclipse.egit.github.core.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,5 +44,11 @@ public class SpringGitServiceFactory {
     @Scope("request")
     public ExtendedContentsService contentsService() {
         return new ExtendedContentsService(new KeycloakTokenAwareGitHubClient(gitHubHost));
+    }
+
+    @Bean
+    @Scope("request")
+    public UserService userService() {
+        return new UserService(new KeycloakTokenAwareGitHubClient(gitHubHost));
     }
 }

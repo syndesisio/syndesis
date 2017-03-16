@@ -21,11 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.redhat.ipaas.github.backend.ExtendedContentsService;
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.RepositoryContents;
-import org.eclipse.egit.github.core.RepositoryHook;
+import org.eclipse.egit.github.core.*;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.eclipse.egit.github.core.service.UserService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -42,10 +41,12 @@ public class GitHubServiceImpl implements GitHubService {
 
     private final RepositoryService repositoryService;
     private final ExtendedContentsService contentsService;
+    private final UserService userService;
 
-    public GitHubServiceImpl(RepositoryService repositoryService, ExtendedContentsService contentsService) {
+    public GitHubServiceImpl(RepositoryService repositoryService, ExtendedContentsService contentsService, UserService userService) {
         this.repositoryService = repositoryService;
         this.contentsService = contentsService;
+        this.userService = userService;
     }
 
     @Override
@@ -81,12 +82,15 @@ public class GitHubServiceImpl implements GitHubService {
     // =====================================================================================
 
     private Repository getRepository(String name) throws IOException {
-        for (Repository repo : repositoryService.getRepositories()) {
-            if (name.equals(repo.getName())) {
-                return repo;
+        User user = userService.getUser();
+        try {
+            return repositoryService.getRepository(user.getLogin(), name);
+        } catch (RequestException e) {
+            if (e.getStatus() != HttpStatus.NOT_FOUND.value()) {
+                throw e;
             }
+            return null;
         }
-        return null;
     }
 
     private Repository createRepo(String name) throws IOException {
