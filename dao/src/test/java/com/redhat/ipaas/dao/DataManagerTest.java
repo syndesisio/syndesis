@@ -91,7 +91,7 @@ public class DataManagerTest {
         Integration integration = dataManager.fetch(Integration.KIND, "1");
         System.out.println(integration.getName());
         Assert.assertEquals("Example Integration", "Twitter to Salesforce Example", integration.getName());
-        Assert.assertEquals(2, integration.getSteps().get().size());
+        Assert.assertEquals(4, integration.getSteps().get().size());
     }
 
 }
