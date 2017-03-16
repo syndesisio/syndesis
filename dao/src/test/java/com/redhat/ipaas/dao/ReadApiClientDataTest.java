@@ -28,7 +28,6 @@ import com.redhat.ipaas.model.connection.ConnectorGroup;
 import com.redhat.ipaas.model.integration.Integration;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -56,7 +55,7 @@ public class ReadApiClientDataTest {
 		Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdOut.getData());
 	}
 
-	@Test @Ignore
+	@Test
 	public void loadApiClientDataTest() throws IOException {
 		List<ModelData> modelDataList = new ReadApiClientData().readDataFromFile("com/redhat/ipaas/dao/deployment.json");
 		System.out.println("Found " + modelDataList.size() + " entities.");
