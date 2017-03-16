@@ -27,28 +27,6 @@ public class TwitterMentionConnectorConfiguration {
      * The consumer secret
      */
     private String consumerSecret;
-    /**
-     * The http proxy host which can be used for the camel-twitter.
-     */
-    private String httpProxyHost;
-    /**
-     * The http proxy user which can be used for the camel-twitter.
-     */
-    private String httpProxyUser;
-    /**
-     * The http proxy password which can be used for the camel-twitter.
-     */
-    private String httpProxyPassword;
-    /**
-     * The http proxy port which can be used for the camel-twitter.
-     */
-    private int httpProxyPort;
-    /**
-     * Whether the component should resolve property placeholders on itself when
-     * starting. Only properties which are of String type can use property
-     * placeholders.
-     */
-    private boolean resolvePropertyPlaceholders = true;
 
     public String getAccessToken() {
         return accessToken;
@@ -80,46 +58,5 @@ public class TwitterMentionConnectorConfiguration {
 
     public void setConsumerSecret(String consumerSecret) {
         this.consumerSecret = consumerSecret;
-    }
-
-    public String getHttpProxyHost() {
-        return httpProxyHost;
-    }
-
-    public void setHttpProxyHost(String httpProxyHost) {
-        this.httpProxyHost = httpProxyHost;
-    }
-
-    public String getHttpProxyUser() {
-        return httpProxyUser;
-    }
-
-    public void setHttpProxyUser(String httpProxyUser) {
-        this.httpProxyUser = httpProxyUser;
-    }
-
-    public String getHttpProxyPassword() {
-        return httpProxyPassword;
-    }
-
-    public void setHttpProxyPassword(String httpProxyPassword) {
-        this.httpProxyPassword = httpProxyPassword;
-    }
-
-    public int getHttpProxyPort() {
-        return httpProxyPort;
-    }
-
-    public void setHttpProxyPort(int httpProxyPort) {
-        this.httpProxyPort = httpProxyPort;
-    }
-
-    public boolean isResolvePropertyPlaceholders() {
-        return resolvePropertyPlaceholders;
-    }
-
-    public void setResolvePropertyPlaceholders(
-            boolean resolvePropertyPlaceholders) {
-        this.resolvePropertyPlaceholders = resolvePropertyPlaceholders;
     }
 }
