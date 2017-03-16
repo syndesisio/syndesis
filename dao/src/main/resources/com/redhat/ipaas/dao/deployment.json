@@ -1,7 +1,11 @@
 [
   {
+    "kind": "connector",
     "data": {
-      "description": "Twitter connector",
+      "id": "twitter",
+      "name": "Twitter",
+      "description": "Twitter Connector",
+      "icon": "fa-twitter",
       "properties": {
         "accessToken": {
           "kind": "property",
@@ -52,116 +56,68 @@
           "description": "The consumer secret"
         }
       },
-      "icon": "fa-twitter",
-      "name": "Twitter",
-      "id": "twitter",
       "actions": [
         {
-          "description": "Connection from twitter when anyone mention you",
+          "name": "Mention",
+          "description": "Search for tweets that mention you",
           "properties": {
-            "accessToken": {
-              "kind": "property",
-              "displayName": "Access Token",
-              "group": "security",
-              "label": "security",
-              "required": false,
-              "type": "string",
-              "javaType": "java.lang.String",
-              "deprecated": false,
-              "secret": true,
-              "description": "The access token"
-            },
-            " accessTokenSecret": {
-              "kind": "property",
-              "displayName": "Access Token Secret",
-              "group": "security",
-              "label": "security",
-              "required": false,
-              "type": "string",
-              "javaType": "java.lang.String",
-              "deprecated": false,
-              "secret": true,
-              "description": "The access token secret"
-            },
-            " consumerKey": {
-              "kind": "property",
-              "displayName": "Consumer Key",
-              "group": "security",
-              "label": "security",
-              "required": false,
-              "type": "string",
-              "javaType": "java.lang.String",
-              "deprecated": false,
-              "secret": true,
-              "description": "The consumer key"
-            },
-            " consumerSecret": {
-              "kind": "property",
-              "displayName": "Consumer Secret",
-              "group": "security",
-              "label": "security",
-              "required": false,
-              "type": "string",
-              "javaType": "java.lang.String",
-              "deprecated": false,
-              "secret": true,
-              "description": "The consumer secret"
-            }
           },
-          "name": "TwitterMention",
           "id": "org.foo_twitter-mention-connector_0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:0.2.1",
           "camelConnectorPrefix": "twitter-mention"
         },
         {
+          "name": "Search",
           "description": "Search tweets based one or more keywords",
-          "name": "TwitterSearch",
           "id": "org.foo_twitter-search-connector_0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:twitter-search-connector:0.2.1",
           "camelConnectorPrefix": "twitter-search"
         },
         {
-          "description": "Create a new tweet",
-          "name": "TwitterTweet",
+          "name": "Send a Tweet",
+          "description": "Creates a new tweet",
           "id": "org.foo_twitter-tweet-connector_0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:twitter-tweet-connector:0.2.1",
           "camelConnectorPrefix": "twitter-tweet"
         },
         {
           "description": "Direct message a specific user",
-          "name": "TwitterDirectMessage",
+          "name": "Send a Direct Message",
           "id": "org.foo_twitter-directmessage-connector_0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:twitter-directmessage-connector:0.2.1",
           "camelConnectorPrefix": "twitter-directmessage"
         },
         {
           "description": "Retrieve tweets from my timeline",
-          "name": "TwitterMyTimeline",
+          "name": "Get My Timeline",
           "id": "org.foo_twitter-mytimeline-connector_0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:twitter-mytimeline-connector:0.2.1",
           "camelConnectorPrefix": "twitter-mytimeline"
         },
         {
           "description": "Retrieve tweets from another user's timeline",
-          "name": "TwitterUserTimeline",
+          "name": "Get A Timeline",
           "id": "org.foo_twitter-usertimeline-connector_0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:twitter-usertimeline-connector:0.2.1",
           "camelConnectorPrefix": "twitter-usertimeline"
         },
         {
           "description": "Retrieve tweets which retweet one of my tweets",
-          "name": "TwitterRetweets",
+          "name": "Get Retweets",
           "id": "org.foo_twitter-retweets-connector_0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:twitter-retweets-connector:0.2.1",
           "camelConnectorPrefix": "twitter-retweets"
         }
       ]
-    },
-    "kind": "connector"
+    }
   },
   {
+    "kind": "connector",
     "data": {
+      "id": "salesforce",
+      "name": "Salesforce",
       "description": "Salesforce connector",
+      "icon": "fa-puzzle-piece",
       "properties": {
         "loginUrl": {
           "kind": "property",
@@ -213,117 +169,67 @@
           "description": "Salesforce connected application Consumer token"
         }
       },
-      "icon": "fa-puzzle-piece",
-      "name": "Salesforce",
-      "id": "salesforce",
       "actions": [
         {
-          "description": "Create or Update Salesforce Contact SObject",
-          "properties": {
-            "loginUrl": {
-              "kind": "property",
-              "displayName": "Login Url",
-              "group": "security",
-              "label": "security",
-              "required": false,
-              "type": "string",
-              "javaType": "java.lang.String",
-              "deprecated": false,
-              "secret": false,
-              "defaultValue": "https://login.salesforce.com",
-              "description": "Salesforce login URL defaults to https://login.salesforce.com"
-            },
-            "clientId": {
-              "kind": "property",
-              "displayName": "Client Id",
-              "group": "security",
-              "label": "security",
-              "required": false,
-              "type": "string",
-              "javaType": "java.lang.String",
-              "deprecated": false,
-              "secret": true,
-              "description": "Salesforce connected application Consumer Key"
-            },
-            "clientSecret": {
-              "kind": "property",
-              "displayName": "Client Secret",
-              "group": "security",
-              "label": "security",
-              "required": false,
-              "type": "string",
-              "javaType": "java.lang.String",
-              "deprecated": false,
-              "secret": true,
-              "description": "Salesforce connected application Consumer Secret"
-            },
-            "refreshToken": {
-              "kind": "property",
-              "displayName": "Refresh Token",
-              "group": "security",
-              "label": "security",
-              "required": false,
-              "type": "string",
-              "javaType": "java.lang.String",
-              "deprecated": false,
-              "secret": true,
-              "description": "Salesforce connected application Consumer token"
-            }
-          },
-          "name": "SalesforceUpsertContact",
           "id": "org.foo_salesforce-upsert-contact-connector_1.0",
+          "name": "Create/Update Salesforce Contact",
+          "description": "Create or Update a Salesforce Contact",
+          "properties": {
+          },
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-upsert-contact"
         },{
+          "id": "org.foo_salesforce-create-opportunity-connector_1.0",
           "description": "Create a new Salesforce opportunity based on the input message",
           "name": "SalesforceCreateOpportunity",
-          "id": "org.foo_salesforce-create-opportunity-connector_1.0",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-opportunity-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-create-opportunity"
         },{
+          "id": "org.foo_salesforce-create-lead-connector_1.0",
           "description": "Create a new Salesforce lead based on the input message",
           "name": "SalesforceCreateLead",
-          "id": "org.foo_salesforce-create-lead-connector_1.0",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-lead-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-create-lead"
         },{
+          "id": "org.foo_salesforce-create-account-connector_1.0",
           "description": "Create a new Salesforce account based on the input message",
           "name": "SalesforceCreateAccount",
-          "id": "org.foo_salesforce-create-account-connector_1.0",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-account-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-create-account"
         },{
+          "id": "org.foo_salesforce-create-case-connector_1.0",
           "description": "Create a new Salesforce case based on the input message",
           "name": "SalesforceCreateCase",
-          "id": "org.foo_salesforce-create-case-connector_1.0",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-case-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-create-case"
         },{
+          "id": "org.foo_salesforce-search-connector_1.0",
           "description": "Execute a search in Salesforce using arbitrary SOQL",
           "name": "SalesforceSearch",
-          "id": "org.foo_salesforce-search-connector_1.0",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-search-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-search"
         },{
+          "id": "org.foo_salesforce-notification-connector_1.0",
           "description": "Trigger an integration when updates occur to a specific Salesforce object",
           "name": "SalesforceNotification",
-          "id": "org.foo_salesforce-notification-connector_1.0",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-notification-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-notification"
         }
       ]
-    },
-    "kind": "connector"
+    }
   },
   {
+    "kind": "connector",
     "data": {
-      "description": "HTTP connector",
-      "properties": {},
-      "icon": "fa-globe",
-      "name": "HTTP",
       "id": "http",
+      "name": "HTTP",
+      "description": "HTTP connector",
+      "icon": "fa-globe",
+      "properties": {},
       "actions": [
         {
+          "id": "com.redhat.ipaas:http-get-connector:0.2.1",
+          "name": "HTTP GET",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "properties": {
             "httpUri": {
@@ -339,12 +245,12 @@
               "description": "The url of the HTTP endpoint to call."
             }
           },
-          "name": "HTTP GET",
-          "id": "com.redhat.ipaas:http-get-connector:0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.1",
           "camelConnectorPrefix": "http-get"
         },
         {
+          "id": "com.redhat.ipaas:http-post-connector:0.2.1",
+          "name": "HTTP POST",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "properties": {
             "httpUri": {
@@ -360,24 +266,24 @@
               "description": "The url of the HTTP endpoint to call."
             }
           },
-          "name": "HTTP POST",
-          "id": "com.redhat.ipaas:http-post-connector:0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.1",
           "camelConnectorPrefix": "http-post"
         }
       ]
-    },
-    "kind": "connector"
+    }
   },
   {
+    "kind": "connector",
     "data": {
-      "description": "Timer Connector",
-      "properties": {},
-      "icon": "fa-puzzle-piece",
-      "name": "Timer",
       "id": "timer",
+      "name": "Timer",
+      "description": "Timer Connector",
+      "icon": "fa-puzzle-piece",
+      "properties": {},
       "actions": [
         {
+          "id": "com.redhat.ipaas_timer-connector_0.2.1",
+          "name": "Periodic Timer",
           "description": "Set a timer that fires at intervals that you specify",
           "properties": {
             "period": {
@@ -393,242 +299,134 @@
               "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
             }
           },
-          "name": "PeriodicTimer",
-          "id": "com.redhat.ipaas_timer-connector_0.2.1",
           "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
           "camelConnectorPrefix": "periodic-timer"
         }
       ]
-    },
-    "kind": "connector"
+    }
   },
   {
+    "kind": "connection",
     "data": {
+      "id": 1,
+      "name": "Twitter Example",
+      "description": "Twitter Connection",
+      "icon": "fa-twitter",
+      "position": "start",
+      "connectorId": "twitter",
       "configuredProperties": {
         "accessToken": "",
         "accessTokenSecret": "",
         "consumerKey": "",
         "consumerSecret": ""
-      },
-      "connectorId": "twitter",
-      "position": "start",
-      "description": "Twitter Connection",
-      "icon": "fa-twitter",
-      "name": "Twitter Example",
-      "id": 1
-    },
-    "kind": "connection"
+      }
+    }
   },
   {
+    "kind": "connection",
     "data": {
+      "id": 2,
+      "name": "Salesforce Example",
+      "description": "Salesforce Connection",
+      "icon": "fa-globe",
+      "position": "end",
+      "connectorId": "salesforce",
       "configuredProperties": {
         "loginUrl": "https://login.salesforce.com",
         "clientId": "",
         "clientSecret": "",
         "refreshToken": ""
-      },
-      "connectorId": "salesforce",
-      "position": "end",
-      "description": "Salesforce Connection",
-      "icon": "fa-globe",
-      "name": "Salesforce Example",
-      "id": 2
-    },
-    "kind": "connection"
+      }
+    }
   },
   {
+    "kind": "connection",
     "data": {
-      "configuredProperties": {},
-      "connectorId": "http",
-      "position": "end",
+      "id": 3,
+      "name": "HTTP Example",
       "description": "HTTP Connection",
       "icon": "fa-globe",
-      "name": "HTTP Example",
-      "id": 3
-    },
-    "kind": "connection"
+      "position": "end",
+      "connectorId": "http",
+      "configuredProperties": {}
+    }
   },
   {
+    "kind": "connection",
     "data": {
-      "configuredProperties": {},
-      "connectorId": "timer",
-      "position": "start",
+      "id": 4,
+      "name": "Timer Example",
       "description": "Timer Connection",
       "icon": "fa-globe",
-      "name": "Timer Example",
-      "id": 4
-    },
-    "kind": "connection"
+      "position": "start",
+      "connectorId": "timer",
+      "configuredProperties": {}
+    }
   },
   {
     "kind": "integration",
     "data": {
-      "configuration": "",
-      "description": "This is an example of a Twitter to Salesforce integration",
       "id": "1",
       "name": "Twitter to Salesforce Example",
+      "description": "This is an example of a Twitter to Salesforce integration",
+      "configuration": "",
       "steps": [
         {
           "id": "1",
           "stepKind": "endpoint",
           "connection": {
+            "id": 1,
+            "name": "Twitter Example",
+            "description": "Twitter Connection",
+            "position": "start",
+            "connectorId": "twitter",
             "configuredProperties": {
               "accessToken": "",
               "accessTokenSecret": "",
               "consumerKey": "",
               "consumerSecret": ""
-            },
-            "connectorId": "twitter",
-            "description": "Twitter Connection",
-            "position": "start",
-            "name": "Twitter Example",
-            "id": 1
+            }
           },
           "action": {
-            "connectorId": "org.foo_twitter-mention-connector_0.2.1",
-            "properties": {
-              "accessToken": {
-                "kind": "property",
-                "displayName": "Access Token",
-                "group": "security",
-                "label": "security",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": true,
-                "description": "The access token"
-              },
-              " accessTokenSecret": {
-                "kind": "property",
-                "displayName": "Access Token Secret",
-                "group": "security",
-                "label": "security",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": true,
-                "description": "The access token secret"
-              },
-              " consumerKey": {
-                "kind": "property",
-                "displayName": "Consumer Key",
-                "group": "security",
-                "label": "security",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": true,
-                "description": "The consumer key"
-              },
-              " consumerSecret": {
-                "kind": "property",
-                "displayName": "Consumer Secret",
-                "group": "security",
-                "label": "security",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": true,
-                "description": "The consumer secret"
-              }
-            },
-            "description": "Connection from twitter when anyone mention you",
             "id": "1",
+            "connectorId": "org.foo_twitter-mention-connector_0.2.1",
+            "description": "Connection from twitter when anyone mention you",
             "name": "Twitter Mention",
             "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:0.2.1",
-            "camelConnectorPrefix": "twitter-mention"
+            "camelConnectorPrefix": "twitter-mention",
+            "properties": {
+            }
           },
           "configuredProperties": {
-            "accessToken": "",
-            "accessTokenSecret": "",
-            "consumerKey": "",
-            "consumerSecret": ""
           }
         },
         {
           "id": "2",
           "stepKind": "endpoint",
           "connection": {
+            "id": 2,
+            "connectorId": "salesforce",
+            "position": "end",
+            "description": "Salesforce Connection",
+            "name": "Salesforce Example",
             "configuredProperties": {
               "loginUrl": "https://login.salesforce.com",
               "clientId": "",
               "clientSecret": "",
               "refreshToken": ""
-            },
-            "connectorId": "salesforce",
-            "position": "end",
-            "description": "Salesforce Connection",
-            "name": "Salesforce Example",
-            "id": 2
+            }
           },
           "action": {
-            "connectorId": "org.foo_salesforce-upsert-contact-connector_1.0",
-            "properties": {
-              "loginUrl": {
-                "kind": "property",
-                "displayName": "Login Url",
-                "group": "security",
-                "label": "security",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "defaultValue": "https://login.salesforce.com",
-                "description": "Salesforce login URL defaults to https://login.salesforce.com"
-              },
-              "clientId": {
-                "kind": "property",
-                "displayName": "Client Id",
-                "group": "security",
-                "label": "security",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": true,
-                "description": "Salesforce connected application Consumer Key"
-              },
-              "clientSecret": {
-                "kind": "property",
-                "displayName": "Client Secret",
-                "group": "security",
-                "label": "security",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": true,
-                "description": "Salesforce connected application Consumer Secret"
-              },
-              "refreshToken": {
-                "kind": "property",
-                "displayName": "Refresh Token",
-                "group": "security",
-                "label": "security",
-                "required": false,
-                "type": "string",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": true,
-                "description": "Salesforce connected application Consumer token"
-              }
-            },
-            "description": "Connection to Create or Update Salesforce Contact SObject",
             "id": "2",
             "name": "Salesforce Upsert Contact",
+            "description": "Connection to Create or Update Salesforce Contact SObject",
             "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:0.2.1",
-            "camelConnectorPrefix": "salesforce-upsert-contact"
+            "camelConnectorPrefix": "salesforce-upsert-contact",
+            "connectorId": "org.foo_salesforce-upsert-contact-connector_1.0",
+            "properties": {
+            }
           },
           "configuredProperties": {
-            "loginUrl": "https://login.salesforce.com",
-            "clientId": "",
-            "clientSecret": "",
-            "refreshToken": ""
           }
         },{
           "id": "3",
@@ -649,25 +447,29 @@
   {
     "kind": "integration",
     "data": {
-      "configuration": "",
-      "description": "This is an example of a Timed Pull to Post Integration",
       "id": "2",
       "name": "Timed Pull to Post Example",
+      "description": "This is an example of a Timed Pull to Post Integration",
+      "configuration": "",
       "steps": [
         {
           "id": "5",
           "stepKind": "endpoint",
           "connection": {
-            "configuredProperties": {},
-            "connectorId": "timer",
-            "position": "start",
+            "id": 4,
+            "name": "Timer Example",
             "description": "Timer Connection",
             "icon": "fa-globe",
-            "name": "Timer Example",
-            "id": 4
+            "connectorId": "timer",
+            "position": "start",
+            "configuredProperties": {}
           },
           "action": {
+            "id": "com.redhat.ipaas_timer-connector_0.2.1",
+            "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
+            "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
+            "camelConnectorPrefix": "periodic-timer",
             "properties": {
               "period": {
                 "kind": "parameter",
@@ -681,11 +483,7 @@
                 "defaultValue": 10000,
                 "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
               }
-            },
-            "name": "PeriodicTimer",
-            "id": "com.redhat.ipaas_timer-connector_0.2.1",
-            "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
-            "camelConnectorPrefix": "periodic-timer"
+            }
           },
           "configuredProperties": {
             "period": "500"
@@ -695,16 +493,20 @@
           "id": "6",
           "stepKind": "endpoint",
           "connection": {
-            "configuredProperties": {},
-            "connectorId": "http",
-            "position": "any",
+            "id": 3,
+            "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
-            "name": "HTTP Example",
-            "id": 3
+            "position": "any",
+            "connectorId": "http",
+            "configuredProperties": {}
           },
           "action": {
+            "id": "com.redhat.ipaas:http-get-connector:0.2.1",
+            "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.1",
+            "camelConnectorPrefix": "http-get",
             "properties": {
               "httpUri": {
                 "kind": "path",
@@ -718,11 +520,7 @@
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
-            },
-            "name": "HTTP GET",
-            "id": "com.redhat.ipaas:http-get-connector:0.2.1",
-            "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.1",
-            "camelConnectorPrefix": "http-get"
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"
@@ -740,16 +538,20 @@
           "id": "8",
           "stepKind": "endpoint",
           "connection": {
-            "configuredProperties": {},
-            "connectorId": "http",
-            "position": "end",
+            "id": 3,
+            "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
-            "name": "HTTP Example",
-            "id": 3
+            "position": "end",
+            "connectorId": "http",
+            "configuredProperties": {}
           },
           "action": {
+            "id": "com.redhat.ipaas:http-post-connector:0.2.1",
+            "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.1",
+            "camelConnectorPrefix": "http-post",
             "properties": {
               "httpUri": {
                 "kind": "path",
@@ -763,11 +565,7 @@
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
-            },
-            "name": "HTTP POST",
-            "id": "com.redhat.ipaas:http-post-connector:0.2.1",
-            "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.1",
-            "camelConnectorPrefix": "http-post"
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
