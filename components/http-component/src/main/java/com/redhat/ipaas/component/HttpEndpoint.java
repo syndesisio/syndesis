@@ -22,7 +22,7 @@ import org.apache.camel.spi.UriPath;
 /**
  * iPaaS HTTP component
  */
-@UriEndpoint(firstVersion = "2.19.0", scheme = "ipaas-http", extendsScheme = "http4", syntax = "ipaas-http:serviceName",
+@UriEndpoint(firstVersion = "0.2.2", scheme = "ipaas-http", extendsScheme = "http4", syntax = "ipaas-http:serviceName",
     lenientProperties = true, title = "iPaaS HTTP", excludeProperties = "httpUri", label = "http", producerOnly = true)
 public class HttpEndpoint extends org.apache.camel.component.http4.HttpEndpoint {
 
