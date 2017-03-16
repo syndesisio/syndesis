@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { StepStore } from '../../../store/step/step.store';
+import { StepStore, StepKind, StepKinds } from '../../../store/step/step.store';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { FlowPage } from '../flow-page';
 import { Step, Steps, TypeFactory } from '../../../model';
@@ -32,22 +32,32 @@ export class IntegrationsStepSelectComponent extends FlowPage implements OnInit 
     super.goBack(['save-or-add-step']);
   }
 
-  getName(step: Step) {
+  getName(step: StepKind) {
+    // TODO this should be the norm
+    if (step.name) {
+      return step.name;
+    }
+    // fallback
     switch (step.stepKind) {
       case 'log':
         return 'Log';
       case 'datamapper':
         return 'Data Mapper';
+      default:
+        // TODO not ideal
+        return step.stepKind;
     }
   }
 
-  getDescription(step: Step) {
+  getDescription(step: StepKind) {
+    if (step.description) {
+      return step.description;
+    }
     switch (step.stepKind) {
       case 'log':
         return 'Sends a message to the integration\'s log';
       case 'datamapper':
         return 'Map fields from the input type to the output type';
-
     }
   }
 
