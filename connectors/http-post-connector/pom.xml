@@ -130,7 +130,10 @@
               <goal>prepare-spring-boot-auto-configuration</goal>
             </goals>
             <configuration>
+              <!-- we done want license headers -->
               <includeLicenseHeader>false</includeLicenseHeader>
+              <!-- we dont camel.connector as prefix -->
+              <configurationPrefix>false</configurationPrefix>
             </configuration>
           </execution>
           <execution>
