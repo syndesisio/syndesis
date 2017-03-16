@@ -66,7 +66,6 @@
     padding-top: 19px;
 
     ul {
-      cursor: pointer;
       min-width: 160px;
       padding: 10px 35px 0 0;
       -webkit-padding-start: 0;
@@ -84,9 +83,15 @@
             border-top: 1px solid #B8DFF3;
           }
           &.inactive {
+            cursor: pointer;
             color: #D1D1D1;
           }
+          &.disabled {
+            cursor: default;
+            pointer-events: none;
+          }
           > .current {
+            cursor: pointer;
             color: #363636;
           }
         }

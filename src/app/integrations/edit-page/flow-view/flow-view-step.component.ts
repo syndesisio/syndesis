@@ -108,10 +108,14 @@ export class FlowViewStepComponent {
         return 'inactive';
       }
     }
+    let answer = 'inactive';
     if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
-      return 'active';
+      answer = 'active';
     }
-    return 'inactive';
+    if (this.getTextClass(state) !== 'current') {
+      answer = answer + ' disabled';
+    }
+    return answer;
   }
 
   getTextClass(state: string) {
