@@ -75,22 +75,39 @@ export class FlowViewStepComponent {
 
   getParentClass() {
     let clazz = '';
-    switch (this.step.stepKind) {
-      case 'endpoint':
-        if (this.step.connection && this.step.connection && this.step.configuredProperties) {
-          clazz = 'current';
-        }
-        break;
-      default:
-        if (this.step.configuredProperties) {
-          clazz = 'current';
-        }
-        break;
+    if (this.thingIsEnabled(this.step)) {
+      clazz = 'current';
     }
     return 'parent-step ' + clazz;
   }
 
+  private thingIsEnabled(step: Step) {
+    if (!step) {
+      return false;
+    }
+    switch (step.stepKind) {
+      case 'endpoint':
+        if (step.connection && step.connection && step.configuredProperties) {
+          return true;
+        }
+        break;
+      default:
+        if (step.configuredProperties) {
+          return true;
+        }
+        break;
+    }
+    return false;
+  }
+
   getActiveClass(state: string) {
+    if (!state) {
+      if (this.thingIsEnabled(this.step)) {
+        return 'active';
+      } else {
+        return 'inactive';
+      }
+    }
     if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
       return 'active';
     }
