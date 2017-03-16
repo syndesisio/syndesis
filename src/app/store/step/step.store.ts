@@ -18,8 +18,9 @@ export class StepStore {
           required: true,
         },
         loggingLevel: {
-          type: 'string',
+          type: 'hidden',
           displayName: 'Level',
+          defaultValue: 'INFO',
           required: true,
         },
       },
