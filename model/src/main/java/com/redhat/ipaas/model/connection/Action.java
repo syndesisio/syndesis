@@ -44,6 +44,10 @@ public interface Action extends WithId<Action>, WithName, Serializable {
 
     String getCamelConnectorPrefix();
 
+    DataShape getInputDataShape();
+
+    DataShape getOutputDataShape();
+
     @Override
     default Action withId(String id) {
         return new Builder().createFrom(this).id(id).build();
