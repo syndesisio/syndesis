@@ -370,6 +370,10 @@
       "name": "Twitter to Salesforce Example",
       "description": "This is an example of a Twitter to Salesforce integration",
       "configuration": "",
+      "statusType": "Activated",
+      "tags": [
+        { "name": "example" }
+       ],
       "steps": [
         {
           "id": "1",
@@ -451,6 +455,10 @@
       "name": "Timed Pull to Post Example",
       "description": "This is an example of a Timed Pull to Post Integration",
       "configuration": "",
+      "statusType": "Activated",
+      "tags": [
+        { "name": "example" }
+       ],
       "steps": [
         {
           "id": "5",
