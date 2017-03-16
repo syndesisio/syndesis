@@ -26,6 +26,8 @@ export class FormFactoryService {
         case 'password':
           type = 'password';
           break;
+        case 'hidden':
+          break;
         default:
           type = 'text';
           break;
@@ -41,8 +43,8 @@ export class FormFactoryService {
       } else {
         formField = new DynamicInputModel({
           id: value.name || key,
-          label: value.title || value.displayName || value.name || key,
-          hint: value.description,
+          label: type === 'hidden' ? null : value.title || value.displayName || value.name || key,
+          hint: type === 'hidden' ? null : value.description,
           inputType: type,
           value: value.value || value.defaultValue,
         });
