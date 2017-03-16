@@ -1,26 +1,28 @@
 {
-  "baseScheme": "timer",
-  "baseGroupId": "org.apache.camel",
-  "baseArtifactId": "camel-core",
-  "baseVersion": "2.19.0-SNAPSHOT",
-  "baseJavaType": "org.apache.camel.component.timer.TimerComponent",
-  "name": "Timer",
-  "scheme": "periodic-timer",
-  "javaType": "com.redhat.ipaas.connector.timer.PeriodicTimerComponent",
-  "groupId": "com.redhat.ipaas",
-  "artifactId": "timer-connector",
-  "version": "1.0",
-  "description": "Set a timer that fires at intervals that you specify. This can cause some action, such as querying your Salesforce data.",
+  "baseScheme" : "timer",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-core",
+  "baseVersion" : "2.19.0-SNAPSHOT",
+  "baseJavaType" : "org.apache.camel.component.timer.TimerComponent",
+  "name" : "Timer",
+  "scheme" : "periodic-timer",
+  "javaType" : "com.redhat.ipaas.connector.timer.PeriodicTimerComponent",
+  "groupId" : "com.redhat.ipaas",
+  "artifactId" : "timer-connector",
+  "version" : "0.2-SNAPSHOT",
+  "description" : "Set a timer that fires at intervals that you specify. This can cause some action, such as querying your Salesforce data.",
   "labels" : [ "timer" ],
-  "pattern": "From",
-  "inputDataType": "none",
-  "outputDataType": "*",
+  "pattern" : "From",
+  "inputDataType" : "none",
+  "outputDataType" : "*",
   "endpointOptions" : [ "period" ],
   "endpointValues" : {
-    "timerName": "every",
+    "timerName" : "every",
     "period" : "10000"
   },
   "endpointOverrides" : {
-    "period": { "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)." }
+    "period" : {
+      "description" : "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+    }
   }
 }

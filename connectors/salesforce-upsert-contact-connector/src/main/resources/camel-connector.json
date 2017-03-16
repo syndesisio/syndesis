@@ -1,27 +1,29 @@
 {
-  "baseScheme": "salesforce",
-  "baseGroupId": "org.apache.camel",
-  "baseArtifactId": "camel-salesforce",
-  "baseVersion": "2.19.0-SNAPSHOT",
-  "baseJavaType": "org.apache.camel.component.salesforce.SalesforceComponent",
-  "name": "SalesforceUpsertContact",
-  "scheme": "salesforce-upsert-contact",
-  "javaType": "com.redhat.ipaas.connector.salesforce.SalesforceUpsertContactComponent",
-  "groupId": "com.redhat.ipaas",
-  "artifactId": "salesforce-upsert-contact-connector",
-  "version": "1.0",
-  "description": "Create or update Salesforce contact",
+  "baseScheme" : "salesforce",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-salesforce",
+  "baseVersion" : "2.19.0-SNAPSHOT",
+  "baseJavaType" : "org.apache.camel.component.salesforce.SalesforceComponent",
+  "name" : "SalesforceUpsertContact",
+  "scheme" : "salesforce-upsert-contact",
+  "javaType" : "com.redhat.ipaas.connector.salesforce.SalesforceUpsertContactComponent",
+  "groupId" : "com.redhat.ipaas",
+  "artifactId" : "salesforce-upsert-contact-connector",
+  "version" : "0.2-SNAPSHOT",
+  "description" : "Create or update Salesforce contact",
   "labels" : [ "salesforce" ],
-  "pattern": "To",
-  "inputDataType": "java:org.foo.salesforce.upsert.contact.Contact",
-  "outputDataType": "none",
-  "globalOptions": [ "loginUrl", "clientId", "clientSecret", "refreshToken" ],
+  "pattern" : "To",
+  "inputDataType" : "java:org.foo.salesforce.upsert.contact.Contact",
+  "outputDataType" : "none",
+  "globalOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken" ],
   "componentOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken" ],
   "endpointValues" : {
-    "operationName": "upsertSObject"
+    "operationName" : "upsertSObject"
   },
-  "endpointOverrides": {
-    "sObjectIdName": { "required": true }
+  "endpointOverrides" : {
+    "sObjectIdName" : {
+      "required" : true
+    }
   },
-  "endpointOptions": [ "sObjectIdName", "sObjectIdValue" ]
+  "endpointOptions" : [ "sObjectIdName", "sObjectIdValue" ]
 }
