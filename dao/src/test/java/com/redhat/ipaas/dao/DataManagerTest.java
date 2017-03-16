@@ -60,8 +60,8 @@ public class DataManagerTest {
         for (Connection connection : connections.getItems()) {
             System.out.print(connection.getId().get() + ",");
         }
-        Assert.assertTrue(connections.getTotalCount() > 1);
-        Assert.assertTrue(connections.getItems().size() > 1);
+        Assert.assertEquals(4, connections.getTotalCount());
+        Assert.assertEquals(4, connections.getItems().size());
         Assert.assertEquals(connections.getTotalCount(), connections.getItems().size());
     }
 
@@ -69,20 +69,28 @@ public class DataManagerTest {
     public void getConnectorsWithFilterFunction() {
         ListResult<Connector> connectors = dataManager.fetchAll(
             Connector.KIND,
-            resultList -> new ListResult.Builder<Connector>().createFrom(resultList).items(resultList.getItems().subList(0, 1)).build()
+            resultList -> new ListResult.Builder<Connector>().createFrom(resultList).items(resultList.getItems().subList(0, 2)).build()
         );
         for (Connector connector : connectors.getItems()) {
             System.out.print(connector.getId().get() + ",");
         }
-        Assert.assertTrue(connectors.getTotalCount() > 1);
-        Assert.assertEquals(1, connectors.getItems().size());
+        Assert.assertEquals(4, connectors.getTotalCount());
+        Assert.assertEquals(2, connectors.getItems().size());
     }
 
     @Test
-    public void getConnector() {
+    public void getTwitterConnector() {
         Connector connector = dataManager.fetch(Connector.KIND, "twitter");
         System.out.println(connector.getName());
         Assert.assertEquals("First Connector in the deployment.json is Twitter", "Twitter", connector.getName());
+        Assert.assertEquals(7, connector.getActions().size());
+    }
+    
+    @Test
+    public void getSalesforceConnector() {
+        Connector connector = dataManager.fetch(Connector.KIND, "salesforce");
+        System.out.println(connector.getName());
+        Assert.assertEquals("Second Connector in the deployment.json is Salesforce", "Salesforce", connector.getName());
         Assert.assertEquals(7, connector.getActions().size());
     }
     
