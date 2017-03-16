@@ -1,7 +1,12 @@
 #!/bin/bash
 
+#Move image streams inside the test namespace
+oc export is -n ipaas-ci | oc create -n "${KUBERNETES_NAMESPACE}" -f -
+
 # We pass the namespace on each command individually, because when this script is run inside a pod, all commands default to the pod namespace (ignoring commands like `oc project` etc)
 echo "Installing IPaaS in ${KUBERNETES_NAMESPACE}"
+
+
 oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/serviceaccount-as-oauthclient-single-tenant.yml -n ${KUBERNETES_NAMESPACE} || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/serviceaccount-as-oauthclient-single-tenant.yml -n ${KUBERNETES_NAMESPACE}
 oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-dev-single-tenant.yml -n ${KUBERNETES_NAMESPACE}  || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-dev-single-tenant.yml -n ${KUBERNETES_NAMESPACE}
 oc new-app redhat-ipaas-dev-single-tenant \
