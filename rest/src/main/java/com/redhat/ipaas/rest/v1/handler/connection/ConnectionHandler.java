@@ -19,10 +19,10 @@ import javax.ws.rs.Path;
 
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.connection.Connection;
+import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Path("/connections")
@@ -42,6 +42,16 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
     @Override
     public String resourceKind() {
         return Connection.KIND;
+    }
+    
+    @Override
+    public Connection get(String id) {
+        Connection connection = Getter.super.get(id);
+        if (connection.getConnectorId().isPresent()) {
+            Connector connector = getDataManager().fetch(Connector.KIND, connection.getConnectorId().get());
+            connection = new Connection.Builder().createFrom(connection).connector(connector).build();
+        }
+        return connection;
     }
 
 }
