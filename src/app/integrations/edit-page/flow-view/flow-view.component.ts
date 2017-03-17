@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { Integration, Step, TypeFactory } from '../../../model';
+import { ChildAwarePage } from '../child-aware-page';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -14,28 +15,36 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './flow-view.component.html',
   styleUrls: ['./flow-view.component.scss'],
 })
-export class FlowViewComponent implements OnInit, OnDestroy {
+export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestroy {
 
   i: Integration;
   flowSubscription: Subscription;
   childRouteSubscription: Subscription;
   urls: UrlSegment[];
-  @Input()
-  currentPosition: number;
-  @Input()
-  currentState: string;
-  integrationName = 'Integration Name';
 
   constructor(
-    private currentFlow: CurrentFlow,
-    private route: ActivatedRoute,
-    private router: Router,
-    private detector: ChangeDetectorRef,
+    public currentFlow: CurrentFlow,
+    public route: ActivatedRoute,
+    public router: Router,
+    public detector: ChangeDetectorRef,
   ) {
+    super(route, router);
     // Hmmmmm, this needs to be set here to deal with new integrations
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
     });
+  }
+
+  get currentPosition() {
+    return this.getCurrentPosition();
+  }
+
+  get currentState() {
+    return this.getCurrentChild();
+  }
+
+  editIntegrationBasics() {
+    this.router.navigate(['integration-basics'], { relativeTo: this.route });
   }
 
   loaded() {
@@ -77,18 +86,14 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     this.router.navigate(['connection-select', target], { relativeTo: this.route });
   }
 
-  integrationNameChanged($event) {
-    this.currentFlow.events.emit({
-      kind: 'integration-set-name',
-      name: $event,
-    });
+  get integrationName() {
+    return (this.currentFlow.integration || { name: '' }).name || '';
   }
 
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
       case 'integration-updated':
         this.i = event['integration'];
-        this.integrationName = this.i.name;
         break;
       case 'integration-connection-select':
         break;

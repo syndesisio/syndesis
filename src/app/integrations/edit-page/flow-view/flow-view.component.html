@@ -5,9 +5,13 @@
     <div class="row name">
       <div class="col-md-12">
         <div class="form-group">
-          <input type="text" id="integrationName" class="form-control integration-name" placeholder="Enter integration name..." [ngModel]="integrationName"
-            (ngModelChange)="integrationNameChanged($event)">
-          <span class="pficon pficon-edit pull-right"></span>
+          <div class="clickable" *ngIf="currentState !== 'integration-basics'" (click)="editIntegrationBasics()">
+            <input type="text" id="integrationName" class="form-control integration-name" placeholder="Enter integration name..." [ngModel]="integrationName" readonly>
+            <span class="pficon pficon-edit pull-right"></span>
+          </div>
+          <div *ngIf="currentState === 'integration-basics'">
+            <input type="text" id="integrationName" class="form-control integration-name" placeholder="Enter integration name..." readonly>
+          </div>
         </div>
       </div>
     </div>

@@ -42,6 +42,11 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
   }
 
   validateFlow() {
+    if (!this.currentFlow.integration.name || this.currentFlow.integration.name === '' ||
+        !this.currentFlow.integration.description || this.currentFlow.integration.description === '') {
+      this.router.navigate(['integration-basics'], { relativeTo: this.route.parent });
+      return;
+    }
     if (this.currentFlow.getStartConnection() === undefined) {
       this.router.navigate(['connection-select', this.currentFlow.getFirstPosition()], { relativeTo: this.route.parent });
       return;
