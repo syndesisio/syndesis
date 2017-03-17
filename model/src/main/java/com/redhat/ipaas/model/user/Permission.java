@@ -18,6 +18,7 @@ package com.redhat.ipaas.model.user;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import org.immutables.value.Value;
@@ -26,11 +27,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Permission.Builder.class)
 public interface Permission extends WithId<Permission>, WithName, Serializable {
 
-    String KIND = "permission";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.Permission;
     }
 
     String getDescription();

@@ -47,9 +47,10 @@ public interface Lister<T extends WithId> extends Resource<T>, WithDataManager {
 
     })
     default ListResult<T> list(@Context UriInfo uriInfo) {
+        Class<T> clazz = (Class<T>)resourceKind().getModelClass();
         return getDataManager().fetchAll(
-            resourceKind(),
-            new ReflectiveSorter<>(resourceClass(), new SortOptionsFromQueryParams(uriInfo)),
+            clazz,
+            new ReflectiveSorter<>(clazz, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
         );
     }

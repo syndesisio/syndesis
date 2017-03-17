@@ -21,19 +21,9 @@ import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.dao.init.ModelData;
 import com.redhat.ipaas.dao.init.ReadApiClientData;
 import com.redhat.ipaas.model.ChangeEvent;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.WithId;
-import com.redhat.ipaas.model.connection.Action;
-import com.redhat.ipaas.model.connection.Connection;
-import com.redhat.ipaas.model.connection.Connector;
-import com.redhat.ipaas.model.connection.ConnectorGroup;
-import com.redhat.ipaas.model.environment.Environment;
-import com.redhat.ipaas.model.environment.EnvironmentType;
-import com.redhat.ipaas.model.environment.Organization;
-import com.redhat.ipaas.model.integration.*;
-import com.redhat.ipaas.model.user.Permission;
-import com.redhat.ipaas.model.user.Role;
-import com.redhat.ipaas.model.user.User;
 import org.infinispan.Cache;
 import org.infinispan.manager.CacheContainer;
 import org.slf4j.Logger;
@@ -102,10 +92,10 @@ public class DataManager implements DataAccessObjectRegistry {
 
     public void store(ModelData modelData) {
         try {
-            Class<? extends WithId> clazz = getClass(modelData.getKind());
-            String kind = modelData.getKind().toLowerCase();
+            Class<? extends WithId> clazz = (Class<? extends WithId>) modelData.getKind().modelClass;
+            Kind kind = modelData.getKind();
 
-            LOGGER.debug(modelData.getKind() + ":" + modelData.getData());
+            LOGGER.debug(kind + ":" + modelData.getData());
             WithId entity = clazz.cast(mapper.readValue(modelData.getData(), clazz));
             Optional<String> id = entity.getId();
             if (!id.isPresent()) {
@@ -113,11 +103,11 @@ public class DataManager implements DataAccessObjectRegistry {
             } else {
                 WithId prev = null;
                 try {
-                    prev = fetch(kind, id.get());
+                    prev = fetch(kind.getModelClass(), id.get());
                 } catch (RuntimeException e) {
                     // Lets try to wipe out the previous record in case
                     // we are running into something like a schema change.
-                    delete(kind, id.get());
+                    delete(kind.getModelClass(), id.get());
                 }
                 if (prev == null) {
                     create(entity);
@@ -148,57 +138,12 @@ public class DataManager implements DataAccessObjectRegistry {
         }
     }
 
-    public Class<? extends WithId> getClass(String kind) {
-        switch (kind.toLowerCase()) {
-            case Connector.KIND:
-                return Connector.class;
-            case ConnectorGroup.KIND:
-                return ConnectorGroup.class;
-            case Connection.KIND:
-                return Connection.class;
-            case Environment.KIND:
-                return Environment.class;
-            case EnvironmentType.KIND:
-                return EnvironmentType.class;
-            case Integration.KIND:
-                return Integration.class;
-            case IntegrationConnectionStep.KIND:
-                return IntegrationConnectionStep.class;
-            case IntegrationPattern.KIND:
-                return IntegrationPattern.class;
-            case IntegrationPatternGroup.KIND:
-                return IntegrationPatternGroup.class;
-            case IntegrationRuntime.KIND:
-                return IntegrationRuntime.class;
-            case IntegrationTemplate.KIND:
-                return IntegrationTemplate.class;
-            case IntegrationTemplateConnectionStep.KIND:
-                return IntegrationTemplateConnectionStep.class;
-            case Organization.KIND:
-                return Organization.class;
-            case Permission.KIND:
-                return Permission.class;
-            case Role.KIND:
-                return Role.class;
-            case Step.KIND:
-                return Step.class;
-            case Tag.KIND:
-                return Tag.class;
-            case User.KIND:
-                return User.class;
-            case Action.KIND:
-                return Action.class;
-            default:
-                break;
-        }
-        throw IPaasServerException.launderThrowable(new IllegalArgumentException("No matching class found for model " + kind));
-    }
-
     @SuppressWarnings("unchecked")
-    public <T extends WithId> ListResult<T> fetchAll(String kind, Function<ListResult<T>, ListResult<T>>... operators) {
-        Cache<String, WithId> cache = caches.getCache(kind);
+    public <T extends WithId> ListResult<T> fetchAll(Class<T> model, Function<ListResult<T>, ListResult<T>>... operators) {
+        Kind kind = Kind.from(model);
+        Cache<String, WithId> cache = caches.getCache(kind.getModelName());
 
-        ListResult<T> result = (ListResult<T>) doWithDataAccessObject(kind, d -> d.fetchAll());
+        ListResult<T> result = (ListResult<T>) doWithDataAccessObject(model, d -> d.fetchAll());
         if( result == null ) {
             // fall back to using the cache for getting values..
             result = ListResult.of((Collection<T>) cache.values());
@@ -210,14 +155,15 @@ public class DataManager implements DataAccessObjectRegistry {
         return result;
     }
 
-    public <T extends WithId> T fetch(String kind, String id) {
-        Map<String, WithId> cache = caches.getCache(kind);
+    public <T extends WithId> T fetch(Class<T> model, String id) {
+        Kind kind = Kind.from(model);
+        Map<String, WithId> cache = caches.getCache(kind.getModelName());
 
         // TODO: report bug in cache.computeIfAbsent, it breaks if the mappingFunction returns null
         // return (T) cache.computeIfAbsent(id, i -> doWithDataAccessObject(kind, d -> (T) d.fetch(i)));
         T value = (T) cache.get(id);
         if ( value == null) {
-            value = doWithDataAccessObject(kind, d -> (T) d.fetch(id));
+            value = doWithDataAccessObject(model, d -> (T) d.fetch(id));
             if (value != null) {
                 cache.put(id, value);
             }
@@ -226,8 +172,8 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     public <T extends WithId> T create(T entity) {
-        String kind = entity.getKind();
-        Cache<String, WithId> cache = caches.getCache(kind);
+        Kind kind = entity.getKind();
+        Cache<String, WithId> cache = caches.getCache(kind.getModelName());
         Optional<String> id = entity.getId();
         String idVal;
         if (!id.isPresent()) {
@@ -242,15 +188,15 @@ public class DataManager implements DataAccessObjectRegistry {
         }
 
         T finalEntity = entity;
-        doWithDataAccessObject(kind, d -> d.create(finalEntity));
+        doWithDataAccessObject(kind.getModelClass(), d -> d.create(finalEntity));
         cache.put(idVal, finalEntity);
-        broadcast("created", kind, idVal);
+        broadcast("created", kind.getModelName(), idVal);
         return finalEntity;
     }
 
     public void update(WithId entity) {
-        String kind = entity.getKind();
-        Map<String, WithId> cache = caches.getCache(kind);
+        Kind kind = entity.getKind();
+        Map<String, WithId> cache = caches.getCache(kind.getModelName());
 
         Optional<String> id = entity.getId();
         if (!id.isPresent()) {
@@ -262,16 +208,17 @@ public class DataManager implements DataAccessObjectRegistry {
             throw new EntityNotFoundException("Can not find " + kind + " with id " + idVal);
         }
 
-        doWithDataAccessObject(kind, d -> d.update(entity));
+        doWithDataAccessObject(kind.getModelClass(), d -> d.update(entity));
         cache.put(idVal, entity);
-        broadcast("updated", kind, idVal);
+        broadcast("updated", kind.getModelName(), idVal);
 
         //TODO 1. properly merge the data ? + add data validation in the REST Resource
     }
 
 
-    public boolean delete(String kind, String id) {
-        Map<String, WithId> cache = caches.getCache(kind);
+    public <T extends WithId> boolean delete(Class<T> model, String id) {
+        Kind kind = Kind.from(model);
+        Map<String, WithId> cache = caches.getCache(kind.getModelName());
         if (id == null || id.equals(""))
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
 
@@ -279,12 +226,12 @@ public class DataManager implements DataAccessObjectRegistry {
         WithId entity = cache.remove(id);
         // And out of the DAO
         boolean deletedInDAO = Optional.ofNullable(
-            doWithDataAccessObject(kind, d -> d.delete(entity))
+            doWithDataAccessObject(model, d -> d.delete(entity))
         ).orElse(Boolean.FALSE).booleanValue();
 
         // Return true if the entity was found in any of the two.
         if ( deletedInDAO || entity != null ) {
-            broadcast("deleted", kind, id);
+            broadcast("deleted", kind.getModelName(), id);
             return true;
         } else {
             return false;
@@ -300,13 +247,13 @@ public class DataManager implements DataAccessObjectRegistry {
     /**
      * Perform a simple action if a {@link DataAccessObject} for the specified kind exists.
      * This is just a way to avoid, duplicating the dao lookup and checks, which are going to change.
-     * @param kind          The kind of the {@link DataAccessObject}.
+     * @param model         The model class of the {@link DataAccessObject}.
      * @param function      The function to perfom on the {@link DataAccessObject}.
      * @param <O>           The return type.
      * @return              The outcome of the function.
      */
-    private <O> O doWithDataAccessObject(String kind, Function<DataAccessObject, O> function) {
-        DataAccessObject dataAccessObject = getDataAccessObject(getClass(kind));
+    private <O> O doWithDataAccessObject(Class model, Function<DataAccessObject, O> function) {
+        DataAccessObject dataAccessObject = getDataAccessObject(model);
         if (dataAccessObject != null) {
             return function.apply(dataAccessObject);
         }

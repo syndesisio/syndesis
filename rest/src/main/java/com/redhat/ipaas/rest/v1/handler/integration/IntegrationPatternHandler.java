@@ -18,12 +18,12 @@ package com.redhat.ipaas.rest.v1.handler.integration;
 import javax.ws.rs.Path;
 
 import com.redhat.ipaas.dao.manager.DataManager;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.integration.IntegrationPattern;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Path("/integrationpatterns")
@@ -36,13 +36,8 @@ public class IntegrationPatternHandler extends BaseHandler implements Lister<Int
     }
 
     @Override
-    public Class<IntegrationPattern> resourceClass() {
-        return IntegrationPattern.class;
-    }
-
-    @Override
-    public String resourceKind() {
-        return IntegrationPattern.KIND;
+    public Kind resourceKind() {
+        return Kind.IntegrationPattern;
     }
 
 }

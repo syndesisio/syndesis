@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import org.immutables.value.Value;
@@ -27,11 +28,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Role.Builder.class)
 public interface Role extends WithId<Role>, WithName, Serializable {
 
-    String KIND = "role";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.Role;
     }
 
     List<Permission> getPermissions();

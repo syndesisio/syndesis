@@ -26,7 +26,8 @@ public interface Deleter<T extends WithId> extends Resource<T>, WithDataManager 
     @Consumes("application/json")
     @Path(value = "/{id}")
     default void delete(@PathParam("id") String id) {
-        getDataManager().delete(resourceKind(), id);
+        Class<T> modelClass = (Class<T>) resourceKind().getModelClass();
+        getDataManager().delete(modelClass, id);
     }
 
 }

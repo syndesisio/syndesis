@@ -20,4 +20,10 @@ import com.redhat.ipaas.dao.manager.DataAccessObject;
 import com.redhat.ipaas.model.user.User;
 
 public interface UserDao extends DataAccessObject<User> {
+
+    @Override
+    default public Class<User> getType() {
+        return User.class;
+    }
+
 }

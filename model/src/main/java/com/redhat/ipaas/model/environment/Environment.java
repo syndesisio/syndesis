@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import org.immutables.value.Value;
@@ -33,11 +34,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Environment.Builder.class)
 public interface Environment extends WithId<Environment>, WithName, Serializable {
 
-    String KIND = "environment";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.Environment;
     }
 
     EnvironmentType environmentType();

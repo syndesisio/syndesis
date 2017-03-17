@@ -26,7 +26,6 @@ import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.integration.IntegrationPattern;
 
-@Named(IntegrationPattern.KIND)
 @ApplicationScoped
 public class IntegrationPatternDaoImpl implements IntegrationPatternDao {
 
@@ -44,11 +43,6 @@ public class IntegrationPatternDaoImpl implements IntegrationPatternDao {
         register(IntegrationPattern.MESSAGE_FILTER);
         register(IntegrationPattern.SET_BODY);
         register(IntegrationPattern.SET_HEDER);
-    }
-
-    @Override
-    public Class<IntegrationPattern> getType() {
-        return IntegrationPattern.class;
     }
 
     @Override

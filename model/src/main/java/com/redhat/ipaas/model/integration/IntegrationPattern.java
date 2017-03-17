@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import io.fabric8.funktion.model.StepKinds;
@@ -37,11 +38,9 @@ public interface IntegrationPattern extends WithId<IntegrationPattern>, WithName
     IntegrationPattern SET_BODY = new IntegrationPattern.Builder().id(StepKinds.SET_BODY).name("Set Body").build();
     IntegrationPattern SET_HEDER = new IntegrationPattern.Builder().id(StepKinds.SET_HEADERS).name("Set Headers").build();
 
-    String KIND = "integration-pattern";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.IntegrationPattern;
     }
 
     String getIcon();

@@ -15,22 +15,21 @@
  */
 package com.redhat.ipaas.model.environment;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import org.immutables.value.Value;
+
+import java.io.Serializable;
 
 @Value.Immutable
 @JsonDeserialize(builder = EnvironmentType.Builder.class)
 public interface EnvironmentType extends WithId<EnvironmentType>, WithName, Serializable {
 
-    String KIND = "environment-type";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.EnvironmentType;
     }
 
     @Override

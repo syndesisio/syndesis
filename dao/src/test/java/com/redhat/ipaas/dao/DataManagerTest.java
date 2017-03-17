@@ -22,8 +22,10 @@ import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.connection.Connection;
 import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.integration.Integration;
-
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ public class DataManagerTest {
 
     @Test
     public void getConnectors() {
-        ListResult<Connector> connectors = dataManager.fetchAll(Connector.KIND);
+        ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         for (Connector connector : connectors.getItems()) {
             System.out.print(connector.getId().get() + ",");
         }
@@ -57,7 +59,7 @@ public class DataManagerTest {
 
     @Test
     public void getConnections() {
-        ListResult<Connection> connections = dataManager.fetchAll(Connection.KIND);
+        ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
         for (Connection connection : connections.getItems()) {
             System.out.print(connection.getId().get() + ",");
         }
@@ -69,7 +71,7 @@ public class DataManagerTest {
     @Test
     public void getConnectorsWithFilterFunction() {
         ListResult<Connector> connectors = dataManager.fetchAll(
-            Connector.KIND,
+            Connector.class,
             resultList -> new ListResult.Builder<Connector>().createFrom(resultList).items(resultList.getItems().subList(0, 2)).build()
         );
         for (Connector connector : connectors.getItems()) {
@@ -81,27 +83,27 @@ public class DataManagerTest {
 
     @Test
     public void getTwitterConnector() {
-        Connector connector = dataManager.fetch(Connector.KIND, "twitter");
+        Connector connector = dataManager.fetch(Connector.class, "twitter");
         System.out.println(connector.getName());
         Assert.assertEquals("First Connector in the deployment.json is Twitter", "Twitter", connector.getName());
         Assert.assertEquals(7, connector.getActions().size());
     }
-    
+
     @Test
     public void getSalesforceConnector() {
-        Connector connector = dataManager.fetch(Connector.KIND, "salesforce");
+        Connector connector = dataManager.fetch(Connector.class, "salesforce");
         System.out.println(connector.getName());
         Assert.assertEquals("Second Connector in the deployment.json is Salesforce", "Salesforce", connector.getName());
         Assert.assertEquals(7, connector.getActions().size());
     }
-    
+
     @Test
     public void getIntegration() throws IOException {
-        Integration integration = dataManager.fetch(Integration.KIND, "1");
+        Integration integration = dataManager.fetch(Integration.class, "1");
         System.out.println(integration.getName());
         Assert.assertEquals("Example Integration", "Twitter to Salesforce Example", integration.getName());
         Assert.assertEquals(4, integration.getSteps().get().size());
-        
+
         //making sure we can deserialize Enums such as StatusType
         Integration int2 = new Integration.Builder().createFrom(integration).statusType(Integration.Type.Activated).build();
         String json = Json.mapper().writeValueAsString(int2);

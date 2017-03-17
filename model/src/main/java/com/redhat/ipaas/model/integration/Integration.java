@@ -15,31 +15,30 @@
  */
 package com.redhat.ipaas.model.integration;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import com.redhat.ipaas.model.connection.Connection;
 import com.redhat.ipaas.model.user.User;
 import org.immutables.value.Value;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
+
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
 public interface Integration extends WithId<Integration>, WithName, Serializable {
 
-    String KIND = "integration";
-    
     public static enum Type {Activated, Deactivated};
-    
+
     public static enum Phase {Pending, Running, Succeeded, Failed, Unknown};
 
     /**
      *Required Labels
      */
-    String LABEL_NAME = "ipaas.redhat.com/integration-name";
+    String LABEL_NAME = "ipaas.redhat.com/integration-modelName";
 
     /**
      * Optional Labels
@@ -52,8 +51,8 @@ public interface Integration extends WithId<Integration>, WithName, Serializable
     String LABEL_TEMPLATE_ID = "ipaas.redhat.com/template-id";
 
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.Integration;
     }
 
     Optional<String> getConfiguration();

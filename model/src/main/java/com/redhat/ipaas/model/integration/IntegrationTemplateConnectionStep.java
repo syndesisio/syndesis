@@ -18,6 +18,7 @@ package com.redhat.ipaas.model.integration;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.connection.Connection;
 import org.immutables.value.Value;
@@ -26,11 +27,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = IntegrationTemplateConnectionStep.Builder.class)
 public interface IntegrationTemplateConnectionStep extends WithId<IntegrationTemplateConnectionStep>, Serializable {
 
-    String KIND = "integration-template-connection-step";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.IntegrationTemplateConnectionStep;
     }
 
     IntegrationTemplate getIntegrationTemplate();

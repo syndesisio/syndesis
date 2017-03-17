@@ -25,6 +25,7 @@ import javax.ws.rs.Path;
 import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.github.GitHubService;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.openshift.OpenShiftService;
 import com.redhat.ipaas.project.converter.IntegrationToProjectConverter;
@@ -59,13 +60,8 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     }
 
     @Override
-    public Class<Integration> resourceClass() {
-        return Integration.class;
-    }
-
-    @Override
-    public String resourceKind() {
-        return Integration.KIND;
+    public Kind resourceKind() {
+        return Kind.Integration;
     }
 
     @Override

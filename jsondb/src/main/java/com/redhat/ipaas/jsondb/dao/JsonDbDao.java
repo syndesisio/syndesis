@@ -26,6 +26,7 @@ import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.core.Json;
 import com.redhat.ipaas.dao.manager.DataAccessObject;
 import com.redhat.ipaas.jsondb.JsonDB;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.WithId;
 
@@ -40,7 +41,9 @@ abstract public class JsonDbDao<T extends WithId> implements DataAccessObject<T>
         this.jsondb = jsondb;
     }
 
-    abstract public String getCollectionPath();
+    public String getCollectionPath() {
+        return "/"+Kind.from(getType()).getModelName()+"s";
+    }
 
     @Override
     public T fetch(String id) {

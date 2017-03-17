@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import com.redhat.ipaas.model.user.User;
@@ -28,11 +29,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Organization.Builder.class)
 public interface Organization extends WithId<Organization>, WithName, Serializable {
 
-    String KIND = "organization";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.Organization;
     }
 
     List<Environment> getEnvironments();

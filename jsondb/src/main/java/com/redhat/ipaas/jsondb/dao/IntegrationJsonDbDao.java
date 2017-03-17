@@ -33,14 +33,4 @@ public class IntegrationJsonDbDao extends JsonDbDao<Integration> implements Inte
         super(jsondb);
     }
 
-    @Override
-    public Class<Integration> getType() {
-        return Integration.class;
-    }
-
-    @Override
-    public String getCollectionPath() {
-        return "/integrations";
-    }
-
 }

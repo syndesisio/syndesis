@@ -18,6 +18,7 @@ package com.redhat.ipaas.rest.v1.handler.connection;
 import javax.ws.rs.Path;
 
 import com.redhat.ipaas.dao.manager.DataManager;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.connection.Connection;
 import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
@@ -35,13 +36,8 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
     }
 
     @Override
-    public Class<Connection> resourceClass() {
-        return Connection.class;
-    }
-
-    @Override
-    public String resourceKind() {
-        return Connection.KIND;
+    public Kind resourceKind() {
+        return Kind.Connection;
     }
     
     @Override

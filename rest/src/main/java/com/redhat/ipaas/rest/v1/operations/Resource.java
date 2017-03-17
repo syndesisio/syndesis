@@ -15,10 +15,10 @@
  */
 package com.redhat.ipaas.rest.v1.operations;
 
+import com.redhat.ipaas.model.Kind;
+
 public interface Resource<T> {
 
-    Class<T> resourceClass();
-
-    String resourceKind();
+    Kind resourceKind();
 
 }

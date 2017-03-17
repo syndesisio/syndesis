@@ -18,6 +18,7 @@ package com.redhat.ipaas.model.integration;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.environment.Environment;
 import org.immutables.value.Value;
@@ -26,11 +27,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = IntegrationRuntime.Builder.class)
 public interface IntegrationRuntime extends WithId<IntegrationRuntime>, Serializable {
 
-    String KIND = "integration-runtime";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.IntegrationRuntime;
     }
 
     String getState();
