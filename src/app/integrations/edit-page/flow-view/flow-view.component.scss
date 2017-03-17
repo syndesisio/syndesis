@@ -3,6 +3,13 @@
   margin-left: 20px !important;
 }
 
+.clickable {
+  cursor: pointer;
+  & > * {
+    cursor: pointer;
+  }
+}
+
 .popover-body > div {
   padding: 5px;
 }

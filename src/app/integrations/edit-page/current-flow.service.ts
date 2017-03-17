@@ -157,8 +157,9 @@ export class CurrentFlow {
           log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
         }
         break;
-      case 'integration-set-name':
-        this._integration.name = event[ 'name' ];
+      case 'integration-set-property':
+        this._integration[event['property']] = event['value'];
+        this.maybeDoAction(event['onSave']);
         break;
       case 'integration-save':
         {

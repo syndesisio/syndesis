@@ -7,6 +7,7 @@ import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integration } from '../../model';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
 import { log, getCategory } from '../../logging';
+import { ChildAwarePage } from './child-aware-page';
 
 const category = getCategory('IntegrationsEditPage');
 
@@ -15,7 +16,7 @@ const category = getCategory('IntegrationsEditPage');
   templateUrl: './edit-page.component.html',
   styleUrls: [ './edit-page.component.scss' ],
 })
-export class IntegrationsEditPage implements OnInit, OnDestroy {
+export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDestroy {
 
   integration: Observable<Integration>;
   private readonly loading: Observable<boolean>;
@@ -28,43 +29,15 @@ export class IntegrationsEditPage implements OnInit, OnDestroy {
   _canContinue = false;
   position: number;
 
-  constructor( private currentFlow: CurrentFlow,
-              private store: IntegrationStore,
-              private route: ActivatedRoute,
-              private router: Router,
-              private detector: ChangeDetectorRef,
+  constructor( public currentFlow: CurrentFlow,
+              public store: IntegrationStore,
+              public route: ActivatedRoute,
+              public router: Router,
+              public detector: ChangeDetectorRef,
                ) {
+    super(route, router);
     this.integration = this.store.resource;
     this.loading = this.store.loading;
-  }
-
-  getCurrentChild(): string {
-    const child = this.route.firstChild;
-    if (child && child.snapshot) {
-      const path = child.snapshot.url;
-      // log.debugc(() => 'path from root: ' + path, category);
-      return path[ 0 ].path;
-    } else {
-      // log.debugc(() => 'no current child', category);
-      return undefined;
-    }
-  }
-
-  getCurrentPosition(): number {
-    const child = this.route.firstChild;
-    if (child && child.snapshot) {
-      const path = child.snapshot.url;
-      // log.debugc(() => 'path from root: ' + path, category);
-      try {
-        const position = path[1].path;
-        return +position;
-      } catch (error) {
-        return -1;
-      }
-    } else {
-      // log.debugc(() => 'no current child', category);
-      return undefined;
-    }
   }
 
   handleFlowEvent(event: FlowEvent) {

@@ -11,6 +11,7 @@ import { PopoverModule } from 'ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
 
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
+import { IntegrationBasicsComponent } from './edit-page/integration-basics/integration-basics.component';
 import { IntegrationsSelectConnectionComponent } from './edit-page/connection-select/connection-select.component';
 import { IntegrationsConfigureActionComponent } from './edit-page/action-configure/action-configure.component';
 import { IntegrationsSelectActionComponent } from './edit-page/action-select/action-select.component';
@@ -32,6 +33,7 @@ import { CollapseModule } from 'ng2-bootstrap';
 
 const editIntegrationChildRoutes = [
   { path: 'save-or-add-step', component: IntegrationsSaveOrAddStepComponent },
+  { path: 'integration-basics', component: IntegrationBasicsComponent },
   { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
   { path: 'action-select/:position', component: IntegrationsSelectActionComponent },
   { path: 'action-configure/:position', component: IntegrationsConfigureActionComponent },
@@ -72,6 +74,7 @@ const routes: Routes = [
   declarations: [
     IntegrationsConfigureActionComponent,
     IntegrationsEditPage,
+    IntegrationBasicsComponent,
     IntegrationsFilterPipe,
     IntegrationsListComponent,
     IntegrationsSelectConnectionComponent,
