@@ -16,12 +16,12 @@
 package com.redhat.ipaas.rest.v1.handler.connection;
 
 import com.redhat.ipaas.dao.manager.DataManager;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.connection.Action;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.Path;
 
@@ -35,13 +35,8 @@ public class ActionHandler extends BaseHandler implements Lister<Action>, Getter
     }
 
     @Override
-    public Class<Action> resourceClass() {
-        return Action.class;
-    }
-
-    @Override
-    public String resourceKind() {
-        return Action.KIND;
+    public Kind resourceKind() {
+        return Kind.Action;
     }
 
 }

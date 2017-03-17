@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.core.Json;
 import com.redhat.ipaas.dao.init.ModelData;
 import com.redhat.ipaas.dao.init.ReadApiClientData;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.connection.ConnectorGroup;
 import com.redhat.ipaas.model.integration.Integration;
@@ -34,7 +35,7 @@ import org.junit.Test;
 public class ReadApiClientDataTest {
 
     private final static ObjectMapper mapper = Json.mapper();
-    
+
 	@Test
 	public void deserializeModelDataTest() throws IOException {
 
@@ -43,10 +44,10 @@ public class ReadApiClientDataTest {
 	    System.out.println(integrationJson);
 	    Integration integrationOut = mapper.readValue(integrationJson, Integration.class);
 	    Assert.assertEquals(integrationIn.getStatusType(), integrationOut.getStatusType());
-	    
+
 		//serialize
 		ConnectorGroup cg = new ConnectorGroup.Builder().id("label").name("label").build();
-		ModelData mdIn = new ModelData(ConnectorGroup.KIND, mapper.writeValueAsString(cg));
+		ModelData mdIn = new ModelData(Kind.ConnectorGroup, mapper.writeValueAsString(cg));
 		Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdIn.getData());
 
 		//deserialize
@@ -62,7 +63,7 @@ public class ReadApiClientDataTest {
 		Assert.assertTrue("We should find some ModelData", 0 < modelDataList.size());
         List<Connector> connectorList = new ArrayList<>();
 		for (ModelData md : modelDataList) {
-			if (md.getKind().equalsIgnoreCase("connector")) {
+			if (md.getKind() == Kind.Connector) {
 				Connector cg = mapper.readValue(md.getData(), Connector.class);
 				connectorList.add(cg);
 			}

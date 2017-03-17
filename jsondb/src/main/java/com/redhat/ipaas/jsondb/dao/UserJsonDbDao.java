@@ -33,14 +33,4 @@ public class UserJsonDbDao extends JsonDbDao<User> implements UserDao {
         super(jsondb);
     }
 
-    @Override
-    public Class<User> getType() {
-        return User.class;
-    }
-
-    @Override
-    public String getCollectionPath() {
-        return "/users";
-    }
-
 }

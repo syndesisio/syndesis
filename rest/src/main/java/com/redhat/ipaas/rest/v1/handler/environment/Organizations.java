@@ -18,6 +18,7 @@ package com.redhat.ipaas.rest.v1.handler.environment;
 import javax.ws.rs.Path;
 
 import com.redhat.ipaas.dao.manager.DataManager;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.environment.Organization;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
@@ -34,13 +35,8 @@ public class Organizations extends BaseHandler implements Lister<Organization>, 
     }
 
     @Override
-    public Class<Organization> resourceClass() {
-        return Organization.class;
-    }
-
-    @Override
-    public String resourceKind() {
-        return Organization.KIND;
+    public Kind resourceKind() {
+        return Kind.Organization;
     }
 
 }

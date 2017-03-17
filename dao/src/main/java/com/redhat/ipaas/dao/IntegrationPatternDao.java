@@ -21,4 +21,9 @@ import com.redhat.ipaas.model.integration.IntegrationPattern;
 
 public interface IntegrationPatternDao extends DataAccessObject<IntegrationPattern> {
 
+    @Override
+    default public Class<IntegrationPattern> getType() {
+        return IntegrationPattern.class;
+    }
+
 }

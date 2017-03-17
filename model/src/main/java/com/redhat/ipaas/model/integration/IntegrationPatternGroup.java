@@ -18,6 +18,7 @@ package com.redhat.ipaas.model.integration;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import org.immutables.value.Value;
@@ -26,11 +27,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = IntegrationPatternGroup.Builder.class)
 public interface IntegrationPatternGroup extends WithId<IntegrationPatternGroup>, WithName, Serializable {
 
-    String KIND = "integration-pattern-group";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.IntegrationPatternGroup;
     }
 
     @Override

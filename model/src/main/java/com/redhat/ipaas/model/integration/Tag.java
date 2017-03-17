@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import com.redhat.ipaas.model.connection.Connection;
@@ -28,11 +29,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Tag.Builder.class)
 public interface Tag extends WithId<Tag>, WithName, Serializable {
 
-    String KIND = "tag";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.Tag;
     }
 
     List<IntegrationTemplate> getIntegrationTemplate();

@@ -18,12 +18,12 @@ package com.redhat.ipaas.rest.v1.handler.connection;
 import javax.ws.rs.Path;
 
 import com.redhat.ipaas.dao.manager.DataManager;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.connection.ConnectorGroup;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Path("/connectorgroups")
@@ -36,13 +36,8 @@ public class ConnectorGroupHandler extends BaseHandler implements Lister<Connect
     }
 
     @Override
-    public Class<ConnectorGroup> resourceClass() {
-        return ConnectorGroup.class;
-    }
-
-    @Override
-    public String resourceKind() {
-        return ConnectorGroup.KIND;
+    public Kind resourceKind() {
+        return Kind.ConnectorGroup;
     }
 
 }

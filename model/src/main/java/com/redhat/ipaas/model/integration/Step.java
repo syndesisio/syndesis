@@ -16,6 +16,7 @@
 package com.redhat.ipaas.model.integration;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.connection.Action;
 import com.redhat.ipaas.model.connection.Connection;
@@ -29,11 +30,9 @@ import java.util.Optional;
 @JsonDeserialize(builder = Step.Builder.class)
 public interface Step extends WithId<Step>, Serializable {
 
-    String KIND = "step";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.Step;
     }
 
     Optional<Action> getAction();

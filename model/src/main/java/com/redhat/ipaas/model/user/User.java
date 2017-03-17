@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.integration.Integration;
 import org.immutables.value.Value;
@@ -28,11 +29,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = User.Builder.class)
 public interface User extends WithId<User>, Serializable {
 
-    String KIND = "user";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.User;
     }
 
     Optional<String> getName();

@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import com.redhat.ipaas.model.environment.Organization;
@@ -35,11 +36,8 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Connection.Builder.class)
 public interface Connection extends WithId<Connection>, WithName, Serializable {
 
-    String KIND = "connection";
-
-    @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.Connection;
     }
 
     Optional<Organization> getOrganization();

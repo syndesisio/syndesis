@@ -18,11 +18,11 @@ package com.redhat.ipaas.rest.v1.handler.integration;
 import javax.ws.rs.Path;
 
 import com.redhat.ipaas.dao.manager.DataManager;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.integration.IntegrationTemplate;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Path("/integrationtemplates")
@@ -35,13 +35,8 @@ public class IntegrationTemplateHandler extends BaseHandler implements Lister<In
     }
 
     @Override
-    public Class<IntegrationTemplate> resourceClass() {
-        return IntegrationTemplate.class;
-    }
-
-    @Override
-    public String resourceKind() {
-        return IntegrationTemplate.KIND;
+    public Kind resourceKind() {
+        return Kind.IntegrationTemplate;
     }
 
 }

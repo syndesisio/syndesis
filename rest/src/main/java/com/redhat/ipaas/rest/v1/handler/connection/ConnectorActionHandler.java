@@ -16,6 +16,7 @@
 package com.redhat.ipaas.rest.v1.handler.connection;
 
 import com.redhat.ipaas.dao.manager.DataManager;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.connection.Action;
 import com.redhat.ipaas.rest.util.PaginationFilter;
@@ -43,13 +44,8 @@ public class ConnectorActionHandler extends BaseHandler implements Lister<Action
     }
 
     @Override
-    public Class<Action> resourceClass() {
-        return Action.class;
-    }
-
-    @Override
-    public String resourceKind() {
-        return Action.KIND;
+    public Kind resourceKind() {
+        return Kind.Action;
     }
 
     @Override
@@ -68,9 +64,9 @@ public class ConnectorActionHandler extends BaseHandler implements Lister<Action
     @Override
     public ListResult<Action> list(UriInfo uriInfo) {
         return getDataManager().fetchAll(
-            resourceKind(),
+            Action.class,
             new PredicateFilter<>((o) -> o.getConnectorId().equals(connectorId)),
-            new ReflectiveSorter<>(resourceClass(), new SortOptionsFromQueryParams(uriInfo)),
+            new ReflectiveSorter<>(Action.class, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
         );
     }

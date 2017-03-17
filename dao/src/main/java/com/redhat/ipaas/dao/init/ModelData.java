@@ -17,6 +17,7 @@ package com.redhat.ipaas.dao.init;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.ToJson;
 
 /**
@@ -25,25 +26,25 @@ import com.redhat.ipaas.model.ToJson;
  */
 public class ModelData implements ToJson {
 
-	private String kind;
+	private Kind kind;
 	private Object data;
 
     public ModelData() {
         super();
     }
 
-	public ModelData(String kind, Object data) {
+	public ModelData(Kind kind, Object data) {
 		super();
 		this.kind = kind;
 		this.data = data;
 	}
 
 
-	public String getKind() {
+	public Kind getKind() {
 		return kind;
 	}
 
-	public void setKind(String kind) {
+	public void setKind(Kind kind) {
 		this.kind = kind;
 	}
 

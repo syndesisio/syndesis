@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import com.redhat.ipaas.model.environment.Organization;
@@ -28,11 +29,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = IntegrationTemplate.Builder.class)
 public interface IntegrationTemplate extends WithId<IntegrationTemplate>, WithName, Serializable {
 
-    String KIND = "integration-template";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.IntegrationTemplate;
     }
 
     Optional<String> getOrganizationId();

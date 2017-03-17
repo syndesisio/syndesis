@@ -21,4 +21,9 @@ import com.redhat.ipaas.model.connection.Connector;
 
 public interface ConnectorDao extends DataAccessObject<Connector> {
 
+    @Override
+    default public Class<Connector> getType() {
+        return Connector.class;
+    }
+
 }

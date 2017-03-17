@@ -29,7 +29,8 @@ public interface Getter<T extends WithId> extends Resource<T>, WithDataManager {
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
     default T get(@PathParam("id") @ApiParam(required = true) String id) {
-        T result = getDataManager().fetch(resourceKind(), id);
+        Class<T> modelClass = (Class<T>) resourceKind().getModelClass();
+        T result = getDataManager().fetch(modelClass, id);
         if( result == null ) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }

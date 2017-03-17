@@ -33,14 +33,4 @@ public class ConnectionJsonDbDao extends JsonDbDao<Connection> implements Connec
         super(jsondb);
     }
 
-    @Override
-    public Class<Connection> getType() {
-        return Connection.class;
-    }
-
-    @Override
-    public String getCollectionPath() {
-        return "/connections";
-    }
-
 }

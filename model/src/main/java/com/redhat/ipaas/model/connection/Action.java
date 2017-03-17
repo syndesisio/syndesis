@@ -16,6 +16,7 @@
 package com.redhat.ipaas.model.connection;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import org.immutables.value.Value;
@@ -27,11 +28,9 @@ import java.util.Map;
 @JsonDeserialize(builder = Action.Builder.class)
 public interface Action extends WithId<Action>, WithName, Serializable {
 
-    String KIND = "action";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.Action;
     }
 
     String getConnectorId();

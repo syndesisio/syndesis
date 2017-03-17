@@ -33,14 +33,4 @@ public class ConnectorJsonDbDao extends JsonDbDao<Connector> implements Connecto
         super(jsondb);
     }
 
-    @Override
-    public Class<Connector> getType() {
-        return Connector.class;
-    }
-
-    @Override
-    public String getCollectionPath() {
-        return "/connectors";
-    }
-
 }

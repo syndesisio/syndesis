@@ -18,6 +18,7 @@ package com.redhat.ipaas.core;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 /**
@@ -28,7 +29,8 @@ public class Json {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
         .registerModule(new Jdk8Module())
         .setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
-        .configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING,true);
+        .configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true)
+        .configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
 
     private Json() {
     }

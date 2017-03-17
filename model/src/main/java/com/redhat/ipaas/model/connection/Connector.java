@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
 import org.immutables.value.Value;
@@ -29,11 +30,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Connector.Builder.class)
 public interface Connector extends WithId<Connector>, WithName, Serializable {
 
-    String KIND = "connector";
-
     @Override
-    default String getKind() {
-        return KIND;
+    default Kind getKind() {
+        return Kind.Connector;
     }
 
     Optional<ConnectorGroup> getConnectorGroup();
