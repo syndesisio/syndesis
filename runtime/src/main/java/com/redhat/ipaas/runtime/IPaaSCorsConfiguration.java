@@ -49,6 +49,7 @@ public class IPaaSCorsConfiguration {
 
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedOrigins(allowedOrigins);
+            config.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
             config.applyPermitDefaultValues();
             return config;
         });
