@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
+import { ModalDirective } from 'ng2-bootstrap/modal';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -32,6 +33,8 @@ export class FlowViewStepComponent {
   @Input()
   currentState: string;
 
+  @ViewChild('childModal') public deleteModal: ModalDirective;
+
   constructor(
     private currentFlow: CurrentFlow,
     private route: ActivatedRoute,
@@ -63,6 +66,32 @@ export class FlowViewStepComponent {
       default:
         return 'fa fa-plus';
     }
+  }
+
+  deletePrompt() {
+    this.deleteModal.show();
+  }
+
+  cancelDeletePrompt() {
+    this.deleteModal.hide();
+  }
+
+  deleteStep() {
+    this.deleteModal.hide();
+    const position = this.getPosition();
+    this.currentFlow.events.emit({
+      kind: 'integration-remove-step',
+      position: position,
+      onSave: () => {
+        if (position === this.currentFlow.getFirstPosition()) {
+          this.router.navigate(['connection-select', position], { relativeTo: this.route });
+        } else if (position === this.currentFlow.getLastPosition()) {
+          this.router.navigate(['connection-select', position], { relativeTo: this.route });
+        } else {
+          this.router.navigate(['save-or-add-step'], { relativeTo: this.route });
+        }
+      },
+    });
   }
 
   getPosition() {

@@ -15,6 +15,7 @@ import { ConnectionsListToolbarComponent } from '../../connections/list-toolbar/
 import { StoreModule } from '../../store/store.module';
 import { CurrentFlow } from './current-flow.service';
 
+import { ModalModule } from 'ng2-bootstrap/modal';
 import { CollapseModule } from 'ng2-bootstrap';
 import { PopoverModule } from 'ng2-bootstrap';
 
@@ -31,6 +32,7 @@ describe('IntegrationsEditComponent', () => {
         CommonModule,
         FormsModule,
         IPaaSCommonModule,
+        ModalModule,
         RestangularModule.forRoot(),
         RouterTestingModule.withRoutes([]),
         PopoverModule.forRoot(),

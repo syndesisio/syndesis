@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { TabsModule } from 'ng2-bootstrap';
 import { CollapseModule } from 'ng2-bootstrap';
 import { PopoverModule } from 'ng2-bootstrap';
+import { ModalModule } from 'ng2-bootstrap/modal';
 
 import { RestangularModule } from 'ng2-restangular';
 
@@ -31,6 +32,7 @@ describe('IntegrationsCreateComponent', () => {
         RouterTestingModule.withRoutes([]),
         RestangularModule.forRoot(),
         ConnectionsModule,
+        ModalModule,
         TabsModule.forRoot(),
         PopoverModule.forRoot(),
         CollapseModule.forRoot(),

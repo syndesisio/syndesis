@@ -111,6 +111,19 @@ export class CurrentFlow {
   handleEvent(event: FlowEvent): void {
     log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
     switch (event.kind) {
+      case 'integration-remove-step': {
+        console.log('Removing: ', event);
+        {
+          const position = +event['position'];
+          if (position === this.getFirstPosition() || position === this.getLastPosition()) {
+            this.steps[position] = TypeFactory.createStep();
+          } else {
+            this.steps.splice(position, 1);
+          }
+          this.maybeDoAction(event['onSave']);
+        }
+        break;
+      }
       case 'integration-set-step':
         {
           const position = +event['position'];

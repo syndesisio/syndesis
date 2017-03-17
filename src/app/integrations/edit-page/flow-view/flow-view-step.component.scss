@@ -10,6 +10,13 @@
     }
   }
 
+  .delete-icon {
+    position: absolute;
+    top: 22px;
+    right: 15px;
+    cursor: pointer;
+  }
+
   // Left-hand side design with the icon and line
   .progress-line {
     text-align: center;
@@ -61,6 +68,7 @@
   }
 
   .text {
+    position: relative;
     padding-left: 0;
     padding-right: 0;
     padding-top: 19px;
@@ -98,7 +106,7 @@
       }
     }
 
-    .fa {
+    .fa.fa-chevron-down .fa.fa-chevron-right {
       font-size: x-small;
       padding-right: 5px;
     }

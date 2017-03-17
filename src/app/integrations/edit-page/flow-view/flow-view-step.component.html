@@ -1,5 +1,31 @@
 <div *ngIf="step" class="flow-view-step steps">
 
+<!-- Delete Modal Container -->
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Confirm Delete</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="cancelDeletePrompt()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <p>Are you sure you would like to delete this step?</p>
+        </div>
+        <div>
+          <p><b style="color: red;">NOTE:</b> This action <i>cannot</i> be undone.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="pull-right btn btn-primary" (click)="deleteStep()">Delete</button>
+        <button class="pull-right btn btn-cancel" (click)="cancelDeletePrompt()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   <!-- Icon Progress Line -->
 
   <div class="col-md-3 progress-line">
@@ -17,7 +43,8 @@
 
     <div *ngSwitchCase="'endpoint'">
 
-      <span [class]="getParentClass()" (click)="goto()">
+      <i class="delete-icon fa fa-lg fa-trash" (click)="deletePrompt()"></i>
+      <span [class]="getParentClass() + ' step-heading'" (click)="goto()">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
@@ -38,7 +65,8 @@
     </div>
 
     <div *ngSwitchDefault>
-      <span [class]="getParentClass()" (click)="goto()">
+      <i class="delete-icon fa fa-lg fa-trash" (click)="deleteStep()"></i>
+      <span [class]="getParentClass() + ' step-heading'" (click)="goto()">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
