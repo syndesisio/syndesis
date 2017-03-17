@@ -87,7 +87,7 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
   }
 
   get integrationName() {
-    return this.currentFlow.integration.name || '';
+    return (this.currentFlow.integration || { name: '' }).name || '';
   }
 
   handleFlowEvent(event: FlowEvent) {
