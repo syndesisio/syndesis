@@ -18,13 +18,14 @@ package com.redhat.ipaas.dao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.core.Json;
 import com.redhat.ipaas.dao.manager.DataManager;
-import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.connection.Connection;
 import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.integration.Integration;
-
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
