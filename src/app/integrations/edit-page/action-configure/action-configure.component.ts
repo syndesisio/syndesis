@@ -56,16 +56,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
   }
 
   getActionProperties(props: any) {
-    if (typeof props === 'string') {
-      try {
-        return JSON.parse(props);
-      } catch (err) {
-        log.debugc(() => 'failed to parse JSON: ' + err, category);
-        return undefined;
-      }
-    } else {
-      return props;
-    }
+    return props;
   }
 
   ngOnInit() {

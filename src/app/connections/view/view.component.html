@@ -25,10 +25,11 @@
           <div *ngFor="let field of getFormFields(connection)">
             <dl class="dl-horizontal">
               <dt>
-                {{ field.title || field.displayName || field.name }}
+                {{ field.displayName }}
               </dt>
               <dd>
-                {{ field.value || "&lt;not set&gt;" }}
+                <div *ngIf="field.secret">{{ getPassword(field.value) }}</div>
+                <div *ngIf="!field.secret">{{ field.value || "&lt;not set&gt;" }}</div>
               </dd>
             </dl>
           </div>
@@ -37,7 +38,7 @@
         <!-- Editing the connection configuration -->
         <div *ngIf="mode === 'edit'">
           <div *ngIf="formModel && formGroup">
-            <form [formGroup]="formGroup">
+            <form class="form-horizontal" [formGroup]="formGroup">
               <dynamic-form-bootstrap-control *ngFor="let controlModel of formModel" [controlGroup]="formGroup" [model]="controlModel"></dynamic-form-bootstrap-control>
             </form>
           </div>

@@ -51,7 +51,14 @@ export class CurrentConnectionService {
 
   saveConnection(event: ConnectionEvent) {
     // poor man's clone
-    const connection = JSON.parse(JSON.stringify(event['connection'] || this.connection));
+    const connection = <Connection> JSON.parse(JSON.stringify(event['connection'] || this.connection));
+    // just in case this leaks through from the form
+    for (const prop in connection.connector.properties) {
+      if (!prop.hasOwnProperty(prop)) {
+        continue;
+      }
+      delete connection.connector.properties[prop]['value'];
+    }
     const sub = this.store.updateOrCreate(connection).subscribe((c: Connection) => {
       log.debugc(() => 'Saved connection: ' + JSON.stringify(c, undefined, 2), category);
       const action = event['action'];

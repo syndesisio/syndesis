@@ -106,36 +106,23 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
           continue;
         }
         const field = formFields[key];
-        field.name = key;
+        field.value = this.connection.configuredProperties[key];
         answer.push(field);
       }
     }
     return answer;
   }
 
-  getFormConfig(connection: Connection) {
-    const config = this.getConfigString(connection);
-    if (typeof config === 'string') {
-      try {
-        return JSON.parse(config);
-      } catch (err) {
-        log.debugc(() => 'Failed to parse JSON config: ' + err, category);
-      }
-    } else {
-      return config;
-    }
+  getPassword(value: any) {
+    return Array(10).join('*');
   }
 
-  getConfigString(connection: Connection) {
-    // TODO this will need adjusting once this is an object
-    if (this.connection.configuredProperties) {
-      return this.connection.configuredProperties;
-    } else if (this.connection.connector && this.connection.connector.properties) {
-      return this.connection.connector.properties;
-    } else {
-      // um...
-      return '{}';
+  getFormConfig(connection: Connection) {
+    // TODO this either shouldn't be null or we need to just fetch the connector in a separate call
+    if (connection.connector) {
+      return JSON.parse(JSON.stringify(connection.connector.properties));
     }
+    return {};
   }
 
   get formModel() {
