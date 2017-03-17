@@ -172,7 +172,7 @@
       "actions": [
         {
           "id": "org.foo_salesforce-upsert-contact-connector_1.0",
-          "name": "Create/Update Salesforce Contact",
+          "name": "Create/Update Contact",
           "description": "Create or Update a Salesforce Contact",
           "properties": {
           },
@@ -181,37 +181,37 @@
         },{
           "id": "org.foo_salesforce-create-opportunity-connector_1.0",
           "description": "Create a new Salesforce opportunity based on the input message",
-          "name": "SalesforceCreateOpportunity",
+          "name": "Create Opportunity",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-opportunity-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-create-opportunity"
         },{
           "id": "org.foo_salesforce-create-lead-connector_1.0",
           "description": "Create a new Salesforce lead based on the input message",
-          "name": "SalesforceCreateLead",
+          "name": "Create Lead",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-lead-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-create-lead"
         },{
           "id": "org.foo_salesforce-create-account-connector_1.0",
           "description": "Create a new Salesforce account based on the input message",
-          "name": "SalesforceCreateAccount",
+          "name": "Create Account",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-account-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-create-account"
         },{
           "id": "org.foo_salesforce-create-case-connector_1.0",
           "description": "Create a new Salesforce case based on the input message",
-          "name": "SalesforceCreateCase",
+          "name": "Create Case",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-case-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-create-case"
         },{
           "id": "org.foo_salesforce-search-connector_1.0",
           "description": "Execute a search in Salesforce using arbitrary SOQL",
-          "name": "SalesforceSearch",
+          "name": "Search",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-search-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-search"
         },{
           "id": "org.foo_salesforce-notification-connector_1.0",
           "description": "Trigger an integration when updates occur to a specific Salesforce object",
-          "name": "SalesforceNotification",
+          "name": "Notification",
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-notification-connector:0.2.1",
           "camelConnectorPrefix": "salesforce-notification"
         }
