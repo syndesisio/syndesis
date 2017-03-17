@@ -599,6 +599,7 @@ objects:
         - secret:
             secretName: ipaas-openshift-proxy-tls
           name: tls-volume
+    triggers:
     - imageChangeParams:
         automatic: true
         containerNames:
