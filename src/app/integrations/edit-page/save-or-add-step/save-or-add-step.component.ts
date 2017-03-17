@@ -29,6 +29,16 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
   goBack() { /* this should be a no-op */ }
 
   save() {
+    this.currentFlow.integration.statusType = 'Deactivated';
+    this.doSave();
+  }
+
+  saveAndPublish() {
+    this.currentFlow.integration.statusType = 'Activated';
+    this.doSave();
+  }
+
+  doSave() {
     const router = this.router;
     this.currentFlow.events.emit({
       kind: 'integration-save',
