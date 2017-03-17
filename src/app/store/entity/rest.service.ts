@@ -21,11 +21,11 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
   }
 
   update(obj: T): Observable<T> {
-    return this.restangularService.one( obj.id ).put( obj );
+    return this.restangularService.one( obj.id ).customPUT(obj);
   }
 
   delete(obj: T) {
-    return this.restangularService.one( obj.id ).delete();
+    return this.restangularService.one( obj.id ).remove();
   }
 
 }
