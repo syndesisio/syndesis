@@ -25,6 +25,7 @@ import com.redhat.ipaas.model.integration.Integration;
 
 import org.junit.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class DataManagerTest {
@@ -95,11 +96,17 @@ public class DataManagerTest {
     }
     
     @Test
-    public void getIntegration() {
+    public void getIntegration() throws IOException {
         Integration integration = dataManager.fetch(Integration.KIND, "1");
         System.out.println(integration.getName());
         Assert.assertEquals("Example Integration", "Twitter to Salesforce Example", integration.getName());
         Assert.assertEquals(4, integration.getSteps().get().size());
+        
+        //making sure we can deserialize Enums such as StatusType
+        Integration int2 = new Integration.Builder().createFrom(integration).statusType(Integration.Type.Activated).build();
+        String json = Json.mapper().writeValueAsString(int2);
+        Integration int3 = Json.mapper().readValue(json, Integration.class);
+        Assert.assertEquals(int2.getStatusType(), int3.getStatusType());
     }
 
 }
