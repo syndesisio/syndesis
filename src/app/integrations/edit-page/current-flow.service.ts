@@ -112,7 +112,6 @@ export class CurrentFlow {
     log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
     switch (event.kind) {
       case 'integration-remove-step': {
-        console.log('Removing: ', event);
         {
           const position = +event['position'];
           if (position === this.getFirstPosition() || position === this.getLastPosition()) {
