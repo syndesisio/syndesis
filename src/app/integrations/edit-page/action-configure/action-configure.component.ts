@@ -55,10 +55,6 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
 
   }
 
-  getActionProperties(props: any) {
-    return props;
-  }
-
   ngOnInit() {
     this.routeSubscription = this.route.params.pluck<Params, string>('position')
       .map((position: string) => {
@@ -70,10 +66,10 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
         }
         this.action = step.action;
         if (this.action && this.action.properties) {
-          this.formConfig = this.getActionProperties(this.action.properties);
-          if (!this.formConfig) {
+          if (!this.action.properties) {
             return;
           }
+          this.formConfig = JSON.parse(JSON.stringify(this.action.properties));
           if (step.configuredProperties) {
             for (const key in <any>step.configuredProperties) {
               if (!step.configuredProperties.hasOwnProperty(key)) {
