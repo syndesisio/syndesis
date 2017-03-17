@@ -44,7 +44,7 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
     public Connection get(String id) {
         Connection connection = Getter.super.get(id);
         if (connection.getConnectorId().isPresent()) {
-            Connector connector = getDataManager().fetch(Connector.KIND, connection.getConnectorId().get());
+            Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId().get());
             connection = new Connection.Builder().createFrom(connection).connector(connector).build();
         }
         return connection;
