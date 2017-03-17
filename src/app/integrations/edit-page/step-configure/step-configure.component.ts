@@ -55,7 +55,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
-      properties: JSON.stringify(properties),
+      properties: properties,
       onSave: () => {
         this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
       },
