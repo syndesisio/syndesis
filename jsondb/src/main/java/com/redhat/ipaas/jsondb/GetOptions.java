@@ -15,32 +15,50 @@
  */
 package com.redhat.ipaas.jsondb;
 
-import java.io.Serializable;
-import java.util.Optional;
-
-import org.immutables.value.Value;
+import com.redhat.ipaas.model.ToJson;
 
 /**
  * Options that can be configured on the {@link JsonDB#getAsString(String, GetOptions)}.
  */
-@Value.Immutable
-public interface GetOptions extends Serializable {
+public class GetOptions implements ToJson, Cloneable {
 
-    Optional<Boolean> prettyPrint();
-    GetOptions withPrettyPrint(boolean value);
+    private boolean prettyPrint;
+    private boolean shallow;
+    private String callback;
 
-// TODO: implement these later.
-//
-//    Optional<Boolean> asList();
-//    GetOptions withAsList(boolean value);
-//
-//    Optional<Boolean> shallow();
-//    GetOptions withShallow(boolean value);
+    public boolean prettyPrint() {
+        return prettyPrint;
+    }
 
-    Optional<String> callback();
-    GetOptions withCallback(String value);
+    public boolean shallow() {
+        return shallow;
+    }
 
-    public static ImmutableGetOptions.Builder builder() {
-        return ImmutableGetOptions.builder();
+    public String callback() {
+        return callback;
+    }
+
+    public GetOptions prettyPrint(final boolean prettyPrint) {
+        this.prettyPrint = prettyPrint;
+        return this;
+    }
+
+    public GetOptions shallow(final boolean shallow) {
+        this.shallow = shallow;
+        return this;
+    }
+
+    public GetOptions callback(final String callback) {
+        this.callback = callback;
+        return this;
+    }
+
+    @Override
+    public GetOptions clone() {
+        try {
+            return (GetOptions) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

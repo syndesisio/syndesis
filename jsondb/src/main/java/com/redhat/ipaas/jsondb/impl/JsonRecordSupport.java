@@ -15,19 +15,21 @@
  */
 package com.redhat.ipaas.jsondb.impl;
 
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.core.JsonToken;
+import com.redhat.ipaas.jsondb.GetOptions;
+import com.redhat.ipaas.jsondb.JsonDBException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.core.*;
-import com.redhat.ipaas.jsondb.GetOptions;
-import com.redhat.ipaas.jsondb.JsonDBException;
 
 import static com.fasterxml.jackson.core.JsonToken.*;
 
@@ -35,6 +37,11 @@ import static com.fasterxml.jackson.core.JsonToken.*;
  * Helper methods for converting between JsonRecord lists and Json
  */
 public class JsonRecordSupport {
+
+    public static Pattern INTEGER_PATTERN;
+    static {
+        INTEGER_PATTERN = Pattern.compile("^\\d+$");
+    }
 
     private static class PathPart {
         private final String path;
@@ -79,14 +86,38 @@ public class JsonRecordSupport {
     }
 
     public static String convertToDBPath(String base) {
-        Pattern pattern = Pattern.compile("^\\d+$");
         String value = Arrays.stream(base.split("/")).filter(x -> !x.isEmpty()).map(x ->
-            pattern.matcher(x).matches() ? toArrayIndexPath(Integer.parseInt(x)) : x
+            INTEGER_PATTERN.matcher(validateKey(x)).matches() ? toArrayIndexPath(Integer.parseInt(x)) : x
         ).collect(Collectors.joining("/"));
         return Strings.suffix(Strings.prefix(value, "/"), "/");
     }
 
-    private static void jsonStreamToRecords(JsonParser jp, String path, Consumer<JsonRecord> consumer) throws IOException {
+    private static String validateKey(String key) {
+        if( key.chars().anyMatch(x -> { switch(x){
+            case '.':
+            case '%':
+            case '$':
+            case '#':
+            case '[':
+            case ']':
+            case '/':
+            case 127:
+                return true;
+            default:
+                if( 0 < x &&  x < 32) {
+                    return true;
+                }
+                return false;
+        }})) {
+            throw new JsonDBException("Invalid key. Cannot contain ., %, $, #, [, ], /, or ASCII control characters 0-31 or 127. Key: "+key);
+        }
+        if( key.length() > 768 ) {
+            throw new JsonDBException("Invalid key. Key cannot ben longer than 768 characters. Key: "+key);
+        }
+        return key;
+    }
+
+    public static void jsonStreamToRecords(JsonParser jp, String path, Consumer<JsonRecord> consumer) throws IOException {
         boolean inArray = false;
         int arrayIndex = 0;
         while (true) {
@@ -98,7 +129,7 @@ public class JsonRecordSupport {
                 if (inArray) {
                     currentPath = path + toArrayIndexPath(arrayIndex) + "/";
                 }
-                jsonStreamToRecords(jp, currentPath + jp.getCurrentName() + "/", consumer);
+                jsonStreamToRecords(jp, currentPath + validateKey(jp.getCurrentName()) + "/", consumer);
             } else if (nextToken == VALUE_NULL) {
                 if (inArray) {
                     currentPath = path + toArrayIndexPath(arrayIndex) + "/";
@@ -188,21 +219,21 @@ public class JsonRecordSupport {
         private final OutputStream output;
         private final GetOptions options;
         private final LinkedList<PathPart> currentPath = new LinkedList<>();
+        private final LinkedHashSet<String> shallowObjects = new LinkedHashSet<>();
 
         public JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
             this.base = base;
             this.output = output;
-            this.options = options;
+            this.options = options.clone();
 
-            if( options.callback().isPresent() ) {
-                String backack = options.callback().get() + "(";
+            if( this.options.callback()!=null ) {
+                String backack = this.options.callback() + "(";
                 output.write(backack.getBytes("UTF-8"));
             }
             this.jg = new JsonFactory().createGenerator(output);
-            if( options.prettyPrint().orElse(Boolean.FALSE).booleanValue() ) {
+            if( options.prettyPrint() ) {
                 jg.useDefaultPrettyPrinter();
             }
-
         }
 
         @Override
@@ -222,6 +253,12 @@ public class JsonRecordSupport {
                 ArrayList<String> newPath = new ArrayList<>(Arrays.asList(path.split("/")));
                 if (newPath.size() == 1 && newPath.get(0).isEmpty()) {
                     newPath.clear();
+                }
+
+                // should we skip over deep records?
+                if( this.options.shallow() && newPath.size() > 1 ) {
+                    shallowObjects.add(newPath.get(0));
+                    return;
                 }
 
                 int pathMatches = getPathMatches(newPath);
@@ -320,6 +357,12 @@ public class JsonRecordSupport {
         }
 
         private void close() throws IOException {
+            if ( !shallowObjects.isEmpty() ) {
+                for (String o : shallowObjects) {
+                    jg.writeFieldName(o);
+                    jg.writeBoolean(true);
+                }
+            }
             while (jg.getOutputContext().getParent() != null) {
                 JsonStreamContext oc = jg.getOutputContext();
                 if (oc.inObject()) {
@@ -329,7 +372,7 @@ public class JsonRecordSupport {
                 }
             }
             jg.flush();
-            if( options.callback().isPresent() ) {
+            if( options.callback()!=null ) {
                 output.write(")".getBytes("UTF-8"));
             }
             jg.close();

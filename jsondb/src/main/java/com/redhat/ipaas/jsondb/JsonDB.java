@@ -92,6 +92,18 @@ public interface JsonDB {
     }
 
     /**
+     * @param path to the object or value to set
+     * @param json value to set it to, can be a json primitive or struct
+     */
+    default void update(String path, String json)  {
+        try {
+            update(path, json.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new JsonDBException(e);
+        }
+    }
+
+    /**
      * Pushes a new value to the the requested path.
      * Same as: {@code set( path + "/" + createKey(), json)}
      *
@@ -129,6 +141,10 @@ public interface JsonDB {
         set(path, new ByteArrayInputStream(json));
     }
 
+    default void update(String path, byte[] json) {
+        update(path, new ByteArrayInputStream(json));
+    }
+
     default String push(String path, byte[] json) {
         return push(path, new ByteArrayInputStream(json));
     }
@@ -161,6 +177,10 @@ public interface JsonDB {
 
     void set(String path, InputStream body);
 
+    void update(String path, InputStream body);
+
     String push(String path, InputStream body);
+
+
 
 }

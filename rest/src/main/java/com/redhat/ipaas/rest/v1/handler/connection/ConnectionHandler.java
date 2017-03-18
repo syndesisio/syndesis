@@ -15,8 +15,6 @@
  */
 package com.redhat.ipaas.rest.v1.handler.connection;
 
-import javax.ws.rs.Path;
-
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.connection.Connection;
@@ -25,6 +23,8 @@ import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.Path;
 
 @Path("/connections")
 @Api(value = "connections")
@@ -39,7 +39,7 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
     public Kind resourceKind() {
         return Kind.Connection;
     }
-    
+
     @Override
     public Connection get(String id) {
         Connection connection = Getter.super.get(id);

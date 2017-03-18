@@ -16,11 +16,6 @@
 package com.redhat.ipaas.jsondb.impl;
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +26,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Unit Tests for the JsonDB implementation.
@@ -42,7 +43,7 @@ public class JsonDBTest {
     private ObjectMapper mapper = new ObjectMapper()
         .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
 
-    private GetOptions prettyPrint = GetOptions.builder().prettyPrint(true).build();
+    private GetOptions prettyPrint = new GetOptions().prettyPrint(true);
 
     @Before
     public void before() {
@@ -61,6 +62,63 @@ public class JsonDBTest {
     }
 
     @Test
+    public void testInvalidKeys() throws IOException {
+
+        for (String s : Arrays.asList("[", "]", ".", "%", "$", "#", "\n")) {
+            try {
+                jsondb.set("/test"+s, mapper.writeValueAsString(map(
+                    "key", "Hiram Chirino"
+                )));
+                fail("Excpected JsonDBException");
+            } catch (JsonDBException e) {
+                assertThat(e.getMessage()).startsWith("Invalid key.");
+            }
+        }
+
+        for (String s : Arrays.asList("[", "]", ".", "%", "$", "#", "/", "\n")) {
+            try {
+                jsondb.set("/test", mapper.writeValueAsString(map(
+                    "bad"+s+"key", "Hiram Chirino"
+                )));
+                fail("Excpected JsonDBException");
+            } catch (JsonDBException e) {
+                assertThat(e.getMessage()).startsWith("Invalid key.");
+            }
+        }
+
+    }
+
+    @Test
+    public void testUpdate() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "name", "Hiram Chirino",
+            "props", map(
+                "city", "Tampa",
+                "state", "FL"
+            )
+        )));
+
+        // Verify that only the name fields change and the we can use
+        // a path for the keys.
+        jsondb.update("/test", mapper.writeValueAsString(map(
+            "name", "Ana Chirino",
+            "props/city", "Miami"
+        )));
+
+        String json = jsondb.getAsString("/test");
+        assertThat(json).isEqualTo("{\"name\":\"Ana Chirino\",\"props\":{\"city\":\"Miami\",\"state\":\"FL\"}}");
+
+        jsondb.update("/test", mapper.writeValueAsString(map(
+            "props", null
+        )));
+
+        json = jsondb.getAsString("/test");
+        assertThat(json).isEqualTo("{\"name\":\"Ana Chirino\",\"props\":null}");
+
+    }
+
+    @Test
     public void testGetMissingKey() throws IOException {
 
         jsondb.set("/test", mapper.writeValueAsString(map(
@@ -72,6 +130,22 @@ public class JsonDBTest {
 
     }
 
+
+    @Test
+    public void testGetShallow() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "name", "Hiram Chirino",
+            "props", map(
+                "city", "Tampa",
+                "state", "FL"
+            )
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().shallow(true));
+        assertThat(json).isEqualTo("{\"name\":\"Hiram Chirino\",\"props\":true}");
+    }
+
     @Test
     public void testGetCallback() throws IOException {
 
@@ -79,7 +153,7 @@ public class JsonDBTest {
             "name", "Hiram Chirino"
         )));
 
-        String json = jsondb.getAsString("/", GetOptions.builder().callback("myfunction").build());
+        String json = jsondb.getAsString("/", new GetOptions().callback("myfunction"));
         assertThat(json).isEqualTo("myfunction({\"test\":{\"name\":\"Hiram Chirino\"}})");
 
     }
@@ -92,7 +166,7 @@ public class JsonDBTest {
         )));
 
         // Check that the result is pretty printed
-        String json = jsondb.getAsString("/", GetOptions.builder().prettyPrint(true).build());
+        String json = jsondb.getAsString("/", new GetOptions().prettyPrint(true));
         assertThat(json).isEqualTo("{\n" +
             "  \"test\" : {\n" +
             "    \"name\" : \"Hiram Chirino\"\n" +
@@ -100,7 +174,7 @@ public class JsonDBTest {
             "}");
 
         // Check that the result is not pretty printed
-        json = jsondb.getAsString("/", GetOptions.builder().prettyPrint(false).build());
+        json = jsondb.getAsString("/", new GetOptions().prettyPrint(false));
         assertThat(json).isEqualTo("{\"test\":{\"name\":\"Hiram Chirino\"}}");
 
         // We default to not pretty printing
@@ -182,7 +256,7 @@ public class JsonDBTest {
     }
 
     @Test
-    public void testUpdate() throws IOException {
+    public void testSet() throws IOException {
 
         HashMap<String, Object> user = map(
             "name", "Joe",

@@ -15,19 +15,17 @@
  */
 package com.redhat.ipaas.jsondb.rest;
 
+import com.redhat.ipaas.jsondb.GetOptions;
+import com.redhat.ipaas.jsondb.JsonDB;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.function.Consumer;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-
-import com.redhat.ipaas.jsondb.GetOptions;
-import com.redhat.ipaas.jsondb.ImmutableGetOptions;
-import com.redhat.ipaas.jsondb.JsonDB;
 
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -59,9 +57,9 @@ public class JsonDBResource {
         @QueryParam("shallow") Boolean shallow,
         @QueryParam("callback") String callback
     ) {
-        ImmutableGetOptions.Builder optionsBuilder = GetOptions.builder();
+        GetOptions options = new GetOptions();
         if ("pretty".equals(print)) {
-            optionsBuilder.prettyPrint(true);
+            options.prettyPrint(true);
         } else if ("silent".equals(print)) {
             if( jsondb.exists(path) ) {
                 return Response.noContent().build();
@@ -70,16 +68,16 @@ public class JsonDBResource {
             }
         }
         if( shallow!=null ) {
-            optionsBuilder.prettyPrint(true);
+            options.shallow(true);
         }
 
         String contentType = APPLICATION_JSON;
         if( callback!=null ) {
             contentType = APPLICATION_JAVASCRIPT;
-            optionsBuilder.callback(callback);
+            options.callback(callback);
         }
 
-        Consumer<OutputStream> stream = jsondb.getAsStreamingOutput(path, optionsBuilder.build());
+        Consumer<OutputStream> stream = jsondb.getAsStreamingOutput(path, options);
         if( stream == null ) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -91,7 +89,7 @@ public class JsonDBResource {
     @Path("/{path: .*}.json")
     @Consumes(APPLICATION_JSON)
     @PUT
-    public void set(@PathParam("path") String path, InputStream body) throws IOException {
+    public void set(@PathParam("path") String path, InputStream body) {
         jsondb.set(path, body);
     }
 
@@ -99,17 +97,23 @@ public class JsonDBResource {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @POST
-    public HashMap<String, String> push(@PathParam("path") String path, InputStream body) throws IOException {
+    public HashMap<String, String> push(@PathParam("path") String path, InputStream body) {
         HashMap<String, String> result = new HashMap<>();
         result.put("name", jsondb.push(path, body));
         return result;
     }
 
+    @Path("/{path: .*}.json")
+    @Consumes(APPLICATION_JSON)
+    @PATCH
+    public void patch(@PathParam("path") String path, InputStream body) {
+        jsondb.update(path, body);
+    }
 
     @Path("/{path: .*}.json")
     @Consumes(APPLICATION_JSON)
     @DELETE
-    public Response delete(@PathParam("path") String path) throws IOException {
+    public Response delete(@PathParam("path") String path) {
         Response.Status status;
         if( jsondb.delete(path) ) {
             status = Response.Status.NO_CONTENT;
