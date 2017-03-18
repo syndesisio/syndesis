@@ -15,18 +15,10 @@
  */
 package com.redhat.ipaas.jsondb.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.function.Consumer;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.redhat.ipaas.core.EventBus;
 import com.redhat.ipaas.jsondb.GetOptions;
 import com.redhat.ipaas.jsondb.JsonDB;
@@ -35,6 +27,19 @@ import org.keycloak.common.util.Base64;
 import org.skife.jdbi.v2.*;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import org.skife.jdbi.v2.util.IntegerColumnMapper;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Random;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Implements the JsonDB via DBI/JDBC
@@ -106,7 +111,7 @@ public class SqlJsonDB implements JsonDB {
         if( options!=null ) {
             o = options;
         } else {
-            o = GetOptions.builder().build();
+            o = new GetOptions();
         }
 
         // Lets normalize the path a bit
@@ -177,57 +182,128 @@ public class SqlJsonDB implements JsonDB {
         return key;
     }
 
+    private class BatchManager {
+
+        private Handle dbi; 
+        private long batchSize;
+        private PreparedBatch insertBatch;
+
+        public BatchManager(Handle dbi) {
+            this.dbi = dbi;
+        }
+
+        public void deleteRecordsForSet(String baseDBPath) {
+            String like = baseDBPath + "%";
+            deleteJsonRecords(dbi, baseDBPath, like);
+        }
+
+        public Consumer<JsonRecord> createSetConsumer() {
+            return r -> {
+                PreparedBatch insert = getInsertBatch();
+                insert.bind("path", r.getPath())
+                    .bind("value", r.getValue())
+                    .bind("kind", r.getKind())
+                    .add();
+
+                batchSize += r.getPath().length() + r.getValue().length();
+                if (batchSize > 512 * 1024) { // Write the batch once we have enough data.
+                    insert.execute();
+                    batchSize = 0;
+                }
+            };
+        }
+
+        public PreparedBatch getInsertBatch() {
+            if (insertBatch == null) {
+                insertBatch = dbi.prepareBatch("INSERT into jsondb (path, value, kind) values (:path, :value, :kind)");
+            }
+            return insertBatch;
+        }
+
+        public void flush() {
+            if (batchSize > 0 && insertBatch != null) {
+                insertBatch.execute();
+
+            }
+        }
+    }
+
     @Override
     public void set(String path, InputStream body) {
-
-        String baseDBPath = JsonRecordSupport.convertToDBPath(path);
-        String like = baseDBPath+"%";
-
         withTransaction(dbi -> {
-            deleteJsonRecords(dbi, baseDBPath, like);
-
-            long byteSize[] = {0};
-            PreparedBatch pb = dbi.prepareBatch("INSERT into jsondb (path, value, kind) values (:path, :value, :kind)");
+            BatchManager mb = new BatchManager(dbi);
+            String baseDBPath = JsonRecordSupport.convertToDBPath(path);
+            mb.deleteRecordsForSet(baseDBPath);
             try {
-                JsonRecordSupport.jsonStreamToRecords(baseDBPath, body, r -> {
-                    pb.bind("path", r.getPath())
-                        .bind("value", r.getValue())
-                        .bind("kind", r.getKind())
-                        .add();
-
-                    byteSize[0] += r.getPath().length() + r.getValue().length();
-                    if (byteSize[0] > 512 * 1024) { // Write the batch once we have enough data.
-                        pb.execute();
-                        byteSize[0] = 0;
-                    }
-                });
+                JsonRecordSupport.jsonStreamToRecords(baseDBPath, body, mb.createSetConsumer());
             } catch (IOException e) {
                 throw new JsonDBException(e);
             }
-
-            // Flush the batch...
-            if (byteSize[0] > 0) {
-                pb.execute();
-            }
+            mb.flush();
         });
         if( bus!=null ) {
             bus.broadcast("jsondb-updated", Strings.prefix(Strings.trimSuffix(path, "/"), "/"));
         }
     }
 
+    @Override
+    public void update(String path, InputStream is) {
+        ArrayList<String> updatePaths = new ArrayList<>();
+        withTransaction(dbi -> {
+            try {
+                BatchManager mb = new BatchManager(dbi);
+
+                JsonParser jp = new JsonFactory().createParser(is);
+
+                JsonToken nextToken = jp.nextToken();
+                if (nextToken != JsonToken.START_OBJECT ) {
+                    throw new JsonParseException(jp, "Update did not contain a json object");
+                }
+
+                while(true) {
+
+                    nextToken = jp.nextToken();
+                    if (nextToken == JsonToken.END_OBJECT ) {
+                        break;
+                    }
+                    if (nextToken != JsonToken.FIELD_NAME ) {
+                        throw new JsonParseException(jp, "Expected a field name");
+                    }
+
+                    String key = Strings.suffix(path, "/")+jp.getCurrentName();
+                    updatePaths.add(key);
+                    String baseDBPath = JsonRecordSupport.convertToDBPath(key);
+                    mb.deleteRecordsForSet(baseDBPath);
+
+                    try {
+                        JsonRecordSupport.jsonStreamToRecords(jp, baseDBPath, mb.createSetConsumer());
+                    } catch (IOException e) {
+                        throw new JsonDBException(e);
+                    }
+                }
+
+                nextToken = jp.nextToken();
+                if (nextToken != null) {
+                    throw new JsonParseException(jp, "Document did not terminate as expected.");
+                }
+                mb.flush();
+
+            } catch (IOException e) {
+                throw new JsonDBException(e);
+            }
+
+        });
+        if( bus!=null ) {
+            for (String updatePath : updatePaths) {
+                bus.broadcast("jsondb-updated", Strings.prefix(Strings.trimSuffix(updatePath, "/"), "/"));
+            }
+        }
+    }
+
+
     private int deleteJsonRecords(Handle dbi, String baseDBPath, String like) {
 
-        LinkedList<String> params = new LinkedList<String>();
-
-        Pattern compile = Pattern.compile("/[^/]*$");
-        String current = Strings.trimSuffix(baseDBPath, "/");
-        while( true ) {
-            current = compile.matcher(current).replaceFirst("");
-            if( current.isEmpty() ) {
-                break;
-            }
-            params.add(current+"/");
-        }
+        LinkedList<String> params = getAllParentPaths(baseDBPath);
 
         String sql = "DELETE from jsondb where path LIKE ?";
         if( !params.isEmpty() ) {
@@ -238,6 +314,20 @@ public class SqlJsonDB implements JsonDB {
 
         params.addFirst(like);
         return dbi.update(sql, params.toArray());
+    }
+
+    static private LinkedList<String> getAllParentPaths(String baseDBPath) {
+        LinkedList<String> params = new LinkedList<String>();
+        Pattern compile = Pattern.compile("/[^/]*$");
+        String current = Strings.trimSuffix(baseDBPath, "/");
+        while( true ) {
+            current = compile.matcher(current).replaceFirst("");
+            if( current.isEmpty() ) {
+                break;
+            }
+            params.add(current+"/");
+        }
+        return  params;
     }
 
     private int countJsonRecords(Handle dbi, String like) {

@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.jsondb;
+package com.redhat.ipaas.jsondb.rest;
 
-/**
- * These runtime exceptions are throw by the methods in JsonDB
- */
-public class JsonDBException extends RuntimeException {
-    public JsonDBException(String message) {
-        super(message);
-    }
-    public JsonDBException(Throwable cause) {
-        super(cause);
-    }
+import javax.ws.rs.HttpMethod;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@HttpMethod("PATCH")
+public @interface PATCH {
 }
