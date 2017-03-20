@@ -32,6 +32,7 @@
   <modules>
     <module>http-pull-push-example</module>
     <module>twitter-salesforce-example</module>
+    <module>twitter-pingcheck-example</module>
   </modules>
 
 </project>
