@@ -15,10 +15,12 @@
  */
 package com.redhat.ipaas.component;
 
+import java.util.Map;
+
+import org.apache.camel.ComponentVerifier;
 import org.apache.camel.Endpoint;
 import org.apache.camel.spi.Metadata;
 import org.apache.camel.util.FileUtil;
-import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.StringHelper;
 
 @Metadata(label = "verifiers", enums = "PARAMETERS,CONNECTIVITY")
@@ -43,7 +45,29 @@ public class HttpComponent extends org.apache.camel.component.http4.HttpComponen
     }
 
     @Override
+    public ComponentVerifier getVerifier() {
+        final ComponentVerifier target = super.getVerifier();
+        return (scope, map) -> {
+            // build parameters into httpUri which is expected in the real
+            String s = map.getOrDefault("scheme", "http").toString();
+            String h = map.getOrDefault("hostname", "").toString();
+            String p = map.getOrDefault("port", "").toString();
+            String c = map.getOrDefault("path", "").toString();
+
+            String url = buildUrl(s, h, p, c, null);
+            map.put("httpUri", url);
+
+            return target.verify(scope, map);
+        };
+    }
+
+    @Override
     public Endpoint createEndpoint(String uri) throws Exception {
+        String build = buildUrl(scheme, hostname, port, path, uri);
+        return super.createEndpoint(build);
+    }
+
+    private static String buildUrl(String scheme, String hostname, Object port, String path, String uri) {
         // build together from component level and given uri that has additional context path to append
         String build = scheme + "://" + hostname;
         if (port != null) {
@@ -55,7 +79,7 @@ public class HttpComponent extends org.apache.camel.component.http4.HttpComponen
         }
 
         String query = null;
-        if (uri.contains("?")) {
+        if (uri != null && uri.contains("?")) {
             query = StringHelper.after(uri, "?");
             uri = StringHelper.before(uri, "?");
             uri = StringHelper.after(uri, "://");
@@ -70,8 +94,7 @@ public class HttpComponent extends org.apache.camel.component.http4.HttpComponen
         if (query != null) {
             build += "?" + query;
         }
-
-        return super.createEndpoint(build);
+        return build;
     }
 
     public String getScheme() {
