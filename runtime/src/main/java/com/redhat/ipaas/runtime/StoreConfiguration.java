@@ -55,14 +55,14 @@ public class StoreConfiguration {
         } catch (Exception ignore) {
         }
 
-        String versionInDB = getClusterProperty(jsondb, "dao.schema.version");
+        String versionInDB = getClusterProperty(jsondb, "dao_schema_version");
         if (daoSchemaVersion != null &&
             (versionInDB == null || !daoSchemaVersion.equals(versionInDB))) {
 
             // really silly migration strategy for now, reset the DB:
             jsondb.set("/", "{}");
 
-            setClusterProperty(jsondb, "dao.schema.version", daoSchemaVersion);
+            setClusterProperty(jsondb, "dao_schema_version", daoSchemaVersion);
         }
 
         return jsondb;
