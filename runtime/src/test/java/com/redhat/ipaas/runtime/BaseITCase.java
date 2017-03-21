@@ -33,8 +33,6 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -49,16 +47,18 @@ public abstract class BaseITCase {
 
     @BeforeClass
     public static void envSetup() throws UnsupportedEncodingException {
-        // Assume.assumeFalse(hasOrNeedsUrlEncoding(GrapeIvy.class.getResource("defaultGrapeConfig.xml").getFile()));
-
         // If the keycloak.http.port is not configured.. configure it now so that
         // our test cases work in an IDE without having to do additional config.
         if( System.getProperty("keycloak.http.port")==null ) {
             System.setProperty("keycloak.http.port", "8282");
         }
 
-        String target = Paths.get("target").toAbsolutePath().toString();
-        System.setProperty("user.home", target);
+        // On some systems (like running a build in a k8s pod), you don't get home dir.
+        if( System.getProperty("user.home")==null ) {
+            // But ivy/grape fails if it does not know where the user home dir is located..
+            String target = Paths.get("target").toAbsolutePath().toString();
+            System.setProperty("user.home", target);
+        }
     }
 
     @PostConstruct()
@@ -160,11 +160,6 @@ public abstract class BaseITCase {
         JsonJackson2HttpMessageConverter() {
             super(Json.mapper(), MediaType.parseMediaType("application/json"));
         }
-    }
-
-
-    protected static Boolean hasOrNeedsUrlEncoding(String path) throws UnsupportedEncodingException {
-        return !path.equals(URLDecoder.decode(path, "UTF-8")) || !path.equals(URLEncoder.encode(path, "UTF-8"));
     }
 
 }
