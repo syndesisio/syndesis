@@ -322,35 +322,20 @@
 
   <dependencies>
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
-    <dependency>
-      <groupId>com.redhat.ipaas</groupId>
-      <artifactId>core</artifactId>
-    </dependency>
 
-    <dependency>
-      <groupId>com.redhat.ipaas</groupId>
-      <artifactId>model</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.redhat.ipaas</groupId>
-      <artifactId>dao</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.redhat.ipaas</groupId>
-      <artifactId>jsondb</artifactId>
-    </dependency>
-
+    <!-- Top most layer, entrypoint. It contains the deps to other modules -->
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
       <artifactId>rest</artifactId>
     </dependency>
 
+    <!-- DAO implementations: -->
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
-      <artifactId>github</artifactId>
+      <artifactId>jsondb</artifactId>
     </dependency>
+
+
     <!-- ===================================================================================== -->
 
     <dependency>

@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.redhat.ipaas.project.converter.ConverterConfiguration
+com.redhat.ipaas.project.converter.ProjectGeneratorConfiguration

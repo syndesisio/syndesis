@@ -39,17 +39,17 @@
 
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
+      <artifactId>dao</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
       <artifactId>github</artifactId>
     </dependency>
 
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
-      <artifactId>jsondb</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.redhat.ipaas</groupId>
-      <artifactId>integration-to-maven-project-converter</artifactId>
+      <artifactId>project-generator</artifactId>
     </dependency>
 
     <dependency>
@@ -77,6 +77,12 @@
     <dependency>
       <groupId>io.swagger</groupId>
       <artifactId>swagger-jaxrs</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <optional>true</optional>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
