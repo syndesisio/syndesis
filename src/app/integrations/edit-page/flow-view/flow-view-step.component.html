@@ -30,8 +30,11 @@
 
   <div class="col-md-3 progress-line">
     <div class="icon">
-      <p [class]="'round ' + getActiveClass()">
-        <i [class]="getIconClass()"></i>
+      <p [class]="'round ' + getActiveClass()"
+         [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')">
+        <!-- Only display icon if step kind is not an endpoint or log -->
+        <i [class]="getIconClass()"
+           *ngIf="step.stepKind === ('endpoint' || 'log')"></i>
       </p>
     </div>
   </div>

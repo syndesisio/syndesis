@@ -64,7 +64,7 @@ export class FlowViewStepComponent {
       case 'log':
         return 'fa fa-newspaper-o';
       default:
-        return 'fa fa-plus';
+        return '';
     }
   }
 
