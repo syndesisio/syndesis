@@ -21,6 +21,13 @@ import com.redhat.ipaas.model.WithId;
 public interface DataAccessObject<T extends WithId> {
 
     /**
+     * @return true if this object cannot be used to create/update entities.
+     */
+    default boolean isReadOnly() {
+        return false;
+    }
+
+    /**
      * @return The Type of entity it supports.
      */
     Class<T> getType();
@@ -68,5 +75,13 @@ public interface DataAccessObject<T extends WithId> {
      * @return          True on successful deletion, false otherwise.
      */
     boolean delete(String id);
+
+
+    default void deleteAll() {
+        ListResult<? extends WithId> l = fetchAll();
+        for (WithId entity : l.getItems()) {
+            delete(entity);
+        }
+    }
 
 }

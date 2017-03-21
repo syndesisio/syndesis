@@ -29,8 +29,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class IntegrationsITCase extends BaseITCase {
 
     @Before
-    public void databaseReset() {
-        super.databaseReset();
+    public void clearDB() {
+        super.clearDB();
     }
 
     @Test

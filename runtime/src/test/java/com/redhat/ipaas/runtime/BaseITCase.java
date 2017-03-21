@@ -31,6 +31,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
+import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -60,7 +61,12 @@ public abstract class BaseITCase {
         System.setProperty("user.home", target);
     }
 
-    protected void databaseReset() {
+    @PostConstruct()
+    public void resetDB() {
+        get("/api/v1/test-support/reset-db", null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
+    }
+
+    protected void clearDB() {
         try {
             this.jsondb.dropTables();
         } catch (Exception e) {

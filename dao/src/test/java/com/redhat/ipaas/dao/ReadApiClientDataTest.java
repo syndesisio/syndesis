@@ -47,13 +47,13 @@ public class ReadApiClientDataTest {
 
 		//serialize
 		ConnectorGroup cg = new ConnectorGroup.Builder().id("label").name("label").build();
-		ModelData mdIn = new ModelData(Kind.ConnectorGroup, mapper.writeValueAsString(cg));
-		Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdIn.getData());
+		ModelData mdIn = new ModelData(Kind.ConnectorGroup, cg);
+		Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdIn.getDataAsJson());
 
 		//deserialize
 		String json = mapper.writeValueAsString(mdIn);
 		ModelData mdOut = mapper.readValue(json, ModelData.class);
-		Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdOut.getData());
+		Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdOut.getDataAsJson());
 	}
 
 	@Test
@@ -64,7 +64,7 @@ public class ReadApiClientDataTest {
         List<Connector> connectorList = new ArrayList<>();
 		for (ModelData md : modelDataList) {
 			if (md.getKind() == Kind.Connector) {
-				Connector cg = mapper.readValue(md.getData(), Connector.class);
+				Connector cg = (Connector) md.getData();
 				connectorList.add(cg);
 			}
 		}

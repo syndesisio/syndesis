@@ -15,10 +15,16 @@
  */
 package com.redhat.ipaas.dao.init;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.redhat.ipaas.core.Json;
 import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.ToJson;
+
+import java.io.IOException;
 
 /**
  * Used to read the deployment.json file from the client GUI project
@@ -26,34 +32,56 @@ import com.redhat.ipaas.model.ToJson;
  */
 public class ModelData implements ToJson {
 
-	private Kind kind;
-	private Object data;
+    private Kind kind;
+    private Object data;
+    private String json;
 
     public ModelData() {
-        super();
     }
 
-	public ModelData(Kind kind, Object data) {
-		super();
-		this.kind = kind;
-		this.data = data;
-	}
+    public ModelData(Kind kind, Object data) {
+        super();
+        this.kind = kind;
+        this.data = data;
+    }
 
 
-	public Kind getKind() {
-		return kind;
-	}
+    public Kind getKind() {
+        return kind;
+    }
 
-	public void setKind(Kind kind) {
-		this.kind = kind;
-	}
+    public void setKind(Kind kind) {
+        this.kind = kind;
+    }
 
-	@JsonRawValue
-	public String getData() {
-		return data == null ? null : data.toString();
-	}
+    @JsonRawValue
+    @JsonProperty("data")
+    public String getDataAsJson() throws JsonProcessingException {
+        if (json == null) {
+            json = Json.mapper().writeValueAsString(data);
+        }
+        return json;
+    }
 
-	public void setData(JsonNode data) {
-		this.data = data;
-	}
+    @JsonRawValue
+    @JsonProperty("data")
+    public void setDataFromJson(JsonNode json) throws JsonProcessingException {
+        this.data = null;
+        this.json = Json.mapper().writeValueAsString(json);
+    }
+
+    @JsonIgnore
+    public Object getData() throws IOException {
+        if (data == null && kind != null && json != null) {
+            data = Json.mapper().readValue(json, kind.getModelClass());
+        }
+        return data;
+    }
+
+    @JsonIgnore
+    public void setData(Object data) {
+        this.data = data;
+        this.json = null;
+    }
+
 }

@@ -18,6 +18,10 @@ keycloak:
   enabled: true
   configurationFile: classpath:/ipaas-test-client.json
 
+endpoints:
+  test_support:
+    enabled: true
+
 spring:
   datasource:
     url: 'jdbc:h2:mem:'
