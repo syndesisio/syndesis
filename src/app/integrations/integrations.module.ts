@@ -9,6 +9,7 @@ import { ModalModule } from 'ng2-bootstrap/modal';
 import { TabsModule } from 'ng2-bootstrap';
 import { PopoverModule } from 'ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
+import { DataMapperModule } from 'ipaas.data.mapper';
 
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
 import { IntegrationBasicsComponent } from './edit-page/integration-basics/integration-basics.component';
@@ -70,6 +71,7 @@ const routes: Routes = [
     ToasterModule,
     ModalModule,
     PopoverModule,
+    DataMapperModule,
   ],
   declarations: [
     IntegrationsConfigureActionComponent,

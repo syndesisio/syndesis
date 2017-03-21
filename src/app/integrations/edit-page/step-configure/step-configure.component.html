@@ -20,13 +20,23 @@
   </div>
 </div>
 <div class="wizard-pf-body clearfix">
-  <div class="title">
-    <h1>Configure {{ step?.stepKind }}</h1>
-  </div>
-  <p>Fill out the fields associated with the selected step.</p>
-  <div *ngIf="formGroup">
-    <form class="form-horizontal" [formGroup]="formGroup">
-      <dynamic-form-bootstrap-control *ngFor="let controlModel of formModel" [controlGroup]="formGroup" [model]="controlModel"></dynamic-form-bootstrap-control>
-    </form>
+  <div *ngIf="step">
+    <div [ngSwitch]="step?.stepKind">
+      <div *ngSwitchCase="'datamapper'">
+        <p>Datamapper here</p>
+        <data-mapper-example-host></data-mapper-example-host>
+      </div>
+      <div *ngSwitchDefault>
+        <div class="title">
+          <h1>Configure {{ step?.stepKind }}</h1>
+        </div>
+        <p>Fill out the fields associated with the selected step.</p>
+        <div *ngIf="formGroup">
+          <form class="form-horizontal" [formGroup]="formGroup">
+            <dynamic-form-bootstrap-control *ngFor="let controlModel of formModel" [controlGroup]="formGroup" [model]="controlModel"></dynamic-form-bootstrap-control>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
