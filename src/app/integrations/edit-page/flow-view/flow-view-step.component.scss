@@ -97,7 +97,7 @@
         padding: 5px 0;
 
         li {
-          padding: 5px 5px 5px 17px;
+          padding: 5px 5px 5px 30px;
 
           &.active {
             background-color: #D6EEFA;
@@ -127,9 +127,10 @@
       color: #FFFFFF;
     }
 
-    .fa.fa-chevron-down .fa.fa-chevron-right {
+    .fa.fa-chevron-down, .fa.fa-chevron-right {
       font-size: x-small;
       padding-right: 5px;
+      margin-right: 5px;
     }
 
     .parent-step {
