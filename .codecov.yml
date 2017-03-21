@@ -21,7 +21,8 @@ coverage:
   status:
     project:
       default:
-        threshold: "5%"
+        target: "0%"
+        threshold: "3%"
 comment:
   layout: "header, diff, tree, sunburst"
   require_changes: true
