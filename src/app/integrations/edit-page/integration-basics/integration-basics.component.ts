@@ -22,8 +22,7 @@ export class IntegrationBasicsComponent extends FlowPage {
   }
 
   canContinue() {
-    return this.currentFlow.integration.name && this.currentFlow.integration.name !== '' &&
-           this.currentFlow.integration.description && this.currentFlow.integration.description !== '';
+    return this.currentFlow.integration.name && this.currentFlow.integration.name !== '';
   }
 
   continue() {
