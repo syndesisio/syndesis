@@ -16,11 +16,8 @@
 package com.redhat.ipaas.runtime;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.redhat.ipaas.core.Json;
 import com.redhat.ipaas.jsondb.impl.SqlJsonDB;
-
-import groovy.grape.GrapeIvy;
-
-import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -28,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
@@ -36,6 +34,7 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,7 +47,7 @@ public abstract class BaseITCase {
 
     @BeforeClass
     public static void envSetup() throws UnsupportedEncodingException {
-        Assume.assumeFalse(hasOrNeedsUrlEncoding(GrapeIvy.class.getResource("defaultGrapeConfig.xml").getFile()));
+        // Assume.assumeFalse(hasOrNeedsUrlEncoding(GrapeIvy.class.getResource("defaultGrapeConfig.xml").getFile()));
 
         // If the keycloak.http.port is not configured.. configure it now so that
         // our test cases work in an IDE without having to do additional config.
@@ -82,7 +81,9 @@ public abstract class BaseITCase {
 
     @Autowired
     public void setRestTemplate(TestRestTemplate testRestTemplate) {
-        testRestTemplate.getRestTemplate().getMessageConverters().add(new YamlJackson2HttpMessageConverter());
+        List<HttpMessageConverter<?>> messageConverters = testRestTemplate.getRestTemplate().getMessageConverters();
+        messageConverters.add(0, new YamlJackson2HttpMessageConverter());
+        messageConverters.add(0, new JsonJackson2HttpMessageConverter());
         this.restTemplate = testRestTemplate;
     }
 
@@ -129,6 +130,9 @@ public abstract class BaseITCase {
 
     protected <T> ResponseEntity<T> http(HttpMethod method, String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {
         HttpHeaders headers = new HttpHeaders();
+        if( body!=null ) {
+            headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
+        }
         headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         ResponseEntity<T> response = restTemplate().exchange(url, method, new HttpEntity<>(body, headers), responseClass);
         if( expectedStatus!=null ) {
@@ -142,6 +146,12 @@ public abstract class BaseITCase {
             super(new YAMLMapper(), MediaType.parseMediaType("application/yaml"));
         }
     }
+    final class JsonJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
+        JsonJackson2HttpMessageConverter() {
+            super(Json.mapper(), MediaType.parseMediaType("application/json"));
+        }
+    }
+
 
     protected static Boolean hasOrNeedsUrlEncoding(String path) throws UnsupportedEncodingException {
         return !path.equals(URLDecoder.decode(path, "UTF-8")) || !path.equals(URLEncoder.encode(path, "UTF-8"));
