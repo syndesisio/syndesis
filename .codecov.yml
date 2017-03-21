@@ -1,0 +1,12 @@
+coverage:
+  range: "30...90"
+  precision: 2
+  round: down
+  status:
+    project:
+      default:
+        threshold: "5%"
+comment:
+  layout: "header, diff, tree, sunburst"
+  require_changes: true
+   
