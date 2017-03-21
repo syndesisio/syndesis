@@ -34,6 +34,7 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,6 +55,9 @@ public abstract class BaseITCase {
         if( System.getProperty("keycloak.http.port")==null ) {
             System.setProperty("keycloak.http.port", "8282");
         }
+
+        String target = Paths.get("target").toAbsolutePath().toString();
+        System.setProperty("user.home", target);
     }
 
     protected void databaseReset() {
