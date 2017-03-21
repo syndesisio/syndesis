@@ -2,7 +2,7 @@ def mavenVersion='3.3.9'
 
 slave {
     withOpenshift {
-            withMaven(mavenImage: "maven:${mavenVersion}", serviceAccount: "jenkins") {
+            withMaven(mavenImage: "maven:${mavenVersion}", serviceAccount: "jenkins", mavenRepositoryClaim: "m2-local-repo") {
                 inside {
                     def testingNamespace = generateProjectName()
 
