@@ -104,7 +104,7 @@ export class FlowViewStepComponent {
 
   getParentClass() {
     let clazz = '';
-    if (this.thingIsEnabled(this.step)) {
+    if (this.getPosition() === this.currentPosition) {
       clazz = 'current';
     }
     return 'parent-step ' + clazz;
