@@ -26,6 +26,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
   formModel: DynamicFormControlModel[];
   formGroup: FormGroup;
   formConfig: any;
+  cfg: any = undefined;
 
   constructor(
     public currentFlow: CurrentFlow,
