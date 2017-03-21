@@ -19,36 +19,36 @@ import com.redhat.ipaas.github.backend.ExtendedContentsService;
 import com.redhat.ipaas.github.backend.KeycloakTokenAwareGitHubClient;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.*;
 
 /**
- * @author roland
- * @since 09/03/2017
+ * Configured in spring.factories so that tis configuration is automatically picked
+ * up when included in the classpath.
+ *
+ * Beans are created in request scope because tokens have to be set in the clients afresh for each request.
  */
 @Configuration
-public class SpringGitServiceFactory {
-
-    @Value("${github.service}")
-    private String gitHubHost = "ipaas-github-proxy";
+@ComponentScan
+@EnableConfigurationProperties(GitHubProperties.class)
+public class GitHubConfiguration {
 
     @Bean
     @Scope("request")
-    public RepositoryService repositoryService() {
-        return new RepositoryService(new KeycloakTokenAwareGitHubClient(gitHubHost));
+    public RepositoryService repositoryService(GitHubProperties props) {
+        return new RepositoryService(new KeycloakTokenAwareGitHubClient(props.getService()));
     }
 
     @Bean
     @Scope("request")
-    public ExtendedContentsService contentsService() {
-        return new ExtendedContentsService(new KeycloakTokenAwareGitHubClient(gitHubHost));
+    public ExtendedContentsService contentsService(GitHubProperties props) {
+        return new ExtendedContentsService(new KeycloakTokenAwareGitHubClient(props.getService()));
     }
 
     @Bean
     @Scope("request")
-    public UserService userService() {
-        return new UserService(new KeycloakTokenAwareGitHubClient(gitHubHost));
+    public UserService userService(GitHubProperties props) {
+        return new UserService(new KeycloakTokenAwareGitHubClient(props.getService()));
     }
+
 }
