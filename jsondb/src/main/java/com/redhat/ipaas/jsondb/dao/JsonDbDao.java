@@ -137,4 +137,14 @@ abstract public class JsonDbDao<T extends WithId> implements DataAccessObject<T>
             throw IPaasServerException.launderThrowable(e);
         }
     }
+
+    @Override
+    public void deleteAll() {
+        try {
+            String dbPath = getCollectionPath();
+            jsondb.set(dbPath, "{}");
+        } catch (RuntimeException e) {
+            throw IPaasServerException.launderThrowable(e);
+        }
+    }
 }

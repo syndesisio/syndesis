@@ -59,6 +59,11 @@ public class IntegrationPatternDaoImpl implements IntegrationPatternDao {
     }
 
     @Override
+    public boolean isReadOnly() {
+        return true;
+    }
+
+    @Override
     public IntegrationPattern create(IntegrationPattern entity) {
         throw new UnsupportedOperationException("You can't create an Integration Pattern.");
     }
