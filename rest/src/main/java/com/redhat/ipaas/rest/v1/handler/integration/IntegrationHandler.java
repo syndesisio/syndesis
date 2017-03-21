@@ -28,7 +28,7 @@ import com.redhat.ipaas.github.GitHubService;
 import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.openshift.OpenShiftService;
-import com.redhat.ipaas.project.converter.IntegrationToProjectConverter;
+import com.redhat.ipaas.project.converter.ProjectGenerator;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
 import io.swagger.annotations.Api;
@@ -42,7 +42,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     private final GitHubService gitHubService;
 
-    private final IntegrationToProjectConverter projectConverter;
+    private final ProjectGenerator projectConverter;
 
     @Value("${openshift.apiBaseUrl}")
     private String openshiftApiBaseUrl;
@@ -52,7 +52,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     private final OpenShiftService openShiftService;
 
-    public IntegrationHandler(DataManager dataMgr, GitHubService gitHubService, IntegrationToProjectConverter projectConverter, OpenShiftService openShiftService) {
+    public IntegrationHandler(DataManager dataMgr, GitHubService gitHubService, ProjectGenerator projectConverter, OpenShiftService openShiftService) {
         super(dataMgr);
         this.gitHubService = gitHubService;
         this.projectConverter = projectConverter;

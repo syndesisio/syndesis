@@ -185,7 +185,7 @@
     <module>rest</module>
     <module>runtime</module>
     <module>github</module>
-    <module>integration-to-maven-project-converter</module>
+    <module>project-generator</module>
     <module>connector-catalog</module>
     <module>openshift</module>
   </modules>
@@ -298,7 +298,7 @@
 
       <dependency>
         <groupId>com.redhat.ipaas</groupId>
-        <artifactId>integration-to-maven-project-converter</artifactId>
+        <artifactId>project-generator</artifactId>
         <version>${project.version}</version>
       </dependency>
 

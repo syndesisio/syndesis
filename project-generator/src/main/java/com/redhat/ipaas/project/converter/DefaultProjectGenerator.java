@@ -40,7 +40,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class DefaultIntegrationToProjectConverter implements IntegrationToProjectConverter {
+public class DefaultProjectGenerator implements ProjectGenerator {
 
     private final static ObjectMapper YAML_OBJECT_MAPPER = YamlHelper.createYamlMapper();
 
@@ -67,7 +67,7 @@ public class DefaultIntegrationToProjectConverter implements IntegrationToProjec
 
     private final ConnectorCatalog connectorCatalog;
 
-    public DefaultIntegrationToProjectConverter(ConnectorCatalog connectorCatalog) {
+    public DefaultProjectGenerator(ConnectorCatalog connectorCatalog) {
         this.connectorCatalog = connectorCatalog;
     }
 

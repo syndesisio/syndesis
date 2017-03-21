@@ -13,18 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.project.converter;
+package com.redhat.ipaas.jsondb.rest;
 
-import com.redhat.ipaas.connector.catalog.ConnectorCatalog;
-import org.springframework.context.annotation.Bean;
+import javax.ws.rs.Path;
+
+import com.redhat.ipaas.jsondb.JsonDB;
+import com.redhat.ipaas.jsondb.rest.JsonDBResource;
+import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+@Path("/jsondb")
+@Api(value = "jsondb")
+@Component
 @Configuration
-public class ConverterConfiguration {
-
-    @Bean
-    public IntegrationToProjectConverter projectConverter(ConnectorCatalog connectorCatalog) {
-        return new DefaultIntegrationToProjectConverter(connectorCatalog);
+@ConditionalOnProperty(value = "endpoints.jsondb.enabled")
+public class JsonDBHandler extends JsonDBResource {
+    public JsonDBHandler(JsonDB jsondb) {
+        super(jsondb);
     }
-
 }

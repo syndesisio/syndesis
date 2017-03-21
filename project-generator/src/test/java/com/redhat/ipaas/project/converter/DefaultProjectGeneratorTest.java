@@ -30,7 +30,6 @@ import groovy.grape.GrapeIvy;
 import org.junit.Assume;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -44,7 +43,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DefaultIntegrationToProjectConverterTest {
+public class DefaultProjectGeneratorTest {
 
     @Test
     public void testConvert() throws Exception {
@@ -56,7 +55,7 @@ public class DefaultIntegrationToProjectConverterTest {
         Step step3 = new Step.Builder().stepKind("log").configuredProperties(map("message", "Hello World! ${body}")).build();
         Step step4 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().camelConnectorPrefix("http-post").camelConnectorGAV("com.redhat.ipaas:http-post-connector:0.2.1").build()).build();
 
-        Map<String, byte[]> files = new DefaultIntegrationToProjectConverter(new ConnectorCatalog(new ConnectorCatalogProperties())).convert(
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties())).convert(
             new Integration.Builder()
                 .id("test-integration")
                 .name("Test Integration")
@@ -64,7 +63,7 @@ public class DefaultIntegrationToProjectConverterTest {
                 .gitRepo("https://ourgithhost.somewhere/test.git")
                 .steps( Arrays.asList(step1, step2, step3, step4))
                 .build()
-        );
+                                                                                                                               );
         assertFileContents(files.get("README.md"), "test-README.md");
         assertFileContents(files.get("src/main/java/com/redhat/ipaas/example/Application.java"), "test-Application.java");
         assertFileContents(files.get("src/main/resources/application.yml"), "test-application.yml");
@@ -85,9 +84,9 @@ public class DefaultIntegrationToProjectConverterTest {
         Assume.assumeFalse(hasOrNeedsUrlEncoding(GrapeIvy.class.getResource("defaultGrapeConfig.xml").getFile()));
 
         JsonNode json = new ObjectMapper().readTree(this.getClass().getResourceAsStream("test-integration.json"));
-        Map<String, byte[]> files = new DefaultIntegrationToProjectConverter(new ConnectorCatalog(new ConnectorCatalogProperties())).convert(
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties())).convert(
             new ObjectMapper().registerModule(new Jdk8Module()).readValue(json.get("data").toString(), Integration.class)
-        );
+                                                                                                                               );
         assertFileContents(files.get("README.md"), "test-pull-push-README.md");
         assertFileContents(files.get("src/main/java/com/redhat/ipaas/example/Application.java"), "test-Application.java");
         assertFileContents(files.get("src/main/resources/application.yml"), "test-pull-push-application.yml");

@@ -20,7 +20,7 @@ import com.redhat.ipaas.model.integration.Integration;
 import java.io.IOException;
 import java.util.Map;
 
-public interface IntegrationToProjectConverter {
+public interface ProjectGenerator {
 
     Map<String, byte[]> convert(Integration integration) throws IOException;
 
