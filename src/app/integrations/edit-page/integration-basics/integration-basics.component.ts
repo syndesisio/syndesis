@@ -9,6 +9,7 @@ import { Tag } from '../../../model';
 @Component({
   selector: 'ipaas-integrations-integration-basics',
   templateUrl: 'integration-basics.component.html',
+  styleUrls: ['./integration-basics.component.scss'],
 })
 export class IntegrationBasicsComponent extends FlowPage {
 

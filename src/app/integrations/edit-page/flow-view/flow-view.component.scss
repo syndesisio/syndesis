@@ -1,3 +1,5 @@
+$flow-view-container-min-height: 500px;
+
 /deep/ .popover {
   margin-top: -2px;
   margin-left: 20px !important;
@@ -5,6 +7,7 @@
 
 .clickable {
   cursor: pointer;
+
   & > * {
     cursor: pointer;
   }
@@ -22,7 +25,7 @@
   }
 
   .flow-view-container {
-    min-height: 500px;
+    min-height: $flow-view-container-min-height;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -48,11 +51,13 @@
 
           li {
             padding: 5px 5px 5px 17px;
+
             &.active {
               background-color: #D6EEFA;
               border-bottom: 1px solid #B8DFF3;
               border-top: 1px solid #B8DFF3;
             }
+
             &.inactive {
               color: #D1D1D1;
             }
@@ -94,11 +99,13 @@
     position: relative;
     top: -47px;
     height: 50px;
+
     .popover-body {
       a {
         cursor: pointer;
       }
     }
+
     .square-icon {
       .fa.fa-plus-square {
         color: #158ACC;
@@ -109,6 +116,7 @@
         margin-top: 10px;
       }
     }
+
     .step-line {
       position: absolute;
       height: 150px;
@@ -123,6 +131,7 @@
     position: relative;
     height: 150px;
     flex-wrap: nowrap;
+
     .step-line {
       position: absolute;
       height: 150px;
@@ -131,6 +140,7 @@
       width: 2px;
       background-color: #d4d4d4;
     }
+
     &.finish {
       .step-line {
         height: 10px;
