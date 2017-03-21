@@ -26,7 +26,7 @@ import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.integration.IntegrationPattern;
 
-@ApplicationScoped
+//@ApplicationScoped
 public class IntegrationPatternDaoImpl implements IntegrationPatternDao {
 
     private static final Map<String, IntegrationPattern> PATTERNS = new HashMap<>();

@@ -31,13 +31,6 @@ import org.springframework.context.annotation.ComponentScan;
 import java.util.List;
 
 @SpringBootApplication
-@ComponentScan(basePackageClasses = {
-    V1Application.class,
-    Application.class,
-    DataManager.class,
-    JsonDB.class,
-    GitHubService.class,
-})
 public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
