@@ -30,7 +30,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 
 
-@Path("/connectors")
+@Path("/connectors`")
 @Api(value = "connectors")
 @org.springframework.stereotype.Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector> {
