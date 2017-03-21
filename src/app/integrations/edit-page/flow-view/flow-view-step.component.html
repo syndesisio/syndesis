@@ -46,7 +46,10 @@
 
     <div *ngSwitchCase="'endpoint'">
 
-      <i class="delete-icon fa fa-lg fa-trash" (click)="deletePrompt()"></i>
+      <!-- Delete Icon -->
+      <i class="delete-icon fa fa-lg fa-trash"
+         (click)="deletePrompt()"></i>
+      
       <span [class]="getParentClass() + ' step-heading'" (click)="goto()">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
@@ -68,7 +71,9 @@
     </div>
 
     <div *ngSwitchDefault>
-      <i class="delete-icon fa fa-lg fa-trash" (click)="deleteStep()"></i>
+      <i class="delete-icon fa fa-lg fa-trash"
+         [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')"
+         (click)="deleteStep()"></i>
       <span [class]="getParentClass() + ' step-heading'" (click)="goto()">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
