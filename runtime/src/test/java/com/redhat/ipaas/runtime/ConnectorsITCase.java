@@ -15,6 +15,7 @@
  */
 package com.redhat.ipaas.runtime;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.connection.Connector;
 import org.junit.Test;
@@ -27,13 +28,13 @@ public class ConnectorsITCase extends BaseITCase {
 
     @Test
     public void connectorsListWithoutToken() {
-        ResponseEntity<ListResult> response = restTemplate().getForEntity("/api/v1/connectors", ListResult.class);
+        ResponseEntity<JsonNode> response = restTemplate().getForEntity("/api/v1/connectors", JsonNode.class);
         assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     public void connectorListWithExpiredToken() {
-        get("/api/v1/connectors", ListResult.class, tokenRule.expiredToken(), HttpStatus.UNAUTHORIZED);
+        get("/api/v1/connectors", JsonNode.class, tokenRule.expiredToken(), HttpStatus.UNAUTHORIZED);
     }
 
     @Test

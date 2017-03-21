@@ -15,14 +15,14 @@
  */
 package com.redhat.ipaas.runtime;
 
-import java.util.ArrayList;
-
-import com.redhat.ipaas.model.ListResult;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.redhat.ipaas.model.integration.Integration;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,13 +35,13 @@ public class IntegrationsITCase extends BaseITCase {
 
     @Test
     public void integrationsListWithoutToken() {
-        ResponseEntity<ListResult> response = restTemplate().getForEntity("/api/v1/integrations", ListResult.class);
+        ResponseEntity<JsonNode> response = restTemplate().getForEntity("/api/v1/integrations", JsonNode.class);
         assertThat(response.getStatusCode()).as("list status code").isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     public void integrationsListWithExpiredToken() {
-        ResponseEntity<ListResult> response = get("/api/v1/integrations", ListResult.class, tokenRule.expiredToken(), null);
+        ResponseEntity<JsonNode> response = get("/api/v1/integrations", JsonNode.class, tokenRule.expiredToken(), null);
         assertThat(response.getStatusCode()).as("status code").isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 

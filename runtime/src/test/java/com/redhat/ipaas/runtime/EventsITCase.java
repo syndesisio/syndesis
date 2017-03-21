@@ -15,23 +15,27 @@
  */
 package com.redhat.ipaas.runtime;
 
-import java.net.URI;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.EventSource;
 import com.launchdarkly.eventsource.MessageEvent;
 import com.redhat.ipaas.model.ChangeEvent;
 import com.redhat.ipaas.model.EventMessage;
 import com.redhat.ipaas.model.integration.Integration;
-import okhttp3.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.net.URI;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static com.redhat.ipaas.runtime.Recordings.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -91,8 +95,10 @@ public class EventsITCase extends BaseITCase {
     @Test
     public void sseEventsWithoutToken() throws Exception {
 
-        // We should not be able to get a reservation uuid to connect to the event stream
-        ResponseEntity<EventMessage> response = restTemplate().postForEntity("/api/v1/event/reservations", null, EventMessage.class);
+        // TODO: define an entity model for the response message:
+        // {"timestamp":1490099424012,"status":401,"error":"Unauthorized","message":"Unauthorized","path":"/api/v1/event/reservations"}
+
+        ResponseEntity<JsonNode> response = restTemplate().postForEntity("/api/v1/event/reservations", null, JsonNode.class);
         assertThat(response.getStatusCode()).as("reservations post status code").isEqualTo(HttpStatus.UNAUTHORIZED);
 
         // lets setup an event handler that we can inspect events on..
