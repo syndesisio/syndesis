@@ -88,7 +88,6 @@
             <config>
               <spring-boot>
                 <name>rhipaas/ipaas-rest:%l</name>
-                <from>fabric8/java-jboss-openjdk8-jdk:${java-image.version}</from>
               </spring-boot>
             </config>
           </generator>
