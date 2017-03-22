@@ -30,7 +30,7 @@
 
   <div class="col-md-3 progress-line">
     <div class="icon">
-      <p [class]="'round ' + getActiveClass()"
+      <p [class]="'round ' + getSubMenuActiveClass()"
          [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')">
         <!-- Only display icon if step kind is not an endpoint or log -->
         <i [class]="getIconClass()"
@@ -44,8 +44,8 @@
 
   <div class="col-md-9 text" [ngSwitch]="step.stepKind">
 
-    <div *ngSwitchCase="'endpoint'">
-
+    <!-- Endpoint Steps -->
+    <div *ngSwitchCase="'endpoint'" [class]="getParentActiveClass()">
       <!-- Delete Icon -->
       <i class="delete-icon fa fa-lg fa-trash"
          (click)="deletePrompt()"></i>
@@ -57,20 +57,22 @@
       </span>
 
       <ul [collapse]="isCollapsed()">
-        <li [class]="getActiveClass('connection-select')" (click)="goto('connection-select')">
+        <li [class]="getSubMenuActiveClass('connection-select')" (click)="goto('connection-select')">
           <span [class]="getTextClass('connection-select')">Choose a connection</span>
         </li>
-        <li [class]="getActiveClass('action-select')" (click)="goto('action-select')">
+        <li [class]="getSubMenuActiveClass('action-select')" (click)="goto('action-select')">
           <span [class]="getTextClass('action-select')">Choose an action</span>
         </li>
-        <li [class]="getActiveClass('action-configure')" (click)="goto('action-configure')">
+        <li [class]="getSubMenuActiveClass('action-configure')" (click)="goto('action-configure')">
           <span [class]="getTextClass('action-configure')">Configure the action</span>
         </li>
       </ul>
 
     </div>
 
-    <div *ngSwitchDefault>
+    <!-- Default Steps -->
+    <div *ngSwitchDefault [class]="getParentActiveClass()">
+      <!-- Delete Icon -->
       <i class="delete-icon fa fa-lg fa-trash"
          [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')"
          (click)="deleteStep()"></i>
@@ -81,10 +83,10 @@
       </span>
 
       <ul [collapse]="isCollapsed()">
-        <li [class]="getActiveClass('step-select')" (click)="goto('step-select')">
+        <li [class]="getSubMenuActiveClass('step-select')" (click)="goto('step-select')">
           <span [class]="getTextClass('step-select')">Choose a step</span>
         </li>
-        <li [class]="getActiveClass('step-configure')" (click)="goto('step-configure')">
+        <li [class]="getSubMenuActiveClass('step-configure')" (click)="goto('step-configure')">
           <span [class]="getTextClass('step-configure')">Configure the step</span>
         </li>
       </ul>

@@ -129,7 +129,17 @@ export class FlowViewStepComponent {
     return false;
   }
 
-  getActiveClass(state: string) {
+  getParentActiveClass() {
+    let clazz = '';
+    if (this.getPosition() === this.currentPosition) {
+      clazz = 'active';
+    } else {
+      clazz = 'inactive';
+    }
+    return clazz;
+  }
+
+  getSubMenuActiveClass(state: string) {
     if (!state) {
       if (this.thingIsEnabled(this.step)) {
         return 'active';
