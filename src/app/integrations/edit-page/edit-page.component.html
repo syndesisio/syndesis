@@ -1,25 +1,17 @@
-<div class="integrations edit">
-  <div class="wizard-pf-row">
+<ipaas-loading [loading]="!(integration | async)">
+  <div class="integrations edit" *ngIf="integration | async">
+    <div class="wizard-pf-row">
 
-    <!-- Sidebar -->
-    <div class="wizard-pf-sidebar">
-      <ipaas-integrations-flow-view></ipaas-integrations-flow-view>
-    </div>
-
-
-    <!-- Add/Edit Integration -->
-    <div class="wizard-pf-main">
-      <router-outlet></router-outlet>
-
-      <!-- Wizard Footer -->
-      <!--
-      <div class='wizard-pf-footer'>
-        <button type='button' class='btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss' (click)="cancel()">Cancel</button>
-        <button type="button" class="btn btn-default" *ngIf="showBack()" (click)="goBack()"><i class="fa fa-chevron-left"></i> Back</button>
-        <button type="button" class="btn btn-primary" *ngIf="showNext()" [disabled]="!canContinue()" (click)="continue()" >Next <i class="fa fa-chevron-right"></i></button>
-        <button type="button" class="btn btn-primary" *ngIf="showFinish()" [disabled]="!canFinish()" (click)="finish()">Create</button>
+      <!-- Sidebar -->
+      <div class="wizard-pf-sidebar">
+        <ipaas-integrations-flow-view></ipaas-integrations-flow-view>
       </div>
-      -->
+
+      <!-- Add/Edit Integration -->
+      <div class="wizard-pf-main">
+        <router-outlet></router-outlet>
+
+      </div>
     </div>
   </div>
-</div>
+</ipaas-loading>
