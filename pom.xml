@@ -151,6 +151,7 @@
   <modules>
     <module>components</module>
     <module>connectors</module>
+    <module>connector-verify</module>
     <module>examples</module>
     <module>catalog</module>
   </modules>
