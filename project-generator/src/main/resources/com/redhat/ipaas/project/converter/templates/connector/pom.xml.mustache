@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.redhat.ipaas.integrations</groupId>
+  <artifactId>connector</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <name>iPaaS Connector Validator :: {{name}}</name>
+  {{#description}}<description>{{description}}</description>{{/description}}
+  <packaging>jar</packaging>
+
+  <properties>
+    <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
+    <camel.version>2.19.0-SNAPSHOT</camel.version>
+    <funktion.version>1.1.55</funktion.version>
+    <ipaas-connectors.version>0.2-SNAPSHOT</ipaas-connectors.version>
+  </properties>
+
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>ipaas-releases</id>
+      <name>ipaas-releases</name>
+      <url>https://dl.bintray.com/redhat-ipaas/maven/</url>
+    </repository>
+    <repository>
+      <id>apache.snapshots</id>
+      <name>Apache Development Snapshot Repository</name>
+      <url>https://repository.apache.org/content/repositories/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>jcenter-releases</id>
+      <name>jcenter</name>
+      <url>https://jcenter.bintray.com</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>jboss.ea</id>
+      <name>JBoss EA</name>
+      <url>https://repository.jboss.org/nexus/content/groups/ea</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>jboss.ea</id>
+      <name>JBoss EA</name>
+      <url>https://repository.jboss.org/nexus/content/groups/ea</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-spring-boot-dependencies</artifactId>
+        <version>${camel.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>connector-verify</artifactId>
+      <version>${ipaas-connectors.version}</version>
+    </dependency>
+
+    <!-- connectors -->
+  {{#connectors}}
+    <dependency>
+      <groupId>{{groupId}}</groupId>
+      <artifactId>{{artifactId}}</artifactId>
+      <version>{{version}}</version>
+    </dependency>
+  {{/connectors}}
+
+  </dependencies>
+
+</project>

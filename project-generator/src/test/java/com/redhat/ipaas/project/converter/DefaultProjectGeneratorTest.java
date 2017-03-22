@@ -55,7 +55,7 @@ public class DefaultProjectGeneratorTest {
         Step step3 = new Step.Builder().stepKind("log").configuredProperties(map("message", "Hello World! ${body}")).build();
         Step step4 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().camelConnectorPrefix("http-post").camelConnectorGAV("com.redhat.ipaas:http-post-connector:0.2.1").build()).build();
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties())).convert(
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties())).generate(
             new Integration.Builder()
                 .id("test-integration")
                 .name("Test Integration")
@@ -84,7 +84,7 @@ public class DefaultProjectGeneratorTest {
         Assume.assumeFalse(hasOrNeedsUrlEncoding(GrapeIvy.class.getResource("defaultGrapeConfig.xml").getFile()));
 
         JsonNode json = new ObjectMapper().readTree(this.getClass().getResourceAsStream("test-integration.json"));
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties())).convert(
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties())).generate(
             new ObjectMapper().registerModule(new Jdk8Module()).readValue(json.get("data").toString(), Integration.class)
                                                                                                                                );
         assertFileContents(files.get("README.md"), "test-pull-push-README.md");

@@ -6,6 +6,8 @@
       "name": "Twitter",
       "description": "Twitter Connector",
       "icon": "fa-twitter",
+      "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:0.2.1",
+      "camelConnectorPrefix": "twitter-mention",
       "properties": {
         "accessToken": {
           "kind": "property",

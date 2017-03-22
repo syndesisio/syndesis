@@ -14,27 +14,14 @@
  * limitations under the License.
  */
 package com.redhat.ipaas.verifier;
-/*
- * Copyright (C) 2017 Red Hat, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.connection.Connection;
+import com.redhat.ipaas.model.connection.Connector;
 import org.immutables.value.Value;
 
 /**
@@ -49,19 +36,18 @@ public interface Verifier {
     /**
      * Verify a connector
      *
-     * @param connectorId id of the connector to verify
+     * @param connector the connector to verify
      * @param scope scope in which to verify (e.g. whether to check connectivity or validity)
      * @param options options for the connector to verify
      * @return the result of the verification
      */
-    Result verify(String connectorId, Scope scope, Map<String, String> options);
+    Result verify(Connector connector, Scope scope, Map<String, String> options);
 
     // Scope determines what kind of verification should be performed
     enum Scope {
-        // check connectivity
-        connect,
-        // validation of options
-        validate
+        NONE,
+        PARAMETERS,
+        CONNECTIVITY;
     }
 
     // Detailed error object
@@ -69,11 +55,21 @@ public interface Verifier {
     @JsonDeserialize(builder = ImmutableError.Builder.class)
     interface Error {
         // Connector specific error code
-        String getCode();
+        Optional<String> getCode();
         // A description of the error in plain english
-        String getDescription();
+        Optional<String> getDescription();
         // List of parameters which caused this particular verification to fail
         List<String> getParameters();
+
+        default Error withCode(String value) {
+            return ImmutableError.builder().from(this).code(value).build();
+        }
+        default Error withDescription(String value) {
+            return ImmutableError.builder().from(this).description(value).build();
+        }
+        default Error withParameters(List<String> value) {
+            return ImmutableError.builder().from(this).parameters(value).build();
+        }
     }
 
     // Result structure to return
@@ -94,7 +90,9 @@ public interface Verifier {
             // Check for the given scope failes
             ERROR,
             // Scope not supported
-            SCOPE_UNSUPPORTED
+            SCOPE_UNSUPPORTED,
+            // Verification not supported.
+            UNSUPPORTED,
         }
     }
 }

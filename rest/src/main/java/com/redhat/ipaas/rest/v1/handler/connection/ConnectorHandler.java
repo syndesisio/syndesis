@@ -15,28 +15,25 @@
  */
 package com.redhat.ipaas.rest.v1.handler.connection;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.connection.Connector;
-import com.redhat.ipaas.rest.v1.dto.VConnectionConfiguration;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
 import com.redhat.ipaas.verifier.Verifier;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
-@Path("/connectors`")
+@Path("/connectors")
 @Api(value = "connectors")
 @org.springframework.stereotype.Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector> {
 
-    // Verify connector without connections
-    private Verifier verifier;
+    private final Verifier verifier;
 
     public ConnectorHandler(DataManager dataMgr, Verifier verifier) {
         super(dataMgr);
@@ -55,9 +52,13 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/verifier/{scope}")
-    public Verifier.Result verifyConnectionParameters(@ApiParam(required = true) VConnectionConfiguration connectionConfig,
-                                                      @PathParam("scope") @ApiParam(required = true) Verifier.Scope scope) {
-        return verifier.verify(connectionConfig.getConnectorId(), scope, connectionConfig.getOptions());
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{id}/verifier/{scope}")
+    public Verifier.Result verifyConnectionParameters(
+        @PathParam("id") String connectorId,
+        @PathParam("scope") String scope,
+        Map<String, String> props) {
+        Verifier.Scope s = Verifier.Scope.valueOf(scope.toUpperCase());
+        return verifier.verify(get(connectorId),s, props);
     }
 }

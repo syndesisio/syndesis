@@ -30,6 +30,12 @@
   <packaging>jar</packaging>
 
   <dependencies>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>project-generator</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
