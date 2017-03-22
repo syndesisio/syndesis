@@ -56,7 +56,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
     return this._loading.asObservable();
   }
 
-  loadAll() {
+  loadAll(retries = 0) {
     this._loading.next(true);
     this.service.list().subscribe(
       (list) => {
@@ -65,7 +65,13 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
       },
       (error) => {
         log.debugc(() => 'Error retrieving ' + plural(this.kind) + ': ' + error, category);
-        this._loading.next(false);
+        if (retries < 3) {
+          setTimeout(() => {
+            this.loadAll(retries + 1);
+          }, (retries + 1) * 1000);
+        } else {
+          this._loading.next(false);
+        }
       });
   }
 
@@ -93,7 +99,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
     }
   }
 
-  load(id: string) {
+  load(id: string, retries = 0) {
     this._loading.next(true);
     this.service.get(id).subscribe(
       (entity) => {
@@ -102,7 +108,13 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
       },
       (error) => {
         log.debugc(() => 'Error retrieving ' + this.kind + ': ' + error, category);
-        this._loading.next(false);
+        if (retries < 3) {
+          setTimeout(() => {
+            this.load(id, retries + 1);
+          }, (retries + 1) * 1000);
+        } else {
+          this._loading.next(false);
+        }
       });
   }
 
