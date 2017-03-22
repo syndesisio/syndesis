@@ -32,7 +32,8 @@ import java.util.Properties;
 
 /**
  * This CLI app expects:
- *  1. cli argument: the camel component prefix.
+ *
+ *  1. cli arguments: scope camel-component-prefix
  *  2. a property file delivered via stdin
  *
  * The result is in property file format on stdout.
@@ -52,7 +53,10 @@ public class ConnectorVerifier {
         System.setOut(System.err);
 
         Properties request = toProperties(System.in);
-        Properties response = check.verify(args[0], request);
+        ComponentVerifier.Scope scope = ComponentVerifier.Scope.valueOf(args[0]);
+        String componentPrefix = args[1];
+
+        Properties response = check.verify(scope, componentPrefix, request);
         response.store(originalOut, null);
 
         System.exit(0);
@@ -64,15 +68,7 @@ public class ConnectorVerifier {
         return result;
     }
 
-    static private void copy(InputStream is, OutputStream out) throws IOException {
-        int c;
-        while ((c = is.read()) >= 0) {
-            out.write(c);
-        }
-    }
-
-
-    public Properties verify(String component, Properties request) throws Exception {
+    public Properties verify(ComponentVerifier.Scope scope, String component, Properties request) throws Exception {
         Properties result = new Properties();
         CamelContext camel = null;
         try {
@@ -90,7 +86,7 @@ public class ConnectorVerifier {
                 ComponentVerifier verifier = vc.getVerifier();
 
                 Map<String, Object> parameters = toMap(request);
-                ComponentVerifier.Result verificationResult = verifier.verify(ComponentVerifier.Scope.CONNECTIVITY, parameters);
+                ComponentVerifier.Result verificationResult = verifier.verify(scope, parameters);
 
                 switch (verificationResult.getStatus()) {
                     case OK:
@@ -103,10 +99,16 @@ public class ConnectorVerifier {
                         // TODO: think about how to encode the error messages better.
                         result.put("value", "error");
                         StringBuilder message = new StringBuilder();
+                        int i = 0;
                         for (ComponentVerifier.Error error : verificationResult.getErrors()) {
-                            message.append("" + error.getCode() + ":" + error.getDescription()+"\n");
+                            if (error.getCode() != null) {
+                                result.put("error." + i + ".code", error.getCode());
+                            }
+                            if (error.getDescription() != null) {
+                                result.put("error." + i + ".description", error.getDescription());
+                            }
+                            i++;
                         }
-                        result.put("error", message.toString());
                         break;
                 }
 
