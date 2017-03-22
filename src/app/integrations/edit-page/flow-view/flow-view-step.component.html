@@ -49,22 +49,25 @@
       <!-- Delete Icon -->
       <i class="delete-icon fa fa-lg fa-trash"
          (click)="deletePrompt()"></i>
-      
-      <span [class]="getParentClass() + ' step-heading'" (click)="goto()">
+
+      <span [class]="getParentClass() + ' step-heading'" (click)="goto('action-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
       </span>
 
       <ul [collapse]="isCollapsed()">
-        <li [class]="getSubMenuActiveClass('connection-select')" (click)="goto('connection-select')">
+        <li *ngIf="!step.connection" [class]="getSubMenuActiveClass('connection-select')" (click)="goto('connection-select')">
           <span [class]="getTextClass('connection-select')">Choose a connection</span>
         </li>
-        <li [class]="getSubMenuActiveClass('action-select')" (click)="goto('action-select')">
+        <li *ngIf="!step.action" [class]="getSubMenuActiveClass('action-select')" (click)="goto('action-select')">
           <span [class]="getTextClass('action-select')">Choose an action</span>
         </li>
-        <li [class]="getSubMenuActiveClass('action-configure')" (click)="goto('action-configure')">
+        <li *ngIf="!step.configuredProperties" [class]="getSubMenuActiveClass('action-configure')" (click)="goto('action-configure')">
           <span [class]="getTextClass('action-configure')">Configure the action</span>
+        </li>
+        <li *ngIf="step.configuredProperties" [class]="getSubMenuActiveClass('action-configure')" (click)="goto('action-configure')">
+          <span [class]="getTextClass('action-configure')">Configure</span>
         </li>
       </ul>
 
@@ -76,18 +79,21 @@
       <i class="delete-icon fa fa-lg fa-trash"
          [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')"
          (click)="deleteStep()"></i>
-      <span [class]="getParentClass() + ' step-heading'" (click)="goto()">
+      <span [class]="getParentClass() + ' step-heading'" (click)="goto('step-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
       </span>
 
       <ul [collapse]="isCollapsed()">
-        <li [class]="getSubMenuActiveClass('step-select')" (click)="goto('step-select')">
+        <li *ngIf="!step.stepKind" [class]="getSubMenuActiveClass('step-select')" (click)="goto('step-select')">
           <span [class]="getTextClass('step-select')">Choose a step</span>
         </li>
-        <li [class]="getSubMenuActiveClass('step-configure')" (click)="goto('step-configure')">
+        <li *ngIf="!step.configuredProperties" [class]="getSubMenuActiveClass('step-configure')" (click)="goto('step-configure')">
           <span [class]="getTextClass('step-configure')">Configure the step</span>
+        </li>
+        <li *ngIf="step.configuredProperties" [class]="getSubMenuActiveClass('step-configure')" (click)="goto('step-configure')">
+          <span [class]="getTextClass('step-configure')">Configure</span>
         </li>
       </ul>
     </div>

@@ -58,6 +58,8 @@ export class IntegrationsSelectConnectionComponent extends FlowPage implements O
   }
 
   goBack() {
+    const step = this.currentFlow.getStep(this.position);
+    step.connection = undefined;
     super.goBack(['save-or-add-step']);
   }
 
@@ -81,6 +83,7 @@ export class IntegrationsSelectConnectionComponent extends FlowPage implements O
         });
       })
       .subscribe();
+    /*
     this.connections.map((connections: Connections) => {
       const config = this.currentFlow.getStep(this.position);
       if (config) {
@@ -92,6 +95,7 @@ export class IntegrationsSelectConnectionComponent extends FlowPage implements O
         }
       }
     });
+    */
     this.store.loadAll();
   }
 

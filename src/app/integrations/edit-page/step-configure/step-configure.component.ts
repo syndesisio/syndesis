@@ -40,6 +40,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
   }
 
   goBack() {
+    const step = this.currentFlow.getStep(this.position);
+    step.stepKind = undefined;
+    step.configuredProperties = undefined;
     super.goBack(['step-select', this.position]);
   }
 
