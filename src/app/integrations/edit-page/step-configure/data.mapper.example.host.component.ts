@@ -1,20 +1,6 @@
-/*
-	Copyright (C) 2017 Red Hat, Inc.
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-	        http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 import { DocumentDefinition } from 'ipaas.data.mapper';
 import { MappingDefinition } from 'ipaas.data.mapper';
@@ -27,54 +13,88 @@ import { MappingManagementService } from 'ipaas.data.mapper';
 
 import { DataMapperAppComponent } from 'ipaas.data.mapper';
 
+import { CurrentFlow, FlowEvent } from '../current-flow.service';
+import { FlowPage } from '../flow-page';
+
 @Component({
-	selector: 'ipaas-data-mapper-host',
-	template: `
-  	<data-mapper #dataMapperComponent [cfg]="cfg"></data-mapper>
+  selector: 'ipaas-data-mapper-host',
+  template: `
+    <div *ngIf="cfg.mappingInputJavaClass && cfg.mappingOutputJavaClass">
+      <data-mapper #dataMapperComponent [cfg]="cfg"></data-mapper>
+    </div>
   `,
-	providers: [MappingManagementService, ErrorHandlerService, DocumentManagementService],
 })
+export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestroy {
 
-export class DataMapperHostComponent {
+  routeSubscription: Subscription;
+  position: number;
 
-	@ViewChild('dataMapperComponent')
-	private dataMapperComponent: DataMapperAppComponent;
+  @ViewChild('dataMapperComponent')
+  private dataMapperComponent: DataMapperAppComponent;
 
-	public cfg: ConfigModel;
+  public cfg: ConfigModel = {
+    // TODO fetch these from the server
+    baseJavaServiceUrl: 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/java/',
+    baseMappingServiceUrl: 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/',
+    mappingInputJavaClass: undefined,
+    mappingOutputJavaClass: undefined,
+    mappings: new MappingDefinition(),
+    documentService: undefined,
+    mappingService: undefined,
+    errorService: undefined,
+    showMappingDetailTray: false,
+    showMappingDataType: false,
+    showLinesAlways: false,
+    inputDoc: undefined,
+    outputDoc: undefined,
+  };
 
-	constructor(
-		private documentService: DocumentManagementService,
-		private mappingService: MappingManagementService,
-		private errorService: ErrorHandlerService,
-		) {
+  constructor(
+    public currentFlow: CurrentFlow,
+    public route: ActivatedRoute,
+    public router: Router,
+    public documentService: DocumentManagementService,
+    public mappingService: MappingManagementService,
+    public errorService: ErrorHandlerService,
+  ) {
+    super(currentFlow, route, router);
+  }
 
-		// initialize config information before initializing services
-		const c: ConfigModel = new ConfigModel();
-		c.baseJavaServiceUrl = 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/java/';
-		c.baseMappingServiceUrl = 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
-		c.mappingInputJavaClass = 'twitter4j.Status';
-		c.mappingOutputJavaClass = 'org.apache.camel.salesforce.dto.Contact';
-		c.mappings = new MappingDefinition();
-		c.documentService = documentService;
-		c.mappingService = mappingService;
-		c.errorService = errorService;
-		this.cfg = c;
+  handleFlowEvent(event: FlowEvent) {
+    switch (event.kind) {
+      case 'integrations-mapper-init':
+        // TODO pull from currentFlow
+        this.cfg.mappingInputJavaClass = 'twitter4j.Status';
+        this.cfg.mappingOutputJavaClass = 'org.apache.camel.salesforce.dto.Contact';
 
-		// point services' config pointers to our config
-		c.documentService.cfg = c;
-		c.mappingService.cfg = c;
+        this.documentService.cfg = this.cfg;
+        this.mappingService.cfg = this.cfg;
+        this.cfg.documentService = this.documentService;
+        this.cfg.mappingService = this.mappingService;
+        this.cfg.errorService = this.errorService;
+        this.documentService.initialize();
+        this.mappingService.initialize();
+        this.mappingService.saveMappingOutput$.subscribe((saveHandler: Function) => {
+          this.mappingService.saveMappingToService(saveHandler);
+        });
+      break;
+    }
+  }
 
-		// fetch the input / output documents from the inspection service
-		c.documentService.initialize();
+  ngOnInit() {
+    this.routeSubscription = this.route.params.pluck<Params, string>('position')
+      .map((position: string) => {
+        this.position = Number.parseInt(position);
+        this.currentFlow.events.emit({
+          kind: 'integrations-mapper-init',
+        });
+      })
+      .subscribe();
+  }
 
-		// fetch mappings from the mapping service
-		// (currently hard coded to look up and use first mapping config prefixed with "UI")
-		c.mappingService.initialize();
+  ngOnDestroy() {
+    this.routeSubscription.unsubscribe();
+  }
 
-		//save the mappings when the ui calls us back asking for save
-		c.mappingService.saveMappingOutput$.subscribe((saveHandler: Function) => {
-			console.log('Host component saving mappings.');
-			c.mappingService.saveMappingToService(saveHandler);
-		});
-	}
+
 }

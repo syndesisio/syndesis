@@ -19,15 +19,15 @@
     </div>
   </div>
 </div>
-<div class="wizard-pf-body clearfix">
+<div [class]="step?.stepKind !== 'datamapper' ? 'wizard-pf-body clearfix' : ''">
   <div *ngIf="step">
-    <div [ngSwitch]="step?.stepKind">
+    <div [ngSwitch]="step.stepKind">
       <div *ngSwitchCase="'datamapper'">
-        <data-mapper #dataMapperComponent (cfg)="cfg"></data-mapper>
+        <ipaas-data-mapper-host></ipaas-data-mapper-host>
       </div>
       <div *ngSwitchDefault>
         <div class="title">
-          <h1>Configure {{ step?.stepKind }}</h1>
+          <h1>Configure {{ step.stepKind }}</h1>
         </div>
         <p>Fill out the fields associated with the selected step.</p>
         <div *ngIf="formGroup">
