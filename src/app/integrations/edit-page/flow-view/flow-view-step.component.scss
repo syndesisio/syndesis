@@ -1,4 +1,5 @@
 @import 'flow-view.component';
+@import '../../../../scss/colors';
 
 .flow-view-step {
   flex-wrap: nowrap;
@@ -59,11 +60,21 @@
         background-color: white;
 
         &.active {
-          border: 3px solid #1487CB;
+          border: 3px solid $pf-blue-400;
         }
 
         &.inactive {
           border: 3px solid #D0D0D0;
+        }
+
+        &.add-step-or-connection {
+          background-color: #fff;
+          border: 10px solid $pf-blue-400;
+          border-radius: 100px;
+          height: 33px;
+          margin: 11px;
+          padding: 0;
+          width: 32px;
         }
       }
     }
@@ -86,20 +97,24 @@
         padding: 5px 0;
 
         li {
-          padding: 5px 5px 5px 17px;
+          padding: 5px 5px 5px 30px;
+
           &.active {
             background-color: #D6EEFA;
             border-bottom: 1px solid #B8DFF3;
             border-top: 1px solid #B8DFF3;
           }
+
           &.inactive {
             cursor: pointer;
             color: #D1D1D1;
           }
+
           &.disabled {
             cursor: default;
             pointer-events: none;
           }
+
           > .current {
             cursor: pointer;
             color: #363636;
@@ -108,9 +123,20 @@
       }
     }
 
-    .fa.fa-chevron-down .fa.fa-chevron-right {
+    .active {
+      .fa.fa-trash {
+        color: #FFFFFF;
+      }
+    }
+
+    i.add-step-or-connection {
+      color: #FFFFFF;
+    }
+
+    .fa.fa-chevron-down, .fa.fa-chevron-right {
       font-size: x-small;
       padding-right: 5px;
+      margin-right: 5px;
     }
 
     .parent-step {
