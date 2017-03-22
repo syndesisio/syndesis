@@ -30,6 +30,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * This CLI app expects:
+ *  1. cli argument: the camel component prefix.
+ *  2. a property file delivered via stdin
+ *
+ * The result is in property file format on stdout.
+ * Debug info can be found on stderr.
+ *
+ * We use property file formats for input and output encoding
+ * to avoid needing additional dependencies on the classpath
+ * like a json parser.
+ */
 public class ConnectorVerifier {
 
     public static void main(String[] args) throws Exception {
@@ -69,7 +81,7 @@ public class ConnectorVerifier {
             camel.start();
 
             // get the connector to use
-            Component get = camel.getComponent(component);
+            Component get = camel.getComponent(component, true, false);
 
             // the connector must support ping check if its verifiable
             if (get instanceof VerifiableComponent) {
