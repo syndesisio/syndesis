@@ -18,8 +18,11 @@ package com.redhat.ipaas.runtime;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.connection.Connector;
+import com.redhat.ipaas.verifier.AlwaysOkVerifier;
 import com.redhat.ipaas.verifier.Verifier;
+import org.junit.Assume;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -30,6 +33,9 @@ import java.util.Properties;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConnectorsITCase extends BaseITCase {
+
+    @Autowired
+    private Verifier verifier;
 
     @Test
     public void connectorsListWithoutToken() {
@@ -77,6 +83,10 @@ public class ConnectorsITCase extends BaseITCase {
 
     @Test
     public void verifyBadTwitterConnectionSettings() throws IOException {
+
+        // AlwaysOkVerifier never fails.. do don't try this test case, if that's whats being used.
+        Assume.assumeFalse(verifier instanceof AlwaysOkVerifier);
+
         Properties credentials = new Properties();
         try (InputStream is = getClass().getResourceAsStream("/valid-twitter-keys.properties")) {
             credentials.load(is);
