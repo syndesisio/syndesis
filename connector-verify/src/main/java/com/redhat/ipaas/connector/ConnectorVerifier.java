@@ -104,9 +104,9 @@ public class ConnectorVerifier {
                         result.put("value", "error");
                         StringBuilder message = new StringBuilder();
                         for (ComponentVerifier.Error error : verificationResult.getErrors()) {
-                            message.append("" + error.getCode() + ":" + error.getDescription());
+                            message.append("" + error.getCode() + ":" + error.getDescription()+"\n");
                         }
-                        result.put("error", message);
+                        result.put("error", message.toString());
                         break;
                 }
 
