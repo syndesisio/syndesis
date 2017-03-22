@@ -15,14 +15,13 @@
  */
 package com.redhat.ipaas.verifier;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.connection.Connector;
+import org.immutables.value.Value;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.redhat.ipaas.model.connection.Connection;
-import com.redhat.ipaas.model.connection.Connector;
-import org.immutables.value.Value;
 
 /**
  * The result of a verification of connection parameters.
