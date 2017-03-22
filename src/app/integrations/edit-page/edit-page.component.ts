@@ -35,9 +35,16 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
               public router: Router,
               public detector: ChangeDetectorRef,
                ) {
-    super(route, router);
+    super(currentFlow, route, router);
     this.integration = this.store.resource;
     this.loading = this.store.loading;
+    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
+      this.handleFlowEvent(event);
+    });
+  }
+
+  get currentStep() {
+    return this.getCurrentStep();
   }
 
   handleFlowEvent(event: FlowEvent) {
@@ -66,9 +73,6 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
   }
 
   ngOnInit() {
-    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
-      this.handleFlowEvent(event);
-    });
     this.integrationSubscription = this.integration.subscribe((i: Integration) => {
       this.currentFlow.integration = i;
     });

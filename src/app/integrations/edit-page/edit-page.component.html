@@ -3,14 +3,13 @@
     <div class="wizard-pf-row">
 
       <!-- Sidebar -->
-      <div class="wizard-pf-sidebar">
+      <div class="wizard-pf-sidebar" *ngIf="currentStep?.stepKind !== 'datamapper'">
         <ipaas-integrations-flow-view></ipaas-integrations-flow-view>
       </div>
 
       <!-- Add/Edit Integration -->
       <div class="wizard-pf-main">
         <router-outlet></router-outlet>
-
       </div>
     </div>
   </div>

@@ -1,9 +1,11 @@
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { CurrentFlow } from './current-flow.service';
 
 export abstract class ChildAwarePage {
 
   constructor(
+    public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
   ) { }
@@ -35,6 +37,10 @@ export abstract class ChildAwarePage {
       // log.debugc(() => 'no current child', category);
       return undefined;
     }
+  }
+
+  getCurrentStep(route: ActivatedRoute = this.route) {
+    return this.currentFlow.getStep(this.getCurrentPosition(route));
   }
 
 

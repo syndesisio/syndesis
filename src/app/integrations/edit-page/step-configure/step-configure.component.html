@@ -23,8 +23,7 @@
   <div *ngIf="step">
     <div [ngSwitch]="step?.stepKind">
       <div *ngSwitchCase="'datamapper'">
-        <p>Datamapper here</p>
-        <data-mapper-example-host></data-mapper-example-host>
+        <data-mapper #dataMapperComponent (cfg)="cfg"></data-mapper>
       </div>
       <div *ngSwitchDefault>
         <div class="title">

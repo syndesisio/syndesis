@@ -28,8 +28,7 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
     public router: Router,
     public detector: ChangeDetectorRef,
   ) {
-    super(route, router);
-    // Hmmmmm, this needs to be set here to deal with new integrations
+    super(currentFlow, route, router);
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
     });
@@ -49,6 +48,10 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
 
   loaded() {
     return this.i === undefined;
+  }
+
+  get currentStep() {
+    return this.getCurrentStep();
   }
 
   startConnection() {
