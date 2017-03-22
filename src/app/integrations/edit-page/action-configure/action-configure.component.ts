@@ -39,6 +39,8 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
   }
 
   goBack() {
+    const step = this.currentFlow.getStep(this.position);
+    step.action = undefined;
     super.goBack(['action-select', this.position]);
   }
 
