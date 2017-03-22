@@ -40,11 +40,16 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Filter',
-      description: 'Filter messages using simple scripting',
+      description: 'Filter messages using a script language',
       stepKind: 'filter',
+      properties: {
+        filter: {
+          type: 'string',
+          displayName: 'Filter',
+          required: true,
+        },
+      },
       configuredProperties: undefined,
-      // TODO need to find out what properties are needed for the filter
-      properties: {},
     },
     {
       id: undefined,
