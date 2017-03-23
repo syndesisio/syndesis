@@ -310,7 +310,7 @@
           "name": "Periodic Timer",
           "description": "Set a timer that fires at intervals that you specify",
           "inputDataShape": {
-             "dataType" : "node"
+             "dataType" : "none"
           },
           "outputDataShape": {
              "dataType" : "*"
