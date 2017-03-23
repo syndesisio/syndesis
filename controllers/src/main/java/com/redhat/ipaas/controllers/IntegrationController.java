@@ -66,13 +66,13 @@ public class IntegrationController {
         scanIntegrationsForWork();
 
         eventBus.subscribe("integration-controller", (event, data) -> {
-            if ("change-event".equals(event)) {
+            if (event!=null && "change-event".equals(event)) {
                 try {
                     ChangeEvent changeEvent = Json.mapper().readValue(data, ChangeEvent.class);
-                    if (changeEvent != null || changeEvent.getKind().isPresent() && changeEvent.getId().isPresent()) {
-                        if (Kind.from(changeEvent.getKind().get()) == Kind.Integration) {
-                            enqueueCheckIntegration(changeEvent.getId().get());
-                        }
+                    if ((changeEvent != null
+                        || changeEvent.getKind().isPresent() && changeEvent.getId().isPresent())
+                        && (Kind.from(changeEvent.getKind().get()) == Kind.Integration)) {
+                        enqueueCheckIntegration(changeEvent.getId().get());
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -103,7 +103,7 @@ public class IntegrationController {
     private void checkIntegration(Integration integration) {
         Integration.Status desired = integration.getDesiredStatus().orElse(Integration.Status.Draft);
         Integration.Status current = integration.getCurrentStatus().orElse(Integration.Status.Draft);
-        if (current != desired) {
+        if (!current.equals(desired)) {
             WorkflowHandler workflowHandler = handlers.get(desired);
             if (workflowHandler != null) {
                 enqueue(workflowHandler, integration.getId().get());
@@ -145,13 +145,10 @@ public class IntegrationController {
     }
 
     private boolean stale(WorkflowHandler workflow, Integration integration) {
-        if (integration == null) {
-            return true;
-        }
-        if (!workflow.getTriggerStatuses().contains(integration.getDesiredStatus())) {
-            return true;
-        }
-        return false;
+        return
+            integration == null
+            || workflow == null
+            || !workflow.getTriggerStatuses().contains(integration.getDesiredStatus());
     }
 
 }
