@@ -4,6 +4,7 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ChildAwarePage } from '../child-aware-page';
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { Integration, Step } from '../../../model';
@@ -15,7 +16,7 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './flow-view-step.component.html',
   styleUrls: ['./flow-view-step.component.scss'],
 })
-export class FlowViewStepComponent {
+export class FlowViewStepComponent extends ChildAwarePage {
 
   // the step object in the current flow
   @Input()
@@ -36,11 +37,11 @@ export class FlowViewStepComponent {
   @ViewChild('childModal') public deleteModal: ModalDirective;
 
   constructor(
-    private currentFlow: CurrentFlow,
-    private route: ActivatedRoute,
-    private router: Router,
+    public currentFlow: CurrentFlow,
+    public route: ActivatedRoute,
+    public router: Router,
   ) {
-
+    super(currentFlow, route, router);
   }
 
   getStepKind(step) {

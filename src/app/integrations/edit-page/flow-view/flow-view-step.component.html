@@ -42,7 +42,7 @@
 
   <!-- Progress Menu -->
 
-  <div class="col-md-9 text" [ngSwitch]="step.stepKind">
+  <div class="col-md-9 text" *ngIf="currentStepKind !== 'datamapper'" [ngSwitch]="step.stepKind">
 
     <!-- Endpoint Steps -->
     <div *ngSwitchCase="'endpoint'" [class]="getParentActiveClass()">
