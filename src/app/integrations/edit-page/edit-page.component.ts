@@ -108,7 +108,9 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
   ngOnDestroy() {
     this.integrationSubscription.unsubscribe();
     this.routeSubscription.unsubscribe();
-    this.flowSubscription.unsubscribe();
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
     $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().showMenu() : '';
   }
 
