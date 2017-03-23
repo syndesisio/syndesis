@@ -18,18 +18,24 @@ $flow-view-container-min-height: 0;
 }
 
 .flow-view {
-  width: 300px;
 
   .bold {
     font-weight: bold;
   }
 
   .flow-view-container {
+    width: 300px;
     min-height: $flow-view-container-min-height;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     margin-top: 20px;
+
+    &.collapsed {
+      width: 66px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
 
     .start, .finish {
       h5 {

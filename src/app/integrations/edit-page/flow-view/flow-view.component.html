@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="flow-view-container" *ngIf="i && i.steps">
+    <div [class]="containerClass" *ngIf="i && i.steps">
 
       <!-- First Step -->
       <div class="row steps start">

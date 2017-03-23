@@ -42,6 +42,15 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
     return this.getCurrentChild();
   }
 
+  get containerClass() {
+    switch (this.currentStepKind) {
+      case 'datamapper':
+        return 'flow-view-container collapsed';
+      default:
+        return 'flow-view-container';
+    }
+  }
+
   editIntegrationBasics() {
     this.router.navigate(['integration-basics'], { relativeTo: this.route });
   }
