@@ -35,39 +35,9 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
               public router: Router,
               public detector: ChangeDetectorRef,
                ) {
-    super(currentFlow, route, router);
+    super(route, router);
     this.integration = this.store.resource;
     this.loading = this.store.loading;
-    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
-      this.handleFlowEvent(event);
-    });
-  }
-
-  getPageRow() {
-    switch (this.currentStepKind) {
-      case 'datamapper':
-        return 'row';
-      default:
-        return 'wizard-pf-row';
-    }
-  }
-
-  getSidebarClass() {
-    switch (this.currentStepKind) {
-      case 'datamapper':
-        return 'col-md-1';
-      default:
-        return 'wizard-pf-sidebar';
-    }
-  }
-
-  getPageContainer() {
-    switch (this.currentStepKind) {
-      case 'datamapper':
-        return 'col-md-11';
-      default:
-        return 'wizard-pf-main';
-    }
   }
 
   handleFlowEvent(event: FlowEvent) {
@@ -96,6 +66,9 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
   }
 
   ngOnInit() {
+    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
+      this.handleFlowEvent(event);
+    });
     this.integrationSubscription = this.integration.subscribe((i: Integration) => {
       this.currentFlow.integration = i;
     });
@@ -108,9 +81,7 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
   ngOnDestroy() {
     this.integrationSubscription.unsubscribe();
     this.routeSubscription.unsubscribe();
-    if (this.flowSubscription) {
-      this.flowSubscription.unsubscribe();
-    }
+    this.flowSubscription.unsubscribe();
     $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().showMenu() : '';
   }
 

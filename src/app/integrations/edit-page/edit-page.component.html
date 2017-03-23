@@ -1,15 +1,16 @@
 <ipaas-loading [loading]="!(integration | async)">
   <div class="integrations edit" *ngIf="integration | async">
-    <div [class]="getPageRow()">
+    <div class="wizard-pf-row">
 
       <!-- Sidebar -->
-      <div [class]="getSidebarClass()">
+      <div class="wizard-pf-sidebar">
         <ipaas-integrations-flow-view></ipaas-integrations-flow-view>
       </div>
 
       <!-- Add/Edit Integration -->
-      <div [class]="getPageContainer()">
+      <div class="wizard-pf-main">
         <router-outlet></router-outlet>
+
       </div>
     </div>
   </div>

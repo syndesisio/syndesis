@@ -28,7 +28,8 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
     public router: Router,
     public detector: ChangeDetectorRef,
   ) {
-    super(currentFlow, route, router);
+    super(route, router);
+    // Hmmmmm, this needs to be set here to deal with new integrations
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
     });
@@ -42,25 +43,12 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
     return this.getCurrentChild();
   }
 
-  get containerClass() {
-    switch (this.currentStepKind) {
-      case 'datamapper':
-        return 'flow-view-container collapsed';
-      default:
-        return 'flow-view-container';
-    }
-  }
-
   editIntegrationBasics() {
     this.router.navigate(['integration-basics'], { relativeTo: this.route });
   }
 
   loaded() {
     return this.i === undefined;
-  }
-
-  get currentStep() {
-    return this.getCurrentStep();
   }
 
   startConnection() {
