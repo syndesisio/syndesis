@@ -16,17 +16,49 @@
 package com.redhat.ipaas.core;
 
 /**
- * Interface for subscribing/unsubscribing clients and publishing events to them.
+ * Interface for managing client subscriptions and publishing events to them.
  */
 public interface EventBus {
 
+    /**
+     * Callback interface clients implement to receive events.
+     */
     public interface Subscription {
+
+        /**
+         * This method must never block.
+         *
+         * @param event the type of event being delivered
+         * @param data the data associated the the event type
+         */
         void onEvent(String event, String data);
     }
 
+    /**
+     * Adds a subscription to the event bus.
+     *
+     * @param subscriberId unique id for the subscription.
+     * @param handler the callback that will receive the events.
+     * @return the previously registered subscription with that id or null.
+     */
     public Subscription subscribe(String subscriberId, Subscription handler);
+
+    /**
+     * Removes a subscription from the event bus.
+     * @param subscriberId unique id for the subscription.
+     * @return the previously registered subscription with that id or null if not registered.
+     */
     public Subscription unsubscribe(String subscriberId);
 
+    /**
+     * Send an event to all subscribers in a bus.  The event MAY get delivered to the subscriptions
+     * after this call returns.
+     */
     public void broadcast(String event, String data);
+
+    /**
+     * Send an event to a specific subscriber on the bus.  The event MAY get delivered to the subscriptions
+     * after this call returns.
+     */
     public void send(String subscriberId, String event, String data);
 }
