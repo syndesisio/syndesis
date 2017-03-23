@@ -18,10 +18,7 @@ package com.redhat.ipaas.controllers;
 import com.redhat.ipaas.model.integration.Integration;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class ActivateHandler implements WorkflowHandler {
@@ -34,7 +31,7 @@ public class ActivateHandler implements WorkflowHandler {
     }
 
     @Override
-    public Integration.Status execute(Integration model) throws Exception {
-        return null;
+    public Optional<Integration.Status> execute(Integration model) throws Exception {
+        return model.getDesiredStatus();
     }
 }

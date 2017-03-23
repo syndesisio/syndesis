@@ -31,7 +31,7 @@ import java.util.Optional;
 @JsonDeserialize(builder = Integration.Builder.class)
 public interface Integration extends WithId<Integration>, WithName, Serializable {
 
-    public static enum Status { Draft, Activated, Deactivated, Pending, Deleted};
+    public static enum Status { Draft, Activated, Deactivated, Deleted};
 
     /**
      *Required Labels

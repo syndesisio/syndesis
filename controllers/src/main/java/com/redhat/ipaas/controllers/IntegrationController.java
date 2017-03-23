@@ -29,6 +29,7 @@ import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -66,6 +67,7 @@ public class IntegrationController {
         scanIntegrationsForWork();
 
         eventBus.subscribe("integration-controller", (event, data) -> {
+            // Never do anything that could block in this callback!
             if (event!=null && "change-event".equals(event)) {
                 try {
                     ChangeEvent changeEvent = Json.mapper().readValue(data, ChangeEvent.class);
@@ -101,10 +103,10 @@ public class IntegrationController {
     }
 
     private void checkIntegration(Integration integration) {
-        Integration.Status desired = integration.getDesiredStatus().orElse(Integration.Status.Draft);
-        Integration.Status current = integration.getCurrentStatus().orElse(Integration.Status.Draft);
-        if (!current.equals(desired)) {
-            WorkflowHandler workflowHandler = handlers.get(desired);
+        Optional<Integration.Status> desired = integration.getDesiredStatus();
+        Optional<Integration.Status> current = integration.getCurrentStatus();
+        if (desired.isPresent() && !current.equals(desired)) {
+            WorkflowHandler workflowHandler = handlers.get(desired.get());
             if (workflowHandler != null) {
                 enqueue(workflowHandler, integration.getId().get());
             }
@@ -120,15 +122,14 @@ public class IntegrationController {
 
             try {
 
-                Integration.Status currentStatus = handler.execute(integration);
-                if (currentStatus == null) {
-                    return;
-                }
-
+                Optional<Integration.Status>currentStatus = handler.execute(integration);
                 // handler.execute might block for while so refresh our copy of the integration
                 // data before we update the current status
                 integration = dataManager.fetch(Integration.class, integrationId);
-                integration = new Integration.Builder().currentStatus(currentStatus).build();
+                integration = new Integration.Builder()
+                    .createFrom(integration)
+                    .currentStatus(currentStatus)
+                    .build();
                 dataManager.update(integration);
 
             } catch (Exception e) {

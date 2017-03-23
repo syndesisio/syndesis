@@ -17,6 +17,7 @@ package com.redhat.ipaas.controllers;
 
 import com.redhat.ipaas.model.integration.Integration;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -26,6 +27,6 @@ public interface WorkflowHandler {
 
     Set<Integration.Status> getTriggerStatuses();
 
-    Integration.Status execute(Integration model) throws Exception;
+    Optional<Integration.Status> execute(Integration model) throws Exception;
 
 }
