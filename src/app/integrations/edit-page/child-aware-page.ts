@@ -43,6 +43,12 @@ export abstract class ChildAwarePage {
     return this.currentFlow.getStep(this.getCurrentPosition(route));
   }
 
+  get currentStep() {
+    return this.getCurrentStep();
+  }
 
+  get currentStepKind() {
+    return (this.currentStep || {})['stepKind'];
+  }
 
 }

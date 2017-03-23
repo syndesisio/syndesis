@@ -43,8 +43,31 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
     });
   }
 
-  get currentStep() {
-    return this.getCurrentStep();
+  getPageRow() {
+    switch (this.currentStepKind) {
+      case 'datamapper':
+        return 'row';
+      default:
+        return 'wizard-pf-row';
+    }
+  }
+
+  getSidebarClass() {
+    switch (this.currentStepKind) {
+      case 'datamapper':
+        return 'col-md-1';
+      default:
+        return 'wizard-pf-sidebar';
+    }
+  }
+
+  getPageContainer() {
+    switch (this.currentStepKind) {
+      case 'datamapper':
+        return 'col-md-11';
+      default:
+        return 'wizard-pf-main';
+    }
   }
 
   handleFlowEvent(event: FlowEvent) {
