@@ -177,17 +177,18 @@
   </properties>
 
   <modules>
+    <module>connector-catalog</module>
+    <module>controllers</module>
     <module>core</module>
+    <module>dao</module>
+    <module>github</module>
+    <module>jsondb</module>
     <module>model</module>
     <module>model2</module>
-    <module>dao</module>
-    <module>jsondb</module>
+    <module>openshift</module>
+    <module>project-generator</module>
     <module>rest</module>
     <module>runtime</module>
-    <module>github</module>
-    <module>project-generator</module>
-    <module>connector-catalog</module>
-    <module>openshift</module>
   </modules>
 
   <dependencyManagement>
@@ -626,7 +627,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>${maven-javadoc-plugin}</version>
+            <version>${maven-javadoc-plugin.version}</version>
             <configuration>
               <includeDependencySources>${javadoc.include.deps}
               </includeDependencySources>

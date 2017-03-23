@@ -39,11 +39,11 @@ public class ReadApiClientDataTest {
 	@Test
 	public void deserializeModelDataTest() throws IOException {
 
-	    Integration integrationIn = new Integration.Builder().statusType(Integration.Type.Activated).build();
+	    Integration integrationIn = new Integration.Builder().desiredStatus(Integration.Status.Activated).build();
 	    String integrationJson = mapper.writeValueAsString(integrationIn);
 	    System.out.println(integrationJson);
 	    Integration integrationOut = mapper.readValue(integrationJson, Integration.class);
-	    Assert.assertEquals(integrationIn.getStatusType(), integrationOut.getStatusType());
+	    Assert.assertEquals(integrationIn.getDesiredStatus(), integrationOut.getDesiredStatus());
 
 		//serialize
 		ConnectorGroup cg = new ConnectorGroup.Builder().id("label").name("label").build();
