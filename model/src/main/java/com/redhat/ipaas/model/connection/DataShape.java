@@ -16,17 +16,18 @@
 package com.redhat.ipaas.model.connection;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import java.util.Optional;
+
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = DataShape.Builder.class)
 public interface DataShape {
 
-    String getKind();
+    String getDataType();
 
-    String getSchemaReference();
-
-    byte[] getExemplar();
+    Optional<byte[]> getExemplar();
 
     class Builder extends ImmutableDataShape.Builder {
     }

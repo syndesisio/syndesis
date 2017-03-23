@@ -60,6 +60,12 @@
         {
           "name": "Mention",
           "description": "Search for tweets that mention you",
+          "inputDataShape": {
+             "dataType" : "none"
+          },
+          "outputDataShape": {
+             "dataType" : "java:twitter4j.Status"
+          },
           "properties": {
           },
           "id": "org.foo_twitter-mention-connector_0.2.1",
@@ -174,6 +180,12 @@
           "id": "org.foo_salesforce-upsert-contact-connector_1.0",
           "name": "Create/Update Contact",
           "description": "Create or Update a Salesforce Contact",
+          "inputDataShape": {
+             "dataType" : "java:org.foo.salesforce.upsert.contact.Contact"
+          },
+          "outputDataShape": {
+             "dataType" : "node"
+          },
           "properties": {
           },
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:0.2.1",
@@ -231,6 +243,12 @@
           "id": "com.redhat.ipaas:http-get-connector:0.2.1",
           "name": "HTTP GET",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+          "inputDataShape": {
+             "dataType" : "node"
+          },
+          "outputDataShape": {
+             "dataType" : "*"
+          },
           "properties": {
             "httpUri": {
               "kind": "path",
@@ -252,6 +270,12 @@
           "id": "com.redhat.ipaas:http-post-connector:0.2.1",
           "name": "HTTP POST",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+          "inputDataShape": {
+             "dataType" : "*"
+          },
+          "outputDataShape": {
+             "dataType" : "*"
+          },
           "properties": {
             "httpUri": {
               "kind": "path",
@@ -285,6 +309,12 @@
           "id": "com.redhat.ipaas_timer-connector_0.2.1",
           "name": "Periodic Timer",
           "description": "Set a timer that fires at intervals that you specify",
+          "inputDataShape": {
+             "dataType" : "none"
+          },
+          "outputDataShape": {
+             "dataType" : "*"
+          },
           "properties": {
             "period": {
               "kind": "parameter",
@@ -396,6 +426,12 @@
             "id": "1",
             "connectorId": "org.foo_twitter-mention-connector_0.2.1",
             "description": "Connection from twitter when anyone mention you",
+            "inputDataShape": {
+                "dataType" : "none"
+            },
+            "outputDataShape": {
+                "dataType" : "java:twitter4j.Status"
+            },
             "name": "Twitter Mention",
             "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:0.2.1",
             "camelConnectorPrefix": "twitter-mention",
@@ -437,6 +473,12 @@
             "id": "2",
             "name": "Salesforce Upsert Contact",
             "description": "Connection to Create or Update Salesforce Contact SObject",
+            "inputDataShape": {
+               "dataType" : "java:org.foo.salesforce.upsert.contact.Contact"
+            },
+            "outputDataShape": {
+               "dataType" : "none"
+            },
             "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:0.2.1",
             "camelConnectorPrefix": "salesforce-upsert-contact",
             "connectorId": "org.foo_salesforce-upsert-contact-connector_1.0",
@@ -477,6 +519,12 @@
             "id": "com.redhat.ipaas_timer-connector_0.2.1",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
+            "inputDataShape": {
+               "dataType" : "none"
+            },
+            "outputDataShape": {
+               "dataType" : "*"
+            },
             "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
             "camelConnectorPrefix": "periodic-timer",
             "properties": {
@@ -521,6 +569,12 @@
             "id": "com.redhat.ipaas:http-post-connector:0.2.1",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "dataType" : "*"
+            },
+            "outputDataShape": {
+               "dataType" : "*"
+            },
             "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.1",
             "camelConnectorPrefix": "http-post",
             "properties": {
@@ -557,6 +611,12 @@
             "id": "com.redhat.ipaas:http-get-connector:0.2.1",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "dataType" : "none"
+            },
+            "outputDataShape": {
+               "dataType" : "*"
+            },
             "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.1",
             "camelConnectorPrefix": "http-get",
             "properties": {
