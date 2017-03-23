@@ -99,10 +99,10 @@ export class AppPage {
     // wait either for login page or loaded ipaas app
     await P.race([
       browser.wait(ExpectedConditions.presenceOf(this.rootElement), 1000, 'ipaas root element - assuming we are already logged in'),
-      browser.wait(ExpectedConditions.presenceOf(element(by.css('input'))), 1000, 'Some input field - assuming we are on login page')
+      browser.wait(ExpectedConditions.presenceOf(element(by.css('input'))), 1000, 'Some input field - assuming we are on login page'),
     ]);
 
-    let url = await this.currentUrl();
+    const url = await this.currentUrl();
     if (contains(url, 'github')) {
       // we need to login on github
       await new GithubLogin().login(user);

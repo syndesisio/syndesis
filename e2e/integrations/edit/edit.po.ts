@@ -1,12 +1,12 @@
-import {IPaaSComponent} from '../../common/common';
-import {element, by, ElementFinder} from 'protractor';
-import {P} from '../../common/world';
-import {ConnectionsListPage, ConnectionsListComponent} from '../../connections/list/list.po';
+import { IPaaSComponent } from '../../common/common';
+import { element, by, ElementFinder } from 'protractor';
+import { P } from '../../common/world';
+import { ConnectionsListPage, ConnectionsListComponent } from '../../connections/list/list.po';
 
 
 export class FlowConnection {
 
-  constructor(public type: string, public element: ElementFinder){
+  constructor(public type: string, public element: ElementFinder) {
   }
 
   /**

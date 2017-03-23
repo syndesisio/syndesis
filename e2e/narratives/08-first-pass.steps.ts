@@ -1,12 +1,12 @@
 /**
  * Created by jludvice on 8.3.17.
  */
-import {binding, given, when, then} from 'cucumber-tsflow';
-import {TableDefinition, CallbackStepDefinition} from 'cucumber';
-import {World, P, expect} from '../common/world';
-import {ConnectionsListPage, ConnectionsListComponent} from '../connections/list/list.po';
-import {ConnectionDetailPage} from '../connections/detail/detail.po';
-import {IntegrationEditPage} from '../integrations/edit/edit.po';
+import { binding, given, when, then } from 'cucumber-tsflow';
+import { TableDefinition, CallbackStepDefinition } from 'cucumber';
+import { World, P, expect } from '../common/world';
+import { ConnectionsListPage, ConnectionsListComponent } from '../connections/list/list.po';
+import { ConnectionDetailPage } from '../connections/detail/detail.po';
+import { IntegrationEditPage } from '../integrations/edit/edit.po';
 
 /**
  * Created by jludvice on 1.3.17.
@@ -31,7 +31,7 @@ class FirstPass {
     // Write code here that turns the phrase above into concrete actions
     const currentLink = await this.world.app.link(arg1);
     console.log(currentLink);
-    expect(currentLink.active, "Dashboard link must be active").to.be.true;
+    expect(currentLink.active, 'Dashboard link must be active').to.be.true;
   }
 
 
@@ -49,7 +49,8 @@ class FirstPass {
   public verifyConnectionDetails(connectionName: string, callback: CallbackStepDefinition): void {
     // Write code here that turns the phrase above into concrete actions
     const page = new ConnectionDetailPage();
-    expect(page.connectionName(), `Connection detail page must show connection name`).to.eventually.be.equal(connectionName).notify(callback);
+    expect(page.connectionName(), `Connection detail page must show connection name`)
+      .to.eventually.be.equal(connectionName).notify(callback);
     // todo add more assertion on connection details page
   }
 

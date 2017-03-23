@@ -1,7 +1,7 @@
-import {binding, then} from 'cucumber-tsflow';
-import {CallbackStepDefinition} from 'cucumber';
-import {ConnectionsListPage, ConnectionsListComponent} from '../connections/list/list.po';
-import {World, expect} from '../common/world';
+import { binding, then } from 'cucumber-tsflow';
+import { CallbackStepDefinition } from 'cucumber';
+import { ConnectionsListPage, ConnectionsListComponent } from '../connections/list/list.po';
+import { World, expect } from '../common/world';
 
 
 /**
@@ -24,7 +24,8 @@ class LoginSteps {
     console.log(`should assert ${connectionCount}`);
 
     const page = new ConnectionsListComponent();
-    expect(page.countConnections(), `There should be ${connectionCount} available`).to.eventually.be.least(Number(connectionCount)).notify(callback);
+    expect(page.countConnections(), `There should be ${connectionCount} available`)
+      .to.eventually.be.least(Number(connectionCount)).notify(callback);
   }
 }
 
