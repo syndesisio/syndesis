@@ -12,7 +12,7 @@ Included in this stack are the following technologies:
 * Framework: [Angular 2](https://angular.io/)
 * Module Bundler: [Angular CLI](https://cli.angular.io)
 * Design Patterns: [PatternFly](https://www.patternfly.org/)
-* Testing: [Jasmine](http://jasmine.github.io/) (BDD Unit Test Framework), [Karma](https://karma-runner.github.io/1.0/index.html) (Unit Test Runner), [Protractor](http://www.protractortest.org/#/) (E2E Framework), [Istanbul](https://github.com/gotwarlost/istanbul) (Code Coverage)
+* Testing: [Cucumber.js](https://cucumber.io/) (BDD Unit Test Framework), [Karma](https://karma-runner.github.io/1.0/index.html) (Unit Test Runner), [Protractor](http://www.protractortest.org/#/) (E2E Framework), [Istanbul](https://github.com/gotwarlost/istanbul) (Code Coverage)
 * Linting: [TsLint](https://github.com/palantir/tslint) (Linting for TypeScript)
 * Logging: [typescript-logging](https://github.com/mreuvers/typescript-logging) (TypeScript Logging)
 * Code Analysis: [Codelyzer](https://github.com/mgechev/codelyzer) (TsLint rules for static code analysis of Angular 2 TypeScript projects)
@@ -143,7 +143,7 @@ For a list of common commands, see [here](/docs/commands.md).
 
 ## Testing
 
-### Watch and Run Tests
+### Watch and Run Unit Tests
 
 `ng test` or `yarn test`
 
@@ -152,6 +152,9 @@ For a list of common commands, see [here](/docs/commands.md).
 `ng test --watch=false`
 
 For a list of common commands, see [here](/docs/commands.md).
+
+### E2E Tests
+See [e2e/Readme.md](e2e/Readme.md).
 
 ### Linting
 
