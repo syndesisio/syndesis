@@ -47,7 +47,6 @@
       
       <!-- First Step -->
       <div class="blank-slate-pf-secondary-action first-step" *ngIf="getMiddleSteps().length === 0">
-        <p>First Steps</p>
         <a (click)="insertStepAfter(0)" class="btn btn-default">Add a Step</a>
         &nbsp;&nbsp;&nbsp;
         <a (click)="insertConnectionAfter(0)" class="btn btn-default">Add a Connection</a>
@@ -55,7 +54,6 @@
       
       <!-- Middle Steps -->
       <div class="blank-slate-pf-secondary-action middle-steps" *ngIf="getMiddleSteps().length !== 0">
-        <p>Middle Steps</p>
         <a (click)="insertStepAfter(position + 1)" class="btn btn-default">Add a Step</a>
         &nbsp;&nbsp;&nbsp;
         <a (click)="insertConnectionAfter(position + 1)" class="btn btn-default">Add a Connection</a>
