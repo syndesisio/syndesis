@@ -12,7 +12,7 @@ import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.co
 import { StoreModule } from '../../store/store.module';
 
 describe('ConnectionListPage', () => {
-  const component: ConnectionsListPage;
+  let component: ConnectionsListPage;
   let fixture: ComponentFixture<ConnectionsListPage>;
 
   beforeEach(async(() => {
