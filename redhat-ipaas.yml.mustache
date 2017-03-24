@@ -1,10 +1,7 @@
-#
-# Do not edit, this is a generated file.
-#
 apiVersion: v1
 kind: Template
 metadata:
-  name: redhat-ipaas-dev-single-tenant
+  name: {{Name}}
 parameters:
 - name: ROUTE_HOSTNAME
   description: The external hostname to access the iPaaS
@@ -99,8 +96,81 @@ message: |-
 
     FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
 objects:
-
-
+{{^SingleTenant}}
+- apiVersion: v1
+  kind: OAuthClient
+  metadata:
+    name: ${OPENSHIFT_OAUTH_CLIENT_ID}
+    labels:
+      app: redhat-ipaas
+      component: ipaas-ui
+  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
+  redirectURIs:
+  - https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
+  grantMethod: prompt
+{{/SingleTenant}}
+{{^DevMode}}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: ipaas-rest
+    labels:
+      app: redhat-ipaas
+      component: ipaas-rest
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: docker.io/rhipaas/ipaas-rest:latest
+      importPolicy:
+        scheduled: true
+      name: latest
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: ipaas-keycloak
+    labels:
+      app: redhat-ipaas
+      component: ipaas-keycloak
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: docker.io/jimmidyson/keycloak-openshift:2.5.4.Final
+      importPolicy:
+        scheduled: true
+      name: 2.5.4.Final
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: ipaas-ui
+    labels:
+      app: redhat-ipaas
+      component: ipaas-ui
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: docker.io/rhipaas/ipaas-ui:latest
+      importPolicy:
+        scheduled: true
+      name: latest
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: ipaas-token-rp
+    labels:
+      app: redhat-ipaas
+      component: ipaas-token-rp
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: docker.io/rhipaas/token-rp:v0.4.0
+      importPolicy:
+        scheduled: true
+      name: v0.4.0
+{{/DevMode}}
 - apiVersion: v1
   kind: Secret
   metadata:
@@ -180,8 +250,11 @@ objects:
       spec:
         containers:
         - name: ipaas-ui
+{{^DevMode}}
+          image: ' '
+{{/DevMode}}{{#DevMode}}
           image: rhipaas/ipaas-ui:latest
-
+{{/DevMode}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
@@ -202,7 +275,16 @@ objects:
             name: ipaas-ui-config
           name: config-volume
     triggers:
-
+{{^DevMode}}
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ipaas-ui
+        from:
+          kind: ImageStreamTag
+          name: ipaas-ui:latest
+      type: ImageChange
+{{/DevMode}}
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -283,8 +365,11 @@ objects:
               secretKeyRef:
                 key: password
                 name: ipaas-keycloak-admin
+{{^DevMode}}
+          image: ' '
+{{/DevMode}}{{#DevMode}}
           image: jimmidyson/keycloak-openshift:2.5.4.Final
-
+{{/DevMode}}
           name: ipaas-keycloak
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -315,7 +400,16 @@ objects:
         - name: ipaas-keycloak-tls
           emptyDir: {}
     triggers:
-
+{{^DevMode}}
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ipaas-keycloak
+        from:
+          kind: ImageStreamTag
+          name: ipaas-keycloak:2.5.4.Final
+      type: ImageChange
+{{/DevMode}}
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -394,8 +488,11 @@ objects:
             valueFrom: 
               fieldRef: 
                 fieldPath: metadata.namespace
+{{^DevMode}}
+          image: ' '
+{{/DevMode}}{{#DevMode}}
           image: rhipaas/ipaas-rest:latest
-
+{{/DevMode}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
@@ -428,7 +525,16 @@ objects:
           configMap:
             name: ipaas-rest-config
     triggers:
-
+{{^DevMode}}
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ipaas-rest
+        from:
+          kind: ImageStreamTag
+          name: ipaas-rest:latest
+      type: ImageChange
+{{/DevMode}}
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -460,8 +566,11 @@ objects:
       spec:
         containers:
         - name: ipaas-github-proxy
+{{^DevMode}}
+          image: ' '
+{{/DevMode}}{{#DevMode}}
           image: rhipaas/token-rp:v0.4.0
-
+{{/DevMode}}
           imagePullPolicy: IfNotPresent
           args:
           - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
@@ -487,7 +596,16 @@ objects:
             secretName: ipaas-github-proxy-tls
           name: tls-volume
     triggers:
-
+{{^DevMode}}
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ipaas-github-proxy
+        from:
+          kind: ImageStreamTag
+          name: ipaas-token-rp:v0.4.0
+      type: ImageChange
+{{/DevMode}}
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -519,8 +637,11 @@ objects:
       spec:
         containers:
         - name: ipaas-openshift-proxy
+{{^DevMode}}
+          image: ' '
+{{/DevMode}}{{#DevMode}}
           image: rhipaas/token-rp:v0.4.0
-
+{{/DevMode}}
           imagePullPolicy: IfNotPresent
           args:
           - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
@@ -546,7 +667,16 @@ objects:
             secretName: ipaas-openshift-proxy-tls
           name: tls-volume
     triggers:
-
+{{^DevMode}}
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ipaas-openshift-proxy
+        from:
+          kind: ImageStreamTag
+          name: ipaas-token-rp:v0.4.0
+      type: ImageChange
+{{/DevMode}}
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -1474,8 +1604,11 @@ objects:
           "surrogateAuthRequired": false,
           "enabled": true,
           "clientAuthenticatorType": "client-secret",
+{{#DevMode}}
           "redirectUris": [ "https://${ROUTE_HOSTNAME}/*", "http://localhost:4200/*"],
-
+{{/DevMode}}{{^DevMode}}
+          "redirectUris": [ "https://${ROUTE_HOSTNAME}/*" ],
+{{/DevMode}}
           "webOrigins": [ "+" ],
           "notBefore": 0,
           "bearerOnly": false,
@@ -1876,8 +2009,11 @@ objects:
             registration: property
             classes: com.redhat.ipaas.rest.v1.V1Application
       cors:
+{{^DevMode}}
+        allowedOrigins: https://${ROUTE_HOSTNAME}
+{{/DevMode}}{{#DevMode}}
         allowedOrigins: http://localhost:4200, https://${ROUTE_HOSTNAME}
-
+{{/DevMode}}
       cache:
         cluster:
           name: IPaaSCluster

@@ -1,3 +1,6 @@
+#
+# Do not edit, this is a generated file.
+#
 apiVersion: v1
 kind: Template
 metadata:
@@ -8,7 +11,7 @@ parameters:
   required: true
 - name: KEYCLOAK_ROUTE_HOSTNAME
   description: The external hostname to access the iPaaS Keycloak directly
-  value: ipaas-keycloak-dev.127.0.0.1.nip.io
+  value: ipaas-keycloak.127.0.0.1.xip.io
   required: true
 - name: KEYCLOAK_ADMIN_USERNAME
   description: The Keycloak admin username
@@ -30,7 +33,7 @@ parameters:
   required: true
 - name: KEYCLOAK_ALLOW_ANY_HOSTNAME
   description: The Keycloack parameter to disable hostname validation on certificate
-  value: "true"
+  value: "false"
   required: true
 - name: OPENSHIFT_MASTER
   description: Public OpenShift master address
@@ -38,7 +41,7 @@ parameters:
   required: true
 - name: OPENSHIFT_OAUTH_CLIENT_ID
   description: OpenShift OAuth client ID
-  value: ipaas-dev
+  value: ipaas
   required: true
 - name: OPENSHIFT_OAUTH_CLIENT_SECRET
   description: OpenShift OAuth client secret
@@ -52,10 +55,6 @@ parameters:
 - name: PEMTOKEYSTORE_IMAGE
   description: PEM to keystore init container image
   value: jimmidyson/pemtokeystore:v0.2.0
-  required: true
-- name: IMAGE_PULL_POLICY
-  description: ImagePullPolicy configuration on rhipaas images
-  value: "IfNotPresent"
   required: true
 - name: GITHUB_OAUTH_CLIENT_ID
   description: GitHub OAuth client ID
@@ -100,6 +99,19 @@ message: |-
 
     FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
 objects:
+- apiVersion: v1
+  kind: OAuthClient
+  metadata:
+    name: ${OPENSHIFT_OAUTH_CLIENT_ID}
+    labels:
+      app: redhat-ipaas
+      component: ipaas-ui
+  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
+  redirectURIs:
+  - https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
+  grantMethod: prompt
+
+
 - apiVersion: v1
   kind: Secret
   metadata:
@@ -147,7 +159,7 @@ objects:
   - kind: Group
     name: dedicated-admins
   userNames:
-  - system:serviceaccount:ipaas-staging:ipaas-
+  - system:serviceaccount:ipaas-staging:ipaas-deployer
   - system:serviceaccount:ipaas-ci:jenkins
 - apiVersion: v1
   kind: DeploymentConfig
@@ -180,7 +192,8 @@ objects:
         containers:
         - name: ipaas-ui
           image: rhipaas/ipaas-ui:latest
-          imagePullPolicy: ${IMAGE_PULL_POLICY}
+
+          imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
               path: "/"
@@ -200,6 +213,7 @@ objects:
             name: ipaas-ui-config
           name: config-volume
     triggers:
+
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -281,6 +295,7 @@ objects:
                 key: password
                 name: ipaas-keycloak-admin
           image: jimmidyson/keycloak-openshift:2.5.4.Final
+
           name: ipaas-keycloak
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -311,6 +326,7 @@ objects:
         - name: ipaas-keycloak-tls
           emptyDir: {}
     triggers:
+
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -388,9 +404,10 @@ objects:
           - name: NAMESPACE
             valueFrom: 
               fieldRef: 
-                fieldPath: metadata.namespace 
+                fieldPath: metadata.namespace
           image: rhipaas/ipaas-rest:latest
-          imagePullPolicy: ${IMAGE_PULL_POLICY}
+
+          imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
               path: "/health"
@@ -422,6 +439,7 @@ objects:
           configMap:
             name: ipaas-rest-config
     triggers:
+
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -454,7 +472,8 @@ objects:
         containers:
         - name: ipaas-github-proxy
           image: rhipaas/token-rp:v0.4.0
-          imagePullPolicy: ${IMAGE_PULL_POLICY}
+
+          imagePullPolicy: IfNotPresent
           args:
           - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
           - -proxy-url=https://api.github.com
@@ -479,6 +498,7 @@ objects:
             secretName: ipaas-github-proxy-tls
           name: tls-volume
     triggers:
+
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -511,7 +531,8 @@ objects:
         containers:
         - name: ipaas-openshift-proxy
           image: rhipaas/token-rp:v0.4.0
-          imagePullPolicy: ${IMAGE_PULL_POLICY}
+
+          imagePullPolicy: IfNotPresent
           args:
           - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
           - -proxy-url=${OPENSHIFT_MASTER}
@@ -535,6 +556,9 @@ objects:
         - secret:
             secretName: ipaas-openshift-proxy-tls
           name: tls-volume
+    triggers:
+
+    - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -1461,7 +1485,8 @@ objects:
           "surrogateAuthRequired": false,
           "enabled": true,
           "clientAuthenticatorType": "client-secret",
-          "redirectUris": [ "https://${ROUTE_HOSTNAME}/*", "http://localhost:4200/*" ],
+          "redirectUris": [ "https://${ROUTE_HOSTNAME}/*", "http://localhost:4200/*"],
+
           "webOrigins": [ "+" ],
           "notBefore": 0,
           "bearerOnly": false,
@@ -1846,17 +1871,6 @@ objects:
         }
       }
 - apiVersion: v1
-  kind: OAuthClient
-  metadata:
-    name: ${OPENSHIFT_OAUTH_CLIENT_ID}
-    labels:
-      app: redhat-ipaas
-      component: ipaas-ui
-  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
-  redirectURIs:
-  - https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
-  grantMethod: prompt
-- apiVersion: v1
   kind: ConfigMap
   metadata:
     labels:
@@ -1874,6 +1888,7 @@ objects:
             classes: com.redhat.ipaas.rest.v1.V1Application
       cors:
         allowedOrigins: http://localhost:4200, https://${ROUTE_HOSTNAME}
+
       cache:
         cluster:
           name: IPaaSCluster
