@@ -30,7 +30,7 @@
   <!-- Icon Progress Line -->
 
   <div class="col-md-3 progress-line">
-    <p [class]="'icon ' + getSubMenuActiveClass() + ' ' + getMenuCompleteClass()"
+    <p [class]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass()"
        [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')">
       <!-- Only display icon if step kind is not an endpoint or log -->
       <i [class]="getIconClass()"
