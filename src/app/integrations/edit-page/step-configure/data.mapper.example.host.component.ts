@@ -30,7 +30,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
   position: number;
 
   @ViewChild('dataMapperComponent')
-  private dataMapperComponent: DataMapperAppComponent;
+  public dataMapperComponent: DataMapperAppComponent;
 
   public cfg: ConfigModel = {
     // TODO fetch these from the server
