@@ -120,7 +120,7 @@
   <properties>
 
     <arquillian.version>1.1.12.Final</arquillian.version>
-    <arquillian-cube.version>1.0.0.Alpha21-ipaas-001</arquillian-cube.version>
+    <arquillian-cube.version>1.0.0.Alpha21-ipaas-004</arquillian-cube.version>
 
     <junit.version>4.12</junit.version>
     <kubernetes-client.version>2.2.6</kubernetes-client.version>

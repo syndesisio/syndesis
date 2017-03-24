@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Removing IPaaS from ${KUBERNETES_NAMESPACE}"
-oc process redhat-ipaas-dev-single-tenant  \
+oc process redhat-ipaas-single-tenant  \
     ROUTE_HOSTNAME=ipaas-testing.b6ff.rh-idev.openshiftapps.com \
     OPENSHIFT_MASTER=$(oc whoami --show-server) \
     OPENSHIFT_OAUTH_CLIENT_ID=system:serviceaccount:${KUBERNETES_NAMESPACE}:ipaas-oauth-client \

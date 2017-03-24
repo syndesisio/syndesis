@@ -8,8 +8,8 @@ echo "Installing IPaaS in ${KUBERNETES_NAMESPACE}"
 
 
 oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/serviceaccount-as-oauthclient-single-tenant.yml -n ${KUBERNETES_NAMESPACE} || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/serviceaccount-as-oauthclient-single-tenant.yml -n ${KUBERNETES_NAMESPACE}
-oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-dev-single-tenant.yml -n ${KUBERNETES_NAMESPACE}  || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-dev-single-tenant.yml -n ${KUBERNETES_NAMESPACE}
-oc new-app redhat-ipaas-dev-single-tenant \
+oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-single-tenant.yml -n ${KUBERNETES_NAMESPACE}  || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-single-tenant.yml -n ${KUBERNETES_NAMESPACE}
+oc new-app redhat-ipaas-single-tenant \
     -p ROUTE_HOSTNAME=ipaas-testing.b6ff.rh-idev.openshiftapps.com \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p OPENSHIFT_OAUTH_CLIENT_ID=system:serviceaccount:${KUBERNETES_NAMESPACE}:ipaas-oauth-client \
