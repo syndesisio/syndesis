@@ -22,6 +22,8 @@ import { ConfigService } from './config.service';
 import { UserService } from './common/user.service';
 import { log } from './logging';
 
+import { DataMapperModule } from 'ipaas.data.mapper';
+
 export function appInitializer(configService: ConfigService, oauthService: OAuthService, userService: UserService, ngZone: NgZone) {
   return () => {
     return configService.load().then(() => {
@@ -158,6 +160,7 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     IPaaSCommonModule.forRoot(),
     OAuthModule.forRoot(),
     ToasterModule,
+    DataMapperModule,
   ],
   providers: [
     {

@@ -2,7 +2,7 @@
   <ipaas-loading [loading]="loaded()">
 
     <!-- Header -->
-    <div class="row name">
+    <div class="row name" *ngIf="currentStepKind !== 'datamapper'">
       <div class="col-md-12">
         <div class="form-group">
           <div class="clickable" *ngIf="currentState !== 'integration-basics'" (click)="editIntegrationBasics()">
@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="flow-view-container" *ngIf="i && i.steps">
+    <div [class]="containerClass" *ngIf="i && i.steps">
 
       <!-- First Step -->
       <div class="row steps start">
