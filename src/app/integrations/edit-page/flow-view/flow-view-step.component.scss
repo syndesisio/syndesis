@@ -1,7 +1,25 @@
 @import 'flow-view.component';
 @import '../../../../scss/colors';
 
+////////////////////////////////////////////////////////////////////////////////
+// FLOW-VIEW-STEP
+//
+// 2 Primary State Categories:
+//
+// 1 - Active/Inactive - Is the user currently on this section/step?
+// 2 - Complete/Incomplete - Has the user completed/configured this section/step?
+//
+// 03/24/2017
+// This file is now organized first by section, then by state (ie text/icon then active/inactive). RMY
+//
+////////////////////////////////////////////////////////////////////////////////
+
 .flow-view-step {
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // SIDEBAR: COMMON, REGARDLESS OF STATE
+  ////////////////////////////////////////////////////////////////////////////////
+
   flex-wrap: nowrap;
 
   ul {
@@ -20,7 +38,15 @@
     cursor: pointer;
   }
 
-  // Left-hand side design with the icon and line
+
+
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // SIDEBAR: LEFT HAND (ICON & PROGRESS LINE)
+  ////////////////////////////////////////////////////////////////////////////////
+
+  //----- Progress Line ----------------->>
+
   .progress-line {
     text-align: center;
 
@@ -32,17 +58,7 @@
         padding-left: 5px;
       }
     }
-
-    // Line that connects cubes
-    .vertical {
-      border: 2px solid #D0D0D0;
-      height: 200px;
-      left: 40px;
-      margin-top: -10px;
-      position: absolute;
-      width: 0;
-    }
-
+    
     .icon {
       padding-top: 0;
       // Overriding the actual cube icon's colors
@@ -80,11 +96,35 @@
     }
   }
 
-  .text {
+  ////////////////////////////////////////////////////////////////////////////////
+  // SIDEBAR: RIGHT HAND (PROGRESS MENU)
+  ////////////////////////////////////////////////////////////////////////////////
+
+  .menu {
     position: relative;
     padding-left: 0;
     padding-right: 0;
     padding-top: 19px;
+
+
+    //----- Sidebar: Menu: Active State ----------------->>
+
+    &.active {}
+
+
+    //----- Sidebar: Menu: Inactive State ----------------->>
+
+    &.inactive {}
+
+
+    //----- Sidebar: Menu: Complete State ----------------->>
+
+    &.complete {}
+
+
+    //----- Sidebar: Menu: Incomplete State ----------------->>
+
+    &.incomplete {}
 
     ul {
       min-width: 160px;
@@ -92,6 +132,7 @@
       -webkit-padding-start: 0;
 
       // Sub-Menu Items
+
       &.collapse {
         margin-top: 5px;
         padding: 5px 0;

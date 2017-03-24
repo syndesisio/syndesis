@@ -1,6 +1,7 @@
 <div *ngIf="step" class="flow-view-step steps">
 
 <!-- Delete Modal Container -->
+
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
@@ -42,11 +43,14 @@
 
   <!-- Progress Menu -->
 
-  <div class="col-md-9 text" *ngIf="currentStepKind !== 'datamapper'" [ngSwitch]="step.stepKind">
+  <div class="col-md-9 menu" *ngIf="currentStepKind !== 'datamapper'" [ngSwitch]="step.stepKind">
 
     <!-- Endpoint Steps -->
+    
     <div *ngSwitchCase="'endpoint'" [class]="getParentActiveClass()">
+      
       <!-- Delete Icon -->
+      
       <i class="delete-icon fa fa-lg fa-trash"
          (click)="deletePrompt()"></i>
 
@@ -74,11 +78,15 @@
     </div>
 
     <!-- Default Steps -->
+    
     <div *ngSwitchDefault [class]="getParentActiveClass()">
+      
       <!-- Delete Icon -->
+      
       <i class="delete-icon fa fa-lg fa-trash"
          [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')"
          (click)="deleteStep()"></i>
+      
       <span [class]="getParentClass() + ' step-heading'" (click)="goto('step-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
