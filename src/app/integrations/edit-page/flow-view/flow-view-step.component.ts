@@ -159,6 +159,14 @@ export class FlowViewStepComponent extends ChildAwarePage {
     return answer;
   }
 
+  getMenuCompleteClass(state: string) {
+    if (this.getTextClass(state) === 'active') {
+      return 'complete';
+    } else {
+      return 'incomplete';
+    }
+  }
+
   getTextClass(state: string) {
     switch (state) {
       case 'connection-select':

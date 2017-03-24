@@ -57,13 +57,14 @@
     .icon {
       -moz-border-radius: 100px;
       border-radius: 100px;
+      border: 3px solid #d0d0d0;
       padding: 11px;
       width: 55px;
       height: 55px;
-      background-color: white;
+      background-color: #FFFFFF;
 
       &.add-step-or-connection {
-        background-color: #fff;
+        background-color: #FFFFFF;
         border: 10px solid $pf-blue-400;
         border-radius: 100px;
         height: 33px;
@@ -72,6 +73,13 @@
         width: 32px;
       }
     }
+
+    // Vertical Line
+
+    .step-line {
+      height: 100%;
+    }
+
 
     //----- Sidebar: Progress Line: Active State ----------------->>
 
@@ -93,13 +101,22 @@
 
     //----- Sidebar: Progress Line: Complete State ----------------->>
 
-    &.complete {}
+    &.complete {
+      .icon {}
+    }
 
 
     //----- Sidebar: Progress Line: Incomplete State ----------------->>
 
-    &.incomplete {}
+    &.incomplete {
+      .icon {
+        border: 3px solid #d0d0d0;
+      }
+    }
   }
+
+
+
 
   ////////////////////////////////////////////////////////////////////////////////
   // SIDEBAR: RIGHT HAND (PROGRESS MENU)
@@ -130,8 +147,6 @@
           color: #FFFFFF;
         }
       }
-
-
 
       //----- Sidebar: Menu: Parent Step ----------------->>
 
@@ -188,6 +203,7 @@
         li {
           display: list-item;
           list-style-type: none;
+          margin: 7px 0 0 0;
           padding: 5px 5px 5px 30px;
 
 
