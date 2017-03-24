@@ -400,7 +400,7 @@
       "name": "Twitter to Salesforce Example",
       "description": "This is an example of a Twitter to Salesforce integration",
       "configuration": "",
-      "statusType": "Activated",
+      "desiredStatus": "Activated",
       "tags": [
         { "name": "example" }
        ],
@@ -498,7 +498,7 @@
       "name": "Timed Pull to Post Example",
       "description": "This is an example of a Timed Pull to Post Integration",
       "configuration": "",
-      "statusType": "Activated",
+      "desiredStatus": "Activated",
       "tags": [
         { "name": "example" }
        ],
