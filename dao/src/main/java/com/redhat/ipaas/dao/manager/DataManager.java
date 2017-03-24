@@ -225,7 +225,7 @@ public class DataManager implements DataAccessObjectRegistry {
         // Remove it out of the cache
         WithId entity = cache.remove(id);
         // And out of the DAO
-        boolean deletedInDAO = Optional.ofNullable(
+        boolean deletedInDAO = entity != null && Optional.ofNullable(
             doWithDataAccessObject(model, d -> d.delete(entity))
         ).orElse(Boolean.FALSE).booleanValue();
 
