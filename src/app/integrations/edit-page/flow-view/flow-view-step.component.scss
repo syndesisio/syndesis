@@ -72,46 +72,42 @@
         padding: 0;
         width: 32px;
       }
+
+
+      //----- Sidebar: Progress Line: Active State ----------------->>
+
+      &.active {
+        border: 3px solid $pf-blue-400;
+      }
+
+
+      //----- Sidebar: Progress Line: Inactive State ----------------->>
+
+      &.inactive {
+        border: 3px solid #D0D0D0;
+      }
+
+
+      //----- Sidebar: Progress Line: Complete State ----------------->>
+
+      &.complete {
+        .fa {
+          color: $pf-black-900;
+        }
+      }
+
+
+      //----- Sidebar: Progress Line: Incomplete State ----------------->>
+
+      &.incomplete {
+        border: 3px solid #d0d0d0;
+      }
     }
 
     // Vertical Line
 
     .step-line {
       height: 100%;
-    }
-
-
-    //----- Sidebar: Progress Line: Active State ----------------->>
-
-    &.active {
-      .icon {
-        border: 3px solid $pf-blue-400;
-      }
-    }
-
-
-    //----- Sidebar: Progress Line: Inactive State ----------------->>
-
-    &.inactive {
-      .icon {
-        border: 3px solid #D0D0D0;
-      }
-    }
-
-
-    //----- Sidebar: Progress Line: Complete State ----------------->>
-
-    &.complete {
-      .icon {}
-    }
-
-
-    //----- Sidebar: Progress Line: Incomplete State ----------------->>
-
-    &.incomplete {
-      .icon {
-        border: 3px solid #d0d0d0;
-      }
     }
   }
 
