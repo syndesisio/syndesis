@@ -1,7 +1,25 @@
 @import 'flow-view.component';
 @import '../../../../scss/colors';
 
+////////////////////////////////////////////////////////////////////////////////
+// FLOW-VIEW-STEP
+//
+// 2 Primary State Categories:
+//
+// 1 - Active/Inactive - Is the user currently on this section/step?
+// 2 - Complete/Incomplete - Has the user completed/configured this section/step?
+//
+// 03/24/2017
+// This file is now organized first by section, then by state (ie text/icon then active/inactive). RMY
+//
+////////////////////////////////////////////////////////////////////////////////
+
 .flow-view-step {
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // SIDEBAR: COMMON, REGARDLESS OF STATE
+  ////////////////////////////////////////////////////////////////////////////////
+
   flex-wrap: nowrap;
 
   ul {
@@ -20,135 +38,196 @@
     cursor: pointer;
   }
 
-  // Left-hand side design with the icon and line
+
+
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // SIDEBAR: LEFT HAND (VERTICAL PROGRESS LINE & ICON)
+  ////////////////////////////////////////////////////////////////////////////////
+
   .progress-line {
+    padding-top: 0;
     text-align: center;
 
-    ul {
-      padding-right: 35px;
-      -webkit-padding-start: 0;
-
-      li {
-        padding-left: 5px;
-      }
-    }
-
-    // Line that connects cubes
-    .vertical {
-      border: 2px solid #D0D0D0;
-      height: 200px;
-      left: 40px;
-      margin-top: -10px;
-      position: absolute;
-      width: 0;
+    .fa {
+      color: #D1D1D1;
+      font-size: x-large;
     }
 
     .icon {
-      padding-top: 0;
-      // Overriding the actual cube icon's colors
-      .fa {
-        color: #D1D1D1;
-        font-size: x-large;
-      }
+      -moz-border-radius: 100px;
+      border-radius: 100px;
+      border: 3px solid #d0d0d0;
+      padding: 11px;
+      width: 55px;
+      height: 55px;
+      background-color: #FFFFFF;
 
-      .round {
-        -moz-border-radius: 100px;
+      &.add-step-or-connection {
+        background-color: #FFFFFF;
+        border: 10px solid $pf-blue-400;
         border-radius: 100px;
-        padding: 11px;
-        width: 55px;
-        height: 55px;
-        background-color: white;
+        height: 33px;
+        margin: 11px;
+        padding: 0;
+        width: 32px;
+      }
 
-        &.active {
-          border: 3px solid $pf-blue-400;
-        }
 
-        &.inactive {
-          border: 3px solid #D0D0D0;
-        }
+      //----- Sidebar: Progress Line: Active State ----------------->>
 
-        &.add-step-or-connection {
-          background-color: #fff;
-          border: 10px solid $pf-blue-400;
-          border-radius: 100px;
-          height: 33px;
-          margin: 11px;
-          padding: 0;
-          width: 32px;
+      &.active {
+        border: 3px solid $pf-blue-400;
+      }
+
+
+      //----- Sidebar: Progress Line: Inactive State ----------------->>
+
+      &.inactive {
+        border: 3px solid #D0D0D0;
+      }
+
+
+      //----- Sidebar: Progress Line: Complete State ----------------->>
+
+      &.complete {
+        .fa {
+          color: $pf-black-900;
         }
       }
+
+
+      //----- Sidebar: Progress Line: Incomplete State ----------------->>
+
+      &.incomplete {
+        border: 3px solid #d0d0d0;
+      }
+    }
+
+    // Vertical Line
+
+    .step-line {
+      height: 100%;
     }
   }
 
-  .text {
+
+
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // SIDEBAR: RIGHT HAND (PROGRESS MENU)
+  ////////////////////////////////////////////////////////////////////////////////
+
+  .menu {
     position: relative;
     padding-left: 0;
     padding-right: 0;
     padding-top: 19px;
 
-    ul {
-      min-width: 160px;
-      padding: 10px 35px 0 0;
-      -webkit-padding-start: 0;
 
-      // Sub-Menu Items
-      &.collapse {
+    //----- Sidebar: Menu & Parent Step Container ----------------->>
+
+    .step-container {
+
+      .fa.fa-chevron-down, .fa.fa-chevron-right {
+        font-size: x-small;
+        padding-right: 5px;
+        margin-right: 5px;
+      }
+
+
+      // Active State for Entire Container of Single Step
+
+      &.active {
+        .fa.fa-trash {
+          color: #FFFFFF;
+        }
+      }
+
+      //----- Sidebar: Menu: Parent Step ----------------->>
+
+      .parent-step {
+        background-color: #E7E7E7;
+        cursor: pointer;
+        display: inline;
+        padding: 8px 100% 8px 8px;
+        text-transform: uppercase;
+
+
+        //----- Sidebar: Menu: Parent Step: Active State ----------------->>
+
+        &.active {
+          background-color: #158ACC;
+          color: #FFFFFF;
+        }
+
+
+        //----- Sidebar: Menu: Parent Step: Inactive State ----------------->>
+
+        &.inactive {}
+
+
+        //----- Sidebar: Menu: Parent Step: Complete State ----------------->>
+
+        &.complete {}
+
+
+        //----- Sidebar: Menu: Parent Step: Incomplete State ----------------->>
+
+        &.incomplete {}
+      }
+
+
+
+      //----- Sidebar: Menu: Sub Steps ----------------->>
+
+      ul.sub-steps {
+        cursor: default;
+        list-style-type: none;
+        margin-bottom: 10px;
         margin-top: 5px;
+        min-width: 160px;
         padding: 5px 0;
+        -webkit-margin-before: 0;
+        -webkit-margin-after: 1em;
+        -webkit-margin-start: 0;
+        -webkit-margin-end: 0;
+
+
+        // Each Step
 
         li {
+          display: list-item;
+          list-style-type: none;
+          margin: 7px 0 0 0;
           padding: 5px 5px 5px 30px;
+
+
+          //----- Sidebar: Menu: Sub Step: Active State ----------------->>
 
           &.active {
             background-color: #D6EEFA;
             border-bottom: 1px solid #B8DFF3;
             border-top: 1px solid #B8DFF3;
-          }
-
-          &.inactive {
-            cursor: pointer;
-            color: #D1D1D1;
-          }
-
-          &.disabled {
-            cursor: default;
-            pointer-events: none;
-          }
-
-          > .current {
-            cursor: pointer;
             color: #363636;
+            cursor: pointer;
           }
+
+
+          //----- Sidebar: Menu: Sub Step: Inactive State ----------------->>
+
+          &.inactive {}
+
+
+          //----- Sidebar: Menu: Sub Step: Complete State ----------------->>
+
+          &.complete {}
+
+
+          //----- Sidebar: Menu: Sub Step: Incomplete State ----------------->>
+
+          &.incomplete {}
         }
-      }
-    }
-
-    .active {
-      .fa.fa-trash {
-        color: #FFFFFF;
-      }
-    }
-
-    i.add-step-or-connection {
-      color: #FFFFFF;
-    }
-
-    .fa.fa-chevron-down, .fa.fa-chevron-right {
-      font-size: x-small;
-      padding-right: 5px;
-      margin-right: 5px;
-    }
-
-    .parent-step {
-      background-color: #E7E7E7;
-      cursor: pointer;
-      display: inline;
-      padding: 8px 100% 8px 8px;
-      text-transform: uppercase;
-
-      &.current {
-        background-color: #158ACC;
-        color: #FFFFFF;
       }
     }
   }

@@ -1,6 +1,7 @@
-<div *ngIf="step" class="flow-view-step steps">
+<div *ngIf="step" class="flow-view-step">
 
 <!-- Delete Modal Container -->
+
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
@@ -29,34 +30,41 @@
   <!-- Icon Progress Line -->
 
   <div class="col-md-3 progress-line">
-    <div class="icon">
-      <p [class]="'round ' + getSubMenuActiveClass()"
-         [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')">
-        <!-- Only display icon if step kind is not an endpoint or log -->
-        <i [class]="getIconClass()"
-           *ngIf="step.stepKind === ('endpoint' || 'log')"></i>
-      </p>
-    </div>
+    <p [class]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass()"
+       [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')">
+      <!-- Only display icon if step kind is not an endpoint or log -->
+      <i [class]="getIconClass()"
+         *ngIf="step.stepKind === ('endpoint' || 'log')"></i>
+    </p>
   </div>
 
 
   <!-- Progress Menu -->
 
-  <div class="col-md-9 text" *ngIf="currentStepKind !== 'datamapper'" [ngSwitch]="step.stepKind">
+  <div class="col-md-9 menu" *ngIf="currentStepKind !== 'datamapper'" [ngSwitch]="step.stepKind">
 
     <!-- Endpoint Steps -->
-    <div *ngSwitchCase="'endpoint'" [class]="getParentActiveClass()">
+    
+    <div *ngSwitchCase="'endpoint'" [class]="getParentActiveClass() + ' step-container'">
+      
       <!-- Delete Icon -->
+      
       <i class="delete-icon fa fa-lg fa-trash"
          (click)="deletePrompt()"></i>
 
-      <span [class]="getParentClass() + ' step-heading'" (click)="goto('action-configure')">
+      
+      <!-- Parent Step -->
+      
+      <span [class]="getParentClass()" (click)="goto('action-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
       </span>
 
-      <ul [collapse]="isCollapsed()">
+      
+      <!-- Sub Steps -->
+      
+      <ul [collapse]="isCollapsed()" class="sub-steps">
         <li *ngIf="!step.connection" [class]="getSubMenuActiveClass('connection-select')" (click)="goto('connection-select')">
           <span [class]="getTextClass('connection-select')">Choose a connection</span>
         </li>
@@ -74,18 +82,26 @@
     </div>
 
     <!-- Default Steps -->
-    <div *ngSwitchDefault [class]="getParentActiveClass()">
+    
+    <div *ngSwitchDefault [class]="getParentActiveClass() + ' step-container'">
+      
       <!-- Delete Icon -->
+      
       <i class="delete-icon fa fa-lg fa-trash"
          [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')"
          (click)="deleteStep()"></i>
-      <span [class]="getParentClass() + ' step-heading'" (click)="goto('step-configure')">
+      
+      <!-- Parent Step Heading -->
+      
+      <span [class]="getParentClass()" (click)="goto('step-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
       </span>
 
-      <ul [collapse]="isCollapsed()">
+      <!-- Sub Steps -->
+      
+      <ul [collapse]="isCollapsed()" class="sub-steps">
         <li *ngIf="!step.stepKind" [class]="getSubMenuActiveClass('step-select')" (click)="goto('step-select')">
           <span [class]="getTextClass('step-select')">Choose a step</span>
         </li>

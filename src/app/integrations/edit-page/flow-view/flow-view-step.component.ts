@@ -106,7 +106,8 @@ export class FlowViewStepComponent extends ChildAwarePage {
   getParentClass() {
     let clazz = '';
     if (this.getPosition() === this.currentPosition) {
-      clazz = 'current';
+      //clazz = 'current';
+      clazz = 'active';
     }
     return 'parent-step ' + clazz;
   }
@@ -152,38 +153,46 @@ export class FlowViewStepComponent extends ChildAwarePage {
     if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
       answer = 'active';
     }
-    if (this.getTextClass(state) !== 'current') {
-      answer = answer + ' disabled';
+    if (this.getTextClass(state) !== 'active') {
+      answer = answer + ' inactive';
     }
     return answer;
+  }
+
+  getMenuCompleteClass(state: string) {
+    if (this.getTextClass(state) === 'active') {
+      return 'complete';
+    } else {
+      return 'incomplete';
+    }
   }
 
   getTextClass(state: string) {
     switch (state) {
       case 'connection-select':
         if (this.step.connection) {
-          return 'current';
+          return 'active';
         }
         break;
       case 'action-select':
         if (this.step.action) {
-          return 'current';
+          return 'active';
         }
         break;
       case 'action-configure':
       case 'step-configure':
         if (this.step.configuredProperties) {
-          return 'current';
+          return 'active';
         }
         break;
       case 'step-select':
         if (this.step.stepKind) {
-          return 'current';
+          return 'active';
         }
         break;
     }
     if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
-      return 'current';
+      return 'active';
     }
     return '';
   }

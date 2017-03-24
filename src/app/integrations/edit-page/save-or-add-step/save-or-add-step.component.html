@@ -43,11 +43,20 @@
         Add to Integration
       </h1>
       <p>Now you can add additional connections as well as steps to your integration.</p>
-      <p>You can interact with the left hand panel to continue adding steps and connections to your integration as well</p>
-      <div class="blank-slate-pf-secondary-action">
-        <button class="btn btn-default"> Add a Step</button>
+      <p>You can interact with the left hand panel to continue adding steps and connections to your integration as well.</p>
+      
+      <!-- First Step -->
+      <div class="blank-slate-pf-secondary-action first-step" *ngIf="getMiddleSteps().length === 0">
+        <a (click)="insertStepAfter(0)" class="btn btn-default">Add a Step</a>
         &nbsp;&nbsp;&nbsp;
-        <button class="btn btn-default"> Add a Connection</button>
+        <a (click)="insertConnectionAfter(0)" class="btn btn-default">Add a Connection</a>
+      </div>
+      
+      <!-- Middle Steps -->
+      <div class="blank-slate-pf-secondary-action middle-steps" *ngIf="getMiddleSteps().length !== 0">
+        <a (click)="insertStepAfter(position + 1)" class="btn btn-default">Add a Step</a>
+        &nbsp;&nbsp;&nbsp;
+        <a (click)="insertConnectionAfter(position + 1)" class="btn btn-default">Add a Connection</a>
       </div>
     </div>
   </div>
