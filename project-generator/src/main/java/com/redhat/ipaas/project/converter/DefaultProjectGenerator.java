@@ -170,8 +170,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return YAML_OBJECT_MAPPER.writeValueAsBytes(funktion);
     }
 
-    private io.fabric8.funktion.model.steps.Step createEndpointStep(String camelConnector, Map<String, String> connectionConfiguredProperties, Map<String, String> configuredProperties) throws IOException, URISyntaxException {
-        Map<String, String> props = aggregate(connectionConfiguredProperties, configuredProperties);
+    private io.fabric8.funktion.model.steps.Step createEndpointStep(String camelConnector, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws IOException, URISyntaxException {
+        Map<String, String> props = aggregate(connectionConfiguredProperties, stepConfiguredProperties);
 
         // TODO Remove this hack... when we can read endpointValues from connector schema then we should use those as initial properties.
         if ("periodic-timer".equals(camelConnector)) {
