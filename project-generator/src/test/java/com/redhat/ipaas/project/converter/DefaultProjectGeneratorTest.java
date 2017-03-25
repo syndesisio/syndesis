@@ -48,8 +48,6 @@ public class DefaultProjectGeneratorTest {
     @Test
     public void testConvert() throws Exception {
 
-        Assume.assumeFalse(hasOrNeedsUrlEncoding(GrapeIvy.class.getResource("defaultGrapeConfig.xml").getFile()));
-
         Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().camelConnectorPrefix("periodic-timer").camelConnectorGAV("com.redhat.ipaas:timer-connector:0.2.1").build()).build();
         Step step2 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("httpUri", "http://localhost:8080/hello")).action(new Action.Builder().camelConnectorPrefix("http-get").camelConnectorGAV("com.redhat.ipaas:http-get-connector:0.2.1").build()).build();
         Step step3 = new Step.Builder().stepKind("log").configuredProperties(map("message", "Hello World! ${body}")).build();
@@ -81,7 +79,6 @@ public class DefaultProjectGeneratorTest {
 
     @Test
     public void testConvertFromJson() throws Exception {
-        Assume.assumeFalse(hasOrNeedsUrlEncoding(GrapeIvy.class.getResource("defaultGrapeConfig.xml").getFile()));
 
         JsonNode json = new ObjectMapper().readTree(this.getClass().getResourceAsStream("test-integration.json"));
         Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties())).generate(
@@ -92,10 +89,6 @@ public class DefaultProjectGeneratorTest {
         assertFileContents(files.get("src/main/resources/application.yml"), "test-pull-push-application.yml");
         assertFileContents(files.get("src/main/resources/funktion.yml"), "test-pull-push-funktion.yml");
         assertFileContents(files.get("pom.xml"), "test-pull-push-pom.xml");
-    }
-
-    private static Boolean hasOrNeedsUrlEncoding(String path) throws UnsupportedEncodingException {
-        return !path.equals(URLDecoder.decode(path, "UTF-8")) || !path.equals(URLEncoder.encode(path, "UTF-8"));
     }
 
     // Helper method to help constuct maps with concise syntax
