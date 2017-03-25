@@ -1,3 +1,5 @@
+spring.application.name=test-integration
+spring.cloud.kubernetes.secrets.paths=/opt/integration/secrets.properties
 ## name of CamelContext
 camel.springboot.name=test-integration
 

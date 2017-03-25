@@ -15,10 +15,17 @@
  */
 package com.redhat.ipaas.openshift;
 
-public class OpenShiftServiceNoOp implements OpenShiftService {
 
-    @Override
-    public void createOpenShiftResources(CreateResourcesRequest request) {
-        // Empty no-op just for testing
-    }
+import org.immutables.value.Value;
+
+import java.util.Map;
+
+@Value.Immutable
+public interface CreateResourcesRequest {
+
+    String getName();
+    String getGitRepository();
+    String getWebhookSecret();
+    Map<String, String> getSecretData();
+
 }

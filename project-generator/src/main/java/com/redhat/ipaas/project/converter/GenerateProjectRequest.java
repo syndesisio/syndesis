@@ -15,7 +15,6 @@
  */
 package com.redhat.ipaas.project.converter;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.integration.Integration;
 
@@ -24,7 +23,6 @@ import org.immutables.value.Value;
 import java.util.Map;
 
 @Value.Immutable
-@JsonDeserialize(builder = Integration.Builder.class)
 public interface GenerateProjectRequest {
 
     Integration getIntegration();

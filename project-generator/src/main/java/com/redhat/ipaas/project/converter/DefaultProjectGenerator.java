@@ -46,6 +46,7 @@ import java.util.stream.Stream;
 public class DefaultProjectGenerator implements ProjectGenerator {
 
     private final static ObjectMapper YAML_OBJECT_MAPPER = YamlHelper.createYamlMapper();
+    private final static String PLACEHOLDER_FORMAT = "{{%s}}";
 
     private MustacheFactory mf = new DefaultMustacheFactory();
 
@@ -178,7 +179,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     private io.fabric8.funktion.model.steps.Step createEndpointStep(Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws IOException, URISyntaxException {
         Map<String, String> properties = aggregate(connectionConfiguredProperties, stepConfiguredProperties);
-        Map<String, String> secrets = filterSecrets(connector, properties);
+        Map<String, String> secrets = connector.filterSecrets(properties, e -> String.format(PLACEHOLDER_FORMAT, e.getKey()));
+
         // TODO Remove this hack... when we can read endpointValues from connector schema then we should use those as initial properties.
         if ("periodic-timer".equals(camelConnectorPrefix)) {
             properties.put("timerName", "every");
@@ -187,13 +189,6 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         Map<String, String> maskedProperties = generatorProperties.isSecretMaskingEnabled() ? aggregate(properties, secrets) : properties;
         String endpointUri = connectorCatalog.buildEndpointUri(camelConnectorPrefix, maskedProperties);
         return new Endpoint(endpointUri);
-    }
-
-    private Map<String, String> filterSecrets(Connector connector, Map<String, String> properties) {
-        return properties.entrySet()
-            .stream()
-            .filter(e -> connector.getProperties() != null && connector.getProperties().containsKey(e.getKey()) && connector.getProperties().get(e.getKey()).getSecret())
-            .collect(Collectors.toMap(e -> e.getKey(), e -> "{{" + e.getKey() + "}}"));
     }
 
     private static Map<String, String> aggregate(Map<String, String> ... maps) throws IOException {
