@@ -15,10 +15,6 @@
  */
 package com.redhat.ipaas.project.converter;
 
-import java.io.*;
-import java.net.URISyntaxException;
-import java.util.*;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -33,6 +29,18 @@ import io.fabric8.funktion.model.Funktion;
 import io.fabric8.funktion.model.StepKinds;
 import io.fabric8.funktion.model.steps.Endpoint;
 import io.fabric8.funktion.support.YamlHelper;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
@@ -163,7 +171,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     private io.fabric8.funktion.model.steps.Step createEndpointStep(String camelConnector, Map<String, String> connectionConfiguredProperties, Map<String, String> configuredProperties) throws IOException, URISyntaxException {
-        Map<String, String> props = readConfiguredProperties(connectionConfiguredProperties, configuredProperties);
+        Map<String, String> props = aggregate(connectionConfiguredProperties, configuredProperties);
 
         // TODO Remove this hack... when we can read endpointValues from connector schema then we should use those as initial properties.
         if ("periodic-timer".equals(camelConnector)) {
@@ -174,12 +182,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return new Endpoint(endpointUri);
     }
 
-    private Map<String, String> readConfiguredProperties(Map<String, String> ... configuredProperties) throws IOException {
-        Map<String, String> configuredProps = new HashMap<>();
-        for (Map<String, String> props : configuredProperties) {
-            configuredProps.putAll(props);
-        }
-        return configuredProps;
+    private static Map<String, String> aggregate(Map<String, String> ... maps) throws IOException {
+        return Stream.of(maps).flatMap(map -> map.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue));
     }
 
     private byte[] generate(Object obj, Mustache template) throws IOException {
