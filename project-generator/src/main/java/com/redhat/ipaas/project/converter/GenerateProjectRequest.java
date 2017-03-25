@@ -15,16 +15,19 @@
  */
 package com.redhat.ipaas.project.converter;
 
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.integration.Integration;
 
-import java.io.IOException;
+import org.immutables.value.Value;
+
 import java.util.Map;
 
+@Value.Immutable
+@JsonDeserialize(builder = Integration.Builder.class)
+public interface GenerateProjectRequest {
 
-public interface ProjectGenerator {
+    Integration getIntegration();
+    Map<String, Connector> getConnectors();
 
-    Map<String, byte[]> generate(GenerateProjectRequest request) throws IOException;
-
-    byte[] generatePom(Integration integration) throws IOException;
 }

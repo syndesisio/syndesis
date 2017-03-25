@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Path;
 
@@ -28,8 +29,11 @@ import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.github.GitHubService;
 import com.redhat.ipaas.model.Kind;
+import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.openshift.OpenShiftService;
+import com.redhat.ipaas.project.converter.GenerateProjectRequest;
+import com.redhat.ipaas.project.converter.ImmutableGenerateProjectRequest;
 import com.redhat.ipaas.project.converter.ProjectGenerator;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
@@ -65,7 +69,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     public Kind resourceKind() {
         return Kind.Integration;
     }
-    
+
     @Override
     public Integration get(String id) {
 
@@ -113,7 +117,13 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             Integration integrationWithGitRepoName = ensureGitRepoName(integration);
             String repoName = integrationWithGitRepoName.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
 
-            Map<String, byte[]> fileContents = projectConverter.generate(integrationWithGitRepoName);
+            GenerateProjectRequest request = ImmutableGenerateProjectRequest
+                .builder()
+                .integration(integrationWithGitRepoName)
+                .connectors(getDataManager().fetchAll(Connector.class).getItems().stream().collect(Collectors.toMap(o -> o.getId().get(), o -> o)))
+                .build();
+
+            Map<String, byte[]> fileContents = projectConverter.generate(request);
 
             // Secret to be used in the build trigger
             String webHookUrl = createWebHookUrl(repoName, secret);

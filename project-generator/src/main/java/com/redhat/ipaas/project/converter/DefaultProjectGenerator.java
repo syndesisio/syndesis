@@ -22,6 +22,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.redhat.ipaas.connector.catalog.ConnectorCatalog;
 import com.redhat.ipaas.core.Json;
+import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.model.integration.Step;
 import io.fabric8.funktion.model.Flow;
@@ -75,25 +76,27 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     );
     */
     private final ConnectorCatalog connectorCatalog;
+    private final ProjectGeneratorProperties generatorProperties;
 
-    public DefaultProjectGenerator(ConnectorCatalog connectorCatalog) {
+    public DefaultProjectGenerator(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties) {
         this.connectorCatalog = connectorCatalog;
+        this.generatorProperties = generatorProperties;
     }
 
     @Override
-    public Map<String, byte[]> generate(Integration integration) throws IOException {
-        integration.getSteps().ifPresent(steps -> {
+    public Map<String, byte[]> generate(GenerateProjectRequest request) throws IOException {
+        request.getIntegration().getSteps().ifPresent(steps -> {
             for (Step step : steps) {
                 step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
             }
         });
 
         Map<String, byte[]> contents = new HashMap<>();
-        contents.put("README.md", generate(integration, readmeMustache));
-        contents.put("src/main/java/com/redhat/ipaas/example/Application.java", generate(integration, applicationJavaMustache));
-        contents.put("src/main/resources/application.yml", generate(integration, applicationYmlMustache));
-        contents.put("src/main/resources/funktion.yml", generateFlowYaml(integration));
-        contents.put("pom.xml", generatePom(integration));
+        contents.put("README.md", generate(request.getIntegration(), readmeMustache));
+        contents.put("src/main/java/com/redhat/ipaas/example/Application.java", generate(request.getIntegration(), applicationJavaMustache));
+        contents.put("src/main/resources/application.yml", generate(request.getIntegration(), applicationYmlMustache));
+        contents.put("src/main/resources/funktion.yml", generateFlowYaml(request));
+        contents.put("pom.xml", generatePom(request.getIntegration()));
 
         return contents;
     }
@@ -112,10 +115,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                 }
             }
         });
-        return generate(
-            new IntegrationForPom(integration.getId().orElse(""), integration.getName(), integration.getDescription().orElse(null), connectors),
-            pomMustache
-        );
+        return generate(new IntegrationForPom(integration.getId().orElse(""), integration.getName(), integration.getDescription().orElse(null), connectors), pomMustache);
     }
 
 
@@ -136,15 +136,21 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
     */
 
-    private byte[] generateFlowYaml(Integration integration) throws JsonProcessingException {
+    private byte[] generateFlowYaml(GenerateProjectRequest request) throws JsonProcessingException {
         Flow flow = new Flow();
-        integration.getSteps().ifPresent(steps -> {
+        request.getIntegration().getSteps().ifPresent(steps -> {
             for (Step step : steps) {
                 if (step.getStepKind().equals(StepKinds.ENDPOINT)) {
                     step.getAction().ifPresent(action -> {
                         step.getConnection().ifPresent(connection -> {
                             try {
-                                flow.addStep(createEndpointStep(action.getCamelConnectorPrefix(), connection.getConfiguredProperties(), step.getConfiguredProperties()));
+                                String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
+                                if (!request.getConnectors().containsKey(connectorId)) {
+                                    throw new IllegalStateException("Connector:["+connectorId+"] not found.");
+                                }
+
+                                Connector connector = request.getConnectors().get(connectorId);
+                                flow.addStep(createEndpointStep(connector, action.getCamelConnectorPrefix(),  connection.getConfiguredProperties(), step.getConfiguredProperties()));
                             } catch (IOException | URISyntaxException e) {
                                 e.printStackTrace();
                             }
@@ -170,16 +176,24 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return YAML_OBJECT_MAPPER.writeValueAsBytes(funktion);
     }
 
-    private io.fabric8.funktion.model.steps.Step createEndpointStep(String camelConnector, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws IOException, URISyntaxException {
-        Map<String, String> props = aggregate(connectionConfiguredProperties, stepConfiguredProperties);
-
+    private io.fabric8.funktion.model.steps.Step createEndpointStep(Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws IOException, URISyntaxException {
+        Map<String, String> properties = aggregate(connectionConfiguredProperties, stepConfiguredProperties);
+        Map<String, String> secrets = filterSecrets(connector, properties);
         // TODO Remove this hack... when we can read endpointValues from connector schema then we should use those as initial properties.
-        if ("periodic-timer".equals(camelConnector)) {
-            props.put("timerName", "every");
+        if ("periodic-timer".equals(camelConnectorPrefix)) {
+            properties.put("timerName", "every");
         }
 
-        String endpointUri = connectorCatalog.buildEndpointUri(camelConnector, props);
+        Map<String, String> maskedProperties = generatorProperties.isSecretMaskingEnabled() ? aggregate(properties, secrets) : properties;
+        String endpointUri = connectorCatalog.buildEndpointUri(camelConnectorPrefix, maskedProperties);
         return new Endpoint(endpointUri);
+    }
+
+    private Map<String, String> filterSecrets(Connector connector, Map<String, String> properties) {
+        return properties.entrySet()
+            .stream()
+            .filter(e -> connector.getProperties() != null && connector.getProperties().containsKey(e.getKey()) && connector.getProperties().get(e.getKey()).getSecret())
+            .collect(Collectors.toMap(e -> e.getKey(), e -> "{{" + e.getKey() + "}}"));
     }
 
     private static Map<String, String> aggregate(Map<String, String> ... maps) throws IOException {

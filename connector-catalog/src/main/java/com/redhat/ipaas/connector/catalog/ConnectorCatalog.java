@@ -32,6 +32,7 @@ public class ConnectorCatalog {
     private final MavenArtifactProvider maven;
 
     public ConnectorCatalog(ConnectorCatalogProperties props) {
+
         connectorCatalog = new DefaultCamelConnectorCatalog();
         camelCatalog = new DefaultCamelCatalog(true);
 
