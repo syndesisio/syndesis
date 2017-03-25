@@ -82,13 +82,6 @@ public class DefaultProjectGeneratorTest {
         assertFileContents(files.get("pom.xml"), "test-pom.xml");
     }
 
-    private void assertFileContents(byte[] actualContents, String expectedFileName) throws Exception {
-        assertThat(new String(actualContents)).isEqualTo(
-            new String(Files.readAllBytes(
-                Paths.get(this.getClass().getResource(expectedFileName).toURI())
-            ), StandardCharsets.UTF_8)
-        );
-    }
 
     @Test
     public void testConverterWithPasswordMasking() throws Exception {
@@ -138,8 +131,17 @@ public class DefaultProjectGeneratorTest {
         assertFileContents(files.get("pom.xml"), "test-pull-push-pom.xml");
     }
 
+
+    private static void assertFileContents(byte[] actualContents, String expectedFileName) throws Exception {
+        assertThat(new String(actualContents)).isEqualTo(
+            new String(Files.readAllBytes(
+                Paths.get(DefaultProjectGeneratorTest.class.getResource(expectedFileName).toURI())
+            ), StandardCharsets.UTF_8)
+        );
+    }
+
     // Helper method to help constuct maps with concise syntax
-    private HashMap<String, ? extends String> map(Object... values) {
+    private static HashMap<String, ? extends String> map(Object... values) {
         HashMap<String, String> rc = new HashMap<String, String>();
         for (int i = 0; i + 1 < values.length; i += 2) {
             rc.put(values[i].toString(), values[i + 1].toString());
