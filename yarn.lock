@@ -5663,9 +5663,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript-logging@0.2.0-beta6:
-  version "0.2.0-beta6"
-  resolved "https://registry.yarnpkg.com/typescript-logging/-/typescript-logging-0.2.0-beta6.tgz#a37b1177528f81832eff03e9a09156ac136b340f"
+typescript-logging@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/typescript-logging/-/typescript-logging-0.2.1.tgz#c471fdf8118dcdc9d6e339c2667efcf29f617b00"
   dependencies:
     stacktrace-js "1.3.1"
 
