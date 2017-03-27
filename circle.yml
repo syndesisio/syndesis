@@ -22,10 +22,10 @@ machine:
 
 dependencies:
   override:
-  - ./mvnw --batch-mode -Pfabric8 -Dfabric8.skip -DskipTests package dependency:go-offline
+  - MAVEN_OPTS=-Xmx1024m ./mvnw --batch-mode -Pfabric8 -Dfabric8.skip -DskipTests package dependency:go-offline
 test:
   override:
-  - ./mvnw --batch-mode -Pfabric8 install
+  - MAVEN_OPTS=-Xmx1024m ./mvnw --batch-mode -Pfabric8 install
   post:
   - mkdir -p $CIRCLE_TEST_REPORTS/junit/
   - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
