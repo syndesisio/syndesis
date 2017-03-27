@@ -77,4 +77,4 @@ github:
   service: ipaas-github-proxy
 
 verifier:
-  kind: always-ok
+  kind: forking

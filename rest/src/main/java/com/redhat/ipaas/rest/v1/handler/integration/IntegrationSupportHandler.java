@@ -25,6 +25,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 
 @Path("/integration-support")
 @Api(value = "integration-support")
@@ -41,8 +42,8 @@ public class IntegrationSupportHandler {
     @Path("/generate/pom.xml")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public byte[] projectPom(Integration integration) {
-        projectConverter.generatePom(integration);
+    public byte[] projectPom(Integration integration) throws IOException {
+        return projectConverter.generatePom(integration);
     }
 
 }
