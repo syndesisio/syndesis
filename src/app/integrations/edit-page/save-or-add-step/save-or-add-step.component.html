@@ -47,16 +47,16 @@
       
       <!-- First Step -->
       <div class="blank-slate-pf-secondary-action first-step" *ngIf="getMiddleSteps().length === 0">
-        <a (click)="insertStepAfter(0)" class="btn btn-default">Add a Step</a>
+        <button type="button" (click)="insertStepAfter(0)" class="btn btn-default">Add a Step</button>
         &nbsp;&nbsp;&nbsp;
-        <a (click)="insertConnectionAfter(0)" class="btn btn-default">Add a Connection</a>
+        <button type="button" (click)="insertConnectionAfter(0)" class="btn btn-default">Add a Connection</button>
       </div>
       
       <!-- Middle Steps -->
       <div class="blank-slate-pf-secondary-action middle-steps" *ngIf="getMiddleSteps().length !== 0">
-        <a (click)="insertStepAfter(position + 1)" class="btn btn-default">Add a Step</a>
+        <button type="button" (click)="insertStepAfter(position + 1)" class="btn btn-default">Add a Step</button>
         &nbsp;&nbsp;&nbsp;
-        <a (click)="insertConnectionAfter(position + 1)" class="btn btn-default">Add a Connection</a>
+        <button type="button" (click)="insertConnectionAfter(position + 1)" class="btn btn-default">Add a Connection</button>
       </div>
     </div>
   </div>
