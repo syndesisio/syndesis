@@ -21,7 +21,7 @@
   <parent>
     <groupId>com.redhat.ipaas</groupId>
     <artifactId>ipaas-connectors-project</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
