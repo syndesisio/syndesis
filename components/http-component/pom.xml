@@ -21,7 +21,7 @@
   <parent>
     <groupId>com.redhat.ipaas</groupId>
     <artifactId>components</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
