@@ -80,13 +80,16 @@ export class FlowViewStepComponent extends ChildAwarePage {
   deleteStep() {
     this.deleteModal.hide();
     const position = this.getPosition();
+    const isFirst = position === this.currentFlow.getFirstPosition();
+    const isLast = position === this.currentFlow.getLastPosition();
+
     this.currentFlow.events.emit({
       kind: 'integration-remove-step',
       position: position,
       onSave: () => {
-        if (position === this.currentFlow.getFirstPosition()) {
+        if (isFirst) {
           this.router.navigate(['connection-select', position], { relativeTo: this.route });
-        } else if (position === this.currentFlow.getLastPosition()) {
+        } else if (isLast) {
           this.router.navigate(['connection-select', position], { relativeTo: this.route });
         } else {
           this.router.navigate(['save-or-add-step'], { relativeTo: this.route });
