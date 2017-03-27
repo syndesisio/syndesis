@@ -91,6 +91,7 @@
       //----- Sidebar: Progress Line: Complete State ----------------->>
 
       &.complete {
+        border: 3px solid $pf-blue-400;
         .fa {
           color: $pf-black-900;
         }

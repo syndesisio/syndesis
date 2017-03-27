@@ -39,7 +39,7 @@
         </template>
         <div class="col-md-2 square-icon" [popover]="firstPopTemplate"  placement="right" #pop1="bs-popover">
           <p>
-            <i class="fa fa-plus-square"></i>
+            <i class="fa fa-plus-square">{{ maybeShowPopover(pop1) }}</i>
           </p>
         </div>
         <div class="col-md-10">

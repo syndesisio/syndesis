@@ -163,11 +163,18 @@ export class FlowViewStepComponent extends ChildAwarePage {
   }
 
   getMenuCompleteClass(state: string) {
-    if (this.getTextClass(state) === 'active') {
-      return 'complete';
-    } else {
-      return 'incomplete';
+    switch(this.step.stepKind) {
+      case 'endpoint':
+        if (this.step.connection && this.step.action && this.step.configuredProperties) {
+          return 'complete';
+        }
+        break;
+      default:
+        if (this.step.stepKind && this.step.configuredProperties) {
+          return 'complete';
+        }
     }
+    return 'incomplete';
   }
 
   getTextClass(state: string) {
