@@ -7,6 +7,7 @@ import { World, P, expect } from '../common/world';
 import { ConnectionsListPage, ConnectionsListComponent } from '../connections/list/list.po';
 import { ConnectionDetailPage } from '../connections/detail/detail.po';
 import { IntegrationEditPage } from '../integrations/edit/edit.po';
+import { log } from '../../src/app/logging';
 
 /**
  * Created by jludvice on 1.3.17.
@@ -22,7 +23,7 @@ class FirstPass {
   @given(/^details for "([^"]*)" connection:$/)
   public setConnectionDetails(arg1: string, table: TableDefinition, callback: CallbackStepDefinition): void {
 
-    console.log(`should set connection details for ${arg1}: ${table}`);
+    log.info(`should set connection details for ${arg1}: ${table}`);
     callback();
   }
 
@@ -30,7 +31,7 @@ class FirstPass {
   public async verifyHomepage(arg1: string): P<any> {
     // Write code here that turns the phrase above into concrete actions
     const currentLink = await this.world.app.link(arg1);
-    console.log(currentLink);
+    log.info(`current navlink: ${currentLink}`);
     expect(currentLink.active, 'Dashboard link must be active').to.be.true;
   }
 

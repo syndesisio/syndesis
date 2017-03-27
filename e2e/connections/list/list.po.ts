@@ -4,6 +4,7 @@ import {element, by, ElementFinder} from 'protractor';
 import {IPaaSComponent} from '../../common/common';
 import WebElement = webdriver.WebElement;
 import IWebElementFinders = webdriver.IWebElementFinders;
+import { log } from '../../../src/app/logging';
 
 export class ConnectionsListComponent implements IPaaSComponent {
   rootElement(): ElementFinder {
@@ -12,13 +13,13 @@ export class ConnectionsListComponent implements IPaaSComponent {
 
   async countConnections(): P<number> {
     const found = await this.rootElement().all(by.css('a.card-title')).getWebElements();
-    console.log(`found ${found.length} connections`);
+    log.info(`found ${found.length} connections`);
     return found.length;
   }
 
 
   goToConnection(connectionTitle: string): P<any> {
-    console.log(`searching for connection ${connectionTitle}`);
+    log.info(`searching for connection ${connectionTitle}`);
     return this.rootElement().element(by.linkText(connectionTitle)).getWebElement().click();
   }
 }

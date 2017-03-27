@@ -2,6 +2,7 @@ import { binding, then } from 'cucumber-tsflow';
 import { CallbackStepDefinition } from 'cucumber';
 import { ConnectionsListPage, ConnectionsListComponent } from '../connections/list/list.po';
 import { World, expect } from '../common/world';
+import { log } from '../../src/app/logging';
 
 
 /**
@@ -21,7 +22,7 @@ class LoginSteps {
   @then(/^she is presented with at least "(\d+)" connections$/)
   public connectionCount(connectionCount: number, callback: CallbackStepDefinition): void {
     // Write code here that turns the phrase above into concrete actions
-    console.log(`should assert ${connectionCount}`);
+    log.info(`should assert ${connectionCount}`);
 
     const page = new ConnectionsListComponent();
     expect(page.countConnections(), `There should be ${connectionCount} available`)

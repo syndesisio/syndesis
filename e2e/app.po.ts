@@ -5,6 +5,7 @@ import {User} from './common/common';
 import {contains, expect} from './common/world';
 import {GithubLogin} from './login/login.po';
 import WebElement = webdriver.WebElement;
+import { log } from '../src/app/logging';
 
 
 /**
@@ -77,7 +78,7 @@ export class AppPage {
   }
 
   clickButton(buttonTitle: string): P<any> {
-    console.log(`clicking button ${buttonTitle}`);
+    log.info(`clicking button ${buttonTitle}`);
     const button = element(by.buttonText(buttonTitle));
 
     // return expect(button.isPresent(), `button ${buttonTitle} must be present`).to.eventually.be.true

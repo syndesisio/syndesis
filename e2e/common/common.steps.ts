@@ -6,6 +6,7 @@ import {binding, given, when} from 'cucumber-tsflow';
 import {Promise as P} from 'es6-promise';
 import {World, expect} from './world';
 import {User} from './common';
+import { log } from '../../src/app/logging';
 /**
  * Generic steps that can be used in various features
  * They may change state through world class.
@@ -40,7 +41,7 @@ class CommonSteps {
   @when(/^"(\w+)" navigates? to the "([^"]*)" page.*$/)
   public async goToNavLink(alias: string, linkTitle: string): P<any> {
     // const link = await this.app.link(linkTitle);
-    console.log(`navigating ${alias} to ${linkTitle} page`);
+    log.info(`navigating ${alias} to ${linkTitle} page`);
     if (linkTitle === 'Home') {
       return this.world.app.goHome();
     }

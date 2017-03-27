@@ -1,6 +1,7 @@
-import {User} from '../common/common';
-import {by, element, browser, ExpectedConditions} from 'protractor';
-import {contains, P} from '../common/world';
+import { User } from '../common/common';
+import { by, element, browser, ExpectedConditions } from 'protractor';
+import { contains, P } from '../common/world';
+import { log } from '../../src/app/logging';
 
 /**
  * Created by jludvice on 1.3.17.
@@ -27,11 +28,9 @@ export class GithubLogin implements LoginPage {
     await submit.getWebElement().click();
 
     const url = await browser.getCurrentUrl();
-
-
-    console.log(`github login, current url: ${url}`);
+    log.info(`github login, current url: ${url}`);
     if (contains(url, 'https://github.com/login/oauth')) {
-      console.log('reauthorizing application');
+      log.info('reauthorizing application');
       // we made too much auth requests, need to reauthorize app
       const reauthorize = element(by.css('#js-oauth-authorize-btn'));
       // wait for reauthorize button to become enabled
