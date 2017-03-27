@@ -1,7 +1,8 @@
-import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { PopoverDirective } from 'ng2-bootstrap/popover';
 
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
@@ -80,7 +81,8 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
   }
 
   getMiddleSteps() {
-    return this.currentFlow.getMiddleSteps();
+    const rc = this.currentFlow.getMiddleSteps();
+    return rc;
   }
 
   insertStepAfter(position: number) {
@@ -100,6 +102,14 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
 
   get integrationName() {
     return (this.currentFlow.integration || { name: '' }).name || '';
+  }
+
+  maybeShowPopover(popover: PopoverDirective) {
+    if (this.getMiddleSteps() && !this.getMiddleSteps().length && popover && !popover.isOpen) {
+      setTimeout( () => {
+        popover.show();
+      }, 10);
+    }
   }
 
   handleFlowEvent(event: FlowEvent) {

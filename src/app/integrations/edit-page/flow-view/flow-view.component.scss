@@ -135,10 +135,8 @@ $flow-view-container-min-height: 0;
 
   .steps {
     position: relative;
-    //height: 150px;
-    height: 100%;
     flex-wrap: nowrap;
-    min-height: 250px;
+    min-height: 150px;
 
     .step-line {
       position: absolute;

@@ -31,10 +31,10 @@
 
   <div class="col-md-3 progress-line">
     <p [class]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass()"
-       [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')">
+       [class.add-step-or-connection]="step.stepKind !== 'endpoint'">
       <!-- Only display icon if step kind is not an endpoint or log -->
       <i [class]="getIconClass()"
-         *ngIf="step.stepKind === ('endpoint' || 'log')"></i>
+         *ngIf="step.stepKind === 'endpoint'"></i>
     </p>
   </div>
 
@@ -88,7 +88,7 @@
       <!-- Delete Icon -->
 
       <i class="delete-icon fa fa-lg fa-trash"
-         [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')"
+         [class.add-step-or-connection]="step.stepKind !== 'endpoint'"
          (click)="deletePrompt()"></i>
 
       <!-- Parent Step Heading -->
