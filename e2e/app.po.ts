@@ -1,4 +1,4 @@
-import { by, browser, element, ExpectedConditions } from 'protractor';
+import { by, browser, element, ExpectedConditions, ElementFinder } from 'protractor';
 import * as webdriver from 'selenium-webdriver';
 import { Promise as P } from 'es6-promise';
 import { User } from './common/common';
@@ -77,14 +77,16 @@ export class AppPage {
     return this.rootElement.element(by.css('a.navbar-brand')).click();
   }
 
+  getButton(buttonTitle: string): ElementFinder {
+    log.info(`searching for button ${buttonTitle}`);
+    return element(by.buttonText(buttonTitle));
+  }
+
   clickButton(buttonTitle: string): P<any> {
     log.info(`clicking button ${buttonTitle}`);
-    const button = element(by.buttonText(buttonTitle));
-
-    // return expect(button.isPresent(), `button ${buttonTitle} must be present`).to.eventually.be.true
-    //   .then(()=> button.click())
-    return element(by.buttonText(buttonTitle)).click();
+    return this.getButton(buttonTitle).click();
   }
+
 
   async link(title: String): P<NavLink> {
     const links = await this.findNavLinks();

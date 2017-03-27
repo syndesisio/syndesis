@@ -2,6 +2,7 @@ import { IPaaSComponent } from '../../common/common';
 import { element, by, ElementFinder } from 'protractor';
 import { P } from '../../common/world';
 import { ConnectionsListComponent } from '../../connections/list/list.po';
+import { log } from '../../../src/app/logging';
 
 
 export class FlowConnection {
@@ -20,18 +21,15 @@ export class FlowConnection {
 }
 
 export class FlowViewComponent implements IPaaSComponent {
+  static readonly nameSelector = 'input.form-control.integration-name';
+
   rootElement(): ElementFinder {
     return element(by.css('ipaas-integrations-flow-view'));
   }
 
   getIntegrationName(): P<string> {
-    return this.rootElement().element(by.css('#integrationName')).getText();
+    return this.rootElement().element(by.css(FlowViewComponent.nameSelector)).getText();
   }
-
-  setIntegrationName(name: string): P<any> {
-    return this.rootElement().element(by.css('#integrationName')).sendKeys(name);
-  }
-
 
   /**
    * Get div
@@ -42,6 +40,18 @@ export class FlowViewComponent implements IPaaSComponent {
     const e = await this.rootElement().element(by.css(`div.row.steps.${type}`));
     return new FlowConnection(type, e);
   }
+}
+
+export class ListActionsComponent implements IPaaSComponent {
+  rootElement(): ElementFinder {
+    return element(by.css('ipaas-list-actions'));
+  }
+
+  selectAction(name: string): P<any> {
+    log.info(`searching for integration action '${name}'`);
+    return this.rootElement().element(by.cssContainingText('div.name', name)).click();
+  }
+
 }
 
 export class ConnectionSelectComponent implements IPaaSComponent {
@@ -57,6 +67,26 @@ export class ConnectionSelectComponent implements IPaaSComponent {
 }
 
 
+export class IntegrationBasicsComponent implements IPaaSComponent {
+  static readonly nameSelector = 'input[name="nameInput"]';
+  static readonly descriptionSelector = 'textarea[name="descriptionInput"]';
+
+  rootElement(): ElementFinder {
+    return element(by.css('ipaas-integrations-integration-basics'));
+  }
+
+  setName(name: string): P<any> {
+    log.debug(`setting integration nae to ${name}`);
+    return this.rootElement().$(IntegrationBasicsComponent.nameSelector).sendKeys(name);
+  }
+
+  setDescription(description: string): P<any> {
+    return this.rootElement().$(IntegrationBasicsComponent.descriptionSelector).sendKeys(description);
+  }
+
+
+}
+
 export class IntegrationEditPage implements IPaaSComponent {
 
   rootElement(): ElementFinder {
@@ -69,6 +99,10 @@ export class IntegrationEditPage implements IPaaSComponent {
 
   connectionSelectComponent(): ConnectionSelectComponent {
     return new ConnectionSelectComponent();
+  }
+
+  basicsComponent(): IntegrationBasicsComponent {
+    return new IntegrationBasicsComponent();
   }
 
 
