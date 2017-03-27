@@ -538,7 +538,7 @@ objects:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - ipaas-rest
+        - ipaas-github-proxy
         from:
           kind: ImageStreamTag
           name: ipaas-token-rp:v0.4.0
@@ -603,7 +603,7 @@ objects:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - ipaas-rest
+        - ipaas-openshift-proxy
         from:
           kind: ImageStreamTag
           name: ipaas-token-rp:v0.4.0
