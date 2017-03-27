@@ -114,3 +114,37 @@ Replace `EXTERNAL_HOSTNAME` appropriately with your public iPaaS address (someth
 ### Log in
 
 You should be able to log in at `https://<EXTERNAL_HOSTNAME>`.
+
+
+## Minishift Quickstart
+
+If you use minishift you can easily setup the redhat-ipaas. The only prerequisite is that you have a GitHub application registered at https://github.com/settings/developers For the registration, please use as callback URL the output of `https://ipaas.$(minishift ip).xip.io`. Then you get a `<GITHUB_CLIENT_ID>` and a `<GITHUB_CLIENT_SECRET>`. These should be used in the commands below.
+
+
+```bash
+# Fire up minishift if not alread running
+minishift start
+
+# Login as root
+oc login -u system:admin
+
+# Use the result of this command as callback URL:
+echo https://ipaas.$(minishift ip).xip.io
+
+# Register a GitHub application at https://github.com/settings/developers
+# .....
+
+# Set your GitHub credentials
+GITHUB_CLIENT_ID=....
+GITHUB_CLIENT_SECRET=....
+
+# Install the OpenShift template
+oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-minishift.yml
+
+# Create an App. Add the propert GitHub credentials
+oc new-app redhat-ipaas-minishift \
+    -p ROUTE_HOSTNAME=ipaas.$(minishift ip).xip.io \
+    -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
+    -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
+    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+```
