@@ -136,10 +136,12 @@ public class ForkingVerifier implements Verifier {
             if (localMavenRepoLocation != null) {
                 args.add("-Dmaven.repo.local=" + localMavenRepoLocation);
             }
-            Process mvn = new ProcessBuilder().command(args)
-                .redirectError(ProcessBuilder.Redirect.INHERIT)
-                .directory(tmpDir.toFile())
-                .start();
+            ProcessBuilder builder = new ProcessBuilder().command(args)
+                    .redirectError(ProcessBuilder.Redirect.INHERIT)
+                    .directory(tmpDir.toFile());
+            Map<String, String> environment = builder.environment();
+            environment.put("MAVEN_OPTS", "-Xmx64M");
+            Process mvn = builder.start();
             try {
                 String result = parseClasspath(mvn.getInputStream());
                 if (mvn.waitFor() != 0) {
