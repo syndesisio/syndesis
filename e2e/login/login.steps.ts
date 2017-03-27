@@ -1,6 +1,6 @@
 import { binding, then } from 'cucumber-tsflow';
 import { CallbackStepDefinition } from 'cucumber';
-import { ConnectionsListPage, ConnectionsListComponent } from '../connections/list/list.po';
+import { ConnectionsListComponent } from '../connections/list/list.po';
 import { World, expect } from '../common/world';
 import { log } from '../../src/app/logging';
 

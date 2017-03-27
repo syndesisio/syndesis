@@ -1,11 +1,11 @@
 /**
  * Created by jludvice on 8.3.17.
  */
-import {CallbackStepDefinition} from 'cucumber';
-import {binding, given, when} from 'cucumber-tsflow';
-import {Promise as P} from 'es6-promise';
-import {World, expect} from './world';
-import {User} from './common';
+import { CallbackStepDefinition } from 'cucumber';
+import { binding, given, when } from 'cucumber-tsflow';
+import { Promise as P } from 'es6-promise';
+import { World, expect } from './world';
+import { User } from './common';
 import { log } from '../../src/app/logging';
 /**
  * Generic steps that can be used in various features

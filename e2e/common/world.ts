@@ -1,6 +1,6 @@
-import {User} from './common';
-import {Promise as P} from 'es6-promise';
-import {AppPage} from '../app.po';
+import { User } from './common';
+import { Promise as P } from 'es6-promise';
+import { AppPage } from '../app.po';
 
 
 // create instance of chai and expect instance
@@ -10,7 +10,7 @@ export const expect = chai.expect;
 
 // reexport promise type so we don't need to remember to import es6-promise
 // we need to export Promise as P because 'Promise' is reserved for async/await usage
-export {P};
+export { P };
 
 /**
  * Mimic cucumber.js world.js (couldn't find better alternative)

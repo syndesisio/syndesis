@@ -1,5 +1,5 @@
-import {element, by, ElementFinder} from 'protractor';
-import {P} from '../../common/world';
+import { element, by, ElementFinder } from 'protractor';
+import { P } from '../../common/world';
 
 /**
  * Created by jludvice on 13.3.17.

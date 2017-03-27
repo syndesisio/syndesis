@@ -1,5 +1,5 @@
 const data = require('../data/users.json').users;
-import {ElementFinder} from 'protractor';
+import { ElementFinder } from 'protractor';
 
 export class User {
   alias: string;

@@ -1,11 +1,11 @@
-import {by, browser, element, ExpectedConditions} from 'protractor';
+import { by, browser, element, ExpectedConditions } from 'protractor';
 import * as webdriver from 'selenium-webdriver';
-import {Promise as P} from 'es6-promise';
-import {User} from './common/common';
-import {contains, expect} from './common/world';
-import {GithubLogin} from './login/login.po';
-import WebElement = webdriver.WebElement;
+import { Promise as P } from 'es6-promise';
+import { User } from './common/common';
+import { contains } from './common/world';
+import { GithubLogin } from './login/login.po';
 import { log } from '../src/app/logging';
+import WebElement = webdriver.WebElement;
 
 
 /**
@@ -104,11 +104,11 @@ export class AppPage {
     ]);
 
     const url = await this.currentUrl();
+
     if (contains(url, 'github')) {
       // we need to login on github
       await new GithubLogin().login(user);
-    }
-    else if (contains(url, browser.baseUrl)) {
+    } else if (contains(url, browser.baseUrl)) {
       // pass - we're already logged in
     } else {
       return P.reject(`Unsupported login page ${url}`);

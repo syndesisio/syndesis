@@ -4,7 +4,7 @@
 import { binding, given, when, then } from 'cucumber-tsflow';
 import { TableDefinition, CallbackStepDefinition } from 'cucumber';
 import { World, P, expect } from '../common/world';
-import { ConnectionsListPage, ConnectionsListComponent } from '../connections/list/list.po';
+import { ConnectionsListComponent } from '../connections/list/list.po';
 import { ConnectionDetailPage } from '../connections/detail/detail.po';
 import { IntegrationEditPage } from '../integrations/edit/edit.po';
 import { log } from '../../src/app/logging';

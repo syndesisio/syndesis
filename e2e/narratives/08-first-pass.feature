@@ -37,7 +37,7 @@ Feature: Sprint 8 narrative
     And click "Create" button
     # todo create button wasn't enabled
 
-   Scenario: Camilla wants to confirm that her integration is available
+  Scenario: Camilla wants to confirm that her integration is available
     When Camilla navigates to the "Integrations" page
     And selects the "Camilla testing integration" integration
     Then she is presented with "Camilla testing integration" integration detail
