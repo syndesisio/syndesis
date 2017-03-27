@@ -14,7 +14,7 @@ export class FlowConnection {
    * @returns {webdriver.promise.Promise<boolean>}
    */
   isActive(): P<boolean> {
-    return this.element.element(by.css('p.round.active')).isPresent();
+    return this.element.element(by.css('p.icon.active')).isPresent();
   }
 
 }
