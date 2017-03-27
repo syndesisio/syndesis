@@ -122,8 +122,10 @@ If you use minishift you can easily setup the redhat-ipaas. The only prerequisit
 
 
 ```bash
-# Fire up minishift if not alread running. Please note that we need v1.5.0 right now
-minishift start  --openshift-version=v1.5.0-rc.0
+# Fire up minishift if not alread running. Please note that we need v1.5.0 right now 
+# for auto creating volumes. Alternatively you could use the provided script tools/create-pv-minishift.sh
+# to create the PV on your own. Also, you need to add some memory, 4192 or more is recommended
+minishift start  --openshift-version=v1.5.0-rc.0 --memory 4192
 
 # Login as root
 oc login -u system:admin
