@@ -166,7 +166,7 @@
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
     <build-helper-maven-plugin.version>1.12</build-helper-maven-plugin.version>
     <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
-    <fabric8-maven-plugin.version>3.2.30</fabric8-maven-plugin.version>
+    <fabric8-maven-plugin.version>3.3.0</fabric8-maven-plugin.version>
     <git-commit-id-plugin.version>2.2.2</git-commit-id-plugin.version>
     <jacoco-maven-plugin.version>0.7.8</jacoco-maven-plugin.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>

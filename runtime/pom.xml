@@ -37,7 +37,9 @@
 
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 
-    <java-image.version>1.2.3</java-image.version>
+    <!-- Base image to use for Docker images. Pinned to 1.2.3 since 1.2.4 has issues because
+         of Java 1.8.0_121 (1.2.3 is running 1.8.0_111) -->
+    <java-base-image>fabric8/java-jboss-openjdk8-jdk:1.2.3</java-base-image>
 
     <keycloak.start.script>./standalone.sh</keycloak.start.script>
     <keycloak.cli.script>./jboss-cli.sh</keycloak.cli.script>
@@ -88,6 +90,7 @@
             <config>
               <spring-boot>
                 <name>rhipaas/ipaas-rest:%l</name>
+                <from>${java-base-image}</from>
               </spring-boot>
             </config>
           </generator>
