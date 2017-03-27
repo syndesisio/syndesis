@@ -114,3 +114,45 @@ Replace `EXTERNAL_HOSTNAME` appropriately with your public iPaaS address (someth
 ### Log in
 
 You should be able to log in at `https://<EXTERNAL_HOSTNAME>`.
+
+
+## Minishift Quickstart
+
+If you use minishift you can easily setup the redhat-ipaas. The only prerequisite is that you have a GitHub application registered at https://github.com/settings/developers For the registration, please use as callback URL the output of `https://ipaas.$(minishift ip).xip.io`. Then you get a `<GITHUB_CLIENT_ID>` and a `<GITHUB_CLIENT_SECRET>`. These should be used in the commands below.
+
+
+```bash
+# Fire up minishift if not alread running. Please note that we need v1.5.0 right now
+minishift start  --openshift-version=v1.5.0-rc.0
+
+# Login as root
+oc login -u system:admin
+
+# Register a GitHub application at https://github.com/settings/developers
+# .....
+
+# Use the result of this command as callback URL for the GitHub registration:
+echo https://ipaas.$(minishift ip).xip.io
+
+# Set your GitHub credentials
+GITHUB_CLIENT_ID=....
+GITHUB_CLIENT_SECRET=....
+
+# Install the OpenShift template
+oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-dev.yml
+
+# Create an App. Add the propert GitHub credentials
+oc new-app redhat-ipaas-dev \
+    -p ROUTE_HOSTNAME=ipaas.$(minishift ip).xip.io \
+    -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
+    -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
+    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+
+# Wait until all pods are running. Some pods are crashing at first, but are restarted
+# so that the system will eventually converts to a stable state ;-). Especially the proxies
+# need up to 5 restarts
+watch oc get pods
+
+# Open browser pointing ot the app
+open https://ipaas.$(minishift ip).xip.io
+```
