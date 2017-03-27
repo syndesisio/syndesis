@@ -2,7 +2,7 @@
   <ipaas-loading [loading]="loaded()">
 
     <!-- Header -->
-    <div class="row name" *ngIf="currentStepKind !== 'datamapper'">
+    <div class="row name" *ngIf="currentStepKind !== 'mapper'">
       <div class="col-md-12">
         <div class="form-group">
           <div class="clickable" *ngIf="currentState !== 'integration-basics'" (click)="editIntegrationBasics()">
@@ -52,7 +52,7 @@
           <div class="step-line"></div>
           <ipaas-integrations-flow-view-step [step]="step" [position]="position + 1" [currentPosition]="currentPosition" [currentState]="currentState"></ipaas-integrations-flow-view-step>
         </div>
-        
+
         <!-- Middle Steps: Save or Add Step -->
         <div class="row step-insert" *ngIf="currentState === 'save-or-add-step'" (click)="pop.toggle()" (mouseover)="pop.show()" (mouseleave)="pop.hide()">
           <div class="step-line"></div>

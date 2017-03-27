@@ -41,29 +41,29 @@
 
   <!-- Progress Menu -->
 
-  <div class="col-md-9 menu" *ngIf="currentStepKind !== 'datamapper'" [ngSwitch]="step.stepKind">
+  <div class="col-md-9 menu" *ngIf="currentStepKind !== 'mapper'" [ngSwitch]="step.stepKind">
 
     <!-- Endpoint Steps -->
-    
+
     <div *ngSwitchCase="'endpoint'" [class]="getParentActiveClass() + ' step-container'">
-      
+
       <!-- Delete Icon -->
-      
+
       <i class="delete-icon fa fa-lg fa-trash"
          (click)="deletePrompt()"></i>
 
-      
+
       <!-- Parent Step -->
-      
+
       <span [class]="getParentClass()" (click)="goto('action-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
       </span>
 
-      
+
       <!-- Sub Steps -->
-      
+
       <ul [collapse]="isCollapsed()" class="sub-steps">
         <li *ngIf="!step.connection" [class]="getSubMenuActiveClass('connection-select')" (click)="goto('connection-select')">
           <span [class]="getTextClass('connection-select')">Choose a connection</span>
@@ -82,17 +82,17 @@
     </div>
 
     <!-- Default Steps -->
-    
+
     <div *ngSwitchDefault [class]="getParentActiveClass() + ' step-container'">
-      
+
       <!-- Delete Icon -->
-      
+
       <i class="delete-icon fa fa-lg fa-trash"
          [class.add-step-or-connection]="step.stepKind !== ('endpoint' || 'log')"
          (click)="deleteStep()"></i>
-      
+
       <!-- Parent Step Heading -->
-      
+
       <span [class]="getParentClass()" (click)="goto('step-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
@@ -100,7 +100,7 @@
       </span>
 
       <!-- Sub Steps -->
-      
+
       <ul [collapse]="isCollapsed()" class="sub-steps">
         <li *ngIf="!step.stepKind" [class]="getSubMenuActiveClass('step-select')" (click)="goto('step-select')">
           <span [class]="getTextClass('step-select')">Choose a step</span>

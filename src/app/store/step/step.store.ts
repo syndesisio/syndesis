@@ -57,7 +57,7 @@ export class StepStore {
       action: undefined,
       name: 'Data Mapper',
       description: 'Map fields from the input type to the output type',
-      stepKind: 'datamapper',
+      stepKind: 'mapper',
       properties: {},
       configuredProperties: undefined,
     },

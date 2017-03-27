@@ -44,7 +44,7 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
 
   get containerClass() {
     switch (this.currentStepKind) {
-      case 'datamapper':
+      case 'mapper':
         return 'flow-view-container collapsed';
       default:
         return 'flow-view-container';

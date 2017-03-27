@@ -21,10 +21,10 @@
         </div>
       </div>
     </div>
-    <div [class]="step?.stepKind !== 'datamapper' ? 'wizard-pf-body clearfix' : ''">
+    <div [class]="step?.stepKind !== 'mapper' ? 'wizard-pf-body clearfix' : ''">
       <div *ngIf="step">
         <div [ngSwitch]="step.stepKind">
-          <div *ngSwitchCase="'datamapper'">
+          <div *ngSwitchCase="'mapper'">
             <div class="row">
               <div class="col-md-12">
                 <ipaas-data-mapper-host></ipaas-data-mapper-host>

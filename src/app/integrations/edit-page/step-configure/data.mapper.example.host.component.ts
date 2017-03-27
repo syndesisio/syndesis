@@ -16,10 +16,12 @@ import { DataMapperAppComponent } from 'ipaas.data.mapper';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { FlowPage } from '../flow-page';
 
+const MAPPING_KEY = 'atlasmapping';
+
 @Component({
   selector: 'ipaas-data-mapper-host',
   template: `
-    <div *ngIf="cfg.mappingInputJavaClass && cfg.mappingOutputJavaClass">
+    <div *ngIf="cfg.mappingInputJavaClass && cfg.mappingOutputJavaClass && cfg.mappings">
       <data-mapper #dataMapperComponent [cfg]="cfg"></data-mapper>
     </div>
   `,
@@ -38,7 +40,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     baseMappingServiceUrl: 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/',
     mappingInputJavaClass: undefined,
     mappingOutputJavaClass: undefined,
-    mappings: new MappingDefinition(),
+    mappings: undefined,
     documentService: undefined,
     mappingService: undefined,
     errorService: undefined,
@@ -60,12 +62,26 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     super(currentFlow, route, router);
   }
 
+
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
       case 'integrations-mapper-init':
-        // TODO pull from currentFlow
-        this.cfg.mappingInputJavaClass = 'twitter4j.Status';
-        this.cfg.mappingOutputJavaClass = 'org.apache.camel.salesforce.dto.Contact';
+        const step = this.currentFlow.getStep(this.position);
+        if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
+          try {
+            this.cfg.mappings = <any> JSON.parse(step.configuredProperties[MAPPING_KEY]);
+          } catch (err) {
+            // TODO
+          }
+        }
+        if (!this.cfg.mappings) {
+          this.cfg.mappings = new MappingDefinition();
+        }
+        const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
+        const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
+        // TODO we'll want to parse the dataType and maybe set the right config value
+        this.cfg.mappingInputJavaClass = start.action.outputDataShape['dataType'].replace(/java:/, '');
+        this.cfg.mappingOutputJavaClass = end.action.inputDataShape['dataType'].replace(/java:/, '');
 
         this.documentService.cfg = this.cfg;
         this.mappingService.cfg = this.cfg;
