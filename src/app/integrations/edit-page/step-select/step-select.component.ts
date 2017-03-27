@@ -41,7 +41,7 @@ export class IntegrationsStepSelectComponent extends FlowPage implements OnInit 
     switch (step.stepKind) {
       case 'log':
         return 'Log';
-      case 'datamapper':
+      case 'mapper':
         return 'Data Mapper';
       default:
         // TODO not ideal
@@ -56,7 +56,7 @@ export class IntegrationsStepSelectComponent extends FlowPage implements OnInit 
     switch (step.stepKind) {
       case 'log':
         return 'Sends a message to the integration\'s log';
-      case 'datamapper':
+      case 'mapper':
         return 'Map fields from the input type to the output type';
     }
   }

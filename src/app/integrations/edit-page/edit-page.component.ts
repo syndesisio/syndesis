@@ -45,7 +45,7 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
 
   getPageRow() {
     switch (this.currentStepKind) {
-      case 'datamapper':
+      case 'mapper':
         return 'row';
       default:
         return 'wizard-pf-row';
@@ -54,7 +54,7 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
 
   getSidebarClass() {
     switch (this.currentStepKind) {
-      case 'datamapper':
+      case 'mapper':
         return 'col-md-1';
       default:
         return 'wizard-pf-sidebar';
@@ -63,7 +63,7 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
 
   getPageContainer() {
     switch (this.currentStepKind) {
-      case 'datamapper':
+      case 'mapper':
         return 'col-md-11';
       default:
         return 'wizard-pf-main';
