@@ -71,7 +71,6 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
           try {
             this.cfg.mappings = <any> JSON.parse(step.configuredProperties[MAPPING_KEY]);
           } catch (err) {
-            console.log("Error umarshalling mappings: ", err);
             // TODO
           }
         }
