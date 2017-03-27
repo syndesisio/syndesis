@@ -104,7 +104,7 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
     return (this.currentFlow.integration || { name: '' }).name || '';
   }
 
-  maybeShowPopover(popover:PopoverDirective) {
+  maybeShowPopover(popover: PopoverDirective) {
     if (this.getMiddleSteps() && !this.getMiddleSteps().length && popover && !popover.isOpen) {
       setTimeout( () => {
         popover.show();
