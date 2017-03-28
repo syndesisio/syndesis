@@ -29,9 +29,10 @@ test:
   post:
   - mkdir -p $CIRCLE_TEST_REPORTS/junit/
   - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-  - cp target/classes/static/index.html $CIRCLE_ARTIFACTS/apidocs.html
-  - cp target/classes/static/swagger.json $CIRCLE_ARTIFACTS/
-  - cp target/classes/static/swagger.yaml $CIRCLE_ARTIFACTS/
+# No swagger yet:
+# - cp target/classes/static/index.html $CIRCLE_ARTIFACTS/apidocs.html
+# - cp target/classes/static/swagger.json $CIRCLE_ARTIFACTS/
+# - cp target/classes/static/swagger.yaml $CIRCLE_ARTIFACTS/
   - bash <(curl -s https://codecov.io/bash)
 
 deployment:
