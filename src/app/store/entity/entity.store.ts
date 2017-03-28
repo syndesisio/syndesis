@@ -64,6 +64,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         this._loading.next(false);
       },
       (error) => {
+        error = this.massageError(error);
         log.debugc(() => 'Error retrieving ' + plural(this.kind) + ': ' + error, category);
         if (retries < 3) {
           setTimeout(() => {
@@ -107,6 +108,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         this._loading.next(false);
       },
       (error) => {
+        error = this.massageError(error);
         log.debugc(() => 'Error retrieving ' + this.kind + ': ' + error, category);
         if (retries < 3) {
           setTimeout(() => {
@@ -118,6 +120,22 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
       });
   }
 
+  private massageError(error: any) {
+    switch (typeof error) {
+      case 'object':
+        return error;
+      case 'string':
+        try {
+          return JSON.parse(error);
+        } catch (err) {
+          // some random text back from the server :-(
+          return { error: error };
+        }
+      default:
+        return { error: error };
+    }
+  }
+
   create(entity: T): Observable<T> {
     const created = new Subject<T>();
     this.service.create(entity).subscribe(
@@ -125,6 +143,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         created.next(this.plain(e));
       },
       (error) => {
+        error = this.massageError(error);
         log.debugc(() => 'Error creating ' + this.kind + ' (' + JSON.stringify(entity, null, 2) + ')' + ': ' + error, category);
         created.error(error);
       });
@@ -138,7 +157,9 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
         updated.next(this.plain(e));
       },
       (error) => {
+        error = this.massageError(error);
         log.debugc(() => 'Error updating ' + this.kind + ' (' + JSON.stringify(entity, null, 2) + ')' + ': ' + error, category);
+        updated.error(error);
       });
     return updated.share();
   }

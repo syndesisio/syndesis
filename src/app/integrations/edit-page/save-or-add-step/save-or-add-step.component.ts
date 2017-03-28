@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -19,12 +19,14 @@ const category = getCategory('IntegrationsCreatePage');
 export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnInit, OnDestroy {
 
   integration: Integration;
+  errorMessage: any = undefined;
 
   constructor(
     public currentFlow: CurrentFlow,
     public store: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router,
+    public detector: ChangeDetectorRef,
   ) {
     super(currentFlow, route, router);
   }
@@ -43,7 +45,10 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
         router.navigate(['/integrations']);
       },
       error: (error) => {
-        router.navigate(['/integrations']);
+        setTimeout(() => {
+          this.errorMessage = error;
+          this.detector.detectChanges();
+        }, 10);
       },
     });
   }
@@ -109,12 +114,12 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
   }
 
   save() {
-    this.currentFlow.integration.statusType = 'Deactivated';
+    this.currentFlow.integration.desiredStatus = 'Deactivated';
     this.doSave();
   }
 
   saveAndPublish() {
-    this.currentFlow.integration.statusType = 'Activated';
+    this.currentFlow.integration.desiredStatus = 'Activated';
     this.doSave();
   }
 
