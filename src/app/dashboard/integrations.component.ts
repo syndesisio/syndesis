@@ -11,7 +11,7 @@ const category = getCategory('Dashboard');
 @Component({
   selector: 'ipaas-dashboard-integrations',
   templateUrl: './integrations.component.html',
-  styleUrls: [],
+  styleUrls: ['./integrations.component.scss'],
 })
 export class DashboardIntegrationsComponent implements OnInit {
 
