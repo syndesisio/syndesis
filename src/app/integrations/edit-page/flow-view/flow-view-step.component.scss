@@ -91,7 +91,6 @@
       //----- Sidebar: Progress Line: Complete State ----------------->>
 
       &.complete {
-        border: 3px solid $pf-blue-400;
         .fa {
           color: $pf-black-900;
         }
@@ -101,7 +100,9 @@
       //----- Sidebar: Progress Line: Incomplete State ----------------->>
 
       &.incomplete {
-        border: 3px solid #d0d0d0;
+        .fa {
+          color: #D1D1D1;
+        }
       }
     }
 
