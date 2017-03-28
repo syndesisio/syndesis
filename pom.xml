@@ -140,8 +140,7 @@
     <redhat-ipaas-connector.version>0.3.2</redhat-ipaas-connector.version>
     <!-- Base image to use for Docker images. Pinned to 1.2.3 since 1.2.4 has issues because
          of Java 1.8.0_121 (1.2.3 is running 1.8.0_111) -->
-    <java-image-docker>fabric8/java-jboss-openjdk8-jdk:1.2.3</java-image-docker>
-    <java-image-s2i>fabric8/java-s2i:2.0.0</java-image-s2i>
+    <java-image>fabric8/java-jboss-openjdk8-jdk:1.2.3</java-image>
   </properties>
 
   <dependencyManagement>
@@ -285,7 +284,7 @@
             <config>
               <spring-boot>
                 <name>rhipaas/ipaas-verifier:%l</name>
-                <from>${java-image-docker}</from>
+                <from>${java-image}</from>
               </spring-boot>
           </config>
           </generator>
@@ -302,7 +301,7 @@
       <properties>
         <user.home>/home/jenkins</user.home>
         <fabric8.namespace>ipaas-ci</fabric8.namespace>
-        <fabric8.generator.from>${java-image-s2i}</fabric8.generator.from>
+        <java-image>fabric8/java-s2i:2.0.0</java-image>
         <fabric8.mode>openshift</fabric8.mode>
       </properties>
     </profile>
