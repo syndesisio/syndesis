@@ -1,5 +1,17 @@
 <div class="ipaas-dashboard">
-  <ipaas-dashboard-empty-state></ipaas-dashboard-empty-state>
+  
+  <!-- At Least One Integration -->
+  <ipaas-dashboard-integrations *ngIf="integrations.length !== 0"
+                               [integrations]="integrations | async"
+                               [loading]="loading | async"
+                               (onSelect)="onSelect($event)"></ipaas-dashboard-integrations>
+  
+  <!-- No Integrations -->
+  <ipaas-dashboard-connections *ngIf="integrations.length === 0"
+                               [connections]="connections | async"
+                               [loading]="loading | async"
+                               (onSelect)="onSelect($event)"></ipaas-dashboard-connections>
+  <ipaas-dashboard-empty-state *ngIf="integrations.length === 0"></ipaas-dashboard-empty-state>
   <!--
   <ipaas-popular-templates [templates]="templates | async" [loading]="loading | async"></ipaas-popular-templates>
   -->

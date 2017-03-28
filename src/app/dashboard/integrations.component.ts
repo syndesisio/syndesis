@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { log, getCategory } from '../logging';
@@ -15,19 +15,18 @@ const category = getCategory('Dashboard');
 })
 export class DashboardIntegrationsComponent implements OnInit {
 
-  integrations: Observable<Integrations>;
-  loading: Observable<boolean>;
+  @Input() integrations: Integrations;
+  @Input() loading: boolean;
   selectedId = undefined;
   truncateLimit = 80;
   truncateTrail = '…';
 
-  constructor(private store: IntegrationStore) {
-    this.integrations = this.store.list;
-    this.loading = this.store.loading;
-  }
+  @Output() onSelected: EventEmitter<Integration> = new EventEmitter();
 
   onSelect(integration: Integration) {
     log.debugc(() => 'Selected integration (list): ' + integration.name, category);
+    this.selectedId = integration.id;
+    this.onSelected.emit(integration);
   }
 
   isSelected(integration: Integration) {
@@ -35,8 +34,7 @@ export class DashboardIntegrationsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.loadAll();
+    log.debugc(() => 'Got integrations: ' + JSON.stringify(this.integrations, undefined, 2), category);
   }
-
 
 }

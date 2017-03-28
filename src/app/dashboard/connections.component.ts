@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { log, getCategory } from '../logging';
@@ -15,19 +15,18 @@ const category = getCategory('Dashboard');
 })
 export class DashboardConnectionsComponent implements OnInit {
 
-  connections: Observable<Connections>;
-  loading: Observable<boolean>;
+  @Input() connections: Connections;
+  @Input() loading: boolean;
   selectedId = undefined;
   truncateLimit = 80;
   truncateTrail = '…';
 
-  constructor(private store: ConnectionStore) {
-    this.connections = this.store.list;
-    this.loading = this.store.loading;
-  }
+  @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
 
   onSelect(connection: Connection) {
     log.debugc(() => 'Selected connection (list): ' + connection.name, category);
+    this.selectedId = connection.id;
+    this.onSelected.emit(connection);
   }
 
   isSelected(connection: Connection) {
@@ -35,7 +34,7 @@ export class DashboardConnectionsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.loadAll();
+    log.debugc(() => 'Got connections: ' + JSON.stringify(this.connections, undefined, 2), category);
   }
 
 }
