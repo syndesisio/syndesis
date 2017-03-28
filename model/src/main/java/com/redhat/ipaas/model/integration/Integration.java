@@ -24,6 +24,8 @@ import com.redhat.ipaas.model.user.User;
 import org.immutables.value.Value;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,6 +78,10 @@ public interface Integration extends WithId<Integration>, WithName, Serializable
     Optional<Status> getDesiredStatus();
 
     Optional<Status> getCurrentStatus();
+    
+    Optional<Date> getLastUpdated();
+
+    Optional<BigInteger> getTimesUsed();
 
     @Override
     default Integration withId(String id) {

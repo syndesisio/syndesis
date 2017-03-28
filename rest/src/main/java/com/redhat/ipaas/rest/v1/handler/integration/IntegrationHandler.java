@@ -16,6 +16,8 @@
 package com.redhat.ipaas.rest.v1.handler.integration;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -63,6 +65,23 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     public Kind resourceKind() {
         return Kind.Integration;
     }
+    
+    @Override
+    public Integration get(String id) {
+
+        Integration integration = Getter.super.get(id);
+
+        //fudging the timesUsed for now
+        if (integration.getCurrentStatus().equals(Integration.Status.Activated)) {
+            Integration updatedIntegration = integration = new Integration.Builder()
+                    .createFrom(integration)
+                    .timesUsed(BigInteger.valueOf(new Date().getTime()/1000000))
+                    .build();
+            return updatedIntegration;
+        } else {
+            return integration;
+        }
+    }
 
     @Override
     public Integration create(Integration integration) {
@@ -70,9 +89,21 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         String secret = createSecret();
         String gitCloneUrl = ensureGitHubSetup(integration, secret);
 
-        Integration requestedIntegration = new Integration.Builder().createFrom(integration).gitRepo(gitCloneUrl).build();
-        ensureOpenShiftResources(requestedIntegration, secret);
-        return Creator.super.create(requestedIntegration);
+        Integration updatedIntegration = new Integration.Builder()
+                .createFrom(integration).gitRepo(gitCloneUrl)
+                .lastUpdated(new Date())
+                .build();
+        ensureOpenShiftResources(updatedIntegration, secret);
+        return Creator.super.create(updatedIntegration);
+    }
+
+    @Override
+    public void update(String id, Integration integration) {
+        Integration updatedIntegration = new Integration.Builder()
+                .createFrom(integration)
+                .lastUpdated(new Date())
+                .build();
+        Updater.super.update(id, updatedIntegration);
     }
 
     // ==========================================================================
@@ -100,12 +131,13 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             "%s/namespaces/%s/buildconfigs/%s/webhooks/%s/github", openshiftApiBaseUrl, namespace, bcName, secret);
     }
 
-
     private Integration ensureGitRepoName(Integration integration) {
         Optional<String> repoNameOptional = integration.getGitRepo();
         if (!repoNameOptional.isPresent()) {
             String generatedRepoName = gitHubService.sanitizeRepoName(integration.getName());
-            integration = new Integration.Builder().createFrom(integration).gitRepo(generatedRepoName).build();
+            integration = new Integration.Builder()
+                    .createFrom(integration).gitRepo(generatedRepoName)
+                    .build();
         }
         return integration;
     }
