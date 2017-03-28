@@ -10,8 +10,10 @@ import { RestangularModule } from 'ng2-restangular';
 import { IPaaSCommonModule } from '../common/common.module';
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
-import { PopularTemplatesComponent } from './populartemplates.component';
-import { TemplatesListComponent } from '../templates/list/list.component';
+//import { PopularTemplatesComponent } from './populartemplates.component';
+//import { TemplatesListComponent } from '../templates/list/list.component';
+import { DashboardConnectionsComponent } from './connections.component';
+import { DashboardIntegrationsComponent } from './integrations.component';
 import { StoreModule } from '../store/store.module';
 
 describe('DashboardComponent', () => {
@@ -21,7 +23,14 @@ describe('DashboardComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [IPaaSCommonModule, StoreModule, RouterTestingModule.withRoutes([]), RestangularModule.forRoot()],
-      declarations: [DashboardComponent, EmptyStateComponent, PopularTemplatesComponent, TemplatesListComponent],
+      declarations: [
+        DashboardComponent,
+        EmptyStateComponent,
+        //PopularTemplatesComponent,
+        //TemplatesListComponent,
+        DashboardConnectionsComponent,
+        DashboardIntegrationsComponent,
+      ],
       providers: [
         MockBackend,
         { provide: RequestOptions, useClass: BaseRequestOptions },
