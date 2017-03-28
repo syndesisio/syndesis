@@ -12,7 +12,7 @@ slave {
 
                     stage 'Build'
                     container(name: 'maven') {
-                        sh "mvn clean install fabric8:build -Dfabric8.mode=openshift -Dfabric8.namespace=ipaas-ci -Duser.home=/home/jenkins"
+                        sh "mvn clean package fabric8:build -Pci"
                     }
 
                     stage 'System Tests'

@@ -1,0 +1,43 @@
+#
+# Copyright (C) 2016 Red Hat, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+machine:
+  pre:
+  - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+  services:
+  - docker
+
+dependencies:
+  override:
+  - mvn --batch-mode -DskipTests package dependency:go-offline
+test:
+  override:
+  - mvn --batch-mode fabric8:build install
+  post:
+  - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+  - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+  - cp target/classes/static/index.html $CIRCLE_ARTIFACTS/apidocs.html
+  - cp target/classes/static/swagger.json $CIRCLE_ARTIFACTS/
+  - cp target/classes/static/swagger.yaml $CIRCLE_ARTIFACTS/
+  - bash <(curl -s https://codecov.io/bash)
+
+deployment:
+  staging:
+    owner: redhat-ipaas
+    branch: master
+    commands:
+    - mvn -Ddocker.push.username=$DOCKER_USERNAME -Ddocker.push.password=$DOCKER_PASSWORD fabric8:push
+

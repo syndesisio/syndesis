@@ -75,6 +75,14 @@
 
   <repositories>
     <repository>
+      <id>ipaas-releases</id>
+      <name>ipaas-releases</name>
+      <url>https://dl.bintray.com/redhat-ipaas/maven/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
       <id>apache.snapshots</id>
       <name>Apache Development Snapshot Repository</name>
       <url>https://repository.apache.org/content/repositories/snapshots/</url>
@@ -129,10 +137,10 @@
     <resteasy-spring-boot-starter.version>2.3.0-RELEASE</resteasy-spring-boot-starter.version>
     <jackson.version>2.8.7</jackson.version>
     <fabric8-maven-plugin.version>3.3.0</fabric8-maven-plugin.version>
-    <redhat-ipaas-connector.version>0.3-SNAPSHOT</redhat-ipaas-connector.version>
+    <redhat-ipaas-connector.version>0.3.2</redhat-ipaas-connector.version>
     <!-- Base image to use for Docker images. Pinned to 1.2.3 since 1.2.4 has issues because
          of Java 1.8.0_121 (1.2.3 is running 1.8.0_111) -->
-    <java-base-image>fabric8/java-jboss-openjdk8-jdk:1.2.3</java-base-image>
+    <java-image>fabric8/java-jboss-openjdk8-jdk:1.2.3</java-image>
   </properties>
 
   <dependencyManagement>
@@ -276,7 +284,7 @@
             <config>
               <spring-boot>
                 <name>rhipaas/ipaas-verifier:%l</name>
-                <from>${java-base-image}</from>
+                <from>${java-image}</from>
               </spring-boot>
           </config>
           </generator>
@@ -285,4 +293,17 @@
 
     </plugins>
   </build>
+
+  <profiles>
+    <!-- Profile for Jenkins CI build on OpenShift -->
+    <profile>
+      <id>ci</id>
+      <properties>
+        <user.home>/home/jenkins</user.home>
+        <fabric8.namespace>ipaas-ci</fabric8.namespace>
+        <java-image>fabric8/s2i-java:2.0</java-image>
+        <fabric8.mode>openshift</fabric8.mode>
+      </properties>
+    </profile>
+  </profiles>
 </project>
