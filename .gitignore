@@ -42,7 +42,6 @@ testem.log
 .DS_Store
 Thumbs.db
 /.history
-/.yarnclean
 /yarn-error.log
 
 src/config.json

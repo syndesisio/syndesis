@@ -120,12 +120,6 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     };
   });
 
-  restangularProvider.addErrorInterceptor((response, subject, responseHandler) => {
-    console.log("Response: ", response);
-
-    return true;
-  });
-
   restangularProvider.addResponseInterceptor((data: any, operation: string) => {
     if (operation === 'getList' && data && Array.isArray(data.items)) {
       const pagingData = data.items;
