@@ -23,7 +23,7 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
   childRouteSubscription: Subscription;
   urls: UrlSegment[];
   selectedKind: string = undefined;
-  @ViewChildren(PopoverDirective) popovers:PopoverDirective[];
+  @ViewChildren(PopoverDirective) popovers: PopoverDirective[];
 
   constructor(
     public currentFlow: CurrentFlow,
