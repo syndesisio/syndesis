@@ -1,6 +1,9 @@
 <ipaas-loading [loading]="loading">
   <div class="container-cards-pf ipaas-dashboard-integrations">
-    <div class="row row-cards-pf">
+
+    <!-- First Row: Page Header & Toolbar -->
+
+    <div class="row row-cards-pf first-row">
       <div class="page-header">
         <div class="actions pull-right">
           <a href="#">View All Integrations</a>&nbsp;&nbsp;
@@ -11,34 +14,105 @@
         <h1>Dashboard: Integrations</h1>
       </div>
     </div>
-    <div class="row row-cards-pf cards">
-      <div class="col-xs-12 col-sm-3 col-md-2 card"></div>
-    </div>
-    <div class="row row-cards-pf cards">
-      <div class="col-xs-12 col-sm-3 col-md-2 card"
-           *ngFor="let integration of integrations"
-           (click)="onSelect(integration)">
-        <div class="card-pf card-pf-view card-pf-view-xs card-pf-view-select card-pf-view-single-select"
-             [class.active]="isSelected(integration)">
+
+
+    <!-- Second Row -->
+
+    <div class="row row-cards-pf second-row">
+
+      <!-- Left: Integrations -->
+
+      <div class="col-xs-7">
+        <div class="card-pf">
+          <div class="card-pf-heading">
+            <h2 class="card-pf-title">
+              Top 5 Integrations
+            </h2>
+          </div>
           <div class="card-pf-body">
-        
-            <!-- Card Heading -->
-            <div class="card-pf-heading-kebab">
-          
-              <!-- Card Title & Icon -->
-          
-              <h2 class="card-pf-title">
-                <span class="fa {{ integration.icon }}"></span>
-                <a class="card-title">{{ integration.name }}</a>
-              </h2>
+            <div class="row integration"
+                 *ngFor="let integration of integrations"
+                 (click)="onSelect(integration)">
+
+              <!-- Icons -->
+              <div class="col-xs-2 icons">
+                <div class="list-view-pf-left">
+                  <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
+                  <span class="fa fa-angle-right"></span>
+                  <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
+                </div>
+              </div>
+
+              <!-- Name -->
+              <div class="col-xs-3 name">
+                {{ integration.name }}
+              </div>
+
+              <!-- Description -->
+              <div class="col-xs-5">
+                <p>1234</p>
+              </div>
             </div>
-        
-            <!-- Card Description / Item Overview -->
-        
-            <p>{{ integration.description | truncate : truncateLimit : truncateTrail }}</p>
           </div>
         </div>
       </div>
+
+
+      <!-- Right -->
+
+      <div class="col-xs-5">
+        <div class="card-pf">
+          <div class="card-pf-heading">
+            <h2 class="card-pf-title">
+              Integration Board
+            </h2>
+          </div>
+          <div class="card-pf-body">
+            <p>Nullam quis risus eget urna mollis ornare vel eu leo. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+          </div>
+        </div>
+
+        <div class="card-pf">
+          <div class="card-pf-heading">
+            <h2 class="card-pf-title">
+              Recent Updates
+            </h2>
+          </div>
+          <div class="card-pf-body">
+            <div class="row integration"
+                 *ngFor="let integration of integrations">
+              <div class="col-xs-8">Update client service</div>
+              <div class="col-xs-4">11 Oct 22:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- Third Row -->
+
+    <div class="row row-cards-pf third-row">
+      <div class="page-header">
+        <div class="actions pull-right">
+          <a href="#">View All Connections</a>&nbsp;&nbsp;
+          <a href=""
+             class="btn btn-primary">Create Connection
+          </a>
+        </div>
+        <h1>Dashboard: Connections</h1>
+      </div>
+    </div>
+
+
+    <!-- Fourth Row -->
+
+    <div class="row row-cards-pf fourth-row">
+
+      <ipaas-dashboard-connections [connections]="connections | async"
+                                   (onSelect)="onSelect($event)"></ipaas-dashboard-connections>
+
     </div>
   </div>
 </ipaas-loading>

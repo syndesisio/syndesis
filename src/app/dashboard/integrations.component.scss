@@ -1,4 +1,5 @@
 .ipaas-dashboard-integrations {
+  color: #656565;
   margin: 15px;
 
   .btn {
@@ -6,13 +7,74 @@
     padding: 2px 20px !important;
   }
 
-  .description {
-    margin: 25px auto;
-    max-width: 40%;
+  .first-row {
+    padding-top: 0;
+
+    .page-header {
+      padding-bottom: 9px;
+      margin: 0;
+    }
   }
 
-  .page-header {
-    padding-bottom: 9px;
-    margin: 0;
+  .second-row {
+    margin: 10px 0;
+    padding: 0;
+
+    .integration {
+      padding: 10px;
+
+      &:hover {
+        background: rgba(214, 238, 250, 0.36);
+      }
+
+      .description {
+        //margin: 25px auto;
+        max-width: 40%;
+      }
+
+      .name {
+        font-weight: 700;
+        padding: 7px;
+      }
+
+      .active-inactive {
+        padding: 5px;
+
+        .btn.btn-primary {
+          background: #199BD1;
+          border: none;
+          font-family: inherit;
+          font-weight: 100;
+          padding: 1px 10px;
+        }
+      }
+
+      .description {
+        padding: 5px;
+      }
+
+      .icons {
+        padding: 1px;
+        width: 22.666667%;
+
+        .fa {
+          margin-right: 15px;
+
+          &.fa-angle-right {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+
+    .actions {
+      padding: 5px;
+
+      ul {
+        cursor: pointer;
+      }
+    }
   }
+
+  .third-row {}
 }
