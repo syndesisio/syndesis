@@ -64,8 +64,6 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     public configService: ConfigService,
   ) {
     super(currentFlow, route, router);
-    const settings = configService.getSettings();
-    console.log('Settings: ', settings);
     try {
       this.cfg.baseJavaServiceUrl = configService.getSettings('datamapper', 'baseJavaServiceUrl') || this.cfg.baseJavaServiceUrl;
       this.cfg.baseMappingServiceUrl = configService.getSettings('datamapper', 'baseMappingServiceUrl') || this.cfg.baseMappingServiceUrl;
