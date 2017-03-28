@@ -15,18 +15,14 @@
  */
 package com.redhat.ipaas.project.converter;
 
-import com.redhat.ipaas.model.connection.Connector;
-import com.redhat.ipaas.model.integration.Integration;
-
 import java.io.IOException;
 import java.util.Map;
+
+import com.redhat.ipaas.model.integration.Integration;
 
 public interface ProjectGenerator {
 
     Map<String, byte[]> generate(Integration integration) throws IOException;
 
     byte[] generatePom(Integration integration) throws IOException;
-
-    byte[] generatePom(Connector connector) throws IOException;
-
 }

@@ -35,18 +35,19 @@ public interface Verifier {
     /**
      * Verify a connector
      *
-     * @param connector the connector to verify
-     * @param scope scope in which to verify (e.g. whether to check connectivity or validity)
-     * @param options options for the connector to verify
-     * @return the result of the verification
+     * @param connectorId id of the connector to verify
+     * @param parameters options for the connector to verify
+     * @return the result of the verification as a list, one element for each scope checked
      */
-    Result verify(Connector connector, Scope scope, Map<String, String> options);
+    List<Result> verify(String connectorId,  Map<String, String> parameters);
 
     // Scope determines what kind of verification should be performed
     enum Scope {
-        NONE,
+        // Checked parameters without reaching out to the backend
         PARAMETERS,
-        CONNECTIVITY;
+
+        // Checked the connectivity. This happens only when the parameter check succeeded.
+        CONNECTIVITY
     }
 
     // Detailed error object
@@ -54,21 +55,16 @@ public interface Verifier {
     @JsonDeserialize(builder = ImmutableError.Builder.class)
     interface Error {
         // Connector specific error code
-        Optional<String> getCode();
+        String getCode();
+
         // A description of the error in plain english
-        Optional<String> getDescription();
+        String getDescription();
+
         // List of parameters which caused this particular verification to fail
         List<String> getParameters();
 
-        default Error withCode(String value) {
-            return ImmutableError.builder().from(this).code(value).build();
-        }
-        default Error withDescription(String value) {
-            return ImmutableError.builder().from(this).description(value).build();
-        }
-        default Error withParameters(List<String> value) {
-            return ImmutableError.builder().from(this).parameters(value).build();
-        }
+        // Map of attributes with detailed error messages
+        Map<String, Object> getAttributes();
     }
 
     // Result structure to return
@@ -88,10 +84,8 @@ public interface Verifier {
             OK,
             // Check for the given scope failes
             ERROR,
-            // Scope not supported
-            SCOPE_UNSUPPORTED,
             // Verification not supported.
-            UNSUPPORTED,
+            UNSUPPORTED
         }
     }
 }

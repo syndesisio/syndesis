@@ -66,11 +66,13 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         "pom.xml"
     );
 
+    /**
+     * Not required for the moment, needed for local forking of a maven process
     private Mustache connectorPomMustache = mf.compile(
         new InputStreamReader(getClass().getResourceAsStream("templates/connector/pom.xml.mustache")),
         "pom.xml"
     );
-
+    */
     private final ConnectorCatalog connectorCatalog;
 
     public DefaultProjectGenerator(ConnectorCatalog connectorCatalog) {
@@ -116,6 +118,10 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
 
+    /*
+    Required for a local verifier, but does not work because the connector does not carry any GAV (but a
+    reference to a 'default' action. Or the mapping happens in the external ipaas-verifier service:
+
     public byte[] generatePom(Connector connector) throws IOException {
         Set<MavenGav> connectors = new LinkedHashSet<>();
         String[] splitGav = connector.getCamelConnectorGAV().get().split(":");
@@ -127,7 +133,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
             connectorPomMustache
         );
     }
-
+    */
 
     private byte[] generateFlowYaml(Integration integration) throws JsonProcessingException {
         Flow flow = new Flow();

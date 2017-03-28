@@ -54,6 +54,7 @@
       <artifactId>keycloak-spring-security-adapter</artifactId>
     </dependency>
 
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>

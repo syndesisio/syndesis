@@ -15,93 +15,99 @@
  */
 package com.redhat.ipaas.verifier;
 
-import com.redhat.ipaas.model.connection.Connector;
-import com.redhat.ipaas.project.converter.ProjectGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-import org.springframework.util.FileSystemUtils;
-
 import java.io.*;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 
-@Component
-@ConditionalOnProperty(value = "verifier.kind", havingValue = "forking")
-public class ForkingVerifier implements Verifier {
+import com.redhat.ipaas.model.connection.Connector;
+import com.redhat.ipaas.project.converter.ProjectGenerator;
+import com.redhat.ipaas.verifier.Verifier.Error;
+import org.springframework.util.FileSystemUtils;
+
+// Needs to be adapted to new API signature.
+/*
+ * Sorry for messing this up to adapt to the new API which is used by the external verifier.
+ * Maybe its worth to have a look at the ExternalVerifier and whether we should not fully settle on
+ * this better decoupled, less resource hungry and more robust approach.
+ */
+
+//@Component
+//@ConditionalOnProperty(value = "verifier.kind", havingValue = "forking")
+public class LocalProcessVerifier {
 
     private final ProjectGenerator projectGenerator;
     private String localMavenRepoLocation = null; // "/tmp/ipaas-local-mvn-repo";
 
-    public ForkingVerifier(ProjectGenerator projectGenerator) {
+    public LocalProcessVerifier(ProjectGenerator projectGenerator) {
         this.projectGenerator = projectGenerator;
     }
 
-    @Override
-    public Result verify(Connector connector, Scope scope, Map<String, String> props) {
+    // Return a list of verification results. Omit scope, use only a connector id for the verification
+    public Verifier.Result verify(Connector connector, Verifier.Scope scope, Map<String, String> props) {
         Properties configuredProperties = new Properties();
         for (Map.Entry<String, String> entry : props.entrySet()) {
             configuredProperties.put(entry.getKey(), entry.getValue());
         }
 
+        /*
+        // The connector must get the GAV from one of its associated Actions. There should be a 'default'
+        // or 'verifier' actions which is selected for doing the verification. The prefix should also come from
+        // the action, too.
+
         if (!connector.getCamelConnectorGAV().isPresent() ||
             !connector.getCamelConnectorPrefix().isPresent() ) {
-            return createResult(scope, Result.Status.UNSUPPORTED, null);
+            return createResult(scope, Verifier.Result.Status.UNSUPPORTED, null);
         }
+        */
 
         try {
             // we could cache the connectorClasspath.
             String connectorClasspath = getConnectorClasspath(connector);
 
             // shell out to java to validate the properties.
-            Properties result = runValidator(connectorClasspath, scope, connector.getCamelConnectorPrefix().get(), configuredProperties);
+            Properties result = runValidator(connectorClasspath, scope, /* see commment above connector.getCamelConnectorPrefix().get() */ null, configuredProperties);
             String value = result.getProperty("value");
             if ("error".equals(value)) {
-                return createResult(scope, Result.Status.ERROR, result);
+                return createResult(scope, Verifier.Result.Status.ERROR, result);
             }
             if ( "unsupported".equals(value) ) {
-                return createResult(scope, Result.Status.UNSUPPORTED, result);
+                return createResult(scope, Verifier.Result.Status.UNSUPPORTED, result);
             }
             if ( "ok".equals(value) ) {
-                return createResult(scope, Result.Status.OK, result);
+                return createResult(scope, Verifier.Result.Status.OK, result);
             }
-            return createResult(scope, Result.Status.ERROR, result);
+            return createResult(scope, Verifier.Result.Status.ERROR, result);
         } catch (IOException|InterruptedException e) {
-            return createResult(scope, Result.Status.ERROR, null);
+            return createResult(scope, Verifier.Result.Status.ERROR, null);
         }
     }
 
-    private ImmutableResult createResult(Scope scope, Result.Status status, Properties response) {
+    private ImmutableResult createResult(Verifier.Scope scope, Verifier.Result.Status status, Properties response) {
         ImmutableResult.Builder builder = ImmutableResult.builder().scope(scope).status(status);
         if( response != null ) {
-            LinkedHashMap<String, Error> errors = new LinkedHashMap<>();
+            LinkedHashMap<String, ImmutableError.Builder> errors = new LinkedHashMap<>();
             for (Map.Entry<Object, Object> entry : response.entrySet()) {
                 String key = (String) entry.getKey();
                 if( key.startsWith("error.") ) {
                     String errorId = key.substring("error.".length()).replaceFirst("\\..*", "");
-                    Error error = errors.getOrDefault(errorId, createError());
+                    ImmutableError.Builder error = errors.getOrDefault(errorId, ImmutableError.builder());
                     String value = (String) entry.getValue();
                     if( key.endsWith(".code") ) {
-                        error = error.withCode(value);
+                        error.code(value);
                     }
                     if( key.endsWith(".description") ) {
-                        error = error.withDescription(value);
+                        error.description(value);
                     }
                     errors.put(errorId, error);
                 }
             }
-            builder.addAllErrors(errors.values());
+            builder.addAllErrors(errors.values().stream().map(ImmutableError.Builder::build).collect(Collectors.toList()));
         }
         return builder.build();
     }
 
-    private Error createError() {
-        return ImmutableError.builder().build();
-    }
-
-    private Properties runValidator(String classpath, Scope scope, String camelPrefix, Properties request) throws IOException, InterruptedException {
+    private Properties runValidator(String classpath, Verifier.Scope scope, String camelPrefix, Properties request) throws IOException, InterruptedException {
         Process java = new ProcessBuilder()
             .command(
                 "java", "-classpath", classpath,
@@ -126,7 +132,7 @@ public class ForkingVerifier implements Verifier {
 
 
     private String getConnectorClasspath(Connector connector) throws IOException, InterruptedException {
-        byte[] pom = projectGenerator.generatePom(connector);
+        byte[] pom = new byte[0]; // TODO: Fix generation to use an Action projectGenerator.generatePom(connector);
         java.nio.file.Path tmpDir = Files.createTempDirectory("ipaas-connector");
         try {
             Files.write(tmpDir.resolve("pom.xml"), pom);

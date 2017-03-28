@@ -26,6 +26,8 @@ import io.swagger.annotations.Api;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
+import java.util.List;
 import java.util.Map;
 
 @Path("/connectors")
@@ -53,12 +55,8 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{id}/verifier/{scope}")
-    public Verifier.Result verifyConnectionParameters(
-        @PathParam("id") String connectorId,
-        @PathParam("scope") String scope,
-        Map<String, String> props) {
-        Verifier.Scope s = Verifier.Scope.valueOf(scope.toUpperCase());
-        return verifier.verify(get(connectorId),s, props);
+    @Path("/{id}/verifier")
+    public List<Verifier.Result> verifyConnectionParameters(@PathParam("id") String connectorId, Map<String, String> props) {
+        return verifier.verify(connectorId, props);
     }
 }

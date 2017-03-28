@@ -16,6 +16,8 @@
 
 package com.redhat.ipaas.verifier;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import com.redhat.ipaas.model.connection.Connector;
@@ -35,7 +37,7 @@ public class AlwaysOkVerifier implements Verifier {
 
     // All good ....
     @Override
-    public Result verify(Connector connector, Scope scope, Map<String, String> options) {
-        return ImmutableResult.builder().scope(scope).status(Result.Status.OK).build();
+    public List<Result> verify(String connectorId, Map<String, String> options) {
+        return Collections.singletonList(ImmutableResult.builder().status(Result.Status.OK).build());
     }
 }

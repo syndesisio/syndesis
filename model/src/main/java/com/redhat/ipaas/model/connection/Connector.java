@@ -45,9 +45,6 @@ public interface Connector extends WithId<Connector>, WithName, Serializable {
 
     String getDescription();
 
-    Optional<String> getCamelConnectorGAV();
-    Optional<String> getCamelConnectorPrefix();
-
     List<Action> getActions();
 
     @Override

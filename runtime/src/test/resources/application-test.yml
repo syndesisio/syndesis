@@ -34,3 +34,6 @@ github:
 
 openshift:
   enabled: false
+
+verifier:
+  kind: always-ok

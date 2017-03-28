@@ -1,5 +1,5 @@
-/**
- * Copyright (C) 2016 Red Hat, Inc.
+/*
+ * Copyright (C) 2017 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.redhat.ipaas.verifier;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ComponentScan
-@EnableConfigurationProperties(VerificationConfigurationProperties.class)
-public class VerifierConfiguration {
+@ConfigurationProperties("verifier")
+public class VerificationConfigurationProperties {
 
+    private String service = "ipass-verifier";
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
 }
