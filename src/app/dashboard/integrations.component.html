@@ -1,26 +1,40 @@
 <ipaas-loading [loading]="loading">
   <div class="container-cards-pf integrations-list">
     <div class="row row-cards-pf cards">
+      <div class="page-header">
+        <div class="actions pull-right">
+          <a href="#">View All Integrations</a>&nbsp;&nbsp;
+          <a href=""
+             class="btn btn-primary">Create Integration
+          </a>
+        </div>
+        <h1>Dashboard: Integrations</h1>
+      </div>
+    </div>
+    <div class="row row-cards-pf cards">
+      <div class="col-xs-12 col-sm-3 col-md-2 card"></div>
+    </div>
+    <div class="row row-cards-pf cards">
       <div class="col-xs-12 col-sm-3 col-md-2 card"
            *ngFor="let integration of integrations"
            (click)="onSelect(integration)">
         <div class="card-pf card-pf-view card-pf-view-xs card-pf-view-select card-pf-view-single-select"
              [class.active]="isSelected(integration)">
           <div class="card-pf-body">
-            
+        
             <!-- Card Heading -->
             <div class="card-pf-heading-kebab">
-              
+          
               <!-- Card Title & Icon -->
-              
+          
               <h2 class="card-pf-title">
                 <span class="fa {{ integration.icon }}"></span>
                 <a class="card-title">{{ integration.name }}</a>
               </h2>
             </div>
-            
+        
             <!-- Card Description / Item Overview -->
-            
+        
             <p>{{ integration.description | truncate : truncateLimit : truncateTrail }}</p>
           </div>
         </div>
