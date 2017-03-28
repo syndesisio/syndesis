@@ -13,7 +13,7 @@
 
   <properties>
     <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
-    <spring-cloud-kubernetes.version>0.1.6</spring-cloud-kubernetes>
+    <spring-cloud-kubernetes.version>0.1.6</spring-cloud-kubernetes.version>
     <camel.version>2.19.0-SNAPSHOT</camel.version>
     <funktion.version>1.1.55</funktion.version>
   </properties>
