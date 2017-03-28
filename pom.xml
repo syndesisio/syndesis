@@ -92,6 +92,14 @@
       <name>jcenter</name>
       <url>https://jcenter.bintray.com</url>
     </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>jboss.ea</id>
+      <name>JBoss EA</name>
+      <url>https://repository.jboss.org/nexus/content/groups/ea</url>
+    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -113,6 +121,14 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
+    </pluginRepository>
+    <pluginRepository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>jboss.ea</id>
+      <name>JBoss EA</name>
+      <url>https://repository.jboss.org/nexus/content/groups/ea</url>
     </pluginRepository>
   </pluginRepositories>
 
