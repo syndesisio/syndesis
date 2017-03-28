@@ -19,7 +19,7 @@ dependencies:
       curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version $YARN_VERSION
     fi
   override:
-  - yarn install --no-progress
+  - yarn install --force --no-progress
   cache_directories:
   - ~/.yarn
   - ~/.cache/yarn
