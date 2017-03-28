@@ -15,17 +15,11 @@
             </ol>
           </div>
           <div class="toolbar-pf-action-right">
-            <button class="btn btn-default"
-                    (click)="cancel()">Cancel
+            <button class="btn btn-default" (click)="cancel()">Cancel
+            </button> &nbsp;
+            <button type="button" class="btn btn-default" (click)="save()">Save
             </button>
-            &nbsp;
-            <button type="button"
-                    class="btn btn-default"
-                    (click)="save()">Save
-            </button>
-            <button type="button"
-                    class="btn btn-primary"
-                    (click)="saveAndPublish()">Publish
+            <button type="button" class="btn btn-primary" (click)="saveAndPublish()">Publish
             </button>
           </div>
         </div>
@@ -35,6 +29,16 @@
 
   <!-- Content -->
   <div class="wizard-pf-body clearfix">
+    <div *ngIf="errorMessage">
+      <div class="alert alert-danger">
+        <button type="button" class="close" (click)="errorMessage = undefined">
+                <span class="pficon pficon-close"></span>
+              </button>
+        <span class="pficon pficon-error-circle-o"></span>
+        <p>Error saving integration: </p>
+        <pre>{{ errorMessage }}</pre>
+      </div>
+    </div>
     <div class="blank-slate-pf">
       <div class="blank-slate-pf-icon">
         <span class="pficon pficon pficon-add-circle-o"></span>
@@ -47,15 +51,13 @@
 
       <!-- First Step -->
       <div class="blank-slate-pf-secondary-action first-step" *ngIf="getMiddleSteps().length === 0">
-        <button type="button" (click)="addNew('step')" class="btn btn-default">Add a Step</button>
-        &nbsp;&nbsp;&nbsp;
+        <button type="button" (click)="addNew('step')" class="btn btn-default">Add a Step</button> &nbsp;&nbsp;&nbsp;
         <button type="button" (click)="addNew('connection')" class="btn btn-default">Add a Connection</button>
       </div>
 
       <!-- Middle Steps -->
       <div class="blank-slate-pf-secondary-action middle-steps" *ngIf="getMiddleSteps().length !== 0">
-        <button type="button" (click)="showPopouts('step')" class="btn btn-default">Add a Step</button>
-        &nbsp;&nbsp;&nbsp;
+        <button type="button" (click)="showPopouts('step')" class="btn btn-default">Add a Step</button> &nbsp;&nbsp;&nbsp;
         <button type="button" (click)="showPopouts('connection')" class="btn btn-default">Add a Connection</button>
       </div>
     </div>
