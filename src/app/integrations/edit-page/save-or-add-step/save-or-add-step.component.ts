@@ -114,12 +114,12 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
   }
 
   save() {
-    this.currentFlow.integration.statusType = 'Deactivated';
+    this.currentFlow.integration.desiredStatus = 'Deactivated';
     this.doSave();
   }
 
   saveAndPublish() {
-    this.currentFlow.integration.statusType = 'Activated';
+    this.currentFlow.integration.desiredStatus = 'Activated';
     this.doSave();
   }
 
