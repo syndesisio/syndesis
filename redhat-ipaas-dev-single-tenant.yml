@@ -137,18 +137,18 @@ objects:
       app: redhat-ipaas
   roleRef:
     name: admin
-subjects:
-- kind: ServiceAccount
-  name: ipaas-deployer
-  namespace: ipaas-staging
-- kind: ServiceAccount
-  name: jenkins
-  namespace: ipaas-ci
-- kind: Group
-  name: dedicated-admins
-userNames:
-- system:serviceaccount:ipaas-staging:ipaas-deployer
-- system:serviceaccount:ipaas-ci:jenkins
+  subjects:
+  - kind: ServiceAccount
+    name: ipaas-deployer
+    namespace: ipaas-staging
+  - kind: ServiceAccount
+    name: jenkins
+    namespace: ipaas-ci
+  - kind: Group
+    name: dedicated-admins
+  userNames:
+  - system:serviceaccount:ipaas-staging:ipaas-
+  - system:serviceaccount:ipaas-ci:jenkins
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
