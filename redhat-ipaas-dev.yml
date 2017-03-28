@@ -130,6 +130,14 @@ objects:
   - kind: ServiceAccount
     name: ipaas-rest
 - apiVersion: v1
+  kind: RoleBinding
+  metadata:
+    name: ipaas:admins
+    labels:
+      app: redhat-ipaas
+  roleRef:
+    name: admin
+- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:

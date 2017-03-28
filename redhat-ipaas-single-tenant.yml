@@ -191,8 +191,8 @@ objects:
     name: ipaas:admins
     labels:
       app: redhat-ipaas
-roleRef:
-  name: admin
+  roleRef:
+    name: admin
 subjects:
 - kind: ServiceAccount
   name: ipaas-deployer
