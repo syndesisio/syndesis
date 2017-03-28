@@ -73,12 +73,14 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
         //fudging the timesUsed for now
         if (integration.getCurrentStatus().equals(Integration.Status.Activated)) {
-            integration = new Integration.Builder()
+            Integration updatedIntegration = integration = new Integration.Builder()
                     .createFrom(integration)
                     .timesUsed(BigInteger.valueOf(new Date().getTime()/1000000))
                     .build();
+            return updatedIntegration;
+        } else {
+            return integration;
         }
-        return integration;
     }
 
     @Override
@@ -87,21 +89,21 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         String secret = createSecret();
         String gitCloneUrl = ensureGitHubSetup(integration, secret);
 
-        integration = new Integration.Builder()
+        Integration updatedIntegration = new Integration.Builder()
                 .createFrom(integration).gitRepo(gitCloneUrl)
                 .lastUpdated(new Date())
                 .build();
-        ensureOpenShiftResources(integration, secret);
-        return Creator.super.create(integration);
+        ensureOpenShiftResources(updatedIntegration, secret);
+        return Creator.super.create(updatedIntegration);
     }
 
     @Override
     public void update(String id, Integration integration) {
-        integration = new Integration.Builder()
+        Integration updatedIntegration = new Integration.Builder()
                 .createFrom(integration)
                 .lastUpdated(new Date())
                 .build();
-        Updater.super.update(id, integration);
+        Updater.super.update(id, updatedIntegration);
     }
 
     // ==========================================================================
