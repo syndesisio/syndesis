@@ -301,7 +301,7 @@
       <properties>
         <user.home>/home/jenkins</user.home>
         <fabric8.namespace>ipaas-ci</fabric8.namespace>
-        <java-image>fabric8/java-s2i:2.0.0</java-image>
+        <java-image>fabric8/s2i-java:2.0</java-image>
         <fabric8.mode>openshift</fabric8.mode>
       </properties>
     </profile>
