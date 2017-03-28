@@ -68,50 +68,50 @@
           },
           "properties": {
           },
-          "id": "org.foo_twitter-mention-connector_0.2.1",
-          "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:0.2.1",
+          "id": "org.foo:twitter-mention-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "twitter-mention"
         },
         {
           "name": "Search",
           "description": "Search tweets based one or more keywords",
-          "id": "org.foo_twitter-search-connector_0.2.1",
-          "camelConnectorGAV": "com.redhat.ipaas:twitter-search-connector:0.2.1",
+          "id": "org.foo:twitter-search-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-search-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "twitter-search"
         },
         {
           "name": "Send a Tweet",
           "description": "Creates a new tweet",
-          "id": "org.foo_twitter-tweet-connector_0.2.1",
-          "camelConnectorGAV": "com.redhat.ipaas:twitter-tweet-connector:0.2.1",
+          "id": "org.foo:twitter-tweet-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-tweet-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "twitter-tweet"
         },
         {
           "description": "Direct message a specific user",
           "name": "Send a Direct Message",
-          "id": "org.foo_twitter-directmessage-connector_0.2.1",
-          "camelConnectorGAV": "com.redhat.ipaas:twitter-directmessage-connector:0.2.1",
+          "id": "org.foo:twitter-directmessage-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-directmessage-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "twitter-directmessage"
         },
         {
           "description": "Retrieve tweets from my timeline",
           "name": "Get My Timeline",
-          "id": "org.foo_twitter-mytimeline-connector_0.2.1",
-          "camelConnectorGAV": "com.redhat.ipaas:twitter-mytimeline-connector:0.2.1",
+          "id": "org.foo:twitter-mytimeline-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-mytimeline-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "twitter-mytimeline"
         },
         {
           "description": "Retrieve tweets from another user's timeline",
           "name": "Get A Timeline",
-          "id": "org.foo_twitter-usertimeline-connector_0.2.1",
-          "camelConnectorGAV": "com.redhat.ipaas:twitter-usertimeline-connector:0.2.1",
+          "id": "org.foo:twitter-usertimeline-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-usertimeline-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "twitter-usertimeline"
         },
         {
           "description": "Retrieve tweets which retweet one of my tweets",
           "name": "Get Retweets",
-          "id": "org.foo_twitter-retweets-connector_0.2.1",
-          "camelConnectorGAV": "com.redhat.ipaas:twitter-retweets-connector:0.2.1",
+          "id": "org.foo:twitter-retweets-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:twitter-retweets-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "twitter-retweets"
         }
       ]
@@ -177,7 +177,7 @@
       },
       "actions": [
         {
-          "id": "org.foo_salesforce-upsert-contact-connector_1.0",
+          "id": "org.foo:salesforce-upsert-contact-connector:latest",
           "name": "Create/Update Contact",
           "description": "Create or Update a Salesforce Contact",
           "inputDataShape": {
@@ -188,43 +188,43 @@
           },
           "properties": {
           },
-          "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "salesforce-upsert-contact"
         },{
-          "id": "org.foo_salesforce-create-opportunity-connector_1.0",
+          "id": "org.foo:salesforce-create-opportunity-connector:latest",
           "description": "Create a new Salesforce opportunity based on the input message",
           "name": "Create Opportunity",
-          "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-opportunity-connector:0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-opportunity-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "salesforce-create-opportunity"
         },{
-          "id": "org.foo_salesforce-create-lead-connector_1.0",
+          "id": "org.foo:salesforce-create-lead-connector:latest",
           "description": "Create a new Salesforce lead based on the input message",
           "name": "Create Lead",
-          "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-lead-connector:0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-lead-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "salesforce-create-lead"
         },{
-          "id": "org.foo_salesforce-create-account-connector_1.0",
+          "id": "org.foo:salesforce-create-account-connector:latest",
           "description": "Create a new Salesforce account based on the input message",
           "name": "Create Account",
-          "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-account-connector:0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-account-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "salesforce-create-account"
         },{
-          "id": "org.foo_salesforce-create-case-connector_1.0",
+          "id": "org.foo:salesforce-create-case-connector:latest",
           "description": "Create a new Salesforce case based on the input message",
           "name": "Create Case",
-          "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-case-connector:0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:salesforce-create-case-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "salesforce-create-case"
         },{
-          "id": "org.foo_salesforce-search-connector_1.0",
+          "id": "org.foo:salesforce-search-connector:latest",
           "description": "Execute a search in Salesforce using arbitrary SOQL",
           "name": "Search",
-          "camelConnectorGAV": "com.redhat.ipaas:salesforce-search-connector:0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:salesforce-search-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "salesforce-search"
         },{
-          "id": "org.foo_salesforce-notification-connector_1.0",
+          "id": "org.foo:salesforce-notification-connector:latest",
           "description": "Trigger an integration when updates occur to a specific Salesforce object",
           "name": "Notification",
-          "camelConnectorGAV": "com.redhat.ipaas:salesforce-notification-connector:0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:salesforce-notification-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "salesforce-notification"
         }
       ]
@@ -240,7 +240,7 @@
       "properties": {},
       "actions": [
         {
-          "id": "com.redhat.ipaas:http-get-connector:0.2.1",
+          "id": "com.redhat.ipaas:http-get-connector:latest",
           "name": "HTTP GET",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "inputDataShape": {
@@ -263,11 +263,11 @@
               "description": "The url of the HTTP endpoint to call."
             }
           },
-          "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "http-get"
         },
         {
-          "id": "com.redhat.ipaas:http-post-connector:0.2.1",
+          "id": "com.redhat.ipaas:http-post-connector:latest",
           "name": "HTTP POST",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "inputDataShape": {
@@ -290,7 +290,7 @@
               "description": "The url of the HTTP endpoint to call."
             }
           },
-          "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "http-post"
         }
       ]
@@ -306,7 +306,7 @@
       "properties": {},
       "actions": [
         {
-          "id": "com.redhat.ipaas_timer-connector_0.2.1",
+          "id": "com.redhat.ipaas_timer-connector:latest",
           "name": "Periodic Timer",
           "description": "Set a timer that fires at intervals that you specify",
           "inputDataShape": {
@@ -329,7 +329,7 @@
               "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
             }
           },
-          "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
+          "camelConnectorGAV": "com.redhat.ipaas:timer-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "periodic-timer"
         }
       ]
@@ -424,7 +424,7 @@
           },
           "action": {
             "id": "1",
-            "connectorId": "org.foo_twitter-mention-connector_0.2.1",
+            "connectorId": "org.foo:twitter-mention-connector:latest",
             "description": "Connection from twitter when anyone mention you",
             "inputDataShape": {
                 "dataType" : "none"
@@ -433,7 +433,7 @@
                 "dataType" : "java:twitter4j.Status"
             },
             "name": "Twitter Mention",
-            "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:0.2.1",
+            "camelConnectorGAV": "com.redhat.ipaas:twitter-mention-connector:@ipaas-connectors.version@",
             "camelConnectorPrefix": "twitter-mention",
             "properties": {
             }
@@ -479,9 +479,9 @@
             "outputDataShape": {
                "dataType" : "none"
             },
-            "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:0.2.1",
+            "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:@ipaas-connectors.version@",
             "camelConnectorPrefix": "salesforce-upsert-contact",
-            "connectorId": "org.foo_salesforce-upsert-contact-connector_1.0",
+            "connectorId": "org.foo:salesforce-upsert-contact-connector:latest",
             "properties": {
             }
           },
@@ -516,7 +516,7 @@
             "configuredProperties": {}
           },
           "action": {
-            "id": "com.redhat.ipaas_timer-connector_0.2.1",
+            "id": "com.redhat.ipaas_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
             "inputDataShape": {
@@ -525,7 +525,7 @@
             "outputDataShape": {
                "dataType" : "*"
             },
-            "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
+            "camelConnectorGAV": "com.redhat.ipaas:timer-connector:@ipaas-connectors.version@",
             "camelConnectorPrefix": "periodic-timer",
             "properties": {
               "period": {
@@ -566,7 +566,7 @@
             "configuredProperties": {}
           },
           "action": {
-            "id": "com.redhat.ipaas:http-post-connector:0.2.1",
+            "id": "com.redhat.ipaas:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
             "inputDataShape": {
@@ -575,7 +575,7 @@
             "outputDataShape": {
                "dataType" : "*"
             },
-            "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.1",
+            "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:@ipaas-connectors.version@",
             "camelConnectorPrefix": "http-post",
             "properties": {
               "httpUri": {
@@ -608,7 +608,7 @@
             "configuredProperties": {}
           },
           "action": {
-            "id": "com.redhat.ipaas:http-get-connector:0.2.1",
+            "id": "com.redhat.ipaas:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
             "inputDataShape": {
@@ -617,7 +617,7 @@
             "outputDataShape": {
                "dataType" : "*"
             },
-            "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.1",
+            "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:@ipaas-connectors.version@",
             "camelConnectorPrefix": "http-get",
             "properties": {
               "httpUri": {
