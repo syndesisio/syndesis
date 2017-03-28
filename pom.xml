@@ -75,6 +75,14 @@
 
   <repositories>
     <repository>
+      <id>ipaas-releases</id>
+      <name>ipaas-releases</name>
+      <url>https://dl.bintray.com/redhat-ipaas/maven/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
       <id>apache.snapshots</id>
       <name>Apache Development Snapshot Repository</name>
       <url>https://repository.apache.org/content/repositories/snapshots/</url>
