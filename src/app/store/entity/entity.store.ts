@@ -121,14 +121,13 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
   }
 
   private massageError(error: any) {
-    console.log("Error (in store): ", error);
     switch (typeof error) {
       case 'object':
         return error;
       case 'string':
         try {
           return JSON.parse(error);
-        } catch(err) {
+        } catch (err) {
           // some random text back from the server :-(
           return { error: error };
         }
