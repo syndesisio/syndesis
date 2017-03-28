@@ -29,10 +29,10 @@
           <div class="step-line"></div>
         <template #firstPopTemplate>
           <div class="popover-body">
-            <div>
+            <div *ngIf="!selectedKind || selectedKind === 'step'">
               <a (click)="insertStepAfter(0)">Add a step</a>
             </div>
-            <div>
+            <div *ngIf="!selectedKind || selectedKind === 'connection'">
               <a (click)="insertConnectionAfter(0)">Add a connection</a>
             </div>
           </div>
@@ -58,10 +58,10 @@
           <div class="step-line"></div>
           <template #firstPopTemplate>
             <div class="popover-body">
-              <div>
+              <div *ngIf="!selectedKind || selectedKind === 'step'">
                 <a (click)="insertStepAfter(position + 1)">Add a step</a>
               </div>
-              <div>
+              <div *ngIf="!selectedKind || selectedKind === 'connection'">
                 <a (click)="insertConnectionAfter(position + 1)">Add a connection</a>
               </div>
             </div>

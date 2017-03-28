@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -22,6 +22,8 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
   flowSubscription: Subscription;
   childRouteSubscription: Subscription;
   urls: UrlSegment[];
+  selectedKind: string = undefined;
+  @ViewChildren(PopoverDirective) popovers: PopoverDirective[];
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -86,6 +88,10 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
   }
 
   insertStepAfter(position: number) {
+    this.popovers.forEach((popover) => {
+      popover.hide();
+    });
+    this.selectedKind = undefined;
     const target = position + 1;
     const step = TypeFactory.createStep();
     this.currentFlow.steps.splice(target, 0, step);
@@ -93,6 +99,10 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
   }
 
   insertConnectionAfter(position: number) {
+    this.popovers.forEach((popover) => {
+      popover.hide();
+    });
+    this.selectedKind = undefined;
     const target = position + 1;
     const step = TypeFactory.createStep();
     step.stepKind = 'endpoint';
@@ -120,6 +130,22 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
       case 'integration-connection-select':
         break;
       case 'integration-connection-configure':
+        break;
+      case 'integration-add-step':
+          switch (event['type']) {
+            case 'connection':
+              this.insertConnectionAfter(0);
+              return;
+            case 'step':
+              this.insertStepAfter(0);
+              return;
+          }
+        break;
+      case 'integration-show-popouts':
+        this.selectedKind = event['type'];
+        this.popovers.forEach((popover) => {
+          popover.show();
+        });
         break;
     }
     this.detector.detectChanges();

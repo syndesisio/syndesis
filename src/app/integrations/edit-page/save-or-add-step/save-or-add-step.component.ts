@@ -79,6 +79,20 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
     }
   }
 
+  addNew(type: string) {
+    this.currentFlow.events.emit({
+      kind: 'integration-add-step',
+      type: type,
+    });
+  }
+
+  showPopouts(type: string) {
+    this.currentFlow.events.emit({
+      kind: 'integration-show-popouts',
+      type: type,
+    });
+  }
+
   insertStepAfter(position: number) {
     const target = position + 1;
     const step = TypeFactory.createStep();
