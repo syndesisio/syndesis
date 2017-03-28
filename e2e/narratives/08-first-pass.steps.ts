@@ -6,8 +6,9 @@ import { TableDefinition, CallbackStepDefinition } from 'cucumber';
 import { World, P, expect } from '../common/world';
 import { ConnectionsListComponent } from '../connections/list/list.po';
 import { ConnectionDetailPage } from '../connections/detail/detail.po';
-import { IntegrationEditPage } from '../integrations/edit/edit.po';
+import { IntegrationEditPage, ListActionsComponent } from '../integrations/edit/edit.po';
 import { log } from '../../src/app/logging';
+import { IntegrationsListPage } from '../integrations/list/list.po';
 
 /**
  * Created by jludvice on 1.3.17.
@@ -25,14 +26,6 @@ class FirstPass {
 
     log.info(`should set connection details for ${arg1}: ${table}`);
     callback();
-  }
-
-  @then(/^Camilla is presented with the iPaaS homepage "([^"]*)"$/)
-  public async verifyHomepage(arg1: string): P<any> {
-    // Write code here that turns the phrase above into concrete actions
-    const currentLink = await this.world.app.link(arg1);
-    log.info(`current navlink: ${currentLink}`);
-    expect(currentLink.active, 'Dashboard link must be active').to.be.true;
   }
 
 
@@ -62,14 +55,12 @@ class FirstPass {
     callback(null, 'pending');
   }
 
+  @when(/defines integration name "([^"]*)"$/)
+  public defineIntegrationName(integrationName: string, callback: CallbackStepDefinition): void {
+    // Write code here that turns the phrase above into concrete actions
+    const page = new IntegrationEditPage();
 
-  @when(/^clicks on a "([^"]*)" button to create a new integration\.$/)
-  public clickOnButton(buttonTitle: string, callback: CallbackStepDefinition): void {
-    this.world.app.clickButton(buttonTitle)
-      .then(() => callback())
-      // it may fail but we still want to let tests continue
-      .catch((e) => callback(e));
-
+    page.basicsComponent().setName(integrationName).then(() => callback());
   }
 
 
@@ -107,6 +98,12 @@ class FirstPass {
     return page.connectionSelectComponent().connectionListComponent().goToConnection(connectionName);
   }
 
+  @when(/^she selects "([^"]*)" integration action$/)
+  public selectIntegrationAction(action: string, callback): void {
+    const page = new ListActionsComponent();
+    page.selectAction(action).then(() => callback());
+  }
+
 
   @when(/^she fills "([^"]*)" connection details$/)
   public fillConnectionDetails(connectionName: string, callback: CallbackStepDefinition): void {
@@ -115,31 +112,12 @@ class FirstPass {
   }
 
 
-  @when(/^click "([^"]*)" button$/)
-  public clickButton(title: string, callback: CallbackStepDefinition): void {
-    // Write code here that turns the phrase above into concrete actions
-    callback(null, 'pending');
-  }
-
-
-  @when(/^Camilla navigates to the "([^"]*)" page$/)
-  public navigateToPage(pageTitle: string, callback: CallbackStepDefinition): void {
-    // Write code here that turns the phrase above into concrete actions
-    callback(null, 'pending');
-  }
-
-
-  @when(/^selects the "([^"]*)" integration$/)
-  public selectIntegration(integrationTitle: string, callback: CallbackStepDefinition): void {
-    // Write code here that turns the phrase above into concrete actions
-    callback(null, 'pending');
-  }
-
-
-  @then(/^she is presented with "([^"]*)" integration detail$/)
-  public verifyIntegrationDetail(arg1: string, callback: CallbackStepDefinition): void {
-    // Write code here that turns the phrase above into concrete actions
-    callback(null, 'pending');
+  @then(/^Integration "([^"]*)" is present in integrations list$/)
+  public expectIntegrationPresent(name: string, callback: CallbackStepDefinition): void {
+    log.info(`Verifying integration ${name} is present`);
+    const page = new IntegrationsListPage();
+    expect(page.listComponent().isIntegrationPresent(name), `Integration ${name} must be present`)
+      .to.eventually.be.true.notify(callback);
   }
 }
 

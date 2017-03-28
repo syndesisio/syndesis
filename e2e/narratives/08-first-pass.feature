@@ -14,7 +14,7 @@ Feature: Sprint 8 narrative
 
   Scenario: First pass at login, homepage
     When "Camilla" logs into the iPaaS URL for her installation (e.g. rh-ipaas.[openshift online domain].com)
-    Then Camilla is presented with the iPaaS homepage "Dashboard"
+    Then Camilla is presented with the iPaaS page "Dashboard"
 
   Scenario: Explore connections
     When "Camilla" navigates to the "Connections" page to see what's available in the iPaaS
@@ -23,22 +23,27 @@ Feature: Sprint 8 narrative
 
   Scenario: Create connection
     When "Camilla" navigates to the "Home" page
-    And clicks on a "Create Integration" button to create a new integration.
+    And clicks on the "Create Integration" button to create a new integration.
     Then she is presented with a visual integration editor
     And she is prompted to select a "Start" connection from a list of available connections
 
     When Camilla selects the "Twitter Example" connection
-    And she fills "Twitter" connection details
-    And click "Next" button
+    And she selects "Mention" integration action
+    And click on the "Next" button
     Then she is prompted to select a "Finish" connection from a list of available connections
 
-    When Camilla selects the "Salesforce" connection
-    And she fills "Salesforce" connection details
-    And click "Create" button
-    # todo create button wasn't enabled
+    When Camilla selects the "Salesforce Example" connection
+    And she selects "Create Opportunity" integration action
+    And click on the "Next" button
+    Then she is presented with the "Add a Step" button
 
-  Scenario: Camilla wants to confirm that her integration is available
-    When Camilla navigates to the "Integrations" page
-    And selects the "Camilla testing integration" integration
-    Then she is presented with "Camilla testing integration" integration detail
+#    try to publish without integration name will open basics page
+    When Camilla clicks on the "Publish" button
+    And she defines integration name "My awesome first integration"
+    And click on the "Next" button
+    Then she is presented with the "Add a Step" button
 
+#    publish again should publish integration
+    When Camilla clicks on the "Publish" button
+    Then Camilla is presented with the iPaaS page "Integrations"
+    And Integration "My awesome first integration" is present in integrations list

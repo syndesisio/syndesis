@@ -2,7 +2,7 @@
  * Created by jludvice on 8.3.17.
  */
 import { CallbackStepDefinition } from 'cucumber';
-import { binding, given, when } from 'cucumber-tsflow';
+import { binding, given, when, then } from 'cucumber-tsflow';
 import { Promise as P } from 'es6-promise';
 import { World, expect } from './world';
 import { User } from './common';
@@ -48,6 +48,33 @@ class CommonSteps {
     const link = await this.world.app.link(linkTitle);
     expect(link, `Navigation link ${linkTitle} should exist`).to.exist;
     return link.element.click();
+  }
+
+  @then(/^(\w+)? ?is presented with the iPaaS page "([^"]*)"$/)
+  public async verifyHomepage(alias: string, pageTitle: string): P<any> {
+    // Write code here that turns the phrase above into concrete actions
+    const currentLink = await this.world.app.link(pageTitle);
+    log.info(`${alias} is on current navlink: ${currentLink}`);
+    expect(currentLink.active, `${pageTitle} link must be active`).to.be.true;
+  }
+
+  @when(/clicks? on the "([^"]*)" button.*$/)
+  public clickOnButton(buttonTitle: string, callback: CallbackStepDefinition): void {
+    this.world.app.clickButton(buttonTitle)
+      .then(() => callback())
+      // it may fail but we still want to let tests continue
+      .catch((e) => callback(e));
+  }
+
+  @then(/^she is presented with the "([^"]*)" button.*$/)
+  public expectButtonPresent(buttonTitle: string, callback: CallbackStepDefinition): void {
+
+    const button = this.world.app.getButton(buttonTitle);
+    expect(button.isPresent(), `There must be present a button ${buttonTitle}`)
+      .to.eventually.be.true;
+
+    expect(button.isPresent(), `There must be enabled button ${buttonTitle}`)
+      .to.eventually.be.true.notify(callback);
   }
 }
 
