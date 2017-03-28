@@ -78,6 +78,14 @@
     minimist "^1.2.0"
     reflect-metadata "^0.1.2"
 
+"@angular/compiler-cli@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-4.0.0.tgz#35b2d40cd35135aecec4be659532148f5ac67da6"
+  dependencies:
+    "@angular/tsc-wrapped" "4.0.0"
+    minimist "^1.2.0"
+    reflect-metadata "^0.1.2"
+
 "@angular/compiler@2.4.7", "@angular/compiler@~2.4.0":
   version "2.4.7"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-2.4.7.tgz#008c1f0d1409c46fbba215fe8ab0d886252c7ff0"
@@ -102,6 +110,13 @@
   version "2.4.7"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-2.4.7.tgz#19f7996a70f07b34ce8d6d0e255544e62cae75f1"
 
+"@angular/platform-server@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-4.0.0.tgz#d76d61787cd3be3ce8ed46043d6a8c82572f567d"
+  dependencies:
+    parse5 "^3.0.1"
+    xhr2 "^0.1.4"
+
 "@angular/router@3.4.7", "@angular/router@~3.4.0":
   version "3.4.7"
   resolved "https://registry.yarnpkg.com/@angular/router/-/router-3.4.7.tgz#e9583eed5a1d50cc1628b2526244555444a746b8"
@@ -111,6 +126,12 @@
   resolved "https://registry.yarnpkg.com/@angular/tsc-wrapped/-/tsc-wrapped-0.5.2.tgz#2eddf472c467fcb334ea94deddaaa71990c5a482"
   dependencies:
     tsickle "^0.2"
+
+"@angular/tsc-wrapped@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@angular/tsc-wrapped/-/tsc-wrapped-4.0.0.tgz#ea91eeda98029cdb0a4ac37d5e25d9d12a4333c1"
+  dependencies:
+    tsickle "^0.21.0"
 
 "@ng2-dynamic-forms/core@1.3.13":
   version "1.3.13"
@@ -2928,23 +2949,27 @@ invert-kv@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
-"ipaas.data.mapper@https://github.com/redhat-ipaas/datamapper-ui.git#6a6f374782621b09610169ee155555e5a8dc2355":
+"ipaas.data.mapper@https://github.com/redhat-ipaas/datamapper-ui.git#08c46fd1b905017d193f1db085b2d08e4dc4247c":
   version "1.0.0"
-  resolved "https://github.com/redhat-ipaas/datamapper-ui.git#6a6f374782621b09610169ee155555e5a8dc2355"
+  resolved "https://github.com/redhat-ipaas/datamapper-ui.git#08c46fd1b905017d193f1db085b2d08e4dc4247c"
   dependencies:
     "@angular/common" "~2.4.0"
     "@angular/compiler" "~2.4.0"
+    "@angular/compiler-cli" "^4.0.0"
     "@angular/core" "~2.4.0"
     "@angular/forms" "~2.4.0"
     "@angular/http" "~2.4.0"
     "@angular/platform-browser" "~2.4.0"
     "@angular/platform-browser-dynamic" "~2.4.0"
+    "@angular/platform-server" "^4.0.0"
     "@angular/router" "~3.4.0"
     angular-in-memory-web-api "~0.2.4"
     bootstrap "^3.3.7"
     core-js "^2.4.1"
-    ng2-bootstrap "1.3.3"
-    patternfly "^3.20.0"
+    mkdirp "^0.5.1"
+    moment "^2.18.1"
+    ncp "^2.0.0"
+    ng2-bootstrap "1.4.2"
     rxjs "5.1.1"
     systemjs "0.19.40"
     zone.js "^0.7.4"
@@ -3804,6 +3829,10 @@ moment@2.17.1:
   version "2.17.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.1.tgz#fed9506063f36b10f066c8b59a144d7faebe1d82"
 
+moment@^2.18.1:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
+
 moment@~2.14.1:
   version "2.14.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.14.1.tgz#b35b27c47e57ed2ddc70053d6b07becdb291741c"
@@ -3842,6 +3871,10 @@ ncname@1.0.x:
   dependencies:
     xml-char-classes "^1.0.0"
 
+ncp@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ncp/-/ncp-2.0.0.tgz#195a21d6c46e361d2fb1281ba38b91e9df7bdbb3"
+
 negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
@@ -3849,6 +3882,12 @@ negotiator@0.6.1:
 ng2-bootstrap@1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/ng2-bootstrap/-/ng2-bootstrap-1.3.3.tgz#2c66781d2e4d4620237bd455250105dab97ee94f"
+  dependencies:
+    moment "2.17.1"
+
+ng2-bootstrap@1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/ng2-bootstrap/-/ng2-bootstrap-1.4.2.tgz#39f3886967f21cffd362d8feb28cc47eecacf153"
   dependencies:
     moment "2.17.1"
 
@@ -4211,6 +4250,12 @@ parse-json@^2.1.0, parse-json@^2.2.0:
   dependencies:
     error-ex "^1.2.0"
 
+parse5@^3.0.1:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/parse5/-/parse5-3.0.2.tgz#05eff57f0ef4577fb144a79f8b9a967a6cc44510"
+  dependencies:
+    "@types/node" "^6.0.46"
+
 parsejson@0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/parsejson/-/parsejson-0.0.3.tgz#ab7e3759f209ece99437973f7d0f1f64ae0e64ab"
@@ -4288,7 +4333,7 @@ patternfly-bootstrap-treeview@~2.1.0:
     bootstrap "3.3.x"
     jquery ">= 2.1.x"
 
-patternfly@3.20.0, patternfly@^3.20.0:
+patternfly@3.20.0:
   version "3.20.0"
   resolved "https://registry.yarnpkg.com/patternfly/-/patternfly-3.20.0.tgz#d1be3bf8d6b91ee5cc57c852cba106bf2d66ee15"
   dependencies:
@@ -5825,6 +5870,15 @@ tsickle@^0.2:
     source-map "^0.5.6"
     source-map-support "^0.4.2"
 
+tsickle@^0.21.0:
+  version "0.21.6"
+  resolved "https://registry.yarnpkg.com/tsickle/-/tsickle-0.21.6.tgz#53b01b979c5c13fdb13afb3fb958177e5991588d"
+  dependencies:
+    minimist "^1.2.0"
+    mkdirp "^0.5.1"
+    source-map "^0.5.6"
+    source-map-support "^0.4.2"
+
 tslint@^4.5.1:
   version "4.5.1"
   resolved "https://registry.yarnpkg.com/tslint/-/tslint-4.5.1.tgz#05356871bef23a434906734006fc188336ba824b"
@@ -6335,6 +6389,10 @@ xdg-basedir@^2.0.0:
 xdg-basedir@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/xdg-basedir/-/xdg-basedir-3.0.0.tgz#496b2cc109eca8dbacfe2dc72b603c17c5870ad4"
+
+xhr2@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.1.4.tgz#7f87658847716db5026323812f818cadab387a5f"
 
 xml-char-classes@^1.0.0:
   version "1.0.0"
