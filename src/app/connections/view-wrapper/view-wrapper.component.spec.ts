@@ -12,6 +12,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 
+import { ModalModule } from 'ng2-bootstrap/modal';
+import { ToasterModule } from 'angular2-toaster';
+
 import { ConnectionViewWrapperComponent } from './view-wrapper.component';
 import { ConnectionViewToolbarComponent } from '../view-toolbar/view-toolbar.component';
 import { ConnectionsListComponent } from '../list/list.component';
@@ -37,6 +40,8 @@ describe('ConnectionViewWrapperComponent', () => {
           StoreModule,
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),
+          ModalModule,
+          ToasterModule,
         ],
         declarations: [
           ConnectionViewWrapperComponent,
