@@ -9,6 +9,7 @@
       <property name="env.teardown.script.url">teardown.sh</property>
       <property name="wait.for.service.list">ipaas-rest ipaas-ui ipaas-keycloak</property>
       <property name="wait.timeout">600000</property>
+      <property name="namespace.cleanup.enabled">false</property>
       <property name="namespace.destroy.enabled">true</property>
     </extension>
 
