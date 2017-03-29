@@ -19,6 +19,7 @@
           "id": 4
         },
         "action": {
+          "connectorId": "http",
           "description": "Set a timer that fires at intervals that you specify",
           "properties": {
             "period": {
@@ -56,6 +57,7 @@
           "id": 3
         },
         "action": {
+          "connectorId": "http",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "properties": {
             "httpUri": {
@@ -101,6 +103,7 @@
           "id": 3
         },
         "action": {
+          "connectorId": "http",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "properties": {
             "httpUri": {

@@ -15,16 +15,18 @@
  */
 package com.redhat.ipaas.project.converter;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import com.redhat.ipaas.model.integration.Integration;
+@ConfigurationProperties("generator")
+public class ProjectGeneratorProperties {
 
-import java.io.IOException;
-import java.util.Map;
+    private Boolean secretMaskingEnabled = false;
 
+    public Boolean isSecretMaskingEnabled() {
+        return secretMaskingEnabled;
+    }
 
-public interface ProjectGenerator {
-
-    Map<String, byte[]> generate(GenerateProjectRequest request) throws IOException;
-
-    byte[] generatePom(Integration integration) throws IOException;
+    public void setSecretMaskingEnabled(Boolean secretMaskingEnabled) {
+        this.secretMaskingEnabled = secretMaskingEnabled;
+    }
 }

@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.project.converter;
+package com.redhat.ipaas.openshift;
 
 
-import com.redhat.ipaas.model.integration.Integration;
+import org.immutables.value.Value;
 
-import java.io.IOException;
 import java.util.Map;
 
+@Value.Immutable
+public interface CreateResourcesRequest {
 
-public interface ProjectGenerator {
+    String getName();
+    String getGitRepository();
+    String getWebhookSecret();
+    Map<String, String> getSecretData();
 
-    Map<String, byte[]> generate(GenerateProjectRequest request) throws IOException;
-
-    byte[] generatePom(Integration integration) throws IOException;
 }

@@ -13,6 +13,7 @@
 
   <properties>
     <spring-boot.version>@spring-boot.version@</spring-boot.version>
+    <spring-cloud-kubernetes.version>@spring-cloud-kubernetes.version@</spring-cloud-kubernetes.version>
     <camel.version>@camel.version@</camel.version>
     <funktion.version>@funktion.version@</funktion.version>
   </properties>
@@ -81,6 +82,13 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>spring-cloud-kubernetes-bom</artifactId>
+        <version>${spring-cloud-kubernetes.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -111,6 +119,10 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>spring-cloud-kubernetes-core</artifactId>
     </dependency>
 
     <!-- Funktion runtime -->

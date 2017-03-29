@@ -22,6 +22,8 @@ import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Map;
+
 public class OpenShiftServiceImpl implements OpenShiftService {
 
     private final NamespacedOpenShiftClient openShiftClient;
@@ -33,8 +35,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public void createOpenShiftResources(String name, String gitRepo, String webhookSecret) {
-        String sanitizedName = sanitizeName(name);
+    public void createOpenShiftResources(CreateResourcesRequest request) {
+        String sanitizedName = sanitizeName(request.getName());
 
         String token = getAuthenticationTokenString();
         RequestConfig requestConfig = new RequestConfigBuilder().withOauthToken(token).build();
@@ -42,7 +44,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             DockerImage img = new DockerImage(builderImage);
             ensureImageStreams(sanitizedName, img);
             ensureDeploymentConfig(sanitizedName);
-            ensureBuildConfig(sanitizedName, gitRepo, img, webhookSecret);
+            ensureSecret(sanitizedName, request.getSecretData());
+            ensureBuildConfig(sanitizedName, request.getGitRepository(), img, request.getWebhookSecret());
             return null;
         });
     }
@@ -68,7 +71,18 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewSpec()
             .addNewContainer()
             .withImage(" ").withImagePullPolicy("Always").withName(projectName).addNewPort().withContainerPort(8778).endPort()
+            .addNewVolumeMount()
+                .withName("secret-volume")
+                .withMountPath("/opt/integration/secrets.properties")
+                .withReadOnly(false)
+            .endVolumeMount()
             .endContainer()
+            .addNewVolume()
+                .withName("secret-volume")
+                .withNewSecret()
+                    .withSecretName(projectName)
+                .endSecret()
+            .endVolume()
             .endSpec()
             .endTemplate()
             .addNewTrigger().withType("ConfigChange").endTrigger()
@@ -100,6 +114,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .endStrategy()
             .withNewOutput().withNewTo().withKind("ImageStreamTag").withName(projectName + ":latest").endTo().endOutput()
             .endSpec()
+            .done();
+    }
+
+    private void ensureSecret(String projectName, Map<String, String> secretData) {
+        openShiftClient.secrets().withName(projectName).createOrReplaceWithNew()
+            .withNewMetadata().withName(projectName).endMetadata()
+            .withStringData(secretData)
             .done();
     }
 

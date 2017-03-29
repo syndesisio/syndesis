@@ -54,6 +54,10 @@
       <artifactId>keycloak-spring-security-adapter</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+    </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
 

@@ -1,0 +1,43 @@
+{
+  "http": {
+    "kind": "Connector",
+      "id": "http",
+      "name": "Http",
+      "description": "Http Connector",
+      "icon": "http",
+      "properties": {
+        "username": {
+          "kind": "property",
+          "displayName": "Username",
+          "group": "security",
+          "label": "security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description": "The username"
+        },
+        "password": {
+          "kind": "property",
+          "displayName": "Password",
+          "group": "security",
+          "label": "security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description": "The password"
+        }
+      }
+  },
+  "timer": {
+    "kind": "Connector",
+      "id": "timer",
+      "name": "Timer",
+      "description": "Timer Connector",
+      "icon": "fa-puzzle-piece",
+      "properties": {}
+    }
+}

@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.redhat.ipaas.model.Kind;
@@ -50,6 +52,28 @@ public interface Connector extends WithId<Connector>, WithName, Serializable {
     @Override
     default Connector withId(String id) {
         return new Builder().createFrom(this).id(id).build();
+    }
+
+    /**
+     * Filters the properties that the {@link Connector} considers sensitive / secret.
+     * @param properties        The specified configuration.
+     * @return                  A map with just the sensitive data.
+     */
+    default Map<String, String> filterSecrets(Map<String, String> properties) {
+        return filterSecrets(properties, e -> e.getValue());
+    }
+
+    /**
+     * Filters the properties that the {@link Connector} considers sensitive / secret.
+     * @param properties        The specified configuration.
+     * @param valueConverter    A {@link Function} that is applies to each {@link Map.Entry} of the configuration.
+     * @return                  A map with just the sensitive data.
+     */
+    default Map<String, String> filterSecrets(Map<String, String> properties, Function<Map.Entry<String, String>, String> valueConverter) {
+        return properties.entrySet()
+            .stream()
+            .filter(e -> this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && this.getProperties().get(e.getKey()).getSecret())
+            .collect(Collectors.toMap(e -> e.getKey(), e -> valueConverter.apply(e)));
     }
 
     class Builder extends ImmutableConnector.Builder {

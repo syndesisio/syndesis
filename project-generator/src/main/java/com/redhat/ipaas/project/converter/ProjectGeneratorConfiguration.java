@@ -16,15 +16,18 @@
 package com.redhat.ipaas.project.converter;
 
 import com.redhat.ipaas.connector.catalog.ConnectorCatalog;
+
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@EnableConfigurationProperties(ProjectGeneratorProperties.class)
 public class ProjectGeneratorConfiguration {
 
     @Bean
-    public ProjectGenerator projectConverter(ConnectorCatalog connectorCatalog) {
-        return new DefaultProjectGenerator(connectorCatalog);
+    public ProjectGenerator projectConverter(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties properties) {
+        return new DefaultProjectGenerator(connectorCatalog, properties);
     }
 
 }

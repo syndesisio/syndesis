@@ -16,11 +16,13 @@
 package com.redhat.ipaas.rest.v1.handler.integration;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Path;
 
@@ -28,11 +30,18 @@ import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.github.GitHubService;
 import com.redhat.ipaas.model.Kind;
+import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.integration.Integration;
+import com.redhat.ipaas.model.integration.Step;
+import com.redhat.ipaas.openshift.ImmutableCreateResourcesRequest;
 import com.redhat.ipaas.openshift.OpenShiftService;
+import com.redhat.ipaas.project.converter.GenerateProjectRequest;
+import com.redhat.ipaas.project.converter.ImmutableGenerateProjectRequest;
 import com.redhat.ipaas.project.converter.ProjectGenerator;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
+
+import io.fabric8.funktion.model.StepKinds;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -65,7 +74,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     public Kind resourceKind() {
         return Kind.Integration;
     }
-    
+
     @Override
     public Integration get(String id) {
 
@@ -113,7 +122,13 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             Integration integrationWithGitRepoName = ensureGitRepoName(integration);
             String repoName = integrationWithGitRepoName.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
 
-            Map<String, byte[]> fileContents = projectConverter.generate(integrationWithGitRepoName);
+            GenerateProjectRequest request = ImmutableGenerateProjectRequest
+                .builder()
+                .integration(integrationWithGitRepoName)
+                .connectors(connectorsMap())
+                .build();
+
+            Map<String, byte[]> fileContents = projectConverter.generate(request);
 
             // Secret to be used in the build trigger
             String webHookUrl = createWebHookUrl(repoName, secret);
@@ -151,7 +166,41 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         return UUID.randomUUID().toString();
     }
 
-    private void ensureOpenShiftResources(Integration integration, String secret) {
-        integration.getGitRepo().ifPresent(gitRepo -> openShiftService.createOpenShiftResources(integration.getName(), gitRepo, secret));
+    private Map<String, Connector> connectorsMap() {
+        return getDataManager().fetchAll(Connector.class).getItems().stream().collect(Collectors.toMap(o -> o.getId().get(), o -> o));
+    }
+
+    private void ensureOpenShiftResources(Integration integration, String webHookSecret) {
+        integration.getGitRepo().ifPresent(gitRepo -> openShiftService.createOpenShiftResources(ImmutableCreateResourcesRequest.builder()
+            .name(integration.getName())
+            .gitRepository(gitRepo)
+            .webhookSecret(webHookSecret)
+            .secretData(extractSecretsFrom(integration))
+            .build()));
+    }
+
+    private Map<String, String> extractSecretsFrom(Integration integration) {
+        Map<String, String> secrets = new HashMap<>();
+        Map<String, Connector> connectorMap = connectorsMap();
+
+        integration.getSteps().ifPresent(steps -> {
+            for (Step step : steps) {
+                if (step.getStepKind().equals(StepKinds.ENDPOINT)) {
+                    step.getAction().ifPresent(action -> {
+                        step.getConnection().ifPresent(connection -> {
+                                String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
+                                if (!connectorMap.containsKey(connectorId)) {
+                                    throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
+                                }
+                                Connector connector = connectorMap.get(connectorId);
+                                secrets.putAll(connector.filterSecrets(connection.getConfiguredProperties()));
+                                secrets.putAll(connector.filterSecrets(step.getConfiguredProperties()));
+                        });
+                    });
+                    continue;
+                }
+            }
+        });
+        return secrets;
     }
 }
