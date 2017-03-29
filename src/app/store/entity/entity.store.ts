@@ -24,7 +24,7 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
 
   private changeEvents: Observable<ChangeEvent>;
 
-  constructor(private service: R, private eventService: EventsService, initialList: L, initialCurrent: T) {
+  constructor(public service: R, private eventService: EventsService, initialList: L, initialCurrent: T) {
     this._list = new BehaviorSubject<L>(initialList);
     this._current = new BehaviorSubject<T>(initialCurrent);
 

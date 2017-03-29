@@ -11,4 +11,8 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
     super(restangular.service('connectors'), 'connector');
   }
 
+  validate(id: string, data: Map<string, string>) {
+    return this.restangularService.one(id).one('verifier').customPOST(data);
+  }
+
 }
