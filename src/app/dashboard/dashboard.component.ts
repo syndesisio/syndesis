@@ -28,14 +28,6 @@ export class DashboardComponent implements OnInit {
     this.loading = this.connectionStore.loading;
   }
 
-  onSelect(item) {
-    log.debugc(() => 'Selected item (list): ' + item.name, category);
-  }
-
-  isSelected(item) {
-    return item.id === this.selectedId;
-  }
-
   ngOnInit() {
     this.connectionStore.loadAll();
     this.integrationStore.loadAll();

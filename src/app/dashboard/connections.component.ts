@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { log, getCategory } from '../logging';
 
@@ -17,21 +16,8 @@ export class DashboardConnectionsComponent implements OnInit {
 
   @Input() connections: Connections;
   @Input() loading: boolean;
-  selectedId = undefined;
   truncateLimit = 80;
   truncateTrail = '…';
-
-  @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
-
-  onSelect(connection: Connection) {
-    log.debugc(() => 'Selected connection (list): ' + connection.name, category);
-    this.selectedId = connection.id;
-    this.onSelected.emit(connection);
-  }
-
-  isSelected(connection: Connection) {
-    return connection.id === this.selectedId;
-  }
 
   toggled(open): void {
     log.debugc(() => 'Dropdown is now: ' + open);

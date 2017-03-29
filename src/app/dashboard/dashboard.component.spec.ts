@@ -7,6 +7,9 @@ import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ng2-restangular';
 
+import { ModalModule } from 'ng2-bootstrap/modal';
+import { ToasterModule } from 'angular2-toaster';
+
 import { IPaaSCommonModule } from '../common/common.module';
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
@@ -25,6 +28,8 @@ describe('DashboardComponent', () => {
       imports: [IPaaSCommonModule, StoreModule, RouterTestingModule.withRoutes([]), RestangularModule.forRoot()],
       declarations: [
         DashboardComponent,
+        ModalModule.forRoot(),
+        ToasterModule,
         EmptyStateComponent,
         //PopularTemplatesComponent,
         //TemplatesListComponent,

@@ -4,8 +4,7 @@
   
   <ipaas-dashboard-integrations *ngIf="integrations.length !== 0"
                                [integrations]="integrations | async"
-                               [loading]="loading | async"
-                               (onSelect)="onSelect($event)"></ipaas-dashboard-integrations>
+                               [loading]="loading | async"></ipaas-dashboard-integrations>
   
   <!-- No Integrations -->
   

@@ -49,6 +49,11 @@
               <!-- Name -->
 
               <div class="col-xs-4 name">
+                <!--
+                <a href="" [routerLink]="['/integrations', integration.id]">
+                  {{ integration.name }}
+                </a>
+                -->
                 {{ integration.name }}
               </div>
 
@@ -79,7 +84,7 @@
                   <ul class="dropdown-menu dropdown-menu-right"
                       aria-labelledby="dropdownKebabRight9">
                     <li>
-                      <a [routerLink]=" ['edit', integration.id, 'save-or-add-step'] ">Edit</a>
+                      <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">Edit</a>
                     </li>
                     <li>
                       <a (click)="requestDeactivate(integration)">Deactivate</a>
@@ -135,9 +140,11 @@
             <div class="row update"
                  *ngFor="let integration of integrations">
               <div class="col-xs-6">
-                <a href="">Update client service</a>
+                <a>Update client service</a>
               </div>
-              <div class="col-xs-2">Draft</div>
+              <div class="col-xs-2">
+                <span class="label label-default">Draft</span>
+              </div>
               <div class="col-xs-4">11 Oct 22:00</div>
             </div>
           </div>
@@ -166,8 +173,7 @@
 
     <div class="row row-cards-pf fourth-row">
 
-      <ipaas-dashboard-connections [connections]="connections | async"
-                                   (onSelect)="onSelect($event)"></ipaas-dashboard-connections>
+      <ipaas-dashboard-connections [connections]="connections | async"></ipaas-dashboard-connections>
 
     </div>
   </div>
