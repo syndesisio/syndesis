@@ -12,7 +12,7 @@
             <div class="card-pf-heading-kebab">
               <!--
           
-              <!-- Card Actions --
+              <!-- Card Actions -->
               <div class="dropdown pull-right dropdown-kebab-pf card-pf-time-frame-filter"
                    (onToggle)="toggled($event)">
                 <button type="button"
@@ -41,13 +41,14 @@
                   </li>
                 </ul>
               </div>
-              -->
 
               <!-- Card Title & Icon -->
 
               <h2 class="card-pf-title">
                 <span class="fa {{ connection.icon }}"></span>
-                <a class="card-title">{{ connection.name }}</a>
+                <p class="card-title">
+                  <a>{{ connection.name }}</a>
+                </p>
               </h2>
             </div>
 
