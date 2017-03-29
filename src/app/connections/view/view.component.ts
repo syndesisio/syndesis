@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { FormGroup } from '@angular/forms';
@@ -24,6 +24,9 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   @Output() connectionChange = new EventEmitter<Connection>();
   @Input() mode = 'view';
   @Input() showName = true;
+  validating = false;
+  validateError: string = undefined;
+  validateSuccess = false;
   connectors: Observable<Connectors>;
   loading: Observable<boolean>;
   filter: ObjectPropertyFilterConfig = {
@@ -43,9 +46,60 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     private store: ConnectorStore,
     private formFactory: FormFactoryService,
     private formService: DynamicFormService,
+    private detector: ChangeDetectorRef,
   ) {
     this.loading = store.loading;
     this.connectors = store.list;
+  }
+
+  showButton(id: string) {
+    switch (id) {
+      case 'salesforce':
+      case 'twitter':
+        return true;
+    }
+    return false;
+  }
+
+  doValidate(connector: Connector, formGroup: FormGroup) {
+    this.validateSuccess = false;
+    this.validateError = undefined;
+    this.validating = true;
+    const data = formGroup.value;
+    const sanitized: any = {};
+    // TODO for some reason some keys have spaces at the beginning
+    for ( const key in data ) {
+      if (!data.hasOwnProperty(key)) {
+        continue;
+      }
+      sanitized[key.trim()] = data[key] || '';
+    }
+    this.store.validate(connector.id, sanitized).subscribe((resp) => {
+      setTimeout(() => {
+        this.validating = false;
+        let errorHit = false;
+        (<Array<any>>resp).forEach((info) => {
+          if (!errorHit) {
+            if (info['status'] === 'ERROR') {
+              errorHit = true;
+              this.validateError = (<Array<any>>info)['errors'].map((err) => {
+                return err['description'];
+              }).join(', \n');
+            }
+          }
+        });
+        if (!errorHit) {
+          this.validateSuccess = true;
+        }
+        this.detector.detectChanges();
+      }, 10);
+    }, (err) => {
+      setTimeout(() => {
+        this.validateError = err.message ? err.message : err;
+        this.validating = false;
+        this.detector.detectChanges();
+      }, 10);
+    });
   }
 
   get name(): string {
