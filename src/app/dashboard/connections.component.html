@@ -45,8 +45,9 @@
               
               <h2 class="card-pf-title">
                 <span class="fa {{ connection.icon }}"></span>
-                <a class="card-title"
-                   [routerLink]="['/connections', connection.id]">{{ connection.name }}</a>
+                <p class="card-title">
+                  <a [routerLink]="['/connections', connection.id]">{{ connection.name }}</a>
+                </p>
               </h2>
             </div>
             
