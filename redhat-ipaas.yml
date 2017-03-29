@@ -529,7 +529,7 @@ objects:
       spec:
         containers:
         - name: ipaas-github-proxy
-          image: ' '
+          image: rhipaas/token-rp:v0.4.0
           imagePullPolicy: IfNotPresent
           args:
           - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
@@ -594,7 +594,7 @@ objects:
       spec:
         containers:
         - name: ipaas-openshift-proxy
-          image: ' '
+          image: rhipaas/token-rp:v0.4.0
           imagePullPolicy: IfNotPresent
           args:
           - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}

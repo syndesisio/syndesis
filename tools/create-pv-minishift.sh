@@ -25,6 +25,7 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
   hostPath:
     path: "/tmp/ipaas-db"
 EOF
