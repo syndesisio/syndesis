@@ -16,67 +16,71 @@
     </div>
   </div>
 
-  <div [class]="columnClass()">
-    <div class="card-pf">
-      <h2 class="card-pf-title">Connection Fields</h2>
+  <div [class]="columnClass()" [ngSwitch]="mode">
+    <!-- Editing the connection configuration -->
+    <div class="card-pf" *ngSwitchCase="'edit'">
+      <h2 class="card-pf-title">{{connection.name}}</h2>
       <div class="card-pf-body">
-        <!-- Viewing the connection configuration -->
-        <div *ngIf="mode === 'view'">
-          <div *ngFor="let field of getFormFields(connection)">
-            <dl class="dl-horizontal">
-              <dt>
-                {{ field.displayName }}
-              </dt>
-              <dd>
-                <div *ngIf="field.secret">{{ getPassword(field.value) }}</div>
-                <div *ngIf="!field.secret">{{ field.value || "&lt;not set&gt;" }}</div>
-              </dd>
-            </dl>
-          </div>
-        </div>
-        <!-- end Viewing -->
-        <!-- Editing the connection configuration -->
-        <div *ngIf="mode === 'edit'">
-          <div *ngIf="formModel && formGroup">
-            <form class="form-horizontal" [formGroup]="formGroup">
-              <dynamic-form-bootstrap-control *ngFor="let controlModel of formModel" [controlGroup]="formGroup" [model]="controlModel"></dynamic-form-bootstrap-control>
-            </form>
-          </div>
-        </div>
-        <!-- end Editing -->
-        <!-- Creating the connection -->
-        <div *ngIf="mode === 'create'">
-          <form class="form-horizontal">
-            <!-- replacing id with data-id to pass build errors -->
-            <div class="form-group required">
-              <label class="col-sm-4 control-label">Connection Name&nbsp;
-                          <span style="color: red">*</span>
-                        </label>
-              <div class="col-sm-8">
-                <input type="text" name="nameInput" data-id="nameInput" placeholder="{{ name }}" [(ngModel)]="name" class="form-control">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-4 control-label">Description&nbsp;
-                          <span style="color: red">*</span>
-                        </label>
-              <div class="col-sm-8">
-                <textarea data-id="descriptionInput" name="descriptionInput" class="form-control" [(ngModel)]="description" rows="2"></textarea>
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="col-sm-4 control-label">Tag(s)</label>
-              <div class="col-sm-8">
-                <input type="text" name="tagsInput" data-id="tagsInput" [(ngModel)]="tags" class="form-control">
-              </div>
-            </div>
+        <div *ngIf="formModel && formGroup">
+          <form class="form-horizontal" [formGroup]="formGroup">
+            <dynamic-form-bootstrap-control *ngFor="let controlModel of formModel" [controlGroup]="formGroup" [model]="controlModel"></dynamic-form-bootstrap-control>
           </form>
-            <ipaas-connections-list-toolbar [(filter)]="filter" [(sort)]="sort" [showCreate]="false"></ipaas-connections-list-toolbar>
-            <ipaas-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async"
-              (onSelected)="onSelected($event)"></ipaas-connections-list>
         </div>
-        <!-- end Creating -->
       </div>
     </div>
+    <!-- end Editing -->
+    <!-- Creating the connection -->
+    <div class="card-pf" *ngSwitchCase="'create'">
+      <h2 class="card-pf-title">Add connection details</h2>
+      <div class="card-pf-body">
+        <form class="form-horizontal">
+          <!-- replacing id with data-id to pass build errors -->
+          <div class="form-group required">
+            <label class="col-sm-4 control-label">Connection Name&nbsp;
+                          <span style="color: red">*</span>
+                        </label>
+            <div class="col-sm-8">
+              <input type="text" name="nameInput" data-id="nameInput" placeholder="{{ name }}" [(ngModel)]="name" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 control-label">Description&nbsp;
+                          <span style="color: red">*</span>
+                        </label>
+            <div class="col-sm-8">
+              <textarea data-id="descriptionInput" name="descriptionInput" class="form-control" [(ngModel)]="description" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="form-group required">
+            <label class="col-sm-4 control-label">Tag(s)</label>
+            <div class="col-sm-8">
+              <input type="text" name="tagsInput" data-id="tagsInput" [(ngModel)]="tags" class="form-control">
+            </div>
+          </div>
+        </form>
+        <ipaas-connections-list-toolbar [(filter)]="filter" [(sort)]="sort" [showCreate]="false"></ipaas-connections-list-toolbar>
+        <ipaas-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async"
+          (onSelected)="onSelected($event)"></ipaas-connections-list>
+      </div>
+    </div>
+    <!-- end Creating -->
+    <!-- Viewing the connection configuration -->
+    <div class="card-pf" *ngSwitchDefault>
+      <h2 class="card-pf-title">Connection Fields</h2>
+      <div class="card-pf-body">
+        <div *ngFor="let field of getFormFields(connection)">
+          <dl class="dl-horizontal">
+            <dt>
+              {{ field.displayName }}
+            </dt>
+            <dd>
+              <div *ngIf="field.secret">{{ getPassword(field.value) }}</div>
+              <div *ngIf="!field.secret">{{ field.value || "&lt;not set&gt;" }}</div>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <!-- end Viewing -->
   </div>
 </div>
