@@ -32,7 +32,8 @@ public class ConnectorCatalogProperties {
     public ConnectorCatalogProperties() {
         this.mavenRepos.put("bintray", "https://dl.bintray.com/redhat-ipaas/maven/");
         this.mavenRepos.put("jcenter", "https://jcenter.bintray.com");
-        this.mavenRepos.put("apache-snapshots", "https://repository.apache.org/content/repositories/snapshots");
+        this.mavenRepos.put("jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea");
+        // this.mavenRepos.put("apache-snapshots", "https://repository.apache.org/content/repositories/snapshots");
     }
 
     public Map<String, String> getMavenRepos() {

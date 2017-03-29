@@ -36,8 +36,8 @@
             }
           },
           "name": "PeriodicTimer",
-          "id": "com.redhat.ipaas_timer-connector_0.2.1",
-          "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.2.1",
+          "id": "com.redhat.ipaas_timer-connector_0.3.3",
+          "camelConnectorGAV": "com.redhat.ipaas:timer-connector:0.3.3",
           "camelConnectorPrefix": "periodic-timer"
         },
         "configuredProperties": {
@@ -74,8 +74,8 @@
             }
           },
           "name": "HTTP GET",
-          "id": "com.redhat.ipaas:http-get-connector:0.2.1",
-          "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.2.1",
+          "id": "com.redhat.ipaas:http-get-connector:0.3.3",
+          "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:0.3.3",
           "camelConnectorPrefix": "http-get"
         },
         "configuredProperties": {
@@ -120,8 +120,8 @@
             }
           },
           "name": "HTTP POST",
-          "id": "com.redhat.ipaas:http-post-connector:0.2.1",
-          "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.2.1",
+          "id": "com.redhat.ipaas:http-post-connector:0.3.3",
+          "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:0.3.3",
           "camelConnectorPrefix": "http-post"
         },
         "configuredProperties": {
