@@ -1,4 +1,6 @@
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
+import { ModalDirective } from 'ng2-bootstrap/modal';
+import { ToasterService } from 'angular2-toaster';
 
 import { log, getCategory } from '../../logging';
 import { Connections, Connection } from '../../model';
@@ -16,9 +18,66 @@ export class ConnectionsListComponent implements OnInit {
   truncateTrail = '…';
   selectedId = undefined;
 
+  private toasterService: ToasterService;
+  private toast;
+
+  @ViewChild('childModal') public childModal: ModalDirective;
+
   @Input() connections: Connections;
   @Input() loading: boolean;
   @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
+
+  constructor(toasterService: ToasterService) {
+    this.toasterService = toasterService;
+  }
+
+
+  //-----  Delete ------------------->>
+
+  // Actual delete action once the user confirms
+  deleteAction(connection: Connections) {
+    log.debugc(() => 'Selected connection for delete: ' + JSON.stringify(connection['id']));
+
+    this.hideModal();
+
+    //this.store.deleteEntity(connection['id']);
+
+    this.toast = {
+      type: 'success',
+      title: 'Delete Successful',
+      body: 'Connection successfully deleted.',
+    };
+
+    setTimeout(this.popToast(this.toast), 1000);
+  }
+
+  // Open modal to confirm delete
+  requestDelete(connection: Connections) {
+    log.debugc(() => 'Selected connection for delete: ' + JSON.stringify(connection['id']));
+    this.showModal();
+  }
+
+
+  //-----  Modals ------------------->>
+
+  public showModal(): void {
+    this.childModal.show();
+  }
+
+  public hideModal(): void {
+    this.childModal.hide();
+  }
+
+  //-----  Toast ------------------->>
+
+  // Show toast notification
+  popToast(toast) {
+    this.toasterService.pop(toast);
+  }
+
+
+  //-----  Selecting a Connection ------------------->>
+
 
   onSelect(connection: Connection) {
     log.debugc(() => 'Selected connection (list): ' + connection.name, category);
@@ -30,9 +89,15 @@ export class ConnectionsListComponent implements OnInit {
     return connection.id === this.selectedId;
   }
 
+
+  //-----  Dropdown/Kebab ------------------->>
+
   toggled(open): void {
     log.debugc(() => 'Dropdown is now: ' + open);
   }
+
+
+  //----- Initialization ------------------->>
 
   ngOnInit() {
     log.debugc(() => 'Got connections: ' + JSON.stringify(this.connections, undefined, 2), category);
