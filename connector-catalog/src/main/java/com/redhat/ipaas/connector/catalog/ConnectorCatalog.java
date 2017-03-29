@@ -61,7 +61,7 @@ public class ConnectorCatalog {
     }
 
     public String buildEndpointUri(String scheme, Map<String, String> options) throws URISyntaxException {
-        return camelCatalog.asEndpointUri(scheme, options, true);
+        return camelCatalog.asEndpointUri(scheme, options, false);
     }
 
 }
