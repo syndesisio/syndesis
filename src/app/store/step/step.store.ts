@@ -40,13 +40,14 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Filter',
-      description: 'Filter messages using a script language',
+      description: 'Filter incoming data based on a set of criteria',
       stepKind: 'filter',
       properties: {
         filter: {
-          type: 'string',
-          displayName: 'Filter',
+          type: 'textarea',
+          displayName: 'Only continue if',
           required: true,
+          rows: 10,
         },
       },
       configuredProperties: undefined,

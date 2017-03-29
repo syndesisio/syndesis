@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ComponentProperty } from '../model';
-import { DynamicFormControlModel, DynamicCheckboxModel, DynamicInputModel } from '@ng2-dynamic-forms/core';
+import { DynamicFormControlModel, DynamicCheckboxModel, DynamicInputModel, DynamicTextAreaModel } from '@ng2-dynamic-forms/core';
 
 export interface ConfiguredComponentProperty extends ComponentProperty {
   value: any;
+  rows?: number;
+  cols?: number;
+
 }
 
 @Injectable()
@@ -22,7 +25,7 @@ export class FormFactoryService {
       let formField: any;
       let type = (value.type || '').toLowerCase();
       // first normalize the type
-      switch (type.toLowerCase()) {
+      switch (type) {
         case 'boolean':
           type = 'checkbox';
           break;
@@ -32,8 +35,7 @@ export class FormFactoryService {
           type = 'number';
           break;
         case 'password':
-          type = 'password';
-          break;
+        case 'textarea':
         case 'hidden':
           break;
         default:
@@ -47,6 +49,24 @@ export class FormFactoryService {
           label: value.displayName || key,
           hint: value.description,
           value: value.value || value.defaultValue,
+        });
+      } else if (type === 'textarea') {
+        formField = new DynamicTextAreaModel({
+          id: key,
+          label: value.displayName || key,
+          placeholder: value.description,
+          value: value.value || value.defaultValue,
+          required: value.required,
+          rows: value.rows,
+          cols: value.cols,
+        }, {
+          element: {
+            label: 'control-label',
+          },
+          grid: {
+            control: 'col-sm-9',
+            label: 'col-sm-3',
+          },
         });
       } else {
         if (value.secret) {
