@@ -1,4 +1,13 @@
 @import '../../../scss/colors';
+
+.connections-detail {
+  .card-pf-body {
+    .fa {
+      font-size: x-large;
+    }
+  }
+}
+
 .connection-edit {
   background: #fff;
   border-top: 2px solid transparent;

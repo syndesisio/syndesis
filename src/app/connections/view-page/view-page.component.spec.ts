@@ -13,6 +13,9 @@ import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ng2-restangular';
 
+import { ModalModule } from 'ng2-bootstrap/modal';
+import { ToasterModule } from 'angular2-toaster';
+
 import { ConnectionViewPage } from './view-page.component';
 import { ConnectionViewWrapperComponent } from '../view-wrapper/view-wrapper.component';
 import { ConnectionViewToolbarComponent } from '../view-toolbar/view-toolbar.component';
@@ -39,6 +42,8 @@ describe('ConnectionViewPage', () => {
           StoreModule,
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),
+          ModalModule,
+          ToasterModule,
         ],
         declarations: [
           ConnectionViewPage,

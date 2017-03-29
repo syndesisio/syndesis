@@ -5,9 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
-import { ModalModule } from 'ng2-bootstrap/modal';
-import { TabsModule } from 'ng2-bootstrap';
-import { PopoverModule } from 'ng2-bootstrap';
+import { CollapseModule, ModalModule, PopoverModule, TabsModule } from 'ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
 import { DataMapperModule } from 'ipaas.data.mapper';
 
@@ -31,7 +29,6 @@ import { FlowViewStepComponent } from './edit-page/flow-view/flow-view-step.comp
 import { CurrentFlow } from './edit-page/current-flow.service';
 import { IPaaSCommonModule } from '../common/common.module';
 import { ConnectionsModule } from '../connections/connections.module';
-import { CollapseModule } from 'ng2-bootstrap';
 
 const editIntegrationChildRoutes = [
   { path: 'save-or-add-step', component: IntegrationsSaveOrAddStepComponent },

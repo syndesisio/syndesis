@@ -5,10 +5,11 @@
     padding: 0;
 
     .card {
+      cursor: default;
       width: 25%;
 
       .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
-        cursor: pointer;
+        cursor: default;
         height: 150px !important;
         max-height: 150px !important;
 
@@ -28,7 +29,7 @@
 
       .card-pf-title {
         .fa {
-          font-size: 16px;
+          font-size: 20px;
         }
       }
 
