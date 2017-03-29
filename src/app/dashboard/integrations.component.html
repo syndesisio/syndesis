@@ -22,7 +22,7 @@
 
       <!-- Left: Integrations -->
 
-      <div class="col-xs-7">
+      <div class="col-xs-7 top-integrations">
         <div class="card-pf">
           <div class="card-pf-heading">
             <h2 class="card-pf-title">
@@ -60,7 +60,7 @@
 
       <!-- Right -->
 
-      <div class="col-xs-5">
+      <div class="col-xs-5 integration-board">
         <div class="card-pf">
           <div class="card-pf-heading">
             <h2 class="card-pf-title">
@@ -72,7 +72,7 @@
           </div>
         </div>
 
-        <div class="card-pf">
+        <div class="card-pf recent-updates">
           <div class="card-pf-heading">
             <h2 class="card-pf-title">
               Recent Updates
@@ -81,7 +81,10 @@
           <div class="card-pf-body">
             <div class="row integration"
                  *ngFor="let integration of integrations">
-              <div class="col-xs-8">Update client service</div>
+              <div class="col-xs-6">
+                <a href="">Update client service</a>
+              </div>
+              <div class="col-xs-2">Draft</div>
               <div class="col-xs-4">11 Oct 22:00</div>
             </div>
           </div>

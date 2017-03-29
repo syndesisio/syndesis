@@ -7,6 +7,10 @@
     padding: 2px 20px !important;
   }
 
+  ////////////////////////////////////////////////////////////////////////////////
+  // FIRST ROW
+  ////////////////////////////////////////////////////////////////////////////////
+
   .first-row {
     padding-top: 0;
 
@@ -16,65 +20,85 @@
     }
   }
 
+  ////////////////////////////////////////////////////////////////////////////////
+  // SECOND ROW
+  ////////////////////////////////////////////////////////////////////////////////
+
   .second-row {
     margin: 10px 0;
     padding: 0;
 
-    .integration {
-      padding: 10px;
+    //----- Integration Board ----------------->>
 
-      &:hover {
-        background: rgba(214, 238, 250, 0.36);
-      }
+    .integration-board {}
 
-      .description {
-        //margin: 25px auto;
-        max-width: 40%;
-      }
 
-      .name {
-        font-weight: 700;
-        padding: 7px;
-      }
+    //----- Recent Updates ----------------->>
 
-      .active-inactive {
-        padding: 5px;
+    .recent-updates {}
 
-        .btn.btn-primary {
-          background: #199BD1;
-          border: none;
-          font-family: inherit;
-          font-weight: 100;
-          padding: 1px 10px;
+
+    //----- Top 5 Integrations ----------------->>
+
+    .top-integrations {
+      .integration {
+        padding: 10px;
+
+        &:hover {
+          background: rgba(214, 238, 250, 0.36);
         }
-      }
 
-      .description {
-        padding: 5px;
-      }
+        .actions {
+          padding: 5px;
 
-      .icons {
-        padding: 1px;
-        width: 22.666667%;
-
-        .fa {
-          margin-right: 15px;
-
-          &.fa-angle-right {
-            font-size: 18px;
+          ul {
+            cursor: pointer;
           }
         }
-      }
-    }
 
-    .actions {
-      padding: 5px;
+        .active-inactive {
+          padding: 5px;
 
-      ul {
-        cursor: pointer;
+          .btn.btn-primary {
+            background: #199BD1;
+            border: none;
+            font-family: inherit;
+            font-weight: 100;
+            padding: 1px 10px;
+          }
+        }
+
+        .description {
+          //margin: 25px auto;
+          max-width: 40%;
+          padding: 5px;
+        }
+
+        .icons {
+          padding: 1px;
+          width: 22.666667%;
+
+          .fa {
+            margin-right: 15px;
+
+            &.fa-angle-right {
+              font-size: 18px;
+            }
+          }
+        }
+
+        .name {
+          font-weight: 700;
+          padding: 7px;
+        }
       }
     }
   }
+
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // THIRD ROW
+  ////////////////////////////////////////////////////////////////////////////////
 
   .third-row {}
 }
