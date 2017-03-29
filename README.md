@@ -73,8 +73,8 @@ If you want to try out the REST API manually, try the following steps (note that
 $ ./start-with-keycloak.sh
 
 # In another terminal... get a token from keycloak authenticating with `user`/`password`
-$ TOKEN=$(curl \                                                                
-    -d "client_id=admin-cli" \ 
+$ TOKEN=$(curl \
+    -d "client_id=admin-cli" \
     -d "username=user" \
     -d "password=password" \
     -d "grant_type=password" \
