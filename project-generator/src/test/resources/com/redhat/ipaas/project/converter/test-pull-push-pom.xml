@@ -13,8 +13,8 @@
 
   <properties>
     <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
-    <spring-cloud-kubernetes.version>0.1.6</spring-cloud-kubernetes.version>
-    <camel.version>2.19.0-SNAPSHOT</camel.version>
+    <spring-cloud-kubernetes.version>0.1.5</spring-cloud-kubernetes.version>
+    <camel.version>2.19.0.fuse-000020</camel.version>
     <funktion.version>1.1.55</funktion.version>
   </properties>
 
@@ -71,21 +71,21 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
+        <version>1.5.2.RELEASE</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-spring-boot-dependencies</artifactId>
-        <version>${camel.version}</version>
+        <version>2.19.0.fuse-000020</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>io.fabric8</groupId>
         <artifactId>spring-cloud-kubernetes-bom</artifactId>
-        <version>${spring-cloud-kubernetes.version}</version>
+        <version>0.1.5</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -137,19 +137,19 @@
     <dependency>
       <groupId>io.fabric8.funktion</groupId>
       <artifactId>funktion-model</artifactId>
-      <version>${funktion.version}</version>
+      <version>1.1.55</version>
     </dependency>
     <dependency>
       <groupId>io.fabric8.funktion</groupId>
       <artifactId>funktion-runtime</artifactId>
-      <version>${funktion.version}</version>
+      <version>1.1.55</version>
     </dependency>
 
     <!-- testing -->
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test</artifactId>
-      <version>${camel.version}</version>
+      <version>2.19.0.fuse-000020</version>
       <scope>test</scope>
     </dependency>
 
@@ -161,7 +161,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
+        <version>1.5.2.RELEASE</version>
         <executions>
           <execution>
             <goals>
