@@ -5,8 +5,7 @@
       <!-- Each Connection's Card Container -->
 
       <div class="col-xs-12 col-sm-3 col-md-2 card"
-           *ngFor="let connection of connections"
-           (click)="onSelect(connection)">
+           *ngFor="let connection of connections">
 
         <!-- Toast Notification Container -->
 
@@ -68,31 +67,33 @@
           
               <!-- Card Actions -->
 
-              <div class="dropdown pull-right dropdown-kebab-pf card-pf-time-frame-filter"
-                   (onToggle)="toggled($event)">
-                <button type="button"
-                        class="btn btn-link"
-                        id="kebab"
-                        dropdownToggle>
+              <div class="dropdown pull-right dropdown-kebab-pf">
+                <button class="btn btn-link dropdown-toggle"
+                        type="button"
+                        id="dropdownKebabRight9"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="true">
                   <span class="fa fa-ellipsis-v"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right"
-                    dropdownMenu
-                    aria-labelledby="kebab"
-                    role="menu">
+                    aria-labelledby="dropdownKebabRight9">
                   <li role="menuitem">
-                    <a [routerLink]="[connection.id]"
+                    <a [routerLink]="['/connections', connection.id]"
                        class="dropdown-item">View</a>
                   </li>
                   <li role="menuitem">
-                    <a [routerLink]="[connection.id, 'edit']"
+                    <a [routerLink]="['/connections/edit', connection.id]"
                        class="dropdown-item">Edit</a>
                   </li>
+                  <!--
                   <li role="menuitem">
                     <a class="dropdown-item">Duplicate</a>
                   </li>
-                  <li role="menuitem">
-                    <a class="dropdown-item">Delete</a>
+                  -->
+                  <li>
+                    <a (click)="requestDelete(connection)"
+                       class="dropdown-item">Delete</a>
                   </li>
                 </ul>
               </div>
@@ -101,7 +102,8 @@
 
               <h2 class="card-pf-title">
                 <span class="fa {{ connection.icon }}"></span>
-                <p class="card-title">
+                <p class="card-title"
+                   (click)="onSelect(connection)">
                   <a>{{ connection.name }}</a>
                 </p>
               </h2>

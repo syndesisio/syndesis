@@ -81,14 +81,17 @@
                        class="dropdown-item">View</a>
                   </li>
                   <li role="menuitem">
-                    <a [routerLink]="[connection.id, 'edit']"
+                    <a [routerLink]="['/connections/edit', connection.id]"
                        class="dropdown-item">Edit</a>
                   </li>
+                  <!--
                   <li role="menuitem">
                     <a class="dropdown-item">Duplicate</a>
                   </li>
+                  -->
                   <li>
-                    <a (click)="requestDelete(connection)">Delete</a>
+                    <a (click)="requestDelete(connection)"
+                       class="dropdown-item">Delete</a>
                   </li>
                 </ul>
               </div>

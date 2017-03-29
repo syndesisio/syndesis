@@ -89,14 +89,6 @@ export class ConnectionsListComponent implements OnInit {
     return connection.id === this.selectedId;
   }
 
-
-  //-----  Dropdown/Kebab ------------------->>
-
-  toggled(open): void {
-    log.debugc(() => 'Dropdown is now: ' + open);
-  }
-
-
   //----- Initialization ------------------->>
 
   ngOnInit() {

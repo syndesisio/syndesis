@@ -57,6 +57,13 @@ export class DashboardConnectionsComponent implements OnInit {
   }
 
 
+  //-----  Duplicate ------------------->>
+
+  duplicate(connection: Connections) {
+    log.debugc(() => 'Request to duplicate the following connection: ' + JSON.stringify(connection['id']));
+  }
+
+
   //-----  Modals ------------------->>
 
   public showModal(): void {
@@ -72,13 +79,6 @@ export class DashboardConnectionsComponent implements OnInit {
   // Show toast notification
   popToast(toast) {
     this.toasterService.pop(toast);
-  }
-
-
-  //-----  Dropdown/Kebab ------------------->>
-
-  toggled(open): void {
-    log.debugc(() => 'Dropdown is now: ' + open);
   }
 
 
