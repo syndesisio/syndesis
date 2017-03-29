@@ -155,7 +155,7 @@ objects:
         name: docker.io/rhipaas/token-rp:v0.4.0
       importPolicy:
         scheduled: true
-      name: v0.2.0
+      name: v0.4.0
 - apiVersion: v1
   kind: Secret
   metadata:
