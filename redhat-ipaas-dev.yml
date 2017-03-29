@@ -1901,6 +1901,8 @@ objects:
           enabled: true
       github:
         service: ipaas-github-proxy.${NAMESPACE}.svc
+      openshift:
+        openShiftHost: ipaas-openshift-proxy.${NAMESPACE}.svc
       keycloak:
         enabled: true
         configurationFile: file:config/ipaas-client.json
