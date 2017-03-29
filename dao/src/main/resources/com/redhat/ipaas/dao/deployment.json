@@ -184,7 +184,7 @@
              "dataType" : "java:org.foo.salesforce.upsert.contact.Contact"
           },
           "outputDataShape": {
-             "dataType" : "node"
+             "dataType" : "none"
           },
           "properties": {
           },
@@ -244,7 +244,7 @@
           "name": "HTTP GET",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "inputDataShape": {
-             "dataType" : "node"
+             "dataType" : "none"
           },
           "outputDataShape": {
              "dataType" : "*"
