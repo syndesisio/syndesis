@@ -9,83 +9,6 @@
 
         <toaster-container></toaster-container>
 
-        <!-- Activate Modal Container -->
-
-        <div bsModal
-             #childModal="bs-modal"
-             class="modal fade"
-             tabindex="-1"
-             role="dialog"
-             aria-labelledby="activateModal"
-             aria-hidden="true">
-          <div class="modal-dialog modal-md">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title pull-left">Confirm Activation</h4>
-                <button type="button"
-                        class="close pull-right"
-                        aria-label="Close"
-                        (click)="hideModal()">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div>
-                  <p>Are you sure you would like to activate the following integration?</p>
-                </div>
-                <div style="text-align: center; font-weight: 700">
-                  <p>{{ integration['name'] }}</p>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button class="pull-right btn btn-primary"
-                        (click)="activateAction(integration)">Activate</button>
-                <button class="pull-right btn btn-cancel"
-                        (click)="hideModal()">Cancel</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <!-- Deactivate Modal Container -->
-
-        <div bsModal
-             #childModal="bs-modal"
-             class="modal fade"
-             tabindex="-1"
-             role="dialog"
-             aria-labelledby="deactivateModal"
-             aria-hidden="true">
-          <div class="modal-dialog modal-md">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title pull-left">Confirm Deactivation</h4>
-                <button type="button"
-                        class="close pull-right"
-                        aria-label="Close"
-                        (click)="hideModal()">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div>
-                  <p>Are you sure you would like to deactivate the following integration?</p>
-                </div>
-                <div style="text-align: center; font-weight: 700">
-                  <p>{{ integration['name'] }}</p>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button class="pull-right btn btn-primary"
-                        (click)="deactivateAction(integration)">Deactivate</button>
-                <button class="pull-right btn btn-cancel"
-                        (click)="hideModal()">Cancel</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
 
         <!-- Delete Modal Container -->
 
@@ -109,10 +32,10 @@
               </div>
               <div class="modal-body">
                 <div>
-                  <p>Are you sure you would like to delete the following integration?</p>
+                  <p>Are you sure you would like to delete the following connection?</p>
                 </div>
                 <div style="text-align: center; font-weight: 700">
-                  <p>{{ integration['name'] }}</p>
+                  <p>{{ connection['name'] }}</p>
                 </div>
                 <div>
                   <p><b style="color: red;">NOTE:</b> This action <i>cannot</i> be undone.</p>
@@ -120,7 +43,7 @@
               </div>
               <div class="modal-footer">
                 <button class="pull-right btn btn-primary"
-                        (click)="deleteAction(integration)">Delete</button>
+                        (click)="deleteAction(connection)">Delete</button>
                 <button class="pull-right btn btn-cancel"
                         (click)="hideModal()">Cancel</button>
               </div>

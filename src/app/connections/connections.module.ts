@@ -5,6 +5,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
+import { ModalModule } from 'ng2-bootstrap';
+import { ToasterModule } from 'angular2-toaster';
 
 import { IPaaSCommonModule } from '../common/common.module';
 import { ConnectionsCreatePage } from './create-page/create-page.component';
@@ -29,6 +31,8 @@ import { CurrentConnectionService } from './create-page/current-connection';
     DynamicFormsBootstrapUIModule,
     RouterModule,
     IPaaSCommonModule,
+    ToasterModule,
+    ModalModule,
   ],
   declarations: [
     ConnectionsCreatePage,
