@@ -113,7 +113,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             Integration integrationWithGitRepoName = ensureGitRepoName(integration);
             String repoName = integrationWithGitRepoName.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
 
-            Map<String, byte[]> fileContents = projectConverter.convert(integrationWithGitRepoName);
+            Map<String, byte[]> fileContents = projectConverter.generate(integrationWithGitRepoName);
 
             // Secret to be used in the build trigger
             String webHookUrl = createWebHookUrl(repoName, secret);

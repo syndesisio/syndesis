@@ -75,3 +75,7 @@ openshift:
 github:
   enabled: true
   service: ipaas-github-proxy
+
+verifier:
+  kind: service
+  service: ipaas-verifier

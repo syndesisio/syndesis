@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
 
     Copyright (C) 2016 Red Hat, Inc.
@@ -16,23 +16,25 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>ipaas-rest-parent</artifactId>
     <groupId>com.redhat.ipaas</groupId>
+    <artifactId>ipaas-rest-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>openshift</artifactId>
-  <name>iPaaS REST :: OpenShift Services</name>
+  <artifactId>verifier</artifactId>
+  <name>iPaaS REST :: Verifier</name>
+  <packaging>jar</packaging>
 
   <dependencies>
 
-    <!-- === Internal dependencies (don't touch without discussion) ========================== -->
-    <!-- ===================================================================================== -->
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>project-generator</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework</groupId>
@@ -45,27 +47,18 @@
     </dependency>
 
     <dependency>
-      <groupId>io.fabric8</groupId>
-      <artifactId>openshift-client</artifactId>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-spring-security-adapter</artifactId>
-    </dependency>
-
-
-    <!-- === Testing Dependencies ======================================================== -->
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
-      <scope>test</scope>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client</artifactId>
     </dependency>
 
   </dependencies>

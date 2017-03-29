@@ -18,13 +18,24 @@ package com.redhat.ipaas.runtime;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.connection.Connector;
+import com.redhat.ipaas.verifier.AlwaysOkVerifier;
+import com.redhat.ipaas.verifier.Verifier;
+import org.junit.Assume;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConnectorsITCase extends BaseITCase {
+
+    @Autowired
+    private Verifier verifier;
 
     @Test
     public void connectorsListWithoutToken() {
@@ -53,6 +64,42 @@ public class ConnectorsITCase extends BaseITCase {
         Connector connector = response.getBody();
         assertThat(connector).isNotNull();
         assertThat(connector.getId()).contains("twitter");
+    }
+
+    // Disabled as it works only for the LocalProcessVerifier which would needs some update
+    //@Test
+    public void verifyGoodTwitterConnectionSettings() throws IOException {
+        Properties credentials = new Properties();
+        try (InputStream is = getClass().getResourceAsStream("/valid-twitter-keys.properties")) {
+            credentials.load(is);
+        }
+
+        ResponseEntity<Verifier.Result> response = post("/api/v1/connectors/twitter/verifier/connectivity", credentials, Verifier.Result.class);
+        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
+        Verifier.Result result = response.getBody();
+        assertThat(result).isNotNull();
+        assertThat(result.getStatus()).isEqualTo(Verifier.Result.Status.OK);
+        assertThat(result.getErrors()).isEmpty();
+    }
+
+    //@Test
+    public void verifyBadTwitterConnectionSettings() throws IOException {
+
+        // AlwaysOkVerifier never fails.. do don't try this test case, if that's whats being used.
+        Assume.assumeFalse(verifier instanceof AlwaysOkVerifier);
+
+        Properties credentials = new Properties();
+        try (InputStream is = getClass().getResourceAsStream("/valid-twitter-keys.properties")) {
+            credentials.load(is);
+        }
+        credentials.put("accessTokenSecret", "badtoken");
+
+        ResponseEntity<Verifier.Result> response = post("/api/v1/connectors/twitter/verifier/connectivity", credentials, Verifier.Result.class);
+        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
+        Verifier.Result result = response.getBody();
+        assertThat(result).isNotNull();
+        assertThat(result.getStatus()).isEqualTo(Verifier.Result.Status.ERROR);
+        assertThat(result.getErrors()).isNotEmpty();
     }
 
 }

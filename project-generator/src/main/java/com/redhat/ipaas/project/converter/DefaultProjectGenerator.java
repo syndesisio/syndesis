@@ -15,6 +15,10 @@
  */
 package com.redhat.ipaas.project.converter;
 
+import java.io.*;
+import java.net.URISyntaxException;
+import java.util.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -29,16 +33,6 @@ import io.fabric8.funktion.model.Funktion;
 import io.fabric8.funktion.model.StepKinds;
 import io.fabric8.funktion.model.steps.Endpoint;
 import io.fabric8.funktion.support.YamlHelper;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
@@ -65,6 +59,13 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         "pom.xml"
     );
 
+    /**
+     * Not required for the moment, needed for local forking of a maven process
+    private Mustache connectorPomMustache = mf.compile(
+        new InputStreamReader(getClass().getResourceAsStream("templates/connector/pom.xml.mustache")),
+        "pom.xml"
+    );
+    */
     private final ConnectorCatalog connectorCatalog;
 
     public DefaultProjectGenerator(ConnectorCatalog connectorCatalog) {
@@ -72,7 +73,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     @Override
-    public Map<String, byte[]> convert(Integration integration) throws IOException {
+    public Map<String, byte[]> generate(Integration integration) throws IOException {
         integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
                 step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
@@ -89,7 +90,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return contents;
     }
 
-    private byte[] generatePom(Integration integration) throws IOException {
+    public byte[] generatePom(Integration integration) throws IOException {
         Set<MavenGav> connectors = new LinkedHashSet<>();
         integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
@@ -108,6 +109,24 @@ public class DefaultProjectGenerator implements ProjectGenerator {
             pomMustache
         );
     }
+
+
+    /*
+    Required for a local verifier, but does not work because the connector does not carry any GAV (but a
+    reference to a 'default' action. Or the mapping happens in the external ipaas-verifier service:
+
+    public byte[] generatePom(Connector connector) throws IOException {
+        Set<MavenGav> connectors = new LinkedHashSet<>();
+        String[] splitGav = connector.getCamelConnectorGAV().get().split(":");
+        if (splitGav.length == 3) {
+            connectors.add(new MavenGav(splitGav[0], splitGav[1], splitGav[2]));
+        }
+        return generate(
+            new IntegrationForPom(connector.getId().get(), connector.getName(), null, connectors),
+            connectorPomMustache
+        );
+    }
+    */
 
     private byte[] generateFlowYaml(Integration integration) throws JsonProcessingException {
         Flow flow = new Flow();

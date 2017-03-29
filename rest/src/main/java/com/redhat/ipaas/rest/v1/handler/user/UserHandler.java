@@ -35,9 +35,9 @@ public class UserHandler extends BaseHandler implements Lister<User>, Getter<Use
         super(dataMgr);
     }
 
-    @Override
+     @Override
     public Kind resourceKind() {
         return Kind.User;
     }
-
 }
+

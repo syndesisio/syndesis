@@ -15,24 +15,31 @@
  */
 package com.redhat.ipaas.rest.v1.handler.connection;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.Getter;
 import com.redhat.ipaas.rest.v1.operations.Lister;
+import com.redhat.ipaas.verifier.Verifier;
 import io.swagger.annotations.Api;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+
+import java.util.List;
+import java.util.Map;
 
 @Path("/connectors")
 @Api(value = "connectors")
 @org.springframework.stereotype.Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector> {
 
-    public ConnectorHandler(DataManager dataMgr) {
+    private final Verifier verifier;
+
+    public ConnectorHandler(DataManager dataMgr, Verifier verifier) {
         super(dataMgr);
+        this.verifier = verifier;
     }
 
     @Override
@@ -45,4 +52,11 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         return new ConnectorActionHandler(getDataManager(), connectorId);
     }
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{id}/verifier")
+    public List<Verifier.Result> verifyConnectionParameters(@PathParam("id") String connectorId, Map<String, String> props) {
+        return verifier.verify(connectorId, props);
+    }
 }

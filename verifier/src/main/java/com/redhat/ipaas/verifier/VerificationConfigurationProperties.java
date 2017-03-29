@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.project.converter;
+package com.redhat.ipaas.verifier;
 
-import java.io.IOException;
-import java.util.Map;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import com.redhat.ipaas.model.integration.Integration;
+@ConfigurationProperties("verifier")
+public class VerificationConfigurationProperties {
 
-public interface ProjectGenerator {
+    private String service = "ipass-verifier";
 
-    Map<String, byte[]> generate(Integration integration) throws IOException;
+    public String getService() {
+        return service;
+    }
 
-    byte[] generatePom(Integration integration) throws IOException;
+    public void setService(String service) {
+        this.service = service;
+    }
 }
