@@ -1,6 +1,13 @@
 <div class="ipaas-dashboard">
-  <ipaas-dashboard-empty-state></ipaas-dashboard-empty-state>
-  <!--
-  <ipaas-popular-templates [templates]="templates | async" [loading]="loading | async"></ipaas-popular-templates>
-  -->
+  
+  <!-- At Least One Integration -->
+  
+  <ipaas-dashboard-integrations *ngIf="integrations.length !== 0"
+                               [integrations]="integrations | async"
+                               [loading]="loading | async"></ipaas-dashboard-integrations>
+  
+  <!-- No Integrations -->
+  
+  <ipaas-dashboard-empty-state *ngIf="integrations.length === 0"
+                               [loading]="loading | async"></ipaas-dashboard-empty-state>
 </div>

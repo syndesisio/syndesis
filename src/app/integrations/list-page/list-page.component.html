@@ -1,4 +1,4 @@
-<div class='integrations list'>
+<div class="integrations list-page">
   <ipaas-integrations-list-toolbar [(filter)]="filter" [(sort)]="sort"></ipaas-integrations-list-toolbar>
   <ipaas-integrations-list [integrations]="integrations | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async"></ipaas-integrations-list>
 </div>

@@ -1,0 +1,160 @@
+@import '../../scss/colors';
+
+.ipaas-dashboard-integrations {
+  color: #656565;
+  cursor: default;
+  margin: 15px;
+
+  a, a:visited {
+    color: $pf-blue-400;
+
+    &.btn {
+      color: #FFFFFF;
+    }
+  }
+
+  .btn {
+    margin: 10px 5px;
+    padding: 2px 20px !important;
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // FIRST ROW
+  ////////////////////////////////////////////////////////////////////////////////
+
+  .first-row {
+    padding-top: 0;
+
+    .page-header {
+      padding-bottom: 9px;
+      margin: 0;
+    }
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // SECOND ROW
+  ////////////////////////////////////////////////////////////////////////////////
+
+  .second-row {
+    margin: 10px 0;
+    padding: 0;
+
+    //----- Integration Board ----------------->>
+
+    .integration-board {}
+
+
+    //----- Recent Updates ----------------->>
+
+    .recent-updates {
+      .update {
+        border-bottom: 1px solid $pf-black-200;
+        cursor: default;
+        padding: 10px 0;
+
+        &:hover {
+          background: rgba(214, 238, 250, 0.36);
+        }
+
+        a:hover {
+          text-decoration: none;
+        }
+      }
+
+      .update:last-child { border-bottom: none; }
+    }
+
+
+    //----- Top 5 Integrations ----------------->>
+
+    .top-integrations {
+      .integration {
+        cursor: default;
+        padding: 15px;
+
+        &:hover {
+          background: rgba(214, 238, 250, 0.36);
+        }
+
+        .actions {
+          //padding: 5px;
+          padding: 0;
+
+          ul {
+            cursor: pointer;
+          }
+        }
+
+        .active-inactive {
+          //padding: 5px;
+          padding: 0;
+
+          .btn.btn-primary {
+            background: #199BD1;
+            border: none;
+            font-family: inherit;
+            font-weight: 100;
+            padding: 1px 10px;
+          }
+        }
+
+        .description {
+          max-width: 40%;
+          //padding: 5px;
+          padding: 0;
+        }
+
+        .icons {
+          padding: 0 0 0 6px;
+          //width: 20%;
+
+          .list-view-pf-left {
+            display: table-cell;
+            padding-right: 0;
+            text-align: center;
+            vertical-align: top;
+
+            .fa:first-child, .fa-angle-right {
+              margin-right: 15px;
+            }
+
+            .fa.fa-angle-right {
+              font-size: 18px;
+            }
+          }
+        }
+
+        .name {
+          font-weight: 500;
+          //padding: 7px;
+          //padding-left: 20px;
+          //padding-right: 20px;
+          padding: 0;
+
+          a, a:visited, a:hover, a:focus {
+            color: inherit;
+            text-decoration: none;
+          }
+        }
+
+        .status {
+          font-size: large;
+          padding: 0;
+          //width: 0.333333%;
+        }
+
+        .times-of-use {
+          padding: 0;
+
+        }
+      }
+    }
+  }
+
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // THIRD ROW
+  ////////////////////////////////////////////////////////////////////////////////
+
+  .third-row {}
+}

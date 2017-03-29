@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { TemplateStore } from '../store/template/template.store';
-import { IntegrationTemplates } from '../model';
+import { log, getCategory } from '../logging';
+
+import { Connection, Connections, Integration, Integrations } from '../model';
+import { ConnectionStore } from '../store/connection/connection.store';
+import { IntegrationStore } from '../store/integration/integration.store';
+
+const category = getCategory('Dashboard');
 
 @Component({
   selector: 'ipaas-dashboard',
@@ -11,18 +15,21 @@ import { IntegrationTemplates } from '../model';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-
-  templates: Observable<IntegrationTemplates>;
-
+  connections: Observable<Connections>;
+  integrations: Observable<Integrations>;
   loading: Observable<boolean>;
+  selectedId = undefined;
+  truncateLimit = 80;
+  truncateTrail = '…';
 
-  constructor(private store: TemplateStore) {
-    this.templates = this.store.list;
-    this.loading = this.store.loading;
+  constructor(private connectionStore: ConnectionStore, private integrationStore: IntegrationStore) {
+    this.connections = this.connectionStore.list;
+    this.integrations = this.integrationStore.list;
+    this.loading = this.connectionStore.loading;
   }
 
   ngOnInit() {
-    this.store.loadAll();
+    this.connectionStore.loadAll();
+    this.integrationStore.loadAll();
   }
-
 }

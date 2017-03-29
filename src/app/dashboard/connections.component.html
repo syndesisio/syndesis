@@ -1,18 +1,17 @@
 <ipaas-loading [loading]="loading">
-  <div class="container-cards-pf connections-list">
+  <div class="container-cards-pf ipaas-dashboard-connections">
     <div class="row row-cards-pf cards">
       <div class="col-xs-12 col-sm-3 col-md-2 card"
-           *ngFor="let connection of connections"
-           (click)="onSelect(connection)">
-        <div class="card-pf card-pf-view card-pf-view-xs card-pf-view-select card-pf-view-single-select"
-             [class.active]="isSelected(connection)">
+           *ngFor="let connection of connections">
+        <div class="card-pf card-pf-view card-pf-view-xs card-pf-view-select card-pf-view-single-select">
           <div class="card-pf-body">
-
+            
             <!-- Card Heading -->
             <div class="card-pf-heading-kebab">
-              <!--
-          
+
+
               <!-- Card Actions -->
+
               <div class="dropdown pull-right dropdown-kebab-pf card-pf-time-frame-filter"
                    (onToggle)="toggled($event)">
                 <button type="button"
@@ -26,7 +25,7 @@
                     aria-labelledby="kebab"
                     role="menu">
                   <li role="menuitem">
-                    <a [routerLink]="[connection.id]"
+                    <a [routerLink]="['/connections', connection.id]"
                        class="dropdown-item">View</a>
                   </li>
                   <li role="menuitem">
@@ -41,19 +40,19 @@
                   </li>
                 </ul>
               </div>
-
+              
               <!-- Card Title & Icon -->
-
+              
               <h2 class="card-pf-title">
                 <span class="fa {{ connection.icon }}"></span>
                 <p class="card-title">
-                  <a>{{ connection.name }}</a>
+                  <a [routerLink]="['/connections', connection.id]">{{ connection.name }}</a>
                 </p>
               </h2>
             </div>
-
+            
             <!-- Card Description / Item Overview -->
-
+            
             <p>{{ connection.description | truncate : truncateLimit : truncateTrail }}</p>
           </div>
         </div>
