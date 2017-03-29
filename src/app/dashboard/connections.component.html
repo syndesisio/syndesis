@@ -10,6 +10,38 @@
             
             <!-- Card Heading -->
             <div class="card-pf-heading-kebab">
+
+
+              <!-- Card Actions -->
+
+              <div class="dropdown pull-right dropdown-kebab-pf card-pf-time-frame-filter"
+                   (onToggle)="toggled($event)">
+                <button type="button"
+                        class="btn btn-link"
+                        id="kebab"
+                        dropdownToggle>
+                  <span class="fa fa-ellipsis-v"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right"
+                    dropdownMenu
+                    aria-labelledby="kebab"
+                    role="menu">
+                  <li role="menuitem">
+                    <a [routerLink]="[connection.id]"
+                       class="dropdown-item">View</a>
+                  </li>
+                  <li role="menuitem">
+                    <a [routerLink]="[connection.id, 'edit']"
+                       class="dropdown-item">Edit</a>
+                  </li>
+                  <li role="menuitem">
+                    <a class="dropdown-item">Duplicate</a>
+                  </li>
+                  <li role="menuitem">
+                    <a class="dropdown-item">Delete</a>
+                  </li>
+                </ul>
+              </div>
               
               <!-- Card Title & Icon -->
               

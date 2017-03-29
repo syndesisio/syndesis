@@ -1,6 +1,17 @@
+@import '../../scss/colors';
+
 .ipaas-dashboard-integrations {
   color: #656565;
+  cursor: default;
   margin: 15px;
+
+  a, a:visited {
+    color: $pf-blue-400;
+
+    &.btn {
+      color: #FFFFFF;
+    }
+  }
 
   .btn {
     margin: 10px 5px;
@@ -35,7 +46,19 @@
 
     //----- Recent Updates ----------------->>
 
-    .recent-updates {}
+    .recent-updates {
+      .update {
+        border-bottom: 1px solid $pf-black-200;
+        cursor: default;
+        padding: 10px 0;
+
+        &:hover {
+          background: rgba(214, 238, 250, 0.36);
+        }
+      }
+
+      .update:last-child { border-bottom: none; }
+    }
 
 
     //----- Top 5 Integrations ----------------->>
@@ -70,15 +93,12 @@
         }
 
         .description {
-          //margin: 25px auto;
           max-width: 40%;
           padding: 5px;
         }
 
         .icons {
-          //padding: 1px;
           padding-left: 6px;
-          //width: 22.666667%;
 
           .fa {
             margin-right: 15px;
