@@ -15,6 +15,10 @@
  */
 package com.redhat.ipaas.project.converter;
 
+import java.io.*;
+import java.net.URISyntaxException;
+import java.util.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -22,7 +26,6 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.redhat.ipaas.connector.catalog.ConnectorCatalog;
 import com.redhat.ipaas.core.Json;
-import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.model.integration.Step;
 import io.fabric8.funktion.model.Flow;
@@ -30,16 +33,6 @@ import io.fabric8.funktion.model.Funktion;
 import io.fabric8.funktion.model.StepKinds;
 import io.fabric8.funktion.model.steps.Endpoint;
 import io.fabric8.funktion.support.YamlHelper;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
