@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.Path;
 
 import com.redhat.ipaas.core.IPaasServerException;
+import com.redhat.ipaas.core.Names;
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.github.GitHubService;
 import com.redhat.ipaas.model.Kind;
@@ -150,7 +151,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     private Integration ensureGitRepoName(Integration integration) {
         Optional<String> repoNameOptional = integration.getGitRepo();
         if (!repoNameOptional.isPresent()) {
-            String generatedRepoName = gitHubService.sanitizeRepoName(integration.getName());
+            String generatedRepoName = Names.sanitize(integration.getName());
             integration = new Integration.Builder()
                     .createFrom(integration).gitRepo(generatedRepoName)
                     .build();

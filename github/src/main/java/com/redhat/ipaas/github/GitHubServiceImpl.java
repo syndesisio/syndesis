@@ -66,19 +66,6 @@ public class GitHubServiceImpl implements GitHubService {
         return repository.getCloneUrl();
     }
 
-    @Override
-    public String sanitizeRepoName(String name) {
-        String ret = name.length() > 100 ? name.substring(0, 100) : name;
-        return ret.replace(" ","-")
-                  .toLowerCase()
-                  .chars()
-                  .filter(this::isValidRepoChar)
-                  .collect(StringBuilder::new,
-                           StringBuilder::appendCodePoint,
-                           StringBuilder::append)
-                  .toString();
-    }
-
     // =====================================================================================
 
     private Repository getRepository(String name) throws IOException {
@@ -148,11 +135,5 @@ public class GitHubServiceImpl implements GitHubService {
             }
             return null;
         }
-    }
-
-    private boolean isValidRepoChar(int c) {
-        return (c >= 'a' && c <= 'z') ||
-               (c >= '0' && c <= '9') ||
-               (c == '-');
     }
 }

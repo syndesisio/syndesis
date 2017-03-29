@@ -33,12 +33,4 @@ public interface GitHubService {
      * @throws IOException if interaction with GitHub fails.
      */
     String createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException;
-
-    /**
-     * Convert a given name to GitHub acceptable repo name.
-     *
-     * @param name to sanitize, must not be null
-     * @return sanitized name.
-     */
-    String sanitizeRepoName(String name);
 }

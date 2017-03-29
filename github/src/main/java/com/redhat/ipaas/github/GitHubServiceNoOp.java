@@ -33,9 +33,4 @@ public class GitHubServiceNoOp implements GitHubService {
         // Dummy value
         return "https://this.doesnt.exist/promise.git";
     }
-
-    @Override
-    public String sanitizeRepoName(String name) {
-        return name;
-    }
 }

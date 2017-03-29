@@ -15,6 +15,8 @@
  */
 package com.redhat.ipaas.openshift;
 
+import com.redhat.ipaas.core.Names;
+
 import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
@@ -36,7 +38,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public void createOpenShiftResources(CreateResourcesRequest request) {
-        String sanitizedName = sanitizeName(request.getName());
+        String sanitizedName = Names.sanitize(request.getName());
 
         String token = getAuthenticationTokenString();
         RequestConfig requestConfig = new RequestConfigBuilder().withOauthToken(token).build();
@@ -137,23 +139,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         }
     }
 
-    private String sanitizeName(String name) {
-        String ret = name.length() > 100 ? name.substring(0,100) : name;
-        return ret.replace(" ","-")
-            .toLowerCase()
-            .chars()
-            .filter(this::isValidNameChar)
-            .collect(StringBuilder::new,
-                StringBuilder::appendCodePoint,
-                StringBuilder::append)
-            .toString();
-    }
-
-    private boolean isValidNameChar(int c) {
-        return (c >= 'a' && c <= 'z') ||
-            (c >= '0' && c <= '9') ||
-            (c == '-');
-    }
 
     static class DockerImage {
         private String image;

@@ -15,33 +15,6 @@
  */
 package com.redhat.ipaas.github;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 public class GitHubServiceImplTest {
-
-
-    @Test
-    public void sanitizeRepoName() throws Exception {
-        GitHubService service = new GitHubServiceImpl(null, null, null);
-
-        String data[] = {
-            "bla", "bla",
-
-            "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789",
-            "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
-
-            "how-are-you", "how are you?",
-
-            "yet-sth--with--spaces", "yet sth  with !#ä spaceS",
-
-            "aaa-big-and-small-zzz", "AaA BIG and Small ZzZ",
-        };
-
-        for (int i = 0; i < data.length; i +=2) {
-            assertEquals(data[i], service.sanitizeRepoName(data[i+1]));
-        }
-    }
 
 }
