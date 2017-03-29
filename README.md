@@ -118,7 +118,7 @@ You should be able to log in at `https://<EXTERNAL_HOSTNAME>`.
 
 ## Minishift Quickstart
 
-If you use minishift you can easily setup the redhat-ipaas. The only prerequisite is that you have a GitHub application registered at https://github.com/settings/developers For the registration, please use as callback URL the output of `https://ipaas.$(minishift ip).xip.io`. Then you get a `<GITHUB_CLIENT_ID>` and a `<GITHUB_CLIENT_SECRET>`. These should be used in the commands below.
+With minishift you can easily try out redhat-ipaas. The only prerequisite is that you have a GitHub application registered at https://github.com/settings/developers For the registration, please use as callback URL the output of `https://ipaas.$(minishift ip).xip.io`. Then you get a `<GITHUB_CLIENT_ID>` and a `<GITHUB_CLIENT_SECRET>`. These should be used in the commands below.
 
 
 ```bash
@@ -127,7 +127,7 @@ If you use minishift you can easily setup the redhat-ipaas. The only prerequisit
 # to create the PV on your own. Also, you need to add some memory, 4192 or more is recommended
 minishift start  --openshift-version=v1.5.0-rc.0 --memory 4192
 
-# Login as root
+# Login as admin
 oc login -u system:admin
 
 # Register a GitHub application at https://github.com/settings/developers
