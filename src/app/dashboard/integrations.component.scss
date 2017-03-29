@@ -42,6 +42,7 @@
 
     .top-integrations {
       .integration {
+        cursor: default;
         padding: 10px;
 
         &:hover {
@@ -75,8 +76,9 @@
         }
 
         .icons {
-          padding: 1px;
-          width: 22.666667%;
+          //padding: 1px;
+          padding-left: 6px;
+          //width: 22.666667%;
 
           .fa {
             margin-right: 15px;
