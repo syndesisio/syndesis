@@ -41,8 +41,9 @@ deployment:
     commands:
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
     - docker push rhipaas/ipaas-rest:latest | cat -
-    - curl -sSL https://github.com/openshift/origin/releases/download/v1.4.1/openshift-origin-client-tools-v1.4.1-3f9807a-linux-64bit.tar.gz | sudo tar xz -C /usr/bin --strip-components 1
-    - oc login --server=${OPENSHIFT_APISERVER} --token=${OPENSHIFT_TOKEN}
-    - oc project ipaas-staging
-    - oc import-image --confirm=true rhipaas/ipaas-rest:latest
+# Disable pushing of the imagestream for now as it is done by the internal CI:
+#    - curl -sSL https://github.com/openshift/origin/releases/download/v1.4.1/openshift-origin-client-tools-v1.4.1-3f9807a-linux-64bit.tar.gz | sudo tar xz -C /usr/bin --strip-components 1
+#    - oc login --server=${OPENSHIFT_APISERVER} --token=${OPENSHIFT_TOKEN}
+#    - oc project ipaas-staging
+#    - oc import-image --confirm=true rhipaas/ipaas-rest:latest
 
