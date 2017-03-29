@@ -25,14 +25,17 @@ describe('DashboardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [IPaaSCommonModule, StoreModule, RouterTestingModule.withRoutes([]), RestangularModule.forRoot()],
+      imports: [
+        IPaaSCommonModule,
+        ModalModule,
+        ToasterModule,
+        StoreModule,
+        RouterTestingModule.withRoutes([]),
+        RestangularModule.forRoot(),
+      ],
       declarations: [
         DashboardComponent,
-        ModalModule.forRoot(),
-        ToasterModule,
         EmptyStateComponent,
-        //PopularTemplatesComponent,
-        //TemplatesListComponent,
         DashboardConnectionsComponent,
         DashboardIntegrationsComponent,
       ],

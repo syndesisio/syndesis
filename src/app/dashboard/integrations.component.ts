@@ -26,6 +26,7 @@ export class DashboardIntegrationsComponent implements OnInit {
   connections: Observable<Connections>;
   @Input() integrations: Integrations;
   @Input() loading: boolean;
+  @Output() onSelected: EventEmitter<Integration> = new EventEmitter();
   selectedId = undefined;
   truncateLimit = 80;
   truncateTrail = '…';
@@ -88,8 +89,6 @@ export class DashboardIntegrationsComponent implements OnInit {
   }
 
   //-----  Selecting an Integration ------------------->>
-
-  @Output() onSelected: EventEmitter<Integration> = new EventEmitter();
 
   onSelect(integration: Integration) {
     log.debugc(() => 'Selected integration (list): ' + integration.name, category);
