@@ -6,9 +6,9 @@
     <div class="row row-cards-pf first-row">
       <div class="page-header">
         <div class="actions pull-right">
-          <a href="#">View All Integrations</a>&nbsp;&nbsp;
+          <a href="#" [routerLink]="['/integrations']">View All Integrations</a>&nbsp;&nbsp;
           <a href=""
-             class="btn btn-primary">Create Integration
+             class="btn btn-primary" [routerLink]="['/integrations/create']">Create Integration
           </a>
         </div>
         <h1>Dashboard: Integrations</h1>
@@ -38,7 +38,7 @@
 
               <!-- Icons -->
 
-              <div class="col-xs-4 icons">
+              <div class="col-xs-3 icons">
                 <div class="list-view-pf-left">
                   <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
                   <span class="fa fa-angle-right"></span>
@@ -54,13 +54,15 @@
 
               <!-- Times of Use -->
 
-              <div class="col-xs-3">
+              <div class="col-xs-3 times-of-use">
                 <p>18 Times of Use</p>
               </div>
 
               <!-- Status -->
 
-              <div class="col-xs-1"></div>
+              <div class="col-xs-1 status">
+                <i class="pficon pficon-ok"></i>
+              </div>
 
 
               <!-- Actions -->
@@ -150,9 +152,9 @@
     <div class="row row-cards-pf third-row">
       <div class="page-header">
         <div class="actions pull-right">
-          <a href="#">View All Connections</a>&nbsp;&nbsp;
+          <a href="#" [routerLink]="['/connections']">View All Connections</a>&nbsp;&nbsp;
           <a href=""
-             class="btn btn-primary">Create Connection
+             class="btn btn-primary" [routerLink]="['/connections/create']">Create Connection
           </a>
         </div>
         <h1>Dashboard: Connections</h1>
