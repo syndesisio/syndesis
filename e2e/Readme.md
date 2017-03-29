@@ -8,9 +8,15 @@ yarn start
 
 create `e2e/data/users.json` file with your github login credentials
 
-launch tests
+launch tests using local dev server `http://localhost:4200`
 ```bash
 yarn e2e
+```
+
+alternatively launch tests using remote web ui
+```bash
+export IPAAS_UI_URL='https://ipaas-qe.b6ff.rh-idev.openshiftapps.com/'
+yarn e2e:ipaas-qe
 ```
 
 ## Launch subset of cucumber tests
