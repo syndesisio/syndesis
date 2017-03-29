@@ -4,6 +4,9 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 
+import { ModalModule } from 'ng2-bootstrap/modal';
+import { ToasterModule } from 'angular2-toaster';
+
 import { IPaaSCommonModule } from '../../common/common.module';
 import { ConnectionsListComponent } from './list.component';
 
@@ -13,7 +16,12 @@ describe('ConnectionsListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [IPaaSCommonModule, RouterTestingModule.withRoutes([])],
+      imports: [
+        IPaaSCommonModule,
+        RouterTestingModule.withRoutes([]),
+        ModalModule,
+        ToasterModule,
+      ],
       declarations: [ConnectionsListComponent],
     })
       .compileComponents();
