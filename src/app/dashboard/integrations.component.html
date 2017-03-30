@@ -153,10 +153,13 @@
             <div class="row update"
                  *ngFor="let integration of integrations">
               <div class="col-xs-6">
-                <a>Update client service</a>
+                <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">
+                  Update integration: {{ integration.name }}
+                </a>
               </div>
               <div class="col-xs-2">
-                <span class="label label-default">
+                <span class="label"
+                      [class]="getLabelClass(integration)">
                   {{ integration.currentStatus }}
                 </span>
               </div>

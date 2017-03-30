@@ -38,14 +38,13 @@ export class DashboardIntegrationsComponent implements OnInit {
     1, 3, 2,
   ];
   public doughnutChartType = 'doughnut';
-  /*
-  public doughnutChartColors = [
-    '#3f9c35', // PatternFly Green 400
-    '#ec7a08', // PatternFly Orange 400
-    '#ededed', // PatternFly Black 200
-  ];
-  */
-  public doughnutChartColors = ['#3f9c35', '#ec7a08', '#ededed'];
+  public doughnutChartColors = [{
+    backgroundColor: [
+      '#3f9c35', // PatternFly Green 400
+      '#ec7a08', // PatternFly Orange 400
+      '#ededed', // PatternFly Black 200
+    ],
+  }];
 
   private toasterService: ToasterService;
   private toast;
@@ -167,6 +166,20 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   //-----  Recent Updates Section ------------------->>
 
+  public getLabelClass(integration): string {
+    log.debugc(() => 'Integration: ' + JSON.stringify(integration));
+    switch (integration.status) {
+      case 'Activated':
+      default:
+        return 'label-success';
+      case 'Deactivated':
+        return 'label-default';
+      case 'Deleted':
+        return 'label-danger';
+      case 'Draft':
+        return 'label-primary';
+    }
+  }
 
   //-----  Selecting an Integration ------------------->>
 
