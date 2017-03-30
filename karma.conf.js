@@ -10,12 +10,13 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-coverage-istanbul-reporter'),
       require('@angular/cli/plugins/karma'),
-      require('karma-junit-reporter'),
+      require('karma-junit-reporter')
     ],
     files: [
       { pattern: './src/test.ts', watched: false },
       './node_modules/jquery/dist/jquery.min.js',
-      './node_modules/jquery-match-height/dist/jquery.matchHeight-min.js'
+      './node_modules/jquery-match-height/dist/jquery.matchHeight-min.js',
+      './node_modules/chart.js/dist/Chart.js'
     ],
     preprocessors: {
       './src/test.ts': ['@angular/cli']

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
 
@@ -16,6 +16,7 @@ const category = getCategory('Dashboard');
 })
 export class DashboardConnectionsComponent implements OnInit {
 
+  selectedId = undefined;
   private toasterService: ToasterService;
   private toast;
 
@@ -23,6 +24,8 @@ export class DashboardConnectionsComponent implements OnInit {
 
   @Input() connections: Connections;
   @Input() loading: boolean;
+  @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
+
   truncateLimit = 80;
   truncateTrail = '…';
 
@@ -80,6 +83,17 @@ export class DashboardConnectionsComponent implements OnInit {
   popToast(toast) {
     this.toasterService.pop(toast);
   }
+
+
+  //-----  Selecting a Connection ------------------->>
+
+
+  onSelect(connection: Connection) {
+    log.debugc(() => 'Selected connection (list): ' + connection.name, category);
+    this.selectedId = connection.id;
+    this.onSelected.emit(connection);
+  }
+
 
 
   //----- Initialization ------------------->>

@@ -16,6 +16,7 @@ Included in this stack are the following technologies:
 * Linting: [TsLint](https://github.com/palantir/tslint) (Linting for TypeScript)
 * Logging: [typescript-logging](https://github.com/mreuvers/typescript-logging) (TypeScript Logging)
 * Code Analysis: [Codelyzer](https://github.com/mgechev/codelyzer) (TsLint rules for static code analysis of Angular 2 TypeScript projects)
+* Charts: [ng2-charts](https://github.com/valor-software/ng2-charts) (Data Visualization)
 
 ## Quick Start
 

@@ -7,9 +7,14 @@
 
   a, a:visited {
     color: $pf-blue-400;
+    cursor: pointer;
 
     &.btn {
       color: #FFFFFF;
+    }
+
+    &:hover {
+      text-decoration: none;
     }
   }
 
@@ -77,7 +82,7 @@
         }
 
         .actions {
-          //padding: 5px;
+          margin-top: -6px;
           padding: 0;
 
           ul {
@@ -100,13 +105,11 @@
 
         .description {
           max-width: 40%;
-          //padding: 5px;
           padding: 0;
         }
 
         .icons {
           padding: 0 0 0 6px;
-          //width: 20%;
 
           .list-view-pf-left {
             display: table-cell;
@@ -126,9 +129,7 @@
 
         .name {
           font-weight: 500;
-          //padding: 7px;
-          //padding-left: 20px;
-          //padding-right: 20px;
+          line-height: 28px;
           padding: 0;
 
           a, a:visited, a:hover, a:focus {
@@ -140,10 +141,10 @@
         .status {
           font-size: large;
           padding: 0;
-          //width: 0.333333%;
         }
 
         .times-of-use {
+          line-height: 28px;
           padding: 0;
 
         }

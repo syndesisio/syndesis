@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
+
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
 
@@ -18,6 +20,9 @@ const category = getCategory('Dashboard');
 })
 export class DashboardIntegrationsComponent implements OnInit {
 
+  public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
+  public doughnutChartData: number[] = [350, 450, 100];
+  public doughnutChartType = 'doughnut';
   private toasterService: ToasterService;
   private toast;
 
@@ -26,12 +31,14 @@ export class DashboardIntegrationsComponent implements OnInit {
   connections: Observable<Connections>;
   @Input() integrations: Integrations;
   @Input() loading: boolean;
-  @Output() onSelected: EventEmitter<Integration> = new EventEmitter();
   selectedId = undefined;
   truncateLimit = 80;
   truncateTrail = '…';
 
-  constructor(private connectionStore: ConnectionStore, toasterService: ToasterService) {
+  constructor(private connectionStore: ConnectionStore,
+              private integrationStore: IntegrationStore,
+              private router: Router,
+              toasterService: ToasterService) {
     this.connections = this.connectionStore.list;
     this.toasterService = toasterService;
   }
@@ -60,7 +67,8 @@ export class DashboardIntegrationsComponent implements OnInit {
 
     this.hideModal();
 
-    //this.store.activate(integration['id']);
+    // Not working yet, we need an `activate` method in the store
+    //this.integrationStore.activate(integration['id']);
 
     this.toast = {
       type: 'success',
@@ -77,7 +85,8 @@ export class DashboardIntegrationsComponent implements OnInit {
 
     this.hideModal();
 
-    //this.store.deactivate(integration['id']);
+    // Not working yet, we need a `deactivate` method in the store
+    //this.integrationStore.deactivate(integration['id']);
 
     this.toast = {
       type: 'success',
@@ -88,17 +97,23 @@ export class DashboardIntegrationsComponent implements OnInit {
     setTimeout(this.popToast(this.toast), 1000);
   }
 
+
+  //-----  Donut Chart ------------------->>
+
+  public chartClicked(e: any): void {
+    log.debugc(() => 'Click event: ' + JSON.stringify(e));
+  }
+
+  public chartHovered(e: any): void {
+    log.debugc(() => 'Hover event: ' + JSON.stringify(e));
+  }
+
   //-----  Selecting an Integration ------------------->>
 
-  onSelect(integration: Integration) {
-    log.debugc(() => 'Selected integration (list): ' + integration.name, category);
-    this.selectedId = integration.id;
-    this.onSelected.emit(integration);
+  onSelected(connection: Connection) {
+    this.router.navigate(['connections', connection.id]);
   }
 
-  isSelected(integration: Integration) {
-    return integration.id === this.selectedId;
-  }
 
   //-----  Icons ------------------->>
 
@@ -123,6 +138,21 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   public hideModal(): void {
     this.childModal.hide();
+  }
+
+  //-----  Randomize Times Used ------------------->>
+
+  randomizeTimesUsed(integration: Integration) {
+    // For testing purposes only
+    /*
+    if (!integration.timesUsed) {
+      log.debugc(() => 'No times used available, auto-generating one..');
+      return Math.floor(Math.random() * 25) + 1;
+    } else {
+      log.debugc(() => 'Times used: ' + JSON.stringify(integration['timesUsed']));
+      return integration.timesUsed;
+    }
+    */
   }
 
   //-----  Toast ------------------->>

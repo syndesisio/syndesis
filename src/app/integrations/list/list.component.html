@@ -41,9 +41,11 @@
             </div>
             <div class="modal-footer">
               <button class="pull-right btn btn-primary"
-                      (click)="doAction(currentAction, integration)">{{ getActionButtonText() }}</button>
+                      (click)="doAction(currentAction, integration)">{{ getActionButtonText() }}
+              </button>
               <button class="pull-right btn btn-cancel"
-                      (click)="hideModal()">Cancel</button>
+                      (click)="hideModal()">Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -79,13 +81,25 @@
           </div>
           <div *ngIf="integration.currentStatus === integration.desiredStatus">
             -->
-            <!-- TODO these should be using currentStatus when it's available -->
-            <button *ngIf="integration.desiredStatus === 'Active'" type="button" class="btn btn-primary" class="btn btn-primary" (click)="requestDeactivate(integration)">Active</button>
-            <button *ngIf="integration.desiredStatus === 'Deactivated' || 'Draft'" type="button" class="btn btn-default" (click)="requestActivate(integration)">Inactive</button>
-            <button *ngIf="integration.desiredStatus === 'Deleted'" type="button" class="btn btn-danger" disabled>Deleted</button>
-            <!--
-          </div>
-          -->
+          <!-- TODO these should be using currentStatus when it's available -->
+          <button *ngIf="integration.desiredStatus === 'Active'"
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="requestDeactivate(integration)">Active
+          </button>
+          <button *ngIf="integration.desiredStatus === 'Deactivated' || 'Draft'"
+                  type="button"
+                  class="btn btn-default"
+                  (click)="requestActivate(integration)">Inactive
+          </button>
+          <button *ngIf="integration.desiredStatus === 'Deleted'"
+                  type="button"
+                  class="btn btn-danger"
+                  disabled>Deleted
+          </button>
+          <!--
+        </div>
+        -->
         </div>
       </div>
 

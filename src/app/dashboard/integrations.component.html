@@ -47,18 +47,13 @@
               <!-- Name -->
 
               <div class="col-xs-4 name">
-                <!--
-                <a href="" [routerLink]="['/integrations', integration.id]">
-                  {{ integration.name }}
-                </a>
-                -->
                 {{ integration.name }}
               </div>
 
               <!-- Times of Use -->
 
               <div class="col-xs-3 times-of-use">
-                <p>18 Times of Use</p>
+                <p>{{ integration.timesUsed || 0 }} Times of Use</p>
               </div>
 
               <!-- Status -->
@@ -122,7 +117,14 @@
             </h2>
           </div>
           <div class="card-pf-body">
-            <p>Nullam quis risus eget urna mollis ornare vel eu leo. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            <div style="display: block">
+              <canvas baseChart
+                      [data]="doughnutChartData"
+                      [labels]="doughnutChartLabels"
+                      [chartType]="doughnutChartType"
+                      (chartHover)="chartHovered($event)"
+                      (chartClick)="chartClicked($event)"></canvas>
+            </div>
           </div>
         </div>
 
@@ -169,7 +171,9 @@
 
     <div class="row row-cards-pf fourth-row">
 
-      <ipaas-dashboard-connections [connections]="connections | async"></ipaas-dashboard-connections>
+      <ipaas-dashboard-connections [connections]="connections | async"
+                                   [loading]="loading"
+                                   (onSelected)="onSelected($event)"></ipaas-dashboard-connections>
 
     </div>
   </div>

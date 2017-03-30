@@ -41,7 +41,8 @@
         "../node_modules/jquery-match-height/dist/jquery.matchHeight.js",
         "../node_modules/tether/dist/js/tether.js",
         "../node_modules/bootstrap/dist/js/bootstrap.js",
-        "../node_modules/patternfly/dist/js/patternfly.js"
+        "../node_modules/patternfly/dist/js/patternfly.js",
+        "../node_modules/chart.js/dist/Chart.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
