@@ -98,17 +98,17 @@
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
       <artifactId>timer-connector</artifactId>
-      <version>0.2.1</version>
+      <version>0.3.3</version>
     </dependency>
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
       <artifactId>http-get-connector</artifactId>
-      <version>0.2.1</version>
+      <version>0.3.3</version>
     </dependency>
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
       <artifactId>http-post-connector</artifactId>
-      <version>0.2.1</version>
+      <version>0.3.3</version>
     </dependency>
 
     <!-- spring-boot as runtime -->
