@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Displaying the list of Pods in project: ${KUBERNETES_NAMESPACE}"
+oc get pods -n ${KUBERNETES_NAMESPACE}
 echo "Removing IPaaS from ${KUBERNETES_NAMESPACE}"
 oc process redhat-ipaas-single-tenant  \
     ROUTE_HOSTNAME=ipaas-testing.b6ff.rh-idev.openshiftapps.com \
