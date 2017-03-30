@@ -82,15 +82,20 @@
           <div *ngIf="integration.currentStatus === integration.desiredStatus">
             -->
           <!-- TODO these should be using currentStatus when it's available -->
-          <button *ngIf="integration.desiredStatus === 'Active'"
+          <button *ngIf="integration.desiredStatus === 'Activated'"
                   type="button"
                   class="btn btn-primary"
                   (click)="requestDeactivate(integration)">Active
           </button>
-          <button *ngIf="integration.desiredStatus === 'Deactivated' || 'Draft'"
+          <button *ngIf="integration.desiredStatus === 'Deactivated'"
                   type="button"
                   class="btn btn-default"
                   (click)="requestActivate(integration)">Inactive
+          </button>
+          <button *ngIf="integration.desiredStatus === 'Draft'"
+                  type="button"
+                  class="btn btn-default"
+                  disabled>Draft
           </button>
           <button *ngIf="integration.desiredStatus === 'Deleted'"
                   type="button"
