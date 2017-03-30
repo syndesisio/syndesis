@@ -134,6 +134,7 @@
                       [data]="doughnutChartData"
                       [labels]="doughnutChartLabels"
                       [chartType]="doughnutChartType"
+                      [colors]="doughnutChartColors"
                       (chartHover)="chartHovered($event)"
                       (chartClick)="chartClicked($event)"></canvas>
             </div>
@@ -178,7 +179,7 @@
           <a href="#" [routerLink]="['/connections']">View All Connections</a>&nbsp;&nbsp;
           <button class="btn btn-primary" [routerLink]="['/connections/create']">Create Connection</button>
         </div>
-        <h1>Dashboard: Connections</h1>
+        <h2>Dashboard: Connections</h2>
       </div>
     </div>
 

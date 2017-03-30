@@ -32,11 +32,20 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   public doughnutChartLabels: string[] = ['Active Integrations', 'Inactive Integrations', 'Draft Integrations'];
   public doughnutChartData: number[] = [
-    this.countActiveIntegrations(),
-    this.countInactiveIntegrations(),
-    this.countDraftIntegrations(),
+    //this.countActiveIntegrations(),
+    //this.countInactiveIntegrations(),
+    //this.countDraftIntegrations(),
+    1, 3, 2,
   ];
   public doughnutChartType = 'doughnut';
+  /*
+  public doughnutChartColors = [
+    '#3f9c35', // PatternFly Green 400
+    '#ec7a08', // PatternFly Orange 400
+    '#ededed', // PatternFly Black 200
+  ];
+  */
+  public doughnutChartColors = ['#3f9c35', '#ec7a08', '#ededed'];
 
   private toasterService: ToasterService;
   private toast;
