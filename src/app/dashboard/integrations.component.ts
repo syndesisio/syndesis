@@ -123,6 +123,12 @@ export class DashboardIntegrationsComponent implements OnInit {
     this.childModal.hide();
   }
 
+  //-----  Randomize Times Used ------------------->>
+
+  randomizeTimesUsed() {
+    return Math.floor(Math.random() * 25) + 1;
+  }
+
   //-----  Toast ------------------->>
 
   // Show toast notification
