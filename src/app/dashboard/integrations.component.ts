@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
 
+
 import { log, getCategory } from '../logging';
 
 import { Connection, Connections, Integration, Integrations } from '../model';
@@ -92,6 +93,21 @@ export class DashboardIntegrationsComponent implements OnInit {
     };
 
     setTimeout(this.popToast(this.toast), 1000);
+  }
+
+
+  //-----  Donut Chart ------------------->>
+
+  public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
+  public doughnutChartData: number[] = [350, 450, 100];
+  public doughnutChartType = 'doughnut';
+
+  public chartClicked(e:any): void {
+    log.debugc(() => 'Click event: ' + JSON.stringify(e));
+  }
+
+  public chartHovered(e:any): void {
+    log.debugc(() => 'Hover event: ' + JSON.stringify(e));
   }
 
   //-----  Selecting an Integration ------------------->>

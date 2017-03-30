@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { IPaaSCommonModule } from '../common/common.module';
 
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
 
@@ -26,8 +27,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     TemplatesModule,
     IPaaSCommonModule,
-    ToasterModule,
+    ChartsModule,
     ModalModule,
+    ToasterModule,
   ],
   declarations: [
     DashboardComponent,
