@@ -57,6 +57,39 @@
       .card-pf-body {
         overflow: auto;
       }
+
+      .legend {
+        padding: 0;
+
+        .col-xs-12 {
+          padding: 0;
+
+          .colors {
+            height: 10px;
+            padding: 9px;
+
+            &.active {
+              background: $pf-green-400;
+            }
+
+            &.deleted {
+              background: $pf-orange-400;
+            }
+
+            &.draft {
+              background: $pf-blue-400;
+            }
+
+            &.inactive {
+              background: $pf-black-200;
+            }
+          }
+
+          .text {
+            padding: 0 0 0 13px;
+          }
+        }
+      }
     }
 
 

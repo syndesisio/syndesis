@@ -30,19 +30,26 @@ export class DashboardIntegrationsComponent implements OnInit {
   truncateLimit = 80;
   truncateTrail = '…';
 
-  public doughnutChartLabels: string[] = ['Active Integrations', 'Inactive Integrations', 'Draft Integrations'];
+  public doughnutChartLabels: string[] = [
+    'Active',
+    'Deleted',
+    'Draft',
+    'Inactive',
+  ];
   public doughnutChartData: number[] = [
     //this.countActiveIntegrations(),
-    //this.countInactiveIntegrations(),
+    //this.countDeletedIntegrations(),
     //this.countDraftIntegrations(),
-    1, 3, 2,
+    //this.countInactiveIntegrations(),
+    1, 0, 3, 2
   ];
   public doughnutChartType = 'doughnut';
   public doughnutChartColors = [{
     backgroundColor: [
-      '#3f9c35', // PatternFly Green 400
-      '#ec7a08', // PatternFly Orange 400
-      '#ededed', // PatternFly Black 200
+      '#3f9c35', // PatternFly Green 400, Active
+      '#ec7a08', // PatternFly Orange 400, Deleted
+      '#0088ce', // PatternFly Blue 400, Draft
+      '#ededed', // PatternFly Black 200, Inactive
     ],
   }];
   public doughnutChartOptions: any = {
@@ -148,6 +155,8 @@ export class DashboardIntegrationsComponent implements OnInit {
   public countInactiveIntegrations() {
     return this.integrations.length;
   }
+
+
 
 
   public chartClicked(e: any): void {
