@@ -125,8 +125,14 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   //-----  Randomize Times Used ------------------->>
 
-  randomizeTimesUsed() {
-    return Math.floor(Math.random() * 25) + 1;
+  randomizeTimesUsed(integration: Integration) {
+    if (!integration.timesUsed) {
+      log.debugc(() => 'No times used available, auto-generating one..');
+      return Math.floor(Math.random() * 25) + 1;
+    } else {
+      log.debugc(() => 'Times used: ' + JSON.stringify(integration['timesUsed']));
+      return integration.timesUsed;
+    }
   }
 
   //-----  Toast ------------------->>
