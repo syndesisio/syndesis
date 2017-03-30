@@ -7,6 +7,7 @@ import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ng2-restangular';
 
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ng2-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
 
@@ -27,6 +28,7 @@ describe('DashboardComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         IPaaSCommonModule,
+        ChartsModule,
         ModalModule,
         ToasterModule,
         StoreModule,
