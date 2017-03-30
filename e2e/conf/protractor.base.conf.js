@@ -26,7 +26,7 @@ exports.config = {
   frameworkPath: require.resolve('protractor-cucumber-framework'),
   cucumberOpts: {
     require: [
-      testPath + '/env.js',
+      testPath + '/env.ts',
       testPath + '/**/*.steps.ts'
     ],
     format: [
