@@ -27,6 +27,7 @@
     <version>9</version>
   </parent>
 
+  <groupId>com.redhat.ipaas</groupId>
   <artifactId>ipaas-verifier</artifactId>
   <name>iPaaS Verifier</name>
   <version>1.0.0-SNAPSHOT</version>

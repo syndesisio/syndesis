@@ -50,6 +50,8 @@ public abstract class BaseVerifier implements Verifier {
             return Collections.singletonList(createUnsupportedResponse());
         }
 
+        customize(params);
+
         // the connector must support ping check if its verifiable
         List<VerifierResponse> resp = new ArrayList<VerifierResponse>();
         for (Verifier.Scope scope :  Verifier.Scope.values()) {
@@ -69,6 +71,11 @@ public abstract class BaseVerifier implements Verifier {
             }
         }
         return resp;
+    }
+
+    // Hook for customizing params
+    protected void customize(Map<String, Object> params) {
+
     }
 
     private ComponentVerifier.Scope toComponentScope(Scope scope) {
