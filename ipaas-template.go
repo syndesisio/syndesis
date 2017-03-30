@@ -34,6 +34,7 @@ var installCommand = &cobra.Command{
 type Context struct {
 	Name         string;
 	DevMode      bool;
+	Ephemeral    bool;
 	SingleTenant bool;
 }
 
@@ -43,6 +44,7 @@ func init() {
 	installCommand.PersistentFlags().StringVar(&context.Name, "name", "redhat-ipaas", "Name of the template")
 	installCommand.PersistentFlags().BoolVar(&context.DevMode, "dev-mode", false, "Developer mode?")
 	installCommand.PersistentFlags().BoolVar(&context.SingleTenant, "single-tenant", false, "Single tenant mode?")
+	installCommand.PersistentFlags().BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 }
 

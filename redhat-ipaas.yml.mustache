@@ -731,6 +731,7 @@ objects:
           resources:
             limits:
               memory: ${POSTGRESQL_MEMORY_LIMIT}
+{{^Ephemeral}}
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: ipaas-db-data
@@ -738,6 +739,7 @@ objects:
         - name: ipaas-db-data
           persistentVolumeClaim:
             claimName: ipaas-db
+{{/Ephemeral}}
     triggers:
     - imageChangeParams:
         automatic: true
@@ -855,6 +857,7 @@ objects:
     type: ClusterIP
   status:
     loadBalancer: {}
+{{^Ephemeral}}
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
@@ -868,6 +871,7 @@ objects:
     resources:
       requests:
         storage: ${POSTGRESQL_VOLUME_CAPACITY}
+{{/Ephemeral}}
 - apiVersion: v1
   kind: Route
   metadata:

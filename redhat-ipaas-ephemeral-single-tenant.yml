@@ -1,3 +1,6 @@
+#
+# Do not edit, this is a generated file.  To regenerate,  run: ./generate-templates.sh
+#
 apiVersion: v1
 kind: Template
 metadata:
@@ -7,8 +10,8 @@ parameters:
   description: The external hostname to access the iPaaS
   required: true
 - name: KEYCLOAK_ROUTE_HOSTNAME
-  description: The external hostname to access the iPaaS Keycloak
-  value: ipaas-keycloak.127.0.0.1.nip.io
+  description: The external hostname to access the iPaaS Keycloak directly
+  value: ipaas-keycloak.127.0.0.1.xip.io
   required: true
 - name: KEYCLOAK_ADMIN_USERNAME
   description: The Keycloak admin username
@@ -96,6 +99,7 @@ message: |-
 
     FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
 objects:
+
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -155,7 +159,8 @@ objects:
         name: docker.io/rhipaas/token-rp:v0.4.0
       importPolicy:
         scheduled: true
-      name: v0.2.0
+      name: v0.4.0
+
 - apiVersion: v1
   kind: Secret
   metadata:
@@ -203,7 +208,7 @@ objects:
   - kind: Group
     name: dedicated-admins
   userNames:
-  - system:serviceaccount:ipaas-staging:ipaas-
+  - system:serviceaccount:ipaas-staging:ipaas-deployer
   - system:serviceaccount:ipaas-ci:jenkins
 - apiVersion: v1
   kind: DeploymentConfig
@@ -236,6 +241,7 @@ objects:
         containers:
         - name: ipaas-ui
           image: ' '
+
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
@@ -264,6 +270,7 @@ objects:
           kind: ImageStreamTag
           name: ipaas-ui:latest
       type: ImageChange
+
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -345,6 +352,7 @@ objects:
                 key: password
                 name: ipaas-keycloak-admin
           image: ' '
+
           name: ipaas-keycloak
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -383,6 +391,7 @@ objects:
           kind: ImageStreamTag
           name: ipaas-keycloak:2.5.4.Final
       type: ImageChange
+
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -457,7 +466,12 @@ objects:
             value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
+          - name: NAMESPACE
+            valueFrom: 
+              fieldRef: 
+                fieldPath: metadata.namespace
           image: ' '
+
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
@@ -498,6 +512,7 @@ objects:
           kind: ImageStreamTag
           name: ipaas-rest:latest
       type: ImageChange
+
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -530,6 +545,7 @@ objects:
         containers:
         - name: ipaas-github-proxy
           image: ' '
+
           imagePullPolicy: IfNotPresent
           args:
           - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
@@ -563,6 +579,7 @@ objects:
           kind: ImageStreamTag
           name: ipaas-token-rp:v0.4.0
       type: ImageChange
+
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -595,6 +612,7 @@ objects:
         containers:
         - name: ipaas-openshift-proxy
           image: ' '
+
           imagePullPolicy: IfNotPresent
           args:
           - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
@@ -628,6 +646,7 @@ objects:
           kind: ImageStreamTag
           name: ipaas-token-rp:v0.4.0
       type: ImageChange
+
     - type: ConfigChange
 - apiVersion: v1
   kind: DeploymentConfig
@@ -682,6 +701,7 @@ objects:
           resources:
             limits:
               memory: ${POSTGRESQL_MEMORY_LIMIT}
+
     triggers:
     - imageChangeParams:
         automatic: true
@@ -799,6 +819,7 @@ objects:
     type: ClusterIP
   status:
     loadBalancer: {}
+
 - apiVersion: v1
   kind: Route
   metadata:
@@ -1536,6 +1557,7 @@ objects:
           "enabled": true,
           "clientAuthenticatorType": "client-secret",
           "redirectUris": [ "https://${ROUTE_HOSTNAME}/*" ],
+
           "webOrigins": [ "+" ],
           "notBefore": 0,
           "bearerOnly": false,
@@ -1937,6 +1959,7 @@ objects:
             classes: com.redhat.ipaas.rest.v1.V1Application
       cors:
         allowedOrigins: https://${ROUTE_HOSTNAME}
+
       cache:
         cluster:
           name: IPaaSCluster
@@ -1962,6 +1985,10 @@ objects:
           sensitive: false
         jsondb:
           enabled: true
+      github:
+        service: ipaas-github-proxy.${NAMESPACE}.svc
+      openshift:
+        openShiftHost: ipaas-openshift-proxy.${NAMESPACE}.svc
       keycloak:
         enabled: true
         configurationFile: file:config/ipaas-client.json

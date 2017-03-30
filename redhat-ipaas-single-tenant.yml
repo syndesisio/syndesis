@@ -1,5 +1,5 @@
 #
-# Do not edit, this is a generated file.
+# Do not edit, this is a generated file.  To regenerate,  run: ./generate-templates.sh
 #
 apiVersion: v1
 kind: Template
@@ -708,6 +708,7 @@ objects:
         - name: ipaas-db-data
           persistentVolumeClaim:
             claimName: ipaas-db
+
     triggers:
     - imageChangeParams:
         automatic: true
@@ -838,6 +839,7 @@ objects:
     resources:
       requests:
         storage: ${POSTGRESQL_VOLUME_CAPACITY}
+
 - apiVersion: v1
   kind: Route
   metadata:
