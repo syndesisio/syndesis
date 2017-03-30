@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 
 import { log, getCategory } from '../logging';
 
-import { Connections } from '../model';
+import { Connection, Connections } from '../model';
 import { ConnectionStore } from '../store/connection/connection.store';
 
 const category = getCategory('Dashboard');
@@ -19,9 +20,15 @@ export class EmptyStateComponent implements OnInit {
   truncateLimit = 80;
   truncateTrail = '…';
 
-  constructor(private connectionStore: ConnectionStore) {
+  constructor(private connectionStore: ConnectionStore,
+              private router: Router) {
     this.connections = this.connectionStore.list;
   }
+
+  onSelected(connection: Connection) {
+    this.router.navigate(['connections', connection.id]);
+  }
+
 
   ngOnInit() {
     this.connectionStore.loadAll();
