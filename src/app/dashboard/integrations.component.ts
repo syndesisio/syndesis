@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
+//import { Tooltip } from 'ng2-bootstrap/tooltip';
 
 import { log, getCategory } from '../logging';
 

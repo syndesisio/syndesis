@@ -59,8 +59,19 @@
               <!-- Status -->
 
               <div class="col-xs-1 status">
-                <i class="pficon"
-                   [ngClass]="(integration.statusMessage)?'pficon-ok':'pficon-error-circle-o'"></i>
+
+                <!-- OK Status -->
+
+                <i *ngIf="!integration.statusMessage"
+                   class="pficon pficon-ok"></i>
+
+                <!-- Not OK Status -->
+
+                <template #statTemplate>Just another: {{integration.statusMessage}}</template>
+                <i *ngIf="integration.statusMessage"
+                   class="pficon pficon-error-circle-o"
+                   [tooltip]="statTemplate"
+                   placement="bottom"></i>
               </div>
 
 
