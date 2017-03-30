@@ -42,7 +42,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class IntegrationController {
 
-
     private final DataManager dataManager;
     private final EventBus eventBus;
     private final HashMap<Integration.Status, WorkflowHandler> handlers = new HashMap<>();
@@ -150,7 +149,7 @@ public class IntegrationController {
         return
             integration == null
             || workflow == null
-            || !workflow.getTriggerStatuses().contains(integration.getDesiredStatus());
+            || !workflow.getTriggerStatuses().contains(integration.getDesiredStatus().get());
     }
 
 }
