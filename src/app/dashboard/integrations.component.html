@@ -169,7 +169,9 @@
 
     <div class="row row-cards-pf fourth-row">
 
-      <ipaas-dashboard-connections [connections]="connections | async"></ipaas-dashboard-connections>
+      <ipaas-dashboard-connections [connections]="connections | async"
+                                   [loading]="loading"
+                                   (onSelected)="onSelected($event)"></ipaas-dashboard-connections>
 
     </div>
   </div>

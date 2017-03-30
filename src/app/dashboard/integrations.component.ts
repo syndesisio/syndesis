@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
+
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
 
@@ -26,12 +28,13 @@ export class DashboardIntegrationsComponent implements OnInit {
   connections: Observable<Connections>;
   @Input() integrations: Integrations;
   @Input() loading: boolean;
-  @Output() onSelected: EventEmitter<Integration> = new EventEmitter();
   selectedId = undefined;
   truncateLimit = 80;
   truncateTrail = '…';
 
-  constructor(private connectionStore: ConnectionStore, toasterService: ToasterService) {
+  constructor(private connectionStore: ConnectionStore,
+              private router: Router,
+              toasterService: ToasterService) {
     this.connections = this.connectionStore.list;
     this.toasterService = toasterService;
   }
@@ -90,15 +93,10 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   //-----  Selecting an Integration ------------------->>
 
-  onSelect(integration: Integration) {
-    log.debugc(() => 'Selected integration (list): ' + integration.name, category);
-    this.selectedId = integration.id;
-    this.onSelected.emit(integration);
+  onSelected(connection: Connection) {
+    this.router.navigate(['connections', connection.id]);
   }
 
-  isSelected(integration: Integration) {
-    return integration.id === this.selectedId;
-  }
 
   //-----  Icons ------------------->>
 
