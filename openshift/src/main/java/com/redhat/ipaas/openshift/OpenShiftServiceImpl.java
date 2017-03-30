@@ -75,13 +75,12 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         String token = getAuthenticationTokenString();
         RequestConfig requestConfig = new RequestConfigBuilder().withOauthToken(token).build();
 
-        return openShiftClient.withRequestConfig(requestConfig).call(c -> {
-            DockerImage img = new DockerImage(builderImage);
-            return removeImageStreams(sanitizedName, img) &&
+        return openShiftClient.withRequestConfig(requestConfig).call(c ->
+            removeImageStreams(new DockerImage(builderImage)) &&
             removeeDeploymentConfig(sanitizedName) &&
             removeSecret(sanitizedName) &&
-            removeBuildConfig(sanitizedName);
-        });
+            removeBuildConfig(sanitizedName)
+        );
     }
 
     @Override
@@ -110,7 +109,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewMetadata().withName(projectName).endMetadata().done();
     }
 
-    private boolean removeImageStreams(String projectName, DockerImage img) {
+    private boolean removeImageStreams(DockerImage img) {
         return openShiftClient.imageStreams().withName(img.getShortName()).delete();
     }
 

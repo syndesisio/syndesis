@@ -50,18 +50,19 @@ public class DeleteHandler implements WorkflowHandler {
             ? Integration.Status.Deleted
             : Integration.Status.Pending;
 
-        /**
-         * TODO: For now we directly deleted the record from the database, so no point in setting current status to deleted.
 
-            Integration updatedIntegration = new Integration.Builder()
-                .createFrom(integration)
-                .currentStatus(currentStatus)
-                .lastUpdated(new Date())
-                .build();
+        Integration existing = dataManager.fetch(Integration.class, integration.getId().orElseThrow(() -> new IllegalArgumentException("Integration should have an id")));
+        if (existing == null) {
+            return Optional.of(Integration.Status.Deleted);
+        }
 
-            dataManager.update(updatedIntegration);
+        Integration updatedIntegration = new Integration.Builder()
+            .createFrom(existing)
+            .currentStatus(currentStatus)
+            .lastUpdated(new Date())
+            .build();
 
-         */
+        dataManager.update(updatedIntegration);
         return integration.getDesiredStatus();
     }
 

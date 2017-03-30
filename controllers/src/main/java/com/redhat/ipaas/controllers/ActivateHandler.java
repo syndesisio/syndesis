@@ -118,7 +118,7 @@ public class ActivateHandler implements WorkflowHandler {
         Optional<String> repoNameOptional = integration.getGitRepo();
         if (!repoNameOptional.isPresent()) {
             String generatedRepoName = Names.sanitize(integration.getName());
-            integration = new Integration.Builder()
+            return new Integration.Builder()
                 .createFrom(integration).gitRepo(generatedRepoName)
                 .build();
         }

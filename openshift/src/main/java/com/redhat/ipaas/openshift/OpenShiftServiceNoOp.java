@@ -29,7 +29,7 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
 
     @Override
     public void scaleDeploymentConfig(String name, int replicas) {
-
+        // Empty no-op just for testing
     }
 
     @Override
