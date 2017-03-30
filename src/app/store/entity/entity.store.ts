@@ -166,18 +166,24 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
 
   updateOrCreate(entity: T): Observable<T> {
     if (entity.id) {
-      return this.update(entity);
+    return this.update(entity);
     } else {
       return this.create(entity);
     }
   }
 
-  /*
-   deleteEntity(id?: string) {
-   if(id) {
-   this.service.delete(id);
-   }
-   }
-   */
+  delete(entity: T): Observable<T> {
+    const deleted = new Subject<T>();
+    this.service.delete(entity).subscribe(
+      (e) => {
+        deleted.next(this.plain(e));
+      },
+      (error) => {
+        error = this.massageError(error);
+        log.debugc(() => 'Error updating ' + this.kind + ' (' + JSON.stringify(entity, null, 2) + ')' + ': ' + error, category);
+        deleted.error(error);
+      });
+    return deleted.share();
+  }
 
 }
