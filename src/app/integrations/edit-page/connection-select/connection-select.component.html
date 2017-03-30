@@ -1,8 +1,8 @@
 <div class="connection-select">
-  
+
   <!-- Toolbar -->
   <div class="toolbar">
-    
+
     <!-- Toolbar: Breadcrumbs -->
     <div class="row toolbar-pf">
       <div class="col-sm-12">
@@ -28,16 +28,16 @@
       </div>
     </div>
   </div>
-  
+
   <div class="wizard-pf-body clearfix">
     <div class="title">
       <h1>Choose a Connection</h1>
     </div>
-    
+
     <p>Choose a connection to start.</p>
-    
+
     <ipaas-connections-list [connections]="connections | async | objectPropertyFilter:filter | objectPropertySort:sort"
                             [loading]="loading | async"
-                            (onSelected)="onSelected($event)"></ipaas-connections-list>
+                            (onSelected)="onSelected($event)" [showKebab]="false"></ipaas-connections-list>
   </div>
 </div>
