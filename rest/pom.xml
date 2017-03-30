@@ -61,6 +61,11 @@
 
     <dependency>
       <groupId>com.redhat.ipaas</groupId>
+      <artifactId>controllers</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
       <artifactId>verifier</artifactId>
     </dependency>
 

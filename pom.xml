@@ -307,6 +307,12 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>com.redhat.ipaas</groupId>
+        <artifactId>controllers</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!-- Funktion -->
       <dependency>
         <groupId>io.fabric8.funktion</groupId>
