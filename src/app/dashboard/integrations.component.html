@@ -67,7 +67,7 @@
 
                 <!-- Not OK Status -->
 
-                <template #statTemplate>Just another: {{integration.statusMessage}}</template>
+                <template #statTemplate>{{integration.statusMessage}}</template>
                 <i *ngIf="integration.statusMessage"
                    class="pficon pficon-error-circle-o"
                    [tooltip]="statTemplate"

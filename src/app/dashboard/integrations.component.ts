@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
-//import { Tooltip } from 'ng2-bootstrap/tooltip';
+import { TooltipDirective } from 'ng2-bootstrap/tooltip';
 
 import { log, getCategory } from '../logging';
 
@@ -21,7 +21,7 @@ const category = getCategory('Dashboard');
 })
 export class DashboardIntegrationsComponent implements OnInit {
 
-  public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
+  public doughnutChartLabels: string[] = ['Active Integrations', 'Inactive Integrations', 'Draft Integrations'];
   public doughnutChartData: number[] = [350, 450, 100];
   public doughnutChartType = 'doughnut';
   private toasterService: ToasterService;
@@ -113,6 +113,17 @@ export class DashboardIntegrationsComponent implements OnInit {
   }
 
   //-----  Integration Board Chart ------------------->>
+
+  public countActiveIntegrations() {
+    //
+  }
+
+  public countDeletedIntegrations() {}
+
+  public countDraftIntegrations() {}
+
+  public countInactiveIntegrations() {}
+
 
   public chartClicked(e: any): void {
     log.debugc(() => 'Click event: ' + JSON.stringify(e));
