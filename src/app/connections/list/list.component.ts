@@ -25,6 +25,7 @@ export class ConnectionsListComponent implements OnInit {
 
   @Input() connections: Connections;
   @Input() loading: boolean;
+  @Input() showKebab = true;
   @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
 
   constructor(toasterService: ToasterService) {

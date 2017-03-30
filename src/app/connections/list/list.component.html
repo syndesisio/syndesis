@@ -5,7 +5,7 @@
       <!-- Each Connection's Card Container -->
 
       <div class="col-xs-12 col-sm-3 col-md-2 card"
-           *ngFor="let connection of connections">
+           *ngFor="let connection of connections" (click)="onSelect(connection)">
 
         <!-- Toast Notification Container -->
 
@@ -63,39 +63,36 @@
             <!-- Card Heading -->
 
             <div class="card-pf-heading-kebab">
-              <!--
-          
+
               <!-- Card Actions -->
 
-              <div class="dropdown pull-right dropdown-kebab-pf">
-                <button class="btn btn-link dropdown-toggle"
+              <div *ngIf="showKebab" dropdown class="dropdown dropdown-kebab-pf pull-right">
+                <button dropdownToggle class="btn btn-link dropdown-toggle"
                         type="button"
-                        id="dropdownKebabRight9"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="true">
+                        id="dropdownKebabRight9">
                   <span class="fa fa-ellipsis-v"></span>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-right"
-                    aria-labelledby="dropdownKebabRight9">
-                  <li role="menuitem">
-                    <a [routerLink]="['/connections', connection.id]"
-                       class="dropdown-item">View</a>
-                  </li>
-                  <li role="menuitem">
-                    <a [routerLink]="['/connections/edit', connection.id]"
-                       class="dropdown-item">Edit</a>
-                  </li>
-                  <!--
-                  <li role="menuitem">
-                    <a class="dropdown-item">Duplicate</a>
-                  </li>
-                  -->
-                  <li>
-                    <a (click)="requestDelete(connection)"
-                       class="dropdown-item">Delete</a>
-                  </li>
-                </ul>
+                  <ul dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li role="menuitem">
+                      <a [routerLink]="['/connections', connection.id]"
+                        class="dropdown-item">View</a>
+                    </li>
+                    <!--
+                    <li role="menuitem">
+                      <a [routerLink]="['/connections/edit', connection.id]"
+                        class="dropdown-item">Edit</a>
+                    </li>
+                    -->
+                    <!--
+                    <li role="menuitem">
+                      <a class="dropdown-item">Duplicate</a>
+                    </li>
+                    -->
+                    <li>
+                      <a (click)="requestDelete(connection)"
+                        class="dropdown-item">Delete</a>
+                    </li>
+                  </ul>
               </div>
 
               <!-- Card Title & Icon -->
