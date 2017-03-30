@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -62,6 +62,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     public mappingService: MappingManagementService,
     public errorService: ErrorHandlerService,
     public configService: ConfigService,
+    public detector: ChangeDetectorRef,
   ) {
     super(currentFlow, route, router);
     try {
@@ -77,21 +78,26 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     switch (event.kind) {
       case 'integrations-mapper-init':
         const step = this.currentFlow.getStep(this.position);
+        let mappings = undefined;
         if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
           try {
-            this.cfg.mappings = <any> JSON.parse(step.configuredProperties[MAPPING_KEY]);
+            mappings = <any> JSON.parse(step.configuredProperties[MAPPING_KEY])['AtlasMapping'];
           } catch (err) {
             // TODO
           }
         }
-        if (!this.cfg.mappings) {
-          this.cfg.mappings = new MappingDefinition();
+        this.cfg.mappings = new MappingDefinition();
+        console.log('Mappings: ', mappings);
+        if (!mappings) {
+          const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
+          const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
+          // TODO we'll want to parse the dataType and maybe set the right config value
+          this.cfg.mappingInputJavaClass = start.action.outputDataShape['dataType'].replace(/java:/, '');
+          this.cfg.mappingOutputJavaClass = end.action.inputDataShape['dataType'].replace(/java:/, '');
+        } else {
+          this.cfg.mappingInputJavaClass = (<string>mappings['sourceUri']).replace(/atlas:java\?className=/, '');
+          this.cfg.mappingOutputJavaClass = (<string>mappings['targetUri']).replace(/atlas:java\?className=/, '');
         }
-        const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
-        const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
-        // TODO we'll want to parse the dataType and maybe set the right config value
-        this.cfg.mappingInputJavaClass = start.action.outputDataShape['dataType'].replace(/java:/, '');
-        this.cfg.mappingOutputJavaClass = end.action.inputDataShape['dataType'].replace(/java:/, '');
 
         this.documentService.cfg = this.cfg;
         this.mappingService.cfg = this.cfg;
@@ -103,6 +109,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
         this.mappingService.saveMappingOutput$.subscribe((saveHandler: Function) => {
           this.mappingService.saveMappingToService(saveHandler);
         });
+        this.detector.detectChanges();
       break;
     }
   }
