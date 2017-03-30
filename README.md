@@ -17,6 +17,17 @@ Assuming that your OpenShift cluster is reachable under the IP address _ip_ then
 
 Once all pods are started up, you should be able to access the iPaaS at `https://`_&lt;external hostname&gt;_`/`.
 
+## Template flavours
+
+Currently there are multiple different flavours of the templates, with the following characteristics:
+
+* `dev`: Are using pure docker images, instead of image streams.
+* `ephemeral:` Are not using persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue .
+* `single-tenant`: As the name implies.
+
+Some templates may mix one or more of the characteristics above.
+
+
 ## Template parameters
 
 * `ROUTE_HOSTNAME`: The external hostname to access the iPaaS
