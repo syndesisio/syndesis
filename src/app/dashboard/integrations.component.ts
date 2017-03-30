@@ -21,12 +21,6 @@ const category = getCategory('Dashboard');
 })
 export class DashboardIntegrationsComponent implements OnInit {
 
-  public doughnutChartLabels: string[] = ['Active Integrations', 'Inactive Integrations', 'Draft Integrations'];
-  public doughnutChartData: number[] = [350, 450, 100];
-  public doughnutChartType = 'doughnut';
-  private toasterService: ToasterService;
-  private toast;
-
   @ViewChild('childModal') public childModal: ModalDirective;
 
   connections: Observable<Connections>;
@@ -35,6 +29,17 @@ export class DashboardIntegrationsComponent implements OnInit {
   selectedId = undefined;
   truncateLimit = 80;
   truncateTrail = '…';
+
+  public doughnutChartLabels: string[] = ['Active Integrations', 'Inactive Integrations', 'Draft Integrations'];
+  public doughnutChartData: number[] = [
+    this.countActiveIntegrations(),
+    this.countInactiveIntegrations(),
+    this.countDraftIntegrations(),
+  ];
+  public doughnutChartType = 'doughnut';
+
+  private toasterService: ToasterService;
+  private toast;
 
   constructor(private connectionStore: ConnectionStore,
               private integrationStore: IntegrationStore,
@@ -115,14 +120,20 @@ export class DashboardIntegrationsComponent implements OnInit {
   //-----  Integration Board Chart ------------------->>
 
   public countActiveIntegrations() {
-    //
+    return this.integrations.length;
   }
 
-  public countDeletedIntegrations() {}
+  public countDeletedIntegrations() {
+    return this.integrations.length;
+  }
 
-  public countDraftIntegrations() {}
+  public countDraftIntegrations() {
+    return this.integrations.length;
+  }
 
-  public countInactiveIntegrations() {}
+  public countInactiveIntegrations() {
+    return this.integrations.length;
+  }
 
 
   public chartClicked(e: any): void {
@@ -143,6 +154,9 @@ export class DashboardIntegrationsComponent implements OnInit {
   public hideModal(): void {
     this.childModal.hide();
   }
+
+
+  //-----  Recent Updates Section ------------------->>
 
 
   //-----  Selecting an Integration ------------------->>
