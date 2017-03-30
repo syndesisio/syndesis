@@ -7,9 +7,14 @@
 
   a, a:visited {
     color: $pf-blue-400;
+    cursor: pointer;
 
     &.btn {
       color: #FFFFFF;
+    }
+
+    &:hover {
+      text-decoration: none;
     }
   }
 

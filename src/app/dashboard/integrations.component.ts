@@ -33,6 +33,7 @@ export class DashboardIntegrationsComponent implements OnInit {
   truncateTrail = '…';
 
   constructor(private connectionStore: ConnectionStore,
+              private integrationStore: IntegrationStore,
               private router: Router,
               toasterService: ToasterService) {
     this.connections = this.connectionStore.list;
@@ -63,7 +64,8 @@ export class DashboardIntegrationsComponent implements OnInit {
 
     this.hideModal();
 
-    //this.store.activate(integration['id']);
+    // Not working yet, we need an `activate` method in the store
+    //this.integrationStore.activate(integration['id']);
 
     this.toast = {
       type: 'success',
@@ -80,7 +82,8 @@ export class DashboardIntegrationsComponent implements OnInit {
 
     this.hideModal();
 
-    //this.store.deactivate(integration['id']);
+    // Not working yet, we need a `deactivate` method in the store
+    //this.integrationStore.deactivate(integration['id']);
 
     this.toast = {
       type: 'success',
