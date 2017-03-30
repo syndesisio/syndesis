@@ -69,6 +69,15 @@ export class FlowViewStepComponent extends ChildAwarePage {
     }
   }
 
+  showDelete() {
+    switch (this.step.stepKind) {
+      case 'endpoint':
+        return this.step.connection && this.step.action && this.step.configuredProperties;
+      default:
+        return this.step.stepKind && this.step.configuredProperties;
+    }
+  }
+
   deletePrompt() {
     this.deleteModal.show();
   }

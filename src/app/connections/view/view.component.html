@@ -21,7 +21,7 @@
     <div class="col-md-8 col-md-offset-2" *ngSwitchCase="'edit'">
       <div class="card-pf">
         <h2 class="card-pf-title">
-          {{connection.name}}
+          {{ connection?.connector?.name }} Configuration
           <div class="pull-right" *ngIf="formGroup">
             <p *ngIf="validating" class="inline-block">Validating, please wait...<span class="spinner spinner-xs spinner-inline"></span></p>
             <button *ngIf="showButton(connection?.connector?.id)" [disabled]="!formGroup.valid || validating" (click)="doValidate(connection.connector, formGroup)"
