@@ -181,7 +181,7 @@
           "name": "Create/Update Contact",
           "description": "Create or Update a Salesforce Contact",
           "inputDataShape": {
-             "dataType" : "java:org.foo.salesforce.upsert.contact.Contact"
+             "dataType" : "java:com.redhat.ipaas.connector.salesforce.Contact"
           },
           "outputDataShape": {
              "dataType" : "none"
