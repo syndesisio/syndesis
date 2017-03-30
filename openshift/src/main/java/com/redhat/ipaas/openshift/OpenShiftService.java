@@ -17,6 +17,46 @@ package com.redhat.ipaas.openshift;
 
 public interface OpenShiftService {
 
+    /**
+     * Checks if {@link io.fabric8.openshift.api.model.DeploymentConfig} is ready.
+     * @param name  The name of the {@link io.fabric8.openshift.api.model.DeploymentConfig}.
+     * @return      True if ready, False otherwise.
+     */
+    boolean isDeploymentConfigReady(String name);
+
+    /**
+     * Scales deployment to the selected number of replicas.
+     * @param name      The name of the {@link io.fabric8.openshift.api.model.DeploymentConfig}
+     * @param replicas  The number of replicas.
+     */
+    boolean isDeploymentConfigScaled(String name, int replicas);
+
+    /**
+     * Scales deployment to the selected number of replicas.
+     * @param name      The name of the {@link io.fabric8.openshift.api.model.DeploymentConfig}
+     * @param replicas  The number of replicas.
+     */
+    void scaleDeploymentConfig(String name, int replicas);
+
+    /**
+     * Checks if DeploymentConfig exists.
+     * @param name      The name of the {@link io.fabric8.openshift.api.model.DeploymentConfig}
+     */
+    boolean deploymentConfigExists(String name);
+
+    /**
+     * Creates all the requires resources.
+     * @param name  The name of the project.
+     * @return      Returns True if all resources were deleted, False otherwise.
+     */
+    boolean deleteResources(String name);
+
+    /**
+     * Creates all the requires resources.
+     * @param request
+     */
     void createOpenShiftResources(CreateResourcesRequest request);
+
+
 
 }

@@ -19,6 +19,7 @@ import com.redhat.ipaas.core.Names;
 
 import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
+import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,6 +35,53 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     public OpenShiftServiceImpl(NamespacedOpenShiftClient openShiftClient, String builderImage) {
         this.openShiftClient = openShiftClient;
         this.builderImage = builderImage;
+    }
+
+    @Override
+    public boolean isDeploymentConfigReady(String name) {
+        String token = getAuthenticationTokenString();
+        RequestConfig requestConfig = new RequestConfigBuilder().withOauthToken(token).build();
+        return openShiftClient.withRequestConfig(requestConfig).call(c -> c.deploymentConfigs().withName(Names.sanitize(name)).isReady());
+    }
+
+    @Override
+    public boolean isDeploymentConfigScaled(String name, int replicas) {
+        DeploymentConfig dc = openShiftClient.deploymentConfigs().withName(Names.sanitize(name)).get();
+
+        int allReplicas = dc.getStatus() != null ? dc.getStatus().getReplicas() : 0;
+        int readyReplicas = dc.getStatus() != null ? dc.getStatus().getReadyReplicas() : 0;
+
+        return replicas == allReplicas && replicas == readyReplicas;
+    }
+
+    @Override
+    public void scaleDeploymentConfig(String name, int replicas) {
+        openShiftClient.deploymentConfigs().withName(Names.sanitize(name)).edit()
+            .editSpec()
+                .withReplicas(replicas)
+            .endSpec()
+            .done();
+    }
+
+    @Override
+    public boolean deploymentConfigExists(String name) {
+        return openShiftClient.deploymentConfigs().withName(Names.sanitize(name)).get() != null;
+    }
+
+    @Override
+    public boolean deleteResources(String name) {
+        String sanitizedName = Names.sanitize(name);
+
+        String token = getAuthenticationTokenString();
+        RequestConfig requestConfig = new RequestConfigBuilder().withOauthToken(token).build();
+
+        return openShiftClient.withRequestConfig(requestConfig).call(c -> {
+            DockerImage img = new DockerImage(builderImage);
+            return removeImageStreams(sanitizedName, img) &&
+            removeeDeploymentConfig(sanitizedName) &&
+            removeSecret(sanitizedName) &&
+            removeBuildConfig(sanitizedName);
+        });
     }
 
     @Override
@@ -60,6 +108,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
         openShiftClient.imageStreams().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata().done();
+    }
+
+    private boolean removeImageStreams(String projectName, DockerImage img) {
+        return openShiftClient.imageStreams().withName(img.getShortName()).delete();
     }
 
     private void ensureDeploymentConfig(String projectName) {
@@ -98,6 +150,11 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .done();
     }
 
+
+    private boolean removeeDeploymentConfig(String projectName) {
+        return openShiftClient.deploymentConfigs().withName(projectName).delete();
+    }
+
     private void ensureBuildConfig(String projectName, String gitRepo, DockerImage img, String webhookSecret) {
         openShiftClient.buildConfigs().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata()
@@ -119,11 +176,19 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .done();
     }
 
+    private boolean removeBuildConfig(String projectName) {
+        return openShiftClient.buildConfigs().withName(projectName).delete();
+    }
+
     private void ensureSecret(String projectName, Map<String, String> secretData) {
         openShiftClient.secrets().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata()
             .withStringData(secretData)
             .done();
+    }
+
+    private boolean removeSecret(String projectName) {
+       return openShiftClient.secrets().withName(projectName).delete();
     }
 
     private String getAuthenticationTokenString() {

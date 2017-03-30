@@ -15,7 +15,10 @@
  */
 package com.redhat.ipaas.controllers;
 
+import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.integration.Integration;
+import com.redhat.ipaas.openshift.OpenShiftService;
+
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -23,18 +26,43 @@ import java.util.*;
 @Component
 public class DeleteHandler implements WorkflowHandler {
 
+    private final DataManager dataManager;
+    private final OpenShiftService openShiftService;
+
     public static final Set<Integration.Status> DESIRED_STATE_TRIGGERS =
         Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             Integration.Status.Deleted
         )));
+
+    public DeleteHandler(DataManager dataManager, OpenShiftService openShiftService) {
+        this.dataManager = dataManager;
+        this.openShiftService = openShiftService;
+    }
 
     public Set<Integration.Status> getTriggerStatuses() {
         return DESIRED_STATE_TRIGGERS;
     }
 
     @Override
-    public Optional<Integration.Status> execute(Integration model) throws Exception {
-        return model.getDesiredStatus();
+    public Optional<Integration.Status> execute(Integration integration) throws Exception {
+        Integration.Status currentStatus = !openShiftService.deploymentConfigExists(integration.getName())
+            || openShiftService.deleteResources(integration.getName())
+            ? Integration.Status.Deleted
+            : Integration.Status.Pending;
+
+        /**
+         * TODO: For now we directly deleted the record from the database, so no point in setting current status to deleted.
+
+            Integration updatedIntegration = new Integration.Builder()
+                .createFrom(integration)
+                .currentStatus(currentStatus)
+                .lastUpdated(new Date())
+                .build();
+
+            dataManager.update(updatedIntegration);
+
+         */
+        return integration.getDesiredStatus();
     }
 
 }

@@ -18,6 +18,31 @@ package com.redhat.ipaas.openshift;
 public class OpenShiftServiceNoOp implements OpenShiftService {
 
     @Override
+    public boolean isDeploymentConfigReady(String name) {
+        return false;
+    }
+
+    @Override
+    public boolean isDeploymentConfigScaled(String name, int replicas) {
+        return false;
+    }
+
+    @Override
+    public void scaleDeploymentConfig(String name, int replicas) {
+
+    }
+
+    @Override
+    public boolean deploymentConfigExists(String name) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteResources(String name) {
+        return false;
+    }
+
+    @Override
     public void createOpenShiftResources(CreateResourcesRequest request) {
         // Empty no-op just for testing
     }

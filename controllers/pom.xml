@@ -36,6 +36,21 @@
     </dependency>
 
     <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>github</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>openshift</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>project-generator</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
