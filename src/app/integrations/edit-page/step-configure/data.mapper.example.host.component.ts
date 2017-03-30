@@ -87,7 +87,6 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
           }
         }
         this.cfg.mappings = new MappingDefinition();
-        console.log('Mappings: ', mappings);
         if (!mappings) {
           const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
           const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
@@ -95,10 +94,10 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
           this.cfg.mappingInputJavaClass = start.action.outputDataShape['dataType'].replace(/java:/, '');
           this.cfg.mappingOutputJavaClass = end.action.inputDataShape['dataType'].replace(/java:/, '');
         } else {
+          // TODO probably a better way to handle these URIs
           this.cfg.mappingInputJavaClass = (<string>mappings['sourceUri']).replace(/atlas:java\?className=/, '');
           this.cfg.mappingOutputJavaClass = (<string>mappings['targetUri']).replace(/atlas:java\?className=/, '');
         }
-
         this.documentService.cfg = this.cfg;
         this.mappingService.cfg = this.cfg;
         this.cfg.documentService = this.documentService;
