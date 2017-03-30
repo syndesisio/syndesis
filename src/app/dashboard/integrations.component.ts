@@ -45,6 +45,12 @@ export class DashboardIntegrationsComponent implements OnInit {
       '#ededed', // PatternFly Black 200
     ],
   }];
+  public doughnutChartOptions: any = {
+    cutoutPercentage: 75,
+    legend: {position: 'bottom', fullWidth: false},
+    width: '300px',
+    height: '300px',
+  };
 
   private toasterService: ToasterService;
   private toast;
@@ -168,7 +174,7 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   public getLabelClass(integration): string {
     log.debugc(() => 'Integration: ' + JSON.stringify(integration));
-    switch (integration.status) {
+    switch (integration.desiredStatus) {
       case 'Activated':
       default:
         return 'label-success';

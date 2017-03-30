@@ -46,7 +46,18 @@
 
     //----- Integration Board ----------------->>
 
-    .integration-board {}
+    .integration-board {
+      /*
+      canvas {
+        width: 65% !important;
+        height: 65% !important;
+      }
+      */
+
+      .card-pf-body {
+        overflow: auto;
+      }
+    }
 
 
     //----- Recent Updates ----------------->>
