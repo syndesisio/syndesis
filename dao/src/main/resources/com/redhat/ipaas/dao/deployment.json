@@ -499,6 +499,8 @@
       "description": "This is an example of a Timed Pull to Post Integration",
       "configuration": "",
       "desiredStatus": "Activated",
+      "currentStatus": "Deactivated",
+      "statusMessage": "This integration failed. Please contact system admin for errors.",
       "tags": [
         { "name": "example" }
        ],
