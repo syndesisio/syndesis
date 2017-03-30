@@ -49,6 +49,8 @@ public interface Integration extends WithId<Integration>, WithName, Serializable
 
     Optional<String> getUserId();
 
+    Optional<String> getToken();
+
     List<User> getUsers();
 
     List<Tag> getTags();

@@ -15,6 +15,24 @@
  */
 package com.redhat.ipaas.rest.v1.handler.integration;
 
+import com.redhat.ipaas.core.EventBus;
+import com.redhat.ipaas.core.IPaasServerException;
+import com.redhat.ipaas.core.Json;
+import com.redhat.ipaas.core.Tokens;
+import com.redhat.ipaas.dao.manager.DataManager;
+import com.redhat.ipaas.model.ChangeEvent;
+import com.redhat.ipaas.model.Kind;
+import com.redhat.ipaas.model.integration.Integration;
+import com.redhat.ipaas.rest.v1.handler.BaseHandler;
+import com.redhat.ipaas.rest.v1.operations.Creator;
+import com.redhat.ipaas.rest.v1.operations.Deleter;
+import com.redhat.ipaas.rest.v1.operations.Getter;
+import com.redhat.ipaas.rest.v1.operations.Lister;
+import com.redhat.ipaas.rest.v1.operations.Updater;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Optional;
@@ -24,22 +42,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import com.redhat.ipaas.core.EventBus;
-import com.redhat.ipaas.core.IPaasServerException;
-import com.redhat.ipaas.core.Json;
-import com.redhat.ipaas.dao.manager.DataManager;
-import com.redhat.ipaas.github.GitHubService;
-import com.redhat.ipaas.model.ChangeEvent;
-import com.redhat.ipaas.model.Kind;
-import com.redhat.ipaas.model.integration.Integration;
-import com.redhat.ipaas.openshift.OpenShiftService;
-import com.redhat.ipaas.project.converter.ProjectGenerator;
-import com.redhat.ipaas.rest.v1.handler.BaseHandler;
-import com.redhat.ipaas.rest.v1.operations.*;
-
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 @Path("/integrations")
 @Api(value = "integrations")
@@ -50,24 +53,15 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     private final EventBus eventBus;
 
-    private final GitHubService gitHubService;
-
-    private final ProjectGenerator projectConverter;
-
     @Value("${openshift.apiBaseUrl}")
     private String openshiftApiBaseUrl;
 
     @Value("${openshift.namespace}")
     private String namespace;
 
-    private final OpenShiftService openShiftService;
-
-    public IntegrationHandler(DataManager dataMgr, EventBus eventBus, GitHubService gitHubService, ProjectGenerator projectConverter, OpenShiftService openShiftService) {
+    public IntegrationHandler(DataManager dataMgr, EventBus eventBus) {
         super(dataMgr);
         this.eventBus = eventBus;
-        this.gitHubService = gitHubService;
-        this.projectConverter = projectConverter;
-        this.openShiftService = openShiftService;
     }
 
     @Override
@@ -113,6 +107,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         try {
             Integration updatedIntegration = new Integration.Builder()
                 .createFrom(integration)
+                .token(Tokens.getAuthenticationToken())
                 .currentStatus(Integration.Status.Draft)
                 .desiredStatus(Integration.Status.Activated)
                 .lastUpdated(new Date())
@@ -129,6 +124,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     public void update(String id, Integration integration) {
         try {
             Integration updatedIntegration = new Integration.Builder()
+                .token(Tokens.getAuthenticationToken())
                 .createFrom(integration)
                 .lastUpdated(new Date())
                 .build();
@@ -151,7 +147,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     private static final String newEvent(Optional<String> id, String action) {
         try {
             return Json.mapper().writeValueAsString(new ChangeEvent.Builder()
-                .kind(Kind.Integration.name())
+                .kind(Kind.Integration.getModelName())
                 .id(id)
                 .action(action).build());
         } catch (Throwable t) {

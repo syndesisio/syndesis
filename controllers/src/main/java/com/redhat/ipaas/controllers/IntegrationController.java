@@ -64,7 +64,8 @@ public class IntegrationController {
     public void start() {
         executor = Executors.newSingleThreadExecutor();
         scheduler = Executors.newScheduledThreadPool(1);
-        scanIntegrationsForWork();
+        //TODO: We can scan for integrations on start, once we solve the short lived token issue.
+        //scanIntegrationsForWork();
 
         eventBus.subscribe("integration-controller", (event, data) -> {
             // Never do anything that could block in this callback!

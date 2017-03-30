@@ -15,9 +15,11 @@
  */
 package com.redhat.ipaas.controllers;
 
+import com.redhat.ipaas.core.Tokens;
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.openshift.OpenShiftService;
+import com.redhat.ipaas.openshift.OpenShiftDeployment;
 
 import org.springframework.stereotype.Component;
 
@@ -44,9 +46,18 @@ public class DeleteHandler implements WorkflowHandler {
     }
 
     @Override
-    public Optional<Integration.Status> execute(Integration integration) throws Exception {
-        Integration.Status currentStatus = !openShiftService.deploymentConfigExists(integration.getName())
-            || openShiftService.deleteResources(integration.getName())
+    public Optional<Integration.Status> execute(Integration integration) {
+        String token = integration.getToken().get();
+        Tokens.setAuthenticationToken(token);
+
+        OpenShiftDeployment deployment = OpenShiftDeployment
+            .builder()
+            .name(integration.getName())
+            .token(token)
+            .build();
+
+        Integration.Status currentStatus = !openShiftService.exists(deployment)
+            || openShiftService.delete(deployment)
             ? Integration.Status.Deleted
             : Integration.Status.Pending;
 

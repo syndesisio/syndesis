@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 public class GitHubServiceNoOp implements GitHubService {
 
     @Override
-    public String createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
+    public String createOrUpdateProjectFiles(String repoName, String token, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
         // Dummy value
         return "https://this.doesnt.exist/promise.git";
     }

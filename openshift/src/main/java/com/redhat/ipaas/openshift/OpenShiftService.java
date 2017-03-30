@@ -18,45 +18,36 @@ package com.redhat.ipaas.openshift;
 public interface OpenShiftService {
 
     /**
-     * Checks if {@link io.fabric8.openshift.api.model.DeploymentConfig} is ready.
-     * @param name  The name of the {@link io.fabric8.openshift.api.model.DeploymentConfig}.
-     * @return      True if ready, False otherwise.
+     * Creates the deployment (Deployment and Build configurations, Image Streams etc)
+     * @param d A description of the deployment to create.
      */
-    boolean isDeploymentConfigReady(String name);
+    void create(OpenShiftDeployment d);
 
     /**
-     * Scales deployment to the selected number of replicas.
-     * @param name      The name of the {@link io.fabric8.openshift.api.model.DeploymentConfig}
-     * @param replicas  The number of replicas.
+     * Deletes the deployment (Deployment and Build configurations, Image Streams etc)
+     * @param d A description of the deployment to delete.
+     * @return          Returns True if all resources were deleted, False otherwise.
      */
-    boolean isDeploymentConfigScaled(String name, int replicas);
+    boolean delete(OpenShiftDeployment d);
 
     /**
-     * Scales deployment to the selected number of replicas.
-     * @param name      The name of the {@link io.fabric8.openshift.api.model.DeploymentConfig}
-     * @param replicas  The number of replicas.
+     * Checks if the deployment (Deployment and Build configurations, Image Streams etc) exists
+     * @param d         A description of the deployment to check.
+     * @return          Returns True if all resources were deleted, False otherwise.
      */
-    void scaleDeploymentConfig(String name, int replicas);
+    boolean exists(OpenShiftDeployment d);
 
     /**
-     * Checks if DeploymentConfig exists.
-     * @param name      The name of the {@link io.fabric8.openshift.api.model.DeploymentConfig}
+     * Scale the deployment (Deployment and Build configurations, Image Streams etc)
+     * @param d A description of the deployment to scale.
      */
-    boolean deploymentConfigExists(String name);
+    void scale(OpenShiftDeployment d);
 
     /**
-     * Creates all the requires resources.
-     * @param name  The name of the project.
-     * @return      Returns True if all resources were deleted, False otherwise.
+     * Checks if the deployment (Deployment and Build configurations, Image Streams etc) is scaled.
+     * @param d A description of the deployment to scale.
+     * @param d
      */
-    boolean deleteResources(String name);
-
-    /**
-     * Creates all the requires resources.
-     * @param request
-     */
-    void createOpenShiftResources(CreateResourcesRequest request);
-
-
+    boolean isScaled(OpenShiftDeployment d);
 
 }

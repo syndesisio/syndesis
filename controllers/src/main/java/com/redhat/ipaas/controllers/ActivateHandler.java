@@ -17,12 +17,14 @@ package com.redhat.ipaas.controllers;
 
 import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.core.Names;
+import com.redhat.ipaas.core.Tokens;
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.github.GitHubService;
 import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.model.integration.Step;
-import com.redhat.ipaas.openshift.ImmutableCreateResourcesRequest;
+import com.redhat.ipaas.openshift.ImmutableOpenShiftDeployment;
+import com.redhat.ipaas.openshift.OpenShiftDeployment;
 import com.redhat.ipaas.openshift.OpenShiftService;
 import com.redhat.ipaas.project.converter.GenerateProjectRequest;
 import com.redhat.ipaas.project.converter.ImmutableGenerateProjectRequest;
@@ -68,8 +70,18 @@ public class ActivateHandler implements WorkflowHandler {
     }
 
     @Override
-    public Optional<Integration.Status> execute(Integration integration) throws Exception {
-        Integration.Status currentStatus = openShiftService.isDeploymentConfigReady(integration.getName())
+    public Optional<Integration.Status> execute(Integration integration)  {
+        String token = integration.getToken().get();
+        Tokens.setAuthenticationToken(token);
+
+        OpenShiftDeployment deployment = OpenShiftDeployment
+            .builder()
+            .name(integration.getName())
+            .replicas(1)
+            .token(token)
+            .build();
+
+        Integration.Status currentStatus = openShiftService.isScaled(deployment)
             ? Integration.Status.Activated
             : Integration.Status.Pending;
 
@@ -103,7 +115,7 @@ public class ActivateHandler implements WorkflowHandler {
             String webHookUrl = createWebHookUrl(repoName, secret);
 
             // Do all github stuff at once
-            return gitHubService.createOrUpdateProjectFiles(repoName, generateCommitMessage(), fileContents, webHookUrl);
+            return gitHubService.createOrUpdateProjectFiles(repoName, integration.getToken().get(), generateCommitMessage(), fileContents, webHookUrl);
 
         } catch (IOException e) {
             throw IPaasServerException.launderThrowable(e);
@@ -139,7 +151,7 @@ public class ActivateHandler implements WorkflowHandler {
     }
 
     private void ensureOpenShiftResources(Integration integration, String webHookSecret) {
-        integration.getGitRepo().ifPresent(gitRepo -> openShiftService.createOpenShiftResources(ImmutableCreateResourcesRequest.builder()
+        integration.getGitRepo().ifPresent(gitRepo -> openShiftService.create(ImmutableOpenShiftDeployment.builder()
             .name(integration.getName())
             .gitRepository(gitRepo)
             .webhookSecret(webHookSecret)
