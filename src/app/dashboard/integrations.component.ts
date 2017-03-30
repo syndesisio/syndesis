@@ -97,24 +97,6 @@ export class DashboardIntegrationsComponent implements OnInit {
     setTimeout(this.popToast(this.toast), 1000);
   }
 
-
-  //-----  Donut Chart ------------------->>
-
-  public chartClicked(e: any): void {
-    log.debugc(() => 'Click event: ' + JSON.stringify(e));
-  }
-
-  public chartHovered(e: any): void {
-    log.debugc(() => 'Hover event: ' + JSON.stringify(e));
-  }
-
-  //-----  Selecting an Integration ------------------->>
-
-  onSelected(connection: Connection) {
-    this.router.navigate(['connections', connection.id]);
-  }
-
-
   //-----  Icons ------------------->>
 
   getStartIcon(integration: Integration) {
@@ -129,6 +111,16 @@ export class DashboardIntegrationsComponent implements OnInit {
     return (connection || {})['icon'] || 'fa-plane';
   }
 
+  //-----  Integration Board Chart ------------------->>
+
+  public chartClicked(e: any): void {
+    log.debugc(() => 'Click event: ' + JSON.stringify(e));
+  }
+
+  public chartHovered(e: any): void {
+    log.debugc(() => 'Hover event: ' + JSON.stringify(e));
+  }
+
 
   //-----  Modals ------------------->>
 
@@ -140,7 +132,15 @@ export class DashboardIntegrationsComponent implements OnInit {
     this.childModal.hide();
   }
 
-  //-----  Randomize Times Used ------------------->>
+
+  //-----  Selecting an Integration ------------------->>
+
+  onSelected(connection: Connection) {
+    this.router.navigate(['connections', connection.id]);
+  }
+
+
+  //-----  Times Used ------------------->>
 
   randomizeTimesUsed(integration: Integration) {
     // For testing purposes only

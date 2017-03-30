@@ -59,7 +59,8 @@
               <!-- Status -->
 
               <div class="col-xs-1 status">
-                <i class="pficon pficon-ok"></i>
+                <i class="pficon"
+                   [ngClass]="(integration.statusMessage)?'pficon-ok':'pficon-error-circle-o'"></i>
               </div>
 
 
@@ -143,9 +144,13 @@
                 <a>Update client service</a>
               </div>
               <div class="col-xs-2">
-                <span class="label label-default">Draft</span>
+                <span class="label label-default">
+                  {{ integration.currentStatus }}
+                </span>
               </div>
-              <div class="col-xs-4">11 Oct 22:00</div>
+              <div class="col-xs-4">
+                {{ integration.lastUpdated }}
+              </div>
             </div>
           </div>
         </div>
