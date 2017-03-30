@@ -5,11 +5,10 @@
     padding: 0;
 
     .card {
-      cursor: default;
+      cursor: pointer;
       width: 25%;
 
       .card-pf.card-pf-view.card-pf-view-xs {
-        cursor: default;
         height: 150px !important;
         max-height: 150px !important;
         text-align: left;
