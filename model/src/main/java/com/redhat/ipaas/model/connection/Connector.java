@@ -72,7 +72,9 @@ public interface Connector extends WithId<Connector>, WithName, Serializable {
     default Map<String, String> filterSecrets(Map<String, String> properties, Function<Map.Entry<String, String>, String> valueConverter) {
         return properties.entrySet()
             .stream()
-            .filter(e -> this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && this.getProperties().get(e.getKey()).getSecret())
+            .filter(e -> this.getProperties() != null
+                && this.getProperties().containsKey(e.getKey())
+                && Boolean.TRUE.equals(this.getProperties().get(e.getKey()).getSecret()))
             .collect(Collectors.toMap(e -> e.getKey(), e -> valueConverter.apply(e)));
     }
 
