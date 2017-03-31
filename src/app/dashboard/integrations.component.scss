@@ -56,15 +56,31 @@
     //----- Integration Board ----------------->>
 
     .integration-board {
-      /*
-      canvas {
-        width: 65% !important;
-        height: 65% !important;
-      }
-      */
 
       .card-pf-body {
         overflow: auto;
+
+        .chart {
+          /*
+          canvas {
+            width: 65% !important;
+            height: 65% !important;
+          }
+          */
+
+          .total-count {
+            margin-top: -180px;
+            height: 100%;
+            margin-bottom: 140px;
+            text-align: center;
+
+            .number {
+              font-size: 22px;
+            }
+
+            .text {}
+          }
+        }
       }
 
       .legend {

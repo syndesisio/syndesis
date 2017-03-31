@@ -129,7 +129,7 @@
             </h2>
           </div>
           <div class="card-pf-body">
-            <div class="col-xs-8"
+            <div class="col-xs-8 chart"
                  *ngIf="integrations">
               <canvas baseChart
                       [data]="doughnutChartData"
@@ -139,6 +139,10 @@
                       [options]="doughnutChartOptions"
                       (chartHover)="chartHovered($event)"
                       (chartClick)="chartClicked($event)"></canvas>
+              <div class="total-count">
+                <div class="number">{{ integrations.length }}</div>
+                <div class="text">integrations</div>
+              </div>
             </div>
             <div class="col-xs-4 legend">
               <div class="col-xs-12">
