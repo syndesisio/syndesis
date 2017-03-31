@@ -7,6 +7,7 @@ import { IPaaSCommonModule } from '../common/common.module';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
+import { TooltipModule } from 'ng2-bootstrap/tooltip';
 
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
@@ -30,6 +31,7 @@ const routes: Routes = [
     ChartsModule,
     ModalModule,
     ToasterModule,
+    TooltipModule,
   ],
   declarations: [
     DashboardComponent,

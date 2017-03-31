@@ -18,6 +18,15 @@
     }
   }
 
+  h1 {
+    font-size: 22px;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
   .btn {
     margin: 10px 5px;
     padding: 2px 20px !important;
@@ -46,7 +55,67 @@
 
     //----- Integration Board ----------------->>
 
-    .integration-board {}
+    .integration-board {
+
+      .card-pf-body {
+        overflow: auto;
+
+        .chart {
+          /*
+          canvas {
+            width: 65% !important;
+            height: 65% !important;
+          }
+          */
+
+          .total-count {
+            margin-top: -180px;
+            height: 100%;
+            margin-bottom: 140px;
+            text-align: center;
+
+            .number {
+              font-size: 22px;
+            }
+
+            .text {}
+          }
+        }
+      }
+
+      .legend {
+        padding: 0;
+
+        .col-xs-12 {
+          padding: 0;
+
+          .colors {
+            height: 10px;
+            padding: 9px;
+
+            &.active {
+              background: $pf-green-400;
+            }
+
+            &.deleted {
+              background: $pf-orange-400;
+            }
+
+            &.draft {
+              background: $pf-blue-400;
+            }
+
+            &.inactive {
+              background: $pf-black-200;
+            }
+          }
+
+          .text {
+            padding: 0 0 0 13px;
+          }
+        }
+      }
+    }
 
 
     //----- Recent Updates ----------------->>
@@ -149,6 +218,17 @@
 
         }
       }
+    }
+  }
+
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // THIRD ROW
+  ////////////////////////////////////////////////////////////////////////////////
+
+  .third-row {
+    .actions {
+      margin-top: -10px;
     }
   }
 }

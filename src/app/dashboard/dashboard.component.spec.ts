@@ -1,7 +1,5 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
@@ -10,6 +8,7 @@ import { RestangularModule } from 'ng2-restangular';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ng2-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
+import { TooltipModule } from 'ng2-bootstrap/tooltip';
 
 import { IPaaSCommonModule } from '../common/common.module';
 import { DashboardComponent } from './dashboard.component';
@@ -31,6 +30,7 @@ describe('DashboardComponent', () => {
         ChartsModule,
         ModalModule,
         ToasterModule,
+        TooltipModule,
         StoreModule,
         RouterTestingModule.withRoutes([]),
         RestangularModule.forRoot(),
