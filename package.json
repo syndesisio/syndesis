@@ -48,7 +48,7 @@
     "bootstrap": "3.3.7",
     "chart.js": "^2.5.0",
     "core-js": "2.4.1",
-    "ipaas.data.mapper": "https://github.com/redhat-ipaas/datamapper-ui.git#08c46fd1b905017d193f1db085b2d08e4dc4247c",
+    "ipaas.data.mapper": "https://github.com/redhat-ipaas/datamapper-ui.git#42369dcd3dfc97ff1dc7fcdae1daf447e8b4c6c6",
     "jquery": "3.1.1",
     "lodash": "4.17.4",
     "merge": "^1.2.0",

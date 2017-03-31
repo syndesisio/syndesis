@@ -7,6 +7,7 @@ import { MappingDefinition } from 'ipaas.data.mapper';
 import { ConfigModel } from 'ipaas.data.mapper';
 import { MappingModel } from 'ipaas.data.mapper';
 
+import { InitializationService } from 'ipaas.data.mapper';
 import { ErrorHandlerService } from 'ipaas.data.mapper';
 import { DocumentManagementService } from 'ipaas.data.mapper';
 import { MappingManagementService } from 'ipaas.data.mapper';
@@ -23,11 +24,11 @@ const MAPPING_KEY = 'atlasmapping';
 @Component({
   selector: 'ipaas-data-mapper-host',
   template: `
-    <div *ngIf="cfg.mappingInputJavaClass && cfg.mappingOutputJavaClass && cfg.mappings">
+    <div *ngIf="cfg.mappings">
       <data-mapper #dataMapperComponent [cfg]="cfg"></data-mapper>
     </div>
   `,
-  providers: [ConfigService],
+  providers: [ConfigService, MappingManagementService, ErrorHandlerService, DocumentManagementService],
 })
 export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestroy {
 
@@ -37,22 +38,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
   @ViewChild('dataMapperComponent')
   public dataMapperComponent: DataMapperAppComponent;
 
-  public cfg: ConfigModel = {
-    // TODO fetch these from the server
-    baseJavaServiceUrl: 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/java/',
-    baseMappingServiceUrl: 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/',
-    mappingInputJavaClass: undefined,
-    mappingOutputJavaClass: undefined,
-    mappings: undefined,
-    documentService: undefined,
-    mappingService: undefined,
-    errorService: undefined,
-    showMappingDetailTray: false,
-    showMappingDataType: false,
-    showLinesAlways: false,
-    inputDoc: undefined,
-    outputDoc: undefined,
-  };
+  public cfg: ConfigModel = new ConfigModel();
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -62,17 +48,26 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     public mappingService: MappingManagementService,
     public errorService: ErrorHandlerService,
     public configService: ConfigService,
+    public initializationService: InitializationService,
     public detector: ChangeDetectorRef,
   ) {
     super(currentFlow, route, router);
+    documentService.cfg = this.cfg;
+    mappingService.cfg = this.cfg;
+    initializationService.cfg = this.cfg;
+    this.cfg.initializationService = initializationService;
+    this.cfg.documentService = documentService;
+    this.cfg.mappingService = mappingService;
+    this.cfg.errorService = errorService;
     try {
       this.cfg.baseJavaServiceUrl = configService.getSettings('datamapper', 'baseJavaServiceUrl') || this.cfg.baseJavaServiceUrl;
       this.cfg.baseMappingServiceUrl = configService.getSettings('datamapper', 'baseMappingServiceUrl') || this.cfg.baseMappingServiceUrl;
     } catch (err) {
       // run with defaults
+      this.cfg.baseJavaServiceUrl = 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/java/';
+      this.cfg.baseMappingServiceUrl = 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
     }
   }
-
 
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
@@ -81,32 +76,43 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
         let mappings = undefined;
         if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
           try {
-            mappings = <any> JSON.parse(step.configuredProperties[MAPPING_KEY])['AtlasMapping'];
+            mappings = <any> step.configuredProperties[MAPPING_KEY]['AtlasMapping'];
           } catch (err) {
             // TODO
           }
         }
         this.cfg.mappings = new MappingDefinition();
-        if (!mappings) {
-          const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
-          const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
-          // TODO we'll want to parse the dataType and maybe set the right config value
-          this.cfg.mappingInputJavaClass = start.action.outputDataShape['dataType'].replace(/java:/, '');
-          this.cfg.mappingOutputJavaClass = end.action.inputDataShape['dataType'].replace(/java:/, '');
-        } else {
-          // TODO probably a better way to handle these URIs
-          this.cfg.mappingInputJavaClass = (<string>mappings['sourceUri']).replace(/atlas:java\?className=/, '');
-          this.cfg.mappingOutputJavaClass = (<string>mappings['targetUri']).replace(/atlas:java\?className=/, '');
+
+        const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
+        const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
+        // TODO we'll want to parse the dataType and maybe set the right config value
+        const inputDocDef = new DocumentDefinition();
+        inputDocDef.isSource = true;
+        inputDocDef.initCfg.documentIdentifier = start.action.outputDataShape['dataType'].replace(/java:/, '');
+        this.cfg.sourceDocs.push(inputDocDef);
+
+        const outputDocDef = new DocumentDefinition();
+        outputDocDef.isSource = false;
+        outputDocDef.initCfg.documentIdentifier = end.action.inputDataShape['dataType'].replace(/java:/, '');
+        this.cfg.targetDocs.push(outputDocDef);
+
+        if (mappings) {
+          const mappingDefinition = new MappingDefinition();
+          // Existing mappings, load from the route
+          this.mappingService.deserializeMappingServiceJSON(mappings, mappingDefinition);
+          this.cfg.mappings = mappingDefinition;
         }
-        this.documentService.cfg = this.cfg;
-        this.mappingService.cfg = this.cfg;
-        this.cfg.documentService = this.documentService;
-        this.cfg.mappingService = this.mappingService;
-        this.cfg.errorService = this.errorService;
-        this.documentService.initialize();
-        this.mappingService.initialize();
+        this.initializationService.initialize();
         this.mappingService.saveMappingOutput$.subscribe((saveHandler: Function) => {
-          this.mappingService.saveMappingToService(saveHandler);
+          const json = this.mappingService.serializeMappingsToJSON(this.cfg.mappings);
+          const properties = {
+            atlasMapping: json,
+          };
+          this.currentFlow.events.emit({
+            kind: 'integration-set-properties',
+            position: this.position,
+            properties: properties,
+          });
         });
         this.detector.detectChanges();
       break;
