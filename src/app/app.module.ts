@@ -10,7 +10,7 @@ import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { Observable } from 'rxjs/Observable';
 
-import { TabsModule, ModalModule, DropdownModule, CollapseModule, AlertModule, PopoverModule } from 'ng2-bootstrap';
+import { TabsModule, ModalModule, DropdownModule, CollapseModule, AlertModule, PopoverModule, TooltipModule } from 'ng2-bootstrap';
 import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 import { AppRoutingModule } from './approuting/approuting.module';
@@ -150,6 +150,7 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     DynamicFormsBootstrapUIModule,
     RestangularModule.forRoot([ConfigService, OAuthService], restangularProviderConfigurer),
     TabsModule.forRoot(),
+    TooltipModule.forRoot(),
     ModalModule.forRoot(),
     DropdownModule.forRoot(),
     CollapseModule.forRoot(),
