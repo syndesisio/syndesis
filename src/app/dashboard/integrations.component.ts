@@ -138,12 +138,43 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   //-----  Integration Board Chart ------------------->>
 
-  public countActiveIntegrations() {
-    for (const key in this.integrations) {
-      if (this.integrations.hasOwnProperty(key)) {
-        log.debugc(() => key + ' -> ' + this.integrations[key]);
+  public filterIntegrations() {
+    const active = [];
+    const deleted = [];
+    const draft = [];
+    const inactive = [];
+
+    this.integrations.map(function(a) {
+      log.debugc(() => 'Integration: ' + JSON.stringify(a));
+      log.debugc(() => 'currentStatus: ' + JSON.stringify(a.currentStatus));
+      log.debugc(() => 'desiredStatus: ' + JSON.stringify(a.desiredStatus));
+
+      switch (a.desiredStatus) {
+        case 'Activated':
+          active.push(a);
+          break;
+        case 'Deleted':
+          deleted.push(a);
+          break;
+        case 'Draft':
+          draft.push(a);
+          break;
+        case 'Deactivated':
+          inactive.push(a);
+          break;
       }
-    }
+
+      return {
+        active: active,
+        deleted: deleted,
+        draft: draft,
+        inactive: inactive,
+      };
+    });
+  }
+
+  public countActiveIntegrations() {
+    return this.integrations.length;
   }
 
   public countDeletedIntegrations() {
@@ -232,6 +263,7 @@ export class DashboardIntegrationsComponent implements OnInit {
   ngOnInit() {
     log.debugc(() => 'Got integrations: ' + JSON.stringify(this.integrations, undefined, 2), category);
     this.connectionStore.loadAll();
+    //this.filterIntegrations();
   }
 
 }
