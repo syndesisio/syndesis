@@ -48,6 +48,11 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
   }
 
   continue() {
+    const step = this.currentFlow.getStep(this.position);
+    if (step.stepKind === 'mapper') {
+      this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
+      return;
+    }
     const data = this.formGroup.value;
     const properties = {};
     for (const key in data) {
