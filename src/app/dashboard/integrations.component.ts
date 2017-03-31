@@ -41,7 +41,7 @@ export class DashboardIntegrationsComponent implements OnInit {
     //this.countDeletedIntegrations(),
     //this.countDraftIntegrations(),
     //this.countInactiveIntegrations(),
-    1, 0, 3, 2
+    1, 0, 3, 2,
   ];
   public doughnutChartType = 'doughnut';
   public doughnutChartColors = [{
@@ -55,8 +55,6 @@ export class DashboardIntegrationsComponent implements OnInit {
   public doughnutChartOptions: any = {
     cutoutPercentage: 75,
     legend: {position: 'bottom', fullWidth: false},
-    width: '300px',
-    height: '300px',
   };
 
   private toasterService: ToasterService;
@@ -141,7 +139,11 @@ export class DashboardIntegrationsComponent implements OnInit {
   //-----  Integration Board Chart ------------------->>
 
   public countActiveIntegrations() {
-    return this.integrations.length;
+    for (const key in this.integrations) {
+      if (this.integrations.hasOwnProperty(key)) {
+        log.debugc(() => key + ' -> ' + this.integrations[key]);
+      }
+    }
   }
 
   public countDeletedIntegrations() {
