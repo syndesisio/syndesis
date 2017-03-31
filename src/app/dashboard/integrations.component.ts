@@ -36,6 +36,7 @@ export class DashboardIntegrationsComponent implements OnInit {
     'Draft',
     'Inactive',
   ];
+  /*
   public doughnutChartData: number[] = [
     //this.countActiveIntegrations(),
     //this.countDeletedIntegrations(),
@@ -43,6 +44,17 @@ export class DashboardIntegrationsComponent implements OnInit {
     //this.countInactiveIntegrations(),
     1, 0, 3, 2,
   ];
+  */
+
+  get doughnutChartData() {
+    return [
+      this.countActiveIntegrations(),
+      this.countDeletedIntegrations(),
+      this.countDraftIntegrations(),
+      this.countInactiveIntegrations(),
+    ];
+  }
+
   public doughnutChartType = 'doughnut';
   public doughnutChartColors = [{
     backgroundColor: [
@@ -144,7 +156,7 @@ export class DashboardIntegrationsComponent implements OnInit {
     const draft = [];
     const inactive = [];
 
-    this.integrations.map(function(a) {
+    this.integrations.forEach(function(a) {
       log.debugc(() => 'Integration: ' + JSON.stringify(a));
       log.debugc(() => 'currentStatus: ' + JSON.stringify(a.currentStatus));
       log.debugc(() => 'desiredStatus: ' + JSON.stringify(a.desiredStatus));
@@ -163,30 +175,29 @@ export class DashboardIntegrationsComponent implements OnInit {
           inactive.push(a);
           break;
       }
-
-      return {
-        active: active,
-        deleted: deleted,
-        draft: draft,
-        inactive: inactive,
-      };
     });
+    return {
+      active: active,
+      deleted: deleted,
+      draft: draft,
+      inactive: inactive,
+    };
   }
 
   public countActiveIntegrations() {
-    return this.integrations.length;
+    return this.filterIntegrations().active.length;
   }
 
   public countDeletedIntegrations() {
-    return this.integrations.length;
+    return this.filterIntegrations().deleted.length;
   }
 
   public countDraftIntegrations() {
-    return this.integrations.length;
+    return this.filterIntegrations().draft.length;
   }
 
   public countInactiveIntegrations() {
-    return this.integrations.length;
+    return this.filterIntegrations().inactive.length;
   }
 
 
