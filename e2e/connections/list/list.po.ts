@@ -12,7 +12,7 @@ export class ConnectionsListComponent implements IPaaSComponent {
   }
 
   async countConnections(): P<number> {
-    const found = await this.rootElement().all(by.css('a.card-title')).getWebElements();
+    const found = await this.rootElement().all(by.css('p.card-title')).getWebElements();
     log.info(`found ${found.length} connections`);
     return found.length;
   }
@@ -33,5 +33,3 @@ export class ConnectionsListPage implements IPaaSComponent {
     return new ConnectionsListComponent();
   }
 }
-
-
