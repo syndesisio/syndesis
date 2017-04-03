@@ -18,7 +18,10 @@ exports.config = {
     testPath +  '/**/*.feature'
   ],
   capabilities: {
-    'browserName': 'chrome'
+    'browserName': 'chrome',
+    'chromeOptions': {
+      'args': ['--no-sandbox']
+    }
   },
   directConnect: true,
   baseUrl: 'http://localhost:4200/',
