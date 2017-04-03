@@ -13,11 +13,18 @@ launch tests using local dev server `http://localhost:4200`
 yarn e2e
 ```
 
-alternatively launch tests using remote web ui
+launch tests using remote web ui
 ```bash
 export IPAAS_UI_URL='https://ipaas-qe.b6ff.rh-idev.openshiftapps.com/'
 yarn e2e:ipaas-qe
 ```
+
+alternatively launch tests in Docker container with Xvfb
+```bash
+export IPAAS_UI_URL='https://ipaas-qe.b6ff.rh-idev.openshiftapps.com/'
+yarn e2e:xvfb
+```
+
 
 ## Launch subset of cucumber tests
 Tests (`*.feature) files can have something like java annotations.
