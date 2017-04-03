@@ -178,17 +178,7 @@ export class CurrentFlow {
         {
         log.debugc(() => 'Saving integration: ' + this.integration);
           // poor man's clone in case we need to munge the data
-          const integration = JSON.parse(JSON.stringify(this.integration));
-          // TODO munging connection objects for now
-          /*
-          const steps = integration.steps;
-          const newSteps = [];
-          for (const step of steps) {
-          newSteps.push();
-          }
-          integration.steps = newSteps;
-          integration.connections = steps;
-          */
+          const integration = this.getIntegrationClone();
           const sub = this.store.updateOrCreate(integration).subscribe((i: Integration) => {
             log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
             const action = event[ 'action' ];
@@ -208,6 +198,10 @@ export class CurrentFlow {
         break;
     }
     // log.debugc(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);
+  }
+
+  getIntegrationClone(): Integration {
+    return JSON.parse(JSON.stringify(this.integration));
   }
 
   get integration(): Integration {

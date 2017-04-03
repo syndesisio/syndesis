@@ -15,16 +15,23 @@ import { MappingManagementService } from 'ipaas.data.mapper';
 import { DataMapperAppComponent } from 'ipaas.data.mapper';
 
 import { ConfigService } from '../../../config.service';
+import { IntegrationSupportService } from '../../../store/integration-support.service';
 
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { FlowPage } from '../flow-page';
+
+import { Step, DataShape, TypeFactory } from '../../../model';
+
+import { log, getCategory } from '../../../logging';
+
+const category = getCategory('Connections');
 
 const MAPPING_KEY = 'atlasmapping';
 
 @Component({
   selector: 'ipaas-data-mapper-host',
   template: `
-    <div *ngIf="cfg.mappings">
+    <div *ngIf="initialized">
       <data-mapper #dataMapperComponent [cfg]="cfg"></data-mapper>
     </div>
   `,
@@ -34,6 +41,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
 
   routeSubscription: Subscription;
   position: number;
+  initialized = false;
 
   @ViewChild('dataMapperComponent')
   public dataMapperComponent: DataMapperAppComponent;
@@ -49,6 +57,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     public errorService: ErrorHandlerService,
     public configService: ConfigService,
     public initializationService: InitializationService,
+    public support: IntegrationSupportService,
     public detector: ChangeDetectorRef,
   ) {
     super(currentFlow, route, router);
@@ -69,63 +78,92 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     }
   }
 
-  handleFlowEvent(event: FlowEvent) {
-    switch (event.kind) {
-      case 'integrations-mapper-init':
-        const step = this.currentFlow.getStep(this.position);
-        let mappings = undefined;
-        if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
-          try {
-            mappings = <any> step.configuredProperties[MAPPING_KEY]['AtlasMapping'];
-          } catch (err) {
-            // TODO
-          }
-        }
-        this.cfg.mappings = new MappingDefinition();
+  createDocumentDefinition(dataShape: DataShape, isSource: boolean = false) {
+    const answer = new DocumentDefinition();
+    answer.isSource = isSource;
+    answer.initCfg.documentIdentifier = dataShape['dataType'].replace(/java:/, '');
+    return answer;
+  }
 
-        const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
-        const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
-        // TODO we'll want to parse the dataType and maybe set the right config value
-        const inputDocDef = new DocumentDefinition();
-        inputDocDef.isSource = true;
-        inputDocDef.initCfg.documentIdentifier = start.action.outputDataShape['dataType'].replace(/java:/, '');
-        this.cfg.sourceDocs.push(inputDocDef);
-
-        const outputDocDef = new DocumentDefinition();
-        outputDocDef.isSource = false;
-        outputDocDef.initCfg.documentIdentifier = end.action.inputDataShape['dataType'].replace(/java:/, '');
-        this.cfg.targetDocs.push(outputDocDef);
-
-        if (mappings) {
-          const mappingDefinition = new MappingDefinition();
-          // Existing mappings, load from the route
-          this.mappingService.deserializeMappingServiceJSON(mappings, mappingDefinition);
-          this.cfg.mappings = mappingDefinition;
-        }
-        this.initializationService.initialize();
-        this.mappingService.saveMappingOutput$.subscribe((saveHandler: Function) => {
-          const json = this.mappingService.serializeMappingsToJSON(this.cfg.mappings);
-          const properties = {
-            atlasMapping: json,
-          };
-          this.currentFlow.events.emit({
-            kind: 'integration-set-properties',
-            position: this.position,
-            properties: properties,
-          });
-        });
-        this.detector.detectChanges();
-      break;
+  initialize() {
+    const step = this.currentFlow.getStep(this.position);
+    let mappings = undefined;
+    if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
+      try {
+        mappings = <any>step.configuredProperties[MAPPING_KEY]['AtlasMapping'];
+      } catch (err) {
+        // TODO
+      }
     }
+    this.cfg.mappings = new MappingDefinition();
+    this.cfg.classPath = '';
+
+    const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
+    const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
+    // TODO we'll want to parse the dataType and maybe set the right config value
+    const inputDocDef = this.createDocumentDefinition(start.action.outputDataShape, true);
+    this.cfg.sourceDocs.push(inputDocDef);
+
+    const outputDocDef = this.createDocumentDefinition(end.action.inputDataShape);
+    this.cfg.targetDocs.push(outputDocDef);
+
+    if (mappings) {
+      const mappingDefinition = new MappingDefinition();
+      // Existing mappings, load from the route
+      this.mappingService.deserializeMappingServiceJSON(mappings, mappingDefinition);
+      this.cfg.mappings = mappingDefinition;
+    }
+    this.mappingService.saveMappingOutput$.subscribe((saveHandler: Function) => {
+      const json = this.mappingService.serializeMappingsToJSON(this.cfg.mappings);
+      const properties = {
+        atlasMapping: json,
+      };
+      this.currentFlow.events.emit({
+        kind: 'integration-set-properties',
+        position: this.position,
+        properties: properties,
+        onSave: () => {
+          log.debugc(() => 'Saved mapping file: ' + json, category);
+        },
+      });
+    });
+    // make sure the property is set on the integration
+    this.currentFlow.events.emit({
+      kind: 'integration-set-properties',
+      position: this.position,
+      properties: {
+        atlasMapping: mappings ? JSON.stringify(mappings) : '',
+      },
+      onSave: () => {
+        this.initializeMapper();
+      },
+    });
+  }
+
+  initializeMapper() {
+    log.debugc(() => 'Fetching POM for integration', category);
+    this.support.requestPom(this.currentFlow.getIntegrationClone()).subscribe(
+      (data) => {
+        const pom = data['_body'];
+        log.debugc(() => 'Fetched POM for integration: ' + pom, category);
+        this.cfg.pomPayload = pom;
+        this.initializationService.initialize();
+        this.initialized = true;
+      }, (err) => {
+        // do our best I guess
+        log.warnc(() => 'failed to fetch pom: ', JSON.parse(err), category);
+        this.initializationService.initialize();
+        this.initialized = true;
+      });
   }
 
   ngOnInit() {
     this.routeSubscription = this.route.params.pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
-        this.currentFlow.events.emit({
-          kind: 'integrations-mapper-init',
-        });
+        setTimeout(() => {
+          this.initialize();
+        }, 10);
       })
       .subscribe();
   }
