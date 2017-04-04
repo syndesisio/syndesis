@@ -1,14 +1,22 @@
 #
-# Do not edit, this is a generated file.  To regenerate,  run: ./generate-templates.sh
+# Do not edit, this is a generated file.  To regenerate,  run: tools/generate-templates.sh
 #
 apiVersion: v1
 kind: Template
 metadata:
-  name: redhat-ipaas
+  name: ipaas-restricted
 parameters:
+# Parameters with no defaults (has to be be provided when template is applied):
 - name: ROUTE_HOSTNAME
   description: The external hostname to access the iPaaS
   required: true
+- name: GITHUB_OAUTH_CLIENT_ID
+  description: GitHub OAuth client ID
+  required: true
+- name: GITHUB_OAUTH_CLIENT_SECRET
+  description: GitHub OAuth client secret
+  required: true
+# Parameters with defaults:
 - name: KEYCLOAK_ROUTE_HOSTNAME
   description: The external hostname to access the iPaaS Keycloak directly
   value: ipaas-keycloak.127.0.0.1.xip.io
@@ -56,12 +64,6 @@ parameters:
   description: PEM to keystore init container image
   value: jimmidyson/pemtokeystore:v0.2.0
   required: true
-- name: GITHUB_OAUTH_CLIENT_ID
-  description: GitHub OAuth client ID
-  required: true
-- name: GITHUB_OAUTH_CLIENT_SECRET
-  description: GitHub OAuth client secret
-  required: true
 - name: GITHUB_OAUTH_DEFAULT_SCOPES
   description: GitHub OAuth default scopes
   value: "user:email public_repo"
@@ -94,22 +96,15 @@ parameters:
   name: POSTGRESQL_VOLUME_CAPACITY
   required: true
   value: 1Gi
+- description: Ignore SSL errors in proxy containers
+  displayName: Insecure skip verify
+  name: INSECURE_SKIP_VERIFY
+  value: 'false'
 message: |-
   Red Hat iPaaS is deployed to ${ROUTE_HOSTNAME}.
 
     FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
 objects:
-- apiVersion: v1
-  kind: OAuthClient
-  metadata:
-    name: ${OPENSHIFT_OAUTH_CLIENT_ID}
-    labels:
-      app: redhat-ipaas
-      component: ipaas-ui
-  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
-  redirectURIs:
-  - https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
-  grantMethod: prompt
 
 - apiVersion: v1
   kind: ImageStream
@@ -185,7 +180,7 @@ objects:
         name: docker.io/atlasmap/ipaas-datamapper:latest
       importPolicy:
         scheduled: true
-      name: latest      
+      name: latest
 
 - apiVersion: v1
   kind: Secret
@@ -500,8 +495,8 @@ objects:
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
           - name: NAMESPACE
-            valueFrom: 
-              fieldRef: 
+            valueFrom:
+              fieldRef:
                 fieldPath: metadata.namespace
           image: ' '
 
@@ -590,6 +585,7 @@ objects:
           - -tls-key=/tls/tls.key
           - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
           - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+          - -insecure-skip-verify=${INSECURE_SKIP_VERIFY}
           readinessProbe:
             tcpSocket:
               port: 8080
@@ -657,6 +653,7 @@ objects:
           - -tls-key=/tls/tls.key
           - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
           - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+          - -insecure-skip-verify=${INSECURE_SKIP_VERIFY}
           readinessProbe:
             tcpSocket:
               port: 8080
@@ -991,7 +988,7 @@ objects:
       targetPort: 8080
     selector:
       app: redhat-ipaas
-      component: ipaas-datamapper    
+      component: ipaas-datamapper
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
@@ -2233,8 +2230,3 @@ objects:
       endpoints:
         health:
           sensitive: false
-
-
-
-
-
