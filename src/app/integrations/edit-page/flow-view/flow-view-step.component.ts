@@ -242,6 +242,12 @@ export class FlowViewStepComponent extends ChildAwarePage {
     switch (this.step.stepKind) {
       case 'endpoint':
         if (!this.step.connection) {
+          if (this.getPosition() === 0) {
+            return 'Start';
+          }
+          if (this.getPosition() === this.currentFlow.getLastPosition()) {
+            return 'Finish';
+          }
           return 'Set up this connection';
         }
         return this.step.connection.name;
