@@ -1,8 +1,10 @@
 /* tslint:disable:no-unused-variable */
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { ModalModule } from 'ng2-bootstrap/modal';
+import { DropdownModule } from 'ng2-bootstrap/dropdown';
 import { ToasterModule } from 'angular2-toaster';
 
 import { IPaaSCommonModule } from '../../common/common.module';
@@ -16,9 +18,11 @@ describe('IntegrationsListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        IPaaSCommonModule,
+        CommonModule,
+        IPaaSCommonModule.forRoot(),
         RouterTestingModule.withRoutes([]),
-        ModalModule,
+        ModalModule.forRoot(),
+        DropdownModule.forRoot(),
         ToasterModule,
         StoreModule,
       ],

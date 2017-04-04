@@ -25,7 +25,7 @@ describe('IntegrationsListPage', () => {
         StoreModule,
         RouterTestingModule.withRoutes([]),
         RestangularModule.forRoot(),
-        ModalModule,
+        ModalModule.forRoot(),
         ToasterModule,
       ],
       declarations: [

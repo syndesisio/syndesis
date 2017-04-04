@@ -28,9 +28,9 @@ describe('DashboardComponent', () => {
       imports: [
         IPaaSCommonModule,
         ChartsModule,
-        ModalModule,
+        ModalModule.forRoot(),
         ToasterModule,
-        TooltipModule,
+        TooltipModule.forRoot(),
         StoreModule,
         RouterTestingModule.withRoutes([]),
         RestangularModule.forRoot(),

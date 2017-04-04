@@ -1,4 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
 import { Subscription } from 'rxjs/Subscription';
@@ -15,9 +16,9 @@ import { log, getCategory } from '../../logging';
 })
 export class IntegrationsListComponent {
 
-  private toasterService: ToasterService;
   private toast;
   currentAction: string = undefined;
+  selectedIntegration: Integration = undefined;
 
   @ViewChild('childModal') public childModal: ModalDirective;
 
@@ -25,8 +26,13 @@ export class IntegrationsListComponent {
 
   @Input() loading: boolean;
 
-  constructor(private store: IntegrationStore, toasterService: ToasterService) {
-    this.toasterService = toasterService;
+  constructor(
+    public store: IntegrationStore,
+    public toasterService: ToasterService,
+    public route: ActivatedRoute,
+    public router: Router,
+  ) {
+
   }
 
   doAction(action: string, integration: Integration) {
@@ -40,18 +46,24 @@ export class IntegrationsListComponent {
     }
   }
 
+  goto(integration: Integration) {
+    this.router.navigate(['edit', integration.id, 'save-or-add-step'], { relativeTo: this.route });
+  }
+
   //-----  Activate/Deactivate ------------------->>
 
   // TODO: Refactor into single method for both cases
   // Open modal to confirm activation
   requestActivate(integration: Integration) {
     log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration['id']));
+    this.selectedIntegration = integration;
     this.showModal('activate');
   }
 
   // Open modal to confirm deactivation
   requestDeactivate(integration: Integration) {
     log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration['id']));
+    this.selectedIntegration = integration;
     this.showModal('deactivate');
   }
 
@@ -128,6 +140,7 @@ export class IntegrationsListComponent {
   // Open modal to confirm delete
   requestDelete(integration: Integration) {
     log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
+    this.selectedIntegration = integration;
     this.showModal('delete');
   }
 
@@ -182,6 +195,7 @@ export class IntegrationsListComponent {
 
   public hideModal(): void {
     this.currentAction = undefined;
+    this.selectedIntegration = undefined;
     this.childModal.hide();
   }
 
