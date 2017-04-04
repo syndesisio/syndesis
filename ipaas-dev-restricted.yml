@@ -753,7 +753,7 @@ objects:
             value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-          image: rhipaas/ipaas-datamapper:latest
+          image: atlasmap/ipaas-datamapper:latest
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
