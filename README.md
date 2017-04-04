@@ -32,9 +32,9 @@ All template parameters are required. Most of them have sane defaults, but some 
 
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
-| `ROUTE_HOSTNAME` | The external hostname to access the iPaaS |
-| `GITHUB_OAUTH_CLIENT_ID` | GitHub OAuth client ID |
-| `GITHUB_OAUTH_CLIENT_SECRET` | GitHub OAuth client secret |
+| **ROUTE_HOSTNAME** | The external hostname to access the iPaaS |
+| **GITHUB_OAUTH_CLIENT_ID** | GitHub OAuth client ID |
+| **GITHUB_OAUTH_CLIENT_SECRET** | GitHub OAuth client secret |
 
 In order to one of the templates described above these parameters must be provided:
 
@@ -58,26 +58,26 @@ Once all pods are started up, you should be able to access the iPaaS at `https:/
 
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
-| `KEYCLOAK_ROUTE_HOSTNAME` | The external hostname to access the iPaaS Keycloak | ipaas-keycloak.127.0.0.1.xip.io |
-| `KEYCLOAK_ADMIN_USERNAME` |  The Keycloak admin username | admin |
-| `KEYCLOAK_ADMIN_PASSWORD` | The Keycloak admin password | _(generated)_ |
-| `KEYCLOAK_IPAAS_REALM_NAME` | iPaaS Keycloak realm name | ipaas |
-| `KEYCLOAK_IPAAS_REST_CLIENT_SECRET` | iPaaS REST service client secret | _(generated)_ |
-| `KEYCLOAK_ALLOW_ANY_HOSTNAME` | The Keycloack parameter to disable hostname validation on  certificate | false |
-| `OPENSHIFT_MASTER` | Public OpenShift master address | https://localhost:8443 |
-| `OPENSHIFT_OAUTH_CLIENT_ID` | OpenShift OAuth client ID | ipaas |
-| `OPENSHIFT_OAUTH_CLIENT_SECRET` | OpenShift OAuth client secret | _(generated)_ |
-| `OPENSHIFT_OAUTH_DEFAULT_SCOPES` | OpenShift OAuth default scopes | user:full |
-| `PEMTOKEYSTORE_IMAGE` | PEM to keystore init container image | jimmidyson/pemtokeystore:v0.2.0 |
-| `GITHUB_OAUTH_DEFAULT_SCOPES` | GitHub OAuth default scopes | user:email public_repo |
-| `POSTGRESQL_MEMORY_LIMIT` | Maximum amount of memory the PostgreSQL container can use | 512Mi |
-| `POSTGRESQL_IMAGE_STREAM_NAMESPACE` | The OpenShift Namespace where the PostgreSQL ImageStream resides | openshift |
-| `POSTGRESQL_USER` | Username for PostgreSQL user that will be used for accessing the database | ipaas |
-| `POSTGRESQL_PASSWORD` | Password for the PostgreSQL connection user | _(generated)_ |
-| `POSTGRESQL_DATABASE` | Name of the PostgreSQL database accessed | ipaas |
-| `POSTGRESQL_VOLUME_CAPACITY` | Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi | 1Gi |
-| `INSECURE_SKIP_VERIFY` | Whether to skip the verification of SSL certificates for internal services | false |
-| `TEST_SUPPORT_ENABLED` | Whether test support for e2e test is enabled | false |
+| **KEYCLOAK_ROUTE_HOSTNAME** | The external hostname to access the iPaaS Keycloak | ipaas-keycloak.127.0.0.1.xip.io |
+| **KEYCLOAK_ADMIN_USERNAME** |  The Keycloak admin username | admin |
+| **KEYCLOAK_ADMIN_PASSWORD** | The Keycloak admin password | _(generated)_ |
+| **KEYCLOAK_IPAAS_REALM_NAME** | iPaaS Keycloak realm name | ipaas |
+| **KEYCLOAK_IPAAS_REST_CLIENT_SECRET** | iPaaS REST service client secret | _(generated)_ |
+| **KEYCLOAK_ALLOW_ANY_HOSTNAME** | The Keycloack parameter to disable hostname validation on  certificate | false |
+| **OPENSHIFT_MASTER** | Public OpenShift master address | https://localhost:8443 |
+| **OPENSHIFT_OAUTH_CLIENT_ID** | OpenShift OAuth client ID | ipaas |
+| **OPENSHIFT_OAUTH_CLIENT_SECRET** | OpenShift OAuth client secret | _(generated)_ |
+| **OPENSHIFT_OAUTH_DEFAULT_SCOPES** | OpenShift OAuth default scopes | user:full |
+| **PEMTOKEYSTORE_IMAGE** | PEM to keystore init container image | jimmidyson/pemtokeystore:v0.2.0 |
+| **GITHUB_OAUTH_DEFAULT_SCOPES** | GitHub OAuth default scopes | user:email public_repo |
+| **POSTGRESQL_MEMORY_LIMIT** | Maximum amount of memory the PostgreSQL container can use | 512Mi |
+| **POSTGRESQL_IMAGE_STREAM_NAMESPACE** | The OpenShift Namespace where the PostgreSQL ImageStream resides | openshift |
+| **POSTGRESQL_USER** | Username for PostgreSQL user that will be used for accessing the database | ipaas |
+| **POSTGRESQL_PASSWORD** | Password for the PostgreSQL connection user | _(generated)_ |
+| **POSTGRESQL_DATABASE** | Name of the PostgreSQL database accessed | ipaas |
+| **POSTGRESQL_VOLUME_CAPACITY** | Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi | 1Gi |
+| **INSECURE_SKIP_VERIFY** | Whether to skip the verification of SSL certificates for internal services | false |
+| **TEST_SUPPORT_ENABLED** | Whether test support for e2e test is enabled | false |
 
 ## Running locally for development
 
@@ -89,7 +89,7 @@ Once they are started and you have logged in with `oc login -u system:admin`, ru
 $ oc create -n openshift -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml
 $ oc new-project ipaas
 # Create app with the required params
-$ oc new-app ipaas -p ROUTE_HOSTNAME=ipaas.127.0.0.1.nip.io GITHUB_CLIENT_ID=... GITHUB_CLIENT_SECRET=...
+$ oc new-app ipaas -p ROUTE_HOSTNAME=ipaas.127.0.0.1.nip.io -p GITHUB_CLIENT_ID=... -p GITHUB_CLIENT_SECRET=...
 # Wait until all started
 $ oc get pods -w
 ```
@@ -182,6 +182,7 @@ oc new-app ipaas-dev \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
     -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+    -p INSECURE_SKIP_VERIFY=true
 
 # Wait until all pods are running. Some pods are crashing at first, but are restarted
 # so that the system will eventually converts to a stable state ;-). Especially the proxies
