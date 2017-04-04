@@ -31,11 +31,18 @@ const MAPPING_KEY = 'atlasmapping';
 @Component({
   selector: 'ipaas-data-mapper-host',
   template: `
-    <div *ngIf="initialized">
+    <div *ngIf="initialized" class="data-mapper-host">
       <data-mapper #dataMapperComponent [cfg]="cfg"></data-mapper>
     </div>
   `,
-  providers: [ConfigService, MappingManagementService, ErrorHandlerService, DocumentManagementService],
+  styles: [
+    `.data-mapper-host {
+        /* TODO probably a better way to set this height to the viewport */
+        height: calc(100vh - 150px);
+      }
+    `,
+  ],
+  providers: [InitializationService, ConfigService, MappingManagementService, ErrorHandlerService, DocumentManagementService],
 })
 export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestroy {
 
@@ -135,12 +142,22 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
         atlasMapping: mappings ? JSON.stringify(mappings) : '',
       },
       onSave: () => {
-        this.initializeMapper();
+        setTimeout(() => {
+          this.initializeMapper();
+        }, 10);
       },
     });
   }
 
   initializeMapper() {
+    this.cfg.mappingService.mappingUpdated$.subscribe(() => {
+      this.detector.detectChanges();
+    });
+    this.cfg.initializationService.systemInitialized$.subscribe(() => {
+      this.detector.detectChanges();
+    });
+    this.initialized = true;
+    this.detector.detectChanges();
     log.debugc(() => 'Fetching POM for integration', category);
     this.support.requestPom(this.currentFlow.getIntegrationClone()).subscribe(
       (data) => {
@@ -148,14 +165,10 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
         log.debugc(() => 'Fetched POM for integration: ' + pom, category);
         this.cfg.pomPayload = pom;
         this.initializationService.initialize();
-        this.initialized = true;
-        this.detector.detectChanges();
       }, (err) => {
         // do our best I guess
         log.warnc(() => 'failed to fetch pom: ', JSON.parse(err), category);
         this.initializationService.initialize();
-        this.initialized = true;
-        this.detector.detectChanges();
       });
   }
 
