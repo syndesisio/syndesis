@@ -1,7 +1,9 @@
-import { when, binding, given } from 'cucumber-tsflow';
-import { World } from '../common/world';
+import { when, binding, then } from 'cucumber-tsflow';
+import { World, expect, P } from '../common/world';
 import { CallbackStepDefinition } from 'cucumber';
-import { log } from '../../src/app/logging';
+import { ConnectionDetailPage } from './detail/detail.po';
+import { ConnectionsListComponent } from './list/list.po';
+import { ConnectionViewComponent } from './edit/edit.po';
 
 // let http = require('http');
 
@@ -16,23 +18,34 @@ class ConnectionSteps {
   constructor(private world: World) {
   }
 
-
-  @when(/^I open url$/)
-  public WhenXXX(callback): void {
+  @then(/^Camilla is presented with "([^"]*)" connection details$/)
+  public verifyConnectionDetails(connectionName: string, callback: CallbackStepDefinition): void {
     // Write code here that turns the phrase above into concrete actions
+    const page = new ConnectionDetailPage();
+    expect(page.connectionName(), `Connection detail page must show connection name`)
+      .to.eventually.be.equal(connectionName).notify(callback);
+    // todo add more assertion on connection details page
+  }
 
+  @when(/^Camilla selects the "([^"]*)" connection.*$/)
+  public selectConnection(connectionName: string): P<any> {
+    // Write code here that turns the phrase above into concrete actions
+    const listComponent = new ConnectionsListComponent();
+    return listComponent.goToConnection(connectionName);
+  }
 
-    const tokenName = 'id_token';
+  @when(/^type "([^"]*)" into connection name$/)
+  public typeConnectionName(name: string): P<void> {
+    // Write code here that turns the phrase above into concrete actions
+    const connectionView = new ConnectionViewComponent();
+    return connectionView.name.set(name);
+  }
 
-    this.world.app.sessionStorage.getItem(tokenName)
-      .then(val => {
-        log.info(`${tokenName} => ${val}`);
-      })
-      .then(() => this.world.app.getApiUrl())
-      .then(url => {
-        log.info(url);
-        callback();
-      });
+  @when(/^type "([^"]*)" into connection description/)
+  public typeConnectionDescription(description: string): P<void> {
+    // Write code here that turns the phrase above into concrete actions
+    const connectionView = new ConnectionViewComponent();
+    return connectionView.description.set(description);
   }
 }
 

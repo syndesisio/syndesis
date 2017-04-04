@@ -92,7 +92,7 @@ export class World {
       let data = '';
 
       res.on('data', chunk => {
-        log.debug(`data chunk (${Object.prototype.toString.call(chunk)}: ${chunk}`);
+        log.debug(`data chunk (${Object.prototype.toString.call(chunk)}): ${chunk}`);
         data += chunk;
       });
 

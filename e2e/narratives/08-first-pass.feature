@@ -18,7 +18,7 @@ Feature: Sprint 8 narrative
 
   Scenario: Explore connections
     When "Camilla" navigates to the "Connections" page to see what's available in the iPaaS
-    And Camilla selects an existing "Twitter Example" connection to view the configuration details for that connection.
+    And Camilla selects the "Twitter Example" connection to view the configuration details for that connection.
     Then Camilla is presented with "Twitter Example" connection details
 
   Scenario: Create connection
