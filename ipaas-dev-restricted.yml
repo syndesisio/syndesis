@@ -521,7 +521,7 @@ objects:
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
           image: rhipaas/ipaas-verifier:latest
 
-          imagePullPolicy: ${IMAGE_PULL_POLICY}
+          imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
               path: /health

@@ -645,7 +645,7 @@ objects:
 {{/Dev}}{{#Dev}}
           image: rhipaas/ipaas-verifier:latest
 {{/Dev}}
-          imagePullPolicy: ${IMAGE_PULL_POLICY}
+          imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
               path: /health
