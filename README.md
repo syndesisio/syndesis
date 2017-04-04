@@ -21,7 +21,7 @@ Currently there are multiple different flavours of the templates, with the follo
 
 More on the different flavors can be found in this [issue](https://github.com/redhat-ipaas/openshift-templates/issues/28)
 
-All of these templates are generated from a single source [ipaas.yml.mustache](generator/ipaas.yml.mustache). So instead of editing individual descriptors please adapt this master template and the run `generator/generate-templates.sh`. 
+All of these templates are generated from a single source [ipaas.yml.mustache](generator/ipaas.yml.mustache). So instead of editing individual descriptors please adapt this master template and the run `generator/generate-templates.sh`.
 
 ## Template parameters
 
@@ -77,6 +77,7 @@ Once all pods are started up, you should be able to access the iPaaS at `https:/
 | `POSTGRESQL_DATABASE` Name of the PostgreSQL database accessed | ipaas |
 | `POSTGRESQL_VOLUME_CAPACITY` Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi | 1Gi |
 | `INSECURE_SKIP_VERIFY` | Whether to skip the verification of SSL certificates for internal services | false |
+| `TEST_SUPPORT_ENABLED` | Whether test support for e2e test is enabled | false |
 
 ## Running locally for development
 
