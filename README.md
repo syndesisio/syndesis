@@ -69,13 +69,13 @@ Once all pods are started up, you should be able to access the iPaaS at `https:/
 | `OPENSHIFT_OAUTH_CLIENT_SECRET` | OpenShift OAuth client secret | _(generated)_ |
 | `OPENSHIFT_OAUTH_DEFAULT_SCOPES` | OpenShift OAuth default scopes | user:full |
 | `PEMTOKEYSTORE_IMAGE` | PEM to keystore init container image | jimmidyson/pemtokeystore:v0.2.0 |
-| `GITHUB_OAUTH_DEFAULT_SCOPES` GitHub OAuth default scopes | user:email public_repo |
-| `POSTGRESQL_MEMORY_LIMIT` Maximum amount of memory the PostgreSQL container can use | 512Mi |
-| `POSTGRESQL_IMAGE_STREAM_NAMESPACE` The OpenShift Namespace where the PostgreSQL ImageStream resides | openshift |
-| `POSTGRESQL_USER` Username for PostgreSQL user that will be used for accessing the database | ipaas |
-| `POSTGRESQL_PASSWORD` Password for the PostgreSQL connection user | _(generated)_ |
-| `POSTGRESQL_DATABASE` Name of the PostgreSQL database accessed | ipaas |
-| `POSTGRESQL_VOLUME_CAPACITY` Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi | 1Gi |
+| `GITHUB_OAUTH_DEFAULT_SCOPES` | GitHub OAuth default scopes | user:email public_repo |
+| `POSTGRESQL_MEMORY_LIMIT` | Maximum amount of memory the PostgreSQL container can use | 512Mi |
+| `POSTGRESQL_IMAGE_STREAM_NAMESPACE` | The OpenShift Namespace where the PostgreSQL ImageStream resides | openshift |
+| `POSTGRESQL_USER` | Username for PostgreSQL user that will be used for accessing the database | ipaas |
+| `POSTGRESQL_PASSWORD` | Password for the PostgreSQL connection user | _(generated)_ |
+| `POSTGRESQL_DATABASE` | Name of the PostgreSQL database accessed | ipaas |
+| `POSTGRESQL_VOLUME_CAPACITY` | Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi | 1Gi |
 | `INSECURE_SKIP_VERIFY` | Whether to skip the verification of SSL certificates for internal services | false |
 | `TEST_SUPPORT_ENABLED` | Whether test support for e2e test is enabled | false |
 
