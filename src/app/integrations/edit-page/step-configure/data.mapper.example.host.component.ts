@@ -31,11 +31,18 @@ const MAPPING_KEY = 'atlasmapping';
 @Component({
   selector: 'ipaas-data-mapper-host',
   template: `
-    <div *ngIf="initialized">
+    <div *ngIf="initialized" class="data-mapper-host">
       <data-mapper #dataMapperComponent [cfg]="cfg"></data-mapper>
     </div>
   `,
-  providers: [ConfigService, MappingManagementService, ErrorHandlerService, DocumentManagementService],
+  styles: [
+    `.data-mapper-host {
+        /* TODO probably a better way to set this height to the viewport */
+        height: calc(100vh - 140px);
+      }
+    `,
+  ],
+  providers: [InitializationService, ConfigService, MappingManagementService, ErrorHandlerService, DocumentManagementService],
 })
 export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestroy {
 
@@ -69,12 +76,12 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     this.cfg.mappingService = mappingService;
     this.cfg.errorService = errorService;
     try {
-      this.cfg.baseJavaServiceUrl = configService.getSettings('datamapper', 'baseJavaServiceUrl') || this.cfg.baseJavaServiceUrl;
-      this.cfg.baseMappingServiceUrl = configService.getSettings('datamapper', 'baseMappingServiceUrl') || this.cfg.baseMappingServiceUrl;
+      this.cfg.initCfg.baseJavaServiceUrl = configService.getSettings('datamapper', 'baseJavaServiceUrl');
+      this.cfg.initCfg.baseMappingServiceUrl = configService.getSettings('datamapper', 'baseMappingServiceUrl');
     } catch (err) {
       // run with defaults
-      this.cfg.baseJavaServiceUrl = 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/java/';
-      this.cfg.baseMappingServiceUrl = 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
+      this.cfg.initCfg.baseJavaServiceUrl = 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/java/';
+      this.cfg.initCfg.baseMappingServiceUrl = 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
     }
   }
 
@@ -96,7 +103,6 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
       }
     }
     this.cfg.mappings = new MappingDefinition();
-    this.cfg.classPath = '';
 
     const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
     const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
@@ -135,27 +141,35 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
         atlasMapping: mappings ? JSON.stringify(mappings) : '',
       },
       onSave: () => {
-        this.initializeMapper();
+        setTimeout(() => {
+          this.initializeMapper();
+        }, 10);
       },
     });
   }
 
   initializeMapper() {
+    this.cfg.mappingService.mappingUpdated$.subscribe(() => {
+      this.detector.detectChanges();
+    });
+    this.cfg.initializationService.systemInitialized$.subscribe(() => {
+      this.detector.detectChanges();
+    });
+    this.initialized = true;
+    this.detector.detectChanges();
     log.debugc(() => 'Fetching POM for integration', category);
     this.support.requestPom(this.currentFlow.getIntegrationClone()).subscribe(
       (data) => {
         const pom = data['_body'];
         log.debugc(() => 'Fetched POM for integration: ' + pom, category);
-        this.cfg.pomPayload = pom;
+        this.cfg.initCfg.classPath = null;
+        this.cfg.initCfg.pomPayload = pom;
         this.initializationService.initialize();
-        this.initialized = true;
-        this.detector.detectChanges();
       }, (err) => {
         // do our best I guess
         log.warnc(() => 'failed to fetch pom: ', JSON.parse(err), category);
+        this.cfg.initCfg.classPath = '';
         this.initializationService.initialize();
-        this.initialized = true;
-        this.detector.detectChanges();
       });
   }
 
