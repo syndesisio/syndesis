@@ -38,7 +38,7 @@ exports.config = {
     ]
   },
   onPrepare: function() {
-    browser.manage().window().setSize(1600, 1000);
+    browser.manage().window().setSize(1280, 720);
   },
   useAllAngular2AppRoots: true,
   beforeLaunch: function() {
