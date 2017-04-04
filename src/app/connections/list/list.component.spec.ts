@@ -19,7 +19,7 @@ describe('ConnectionsListComponent', () => {
       imports: [
         IPaaSCommonModule,
         RouterTestingModule.withRoutes([]),
-        ModalModule,
+        ModalModule.forRoot(),
         ToasterModule,
       ],
       declarations: [ConnectionsListComponent],

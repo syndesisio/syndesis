@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
-import { CollapseModule, ModalModule, PopoverModule, TabsModule } from 'ng2-bootstrap';
+import { CollapseModule, ModalModule, PopoverModule, TabsModule, DropdownModule } from 'ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
 import { DataMapperModule } from 'ipaas.data.mapper';
 
@@ -69,6 +69,7 @@ const routes: Routes = [
     ToasterModule,
     ModalModule,
     PopoverModule,
+    DropdownModule,
     DataMapperModule,
   ],
   declarations: [
