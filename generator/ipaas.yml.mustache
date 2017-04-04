@@ -910,7 +910,11 @@ objects:
             value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
+{{^Dev}}
           image: ' '
+{{/Dev}}{{#Dev}}
+          image: rhipaas/ipaas-datamapper:latest
+{{/Dev}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
