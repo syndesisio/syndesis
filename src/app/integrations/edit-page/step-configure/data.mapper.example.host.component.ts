@@ -149,11 +149,13 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
         this.cfg.pomPayload = pom;
         this.initializationService.initialize();
         this.initialized = true;
+        this.detector.detectChanges();
       }, (err) => {
         // do our best I guess
         log.warnc(() => 'failed to fetch pom: ', JSON.parse(err), category);
         this.initializationService.initialize();
         this.initialized = true;
+        this.detector.detectChanges();
       });
   }
 
