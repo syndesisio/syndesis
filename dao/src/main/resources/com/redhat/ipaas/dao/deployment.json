@@ -249,7 +249,7 @@
              "kind" : "none"
           },
           "outputDataShape": {
-             "kind" : "*"
+             "kind" : "any"
           },
           "properties": {
             "httpUri": {
@@ -273,10 +273,10 @@
           "name": "HTTP POST",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "inputDataShape": {
-             "kind" : "*"
+             "kind" : "any"
           },
           "outputDataShape": {
-             "kind" : "*"
+             "kind" : "any"
           },
           "properties": {
             "httpUri": {
@@ -315,7 +315,7 @@
              "kind" : "none"
           },
           "outputDataShape": {
-             "kind" : "*"
+             "kind" : "any"
           },
           "properties": {
             "period": {
@@ -529,7 +529,7 @@
                "kind" : "none"
             },
             "outputDataShape": {
-               "kind" : "*"
+               "kind" : "any"
             },
             "camelConnectorGAV": "com.redhat.ipaas:timer-connector:@ipaas-connectors.version@",
             "camelConnectorPrefix": "periodic-timer",
@@ -576,10 +576,10 @@
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
             "inputDataShape": {
-               "kind" : "*"
+               "kind" : "any"
             },
             "outputDataShape": {
-               "kind" : "*"
+               "kind" : "any"
             },
             "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:@ipaas-connectors.version@",
             "camelConnectorPrefix": "http-post",
@@ -621,7 +621,7 @@
                "kind" : "none"
             },
             "outputDataShape": {
-               "kind" : "*"
+               "kind" : "any"
             },
             "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:@ipaas-connectors.version@",
             "camelConnectorPrefix": "http-get",
