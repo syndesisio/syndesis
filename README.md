@@ -13,11 +13,12 @@ $ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-template
 Currently there are multiple different flavours of the templates, with the following characteristics:
 
 | Template | Descripton |
-| ipaas.yml | Full production when setting up on a cluster with full access rights. Uses image streams under the hoods. |
-| ipaas-dev.yml | Same as above, but with direct references to Docker images so that they locally created images (e.g. agains a Minishift Docker daemon) can be used directly |
-| ipaas-restricted.yml | If running in an restricted environment without admin access this template should be used. See the [section](#running-single-tenant) below for detailed usage instructions. |
-| ipaas-dev-restricted.yml | Same as above, but as a developer version with using direct Docker images |
-| ipaas-restricted-ephemeral.yml | A variant of `ipaas-restricted.yml` which does only use temporary persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue. |
+| ======== | ========== |
+| [ipaas.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml) | Full production when setting up on a cluster with full access rights. Uses image streams under the hoods. |
+| [ipaas-dev.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev.yml) | Same as above, but with direct references to Docker images so that they locally created images (e.g. agains a Minishift Docker daemon) can be used directly |
+| [ipaas-restricted.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-restricted.yml) | If running in an restricted environment without admin access this template should be used. See the [section](#running-single-tenant) below for detailed usage instructions. |
+| [ipaas-dev-restricted.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev-restricted.yml) | Same as above, but as a developer version with using direct Docker images |
+| [ipaas-restricted-ephemeral.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-restricted-ephemeral.yml) | A variant of `ipaas-restricted.yml` which does only use temporary persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue. |
 
 More on the different flavors can be found in this [issue](https://github.com/redhat-ipaas/openshift-templates/issues/28)
 
