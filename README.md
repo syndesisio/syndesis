@@ -31,8 +31,8 @@ All template parameters are required. Most of them have sane defaults, but some 
 
 ### Required input parametes
 
-| Parameter | Description | Default |
-| --------- | ----------- | ------- |
+| Parameter | Description |
+| --------- | ----------- |
 | **ROUTE_HOSTNAME** | The external hostname to access the iPaaS |
 | **GITHUB_OAUTH_CLIENT_ID** | GitHub OAuth client ID |
 | **GITHUB_OAUTH_CLIENT_SECRET** | GitHub OAuth client secret |
@@ -152,7 +152,7 @@ You should be able to log in at `https://<EXTERNAL_HOSTNAME>`.
 
 With minishift you can easily try out redhat-ipaas. The only prerequisite is that you have a GitHub application registered at https://github.com/settings/developers For the registration, please use as callback URL the output of `https://ipaas.$(minishift ip).xip.io`. Then you get a `<GITHUB_CLIENT_ID>` and a `<GITHUB_CLIENT_SECRET>`. These should be used in the commands below.
 
-> Please note that there is currently a switch for Minishift with regard to the default DNS reflector. For Minishift 1.0.0-beta3 please use `xip.io` as the domain. For Minishift 1.0.0-beta5 you have to use `nip.io` but you have also have to use the parameter `INSECURE_SKIP_VERIFY=true` because the internal certs still refer to `xip.io`. This should be fixed in the final 1.0.0 version of Minishift.
+> Please note that there is currently a switch for Minishift with regard to the default DNS reflector. For Minishift 1.0.0-rc1 please use `xip.io` as the domain. For Minishift 1.0.0-rc1 you have to use `nip.io` but you have also have to use the parameter `INSECURE_SKIP_VERIFY=true` because the internal certs still refer to `xip.io`. This should be fixed in the final 1.0.0 version of Minishift.
 
 
 ```bash
