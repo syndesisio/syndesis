@@ -17,6 +17,8 @@
       }
     }
 
+    // Create & Edit Specific Changes to the Connection List Toolbar
+
     /deep/ .toolbar-pf {
       padding: 15px 5px;
 
@@ -33,6 +35,22 @@
           }
 
           .input-group-btn {
+            display: none;
+          }
+        }
+      }
+    }
+
+    // Create & Edit Specific Changes to the Connection List
+
+    /deep/ .connections-list {
+      .cards {
+        cursor: pointer !important;
+
+        .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
+          cursor: pointer !important;
+
+          .dropdown-kebab-pf {
             display: none;
           }
         }

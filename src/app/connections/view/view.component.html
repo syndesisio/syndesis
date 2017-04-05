@@ -132,6 +132,7 @@
           <ipaas-connections-list-toolbar [(filter)]="filter"
                                           [(sort)]="sort"
                                           [showCreate]="false"></ipaas-connections-list-toolbar>
+
           <ipaas-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort"
                                   [loading]="loading | async"
                                   (onSelected)="onSelected($event)"></ipaas-connections-list>
