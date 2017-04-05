@@ -37,7 +37,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     const connection = this.current.connection;
     switch (page) {
       case 'connection-basics':
-        return this.connection.name && this.connection.description && this.connection.connector;
+        return this.connection.name && this.connection.connector;
       case 'configure-fields':
         // TODO validate form
       case 'review':
