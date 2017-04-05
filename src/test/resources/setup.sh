@@ -3,9 +3,9 @@
 # We pass the namespace on each command individually, because when this script is run inside a pod, all commands default to the pod namespace (ignoring commands like `oc project` etc)
 echo "Installing IPaaS in ${KUBERNETES_NAMESPACE}"
 
-oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/serviceaccount-as-oauthclient-single-tenant.yml -n ${KUBERNETES_NAMESPACE} || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/serviceaccount-as-oauthclient-single-tenant.yml -n ${KUBERNETES_NAMESPACE}
-oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-ephemeral-single-tenant.yml -n ${KUBERNETES_NAMESPACE}  || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ephemeral-ipaas-single-tenant.yml -n ${KUBERNETES_NAMESPACE}
-oc new-app redhat-ipaas-single-tenant \
+oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml -n ${KUBERNETES_NAMESPACE} || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml -n ${KUBERNETES_NAMESPACE}
+oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-ephemeral-restricted.yml -n ${KUBERNETES_NAMESPACE}  || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-ephemeral-restricted.yml -n ${KUBERNETES_NAMESPACE}
+oc new-app ipaas-ephemeral-restricted \
     -p ROUTE_HOSTNAME=ipaas-testing.b6ff.rh-idev.openshiftapps.com \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p OPENSHIFT_OAUTH_CLIENT_ID=system:serviceaccount:${KUBERNETES_NAMESPACE}:ipaas-oauth-client \
