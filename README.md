@@ -101,7 +101,7 @@ If you don't have cluster admin privileges, then you can run the iPaaS as a sing
 
 Deployment is a bit more complicated because it requires a few extra steps to set stuff up:
 
-### (Optional) Create a project
+#### (Optional) Create a project
 
 It is advisable to run the iPaaS in its own project so that it can adhere to cluster quotas:
 
@@ -109,7 +109,7 @@ It is advisable to run the iPaaS in its own project so that it can adhere to clu
 $ oc new-project ipaas-restricted
 ```
 
-### Create service account to use as OAuth client
+#### Create service account to use as OAuth client
 
 OpenShift includes the ability for a service account to act as a limited OAuthClient (see
 [here](https://docs.openshift.org/latest/architecture/additional_concepts/authentication.html#service-accounts-as-oauth-clients)
@@ -119,7 +119,7 @@ for more details). Let's create the service account with the correct redirect UR
 $ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml
 ```
 
-### Create the template to use
+#### Create the template to use
 
 We will create the template in the project, rather than in the openshift namespace as it is assumed the user does not have cluster-admin rights:
 
@@ -127,7 +127,7 @@ We will create the template in the project, rather than in the openshift namespa
 $ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev-restricted.yml
 ```
 
-### Create the new app
+#### Create the new app
 
 You can now use the template and the ServiceAccount created above to deploy the restricted iPaaS for a single tenant iPaaS:
 
@@ -142,7 +142,7 @@ $ oc new-app ipaas-dev-restricted \
 
 Replace `EXTERNAL_HOSTNAME` appropriately with your public iPaaS address (something like `ipaas.127.0.0.1.nip.io` works great if you are using `oc cluster up` locally).
 
-### Log in
+#### Log in
 
 You should be able to log in at `https://<EXTERNAL_HOSTNAME>`.
 
