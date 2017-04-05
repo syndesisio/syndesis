@@ -24,7 +24,7 @@
 
     <!-- Editing the connection configuration -->
 
-    <div class="col-md-8 col-md-offset-2"
+    <div class="col-md-8 col-md-offset-2 edit"
          *ngSwitchCase="'edit'">
       <div class="card-pf">
         <h2 class="card-pf-title">
@@ -84,10 +84,14 @@
 
     <!-- Creating the connection -->
 
-    <div *ngSwitchCase="'create'">
+    <div *ngSwitchCase="'create'"
+         class="create">
       <div class="card-pf">
         <h2 class="card-pf-title">Add connection details</h2>
         <div class="card-pf-body">
+          <div class="row">
+            <div class="col-xs-12"></div>
+          </div>
           <form class="form-horizontal">
             <!-- replacing id with data-id to pass build errors -->
             <div class="form-group required">
@@ -137,7 +141,8 @@
 
     <!-- Viewing the connection configuration -->
 
-    <div *ngSwitchDefault>
+    <div *ngSwitchDefault
+         class="view">
       <div class="card-pf">
         <h2 class="card-pf-title">Connection Fields</h2>
         <div class="card-pf-body">
