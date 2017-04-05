@@ -16,6 +16,28 @@
         float: left;
       }
     }
+
+    /deep/ .toolbar-pf {
+      padding: 15px 5px;
+
+      .toolbar-pf-actions {
+        margin: 0;
+
+        .search {
+          input {
+            font-style: italic;
+          }
+
+          .input-group {
+            width: 100%;
+          }
+
+          .input-group-btn {
+            display: none;
+          }
+        }
+      }
+    }
   }
 }
 
