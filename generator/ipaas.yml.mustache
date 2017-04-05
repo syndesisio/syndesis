@@ -196,6 +196,21 @@ objects:
       importPolicy:
         scheduled: true
       name: latest
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: ipaas-verifier
+    labels:
+      app: redhat-ipaas
+      component: ipaas-verifier
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: docker.io/rhipaas/ipaas-verifier:latest
+      importPolicy:
+        scheduled: true
+       name: latest
 {{/Dev}}
 - apiVersion: v1
   kind: Secret
