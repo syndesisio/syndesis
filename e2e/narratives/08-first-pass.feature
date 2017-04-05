@@ -3,15 +3,6 @@
 Feature: Sprint 8 narrative
   https://issues.jboss.org/browse/IPAAS-153
 
-  Background:
-    Given details for "Twitter Example" connection:
-      | accessToken       | some access token   |
-      | accessTokenSecret | some awesome secret |
-
-    And details for "Salesforce" connection:
-      | loginUrl | http://redhat.com/demo |
-      | clientId | ssldkfjslkdfj3343      |
-
   Scenario: First pass at login, homepage
     When "Camilla" logs into the iPaaS URL for her installation (e.g. rh-ipaas.[openshift online domain].com)
     Then Camilla is presented with the iPaaS page "Dashboard"

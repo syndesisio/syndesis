@@ -4,6 +4,12 @@ Feature: Connections smoke test
   # Enter feature description here
 
   Background:
+    Given details for "Twitter" connection:
+      | accessToken       | randomly generated token        |
+      | accessTokenSecret | this is just the biggest secret |
+      | consumerKey       | rrrrrrrrrrrrrrrrrrrrrrr333      |
+      | consumerSecret    | ssssssssssssssssssssssss333     |
+
     Given credentials for "Camilla"
     And clean application state
 
@@ -16,4 +22,5 @@ Feature: Connections smoke test
     And click on the "Next" button
     Then she is presented with the "Validate" button
 
+    When she fills "Twitter" connection details
 

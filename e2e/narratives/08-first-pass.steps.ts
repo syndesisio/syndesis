@@ -21,14 +21,6 @@ class FirstPass {
   }
 
 
-  @given(/^details for "([^"]*)" connection:$/)
-  public setConnectionDetails(arg1: string, table: TableDefinition, callback: CallbackStepDefinition): void {
-
-    log.info(`should set connection details for ${arg1}: ${table}`);
-    callback();
-  }
-
-
   @when(/^Camilla navigates to the iPaaS "([^"]*)"$/)
   public navigateIpaas(arg1: string, callback: CallbackStepDefinition): void {
     // Write code here that turns the phrase above into concrete actions
@@ -75,13 +67,6 @@ class FirstPass {
   public selectIntegrationAction(action: string, callback): void {
     const page = new ListActionsComponent();
     page.selectAction(action).then(() => callback());
-  }
-
-
-  @when(/^she fills "([^"]*)" connection details$/)
-  public fillConnectionDetails(connectionName: string, callback: CallbackStepDefinition): void {
-    // Write code here that turns the phrase above into concrete actions
-    callback(null, 'pending');
   }
 
 

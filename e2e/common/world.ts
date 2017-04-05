@@ -54,6 +54,7 @@ export class World {
   user: User;
   app: AppPage;
   private token: string = null;
+  connectionDetails: Map<string, Map<string, string>> = new Map();
 
   constructor() {
     this.app = new AppPage();
