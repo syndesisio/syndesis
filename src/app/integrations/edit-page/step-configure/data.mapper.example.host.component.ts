@@ -96,11 +96,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     const step = this.currentFlow.getStep(this.position);
     let mappings = undefined;
     if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
-      try {
-        mappings = <any>step.configuredProperties[MAPPING_KEY]['AtlasMapping'];
-      } catch (err) {
-        // TODO
-      }
+      mappings = <string> step.configuredProperties[MAPPING_KEY];
     }
     this.cfg.mappings = new MappingDefinition();
 
@@ -116,13 +112,18 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     if (mappings) {
       const mappingDefinition = new MappingDefinition();
       // Existing mappings, load from the route
+      try {
       this.mappingService.deserializeMappingServiceJSON(mappings, mappingDefinition);
+      } catch (err) {
+        // TODO popup or error alert?  At least catch this so we initialize
+        log.warn('Failed to deserialize mappings: ' + err, category);
+      }
       this.cfg.mappings = mappingDefinition;
     }
     this.mappingService.saveMappingOutput$.subscribe((saveHandler: Function) => {
       const json = this.mappingService.serializeMappingsToJSON(this.cfg.mappings);
       const properties = {
-        atlasMapping: json,
+        atlasmapping: JSON.stringify(json),
       };
       this.currentFlow.events.emit({
         kind: 'integration-set-properties',
@@ -138,7 +139,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
       kind: 'integration-set-properties',
       position: this.position,
       properties: {
-        atlasMapping: mappings ? JSON.stringify(mappings) : '',
+        atlasmapping: mappings ? mappings : '',
       },
       onSave: () => {
         setTimeout(() => {
