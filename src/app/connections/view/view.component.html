@@ -1,4 +1,5 @@
 <div class="row row-cards-pf center connections-view"
+     [ngClass]="{edit: 'edit', create: 'create'}[mode] || 'view'"
      *ngIf="connection">
   <div class="col-xs-4"
        *ngIf="showName">
@@ -24,7 +25,7 @@
 
     <!-- Editing the connection configuration -->
 
-    <div class="col-md-8 col-md-offset-2 edit"
+    <div class="col-md-8 col-md-offset-2"
          *ngSwitchCase="'edit'">
       <div class="card-pf">
         <h2 class="card-pf-title">
@@ -84,8 +85,7 @@
 
     <!-- Creating the connection -->
 
-    <div *ngSwitchCase="'create'"
-         class="create">
+    <div *ngSwitchCase="'create'">
       <div class="card-pf">
         <h2 class="card-pf-title">Add Connection Details</h2>
         <div class="card-pf-body">

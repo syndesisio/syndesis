@@ -1,1 +1,16 @@
-.connections-create {}
+.connections-create-page {
+  .wizard-pf-body {
+    background: #FFFFFF;
+
+    .wizard-pf-steps {
+      .wizard-pf-steps-indicator {
+        float: none;
+        margin: 0 auto;
+      }
+    }
+  }
+
+  .details {
+    border-top: solid 1px #000;
+  }
+}

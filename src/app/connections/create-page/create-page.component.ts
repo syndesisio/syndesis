@@ -10,6 +10,7 @@ const category = getCategory('Connections');
 @Component({
   selector: 'ipaas-connection-create-page',
   templateUrl: 'create-page.component.html',
+  styleUrls: ['./create-page.component.scss'],
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
   constructor(

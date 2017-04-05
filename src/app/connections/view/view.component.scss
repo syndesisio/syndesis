@@ -1,13 +1,20 @@
 @import '../../../scss/colors';
 
 .connections-view {
+  padding: 0;
+
   .card-pf-body {
     .fa {
       font-size: x-large;
     }
   }
 
-  .create, .edit {
+  &.create, &.edit {
+    .card-pf-body {
+      margin: 0;
+      padding: 0;
+    }
+
     .form {
       border-bottom: solid 1px $pf-black-200;
       padding-bottom: 10px;
@@ -44,9 +51,11 @@
     // Create & Edit Specific Changes to the Connection List
 
     /deep/ .connections-list {
-      .cards {
-        cursor: pointer !important;
+      background: $pf-black-200;
+      margin: 0 -20px;
+      padding: 20px;
 
+      .cards {
         .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
           cursor: pointer !important;
 
@@ -57,11 +66,15 @@
       }
     }
   }
+
+  &.view {}
 }
 
+/*
 .connection-edit {
   background: #fff;
   border-top: 2px solid transparent;
   box-shadow: 0 1px 1px rgba(3, 3, 3, 0.175);
   padding: 0 20px;
 }
+*/
