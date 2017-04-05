@@ -1,4 +1,10 @@
+@import '../../../scss/colors';
+
 .connections-create-page {
+  .card-pf {
+    background: $pf-black-200;
+  }
+  
   .wizard-pf-body {
     background: #FFFFFF;
 
@@ -10,7 +16,12 @@
     }
   }
 
-  .details {
-    //border-top: solid 1px #000;
+  /deep/ .toolbar-pf-actions {
+    margin-bottom: 0;
+
+    .breadcrumb {
+      margin-bottom: 10px;
+    }
   }
 }
+
