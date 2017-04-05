@@ -1,5 +1,5 @@
 #
-# Do not edit, this is a generated file.  To regenerate,  run: tools/generate-templates.sh
+# Do not edit, this is a generated file.  To regenerate,  run: ./generator/run.sh
 #
 apiVersion: v1
 kind: Template
