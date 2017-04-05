@@ -19,7 +19,7 @@
           "secret": true,
           "description": "The access token"
         },
-        " accessTokenSecret": {
+        "accessTokenSecret": {
           "kind": "property",
           "displayName": "Access Token Secret",
           "group": "security",
@@ -31,7 +31,7 @@
           "secret": true,
           "description": "The access token secret"
         },
-        " consumerKey": {
+        "consumerKey": {
           "kind": "property",
           "displayName": "Consumer Key",
           "group": "security",
@@ -43,7 +43,7 @@
           "secret": true,
           "description": "The consumer key"
         },
-        " consumerSecret": {
+        "consumerSecret": {
           "kind": "property",
           "displayName": "Consumer Secret",
           "group": "security",
