@@ -25,7 +25,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = DataShape.Builder.class)
 public interface DataShape {
 
-    String getDataType();
+    String getKind();
+
+    String getType();
 
     Optional<byte[]> getExemplar();
 
