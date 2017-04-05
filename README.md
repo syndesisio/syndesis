@@ -78,7 +78,7 @@ Once all pods are started up, you should be able to access the iPaaS at `https:/
 | **INSECURE_SKIP_VERIFY** | Whether to skip the verification of SSL certificates for internal services | false |
 | **TEST_SUPPORT_ENABLED** | Whether test support for e2e test is enabled | false |
 
-## Running locally for development
+## Running locally
 
 Use either [Minishift](https://github.com/minishift/minishift) or [`oc cluster up`](https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md). For Minishift specific instructions see [below](#minishift-quickstart).
 
@@ -92,6 +92,8 @@ $ oc new-app ipaas -p ROUTE_HOSTNAME=ipaas.127.0.0.1.nip.io -p GITHUB_CLIENT_ID=
 # Wait until all started
 $ oc get pods -w
 ```
+
+If you want to use the development version which refers directly to Docker images substitute `ipaas` with `ipaas-dev` in the example above.
 
 Once everything is running, you should be able to access iPaaS at https://ipaas.127.0.0.1.nip.io and log in with the OpenShift user `developer` using any password.
 
