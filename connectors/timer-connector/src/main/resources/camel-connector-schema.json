@@ -14,7 +14,7 @@
     "javaType": "com.redhat.ipaas.connector.timer.PeriodicTimerComponent",
     "groupId": "com.redhat.ipaas",
     "artifactId": "timer-connector",
-    "version": "0.2-SNAPSHOT"
+    "version": "0.3-SNAPSHOT"
   },
   "componentProperties": {
   },

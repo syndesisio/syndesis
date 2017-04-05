@@ -14,7 +14,7 @@
     "javaType": "com.redhat.ipaas.connector.twitter.TwitterMentionComponent",
     "groupId": "com.redhat.ipaas",
     "artifactId": "twitter-mention-connector",
-    "version": "0.2-SNAPSHOT"
+    "version": "0.3-SNAPSHOT"
   },
   "componentProperties": {
     "accessToken": { "kind": "property", "displayName": "Access Token", "group": "security", "label": "security", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": true, "description": "The access token" },
