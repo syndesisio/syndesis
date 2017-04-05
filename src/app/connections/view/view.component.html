@@ -87,47 +87,48 @@
     <div *ngSwitchCase="'create'"
          class="create">
       <div class="card-pf">
-        <h2 class="card-pf-title">Add connection details</h2>
+        <h2 class="card-pf-title">Add Connection Details</h2>
         <div class="card-pf-body">
-          <div class="row">
-            <div class="col-xs-12"></div>
-          </div>
-          <form class="form-horizontal">
-            <!-- replacing id with data-id to pass build errors -->
-            <div class="form-group required">
-              <label class="col-sm-4 control-label">Connection Name&nbsp;
-                <span style="color: red">*</span>
-              </label>
-              <div class="col-sm-8">
-                <input type="text"
-                       name="nameInput"
-                       data-id="nameInput"
-                       placeholder="{{ name }}"
-                       [(ngModel)]="name"
-                       class="form-control">
+          <div class="row form">
+            <form class="form-horizontal col-xs-6">
+              <!-- replacing id with data-id to pass build errors -->
+              <div class="form-group required">
+                <label class="col-sm-4 control-label">Connection Name&nbsp;
+                  <span style="color: red">*</span>
+                </label>
+                <div class="col-sm-8">
+                  <input type="text"
+                         name="nameInput"
+                         data-id="nameInput"
+                         placeholder="{{ name }}"
+                         [(ngModel)]="name"
+                         class="form-control">
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-4 control-label">Description</label>
-              <div class="col-sm-8">
+              <div class="form-group">
+                <label class="col-sm-4 control-label">Description</label>
+                <div class="col-sm-8">
                 <textarea data-id="descriptionInput"
                           name="descriptionInput"
                           class="form-control"
                           [(ngModel)]="description"
                           rows="2"></textarea>
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-4 control-label">Tag(s)</label>
-              <div class="col-sm-8">
-                <input type="text"
-                       name="tagsInput"
-                       data-id="tagsInput"
-                       [(ngModel)]="tags"
-                       class="form-control">
+              <div class="form-group">
+                <label class="col-sm-4 control-label">Tag(s)</label>
+                <div class="col-sm-8">
+                  <input type="text"
+                         name="tagsInput"
+                         data-id="tagsInput"
+                         [(ngModel)]="tags"
+                         class="form-control">
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
+
+
           <ipaas-connections-list-toolbar [(filter)]="filter"
                                           [(sort)]="sort"
                                           [showCreate]="false"></ipaas-connections-list-toolbar>

@@ -6,6 +6,17 @@
       font-size: x-large;
     }
   }
+
+  .create, .edit {
+    .form {
+      border-bottom: solid 1px $pf-black-200;
+      padding-bottom: 10px;
+
+      .form-horizontal {
+        float: left;
+      }
+    }
+  }
 }
 
 .connection-edit {
