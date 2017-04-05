@@ -13,7 +13,7 @@ $ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-template
 Currently there are multiple different flavours of the templates, with the following characteristics:
 
 | Template | Descripton |
-| ======== | ========== |
+| -------- | ---------- |
 | [ipaas.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml) | Full production when setting up on a cluster with full access rights. Uses image streams under the hoods. |
 | [ipaas-dev.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev.yml) | Same as above, but with direct references to Docker images so that they locally created images (e.g. agains a Minishift Docker daemon) can be used directly |
 | [ipaas-restricted.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-restricted.yml) | If running in an restricted environment without admin access this template should be used. See the [section](#running-single-tenant) below for detailed usage instructions. |
