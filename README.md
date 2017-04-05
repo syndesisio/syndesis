@@ -80,7 +80,7 @@ Once all pods are started up, you should be able to access the iPaaS at `https:/
 
 ## Running locally for development
 
-Use either [Minishift](https://github.com/minishift/minishift) or [`oc cluster up`](https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md). For Minishift specific instructions see [below](minishift-quickstart).
+Use either [Minishift](https://github.com/minishift/minishift) or [`oc cluster up`](https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md). For Minishift specific instructions see [below](#minishift-quickstart).
 
 Once they are started and you have logged in with `oc login -u system:admin`, run:
 
