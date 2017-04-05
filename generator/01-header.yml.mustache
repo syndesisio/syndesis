@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: {{Name}}
+parameters:
+# Parameters with no defaults (has to be be provided when template is applied):
+- name: ROUTE_HOSTNAME
+  description: The external hostname to access the iPaaS
+  required: true
+- name: GITHUB_OAUTH_CLIENT_ID
+  description: GitHub OAuth client ID
+  required: true
+- name: GITHUB_OAUTH_CLIENT_SECRET
+  description: GitHub OAuth client secret
+  required: true
+# Parameters with defaults:
+- name: KEYCLOAK_ROUTE_HOSTNAME
+  description: The external hostname to access the iPaaS Keycloak directly
+  value: ipaas-keycloak.127.0.0.1.xip.io
+  required: true
+- name: KEYCLOAK_ADMIN_USERNAME
+  description: The Keycloak admin username
+  value: admin
+  required: true
+- name: KEYCLOAK_ADMIN_PASSWORD
+  description: The Keycloak admin password
+  generate: expression
+  from: "[a-zA-Z0-9]{40}"
+  required: true
+- name: KEYCLOAK_IPAAS_REALM_NAME
+  description: Keycloak iPaaS realm name
+  value: ipaas
+  required: true
+- name: KEYCLOAK_IPAAS_REST_CLIENT_SECRET
+  description: iPaaS REST service client secret
+  generate: expression
+  from: "[a-zA-Z0-9]{64}"
+  required: true
+- name: KEYCLOAK_ALLOW_ANY_HOSTNAME
+  description: The Keycloack parameter to disable hostname validation on certificate
+  value: "false"
+  required: true
+- name: OPENSHIFT_MASTER
+  description: Public OpenShift master address
+  value: https://localhost:8443
+  required: true
+- name: OPENSHIFT_OAUTH_CLIENT_ID
+  description: OpenShift OAuth client ID
+  value: ipaas
+  required: true
+- name: OPENSHIFT_OAUTH_CLIENT_SECRET
+  description: OpenShift OAuth client secret
+  generate: expression
+  from: "[a-zA-Z0-9]{64}"
+  required: true
+- name: OPENSHIFT_OAUTH_DEFAULT_SCOPES
+  description: OpenShift OAuth default scopes
+  value: "user:full"
+  required: true
+- name: PEMTOKEYSTORE_IMAGE
+  description: PEM to keystore init container image
+  value: jimmidyson/pemtokeystore:v0.2.0
+  required: true
+- name: GITHUB_OAUTH_DEFAULT_SCOPES
+  description: GitHub OAuth default scopes
+  value: "user:email public_repo"
+  required: true
+- description: Maximum amount of memory the PostgreSQL container can use.
+  displayName: Memory Limit
+  name: POSTGRESQL_MEMORY_LIMIT
+  value: 512Mi
+- description: The OpenShift Namespace where the PostgreSQL ImageStream resides.
+  displayName: Namespace
+  name: POSTGRESQL_IMAGE_STREAM_NAMESPACE
+  value: openshift
+- description: Username for PostgreSQL user that will be used for accessing the database.
+  displayName: PostgreSQL Connection Username
+  name: POSTGRESQL_USER
+  value: ipaas
+- description: Password for the PostgreSQL connection user.
+  displayName: PostgreSQL Connection Password
+  from: '[a-zA-Z0-9]{16}'
+  generate: expression
+  name: POSTGRESQL_PASSWORD
+  required: true
+- description: Name of the PostgreSQL database accessed.
+  displayName: PostgreSQL Database Name
+  name: POSTGRESQL_DATABASE
+  required: true
+  value: ipaas
+- description: Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi.
+  displayName: Volume Capacity
+  name: POSTGRESQL_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
+- description: Enables test-support endpoint on backend API
+  displayName: Test Support Enabled
+  name: TEST_SUPPORT_ENABLED
+  required: true
+  value: "false"
+- description: Ignore SSL errors in proxy containers
+  displayName: Insecure skip verify
+  name: INSECURE_SKIP_VERIFY
+  value: 'false'
+message: |-
+  Red Hat iPaaS is deployed to ${ROUTE_HOSTNAME}.
+
+    FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
+objects:
