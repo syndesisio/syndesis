@@ -33,6 +33,7 @@ import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.connection.Connector;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.model.integration.Step;
+import com.redhat.ipaas.model.integration.Integration.Status;
 import com.redhat.ipaas.openshift.ImmutableCreateResourcesRequest;
 import com.redhat.ipaas.openshift.OpenShiftService;
 import com.redhat.ipaas.project.converter.GenerateProjectRequest;
@@ -100,7 +101,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
         Integration updatedIntegration = new Integration.Builder()
                 .createFrom(integration).gitRepo(gitCloneUrl)
-                .lastUpdated(new Date())
+                .lastUpdated(new Date()).currentStatus(Status.Draft)
                 .build();
         ensureOpenShiftResources(updatedIntegration, secret);
         return Creator.super.create(updatedIntegration);
