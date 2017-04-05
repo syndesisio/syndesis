@@ -180,7 +180,7 @@ oc new-app ipaas-dev \
     -p ROUTE_HOSTNAME=ipaas.$(minishift ip).xip.io \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
-    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} \
     -p INSECURE_SKIP_VERIFY=true
 
 # Wait until all pods are running. Some pods are crashing at first, but are restarted
