@@ -2,7 +2,7 @@
 #
 # Creats PVs for the ipaas deployment on minishift
 #
-set -e 
+set -e
 
 oc login -u system:admin
 
@@ -29,4 +29,3 @@ spec:
   hostPath:
     path: "/tmp/ipaas-db"
 EOF
-

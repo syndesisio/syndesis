@@ -25,31 +25,31 @@ func main() {
 }
 
 var installCommand = &cobra.Command{
-	Use:   "ipaas-install",
-	Short: "ipaas-install is a tool for creating the OpenShift resources needed to install the redhat-ipass.",
-	Long:  `ipaas-install is a tool for creating the OpenShift resources needed to install the redhat-ipass.`,
+	Use:   "ipaas-template",
+	Short: "ipaas-template is a tool for creating the OpenShift resources needed to install the redhat-ipass.",
+	Long:  `ipaas-template is a tool for creating the OpenShift resources needed to install the redhat-ipass.`,
 	Run: install,
 }
 
 type Context struct {
 	Name         string;
-	DevMode      bool;
+	Dev          bool;
 	Ephemeral    bool;
-	SingleTenant bool;
+	Restricted   bool;
 }
 
 var context = Context{}
 
 func init() {
-	installCommand.PersistentFlags().StringVar(&context.Name, "name", "redhat-ipaas", "Name of the template")
-	installCommand.PersistentFlags().BoolVar(&context.DevMode, "dev-mode", false, "Developer mode?")
-	installCommand.PersistentFlags().BoolVar(&context.SingleTenant, "single-tenant", false, "Single tenant mode?")
+	installCommand.PersistentFlags().StringVar(&context.Name, "name", "ipaas", "Name of the template")
+	installCommand.PersistentFlags().BoolVar(&context.Dev, "dev", false, "Developer mode?")
+	installCommand.PersistentFlags().BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
 	installCommand.PersistentFlags().BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 }
 
 func install(cmd *cobra.Command, args []string) {
-	template, err := ioutil.ReadFile("redhat-ipaas.yml.mustache")
+	template, err := ioutil.ReadFile("ipaas.yml.mustache")
 	check(err)
 	fmt.Print(mustache.Render(string(template), context))
 }

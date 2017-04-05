@@ -1,13 +1,49 @@
 # Red Hat iPaaS OpenShift Templates
 
-This repository contains a simple way to get the Red Hat iPaaS deployed, using OpenShift templates,
-on a running cluster.
+This repository contains a simple way to get the Red Hat iPaaS deployed, using OpenShift templates, on a running cluster.
 
-Run the following commands:
+There are several flavors of templates you can use (see [below]()), but in general in order to apply the templates you can directly refer to the given files via a GitHub URL:
 
 ```bash
-$ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas.yml
-$ oc new-app redhat-ipaas -p ROUTE_HOSTNAME=<external hostname>
+$ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml
+```
+
+## Template flavours
+
+Currently there are multiple different flavours of the templates, with the following characteristics:
+
+| Template | Descripton |
+| -------- | ---------- |
+| [ipaas.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml) | Full production when setting up on a cluster with full access rights. Uses image streams under the hoods. |
+| [ipaas-dev.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev.yml) | Same as above, but with direct references to Docker images so that they locally created images (e.g. agains a Minishift Docker daemon) can be used directly |
+| [ipaas-restricted.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-restricted.yml) | If running in an restricted environment without admin access this template should be used. See the [section](#running-single-tenant) below for detailed usage instructions. |
+| [ipaas-dev-restricted.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev-restricted.yml) | Same as above, but as a developer version with using direct Docker images |
+| [ipaas-restricted-ephemeral.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-restricted-ephemeral.yml) | A variant of `ipaas-restricted.yml` which does only use temporary persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue. |
+
+More on the different flavors can be found in this [issue](https://github.com/redhat-ipaas/openshift-templates/issues/28)
+
+All of these templates are generated from a single source [ipaas.yml.mustache](generator/ipaas.yml.mustache). So instead of editing individual descriptors please adapt this master template and the run `generator/generate-templates.sh`.
+
+## Template parameters
+
+All template parameters are required. Most of them have sane defaults, but some of them have not. These must be provided during instantiation with `oc new-app`
+
+
+### Required input parametes
+
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| **ROUTE_HOSTNAME** | The external hostname to access the iPaaS |
+| **GITHUB_OAUTH_CLIENT_ID** | GitHub OAuth client ID |
+| **GITHUB_OAUTH_CLIENT_SECRET** | GitHub OAuth client secret |
+
+In order to one of the templates described above these parameters must be provided:
+
+```
+$ oc new-app ipaas -p \
+       ROUTE_HOSTNAME=<external hostname> \
+       GITHUB_OAUTH_CLIENT_ID=<oauth client> \
+       GITHUB_OAUTH_CLIENT_SECRET=<secret>
 ```
 
 Replace _&lt;external hostname&gt;_ with a value that will resolve to the address of the OpenShift router.
@@ -15,68 +51,55 @@ Replace _&lt;external hostname&gt;_ with a value that will resolve to the addres
 You have to chose an address or _&lt;external hostname&gt;_ which is routable on your system (and also resolvable from inside your cluster). For a development setup you can use an external DNS resolving service like xip.io or nip.io:
 Assuming that your OpenShift cluster is reachable under the IP address _ip_ then use `ipaas.`_ip_`.nip.io`.) (e.g. `ipass.127.0.0.1.nip.io` if your cluster is listening on localhost). With minishift you can retrieve the IP of the cluster with `minishift ip`.
 
+In order to use the GitHub integration you need a GitHub application registered at https://github.com/settings/developers For the registration, you will be asked for a _callback URL_. Please use the route you have given above: `https://<external hostname>` (e.g. `https://ipaas.127.0.0.1.nip.io`). GitHub will you then give a _client id_ and a _client secrte_ which you set for the corresponding template parameters.
+
 Once all pods are started up, you should be able to access the iPaaS at `https://`_&lt;external hostname&gt;_`/`.
 
-## Template flavours
+### Parameters with default values
 
-Currently there are multiple different flavours of the templates, with the following characteristics:
-
-* `dev`: Are using pure docker images, instead of image streams.
-* `ephemeral:` Are not using persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue .
-* `single-tenant`: As the name implies.
-
-Some templates may mix one or more of the characteristics above.
-
-
-## Template parameters
-
-* `ROUTE_HOSTNAME`: The external hostname to access the iPaaS
-* `KEYCLOAK_ROUTE_HOSTNAME`: The external hostname to access the iPaaS Keycloak
-* `KEYCLOAK_ADMIN_USERNAME`: The Keycloak admin username
-* `KEYCLOAK_ADMIN_PASSWORD`: The Keycloak admin password
-* `KEYCLOAK_IPAAS_REALM_NAME`: iPaaS Keycloak realm name
-* `KEYCLOAK_IPAAS_REST_CLIENT_SECRET`: iPaaS REST service client secret
-* `KEYCLOAK_ALLOW_ANY_HOSTNAME`: The Keycloack parameter to disable hostname validation on certificate
-* `OPENSHIFT_MASTER`: Public OpenShift master address
-* `OPENSHIFT_OAUTH_CLIENT_ID`: OpenShift OAuth client ID
-* `OPENSHIFT_OAUTH_CLIENT_SECRET`: OpenShift OAuth client secret
-* `OPENSHIFT_OAUTH_DEFAULT_SCOPES`: OpenShift OAuth default scopes
-* `PEMTOKEYSTORE_IMAGE`: PEM to keystore init container image
-* `IMAGE_PULL_POLICY`: ImagePullPolicy configuration on rhipaas images
-* `GITHUB_OAUTH_CLIENT_ID` GitHub OAuth client ID
-* `GITHUB_OAUTH_CLIENT_SECRET` GitHub OAuth client secret
-* `GITHUB_OAUTH_DEFAULT_SCOPES` GitHub OAuth default scopes
-* `POSTGRESQL_MEMORY_LIMIT` Maximum amount of memory the PostgreSQL container can use
-* `POSTGRESQL_IMAGE_STREAM_NAMESPACE` The OpenShift Namespace where the PostgreSQL ImageStream resides
-* `POSTGRESQL_USER` Username for PostgreSQL user that will be used for accessing the database
-* `POSTGRESQL_PASSWORD` Password for the PostgreSQL connection user
-* `POSTGRESQL_DATABASE` Name of the PostgreSQL database accessed
-* `POSTGRESQL_VOLUME_CAPACITY` Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| **KEYCLOAK_ROUTE_HOSTNAME** | The external hostname to access the iPaaS Keycloak | ipaas-keycloak.127.0.0.1.xip.io |
+| **KEYCLOAK_ADMIN_USERNAME** |  The Keycloak admin username | admin |
+| **KEYCLOAK_ADMIN_PASSWORD** | The Keycloak admin password | _(generated)_ |
+| **KEYCLOAK_IPAAS_REALM_NAME** | iPaaS Keycloak realm name | ipaas |
+| **KEYCLOAK_IPAAS_REST_CLIENT_SECRET** | iPaaS REST service client secret | _(generated)_ |
+| **KEYCLOAK_ALLOW_ANY_HOSTNAME** | The Keycloack parameter to disable hostname validation on  certificate | false |
+| **OPENSHIFT_MASTER** | Public OpenShift master address | https://localhost:8443 |
+| **OPENSHIFT_OAUTH_CLIENT_ID** | OpenShift OAuth client ID | ipaas |
+| **OPENSHIFT_OAUTH_CLIENT_SECRET** | OpenShift OAuth client secret | _(generated)_ |
+| **OPENSHIFT_OAUTH_DEFAULT_SCOPES** | OpenShift OAuth default scopes | user:full |
+| **PEMTOKEYSTORE_IMAGE** | PEM to keystore init container image | jimmidyson/pemtokeystore:v0.2.0 |
+| **GITHUB_OAUTH_DEFAULT_SCOPES** | GitHub OAuth default scopes | user:email public_repo |
+| **POSTGRESQL_MEMORY_LIMIT** | Maximum amount of memory the PostgreSQL container can use | 512Mi |
+| **POSTGRESQL_IMAGE_STREAM_NAMESPACE** | The OpenShift Namespace where the PostgreSQL ImageStream resides | openshift |
+| **POSTGRESQL_USER** | Username for PostgreSQL user that will be used for accessing the database | ipaas |
+| **POSTGRESQL_PASSWORD** | Password for the PostgreSQL connection user | _(generated)_ |
+| **POSTGRESQL_DATABASE** | Name of the PostgreSQL database accessed | ipaas |
+| **POSTGRESQL_VOLUME_CAPACITY** | Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi | 1Gi |
+| **INSECURE_SKIP_VERIFY** | Whether to skip the verification of SSL certificates for internal services | false |
+| **TEST_SUPPORT_ENABLED** | Whether test support for e2e test is enabled | false |
 
 ## Running locally for development
 
-Use either [Minishift](https://github.com/minishift/minishift) or [`oc cluster up`](https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md).
+Use either [Minishift](https://github.com/minishift/minishift) or [`oc cluster up`](https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md). For Minishift specific instructions see [below](minishift-quickstart).
 
 Once they are started and you have logged in with `oc login -u system:admin`, run:
 
 ```bash
-$ oc create -n openshift -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas.yml
+$ oc create -n openshift -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml
 $ oc new-project ipaas
-$ oc new-app redhat-ipaas
+# Create app with the required params
+$ oc new-app ipaas -p ROUTE_HOSTNAME=ipaas.127.0.0.1.nip.io -p GITHUB_CLIENT_ID=... -p GITHUB_CLIENT_SECRET=...
 # Wait until all started
 $ oc get pods -w
 ```
 
-Once everything is running, you should be able to access iPaaS at https://ipaas.127.0.0.1.nip.io and
-log in with the OpenShift user `developer` using any password.
+Once everything is running, you should be able to access iPaaS at https://ipaas.127.0.0.1.nip.io and log in with the OpenShift user `developer` using any password.
 
 ## Running single tenant
 
-If you don't have cluster admin privileges, then you can run the iPaaS as a single tenant deployment
-which only needs admin role in a project. This restricts all access to the single project and as such
-acts as a single tenant. The drawback to this is of course that you need to deploy the iPaaS services
-and pods into every project that you want to provision integrations in, but this is fine for a single,
-local deployment.
+If you don't have cluster admin privileges, then you can run the iPaaS as a single tenant deployment which only needs admin role in a project. This restricts all access to the single project and as such acts as a single tenant. The drawback to this is of course that you need to deploy the iPaaS services and pods into every project that you want to provision integrations in, but this is fine for a single, local deployment.
 
 Deployment is a bit more complicated because it requires a few extra steps to set stuff up:
 
@@ -85,7 +108,7 @@ Deployment is a bit more complicated because it requires a few extra steps to se
 It is advisable to run the iPaaS in its own project so that it can adhere to cluster quotas:
 
 ```bash
-$ oc new-project ipaas-single-tenant
+$ oc new-project ipaas-restricted
 ```
 
 ### Create service account to use as OAuth client
@@ -95,24 +118,23 @@ OpenShift includes the ability for a service account to act as a limited OAuthCl
 for more details). Let's create the service account with the correct redirect URIs enabled:
 
 ```bash
-$ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/serviceaccount-as-oauthclient-single-tenant.yml
+$ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml
 ```
 
 ### Create the template to use
 
-We will create the template in the project, rather than in the openshift namespace as it is assumed
-the user does not have cluster-admin rights:
+We will create the template in the project, rather than in the openshift namespace as it is assumed the user does not have cluster-admin rights:
 
 ```bash
-$ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-dev-single-tenant.yml
+$ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev-restricted.yml
 ```
 
 ### Create the new app
 
-You can now use the template and the ServiceAccount created above to deploy the single tenant iPaaS:
+You can now use the template and the ServiceAccount created above to deploy the restricted iPaaS for a single tenant iPaaS:
 
 ```bash
-$ oc new-app redhat-ipaas-dev-single-tenant \
+$ oc new-app ipaas-dev-restricted \
     -p ROUTE_HOSTNAME=<EXTERNAL_HOSTNAME> \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p OPENSHIFT_OAUTH_CLIENT_ID=system:serviceaccount:$(oc project -q):ipaas-oauth-client \
@@ -126,14 +148,15 @@ Replace `EXTERNAL_HOSTNAME` appropriately with your public iPaaS address (someth
 
 You should be able to log in at `https://<EXTERNAL_HOSTNAME>`.
 
-
 ## Minishift Quickstart
 
 With minishift you can easily try out redhat-ipaas. The only prerequisite is that you have a GitHub application registered at https://github.com/settings/developers For the registration, please use as callback URL the output of `https://ipaas.$(minishift ip).xip.io`. Then you get a `<GITHUB_CLIENT_ID>` and a `<GITHUB_CLIENT_SECRET>`. These should be used in the commands below.
 
+> Please note that there is currently a switch for Minishift with regard to the default DNS reflector. For Minishift 1.0.0-beta3 please use `xip.io` as the domain. For Minishift 1.0.0-beta5 you have to use `nip.io` but you have also have to use the parameter `INSECURE_SKIP_VERIFY=true` because the internal certs still refer to `xip.io`. This should be fixed in the final 1.0.0 version of Minishift.
+
 
 ```bash
-# Fire up minishift if not alread running. Please note that we need v1.5.0 right now 
+# Fire up minishift if not alread running. Please note that we need v1.5.0 right now
 # for auto creating volumes. Alternatively you could use the provided script tools/create-pv-minishift.sh
 # to create the PV on your own. Also, you need to add some memory, 4192 or more is recommended
 minishift start  --openshift-version=v1.5.0-rc.0 --memory 4192
@@ -152,14 +175,15 @@ GITHUB_CLIENT_ID=....
 GITHUB_CLIENT_SECRET=....
 
 # Install the OpenShift template
-oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/redhat-ipaas-dev.yml
+oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev.yml
 
 # Create an App. Add the propert GitHub credentials
-oc new-app redhat-ipaas-dev \
+oc new-app ipaas-dev \
     -p ROUTE_HOSTNAME=ipaas.$(minishift ip).xip.io \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
     -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+    -p INSECURE_SKIP_VERIFY=true
 
 # Wait until all pods are running. Some pods are crashing at first, but are restarted
 # so that the system will eventually converts to a stable state ;-). Especially the proxies
