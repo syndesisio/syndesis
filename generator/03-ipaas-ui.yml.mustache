@@ -110,6 +110,10 @@
       {
         "apiEndpoint": "https://${ROUTE_HOSTNAME}/api/v1",
         "title": "Red Hat iPaaS",
+        "datamapper": {
+          "baseJavaServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/java/",
+          "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/"
+        },
         "oauth": {
           "clientId": "ipaas-ui",
           "scopes": ["openid"],
