@@ -30,83 +30,86 @@
             </h2>
           </div>
           <div class="card-pf-body">
-            <div class="row integration"
-                 *ngFor="let integration of integrations"
+            <div class="row"
+                 *ngFor="let integration of integrations; let i=index"
                  (click)="onSelect(integration)">
 
-              <!-- Icons -->
+              <div class="col-xs-12 integration"
+                   *ngIf="i<5">
+                <!-- Icons -->
 
-              <div class="col-xs-3 icons">
-                <div class="list-view-pf-left">
-                  <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
-                  <span class="fa fa-angle-right"></span>
-                  <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
+                <div class="col-xs-3 icons">
+                  <div class="list-view-pf-left">
+                    <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
+                    <span class="fa fa-angle-right"></span>
+                    <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
+                  </div>
                 </div>
-              </div>
 
-              <!-- Name -->
+                <!-- Name -->
 
-              <div class="col-xs-4 name">
-                {{ integration.name }}
-              </div>
+                <div class="col-xs-4 name">
+                  {{ integration.name }}
+                </div>
 
-              <!-- Times of Use -->
+                <!-- Times of Use -->
 
-              <div class="col-xs-3 times-of-use">
-                <p>{{ integration.timesUsed || 0 }} Times of Use</p>
-              </div>
+                <div class="col-xs-3 times-of-use">
+                  <p>{{ integration.timesUsed || 0 }} Times of Use</p>
+                </div>
 
-              <!-- Status -->
+                <!-- Status -->
 
-              <div class="col-xs-1 status">
+                <div class="col-xs-1 status">
 
-                <!-- OK Status -->
+                  <!-- OK Status -->
 
-                <i *ngIf="!integration.statusMessage"
-                   class="pficon pficon-ok"></i>
+                  <i *ngIf="!integration.statusMessage"
+                     class="pficon pficon-ok"></i>
 
-                <!-- Not OK Status -->
+                  <!-- Not OK Status -->
 
-                <template #statTemplate>{{integration.statusMessage}}</template>
-                <i *ngIf="integration.statusMessage"
-                   class="pficon pficon-error-circle-o"
-                   [tooltip]="statTemplate"
-                   placement="bottom"></i>
-              </div>
+                  <template #statTemplate>{{integration.statusMessage}}</template>
+                  <i *ngIf="integration.statusMessage"
+                     class="pficon pficon-error-circle-o"
+                     [tooltip]="statTemplate"
+                     placement="bottom"></i>
+                </div>
 
 
-              <!-- Actions -->
-              <div class="col-xs-1 actions">
-                <div class="dropdown pull-right dropdown-kebab-pf">
-                  <button class="btn btn-link dropdown-toggle"
-                          type="button"
-                          id="dropdownKebabRight9"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="true">
-                    <span class="fa fa-ellipsis-v"></span>
-                  </button>
-                  <ul class="dropdown-menu dropdown-menu-right"
-                      aria-labelledby="dropdownKebabRight9">
-                    <li>
-                      <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">Edit</a>
-                    </li>
-                    <li>
-                      <a (click)="requestDeactivate(integration)">Deactivate</a>
-                    </li>
-                    <li *ngIf="integration.active === false"
-                        (click)="requestActivate(integration)">
-                      <a>Activate</a>
-                    </li>
-                    <!--
-                    <li>
-                      <a>Duplicate</a>
-                    </li>
-                    -->
-                    <li>
-                      <a (click)="requestDelete(integration)">Delete</a>
-                    </li>
-                  </ul>
+                <!-- Actions -->
+                <div class="col-xs-1 actions">
+                  <div class="dropdown pull-right dropdown-kebab-pf">
+                    <button class="btn btn-link dropdown-toggle"
+                            type="button"
+                            id="dropdownKebabRight9"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="true">
+                      <span class="fa fa-ellipsis-v"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right"
+                        aria-labelledby="dropdownKebabRight9">
+                      <li>
+                        <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">Edit</a>
+                      </li>
+                      <li>
+                        <a (click)="requestDeactivate(integration)">Deactivate</a>
+                      </li>
+                      <li *ngIf="integration.active === false"
+                          (click)="requestActivate(integration)">
+                        <a>Activate</a>
+                      </li>
+                      <!--
+                      <li>
+                        <a>Duplicate</a>
+                      </li>
+                      -->
+                      <li>
+                        <a (click)="requestDelete(integration)">Delete</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
 
@@ -174,20 +177,23 @@
             </h2>
           </div>
           <div class="card-pf-body">
-            <div class="row update"
-                 *ngFor="let integration of integrations">
-              <div class="col-xs-5">
-                Updated: <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">
+            <div class="row"
+                 *ngFor="let integration of integrations; let i=index">
+              <div class="update col-xs-12"
+                   *ngIf="i<5">
+                <div class="col-xs-5">
+                  Updated: <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">
                   {{ integration.name }}
                 </a>
-              </div>
-              <div class="col-xs-4">
+                </div>
+                <div class="col-xs-4">
                 <span [class]="'label ' + getLabelClass(integration)">
                   {{ integration.desiredStatus }}
                 </span>
-              </div>
-              <div class="col-xs-3">
-                {{ integration.lastUpdated | date:'d MMM HH:MM' }}
+                </div>
+                <div class="col-xs-3">
+                  {{ integration.lastUpdated | date:'d MMM HH:MM' }}
+                </div>
               </div>
             </div>
           </div>
