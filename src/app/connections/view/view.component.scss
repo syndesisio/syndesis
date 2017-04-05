@@ -10,9 +10,13 @@
   }
 
   &.create, &.edit {
-    .card-pf-body {
-      margin: 0;
-      padding: 0;
+    .card-pf {
+      margin: 0 -10px 0;
+
+      .card-pf-body {
+        margin: 0;
+        padding: 0;
+      }
     }
 
     .form {
