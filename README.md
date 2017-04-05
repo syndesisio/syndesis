@@ -78,9 +78,9 @@ Once all pods are started up, you should be able to access the iPaaS at `https:/
 | **INSECURE_SKIP_VERIFY** | Whether to skip the verification of SSL certificates for internal services | false |
 | **TEST_SUPPORT_ENABLED** | Whether test support for e2e test is enabled | false |
 
-## Running locally
+## Running as a Cluster Admin
 
-Use either [Minishift](https://github.com/minishift/minishift) or [`oc cluster up`](https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md). For Minishift specific instructions see [below](#minishift-quickstart).
+You can use either [Minishift](https://github.com/minishift/minishift) or [`oc cluster up`](https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md) to setup your OpenShift system. For Minishift specific instructions see [below](#minishift-quickstart).
 
 Once they are started and you have logged in with `oc login -u system:admin`, run:
 
@@ -97,7 +97,7 @@ If you want to use the development version which refers directly to Docker image
 
 Once everything is running, you should be able to access iPaaS at https://ipaas.127.0.0.1.nip.io and log in with the OpenShift user `developer` using any password.
 
-## Running single tenant
+## Running in a Restricted environment
 
 If you don't have cluster admin privileges, then you can run the iPaaS as a single tenant deployment which only needs admin role in a project. This restricts all access to the single project and as such acts as a single tenant. The drawback to this is of course that you need to deploy the iPaaS services and pods into every project that you want to provision integrations in, but this is fine for a single, local deployment.
 
