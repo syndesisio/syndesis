@@ -1,16 +1,8 @@
 # Red Hat iPaaS OpenShift Templates
 
-This repository contains a simple way to get the Red Hat iPaaS deployed, using OpenShift templates, on a running cluster.
+This repository is about the canonical way to install Red Hat iPaaS by using OpenShift templates for deploying on an OpenShift cluster.
 
-There are several flavors of templates you can use (see [below]()), but in general in order to apply the templates you can directly refer to the given files via a GitHub URL:
-
-```bash
-$ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml
-```
-
-## Template flavours
-
-Currently there are multiple different flavours of the templates, with the following characteristics:
+There exist different flavours of OpenShift templates, with the following characteristics:
 
 | Template | Descripton |
 | -------- | ---------- |
@@ -20,9 +12,15 @@ Currently there are multiple different flavours of the templates, with the follo
 | [ipaas-dev-restricted.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev-restricted.yml) | Same as above, but as a developer version with using direct Docker images |
 | [ipaas-restricted-ephemeral.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-restricted-ephemeral.yml) | A variant of `ipaas-restricted.yml` which does only use temporary persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue. |
 
-More on the different flavors can be found in this [issue](https://github.com/redhat-ipaas/openshift-templates/issues/28)
+More about the differences can be found in this [issue](https://github.com/redhat-ipaas/openshift-templates/issues/28)
 
-All of these templates are generated from a single source [ipaas.yml.mustache](generator/ipaas.yml.mustache). So instead of editing individual descriptors please adapt this master template and the run `generator/generate-templates.sh`.
+In order to apply the templates you can directly refer to the given files via its GitHub URL:
+
+```bash
+$ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml
+```
+
+All of these templates are generated from a single source [ipaas.yml.mustache](generator/ipaas.yml.mustache). So instead of editing individual descriptors you have to change this master template and then run `generator/generate-templates.sh`.
 
 ## Template parameters
 
