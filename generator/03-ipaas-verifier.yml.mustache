@@ -1,0 +1,137 @@
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: redhat-ipaas
+      component: ipaas-verifier
+    name: ipaas-verifier
+  spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: redhat-ipaas
+      component: ipaas-verifier
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: redhat-ipaas
+      component: ipaas-verifier
+    name: ipaas-verifier
+  spec:
+    replicas: 1
+    selector:
+      app: redhat-ipaas
+      component: ipaas-verifier
+      deploymentconfig: ipaas-verifier
+    strategy:
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 10800
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: redhat-ipaas
+          component: ipaas-verifier
+          deploymentconfig: ipaas-verifier
+        annotations:
+          pod.beta.kubernetes.io/init-containers: |-
+            [{
+              "name": "openshift-ca-pemtokeystore",
+              "image": "${PEMTOKEYSTORE_IMAGE}",
+              "imagePullPolicy": "IfNotPresent",
+              "args": [
+                "-keystore", "/tls-keystore/openshift-truststore.jks",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
+                "-ca-dir", "/usr/share/ca-certificates/mozilla"
+              ],
+              "volumeMounts": [{
+                "name": "ipaas-verifier-tls",
+                "mountPath": "/tls-keystore"
+              }]
+            }]
+      spec:
+        initContainers:
+        - name: openshift-ca-pemtokeystore
+          image: ${PEMTOKEYSTORE_IMAGE}
+          imagePullPolicy: IfNotPresent
+          args:
+          - -keystore
+          - /tls-keystore/openshift-truststore.jks
+          - -ca-file
+          - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          - -ca-file
+          - /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+          - -ca-dir
+          - /usr/share/ca-certificates/mozilla
+          volumeMounts:
+          - name: ipaas-verifier-tls
+            mountPath: /tls-keystore
+        serviceAccountName: ipaas-rest
+        containers:
+        - name: ipaas-verifier
+          env:
+          - name: JAVA_APP_DIR
+            value: /deployments
+          - name: JAVA_OPTIONS
+            value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
+{{^Dev}}
+          image: ' '
+{{/Dev}}{{#Dev}}
+          image: rhipaas/ipaas-verifier:latest
+{{/Dev}}
+          imagePullPolicy: IfNotPresent
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9779
+            name: prometheus
+            protocol: TCP
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 612Mi
+            requests:
+              cpu: 200m
+              memory: 612Mi
+          volumeMounts:
+          - name: ipaas-verifier-tls
+            mountPath: /tls-keystore
+        volumes:
+        - name: ipaas-verifier-tls
+          emptyDir: {}
+    triggers:
+{{^Dev}}
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ipaas-verifier
+        from:
+          kind: ImageStreamTag
+          name: ipaas-verifier:latest
+      type: ImageChange
+{{/Dev}}
+    - type: ConfigChange

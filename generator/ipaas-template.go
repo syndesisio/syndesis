@@ -3,11 +3,12 @@
 //   go get -u github.com/spf13/cobra github.com/spf13/pflag github.com/hoisie/mustache
 //   go install ipaas-template.go
 //
-// Or to just test locally:
+// Or to just run without installing:
 //
-//     go run ipaas-template.go <args>
+//   go run ipaas-template.go <args>
 //
 package main
+
 
 import (
 	//"flag"
@@ -17,6 +18,8 @@ import (
 	"github.com/hoisie/mustache"
 	"io/ioutil"
 	"flag"
+	"sort"
+	"strings"
 )
 
 func main() {
@@ -26,8 +29,8 @@ func main() {
 
 var installCommand = &cobra.Command{
 	Use:   "ipaas-template",
-	Short: "ipaas-template is a tool for creating the OpenShift resources needed to install the redhat-ipass.",
-	Long:  `ipaas-template is a tool for creating the OpenShift resources needed to install the redhat-ipass.`,
+	Short: "ipaas-template is a tool for creating the OpenShift templates used to install the redhat-ipass.",
+	Long:  `ipaas-template is a tool for creating the OpenShift templates used to install the redhat-ipass.`,
 	Run: install,
 }
 
@@ -49,9 +52,22 @@ func init() {
 }
 
 func install(cmd *cobra.Command, args []string) {
-	template, err := ioutil.ReadFile("ipaas.yml.mustache")
+
+	files, err := ioutil.ReadDir("./")
 	check(err)
-	fmt.Print(mustache.Render(string(template), context))
+	
+	sort.Slice(files, func(i, j int) bool {
+  		return files[i].Name() < files[j].Name()
+	})
+
+    for _, f := range files {
+    	if( strings.HasSuffix(f.Name(), ".yml.mustache" ) ) {    	
+			template, err := ioutil.ReadFile(f.Name())
+			check(err)
+			fmt.Print(mustache.Render(string(template), context))
+    	}
+    }
+
 }
 
 func check(e error) {

@@ -1,0 +1,120 @@
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: redhat-ipaas
+      component: ipaas-ui
+    annotations:
+      service.alpha.openshift.io/serving-cert-secret-name: ipaas-ui-tls
+    name: ipaas-ui
+  spec:
+    ports:
+    - port: 2015
+      protocol: TCP
+      targetPort: 2015
+    selector:
+      app: redhat-ipaas
+      component: ipaas-ui
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: redhat-ipaas
+      component: ipaas-ui
+    name: ipaas-ui
+  spec:
+    host: ${ROUTE_HOSTNAME}
+    port:
+      targetPort: 2015
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: ipaas-ui
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: redhat-ipaas
+      component: ipaas-ui
+    name: ipaas-ui
+  spec:
+    replicas: 1
+    selector:
+      app: redhat-ipaas
+      component: ipaas-ui
+      deploymentconfig: ipaas-ui
+    strategy:
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: redhat-ipaas
+          component: ipaas-ui
+          deploymentconfig: ipaas-ui
+      spec:
+        containers:
+        - name: ipaas-ui
+{{^Dev}}
+          image: ' '
+{{/Dev}}{{#Dev}}
+          image: rhipaas/ipaas-ui:latest
+{{/Dev}}
+          imagePullPolicy: IfNotPresent
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: 2015
+            initialDelaySeconds: 1
+          ports:
+          - containerPort: 2015
+          volumeMounts:
+          - mountPath: /srv/config.json
+            name: config-volume
+            subPath: config/config.json
+        volumes:
+        - configMap:
+            items:
+            - key: config.json
+              path: config/config.json
+            name: ipaas-ui-config
+          name: config-volume
+    triggers:
+{{^Dev}}
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ipaas-ui
+        from:
+          kind: ImageStreamTag
+          name: ipaas-ui:latest
+      type: ImageChange
+{{/Dev}}
+    - type: ConfigChange
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: ipaas-ui-config
+    labels:
+      app: redhat-ipaas
+      component: ipaas-ui
+  data:
+    config.json: |
+      {
+        "apiEndpoint": "https://${ROUTE_HOSTNAME}/api/v1",
+        "title": "Red Hat iPaaS",
+        "oauth": {
+          "clientId": "ipaas-ui",
+          "scopes": ["openid"],
+          "oidc": true,
+          "hybrid": true,
+          "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}"
+        }
+      }

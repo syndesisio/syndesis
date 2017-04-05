@@ -1,0 +1,196 @@
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: ipaas-datamapper
+    labels:
+      app: redhat-ipaas
+      component: ipaas-datamapper
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: redhat-ipaas
+      component: ipaas-datamapper
+    annotations:
+      service.alpha.openshift.io/serving-cert-secret-name: ipaas-datamapper-tls
+    name: ipaas-datamapper
+  spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: redhat-ipaas
+      component: ipaas-datamapper
+
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: redhat-ipaas
+      component: ipaas-datamapper
+    name: ipaas-datamapper
+  spec:
+    host: ${ROUTE_HOSTNAME}
+    path: /v2/atlas
+    port:
+      targetPort: 8080
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: ipaas-datamapper
+      weight: 100
+
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: redhat-ipaas
+      component: ipaas-datamapper
+    name: ipaas-datamapper
+  spec:
+    replicas: 1
+    selector:
+      app: redhat-ipaas
+      component: ipaas-datamapper
+      deploymentconfig: ipaas-datamapper
+    strategy:
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 10800
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: redhat-ipaas
+          component: ipaas-datamapper
+          deploymentconfig: ipaas-datamapper
+        annotations:
+          pod.beta.kubernetes.io/init-containers: |-
+            [{
+              "name": "openshift-ca-pemtokeystore",
+              "image": "${PEMTOKEYSTORE_IMAGE}",
+              "imagePullPolicy": "IfNotPresent",
+              "args": [
+                "-keystore", "/tls-keystore/openshift-truststore.jks",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
+                "-ca-dir", "/usr/share/ca-certificates/mozilla"
+              ],
+              "volumeMounts": [{
+                "name": "ipaas-datamapper-tls",
+                "mountPath": "/tls-keystore"
+              }]
+            }]
+      spec:
+        initContainers:
+        - name: openshift-ca-pemtokeystore
+          image: ${PEMTOKEYSTORE_IMAGE}
+          imagePullPolicy: IfNotPresent
+          args:
+          - -keystore
+          - /tls-keystore/openshift-truststore.jks
+          - -ca-file
+          - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          - -ca-file
+          - /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+          - -ca-dir
+          - /usr/share/ca-certificates/mozilla
+          volumeMounts:
+          - name: ipaas-datamapper-tls
+            mountPath: /tls-keystore
+        serviceAccountName: ipaas-datamapper
+        containers:
+        - name: ipaas-datamapper
+          env:
+          - name: AB_JOLOKIA_OFF
+            value: "true"
+          - name: JAVA_APP_DIR
+            value: /deployments
+          - name: AB_OFF
+            value: "true"
+          - name: JAVA_OPTIONS
+            value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
+{{^Dev}}
+          image: ' '
+{{/Dev}}{{#Dev}}
+          image: atlasmap/ipaas-datamapper:latest
+{{/Dev}}
+          imagePullPolicy: IfNotPresent
+          readinessProbe:
+            httpGet:
+              path: "/health"
+              port: 8181
+            initialDelaySeconds: 5
+          ports:
+          - containerPort: 8080
+            name: http
+          - containerPort: 9779
+            name: prometheus
+          - containerPort: 8778
+            name: jolokia
+          volumeMounts:
+          - name: ipaas-datamapper-tls
+            mountPath: /tls-keystore
+          - name: config-volume
+            mountPath: /deployments/config
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 612Mi
+            requests:
+              cpu: 200m
+              memory: 612Mi
+        volumes:
+        - name: ipaas-datamapper-tls
+          emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: ipaas-datamapper-config
+    triggers:
+    - type: ConfigChange
+{{^Dev}}
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ipaas-datamapper
+        from:
+          kind: ImageStreamTag
+          name: ipaas-datamapper:latest
+      type: ImageChange
+{{/Dev}}
+
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: redhat-ipaas
+      component: ipaas-datamapper
+    name: ipaas-datamapper-config
+  data:
+    application.yml: |-
+      cors:
+{{^Dev}}
+        allowedOrigins: https://${ROUTE_HOSTNAME}
+{{/Dev}}{{#Dev}}
+        allowedOrigins: http://localhost:4200, https://${ROUTE_HOSTNAME}
+{{/Dev}}
+      spring:
+        zipkin:
+          enabled: false
+      security:
+        basic:
+          enabled: false
+      management:
+        port: 8181
+        security:
+          enabled: true
+      endpoints:
+        health:
+          sensitive: false

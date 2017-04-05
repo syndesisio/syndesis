@@ -1,0 +1,108 @@
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ipaas-db
+    labels:
+      app: redhat-ipaas
+      component: ipaas-db
+  spec:
+    ports:
+    - name: postgresql
+      nodePort: 0
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: redhat-ipaas
+      component: ipaas-db
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+{{^Ephemeral}}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ipaas-db
+    labels:
+      app: redhat-ipaas
+      component: ipaas-db
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${POSTGRESQL_VOLUME_CAPACITY}
+{{/Ephemeral}}    
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ipaas-db
+    labels:
+      app: redhat-ipaas
+      component: ipaas-db
+  spec:
+    replicas: 1
+    selector:
+      app: redhat-ipaas
+      component: ipaas-db
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: redhat-ipaas
+          component: ipaas-db
+      spec:
+        containers:
+        - capabilities: {}
+          env:
+          - name: POSTGRESQL_USER
+            value: ${POSTGRESQL_USER}
+          - name: POSTGRESQL_PASSWORD
+            value: ${POSTGRESQL_PASSWORD}
+          - name: POSTGRESQL_DATABASE
+            value: ${POSTGRESQL_DATABASE}
+          image: ' '
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            initialDelaySeconds: 10
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: ${POSTGRESQL_MEMORY_LIMIT}
+{{^Ephemeral}}
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: ipaas-db-data
+        volumes:
+        - name: ipaas-db-data
+          persistentVolumeClaim:
+            claimName: ipaas-db
+{{/Ephemeral}}
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
+          namespace: ${POSTGRESQL_IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - type: ConfigChange

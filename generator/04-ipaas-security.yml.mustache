@@ -1,0 +1,45 @@
+{{^Restricted}}
+- apiVersion: v1
+  kind: OAuthClient
+  metadata:
+    name: ${OPENSHIFT_OAUTH_CLIENT_ID}
+    labels:
+      app: redhat-ipaas
+      component: ipaas-ui
+  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
+  redirectURIs:
+  - https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
+  grantMethod: prompt
+{{/Restricted}}
+
+- apiVersion: v1
+  kind: RoleBinding
+  metadata:
+    name: ipaas:viewers
+    labels:
+      app: redhat-ipaas
+  roleRef:
+    name: view
+  subjects:
+  - kind: ServiceAccount
+    name: ipaas-rest
+- apiVersion: v1
+  kind: RoleBinding
+  metadata:
+    name: ipaas:admins
+    labels:
+      app: redhat-ipaas
+  roleRef:
+    name: admin
+  subjects:
+  - kind: ServiceAccount
+    name: ipaas-deployer
+    namespace: ipaas-staging
+  - kind: ServiceAccount
+    name: jenkins
+    namespace: ipaas-ci
+  - kind: Group
+    name: dedicated-admins
+  userNames:
+  - system:serviceaccount:ipaas-staging:ipaas-deployer
+  - system:serviceaccount:ipaas-ci:jenkins
