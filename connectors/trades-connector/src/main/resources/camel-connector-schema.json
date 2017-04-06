@@ -1,0 +1,19 @@
+{
+  "component": {
+    "kind": "component",
+    "baseScheme": "rest",
+    "scheme": "trades",
+    "syntax": "trades",
+    "title": "Fetch trades",
+    "description": "Fetch trades from Day trade API server",
+    "label": "http",
+    "deprecated": false,
+    "async": false,
+    "producerOnly": true,
+    "lenientProperties": true,
+    "javaType": "com.redhat.ipaas.connector.daytrade.TradesComponent",
+    "groupId": "com.redhat.ipaas",
+    "artifactId": "trades-connector",
+    "version": "0.3-SNAPSHOT"
+  }
+}

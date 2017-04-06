@@ -1,0 +1,30 @@
+{
+  "baseScheme" : "rest",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-core",
+  "baseVersion" : "2.19.0-SNAPSHOT",
+  "baseJavaType" : "org.apache.camel.component.rest.RestComponent",
+  "name" : "TradesComponent",
+  "scheme" : "trades",
+  "javaType" : "com.redhat.ipaas.connector.daytrade.TradesComponent",
+  "groupId" : "com.redhat.ipaas",
+  "artifactId" : "trades-connector",
+  "version" : "0.3-SNAPSHOT",
+  "description" : "Fetch trades from Day trade API server",
+  "labels" : [ "http", "daytrade" ],
+  "pattern" : "To",
+  "inputDataType" : "none",
+  "outputDataType" : "java:com.redhat.ipaas.connector.daytrade.Trade",
+  "globalOptions" : [ "host" ],
+  "componentOptions" : [ "host" ],
+  "endpointOptions" : [ "orderId" ],
+  "endpointValues" : {
+    "component" : "undertow",
+    "method" : "GET",
+    "path" : "/apis",
+    "uriTemplate": "/orders/{orderId}",
+    "host" : "http://localhost:8080",
+    "bindingMode" : "json",
+    "outType" : "com.redhat.ipaas.connector.daytrade.Trade"
+  }
+}
