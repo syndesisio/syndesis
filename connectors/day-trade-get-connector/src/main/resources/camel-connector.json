@@ -8,7 +8,7 @@
   "scheme" : "day-trades-get",
   "javaType" : "com.redhat.ipaas.connector.daytrade.TradesGetComponent",
   "groupId" : "com.redhat.ipaas",
-  "artifactId" : "trades-connector",
+  "artifactId" : "day-trade-get-connector",
   "version" : "0.3-SNAPSHOT",
   "description" : "Get trade by order id from Day Trade API server",
   "labels" : [ "daytrade" ],
