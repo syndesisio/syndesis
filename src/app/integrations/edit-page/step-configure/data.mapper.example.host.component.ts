@@ -92,7 +92,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     switch (dataShape.kind) {
       case 'java':
         answer.initCfg.documentIdentifier = dataShape.type;
-      break;
+        break;
     }
     return answer;
   }
@@ -101,7 +101,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     const step = this.currentFlow.getStep(this.position);
     let mappings = undefined;
     if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
-      mappings = <string> step.configuredProperties[MAPPING_KEY];
+      mappings = <string>step.configuredProperties[MAPPING_KEY];
     }
     this.cfg.mappings = new MappingDefinition();
 
@@ -118,7 +118,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
       const mappingDefinition = new MappingDefinition();
       // Existing mappings, load from the route
       try {
-      this.mappingService.deserializeMappingServiceJSON(mappings, mappingDefinition);
+        this.mappingService.deserializeMappingServiceJSON(JSON.parse(mappings), mappingDefinition);
       } catch (err) {
         // TODO popup or error alert?  At least catch this so we initialize
         log.warn('Failed to deserialize mappings: ' + err, category);
