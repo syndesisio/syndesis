@@ -17,10 +17,10 @@ package com.redhat.ipaas.connector.daytrade;
 
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
-public class TradesPlaceComponent extends DefaultConnectorComponent {
+public class DayTradePlaceComponent extends DefaultConnectorComponent {
 
-    public TradesPlaceComponent() {
-        super("day-trades-place", TradesPlaceComponent.class.getName());
+    public DayTradePlaceComponent() {
+        super("day-trade-place", DayTradePlaceComponent.class.getName());
     }
 
 }

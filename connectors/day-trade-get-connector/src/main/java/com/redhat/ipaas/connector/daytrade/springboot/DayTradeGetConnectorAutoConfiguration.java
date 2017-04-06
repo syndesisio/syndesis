@@ -2,7 +2,7 @@ package com.redhat.ipaas.connector.daytrade.springboot;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.redhat.ipaas.connector.daytrade.TradesGetComponent;
+import com.redhat.ipaas.connector.daytrade.DayTradeGetComponent;
 import org.apache.camel.CamelContext;
 import org.apache.camel.util.IntrospectionSupport;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -20,17 +20,17 @@ import org.springframework.context.annotation.Lazy;
 @Configuration
 @ConditionalOnBean(type = "org.apache.camel.spring.boot.CamelAutoConfiguration")
 @AutoConfigureAfter(name = "org.apache.camel.spring.boot.CamelAutoConfiguration")
-@EnableConfigurationProperties(TradesGetConnectorConfiguration.class)
-public class TradesGetConnectorAutoConfiguration {
+@EnableConfigurationProperties(DayTradeGetConnectorConfiguration.class)
+public class DayTradeGetConnectorAutoConfiguration {
 
     @Lazy
-    @Bean(name = "day-trades-get-component")
+    @Bean(name = "day-trade-get-component")
     @ConditionalOnClass(CamelContext.class)
-    @ConditionalOnMissingBean(com.redhat.ipaas.connector.daytrade.TradesGetComponent.class)
-    public TradesGetComponent configureTradesGetComponent(
+    @ConditionalOnMissingBean(com.redhat.ipaas.connector.daytrade.DayTradeGetComponent.class)
+    public DayTradeGetComponent configureDayTradeGetComponent(
             CamelContext camelContext,
-            TradesGetConnectorConfiguration configuration) throws Exception {
-        TradesGetComponent connector = new TradesGetComponent();
+            DayTradeGetConnectorConfiguration configuration) throws Exception {
+        DayTradeGetComponent connector = new DayTradeGetComponent();
         connector.setCamelContext(camelContext);
         Map<String, Object> parameters = new HashMap<>();
         IntrospectionSupport.getProperties(configuration, parameters, null,

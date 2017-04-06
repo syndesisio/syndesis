@@ -13,7 +13,7 @@
     "lenientProperties": true,
     "javaType": "com.redhat.ipaas.connector.tradeinsight.TradeInsightBuyComponent",
     "groupId": "com.redhat.ipaas",
-    "artifactId": "day-trade-place-connector",
+    "artifactId": "trade-insight-buy-connector",
     "version": "0.3-SNAPSHOT"
   },
   "componentProperties": {
