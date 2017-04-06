@@ -13,7 +13,7 @@ Feature: Connections smoke test
     Given credentials for "Camilla"
     And clean application state
 
-  Scenario: Test connections
+  Scenario: Create connection happy path
     When "Camilla" navigates to the "Connections" page
     And click on the "Create" button
     And Camilla selects the "Twitter" connection
@@ -23,4 +23,10 @@ Feature: Connections smoke test
     Then she is presented with the "Validate" button
 
     When she fills "Twitter" connection details
+    And click on the "Next" button
+    And click on the "Create" button
+    Then Camilla is presented with the iPaaS page "Connections"
+
+    When Camilla selects the "my sample twitter connection" connection
+    Then Camilla is presented with "my sample twitter connection" connection details
 
