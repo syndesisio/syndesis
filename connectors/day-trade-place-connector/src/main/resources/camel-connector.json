@@ -22,10 +22,10 @@
   },
   "endpointOptions" : [ "orderId" ],
   "endpointValues" : {
-    "component" : "undertow",
+    "componentName" : "undertow",
     "method" : "POST",
-    "path" : "/orders/",
-    "uriTemplate": "",
+    "path" : "/day-trade",
+    "uriTemplate": "/orders",
     "bindingMode" : "json",
     "inType" : "com.redhat.ipaas.connector.daytrade.Trade"
   }

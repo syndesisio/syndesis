@@ -32,6 +32,7 @@
   <modules>
     <module>http-pull-push-example</module>
     <module>twitter-salesforce-example</module>
+    <module>trade-buy-place-example</module>
     
     <module>http-pingcheck-example</module>
     <module>salesforce-pingcheck-example</module>
