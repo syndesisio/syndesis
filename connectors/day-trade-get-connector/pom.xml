@@ -49,14 +49,26 @@
   </dependencyManagement>
 
   <dependencies>
+
+    <!-- base component to use for this connector -->
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-jackson</artifactId>
+      <artifactId>camel-core</artifactId>
+    </dependency>
+    <!-- add spring-boot support -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-core-starter</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-undertow</artifactId>
+      <artifactId>camel-jackson-starter</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-undertow-starter</artifactId>
+    </dependency>
+
     <!-- camel-connector -->
     <dependency>
       <groupId>org.apache.camel</groupId>
@@ -129,18 +141,18 @@
         <artifactId>camel-connector-maven-plugin</artifactId>
         <version>${camel.version}</version>
         <executions>
-<!--           <execution> -->
-<!--             <id>boot</id> -->
-<!--             <goals> -->
-<!--               <goal>prepare-spring-boot-auto-configuration</goal> -->
-<!--             </goals> -->
-<!--             <configuration> -->
-<!--               we done want license headers -->
-<!--               <includeLicenseHeader>false</includeLicenseHeader> -->
-<!--               we dont camel.connector as prefix -->
-<!--               <configurationPrefix>false</configurationPrefix> -->
-<!--             </configuration> -->
-<!--           </execution> -->
+          <execution>
+            <id>boot</id>
+            <goals>
+              <goal>prepare-spring-boot-auto-configuration</goal>
+            </goals>
+            <configuration>
+              <!-- we done want license headers -->
+              <includeLicenseHeader>false</includeLicenseHeader>
+              <!-- we dont camel.connector as prefix -->
+              <configurationPrefix>false</configurationPrefix>
+            </configuration>
+          </execution>
           <execution>
             <id>connector</id>
             <goals>

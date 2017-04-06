@@ -6,7 +6,7 @@
   "baseJavaType" : "org.apache.camel.component.rest.RestComponent",
   "name" : "DayTradesGetComponent",
   "scheme" : "day-trades-get",
-  "javaType" : "com.redhat.ipaas.connector.daytrade.TradesComponent",
+  "javaType" : "com.redhat.ipaas.connector.daytrade.TradesGetComponent",
   "groupId" : "com.redhat.ipaas",
   "artifactId" : "trades-connector",
   "version" : "0.3-SNAPSHOT",

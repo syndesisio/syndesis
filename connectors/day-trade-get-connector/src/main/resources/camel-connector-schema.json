@@ -3,17 +3,22 @@
     "kind": "component",
     "baseScheme": "rest",
     "scheme": "day-trades-get",
-    "syntax": "day-trades-get",
-    "title": "Get trades",
+    "syntax": "day-trades-get:method:path:uriTemplate",
+    "title": "DayTradesGetComponent",
     "description": "Get trade by order id from Day Trade API server",
     "label": "daytrade",
     "deprecated": false,
     "async": false,
     "producerOnly": true,
     "lenientProperties": true,
-    "javaType": "com.redhat.ipaas.connector.daytrade.TradesComponent",
+    "javaType": "com.redhat.ipaas.connector.daytrade.TradesGetComponent",
     "groupId": "com.redhat.ipaas",
-    "artifactId": "trades-connector",
+    "artifactId": "day-trade-get-connector",
     "version": "0.3-SNAPSHOT"
+  },
+  "componentProperties": {
+    "host": { "kind": "property", "displayName": "Host", "group": "producer", "label": "producer", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Host and port of HTTP service to use (override host in swagger schema)" }
+  },
+  "properties": {
   }
 }
