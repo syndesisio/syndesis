@@ -88,7 +88,12 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
   createDocumentDefinition(dataShape: DataShape, isSource: boolean = false) {
     const answer = new DocumentDefinition();
     answer.isSource = isSource;
-    answer.initCfg.documentIdentifier = dataShape['dataType'].replace(/java:/, '');
+    // TODO not sure what to do for `none` or `any` here
+    switch (dataShape.kind) {
+      case 'java':
+        answer.initCfg.documentIdentifier = dataShape.type;
+      break;
+    }
     return answer;
   }
 
