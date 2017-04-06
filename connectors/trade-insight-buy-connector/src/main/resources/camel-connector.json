@@ -1,0 +1,31 @@
+{
+  "baseScheme" : "rest",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-core",
+  "baseVersion" : "2.19.0-SNAPSHOT",
+  "baseJavaType" : "org.apache.camel.component.rest.RestComponent",
+  "name" : "TradeInsightBuy",
+  "scheme" : "trade-insight-buy",
+  "javaType" : "com.redhat.ipaas.connector.tradeinsight.TradeInsightBuyComponent",
+  "groupId" : "com.redhat.ipaas",
+  "artifactId" : "trade-insight-buy-connector",
+  "version" : "0.3-SNAPSHOT",
+  "description" : "Fetches buy recommendation from Trade Insight API server",
+  "labels" : [ "daytrade" ],
+  "pattern" : "To",
+  "inputDataType" : "none",
+  "outputDataType" : "java:com.redhat.ipaas.connector.tradeinsight.Suggestion",
+  "globalOptions" : [ "host" ],
+  "componentOptions" : [ "host" ],
+  "componentOverrides" : {
+    "host": { "required": true }
+  },
+  "endpointValues" : {
+    "component" : "undertow",
+    "method" : "GET",
+    "path" : "/trade-insight",
+    "uriTemplate": "/buy/",
+    "bindingMode" : "json",
+    "outType" : "com.redhat.ipaas.connector.tradeinsight.Suggestion"
+  }
+}

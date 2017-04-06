@@ -1,0 +1,24 @@
+{
+  "component": {
+    "kind": "component",
+    "baseScheme": "rest",
+    "scheme": "trade-insight-buy",
+    "syntax": "trade-insight-buy:method:path:uriTemplate",
+    "title": "TradeInsightBuy",
+    "description": "Fetches buy recommendation from Trade Insight API server",
+    "label": "daytrade",
+    "deprecated": false,
+    "async": false,
+    "producerOnly": true,
+    "lenientProperties": true,
+    "javaType": "com.redhat.ipaas.connector.tradeinsight.TradeInsightBuyComponent",
+    "groupId": "com.redhat.ipaas",
+    "artifactId": "day-trade-place-connector",
+    "version": "0.3-SNAPSHOT"
+  },
+  "componentProperties": {
+    "host": { "kind": "property", "displayName": "Host", "group": "producer", "label": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Host and port of HTTP service to use (override host in swagger schema)" }
+  },
+  "properties": {
+  }
+}
