@@ -30,9 +30,9 @@
     <camel.version>2.19.0-SNAPSHOT</camel.version>
   </properties>
 
-  <artifactId>trades-connector</artifactId>
-  <name>iPaaS Connectors :: Day trade Connector</name>
-  <description>Day trade Connector</description>
+  <artifactId>day-trade-get-connector</artifactId>
+  <name>iPaaS Connectors :: Day Trade Get Connector</name>
+  <description>Day Trade Get Connector</description>
   <packaging>jar</packaging>
 
   <dependencyManagement>
