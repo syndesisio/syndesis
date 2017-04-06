@@ -12,7 +12,7 @@ Feature: Sprint 8 narrative
     And Camilla selects the "Twitter Example" connection to view the configuration details for that connection.
     Then Camilla is presented with "Twitter Example" connection details
 
-  Scenario: Create connection
+  Scenario: Create integration
     When "Camilla" navigates to the "Home" page
     And clicks on the "Create Integration" button to create a new integration.
     Then she is presented with a visual integration editor
