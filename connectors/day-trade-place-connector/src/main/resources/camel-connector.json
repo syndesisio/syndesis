@@ -1,0 +1,31 @@
+{
+  "baseScheme" : "rest",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-core",
+  "baseVersion" : "2.19.0-SNAPSHOT",
+  "baseJavaType" : "org.apache.camel.component.rest.RestComponent",
+  "name" : "DayTradesPlace",
+  "scheme" : "day-trades-place",
+  "javaType" : "com.redhat.ipaas.connector.daytrade.TradesPlaceComponent",
+  "groupId" : "com.redhat.ipaas",
+  "artifactId" : "day-trade-place-connector",
+  "version" : "0.3-SNAPSHOT",
+  "description" : "Place trade on Day Trade API server",
+  "labels" : [ "daytrade" ],
+  "pattern" : "To",
+  "inputDataType" : "java:com.redhat.ipaas.connector.daytrade.Trade",
+  "outputDataType" : "none",
+  "globalOptions" : [ "host" ],
+  "componentOptions" : [ "host" ],
+  "componentOverrides" : {
+    "host": { "required": true }
+  },
+  "endpointValues" : {
+    "component" : "undertow",
+    "method" : "POST",
+    "path" : "/apis",
+    "uriTemplate": "/orders/",
+    "bindingMode" : "json",
+    "inType" : "com.redhat.ipaas.connector.daytrade.Trade"
+  }
+}

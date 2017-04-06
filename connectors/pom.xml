@@ -36,6 +36,7 @@
     <module>twitter-mention-connector</module>
     <module>salesforce-upsert-contact-connector</module>
     <module>day-trade-get-connector</module>
+    <module>day-trade-place-connector</module>
   </modules>
 
 </project>
