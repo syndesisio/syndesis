@@ -4,29 +4,28 @@
   "baseArtifactId" : "camel-core",
   "baseVersion" : "2.19.0-SNAPSHOT",
   "baseJavaType" : "org.apache.camel.component.rest.RestComponent",
-  "name" : "DayTradesGetComponent",
-  "scheme" : "day-trades-get",
-  "javaType" : "com.redhat.ipaas.connector.daytrade.TradesGetComponent",
+  "name" : "DayTradesPlace",
+  "scheme" : "day-trades-place",
+  "javaType" : "com.redhat.ipaas.connector.daytrade.TradesPlaceComponent",
   "groupId" : "com.redhat.ipaas",
-  "artifactId" : "day-trade-get-connector",
+  "artifactId" : "day-trade-place-connector",
   "version" : "0.3-SNAPSHOT",
-  "description" : "Get trade by order id from Day Trade API server",
+  "description" : "Place trade on Day Trade API server",
   "labels" : [ "daytrade" ],
   "pattern" : "To",
-  "inputDataType" : "none",
-  "outputDataType" : "java:com.redhat.ipaas.connector.daytrade.Trade",
+  "inputDataType" : "java:com.redhat.ipaas.connector.daytrade.Trade",
+  "outputDataType" : "none",
   "globalOptions" : [ "host" ],
   "componentOptions" : [ "host" ],
   "componentOverrides" : {
     "host": { "required": true }
   },
-  "endpointOptions" : [ "orderId" ],
   "endpointValues" : {
     "component" : "undertow",
-    "method" : "GET",
+    "method" : "POST",
     "path" : "/apis",
-    "uriTemplate": "/orders/{orderId}",
+    "uriTemplate": "/orders/",
     "bindingMode" : "json",
-    "outType" : "com.redhat.ipaas.connector.daytrade.Trade"
+    "inType" : "com.redhat.ipaas.connector.daytrade.Trade"
   }
 }
