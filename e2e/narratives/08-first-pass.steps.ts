@@ -21,34 +21,6 @@ class FirstPass {
   }
 
 
-  @given(/^details for "([^"]*)" connection:$/)
-  public setConnectionDetails(arg1: string, table: TableDefinition, callback: CallbackStepDefinition): void {
-
-    log.info(`should set connection details for ${arg1}: ${table}`);
-    callback();
-  }
-
-
-  @when(/^Camilla selects an existing "([^"]*)" connection to view the configuration details for that connection\.$/)
-  public select(arg1: string, callback: CallbackStepDefinition): void {
-    // Write code here that turns the phrase above into concrete actions
-
-    const page = new ConnectionsListComponent();
-    page.goToConnection(arg1).then((res) => {
-      callback();
-    });
-  }
-
-  @then(/^Camilla is presented with "([^"]*)" connection details$/)
-  public verifyConnectionDetails(connectionName: string, callback: CallbackStepDefinition): void {
-    // Write code here that turns the phrase above into concrete actions
-    const page = new ConnectionDetailPage();
-    expect(page.connectionName(), `Connection detail page must show connection name`)
-      .to.eventually.be.equal(connectionName).notify(callback);
-    // todo add more assertion on connection details page
-  }
-
-
   @when(/^Camilla navigates to the iPaaS "([^"]*)"$/)
   public navigateIpaas(arg1: string, callback: CallbackStepDefinition): void {
     // Write code here that turns the phrase above into concrete actions
@@ -91,24 +63,10 @@ class FirstPass {
   }
 
 
-  @when(/^Camilla selects the "([^"]*)" connection.*$/)
-  public selectConnection(connectionName: string): P<any> {
-    // Write code here that turns the phrase above into concrete actions
-    const page = new IntegrationEditPage();
-    return page.connectionSelectComponent().connectionListComponent().goToConnection(connectionName);
-  }
-
   @when(/^she selects "([^"]*)" integration action$/)
   public selectIntegrationAction(action: string, callback): void {
     const page = new ListActionsComponent();
     page.selectAction(action).then(() => callback());
-  }
-
-
-  @when(/^she fills "([^"]*)" connection details$/)
-  public fillConnectionDetails(connectionName: string, callback: CallbackStepDefinition): void {
-    // Write code here that turns the phrase above into concrete actions
-    callback(null, 'pending');
   }
 
 

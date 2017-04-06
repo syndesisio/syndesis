@@ -20,8 +20,8 @@ class CommonSteps {
 
   @given(/^credentials for "([^"]*)"$/)
   public loadCredentials(alias: string, callback: CallbackStepDefinition): void {
-    this.world.user = new User(alias, 'asdfadf');
-
+    this.world.user = new User(alias.toLowerCase(), 'asdfadf');
+    log.info(`using alias ${alias} with login ${this.world.user.username}`);
     callback();
   }
 
@@ -30,6 +30,14 @@ class CommonSteps {
     this.world.user = new User(alias.toLowerCase(), 'asdfadf');
     // return this.app.login(this.world.user);
     return this.world.app.login(this.world.user);
+  }
+
+  @given(/^clean application state$/)
+  public async resetState(): P<any> {
+    // user must be logged in (we need his token)
+    const result = await this.world.app.login(this.world.user);
+    // reset state or fail this step
+    return this.world.resetState();
   }
 
 

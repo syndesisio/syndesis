@@ -3,25 +3,16 @@
 Feature: Sprint 8 narrative
   https://issues.jboss.org/browse/IPAAS-153
 
-  Background:
-    Given details for "Twitter Example" connection:
-      | accessToken       | some access token   |
-      | accessTokenSecret | some awesome secret |
-
-    And details for "Salesforce" connection:
-      | loginUrl | http://redhat.com/demo |
-      | clientId | ssldkfjslkdfj3343      |
-
   Scenario: First pass at login, homepage
     When "Camilla" logs into the iPaaS URL for her installation (e.g. rh-ipaas.[openshift online domain].com)
     Then Camilla is presented with the iPaaS page "Dashboard"
 
   Scenario: Explore connections
     When "Camilla" navigates to the "Connections" page to see what's available in the iPaaS
-    And Camilla selects an existing "Twitter Example" connection to view the configuration details for that connection.
+    And Camilla selects the "Twitter Example" connection to view the configuration details for that connection.
     Then Camilla is presented with "Twitter Example" connection details
 
-  Scenario: Create connection
+  Scenario: Create integration
     When "Camilla" navigates to the "Home" page
     And clicks on the "Create Integration" button to create a new integration.
     Then she is presented with a visual integration editor
