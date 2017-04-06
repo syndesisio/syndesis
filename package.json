@@ -70,6 +70,7 @@
     "@types/chai-as-promised": "^0.0.29",
     "@types/cucumber": "^0.0.37",
     "@types/jasmine": "2.5.43",
+    "@types/jquery": "^2.0.41",
     "@types/lodash": "4.14.52",
     "@types/node": "7.0.5",
     "@types/pluralize": "0.0.27",
