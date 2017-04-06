@@ -1,7 +1,6 @@
 .connections-list {
   .cards {
     .card {
-      cursor: default;
       width: 25%;
 
       .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
@@ -20,7 +19,7 @@
       }
 
       .card-pf-body {
-        height: 100% !important;
+        //height: 100% !important;
       }
 
       .card-pf-title {
