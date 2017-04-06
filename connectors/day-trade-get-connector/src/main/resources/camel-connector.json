@@ -17,6 +17,9 @@
   "outputDataType" : "java:com.redhat.ipaas.connector.daytrade.Trade",
   "globalOptions" : [ "host" ],
   "componentOptions" : [ "host" ],
+  "componentOverrides" : {
+    "host": { "required": true }
+  },
   "endpointOptions" : [ "orderId" ],
   "endpointValues" : {
     "component" : "undertow",
