@@ -24,7 +24,6 @@ public class Trade {
     private String ticker;
 
     public Trade() {
-
     }
 
     public Trade(final String ticker, final int quantity, final String action, final int limit,
@@ -78,7 +77,7 @@ public class Trade {
 
     @Override
     public String toString() {
-        return "\nlimit   = " + limit + "\nticker  = " + ticker + "\nquantity  = " + quantity + "\nexpires = "
-            + expiration + "\naction  = " + action;
+        return "\nlimit  = " + limit + "\nticker = " + ticker + "\nquantity = " + quantity + "\nexpires = "
+            + expiration + "\naction = " + action;
     }
 }
