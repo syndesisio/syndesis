@@ -24,7 +24,7 @@
     "component" : "undertow",
     "method" : "GET",
     "path" : "/trade-insight",
-    "uriTemplate": "/buy/",
+    "uriTemplate": "/buy",
     "bindingMode" : "json",
     "outType" : "com.redhat.ipaas.connector.tradeinsight.Suggestion"
   }

@@ -24,8 +24,8 @@
   "endpointValues" : {
     "component" : "undertow",
     "method" : "POST",
-    "path" : "/apis",
-    "uriTemplate": "/orders/",
+    "path" : "/orders/",
+    "uriTemplate": "",
     "bindingMode" : "json",
     "inType" : "com.redhat.ipaas.connector.daytrade.Trade"
   }
