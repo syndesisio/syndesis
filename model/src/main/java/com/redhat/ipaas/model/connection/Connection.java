@@ -60,8 +60,6 @@ public interface Connection extends WithId<Connection>, WithName, Serializable {
 
     String getDescription();
 
-    String getPosition();
-
     Optional<List<Tag>> getTags();
 
     Optional<String> getUserId();

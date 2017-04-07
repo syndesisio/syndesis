@@ -344,7 +344,6 @@
       "name": "Twitter Example",
       "description": "Twitter Connection",
       "icon": "fa-twitter",
-      "position": "start",
       "connectorId": "twitter",
       "configuredProperties": {
         "accessToken": "",
@@ -361,7 +360,6 @@
       "name": "Salesforce Example",
       "description": "Salesforce Connection",
       "icon": "fa-globe",
-      "position": "end",
       "connectorId": "salesforce",
       "configuredProperties": {
         "loginUrl": "https://login.salesforce.com",
@@ -378,7 +376,6 @@
       "name": "HTTP Example",
       "description": "HTTP Connection",
       "icon": "fa-globe",
-      "position": "end",
       "connectorId": "http",
       "configuredProperties": {}
     }
@@ -390,7 +387,6 @@
       "name": "Timer Example",
       "description": "Timer Connection",
       "icon": "fa-globe",
-      "position": "start",
       "connectorId": "timer",
       "configuredProperties": {}
     }
@@ -415,7 +411,6 @@
             "name": "Twitter Example",
             "description": "Twitter Connection",
             "icon": "fa-twitter",
-            "position": "start",
             "connectorId": "twitter",
             "configuredProperties": {
               "accessToken": "",
@@ -461,7 +456,6 @@
           "connection": {
             "id": 2,
             "connectorId": "salesforce",
-            "position": "end",
             "description": "Salesforce Connection",
             "icon": "fa-puzzle-piece",
             "name": "Salesforce Example",
@@ -518,7 +512,6 @@
             "description": "Timer Connection",
             "icon": "fa-globe",
             "connectorId": "timer",
-            "position": "start",
             "configuredProperties": {}
           },
           "action": {
@@ -567,7 +560,6 @@
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
-            "position": "end",
             "connectorId": "http",
             "configuredProperties": {}
           },
@@ -609,7 +601,6 @@
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
-            "position": "any",
             "connectorId": "http",
             "configuredProperties": {}
           },
