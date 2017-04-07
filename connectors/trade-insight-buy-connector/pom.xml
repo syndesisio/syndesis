@@ -26,11 +26,6 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- TODO: go back to EA version in next upgrade -->
-  <properties>
-    <camel.version>2.19.0-SNAPSHOT</camel.version>
-  </properties>
-
   <artifactId>trade-insight-buy-connector</artifactId>
   <name>iPaaS Connectors :: Trade Insight Buy Connector</name>
   <description>Trade Insight Buy Connector</description>
