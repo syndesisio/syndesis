@@ -1,36 +1,42 @@
 @import '../../../scss/colors';
 
 .connections-view {
-  padding: 0;
+  //padding: 0;
 
-  .card-pf-body {
-    .fa {
-      font-size: x-large;
+  .card-pf {
+    .card-pf-body {
+      .fa {
+        font-size: x-large;
+      }
     }
   }
 
   &.create, &.edit {
-    background: $pf-black-200;
-    padding-top: 0;
+    //background: $pf-black-200;
+    //padding-top: 0;
 
     .cards-pf .row-cards-pf:first-child {
       padding-top: 0;
     }
 
     .card-pf {
-      margin: 0 -10px 0;
+      //margin: 0;
+      //padding: 0;
+
+      .card-pf-title {
+        //padding: 0 10px;
+      }
 
       .card-pf-body {
-        margin: 0;
-        //padding: 0;
-        padding-bottom: 100px;
+        //margin: 0;
+        //padding: 0 0 100px 0;
       }
     }
 
     .form {
-      background: #FFFFFF;
+      //background: #FFFFFF;
       border-bottom: solid 1px $pf-black-200;
-      padding-bottom: 10px;
+      //padding-bottom: 10px;
 
       .form-horizontal {
         float: left;
@@ -40,15 +46,11 @@
     // Create & Edit Specific Changes to the Connection List Toolbar
 
     /deep/ .toolbar-pf {
-      padding: 15px 5px;
+      //padding: 15px 5px;
 
       .toolbar-pf-actions {
-        //margin: 0 !important;
-        margin-bottom: 0;
-
-        .breadcrumb {
-          //margin-bottom
-        }
+        //margin-bottom: 0;
+        //padding: 0 10px;
 
         .search {
           input {
@@ -69,9 +71,9 @@
     // Create & Edit Specific Changes to the Connection List
 
     /deep/ .connections-list {
-      background: $pf-black-200;
-      margin: 0 -20px;
-      padding: 20px;
+      //background: $pf-black-200;
+      //margin: 0 -20px;
+      //padding: 20px;
 
       .cards {
         .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
@@ -89,19 +91,19 @@
   // Create Connection Only
 
   &.create {
-    .card-pf-body {
-      background: $pf-black-200;
+    .card-pf {
+      margin-bottom: 0;
     }
   }
 
   // Configure Connection & Edit Only
 
   &.edit {
-    padding-top: 20px;
-    padding-bottom: 40px;
+    //padding-top: 20px;
+    //padding-bottom: 40px;
 
     .card-pf-body {
-      background: #FFFFFF;
+      //background: #FFFFFF;
     }
   }
 
@@ -109,16 +111,7 @@
   // View Connection Only
 
   &.view {
-    background: $pf-black-200;
-    padding: 20px 40px;
+    //background: $pf-black-200;
+    //padding: 20px 40px;
   }
 }
-
-/*
-.connection-edit {
-  background: #fff;
-  border-top: 2px solid transparent;
-  box-shadow: 0 1px 1px rgba(3, 3, 3, 0.175);
-  padding: 0 20px;
-}
-*/
