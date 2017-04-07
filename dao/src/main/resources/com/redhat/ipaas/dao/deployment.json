@@ -338,6 +338,47 @@
     }
   },
   {
+    "kind": "connector",
+    "data": {
+      "id": "trade-insight",
+      "name": "Trade Insight",
+      "description": "Trade Insight API connector",
+      "icon": "fa-usd",
+      "properties": {
+        "host": {
+          "kind": "property",
+          "displayName": "Host",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "description": "Host and port of HTTP service to use (override host in swagger schema)"
+        }
+      },
+      "actions": [
+        {
+          "name": "Buy Suggestion",
+          "description": "Fetches buy recommendation from Trade Insight API server",
+          "inputDataShape": {
+            "kind": "none"
+          },
+          "outputDataShape": {
+            "kind": "java",
+            "type": "com.redhat.ipaas.connector.tradeinsight.Suggestion"
+          },
+          "properties": {
+          },
+          "id": "com.redhat.ipaas:trade-insight-buy-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:trade-insight-buy-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "trade-insight-buy"
+        }
+      ]
+    }
+  },
+  {
     "kind": "connection",
     "data": {
       "id": 1,
