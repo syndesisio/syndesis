@@ -100,7 +100,7 @@ public class ConnectorVerifier {
                         result.put("value", "error");
                         StringBuilder message = new StringBuilder();
                         int i = 0;
-                        for (ComponentVerifier.Error error : verificationResult.getErrors()) {
+                        for (ComponentVerifier.VerificationError error : verificationResult.getErrors()) {
                             if (error.getCode() != null) {
                                 result.put("error." + i + ".code", error.getCode());
                             }
