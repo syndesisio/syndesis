@@ -23,7 +23,7 @@ public class BuyPlaceRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        from("periodic-timer?synchronous=true")
+        from("periodic-timer")
             .log("Triggering")
             .to("trade-insight-buy")
             .log("Transforming")
