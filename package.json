@@ -6,6 +6,7 @@
     "generate": "node ./scripts/generate-ts.js",
     "copy:assets": "yarn ncp node_modules/ipaas.data.mapper/src/assets/dm src/assets/dm",
     "start": "yarn ng serve",
+    "start:prod": "yarn ng start -- --aot --prod",
     "lint": "yarn ng lint",
     "lint:fix": "yarn ng lint -- --fix",
     "test": "yarn ng test",
