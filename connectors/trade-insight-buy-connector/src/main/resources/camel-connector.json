@@ -21,7 +21,7 @@
     "host": { "required": true }
   },
   "endpointValues" : {
-    "componentName" : "undertow",
+    "componentName" : "http4",
     "method" : "GET",
     "path" : "/trade-insight",
     "uriTemplate": "/buy",

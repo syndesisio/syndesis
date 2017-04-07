@@ -22,7 +22,7 @@
   },
   "endpointOptions" : [ "orderId" ],
   "endpointValues" : {
-    "componentName" : "undertow",
+    "componentName" : "http4",
     "method" : "GET",
     "path" : "/apis",
     "uriTemplate": "/orders/{orderId}",
