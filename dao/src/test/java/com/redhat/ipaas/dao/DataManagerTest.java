@@ -77,7 +77,7 @@ public class DataManagerTest {
         for (Connector connector : connectors.getItems()) {
             System.out.print(connector.getId().get() + ",");
         }
-        Assert.assertEquals(4, connectors.getTotalCount());
+        Assert.assertEquals(6, connectors.getTotalCount());
         Assert.assertEquals(2, connectors.getItems().size());
     }
 
