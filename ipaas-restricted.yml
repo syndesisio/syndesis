@@ -312,6 +312,10 @@ objects:
         containers:
         - name: ipaas-datamapper
           env:
+          - name: HOME
+            value: /deployments
+          - name: JAVA_TOOL_OPTIONS
+            value: '-Duser.home=/deployments -Duser.name=jboss'
           - name: AB_JOLOKIA_OFF
             value: "true"
           - name: JAVA_APP_DIR
