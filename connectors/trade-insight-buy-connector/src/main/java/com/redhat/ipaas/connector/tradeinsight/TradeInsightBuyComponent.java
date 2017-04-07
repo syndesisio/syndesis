@@ -15,12 +15,21 @@
  */
 package com.redhat.ipaas.connector.tradeinsight;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
 public class TradeInsightBuyComponent extends DefaultConnectorComponent {
 
     public TradeInsightBuyComponent() {
         super("trade-insight-buy", TradeInsightBuyComponent.class.getName());
+
+        // remove all the headers, as we should not propagate any of them
+        // and set the content type as json which is what this connector uses
+        setBeforeProducer(exchange -> {
+            exchange.getIn().removeHeaders("*");
+            exchange.getIn().setHeader(Exchange.CONTENT_TYPE, "application/json");
+        });
+
     }
 
 }

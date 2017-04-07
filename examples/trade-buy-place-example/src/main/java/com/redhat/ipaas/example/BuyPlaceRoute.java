@@ -15,7 +15,6 @@
  */
 package com.redhat.ipaas.example;
 
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +29,6 @@ public class BuyPlaceRoute extends RouteBuilder {
             .log("Transforming")
             .transform().method(TradeDataMapper.class)
             .log("Trading")
-            .removeHeaders("*")
-            .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
             .to("day-trade-place")
             .log("Done");
     }

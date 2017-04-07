@@ -15,12 +15,21 @@
  */
 package com.redhat.ipaas.connector.daytrade;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
 public class DayTradeGetComponent extends DefaultConnectorComponent {
 
     public DayTradeGetComponent() {
         super("day-trade-get", DayTradeGetComponent.class.getName());
+
+        // remove all the headers, expect the order id as we should not propagate any of them
+        // and set the content type as json which is what this connector uses
+        setBeforeProducer(exchange -> {
+            exchange.getIn().removeHeaders("*", "orderId");
+            exchange.getIn().setHeader(Exchange.CONTENT_TYPE, "application/json");
+        });
+
     }
 
 }
