@@ -379,6 +379,47 @@
     }
   },
   {
+    "kind": "connector",
+    "data": {
+      "id": "day-trade",
+      "name": "Day Trade",
+      "description": "Day Trade API connector",
+      "icon": "fa-usd",
+      "properties": {
+        "host": {
+          "kind": "property",
+          "displayName": "Host",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "description": "Host and port of HTTP service to use (override host in swagger schema)"
+        }
+      },
+      "actions": [
+        {
+          "name": "Place Trade",
+          "description": "Place trade on Day Trade API server",
+          "inputDataShape": {
+            "kind": "java",
+            "type": "com.redhat.ipaas.connector.daytrade.Trade"
+          },
+          "outputDataShape": {
+            "kind": "none"
+          },
+          "properties": {
+          },
+          "id": "com.redhat.ipaas:day-trade-place-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:day-trade-place-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "day-trade-place"
+        }
+      ]
+    }
+  },
+  {
     "kind": "connection",
     "data": {
       "id": 1,
