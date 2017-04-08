@@ -58,7 +58,7 @@ public interface Connection extends WithId<Connection>, WithName, Serializable {
 
     String getIcon();
 
-    String getDescription();
+    Optional<String> getDescription();
 
     Optional<List<Tag>> getTags();
 
