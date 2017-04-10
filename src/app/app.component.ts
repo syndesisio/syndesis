@@ -1,6 +1,10 @@
 import { Component, ChangeDetectionStrategy, OnInit, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Restangular } from 'ng2-restangular';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
+import { Response } from '@angular/http';
+
+import { TestSupportService } from './store/test-support.service';
 
 import { log } from './logging';
 
@@ -12,6 +16,7 @@ import { User } from './model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ Restangular, TestSupportService ],
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
@@ -28,12 +33,32 @@ export class AppComponent implements OnInit, AfterViewInit {
   url = 'https://www.twitter.com/jboss';
   user: Observable<User>;
 
-  constructor(private oauthService: OAuthService, private userService: UserService) {
+  constructor(
+    private oauthService: OAuthService,
+    private userService: UserService,
+    public testSupport: TestSupportService,
+    ) {
   }
 
   ngOnInit() {
     this.loggedIn = this.oauthService.hasValidAccessToken();
     this.user = this.userService.user;
+  }
+
+  resetDB() {
+    this.testSupport.resetDB().subscribe((value: Response) => {
+      console.log('resetDB, got back: ', value);
+    });
+  }
+
+  exportDB() {
+    this.testSupport.snapshotDB().subscribe((value: Response) => {
+      console.log('snapshotDB, got back: ', value);
+    });
+  }
+
+  logout() {
+    // TODO
   }
 
   ngAfterViewInit() {

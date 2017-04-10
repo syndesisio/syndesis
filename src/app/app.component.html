@@ -2,7 +2,8 @@
   <header *ngIf="loggedIn">
 
     <!-- Navbar: Logged Out -->
-    <nav class="navbar navbar-fixed-top navbar-light loggedOut" *ngIf="!loggedIn">
+    <nav class="navbar navbar-fixed-top navbar-light loggedOut"
+         *ngIf="!loggedIn">
       <!-- Logo -->
       <a [routerLink]=" ['/'] ">
         <img src="{{ logoWhiteBg }}">
@@ -14,7 +15,8 @@
       <div class="navbar-header">
 
         <!-- Toggle Sidebar-->
-        <button type="button" class="navbar-toggle">
+        <button type="button"
+                class="navbar-toggle">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -22,9 +24,14 @@
         </button>
 
         <!-- Logo -->
-        <a [routerLink]=" ['/'] " class="navbar-brand">
-          <img class="navbar-brand-icon" [src]="iconDarkBg" alt="" />
-          <img class="navbar-brand-name" [src]="logoDarkBg" alt="iPaaS" />
+        <a [routerLink]=" ['/'] "
+           class="navbar-brand">
+          <img class="navbar-brand-icon"
+               [src]="iconDarkBg"
+               alt="" />
+          <img class="navbar-brand-name"
+               [src]="logoDarkBg"
+               alt="iPaaS" />
         </a>
       </div>
 
@@ -33,17 +40,30 @@
         <ul class="nav navbar-nav navbar-right navbar-iconic">
 
           <!-- User Dropdown -->
-          <li class="dropdown user">
-            <a class="dropdown-toggle nav-item-iconic" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span title="Username" class="fa pficon-user"></span>
+          <li dropdown
+              class="dropdown user">
+            <a dropdownToggle
+               class="dropdown-toggle nav-item-iconic"
+               id="dropdownMenu2"
+               aria-haspopup="true"
+               aria-expanded="true">
+              <span title="Username"
+                    class="fa pficon-user"></span>
               <span class="username">{{( user | async)?.name}}</span>
               <span class="caret"></span>
             </a>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <!--
-              <li><a href="#">Preferences</a></li>
-              -->
-              <li><a href="#">Logout</a></li>
+            <ul dropdownMenu
+                class="dropdown-menu"
+                aria-labelledby="dropdownMenu2">
+              <li>
+                <a (click)="resetDB()">Reset DB</a>
+              </li>
+              <li>
+                <a (click)="exportDB()">Export DB</a>
+              </li>
+              <li>
+                <a (click)="logout()">Logout</a>
+              </li>
             </ul>
           </li>
         </ul>
@@ -56,15 +76,21 @@
   <div class="nav-pf-vertical hidden-icons-pf"
        *ngIf="loggedIn">
     <ul class="list-group">
-      <li class="list-group-item" routerLinkActive="active">
+      <li class="list-group-item"
+          routerLinkActive="active">
         <a [routerLink]=" ['dashboard'] ">
-          <span class="fa fa-tachometer" data-toggle="tooltip" title="Dashboard"></span>
+          <span class="fa fa-tachometer"
+                data-toggle="tooltip"
+                title="Dashboard"></span>
           <span class="list-group-item-value">Dashboard</span>
         </a>
       </li>
-      <li class="list-group-item" routerLinkActive="active">
+      <li class="list-group-item"
+          routerLinkActive="active">
         <a [routerLink]=" ['integrations'] ">
-          <span class="pficon pficon-topology" data-toggle="tooltip" title="Integrations"></span>
+          <span class="pficon pficon-topology"
+                data-toggle="tooltip"
+                title="Integrations"></span>
           <span class="list-group-item-value">Integrations</span>
         </a>
       </li>
@@ -76,9 +102,12 @@
         </a>
       </li>
       -->
-      <li class="list-group-item" routerLinkActive="active">
+      <li class="list-group-item"
+          routerLinkActive="active">
         <a [routerLink]=" ['connections'] ">
-          <span class="pficon pficon-network" data-toggle="tooltip" title="Connections"></span>
+          <span class="pficon pficon-network"
+                data-toggle="tooltip"
+                title="Connections"></span>
           <span class="list-group-item-value">Connections</span>
         </a>
       </li>
@@ -92,7 +121,8 @@
       -->
     </ul>
   </div>
-  <main class="container-fluid container-pf-nav-pf-vertical" *ngIf="loggedIn">
+  <main class="container-fluid container-pf-nav-pf-vertical"
+        *ngIf="loggedIn">
     <router-outlet></router-outlet>
   </main>
 
