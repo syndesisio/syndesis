@@ -4,30 +4,10 @@
   .card-pf {
     //background: $pf-black-200;
     box-shadow: none;
-
-    .card-pf-body {
-      //margin-bottom: 100px;
-      //padding-bottom: 0;
-    }
   }
 
-  .wizard-pf-body {
-    //background: #FFFFFF;
-
-    .wizard-pf-steps {
-      .wizard-pf-steps-indicator {
-        float: none;
-        //margin: 0 auto;
-      }
-    }
-  }
-
-  /deep/ .toolbar-pf-actions {
-    //margin-bottom: 0;
-
-    .breadcrumb {
-      //margin-bottom: 10px;
-    }
+  .wizard-pf-steps-indicator {
+    width: 50%;
   }
 }
 
