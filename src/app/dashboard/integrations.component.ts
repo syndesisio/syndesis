@@ -157,9 +157,11 @@ export class DashboardIntegrationsComponent implements OnInit {
     const inactive = [];
 
     this.integrations.forEach(function(a) {
+      /* TODO - too noisy
       log.debugc(() => 'Integration: ' + JSON.stringify(a));
       log.debugc(() => 'currentStatus: ' + JSON.stringify(a.currentStatus));
       log.debugc(() => 'desiredStatus: ' + JSON.stringify(a.desiredStatus));
+      */
 
       switch (a.desiredStatus) {
         case 'Activated':
@@ -226,7 +228,9 @@ export class DashboardIntegrationsComponent implements OnInit {
   //-----  Recent Updates Section ------------------->>
 
   public getLabelClass(integration): string {
+    /* TODO - too noisy
     log.debugc(() => 'Integration: ' + JSON.stringify(integration));
+    */
     switch (integration.desiredStatus) {
       case 'Activated':
       default:
