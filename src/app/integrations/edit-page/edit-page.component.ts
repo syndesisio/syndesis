@@ -46,7 +46,7 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
   getPageRow() {
     switch (this.currentStepKind) {
       case 'mapper':
-        return 'row';
+        return 'row datamapper';
       default:
         return 'wizard-pf-row';
     }

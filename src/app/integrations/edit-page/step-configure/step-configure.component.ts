@@ -71,6 +71,14 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
     });
   }
 
+  getToolbarClass() {
+    switch (this.currentFlow.getStep(this.position).stepKind) {
+      case 'mapper':
+        return 'toolbar mapper';
+    }
+    return 'toolbar';
+  }
+
   getConfiguredProperties(props: any) {
     if (typeof props === 'string') {
       return JSON.parse(props);
