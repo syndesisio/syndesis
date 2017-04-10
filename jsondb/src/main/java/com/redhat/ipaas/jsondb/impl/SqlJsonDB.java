@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 public class SqlJsonDB implements JsonDB {
 
     enum DatabaseKind {
-        PostgreSQL, SQLite, H2
+        PostgreSQL, SQLite, H2, CockroachDB
     }
 
     private final DBI dbi;
@@ -75,6 +75,14 @@ public class SqlJsonDB implements JsonDB {
             try {
                 String dbName = x.getConnection().getMetaData().getDatabaseProductName();
                 databaseKind = DatabaseKind.valueOf(dbName);
+
+                // CockroachDB uses the PostgreSQL driver.. so need to look a little closer.
+                if( databaseKind == DatabaseKind.PostgreSQL ) {
+                    String version = x.createQuery("SELECT VERSION()").mapTo(String.class).first();
+                    if( version.startsWith("CockroachDB") ) {
+                        databaseKind = DatabaseKind.CockroachDB;
+                    }
+                }
             } catch (Exception e) {
                 throw new IllegalStateException("Could not determine the database type", e);
             }
@@ -84,7 +92,14 @@ public class SqlJsonDB implements JsonDB {
 
     public void createTables() {
         withTransaction(dbi -> {
-            dbi.update("CREATE TABLE jsondb (path VARCHAR PRIMARY KEY, value VARCHAR, kind INT)");
+            switch (databaseKind) {
+                case PostgreSQL:
+                    dbi.update("CREATE TABLE jsondb (path VARCHAR COLLATE \"C\" PRIMARY KEY, value VARCHAR, kind INT)");
+                    break;
+                default:
+                    dbi.update("CREATE TABLE jsondb (path VARCHAR PRIMARY KEY, value VARCHAR, kind INT)");
+                    break;
+            }
         });
     }
 
@@ -138,10 +153,6 @@ public class SqlJsonDB implements JsonDB {
         final Handle h = dbi.open();
         try {
             String sql = "select path,value,kind from jsondb where path LIKE :like order by path";
-            if( databaseKind == DatabaseKind.PostgreSQL ) {
-                // To get lexical sorting on even the / character.
-                sql = "select path,value,kind from jsondb where path LIKE :like order by BYTEA(path)";
-            }
             ResultIterator<JsonRecord> iterator = h.createQuery(sql)
                 .bind("like", like)
                 .map(JsonRecordMapper.INSTANCE)
