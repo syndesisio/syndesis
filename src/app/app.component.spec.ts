@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RestangularModule } from 'ng2-restangular';
 import { OAuthModule } from 'angular-oauth2-oidc-hybrid';
 
-import { CollapseModule, DropdownModule } from 'ng2-bootstrap';
+import { CollapseModule, DropdownModule, ModalModule } from 'ng2-bootstrap';
 
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';
@@ -22,6 +22,7 @@ describe('AppComponent', () => {
       imports: [
         RestangularModule,
         StoreModule,
+        ModalModule.forRoot(),
         RouterTestingModule.withRoutes([]),
         OAuthModule.forRoot(),
         CollapseModule.forRoot(),

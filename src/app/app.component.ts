@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ng2-restangular';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
@@ -10,6 +10,8 @@ import { log } from './logging';
 
 import { UserService } from './common/user.service';
 import { User } from './model';
+import { saveAs } from 'file-saver';
+import { ModalDirective } from 'ng2-bootstrap';
 
 @Component({
   selector: 'ipaas-root',
@@ -19,6 +21,8 @@ import { User } from './model';
   providers: [ Restangular, TestSupportService ],
 })
 export class AppComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('importDBModal') public importDBModal: ModalDirective;
 
   // White BG
   logoWhiteBg = 'assets/images/rh_ipaas_small.svg';
@@ -47,14 +51,32 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   resetDB() {
     this.testSupport.resetDB().subscribe((value: Response) => {
-      console.log('resetDB, got back: ', value);
+      log.debugc(() => 'DB has been reset');
     });
   }
 
   exportDB() {
     this.testSupport.snapshotDB().subscribe((value: Response) => {
-      console.log('snapshotDB, got back: ', value);
+      const blob = new Blob([value.text()], {type: 'text/plain;charset=utf-8'});
+      saveAs(blob, 'ipaas-db-export.json');
     });
+  }
+
+  showImportDB() {
+    this.importDBModal.show();
+  }
+
+  importDB(event) {
+    const file = event.srcElement.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      const json = JSON.parse(reader.result);
+      this.testSupport.restoreDB(json).subscribe((value: Response) => {
+        log.debugc(() => 'DB has been imported');
+      });
+    };
+    reader.readAsText(file, 'text/plain;charset=utf-8');
+    this.importDBModal.hide();
   }
 
   logout() {
