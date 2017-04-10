@@ -49,6 +49,10 @@ import java.util.stream.Collectors;
  */
 public class SqlJsonDB implements JsonDB {
 
+    enum DatabaseKind {
+        PostgreSQL, SQLite, H2
+    }
+
     private final DBI dbi;
     private final EventBus bus;
 
@@ -56,6 +60,7 @@ public class SqlJsonDB implements JsonDB {
     private long lastTimestamp = System.currentTimeMillis();
     private final byte randomnessByte;
     private long randomnessLong;
+    private DatabaseKind databaseKind = DatabaseKind.PostgreSQL;
 
     public SqlJsonDB(DBI dbi, EventBus bus) {
         this.dbi = dbi;
@@ -64,6 +69,17 @@ public class SqlJsonDB implements JsonDB {
         Random random = new Random();
         randomnessByte = (byte) random.nextInt();
         randomnessLong = random.nextLong();
+
+        // Lets find out the type of DB we are working with.
+        withTransaction(x -> {
+            try {
+                String dbName = x.getConnection().getMetaData().getDatabaseProductName();
+                databaseKind = DatabaseKind.valueOf(dbName);
+            } catch (Exception e) {
+                throw new IllegalStateException("Could not determine the database type", e);
+            }
+        });
+
     }
 
     public void createTables() {
@@ -121,7 +137,12 @@ public class SqlJsonDB implements JsonDB {
         Consumer<OutputStream> result = null;
         final Handle h = dbi.open();
         try {
-            ResultIterator<JsonRecord> iterator = h.createQuery("select path,value,kind from jsondb where path LIKE :like order by path")
+            String sql = "select path,value,kind from jsondb where path LIKE :like order by path";
+            if( databaseKind == DatabaseKind.PostgreSQL ) {
+                // To get lexical sorting on even the / character.
+                sql = "select path,value,kind from jsondb where path LIKE :like order by BYTEA(path)";
+            }
+            ResultIterator<JsonRecord> iterator = h.createQuery(sql)
                 .bind("like", like)
                 .map(JsonRecordMapper.INSTANCE)
                 .iterator();
@@ -184,7 +205,7 @@ public class SqlJsonDB implements JsonDB {
 
     private class BatchManager {
 
-        private Handle dbi; 
+        private Handle dbi;
         private long batchSize;
         private PreparedBatch insertBatch;
 
