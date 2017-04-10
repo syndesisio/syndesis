@@ -6,6 +6,18 @@
     box-shadow: none;
   }
 
+  .toolbar.toolbar-pf {
+    padding: 10px 0;
+
+    .toolbar-pf-actions {
+      margin: 0;
+
+      .breadcrumb {
+        margin: 0;
+      }
+    }
+  }
+
   .wizard-pf-steps-indicator {
     width: 50%;
   }
