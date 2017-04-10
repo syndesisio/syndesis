@@ -1,4 +1,4 @@
-<div class="row row-cards-pf center connections-view"
+<div class="row row-cards-pf connections-view"
      [ngClass]="{edit: 'edit', create: 'create'}[mode] || 'view'"
      *ngIf="connection">
   <div class="col-xs-4"
@@ -127,17 +127,16 @@
               </div>
             </form>
           </div>
-
-
-          <ipaas-connections-list-toolbar [(filter)]="filter"
-                                          [(sort)]="sort"
-                                          [showCreate]="false"></ipaas-connections-list-toolbar>
-
-          <ipaas-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort"
-                                  [loading]="loading | async"
-                                  (onSelected)="onSelected($event)"></ipaas-connections-list>
         </div>
       </div>
+
+      <ipaas-connections-list-toolbar [(filter)]="filter"
+                                      [(sort)]="sort"
+                                      [showCreate]="false"></ipaas-connections-list-toolbar>
+
+      <ipaas-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort"
+                              [loading]="loading | async"
+                              (onSelected)="onSelected($event)"></ipaas-connections-list>
     </div>
     <!-- end Creating -->
 

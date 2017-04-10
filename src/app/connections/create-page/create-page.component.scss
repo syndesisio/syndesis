@@ -2,26 +2,24 @@
 
 .connections-create-page {
   .card-pf {
-    background: $pf-black-200;
+    //background: $pf-black-200;
+    box-shadow: none;
   }
-  
-  .wizard-pf-body {
-    background: #FFFFFF;
 
-    .wizard-pf-steps {
-      .wizard-pf-steps-indicator {
-        float: none;
-        margin: 0 auto;
+  .toolbar.toolbar-pf {
+    padding: 10px 0;
+
+    .toolbar-pf-actions {
+      margin: 0;
+
+      .breadcrumb {
+        margin: 0;
       }
     }
   }
 
-  /deep/ .toolbar-pf-actions {
-    margin-bottom: 0;
-
-    .breadcrumb {
-      margin-bottom: 10px;
-    }
+  .wizard-pf-steps-indicator {
+    width: 50%;
   }
 }
 
