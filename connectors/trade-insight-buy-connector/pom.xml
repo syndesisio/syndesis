@@ -30,11 +30,6 @@
   <description>Trade Insight Buy Connector</description>
   <packaging>jar</packaging>
 
-  <!-- TODO: until new EA build -->
-  <properties>
-    <camel.version>2.19.0-SNAPSHOT</camel.version>
-  </properties>
-
   <dependencyManagement>
     <dependencies>
       <!-- Camel BOM -->

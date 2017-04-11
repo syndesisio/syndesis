@@ -116,7 +116,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
-    <camel.version>2.19.0.fuse-000035</camel.version>
+    <camel.version>2.19.0.fuse-000036</camel.version>
     <spring-boot.version>1.4.5.RELEASE</spring-boot.version>
 
     <!-- maven plugin version -->

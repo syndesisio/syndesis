@@ -2,7 +2,7 @@
   "baseScheme" : "timer",
   "baseGroupId" : "org.apache.camel",
   "baseArtifactId" : "camel-core",
-  "baseVersion" : "2.19.0.fuse-000035",
+  "baseVersion" : "2.19.0.fuse-000036",
   "baseJavaType" : "org.apache.camel.component.timer.TimerComponent",
   "name" : "Timer",
   "scheme" : "periodic-timer",
