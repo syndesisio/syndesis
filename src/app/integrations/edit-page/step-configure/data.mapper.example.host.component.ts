@@ -110,10 +110,10 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     // TODO we'll want to parse the dataType and maybe set the right config value
     const inputDocDef = this.createDocumentDefinition(start.action.outputDataShape, true);
     this.cfg.sourceDocs.push(inputDocDef);
-
     const outputDocDef = this.createDocumentDefinition(end.action.inputDataShape);
     this.cfg.targetDocs.push(outputDocDef);
-
+    // TODO for now set a really long timeout
+    this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;
     if (mappings) {
       const mappingDefinition = new MappingDefinition();
       // Existing mappings, load from the route
