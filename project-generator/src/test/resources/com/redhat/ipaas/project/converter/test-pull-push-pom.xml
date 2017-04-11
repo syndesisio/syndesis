@@ -14,7 +14,7 @@
   <properties>
     <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
     <spring-cloud-kubernetes.version>0.1.5</spring-cloud-kubernetes.version>
-    <camel.version>2.19.0.fuse-000020</camel.version>
+    <camel.version>@camel.version@</camel.version>
     <funktion.version>1.1.55</funktion.version>
   </properties>
 
@@ -71,21 +71,21 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>1.5.2.RELEASE</version>
+        <version>${spring-boot.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-spring-boot-dependencies</artifactId>
-        <version>2.19.0.fuse-000020</version>
+        <version>${camel.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>io.fabric8</groupId>
         <artifactId>spring-cloud-kubernetes-bom</artifactId>
-        <version>0.1.5</version>
+        <version>${spring-cloud-kubernetes.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -149,7 +149,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test</artifactId>
-      <version>2.19.0.fuse-000020</version>
+      <version>${camel.version}</version>
       <scope>test</scope>
     </dependency>
 
