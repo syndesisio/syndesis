@@ -44,8 +44,10 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
     super.goBack(['action-select', this.position]);
   }
 
-  continue() {
-    const data = this.formGroup.value;
+  continue(data: any = undefined) {
+    if (!data) {
+      data = this.formGroup.value;
+    }
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
@@ -68,9 +70,6 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
         }
         this.action = step.action;
         if (this.action && this.action.properties) {
-          if (!this.action.properties) {
-            return;
-          }
           this.formConfig = JSON.parse(JSON.stringify(this.action.properties));
           if (step.configuredProperties) {
             for (const key in <any>step.configuredProperties) {
@@ -79,6 +78,10 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
               }
               this.formConfig[key]['value'] = step.configuredProperties[key];
             }
+          }
+          if (!Object.keys(this.formConfig).length) {
+            this.continue({});
+            return;
           }
           log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
           this.formModel = this.formFactory.createFormModel(this.formConfig);
