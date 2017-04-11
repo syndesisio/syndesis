@@ -143,10 +143,10 @@ public class DataManager implements DataAccessObjectRegistry {
         Kind kind = Kind.from(model);
         Cache<String, WithId> cache = caches.getCache(kind.getModelName());
 
-        ListResult<T> result = (ListResult<T>) doWithDataAccessObject(model, d -> d.fetchAll());
+        ListResult<T> result = ListResult.of((Collection<T>) cache.values());
+         
         if( result == null ) {
-            // fall back to using the cache for getting values..
-            result = ListResult.of((Collection<T>) cache.values());
+            result = (ListResult<T>) doWithDataAccessObject(model, d -> d.fetchAll());
         }
 
         for (Function<ListResult<T>, ListResult<T>> operator : operators) {
@@ -159,8 +159,6 @@ public class DataManager implements DataAccessObjectRegistry {
         Kind kind = Kind.from(model);
         Map<String, WithId> cache = caches.getCache(kind.getModelName());
 
-        // TODO: report bug in cache.computeIfAbsent, it breaks if the mappingFunction returns null
-        // return (T) cache.computeIfAbsent(id, i -> doWithDataAccessObject(kind, d -> (T) d.fetch(i)));
         T value = (T) cache.get(id);
         if ( value == null) {
             value = doWithDataAccessObject(model, d -> (T) d.fetch(id));
