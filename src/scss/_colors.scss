@@ -1,4 +1,14 @@
-// PatternFly Colors
+
+////////////////////////////////////////////////////////////////////////////////
+// PATTERNFLY COLORS
+////////////////////////////////////////////////////////////////////////////////
+
+
+// This is the darker gray we are using as a result of the lighter grays in PatternFly
+// getting washed out on projectors, demo recordings, and BlueJeans screenshares.
+
+$pf-custom-gray:           #E1E1E1;
+
 $pf-black-100:             #fafafa;
 $pf-black-150:             #f5f5f5; // Dashboard gray background
 $pf-black-200:             #ededed;
