@@ -2,7 +2,7 @@
   "baseScheme" : "rest",
   "baseGroupId" : "org.apache.camel",
   "baseArtifactId" : "camel-core",
-  "baseVersion" : "2.19.0.fuse-000035",
+  "baseVersion" : "2.19.0.fuse-000036",
   "baseJavaType" : "org.apache.camel.component.rest.RestComponent",
   "name" : "DayTradeGetComponent",
   "scheme" : "day-trade-get",
@@ -18,14 +18,16 @@
   "globalOptions" : [ "host" ],
   "componentOptions" : [ "host" ],
   "componentOverrides" : {
-    "host": { "required": true }
+    "host" : {
+      "required" : true
+    }
   },
   "endpointOptions" : [ "orderId" ],
   "endpointValues" : {
     "componentName" : "http4",
     "method" : "GET",
     "path" : "/apis",
-    "uriTemplate": "/orders/{orderId}",
+    "uriTemplate" : "/orders/{orderId}",
     "bindingMode" : "json",
     "outType" : "com.redhat.ipaas.connector.daytrade.Trade"
   }
