@@ -60,7 +60,8 @@ public class StoreConfiguration {
             (versionInDB == null || !daoSchemaVersion.equals(versionInDB))) {
 
             // really silly migration strategy for now, reset the DB:
-            jsondb.set("/", "{}");
+            jsondb.dropTables();
+            jsondb.createTables();
 
             setClusterProperty(jsondb, "dao_schema_version", daoSchemaVersion);
         }
