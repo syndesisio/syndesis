@@ -1,8 +1,8 @@
 0.0.0.0
 log stdout
-errors {
-  log stdout
-  404 index.html
-}
 gzip
 prometheus
+rewrite {
+  ext /
+  to {path} {path}/ /index.html
+}
