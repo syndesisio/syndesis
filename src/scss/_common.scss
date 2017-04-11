@@ -1,13 +1,42 @@
+
+////////////////////////////////////////////////////////////////////////////////
+// COMMON & HELPER CLASSES
+////////////////////////////////////////////////////////////////////////////////
+
+
+//----- Centers a Division ----------------->>
+
 .center {
   margin: 0 auto;
 }
 
+//----- Convenience Class ----------------->>
+
 .inline-block {
   display: inline-block;
 }
+
+//----- Disabled Anchor / Link That Uses routerLink/routerActiveClass ----------------->>
 
 /* use this class to disable an anchor that uses routerLink/routerActiveClass */
 a.disabled {
   pointer-events: none;
   cursor: default;
 }
+
+
+//----- Vertically Align Contents in a Division ----------------->>
+
+.vertical-align {
+  display: flex;
+  flex-direction: row;
+}
+
+.vertical-align > [class^="col-"],
+.vertical-align > [class*=" col-"] {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Optional, to align inner items
+                              horizontally inside the column */
+}
+

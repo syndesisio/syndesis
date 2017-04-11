@@ -3,13 +3,17 @@
 
     <!-- First Row: Page Header & Toolbar -->
 
-    <div class="row row-cards-pf first-row">
-      <div class="page-header">
-        <div class="actions pull-right">
-          <a href="#" [routerLink]="['/integrations']">View All Integrations</a>&nbsp;&nbsp;
-          <button class="btn btn-primary" [routerLink]="['/integrations/create']">Create Integration</button>
+    <div class="row row-cards-pf first-row vertical-align">
+      <div class="page-header col-xs-12">
+        <div class="col-xs-8">
+          <h1>Dashboard: Integrations</h1>
         </div>
-        <h1>Dashboard: Integrations</h1>
+        <div class="col-xs-4">
+          <div class="actions pull-right">
+            <a href="#" [routerLink]="['/integrations']">View All Integrations</a>&nbsp;&nbsp;
+            <button class="btn btn-primary" [routerLink]="['/integrations/create']">Create Integration</button>
+          </div>
+        </div>
       </div>
     </div>
 

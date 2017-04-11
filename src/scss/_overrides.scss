@@ -4,6 +4,11 @@
 // PATTERNFLY CARD LAYOUT
 ////////////////////////////////////////////////////////////////////////////////
 
+
+body.cards-pf {
+  background-color: $pf-custom-gray;
+}
+
 .card-title {
   font-size: 14px;
   font-weight: 600;
