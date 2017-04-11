@@ -38,7 +38,7 @@ public class Recordings {
         private Object result;
         private Throwable error;
 
-        public Invocation(@Nonnull Method method, @Nonnull Object[] args) {
+        public Invocation(@Nonnull Method method, Object[] args) {
             this.method = method;
             this.args = args;
         }
@@ -70,7 +70,7 @@ public class Recordings {
         }
 
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        public synchronized Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
             if (method.getName().equals("getInvocationHandler$$$")) {
                 RecordingInvocationHandler rc = this;
@@ -102,7 +102,7 @@ public class Recordings {
 
     public interface RecordingProxy {
         // Use a weird method name to avoid conflicts with other methods the proxied class might declare.
-        public RecordingInvocationHandler getInvocationHandler$$$();
+        RecordingInvocationHandler getInvocationHandler$$$();
     }
 
     static public <T> T recorder(Object object, Class<T> as) {
