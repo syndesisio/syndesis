@@ -30,27 +30,9 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
   ) {
     super(currentFlow, route, router);
   }
+
   get currentStep() {
     return this.getCurrentStep();
-  }
-  doSave() {
-    if (!this.currentFlow.integration.name || this.currentFlow.integration.name === '') {
-      this.router.navigate(['integration-basics'], { relativeTo: this.route.parent });
-      return;
-    }
-    const router = this.router;
-    this.currentFlow.events.emit({
-      kind: 'integration-save',
-      action: (i: Integration) => {
-        router.navigate(['/integrations']);
-      },
-      error: (error) => {
-        setTimeout(() => {
-          this.errorMessage = error;
-          this.detector.detectChanges();
-        }, 10);
-      },
-    });
   }
 
   getCurrentPosition(route: ActivatedRoute = this.route): number {
@@ -111,16 +93,6 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
     step.stepKind = 'endpoint';
     this.currentFlow.steps.splice(target, 0, step);
     this.router.navigate(['connection-select', target], { relativeTo: this.route });
-  }
-
-  save() {
-    this.currentFlow.integration.desiredStatus = 'Deactivated';
-    this.doSave();
-  }
-
-  saveAndPublish() {
-    this.currentFlow.integration.desiredStatus = 'Activated';
-    this.doSave();
   }
 
   startConnection() {
