@@ -2997,9 +2997,9 @@ invert-kv@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
-"ipaas.data.mapper@https://github.com/redhat-ipaas/datamapper-ui.git#c6ac2fb32283893a43c3c1e33ead461ebd223734":
+"ipaas.data.mapper@https://github.com/redhat-ipaas/datamapper-ui.git#3d1a73984e9556ab0d6a085da9c7d7ab7c83d0c9":
   version "1.0.0"
-  resolved "https://github.com/redhat-ipaas/datamapper-ui.git#c6ac2fb32283893a43c3c1e33ead461ebd223734"
+  resolved "https://github.com/redhat-ipaas/datamapper-ui.git#3d1a73984e9556ab0d6a085da9c7d7ab7c83d0c9"
   dependencies:
     "@angular/common" "~2.4.0"
     "@angular/compiler" "~2.4.0"
