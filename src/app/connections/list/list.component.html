@@ -68,13 +68,17 @@
 
               <div *ngIf="showKebab"
                    dropdown
-                   class="dropdown dropdown-kebab-pf pull-right">
-                <button dropdownToggle class="btn btn-link dropdown-toggle"
+                   class="dropdown dropdown-kebab-pf pull-right"
+                   container="body">
+                <button dropdownToggle
+                        class="btn btn-link dropdown-toggle"
                         type="button"
                         id="dropdownKebabRight9">
                   <span class="fa fa-ellipsis-v"></span>
                 </button>
-                  <ul dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+                  <ul dropdownMenu
+                      class="dropdown-menu dropdown-menu-right"
+                      role="menu">
                     <li role="menuitem">
                       <a [routerLink]="['/connections', connection.id]"
                         class="dropdown-item">View</a>
