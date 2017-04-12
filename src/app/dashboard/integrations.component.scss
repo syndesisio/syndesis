@@ -164,7 +164,8 @@
         padding: 15px;
 
         &:hover {
-          background: rgba(214, 238, 250, 0.36);
+          //background: rgba(214, 238, 250, 0.36);
+          background: $pf-blue-50;
         }
 
         .actions {
