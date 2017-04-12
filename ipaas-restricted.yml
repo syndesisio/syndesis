@@ -105,6 +105,10 @@ parameters:
   displayName: Insecure skip verify
   name: INSECURE_SKIP_VERIFY
   value: 'false'
+- description: Should deployment of integrations be enabled?
+  displayName: Enable Integration Deployment
+  name: CONTROLLERS_INTEGRATION_ENABLED
+  value: 'true'
 message: |-
   Red Hat iPaaS is deployed to ${ROUTE_HOSTNAME}.
 
@@ -2012,6 +2016,8 @@ objects:
                 fieldPath: metadata.namespace
           - name: ENDPOINTS_TEST_SUPPORT_ENABLED
             value: ${TEST_SUPPORT_ENABLED}
+          - name: CONTROLLERS_INTEGRATION_ENABLED
+            value: ${CONTROLLERS_INTEGRATION_ENABLED}
           image: ' '
 
           imagePullPolicy: IfNotPresent

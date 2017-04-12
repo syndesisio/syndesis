@@ -120,6 +120,8 @@
                 fieldPath: metadata.namespace
           - name: ENDPOINTS_TEST_SUPPORT_ENABLED
             value: ${TEST_SUPPORT_ENABLED}
+          - name: CONTROLLERS_INTEGRATION_ENABLED
+            value: ${CONTROLLERS_INTEGRATION_ENABLED}
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
