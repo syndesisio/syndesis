@@ -15,20 +15,13 @@
  */
 package com.redhat.ipaas.core;
 
-import org.keycloak.adapters.KeycloakDeployment;
-import org.keycloak.adapters.KeycloakDeploymentBuilder;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.io.InputStream;
-import java.net.URL;
-
 public class Tokens {
 
     private static ThreadLocal<String> OAUTH_TOKEN = new InheritableThreadLocal<>();
-
-    private static final KeycloakDeployment KEYCLOAK_DEPLOYMENT = keycloakDeployment();
 
     public static String getAuthenticationToken() {
         String stringToken = OAUTH_TOKEN.get();
@@ -53,12 +46,4 @@ public class Tokens {
         OAUTH_TOKEN.set(token);
     }
 
-
-    private static final KeycloakDeployment keycloakDeployment() {
-        try (InputStream is = new URL("file:config/ipaas-client.json").openStream()){
-            return  KeycloakDeploymentBuilder.build(is);
-        }  catch (Throwable t) {
-            throw IPaasServerException.launderThrowable(t);
-        }
-    }
 }
