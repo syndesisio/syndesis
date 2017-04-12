@@ -82,10 +82,22 @@
     </div>
     <!-- end Editing -->
 
+    <div *ngSwitchCase="'create1'">
+      <div class="connector-list">
+        <ipaas-connections-list-toolbar [(filter)]="filter"
+                                        [(sort)]="sort"
+                                        [showCreate]="false"></ipaas-connections-list-toolbar>
+
+        <ipaas-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort"
+                                [loading]="loading | async"
+                                [showKebab]="false"
+                                (onSelected)="onSelected($event)"></ipaas-connections-list>
+      </div>
+    </div>
+
 
     <!-- Creating the connection -->
-
-    <div *ngSwitchCase="'create'">
+    <div *ngSwitchCase="'create2'">
       <div class="card-pf">
         <h2 class="card-pf-title">Add Connection Details</h2>
         <div class="card-pf-body">
@@ -108,11 +120,11 @@
               <div class="form-group">
                 <label class="col-sm-4 control-label">Description</label>
                 <div class="col-sm-8">
-                <textarea data-id="descriptionInput"
-                          name="descriptionInput"
-                          class="form-control"
-                          [(ngModel)]="description"
-                          rows="2"></textarea>
+                  <textarea data-id="descriptionInput"
+                            name="descriptionInput"
+                            class="form-control"
+                            [(ngModel)]="description"
+                            rows="2"></textarea>
                 </div>
               </div>
               <div class="form-group">
@@ -129,14 +141,6 @@
           </div>
         </div>
       </div>
-
-      <ipaas-connections-list-toolbar [(filter)]="filter"
-                                      [(sort)]="sort"
-                                      [showCreate]="false"></ipaas-connections-list-toolbar>
-
-      <ipaas-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort"
-                              [loading]="loading | async"
-                              (onSelected)="onSelected($event)"></ipaas-connections-list>
     </div>
     <!-- end Creating -->
 

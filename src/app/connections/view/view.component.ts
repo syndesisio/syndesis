@@ -221,10 +221,11 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     switch (this.mode) {
-      case 'create':
+      case 'create1':
         this.store.loadAll();
       break;
-      case 'edit':
+      default:
+        // nothing to do
       break;
     }
 
