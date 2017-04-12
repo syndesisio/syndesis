@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class T3stSupportITCase extends BaseITCase {
 
     @Test
-    public void createAndGetIntegration() {
+    public void createAndGetIntegration() throws InterruptedException {
 
         // Reset to fresh startup state..
         get("/api/v1/test-support/reset-db", null, tokenRule.validToken(), HttpStatus.NO_CONTENT);

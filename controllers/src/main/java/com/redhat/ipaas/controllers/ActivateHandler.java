@@ -70,7 +70,15 @@ public class ActivateHandler implements WorkflowHandler {
     }
 
     @Override
-    public Optional<Integration.Status> execute(Integration integration)  {
+    public Integration execute(Integration integration)  {
+        if( !integration.getToken().isPresent() ) {
+            return new Integration.Builder()
+                .createFrom(integration)
+                .statusMessage("No token present")
+                .lastUpdated(new Date())
+                .build();
+        }
+
         String token = integration.getToken().get();
         Tokens.setAuthenticationToken(token);
 
@@ -95,7 +103,7 @@ public class ActivateHandler implements WorkflowHandler {
             .build();
 
         ensureOpenShiftResources(updatedIntegration, secret);
-        return integration.getDesiredStatus();
+        return updatedIntegration;
     }
 
     private String ensureGitHubSetup(Integration integration, String secret) {

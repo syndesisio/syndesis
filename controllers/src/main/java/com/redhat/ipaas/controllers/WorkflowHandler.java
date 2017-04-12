@@ -27,6 +27,6 @@ public interface WorkflowHandler {
 
     Set<Integration.Status> getTriggerStatuses();
 
-    Optional<Integration.Status> execute(Integration model);
+    Integration execute(Integration model);
 
 }

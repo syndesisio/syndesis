@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -104,6 +105,9 @@ public class IntegrationController {
     }
 
     private void checkIntegration(Integration integration) {
+        if (integration == null) {
+            return;
+        }
         Optional<Integration.Status> desired = integration.getDesiredStatus();
         Optional<Integration.Status> current = integration.getCurrentStatus();
         if (desired.isPresent() && !current.equals(desired)) {
@@ -120,37 +124,53 @@ public class IntegrationController {
             if (stale(handler, integration)) {
                 return;
             }
-
             try {
 
-                Optional<Integration.Status>currentStatus = handler.execute(integration);
-                // handler.execute might block for while so refresh our copy of the integration
-                // data before we update the current status
-                integration = dataManager.fetch(Integration.class, integrationId);
-                integration = new Integration.Builder()
-                    .createFrom(integration)
-                    .currentStatus(currentStatus)
-                    .build();
-                dataManager.update(integration);
+                Integration update = handler.execute(integration);
+                if( update!=null ) {
+
+                    // handler.execute might block for while so refresh our copy of the integration
+                    // data before we update the current status
+
+                    // TODO: do this in a single TX.
+                    Integration current = dataManager.fetch(Integration.class, integrationId);
+                    dataManager.update(
+                        new Integration.Builder()
+                            .createFrom(current)
+                            .currentStatus(update.getCurrentStatus())
+                            .statusMessage(update.getStatusMessage())
+                            .lastUpdated(new Date())
+                            .build());
+                }
 
             } catch (Exception e) {
 
-                e.printStackTrace();
-                // TODO update the integration status
+                // Something went wrong.. lets note it.
+                Integration current = dataManager.fetch(Integration.class, integrationId);
+                dataManager.update(new Integration.Builder()
+                    .createFrom(current)
+                    .statusMessage("Error: "+e)
+                    .lastUpdated(new Date())
+                    .build());
 
-                // Retry in a while
+            } finally {
                 scheduler.schedule(() -> {
-                    enqueue(handler, integrationId);
+                    Integration i = dataManager.fetch(Integration.class, integrationId);
+                    checkIntegration(i);
                 }, retrySeconds, TimeUnit.SECONDS);
             }
+
         });
     }
 
     private boolean stale(WorkflowHandler workflow, Integration integration) {
-        return
-            integration == null
-            || workflow == null
-            || !workflow.getTriggerStatuses().contains(integration.getDesiredStatus().get());
+        if( integration==null || workflow==null )
+            return true;
+
+        Optional<Integration.Status> desiredStatus = integration.getDesiredStatus();
+        return !desiredStatus.isPresent()
+            || desiredStatus.equals(integration.getCurrentStatus())
+            || !workflow.getTriggerStatuses().contains(desiredStatus.get());
     }
 
 }

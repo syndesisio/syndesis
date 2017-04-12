@@ -28,7 +28,6 @@ import java.util.*;
 @Component
 public class DeleteHandler implements WorkflowHandler {
 
-    private final DataManager dataManager;
     private final OpenShiftService openShiftService;
 
     public static final Set<Integration.Status> DESIRED_STATE_TRIGGERS =
@@ -36,8 +35,7 @@ public class DeleteHandler implements WorkflowHandler {
             Integration.Status.Deleted
         )));
 
-    public DeleteHandler(DataManager dataManager, OpenShiftService openShiftService) {
-        this.dataManager = dataManager;
+    public DeleteHandler(OpenShiftService openShiftService) {
         this.openShiftService = openShiftService;
     }
 
@@ -46,7 +44,7 @@ public class DeleteHandler implements WorkflowHandler {
     }
 
     @Override
-    public Optional<Integration.Status> execute(Integration integration) {
+    public Integration execute(Integration integration) {
         String token = integration.getToken().get();
         Tokens.setAuthenticationToken(token);
 
@@ -62,19 +60,12 @@ public class DeleteHandler implements WorkflowHandler {
             : Integration.Status.Pending;
 
 
-        Integration existing = dataManager.fetch(Integration.class, integration.getId().orElseThrow(() -> new IllegalArgumentException("Integration should have an id")));
-        if (existing == null) {
-            return Optional.of(Integration.Status.Deleted);
-        }
-
-        Integration updatedIntegration = new Integration.Builder()
-            .createFrom(existing)
+        return new Integration.Builder()
+            .createFrom(integration)
             .currentStatus(currentStatus)
             .lastUpdated(new Date())
             .build();
 
-        dataManager.update(updatedIntegration);
-        return integration.getDesiredStatus();
     }
 
 }

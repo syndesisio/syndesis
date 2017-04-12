@@ -34,11 +34,9 @@ public class DeactivateHandler implements WorkflowHandler {
         )));
 
 
-    private final DataManager dataManager;
     private final OpenShiftService openShiftService;
 
-    public DeactivateHandler(DataManager dataManager, OpenShiftService openShiftService) {
-        this.dataManager = dataManager;
+    public DeactivateHandler(OpenShiftService openShiftService) {
         this.openShiftService = openShiftService;
     }
 
@@ -47,7 +45,7 @@ public class DeactivateHandler implements WorkflowHandler {
     }
 
     @Override
-    public Optional<Integration.Status> execute(Integration integration) {
+    public Integration execute(Integration integration) {
         String token = integration.getToken().get();
         Tokens.setAuthenticationToken(token);
 
@@ -64,14 +62,11 @@ public class DeactivateHandler implements WorkflowHandler {
 
         openShiftService.scale(deployment);
 
-        Integration updatedIntegration = new Integration.Builder()
+        return new Integration.Builder()
             .createFrom(integration)
             .currentStatus(currentStatus)
             .lastUpdated(new Date())
             .build();
-
-        dataManager.update(updatedIntegration);
-        return integration.getDesiredStatus();
     }
 
 }
