@@ -16,11 +16,9 @@
 package com.redhat.ipaas.controllers;
 
 import com.redhat.ipaas.core.Tokens;
-import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.openshift.OpenShiftDeployment;
 import com.redhat.ipaas.openshift.OpenShiftService;
-
 import org.springframework.stereotype.Component;
 
 import java.util.*;
