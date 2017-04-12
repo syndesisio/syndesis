@@ -53,7 +53,12 @@ public class IntegrationsITCase extends BaseITCase {
             tokenRule.validToken(), HttpStatus.NOT_FOUND);
 
         // Create the integration.
-        Integration integration = new Integration.Builder().id("2001").name("test").build();
+        Integration integration = new Integration.Builder()
+            .id("2001")
+            .name("test")
+            .desiredStatus(Integration.Status.Draft)
+            .currentStatus(Integration.Status.Draft)
+            .build();
         post("/api/v1/integrations", integration, Integration.class);
 
         // Validate we can now fetch it.
@@ -61,7 +66,12 @@ public class IntegrationsITCase extends BaseITCase {
         assertThat(result.getBody().getName()).as("name").isEqualTo("test");
 
         // Create another integration.
-        integration = new Integration.Builder().id("2002").name("test2").build();
+        integration = new Integration.Builder()
+            .id("2002")
+            .name("test2")
+            .desiredStatus(Integration.Status.Draft)
+            .currentStatus(Integration.Status.Draft)
+            .build();
         post("/api/v1/integrations", integration, Integration.class);
 
         // Check the we can list the integrations.

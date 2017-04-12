@@ -77,7 +77,12 @@ public class EventsITCase extends BaseITCase {
         invocations.clear();
         countDownLatch = resetRecorderLatch(handler, 1);
 
-        Integration integration = new Integration.Builder().id("1001").name("test").build();
+        Integration integration = new Integration.Builder()
+            .id("1001")
+            .name("test")
+            .desiredStatus(Integration.Status.Draft)
+            .currentStatus(Integration.Status.Draft)
+            .build();
         post("/api/v1/integrations", integration, Integration.class);
 
         assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
@@ -157,7 +162,12 @@ public class EventsITCase extends BaseITCase {
         invocations.clear();
         countDownLatch = resetRecorderLatch(listener, 1);
 
-        Integration integration = new Integration.Builder().id("1002").name("test").build();
+        Integration integration = new Integration.Builder()
+            .id("1002")
+            .name("test")
+            .desiredStatus(Integration.Status.Draft)
+            .currentStatus(Integration.Status.Draft)
+            .build();
         post("/api/v1/integrations", integration, Integration.class);
 
         assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
