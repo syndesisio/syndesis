@@ -38,6 +38,8 @@
     <module>day-trade-get-connector</module>
     <module>day-trade-place-connector</module>
     <module>trade-insight-buy-connector</module>
+    <module>trade-insight-sell-connector</module>
+    <module>trade-insight-top-connector</module>
   </modules>
 
 </project>
