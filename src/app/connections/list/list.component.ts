@@ -14,7 +14,6 @@ const category = getCategory('Connections');
 })
 export class ConnectionsListComponent implements OnInit {
 
-  truncateLimit = 80;
   truncateTrail = '…';
   selectedId = undefined;
 

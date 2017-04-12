@@ -108,14 +108,15 @@
             <!-- Card Name -->
 
             <h2 class="card-pf-title text-center"
-                (click)="onSelect(connection)">
-              {{ connection.name }}
+                (click)="onSelect(connection)"
+                title="{{ connection.name }}">
+              {{ connection.name | truncate : '15' : truncateTrail }}
             </h2>
 
             <!-- Card Description / Item Overview -->
 
             <p class="card-pf-info text-center">
-              {{ connection.description | truncate : truncateLimit : truncateTrail }}
+              {{ connection.description | truncate : '90' : truncateTrail }}
             </p>
           </div>
         </div>
