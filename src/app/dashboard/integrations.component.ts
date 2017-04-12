@@ -208,7 +208,8 @@ export class DashboardIntegrationsComponent implements OnInit {
 
 
   public chartClicked(e: any): void {
-    log.debugc(() => 'Click event: ' + JSON.stringify(e));
+    //log.debugc(() => 'Click event: ' + JSON.stringify(e));
+    log.debugc(() => 'Click event: ' + e);
   }
 
   public chartHovered(e: any): void {
