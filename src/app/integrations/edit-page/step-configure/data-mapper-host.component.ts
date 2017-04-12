@@ -135,6 +135,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
         position: this.position,
         properties: properties,
         onSave: () => {
+          this.mappingService.handleMappingSaveSuccess(saveHandler);
           log.debugc(() => 'Saved mapping file: ' + json, category);
         },
       });
