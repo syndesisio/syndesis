@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ModalDirective } from 'ng2-bootstrap/modal';
-import { ToasterService } from 'angular2-toaster';
 
 import { log, getCategory } from '../logging';
 
@@ -17,72 +15,12 @@ const category = getCategory('Dashboard');
 export class DashboardConnectionsComponent implements OnInit {
 
   selectedId = undefined;
-  private toasterService: ToasterService;
-  private toast;
-
-  @ViewChild('childModal') public childModal: ModalDirective;
 
   @Input() connections: Connections;
   @Input() loading: boolean;
   @Output() selectedConnection: EventEmitter<Connection> = new EventEmitter();
 
-  truncateLimit = 80;
   truncateTrail = '…';
-
-  constructor(toasterService: ToasterService) {
-    this.toasterService = toasterService;
-  }
-
-
-  //-----  Delete ------------------->>
-
-  // Actual delete action once the user confirms
-  deleteAction(connection: Connections) {
-    log.debugc(() => 'Selected connection for delete: ' + JSON.stringify(connection['id']));
-
-    this.hideModal();
-
-    //this.store.deleteEntity(connection['id']);
-
-    this.toast = {
-      type: 'success',
-      title: 'Delete Successful',
-      body: 'Connection successfully deleted.',
-    };
-
-    setTimeout(this.popToast(this.toast), 1000);
-  }
-
-  // Open modal to confirm delete
-  requestDelete(connection: Connections) {
-    log.debugc(() => 'Selected connection for delete: ' + JSON.stringify(connection['id']));
-    this.showModal();
-  }
-
-
-  //-----  Duplicate ------------------->>
-
-  duplicate(connection: Connections) {
-    log.debugc(() => 'Request to duplicate the following connection: ' + JSON.stringify(connection['id']));
-  }
-
-
-  //-----  Modals ------------------->>
-
-  public showModal(): void {
-    this.childModal.show();
-  }
-
-  public hideModal(): void {
-    this.childModal.hide();
-  }
-
-  //-----  Toast ------------------->>
-
-  // Show toast notification
-  popToast(toast) {
-    this.toasterService.pop(toast);
-  }
 
 
   //-----  Selecting a Connection ------------------->>
