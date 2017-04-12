@@ -79,9 +79,9 @@
 
     <!-- == Test ==========================================================================  -->
     <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <version>1.4.193</version>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <version>3.16.1</version>
       <scope>test</scope>
     </dependency>
 
