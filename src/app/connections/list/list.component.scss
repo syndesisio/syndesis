@@ -13,14 +13,10 @@
         margin: 0 auto;
         text-align: center;
         width: 106px;
-
-        //&:before {}
       }
 
       .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
         cursor: pointer;
-        height: 150px !important;
-        max-height: 150px !important;
 
         .dropdown-toggle {
           padding: 4px 10px;
@@ -33,8 +29,7 @@
       }
 
       .card-pf-body {
-        //height: 100% !important;
-        height: 260px;
+        height: 240px;
       }
 
       .card-pf-title {
