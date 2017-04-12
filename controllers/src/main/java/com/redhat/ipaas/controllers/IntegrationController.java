@@ -22,6 +22,7 @@ import com.redhat.ipaas.model.ChangeEvent;
 import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.integration.Integration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -41,6 +42,7 @@ import java.util.concurrent.TimeUnit;
  * their current status matches their desired status.
  */
 @Service
+@ConditionalOnProperty(value = "controllers.integration.enabled")
 public class IntegrationController {
 
     private final DataManager dataManager;
