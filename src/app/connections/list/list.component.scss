@@ -3,6 +3,20 @@
     .card {
       width: 25%;
 
+      //----- Same as .card-pf-icon-circle except without the blue circle ----------------->>
+
+      .card-pf-view .card-pf-top-element .card-pf-icon-large {
+        display: block;
+        font-size: 46px;
+        height: 106px;
+        line-height: 102px;
+        margin: 0 auto;
+        text-align: center;
+        width: 106px;
+
+        //&:before {}
+      }
+
       .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
         cursor: pointer;
         height: 150px !important;
@@ -20,6 +34,7 @@
 
       .card-pf-body {
         //height: 100% !important;
+        height: 260px;
       }
 
       .card-pf-title {
