@@ -57,6 +57,14 @@ class CommonSteps {
     log.info(`${alias} is on current navlink: ${currentLink}`);
     expect(currentLink.active, `${pageTitle} link must be active`).to.be.true;
   }
+    
+  @then(/^(\w+)? ?is presented with the "([^"]*)" link$/)
+  public async verifyLink(alias: string, linkTitle: string): P<any> {
+    const currentLink = await this.world.app.getLink(linkTitle);
+
+    expect(currentLink.isPresent(), `There must be present a link ${linkTitle}`)
+      .to.eventually.be.true;
+  }  
 
   @when(/clicks? on the "([^"]*)" button.*$/)
   public clickOnButton(buttonTitle: string, callback: CallbackStepDefinition): void {
@@ -66,6 +74,14 @@ class CommonSteps {
       .catch((e) => callback(e));
   }
 
+  @when(/clicks? on the "([^"]*)" link.*$/)
+  public clickOnLink(linkTitle: string, callback: CallbackStepDefinition): void {
+    this.world.app.clickLink(linkTitle)
+      .then(() => callback())
+      // it may fail but we still want to let tests continue
+      .catch((e) => callback(e));
+  }
+  
   @then(/^she is presented with the "([^"]*)" button.*$/)
   public expectButtonPresent(buttonTitle: string, callback: CallbackStepDefinition): void {
 

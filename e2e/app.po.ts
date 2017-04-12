@@ -81,12 +81,21 @@ export class AppPage {
     log.info(`searching for button ${buttonTitle}`);
     return element(by.buttonText(buttonTitle));
   }
-
+  
   clickButton(buttonTitle: string): P<any> {
     log.info(`clicking button ${buttonTitle}`);
     return this.getButton(buttonTitle).click();
   }
 
+  getLink(linkTitle: string): ElementFinder {
+    log.info(`searching for link ${linkTitle}`);
+    return element(by.linkText(linkTitle));
+  }
+
+  clickLink(linkTitle: string): P<any> {
+    log.info(`clicking link ${linkTitle}`);
+    return this.getLink(linkTitle).click();
+  }
 
   async link(title: String): P<NavLink> {
     const links = await this.findNavLinks();
