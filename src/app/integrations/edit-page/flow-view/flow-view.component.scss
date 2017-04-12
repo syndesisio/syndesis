@@ -100,15 +100,27 @@ $flow-view-container-min-height: 0;
     }
   }
 
-  // Steps on left-hand side
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // LEFT-HAND NAV BAR W/ STEPS
+  ////////////////////////////////////////////////////////////////////////////////
+
   .step-insert {
     position: relative;
     top: -47px;
     height: 50px;
 
+    a {
+      text-decoration: none;
+
+      &:hover {
+      }
+    }
+
     .popover-body {
       a {
         cursor: pointer;
+        padding: 10px;
       }
     }
 

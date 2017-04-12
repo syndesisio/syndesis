@@ -3,10 +3,20 @@
     .card {
       width: 25%;
 
+      //----- Same as .card-pf-icon-circle except without the blue circle ----------------->>
+
+      .card-pf-view .card-pf-top-element .card-pf-icon-large {
+        display: block;
+        font-size: 46px;
+        height: 106px;
+        line-height: 102px;
+        margin: 0 auto;
+        text-align: center;
+        width: 106px;
+      }
+
       .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
-        cursor: default;
-        height: 150px !important;
-        max-height: 150px !important;
+        cursor: pointer;
 
         .dropdown-toggle {
           padding: 4px 10px;
@@ -19,7 +29,7 @@
       }
 
       .card-pf-body {
-        //height: 100% !important;
+        height: 240px;
       }
 
       .card-pf-title {
