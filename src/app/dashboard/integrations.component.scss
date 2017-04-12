@@ -121,7 +121,8 @@
             }
 
             &.inactive {
-              background: $pf-black-200;
+              //background: $pf-black-200;
+              background: $pf-custom-gray;
             }
           }
 

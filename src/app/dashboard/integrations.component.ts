@@ -61,7 +61,9 @@ export class DashboardIntegrationsComponent implements OnInit {
       '#3f9c35', // PatternFly Green 400, Active
       '#ec7a08', // PatternFly Orange 400, Deleted
       '#0088ce', // PatternFly Blue 400, Draft
-      '#ededed', // PatternFly Black 200, Inactive
+      '#E1E1E1',
+      //'#ededed', // PatternFly Black 200, Inactive
+      //'#1E1E1E',
     ],
   }];
   public doughnutChartOptions: any = {
