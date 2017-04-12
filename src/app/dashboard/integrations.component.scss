@@ -41,11 +41,21 @@
     padding-top: 0;
 
     .page-header {
-      padding-bottom: 0;
+      border-bottom: none;
+      padding: 10px 0;
       margin: 0;
 
       .actions {
+        justify-content: flex-end;
         margin: 0;
+      }
+
+      [class^="col-"], [class*=" col-"] {
+        padding: 0;
+
+        h1 {
+          margin: 0;
+        }
       }
     }
   }
