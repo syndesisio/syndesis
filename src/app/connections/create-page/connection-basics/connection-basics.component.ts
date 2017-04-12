@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { CurrentConnectionService } from '../current-connection';
 import { Connection } from '../../../model';
@@ -10,6 +11,8 @@ import { Connection } from '../../../model';
 export class ConnectionsConnectionBasicsComponent implements OnInit {
   constructor(
     private current: CurrentConnectionService,
+    public route: ActivatedRoute,
+    public router: Router,
   ) { }
 
   get connection(): Connection {
@@ -18,6 +21,9 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
 
   set connection(connection: Connection) {
     this.current.connection = connection;
+    if (this.current.connection.connector) {
+      this.router.navigate(['..', 'configure-fields'], { relativeTo: this.route });
+    }
   }
 
   ngOnInit() { }
