@@ -62,6 +62,9 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
   ngOnInit() {
     this.routeSubscription = this.route.params.pluck<Params, string>('position')
       .map((position: string) => {
+        if (this.position !== undefined) {
+          return;
+        }
         this.position = Number.parseInt(position);
         const step = <Step> this.currentFlow.getStep(this.position);
         if (!step) {
@@ -79,13 +82,9 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
               this.formConfig[key]['value'] = step.configuredProperties[key];
             }
           }
-          if (!Object.keys(this.formConfig).length) {
-            this.continue({});
-            return;
-          }
-          log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
+          //log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
           this.formModel = this.formFactory.createFormModel(this.formConfig);
-          log.debugc(() => 'Form model: ' + JSON.stringify(this.formModel, undefined, 2), category);
+          //log.debugc(() => 'Form model: ' + JSON.stringify(this.formModel, undefined, 2), category);
           this.formGroup = this.formService.createFormGroup(this.formModel);
           setTimeout(() => {
             this.changeDetectorRef.detectChanges();
