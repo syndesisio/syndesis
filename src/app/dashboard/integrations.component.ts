@@ -27,7 +27,6 @@ export class DashboardIntegrationsComponent implements OnInit {
   @Input() integrations: Integrations;
   @Input() loading: boolean;
   selectedId = undefined;
-  truncateLimit = 80;
   truncateTrail = '…';
 
   public doughnutChartLabels: string[] = [
@@ -56,6 +55,7 @@ export class DashboardIntegrationsComponent implements OnInit {
   }
 
   public doughnutChartType = 'doughnut';
+  public doughnutChartLegend = false;
   public doughnutChartColors = [{
     backgroundColor: [
       '#3f9c35', // PatternFly Green 400, Active
@@ -67,7 +67,7 @@ export class DashboardIntegrationsComponent implements OnInit {
   }];
   public doughnutChartOptions: any = {
     cutoutPercentage: 75,
-    legend: {position: 'bottom', fullWidth: false},
+    //legend: {position: 'bottom', fullWidth: false},
   };
 
   private toasterService: ToasterService;
