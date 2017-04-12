@@ -32,17 +32,32 @@
     padding: 2px 20px !important;
   }
 
+  .page-header {
+    border-bottom: none;
+    padding: 10px 0;
+    margin: 0;
+
+    .actions {
+      justify-content: flex-end;
+      margin: 0;
+    }
+
+    [class^="col-"], [class*=" col-"] {
+      padding: 0;
+
+      h1 {
+        margin: 0;
+      }
+    }
+  }
+
+
   ////////////////////////////////////////////////////////////////////////////////
   // FIRST ROW
   ////////////////////////////////////////////////////////////////////////////////
 
   .first-row {
     padding-top: 0;
-
-    .page-header {
-      padding-bottom: 9px;
-      margin: 0;
-    }
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +121,8 @@
             }
 
             &.inactive {
-              background: $pf-black-200;
+              //background: $pf-black-200;
+              background: $pf-custom-gray;
             }
           }
 
