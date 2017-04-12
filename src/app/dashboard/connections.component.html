@@ -5,13 +5,13 @@
       <!-- Each Connection's Card Container -->
 
       <div class="col-xs-12 col-sm-3 col-md-2 card"
-           *ngFor="let connection of connections; let i = index"
-           (click)="onSelect(connection)">
+           *ngFor="let connection of connections; let i = index">
 
         <!-- Connection Card -->
 
         <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select"
-             *ngIf="i<8">
+             *ngIf="i<8"
+             (click)="onSelect(connection)">
           <div class="card-pf-body">
 
             <!-- Card Icon -->
@@ -23,7 +23,6 @@
             <!-- Card Name -->
 
             <h2 class="card-pf-title text-center"
-                (click)="onSelect(connection)"
                 title="{{ connection.name }}">
               {{ connection.name | truncate : '20' : truncateTrail }}
             </h2>

@@ -24,7 +24,7 @@ export class DashboardConnectionsComponent implements OnInit {
 
   @Input() connections: Connections;
   @Input() loading: boolean;
-  @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
+  @Output() selectedConnection: EventEmitter<Connection> = new EventEmitter();
 
   truncateLimit = 80;
   truncateTrail = '…';
@@ -91,7 +91,7 @@ export class DashboardConnectionsComponent implements OnInit {
   onSelect(connection: Connection) {
     log.debugc(() => 'Selected connection (list): ' + connection.name, category);
     this.selectedId = connection.id;
-    this.onSelected.emit(connection);
+    this.selectedConnection.emit(connection);
   }
 
 

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
@@ -75,6 +75,7 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   constructor(private connectionStore: ConnectionStore,
               private integrationStore: IntegrationStore,
+              public route: ActivatedRoute,
               private router: Router,
               toasterService: ToasterService) {
     this.connections = this.connectionStore.list;
@@ -245,10 +246,14 @@ export class DashboardIntegrationsComponent implements OnInit {
     }
   }
 
-  //-----  Selecting an Integration ------------------->>
+  //-----  Selecting a Connection or Integration ------------------->>
 
-  onSelected(connection: Connection) {
-    this.router.navigate(['connections', connection.id]);
+  selectedConnection(connection: Connection) {
+    this.router.navigate(['/connections', connection.id]);
+  }
+
+  selectedIntegration(integration: Integration) {
+    this.router.navigate(['/integrations/edit', integration.id, 'save-or-add-step'], { relativeTo: this.route });
   }
 
 
