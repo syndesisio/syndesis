@@ -33,7 +33,7 @@ public class EntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotF
 	@Override
 	public Response toResponse(EntityNotFoundException e) {
 		LOG.error(e.getMessage(),e);
-		RestError error = new RestError("Entity Not Found Exception " + e.getMessage(), "Please check your request data", 400);
+		RestError error = new RestError("Entity Not Found Exception " + e.getMessage(), "Please check your request data", 404);
 		return Response.status(error.errorCode).entity(error).build();
 	}
 
