@@ -22,7 +22,9 @@ import javax.ws.rs.ext.Provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 @Provider
 public class EntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotFoundException> {
 
@@ -31,7 +33,7 @@ public class EntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotF
 	@Override
 	public Response toResponse(EntityNotFoundException e) {
 		LOG.error(e.getMessage(),e);
-		RestError error = new RestError("Entity Not Found Exception " + e.getMessage(), "Please check your request data", 400);
+		RestError error = new RestError("Entity Not Found Exception " + e.getMessage(), "Please check your request data", 404);
 		return Response.status(error.errorCode).entity(error).build();
 	}
 

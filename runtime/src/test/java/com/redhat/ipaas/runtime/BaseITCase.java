@@ -120,7 +120,11 @@ public abstract class BaseITCase {
     }
 
     protected <T> ResponseEntity<T> get(String url, Class<T> responseClass) {
-        return get(url, responseClass, tokenRule.validToken(), HttpStatus.OK);
+        return get(url, responseClass, HttpStatus.OK);
+    }
+
+    protected <T> ResponseEntity<T> get(String url, Class<T> responseClass, HttpStatus expectedStatus) {
+        return get(url, responseClass, tokenRule.validToken(), expectedStatus);
     }
 
     protected <T> ResponseEntity<T> get(String url, Class<T> responseClass, String token) {

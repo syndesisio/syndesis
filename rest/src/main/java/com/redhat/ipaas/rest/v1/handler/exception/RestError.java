@@ -22,11 +22,9 @@ public class RestError {
 	Integer errorCode;
 
 	public RestError() {
-		super();
 	}
 
 	public RestError(String developerMsg, String userMsg, Integer errorCode) {
-		super();
 		this.developerMsg = developerMsg;
 		this.userMsg = userMsg;
 		this.errorCode = errorCode;

@@ -15,6 +15,7 @@
  */
 package com.redhat.ipaas.rest.v1.operations;
 
+import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -32,7 +33,7 @@ public interface Getter<T extends WithId> extends Resource<T>, WithDataManager {
         Class<T> modelClass = (Class<T>) resourceKind().getModelClass();
         T result = getDataManager().fetch(modelClass, id);
         if( result == null ) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new EntityNotFoundException();
         }
         return result;
     }

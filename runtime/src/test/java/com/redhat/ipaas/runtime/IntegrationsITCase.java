@@ -17,6 +17,7 @@ package com.redhat.ipaas.runtime;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.redhat.ipaas.model.integration.Integration;
+import com.redhat.ipaas.rest.v1.handler.exception.RestError;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -35,21 +36,27 @@ public class IntegrationsITCase extends BaseITCase {
 
     @Test
     public void integrationsListWithoutToken() {
-        ResponseEntity<JsonNode> response = restTemplate().getForEntity("/api/v1/integrations", JsonNode.class);
-        assertThat(response.getStatusCode()).as("list status code").isEqualTo(HttpStatus.UNAUTHORIZED);
+        get("/api/v1/integrations", JsonNode.class, null, HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     public void integrationsListWithExpiredToken() {
-        ResponseEntity<JsonNode> response = get("/api/v1/integrations", JsonNode.class, tokenRule.expiredToken(), null);
-        assertThat(response.getStatusCode()).as("status code").isEqualTo(HttpStatus.UNAUTHORIZED);
+        get("/api/v1/integrations", JsonNode.class, tokenRule.expiredToken(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void invalidSortField() {
+        ResponseEntity<RestError> response = get("/api/v1/integrations?sort=invalid_field", RestError.class, HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getErrorCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.getBody().getUserMsg()).isEqualTo("Please check your sorting arguments");
+        assertThat(response.getBody().getDeveloperMsg()).startsWith("Illegal Argument on Call");
     }
 
     @Test
     public void createAndGetIntegration() {
 
         // Verify that the integration does not exist.
-        get("/api/v1/integrations/2001", Integration.class,
+        get("/api/v1/integrations/2001", RestError.class,
             tokenRule.validToken(), HttpStatus.NOT_FOUND);
 
         // Create the integration.
@@ -84,7 +91,7 @@ public class IntegrationsITCase extends BaseITCase {
         delete("/api/v1/integrations/2001");
 
         // We should not be able to fetch it again..
-        get("/api/v1/integrations/2001", Integration.class,
+        get("/api/v1/integrations/2001", RestError.class,
             tokenRule.validToken(), HttpStatus.NOT_FOUND);
 
 
