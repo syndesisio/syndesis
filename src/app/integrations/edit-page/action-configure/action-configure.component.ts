@@ -46,7 +46,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
 
   continue(data: any = undefined) {
     if (!data) {
-      data = this.formGroup.value;
+      data = this.formGroup.value || {};
     }
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
@@ -81,6 +81,10 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
               }
               this.formConfig[key]['value'] = step.configuredProperties[key];
             }
+          }
+          if (!Object.keys(this.formConfig).length) {
+            this.continue({});
+            return;
           }
           //log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
           this.formModel = this.formFactory.createFormModel(this.formConfig);
