@@ -24,10 +24,10 @@ endpoints:
 
 spring:
   datasource:
-    url: 'jdbc:h2:mem:'
+    url: 'jdbc:sqlite:target/sqlite.db'
     username: sa
     password: sa
-    driver-class-name: org.h2.Driver
+    driver-class-name: org.sqlite.JDBC
 
 github:
   enabled: false

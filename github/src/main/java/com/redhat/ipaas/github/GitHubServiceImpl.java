@@ -28,14 +28,12 @@ import org.eclipse.egit.github.core.service.UserService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.RequestScope;
 
 /**
  * @author roland
  * @since 08/03/2017
  */
 @Service
-@RequestScope
 @ConditionalOnProperty(value = "github.enabled", matchIfMissing = true, havingValue = "true")
 public class GitHubServiceImpl implements GitHubService {
 
@@ -50,7 +48,7 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     @Override
-    public String createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
+    public String createOrUpdateProjectFiles(String repoName, String token, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
         Repository repository = getRepository(repoName);
         if (repository == null) {
             // New Repo
@@ -64,19 +62,6 @@ public class GitHubServiceImpl implements GitHubService {
             createOrUpdateFiles(repository, commitMessage, fileContents);
         }
         return repository.getCloneUrl();
-    }
-
-    @Override
-    public String sanitizeRepoName(String name) {
-        String ret = name.length() > 100 ? name.substring(0, 100) : name;
-        return ret.replace(" ","-")
-                  .toLowerCase()
-                  .chars()
-                  .filter(this::isValidRepoChar)
-                  .collect(StringBuilder::new,
-                           StringBuilder::appendCodePoint,
-                           StringBuilder::append)
-                  .toString();
     }
 
     // =====================================================================================
@@ -148,11 +133,5 @@ public class GitHubServiceImpl implements GitHubService {
             }
             return null;
         }
-    }
-
-    private boolean isValidRepoChar(int c) {
-        return (c >= 'a' && c <= 'z') ||
-               (c >= '0' && c <= '9') ||
-               (c == '-');
     }
 }

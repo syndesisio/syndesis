@@ -15,7 +15,10 @@
  */
 package com.redhat.ipaas.controllers;
 
+import com.redhat.ipaas.core.Tokens;
 import com.redhat.ipaas.model.integration.Integration;
+import com.redhat.ipaas.openshift.OpenShiftDeployment;
+import com.redhat.ipaas.openshift.OpenShiftService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -23,18 +26,44 @@ import java.util.*;
 @Component
 public class DeleteHandler implements WorkflowHandler {
 
+    private final OpenShiftService openShiftService;
+
     public static final Set<Integration.Status> DESIRED_STATE_TRIGGERS =
         Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             Integration.Status.Deleted
         )));
+
+    public DeleteHandler(OpenShiftService openShiftService) {
+        this.openShiftService = openShiftService;
+    }
 
     public Set<Integration.Status> getTriggerStatuses() {
         return DESIRED_STATE_TRIGGERS;
     }
 
     @Override
-    public Optional<Integration.Status> execute(Integration model) throws Exception {
-        return model.getDesiredStatus();
+    public Integration execute(Integration integration) {
+        String token = integration.getToken().get();
+        Tokens.setAuthenticationToken(token);
+
+        OpenShiftDeployment deployment = OpenShiftDeployment
+            .builder()
+            .name(integration.getName())
+            .token(token)
+            .build();
+
+        Integration.Status currentStatus = !openShiftService.exists(deployment)
+            || openShiftService.delete(deployment)
+            ? Integration.Status.Deleted
+            : Integration.Status.Pending;
+
+
+        return new Integration.Builder()
+            .createFrom(integration)
+            .currentStatus(currentStatus)
+            .lastUpdated(new Date())
+            .build();
+
     }
 
 }

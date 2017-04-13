@@ -17,6 +17,37 @@ package com.redhat.ipaas.openshift;
 
 public interface OpenShiftService {
 
-    void createOpenShiftResources(CreateResourcesRequest request);
+    /**
+     * Creates the deployment (Deployment and Build configurations, Image Streams etc)
+     * @param d A description of the deployment to create.
+     */
+    void create(OpenShiftDeployment d);
+
+    /**
+     * Deletes the deployment (Deployment and Build configurations, Image Streams etc)
+     * @param d A description of the deployment to delete.
+     * @return          Returns True if all resources were deleted, False otherwise.
+     */
+    boolean delete(OpenShiftDeployment d);
+
+    /**
+     * Checks if the deployment (Deployment and Build configurations, Image Streams etc) exists
+     * @param d         A description of the deployment to check.
+     * @return          Returns True if all resources were deleted, False otherwise.
+     */
+    boolean exists(OpenShiftDeployment d);
+
+    /**
+     * Scale the deployment (Deployment and Build configurations, Image Streams etc)
+     * @param d A description of the deployment to scale.
+     */
+    void scale(OpenShiftDeployment d);
+
+    /**
+     * Checks if the deployment (Deployment and Build configurations, Image Streams etc) is scaled.
+     * @param d A description of the deployment to scale.
+     * @param d
+     */
+    boolean isScaled(OpenShiftDeployment d);
 
 }

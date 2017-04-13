@@ -33,6 +33,10 @@
 
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
     <!-- ===================================================================================== -->
+    <dependency>
+      <groupId>com.redhat.ipaas</groupId>
+      <artifactId>core</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework</groupId>
@@ -48,7 +52,7 @@
       <groupId>org.eclipse.mylyn.github</groupId>
       <artifactId>org.eclipse.egit.github.core</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.keycloak</groupId>
       <artifactId>keycloak-spring-security-adapter</artifactId>

@@ -26,19 +26,12 @@ public interface GitHubService {
      * still persists.
      *
      * @param repoName repo to either create if not existent or to update
+     * @param token the token to use to authenticate to github.
      * @param commitMessage the message to use for committing files.
      * @param fileContents map of files to add or update. Key are pathes within the repo, values is the content to write
      * @param webHookUrl an optional Webhook URL. If non-null a webhook is created with this url as callback URL
      * @return the repositories clone URL
      * @throws IOException if interaction with GitHub fails.
      */
-    String createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException;
-
-    /**
-     * Convert a given name to GitHub acceptable repo name.
-     *
-     * @param name to sanitize, must not be null
-     * @return sanitized name.
-     */
-    String sanitizeRepoName(String name);
+    String createOrUpdateProjectFiles(String repoName, String token, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException;
 }

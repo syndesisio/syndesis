@@ -34,19 +34,16 @@ import org.springframework.context.annotation.*;
 public class GitHubConfiguration {
 
     @Bean
-    @Scope("request")
     public RepositoryService repositoryService(GitHubProperties props) {
         return new RepositoryService(new KeycloakTokenAwareGitHubClient(props.getService()));
     }
 
     @Bean
-    @Scope("request")
     public ExtendedContentsService contentsService(GitHubProperties props) {
         return new ExtendedContentsService(new KeycloakTokenAwareGitHubClient(props.getService()));
     }
 
     @Bean
-    @Scope("request")
     public UserService userService(GitHubProperties props) {
         return new UserService(new KeycloakTokenAwareGitHubClient(props.getService()));
     }

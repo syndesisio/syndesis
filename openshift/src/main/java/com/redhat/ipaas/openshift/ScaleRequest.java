@@ -18,14 +18,9 @@ package com.redhat.ipaas.openshift;
 
 import org.immutables.value.Value;
 
-import java.util.Map;
-
 @Value.Immutable
-public interface CreateResourcesRequest {
-
+public interface ScaleRequest {
     String getName();
-    String getGitRepository();
-    String getWebhookSecret();
-    Map<String, String> getSecretData();
-
+    String getToken();
+    int getReplicas();
 }

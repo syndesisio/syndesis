@@ -15,6 +15,8 @@
  */
 package com.redhat.ipaas.github.backend;
 
+import com.redhat.ipaas.core.Tokens;
+
 import java.net.HttpURLConnection;
 
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -45,20 +47,7 @@ public class KeycloakTokenAwareGitHubClient extends GitHubClient {
     @Override
     protected HttpURLConnection configureRequest(final HttpURLConnection request) {
         super.configureRequest(request);
-        request.setRequestProperty(HEADER_AUTHORIZATION, "Bearer " + getAuthenticationTokenString());
+        request.setRequestProperty(HEADER_AUTHORIZATION, "Bearer " + Tokens.getAuthenticationToken());
 		return request;
 	}
-
-    private String getAuthenticationTokenString() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new IllegalStateException("Cannot set authorization header because there is no authenticated principal");
-        } else if (!KeycloakAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
-            throw new IllegalStateException(String.format("Cannot set authorization header because Authentication is of type %s but %s is required",
-                                                          new Object[]{authentication.getClass(), KeycloakAuthenticationToken.class}));
-        } else {
-            KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) authentication;
-            return token.getAccount().getKeycloakSecurityContext().getTokenString();
-        }
-    }
 }

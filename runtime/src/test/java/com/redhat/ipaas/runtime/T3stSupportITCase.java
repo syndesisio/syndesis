@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class T3stSupportITCase extends BaseITCase {
 
     @Test
-    public void createAndGetIntegration() {
+    public void createAndGetIntegration() throws InterruptedException {
 
         // Reset to fresh startup state..
         get("/api/v1/test-support/reset-db", null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
@@ -46,7 +46,12 @@ public class T3stSupportITCase extends BaseITCase {
         post("/api/v1/test-support/restore-db", NO_DATA, null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // Lets add an integration...
-        Integration integration = new Integration.Builder().id("2001").name("test").build();
+        Integration integration = new Integration.Builder()
+            .id("2001")
+            .name("test")
+            .desiredStatus(Integration.Status.Draft)
+            .currentStatus(Integration.Status.Draft)
+            .build();
         post("/api/v1/integrations", integration, Integration.class);
 
         // Snapshot should only contain the integration entity..

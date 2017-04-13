@@ -33,22 +33,8 @@ import java.util.Optional;
 @JsonDeserialize(builder = Integration.Builder.class)
 public interface Integration extends WithId<Integration>, WithName, Serializable {
 
-    public static enum Status { Draft, Activated, Deactivated, Deleted};
+    enum Status { Draft, Pending, Activated, Deactivated, Deleted};
 
-    /**
-     *Required Labels
-     */
-    String LABEL_NAME = "ipaas.redhat.com/integration-modelName";
-
-    /**
-     * Optional Labels
-     */
-
-    //The integration id
-    String LABEL_ID = "ipaas.redhat.com/integration-id";
-
-    //The integration template id
-    String LABEL_TEMPLATE_ID = "ipaas.redhat.com/template-id";
 
     @Override
     default Kind getKind() {
@@ -62,6 +48,8 @@ public interface Integration extends WithId<Integration>, WithName, Serializable
     Optional<IntegrationTemplate> getIntegrationTemplate();
 
     Optional<String> getUserId();
+
+    Optional<String> getToken();
 
     List<User> getUsers();
 
@@ -78,9 +66,9 @@ public interface Integration extends WithId<Integration>, WithName, Serializable
     Optional<Status> getDesiredStatus();
 
     Optional<Status> getCurrentStatus();
-    
+
     Optional<String> getStatusMessage();
-    
+
     Optional<Date> getLastUpdated();
 
     Optional<BigInteger> getTimesUsed();

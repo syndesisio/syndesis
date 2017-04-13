@@ -15,13 +15,16 @@
  */
 package com.redhat.ipaas.openshift;
 
+import com.redhat.ipaas.core.Names;
+import com.redhat.ipaas.core.Tokens;
+
 import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
+import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import io.fabric8.openshift.client.OpenShiftClient;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -35,33 +38,88 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public void createOpenShiftResources(CreateResourcesRequest request) {
-        String sanitizedName = sanitizeName(request.getName());
+    public void create(OpenShiftDeployment d) {
+        String sanitizedName = Names.sanitize(d.getName());
 
-        String token = getAuthenticationTokenString();
+        String token = d.getToken().orElse(Tokens.getAuthenticationToken());
         RequestConfig requestConfig = new RequestConfigBuilder().withOauthToken(token).build();
         openShiftClient.withRequestConfig(requestConfig).<Void>call(c -> {
             DockerImage img = new DockerImage(builderImage);
-            ensureImageStreams(sanitizedName, img);
-            ensureDeploymentConfig(sanitizedName);
-            ensureSecret(sanitizedName, request.getSecretData());
-            ensureBuildConfig(sanitizedName, request.getGitRepository(), img, request.getWebhookSecret());
+            ensureImageStreams(openShiftClient, sanitizedName, img);
+            ensureDeploymentConfig(openShiftClient, sanitizedName);
+            ensureSecret(openShiftClient, sanitizedName, d.getSecretData().orElseGet(HashMap::new));
+            ensureBuildConfig(openShiftClient, sanitizedName,
+                d.getGitRepository().orElseThrow(()-> new IllegalStateException("Git repository is required")),
+                img,
+                d.getWebhookSecret().orElseThrow(() -> new IllegalStateException("Web hook secret is required")));
             return null;
         });
     }
 
-    private void ensureImageStreams(String projectName, DockerImage img) {
-        openShiftClient.imageStreams().withName(img.getShortName()).createOrReplaceWithNew()
+    @Override
+    public boolean delete(OpenShiftDeployment d) {
+        String sanitizedName = Names.sanitize(d.getName());
+
+        String token = d.getToken().orElse(Tokens.getAuthenticationToken());
+        RequestConfig requestConfig = new RequestConfigBuilder().withOauthToken(token).build();
+
+        return openShiftClient.withRequestConfig(requestConfig).call(c ->
+            removeImageStreams(openShiftClient, new DockerImage(builderImage)) &&
+                removeDeploymentConfig(openShiftClient, sanitizedName) &&
+                removeSecret(openShiftClient, sanitizedName) &&
+                removeBuildConfig(openShiftClient, sanitizedName)
+        );
+    }
+
+    @Override
+    public boolean exists(OpenShiftDeployment d) {
+        return openShiftClient.withRequestConfig(d.getRequestConfig()).call(c ->
+            openShiftClient.deploymentConfigs().withName(Names.sanitize(d.getName())).get() != null
+        );
+    }
+
+    @Override
+    public void scale(OpenShiftDeployment d) {
+        openShiftClient.withRequestConfig(d.getRequestConfig()).call(c ->
+            openShiftClient.deploymentConfigs().withName(Names.sanitize(Names.sanitize(d.getName()))).edit()
+                .editSpec()
+                .withReplicas(d.getReplicas().orElse(1))
+                .endSpec()
+                .done());
+    }
+
+
+    @Override
+    public boolean isScaled(OpenShiftDeployment d) {
+        DeploymentConfig dc = openShiftClient.withRequestConfig(d.getRequestConfig()).call(c ->
+            openShiftClient.deploymentConfigs().withName(Names.sanitize(d.getName())).get()
+        );
+
+        int allReplicas = dc != null && dc.getStatus() != null ? dc.getStatus().getReplicas() : 0;
+        int readyReplicas = dc != null && dc.getStatus() != null ? dc.getStatus().getReadyReplicas() : 0;
+
+        int desiredReplicas = d.getReplicas().orElse(1);
+        return desiredReplicas == allReplicas && desiredReplicas == readyReplicas;
+    }
+
+//==================================================================================================
+
+    private static void ensureImageStreams(OpenShiftClient client, String projectName, DockerImage img) {
+        client.imageStreams().withName(img.getShortName()).createOrReplaceWithNew()
                 .withNewMetadata().withName(img.shortName).endMetadata()
                 .withNewSpec().addNewTag().withNewFrom().withKind("DockerImage").withName(img.getImage()).endFrom().withName(img.getTag()).endTag().endSpec()
                 .done();
 
-        openShiftClient.imageStreams().withName(projectName).createOrReplaceWithNew()
+        client.imageStreams().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata().done();
     }
 
-    private void ensureDeploymentConfig(String projectName) {
-        openShiftClient.deploymentConfigs().withName(projectName).createOrReplaceWithNew()
+    private static boolean removeImageStreams(OpenShiftClient client, DockerImage img) {
+        return client.imageStreams().withName(img.getShortName()).delete();
+    }
+
+    private static void ensureDeploymentConfig(OpenShiftClient client, String projectName) {
+        client.deploymentConfigs().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata()
             .withNewSpec()
             .withReplicas(1)
@@ -96,8 +154,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .done();
     }
 
-    private void ensureBuildConfig(String projectName, String gitRepo, DockerImage img, String webhookSecret) {
-        openShiftClient.buildConfigs().withName(projectName).createOrReplaceWithNew()
+
+    private static boolean removeDeploymentConfig(OpenShiftClient client, String projectName) {
+        return client.deploymentConfigs().withName(projectName).delete();
+    }
+
+    private static void ensureBuildConfig(OpenShiftClient client, String projectName, String gitRepo, DockerImage img, String webhookSecret) {
+        client.buildConfigs().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata()
             .withNewSpec()
             .withRunPolicy("SerialLatestOnly")
@@ -117,43 +180,21 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .done();
     }
 
-    private void ensureSecret(String projectName, Map<String, String> secretData) {
-        openShiftClient.secrets().withName(projectName).createOrReplaceWithNew()
+    private static boolean removeBuildConfig(OpenShiftClient client, String projectName) {
+        return client.buildConfigs().withName(projectName).delete();
+    }
+
+    private static void ensureSecret(OpenShiftClient client, String projectName, Map<String, String> secretData) {
+        client.secrets().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata()
             .withStringData(secretData)
             .done();
     }
 
-    private String getAuthenticationTokenString() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new IllegalStateException("Cannot set authorization header because there is no authenticated principal");
-        } else if (!KeycloakAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
-            throw new IllegalStateException(String.format("Cannot set authorization header because Authentication is of type %s but %s is required",
-                new Object[]{authentication.getClass(), KeycloakAuthenticationToken.class}));
-        } else {
-            KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) authentication;
-            return token.getAccount().getKeycloakSecurityContext().getTokenString();
-        }
+    private static boolean removeSecret(OpenShiftClient client, String projectName) {
+       return client.secrets().withName(projectName).delete();
     }
 
-    private String sanitizeName(String name) {
-        String ret = name.length() > 100 ? name.substring(0,100) : name;
-        return ret.replace(" ","-")
-            .toLowerCase()
-            .chars()
-            .filter(this::isValidNameChar)
-            .collect(StringBuilder::new,
-                StringBuilder::appendCodePoint,
-                StringBuilder::append)
-            .toString();
-    }
-
-    private boolean isValidNameChar(int c) {
-        return (c >= 'a' && c <= 'z') ||
-            (c >= '0' && c <= '9') ||
-            (c == '-');
-    }
 
     static class DockerImage {
         private String image;

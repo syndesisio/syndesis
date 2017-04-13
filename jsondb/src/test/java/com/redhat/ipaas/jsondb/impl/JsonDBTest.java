@@ -21,10 +21,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.jsondb.GetOptions;
 import com.redhat.ipaas.jsondb.JsonDBException;
-import org.h2.jdbcx.JdbcDataSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
+import org.sqlite.SQLiteDataSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -47,10 +47,8 @@ public class JsonDBTest {
 
     @Before
     public void before() {
-        JdbcDataSource ds = new JdbcDataSource();
-        ds.setURL("jdbc:h2:./target/test-db/" + getClass().getName());
-        ds.setUser("sa");
-        ds.setPassword("sa");
+        SQLiteDataSource ds = new SQLiteDataSource();
+        ds.setUrl("jdbc:sqlite:target/sqlite.db");
         DBI dbi = new DBI(ds);
         this.jsondb = new SqlJsonDB(dbi, null);
 

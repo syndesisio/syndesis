@@ -15,7 +15,10 @@
  */
 package com.redhat.ipaas.controllers;
 
+import com.redhat.ipaas.core.Tokens;
 import com.redhat.ipaas.model.integration.Integration;
+import com.redhat.ipaas.openshift.OpenShiftDeployment;
+import com.redhat.ipaas.openshift.OpenShiftService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -28,13 +31,40 @@ public class DeactivateHandler implements WorkflowHandler {
             Integration.Status.Deactivated, Integration.Status.Draft
         )));
 
+
+    private final OpenShiftService openShiftService;
+
+    public DeactivateHandler(OpenShiftService openShiftService) {
+        this.openShiftService = openShiftService;
+    }
+
     public Set<Integration.Status> getTriggerStatuses() {
         return DESIRED_STATE_TRIGGERS;
     }
 
     @Override
-    public Optional<Integration.Status> execute(Integration model) throws Exception {
-        return model.getDesiredStatus();
+    public Integration execute(Integration integration) {
+        String token = integration.getToken().get();
+        Tokens.setAuthenticationToken(token);
+
+        OpenShiftDeployment deployment = OpenShiftDeployment
+            .builder()
+            .name(integration.getName())
+            .replicas(0)
+            .token(token)
+            .build();
+
+        Integration.Status currentStatus = openShiftService.isScaled(deployment)
+            ? Integration.Status.Deactivated
+            : Integration.Status.Pending;
+
+        openShiftService.scale(deployment);
+
+        return new Integration.Builder()
+            .createFrom(integration)
+            .currentStatus(currentStatus)
+            .lastUpdated(new Date())
+            .build();
     }
 
 }

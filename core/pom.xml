@@ -39,6 +39,18 @@
       <artifactId>jackson-datatype-jdk8</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-spring-security-adapter</artifactId>
+    </dependency>
+
+    <!-- Testing -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
 </project>

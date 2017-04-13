@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.redhat.ipaas.controlers.ControllersConfiguration
+com.redhat.ipaas.controllers.ControllersConfiguration
