@@ -47,13 +47,15 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
     super.goBack(['step-select', this.position]);
   }
 
-  continue() {
+  continue(data: any) {
     const step = this.currentFlow.getStep(this.position);
     if (step.stepKind === 'mapper') {
       this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
       return;
     }
-    const data = this.formGroup.value;
+    if (!data) {
+      data = this.formGroup.value || {};
+    }
     const properties = {};
     for (const key in data) {
       if (!data.hasOwnProperty(key)) {
@@ -116,6 +118,10 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
           if (item) {
             item.value = value;
           }
+        }
+        if (!Object.keys(this.formConfig).length) {
+          this.continue({});
+          return;
         }
         log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
         this.formModel = this.formFactory.createFormModel(this.formConfig);
