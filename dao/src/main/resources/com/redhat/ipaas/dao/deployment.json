@@ -374,6 +374,38 @@
           "id": "com.redhat.ipaas:trade-insight-buy-connector:latest",
           "camelConnectorGAV": "com.redhat.ipaas:trade-insight-buy-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "trade-insight-buy"
+        },
+        {
+          "name": "Sell Recommendation",
+          "description": "Fetches sell recommendation from Trade Insight API server",
+          "inputDataShape": {
+            "kind": "none"
+          },
+          "outputDataShape": {
+            "kind": "java",
+            "type": "com.redhat.ipaas.connector.tradeinsight.Suggestion"
+          },
+          "properties": {
+          },
+          "id": "com.redhat.ipaas:trade-insight-sell-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:trade-insight-sell-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "trade-insight-sell"
+        },
+        {
+          "name": "Top Recommendation",
+          "description": "Fetches top recommendation from Trade Insight API server",
+          "inputDataShape": {
+            "kind": "none"
+          },
+          "outputDataShape": {
+            "kind": "java",
+            "type": "com.redhat.ipaas.connector.tradeinsight.Suggestion"
+          },
+          "properties": {
+          },
+          "id": "com.redhat.ipaas:trade-insight-top-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:trade-insight-top-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "trade-insight-top"
         }
       ]
     }
