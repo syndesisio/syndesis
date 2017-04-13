@@ -16,6 +16,7 @@
 package com.redhat.ipaas.model.connection;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -63,6 +64,10 @@ public interface Connection extends WithId<Connection>, WithName, Serializable {
     Optional<List<Tag>> getTags();
 
     Optional<String> getUserId();
+    
+    Optional<Date> getLastUpdated();
+    
+    Optional<Date> getCreatedDate();
 
     @Override
     default Connection withId(String id) {

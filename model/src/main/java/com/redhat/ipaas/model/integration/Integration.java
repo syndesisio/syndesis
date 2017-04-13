@@ -70,6 +70,8 @@ public interface Integration extends WithId<Integration>, WithName, Serializable
     Optional<String> getStatusMessage();
 
     Optional<Date> getLastUpdated();
+    
+    Optional<Date> getCreatedDate();
 
     Optional<BigInteger> getTimesUsed();
 
