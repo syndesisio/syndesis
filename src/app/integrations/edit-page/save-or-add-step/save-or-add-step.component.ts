@@ -28,7 +28,7 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
     public router: Router,
     public detector: ChangeDetectorRef,
   ) {
-    super(currentFlow, route, router);
+    super(currentFlow, route, router, detector);
   }
 
   get currentStep() {

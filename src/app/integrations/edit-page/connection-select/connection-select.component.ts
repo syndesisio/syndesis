@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -39,8 +39,9 @@ export class IntegrationsSelectConnectionComponent extends FlowPage implements O
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
+    public detector: ChangeDetectorRef,
     ) {
-    super(currentFlow, route, router);
+    super(currentFlow, route, router, detector);
     this.loading = store.loading;
     this.connections = store.list;
   }

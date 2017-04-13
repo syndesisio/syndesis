@@ -1,4 +1,4 @@
-import { OnDestroy } from '@angular/core';
+import { OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
@@ -8,11 +8,14 @@ export abstract class FlowPage implements OnDestroy {
 
   flowSubscription: Subscription;
   errorMessage: any = undefined;
+  saveInProgress = false;
+  publishInProgress = false;
 
   constructor(
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
+    public detector: ChangeDetectorRef,
   ) {
     this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
       this.handleFlowEvent(event);
@@ -32,19 +35,30 @@ export abstract class FlowPage implements OnDestroy {
   }
 
   doSave() {
+    this.errorMessage = undefined;
     if (!this.currentFlow.integration.name || this.currentFlow.integration.name === '') {
       this.router.navigate(['integration-basics'], { relativeTo: this.route.parent });
+      this.saveInProgress = false;
+      this.publishInProgress = false;
       return;
     }
     const router = this.router;
     this.currentFlow.events.emit({
       kind: 'integration-save',
       action: (i: Integration) => {
+        /*
+        this.detector.detectChanges();
+        this.saveInProgress = false;
+        this.publishInProgress = false;
+        */
         router.navigate(['/integrations']);
       },
       error: (error) => {
         setTimeout(() => {
           this.errorMessage = error;
+          this.saveInProgress = false;
+          this.publishInProgress = false;
+          this.detector.detectChanges();
         }, 10);
       },
     });
@@ -54,11 +68,13 @@ export abstract class FlowPage implements OnDestroy {
     if (!this.currentFlow.integration.desiredStatus) {
       this.currentFlow.integration.desiredStatus = 'Draft';
     }
+    this.saveInProgress = true;
     this.doSave();
   }
 
   publish() {
     this.currentFlow.integration.desiredStatus = 'Activated';
+    this.publishInProgress = true;
     this.doSave();
   }
 

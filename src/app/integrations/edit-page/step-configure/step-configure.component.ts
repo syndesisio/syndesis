@@ -34,10 +34,10 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
     public router: Router,
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
-    public changeDetectorRef: ChangeDetectorRef,
+    public detector: ChangeDetectorRef,
     public stepStore: StepStore,
   ) {
-    super(currentFlow, route, router);
+    super(currentFlow, route, router, detector);
   }
 
   goBack() {
@@ -121,7 +121,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
         this.formModel = this.formFactory.createFormModel(this.formConfig);
         this.formGroup = this.formService.createFormGroup(this.formModel);
         setTimeout(() => {
-          this.changeDetectorRef.detectChanges();
+          this.detector.detectChanges();
         }, 30);
         this.currentFlow.events.emit({
           kind: 'integration-action-configure',

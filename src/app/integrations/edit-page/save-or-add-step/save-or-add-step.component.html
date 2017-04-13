@@ -20,8 +20,8 @@
             </button> &nbsp;
             <button type="button"
                     class="btn btn-primary"
-                    (click)="save()">Save
-            </button>
+                    (click)="save()"
+                    [disabled]="saveInProgress"><span *ngIf="saveInProgress" class="spinner spinner-sm spinner-inline"></span>Save</button>
             <!--
             <button type="button" class="btn btn-primary" (click)="saveAndPublish()">Publish
             </button>

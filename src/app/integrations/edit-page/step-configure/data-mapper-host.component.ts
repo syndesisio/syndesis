@@ -67,7 +67,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     public support: IntegrationSupportService,
     public detector: ChangeDetectorRef,
   ) {
-    super(currentFlow, route, router);
+    super(currentFlow, route, router, detector);
     documentService.cfg = this.cfg;
     mappingService.cfg = this.cfg;
     initializationService.cfg = this.cfg;

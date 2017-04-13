@@ -33,9 +33,9 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
     public router: Router,
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
-    public changeDetectorRef: ChangeDetectorRef,
+    public detector: ChangeDetectorRef,
   ) {
-    super(currentFlow, route, router);
+    super(currentFlow, route, router, detector);
   }
 
   goBack() {
@@ -87,7 +87,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
           //log.debugc(() => 'Form model: ' + JSON.stringify(this.formModel, undefined, 2), category);
           this.formGroup = this.formService.createFormGroup(this.formModel);
           setTimeout(() => {
-            this.changeDetectorRef.detectChanges();
+            this.detector.detectChanges();
           }, 30);
         } else {
           this.router.navigate(['action-select', this.position], { relativeTo: this.route.parent });
