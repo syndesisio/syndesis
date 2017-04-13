@@ -74,19 +74,22 @@
 
       .card-pf-body {
         overflow: auto;
+        display: flex;
+        overflow: hidden;
 
         .chart {
-          /*
+          flex-grow: 1;
+          margin-bottom: -5em;
+
           canvas {
-            width: 65% !important;
-            height: 65% !important;
+            width: 100% !important;
+            height: auto !important;
           }
-          */
 
           .total-count {
-            margin-top: -180px;
-            height: 100%;
-            margin-bottom: 140px;
+            position: relative;
+            top: -50%;
+            width: 100%;
             text-align: center;
 
             .number {
@@ -96,42 +99,51 @@
             .text {}
           }
         }
-      }
 
-      .legend {
-        padding: 0;
+        .legend {
+          flex: none;
+          min-width: 10em;
+          padding: 0 0 0 1em;
 
-        .col-xs-12 {
-          padding: 0;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
 
-          .colors {
-            height: 10px;
-            padding: 9px;
+          .item {
+            display: flex;
+            padding: 0;
+            .colors {
 
-            &.active {
-              background: $pf-green-400;
+              flex-grow: 0;
+              height: 10px;
+              padding: 9px;
+
+              &.active {
+                background: $pf-green-400;
+              }
+
+              &.deleted {
+                background: $pf-orange-400;
+              }
+
+              &.draft {
+                background: $pf-blue-400;
+              }
+
+              &.inactive {
+                background: $pf-black-300;
+              }
             }
 
-            &.deleted {
-              background: $pf-orange-400;
+            .text {
+              flex-grow: 1;
+              padding: 0 0 0 13px;
             }
-
-            &.draft {
-              background: $pf-blue-400;
-            }
-
-            &.inactive {
-              //background: $pf-black-200;
-              //background: $pf-custom-gray;
-              background: $pf-black-300;
-            }
-          }
-
-          .text {
-            padding: 0 0 0 13px;
           }
         }
+
       }
+
     }
 
 
