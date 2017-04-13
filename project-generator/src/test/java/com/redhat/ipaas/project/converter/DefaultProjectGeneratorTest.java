@@ -68,11 +68,12 @@ public class DefaultProjectGeneratorTest {
 
         GenerateProjectRequest request = ImmutableGenerateProjectRequest
             .builder()
+            .gitHubUser("noob")
+            .gitHubRepoName("test")
             .integration(new Integration.Builder()
                 .id("test-integration")
                 .name("Test Integration")
                 .description("This is a test integration!")
-                .gitRepo("https://ourgithhost.somewhere/test.git")
                 .steps( Arrays.asList(step1, step2, step3, step4))
                 .build())
             .connectors(connectors)
@@ -99,10 +100,11 @@ public class DefaultProjectGeneratorTest {
                 .id("test-integration")
                 .name("Test Integration")
                 .description("This is a test integration!")
-                .gitRepo("https://ourgithhost.somewhere/test.git")
                 .steps( Arrays.asList(step1, step2))
                 .build())
             .connectors(connectors)
+            .gitHubUser("noob")
+            .gitHubRepoName("test")
             .build();
 
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
@@ -123,6 +125,8 @@ public class DefaultProjectGeneratorTest {
 
         GenerateProjectRequest request = ImmutableGenerateProjectRequest
             .builder()
+            .gitHubUser("noob")
+            .gitHubRepoName("test")
             .integration(new ObjectMapper().registerModule(new Jdk8Module()).readValue(json.get("data").toString(), Integration.class))
             .connectors(connectors)
             .build();
