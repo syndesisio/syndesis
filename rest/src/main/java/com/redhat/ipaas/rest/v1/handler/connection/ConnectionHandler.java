@@ -24,6 +24,8 @@ import com.redhat.ipaas.rest.v1.operations.*;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 import javax.ws.rs.Path;
 
 @Path("/connections")
@@ -48,6 +50,24 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
             connection = new Connection.Builder().createFrom(connection).connector(connector).build();
         }
         return connection;
+    }
+
+    @Override
+    public Connection create(Connection connection) {
+        Date rightNow = new Date();
+        Connection updatedConnection = new Connection.Builder().createFrom(connection)
+                .createdDate(rightNow)
+                .lastUpdated(rightNow)
+                .build();
+        return Creator.super.create(updatedConnection);
+    }
+
+    @Override
+    public void update(String id, Connection connection) {
+        Connection updatedConnection = new Connection.Builder().createFrom(connection)
+                .lastUpdated(new Date())
+                .build();
+        Updater.super.update(id, updatedConnection);
     }
 
 }

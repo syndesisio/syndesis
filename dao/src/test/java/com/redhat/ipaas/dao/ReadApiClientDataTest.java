@@ -17,6 +17,7 @@ package com.redhat.ipaas.dao;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +40,10 @@ public class ReadApiClientDataTest {
 	@Test
 	public void deserializeModelDataTest() throws IOException {
 
-	    Integration integrationIn = new Integration.Builder().desiredStatus(Integration.Status.Activated).build();
+	    Integration integrationIn = new Integration.Builder()
+	                .desiredStatus(Integration.Status.Activated)
+	                .createdDate(new Date())
+	                .build();
 	    String integrationJson = mapper.writeValueAsString(integrationIn);
 	    System.out.println(integrationJson);
 	    Integration integrationOut = mapper.readValue(integrationJson, Integration.class);

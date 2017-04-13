@@ -457,6 +457,8 @@
       "id": 1,
       "name": "Twitter Example",
       "description": "Twitter Connection",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
       "icon": "fa-twitter",
       "connectorId": "twitter",
       "configuredProperties": {
@@ -473,6 +475,8 @@
       "id": 2,
       "name": "Salesforce Example",
       "description": "Salesforce Connection",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
       "icon": "fa-globe",
       "connectorId": "salesforce",
       "configuredProperties": {
@@ -489,6 +493,8 @@
       "id": 3,
       "name": "HTTP Example",
       "description": "HTTP Connection",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
       "icon": "fa-globe",
       "connectorId": "http",
       "configuredProperties": {}
@@ -500,6 +506,8 @@
       "id": 4,
       "name": "Timer Example",
       "description": "Timer Connection",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
       "icon": "fa-globe",
       "connectorId": "timer",
       "configuredProperties": {}
@@ -512,6 +520,8 @@
       "name": "Twitter to Salesforce Example",
       "description": "This is an example of a Twitter to Salesforce integration",
       "configuration": "",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
       "desiredStatus": "Activated",
       "tags": [
         { "name": "example" }
@@ -610,6 +620,8 @@
       "name": "Timed Pull to Post Example",
       "description": "This is an example of a Timed Pull to Post Integration",
       "configuration": "",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
       "desiredStatus": "Activated",
       "currentStatus": "Deactivated",
       "statusMessage": "This integration failed. Please contact system admin for errors.",
