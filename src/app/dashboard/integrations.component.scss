@@ -79,7 +79,11 @@
 
         .chart {
           flex-grow: 1;
-          margin-bottom: -5em;
+          //margin-bottom: -5em;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          position: relative;
 
           canvas {
             width: 100% !important;
@@ -87,8 +91,7 @@
           }
 
           .total-count {
-            position: relative;
-            top: -50%;
+            position: absolute;
             width: 100%;
             text-align: center;
 
@@ -96,7 +99,10 @@
               font-size: 22px;
             }
 
-            .text {}
+            @media (max-width: 1020px) {
+              .text { display: none }
+            }
+
           }
         }
 
