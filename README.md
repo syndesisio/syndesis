@@ -7,7 +7,7 @@ There exist different flavours of OpenShift templates, with the following charac
 | Template | Descripton |
 | -------- | ---------- |
 | [ipaas.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml) | Full production when setting up on a cluster with full access rights. Uses image streams under the hoods. |
-| [ipaas-dev.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev.yml) | Same as above, but with direct references to Docker images so that they locally created images (e.g. agains a Minishift Docker daemon) can be used directly |
+| [ipaas-dev.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev.yml) | Same as above, but with direct references to Docker images so that they locally created images (e.g. against a Minishift Docker daemon) can be used directly. |
 | [ipaas-restricted.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-restricted.yml) | If running in an restricted environment without admin access this template should be used. See the [section](#running-single-tenant) below for detailed usage instructions. |
 | [ipaas-dev-restricted.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev-restricted.yml) | Same as above, but as a developer version with using direct Docker images |
 | [ipaas-restricted-ephemeral.yml](https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-restricted-ephemeral.yml) | A variant of `ipaas-restricted.yml` which does only use temporary persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue. |
@@ -152,6 +152,17 @@ You should be able to log in at `https://<EXTERNAL_HOSTNAME>`.
 
 With minishift you can easily try out redhat-ipaas. The only prerequisite is that you have a GitHub application registered at https://github.com/settings/developers For the registration, please use as callback URL the output of `https://ipaas.$(minishift ip).xip.io`. Then you get a `<GITHUB_CLIENT_ID>` and a `<GITHUB_CLIENT_SECRET>`. These should be used in the commands below.
 
+### Template selection
+
+The template to use in the installation instructions depend on your use case:
+
+* **Developer** : Use the template `ipaas-dev` which directly references Docker images without image streams. Then when before building you images e.g. with `mvn fabric8:build` set your `DOCKER_HOST` envvar to use the Minishift Docker daemon via `eval $(minishift docker-env)`. After you have created a new image you simply only need to kill the appropriate pod so that the new pod spinning up will use the freshly created image. 
+
+* **Tester** / **User** : In case you only want to have the latest version if ipaas on your local Minishift installation, use the template `ipaas` which uses image stream refering to the published Docker Hub images. Minishift will update its images and trigger a redeployment when the images at Docker Hub changes. Therefor it checks every 15 minutes for a change image. You do not have to do anything to get your application updated except for waiting on Minishift to pick up ew images.
+
+Depending on your role please use the appropriate template in the instructions below.
+
+### Install instructions
 > Please note that there is currently a switch for Minishift with regard to the default DNS reflector. For Minishift 1.0.0-rc1 please use `xip.io` as the domain. For Minishift 1.0.0-rc1 you have to use `nip.io` but you have also have to use the parameter `INSECURE_SKIP_VERIFY=true` because the internal certs still refer to `xip.io`. This should be fixed in the final 1.0.0 version of Minishift.
 
 
@@ -174,10 +185,11 @@ echo https://ipaas.$(minishift ip).xip.io
 GITHUB_CLIENT_ID=....
 GITHUB_CLIENT_SECRET=....
 
-# Install the OpenShift template
+# Install the OpenShift template (ipaas-dev.yml or ipaas.yml)
 oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-dev.yml
 
-# Create an App. Add the propert GitHub credentials
+# Create an App. Add the propert GitHub credentials. Use "ipaas-dev" or "ipaas" depending on the template
+# you have installed
 oc new-app ipaas-dev \
     -p ROUTE_HOSTNAME=ipaas.$(minishift ip).xip.io \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
