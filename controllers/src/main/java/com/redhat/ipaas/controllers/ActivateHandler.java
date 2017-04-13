@@ -173,7 +173,7 @@ public class ActivateHandler implements WorkflowHandler {
                             }
                             Connector connector = connectorMap.get(connectorId);
                             secrets.putAll(connector.filterSecrets(connection.getConfiguredProperties()));
-                            secrets.putAll(connector.filterSecrets(step.getConfiguredProperties()));
+                            secrets.putAll(connector.filterSecrets(step.getConfiguredProperties().orElse(new HashMap<String,String>())));
                         });
                     });
                     continue;
