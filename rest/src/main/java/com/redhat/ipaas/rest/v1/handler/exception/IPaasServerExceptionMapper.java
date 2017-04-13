@@ -24,12 +24,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Provider
-public class IPaasServerExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<ClassNotFoundException> {
+public class IPaasServerExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Exception> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(IPaasServerExceptionMapper.class);
 
 	@Override
-	public Response toResponse(ClassNotFoundException e) {
+	public Response toResponse(Exception e) {
 		LOG.error(e.getMessage(),e);
 		RestError error = new RestError("Internal Server Exception. " + e.getMessage(), "Please contact the administrator and file a bug report", 500);
 		return Response.status(error.errorCode).entity(error).build();
