@@ -19,6 +19,7 @@ Feature: Connections smoke test
     And Camilla selects the "Twitter" connection
     And type "my sample twitter connection" into connection name
     And type "this connection is awesome" into connection description
+    And scroll "top" "right"
     And click on the "Next" button
     Then she is presented with the "Validate" button
 
