@@ -7,5 +7,5 @@ This is a test integration!
 To run this on OpenShift, just run:
 
 ```bash
-$ oc new-app fabric8/s2i-java:2.0.0~https://ourgithhost.somewhere/test.git
+$ oc new-app fabric8/s2i-java:2.0.0~https://github.com/noob/test.git
 ```

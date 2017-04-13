@@ -97,7 +97,8 @@ public class ActivateHandler implements WorkflowHandler {
         String gitCloneUrl = ensureGitHubSetup(integration, secret);
 
         Integration updatedIntegration = new Integration.Builder()
-            .createFrom(integration).gitRepo(gitCloneUrl)
+            .createFrom(integration)
+            .gitRepo(gitCloneUrl)
             .currentStatus(currentStatus)
             .lastUpdated(new Date())
             .build();
@@ -108,22 +109,23 @@ public class ActivateHandler implements WorkflowHandler {
 
     private String ensureGitHubSetup(Integration integration, String secret) {
         try {
-            Integration integrationWithGitRepoName = ensureGitRepoName(integration);
-            String repoName = integrationWithGitRepoName.getGitRepo().orElseThrow(() -> new IllegalArgumentException("Missing git repo in integration"));
+            String gitHubRepoName = Names.sanitize(integration.getName());
 
             GenerateProjectRequest request = ImmutableGenerateProjectRequest
                 .builder()
-                .integration(integrationWithGitRepoName)
-                .connectors(connectorsMap())
+                .integration(integration)
+                .connectors(fetchConnectorsMap())
+                .gitHubRepoName(gitHubRepoName)
+                .gitHubUser(gitHubService.getApiUser())
                 .build();
 
             Map<String, byte[]> fileContents = projectConverter.generate(request);
 
             // Secret to be used in the build trigger
-            String webHookUrl = createWebHookUrl(repoName, secret);
+            String webHookUrl = createWebHookUrl(gitHubRepoName, secret);
 
             // Do all github stuff at once
-            return gitHubService.createOrUpdateProjectFiles(repoName, integration.getToken().get(), generateCommitMessage(), fileContents, webHookUrl);
+            return gitHubService.createOrUpdateProjectFiles(gitHubRepoName, generateCommitMessage(), fileContents, webHookUrl);
 
         } catch (IOException e) {
             throw IPaasServerException.launderThrowable(e);
@@ -132,17 +134,6 @@ public class ActivateHandler implements WorkflowHandler {
 
     private String createWebHookUrl(String bcName, String secret) {
         return String.format(WEBHOOK_FORMAT, openshiftApiBaseUrl, namespace, bcName, secret);
-    }
-
-    private Integration ensureGitRepoName(Integration integration) {
-        Optional<String> repoNameOptional = integration.getGitRepo();
-        if (!repoNameOptional.isPresent()) {
-            String generatedRepoName = Names.sanitize(integration.getName());
-            return new Integration.Builder()
-                .createFrom(integration).gitRepo(generatedRepoName)
-                .build();
-        }
-        return integration;
     }
 
     private String generateCommitMessage() {
@@ -154,7 +145,7 @@ public class ActivateHandler implements WorkflowHandler {
         return UUID.randomUUID().toString();
     }
 
-    private Map<String, Connector> connectorsMap() {
+    private Map<String, Connector> fetchConnectorsMap() {
         return dataManager.fetchAll(Connector.class).getItems().stream().collect(Collectors.toMap(o -> o.getId().get(), o -> o));
     }
 
@@ -169,7 +160,7 @@ public class ActivateHandler implements WorkflowHandler {
 
     private Map<String, String> extractSecretsFrom(Integration integration) {
         Map<String, String> secrets = new HashMap<>();
-        Map<String, Connector> connectorMap = connectorsMap();
+        Map<String, Connector> connectorMap = fetchConnectorsMap();
 
         integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {

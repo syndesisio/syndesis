@@ -93,9 +93,9 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         });
 
         Map<String, byte[]> contents = new HashMap<>();
-        contents.put("README.md", generate(request.getIntegration(), readmeMustache));
-        contents.put("src/main/java/com/redhat/ipaas/example/Application.java", generate(request.getIntegration(), applicationJavaMustache));
-        contents.put("src/main/resources/application.yml", generate(request.getIntegration(), applicationYmlMustache));
+        contents.put("README.md", generateFromRequest(request, readmeMustache));
+        contents.put("src/main/java/com/redhat/ipaas/example/Application.java", generateFromRequest(request, applicationJavaMustache));
+        contents.put("src/main/resources/application.yml", generateFromRequest(request, applicationYmlMustache));
         contents.put("src/main/resources/funktion.yml", generateFlowYaml(request));
         contents.put("pom.xml", generatePom(request.getIntegration()));
 
@@ -116,7 +116,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                 }
             }
         });
-        return generate(new IntegrationForPom(integration.getId().orElse(""), integration.getName(), integration.getDescription().orElse(null), connectors), pomMustache);
+        return generateFromPomContext(new PomContext(integration.getId().orElse(""), integration.getName(), integration.getDescription().orElse(null), connectors), pomMustache);
     }
 
 
@@ -195,11 +195,21 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return Stream.of(maps).flatMap(map -> map.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue));
     }
 
+    private byte[] generateFromRequest(GenerateProjectRequest request, Mustache template) throws IOException {
+        return generate(request, template);
+    }
+
+    private byte[] generateFromPomContext(PomContext integration, Mustache template) throws IOException {
+        return generate(integration, template);
+    }
+
     private byte[] generate(Object obj, Mustache template) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         template.execute(new PrintWriter(bos), obj).flush();
         return bos.toByteArray();
     }
+
+
 
     private static class MavenGav {
         private final String groupId;
@@ -227,7 +237,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         }
     }
 
-    private static class IntegrationForPom {
+    private static class PomContext {
 
         private final String id;
 
@@ -237,7 +247,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
         private final Set<MavenGav> connectors;
 
-        private IntegrationForPom(String id, String name, String description, Set<MavenGav> connectors) {
+        private PomContext(String id, String name, String description, Set<MavenGav> connectors) {
             this.id = id;
             this.name = name;
             this.description = description;

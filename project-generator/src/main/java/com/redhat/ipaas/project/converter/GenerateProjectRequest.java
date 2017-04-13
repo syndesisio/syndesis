@@ -25,6 +25,8 @@ import java.util.Map;
 @Value.Immutable
 public interface GenerateProjectRequest {
 
+    String getGitHubUser();
+    String getGitHubRepoName();
     Integration getIntegration();
     Map<String, Connector> getConnectors();
 
