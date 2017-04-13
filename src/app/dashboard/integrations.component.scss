@@ -84,6 +84,7 @@
           justify-content: center;
           flex-direction: column;
           position: relative;
+          max-width: 180px;
 
           canvas {
             width: 100% !important;
