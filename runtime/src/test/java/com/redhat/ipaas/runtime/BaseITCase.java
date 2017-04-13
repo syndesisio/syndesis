@@ -17,6 +17,7 @@ package com.redhat.ipaas.runtime;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.redhat.ipaas.core.Json;
+import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.jsondb.impl.SqlJsonDB;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -44,6 +45,9 @@ public abstract class BaseITCase {
 
     @Autowired
     protected SqlJsonDB jsondb;
+    
+    @Autowired
+    protected DataManager dataManager;
 
     @BeforeClass
     public static void envSetup() throws UnsupportedEncodingException {
@@ -68,6 +72,7 @@ public abstract class BaseITCase {
 
     protected void clearDB() {
         try {
+            this.dataManager.clearCache();
             this.jsondb.dropTables();
         } catch (Exception e) {
         }
