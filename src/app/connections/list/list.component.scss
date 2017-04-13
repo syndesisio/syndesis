@@ -35,13 +35,21 @@
         .card-pf-heading-kebab {
           .dropdown-kebab-pf {
             margin-top: -8px;
-            
+
+            &:focus {
+              outline: 0;
+            }
+
             .btn-link {
               color: #252525;
               font-size: 16px;
               line-height: 1;
               padding: 5px 12px;
               margin: 4px 1px 0 -12px;
+
+              .fa:focus {
+                outline: 0;
+              }
             }
 
             .dropdown-menu.dropdown-menu-right {
