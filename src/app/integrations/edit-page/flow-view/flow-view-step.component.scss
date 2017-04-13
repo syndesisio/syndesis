@@ -50,14 +50,15 @@
     text-align: center;
 
     .fa {
-      color: #D1D1D1;
+      color: $pf-black-300;
       font-size: x-large;
     }
 
     .icon {
       -moz-border-radius: 100px;
       border-radius: 100px;
-      border: 3px solid #d0d0d0;
+      //border: 3px solid #d0d0d0;
+      border: 3px solid $pf-black-300;
       padding: 11px;
       width: 55px;
       height: 55px;
@@ -65,12 +66,18 @@
 
       &.add-step-or-connection {
         background-color: #FFFFFF;
-        border: 10px solid $pf-blue-400;
+        //border: 10px solid $pf-blue-400;
+        border: 12px solid #0088ce;
+        padding: 5px 0px;
         border-radius: 100px;
         height: 33px;
         margin: 11px;
-        padding: 0;
+        //padding: 0;
         width: 32px;
+
+        &.active {
+          border: 12px solid #0088ce;
+        }
       }
 
 
@@ -149,7 +156,8 @@
       //----- Sidebar: Menu: Parent Step ----------------->>
 
       .parent-step {
-        background-color: #E7E7E7;
+        //background-color: #E7E7E7;
+        background-color: $pf-black-300;
         cursor: pointer;
         display: inline;
         padding: 8px 100% 8px 8px;
