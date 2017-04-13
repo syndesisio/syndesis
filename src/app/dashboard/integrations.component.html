@@ -38,11 +38,11 @@
                  *ngFor="let integration of integrations; let i=index">
 
               <div class="col-xs-12 integration"
-                   *ngIf="i<5"
-                   (click)="selectedIntegration(integration)">
+                   *ngIf="i<5">
                 <!-- Icons -->
 
-                <div class="col-xs-3 icons">
+                <div class="col-xs-3 icons"
+                     (click)="selectedIntegration(integration)">
                   <div class="list-view-pf-left">
                     <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
                     <span class="fa fa-angle-right"></span>
@@ -52,19 +52,22 @@
 
                 <!-- Name -->
 
-                <div class="col-xs-4 name">
+                <div class="col-xs-4 name"
+                     (click)="selectedIntegration(integration)">
                   {{ integration.name }}
                 </div>
 
                 <!-- Times of Use -->
 
-                <div class="col-xs-3 times-of-use">
+                <div class="col-xs-3 times-of-use"
+                     (click)="selectedIntegration(integration)">
                   <p>{{ integration.timesUsed || 0 }} Times of Use</p>
                 </div>
 
                 <!-- Status -->
 
-                <div class="col-xs-1 status">
+                <div class="col-xs-1 status"
+                     (click)="selectedIntegration(integration)">
 
                   <!-- OK Status -->
 
