@@ -99,7 +99,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
           return;
         }
         const stepDef = this.stepStore.getStepConfig(step.stepKind);
-        if (!stepDef) {
+        if (!stepDef || step.stepKind === 'mapper') {
           // TODO if we don't have a definition for this step then ???
           return;
         }
