@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests the /test-support API endpoints
  *
  * Can't call this class TestSupportITCase because it then gets
- * run as a unit test when keycloack is not running.
+ * run as a unit test when keycloak is not running.
  */
 public class T3stSupportITCase extends BaseITCase {
 
