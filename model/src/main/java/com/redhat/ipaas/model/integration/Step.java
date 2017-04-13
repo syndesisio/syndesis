@@ -41,7 +41,7 @@ public interface Step extends WithId<Step>, Serializable {
 
     String getStepKind();
 
-    Map<String, String> getConfiguredProperties();
+    Optional<Map<String, String>> getConfiguredProperties();
 
     String getName();
 
