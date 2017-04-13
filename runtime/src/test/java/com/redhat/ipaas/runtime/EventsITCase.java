@@ -64,6 +64,10 @@ public class EventsITCase extends BaseITCase {
         eventSource.start();
 
         assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
+
+        // workaround issues in EventSource
+        reorderEventSourceInvocations(invocations);
+
         assertThat(invocations.get(0).getMethod().getName()).isEqualTo("onOpen");
 
         // We auto get a message letting us know we connected.
@@ -91,6 +95,19 @@ public class EventsITCase extends BaseITCase {
             .isEqualTo(ChangeEvent.of("created", "integration", "1001").toJson());
 
         eventSource.close();
+    }
+
+
+    private void reorderEventSourceInvocations(List<Invocation> invocations) {
+        // The EventSource is using a thread pool to emmit events.. so we get non-deterministic results.
+        // lets reorder stuff so that the onOpen is the first event.
+        for (int i = 1; i < invocations.size(); i++) {
+            Invocation invocation = invocations.get(i);
+            if( invocation.getMethod().getName().equals("onOpen") ) {
+                invocations.remove(i);
+                invocations.add(0, invocation);
+            }
+        }
     }
 
     private URI resolveURI(String uriTemplate) {
