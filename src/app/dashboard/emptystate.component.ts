@@ -25,8 +25,8 @@ export class EmptyStateComponent implements OnInit {
     this.connections = this.connectionStore.list;
   }
 
-  onSelected(connection: Connection) {
-    this.router.navigate(['connections', connection.id]);
+  selectedConnection(connection: Connection) {
+    this.router.navigate(['/connections', connection.id]);
   }
 
 

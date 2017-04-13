@@ -1,12 +1,17 @@
 <div class="row row-cards-pf connections-view"
      [ngClass]="{edit: 'edit', create: 'create'}[mode] || 'view'"
      *ngIf="connection">
+
+  <!-- Connections: Basics -->
+
   <div class="col-xs-4"
        *ngIf="showName">
     <div class="card-pf">
       <div class="card-pf-body">
         <div class="icon">
-          <span class="fa {{connection.icon}}"></span>
+          <span class="card-pf-icon-large image-icon">
+            <img src="../../../assets/icons/{{ connection.connectorId }}.connection.png">
+          </span>
         </div>
         <div class="name">
           <h2 class="card-pf-title">{{name}}</h2>

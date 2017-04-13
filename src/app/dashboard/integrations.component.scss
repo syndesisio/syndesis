@@ -122,7 +122,8 @@
 
             &.inactive {
               //background: $pf-black-200;
-              background: $pf-custom-gray;
+              //background: $pf-custom-gray;
+              background: $pf-black-300;
             }
           }
 
@@ -159,11 +160,12 @@
 
     .top-integrations {
       .integration {
-        cursor: default;
+        cursor: pointer;
         padding: 15px;
 
         &:hover {
-          background: rgba(214, 238, 250, 0.36);
+          //background: rgba(214, 238, 250, 0.36);
+          background: $pf-blue-50;
         }
 
         .actions {

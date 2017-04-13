@@ -33,7 +33,7 @@
 
       <ipaas-dashboard-connections [connections]="connections | async"
                                    [loading]="loading"
-                                   (onSelected)="onSelected($event)"></ipaas-dashboard-connections>
+                                   (selectedConnection)="selectedConnection($event)"></ipaas-dashboard-connections>
 
       <!--
       <ipaas-popular-templates [templates]="templates | async" [loading]="loading | async"></ipaas-popular-templates>

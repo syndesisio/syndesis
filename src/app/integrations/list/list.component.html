@@ -23,7 +23,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="pull-right btn btn-primary" (click)="doAction(currentAction, selectedIntegration)">{{ getActionButtonText() }}
+            <button class="pull-right btn btn-primary" (click)="doAction(currentAction, selectedIntegration)">
+              {{ getActionButtonText() }}
               </button>
             <button class="pull-right btn btn-cancel" (click)="hideModal()">Cancel
               </button>
@@ -41,10 +42,19 @@
 
       <!-- Icons -->
       <div class="col-xs-2 icons" (click)="goto(integration)">
-        <div class="list-view-pf-left">
+        <div class="list-view-pf-left" *ngIf="integration">
           <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
           <span class="fa fa-angle-right"></span>
           <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
+          <!--
+          <span class="card-pf-icon-large image-icon">
+            <img src="../../../assets/icons/{{ integration.connections[0].connectorId }}.integration.png">
+          </span>
+          <span class="fa fa-angle-right"></span>
+          <span class="card-pf-icon-large image-icon">
+            <img src="../../../assets/icons/{{ integration.connections[1].connectorId }}.integration.png">
+          </span>
+          -->
         </div>
       </div>
 
@@ -95,10 +105,10 @@
             <li role="menuitem">
               <a [routerLink]="['edit', integration.id, 'save-or-add-step']">Edit</a>
             </li>
-            <li role="menuitem" *ngIf="integration.desiredStatus === 'Active'">
+            <li role="menuitem" *ngIf="integration.desiredStatus === 'Activated'">
               <a (click)="requestDeactivate(integration)">Deactivate</a>
             </li>
-            <li role="menuitem" *ngIf="integration.desiredStatus === 'Deactived' || 'Draft'">
+            <li role="menuitem" *ngIf="integration.desiredStatus === 'Deactivated'">
               <a (click)="requestActivate(integration)">Activate</a>
             </li>
             <li role="menuitem" *ngIf="integration.active === false" (click)="requestActivate(integration)">
