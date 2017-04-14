@@ -8,6 +8,7 @@
     background: #FFFFFF;
     cursor: pointer;
     padding: 20px;
+    display: flex;
 
     &:hover {
       //background: rgba(214, 238, 250, 0.36);
@@ -16,6 +17,7 @@
 
     .actions {
       padding: 5px;
+      flex: none;
 
       ul {
         cursor: pointer;
@@ -33,10 +35,15 @@
 
     .description {
       padding: 5px;
+      flex: 2 2;
+      @media (max-width: 500px) {
+        display: none;
+      }
     }
 
     .icons {
       padding: 1px;
+      flex: none;
 
       .fa {
         margin-right: 15px;
@@ -63,6 +70,7 @@
     .name {
       font-weight: 700;
       padding: 7px;
+      flex: 1 1;
     }
   }
 }
