@@ -45,6 +45,12 @@
         <div class="col-md-10">
         </div>
       </div>
+      <div class="row step-insert" *ngIf="currentState != 'save-or-add-step'">
+        <div class="col-md-2 square-icon">
+        </div>
+        <div class="col-md-10">
+        </div>
+      </div>
 
       <!-- Middle Steps -->
       <template ngFor let-step [ngForOf]="getMiddleSteps()" let-position="index">
@@ -70,6 +76,12 @@
             <p>
               <i class="fa fa-plus-square"></i>
             </p>
+          </div>
+          <div class="col-md-10">
+          </div>
+        </div>
+        <div class="row step-insert" *ngIf="currentState != 'save-or-add-step'">
+          <div class="col-md-2 square-icon">
           </div>
           <div class="col-md-10">
           </div>

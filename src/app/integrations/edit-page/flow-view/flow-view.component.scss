@@ -111,6 +111,8 @@ $flow-view-container-min-height: 0;
     position: relative;
     top: -47px;
     height: 50px;
+    margin-top:-15%;
+    margin-bottom:-15%;
 
     a {
       text-decoration: none;
@@ -136,7 +138,7 @@ $flow-view-container-min-height: 0;
 
     .step-line {
       position: absolute;
-      height: 150px;
+      height: 100px;
       top: 0;
       left: 46px;
       width: 2px;
