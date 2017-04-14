@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
+import com.redhat.ipaas.model.WithTags;
 import com.redhat.ipaas.model.connection.Connection;
 import com.redhat.ipaas.model.user.User;
 import org.immutables.value.Value;
@@ -31,7 +32,7 @@ import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
-public interface Integration extends WithId<Integration>, WithName, Serializable {
+public interface Integration extends WithId<Integration>, WithTags, WithName, Serializable {
 
     enum Status { Draft, Pending, Activated, Deactivated, Deleted};
 
@@ -52,8 +53,6 @@ public interface Integration extends WithId<Integration>, WithName, Serializable
     Optional<String> getToken();
 
     List<User> getUsers();
-
-    List<Tag> getTags();
 
     Optional<List<Connection>> getConnections();
 

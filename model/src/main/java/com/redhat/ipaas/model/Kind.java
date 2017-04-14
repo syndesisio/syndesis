@@ -38,7 +38,6 @@ public enum Kind {
     IntegrationTemplate(com.redhat.ipaas.model.integration.IntegrationTemplate.class),
     IntegrationTemplateConnectionStep(com.redhat.ipaas.model.integration.IntegrationTemplateConnectionStep.class),
     Step(com.redhat.ipaas.model.integration.Step.class),
-    Tag(com.redhat.ipaas.model.integration.Tag.class),
 
     Permission(com.redhat.ipaas.model.user.Permission.class),
     Role(com.redhat.ipaas.model.user.Role.class),

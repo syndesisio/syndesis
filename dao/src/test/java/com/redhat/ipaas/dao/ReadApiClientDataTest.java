@@ -17,8 +17,10 @@ package com.redhat.ipaas.dao;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.core.Json;
@@ -42,6 +44,7 @@ public class ReadApiClientDataTest {
 
 	    Integration integrationIn = new Integration.Builder()
 	                .desiredStatus(Integration.Status.Activated)
+	                .tags(new TreeSet<String>(Arrays.asList("tag1", "tag2")))
 	                .createdDate(new Date())
 	                .build();
 	    String integrationJson = mapper.writeValueAsString(integrationIn);

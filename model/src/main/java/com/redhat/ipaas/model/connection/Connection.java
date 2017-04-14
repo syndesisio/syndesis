@@ -25,8 +25,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
+import com.redhat.ipaas.model.WithTags;
 import com.redhat.ipaas.model.environment.Organization;
-import com.redhat.ipaas.model.integration.Tag;
 import org.immutables.value.Value;
 
 /**
@@ -35,7 +35,7 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @JsonDeserialize(builder = Connection.Builder.class)
-public interface Connection extends WithId<Connection>, WithName, Serializable {
+public interface Connection extends WithId<Connection>, WithTags, WithName, Serializable {
 
     default Kind getKind() {
         return Kind.Connection;
@@ -60,8 +60,6 @@ public interface Connection extends WithId<Connection>, WithName, Serializable {
     String getIcon();
 
     Optional<String> getDescription();
-
-    Optional<List<Tag>> getTags();
 
     Optional<String> getUserId();
     
