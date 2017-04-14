@@ -41,7 +41,7 @@
                    *ngIf="i<5">
                 <!-- Icons -->
 
-                <div class="col-xs-3 icons"
+                <div class="icons"
                      (click)="selectedIntegration(integration)">
                   <div class="list-view-pf-left">
                     <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
@@ -52,7 +52,7 @@
 
                 <!-- Name -->
 
-                <div class="col-xs-4 name"
+                <div class="name"
                      (click)="selectedIntegration(integration)">
                   {{ integration.name }}
                 </div>
