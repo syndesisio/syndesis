@@ -150,7 +150,7 @@ public class DefaultProjectGeneratorTest {
     }
 
     // Helper method to help constuct maps with concise syntax
-    private static HashMap<String, ? extends String> map(Object... values) {
+    private static HashMap<String, String> map(Object... values) {
         HashMap<String, String> rc = new HashMap<String, String>();
         for (int i = 0; i + 1 < values.length; i += 2) {
             rc.put(values[i].toString(), values[i + 1].toString());

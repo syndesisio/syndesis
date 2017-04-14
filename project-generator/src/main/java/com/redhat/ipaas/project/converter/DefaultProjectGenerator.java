@@ -151,7 +151,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                                 }
 
                                 Connector connector = request.getConnectors().get(connectorId);
-                                flow.addStep(createEndpointStep(connector, action.getCamelConnectorPrefix(),  connection.getConfiguredProperties(), step.getConfiguredProperties()));
+                                flow.addStep(createEndpointStep(connector, action.getCamelConnectorPrefix(), 
+                                        connection.getConfiguredProperties(), step.getConfiguredProperties().orElse(new HashMap<String,String>())));
                             } catch (IOException | URISyntaxException e) {
                                 e.printStackTrace();
                             }
@@ -161,7 +162,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                 }
 
                 try {
-                    HashMap<String, Object> stepJSON = new HashMap<>(step.getConfiguredProperties());
+                    HashMap<String, Object> stepJSON = new HashMap<>(step.getConfiguredProperties().orElse(new HashMap<String,String>()));
                     stepJSON.put("kind", step.getStepKind());
                     String json = Json.mapper().writeValueAsString(stepJSON);
                     flow.addStep(Json.mapper().readValue(json, io.fabric8.funktion.model.steps.Step.class));
