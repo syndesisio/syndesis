@@ -41,7 +41,7 @@
     <div class="integration col-xs-12" *ngFor="let integration of integrations">
 
       <!-- Icons -->
-      <div class="col-xs-2 icons" (click)="goto(integration)">
+      <div class="icons" (click)="goto(integration)">
         <div class="list-view-pf-left" *ngIf="integration">
           <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
           <span class="fa fa-angle-right"></span>
@@ -59,19 +59,19 @@
       </div>
 
       <!-- Name -->
-      <div class="col-xs-3 name" (click)="goto(integration)">
+      <div class="name" (click)="goto(integration)">
         {{ integration.name }}
       </div>
 
       <!-- Description -->
-      <div class="col-xs-5 description" (click)="goto(integration)">
+      <div class="description" (click)="goto(integration)">
         <div class="list-group-item-text">
           {{ integration.description }}
         </div>
       </div>
 
       <!-- Active/Inactive -->
-      <div class="col-xs-1 active-inactive">
+      <div class="active-inactive">
         <div class="list-view-pf-additional-info-item">
           <!-- TODO
           <div *ngIf="integration.currentStatus !== integration.desiredStatus">
@@ -95,7 +95,7 @@
       </div>
 
       <!-- Actions -->
-      <div class="col-xs-1 actions">
+      <div class="actions">
         <div dropdown class="dropdown pull-right dropdown-kebab-pf">
           <button dropdownToggle class="btn btn-link" type="button" id="dropdownKebabRight9" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="true">
