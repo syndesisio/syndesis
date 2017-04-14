@@ -4,7 +4,7 @@
     "data": {
       "id": "twitter",
       "name": "Twitter",
-      "description": "Twitter Connector",
+      "description": "Direct and event-driven interaction with Twitter timelines, searches, and messages",
       "icon": "fa-twitter",
       "properties": {
         "accessToken": {
@@ -123,7 +123,7 @@
     "data": {
       "id": "salesforce",
       "name": "Salesforce",
-      "description": "Salesforce connector",
+      "description": "Cloud-based Customer Relationship Management",
       "icon": "fa-puzzle-piece",
       "properties": {
         "loginUrl": {
@@ -237,7 +237,7 @@
     "data": {
       "id": "http",
       "name": "HTTP",
-      "description": "HTTP connector",
+      "description": "Interact with APIs and plain HTTP endpoints",
       "icon": "fa-globe",
       "properties": {},
       "actions": [
@@ -447,6 +447,285 @@
           "id": "com.redhat.ipaas:day-trade-place-connector:latest",
           "camelConnectorGAV": "com.redhat.ipaas:day-trade-place-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "day-trade-place"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "connector",
+    "data": {
+      "id": "linkedin",
+      "name": "LinkedIn",
+      "description": "Connect and interact with your professional social network",
+      "icon": "fa-puzzle-piece",
+      "properties": {},
+      "actions": [
+        {
+          "id": "com.redhat.ipaas:linkedin-get-connections-connector:latest",
+          "name": "Get Connections",
+          "description": "Get all LinkedIn connections",
+          "inputDataShape": {
+             "kind" : "none"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:linkedin-connections-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "linkedin-connections"
+        },
+        {
+          "id": "com.redhat.ipaas:linkedin-add-invite-connector:latest",
+          "name": "Send Invite",
+          "description": "Send out a LinkedIn Invite",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "none"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:linkedin-invite-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "linkedin-invite"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "connector",
+    "data": {
+      "id": "servicenow",
+      "name": "ServiceNow",
+      "description": "Cloud-based IT Service Management",
+      "icon": "fa-puzzle-piece",
+      "properties": {},
+      "actions": [
+        {
+          "id": "com.redhat.ipaas:servicenow-connector:latest",
+          "name": "service-now",
+          "description": "Provides access to all of ServiceNow REST API",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:servicenow-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "servicenow"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "connector",
+    "data": {
+      "id": "github",
+      "name": "GitHub",
+      "description": "Manage code on GitHub through commits, pull requests, tags, and more",
+      "icon": "fa-puzzle-piece",
+      "properties": {},
+      "actions": [
+        {
+          "id": "com.redhat.ipaas:github-pullrequest-connector:latest",
+          "name": "github-pullrequest",
+          "description": "Create a GitHub PullRequest",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:github-pullrequest-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "github-pullrequest"
+        },
+        {
+          "id": "com.redhat.ipaas:github-tag-connector:latest",
+          "name": "github-tag",
+          "description": "Create a GitHub Tag",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:github-tag-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "github-tag"
+        },
+        {
+          "id": "com.redhat.ipaas:github-commit-connector:latest",
+          "name": "github-commit",
+          "description": "Performs a GitHub Commit",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:github-commit-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "github-commit"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "connector",
+    "data": {
+      "id": "gmail",
+      "name": "GMail",
+      "description": "Send and receive email using Google's Gmail service",
+      "icon": "fa-puzzle-piece",
+      "properties": {},
+      "actions": [
+        {
+          "id": "com.redhat.ipaas:gmail-send:latest",
+          "name": "GMail Send",
+          "description": "Send an email",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:gmail-send-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "gmail-send"
+        },
+        {
+          "id": "com.redhat.ipaas:gmail-list:latest",
+          "name": "GMail List",
+          "description": "List incoming messages",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:gmail-list-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "gmail-list"
+        },
+        {
+          "id": "com.redhat.ipaas:gmail-get:latest",
+          "name": "GMail Get",
+          "description": "Get email message",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:gmail-get-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "gmail-get"
+        },
+        {
+          "id": "com.redhat.ipaas:gmail-delete:latest",
+          "name": "GMail Delete",
+          "description": "Delete email message",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:gmail-delete-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "gmail-delete"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "connector",
+    "data": {
+      "id": "facebook",
+      "name": "Facebook",
+      "description": "Access Facebook social network features such as posts, users, checkins, etc",
+      "icon": "fa-puzzle-piece",
+      "properties": {},
+      "actions": [
+        {
+          "id": "com.redhat.ipaas:facebook-post-connector:latest",
+          "name": "Post",
+          "description": "Creates a post to Facebook",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:facebook-post-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "facebook-post"
+        },
+        {
+          "id": "com.redhat.ipaas:facebook-like-connector:latest",
+          "name": "Like",
+          "description": "Like something on Facebook",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:facebook-like-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "facebook-like"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "connector",
+    "data": {
+      "id": "jms",
+      "name": "Messaging",
+      "description": "Produce and consume messages for event-driven interaction",
+      "icon": "fa-puzzle-piece",
+      "properties": {},
+      "actions": [
+        {
+          "id": "com.redhat.ipaas:jms-producer-connector:latest",
+          "name": "Message Producer",
+          "description": "Drop a message on a Queue",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:jms-producer-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "jms-producer"
+        },
+        {
+          "id": "com.redhat.ipaas:jms-consumer-connector:latest",
+          "name": "Message Consumer",
+          "description": "Takes a message off a Queue",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:jms-consumer-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "jms-consumer"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "connector",
+    "data": {
+      "id": "ftp",
+      "name": "File Transfer",
+      "description": "Remote, secure file transfer",
+      "icon": "fa-puzzle-piece",
+      "properties": {},
+      "actions": [
+        {
+          "id": "com.redhat.ipaas:ftp-connector:latest",
+          "name": "File Transport",
+          "description": "FTP/SFTP/FPTS file transfer",
+          "inputDataShape": {
+             "kind" : "any"
+          },
+          "outputDataShape": {
+             "kind" : "any"
+          },
+          "camelConnectorGAV": "com.redhat.ipaas:ftp-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "ftp"
         }
       ]
     }
