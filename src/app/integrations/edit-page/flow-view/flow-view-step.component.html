@@ -98,12 +98,12 @@
             (click)="goto('connection-select')">
           <span [class]="getTextClass('connection-select')">Choose a connection</span>
         </li>
-        <li *ngIf="!step.action"
+        <li *ngIf="step.connection && !step.action"
             [class]="getSubMenuActiveClass('action-select')"
             (click)="goto('action-select')">
           <span [class]="getTextClass('action-select')">Choose an action</span>
         </li>
-        <li *ngIf="!step.configuredProperties"
+        <li *ngIf="step.action && !step.configuredProperties"
             [class]="getSubMenuActiveClass('action-configure')"
             (click)="goto('action-configure')">
           <span [class]="getTextClass('action-configure')">Configure the action</span>
@@ -111,7 +111,7 @@
         <li *ngIf="step.configuredProperties"
             [class]="getSubMenuActiveClass('action-configure')"
             (click)="goto('action-configure')">
-          <span [class]="getTextClass('action-configure')">Configure</span>
+          <span [class]="getTextClass('action-configure')">Configuration</span>
         </li>
       </ul>
 
@@ -147,7 +147,7 @@
             (click)="goto('step-select')">
           <span [class]="getTextClass('step-select')">Choose a step</span>
         </li>
-        <li *ngIf="!step.configuredProperties"
+        <li *ngIf="step.stepKind && !step.configuredProperties"
             [class]="getSubMenuActiveClass('step-configure')"
             (click)="goto('step-configure')">
           <span [class]="getTextClass('step-configure')">Configure the step</span>
@@ -155,7 +155,7 @@
         <li *ngIf="step.configuredProperties"
             [class]="getSubMenuActiveClass('step-configure')"
             (click)="goto('step-configure')">
-          <span [class]="getTextClass('step-configure')">Configure</span>
+          <span [class]="getTextClass('step-configure')">Configuration</span>
         </li>
       </ul>
     </div>
