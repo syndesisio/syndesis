@@ -16,10 +16,10 @@
 package com.redhat.ipaas.model;
 
 import java.util.Optional;
-import java.util.TreeSet;
+import java.util.SortedSet;
 
 public interface WithTags {
 
-    Optional<TreeSet<String>> getTags();
+    Optional<SortedSet<String>> getTags();
 
 }

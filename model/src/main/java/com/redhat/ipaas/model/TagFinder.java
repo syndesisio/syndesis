@@ -15,7 +15,7 @@
  */
 package com.redhat.ipaas.model;
 
-import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -25,13 +25,13 @@ import java.util.TreeSet;
  */
 public class TagFinder {
 
-    private Set<String> tags = new TreeSet<String>();
+    private SortedSet<String> tags = new TreeSet<String>();
     
     public TagFinder add(ListResult<? extends WithTags> items) {
         if (items.getItems()!=null) {
             for (WithTags item : items.getItems()) {
                 if (item.getTags().isPresent()) {
-                    for (String tag: (Set<String>) item.getTags().get()) {
+                    for (String tag: (SortedSet<String>) item.getTags().get()) {
                         tags.add(tag);
                     }
                 }
