@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {ConfigService} from '../../config.service';
 import { Restangular } from 'ng2-restangular';
+import { log } from '../../logging';
 
 export class ChangeEvent {
   action: string;
@@ -42,18 +43,17 @@ export class EventsService {
   private connectEventSource(url: string) {
     const eventSource = new EventSource( url);
 
-
     eventSource.addEventListener( 'message', (event) => {
-      //console.log('sse.message', event.data)
+      log.info('sse.message: ' + JSON.stringify(event.data));
       this.messageEvents.next( event.data );
     } );
     eventSource.addEventListener( 'change-event', (event) => {
       const value = JSON.parse( event.data ) as ChangeEvent;
-      //console.log('sse.change-event', value)
+      log.info('sse.change-event: ' + JSON.stringify(value));
       this.changeEvents.next( value );
     } );
     eventSource.addEventListener( 'close', (event) => {
-      //console.log('sse.close', event)
+      log.info('sse.close: ' + JSON.stringify(event));
       // TODO: reconnect?
     } );
     this.eventSource = eventSource;
@@ -65,10 +65,12 @@ export class EventsService {
       const messageEvent = JSON.parse( event.data ) as MessageEvent;
       switch (messageEvent.event) {
         case 'message':
+          log.info('ws.message: ' + JSON.stringify(messageEvent.data));
           // console.log('ws.message', messageEvent.data)
           this.messageEvents.next( messageEvent.data );
           break;
         case 'change-event':
+          log.info('ws.change-event: ' + JSON.stringify(messageEvent.data));
           const value = JSON.parse( messageEvent.data ) as ChangeEvent;
           //console.log('ws.change-event', value)
           this.changeEvents.next( value );
@@ -78,7 +80,7 @@ export class EventsService {
       }
     };
     ws.onclose = (event) => {
-      //console.log('ws.onclose', event)
+      log.info('ws.onclose: ' + JSON.stringify(event));
       // TODO: reconnect?
     };
     this.webSocket = ws;
