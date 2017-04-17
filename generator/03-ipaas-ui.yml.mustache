@@ -119,6 +119,7 @@
           "scopes": ["openid"],
           "oidc": true,
           "hybrid": true,
-          "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}"
+          "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}",
+          "auto-link-github": ${CONTROLLERS_INTEGRATION_ENABLED}
         }
       }

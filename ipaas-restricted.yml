@@ -1383,7 +1383,7 @@ objects:
         }, {
           "alias": "github",
           "providerId": "github",
-          "enabled": true,
+          "enabled": ${CONTROLLERS_INTEGRATION_ENABLED},
           "updateProfileFirstLoginMode": "on",
           "trustEmail": true,
           "storeToken": true,
@@ -2243,7 +2243,8 @@ objects:
           "scopes": ["openid"],
           "oidc": true,
           "hybrid": true,
-          "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}"
+          "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}",
+          "auto-link-github": ${CONTROLLERS_INTEGRATION_ENABLED}
         }
       }
 - apiVersion: v1
