@@ -2,57 +2,56 @@
   <div class="container-cards-pf connections-list">
     <div class="row row-cards-pf cards">
 
-      <!-- Each Connection's Card Container -->
+      <!-- Toast Notification Container -->
+      <toaster-container></toaster-container>
 
-      <div class="col-xs-12 col-sm-3 col-md-2 card"
-           *ngFor="let connection of connections" (click)="onSelect(connection)">
-
-        <!-- Toast Notification Container -->
-
-        <toaster-container></toaster-container>
-
-
-        <!-- Delete Modal Container -->
-
-        <div bsModal
-             #childModal="bs-modal"
-             class="modal fade"
-             tabindex="-1"
-             role="dialog"
-             aria-labelledby="deleteModal"
-             aria-hidden="true">
-          <div class="modal-dialog modal-md">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title pull-left">Confirm Delete</h4>
-                <button type="button"
-                        class="close pull-right"
-                        aria-label="Close"
-                        (click)="hideModal()">
+      <!-- Delete Modal Container -->
+      <div bsModal
+           #childModal="bs-modal"
+           class="modal fade"
+           tabindex="-1"
+           role="dialog"
+           aria-labelledby="deleteModal"
+           aria-hidden="true">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">Confirm Delete</h4>
+              <button type="button"
+                      class="close pull-right"
+                      aria-label="Close"
+                      (click)="hideModal()">
                   <span aria-hidden="true">&times;</span>
                 </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <p>Are you sure you would like to delete the following connection?</p>
               </div>
-              <div class="modal-body">
-                <div>
-                  <p>Are you sure you would like to delete the following connection?</p>
-                </div>
-                <div style="text-align: center; font-weight: 700">
-                  <p>{{ connection['name'] }}</p>
-                </div>
-                <div>
-                  <p><b style="color: red;">NOTE:</b> This action <i>cannot</i> be undone.</p>
-                </div>
+              <div style="text-align: center; font-weight: 700">
+                <p>{{ selectedForDelete?.name }}</p>
               </div>
-              <div class="modal-footer">
-                <button class="pull-right btn btn-primary"
-                        (click)="deleteAction(connection)">Delete</button>
-                <button class="pull-right btn btn-cancel"
-                        (click)="hideModal()">Cancel</button>
+              <div>
+                <p><b style="color: red;">NOTE:</b> This action <i>cannot</i> be undone.</p>
               </div>
+            </div>
+            <div class="modal-footer">
+              <button class="pull-right btn btn-primary"
+                      (click)="deleteAction(selectedForDelete)">Delete</button>
+              <button class="pull-right btn btn-cancel"
+                      (click)="selectedForDelete = undefined; hideModal()">Cancel</button>
             </div>
           </div>
         </div>
+      </div>
 
+
+
+      <!-- Each Connection's Card Container -->
+
+      <div class="col-xs-12 col-sm-3 col-md-2 card"
+           *ngFor="let connection of connections"
+           (click)="onSelect(connection, $event)">
 
         <!-- Connection Card -->
 
@@ -76,29 +75,29 @@
                         id="dropdownKebabRight9">
                   <span class="fa fa-ellipsis-v"></span>
                 </button>
-                  <ul dropdownMenu
-                      class="dropdown-menu dropdown-menu-right"
-                      role="menu">
-                    <li role="menuitem">
-                      <a [routerLink]="['/connections', connection.id]"
-                        class="dropdown-item">View</a>
-                    </li>
-                    <!--
+                <ul dropdownMenu
+                    class="dropdown-menu dropdown-menu-right"
+                    role="menu">
+                  <li role="menuitem">
+                    <a [routerLink]="['/connections', connection.id]"
+                       class="dropdown-item">View</a>
+                  </li>
+                  <!--
                     <li role="menuitem">
                       <a [routerLink]="['/connections/edit', connection.id]"
                         class="dropdown-item">Edit</a>
                     </li>
                     -->
-                    <!--
+                  <!--
                     <li role="menuitem">
                       <a class="dropdown-item">Duplicate</a>
                     </li>
                     -->
-                    <li>
-                      <a (click)="requestDelete(connection)"
-                        class="dropdown-item">Delete</a>
-                    </li>
-                  </ul>
+                  <li>
+                    <a (click)="requestDelete(connection); $event.stopPropagation()"
+                       class="dropdown-item">Delete</a>
+                  </li>
+                </ul>
               </div>
             </div>
 
