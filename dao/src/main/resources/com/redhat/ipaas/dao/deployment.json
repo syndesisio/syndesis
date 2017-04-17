@@ -356,6 +356,18 @@
           "deprecated": false,
           "secret": false,
           "description": "Host and port of HTTP service to use (override host in swagger schema)"
+        },
+        "api_key": {
+          "kind": "property",
+          "displayName": "API Key",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description": "The API Key used to access the service"
         }
       },
       "actions": [
@@ -429,6 +441,18 @@
           "deprecated": false,
           "secret": false,
           "description": "Host and port of HTTP service to use (override host in swagger schema)"
+        },
+        "api_key": {
+          "kind": "property",
+          "displayName": "API Key",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description": "The API Key used to access the service"
         }
       },
       "actions": [
@@ -441,6 +465,39 @@
           },
           "outputDataShape": {
             "kind": "none"
+          },
+          "properties": {
+          },
+          "id": "com.redhat.ipaas:day-trade-place-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:day-trade-place-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "day-trade-place"
+        },
+        {
+          "name": "Retrieve Trade",
+          "description": "Retrieve a trade on Day Trade API server",
+          "inputDataShape": {
+            "kind": "java",
+            "type": "com.redhat.ipaas.connector.daytrade.Trade"
+          },
+          "outputDataShape": {
+            "kind": "java",
+            "type": "com.redhat.ipaas.connector.daytrade.Trade"
+          },
+          "properties": {
+          },
+          "id": "com.redhat.ipaas:day-trade-place-connector:latest",
+          "camelConnectorGAV": "com.redhat.ipaas:day-trade-place-connector:@ipaas-connectors.version@",
+          "camelConnectorPrefix": "day-trade-place"
+        },
+        {
+          "name": "Get Latest Trade",
+          "description": "Get the latest trade on Day Trade API server",
+          "inputDataShape": {
+            "kind": "none"
+          },
+          "outputDataShape": {
+            "kind": "java",
+            "type": "com.redhat.ipaas.connector.daytrade.Trade"
           },
           "properties": {
           },
