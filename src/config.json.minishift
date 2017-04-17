@@ -11,6 +11,7 @@
     "scopes": ["openid"],
     "oidc": true,
     "hybrid": true,
-    "issuer": "https://ipaas.192.168.64.2.xip.io/auth/realms/ipaas"
+    "issuer": "https://ipaas.192.168.64.2.xip.io/auth/realms/ipaas",
+    "auto-link-github": true
   }
 }

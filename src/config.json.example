@@ -10,6 +10,7 @@
     "scopes": [],
     "oidc": true,
     "hybrid": true,
-    "issuer": "http://localhost:8282/auth/realms/ipaas-test"
+    "issuer": "http://localhost:8282/auth/realms/ipaas-test",
+    "auto-link-github": true
   }
 }
