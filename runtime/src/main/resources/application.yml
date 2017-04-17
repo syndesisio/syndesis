@@ -82,3 +82,7 @@ verifier:
 
 generator:
   secretMaskingEnabled: false
+
+controllers:
+  integration:
+    enabled: true

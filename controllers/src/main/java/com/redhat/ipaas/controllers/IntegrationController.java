@@ -42,7 +42,6 @@ import java.util.concurrent.TimeUnit;
  * their current status matches their desired status.
  */
 @Service
-@ConditionalOnProperty(value = "controllers.integration.enabled")
 public class IntegrationController {
 
     private final DataManager dataManager;

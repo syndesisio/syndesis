@@ -15,27 +15,18 @@
  */
 package com.redhat.ipaas.controllers;
 
-import com.redhat.ipaas.core.Tokens;
 import com.redhat.ipaas.model.integration.Integration;
-import com.redhat.ipaas.openshift.OpenShiftDeployment;
-import com.redhat.ipaas.openshift.OpenShiftService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
-public class DeleteHandler implements WorkflowHandler {
-
-    private final OpenShiftService openShiftService;
+@ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "false")
+public class DemoDeactivateHandler implements WorkflowHandler {
 
     public static final Set<Integration.Status> DESIRED_STATE_TRIGGERS =
-        Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            Integration.Status.Deleted
-        )));
-
-    public DeleteHandler(OpenShiftService openShiftService) {
-        this.openShiftService = openShiftService;
-    }
+        Collections.unmodifiableSet(new HashSet<>(Arrays.asList(Integration.Status.Deactivated)));
 
     public Set<Integration.Status> getTriggerStatuses() {
         return DESIRED_STATE_TRIGGERS;
@@ -43,27 +34,21 @@ public class DeleteHandler implements WorkflowHandler {
 
     @Override
     public Integration execute(Integration integration) {
-        String token = integration.getToken().get();
-        Tokens.setAuthenticationToken(token);
 
-        OpenShiftDeployment deployment = OpenShiftDeployment
-            .builder()
-            .name(integration.getName())
-            .token(token)
-            .build();
+        try {
+            Thread.sleep(5000L);
+        } catch (InterruptedException e) {
+            return integration;
+        }
 
-        Integration.Status currentStatus = !openShiftService.exists(deployment)
-            || openShiftService.delete(deployment)
-            ? Integration.Status.Deleted
-            : Integration.Status.Pending;
-
-
-        return new Integration.Builder()
+        Integration updatedIntegration = new Integration.Builder()
             .createFrom(integration)
-            .currentStatus(currentStatus)
+            .currentStatus(Integration.Status.Deactivated)
             .lastUpdated(new Date())
             .build();
-
+        return updatedIntegration;
     }
 
 }
+
+
