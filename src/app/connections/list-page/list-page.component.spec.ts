@@ -6,13 +6,14 @@ import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ng2-restangular';
 
 import { ModalModule } from 'ng2-bootstrap/modal';
+import { DropdownModule } from 'ng2-bootstrap/dropdown';
 import { ToasterModule } from 'angular2-toaster';
+import { StoreModule } from '../../store/store.module';
 
 import { IPaaSCommonModule } from '../../common/common.module';
 import { ConnectionsListPage } from './list-page.component';
 import { ConnectionsListComponent } from '../list/list.component';
 import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
-import { StoreModule } from '../../store/store.module';
 
 describe('ConnectionListPage', () => {
   let component: ConnectionsListPage;
@@ -25,7 +26,8 @@ describe('ConnectionListPage', () => {
         StoreModule,
         RouterTestingModule.withRoutes([]),
         RestangularModule.forRoot(),
-        ModalModule,
+        ModalModule.forRoot(),
+        DropdownModule.forRoot(),
         ToasterModule,
       ],
       declarations: [ConnectionsListPage, ConnectionsListComponent, ConnectionsListToolbarComponent],
