@@ -813,6 +813,7 @@
       "description": "Salesforce Connection",
       "createdDate": 1492095344060,
       "lastUpdated": 1492095344060,
+      "tags":["example","test"],
       "icon": "fa-globe",
       "connectorId": "salesforce",
       "configuredProperties": {
@@ -831,6 +832,7 @@
       "description": "HTTP Connection",
       "createdDate": 1492095344060,
       "lastUpdated": 1492095344060,
+      "tags":["example","test"],
       "icon": "fa-globe",
       "connectorId": "http",
       "configuredProperties": {}
@@ -844,6 +846,7 @@
       "description": "Timer Connection",
       "createdDate": 1492095344060,
       "lastUpdated": 1492095344060,
+      "tags":["example","test"],
       "icon": "fa-globe",
       "connectorId": "timer",
       "configuredProperties": {}
@@ -858,10 +861,8 @@
       "configuration": "",
       "createdDate": 1492095344060,
       "lastUpdated": 1492095344060,
+      "tags":["example","test"],
       "desiredStatus": "Activated",
-      "tags": [
-        { "name": "example" }
-       ],
       "steps": [
         {
           "id": "1",
@@ -961,9 +962,7 @@
       "desiredStatus": "Activated",
       "currentStatus": "Deactivated",
       "statusMessage": "This integration failed. Please contact system admin for errors.",
-      "tags": [
-        { "name": "example" }
-       ],
+      "tags":["example","test"],
       "steps": [
         {
           "id": "5",
