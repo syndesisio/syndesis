@@ -20,8 +20,8 @@
                     class="close pull-right"
                     aria-label="Close"
                     (click)="hideModal()">
-                <span aria-hidden="true">&times;</span>
-              </button>
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
           <div class="modal-body">
             <div>
@@ -35,161 +35,187 @@
             <button class="pull-right btn btn-primary"
                     (click)="doAction(currentAction, selectedIntegration)">
               {{ getActionButtonText() }}
-              </button>
+            </button>
             <button class="pull-right btn btn-cancel"
                     (click)="hideModal()">Cancel
-              </button>
+            </button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Tabs -->
-    <!--<tabset>-->
+    <tabset>
 
-    <!-- All -->
-    <!--<tab heading='All'>-->
-    <div class="integration col-xs-12"
-         *ngFor="let integration of integrations">
+      <!-- All -->
+      <tab heading="All">
+        <div class="integration col-xs-12"
+             *ngFor="let integration of integrations">
 
-      <!-- Icons -->
-      <div class="col-xs-2 icons"
-           (click)="goto(integration)">
-        <div class="list-view-pf-left"
-             *ngIf="integration">
-          <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
-          <span class="fa fa-angle-right"></span>
-          <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
-          <!--
-          <span class="card-pf-icon-large image-icon">
-            <img src="../../../assets/icons/{{ integration.connections[0].connectorId }}.integration.png">
-          </span>
-          <span class="fa fa-angle-right"></span>
-          <span class="card-pf-icon-large image-icon">
-            <img src="../../../assets/icons/{{ integration.connections[1].connectorId }}.integration.png">
-          </span>
-          -->
-        </div>
-      </div>
-
-      <!-- Name -->
-      <div class="col-xs-3 name"
-           (click)="goto(integration)">
-        {{ integration.name }}
-      </div>
-
-      <!-- Description -->
-      <div class="col-xs-5 description"
-           (click)="goto(integration)">
-        <div class="list-group-item-text">
-          {{ integration.description }}
-        </div>
-      </div>
-
-      <!-- Active/Inactive -->
-      <div class="col-xs-1 active-inactive">
-        <div class="list-view-pf-additional-info-item">
-          <template #statTemplate>{{integration.statusMessage}}
-          </template>
-          <div *ngIf="integration.currentStatus !== integration.desiredStatus">
-            <i *ngIf="!integration.statusMessage"
-                  class="spinner spinner-inline"></i>
-            <i *ngIf="integration.statusMessage"
-                  class="pficon pficon-error-circle-o"
-                  [tooltip]="statTemplate"
-                  placement="top"></i>
+          <!-- Icons -->
+          <div class="col-xs-2 icons"
+               (click)="goto(integration)">
+            <div class="list-view-pf-left"
+                 *ngIf="integration">
+              <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
+              <span class="fa fa-angle-right"></span>
+              <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
+              <!--
+              <span class="card-pf-icon-large image-icon">
+                <img src="../../../assets/icons/{{ integration.connections[0].connectorId }}.integration.png">
+              </span>
+              <span class="fa fa-angle-right"></span>
+              <span class="card-pf-icon-large image-icon">
+                <img src="../../../assets/icons/{{ integration.connections[1].connectorId }}.integration.png">
+              </span>
+              -->
+            </div>
           </div>
-          <div *ngIf="integration.currentStatus === integration.desiredStatus">
+
+          <!-- Name -->
+          <div class="col-xs-3 name"
+               (click)="goto(integration)">
+            {{ integration.name }}
+          </div>
+
+          <!-- Description -->
+          <div class="col-xs-5 description"
+               (click)="goto(integration)">
+            <div class="list-group-item-text">
+              {{ integration.description }}
+            </div>
+          </div>
+
+          <!-- Active/Inactive -->
+          <div class="col-xs-1 active-inactive">
+            <div class="list-view-pf-additional-info-item">
+              <template #statTemplate>{{integration.statusMessage}}
+              </template>
+              <div *ngIf="integration.currentStatus !== integration.desiredStatus">
+                <i *ngIf="!integration.statusMessage"
+                   class="spinner spinner-inline"></i>
+                <i *ngIf="integration.statusMessage"
+                   class="pficon pficon-error-circle-o"
+                   [tooltip]="statTemplate"
+                   placement="top"></i>
+              </div>
+              <div *ngIf="integration.currentStatus === integration.desiredStatus">
             <span *ngIf="integration.currentStatus === 'Activated'"
                   class="label label-success"
                   [tooltip]="statTemplate"
                   (click)="requestDeactivate(integration)">Active
           </span>
-            <span *ngIf="integration.currentStatus === 'Deactivated'"
-                  class="label label-default"
-                  [tooltip]="statTemplate"
-                  (click)="requestActivate(integration)">Inactive
+                <span *ngIf="integration.currentStatus === 'Deactivated'"
+                      class="label label-default"
+                      [tooltip]="statTemplate"
+                      (click)="requestActivate(integration)">Inactive
           </span>
-            <span *ngIf="integration.currentStatus === 'Draft'"
-                  class="label label-primary"
-                  [tooltip]="statTemplate"
-                  disabled>Draft
+                <span *ngIf="integration.currentStatus === 'Draft'"
+                      class="label label-primary"
+                      [tooltip]="statTemplate"
+                      disabled>Draft
           </span>
-            <span *ngIf="integration.currentStatus === 'Deleted'"
-                  class="label label-danger"
-                  [tooltip]="statTemplate"
-                  disabled>Deleted
+                <span *ngIf="integration.currentStatus === 'Deleted'"
+                      class="label label-danger"
+                      [tooltip]="statTemplate"
+                      disabled>Deleted
           </span>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Uses -->
+          <div class="uses">
+            <p>{{ integration.timesUsed || 0 }} uses</p>
+          </div>
+
+
+          <!-- Pass/Fail -->
+
+          <div class="pass-fail">
+
+            <!-- OK Status -->
+
+            <i *ngIf="!integration.statusMessage"
+               class="pficon pficon-ok"></i>
+
+            <!-- Not OK Status -->
+
+            <template #statTemplate>{{integration.statusMessage}}</template>
+            <i *ngIf="integration.statusMessage"
+               class="pficon pficon-error-circle-o"
+               [tooltip]="statTemplate"
+               placement="bottom"></i>
+          </div>
+
+
+          <!-- Actions -->
+          <<<<<<< 77bccbbdeabf7f3d06fca075fab0b72a9443a77d
+          <div class="col-xs-1 actions">
+            =======
+
+            <div class="actions">
+              >>>>>>> Re-add tabs, add elements from #253
+              <div dropdown
+                   class="dropdown pull-right dropdown-kebab-pf">
+                <button dropdownToggle
+                        class="btn btn-link"
+                        type="button"
+                        id="dropdownKebabRight9"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="true">
+                  <span class="fa fa-ellipsis-v"></span>
+                </button>
+                <ul dropdownMenu
+                    class="dropdown-menu dropdown-menu-right"
+                    aria-labelledby="dropdownKebabRight9">
+                  <li role="menuitem">
+                    <a [routerLink]="['edit', integration.id, 'save-or-add-step']">Edit</a>
+                  </li>
+                  <li role="menuitem"
+                      *ngIf="integration.desiredStatus === 'Activated'">
+                    <a (click)="requestDeactivate(integration)">Deactivate</a>
+                  </li>
+                  <li role="menuitem"
+                      *ngIf="integration.desiredStatus === 'Deactivated'">
+                    <a (click)="requestActivate(integration)">Activate</a>
+                  </li>
+                  <li role="menuitem"
+                      *ngIf="integration.active === false"
+                      (click)="requestActivate(integration)">
+                    <a>Activate</a>
+                  </li>
+                  <!--
+                  <li>
+                    <a>Duplicate</a>
+                  </li>
+                  -->
+                  <li role="menuitem">
+                    <a (click)="requestDelete(integration)">Delete</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </tab>
 
-      <!-- Actions -->
-      <div class="col-xs-1 actions">
-        <div dropdown
-             class="dropdown pull-right dropdown-kebab-pf">
-          <button dropdownToggle
-                  class="btn btn-link"
-                  type="button"
-                  id="dropdownKebabRight9"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="true">
-            <span class="fa fa-ellipsis-v"></span>
-          </button>
-          <ul dropdownMenu
-              class="dropdown-menu dropdown-menu-right"
-              aria-labelledby="dropdownKebabRight9">
-            <li role="menuitem">
-              <a [routerLink]="['edit', integration.id, 'save-or-add-step']">Edit</a>
-            </li>
-            <li role="menuitem"
-                *ngIf="integration.desiredStatus === 'Activated'">
-              <a (click)="requestDeactivate(integration)">Deactivate</a>
-            </li>
-            <li role="menuitem"
-                *ngIf="integration.desiredStatus === 'Deactivated'">
-              <a (click)="requestActivate(integration)">Activate</a>
-            </li>
-            <li role="menuitem"
-                *ngIf="integration.active === false"
-                (click)="requestActivate(integration)">
-              <a>Activate</a>
-            </li>
-            <!--
-            <li>
-              <a>Duplicate</a>
-            </li>
-            -->
-            <li role="menuitem">
-              <a (click)="requestDelete(integration)">Delete</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <!--</tab>-->
+      <!-- Active -->
+      <tab heading="Active">
+        Active Integrations
+      </tab>
 
-    <!-- Active -->
-    <!--
-    <tab heading='Active'>
-      Active Integrations
-    </tab>
-    --<
+      <!-- Inactive -->
+      <tab heading="Inactive">
+        Inactive Integrations
+      </tab>
 
-    <!-- Inactive -->
-    <!--
-    <tab heading='Inactive'>
-      Inactive Integrations
-    </tab>
-    -->
-
-    <!-- Draft -->
-    <!--
-    <tab heading='Draft'>
-      Draft Integrations
-    </tab>
-  </tabset>
-  -->
+      <!-- Draft -->
+      <tab heading="Draft">
+        Draft Integrations
+      </tab>
+    </tabset>
   </div>
 </ipaas-loading>
