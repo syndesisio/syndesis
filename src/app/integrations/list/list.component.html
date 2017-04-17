@@ -5,12 +5,21 @@
     <toaster-container></toaster-container>
 
     <!-- Modal Container -->
-    <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="activateModal" aria-hidden="true">
+    <div bsModal
+         #childModal="bs-modal"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="activateModal"
+         aria-hidden="true">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title pull-left">Confirm {{ getActionTitle() }}</h4>
-            <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+            <button type="button"
+                    class="close pull-right"
+                    aria-label="Close"
+                    (click)="hideModal()">
                 <span aria-hidden="true">&times;</span>
               </button>
           </div>
@@ -23,10 +32,12 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="pull-right btn btn-primary" (click)="doAction(currentAction, selectedIntegration)">
+            <button class="pull-right btn btn-primary"
+                    (click)="doAction(currentAction, selectedIntegration)">
               {{ getActionButtonText() }}
               </button>
-            <button class="pull-right btn btn-cancel" (click)="hideModal()">Cancel
+            <button class="pull-right btn btn-cancel"
+                    (click)="hideModal()">Cancel
               </button>
           </div>
         </div>
@@ -38,11 +49,14 @@
 
     <!-- All -->
     <!--<tab heading='All'>-->
-    <div class="integration col-xs-12" *ngFor="let integration of integrations">
+    <div class="integration col-xs-12"
+         *ngFor="let integration of integrations">
 
       <!-- Icons -->
-      <div class="icons" (click)="goto(integration)">
-        <div class="list-view-pf-left" *ngIf="integration">
+      <div class="icons"
+           (click)="goto(integration)">
+        <div class="list-view-pf-left"
+             *ngIf="integration">
           <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
           <span class="fa fa-angle-right"></span>
           <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
@@ -59,12 +73,14 @@
       </div>
 
       <!-- Name -->
-      <div class="name" (click)="goto(integration)">
+      <div class="name"
+           (click)="goto(integration)">
         {{ integration.name }}
       </div>
 
       <!-- Description -->
-      <div class="description" (click)="goto(integration)">
+      <div class="description"
+           (click)="goto(integration)">
         <div class="list-group-item-text">
           {{ integration.description }}
         </div>
@@ -73,45 +89,60 @@
       <!-- Active/Inactive -->
       <div class="active-inactive">
         <div class="list-view-pf-additional-info-item">
-          <!-- TODO
           <div *ngIf="integration.currentStatus !== integration.desiredStatus">
-            <div class="spinner"></div>
+            <span class="spinner spinner-inline"></span>
           </div>
           <div *ngIf="integration.currentStatus === integration.desiredStatus">
-            -->
-          <!-- TODO these should be using currentStatus when it's available -->
-          <span *ngIf="integration.desiredStatus === 'Activated'" class="label label-success" (click)="requestDeactivate(integration)">Active
+            <span *ngIf="integration.currentStatus === 'Activated'"
+                  class="label label-success"
+                  (click)="requestDeactivate(integration)">Active
           </span>
-          <span *ngIf="integration.desiredStatus === 'Deactivated'" class="label label-default" (click)="requestActivate(integration)">Inactive
+            <span *ngIf="integration.currentStatus === 'Deactivated'"
+                  class="label label-default"
+                  (click)="requestActivate(integration)">Inactive
           </span>
-          <span *ngIf="integration.desiredStatus === 'Draft'" class="label label-primary" disabled>Draft
+            <span *ngIf="integration.currentStatus === 'Draft'"
+                  class="label label-primary"
+                  disabled>Draft
           </span>
-          <span *ngIf="integration.desiredStatus === 'Deleted'" class="label label-danger" disabled>Deleted
+            <span *ngIf="integration.currentStatus === 'Deleted'"
+                  class="label label-danger"
+                  disabled>Deleted
           </span>
-          <!--
-        </div>
-        -->
+          </div>
         </div>
       </div>
 
       <!-- Actions -->
       <div class="actions">
-        <div dropdown class="dropdown pull-right dropdown-kebab-pf">
-          <button dropdownToggle class="btn btn-link" type="button" id="dropdownKebabRight9" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="true">
+        <div dropdown
+             class="dropdown pull-right dropdown-kebab-pf">
+          <button dropdownToggle
+                  class="btn btn-link"
+                  type="button"
+                  id="dropdownKebabRight9"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="true">
             <span class="fa fa-ellipsis-v"></span>
           </button>
-          <ul dropdownMenu class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight9">
+          <ul dropdownMenu
+              class="dropdown-menu dropdown-menu-right"
+              aria-labelledby="dropdownKebabRight9">
             <li role="menuitem">
               <a [routerLink]="['edit', integration.id, 'save-or-add-step']">Edit</a>
             </li>
-            <li role="menuitem" *ngIf="integration.desiredStatus === 'Activated'">
+            <li role="menuitem"
+                *ngIf="integration.desiredStatus === 'Activated'">
               <a (click)="requestDeactivate(integration)">Deactivate</a>
             </li>
-            <li role="menuitem" *ngIf="integration.desiredStatus === 'Deactivated'">
+            <li role="menuitem"
+                *ngIf="integration.desiredStatus === 'Deactivated'">
               <a (click)="requestActivate(integration)">Activate</a>
             </li>
-            <li role="menuitem" *ngIf="integration.active === false" (click)="requestActivate(integration)">
+            <li role="menuitem"
+                *ngIf="integration.active === false"
+                (click)="requestActivate(integration)">
               <a>Activate</a>
             </li>
             <!--

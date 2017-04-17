@@ -18,12 +18,12 @@
                     (click)="cancel()">Cancel
             </button> &nbsp;
             <button class="btn btn-default"
-                    (click)="save()"
+                    (click)="save('Draft')"
                     [disabled]="!canContinue() || saveInProgress || publishInProgress"><span *ngIf="saveInProgress" class="spinner spinner-sm spinner-inline"></span>Save as Draft
             </button>
             <button type="button"
                     class="btn btn-primary"
-                    (click)="publish()"
+                    (click)="publish('Activated')"
                     [disabled]="!canContinue() || saveInProgress || publishInProgress"><span *ngIf="publishInProgress" class="spinner spinner-sm spinner-inline"></span>Publish</button>
           </div>
         </div>
