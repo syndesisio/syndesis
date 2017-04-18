@@ -50,7 +50,11 @@
        (mouseover)="showTooltip()"
        (mouseleave)="hideTooltip()"
        container="body">
-      <img class="connection-icon" *ngIf="step.stepKind === 'endpoint'" src="../../../assets/icons/{{ step.connection.connectorId }}.integration.png">
+      <i [class]="getIconClass()"
+         *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
+      <img class="connection-icon"
+           *ngIf="step.stepKind === 'endpoint' && step.connection"
+           src="../../../assets/icons/{{ step.connection.connectorId }}.integration.png">
     </p>
     <template #tooltipPopover>
       <div *ngIf="step.stepKind === 'endpoint'">

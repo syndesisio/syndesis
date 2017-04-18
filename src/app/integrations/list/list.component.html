@@ -89,24 +89,35 @@
       <!-- Active/Inactive -->
       <div class="col-xs-1 active-inactive">
         <div class="list-view-pf-additional-info-item">
+          <template #statTemplate>{{integration.statusMessage}}
+          </template>
           <div *ngIf="integration.currentStatus !== integration.desiredStatus">
-            <span class="spinner spinner-inline"></span>
+            <i *ngIf="!integration.statusMessage"
+                  class="spinner spinner-inline"></i>
+            <i *ngIf="integration.statusMessage"
+                  class="pficon pficon-error-circle-o"
+                  [tooltip]="statTemplate"
+                  placement="top"></i>
           </div>
           <div *ngIf="integration.currentStatus === integration.desiredStatus">
             <span *ngIf="integration.currentStatus === 'Activated'"
                   class="label label-success"
+                  [tooltip]="statTemplate"
                   (click)="requestDeactivate(integration)">Active
           </span>
             <span *ngIf="integration.currentStatus === 'Deactivated'"
                   class="label label-default"
+                  [tooltip]="statTemplate"
                   (click)="requestActivate(integration)">Inactive
           </span>
             <span *ngIf="integration.currentStatus === 'Draft'"
                   class="label label-primary"
+                  [tooltip]="statTemplate"
                   disabled>Draft
           </span>
             <span *ngIf="integration.currentStatus === 'Deleted'"
                   class="label label-danger"
+                  [tooltip]="statTemplate"
                   disabled>Deleted
           </span>
           </div>
