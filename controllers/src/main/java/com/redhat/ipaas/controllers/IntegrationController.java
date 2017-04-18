@@ -21,6 +21,8 @@ import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.ChangeEvent;
 import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.integration.Integration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,7 @@ import java.util.concurrent.*;
  */
 @Service
 public class IntegrationController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationController.class.getName());
 
     private final DataManager dataManager;
     private final EventBus eventBus;
@@ -64,8 +67,7 @@ public class IntegrationController {
     public void start() {
         executor = Executors.newSingleThreadExecutor();
         scheduler = Executors.newScheduledThreadPool(1);
-        //TODO: We can scan for integrations on start, once we solve the short lived token issue.
-        //scanIntegrationsForWork();
+        scanIntegrationsForWork();
 
         eventBus.subscribe("integration-controller", (event, data) -> {
             // Never do anything that could block in this callback!
@@ -94,6 +96,7 @@ public class IntegrationController {
     private void scanIntegrationsForWork() {
         executor.submit(() -> {
             dataManager.fetchAll(Integration.class).getItems().forEach(integration -> {
+                LOGGER.info("Looking for integrations that are not in the desired status.");
                 checkIntegration(integration);
             });
         });
@@ -114,7 +117,9 @@ public class IntegrationController {
         if (desired.isPresent() && !current.equals(desired)) {
             WorkflowHandler workflowHandler = handlers.get(desired.get());
             if (workflowHandler != null) {
-                enqueue(workflowHandler, integration.getId().get());
+                String integrationId = integration.getId().get();
+                LOGGER.info("Integration "+integrationId+" is not in the desired status, enqueuing for processing");
+                enqueue(workflowHandler, integrationId);
             }
         }
     }
@@ -128,6 +133,7 @@ public class IntegrationController {
             }
             try {
 
+                LOGGER.info("Processing integration "+integrationId+".");
                 Integration update = handler.execute(integration);
                 if( update!=null ) {
 
