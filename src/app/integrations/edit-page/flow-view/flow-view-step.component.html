@@ -50,9 +50,7 @@
        (mouseover)="showTooltip()"
        (mouseleave)="hideTooltip()"
        container="body">
-      <!-- Only display icon if step kind is not an endpoint or log -->
-      <i [class]="getIconClass()"
-         *ngIf="step.stepKind === 'endpoint'"></i>
+      <img class="connection-icon" *ngIf="step.stepKind === 'endpoint'" src="../../../assets/icons/{{ step.connection.connectorId }}.integration.png">
     </p>
     <template #tooltipPopover>
       <div *ngIf="step.stepKind === 'endpoint'">
