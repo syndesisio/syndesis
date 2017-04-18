@@ -114,9 +114,7 @@ public class IntegrationController {
         Optional<Integration.Status> current = integration.getCurrentStatus();
         if (desired.isPresent() && !current.equals(desired)) {
             WorkflowHandler workflowHandler = handlers.get(desired.get());
-
-            String scheduledKey = "" + integration.getDesiredStatus() + ":" + integration.getId().get();
-            if (workflowHandler != null && !scheduledChecks.containsKey(scheduledKey)) {
+            if (workflowHandler != null) {
                 enqueue(workflowHandler, integration.getId().get());
             }
         }
@@ -125,7 +123,8 @@ public class IntegrationController {
     private void enqueue(WorkflowHandler handler, String integrationId) {
         executor.submit(() -> {
             Integration integration = dataManager.fetch(Integration.class, integrationId);
-            if (stale(handler, integration)) {
+            String scheduledKey = "" + integration.getDesiredStatus() + ":" + integrationId;
+            if ( scheduledChecks.containsKey(scheduledKey) || stale(handler, integration)) {
                 return;
             }
             try {
@@ -158,7 +157,6 @@ public class IntegrationController {
                     .build());
 
             } finally {
-                String scheduledKey = "" + integration.getDesiredStatus() + ":" + integrationId;
                 scheduledChecks.put(scheduledKey, integrationId);
                 scheduler.schedule(() -> {
                     scheduledChecks.remove(scheduledKey, integrationId);
