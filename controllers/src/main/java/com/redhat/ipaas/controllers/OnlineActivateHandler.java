@@ -31,6 +31,7 @@ import com.redhat.ipaas.project.converter.ImmutableGenerateProjectRequest;
 import com.redhat.ipaas.project.converter.ProjectGenerator;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -40,7 +41,8 @@ import java.util.stream.Collectors;
 import io.fabric8.funktion.model.StepKinds;
 
 @Component
-public class ActivateHandler implements WorkflowHandler {
+@ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "true")
+public class OnlineActivateHandler implements WorkflowHandler {
 
     private static final String WEBHOOK_FORMAT = "%s/namespaces/%s/buildconfigs/%s/webhooks/%s/github";
 
@@ -58,7 +60,7 @@ public class ActivateHandler implements WorkflowHandler {
     private final GitHubService gitHubService;
     private final ProjectGenerator projectConverter;
 
-    public ActivateHandler(DataManager dataManager, OpenShiftService openShiftService, GitHubService gitHubService, ProjectGenerator projectConverter) {
+    public OnlineActivateHandler(DataManager dataManager, OpenShiftService openShiftService, GitHubService gitHubService, ProjectGenerator projectConverter) {
         this.dataManager = dataManager;
         this.openShiftService = openShiftService;
         this.gitHubService = gitHubService;

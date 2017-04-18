@@ -22,6 +22,10 @@ endpoints:
   test_support:
     enabled: true
 
+controllers:
+  integration:
+    enabled: 'noop'
+
 spring:
   datasource:
     url: 'jdbc:sqlite:target/sqlite.db'

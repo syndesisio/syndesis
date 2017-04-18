@@ -15,28 +15,18 @@
  */
 package com.redhat.ipaas.controllers;
 
-import com.redhat.ipaas.core.Tokens;
 import com.redhat.ipaas.model.integration.Integration;
-import com.redhat.ipaas.openshift.OpenShiftDeployment;
-import com.redhat.ipaas.openshift.OpenShiftService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
-public class DeactivateHandler implements WorkflowHandler {
+@ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "false")
+public class DemoActivateHandler implements WorkflowHandler {
 
     public static final Set<Integration.Status> DESIRED_STATE_TRIGGERS =
-        Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            Integration.Status.Deactivated, Integration.Status.Draft
-        )));
-
-
-    private final OpenShiftService openShiftService;
-
-    public DeactivateHandler(OpenShiftService openShiftService) {
-        this.openShiftService = openShiftService;
-    }
+        Collections.unmodifiableSet(new HashSet<>(Arrays.asList(Integration.Status.Activated)));
 
     public Set<Integration.Status> getTriggerStatuses() {
         return DESIRED_STATE_TRIGGERS;
@@ -44,27 +34,21 @@ public class DeactivateHandler implements WorkflowHandler {
 
     @Override
     public Integration execute(Integration integration) {
-        String token = integration.getToken().get();
-        Tokens.setAuthenticationToken(token);
 
-        OpenShiftDeployment deployment = OpenShiftDeployment
-            .builder()
-            .name(integration.getName())
-            .replicas(0)
-            .token(token)
-            .build();
+        try {
+            Thread.sleep(5000L);
+        } catch (InterruptedException e) {
+            return integration;
+        }
 
-        Integration.Status currentStatus = openShiftService.isScaled(deployment)
-            ? Integration.Status.Deactivated
-            : Integration.Status.Pending;
-
-        openShiftService.scale(deployment);
-
-        return new Integration.Builder()
+        Integration updatedIntegration = new Integration.Builder()
             .createFrom(integration)
-            .currentStatus(currentStatus)
+            .currentStatus(Integration.Status.Activated)
             .lastUpdated(new Date())
             .build();
+        return updatedIntegration;
     }
 
 }
+
+
