@@ -32,10 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * This class tracks changes to Integrations and attempts to process them so that
@@ -46,7 +43,8 @@ public class IntegrationController {
 
     private final DataManager dataManager;
     private final EventBus eventBus;
-    private final HashMap<Integration.Status, WorkflowHandler> handlers = new HashMap<>();
+    private final ConcurrentHashMap<Integration.Status, WorkflowHandler> handlers = new ConcurrentHashMap<>();
+    private final HashMap<String, String> scheduledChecks = new HashMap<>();
     private ExecutorService executor;
     private ScheduledExecutorService scheduler;
     private long retrySeconds = 60;
@@ -94,8 +92,10 @@ public class IntegrationController {
     }
 
     private void scanIntegrationsForWork() {
-        dataManager.fetchAll(Integration.class).getItems().forEach(integration -> {
-            checkIntegration(integration);
+        executor.submit(() -> {
+            dataManager.fetchAll(Integration.class).getItems().forEach(integration -> {
+                checkIntegration(integration);
+            });
         });
     }
 
@@ -122,7 +122,8 @@ public class IntegrationController {
     private void enqueue(WorkflowHandler handler, String integrationId) {
         executor.submit(() -> {
             Integration integration = dataManager.fetch(Integration.class, integrationId);
-            if (stale(handler, integration)) {
+            String scheduledKey = "" + integration.getDesiredStatus() + ":" + integrationId;
+            if ( scheduledChecks.containsKey(scheduledKey) || stale(handler, integration)) {
                 return;
             }
             try {
@@ -155,7 +156,9 @@ public class IntegrationController {
                     .build());
 
             } finally {
+                scheduledChecks.put(scheduledKey, integrationId);
                 scheduler.schedule(() -> {
+                    scheduledChecks.remove(scheduledKey, integrationId);
                     Integration i = dataManager.fetch(Integration.class, integrationId);
                     checkIntegration(i);
                 }, retrySeconds, TimeUnit.SECONDS);
