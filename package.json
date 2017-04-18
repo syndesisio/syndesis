@@ -52,7 +52,7 @@
     "chart.js": "^2.5.0",
     "core-js": "2.4.1",
     "file-saver": "^1.3.3",
-    "ipaas.data.mapper": "https://github.com/redhat-ipaas/datamapper-ui.git#b2619d9a7f9fd9d52227fb31e4fea41d3512d7aa",
+    "ipaas.data.mapper": "https://github.com/redhat-ipaas/datamapper-ui.git#1f80ba1b48e73c25dc6bac674a4e11b1f8729df2",
     "jquery": "3.1.1",
     "lodash": "4.17.4",
     "merge": "^1.2.0",
