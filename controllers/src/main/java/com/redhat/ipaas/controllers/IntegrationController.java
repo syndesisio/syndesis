@@ -48,6 +48,7 @@ public class IntegrationController {
     private final DataManager dataManager;
     private final EventBus eventBus;
     private final HashMap<Integration.Status, WorkflowHandler> handlers = new HashMap<>();
+    private final HashMap<String, String> scheduledChecks = new HashMap<>();
     private ExecutorService executor;
     private ScheduledExecutorService scheduler;
     private long retrySeconds = 60;
@@ -95,8 +96,10 @@ public class IntegrationController {
     }
 
     private void scanIntegrationsForWork() {
-        dataManager.fetchAll(Integration.class).getItems().forEach(integration -> {
-            checkIntegration(integration);
+        executor.submit(() -> {
+            dataManager.fetchAll(Integration.class).getItems().forEach(integration -> {
+                checkIntegration(integration);
+            });
         });
     }
 
@@ -114,7 +117,9 @@ public class IntegrationController {
         Optional<Integration.Status> current = integration.getCurrentStatus();
         if (desired.isPresent() && !current.equals(desired)) {
             WorkflowHandler workflowHandler = handlers.get(desired.get());
-            if (workflowHandler != null) {
+
+            String scheduledKey = "" + integration.getDesiredStatus() + ":" + integration.getId().get();
+            if (workflowHandler != null && !scheduledChecks.containsKey(scheduledKey)) {
                 enqueue(workflowHandler, integration.getId().get());
             }
         }
@@ -156,7 +161,10 @@ public class IntegrationController {
                     .build());
 
             } finally {
+                String scheduledKey = "" + integration.getDesiredStatus() + ":" + integrationId;
+                scheduledChecks.put(scheduledKey, integrationId);
                 scheduler.schedule(() -> {
+                    scheduledChecks.remove(scheduledKey, integrationId);
                     Integration i = dataManager.fetch(Integration.class, integrationId);
                     checkIntegration(i);
                 }, retrySeconds, TimeUnit.SECONDS);
