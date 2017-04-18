@@ -32,10 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * This class tracks changes to Integrations and attempts to process them so that
@@ -47,7 +44,7 @@ public class IntegrationController {
 
     private final DataManager dataManager;
     private final EventBus eventBus;
-    private final HashMap<Integration.Status, WorkflowHandler> handlers = new HashMap<>();
+    private final ConcurrentHashMap<Integration.Status, WorkflowHandler> handlers = new ConcurrentHashMap<>();
     private final HashMap<String, String> scheduledChecks = new HashMap<>();
     private ExecutorService executor;
     private ScheduledExecutorService scheduler;
