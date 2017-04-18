@@ -34,3 +34,35 @@ body.cards-pf {
   }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// TABS
+////////////////////////////////////////////////////////////////////////////////
+
+.tab-container {
+  .nav-tabs {
+    border-bottom: none;
+
+    li.nav-item {
+      margin: 0;
+      
+      a {
+        border: none;
+        cursor: pointer;
+
+        &.active:hover {
+          background: #FFFFFF;
+        }
+
+        &:hover {
+          background: $pf-black-300;
+        }
+      }
+    }
+  }
+
+  .tab-content {
+    background: #FFFFFF;
+  }
+}
+
