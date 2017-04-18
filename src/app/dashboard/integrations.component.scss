@@ -74,8 +74,6 @@
 
       .card-pf-body {
         overflow: auto;
-        display: flex;
-        overflow: hidden;
 
         .chart {
           flex-grow: 1;
@@ -87,13 +85,14 @@
           max-width: 180px;
 
           canvas {
-            width: 100% !important;
-            height: auto !important;
+            width: 80% !important;
+            height: 80% !important;
           }
 
           .total-count {
+            top: 20px;
             position: absolute;
-            width: 100%;
+            width: 62%;
             text-align: center;
 
             .number {
@@ -106,51 +105,42 @@
 
           }
         }
-
-        .legend {
-          flex: none;
-          min-width: 10em;
-          padding: 0 0 0 1em;
-
-          display: flex;
-          justify-content: center;
-          flex-direction: column;
-
-          .item {
-            display: flex;
-            padding: 0;
-            .colors {
-
-              flex-grow: 0;
-              height: 10px;
-              padding: 9px;
-
-              &.active {
-                background: $pf-green-400;
-              }
-
-              &.deleted {
-                background: $pf-orange-400;
-              }
-
-              &.draft {
-                background: $pf-blue-400;
-              }
-
-              &.inactive {
-                background: $pf-black-300;
-              }
-            }
-
-            .text {
-              flex-grow: 1;
-              padding: 0 0 0 13px;
-            }
-          }
-        }
-
       }
 
+      .legend {
+        padding: 0;
+
+        .col-xs-12 {
+          padding: 0;
+
+          .colors {
+            height: 10px;
+            padding: 9px;
+
+            &.active {
+              background: $pf-green-400;
+            }
+
+            &.deleted {
+              background: $pf-orange-400;
+            }
+
+            &.draft {
+              background: $pf-blue-400;
+            }
+
+            &.inactive {
+              //background: $pf-black-200;
+              //background: $pf-custom-gray;
+              background: $pf-black-300;
+            }
+          }
+
+          .text {
+            padding: 0 0 0 13px;
+          }
+        }
+      }
     }
 
 
