@@ -247,6 +247,20 @@ export class DashboardIntegrationsComponent implements OnInit {
     }
   }
 
+  public getStatusText(integration: Integration): string {
+    switch (integration.desiredStatus) {
+      case 'Activated':
+        return 'Active';
+      case 'Deactivated':
+        return 'Inactive';
+      case 'Deleted':
+        return 'Deleted';
+      case 'Draft':
+        return 'Draft';
+    }
+    return '';
+  }
+
   //-----  Selecting a Connection or Integration ------------------->>
 
   selectedConnection(connection: Connection) {
