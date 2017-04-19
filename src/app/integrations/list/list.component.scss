@@ -15,7 +15,6 @@
     padding: 20px;
 
     &:hover {
-      //background: rgba(214, 238, 250, 0.36);
       background: $pf-blue-50;
     }
 
@@ -30,6 +29,10 @@
 
       &.icons {
         padding: 1px;
+
+        [class^=" col-"], [class*=" col-"] {
+          padding: 0;
+        }
 
         .fa {
           margin-right: 15px;

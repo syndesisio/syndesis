@@ -57,23 +57,24 @@
              *ngFor="let integration of integrations; let i=index">
 
           <!-- Group 1: Icons -->
-          <div class="col-xs-2">
-            <div class="col-xs-12 icons"
+
+          <div class="col-xs-2 group icons">
+            <div class="col-xs-12"
                  (click)="goto(integration)">
               <div class="list-view-pf-left"
                    *ngIf="integration">
+                <!--
                 <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
                 <span class="fa fa-angle-right"></span>
                 <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
-                <!--
-                <span class="card-pf-icon-large image-icon">
-                  <img src="../../../assets/icons/{{ integration.connections[0].connectorId }}.integration.png">
+                -->
+                <span class="card-pf-icon-large image-icon" *ngIf="integration.steps[0].connection">
+                  <img src="../../../assets/icons/{{ integration.steps[0].connection.connectorId }}.integration.png">
                 </span>
                 <span class="fa fa-angle-right"></span>
-                <span class="card-pf-icon-large image-icon">
-                  <img src="../../../assets/icons/{{ integration.connections[1].connectorId }}.integration.png">
+                <span class="card-pf-icon-large image-icon" *ngIf="integration.steps[1].connection">
+                  <img src="../../../assets/icons/{{ integration.steps[1].connection.connectorId }}.integration.png">
                 </span>
-                -->
               </div>
             </div>
           </div>
