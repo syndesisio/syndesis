@@ -1690,5 +1690,153 @@
         }
       ]
     }
+  },
+    {
+    "kind": "integration",
+    "data": {
+      "id": "6",
+      "name": "Deleted Client Service Example",
+      "description": "This is an example in Deleted state",
+      "configuration": "",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "desiredStatus": "Deleted",
+      "currentStatus": "Deleted",
+      "tags":["example","test"],
+      "steps": [
+        {
+          "id": "5",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 4,
+            "name": "Timer Example",
+            "description": "Timer Connection",
+            "icon": "fa-globe",
+            "connectorId": "timer",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "com.redhat.ipaas_timer-connector:latest",
+            "name": "PeriodicTimer",
+            "description": "Set a timer that fires at intervals that you specify",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "com.redhat.ipaas:timer-connector:@ipaas-connectors.version@",
+            "camelConnectorPrefix": "periodic-timer",
+            "properties": {
+              "period": {
+                "kind": "parameter",
+                "displayName": "Period",
+                "group": "consumer",
+                "required": false,
+                "type": "integer",
+                "javaType": "long",
+                "deprecated": false,
+                "secret": false,
+                "defaultValue": 10000,
+                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+              }
+            }
+          },
+          "configuredProperties": {
+            "period": "500"
+          }
+        },{
+          "id": "6",
+          "stepKind": "log",
+          "configuredProperties": {
+            "message": "Hello World! ${body}",
+            "loggingLevel": "INFO"
+          }
+        },
+        {
+          "id": "7",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "com.redhat.ipaas:http-post-connector:latest",
+            "name": "HTTP POST",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "com.redhat.ipaas:http-post-connector:@ipaas-connectors.version@",
+            "camelConnectorPrefix": "http-post",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/bye"
+          }
+        },{
+          "id": "8",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "com.redhat.ipaas:http-get-connector:latest",
+            "name": "HTTP GET",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "com.redhat.ipaas:http-get-connector:@ipaas-connectors.version@",
+            "camelConnectorPrefix": "http-get",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/hello"
+          }
+        }
+      ]
+    }
   }
 ]
