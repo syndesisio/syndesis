@@ -57,27 +57,22 @@
     .icon {
       -moz-border-radius: 100px;
       border-radius: 100px;
-      //border: 3px solid #d0d0d0;
-      border: 3px solid $pf-black-300;
+      border-style: solid;
+      border-width: 3px;
+      border-color: $pf-black-300;
       padding: 11px;
       width: 55px;
       height: 55px;
       background-color: #FFFFFF;
 
-      &.add-step-or-connection {
+      &.not-connection {
         background-color: #FFFFFF;
-        //border: 10px solid $pf-blue-400;
-        border: 12px solid #0088ce;
+        border-width: 10px;
         padding: 5px 0px;
         border-radius: 100px;
         height: 33px;
         margin: 11px;
-        //padding: 0;
         width: 32px;
-
-        &.active {
-          border: 12px solid #0088ce;
-        }
       }
 
       .connection-icon {
@@ -90,14 +85,14 @@
       //----- Sidebar: Progress Line: Active State ----------------->>
 
       &.active {
-        border: 3px solid $pf-blue-400;
+        border-color: $pf-blue-400;
       }
 
 
       //----- Sidebar: Progress Line: Inactive State ----------------->>
 
       &.inactive {
-        border: 3px solid #D0D0D0;
+        border-color: #D0D0D0;
       }
 
 

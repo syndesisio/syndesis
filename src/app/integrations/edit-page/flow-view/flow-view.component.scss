@@ -12,6 +12,16 @@ $flow-view-container-min-height: 0;
   }
 }
 
+.collapsed {
+  .steps {
+    min-height: 145;
+  }
+
+  .step-insert {
+    display: none;
+  }
+}
+
 .clickable {
   cursor: pointer;
 
