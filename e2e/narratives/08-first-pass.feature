@@ -29,12 +29,8 @@ Feature: Sprint 8 narrative
     Then she is presented with the "Add a Step" button
 
 #    try to publish without integration name will open basics page
-    When Camilla clicks on the "Publish" button
+    When Camilla clicks on the "Save" button
     And she defines integration name "My awesome first integration"
-    And click on the "Next" button
-    Then she is presented with the "Add a Step" button
-
-#    publish again should publish integration
-    When Camilla clicks on the "Publish" button
+    And click on the "Publish" button
     Then Camilla is presented with the iPaaS page "Integrations"
     And Integration "My awesome first integration" is present in integrations list
