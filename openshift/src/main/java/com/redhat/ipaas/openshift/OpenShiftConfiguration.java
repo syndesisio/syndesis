@@ -35,7 +35,7 @@ public class OpenShiftConfiguration {
     @Bean
     @ConditionalOnProperty(value = "openshift.enabled", matchIfMissing = true, havingValue = "true")
     public OpenShiftService openShiftService(NamespacedOpenShiftClient openShiftClient, OpenShiftConfigurationProperties openShiftConfigurationProperties) {
-        return new OpenShiftServiceImpl(openShiftClient, openShiftConfigurationProperties.getBuilderImage());
+        return new OpenShiftServiceImpl(openShiftClient, openShiftConfigurationProperties);
     }
 
     @Bean

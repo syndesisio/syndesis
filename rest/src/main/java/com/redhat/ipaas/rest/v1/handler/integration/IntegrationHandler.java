@@ -37,12 +37,6 @@ import java.util.Date;
 @Component
 public class IntegrationHandler extends BaseHandler implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration> {
 
-    @Value("${openshift.apiBaseUrl}")
-    private String openshiftApiBaseUrl;
-
-    @Value("${openshift.namespace}")
-    private String namespace;
-
     public IntegrationHandler(DataManager dataMgr) {
         super(dataMgr);
     }
@@ -55,16 +49,14 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @PUT
     @Path(value = "/{id}/activate")
     @Consumes("application/json")
-    public void activate(@PathParam("id") String id)
-    {
+    public void activate(@PathParam("id") String id) {
         update(id, new Integration.Builder().createFrom(get(id)).desiredStatus(Integration.Status.Activated).build());
     }
 
     @PUT
     @Path(value = "/{id}/deactivate")
     @Consumes("application/json")
-    public void deactivate(@PathParam("id") String id)
-    {
+    public void deactivate(@PathParam("id") String id) {
         update(id, new Integration.Builder().createFrom(get(id)).desiredStatus(Integration.Status.Activated).build());
     }
 
@@ -103,8 +95,8 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Override
     public void update(String id, Integration integration) {
         Integration updatedIntegration = new Integration.Builder()
-            .token(Tokens.getAuthenticationToken())
             .createFrom(integration)
+            .token(Tokens.getAuthenticationToken())
             .lastUpdated(new Date())
             .build();
 

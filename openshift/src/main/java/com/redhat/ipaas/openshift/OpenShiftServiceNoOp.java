@@ -41,4 +41,9 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     public boolean isScaled(OpenShiftDeployment d) {
         return false;
     }
+
+    @Override
+    public String getGitHubWebHookUrl(OpenShiftDeployment d, String secret) {
+        return "";
+    }
 }

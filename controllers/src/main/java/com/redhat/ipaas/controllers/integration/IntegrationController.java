@@ -1,19 +1,27 @@
-/**
- * Copyright (C) 2016 Red Hat, Inc.
+/*
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Copyright (C) 2016 Red Hat, Inc.
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
-package com.redhat.ipaas.controllers;
+package com.redhat.ipaas.controllers.integration;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.*;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import com.redhat.ipaas.core.EventBus;
 import com.redhat.ipaas.core.Json;
@@ -24,17 +32,7 @@ import com.redhat.ipaas.model.integration.Integration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.*;
 
 /**
  * This class tracks changes to Integrations and attempts to process them so that
@@ -42,21 +40,21 @@ import java.util.concurrent.*;
  */
 @Service
 public class IntegrationController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationController.class.getName());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final DataManager dataManager;
     private final EventBus eventBus;
-    private final ConcurrentHashMap<Integration.Status, WorkflowHandler> handlers = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integration.Status, StatusChangeHandlerProvider.StatusChangeHandler> handlers = new ConcurrentHashMap<>();
     private final HashMap<String, String> scheduledChecks = new HashMap<>();
     private ExecutorService executor;
     private ScheduledExecutorService scheduler;
     private long retrySeconds = 60;
 
     @Autowired
-    public IntegrationController(DataManager dataManager, EventBus eventBus, List<WorkflowHandler> handlers) {
+    public IntegrationController(DataManager dataManager, EventBus eventBus, StatusChangeHandlerProvider handlerFactory) {
         this.dataManager = dataManager;
         this.eventBus = eventBus;
-        for (WorkflowHandler handler : handlers) {
+        for (StatusChangeHandlerProvider.StatusChangeHandler handler : handlerFactory.getStatusChangeHandlers()) {
             for (Integration.Status status : handler.getTriggerStatuses()) {
                 this.handlers.put(status, handler);
             }
@@ -74,13 +72,17 @@ public class IntegrationController {
             if (event!=null && "change-event".equals(event)) {
                 try {
                     ChangeEvent changeEvent = Json.mapper().readValue(data, ChangeEvent.class);
-                    if ((changeEvent != null
-                        || changeEvent.getKind().isPresent() && changeEvent.getId().isPresent())
-                        && (Kind.from(changeEvent.getKind().get()) == Kind.Integration)) {
-                        enqueueCheckIntegration(changeEvent.getId().get());
+                    if (changeEvent != null) {
+                        changeEvent.getId().ifPresent(
+                            id -> changeEvent.getKind().ifPresent(
+                                kind -> {
+                                    if (Kind.from(kind) == Kind.Integration) {
+                                        enqueueCheckIntegration(id);
+                                    }
+                                }));
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Error while subscribing to change-event " + data, e);
                 }
             }
         });
@@ -96,7 +98,7 @@ public class IntegrationController {
     private void scanIntegrationsForWork() {
         executor.submit(() -> {
             dataManager.fetchAll(Integration.class).getItems().forEach(integration -> {
-                LOGGER.info("Looking for integrations that are not in the desired status.");
+                log.info("Checking integrations for their status.");
                 checkIntegration(integration);
             });
         });
@@ -114,28 +116,31 @@ public class IntegrationController {
         }
         Optional<Integration.Status> desired = integration.getDesiredStatus();
         Optional<Integration.Status> current = integration.getCurrentStatus();
-        if (desired.isPresent() && !current.equals(desired)) {
-            WorkflowHandler workflowHandler = handlers.get(desired.get());
-            if (workflowHandler != null) {
-                String integrationId = integration.getId().get();
-                LOGGER.info("Integration "+integrationId+" is not in the desired status, enqueuing for processing");
-                enqueue(workflowHandler, integrationId);
-            }
+        if (!current.equals(desired)) {
+            desired.ifPresent(desiredStatus ->
+                integration.getId().ifPresent(integrationId -> {
+                    StatusChangeHandlerProvider.StatusChangeHandler statusChangeHandler = handlers.get(desiredStatus);
+                    if (statusChangeHandler != null) {
+                        log.info(String.format("Integration %s is not in the desired status %s (current: %s) --> enqueuing",
+                                               integrationId, desiredStatus.toString(), current.map(Enum::toString).orElse("[none]")));
+                        enqueue(statusChangeHandler, integrationId);
+                    }
+                }));
         }
     }
 
-    private void enqueue(WorkflowHandler handler, String integrationId) {
+    private void enqueue(StatusChangeHandlerProvider.StatusChangeHandler handler, String integrationId) {
         executor.submit(() -> {
             Integration integration = dataManager.fetch(Integration.class, integrationId);
-            String scheduledKey = "" + integration.getDesiredStatus() + ":" + integrationId;
-            if ( scheduledChecks.containsKey(scheduledKey) || stale(handler, integration)) {
+            String scheduledKey = getIntegrationMarkerKey(integration);
+            if (stale(handler, integration) || scheduledChecks.containsKey(scheduledKey)) {
                 return;
             }
-            try {
 
-                LOGGER.info("Processing integration "+integrationId+".");
-                Integration update = handler.execute(integration);
-                if( update!=null ) {
+            try {
+                log.info("Processing integration " + integrationId + ".");
+                StatusChangeHandlerProvider.StatusChangeHandler.StatusUpdate update = handler.execute(integration);
+                if (update!=null) {
 
                     // handler.execute might block for while so refresh our copy of the integration
                     // data before we update the current status
@@ -145,14 +150,14 @@ public class IntegrationController {
                     dataManager.update(
                         new Integration.Builder()
                             .createFrom(current)
-                            .currentStatus(update.getCurrentStatus())
+                            .currentStatus(update.getNewStatus())
                             .statusMessage(update.getStatusMessage())
                             .lastUpdated(new Date())
                             .build());
                 }
 
             } catch (Exception e) {
-
+                log.error("Error while processing integration status for integration " + integrationId, e);
                 // Something went wrong.. lets note it.
                 Integration current = dataManager.fetch(Integration.class, integrationId);
                 dataManager.update(new Integration.Builder()
@@ -173,14 +178,20 @@ public class IntegrationController {
         });
     }
 
-    private boolean stale(WorkflowHandler workflow, Integration integration) {
-        if( integration==null || workflow==null )
+    private String getIntegrationMarkerKey(Integration integration) {
+        return integration.getDesiredStatus().orElseThrow(() -> new IllegalArgumentException("No desired status set on " + integration)).toString() +
+               ":" +
+               integration.getId().orElseThrow(() -> new IllegalArgumentException("No id set in integration " + integration));
+    }
+
+    private boolean stale(StatusChangeHandlerProvider.StatusChangeHandler handler, Integration integration) {
+        if (integration == null || handler == null) {
             return true;
+        }
 
         Optional<Integration.Status> desiredStatus = integration.getDesiredStatus();
         return !desiredStatus.isPresent()
-            || desiredStatus.equals(integration.getCurrentStatus())
-            || !workflow.getTriggerStatuses().contains(desiredStatus.get());
+               || desiredStatus.equals(integration.getCurrentStatus())
+               || !handler.getTriggerStatuses().contains(desiredStatus.get());
     }
-
 }

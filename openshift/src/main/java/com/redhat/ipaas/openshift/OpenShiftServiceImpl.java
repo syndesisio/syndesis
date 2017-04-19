@@ -21,6 +21,7 @@ import com.redhat.ipaas.core.Tokens;
 import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
 
@@ -30,11 +31,11 @@ import java.util.Map;
 public class OpenShiftServiceImpl implements OpenShiftService {
 
     private final NamespacedOpenShiftClient openShiftClient;
-    private String builderImage;
+    private final OpenShiftConfigurationProperties config;
 
-    public OpenShiftServiceImpl(NamespacedOpenShiftClient openShiftClient, String builderImage) {
+    public OpenShiftServiceImpl(NamespacedOpenShiftClient openShiftClient, OpenShiftConfigurationProperties config) {
         this.openShiftClient = openShiftClient;
-        this.builderImage = builderImage;
+        this.config = config;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         String token = d.getToken().orElse(Tokens.getAuthenticationToken());
         RequestConfig requestConfig = new RequestConfigBuilder().withOauthToken(token).build();
         openShiftClient.withRequestConfig(requestConfig).<Void>call(c -> {
-            DockerImage img = new DockerImage(builderImage);
+            DockerImage img = new DockerImage(config.getBuilderImage());
             ensureImageStreams(openShiftClient, sanitizedName, img);
             ensureDeploymentConfig(openShiftClient, sanitizedName);
             ensureSecret(openShiftClient, sanitizedName, d.getSecretData().orElseGet(HashMap::new));
@@ -64,7 +65,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         RequestConfig requestConfig = new RequestConfigBuilder().withOauthToken(token).build();
 
         return openShiftClient.withRequestConfig(requestConfig).call(c ->
-            removeImageStreams(openShiftClient, new DockerImage(builderImage)) &&
+            removeImageStreams(openShiftClient, new DockerImage(config.getBuilderImage())) &&
                 removeDeploymentConfig(openShiftClient, sanitizedName) &&
                 removeSecret(openShiftClient, sanitizedName) &&
                 removeBuildConfig(openShiftClient, sanitizedName)
@@ -95,11 +96,25 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             openShiftClient.deploymentConfigs().withName(Names.sanitize(d.getName())).get()
         );
 
-        int allReplicas = dc != null && dc.getStatus() != null ? dc.getStatus().getReplicas() : 0;
-        int readyReplicas = dc != null && dc.getStatus() != null ? dc.getStatus().getReadyReplicas() : 0;
-
+        int allReplicas = 0;
+        int readyReplicas = 0;
+        if (dc != null && dc.getStatus() != null) {
+            DeploymentConfigStatus status = dc.getStatus();
+            allReplicas = nullSafe(status.getReplicas());
+            readyReplicas = nullSafe(status.getReadyReplicas());
+        }
         int desiredReplicas = d.getReplicas().orElse(1);
         return desiredReplicas == allReplicas && desiredReplicas == readyReplicas;
+    }
+
+    @Override
+    public String getGitHubWebHookUrl(OpenShiftDeployment d, String secret) {
+        return String.format("%s/namespaces/%s/buildconfigs/%s/webhooks/%s/github",
+                             config.getOpenshiftApiBaseUrl(), config.getNamespace(), Names.sanitize(d.getName()), secret);
+    }
+
+    private int nullSafe(Integer nr) {
+        return nr != null ? nr : 0;
     }
 
 //==================================================================================================

@@ -1,20 +1,22 @@
-/**
- * Copyright (C) 2016 Red Hat, Inc.
+/*
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Copyright (C) 2016 Red Hat, Inc.
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
-package com.redhat.ipaas.controllers;
+package com.redhat.ipaas.controllers.integration.online;
 
+import com.redhat.ipaas.controllers.integration.StatusChangeHandlerProvider;
 import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.core.Names;
 import com.redhat.ipaas.core.Tokens;
@@ -30,37 +32,20 @@ import com.redhat.ipaas.project.converter.GenerateProjectRequest;
 import com.redhat.ipaas.project.converter.ImmutableGenerateProjectRequest;
 import com.redhat.ipaas.project.converter.ProjectGenerator;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import io.fabric8.funktion.model.StepKinds;
 
-@Component
-@ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "true")
-public class OnlineActivateHandler implements WorkflowHandler {
-
-    private static final String WEBHOOK_FORMAT = "%s/namespaces/%s/buildconfigs/%s/webhooks/%s/github";
-
-    public static final Set<Integration.Status> DESIRED_STATE_TRIGGERS =
-        Collections.unmodifiableSet(new HashSet<>(Arrays.asList(Integration.Status.Activated)));
-
-    @Value("${openshift.apiBaseUrl}")
-    private String openshiftApiBaseUrl;
-
-    @Value("${openshift.namespace}")
-    private String namespace;
+public class ActivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
     private final DataManager dataManager;
     private final OpenShiftService openShiftService;
     private final GitHubService gitHubService;
     private final ProjectGenerator projectConverter;
 
-    public OnlineActivateHandler(DataManager dataManager, OpenShiftService openShiftService, GitHubService gitHubService, ProjectGenerator projectConverter) {
+    ActivateHandler(DataManager dataManager, OpenShiftService openShiftService, GitHubService gitHubService, ProjectGenerator projectConverter) {
         this.dataManager = dataManager;
         this.openShiftService = openShiftService;
         this.gitHubService = gitHubService;
@@ -68,17 +53,13 @@ public class OnlineActivateHandler implements WorkflowHandler {
     }
 
     public Set<Integration.Status> getTriggerStatuses() {
-        return DESIRED_STATE_TRIGGERS;
+        return Collections.singleton(Integration.Status.Activated);
     }
 
     @Override
-    public Integration execute(Integration integration)  {
+    public StatusUpdate execute(Integration integration)  {
         if( !integration.getToken().isPresent() ) {
-            return new Integration.Builder()
-                .createFrom(integration)
-                .statusMessage("No token present")
-                .lastUpdated(new Date())
-                .build();
+            return new StatusUpdate(integration.getCurrentStatus(), "No token present");
         }
 
         String token = integration.getToken().get();
@@ -91,25 +72,22 @@ public class OnlineActivateHandler implements WorkflowHandler {
             .token(token)
             .build();
 
+        String secret = createSecret();
+        String gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret));
+        ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, extractSecretsFrom(integration));
+
         Integration.Status currentStatus = openShiftService.isScaled(deployment)
             ? Integration.Status.Activated
             : Integration.Status.Pending;
 
-        String secret = createSecret();
-        String gitCloneUrl = ensureGitHubSetup(integration, secret);
-
-        Integration updatedIntegration = new Integration.Builder()
-            .createFrom(integration)
-            .gitRepo(gitCloneUrl)
-            .currentStatus(currentStatus)
-            .lastUpdated(new Date())
-            .build();
-
-        ensureOpenShiftResources(updatedIntegration, secret);
-        return updatedIntegration;
+        return new StatusUpdate(currentStatus);
     }
 
-    private String ensureGitHubSetup(Integration integration, String secret) {
+    private String getWebHookUrl(OpenShiftDeployment deployment, String secret) {
+        return openShiftService.getGitHubWebHookUrl(deployment, secret);
+    }
+
+    private String ensureGitHubSetup(Integration integration, String webHookUrl) {
         try {
             String gitHubRepoName = Names.sanitize(integration.getName());
 
@@ -123,19 +101,21 @@ public class OnlineActivateHandler implements WorkflowHandler {
 
             Map<String, byte[]> fileContents = projectConverter.generate(request);
 
-            // Secret to be used in the build trigger
-            String webHookUrl = createWebHookUrl(gitHubRepoName, secret);
-
             // Do all github stuff at once
-            return gitHubService.createOrUpdateProjectFiles(gitHubRepoName, generateCommitMessage(), fileContents, webHookUrl);
+            String gitCloneUrl = gitHubService.createOrUpdateProjectFiles(gitHubRepoName, generateCommitMessage(), fileContents, webHookUrl);
 
+            // Update integration within DB. Maybe re-read it before updating the URL ? Best: Add a dedicated 'updateGitRepo()'
+            // method to the backend
+            Integration updatedIntegration = new Integration.Builder()
+                .createFrom(integration)
+                .gitRepo(gitCloneUrl)
+                .build();
+            dataManager.update(updatedIntegration);
+
+            return gitCloneUrl;
         } catch (IOException e) {
             throw IPaasServerException.launderThrowable(e);
         }
-    }
-
-    private String createWebHookUrl(String bcName, String secret) {
-        return String.format(WEBHOOK_FORMAT, openshiftApiBaseUrl, namespace, bcName, secret);
     }
 
     private String generateCommitMessage() {
@@ -151,13 +131,14 @@ public class OnlineActivateHandler implements WorkflowHandler {
         return dataManager.fetchAll(Connector.class).getItems().stream().collect(Collectors.toMap(o -> o.getId().get(), o -> o));
     }
 
-    private void ensureOpenShiftResources(Integration integration, String webHookSecret) {
-        integration.getGitRepo().ifPresent(gitRepo -> openShiftService.create(ImmutableOpenShiftDeployment.builder()
-            .name(integration.getName())
-            .gitRepository(gitRepo)
-            .webhookSecret(webHookSecret)
-            .secretData(extractSecretsFrom(integration))
-            .build()));
+    private void ensureOpenShiftResources(String integrationName, String gitCloneUrl, String webHookSecret, Map<String, String> secretData) {
+        openShiftService.create(
+            ImmutableOpenShiftDeployment.builder()
+                                        .name(integrationName)
+                                        .gitRepository(gitCloneUrl)
+                                        .webhookSecret(webHookSecret)
+                                        .secretData(secretData)
+                                        .build());
     }
 
     private Map<String, String> extractSecretsFrom(Integration integration) {
