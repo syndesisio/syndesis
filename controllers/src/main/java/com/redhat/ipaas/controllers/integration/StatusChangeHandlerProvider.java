@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.redhat.ipaas.controllers.integration;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
