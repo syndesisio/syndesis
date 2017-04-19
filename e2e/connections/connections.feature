@@ -17,14 +17,13 @@ Feature: Connections smoke test
     When "Camilla" navigates to the "Connections" page
     And click on the "Create" button
     And Camilla selects the "Twitter" connection
-    And type "my sample twitter connection" into connection name
-    And type "this connection is awesome" into connection description
-    And scroll "top" "right"
-    And click on the "Next" button
     Then she is presented with the "Validate" button
 
     When she fills "Twitter" connection details
+    And scroll "top" "right"
     And click on the "Next" button
+    And type "my sample twitter connection" into connection name
+    And type "this connection is awesome" into connection description
     And click on the "Create" button
     Then Camilla is presented with the iPaaS page "Connections"
 
