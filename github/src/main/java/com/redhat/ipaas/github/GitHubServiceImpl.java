@@ -91,10 +91,10 @@ public class GitHubServiceImpl implements GitHubService {
 
     private void createOrUpdateFiles(Repository repo, String message, Map<String, byte[]> files) throws IOException {
         for (Map.Entry<String, byte[]> entry : files.entrySet()) {
-            createOrUpdateFile(repo, message, entry.getKey(), entry.getValue());
             // Wait a bit to let GitHub catch up
             // See http://stackoverflow.com/questions/19576601/github-api-issue-with-file-upload for details
-            sleep(500L);
+            sleep(1000L);
+            createOrUpdateFile(repo, message, entry.getKey(), entry.getValue());
         }
     }
 

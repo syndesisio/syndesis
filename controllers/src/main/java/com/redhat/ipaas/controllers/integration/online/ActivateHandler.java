@@ -15,6 +15,10 @@
  */
 package com.redhat.ipaas.controllers.integration.online;
 
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import com.redhat.ipaas.controllers.integration.StatusChangeHandlerProvider;
 import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.core.Names;
@@ -30,12 +34,9 @@ import com.redhat.ipaas.openshift.OpenShiftService;
 import com.redhat.ipaas.project.converter.GenerateProjectRequest;
 import com.redhat.ipaas.project.converter.ImmutableGenerateProjectRequest;
 import com.redhat.ipaas.project.converter.ProjectGenerator;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import io.fabric8.funktion.model.StepKinds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ActivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
@@ -44,7 +45,10 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
     private final GitHubService gitHubService;
     private final ProjectGenerator projectConverter;
 
-    ActivateHandler(DataManager dataManager, OpenShiftService openShiftService, GitHubService gitHubService, ProjectGenerator projectConverter) {
+    private final static Logger log = LoggerFactory.getLogger(ActivateHandler.class);
+
+    ActivateHandler(DataManager dataManager, OpenShiftService openShiftService,
+                    GitHubService gitHubService, ProjectGenerator projectConverter) {
         this.dataManager = dataManager;
         this.openShiftService = openShiftService;
         this.gitHubService = gitHubService;
@@ -72,36 +76,37 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
             .build();
 
         String secret = createSecret();
-        String gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret));
+
+        // TODO: Verify Token and refresh if expired ....
+
+        String gitHubUser = getGitHubUser();
+        log.info("{} : Looked up GitHubUser {}", getLabel(integration), gitHubUser);
+
+        Map<String, byte[]> projectFiles = createProjectFiles(gitHubUser, integration);
+        log.info("{} : Created project files", getLabel(integration));
+
+        String gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
+        log.info("{} : Updated GitHub Repo {}", getLabel(integration), gitCloneUrl);
+
         ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, extractSecretsFrom(integration));
+        log.info("{} : Created OpenShift resources", getLabel(integration));
 
-        Integration.Status currentStatus = openShiftService.isScaled(deployment)
-            ? Integration.Status.Activated
-            : Integration.Status.Pending;
+        Integration.Status status = openShiftService.isScaled(deployment) ?
+            Integration.Status.Activated : Integration.Status.Pending;
+        log.info("{} : Setting status to {}", getLabel(integration), status);
 
-        return new StatusUpdate(currentStatus);
+        return new StatusUpdate(status);
     }
 
     private String getWebHookUrl(OpenShiftDeployment deployment, String secret) {
         return openShiftService.getGitHubWebHookUrl(deployment, secret);
     }
 
-    private String ensureGitHubSetup(Integration integration, String webHookUrl) {
+    private String ensureGitHubSetup(Integration integration, String webHookUrl, Map<String, byte[]> projectFiles) {
         try {
-            String gitHubRepoName = Names.sanitize(integration.getName());
-
-            GenerateProjectRequest request = ImmutableGenerateProjectRequest
-                .builder()
-                .integration(integration)
-                .connectors(fetchConnectorsMap())
-                .gitHubRepoName(gitHubRepoName)
-                .gitHubUser(gitHubService.getApiUser())
-                .build();
-
-            Map<String, byte[]> fileContents = projectConverter.generate(request);
-
             // Do all github stuff at once
-            String gitCloneUrl = gitHubService.createOrUpdateProjectFiles(gitHubRepoName, generateCommitMessage(), fileContents, webHookUrl);
+            String gitHubRepoName = Names.sanitize(integration.getName());
+            String gitCloneUrl = gitHubService.createOrUpdateProjectFiles(gitHubRepoName, generateCommitMessage(), projectFiles, webHookUrl);
 
             // Update integration within DB. Maybe re-read it before updating the URL ? Best: Add a dedicated 'updateGitRepo()'
             // method to the backend
@@ -110,8 +115,30 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                 .gitRepo(gitCloneUrl)
                 .build();
             dataManager.update(updatedIntegration);
-
             return gitCloneUrl;
+        } catch (IOException e) {
+            throw IPaasServerException.launderThrowable(e);
+        }
+    }
+
+    private Map<String, byte[]> createProjectFiles(String gitHubUser, Integration integration) {
+        try {
+            GenerateProjectRequest request = ImmutableGenerateProjectRequest
+                .builder()
+                .integration(integration)
+                .connectors(fetchConnectorsMap())
+                .gitHubRepoName(Names.sanitize(integration.getName()))
+                .gitHubUser(gitHubUser)
+                .build();
+            return projectConverter.generate(request);
+        } catch (IOException e) {
+            throw IPaasServerException.launderThrowable(e);
+        }
+    }
+
+    private String getGitHubUser() {
+        try {
+            return gitHubService.getApiUser();
         } catch (IOException e) {
             throw IPaasServerException.launderThrowable(e);
         }
@@ -164,4 +191,9 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         });
         return secrets;
     }
+
+    private String getLabel(Integration integration) {
+        return "Integration " + integration.getId().orElse("[none]");
+    }
+
 }

@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class ConnectorCatalog {
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
+    private final static Logger log = LoggerFactory.getLogger(ConnectorCatalog.class);
 
     private final CamelConnectorCatalog connectorCatalog;
     private final CamelCatalog camelCatalog;
