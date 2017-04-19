@@ -34,3 +34,37 @@ body.cards-pf {
   }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// TABS
+////////////////////////////////////////////////////////////////////////////////
+
+.tab-container {
+  .nav-tabs {
+    border-bottom: solid 1px $pf-black-300;
+
+    li.nav-item {
+      margin: 0;
+
+      a {
+        border: none;
+        cursor: pointer;
+
+        &.active, &.active:hover, &.active:focus, &.active:visited {
+          background: none;
+          border-bottom: solid 1px $pf-blue-300;
+        }
+
+        &:hover {
+          background: $pf-black-300;
+          border-bottom: solid 1px $pf-black-300;
+        }
+      }
+    }
+  }
+
+  .tab-content {
+    background: #FFFFFF;
+  }
+}
+
