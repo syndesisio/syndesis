@@ -4,6 +4,11 @@
   color: #656565;
   margin-top: 25px;
 
+  ////////////////////////////////////////////////////////////////////////////////
+  // INTEGRATION ROWS
+  // Each integration is displayed in a row.
+  ////////////////////////////////////////////////////////////////////////////////
+
   .integration {
     background: #FFFFFF;
     cursor: pointer;
@@ -14,39 +19,75 @@
       background: $pf-blue-50;
     }
 
-    .actions {
-      padding: 5px;
+    ////////////////////////////////////////////////////////////////////////////////
+    // INTEGRATION ROW GROUPS
+    // Separate each integration row into groups within the 12-column grid
+    ////////////////////////////////////////////////////////////////////////////////
 
-      ul {
-        cursor: pointer;
-      }
-    }
+    .group {
 
-    .active-inactive {
-      padding: 5px;
+      //----- Group 1: Icons ----------------->>
 
-      .label {
-        padding: 6px;
-        cursor: pointer;
-      }
-    }
+      &.icons {
+        padding: 1px;
 
-    .description {
-      padding: 5px;
-    }
+        .fa {
+          margin-right: 15px;
 
-    .icons {
-      padding: 1px;
-
-      .fa {
-        margin-right: 15px;
-
-        &.fa-angle-right {
-          font-size: 18px;
+          &.fa-angle-right {
+            font-size: 18px;
+          }
         }
       }
+
+      //----- Group 2: Text (Name & Description) ----------------->>
+
+      &.text {
+        .description {
+          padding: 5px;
+        }
+
+        .name {
+          font-weight: 700;
+          padding: 7px;
+        }
+      }
+
+      //----- Group 3: Metrics & Actions ----------------->>
+
+      &.metrics-actions {
+        .actions {
+          padding: 5px;
+
+          ul {
+            cursor: pointer;
+          }
+        }
+
+        .active-inactive {
+          padding: 5px;
+
+          .in-progress {
+            h3 {
+              font-size: 12px;
+              margin: 0;
+            }
+          }
+
+          .label {
+            padding: 6px;
+            cursor: pointer;
+          }
+        }
+      }
+
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // MODALS
+    ////////////////////////////////////////////////////////////////////////////////
+    
     .modal {
       .modal-footer {
         .btn {
@@ -58,11 +99,6 @@
           }
         }
       }
-    }
-
-    .name {
-      font-weight: 700;
-      padding: 7px;
     }
   }
 }
