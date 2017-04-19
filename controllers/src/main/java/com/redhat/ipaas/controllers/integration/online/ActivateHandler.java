@@ -60,10 +60,11 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
     }
 
     @Override
-    public StatusUpdate execute(Integration integration)  {
-        if( !integration.getToken().isPresent() ) {
+    public StatusUpdate execute(Integration integration) {
+        if (!integration.getToken().isPresent()) {
             return new StatusUpdate(integration.getCurrentStatus(), "No token present");
         }
+
 
         String token = integration.getToken().get();
         Tokens.setAuthenticationToken(token);
@@ -79,17 +80,23 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
         // TODO: Verify Token and refresh if expired ....
 
-        String gitHubUser = getGitHubUser();
-        log.info("{} : Looked up GitHubUser {}", getLabel(integration), gitHubUser);
+        Optional<Integration.Status> currentStatus = integration.getCurrentStatus();
+        if (!currentStatus.isPresent() || currentStatus.get() != Integration.Status.Pending) {
+            String gitHubUser = getGitHubUser();
+            log.info("{} : Looked up GitHubUser {}", getLabel(integration), gitHubUser);
 
-        Map<String, byte[]> projectFiles = createProjectFiles(gitHubUser, integration);
-        log.info("{} : Created project files", getLabel(integration));
+            Map<String, byte[]> projectFiles = createProjectFiles(gitHubUser, integration);
+            log.info("{} : Created project files", getLabel(integration));
 
-        String gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
-        log.info("{} : Updated GitHub Repo {}", getLabel(integration), gitCloneUrl);
+            String gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
+            log.info("{} : Updated GitHub Repo {}", getLabel(integration), gitCloneUrl);
 
-        ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, extractSecretsFrom(integration));
-        log.info("{} : Created OpenShift resources", getLabel(integration));
+            ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, extractSecretsFrom(integration));
+            log.info("{} : Created OpenShift resources", getLabel(integration));
+        } else {
+            log.info("{} : Skipping project generation because integration is in status {}",
+                     getLabel(integration), currentStatus.map(Enum::name).orElse("[none]"));
+        }
 
         Integration.Status status = openShiftService.isScaled(deployment) ?
             Integration.Status.Activated : Integration.Status.Pending;
