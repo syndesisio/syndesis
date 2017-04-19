@@ -4,7 +4,12 @@ $flow-view-container-min-height: 0;
 
 /deep/ .popover {
   margin-top: -2px;
-  margin-left: 20px !important;
+  margin-left: 28px !important;
+  border-color: $pf-black-500;
+
+  &.right > .arrow {
+    border-right-color: $pf-black-500;
+  }
 }
 
 .clickable {
@@ -109,8 +114,8 @@ $flow-view-container-min-height: 0;
 
   .step-insert {
     position: relative;
-    top: -47px;
-    height: 50px;
+    top: -29px;
+    height: 80px;
     margin-top:-15%;
     margin-bottom:-15%;
 
