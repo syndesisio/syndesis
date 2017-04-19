@@ -1694,7 +1694,7 @@
     {
     "kind": "integration",
     "data": {
-      "id": "6",
+      "id": "7",
       "name": "Deleted Client Service Example",
       "description": "This is an example in Deleted state",
       "configuration": "",
