@@ -20,7 +20,7 @@ export class ConnectionsListComponent implements IPaaSComponent {
 
   goToConnection(connectionTitle: string): P<any> {
     log.info(`searching for connection ${connectionTitle}`);
-    return this.rootElement().element(by.cssContainingText('h2.card-pf-title.text-center', connectionTitle)).getWebElement().click();
+    return this.rootElement().$(`h2.card-pf-title.text-center[title="${connectionTitle}"]`).getWebElement().click();
   }
 }
 
