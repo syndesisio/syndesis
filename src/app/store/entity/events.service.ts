@@ -27,15 +27,15 @@ export class EventsService {
   constructor(config: ConfigService, restangular: Restangular) {
     // Setup an event stream reservation first..
     restangular.all('event/reservations').customPOST().subscribe( response => {
-      let apiEndpoint = config.getSettings().apiEndpoint;
+      const apiEndpoint = config.getSettings().apiEndpoint;
       const reservation = response.data;
       try {
-        // First try to connect via an EventSource (not supported on IE)
-        this.connectEventSource(  apiEndpoint + '/event/streams/' + reservation );
+        // First try to connect via a WebSocket
+        const wsApiEndpoint = apiEndpoint.replace( /^http/, 'ws' );
+        this.connectWebSocket( wsApiEndpoint + '/event/streams.ws/' + reservation  );
       } catch ( error ) {
-        // Then fallback to using WebSockets
-        apiEndpoint = apiEndpoint.replace( /^http/, 'ws' );
-        this.connectWebSocket( apiEndpoint + '/event/streams.ws/' + reservation  );
+        // Then fallback to using EventSource
+        this.connectEventSource(  apiEndpoint + '/event/streams/' + reservation );
       }
     });
   }
