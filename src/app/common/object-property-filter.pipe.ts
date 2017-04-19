@@ -27,7 +27,7 @@ export class ObjectPropertyFilterPipe {
     }
     return objects.filter((obj: any) => {
       const value = getPropertyValue(obj, config.propertyName);
-      if (!value) {
+      if (value === undefined) {
         // no idea what to do in this case
         return true;
       }

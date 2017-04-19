@@ -151,9 +151,7 @@ export class IntegrationsListComponent {
   }
 
   getFinish(integration: Integration) {
-    const answer =  integration.steps.slice(-1)[0];
-    console.log('Answer: ', answer);
-    return answer;
+    return integration.steps.slice(-1)[0];
   }
 
   //-----  Random Text Stuff --------->>
