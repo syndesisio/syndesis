@@ -97,11 +97,11 @@ class CommonSteps {
   public async scroll(topBottom: string, leftRight: string): P<any> {
 
     const size = await browser.manage().window().getSize();
-    let directions: Object = {
+    const directions: Object = {
       top: 0,
       bottom: size.height,
       left: 0,
-      right: size.width
+      right: size.width,
     };
     if (!directions.hasOwnProperty(topBottom) || !directions.hasOwnProperty(leftRight)) {
       return P.reject(`unknown directions [${topBottom}, ${leftRight}`);
@@ -110,7 +110,7 @@ class CommonSteps {
     const y = directions[topBottom];
 
     log.info(`scrolling to [x=${x},y=${y}]`);
-    return browser.driver.executeScript((x, y) => window.scrollTo(x, y), x, y);
+    return browser.driver.executeScript((browserX, browserY) => window.scrollTo(browserX, browserY), x, y);
   }
 }
 
