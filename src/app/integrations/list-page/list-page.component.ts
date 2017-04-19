@@ -17,6 +17,11 @@ export class IntegrationsListPage implements OnInit {
 
   loading: Observable<boolean>;
 
+  statusFilter: ObjectPropertyFilterConfig = {
+    filter: '',
+    propertyName: 'currentStatus',
+  };
+
   filter: ObjectPropertyFilterConfig = {
     filter: '',
     propertyName: 'name',

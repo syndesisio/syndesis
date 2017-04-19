@@ -146,16 +146,14 @@ export class IntegrationsListComponent {
 
   //-----  Icons ------------------->>
 
-  getStartIcon(integration: Integration) {
-    const connection = integration.steps[0].connection;
-    const icon = 'fa fa-plane';
-
-    return (connection || {})['icon'] || 'fa-plane';
+  getStart(integration: Integration) {
+    return integration.steps[0];
   }
 
-  getFinishIcon(integration: Integration) {
-    const connection = integration.steps[integration.steps.length - 1].connection;
-    return (connection || {})['icon'] || 'fa-plane';
+  getFinish(integration: Integration) {
+    const answer =  integration.steps.slice(-1)[0];
+    console.log('Answer: ', answer);
+    return answer;
   }
 
   //-----  Random Text Stuff --------->>
