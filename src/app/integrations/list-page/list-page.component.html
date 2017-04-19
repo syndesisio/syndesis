@@ -1,4 +1,15 @@
 <div class="integrations list-page">
-  <ipaas-integrations-list-toolbar [(filter)]="filter" [(sort)]="sort"></ipaas-integrations-list-toolbar>
-  <ipaas-integrations-list [integrations]="integrations | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async"></ipaas-integrations-list>
+  <ipaas-integrations-list-toolbar [(filter)]="filter"
+                                   [(sort)]="sort"></ipaas-integrations-list-toolbar>
+  <p>&nbsp;</p>
+  <tabset class="nav nav-tabs nav-tabs-pf">
+    <tab heading="All" (select)="statusFilter.filter = ''"></tab>
+    <tab heading="Active" (select)="statusFilter.filter = 'Activated'"></tab>
+    <tab heading="Inactive" (select)="statusFilter.filter = 'Deactivated'"></tab>
+    <tab heading="Draft" (select)="statusFilter.filter = 'Draft'"></tab>
+  </tabset>
+
+  <ipaas-integrations-list [integrations]="integrations | async | objectPropertyFilter: statusFilter | objectPropertyFilter:filter | objectPropertySort:sort"
+
+                           [loading]="loading | async"></ipaas-integrations-list>
 </div>

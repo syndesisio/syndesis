@@ -7,6 +7,7 @@ import { RestangularModule } from 'ng2-restangular';
 
 import { ModalModule } from 'ng2-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
+import { TabsModule } from 'ng2-bootstrap/tabs';
 import { TooltipModule } from 'ng2-bootstrap/tooltip';
 
 import { IPaaSCommonModule } from '../../common/common.module';
@@ -28,6 +29,7 @@ describe('IntegrationsListPage', () => {
         RestangularModule.forRoot(),
         ModalModule.forRoot(),
         TooltipModule.forRoot(),
+        TabsModule.forRoot(),
         ToasterModule,
       ],
       declarations: [

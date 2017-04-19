@@ -2,7 +2,9 @@
 
 .integrations.list {
   color: #656565;
+  /*
   margin-top: 25px;
+  */
 
   ////////////////////////////////////////////////////////////////////////////////
   // INTEGRATION ROWS
@@ -40,6 +42,10 @@
           &.fa-angle-right {
             font-size: 18px;
           }
+        }
+        .image-icon > img {
+          width: 32px;
+          height: 32px;
         }
       }
 
