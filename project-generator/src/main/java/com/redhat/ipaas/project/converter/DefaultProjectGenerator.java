@@ -86,8 +86,9 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     public Map<String, byte[]> generate(GenerateProjectRequest request) throws IOException {
         request.getIntegration().getSteps().ifPresent(steps -> {
             for (Step step : steps) {
-                log.info("Integration {} : Adding step {} ", step.getId().orElse("none"),
-                         request.getIntegration().getId().orElse("[none]"));
+                log.info("Integration {} : Adding step {} ",
+                         request.getIntegration().getId().orElse("[none]"),
+                         step.getId().orElse(""));
                 step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
             }
         });

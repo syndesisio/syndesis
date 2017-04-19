@@ -66,8 +66,11 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         }
 
 
-        String token = integration.getToken().get();
-        Tokens.setAuthenticationToken(token);
+        if (isTokenExpired(integration)) {
+            log.info("{} : Token is expired", getLabel(integration));
+            return new StatusUpdate(integration.getCurrentStatus(), "Token is expired");
+        }
+        String token = storeToken(integration);
 
         OpenShiftDeployment deployment = OpenShiftDeployment
             .builder()
@@ -83,13 +86,13 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         Optional<Integration.Status> currentStatus = integration.getCurrentStatus();
         if (!currentStatus.isPresent() || currentStatus.get() != Integration.Status.Pending) {
             String gitHubUser = getGitHubUser();
-            log.info("{} : Looked up GitHubUser {}", getLabel(integration), gitHubUser);
+            log.info("{} : Looked up GitHub user {}", getLabel(integration), gitHubUser);
 
             Map<String, byte[]> projectFiles = createProjectFiles(gitHubUser, integration);
             log.info("{} : Created project files", getLabel(integration));
 
             String gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
-            log.info("{} : Updated GitHub Repo {}", getLabel(integration), gitCloneUrl);
+            log.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
 
             ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, extractSecretsFrom(integration));
             log.info("{} : Created OpenShift resources", getLabel(integration));
@@ -103,6 +106,17 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         log.info("{} : Setting status to {}", getLabel(integration), status);
 
         return new StatusUpdate(status);
+    }
+
+    private boolean isTokenExpired(Integration integration) {
+        return integration.getToken().isPresent() &&
+               Tokens.isTokenExpired(integration.getToken().get());
+    }
+
+    private String storeToken(Integration integration) {
+        String token = integration.getToken().orElse(null);
+        Tokens.setAuthenticationToken(token);
+        return token;
     }
 
     private String getWebHookUrl(OpenShiftDeployment deployment, String secret) {
