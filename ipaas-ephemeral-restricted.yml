@@ -109,6 +109,10 @@ parameters:
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
   value: 'true'
+- description: How many seconds should an access token be valid?
+  displayName: Acess Token Lifespan
+  name: ACCESS_TOKEN_LIFESPAN
+  value: '300'
 message: |-
   Red Hat iPaaS is deployed to ${ROUTE_HOSTNAME}.
 
@@ -1314,7 +1318,7 @@ objects:
         "realm": "${KEYCLOAK_IPAAS_REALM_NAME}",
         "notBefore": 0,
         "revokeRefreshToken": false,
-        "accessTokenLifespan": 300,
+        "accessTokenLifespan": ${ACCESS_TOKEN_LIFESPAN},
         "accessTokenLifespanForImplicitFlow": 900,
         "ssoSessionIdleTimeout": 1800,
         "ssoSessionMaxLifespan": 36000,
