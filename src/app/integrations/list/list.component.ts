@@ -142,6 +142,7 @@ export class IntegrationsListComponent {
     this.showModal('delete');
   }
 
+
   //-----  Icons ------------------->>
 
   getStart(integration: Integration) {
