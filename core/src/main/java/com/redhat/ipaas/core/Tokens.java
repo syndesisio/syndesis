@@ -46,9 +46,9 @@ public class Tokens {
     public static boolean isTokenExpired(String token) {
         TokenVerifier verifier = TokenVerifier.create(token);
         try {
-            return verifier.parse().getToken().isExpired();
+            return verifier.getToken().isExpired();
         } catch (VerificationException e) {
-            return false;
+            return true;
         }
     }
 
