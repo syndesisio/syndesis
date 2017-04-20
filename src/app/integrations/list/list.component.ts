@@ -17,6 +17,7 @@ import { log, getCategory } from '../../logging';
 export class IntegrationsListComponent {
 
   private toast;
+  isActive = true;
   currentAction: string = undefined;
   selectedIntegration: Integration = undefined;
 
@@ -140,6 +141,16 @@ export class IntegrationsListComponent {
     log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
     this.selectedIntegration = integration;
     this.showModal('delete');
+  }
+
+  //-----  'Is Integration Active?' Model ------------------->>
+
+  toggleActive(integration: Integration) {
+    if(integration.currentStatus === 'Activated') {
+      this.requestDeactivate(integration);
+    } else {
+      this.requestActivate(integration);
+    }
   }
 
 

@@ -106,7 +106,8 @@
               </h3>
             </div>
 
-            <div *ngIf="integration.currentStatus === 'Activated' || integration.currentStatus === 'Deactivated'">
+            <div *ngIf="integration.currentStatus === 'Activated' || integration.currentStatus === 'Deactivated'"
+                 (click)="toggleActive(integration)">
               <label class="switch_wrap"
                      for="field-{{ integration.id }}">
                 <input id="field-{{ integration.id }}"
