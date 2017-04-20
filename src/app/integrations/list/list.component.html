@@ -109,16 +109,13 @@
 
             <div *ngIf="integration.currentStatus === integration.desiredStatus">
               <span *ngIf="integration.currentStatus === 'Activated'"
-                    class="label label-success"
-                    [tooltip]="statTemplate"
+                    class="label label-primary"
                     (click)="requestDeactivate(integration)">Active</span>
               <span *ngIf="integration.currentStatus === 'Deactivated'"
                     class="label label-default"
-                    [tooltip]="statTemplate"
                     (click)="requestActivate(integration)">Inactive</span>
               <span *ngIf="integration.currentStatus === 'Draft'"
-                    class="label label-primary"
-                    [tooltip]="statTemplate"
+                    class="label label-warning"
                     disabled>Draft</span>
             </div>
           </div>
