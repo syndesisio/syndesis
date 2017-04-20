@@ -1,6 +1,48 @@
 <ipaas-loading [loading]="loading">
   <div class="container-cards-pf ipaas-dashboard-integrations">
 
+    <!-- Modal Container -->
+
+    <div bsModal
+         #childModal="bs-modal"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="activateModal"
+         aria-hidden="true">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title pull-left">Confirm {{ getActionTitle() }}</h4>
+            <button type="button"
+                    class="close pull-right"
+                    aria-label="Close"
+                    (click)="hideModal()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div>
+              <p>Are you sure you would like to {{ getAction() }} the following integration?</p>
+            </div>
+            <div style="text-align: center; font-weight: 700">
+              <p>{{ selectedIntegration?.name }}</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="pull-right btn btn-primary"
+                    (click)="doAction(currentAction, selectedIntegration)">
+              {{ getActionButtonText() }}
+            </button>
+            <button class="pull-right btn btn-cancel"
+                    (click)="hideModal()">Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <!-- First Row: Page Header & Toolbar -->
 
     <div class="row row-cards-pf first-row vertical-align">
@@ -10,8 +52,10 @@
         </div>
         <div class="col-xs-4 actions">
           <div class="pull-right">
-            <a href="#" [routerLink]="['/integrations']">View All Integrations</a>&nbsp;&nbsp;
-            <button class="btn btn-primary" [routerLink]="['/integrations/create']">Create Integration</button>
+            <a href="#"
+               [routerLink]="['/integrations']">View All Integrations</a>&nbsp;&nbsp;
+            <button class="btn btn-primary"
+                    [routerLink]="['/integrations/create']">Create Integration</button>
           </div>
         </div>
       </div>
@@ -42,7 +86,7 @@
                 <!-- Icons -->
 
                 <div class="col-xs-3 icons"
-                     (click)="selectedIntegration(integration)">
+                     (click)="goto(integration)">
                   <div class="list-view-pf-left">
                     <!--
                     <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
@@ -64,14 +108,14 @@
                 <!-- Name -->
 
                 <div class="col-xs-4 name"
-                     (click)="selectedIntegration(integration)">
+                     (click)="goto(integration)">
                   {{ integration.name }}
                 </div>
 
                 <!-- Uses -->
 
                 <div class="col-xs-3 uses"
-                     (click)="selectedIntegration(integration)">
+                     (click)="goto(integration)">
                   <p>{{ integration.timesUsed || 0 }} uses
                   </p>
                 </div>
@@ -79,7 +123,7 @@
                 <!-- Status -->
 
                 <div class="col-xs-1 status"
-                     (click)="selectedIntegration(integration)">
+                     (click)="goto(integration)">
 
                   <!-- OK Status -->
 
@@ -98,26 +142,27 @@
 
                 <!-- Actions -->
                 <div class="col-xs-1 actions">
-                  <div class="dropdown pull-right dropdown-kebab-pf">
-                    <button class="btn btn-link dropdown-toggle"
+                  <div dropdown
+                       class="dropdown pull-right dropdown-kebab-pf">
+                    <button dropdownToggle
+                            class="btn btn-link"
                             type="button"
                             id="dropdownKebabRight9"
-                            data-toggle="dropdown"
                             aria-haspopup="true"
                             aria-expanded="true">
                       <span class="fa fa-ellipsis-v"></span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-right"
+                    <ul dropdownMenu
+                        class="dropdown-menu dropdown-menu-right"
                         aria-labelledby="dropdownKebabRight9">
                       <li>
                         <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">Edit</a>
                       </li>
-                      <li>
+                      <li *ngIf="integration.currentStatus === 'Activated'">
                         <a (click)="requestDeactivate(integration)">Deactivate</a>
                       </li>
-                      <li *ngIf="integration.active === false"
-                          (click)="requestActivate(integration)">
-                        <a>Activate</a>
+                      <li *ngIf="integration.currentStatus === 'Deactivated'">
+                        <a (click)="requestActivate(integration)">Activate</a>
                       </li>
                       <!--
                       <li>
@@ -197,14 +242,14 @@
                  *ngFor="let integration of integrations; let i=index">
               <div class="update col-xs-12"
                    *ngIf="i<5"
-                   (click)="selectedIntegration(integration)">
+                   (click)="goto(integration)">
                 <div class="col-xs-5">
                   Updated: <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">
                   {{ integration.name }}
                 </a>
                 </div>
                 <div class="col-xs-4">
-                <span [class]="'label ' + getLabelClass(integration)">
+                  <span [class]="'label ' + getLabelClass(integration)">
                   {{ getStatusText(integration) }}
                 </span>
                 </div>
@@ -229,8 +274,10 @@
         </div>
         <div class="col-xs-4 actions">
           <div class="pull-right">
-            <a href="#" [routerLink]="['/connections']">View All Connections</a>&nbsp;&nbsp;
-            <button class="btn btn-primary" [routerLink]="['/connections/create']">Create Connection</button>
+            <a href="#"
+               [routerLink]="['/connections']">View All Connections</a>&nbsp;&nbsp;
+            <button class="btn btn-primary"
+                    [routerLink]="['/connections/create']">Create Connection</button>
           </div>
         </div>
       </div>
