@@ -102,9 +102,9 @@
             }
           }
 
-          // Draft State
+          // Deleted & Draft States
 
-          .draft {
+          .deleted, .draft {
             display: inline-block;
             padding: 0 25px;
 

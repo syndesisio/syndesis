@@ -120,6 +120,11 @@
                  class="draft">
               <span class="label label-warning" disabled>Draft</span>
             </div>
+
+            <div *ngIf="integration.currentStatus === 'Deleted'"
+                 class="deleted">
+              <span class="label label-danger" disabled>Deleted</span>
+            </div>
           </div>
         </div>
 
