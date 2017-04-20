@@ -4,7 +4,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { FlowPage } from '../flow-page';
-import { Tag } from '../../../model';
 
 @Component({
   selector: 'ipaas-integrations-integration-basics',
@@ -56,7 +55,7 @@ export class IntegrationBasicsComponent extends FlowPage {
   }
 
   get tagsArray(): string[] {
-    return (this.currentFlow.integration.tags || []).map((tag) => tag.name);
+    return this.currentFlow.integration.tags;
   }
 
   get tags(): string {
@@ -64,7 +63,7 @@ export class IntegrationBasicsComponent extends FlowPage {
   }
 
   set tags(tags: string) {
-    const _tags = tags.split(',').map((str) => <Tag> { name: str.trim() });
+    const _tags = tags.split(',').map((str) => str.trim());
     this.currentFlow.events.emit({
       kind: 'integration-set-property',
       property: 'tags',
