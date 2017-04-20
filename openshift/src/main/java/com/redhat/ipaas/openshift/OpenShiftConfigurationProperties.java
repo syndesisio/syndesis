@@ -36,6 +36,8 @@ public class OpenShiftConfigurationProperties {
 
     private String namespace;
 
+    private String integrationServiceAccount = "ipaas-integration";
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -78,5 +80,9 @@ public class OpenShiftConfigurationProperties {
 
     public void setNamespace(String namespace) {
         this.namespace = namespace;
+    }
+
+    public String getIntegrationServiceAccount() {
+        return integrationServiceAccount;
     }
 }
