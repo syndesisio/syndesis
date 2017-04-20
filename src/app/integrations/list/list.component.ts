@@ -113,9 +113,7 @@ export class IntegrationsListComponent {
       setTimeout(this.popToast(toast), 1000);
     });
   }
-
-
-  //-----  Delete ------------------->>
+  
 
   // Actual delete action once the user confirms
   deleteAction(integration: Integration) {
