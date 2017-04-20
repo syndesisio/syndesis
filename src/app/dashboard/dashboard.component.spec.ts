@@ -9,6 +9,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ng2-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
 import { TooltipModule } from 'ng2-bootstrap/tooltip';
+import { DropdownModule } from 'ng2-bootstrap/dropdown';
 
 import { IPaaSCommonModule } from '../common/common.module';
 import { DashboardComponent } from './dashboard.component';
@@ -31,6 +32,7 @@ describe('DashboardComponent', () => {
         ModalModule.forRoot(),
         ToasterModule,
         TooltipModule.forRoot(),
+        DropdownModule.forRoot(),
         StoreModule,
         RouterTestingModule.withRoutes([]),
         RestangularModule.forRoot(),
