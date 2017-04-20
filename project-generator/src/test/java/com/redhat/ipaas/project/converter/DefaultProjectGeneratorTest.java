@@ -158,4 +158,31 @@ public class DefaultProjectGeneratorTest {
         return rc;
     }
 
+    @Test
+    public void testMapper() throws Exception {
+        Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("com.redhat.ipaas:timer-connector:0.3.3").build()).build();
+        Map<String, String> props = new HashMap<>();
+        props.put("atlasmapping", "{}");
+        Step step2 = new Step.Builder().stepKind("mapper").configuredProperties(props).build();
+        Step step3 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-post").camelConnectorGAV("com.redhat.ipaas:http-post-connector:0.3.3").build()).build();
+
+        GenerateProjectRequest request = ImmutableGenerateProjectRequest
+            .builder()
+            .gitHubUser("noob")
+            .gitHubRepoName("test")
+            .integration(new Integration.Builder()
+                .id("test-integration")
+                .name("Test Integration")
+                .steps( Arrays.asList(step1, step2, step3))
+                .build())
+            .connectors(connectors)
+            .build();
+
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), new ProjectGeneratorProperties()).generate(request);
+
+        assertFileContents(files.get("src/main/resources/funktion.yml"), "test-mapper-funktion.yml");
+        assertThat(new String(files.get("src/main/resources/mapping-step-2.json"))).isEqualTo("{}");
+    }
+
+
 }

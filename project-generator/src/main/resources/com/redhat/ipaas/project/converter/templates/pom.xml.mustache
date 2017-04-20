@@ -39,6 +39,17 @@
       </snapshots>
     </repository>
     <repository>
+      <id>sonatype.snapshots</id>
+      <name>Sonatype Snapshot Repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
@@ -135,6 +146,13 @@
       <groupId>io.fabric8.funktion</groupId>
       <artifactId>funktion-runtime</artifactId>
       <version>${funktion.version}</version>
+    </dependency>
+
+    <!-- atlasmap runtime -->
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>camel-atlasmap</artifactId>
+      <version>1.10.0-SNAPSHOT</version>
     </dependency>
 
     <!-- testing -->

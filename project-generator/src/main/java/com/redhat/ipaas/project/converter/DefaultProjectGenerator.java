@@ -15,12 +15,6 @@
  */
 package com.redhat.ipaas.project.converter;
 
-import java.io.*;
-import java.net.URISyntaxException;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -39,8 +33,22 @@ import io.fabric8.funktion.support.YamlHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class DefaultProjectGenerator implements ProjectGenerator {
 
+    private final static String MAPPER = "mapper";
     private final static ObjectMapper YAML_OBJECT_MAPPER = YamlHelper.createYamlMapper();
     private final static String PLACEHOLDER_FORMAT = "{{%s}}";
 
@@ -97,7 +105,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         contents.put("README.md", generateFromRequest(request, readmeMustache));
         contents.put("src/main/java/com/redhat/ipaas/example/Application.java", generateFromRequest(request, applicationJavaMustache));
         contents.put("src/main/resources/application.yml", generateFromRequest(request, applicationYmlMustache));
-        contents.put("src/main/resources/funktion.yml", generateFlowYaml(request));
+        contents.put("src/main/resources/funktion.yml", generateFlowYaml(contents, request));
         contents.put("pom.xml", generatePom(request.getIntegration()));
 
         return contents;
@@ -138,10 +146,12 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
     */
 
-    private byte[] generateFlowYaml(GenerateProjectRequest request) throws JsonProcessingException {
+    private byte[] generateFlowYaml(Map<String, byte[]> contents, GenerateProjectRequest request) throws JsonProcessingException {
         Flow flow = new Flow();
         request.getIntegration().getSteps().ifPresent(steps -> {
+            int stepCounter=0;
             for (Step step : steps) {
+                stepCounter++;
                 if (step.getStepKind().equals(StepKinds.ENDPOINT)) {
                     step.getAction().ifPresent(action -> {
                         step.getConnection().ifPresent(connection -> {
@@ -162,6 +172,18 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                     continue;
                 }
 
+                if ( MAPPER.equals(step.getStepKind()) ) {
+
+                    Map<String, String> configuredProperties = step.getConfiguredProperties().get();
+
+                    String resourceName = "mapping-step-" + stepCounter + ".json";
+                    byte[] resourceData = utf8(configuredProperties.get("atlasmapping"));
+                    contents.put("src/main/resources/" + resourceName, resourceData);
+                    flow.addStep(new Endpoint("atlas:"+resourceName));
+
+                    continue;
+                }
+
                 try {
                     HashMap<String, Object> stepJSON = new HashMap<>(step.getConfiguredProperties().orElse(new HashMap<String,String>()));
                     stepJSON.put("kind", step.getStepKind());
@@ -177,6 +199,13 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         Funktion funktion = new Funktion();
         funktion.addFlow(flow);
         return YAML_OBJECT_MAPPER.writeValueAsBytes(funktion);
+    }
+
+    static private byte[] utf8(String value) {
+        if (value == null) {
+            return null;
+        }
+        return value.getBytes(Charset.forName("UTF-8"));
     }
 
     private io.fabric8.funktion.model.steps.Step createEndpointStep(Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws IOException, URISyntaxException {
