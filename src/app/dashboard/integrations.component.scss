@@ -77,7 +77,6 @@
 
         .chart {
           flex-grow: 1;
-          //margin-bottom: -5em;
           display: flex;
           justify-content: center;
           flex-direction: column;
@@ -118,20 +117,14 @@
             padding: 9px;
 
             &.active {
-              background: $pf-green-400;
-            }
-
-            &.deleted {
-              background: $pf-orange-400;
-            }
-
-            &.draft {
               background: $pf-blue-400;
             }
 
+            &.draft {
+              background: $pf-orange-400;
+            }
+
             &.inactive {
-              //background: $pf-black-200;
-              //background: $pf-custom-gray;
               background: $pf-black-300;
             }
           }
@@ -173,7 +166,6 @@
         padding: 15px;
 
         &:hover {
-          //background: rgba(214, 238, 250, 0.36);
           background: $pf-blue-50;
         }
 
@@ -219,6 +211,8 @@
 
             .fa.fa-angle-right {
               font-size: 18px;
+              margin: 0;
+              padding: 0 10px;
             }
           }
         }
