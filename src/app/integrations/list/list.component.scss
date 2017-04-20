@@ -91,6 +91,9 @@
 
         .active-inactive {
           padding: 5px;
+          text-align: center;
+
+          // In Progress State
 
           .in-progress {
             h3 {
@@ -99,12 +102,20 @@
             }
           }
 
-          .label {
-            padding: 6px;
-            cursor: pointer;
+          // Draft State
+
+          .draft {
+            display: inline-block;
+            padding: 0 25px;
+
+            .label {
+              cursor: pointer;
+              padding: 6px;
+            }
           }
 
-          // Toggle Button for State
+
+          // Other States - Toggle Button
 
           .switch_wrap input[type="checkbox"] {
             display: none;
