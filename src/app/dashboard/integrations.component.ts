@@ -30,7 +30,6 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   public doughnutChartLabels: string[] = [
     'Active',
-    'Deleted',
     'Draft',
     'Inactive',
   ];
@@ -99,7 +98,7 @@ export class DashboardIntegrationsComponent implements OnInit {
       log.debugc(() => 'desiredStatus: ' + JSON.stringify(a.desiredStatus));
       */
 
-      switch (a.desiredStatus) {
+      switch (a.currentStatus) {
         case 'Activated':
           active.push(a);
           break;
@@ -160,19 +159,19 @@ export class DashboardIntegrationsComponent implements OnInit {
     /* TODO - too noisy
     log.debugc(() => 'Integration: ' + JSON.stringify(integration));
     */
-    switch (integration.desiredStatus) {
+    switch (integration.currentStatus) {
       case 'Activated':
       default:
-        return 'label-success';
+        return 'label-primary';
       case 'Deactivated':
         return 'label-default';
       case 'Draft':
-        return 'label-primary';
+        return 'label-warning';
     }
   }
 
   public getStatusText(integration: Integration): string {
-    switch (integration.desiredStatus) {
+    switch (integration.currentStatus) {
       case 'Activated':
         return 'Active';
       case 'Deactivated':
