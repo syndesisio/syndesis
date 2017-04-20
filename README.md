@@ -20,7 +20,7 @@ In order to apply the templates you can directly refer to the given files via it
 $ oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml
 ```
 
-All of these templates are generated from a single source [ipaas.yml.mustache](generator/ipaas.yml.mustache). So instead of editing individual descriptors you have to change this master template and then run `generator/generate-templates.sh`.
+All of these templates are generated from a single source [ipaas.yml.mustache](generator/ipaas.yml.mustache). So instead of editing individual descriptors you have to change this master template and then run `generator/run.sh`.
 
 ## Template parameters
 
