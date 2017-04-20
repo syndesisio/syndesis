@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -23,8 +23,9 @@ export class IntegrationsStepSelectComponent extends FlowPage implements OnInit 
     public route: ActivatedRoute,
     public router: Router,
     public stepStore: StepStore,
+    public detector: ChangeDetectorRef,
   ) {
-    super(currentFlow, route, router);
+    super(currentFlow, route, router, detector);
     this.steps = stepStore.getSteps();
   }
 

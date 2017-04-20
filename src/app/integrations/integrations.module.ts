@@ -7,6 +7,7 @@ import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { CollapseModule, ModalModule, PopoverModule, TabsModule, DropdownModule } from 'ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
+import { TooltipModule } from 'ng2-bootstrap/tooltip';
 import { DataMapperModule } from 'ipaas.data.mapper';
 
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
@@ -17,7 +18,7 @@ import { IntegrationsSelectActionComponent } from './edit-page/action-select/act
 import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
 import { IntegrationsStepSelectComponent } from './edit-page/step-select/step-select.component';
 import { IntegrationsStepConfigureComponent } from './edit-page/step-configure/step-configure.component';
-import { DataMapperHostComponent } from './edit-page/step-configure/data.mapper.example.host.component';
+import { DataMapperHostComponent } from './edit-page/step-configure/data-mapper-host.component';
 import { ListActionsComponent } from './edit-page/list-actions/list-actions.component';
 
 import { IntegrationsListPage } from './list-page/list-page.component';
@@ -67,6 +68,7 @@ const routes: Routes = [
     IPaaSCommonModule,
     CollapseModule,
     ToasterModule,
+    TooltipModule,
     ModalModule,
     PopoverModule,
     DropdownModule,

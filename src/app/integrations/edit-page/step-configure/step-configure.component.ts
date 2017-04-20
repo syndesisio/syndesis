@@ -34,10 +34,10 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
     public router: Router,
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
-    public changeDetectorRef: ChangeDetectorRef,
+    public detector: ChangeDetectorRef,
     public stepStore: StepStore,
   ) {
-    super(currentFlow, route, router);
+    super(currentFlow, route, router, detector);
   }
 
   goBack() {
@@ -47,13 +47,15 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
     super.goBack(['step-select', this.position]);
   }
 
-  continue() {
+  continue(data: any) {
     const step = this.currentFlow.getStep(this.position);
     if (step.stepKind === 'mapper') {
       this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
       return;
     }
-    const data = this.formGroup.value;
+    if (!data) {
+      data = this.formGroup.value || {};
+    }
     const properties = {};
     for (const key in data) {
       if (!data.hasOwnProperty(key)) {
@@ -69,6 +71,14 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
         this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
       },
     });
+  }
+
+  getToolbarClass() {
+    switch (this.currentFlow.getStep(this.position).stepKind) {
+      case 'mapper':
+        return 'toolbar mapper';
+    }
+    return 'toolbar';
   }
 
   getConfiguredProperties(props: any) {
@@ -89,7 +99,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
           return;
         }
         const stepDef = this.stepStore.getStepConfig(step.stepKind);
-        if (!stepDef) {
+        if (!stepDef || step.stepKind === 'mapper') {
           // TODO if we don't have a definition for this step then ???
           return;
         }
@@ -109,11 +119,15 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
             item.value = value;
           }
         }
+        if (!Object.keys(this.formConfig).length) {
+          this.continue({});
+          return;
+        }
         log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
         this.formModel = this.formFactory.createFormModel(this.formConfig);
         this.formGroup = this.formService.createFormGroup(this.formModel);
         setTimeout(() => {
-          this.changeDetectorRef.detectChanges();
+          this.detector.detectChanges();
         }, 30);
         this.currentFlow.events.emit({
           kind: 'integration-action-configure',

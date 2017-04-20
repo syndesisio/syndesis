@@ -1,0 +1,17 @@
+{
+  "commment":"This config should for testing against a minishift using the ipaas-dev application templates.",
+  "apiEndpoint": "https://ipaas.192.168.64.2.xip.io/api/v1",
+  "title": "Red Hat iPaaS",
+  "datamapper": {
+    "baseJavaServiceUrl": "https://ipaas.192.168.64.2.xip.io/v2/atlas/java/",
+    "baseMappingServiceUrl": "https://ipaas.192.168.64.2.xip.io/v2/atlas/"
+  },
+  "oauth": {
+    "clientId": "ipaas-ui",
+    "scopes": ["openid"],
+    "oidc": true,
+    "hybrid": true,
+    "issuer": "https://ipaas.192.168.64.2.xip.io/auth/realms/ipaas",
+    "auto-link-github": true
+  }
+}

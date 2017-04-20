@@ -32,17 +32,32 @@
     padding: 2px 20px !important;
   }
 
+  .page-header {
+    border-bottom: none;
+    padding: 10px 0;
+    margin: 0;
+
+    .actions {
+      justify-content: flex-end;
+      margin: 0;
+    }
+
+    [class^="col-"], [class*=" col-"] {
+      padding: 0;
+
+      h1 {
+        margin: 0;
+      }
+    }
+  }
+
+
   ////////////////////////////////////////////////////////////////////////////////
   // FIRST ROW
   ////////////////////////////////////////////////////////////////////////////////
 
   .first-row {
     padding-top: 0;
-
-    .page-header {
-      padding-bottom: 9px;
-      margin: 0;
-    }
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -61,24 +76,33 @@
         overflow: auto;
 
         .chart {
-          /*
+          flex-grow: 1;
+          //margin-bottom: -5em;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          position: relative;
+          max-width: 180px;
+
           canvas {
-            width: 65% !important;
-            height: 65% !important;
+            width: 80% !important;
+            height: 80% !important;
           }
-          */
 
           .total-count {
-            margin-top: -180px;
-            height: 100%;
-            margin-bottom: 140px;
+            top: 20px;
+            position: absolute;
+            width: 62%;
             text-align: center;
 
             .number {
               font-size: 22px;
             }
 
-            .text {}
+            @media (max-width: 1020px) {
+              .text { display: none }
+            }
+
           }
         }
       }
@@ -106,7 +130,9 @@
             }
 
             &.inactive {
-              background: $pf-black-200;
+              //background: $pf-black-200;
+              //background: $pf-custom-gray;
+              background: $pf-black-300;
             }
           }
 
@@ -143,11 +169,12 @@
 
     .top-integrations {
       .integration {
-        cursor: default;
+        cursor: pointer;
         padding: 15px;
 
         &:hover {
-          background: rgba(214, 238, 250, 0.36);
+          //background: rgba(214, 238, 250, 0.36);
+          background: $pf-blue-50;
         }
 
         .actions {

@@ -169,11 +169,19 @@
   version "0.0.37"
   resolved "https://registry.yarnpkg.com/@types/cucumber/-/cucumber-0.0.37.tgz#b6cb3f038ed4e0608264e2c0b3cf6be3b4dd17cb"
 
+"@types/file-saver@0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@types/file-saver/-/file-saver-0.0.0.tgz#1d954502619862d4354444d43385fb8a8fa4478a"
+
 "@types/jasmine@2.5.43":
   version "2.5.43"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.5.43.tgz#6328a8c26082f2fd84f043c802c9ed7fa110b2dd"
   dependencies:
     typescript ">=2.1.4"
+
+"@types/jquery@^2.0.41":
+  version "2.0.41"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-2.0.41.tgz#b87ba051011f99edbe586d8f97282e7786e01a6d"
 
 "@types/lodash@4.14.52":
   version "4.14.52"
@@ -2305,6 +2313,10 @@ file-loader@^0.10.0:
   dependencies:
     loader-utils "^1.0.2"
 
+file-saver@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/file-saver/-/file-saver-1.3.3.tgz#cdd4c44d3aa264eac2f68ec165bc791c34af1232"
+
 filename-regex@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/filename-regex/-/filename-regex-2.0.0.tgz#996e3e80479b98b9897f15a8a58b3d084e926775"
@@ -2985,9 +2997,9 @@ invert-kv@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
-"ipaas.data.mapper@https://github.com/redhat-ipaas/datamapper-ui.git#3fa8d5b83b54fa6fce49f3bf1ac9533c9a83fd13":
+"ipaas.data.mapper@https://github.com/redhat-ipaas/datamapper-ui.git#1f80ba1b48e73c25dc6bac674a4e11b1f8729df2":
   version "1.0.0"
-  resolved "https://github.com/redhat-ipaas/datamapper-ui.git#3fa8d5b83b54fa6fce49f3bf1ac9533c9a83fd13"
+  resolved "https://github.com/redhat-ipaas/datamapper-ui.git#1f80ba1b48e73c25dc6bac674a4e11b1f8729df2"
   dependencies:
     "@angular/common" "~2.4.0"
     "@angular/compiler" "~2.4.0"
@@ -3927,7 +3939,7 @@ ng2-bootstrap@1.4.2:
   dependencies:
     moment "2.17.1"
 
-ng2-charts@^1.5.0:
+ng2-charts@1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/ng2-charts/-/ng2-charts-1.5.0.tgz#72556a1ff0f6758c21abc7eccfe71984c82e9c2d"
   dependencies:

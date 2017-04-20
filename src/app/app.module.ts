@@ -77,8 +77,13 @@ export function appInitializer(configService: ConfigService, oauthService: OAuth
         sessionStorage.setItem('ipaas-first-idp', 'false');
         oauthService.hybrid = originalHybrid;
 
+        let autoLinkGithHub = configService.getSettings('oauth')['auto-link-github'];
+        if (autoLinkGithHub === undefined) {
+          autoLinkGithHub = true;
+        }
+
         // If this wasn't the autolink flow then rekick off flow with state set to autolink.
-        if (oauthService.state !== 'autolink') {
+        if (autoLinkGithHub && oauthService.state !== 'autolink') {
           // Client suggested IDP works great with Keycloak.
           oauthService.loginUrl += '?kc_idp_hint=github';
           // Clear session storage before trying again.

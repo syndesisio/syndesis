@@ -1,9 +1,6 @@
 // Typings reference file, you can add your own global typings here
 // https://www.typescriptlang.org/docs/handbook/writing-declaration-files.html
 
-declare var jQuery: any;
-declare var $: any;
-
 declare interface EventSourceInit {
   withCredentials?: boolean;
 }
@@ -27,4 +24,9 @@ declare class EventSource {
 
   removeEventListener(event: string, cb: (event: any) => void);
 
+}
+
+// add type definition for https://github.com/liabru/jquery-match-height plugin
+interface JQuery {
+  matchHeight(options?: any): any;
 }

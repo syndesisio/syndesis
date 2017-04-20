@@ -1,16 +1,125 @@
 @import '../../../scss/colors';
 
-.connections-detail {
-  .card-pf-body {
-    .fa {
-      font-size: x-large;
+.connections-view {
+  .card-pf {
+    .card-pf-body {
+      .fa {
+        font-size: x-large;
+      }
     }
   }
-}
 
-.connection-edit {
-  background: #fff;
-  border-top: 2px solid transparent;
-  box-shadow: 0 1px 1px rgba(3, 3, 3, 0.175);
-  padding: 0 20px;
+  ////////////////////////////////////////////////////////////////////////////////
+  // CREATE & EDIT OVERRIDES
+  // The Create and Edit Connection pages reuse and pull in the viewComponent as a
+  // selector/directive. The .create and .edit classes are applied to them under these conditions.
+  ////////////////////////////////////////////////////////////////////////////////
+
+
+  //----- Create & Edit Connection State Common Overrides the Connection List ----------------->>
+
+  &.create, &.edit {
+
+    .cards-pf .row-cards-pf:first-child {
+      padding-top: 0;
+    }
+
+    .form {
+      border-bottom: solid 1px $pf-black-200;
+
+      .form-horizontal {
+        float: left;
+      }
+    }
+
+    // Create & Edit Specific Deeper Overrides to the Connection List Toolbar
+    // As these are already nested as components/directives within the Connection List Component.
+
+    /deep/ .toolbar-pf {
+      .toolbar-pf-actions {
+        .search {
+          input {
+            font-style: italic;
+          }
+
+          .input-group {
+            width: 100%;
+          }
+
+          .input-group-btn {
+            display: none;
+          }
+        }
+      }
+    }
+
+    // Create & Edit Specific Changes to the Connection List
+
+    /deep/ .connections-list {
+      .cards {
+        .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
+          cursor: pointer !important;
+
+          .dropdown-kebab-pf {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+
+  //----- Create a Connection - Specific Overrides to the Connection List ----------------->>
+
+  &.create {
+    padding: 0;
+
+    .card-pf {
+      margin-bottom: 0;
+    }
+
+    .card-pf-body {
+      padding-bottom: 0;
+    }
+
+    /deep/ .connections-list {
+      &.container-cards-pf {
+        margin-top: 20px;
+        margin-bottom: 40px;
+      }
+    }
+
+    /deep/ .col-md-12 {
+      padding: 0;
+    }
+
+    /deep/ .row.toolbar-pf {
+      margin: 0 -10px;
+      padding: 0;
+
+      .toolbar-pf-actions {
+        margin-bottom: 0;
+        padding: 15px 0;
+      }
+    }
+  }
+
+  //----- Edit & Configure a Connection - Specific Overrides to the Connection List ----------------->>
+
+  &.edit {
+    //padding-top: 20px;
+    //padding-bottom: 40px;
+
+    .card-pf-body {
+      //background: #FFFFFF;
+    }
+  }
+
+
+  //----- View a Connection - Specific Overrides to the Connection List ----------------->>
+
+  &.view {
+    //background: $pf-black-200;
+    //padding: 20px 40px;
+  }
 }

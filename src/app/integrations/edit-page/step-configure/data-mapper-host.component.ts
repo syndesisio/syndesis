@@ -67,7 +67,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     public support: IntegrationSupportService,
     public detector: ChangeDetectorRef,
   ) {
-    super(currentFlow, route, router);
+    super(currentFlow, route, router, detector);
     documentService.cfg = this.cfg;
     mappingService.cfg = this.cfg;
     initializationService.cfg = this.cfg;
@@ -88,7 +88,12 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
   createDocumentDefinition(dataShape: DataShape, isSource: boolean = false) {
     const answer = new DocumentDefinition();
     answer.isSource = isSource;
-    answer.initCfg.documentIdentifier = dataShape['dataType'].replace(/java:/, '');
+    // TODO not sure what to do for `none` or `any` here
+    switch (dataShape.kind) {
+      case 'java':
+        answer.initCfg.documentIdentifier = dataShape.type;
+        break;
+    }
     return answer;
   }
 
@@ -96,7 +101,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     const step = this.currentFlow.getStep(this.position);
     let mappings = undefined;
     if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
-      mappings = <string> step.configuredProperties[MAPPING_KEY];
+      mappings = <string>step.configuredProperties[MAPPING_KEY];
     }
     this.cfg.mappings = new MappingDefinition();
 
@@ -105,15 +110,15 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     // TODO we'll want to parse the dataType and maybe set the right config value
     const inputDocDef = this.createDocumentDefinition(start.action.outputDataShape, true);
     this.cfg.sourceDocs.push(inputDocDef);
-
     const outputDocDef = this.createDocumentDefinition(end.action.inputDataShape);
     this.cfg.targetDocs.push(outputDocDef);
-
+    // TODO for now set a really long timeout
+    this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;
     if (mappings) {
       const mappingDefinition = new MappingDefinition();
       // Existing mappings, load from the route
       try {
-      this.mappingService.deserializeMappingServiceJSON(mappings, mappingDefinition);
+        this.mappingService.deserializeMappingServiceJSON(JSON.parse(mappings), mappingDefinition);
       } catch (err) {
         // TODO popup or error alert?  At least catch this so we initialize
         log.warn('Failed to deserialize mappings: ' + err, category);
@@ -130,6 +135,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
         position: this.position,
         properties: properties,
         onSave: () => {
+          this.mappingService.handleMappingSaveSuccess(saveHandler);
           log.debugc(() => 'Saved mapping file: ' + json, category);
         },
       });

@@ -7,7 +7,6 @@ import { ConnectionStore } from '../../store/connection/connection.store';
 @Component({
   selector: 'ipaas-connection-view-page',
   templateUrl: './view-page.component.html',
-  styleUrls: ['./view-page.component.scss'],
 })
 export class ConnectionViewPage implements OnDestroy {
   private idSubscription: Subscription;

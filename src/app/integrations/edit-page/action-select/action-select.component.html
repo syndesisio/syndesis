@@ -1,8 +1,8 @@
 <div class="action-select">
-  
+
   <!-- Toolbar -->
   <div class="toolbar">
-  
+
     <!-- Toolbar: Breadcrumbs -->
     <div class="row toolbar-pf">
       <div class="col-sm-12">
@@ -16,6 +16,7 @@
             </ol>
           </div>
           <div class="toolbar-pf-action-right">
+            <!--
             <button class="btn btn-default"
                     (click)="cancel()">Cancel
             </button>
@@ -23,29 +24,30 @@
             <button class="btn btn-default"
                     (click)="goBack()"><i class="fa fa-chevron-left"></i> Back
             </button>
+            -->
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+
   <div class="wizard-pf-body clearfix pre-content">
     <div class="title">
       <h1>Choose an Action</h1>
     </div>
-    
+
     <!-- Actions -->
-    
+
     <div *ngIf="actions">
       <p>Choose an action for the integration.</p>
-      
+
       <!-- Toolbar -->
       <div class="row toolbar-pf">
         <div class="col-sm-12">
           <div class="toolbar-pf-actions">
-            
+
             <!-- Toolbar: Search -->
-            
+
             <div class="form-group toolbar-pf-filter search">
               <label class="sr-only">Name</label>
               <div class="input-group">
@@ -61,9 +63,9 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Action List -->
-      
+
       <ipaas-list-actions [actions]="actions | objectPropertyFilter:filter"
                           [loading]="loading | async"
                           (onSelected)="onSelected($event)"></ipaas-list-actions>

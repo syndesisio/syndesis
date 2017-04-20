@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
@@ -17,8 +17,9 @@ export class IntegrationBasicsComponent extends FlowPage {
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
+    public detector: ChangeDetectorRef,
     ) {
-    super(currentFlow, route, router);
+    super(currentFlow, route, router, detector);
   }
 
   canContinue() {

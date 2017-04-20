@@ -41,9 +41,9 @@ export class IntegrationsSelectActionComponent extends FlowPage implements OnIni
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public changeDetectorRef: ChangeDetectorRef,
+    public detector: ChangeDetectorRef,
     ) {
-      super(currentFlow, route, router);
+      super(currentFlow, route, router, detector);
       this.connector = connectorStore.resource;
       this.loading = connectorStore.loading;
   }
@@ -72,7 +72,7 @@ export class IntegrationsSelectActionComponent extends FlowPage implements OnIni
       this.actions = connector.actions;
       // TODO oh no, why is this needed...
       setTimeout(() => {
-        this.changeDetectorRef.detectChanges();
+        this.detector.detectChanges();
       }, 10);
     });
     this.routeSubscription = this.route.params.pluck<Params, string>('position')

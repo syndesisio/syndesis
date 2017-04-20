@@ -1,7 +1,8 @@
-import { Component, Input, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
 
+import { ConnectionStore } from '../../store/connection/connection.store';
 import { log, getCategory } from '../../logging';
 import { Connections, Connection } from '../../model';
 
@@ -14,11 +15,10 @@ const category = getCategory('Connections');
 })
 export class ConnectionsListComponent implements OnInit {
 
-  truncateLimit = 80;
   truncateTrail = '…';
   selectedId = undefined;
+  selectedForDelete: Connection = undefined;
 
-  private toasterService: ToasterService;
   private toast;
 
   @ViewChild('childModal') public childModal: ModalDirective;
@@ -28,33 +28,45 @@ export class ConnectionsListComponent implements OnInit {
   @Input() showKebab = true;
   @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
 
-  constructor(toasterService: ToasterService) {
-    this.toasterService = toasterService;
-  }
+  constructor(
+    public toasterService: ToasterService,
+    public store: ConnectionStore,
+    public detector: ChangeDetectorRef,
+    ) { }
 
 
   //-----  Delete ------------------->>
 
   // Actual delete action once the user confirms
-  deleteAction(connection: Connections) {
-    log.debugc(() => 'Selected connection for delete: ' + JSON.stringify(connection['id']));
-
+  deleteAction(connection: Connection) {
     this.hideModal();
-
-    //this.store.deleteEntity(connection['id']);
-
-    this.toast = {
-      type: 'success',
-      title: 'Delete Successful',
-      body: 'Connection successfully deleted.',
-    };
-
-    setTimeout(this.popToast(this.toast), 1000);
+    const sub = this.store.delete(connection).subscribe(() => {
+      const toast = {
+        type: 'success',
+        title: 'Delete Successful',
+        body: 'Connection successfully deleted.',
+      };
+      sub.unsubscribe();
+      setTimeout(() => {
+        this.toasterService.pop(toast);
+      }, 10);
+    }, (err: any) => {
+      const toast = {
+        type: 'error',
+        title: 'Delete Failed',
+        body: 'Failed to delete connection: ', err,
+      };
+      sub.unsubscribe();
+      setTimeout(() => {
+        this.toasterService.pop(toast);
+      }, 10);
+    });
   }
 
   // Open modal to confirm delete
-  requestDelete(connection: Connections) {
-    log.debugc(() => 'Selected connection for delete: ' + JSON.stringify(connection['id']));
+  requestDelete(connection: Connection, $event) {
+    log.debugc(() => 'Selected connection for delete: ' + connection.id);
+    this.selectedForDelete = connection;
     this.showModal();
   }
 
@@ -73,13 +85,10 @@ export class ConnectionsListComponent implements OnInit {
 
   // Show toast notification
   popToast(toast) {
-    this.toasterService.pop(toast);
   }
 
 
   //-----  Selecting a Connection ------------------->>
-
-
   onSelect(connection: Connection) {
     log.debugc(() => 'Selected connection (list): ' + connection.name, category);
     this.selectedId = connection.id;

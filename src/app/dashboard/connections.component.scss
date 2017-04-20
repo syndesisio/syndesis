@@ -5,39 +5,33 @@
     padding: 0;
 
     .card {
-      cursor: pointer;
       width: 25%;
 
-      .card-pf.card-pf-view.card-pf-view-xs {
-        height: 150px !important;
-        max-height: 150px !important;
-        text-align: left;
+      //----- Same as .card-pf-icon-circle except without the blue circle ----------------->>
+
+      .card-pf-view .card-pf-top-element .card-pf-icon-large {
+        display: block;
+        font-size: 46px;
+        height: 106px;
+        line-height: 102px;
+        margin: 0 auto;
+        text-align: center;
+        width: 106px;
+      }
+
+
+      .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
+        cursor: pointer;
 
         a:hover, a:focus {
-          color: $pf-blue-400;
+          cursor: pointer;
           text-decoration: none;
         }
+      }
 
-        .card-pf-heading {
-          border-bottom: none;
-
-          .card-pf-title {
-
-            // Text
-            .card-title {
-              padding-top: 20px;
-            }
-
-            // Icon
-            .fa {
-              font-size: 20px;
-            }
-          }
-        }
-
-        .card-pf-body {
-          height: 100% !important;
-        }
+      .card-pf-body {
+        height: 240px;
+        overflow: hidden;
       }
     }
   }

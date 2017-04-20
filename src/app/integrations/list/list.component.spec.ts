@@ -5,7 +5,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ModalModule } from 'ng2-bootstrap/modal';
 import { DropdownModule } from 'ng2-bootstrap/dropdown';
+import { TabsModule } from 'ng2-bootstrap/tabs';
 import { ToasterModule } from 'angular2-toaster';
+import { TooltipModule } from 'ng2-bootstrap/tooltip';
 
 import { IPaaSCommonModule } from '../../common/common.module';
 import { IntegrationsListComponent } from './list.component';
@@ -22,7 +24,9 @@ describe('IntegrationsListComponent', () => {
         IPaaSCommonModule.forRoot(),
         RouterTestingModule.withRoutes([]),
         ModalModule.forRoot(),
+        TooltipModule.forRoot(),
         DropdownModule.forRoot(),
+        TabsModule.forRoot(),
         ToasterModule,
         StoreModule,
       ],

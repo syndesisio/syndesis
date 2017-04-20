@@ -15,10 +15,12 @@
             </ol>
           </div>
           <div class="toolbar-pf-action-right">
+            <!--
             <button class="btn btn-default" (click)="cancel()">Cancel
             </button> &nbsp;
             <button class="btn btn-default" (click)="goBack()"><i class="fa fa-chevron-left"></i> Back
             </button>
+            -->
           </div>
         </div>
       </div>
@@ -29,16 +31,19 @@
       <h1>Add a step</h1>
     </div>
     <p>Choose a step from below</p>
-      <div class="list-group list-view-pf list-view-pf-view">
-        <div class="list-group-item" *ngFor="let step of steps" (click)="onSelect(step)" [class.active]="isSelected(step)">
-          <div class="list-view-pf-main-info">
-            <div class="list-view-pf-body">
-              <div class="list-group-item-heading">{{ getName(step) }}</div>
-              <div class="list-group-item-text">{{ getDescription(step) }}
+    <div class="list-group list-view-pf list-view-pf-view">
+      <div class="list-group-item"
+           *ngFor="let step of steps"
+           (click)="onSelect(step)"
+           [class.active]="isSelected(step)">
+        <div class="list-view-pf-main-info">
+          <div class="list-view-pf-body">
+            <div class="list-group-item-heading">{{ getName(step) }}</div>
+            <div class="list-group-item-text">{{ getDescription(step) }}
             </div>
           </div>
         </div>
       </div>
 
+    </div>
   </div>
-</div>

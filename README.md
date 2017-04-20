@@ -54,7 +54,7 @@ Go to [http://0.0.0.0:4200](http://0.0.0.0:4200) or [http://localhost:4200](http
   * [Configuring](#configuring)
 * [Contributing](#contributing)
 * [Resources](#resources)
-
+* [Data Mapper Updates](#data-mapper)
 
 ### File Structure
 
@@ -172,3 +172,9 @@ Pull requests are always welcome. Please read through our [Contribution](/docs/c
 ## Frequently Asked Questions (FAQ)
 
 You can read our FAQ, located in our `/docs` directory, [here](/docs/faq.md).
+
+## Data Mapper
+
+To update the data mapper, change the commit SHA in package.json to pick up the desired code revision, then run `yarn install`.  Verify that the projects still builds by running `yarn start:prod` and adjust the code as necessary based on the data mapper example usage in the [README](https://github.com/redhat-ipaas/datamapper-ui).
+
+When updating the SHA you should also run `yarn copy:assets` to bring over any assets the data mapper component needs, this tasks copies them all to `src/assets/dm`

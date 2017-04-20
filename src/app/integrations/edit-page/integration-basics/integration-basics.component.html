@@ -16,23 +16,33 @@
           <div class="toolbar-pf-action-right">
             <button class="btn btn-default"
                     (click)="cancel()">Cancel
-            </button>
-            <!--
-            &nbsp;
+            </button> &nbsp;
             <button class="btn btn-default"
-                    (click)="goBack()"><i class="fa fa-chevron-left"></i> Back
+                    (click)="save('Draft')"
+                    [disabled]="!canContinue() || saveInProgress || publishInProgress"><span *ngIf="saveInProgress" class="spinner spinner-sm spinner-inline"></span>Save as Draft
             </button>
-            -->
             <button type="button"
                     class="btn btn-primary"
-                    (click)="continue()"
-                    [disabled]="!canContinue()">Next <i class="fa fa-chevron-right"></i></button>
+                    (click)="publish('Activated')"
+                    [disabled]="!canContinue() || saveInProgress || publishInProgress"><span *ngIf="publishInProgress" class="spinner spinner-sm spinner-inline"></span>Publish</button>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="wizard-pf-body clearfix">
+    <div *ngIf="errorMessage">
+      <div class="alert alert-danger">
+        <button type="button"
+                class="close"
+                (click)="errorMessage = undefined">
+                <span class="pficon pficon-close"></span>
+              </button>
+        <span class="pficon pficon-error-circle-o"></span>
+        <p>Error saving integration: </p>
+        <pre>{{ errorMessage }}</pre>
+      </div>
+    </div>
     <div class="title">
       <h1>Create an integration</h1>
     </div>

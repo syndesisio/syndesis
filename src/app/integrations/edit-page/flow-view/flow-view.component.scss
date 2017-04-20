@@ -1,8 +1,25 @@
+@import '../../../../scss/colors';
+
 $flow-view-container-min-height: 0;
 
 /deep/ .popover {
   margin-top: -2px;
-  margin-left: 20px !important;
+  margin-left: 28px !important;
+  border-color: $pf-black-500;
+
+  &.right > .arrow {
+    border-right-color: $pf-black-500;
+  }
+}
+
+.collapsed {
+  .steps {
+    min-height: 145;
+  }
+
+  .step-insert {
+    display: none;
+  }
 }
 
 .clickable {
@@ -100,15 +117,26 @@ $flow-view-container-min-height: 0;
     }
   }
 
-  // Steps on left-hand side
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // LEFT-HAND NAV BAR W/ STEPS
+  ////////////////////////////////////////////////////////////////////////////////
+
   .step-insert {
     position: relative;
-    top: -47px;
-    height: 50px;
+    top: -29px;
+    height: 80px;
+    margin-top:-15%;
+    margin-bottom:-15%;
+
+    a {
+      text-decoration: none;
+    }
 
     .popover-body {
       a {
         cursor: pointer;
+        padding: 10px;
       }
     }
 
@@ -125,11 +153,12 @@ $flow-view-container-min-height: 0;
 
     .step-line {
       position: absolute;
-      height: 150px;
+      height: 100px;
       top: 0;
       left: 46px;
       width: 2px;
-      background-color: #d4d4d4;
+      //background-color: #d4d4d4;
+      background-color: $pf-black-300;
     }
   }
 

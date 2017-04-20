@@ -12,6 +12,7 @@ import { EventsService } from './entity/events.service';
 import { IntegrationService } from './integration/integration.service';
 import { TemplateService } from './template/template.service';
 import { IntegrationSupportService } from './integration-support.service';
+import { TestSupportService } from './test-support.service';
 
 import { ActionStore } from './action/action.store';
 import { ConnectionStore } from './connection/connection.store';
@@ -39,6 +40,7 @@ import { StepStore } from './step/step.store';
     ConnectorStore,
     IntegrationStore,
     TemplateStore,
+    TestSupportService,
     StepStore,
   ],
 })

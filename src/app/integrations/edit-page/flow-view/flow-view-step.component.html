@@ -1,81 +1,118 @@
-<div *ngIf="step" class="flow-view-step">
+<div *ngIf="step"
+     class="flow-view-step">
 
-<!-- Delete Modal Container -->
+  <!-- Delete Modal Container -->
 
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
-  <div class="modal-dialog modal-md">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title pull-left">Confirm Delete</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="cancelDeletePrompt()">
+  <div bsModal
+       #childModal="bs-modal"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="deleteModal"
+       aria-hidden="true">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">Confirm Delete</h4>
+          <button type="button"
+                  class="close pull-right"
+                  aria-label="Close"
+                  (click)="cancelDeletePrompt()">
                 <span aria-hidden="true">&times;</span>
               </button>
-      </div>
-      <div class="modal-body">
-        <div>
-          <p>Are you sure you would like to delete this step?</p>
         </div>
-        <div>
-          <p><b style="color: red;">NOTE:</b> This action <i>cannot</i> be undone.</p>
+        <div class="modal-body">
+          <div>
+            <p>Are you sure you would like to delete this step?</p>
+          </div>
+          <div>
+            <p><b style="color: red;">NOTE:</b> This action <i>cannot</i> be undone.</p>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="pull-right btn btn-primary" (click)="deleteStep()">Delete</button>
-        <button class="pull-right btn btn-cancel" (click)="cancelDeletePrompt()">Cancel</button>
+        <div class="modal-footer">
+          <button class="pull-right btn btn-primary"
+                  (click)="deleteStep()">Delete</button>
+          <button class="pull-right btn btn-cancel"
+                  (click)="cancelDeletePrompt()">Cancel</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <!-- Icon Progress Line -->
 
   <div class="col-md-3 progress-line">
-    <p [class]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass()"
-       [class.add-step-or-connection]="step.stepKind !== 'endpoint'">
-      <!-- Only display icon if step kind is not an endpoint or log -->
+    <p [class]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
+       [popover]="tooltipPopover"
+       #pop="bs-popover"
+       placement="right"
+       (mouseover)="showTooltip()"
+       (mouseleave)="hideTooltip()"
+       container="body">
       <i [class]="getIconClass()"
-         *ngIf="step.stepKind === 'endpoint'"></i>
+         *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
+      <img class="connection-icon"
+           *ngIf="step.stepKind === 'endpoint' && step.connection"
+           src="../../../assets/icons/{{ step.connection.connectorId }}.integration.png">
     </p>
+    <template #tooltipPopover>
+      <div *ngIf="step.stepKind === 'endpoint'">
+        Connection: <strong> {{ step.connection.name }} </strong>
+      </div>
+    </template>
   </div>
 
 
   <!-- Progress Menu -->
 
-  <div class="col-md-9 menu" *ngIf="currentStepKind !== 'mapper'" [ngSwitch]="step.stepKind">
+  <div class="col-md-9 menu"
+       *ngIf="currentStepKind !== 'mapper'"
+       [ngSwitch]="step.stepKind">
 
     <!-- Endpoint Steps -->
 
-    <div *ngSwitchCase="'endpoint'" [class]="getParentActiveClass() + ' step-container'">
+    <div *ngSwitchCase="'endpoint'"
+         [class]="getParentActiveClass() + ' step-container'">
 
       <!-- Delete Icon -->
 
-      <i *ngIf="showDelete()" class="delete-icon fa fa-lg fa-trash"
+      <i *ngIf="showDelete()"
+         class="delete-icon fa fa-lg fa-trash"
          (click)="deletePrompt()"></i>
 
 
       <!-- Parent Step -->
 
-      <span [class]="getParentClass()" (click)="goto('action-configure')">
+      <span [class]="getParentClass()"
+            (click)="goto('action-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
       </span>
 
-
       <!-- Sub Steps -->
 
-      <ul [collapse]="isCollapsed()" class="sub-steps">
-        <li *ngIf="!step.connection" [class]="getSubMenuActiveClass('connection-select')" (click)="goto('connection-select')">
+      <ul [collapse]="isCollapsed()"
+          class="sub-steps">
+        <li *ngIf="!step.connection"
+            [class]="getSubMenuActiveClass('connection-select')"
+            (click)="goto('connection-select')">
           <span [class]="getTextClass('connection-select')">Choose a connection</span>
         </li>
-        <li *ngIf="!step.action" [class]="getSubMenuActiveClass('action-select')" (click)="goto('action-select')">
+        <li *ngIf="step.connection && !step.action"
+            [class]="getSubMenuActiveClass('action-select')"
+            (click)="goto('action-select')">
           <span [class]="getTextClass('action-select')">Choose an action</span>
         </li>
-        <li *ngIf="!step.configuredProperties" [class]="getSubMenuActiveClass('action-configure')" (click)="goto('action-configure')">
+        <li *ngIf="step.action && !step.configuredProperties"
+            [class]="getSubMenuActiveClass('action-configure')"
+            (click)="goto('action-configure')">
           <span [class]="getTextClass('action-configure')">Configure the action</span>
         </li>
-        <li *ngIf="step.configuredProperties" [class]="getSubMenuActiveClass('action-configure')" (click)="goto('action-configure')">
-          <span [class]="getTextClass('action-configure')">Configure</span>
+        <li *ngIf="step.configuredProperties"
+            [class]="getSubMenuActiveClass('action-configure')"
+            (click)="goto('action-configure')">
+          <span [class]="getTextClass('action-configure')">Configuration</span>
         </li>
       </ul>
 
@@ -83,17 +120,20 @@
 
     <!-- Default Steps -->
 
-    <div *ngSwitchDefault [class]="getParentActiveClass() + ' step-container'">
+    <div *ngSwitchDefault
+         [class]="getParentActiveClass() + ' step-container'">
 
       <!-- Delete Icon -->
 
-      <i *ngIf="showDelete()" class="delete-icon fa fa-lg fa-trash"
+      <i *ngIf="showDelete()"
+         class="delete-icon fa fa-lg fa-trash"
          [class.add-step-or-connection]="step.stepKind !== 'endpoint'"
          (click)="deletePrompt()"></i>
 
       <!-- Parent Step Heading -->
 
-      <span [class]="getParentClass()" (click)="goto('step-configure')">
+      <span [class]="getParentClass()"
+            (click)="goto('step-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
@@ -101,15 +141,22 @@
 
       <!-- Sub Steps -->
 
-      <ul [collapse]="isCollapsed()" class="sub-steps">
-        <li *ngIf="!step.stepKind" [class]="getSubMenuActiveClass('step-select')" (click)="goto('step-select')">
+      <ul [collapse]="isCollapsed()"
+          class="sub-steps">
+        <li *ngIf="!step.stepKind"
+            [class]="getSubMenuActiveClass('step-select')"
+            (click)="goto('step-select')">
           <span [class]="getTextClass('step-select')">Choose a step</span>
         </li>
-        <li *ngIf="!step.configuredProperties" [class]="getSubMenuActiveClass('step-configure')" (click)="goto('step-configure')">
+        <li *ngIf="step.stepKind && !step.configuredProperties"
+            [class]="getSubMenuActiveClass('step-configure')"
+            (click)="goto('step-configure')">
           <span [class]="getTextClass('step-configure')">Configure the step</span>
         </li>
-        <li *ngIf="step.configuredProperties" [class]="getSubMenuActiveClass('step-configure')" (click)="goto('step-configure')">
-          <span [class]="getTextClass('step-configure')">Configure</span>
+        <li *ngIf="step.configuredProperties"
+            [class]="getSubMenuActiveClass('step-configure')"
+            (click)="goto('step-configure')">
+          <span [class]="getTextClass('step-configure')">Configuration</span>
         </li>
       </ul>
     </div>

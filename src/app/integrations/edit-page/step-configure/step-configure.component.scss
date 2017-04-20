@@ -1,6 +1,9 @@
 .step-configure {
   .toolbar {
     margin: 0 -20px;
+    &.mapper {
+      margin-top: 15px;
+    }
 
     .toolbar-pf {
       background: none !important;

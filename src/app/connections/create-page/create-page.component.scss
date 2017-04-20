@@ -1,0 +1,33 @@
+@import '../../../scss/colors';
+
+.connections-create-page {
+  .card-pf {
+    //background: $pf-black-200;
+    box-shadow: none;
+  }
+
+  .toolbar.toolbar-pf {
+    padding: 10px 0;
+
+    .toolbar-pf-actions {
+      margin: 0;
+
+      .breadcrumb {
+        margin: 0;
+      }
+    }
+  }
+
+  .wizard-pf-steps-indicator {
+    width: 50%;
+  }
+
+  /deep/ .connector-list {
+    margin-top: -5px;
+
+    .toolbar-pf {
+      margin: -20px -50px;
+    }
+  }
+}
+

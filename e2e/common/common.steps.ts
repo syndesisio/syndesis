@@ -2,9 +2,10 @@
  * Created by jludvice on 8.3.17.
  */
 import { CallbackStepDefinition } from 'cucumber';
-import { binding, given, when, then } from 'cucumber-tsflow';
+import { browser } from 'protractor';
+import { binding, given, then, when } from 'cucumber-tsflow';
 import { Promise as P } from 'es6-promise';
-import { World, expect } from './world';
+import { expect, World } from './world';
 import { User } from './common';
 import { log } from '../../src/app/logging';
 /**
@@ -20,8 +21,8 @@ class CommonSteps {
 
   @given(/^credentials for "([^"]*)"$/)
   public loadCredentials(alias: string, callback: CallbackStepDefinition): void {
-    this.world.user = new User(alias, 'asdfadf');
-
+    this.world.user = new User(alias.toLowerCase(), 'asdfadf');
+    log.info(`using alias ${alias} with login ${this.world.user.username}`);
     callback();
   }
 
@@ -30,6 +31,14 @@ class CommonSteps {
     this.world.user = new User(alias.toLowerCase(), 'asdfadf');
     // return this.app.login(this.world.user);
     return this.world.app.login(this.world.user);
+  }
+
+  @given(/^clean application state$/)
+  public async resetState(): P<any> {
+    // user must be logged in (we need his token)
+    const result = await this.world.app.login(this.world.user);
+    // reset state or fail this step
+    return this.world.resetState();
   }
 
 
@@ -112,6 +121,33 @@ class CommonSteps {
 
     expect(element.isPresent(), `There must be enabled element ${elementClassName}`)
       .to.eventually.be.true.notify(callback);
+  }
+
+  /**
+   * Scroll the webpage.
+   *
+   * @param topBottom possible values: top, bottom
+   * @param leftRight possible values: left, right
+   * @returns {Promise<any>}
+   */
+  @when(/^scroll "([^"]*)" "([^"]*)"$/)
+  public async scroll(topBottom: string, leftRight: string): P<any> {
+
+    const size = await browser.manage().window().getSize();
+    const directions: Object = {
+      top: 0,
+      bottom: size.height,
+      left: 0,
+      right: size.width,
+    };
+    if (!directions.hasOwnProperty(topBottom) || !directions.hasOwnProperty(leftRight)) {
+      return P.reject(`unknown directions [${topBottom}, ${leftRight}`);
+    }
+    const x = directions[leftRight];
+    const y = directions[topBottom];
+
+    log.info(`scrolling to [x=${x},y=${y}]`);
+    return browser.driver.executeScript((browserX, browserY) => window.scrollTo(browserX, browserY), x, y);
   }
 }
 

@@ -1,71 +1,79 @@
-<div class="connections create">
+<div class="connections-create-page">
 
   <!-- Toolbar -->
-  <div class="toolbar">
-    <!-- Toolbar: Breadcrumbs -->
-    <div class="row toolbar-pf">
-      <div class="col-sm-12">
-        <div class="toolbar-pf-actions">
-          <div class="inline-block">
-            <ol class="breadcrumb">
-              <li>
-                <a [routerLink]=" ['/'] ">Home</a>
-              </li>
-              <li>
-                <a [routerLink]=" ['..'] ">Connections</a>
-              </li>
-              <li class="active"><strong>Create Connection</strong></li>
-            </ol>
-          </div>
-          <div class="toolbar-pf-action-right">
-            <button class="btn btn-default" (click)="cancel()">Cancel</button>
-            &nbsp;
-            <button class="btn btn-default" (click)="goBack()"><i class="fa fa-chevron-left"></i> Back</button>
-            <button class="btn btn-primary" (click)="goForward()" [disabled]="!canContinue()">{{ getCurrentPage() === 'review' ? 'Create' : 'Next' }} <i *ngIf="getCurrentPage() !== 'review'" class="fa fa-chevron-right"></i></button>
-          </div>
+
+  <div class="row toolbar-pf toolbar">
+    <div class="col-sm-12">
+      <div class="toolbar-pf-actions">
+        <div class="inline-block">
+          <ol class="breadcrumb">
+            <li>
+              <a [routerLink]=" ['/'] ">Home</a>
+            </li>
+            <li>
+              <a [routerLink]=" ['..'] ">Connections</a>
+            </li>
+            <li class="active"><strong>Create Connection</strong></li>
+          </ol>
+        </div>
+        <div class="toolbar-pf-action-right">
+          <button class="btn btn-default"
+                  (click)="cancel()">Cancel
+          </button>
+          &nbsp;
+          <button class="btn btn-default"
+                  (click)="goBack()"><i class="fa fa-chevron-left"></i> Back
+          </button>
+          <button class="btn btn-primary"
+                  (click)="goForward()"
+                  [disabled]="!canContinue()">{{ getCurrentPage() === 'review' ? 'Create' : 'Next' }}
+            <i *ngIf="getCurrentPage() !== 'review'"
+               class="fa fa-chevron-right"></i></button>
         </div>
       </div>
     </div>
   </div>
 
-  <div>
-    <div class="wizard-pf-body clearfix">
-      <!-- Wizard Progress Bar-->
-      <div class="wizard-pf-steps">
-        <!-- hidden -->
-        <ul class="wizard-pf-steps-indicator">
-          <li class="wizard-pf-step">
-            <a class="disabled" [routerLink]=" ['connection-basics'] " routerLinkActive="active">
-              <span class="wizard-pf-step-number">1</span>
-              <span class="wizard-pf-step-title">Define Connection Basics</span>
-            </a>
-          </li>
-          <li class="wizard-pf-step">
-            <a class="disabled" [routerLink]=" ['configure-fields'] " routerLinkActive="active">
-              <span class="wizard-pf-step-number">2</span>
-              <span class="wizard-pf-step-title">Select and Configure Fields</span>
-            </a>
-          </li>
-          <li class="wizard-pf-step">
-            <a class="disabled" [routerLink]=" ['review'] " routerLinkActive="active">
-              <span class="wizard-pf-step-number">3</span>
-              <span class="wizard-pf-step-title">Review</span>
-            </a>
-          </li>
-        </ul>
-      </div>
+  <!-- Wizard Progress Bar-->
 
-      <!-- debug section -->
-      <!--
-      <div class="row">
-        <pre>{{ connection | json }}</pre>
-      </div>
-      -->
-
-      <!-- Wizard Content -->
-      <div class="row">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
+  <div class="row toolbar-pf steps">
+    <!-- hidden -->
+    <ul class="wizard-pf-steps-indicator center">
+      <li class="wizard-pf-step">
+        <a class="disabled"
+           [routerLink]=" ['connection-basics'] "
+           routerLinkActive="active">
+          <span class="wizard-pf-step-number">1</span>
+          <span class="wizard-pf-step-title">Select Connector</span>
+        </a>
+      </li>
+      <li class="wizard-pf-step">
+        <a class="disabled"
+           [routerLink]=" ['configure-fields'] "
+           routerLinkActive="active">
+          <span class="wizard-pf-step-number">2</span>
+          <span class="wizard-pf-step-title">Configure Connector</span>
+        </a>
+      </li>
+      <li class="wizard-pf-step">
+        <a class="disabled"
+           [routerLink]=" ['review'] "
+           routerLinkActive="active">
+          <span class="wizard-pf-step-number">3</span>
+          <span class="wizard-pf-step-title">Name Connection</span>
+        </a>
+      </li>
+    </ul>
   </div>
+
+  <!-- debug section -->
+  <!--
+  <div class="row">
+    <pre>{{ connection | json }}</pre>
+  </div>
+  -->
+
+  <!-- Wizard Content -->
+
+  <router-outlet></router-outlet>
 </div>

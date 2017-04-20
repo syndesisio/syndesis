@@ -5,6 +5,7 @@ import { User } from './common/common';
 import { contains } from './common/world';
 import { GithubLogin } from './login/login.po';
 import { log } from '../src/app/logging';
+import * as jQuery from 'jquery';
 import WebElement = webdriver.WebElement;
 
 
@@ -27,12 +28,30 @@ class NavLink {
 }
 
 /**
+ * Wrapper around session storage inside browser
+ */
+class SessionStorage {
+  /**
+   * Get session item of given key from browser
+   * @param key session item key
+   * @returns {string|null} value of given item
+   */
+  getItem(key: string): P<string|null> {
+    log.info(`Fetching session item '${key}' from browser session storage`);
+    // we may need to include  $('ipaas-root').isPresent().then() eventually
+    return browser.driver.executeScript((itemKey) => sessionStorage.getItem(itemKey), key);
+  }
+}
+
+/**
  * Main application with navigation sidebar
  */
 export class AppPage {
   static baseurl = '/';
   rootElement = element(by.css('ipaas-root'));
   // rootElement = element(by.css('ipaas-root'));
+
+  sessionStorage = new SessionStorage();
 
   /**
    * Find links from left navbar
@@ -131,5 +150,24 @@ export class AppPage {
     }
     browser.waitForAngularEnabled(true);
     return this.goToUrl(AppPage.baseurl);
+  }
+
+
+  /**
+   * Hook into browser and fetch config.json
+   * @returns {any} config.json used in ipaas app
+   */
+  getSettings(): P<any> {
+    // jquery is invoked in the context of the browser
+    return browser.driver.executeAsyncScript((callback) => {
+      jQuery.get('/config.json', function (data) {
+        callback(data);
+      });
+    }).then(jsonString => JSON.parse(<string> jsonString));
+  }
+
+  async getApiUrl(): P<string> {
+    const settings = await this.getSettings();
+    return settings.apiEndpoint;
   }
 }

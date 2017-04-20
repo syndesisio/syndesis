@@ -12,7 +12,7 @@ export class ConnectionsListComponent implements IPaaSComponent {
   }
 
   async countConnections(): P<number> {
-    const found = await this.rootElement().all(by.css('p.card-title')).getWebElements();
+    const found = await this.rootElement().all(by.css('h2.card-pf-title.text-center')).getWebElements();
     log.info(`found ${found.length} connections`);
     return found.length;
   }
@@ -20,7 +20,7 @@ export class ConnectionsListComponent implements IPaaSComponent {
 
   goToConnection(connectionTitle: string): P<any> {
     log.info(`searching for connection ${connectionTitle}`);
-    return this.rootElement().element(by.linkText(connectionTitle)).getWebElement().click();
+    return this.rootElement().$(`h2.card-pf-title.text-center[title="${connectionTitle}"]`).getWebElement().click();
   }
 }
 

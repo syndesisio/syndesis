@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
@@ -27,7 +27,6 @@ export class DashboardIntegrationsComponent implements OnInit {
   @Input() integrations: Integrations;
   @Input() loading: boolean;
   selectedId = undefined;
-  truncateLimit = 80;
   truncateTrail = '…';
 
   public doughnutChartLabels: string[] = [
@@ -56,17 +55,19 @@ export class DashboardIntegrationsComponent implements OnInit {
   }
 
   public doughnutChartType = 'doughnut';
+  public doughnutChartLegend = false;
   public doughnutChartColors = [{
     backgroundColor: [
       '#3f9c35', // PatternFly Green 400, Active
       '#ec7a08', // PatternFly Orange 400, Deleted
       '#0088ce', // PatternFly Blue 400, Draft
-      '#ededed', // PatternFly Black 200, Inactive
+      //'#E1E1E1', // PatternFly Custom Gray, Inactive
+      //'#d1d1d1', // PatternFly Black 300, Inactive
     ],
   }];
   public doughnutChartOptions: any = {
     cutoutPercentage: 75,
-    legend: {position: 'bottom', fullWidth: false},
+    //legend: {position: 'bottom', fullWidth: false},
   };
 
   private toasterService: ToasterService;
@@ -74,6 +75,7 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   constructor(private connectionStore: ConnectionStore,
               private integrationStore: IntegrationStore,
+              public route: ActivatedRoute,
               private router: Router,
               toasterService: ToasterService) {
     this.connections = this.connectionStore.list;
@@ -157,9 +159,11 @@ export class DashboardIntegrationsComponent implements OnInit {
     const inactive = [];
 
     this.integrations.forEach(function(a) {
+      /* TODO - too noisy
       log.debugc(() => 'Integration: ' + JSON.stringify(a));
       log.debugc(() => 'currentStatus: ' + JSON.stringify(a.currentStatus));
       log.debugc(() => 'desiredStatus: ' + JSON.stringify(a.desiredStatus));
+      */
 
       switch (a.desiredStatus) {
         case 'Activated':
@@ -204,7 +208,8 @@ export class DashboardIntegrationsComponent implements OnInit {
 
 
   public chartClicked(e: any): void {
-    log.debugc(() => 'Click event: ' + JSON.stringify(e));
+    //log.debugc(() => 'Click event: ' + JSON.stringify(e));
+    log.debugc(() => 'Click event: ' + e);
   }
 
   public chartHovered(e: any): void {
@@ -226,7 +231,9 @@ export class DashboardIntegrationsComponent implements OnInit {
   //-----  Recent Updates Section ------------------->>
 
   public getLabelClass(integration): string {
+    /* TODO - too noisy
     log.debugc(() => 'Integration: ' + JSON.stringify(integration));
+    */
     switch (integration.desiredStatus) {
       case 'Activated':
       default:
@@ -240,10 +247,28 @@ export class DashboardIntegrationsComponent implements OnInit {
     }
   }
 
-  //-----  Selecting an Integration ------------------->>
+  public getStatusText(integration: Integration): string {
+    switch (integration.desiredStatus) {
+      case 'Activated':
+        return 'Active';
+      case 'Deactivated':
+        return 'Inactive';
+      case 'Deleted':
+        return 'Deleted';
+      case 'Draft':
+        return 'Draft';
+    }
+    return '';
+  }
 
-  onSelected(connection: Connection) {
-    this.router.navigate(['connections', connection.id]);
+  //-----  Selecting a Connection or Integration ------------------->>
+
+  selectedConnection(connection: Connection) {
+    this.router.navigate(['/connections', connection.id]);
+  }
+
+  selectedIntegration(integration: Integration) {
+    this.router.navigate(['/integrations/edit', integration.id, 'save-or-add-step'], { relativeTo: this.route });
   }
 
 

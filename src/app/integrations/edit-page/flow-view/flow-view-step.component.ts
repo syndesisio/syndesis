@@ -3,6 +3,7 @@ import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { PopoverDirective } from 'ng2-bootstrap/popover';
 
 import { ChildAwarePage } from '../child-aware-page';
 import { log, getCategory } from '../../../logging';
@@ -35,6 +36,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
   currentState: string;
 
   @ViewChild('childModal') public deleteModal: ModalDirective;
+  @ViewChild('pop') public pop: PopoverDirective;
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -42,6 +44,16 @@ export class FlowViewStepComponent extends ChildAwarePage {
     public router: Router,
   ) {
     super(currentFlow, route, router);
+  }
+
+  showTooltip() {
+    if (this.step.stepKind === 'endpoint') {
+      this.pop.show();
+    }
+  }
+
+  hideTooltip() {
+    this.pop.hide();
   }
 
   getStepKind(step) {
@@ -171,6 +183,13 @@ export class FlowViewStepComponent extends ChildAwarePage {
     return answer;
   }
 
+  getConnectionClass() {
+    if (this.step.stepKind === 'endpoint') {
+      return '';
+    }
+    return 'not-connection';
+  }
+
   getMenuCompleteClass(state: string) {
     switch (this.step.stepKind) {
       case 'endpoint':
@@ -241,16 +260,19 @@ export class FlowViewStepComponent extends ChildAwarePage {
     }
     switch (this.step.stepKind) {
       case 'endpoint':
-        if (!this.step.connection) {
-          if (this.getPosition() === 0) {
-            return 'Start';
-          }
-          if (this.getPosition() === this.currentFlow.getLastPosition()) {
-            return 'Finish';
-          }
-          return 'Set up this connection';
+        if (this.step.action && this.step.action.name) {
+          return this.step.action.name;
         }
-        return this.step.connection.name;
+        if (this.step.connection) {
+          return this.step.connection.name;
+        }
+        if (this.getPosition() === 0) {
+          return 'Start';
+        }
+        if (this.getPosition() === this.currentFlow.getLastPosition()) {
+          return 'Finish';
+        }
+        return 'Set up this connection';
       default:
         if (this.step.stepKind) {
           return this.step.stepKind;

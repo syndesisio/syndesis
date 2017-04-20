@@ -3,13 +3,17 @@
 
     <!-- First Row: Page Header & Toolbar -->
 
-    <div class="row row-cards-pf first-row">
-      <div class="page-header">
-        <div class="actions pull-right">
-          <a href="#" [routerLink]="['/integrations']">View All Integrations</a>&nbsp;&nbsp;
-          <button class="btn btn-primary" [routerLink]="['/integrations/create']">Create Integration</button>
+    <div class="row row-cards-pf first-row vertical-align">
+      <div class="page-header col-xs-12">
+        <div class="col-xs-8">
+          <h1>Dashboard: Integrations</h1>
         </div>
-        <h1>Dashboard: Integrations</h1>
+        <div class="col-xs-4 actions">
+          <div class="pull-right">
+            <a href="#" [routerLink]="['/integrations']">View All Integrations</a>&nbsp;&nbsp;
+            <button class="btn btn-primary" [routerLink]="['/integrations/create']">Create Integration</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -30,83 +34,90 @@
             </h2>
           </div>
           <div class="card-pf-body">
-            <div class="row integration"
-                 *ngFor="let integration of integrations"
-                 (click)="onSelect(integration)">
+            <div class="row"
+                 *ngFor="let integration of integrations; let i=index">
 
-              <!-- Icons -->
+              <div class="col-xs-12 integration"
+                   *ngIf="i<5">
+                <!-- Icons -->
 
-              <div class="col-xs-3 icons">
-                <div class="list-view-pf-left">
-                  <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
-                  <span class="fa fa-angle-right"></span>
-                  <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
+                <div class="col-xs-3 icons"
+                     (click)="selectedIntegration(integration)">
+                  <div class="list-view-pf-left">
+                    <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
+                    <span class="fa fa-angle-right"></span>
+                    <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
+                  </div>
                 </div>
-              </div>
 
-              <!-- Name -->
+                <!-- Name -->
 
-              <div class="col-xs-4 name">
-                {{ integration.name }}
-              </div>
+                <div class="col-xs-4 name"
+                     (click)="selectedIntegration(integration)">
+                  {{ integration.name }}
+                </div>
 
-              <!-- Times of Use -->
+                <!-- Times of Use -->
 
-              <div class="col-xs-3 times-of-use">
-                <p>{{ integration.timesUsed || 0 }} Times of Use</p>
-              </div>
+                <div class="col-xs-3 times-of-use"
+                     (click)="selectedIntegration(integration)">
+                  <p>{{ integration.timesUsed || 0 }} uses
+                  </p>
+                </div>
 
-              <!-- Status -->
+                <!-- Status -->
 
-              <div class="col-xs-1 status">
+                <div class="col-xs-1 status"
+                     (click)="selectedIntegration(integration)">
 
-                <!-- OK Status -->
+                  <!-- OK Status -->
 
-                <i *ngIf="!integration.statusMessage"
-                   class="pficon pficon-ok"></i>
+                  <i *ngIf="!integration.statusMessage"
+                     class="pficon pficon-ok"></i>
 
-                <!-- Not OK Status -->
+                  <!-- Not OK Status -->
 
-                <template #statTemplate>{{integration.statusMessage}}</template>
-                <i *ngIf="integration.statusMessage"
-                   class="pficon pficon-error-circle-o"
-                   [tooltip]="statTemplate"
-                   placement="bottom"></i>
-              </div>
+                  <template #statTemplate>{{integration.statusMessage}}</template>
+                  <i *ngIf="integration.statusMessage"
+                     class="pficon pficon-error-circle-o"
+                     [tooltip]="statTemplate"
+                     placement="bottom"></i>
+                </div>
 
 
-              <!-- Actions -->
-              <div class="col-xs-1 actions">
-                <div class="dropdown pull-right dropdown-kebab-pf">
-                  <button class="btn btn-link dropdown-toggle"
-                          type="button"
-                          id="dropdownKebabRight9"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="true">
-                    <span class="fa fa-ellipsis-v"></span>
-                  </button>
-                  <ul class="dropdown-menu dropdown-menu-right"
-                      aria-labelledby="dropdownKebabRight9">
-                    <li>
-                      <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">Edit</a>
-                    </li>
-                    <li>
-                      <a (click)="requestDeactivate(integration)">Deactivate</a>
-                    </li>
-                    <li *ngIf="integration.active === false"
-                        (click)="requestActivate(integration)">
-                      <a>Activate</a>
-                    </li>
-                    <!--
-                    <li>
-                      <a>Duplicate</a>
-                    </li>
-                    -->
-                    <li>
-                      <a (click)="requestDelete(integration)">Delete</a>
-                    </li>
-                  </ul>
+                <!-- Actions -->
+                <div class="col-xs-1 actions">
+                  <div class="dropdown pull-right dropdown-kebab-pf">
+                    <button class="btn btn-link dropdown-toggle"
+                            type="button"
+                            id="dropdownKebabRight9"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="true">
+                      <span class="fa fa-ellipsis-v"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right"
+                        aria-labelledby="dropdownKebabRight9">
+                      <li>
+                        <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">Edit</a>
+                      </li>
+                      <li>
+                        <a (click)="requestDeactivate(integration)">Deactivate</a>
+                      </li>
+                      <li *ngIf="integration.active === false"
+                          (click)="requestActivate(integration)">
+                        <a>Activate</a>
+                      </li>
+                      <!--
+                      <li>
+                        <a>Duplicate</a>
+                      </li>
+                      -->
+                      <li>
+                        <a (click)="requestDelete(integration)">Delete</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
 
@@ -136,6 +147,7 @@
                       [labels]="doughnutChartLabels"
                       [chartType]="doughnutChartType"
                       [colors]="doughnutChartColors"
+                      [legend]="doughnutChartLegend"
                       [options]="doughnutChartOptions"
                       (chartHover)="chartHovered($event)"
                       (chartClick)="chartClicked($event)"></canvas>
@@ -174,20 +186,24 @@
             </h2>
           </div>
           <div class="card-pf-body">
-            <div class="row update"
-                 *ngFor="let integration of integrations">
-              <div class="col-xs-5">
-                Updated: <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">
+            <div class="row"
+                 *ngFor="let integration of integrations; let i=index">
+              <div class="update col-xs-12"
+                   *ngIf="i<5"
+                   (click)="selectedIntegration(integration)">
+                <div class="col-xs-5">
+                  Updated: <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">
                   {{ integration.name }}
                 </a>
-              </div>
-              <div class="col-xs-4">
+                </div>
+                <div class="col-xs-4">
                 <span [class]="'label ' + getLabelClass(integration)">
-                  {{ integration.desiredStatus }}
+                  {{ getStatusText(integration) }}
                 </span>
-              </div>
-              <div class="col-xs-3">
-                {{ integration.lastUpdated | date:'d MMM HH:MM' }}
+                </div>
+                <div class="col-xs-3">
+                  {{ integration.lastUpdated | date:'d MMM HH:MM' }}
+                </div>
               </div>
             </div>
           </div>
@@ -199,13 +215,17 @@
 
     <!-- Third Row: Connections Header & Toolbar -->
 
-    <div class="row row-cards-pf third-row">
-      <div class="page-header">
-        <div class="actions pull-right">
-          <a href="#" [routerLink]="['/connections']">View All Connections</a>&nbsp;&nbsp;
-          <button class="btn btn-primary" [routerLink]="['/connections/create']">Create Connection</button>
+    <div class="row row-cards-pf third-row vertical-align">
+      <div class="page-header col-xs-12">
+        <div class="col-xs-8">
+          <h1>Dashboard: Connections</h1>
         </div>
-        <h2>Dashboard: Connections</h2>
+        <div class="col-xs-4 actions">
+          <div class="pull-right">
+            <a href="#" [routerLink]="['/connections']">View All Connections</a>&nbsp;&nbsp;
+            <button class="btn btn-primary" [routerLink]="['/connections/create']">Create Connection</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -216,7 +236,7 @@
 
       <ipaas-dashboard-connections [connections]="connections | async"
                                    [loading]="loading"
-                                   (onSelected)="onSelected($event)"></ipaas-dashboard-connections>
+                                   (selectedConnection)="selectedConnection($event)"></ipaas-dashboard-connections>
 
     </div>
   </div>

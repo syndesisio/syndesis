@@ -10,6 +10,7 @@ const category = getCategory('Connections');
 @Component({
   selector: 'ipaas-connection-create-page',
   templateUrl: 'create-page.component.html',
+  styleUrls: ['./create-page.component.scss'],
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
   constructor(
@@ -37,7 +38,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     const connection = this.current.connection;
     switch (page) {
       case 'connection-basics':
-        return this.connection.name && this.connection.description && this.connection.connector;
+        return this.connection.name && this.connection.connector;
       case 'configure-fields':
         // TODO validate form
       case 'review':

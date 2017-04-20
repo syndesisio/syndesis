@@ -5,30 +5,35 @@
       <!-- Each Connection's Card Container -->
 
       <div class="col-xs-12 col-sm-3 col-md-2 card"
-           *ngFor="let connection of connections"
-           (click)="onSelect(connection)">
+           *ngFor="let connection of connections; let i = index">
 
         <!-- Connection Card -->
 
-        <div class="card-pf card-pf-view card-pf-view-xs">
+        <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select"
+             *ngIf="i<8"
+             (click)="onSelect(connection)">
           <div class="card-pf-body">
-            
-            <!-- Card Heading -->
-            <div class="card-pf-heading">
 
-              <!-- Card Title & Icon -->
-              
-              <h2 class="card-pf-title">
-                <span class="fa {{ connection.icon }}"></span>
-                <p class="card-title">
-                  <a [routerLink]="['/connections', connection.id]">{{ connection.name }}</a>
-                </p>
-              </h2>
+            <!-- Card Icon -->
+
+            <div class="card-pf-top-element">
+              <span class="card-pf-icon-large image-icon">
+                <img src="../../../assets/icons/{{ connection.connectorId }}.connection.png">
+              </span>
             </div>
-            
+
+            <!-- Card Name -->
+
+            <h2 class="card-pf-title text-center"
+                title="{{ connection.name }}">
+              {{ connection.name | truncate : '20' : truncateTrail }}
+            </h2>
+
             <!-- Card Description / Item Overview -->
-            
-            <p>{{ connection.description | truncate : truncateLimit : truncateTrail }}</p>
+
+            <p class="card-pf-info text-center">
+              {{ connection.description | truncate : '100' : truncateTrail }}
+            </p>
           </div>
         </div>
       </div>
