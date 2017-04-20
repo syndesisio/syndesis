@@ -83,7 +83,7 @@ public class DefaultProjectGeneratorTest {
 
         assertFileContents(files.get("README.md"), "test-README.md");
         assertFileContents(files.get("src/main/java/com/redhat/ipaas/example/Application.java"), "test-Application.java");
-        assertFileContents(files.get("src/main/resources/application.yml"), "test-application.yml");
+        assertFileContents(files.get("src/main/resources/application.properties"), "test-application.properties");
         assertFileContents(files.get("src/main/resources/funktion.yml"), "test-funktion.yml");
         assertFileContents(files.get("pom.xml"), "test-pom.xml");
     }
@@ -113,7 +113,7 @@ public class DefaultProjectGeneratorTest {
         Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), generatorProperties).generate(request);
 
 
-        assertFileContents(files.get("src/main/resources/application.yml"), "test-application.yml");
+        assertFileContents(files.get("src/main/resources/application.properties"), "test-application.properties");
         assertFileContents(files.get("src/main/resources/funktion.yml"), "test-funktion-with-secrets.yml");
     }
 
@@ -135,7 +135,7 @@ public class DefaultProjectGeneratorTest {
 
         assertFileContents(files.get("README.md"), "test-pull-push-README.md");
         assertFileContents(files.get("src/main/java/com/redhat/ipaas/example/Application.java"), "test-Application.java");
-        assertFileContents(files.get("src/main/resources/application.yml"), "test-pull-push-application.yml");
+        assertFileContents(files.get("src/main/resources/application.properties"), "test-pull-push-application.properties");
         assertFileContents(files.get("src/main/resources/funktion.yml"), "test-pull-push-funktion.yml");
         assertFileContents(files.get("pom.xml"), "test-pull-push-pom.xml");
     }

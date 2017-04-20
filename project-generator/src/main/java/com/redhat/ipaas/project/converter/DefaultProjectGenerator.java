@@ -64,8 +64,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     );
 
     private Mustache applicationYmlMustache = mf.compile(
-        new InputStreamReader(getClass().getResourceAsStream("templates/application.yml.mustache")),
-        "application.yml"
+        new InputStreamReader(getClass().getResourceAsStream("templates/application.properties.mustache")),
+        "application.properties"
     );
 
     private Mustache pomMustache = mf.compile(
@@ -104,7 +104,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         Map<String, byte[]> contents = new HashMap<>();
         contents.put("README.md", generateFromRequest(request, readmeMustache));
         contents.put("src/main/java/com/redhat/ipaas/example/Application.java", generateFromRequest(request, applicationJavaMustache));
-        contents.put("src/main/resources/application.yml", generateFromRequest(request, applicationYmlMustache));
+        contents.put("src/main/resources/application.properties", generateFromRequest(request, applicationYmlMustache));
         contents.put("src/main/resources/funktion.yml", generateFlowYaml(contents, request));
         contents.put("pom.xml", generatePom(request.getIntegration()));
 
