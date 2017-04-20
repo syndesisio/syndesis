@@ -29,7 +29,7 @@ export class IntegrationsListComponent {
   constructor(public store: IntegrationStore,
               public toasterService: ToasterService,
               public route: ActivatedRoute,
-              public router: Router,) {
+              public router: Router) {
 
   }
 
