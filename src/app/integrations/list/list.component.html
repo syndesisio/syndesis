@@ -106,7 +106,7 @@
               </h3>
             </div>
 
-            <div *ngIf="integration.currentStatus !== 'Pending' && integration.currentStatus !== 'Draft'">
+            <div *ngIf="integration.currentStatus === 'Activated' || integration.currentStatus === 'Deactivated'">
               <label class="switch_wrap"
                      for="field-{{ integration.id }}">
                 <input id="field-{{ integration.id }}"
