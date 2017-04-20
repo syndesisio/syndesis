@@ -83,7 +83,7 @@ public class DefaultProjectGeneratorTest {
 
         assertFileContents(files.get("README.md"), "test-README.md");
         assertFileContents(files.get("src/main/java/com/redhat/ipaas/example/Application.java"), "test-Application.java");
-        assertFileContents(files.get("src/main/resources/application.yml"), "test-application.yml");
+        assertFileContents(files.get("src/main/resources/application.properties"), "test-application.properties");
         assertFileContents(files.get("src/main/resources/funktion.yml"), "test-funktion.yml");
         assertFileContents(files.get("pom.xml"), "test-pom.xml");
     }
@@ -113,7 +113,7 @@ public class DefaultProjectGeneratorTest {
         Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), generatorProperties).generate(request);
 
 
-        assertFileContents(files.get("src/main/resources/application.yml"), "test-application.yml");
+        assertFileContents(files.get("src/main/resources/application.properties"), "test-application.properties");
         assertFileContents(files.get("src/main/resources/funktion.yml"), "test-funktion-with-secrets.yml");
     }
 
@@ -135,7 +135,7 @@ public class DefaultProjectGeneratorTest {
 
         assertFileContents(files.get("README.md"), "test-pull-push-README.md");
         assertFileContents(files.get("src/main/java/com/redhat/ipaas/example/Application.java"), "test-Application.java");
-        assertFileContents(files.get("src/main/resources/application.yml"), "test-pull-push-application.yml");
+        assertFileContents(files.get("src/main/resources/application.properties"), "test-pull-push-application.properties");
         assertFileContents(files.get("src/main/resources/funktion.yml"), "test-pull-push-funktion.yml");
         assertFileContents(files.get("pom.xml"), "test-pull-push-pom.xml");
     }
@@ -157,5 +157,32 @@ public class DefaultProjectGeneratorTest {
         }
         return rc;
     }
+
+    @Test
+    public void testMapper() throws Exception {
+        Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("com.redhat.ipaas:timer-connector:0.3.3").build()).build();
+        Map<String, String> props = new HashMap<>();
+        props.put("atlasmapping", "{}");
+        Step step2 = new Step.Builder().stepKind("mapper").configuredProperties(props).build();
+        Step step3 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-post").camelConnectorGAV("com.redhat.ipaas:http-post-connector:0.3.3").build()).build();
+
+        GenerateProjectRequest request = ImmutableGenerateProjectRequest
+            .builder()
+            .gitHubUser("noob")
+            .gitHubRepoName("test")
+            .integration(new Integration.Builder()
+                .id("test-integration")
+                .name("Test Integration")
+                .steps( Arrays.asList(step1, step2, step3))
+                .build())
+            .connectors(connectors)
+            .build();
+
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), new ProjectGeneratorProperties()).generate(request);
+
+        assertFileContents(files.get("src/main/resources/funktion.yml"), "test-mapper-funktion.yml");
+        assertThat(new String(files.get("src/main/resources/mapping-step-2.json"))).isEqualTo("{}");
+    }
+
 
 }
