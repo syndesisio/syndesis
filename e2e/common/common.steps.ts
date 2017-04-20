@@ -100,12 +100,6 @@ class CommonSteps {
       
     for (let elementClassName of elementClassNamesArray) {
       this.expectElementPresent(elementClassName, callback);
-      //const element = this.world.app.getElementByClassName(elementClassName);
-      //expect(element.isDisplayed(), `There must be present a element ${elementClassName}`)
-      //  .to.eventually.be.true;
-
-      //expect(element.isPresent(), `There must be enabled element ${elementClassName}`)
-      //.to.eventually.be.true.notify(callback);
     }
   }
 
