@@ -51,9 +51,9 @@
 
       <!-- Group 1: Icons -->
 
-      <div class="col-xs-2 group icons">
-        <div class="col-xs-12"
-             (click)="goto(integration)">
+      <div class="col-xs-2 group icons"
+           (click)="goto(integration)">
+        <div class="col-xs-12">
           <div class="list-view-pf-left"
                *ngIf="integration">
             <span class="card-pf-icon-large image-icon"
@@ -71,17 +71,16 @@
 
       <!-- Group 2: Text -->
 
-      <div class="col-xs-6 group text">
+      <div class="col-xs-6 group text"
+           (click)="goto(integration)">
 
         <!-- Name -->
-        <div class="col-xs-4 name"
-             (click)="goto(integration)">
+        <div class="col-xs-4 name">
           {{ integration.name }}
         </div>
 
         <!-- Description -->
-        <div class="col-xs-8 description"
-             (click)="goto(integration)">
+        <div class="col-xs-8 description">
           <div class="list-group-item-text">
             {{ integration.description }}
           </div>
@@ -90,7 +89,8 @@
 
       <!-- Group 3: Metrics & Actions -->
 
-      <div class="col-xs-4 group metrics-actions">
+      <div class="col-xs-4 group metrics-actions"
+           (click)="goto(integration)">
 
         <!-- Active/Inactive Labels -->
 
@@ -98,12 +98,9 @@
           <div class="list-view-pf-additional-info-item">
 
             <!-- In Progress -->
-            <!--
-                <div *ngIf="(integration.currentStatus !== integration.desiredStatus) && !integration.statusMessage">
-                  <div class="spinner spinner-sm spinner-inline"></div>
-                </div>
-                -->
-            <div class="in-progress">
+
+            <div class="in-progress"
+                 *ngIf="(integration.currentStatus !== integration.desiredStatus) && !integration.statusMessage">
               <h3>
                 <div class="spinner spinner-sm spinner-inline"></div>
                 In Progress
@@ -112,21 +109,14 @@
 
             <div *ngIf="integration.currentStatus === integration.desiredStatus">
               <span *ngIf="integration.currentStatus === 'Activated'"
-                    class="label label-success"
-                    [tooltip]="statTemplate"
+                    class="label label-primary"
                     (click)="requestDeactivate(integration)">Active</span>
               <span *ngIf="integration.currentStatus === 'Deactivated'"
                     class="label label-default"
-                    [tooltip]="statTemplate"
                     (click)="requestActivate(integration)">Inactive</span>
               <span *ngIf="integration.currentStatus === 'Draft'"
-                    class="label label-primary"
-                    [tooltip]="statTemplate"
+                    class="label label-warning"
                     disabled>Draft</span>
-              <span *ngIf="integration.currentStatus === 'Deleted'"
-                    class="label label-danger"
-                    [tooltip]="statTemplate"
-                    disabled>Deleted</span>
             </div>
           </div>
         </div>
@@ -138,14 +128,16 @@
 
           <!-- Uses -->
 
-          <div class="col-xs-7 uses">
+          <div class="col-xs-7 uses"
+               (click)="goto(integration)">
             <p>{{ integration.timesUsed || 0 }} uses</p>
           </div>
 
 
           <!-- Pass/Fail -->
 
-          <div class="col-xs-4 pass-fail">
+          <div class="col-xs-4 pass-fail"
+               (click)="goto(integration)">
 
             <!-- OK Status -->
 
