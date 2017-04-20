@@ -81,7 +81,7 @@ export class AppPage {
     log.info(`searching for button ${buttonTitle}`);
     return element(by.buttonText(buttonTitle));
   }
-  
+
   clickButton(buttonTitle: string): P<any> {
     log.info(`clicking button ${buttonTitle}`);
     return this.getButton(buttonTitle).click();
@@ -95,6 +95,11 @@ export class AppPage {
   clickLink(linkTitle: string): P<any> {
     log.info(`clicking link ${linkTitle}`);
     return this.getLink(linkTitle).click();
+  }
+
+  getElementByClassName(elementClassName: string): ElementFinder {
+    log.info(`searching for element ${elementClassName}`);
+    return element(by.className(elementClassName));
   }
 
   async link(title: String): P<NavLink> {

@@ -57,7 +57,7 @@ class CommonSteps {
     log.info(`${alias} is on current navlink: ${currentLink}`);
     expect(currentLink.active, `${pageTitle} link must be active`).to.be.true;
   }
-    
+  
   @then(/^(\w+)? ?is presented with the "([^"]*)" link$/)
   public async verifyLink(alias: string, linkTitle: string): P<any> {
     const currentLink = await this.world.app.getLink(linkTitle);
@@ -81,7 +81,7 @@ class CommonSteps {
       // it may fail but we still want to let tests continue
       .catch((e) => callback(e));
   }
-  
+
   @then(/^she is presented with the "([^"]*)" button.*$/)
   public expectButtonPresent(buttonTitle: string, callback: CallbackStepDefinition): void {
 
@@ -90,6 +90,33 @@ class CommonSteps {
       .to.eventually.be.true;
 
     expect(button.isPresent(), `There must be enabled button ${buttonTitle}`)
+      .to.eventually.be.true.notify(callback);
+  }
+  
+  @then(/^she is presented with the "([^"]*)" elements*$/)
+  public expectElementsPresent(elementClassNames: string, callback: CallbackStepDefinition): void {
+ 
+    let elementClassNamesArray = elementClassNames.split(",");
+      
+    for (let elementClassName of elementClassNamesArray) {
+      this.expectElementPresent(elementClassName, callback);
+      //const element = this.world.app.getElementByClassName(elementClassName);
+      //expect(element.isDisplayed(), `There must be present a element ${elementClassName}`)
+      //  .to.eventually.be.true;
+
+      //expect(element.isPresent(), `There must be enabled element ${elementClassName}`)
+      //.to.eventually.be.true.notify(callback);
+    }
+  }
+
+  @then(/^she is presented with the "([^"]*)"$/)  
+  public expectElementPresent(elementClassName: string, callback: CallbackStepDefinition): void {
+
+    const element = this.world.app.getElementByClassName(elementClassName);
+    expect(element.isPresent(), `There must be present a element ${elementClassName}`)
+      .to.eventually.be.true;
+
+    expect(element.isPresent(), `There must be enabled element ${elementClassName}`)
       .to.eventually.be.true.notify(callback);
   }
 }
