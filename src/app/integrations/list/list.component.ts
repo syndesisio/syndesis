@@ -155,6 +155,7 @@ export class IntegrationsListComponent {
   }
 
   //-----  Random Text Stuff --------->>
+
   getActionTitle() {
     switch (this.currentAction) {
       case 'activate':

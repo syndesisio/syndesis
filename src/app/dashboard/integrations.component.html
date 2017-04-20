@@ -44,9 +44,20 @@
                 <div class="col-xs-3 icons"
                      (click)="selectedIntegration(integration)">
                   <div class="list-view-pf-left">
+                    <!--
                     <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
                     <span class="fa fa-angle-right"></span>
                     <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
+                    -->
+                    <span class="card-pf-icon-large image-icon"
+                          *ngIf="getStart(integration).connection">
+                      <img src="../../../assets/icons/{{ getStart(integration).connection.connectorId }}.integration.png">
+                    </span>
+                    <span class="fa fa-angle-right"></span>
+                    <span class="card-pf-icon-large image-icon"
+                          *ngIf="getFinish(integration).connection">
+                      <img src="../../../assets/icons/{{ getFinish(integration).connection.connectorId }}.integration.png">
+                    </span>
                   </div>
                 </div>
 

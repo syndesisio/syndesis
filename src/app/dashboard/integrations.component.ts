@@ -182,6 +182,18 @@ export class DashboardIntegrationsComponent implements OnInit {
     return '';
   }
 
+
+  //-----  Icons ------------------->>
+
+  getStart(integration: Integration) {
+    return integration.steps[0];
+  }
+
+  getFinish(integration: Integration) {
+    return integration.steps.slice(-1)[0];
+  }
+
+
   //-----  Selecting a Connection or Integration ------------------->>
 
   selectedConnection(connection: Connection) {
