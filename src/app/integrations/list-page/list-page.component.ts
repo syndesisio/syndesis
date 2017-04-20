@@ -20,6 +20,7 @@ export class IntegrationsListPage implements OnInit {
   statusFilter: ObjectPropertyFilterConfig = {
     filter: '',
     propertyName: 'currentStatus',
+    exact: true,
   };
 
   filter: ObjectPropertyFilterConfig = {
