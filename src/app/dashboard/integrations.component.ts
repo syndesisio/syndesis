@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
-import { TooltipDirective } from 'ng2-bootstrap/tooltip';
 
 import { log, getCategory } from '../logging';
 
@@ -35,20 +34,10 @@ export class DashboardIntegrationsComponent implements OnInit {
     'Draft',
     'Inactive',
   ];
-  /*
-  public doughnutChartData: number[] = [
-    //this.countActiveIntegrations(),
-    //this.countDeletedIntegrations(),
-    //this.countDraftIntegrations(),
-    //this.countInactiveIntegrations(),
-    1, 0, 3, 2,
-  ];
-  */
 
   get doughnutChartData() {
     return [
       this.countActiveIntegrations(),
-      this.countDeletedIntegrations(),
       this.countDraftIntegrations(),
       this.countInactiveIntegrations(),
     ];
@@ -58,16 +47,14 @@ export class DashboardIntegrationsComponent implements OnInit {
   public doughnutChartLegend = false;
   public doughnutChartColors = [{
     backgroundColor: [
-      '#3f9c35', // PatternFly Green 400, Active
-      '#ec7a08', // PatternFly Orange 400, Deleted
-      '#0088ce', // PatternFly Blue 400, Draft
-      //'#E1E1E1', // PatternFly Custom Gray, Inactive
-      //'#d1d1d1', // PatternFly Black 300, Inactive
+      '#3F9C35', // PatternFly Blue 400, Active
+      '#EC7A08', // PatternFly Orange 400, Draft
+      '#D1D1D1', // PatternFly Black 300, Inactive
+      //'#D1D1D1', // PatternFly Black 300, Inactive
     ],
   }];
   public doughnutChartOptions: any = {
     cutoutPercentage: 75,
-    //legend: {position: 'bottom', fullWidth: false},
   };
 
   private toasterService: ToasterService;
@@ -83,58 +70,6 @@ export class DashboardIntegrationsComponent implements OnInit {
   }
 
 
-
-  //-----  Activate/Deactivate ------------------->>
-
-  // TODO: Refactor into single method for both cases
-  // Open modal to confirm activation
-  requestActivate(integration: Integrations) {
-    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration['id']));
-    this.showModal();
-  }
-
-  // Open modal to confirm deactivation
-  requestDeactivate(integration: Integrations) {
-    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration['id']));
-    this.showModal();
-  }
-
-  // TODO: Refactor into single method for both cases
-  // Actual activate/deactivate action once the user confirms
-  activateAction(integration: Integrations) {
-    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration['id']));
-
-    this.hideModal();
-
-    // Not working yet, we need an `activate` method in the store
-    //this.integrationStore.activate(integration['id']);
-
-    this.toast = {
-      type: 'success',
-      title: 'Integration is activating',
-      body: 'Please allow a moment for the integration to fully activate.',
-    };
-
-    setTimeout(this.popToast(this.toast), 1000);
-  }
-
-  // Actual activate/deactivate action once the user confirms
-  deactivateAction(integration: Integrations) {
-    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration['id']));
-
-    this.hideModal();
-
-    // Not working yet, we need a `deactivate` method in the store
-    //this.integrationStore.deactivate(integration['id']);
-
-    this.toast = {
-      type: 'success',
-      title: 'Integration is deactivating',
-      body: 'Please allow a moment for the integration to be deactivated.',
-    };
-
-    setTimeout(this.popToast(this.toast), 1000);
-  }
 
   //-----  Icons ------------------->>
 
@@ -154,7 +89,6 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   public filterIntegrations() {
     const active = [];
-    const deleted = [];
     const draft = [];
     const inactive = [];
 
@@ -169,9 +103,6 @@ export class DashboardIntegrationsComponent implements OnInit {
         case 'Activated':
           active.push(a);
           break;
-        case 'Deleted':
-          deleted.push(a);
-          break;
         case 'Draft':
           draft.push(a);
           break;
@@ -182,7 +113,6 @@ export class DashboardIntegrationsComponent implements OnInit {
     });
     return {
       active: active,
-      deleted: deleted,
       draft: draft,
       inactive: inactive,
     };
@@ -190,10 +120,6 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   public countActiveIntegrations() {
     return this.filterIntegrations().active.length;
-  }
-
-  public countDeletedIntegrations() {
-    return this.filterIntegrations().deleted.length;
   }
 
   public countDraftIntegrations() {
@@ -240,8 +166,6 @@ export class DashboardIntegrationsComponent implements OnInit {
         return 'label-success';
       case 'Deactivated':
         return 'label-default';
-      case 'Deleted':
-        return 'label-danger';
       case 'Draft':
         return 'label-primary';
     }
@@ -253,8 +177,6 @@ export class DashboardIntegrationsComponent implements OnInit {
         return 'Active';
       case 'Deactivated':
         return 'Inactive';
-      case 'Deleted':
-        return 'Deleted';
       case 'Draft':
         return 'Draft';
     }
@@ -299,7 +221,6 @@ export class DashboardIntegrationsComponent implements OnInit {
   ngOnInit() {
     log.debugc(() => 'Got integrations: ' + JSON.stringify(this.integrations, undefined, 2), category);
     this.connectionStore.loadAll();
-    //this.filterIntegrations();
   }
 
 }
