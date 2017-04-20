@@ -122,7 +122,7 @@
           }
 
           .switch_wrap input[type="checkbox"]:checked + .switch {
-            background-color: #6cbc43;
+            background-color: $pf-blue-400;
           }
 
           .switch_wrap input[type="checkbox"]:checked + .switch::before {
@@ -134,43 +134,43 @@
           }
 
           .switch_wrap input[type="checkbox"]:checked + .switch .bullet {
-            //left: 33px;
-            left: 50px;
+            left: 51px;
           }
 
           .switch_wrap .switch {
-            position: relative;
-            display: inline-block;
+            background-color: $pf-black-300;
+            border-radius: 3px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.25) inset, 0 1px 0 rgb(255,255,255);
             cursor: pointer;
-            //width: 65px;
-            width: 90px;
-            height: 24px;
+            display: inline-block;
             line-height: 24px;
             margin-right: 1em;
             margin-top: -3px;
+            position: relative;
+            //width: 65px;
+            width: 100px;
+            height: 24px;
             vertical-align: middle;
-            background-color: #c1272d;
-            border-radius: 3px;
-            border: 1px solid rgba(0, 0, 0, 0.2);
             -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.25) inset, 0 1px 0 rgb(255,255,255);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.25) inset, 0 1px 0 rgb(255,255,255);
           }
 
           .switch_wrap .switch::before,
           .switch_wrap .switch::after {
+            color: white;
             content: 'Active';
             display: none;
-            width: 50%;
-            position: absolute;
-            top: 0;
             font-size: 11px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+            //font-weight: bold;
+            position: absolute;
+            //text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
             text-align: center;
+            top: 0;
+            width: 50%;
           }
 
           .switch_wrap .switch::after {
+            color: $pf-black-900;
             content: 'Inactive';
             display: block;
             right: 0;
@@ -180,7 +180,7 @@
             position: relative;
             display: block;
             //width: 32px;
-            width: 40px;
+            width: 50px;
             height: 26px;
             top: -2px;
             left: -2px;
