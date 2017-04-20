@@ -12,7 +12,7 @@ import { log, getCategory } from '../../logging';
 @Component({
   selector: 'ipaas-integrations-list',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  styleUrls: [ './list.component.scss' ],
 })
 export class IntegrationsListComponent {
 
@@ -26,12 +26,10 @@ export class IntegrationsListComponent {
 
   @Input() loading: boolean;
 
-  constructor(
-    public store: IntegrationStore,
-    public toasterService: ToasterService,
-    public route: ActivatedRoute,
-    public router: Router,
-  ) {
+  constructor(public store: IntegrationStore,
+              public toasterService: ToasterService,
+              public route: ActivatedRoute,
+              public router: Router,) {
 
   }
 
@@ -47,7 +45,7 @@ export class IntegrationsListComponent {
   }
 
   goto(integration: Integration) {
-    this.router.navigate(['edit', integration.id, 'save-or-add-step'], { relativeTo: this.route });
+    this.router.navigate([ 'edit', integration.id, 'save-or-add-step' ], { relativeTo: this.route });
   }
 
   //-----  Activate/Deactivate ------------------->>
@@ -55,14 +53,14 @@ export class IntegrationsListComponent {
   // TODO: Refactor into single method for both cases
   // Open modal to confirm activation
   requestActivate(integration: Integration) {
-    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration['id']));
+    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration[ 'id' ]));
     this.selectedIntegration = integration;
     this.showModal('activate');
   }
 
   // Open modal to confirm deactivation
   requestDeactivate(integration: Integration) {
-    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration['id']));
+    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration[ 'id' ]));
     this.selectedIntegration = integration;
     this.showModal('deactivate');
   }
@@ -70,7 +68,7 @@ export class IntegrationsListComponent {
   // TODO: Refactor into single method for both cases
   // Actual activate/deactivate action once the user confirms
   activateAction(integration: Integration) {
-    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration['id']));
+    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration[ 'id' ]));
     this.hideModal();
     const i = JSON.parse(JSON.stringify(integration));
     i.desiredStatus = 'Activated';
@@ -93,7 +91,7 @@ export class IntegrationsListComponent {
 
   // Actual activate/deactivate action once the user confirms
   deactivateAction(integration: Integration) {
-    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration['id']));
+    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration[ 'id' ]));
     this.hideModal();
     const i = JSON.parse(JSON.stringify(integration));
     i.desiredStatus = 'Deactivated';
@@ -116,7 +114,7 @@ export class IntegrationsListComponent {
 
   // Actual delete action once the user confirms
   deleteAction(integration: Integration) {
-    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
+    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration[ 'id' ]));
     this.hideModal();
     this.store.delete(integration).subscribe(() => {
       const toast = {
@@ -137,7 +135,7 @@ export class IntegrationsListComponent {
 
   // Open modal to confirm delete
   requestDelete(integration: Integration) {
-    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
+    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration[ 'id' ]));
     this.selectedIntegration = integration;
     this.showModal('delete');
   }
@@ -145,22 +143,21 @@ export class IntegrationsListComponent {
   //-----  'Is Integration Active?' Model ------------------->>
 
   toggleActive(integration: Integration) {
-    if(integration.currentStatus === 'Activated') {
+    if (integration.currentStatus === 'Activated') {
       this.requestDeactivate(integration);
     } else {
       this.requestActivate(integration);
     }
   }
 
-
   //-----  Icons ------------------->>
 
   getStart(integration: Integration) {
-    return integration.steps[0];
+    return integration.steps[ 0 ];
   }
 
   getFinish(integration: Integration) {
-    return integration.steps.slice(-1)[0];
+    return integration.steps.slice(-1)[ 0 ];
   }
 
   //-----  Random Text Stuff --------->>
