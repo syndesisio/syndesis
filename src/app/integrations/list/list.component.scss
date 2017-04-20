@@ -32,7 +32,7 @@
       &.icons {
         padding: 1px;
 
-        [class^=" col-"], [class*=" col-"] {
+        .col-xs-12 {
           padding: 0;
         }
 
@@ -41,6 +41,8 @@
 
           &.fa-angle-right {
             font-size: 18px;
+            margin: 0;
+            padding: 0 10px;
           }
         }
         .image-icon > img {
