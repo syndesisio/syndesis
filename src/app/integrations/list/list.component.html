@@ -51,27 +51,27 @@
 
       <!-- Group 1: Icons -->
 
-      <div class="col-xs-2 group icons"
+      <div class="col-xs-1 group icons"
            (click)="goto(integration)">
-        <div class="col-xs-12">
-          <div class="list-view-pf-left"
-               *ngIf="integration">
-            <span class="card-pf-icon-large image-icon"
-                  *ngIf="getStart(integration).connection">
-              <img src="../../../assets/icons/{{ getStart(integration).connection.connectorId }}.integration.png">
-            </span>
-            <span class="fa fa-angle-right"></span>
-            <span class="card-pf-icon-large image-icon"
-                  *ngIf="getFinish(integration).connection">
-              <img src="../../../assets/icons/{{ getFinish(integration).connection.connectorId }}.integration.png">
-            </span>
-          </div>
+        <div class="col-xs-12"
+             *ngIf="integration">
+          <span class="image-icon"
+                *ngIf="getStart(integration).connection">
+            <img src="../../../assets/icons/{{ getStart(integration).connection.connectorId }}.integration.png"
+                 class="start">
+          </span>
+          <span class="fa fa-angle-right"></span>
+          <span class="image-icon"
+                *ngIf="getFinish(integration).connection">
+            <img src="../../../assets/icons/{{ getFinish(integration).connection.connectorId }}.integration.png"
+                 class="end">
+          </span>
         </div>
       </div>
 
       <!-- Group 2: Text -->
 
-      <div class="col-xs-6 group text"
+      <div class="col-xs-7 group text"
            (click)="goto(integration)">
 
         <!-- Name -->
@@ -106,19 +106,24 @@
               </h3>
             </div>
 
-            <div *ngIf="integration.currentStatus !== 'Pending'">
-              <span *ngIf="integration.currentStatus === 'Activated'"
-                    class="label label-primary"
-                    (click)="requestDeactivate(integration)">Active</span>
-              <span *ngIf="integration.currentStatus === 'Deactivated'"
-                    class="label label-default"
-                    (click)="requestActivate(integration)">Inactive</span>
-              <span *ngIf="integration.currentStatus === 'Draft'"
-                    class="label label-warning"
-                    disabled>Draft</span>
-              <span *ngIf="integration.currentStatus === 'Deleted'"
-                    class="label label-danger"
-                    disabled>Deleted</span>
+            <div *ngIf="integration.currentStatus === 'Activated' || integration.currentStatus === 'Deactivated'">
+              <label class="switch_wrap"
+                     for="field-{{ integration.id }}">
+                <input id="field-{{ integration.id }}"
+                       type="checkbox"
+                       value="{{ integration.currentStatus === 'Activated' ? 0 : 1 }}" />
+                <div class="switch"><span class="bullet"></span></div>
+              </label>
+            </div>
+
+            <div *ngIf="integration.currentStatus === 'Draft'"
+                 class="draft">
+              <span class="label label-warning" disabled>Draft</span>
+            </div>
+
+            <div *ngIf="integration.currentStatus === 'Deleted'"
+                 class="deleted">
+              <span class="label label-danger" disabled>Deleted</span>
             </div>
           </div>
         </div>

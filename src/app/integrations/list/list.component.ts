@@ -114,8 +114,6 @@ export class IntegrationsListComponent {
     });
   }
 
-  //-----  Delete ------------------->>
-
   // Actual delete action once the user confirms
   deleteAction(integration: Integration) {
     log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
