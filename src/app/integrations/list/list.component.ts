@@ -17,7 +17,6 @@ import { log, getCategory } from '../../logging';
 export class IntegrationsListComponent {
 
   private toast;
-  isActive = true;
   currentAction: string = undefined;
   selectedIntegration: Integration = undefined;
 
