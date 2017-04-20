@@ -50,4 +50,10 @@ public interface OpenShiftService {
      */
     boolean isScaled(OpenShiftDeployment d);
 
+    /**
+     * Create a Webhook URL which can be used in a github integration
+     * @param d delployment from which to get the webhool
+     * @param secret
+     */
+    String getGitHubWebHookUrl(OpenShiftDeployment d, String secret);
 }

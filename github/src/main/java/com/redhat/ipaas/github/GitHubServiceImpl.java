@@ -28,14 +28,12 @@ import org.eclipse.egit.github.core.service.UserService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.RequestScope;
 
 /**
  * @author roland
  * @since 08/03/2017
  */
 @Service
-@RequestScope
 @ConditionalOnProperty(value = "github.enabled", matchIfMissing = true, havingValue = "true")
 public class GitHubServiceImpl implements GitHubService {
 
@@ -93,8 +91,17 @@ public class GitHubServiceImpl implements GitHubService {
 
     private void createOrUpdateFiles(Repository repo, String message, Map<String, byte[]> files) throws IOException {
         for (Map.Entry<String, byte[]> entry : files.entrySet()) {
-            createOrUpdateFiles(repo, message, entry.getKey(), entry.getValue());
+            // Wait a bit to let GitHub catch up
+            // See http://stackoverflow.com/questions/19576601/github-api-issue-with-file-upload for details
+            sleep(1000L);
+            createOrUpdateFile(repo, message, entry.getKey(), entry.getValue());
         }
+    }
+
+    private void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {}
     }
 
     private void createWebHookAsBuildTrigger(Repository repository, String url) throws IOException {
@@ -115,7 +122,7 @@ public class GitHubServiceImpl implements GitHubService {
         return hook;
     }
 
-    private void createOrUpdateFiles(Repository repo, String message, String path, byte[] content) throws IOException {
+    private void createOrUpdateFile(Repository repo, String message, String path, byte[] content) throws IOException {
         String sha = getFileSha(repo, path);
         if (sha != null) {
             contentsService.updateFile(repo, message, path, sha, content);

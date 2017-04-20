@@ -32,6 +32,10 @@ public class OpenShiftConfigurationProperties {
 
     private String builderImage = "fabric8/s2i-java:2.0.0";
 
+    private String openshiftApiBaseUrl;
+
+    private String namespace;
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -58,5 +62,21 @@ public class OpenShiftConfigurationProperties {
 
     public void setBuilderImage(String builderImage) {
         this.builderImage = builderImage;
+    }
+
+    public String getOpenshiftApiBaseUrl() {
+        return openshiftApiBaseUrl;
+    }
+
+    public void setOpenshiftApiBaseUrl(String openshiftApiBaseUrl) {
+        this.openshiftApiBaseUrl = openshiftApiBaseUrl;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 }

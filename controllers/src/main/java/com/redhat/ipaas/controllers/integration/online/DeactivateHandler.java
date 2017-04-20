@@ -13,39 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.controllers;
+package com.redhat.ipaas.controllers.integration.online;
 
+import com.redhat.ipaas.controllers.integration.StatusChangeHandlerProvider;
 import com.redhat.ipaas.core.Tokens;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.openshift.OpenShiftDeployment;
 import com.redhat.ipaas.openshift.OpenShiftService;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@Component
-@ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "true")
-public class OnlineDeactivateHandler implements WorkflowHandler {
-
-    public static final Set<Integration.Status> DESIRED_STATE_TRIGGERS =
-        Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            Integration.Status.Deactivated, Integration.Status.Draft
-        )));
+public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
 
     private final OpenShiftService openShiftService;
 
-    public OnlineDeactivateHandler(OpenShiftService openShiftService) {
+    DeactivateHandler(OpenShiftService openShiftService) {
         this.openShiftService = openShiftService;
     }
 
     public Set<Integration.Status> getTriggerStatuses() {
-        return DESIRED_STATE_TRIGGERS;
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            Integration.Status.Deactivated, Integration.Status.Draft)));
     }
 
     @Override
-    public Integration execute(Integration integration) {
+    public StatusUpdate execute(Integration integration) {
         String token = integration.getToken().get();
         Tokens.setAuthenticationToken(token);
 
@@ -62,11 +55,7 @@ public class OnlineDeactivateHandler implements WorkflowHandler {
 
         openShiftService.scale(deployment);
 
-        return new Integration.Builder()
-            .createFrom(integration)
-            .currentStatus(currentStatus)
-            .lastUpdated(new Date())
-            .build();
+        return new StatusUpdate(currentStatus);
     }
 
 }

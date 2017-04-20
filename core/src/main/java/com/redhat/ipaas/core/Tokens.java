@@ -15,7 +15,9 @@
  */
 package com.redhat.ipaas.core;
 
+import org.keycloak.TokenVerifier;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.common.VerificationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -41,6 +43,14 @@ public class Tokens {
         }
     }
 
+    public static boolean isTokenExpired(String token) {
+        TokenVerifier verifier = TokenVerifier.create(token);
+        try {
+            return verifier.getToken().isExpired();
+        } catch (VerificationException e) {
+            return true;
+        }
+    }
 
     public static void setAuthenticationToken(String token) {
         OAUTH_TOKEN.set(token);

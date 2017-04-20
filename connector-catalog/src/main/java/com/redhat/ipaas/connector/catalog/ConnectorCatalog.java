@@ -21,11 +21,15 @@ import org.apache.camel.catalog.connector.CamelConnectorCatalog;
 import org.apache.camel.catalog.connector.DefaultCamelConnectorCatalog;
 import org.apache.camel.catalog.maven.DefaultMavenArtifactProvider;
 import org.apache.camel.catalog.maven.MavenArtifactProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.Map;
 
 public class ConnectorCatalog {
+
+    private final static Logger log = LoggerFactory.getLogger(ConnectorCatalog.class);
 
     private final CamelConnectorCatalog connectorCatalog;
     private final CamelCatalog camelCatalog;
@@ -54,7 +58,7 @@ public class ConnectorCatalog {
             String artifactId = splitGAV[1];
             String version = splitGAV[2];
 
-            System.out.println("Downloading Maven GAV: " + groupId + ":" + artifactId + ":" + version);
+           log.info("Downloading Maven GAV: " + groupId + ":" + artifactId + ":" + version);
 
             maven.addArtifactToCatalog(camelCatalog, connectorCatalog, groupId, artifactId, version);
         }

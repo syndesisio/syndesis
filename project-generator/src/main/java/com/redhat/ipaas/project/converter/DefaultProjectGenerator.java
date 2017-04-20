@@ -15,6 +15,12 @@
  */
 package com.redhat.ipaas.project.converter;
 
+import java.io.*;
+import java.net.URISyntaxException;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -30,18 +36,8 @@ import io.fabric8.funktion.model.Funktion;
 import io.fabric8.funktion.model.StepKinds;
 import io.fabric8.funktion.model.steps.Endpoint;
 import io.fabric8.funktion.support.YamlHelper;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
@@ -79,6 +75,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     private final ConnectorCatalog connectorCatalog;
     private final ProjectGeneratorProperties generatorProperties;
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     public DefaultProjectGenerator(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties) {
         this.connectorCatalog = connectorCatalog;
         this.generatorProperties = generatorProperties;
@@ -88,6 +86,9 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     public Map<String, byte[]> generate(GenerateProjectRequest request) throws IOException {
         request.getIntegration().getSteps().ifPresent(steps -> {
             for (Step step : steps) {
+                log.info("Integration {} : Adding step {} ",
+                         request.getIntegration().getId().orElse("[none]"),
+                         step.getId().orElse(""));
                 step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
             }
         });
@@ -151,7 +152,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                                 }
 
                                 Connector connector = request.getConnectors().get(connectorId);
-                                flow.addStep(createEndpointStep(connector, action.getCamelConnectorPrefix(), 
+                                flow.addStep(createEndpointStep(connector, action.getCamelConnectorPrefix(),
                                         connection.getConfiguredProperties(), step.getConfiguredProperties().orElse(new HashMap<String,String>())));
                             } catch (IOException | URISyntaxException e) {
                                 e.printStackTrace();

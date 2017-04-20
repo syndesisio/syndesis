@@ -36,7 +36,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     enum Status { Draft, Pending, Activated, Deactivated, Deleted};
 
-
     @Override
     default Kind getKind() {
         return Kind.Integration;
@@ -69,7 +68,7 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     Optional<String> getStatusMessage();
 
     Optional<Date> getLastUpdated();
-    
+
     Optional<Date> getCreatedDate();
 
     Optional<BigInteger> getTimesUsed();

@@ -13,42 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.controllers;
+package com.redhat.ipaas.controllers.integration;
+
+import java.util.*;
 
 import com.redhat.ipaas.model.integration.Integration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-
 @Component
-@ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "false")
-public class DemoActivateHandler implements WorkflowHandler {
-
-    public static final Set<Integration.Status> DESIRED_STATE_TRIGGERS =
-        Collections.unmodifiableSet(new HashSet<>(Arrays.asList(Integration.Status.Activated)));
+@ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "noop")
+public class NoopHandlerProvider implements StatusChangeHandlerProvider.StatusChangeHandler, StatusChangeHandlerProvider {
 
     public Set<Integration.Status> getTriggerStatuses() {
-        return DESIRED_STATE_TRIGGERS;
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            Integration.Status.Activated,
+            Integration.Status.Deactivated,
+            Integration.Status.Deleted)));
     }
 
     @Override
-    public Integration execute(Integration integration) {
-
-        try {
-            Thread.sleep(5000L);
-        } catch (InterruptedException e) {
-            return integration;
-        }
-
-        Integration updatedIntegration = new Integration.Builder()
-            .createFrom(integration)
-            .currentStatus(Integration.Status.Activated)
-            .lastUpdated(new Date())
-            .build();
-        return updatedIntegration;
+    public StatusUpdate execute(Integration integration) {
+        return null;
     }
 
+    @Override
+    public List<StatusChangeHandler> getStatusChangeHandlers() {
+        return Collections.singletonList(this);
+    }
 }
 
 
