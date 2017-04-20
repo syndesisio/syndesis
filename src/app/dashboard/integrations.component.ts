@@ -46,7 +46,7 @@ export class DashboardIntegrationsComponent implements OnInit {
   public doughnutChartLegend = false;
   public doughnutChartColors = [{
     backgroundColor: [
-      '#3F9C35', // PatternFly Blue 400, Active
+      '#0088CE', // PatternFly Blue 400, Active
       '#EC7A08', // PatternFly Orange 400, Draft
       '#D1D1D1', // PatternFly Black 300, Inactive
       //'#D1D1D1', // PatternFly Black 300, Inactive
