@@ -21,5 +21,5 @@ Feature: Test to verify Dashboard links
 
   Scenario: Verify "Create integration" button
     When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
-	  And Camilla clicks on the "Create Integration" button
+    And Camilla clicks on the "Create Integration" button
     Then she is presented with a visual integration editor
