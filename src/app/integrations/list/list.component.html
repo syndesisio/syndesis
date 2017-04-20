@@ -104,13 +104,17 @@
               </h3>
             </div>
 
-            <div *ngIf="integration.currentStatus !== 'Pending'">
+            <div *ngIf="integration.currentStatus !== ('Pending' || 'Draft')">
               <label class="switch_wrap" for="field-{{ integration.id }}">
                 <input id="field-{{ integration.id }}"
                        type="checkbox"
                        value="1" />
                 <div class="switch"><span class="bullet"></span></div>
               </label>
+            </div>
+
+            <div *ngIf="integration.currentStatus === 'Draft'">
+              <span class="label label-warning" disabled>Draft</span>
             </div>
 
             <!--

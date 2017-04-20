@@ -115,23 +115,6 @@ export class IntegrationsListComponent {
   }
 
 
-
-  //-----  Status Check ------------------->>
-
-  checkStatus(integration: Integration) {
-    switch(integration.currentStatus) {
-      case 'Activated':
-        return;
-      case 'Deactivated':
-        return;
-      case 'Draft':
-        return;
-      case 'Pending':
-        return;
-    }
-  }
-
-
   //-----  Delete ------------------->>
 
   // Actual delete action once the user confirms

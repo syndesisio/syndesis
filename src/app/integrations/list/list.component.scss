@@ -30,10 +30,21 @@
       //----- Group 1: Icons ----------------->>
 
       &.icons {
-        padding: 1px;
+        overflow: hidden;
+        //padding: 1px;
+        text-align: center;
 
         .col-xs-12 {
           padding: 0;
+
+          .image-icon {
+            img {
+              display: inline-block;
+              margin: 10px 10px 0 0;
+              padding: 5px 10px;
+              width: 32px;
+            }
+          }
         }
 
         .fa {
@@ -44,10 +55,6 @@
             margin: 0;
             padding: 0 10px;
           }
-        }
-        .image-icon > img {
-          width: 32px;
-          height: 32px;
         }
       }
 
@@ -92,7 +99,6 @@
 
           // Toggle Button for State
 
-
           .switch_wrap input[type="checkbox"] {
             display: none;
           }
@@ -131,7 +137,7 @@
 
           .switch_wrap .switch::before,
           .switch_wrap .switch::after {
-            content: 'ON';
+            content: 'Active';
             display: none;
             width: 50%;
             position: absolute;
@@ -144,7 +150,7 @@
           }
 
           .switch_wrap .switch::after {
-            content: 'OFF';
+            content: 'Inactive';
             display: block;
             right: 0;
           }
