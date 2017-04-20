@@ -37,7 +37,7 @@
             <div class="row"
                  *ngFor="let integration of integrations; let i=index">
 
-              <div class="col-xs-12 integration"
+              <div class="col-xs-12 integration vertical-align"
                    *ngIf="i<5">
                 <!-- Icons -->
 
@@ -68,9 +68,9 @@
                   {{ integration.name }}
                 </div>
 
-                <!-- Times of Use -->
+                <!-- Uses -->
 
-                <div class="col-xs-3 times-of-use"
+                <div class="col-xs-3 uses"
                      (click)="selectedIntegration(integration)">
                   <p>{{ integration.timesUsed || 0 }} uses
                   </p>
