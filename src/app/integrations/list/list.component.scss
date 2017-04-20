@@ -31,8 +31,10 @@
 
       &.icons {
         overflow: hidden;
-        //padding: 1px;
+        margin: 0;
+        padding: 0;
         text-align: center;
+        width: 12%;
 
         .col-xs-12 {
           padding: 0;
@@ -40,9 +42,14 @@
           .image-icon {
             img {
               display: inline-block;
-              margin: 10px 10px 0 0;
-              padding: 5px 10px;
-              width: 32px;
+
+              &.start {
+                padding-right: 10px;
+              }
+
+              &.end {
+                padding-left: 10px;
+              }
             }
           }
         }

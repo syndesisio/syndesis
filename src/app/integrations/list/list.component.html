@@ -51,25 +51,27 @@
 
       <!-- Group 1: Icons -->
 
-      <div class="col-xs-2 group icons"
+      <div class="col-xs-1 group icons"
            (click)="goto(integration)">
         <div class="col-xs-12"
              *ngIf="integration">
-          <span class="card-pf-icon-large image-icon"
+          <span class="image-icon"
                 *ngIf="getStart(integration).connection">
-            <img src="../../../assets/icons/{{ getStart(integration).connection.connectorId }}.integration.png">
+            <img src="../../../assets/icons/{{ getStart(integration).connection.connectorId }}.integration.png"
+                 class="start">
           </span>
           <span class="fa fa-angle-right"></span>
-          <span class="card-pf-icon-large image-icon"
+          <span class="image-icon"
                 *ngIf="getFinish(integration).connection">
-            <img src="../../../assets/icons/{{ getFinish(integration).connection.connectorId }}.integration.png">
+            <img src="../../../assets/icons/{{ getFinish(integration).connection.connectorId }}.integration.png"
+                 class="end">
           </span>
         </div>
       </div>
 
       <!-- Group 2: Text -->
 
-      <div class="col-xs-6 group text"
+      <div class="col-xs-7 group text"
            (click)="goto(integration)">
 
         <!-- Name -->
@@ -104,7 +106,7 @@
               </h3>
             </div>
 
-            <div *ngIf="integration.currentStatus !== ('Pending' || 'Draft')">
+            <div *ngIf="integration.currentStatus !== 'Pending' && integration.currentStatus !== 'Draft'">
               <label class="switch_wrap" for="field-{{ integration.id }}">
                 <input id="field-{{ integration.id }}"
                        type="checkbox"
