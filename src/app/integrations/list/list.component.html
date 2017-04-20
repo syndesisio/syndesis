@@ -89,8 +89,7 @@
 
       <!-- Group 3: Metrics & Actions -->
 
-      <div class="col-xs-4 group metrics-actions"
-           (click)="goto(integration)">
+      <div class="col-xs-4 group metrics-actions">
 
         <!-- Active/Inactive Labels -->
 
@@ -100,14 +99,14 @@
             <!-- In Progress -->
 
             <div class="in-progress"
-                 *ngIf="(integration.currentStatus !== integration.desiredStatus) && !integration.statusMessage">
+                 *ngIf="integration.currentStatus === 'Pending'">
               <h3>
                 <div class="spinner spinner-sm spinner-inline"></div>
                 In Progress
               </h3>
             </div>
 
-            <div *ngIf="integration.currentStatus === integration.desiredStatus">
+            <div *ngIf="integration.currentStatus !== 'Pending'">
               <span *ngIf="integration.currentStatus === 'Activated'"
                     class="label label-primary"
                     (click)="requestDeactivate(integration)">Active</span>
@@ -117,6 +116,9 @@
               <span *ngIf="integration.currentStatus === 'Draft'"
                     class="label label-warning"
                     disabled>Draft</span>
+              <span *ngIf="integration.currentStatus === 'Deleted'"
+                    class="label label-danger"
+                    disabled>Deleted</span>
             </div>
           </div>
         </div>
