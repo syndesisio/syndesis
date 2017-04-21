@@ -113,6 +113,10 @@ parameters:
   displayName: Acess Token Lifespan
   name: ACCESS_TOKEN_LIFESPAN
   value: '300'
+- description: How long are idle SSO Sesions allow to exist?
+  displayName: Idle Session Lifespan
+  name: SESSION_LIFESPAN
+  value: '36000'
 message: |-
   Red Hat iPaaS is deployed to ${ROUTE_HOSTNAME}.
 
@@ -1339,9 +1343,9 @@ objects:
         "notBefore": 0,
         "revokeRefreshToken": false,
         "accessTokenLifespan": ${ACCESS_TOKEN_LIFESPAN},
-        "accessTokenLifespanForImplicitFlow": 900,
-        "ssoSessionIdleTimeout": 1800,
-        "ssoSessionMaxLifespan": 36000,
+        "accessTokenLifespanForImplicitFlow": ${ACCESS_TOKEN_LIFESPAN},
+        "ssoSessionIdleTimeout": ${SESSION_LIFESPAN},
+        "ssoSessionMaxLifespan": ${SESSION_LIFESPAN},
         "offlineSessionIdleTimeout": 2592000,
         "accessCodeLifespan": 60,
         "accessCodeLifespanUserAction": 300,
