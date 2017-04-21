@@ -106,6 +106,20 @@ export class AppPage {
     return this.getButton(buttonTitle).click();
   }
 
+  getLink(linkTitle: string): ElementFinder {
+    log.info(`searching for link ${linkTitle}`);
+    return element(by.linkText(linkTitle));
+  }
+
+  clickLink(linkTitle: string): P<any> {
+    log.info(`clicking link ${linkTitle}`);
+    return this.getLink(linkTitle).click();
+  }
+
+  getElementByClassName(elementClassName: string): ElementFinder {
+    log.info(`searching for element ${elementClassName}`);
+    return element(by.className(elementClassName));
+  }
 
   async link(title: String): P<NavLink> {
     const links = await this.findNavLinks();
