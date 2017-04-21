@@ -49,7 +49,7 @@ public interface StatusChangeHandlerProvider {
             }
 
             public StatusUpdate(Integration.Status status) {
-                this(status, status.name());
+                this(status, null);
             }
 
             public Optional<Integration.Status> getNewStatus() {
