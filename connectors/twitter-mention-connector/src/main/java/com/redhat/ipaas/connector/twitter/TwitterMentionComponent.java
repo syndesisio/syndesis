@@ -15,6 +15,7 @@
  */
 package com.redhat.ipaas.connector.twitter;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
 /**
@@ -24,6 +25,10 @@ public class TwitterMentionComponent extends DefaultConnectorComponent {
     
     public TwitterMentionComponent() {
         super("twitter-mention", "com.redhat.ipaas.connector.twitter.TwitterMentionComponent");
+
+        setBeforeConsumer(exchange -> {
+            exchange.getIn().setHeader(Exchange.CONTENT_TYPE, "application/java-byte-code");
+        });
     }
 
 }
