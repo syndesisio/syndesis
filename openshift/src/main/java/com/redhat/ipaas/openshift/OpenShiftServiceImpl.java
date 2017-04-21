@@ -47,7 +47,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         openShiftClient.withRequestConfig(requestConfig).<Void>call(c -> {
             DockerImage img = new DockerImage(config.getBuilderImage());
             ensureImageStreams(openShiftClient, sanitizedName, img);
-            ensureDeploymentConfig(openShiftClient, sanitizedName);
+            ensureDeploymentConfig(openShiftClient, sanitizedName, config.getIntegrationServiceAccount());
             ensureSecret(openShiftClient, sanitizedName, d.getSecretData().orElseGet(HashMap::new));
             ensureBuildConfig(openShiftClient, sanitizedName,
                 d.getGitRepository().orElseThrow(()-> new IllegalStateException("Git repository is required")),
@@ -133,7 +133,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return client.imageStreams().withName(img.getShortName()).delete();
     }
 
-    private static void ensureDeploymentConfig(OpenShiftClient client, String projectName) {
+    private static void ensureDeploymentConfig(OpenShiftClient client, String projectName, String serviceAccount) {
         client.deploymentConfigs().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata()
             .withNewSpec()
@@ -142,6 +142,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewTemplate()
             .withNewMetadata().addToLabels("integration", projectName).endMetadata()
             .withNewSpec()
+            .withServiceAccount(serviceAccount)
+            .withServiceAccountName(serviceAccount)
             .addNewContainer()
             .withImage(" ").withImagePullPolicy("Always").withName(projectName).addNewPort().withContainerPort(8778).endPort()
             .addNewVolumeMount()
