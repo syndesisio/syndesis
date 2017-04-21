@@ -15,8 +15,8 @@
   "pattern" : "To",
   "inputDataType" : "java:org.foo.salesforce.upsert.contact.Contact",
   "outputDataType" : "none",
-  "globalOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken" ],
-  "componentOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken" ],
+  "globalOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken", "userName", "password"],
+  "componentOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken", "userName", "password"],
   "endpointValues" : {
     "operationName" : "upsertSObject"
   },
