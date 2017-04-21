@@ -38,6 +38,19 @@ public class SalesforceUpsertContactConnectorConfiguration {
      * application at localhost.
      */
     private String refreshToken;
+    /**
+     * Username used in OAuth flow to gain access to access token. It's easy to
+     * get started with password OAuth flow but in general one should avoid it
+     * as it is deemed less secure than other flows.
+     */
+    private String userName;
+    /**
+     * Password used in OAuth flow to gain access to access token. It's easy to
+     * get started with password OAuth flow but in general one should avoid it
+     * as it is deemed less secure than other flows. Make sure that you append
+     * security token to the end of the password if using one.
+     */
+    private String password;
 
     public String getLoginUrl() {
         return loginUrl;
@@ -69,5 +82,21 @@ public class SalesforceUpsertContactConnectorConfiguration {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
