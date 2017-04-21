@@ -66,14 +66,14 @@ class CommonSteps {
     log.info(`${alias} is on current navlink: ${currentLink}`);
     expect(currentLink.active, `${pageTitle} link must be active`).to.be.true;
   }
-  
+
   @then(/^(\w+)? ?is presented with the "([^"]*)" link$/)
   public async verifyLink(alias: string, linkTitle: string): P<any> {
     const currentLink = await this.world.app.getLink(linkTitle);
 
     expect(currentLink.isPresent(), `There must be present a link ${linkTitle}`)
       .to.eventually.be.true;
-  }  
+  }
 
   @when(/clicks? on the "([^"]*)" button.*$/)
   public clickOnButton(buttonTitle: string, callback: CallbackStepDefinition): void {
@@ -101,18 +101,18 @@ class CommonSteps {
     expect(button.isPresent(), `There must be enabled button ${buttonTitle}`)
       .to.eventually.be.true.notify(callback);
   }
-  
+
   @then(/^she is presented with the "([^"]*)" elements*$/)
   public expectElementsPresent(elementClassNames: string, callback: CallbackStepDefinition): void {
- 
-    let elementClassNamesArray = elementClassNames.split(",");
-      
-    for (let elementClassName of elementClassNamesArray) {
+
+    const elementClassNamesArray = elementClassNames.split(',');
+
+    for (const elementClassName of elementClassNamesArray) {
       this.expectElementPresent(elementClassName, callback);
     }
   }
 
-  @then(/^she is presented with the "([^"]*)"$/)  
+  @then(/^she is presented with the "([^"]*)"$/)
   public expectElementPresent(elementClassName: string, callback: CallbackStepDefinition): void {
 
     const element = this.world.app.getElementByClassName(elementClassName);
