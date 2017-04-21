@@ -104,6 +104,12 @@
   </dependencyManagement>
 
   <dependencies>
+    <!-- atlasmap runtime -->
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>camel-atlasmap</artifactId>
+      <version>1.10.0-SNAPSHOT</version>
+    </dependency>
 
     <!-- connectors used in this integration -->
   {{#connectors}}
@@ -146,13 +152,6 @@
       <groupId>io.fabric8.funktion</groupId>
       <artifactId>funktion-runtime</artifactId>
       <version>${funktion.version}</version>
-    </dependency>
-
-    <!-- atlasmap runtime -->
-    <dependency>
-      <groupId>io.atlasmap</groupId>
-      <artifactId>camel-atlasmap</artifactId>
-      <version>1.10.0-SNAPSHOT</version>
     </dependency>
 
     <!-- testing -->

@@ -31,6 +31,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.Optional;
 
 @Path("/integrations")
 @Api(value = "integrations")
@@ -57,7 +58,9 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Path(value = "/{id}/deactivate")
     @Consumes("application/json")
     public void deactivate(@PathParam("id") String id) {
-        update(id, new Integration.Builder().createFrom(get(id)).desiredStatus(Integration.Status.Activated).build());
+        update(id, new Integration.Builder().createFrom(get(id))
+            .desiredStatus(Integration.Status.Activated)
+            .build());
     }
 
     @Override
@@ -84,6 +87,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             .token(Tokens.getAuthenticationToken())
             .currentStatus(Integration.Status.Draft)
             .desiredStatus(Integration.Status.Activated)
+            .statusMessage(Optional.empty())
             .lastUpdated(rightNow)
             .createdDate(rightNow)
             .build();
