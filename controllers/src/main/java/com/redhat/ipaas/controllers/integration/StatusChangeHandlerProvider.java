@@ -36,28 +36,32 @@ public interface StatusChangeHandlerProvider {
         StatusUpdate execute(Integration model);
 
         class StatusUpdate {
-            private Optional<Integration.Status> newStatus;
-            private String message;
+            private Optional<Integration.Status> status;
+            private Optional<String> statusMessage;
 
-            public StatusUpdate(Optional<Integration.Status> newStatus, String message) {
-                this.newStatus = newStatus;
-                this.message = message;
+            public StatusUpdate(Optional<Integration.Status> status, Optional<String> statusMessage) {
+                this.status = status;
+                this.statusMessage = statusMessage;
             }
 
-            public StatusUpdate(Integration.Status currentStatus, String message) {
-                this(Optional.of(currentStatus), message);
+            public StatusUpdate(Optional<Integration.Status> status, String statusMessage) {
+                this(status, Optional.of(statusMessage));
+            }
+
+            public StatusUpdate(Integration.Status status, String statusMessage) {
+                this(Optional.of(status), Optional.of(statusMessage));
             }
 
             public StatusUpdate(Integration.Status status) {
-                this(status, null);
+                this(Optional.of(status), Optional.empty());
             }
 
-            public Optional<Integration.Status> getNewStatus() {
-                return newStatus;
+            public Optional<Integration.Status> getStatus() {
+                return status;
             }
 
-            public String getStatusMessage() {
-                return message;
+            public Optional<String> getStatusMessage() {
+                return statusMessage;
             }
         }
     }
