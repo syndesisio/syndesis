@@ -167,7 +167,7 @@ public class IntegrationController {
                     dataManager.update(
                         new Integration.Builder()
                             .createFrom(current)
-                            .currentStatus(update.getNewStatus())
+                            .currentStatus(update.getStatus())
                             .statusMessage(update.getStatusMessage())
                             .lastUpdated(new Date())
                             .build());
