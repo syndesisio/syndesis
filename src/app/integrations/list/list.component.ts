@@ -140,15 +140,6 @@ export class IntegrationsListComponent {
     this.showModal('delete');
   }
 
-  //-----  'Is Integration Active?' Model ------------------->>
-
-  toggleActive(integration: Integration) {
-    if (integration.currentStatus === 'Activated') {
-      this.requestDeactivate(integration);
-    } else {
-      this.requestActivate(integration);
-    }
-  }
 
   //-----  Icons ------------------->>
 
@@ -158,6 +149,69 @@ export class IntegrationsListComponent {
 
   getFinish(integration: Integration) {
     return integration.steps.slice(-1)[ 0 ];
+  }
+
+
+  //-----  Dropdown Action Checks ------------------->>
+
+  canActivate(currentStatus) {
+    switch (currentStatus) {
+      case 'Activated':
+      case 'Deleted':
+      case 'Draft':
+      case 'Pending':
+        return false;
+      default:
+        return true;
+    }
+  }
+
+  canDeactivate(currentStatus) {
+    switch (currentStatus) {
+      case 'Deactivated':
+      case 'Deleted':
+      case 'Draft':
+      case 'Pending':
+        return false;
+      default:
+        return true;
+    }
+  }
+
+  canDelete(currentStatus) {
+    switch (currentStatus) {
+      case 'Deleted':
+      case 'Pending':
+        return false;
+      default:
+        return true;
+    }
+  }
+
+  canEdit(currentStatus) {
+    switch (currentStatus) {
+      case 'Deleted':
+      case 'Draft':
+      case 'Pending':
+        return false;
+      default:
+        return true;
+    }
+  }
+
+  //-----  Get Status Icon Class ------------------->>
+
+  getLabelClass(currentStatus) {
+    switch (currentStatus) {
+      case 'Activated':
+        return 'primary';
+      case 'Deactivated':
+        return 'default';
+      case 'Deleted':
+        return 'danger';
+      case 'Draft':
+        return 'warning';
+    }
   }
 
   //-----  Random Text Stuff --------->>
