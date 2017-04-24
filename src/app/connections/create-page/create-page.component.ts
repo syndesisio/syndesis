@@ -47,6 +47,24 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     return true;
   }
 
+  showBack() {
+    const page = this.getCurrentPage();
+    switch (page) {
+      case 'connection-basics':
+        return false;
+    }
+    return true;
+  }
+
+  showNext() {
+    const page = this.getCurrentPage();
+    switch (page) {
+      case 'connection-basics':
+        return false;
+    }
+    return true;
+  }
+
   cancel() {
     this.router.navigate(['..'], { relativeTo: this.route });
   }
