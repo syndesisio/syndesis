@@ -45,7 +45,7 @@ public class TestSupportHandler {
     @Path("/reset-db")
     public void resetDBToDefault() {
         deleteAllDBEntities();
-        dataMgr.init();
+        dataMgr.resetDeploymentData();
     }
 
     @POST

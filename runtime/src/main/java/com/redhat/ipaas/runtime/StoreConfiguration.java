@@ -17,6 +17,7 @@ package com.redhat.ipaas.runtime;
 
 import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.core.Json;
+import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.jsondb.JsonDB;
 import com.redhat.ipaas.jsondb.impl.SqlJsonDB;
 import org.skife.jdbi.v2.DBI;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.IOException;
 
@@ -34,9 +36,6 @@ import java.io.IOException;
 @Configuration
 public class StoreConfiguration {
 
-    @Value("${dao.schema.version}")
-    private String daoSchemaVersion;
-
     @Bean
     public DBI dbiBean(@Autowired DataSource dataSource) {
         DBI dbi = new DBI(dataSource);
@@ -45,50 +44,13 @@ public class StoreConfiguration {
 
     @Bean
     @Autowired
-    public JsonDB realTimeDB(DBI dbi) {
-        return init(new SqlJsonDB(dbi, null));
-    }
-
-    private SqlJsonDB init(SqlJsonDB jsondb) {
+    public SqlJsonDB realTimeDB(DBI dbi) {
+        SqlJsonDB jsondb = new SqlJsonDB(dbi, null);
         try {
             jsondb.createTables();
         } catch (Exception ignore) {
         }
-
-        String versionInDB = getClusterProperty(jsondb, "dao_schema_version");
-        if (daoSchemaVersion != null &&
-            (versionInDB == null || !daoSchemaVersion.equals(versionInDB))) {
-
-            // really silly migration strategy for now, reset the DB:
-            jsondb.dropTables();
-            jsondb.createTables();
-
-            setClusterProperty(jsondb, "dao_schema_version", daoSchemaVersion);
-        }
-
         return jsondb;
-    }
-
-    public static String getClusterProperty(SqlJsonDB jsondb, String name) {
-        String json = jsondb.getAsString("/cluster-properties/"+name);
-        if( json==null ) {
-            return null;
-        }
-        try {
-            return Json.mapper().readValue(json, String.class);
-        } catch (IOException e) {
-            throw IPaasServerException.launderThrowable(e);
-        }
-    }
-
-    public  static void setClusterProperty(SqlJsonDB jsondb, String name, String value) {
-        String json;
-        try {
-            json = Json.mapper().writeValueAsString(value);
-        } catch (IOException e) {
-            throw IPaasServerException.launderThrowable(e);
-        }
-        jsondb.set("/cluster-properties/"+name, json);
     }
 
 }
