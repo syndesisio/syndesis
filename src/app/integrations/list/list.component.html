@@ -93,60 +93,44 @@
 
         <!-- Active/Inactive Labels -->
 
-        <div class="col-xs-5 active-inactive">
-          <div class="list-view-pf-additional-info-item">
+        <div class="col-xs-6 active-inactive">
+          <!-- In Progress -->
 
-            <!-- In Progress -->
+          <div class="in-progress"
+               *ngIf="integration.currentStatus === 'Pending'">
+            <h3>
+              <div class="spinner spinner-sm spinner-inline"></div>
+              In Progress
+            </h3>
+          </div>
 
-            <div class="in-progress"
-                 *ngIf="integration.currentStatus === 'Pending'">
-              <h3>
-                <div class="spinner spinner-sm spinner-inline"></div>
-                In Progress
-              </h3>
-            </div>
+          <!-- Status -->
 
-            <div *ngIf="integration.currentStatus === 'Activated' || integration.currentStatus === 'Deactivated'"
-                 (click)="toggleActive(integration)">
-              <label class="switch_wrap"
-                     for="field-{{ integration.id }}">
-                <input id="field-{{ integration.id }}"
-                       type="checkbox"
-                       [checked]="integration.currentStatus === 'Activated'" />
-                <div class="switch">
-                  <span class="bullet"></span>
-                </div>
-              </label>
-            </div>
-
-            <div *ngIf="integration.currentStatus === 'Draft'"
-                 class="draft">
-              <span class="label label-warning" disabled>Draft</span>
-            </div>
-
-            <div *ngIf="integration.currentStatus === 'Deleted'"
-                 class="deleted">
-              <span class="label label-danger" disabled>Deleted</span>
-            </div>
+          <div *ngIf="integration.currentStatus !== 'Pending'"
+               class="not-pending">
+              <span class="label label-{{ getLabelClass(integration.currentStatus) }}"
+                    disabled>{{ getStatusText(integration.currentStatus) }}</span>
           </div>
         </div>
 
 
         <!-- Metrics & Actions -->
 
-        <div class="col-xs-7">
+        <div class="col-xs-6">
 
           <!-- Uses -->
 
+          <!--
           <div class="col-xs-7 uses"
                (click)="goto(integration)">
             <p>{{ integration.timesUsed || 0 }} uses</p>
           </div>
+          -->
 
 
           <!-- Pass/Fail -->
 
-          <div class="col-xs-4 pass-fail"
+          <div class="col-xs-10 pass-fail"
                (click)="goto(integration)">
 
             <!-- OK Status -->
@@ -167,7 +151,7 @@
 
           <!-- Actions -->
 
-          <div class="col-xs-1 actions">
+          <div class="col-xs-2 actions">
             <div dropdown
                  class="dropdown pull-right dropdown-kebab-pf">
               <button dropdownToggle
@@ -182,28 +166,25 @@
               <ul dropdownMenu
                   class="dropdown-menu dropdown-menu-right"
                   aria-labelledby="dropdownKebabRight9">
-                <li role="menuitem">
+                <li role="menuitem"
+                    *ngIf="canEdit(integration.currentStatus)">
                   <a [routerLink]="['edit', integration.id, 'save-or-add-step']">Edit</a>
                 </li>
                 <li role="menuitem"
-                    *ngIf="integration.desiredStatus === 'Activated'">
-                  <a (click)="requestDeactivate(integration)">Deactivate</a>
-                </li>
-                <li role="menuitem"
-                    *ngIf="integration.desiredStatus === 'Deactivated'">
+                    *ngIf="canActivate(integration.currentStatus)">
                   <a (click)="requestActivate(integration)">Activate</a>
                 </li>
                 <li role="menuitem"
-                    *ngIf="integration.active === false"
-                    (click)="requestActivate(integration)">
-                  <a>Activate</a>
+                    *ngIf="canDeactivate(integration.currentStatus)">
+                  <a (click)="requestDeactivate(integration)">Deactivate</a>
                 </li>
                 <!--
                     <li>
                       <a>Duplicate</a>
                     </li>
                     -->
-                <li role="menuitem">
+                <li role="menuitem"
+                    *ngIf="canDelete(integration.currentStatus)">
                   <a (click)="requestDelete(integration)">Delete</a>
                 </li>
               </ul>
