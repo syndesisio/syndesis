@@ -109,7 +109,7 @@
           <div *ngIf="integration.currentStatus !== 'Pending'"
                class="not-pending">
               <span class="label label-{{ getLabelClass(integration.currentStatus) }}"
-                    disabled>{{ integration.currentStatus }}</span>
+                    disabled>{{ getStatusText(integration.currentStatus) }}</span>
           </div>
         </div>
 
@@ -176,7 +176,7 @@
                 </li>
                 <li role="menuitem"
                     *ngIf="canDeactivate(integration.currentStatus)">
-                  <a (click)="requestActivate(integration)">Deactivate</a>
+                  <a (click)="requestDeactivate(integration)">Deactivate</a>
                 </li>
                 <!--
                     <li>

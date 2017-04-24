@@ -191,8 +191,6 @@ export class IntegrationsListComponent {
   canEdit(currentStatus) {
     switch (currentStatus) {
       case 'Deleted':
-      case 'Draft':
-      case 'Pending':
         return false;
       default:
         return true;
@@ -206,7 +204,7 @@ export class IntegrationsListComponent {
       case 'Activated':
         return 'primary';
       case 'Deactivated':
-        return 'default';
+        return 'custom';
       case 'Deleted':
         return 'danger';
       case 'Draft':
@@ -239,6 +237,19 @@ export class IntegrationsListComponent {
         return 'Deactivate';
       default:
         return 'Delete';
+    }
+  }
+
+  getStatusText(currentStatus) {
+    switch (currentStatus) {
+      case 'Activated':
+        return 'Active';
+      case 'Deactivated':
+        return 'Inactive';
+      case 'Pending':
+        return 'In Progress';
+      default:
+        return currentStatus;
     }
   }
 

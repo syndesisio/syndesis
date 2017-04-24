@@ -114,6 +114,11 @@
             .label {
               cursor: pointer;
               padding: 6px;
+
+              &.label-custom {
+                background: $pf-black-300;
+                color: #000000;
+              }
             }
           }
 
