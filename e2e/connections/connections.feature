@@ -15,7 +15,7 @@ Feature: Connections smoke test
 
   Scenario: Create connection happy path
     When "Camilla" navigates to the "Connections" page
-    And click on the "Create" button
+    And click on the "Create Connection" button
     And Camilla selects the "Twitter" connection
     Then she is presented with the "Validate" button
 
@@ -29,4 +29,3 @@ Feature: Connections smoke test
 
     When Camilla selects the "my sample twitter connection" connection
     Then Camilla is presented with "my sample twitter connection" connection details
-

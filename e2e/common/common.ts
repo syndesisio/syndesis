@@ -5,9 +5,10 @@ export class User {
   description: string;
   username: string;
   password: string;
+  userDetails: UserDetails;
 
 
-  constructor(alias: string, description: string) {
+  constructor(alias: string, description: string, userDetails: UserDetails) {
     this.alias = alias;
     this.description = description;
 
@@ -22,6 +23,11 @@ export class User {
       this.username = envUsername;
       this.password = envPassword;
     }
+    if (userDetails === null) {
+      this.userDetails = new UserDetails(`${this.alias}@example.com`, 'FirstName', 'LastName');
+    } else {
+      this.userDetails = userDetails;
+    }
   }
 
 
@@ -29,6 +35,18 @@ export class User {
     return `User{alias=${this.alias}, login=${this.username}}`;
   }
 
+}
+
+export class UserDetails {
+  email: string;
+  firstName: string;
+  lastName: string;
+
+  constructor(email: string, firstName: string, lastName: string) {
+    this.email = email;
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
 }
 
 /**

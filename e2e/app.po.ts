@@ -1,9 +1,9 @@
 import { by, browser, element, ExpectedConditions, ElementFinder } from 'protractor';
 import * as webdriver from 'selenium-webdriver';
 import { Promise as P } from 'es6-promise';
-import { User } from './common/common';
+import { User, UserDetails } from './common/common';
 import { contains } from './common/world';
-import { GithubLogin } from './login/login.po';
+import { GithubLogin, KeycloakDetails } from './login/login.po';
 import { log } from '../src/app/logging';
 import * as jQuery from 'jquery';
 import WebElement = webdriver.WebElement;
@@ -138,7 +138,7 @@ export class AppPage {
       browser.wait(ExpectedConditions.presenceOf(element(by.css('input'))), 1000, 'Some input field - assuming we are on login page'),
     ]);
 
-    const url = await this.currentUrl();
+    let url = await this.currentUrl();
 
     if (contains(url, 'github')) {
       // we need to login on github
@@ -148,7 +148,12 @@ export class AppPage {
     } else {
       return P.reject(`Unsupported login page ${url}`);
     }
+    url = await this.currentUrl();
+    if (contains(url, 'first-broker-login')) {
+      await new KeycloakDetails().submitUserDetails(user.userDetails);
+    }
     browser.waitForAngularEnabled(true);
+
     return this.goToUrl(AppPage.baseurl);
   }
 

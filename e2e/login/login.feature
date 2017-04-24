@@ -5,13 +5,9 @@ Feature: First pass at login, homepage, connections
   Camila (citizen developer) first explores
 
   Background:
-    Given credentials for "camilla"
-
+    Given credentials for "Camilla"
 
   Scenario: User Camila logins
     When "Camilla" logs into the iPaaS
     And "Camilla" navigate to the "Connections" page
     Then she is presented with at least "2" connections
-
-
-

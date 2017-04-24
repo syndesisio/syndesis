@@ -1,4 +1,4 @@
-import { User } from '../common/common';
+import { User, UserDetails } from '../common/common';
 import { by, element, browser, ExpectedConditions } from 'protractor';
 import { contains, P } from '../common/world';
 import { log } from '../../src/app/logging';
@@ -39,5 +39,32 @@ export class GithubLogin implements LoginPage {
     } else {
       return P.resolve();
     }
+  }
+}
+
+export class KeycloakDetails {
+
+  loginSelector = 'input#username';
+  emailSelector = 'input#email';
+  firstNameSelector = 'input#firstName';
+  lastNameSelector = 'input#lastName';
+  submitSelector = '#kc-form-buttons > input.btn.btn-primary.btn-lg';
+
+  async submitUserDetails(userDetails: UserDetails): P<any> {
+    const login = element(by.css(this.loginSelector));
+    const email = element(by.css(this.emailSelector));
+    const firstName = element(by.css(this.firstNameSelector));
+    const lastName = element(by.css(this.lastNameSelector));
+    const submit = element(by.css(this.submitSelector));
+
+    browser.wait(ExpectedConditions.presenceOf(login), 10000, 'waiting for Keycloak login field');
+    email.getWebElement().sendKeys(userDetails.email);
+    firstName.getWebElement().sendKeys(userDetails.firstName);
+    lastName.getWebElement().sendKeys(userDetails.lastName);
+    await submit.getWebElement().click();
+
+    const url = await browser.getCurrentUrl();
+    log.info(`Keycloak login, current url: ${url}`);
+    return P.resolve();
   }
 }
