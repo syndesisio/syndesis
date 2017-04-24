@@ -91,6 +91,7 @@ export class DashboardIntegrationsComponent implements OnInit {
     const active = [];
     const draft = [];
     const inactive = [];
+    let total = 0;
 
     this.integrations.forEach(function(a) {
       /* TODO - too noisy
@@ -101,12 +102,15 @@ export class DashboardIntegrationsComponent implements OnInit {
 
       switch (a.currentStatus) {
         case 'Activated':
+          total = total + 1;
           active.push(a);
           break;
         case 'Draft':
+          total = total + 1;
           draft.push(a);
           break;
         case 'Deactivated':
+          total = total + 1;
           inactive.push(a);
           break;
       }
@@ -115,6 +119,7 @@ export class DashboardIntegrationsComponent implements OnInit {
       active: active,
       draft: draft,
       inactive: inactive,
+      total: total,
     };
   }
 
@@ -130,7 +135,9 @@ export class DashboardIntegrationsComponent implements OnInit {
     return this.filterIntegrations().inactive.length;
   }
 
-
+  public countTotalIntegrations() {
+    return this.filterIntegrations().total;
+  }
 
 
   public chartClicked(e: any): void {
