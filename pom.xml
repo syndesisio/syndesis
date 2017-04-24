@@ -125,7 +125,7 @@
     <hibernate.validator.version>5.3.4.Final</hibernate.validator.version>
     <immutables.version>2.4.0</immutables.version>
     <infinispan.version>9.0.0.Final</infinispan.version>
-    <ipaas-connectors.version>0.3.6</ipaas-connectors.version>
+    <ipaas-connectors.version>0.3.7</ipaas-connectors.version>
     <jackson.version>2.8.6</jackson.version>
     <javaee.api.version>7.0</javaee.api.version>
     <junit.version>4.12</junit.version>
