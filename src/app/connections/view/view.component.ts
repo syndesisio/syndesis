@@ -122,7 +122,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   }
 
   get tagsArray(): string[] {
-    return this.connection.tags;
+    return this.connection.tags || [];
   }
 
   get tags(): string {
