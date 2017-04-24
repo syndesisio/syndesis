@@ -1,4 +1,3 @@
-const data = require('../data/users.json').users;
 import { ElementFinder } from 'protractor';
 
 export class User {
@@ -16,6 +15,7 @@ export class User {
     const envPassword = process.env[`IPAAS_${alias.toUpperCase()}_PASSWORD`] || null;
 
     if (envUsername === null || envPassword === null) {
+      const data = require('../data/users.json').users;
       this.username = data[alias].username;
       this.password = data[alias].password;
     } else {
