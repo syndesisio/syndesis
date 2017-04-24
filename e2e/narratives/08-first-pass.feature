@@ -20,16 +20,15 @@ Feature: Sprint 8 narrative
 
     When Camilla selects the "Twitter Example" connection
     And she selects "Mention" integration action
-    And click on the "Next" button
     Then she is prompted to select a "Finish" connection from a list of available connections
 
     When Camilla selects the "Salesforce Example" connection
     And she selects "Create Opportunity" integration action
-    And click on the "Next" button
     Then she is presented with the "Add a Step" button
+    And click on the "Save" button
 
 #    try to publish without integration name will open basics page
-    When Camilla clicks on the "Save" button
+    When Camilla clicks on the "Save as Draft" button
     And she defines integration name "My awesome first integration"
     And click on the "Publish" button
     Then Camilla is presented with the iPaaS page "Integrations"
