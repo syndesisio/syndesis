@@ -26,6 +26,6 @@ public class MentionAddContractRoute extends RouteBuilder {
         from("twitter-mention")
             .log("I was mentioned by ${body}")
             .process("tweetToContactMapper")
-            .to("salesforce-upsert-contact?sObjectIdName=TwitterScreenName__c");
+            .to("salesforce-upsert-contact");
     }
 }
