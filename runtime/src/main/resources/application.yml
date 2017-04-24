@@ -81,7 +81,7 @@ verifier:
   service: ipaas-verifier
 
 generator:
-  secretMaskingEnabled: false
+  secretMaskingEnabled: true
 
 controllers:
   integration:
