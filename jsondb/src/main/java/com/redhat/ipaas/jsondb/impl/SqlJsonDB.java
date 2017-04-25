@@ -20,10 +20,10 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.redhat.ipaas.core.EventBus;
+import com.redhat.ipaas.core.KeyGenerator;
 import com.redhat.ipaas.jsondb.GetOptions;
 import com.redhat.ipaas.jsondb.JsonDB;
 import com.redhat.ipaas.jsondb.JsonDBException;
-import org.keycloak.common.util.Base64;
 import org.skife.jdbi.v2.*;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import org.skife.jdbi.v2.util.IntegerColumnMapper;
@@ -31,12 +31,10 @@ import org.skife.jdbi.v2.util.IntegerColumnMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Random;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -57,18 +55,12 @@ public class SqlJsonDB implements JsonDB {
     private final EventBus bus;
 
     // These values are used to compute a seq key
-    private long lastTimestamp = System.currentTimeMillis();
-    private final byte randomnessByte;
-    private long randomnessLong;
     private DatabaseKind databaseKind = DatabaseKind.PostgreSQL;
 
     public SqlJsonDB(DBI dbi, EventBus bus) {
         this.dbi = dbi;
         this.bus = bus;
 
-        Random random = new Random();
-        randomnessByte = (byte) random.nextInt();
-        randomnessLong = random.nextLong();
 
         // Lets find out the type of DB we are working with.
         withTransaction(x -> {
@@ -109,32 +101,11 @@ public class SqlJsonDB implements JsonDB {
         });
     }
 
-
     @Override
     public String createKey() {
-        long timeStamp = System.currentTimeMillis();
-        long randomnessLong = 0;
-        // lets make sure we don't create dup keys
-        synchronized (this) {
-            if( timeStamp == lastTimestamp ) {
-                // increment the randomness.
-                this.randomnessLong ++;
-            } else {
-                lastTimestamp = timeStamp;
-            }
-            randomnessLong = this.randomnessLong;
-        }
-        ByteBuffer buffer = ByteBuffer.wrap(new byte[8 + 1 + 8]);
-        buffer.putLong(timeStamp);
-        buffer.put(randomnessByte);
-        buffer.putLong(randomnessLong);
-
-        try {
-            return Base64.encodeBytes(buffer.array(), 2, 15, Base64.ORDERED);
-        } catch (IOException e) {
-            throw new JsonDBException(e);
-        }
+        return KeyGenerator.createKey();
     }
+
     @Override
     public Consumer<OutputStream> getAsStreamingOutput(String path, GetOptions options) {
 
