@@ -140,6 +140,7 @@
     <spring-cloud.version>Camden.SR5</spring-cloud.version>
     <spring-cloud-kubernetes.version>0.1.5</spring-cloud-kubernetes.version>
     <swagger.version>1.5.12</swagger.version>
+    <atlasmap.version>1.10.0</atlasmap.version>
 
     <!-- maven plugin version -->
     <maven-dependency-plugin.version>3.0.0</maven-dependency-plugin.version>
