@@ -209,8 +209,10 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     private io.fabric8.funktion.model.steps.Step createEndpointStep(Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws IOException, URISyntaxException {
-        Map<String, String> properties = aggregate(connectionConfiguredProperties, stepConfiguredProperties);
-        Map<String, String> secrets = connector.filterSecrets(properties, e -> String.format(PLACEHOLDER_FORMAT, e.getKey()));
+        Map<String, String> properties = connector.filterProperties(aggregate(connectionConfiguredProperties, stepConfiguredProperties), connector.isEndpointProperty());
+        Map<String, String> secrets = connector.filterProperties(properties, connector.isSecret(),
+            e -> e.getKey(),
+            e -> String.format(PLACEHOLDER_FORMAT, camelConnectorPrefix + "." + e.getKey()));
 
         // TODO Remove this hack... when we can read endpointValues from connector schema then we should use those as initial properties.
         if ("periodic-timer".equals(camelConnectorPrefix)) {

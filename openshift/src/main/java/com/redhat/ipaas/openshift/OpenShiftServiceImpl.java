@@ -48,7 +48,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             DockerImage img = new DockerImage(config.getBuilderImage());
             ensureImageStreams(openShiftClient, sanitizedName, img);
             ensureDeploymentConfig(openShiftClient, sanitizedName, config.getIntegrationServiceAccount());
-            ensureSecret(openShiftClient, sanitizedName, d.getSecretData().orElseGet(HashMap::new));
+            ensureSecret(openShiftClient, sanitizedName, d.getApplicationProperties().orElseGet(HashMap::new));
             ensureBuildConfig(openShiftClient, sanitizedName,
                 d.getGitRepository().orElseThrow(()-> new IllegalStateException("Git repository is required")),
                 img,

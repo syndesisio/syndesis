@@ -92,7 +92,7 @@ public class DefaultProjectGeneratorTest {
     @Test
     public void testConverterWithPasswordMasking() throws Exception {
         Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("com.redhat.ipaas:timer-connector:0.3.3").build()).build();
-        Step step2 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("httpUri", "http://localhost:8080/hello", "username", "admin", "password", "admin")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-get").camelConnectorGAV("com.redhat.ipaas:http-get-connector:0.3.3").build()).build();
+        Step step2 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("httpUri", "http://localhost:8080/hello", "username", "admin", "password", "admin", "token", "mytoken")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-get").camelConnectorGAV("com.redhat.ipaas:http-get-connector:0.3.3").build()).build();
 
         GenerateProjectRequest request = ImmutableGenerateProjectRequest
             .builder()

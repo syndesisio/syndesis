@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.redhat.ipaas.model.Kind;
 import com.redhat.ipaas.model.WithId;
 import com.redhat.ipaas.model.WithName;
+import com.redhat.ipaas.model.WithProperties;
+
 import org.immutables.value.Value;
 
 import java.io.Serializable;
@@ -26,7 +28,7 @@ import java.util.Map;
 
 @Value.Immutable
 @JsonDeserialize(builder = Action.Builder.class)
-public interface Action extends WithId<Action>, WithName, Serializable {
+public interface Action extends WithId<Action>, WithName, WithProperties, Serializable {
 
     @Override
     default Kind getKind() {
@@ -34,8 +36,6 @@ public interface Action extends WithId<Action>, WithName, Serializable {
     }
 
     String getConnectorId();
-
-    Map<String, ComponentProperty> getProperties();
 
     String getDescription();
 

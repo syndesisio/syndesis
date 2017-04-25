@@ -19,8 +19,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(builder = ComponentProperty.Builder.class)
-public interface ComponentProperty {
+@JsonDeserialize(builder = ConfigurationProperty.Builder.class)
+public interface ConfigurationProperty {
 
     String getKind();
     String getDisplayName();
@@ -31,10 +31,11 @@ public interface ComponentProperty {
     String getJavaType();
     Boolean getDeprecated();
     Boolean getSecret();
+    Boolean getComponentProperty();
     String getDescription();
     String getDefaultValue();
 
-    class Builder extends ImmutableComponentProperty.Builder {
+    class Builder extends ImmutableConfigurationProperty.Builder {
     }
 
 }
