@@ -69,7 +69,7 @@ jobs:
             exit 0
           fi
 
-          curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}-ce.tgz | tar xz -C /usr/bin --strip-components 1
+          curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
 
           yarn ng build -- --aot --prod --progress=false
           docker build -t rhipaas/ipaas-ui:${DOCKER_IMAGE_TAG} . | cat -
