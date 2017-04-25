@@ -56,7 +56,6 @@ public class KeyGenerator {
     }
 
     protected synchronized static long getRandomPart(long timeStamp) {
-        long localLong;
         if( timeStamp == lastTimestamp ) {
             // increment the randomness.
             randomnessLong ++;
