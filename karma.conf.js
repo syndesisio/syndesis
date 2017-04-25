@@ -1,6 +1,3 @@
-const COVERAGE_OUTPUT_DIR = process.env.CIRCLE_ARTIFACTS || '.';
-const REPORT_OUTPUT_DIR = process.env.CIRCLE_TEST_REPORTS || '.';
-
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -25,11 +22,11 @@ module.exports = function (config) {
       'text/x-typescript': ['ts', 'tsx']
     },
     remapIstanbulReporter: {
-      reports: [ 'html', 'lcovonly' ],
+      reports: ['html', 'lcovonly'],
       fixWebpackSourcePaths: true
     },
     junitReporter: {
-      outputDir: REPORT_OUTPUT_DIR + '/junit'
+      outputDir: './junit'
     },
     angularCli: {
       config: './angular-cli.json',
