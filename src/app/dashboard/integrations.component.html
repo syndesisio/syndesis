@@ -87,38 +87,37 @@
 
                 <div class="col-xs-3 icons"
                      (click)="goto(integration)">
-                  <div class="list-view-pf-left">
-                    <!--
-                    <span [class]="'fa ' + getStartIcon(integration) + ' list-view-pf-icon-sm'"></span>
-                    <span class="fa fa-angle-right"></span>
-                    <span [class]="'fa ' + getFinishIcon(integration) + ' list-view-pf-icon-sm'"></span>
-                    -->
+                  <div class="col-xs-12">
                     <span class="image-icon"
                           *ngIf="getStart(integration).connection">
-                      <img src="../../../assets/icons/{{ getStart(integration).connection.connectorId }}.integration.png">
+                      <img src="../../../assets/icons/{{ getStart(integration).connection.connectorId }}.integration.png"
+                           class="start">
                     </span>
                     <span class="fa fa-angle-right"></span>
                     <span class="image-icon"
                           *ngIf="getFinish(integration).connection">
-                      <img src="../../../assets/icons/{{ getFinish(integration).connection.connectorId }}.integration.png">
+                      <img src="../../../assets/icons/{{ getFinish(integration).connection.connectorId }}.integration.png"
+                           class="end">
                     </span>
                   </div>
                 </div>
 
                 <!-- Name -->
 
-                <div class="col-xs-4 name"
+                <div class="col-xs-7 name"
                      (click)="goto(integration)">
                   {{ integration.name }}
                 </div>
 
                 <!-- Uses -->
 
+                <!--
                 <div class="col-xs-3 uses"
                      (click)="goto(integration)">
                   <p>{{ integration.timesUsed || 0 }} uses
                   </p>
                 </div>
+                -->
 
                 <!-- Status -->
 
@@ -244,16 +243,16 @@
                    *ngIf="i<5"
                    (click)="goto(integration)">
                 <div class="col-xs-5">
-                  Updated: <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">
+                  <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">
                   {{ integration.name }}
                 </a>
                 </div>
-                <div class="col-xs-4">
+                <div class="col-xs-3">
                   <span [class]="'label ' + getLabelClass(integration)">
                   {{ getStatusText(integration) }}
                 </span>
                 </div>
-                <div class="col-xs-3">
+                <div class="col-xs-4">
                   {{ integration.lastUpdated | date:'d MMM HH:MM' }}
                 </div>
               </div>
