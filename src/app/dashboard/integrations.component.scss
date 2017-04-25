@@ -86,6 +86,7 @@
           canvas {
             width: 80% !important;
             height: 80% !important;
+            z-index: 50;
           }
 
           .total-count {
@@ -142,7 +143,7 @@
     .recent-updates {
       .update {
         border-bottom: 1px solid $pf-black-200;
-        cursor: default;
+        cursor: pointer;
         padding: 10px 0;
 
         &:hover {
@@ -161,6 +162,12 @@
     //----- Top 5 Integrations ----------------->>
 
     .top-integrations {
+      .card-pf-heading-details {
+        float: right;
+        font-size: 12px;
+        margin-bottom: 0;
+      }
+
       .integration {
         cursor: pointer;
         padding: 15px;
@@ -197,22 +204,26 @@
         }
 
         .icons {
-          padding: 0 0 0 6px;
+          overflow: visible;
+          margin: 0;
+          padding: 0;
+          text-align: center;
 
-          .list-view-pf-left {
-            display: table-cell;
-            padding-right: 0;
-            text-align: center;
-            vertical-align: top;
+          .col-xs-12 {
+            padding: 0;
 
-            .fa:first-child, .fa-angle-right {
-              margin-right: 15px;
-            }
+            .image-icon {
+              img {
+                display: inline-block;
 
-            .fa.fa-angle-right {
-              font-size: 18px;
-              margin: 0;
-              padding: 0 10px;
+                &.start {
+                  padding-right: 10px;
+                }
+
+                &.end {
+                  padding-left: 10px;
+                }
+              }
             }
           }
         }
