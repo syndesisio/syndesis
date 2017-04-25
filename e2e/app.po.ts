@@ -1,9 +1,9 @@
 import { by, browser, element, ExpectedConditions, ElementFinder } from 'protractor';
 import * as webdriver from 'selenium-webdriver';
 import { Promise as P } from 'es6-promise';
-import { User } from './common/common';
+import { User, UserDetails } from './common/common';
 import { contains } from './common/world';
-import { GithubLogin } from './login/login.po';
+import { GithubLogin, KeycloakDetails } from './login/login.po';
 import { log } from '../src/app/logging';
 import * as jQuery from 'jquery';
 import WebElement = webdriver.WebElement;
@@ -135,19 +135,20 @@ export class AppPage {
     // wait either for login page or loaded ipaas app
     await P.race([
       browser.wait(ExpectedConditions.presenceOf(this.rootElement), 1000, 'ipaas root element - assuming we are already logged in'),
-      browser.wait(ExpectedConditions.presenceOf(element(by.css('input'))), 1000, 'Some input field - assuming we are on login page'),
+      browser.wait(ExpectedConditions.presenceOf(element(by.css('input#login_field'))), 1000, 'Github login page' ).then(() => {
+        log.info('GitHub login page');
+        return new GithubLogin().login(user);
+      }),
     ]);
 
-    const url = await this.currentUrl();
+    await P.race([
+      browser.wait(ExpectedConditions.presenceOf(this.rootElement), 1000, 'ipaas root element - assuming we are already logged in'),
+      browser.wait(ExpectedConditions.presenceOf(element(by.css('input#firstName'))), 1000, 'Keycloack login page' ).then(() => {
+        log.info('Keycloak first time visit page');
+        return new KeycloakDetails().submitUserDetails(user.userDetails);
+      }),
+    ]);
 
-    if (contains(url, 'github')) {
-      // we need to login on github
-      await new GithubLogin().login(user);
-    } else if (contains(url, browser.baseUrl)) {
-      // pass - we're already logged in
-    } else {
-      return P.reject(`Unsupported login page ${url}`);
-    }
     browser.waitForAngularEnabled(true);
     return this.goToUrl(AppPage.baseurl);
   }
