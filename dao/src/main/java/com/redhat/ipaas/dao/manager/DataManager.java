@@ -18,6 +18,7 @@ package com.redhat.ipaas.dao.manager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.ipaas.core.EventBus;
 import com.redhat.ipaas.core.IPaasServerException;
+import com.redhat.ipaas.core.KeyGenerator;
 import com.redhat.ipaas.dao.init.ModelData;
 import com.redhat.ipaas.dao.init.ReadApiClientData;
 import com.redhat.ipaas.model.ChangeEvent;
@@ -123,23 +124,6 @@ public class DataManager implements DataAccessObjectRegistry {
         }
     }
 
-    /**
-     * Simple generator to mimic behavior in api-client project. When we start
-     * hooking up the back-end systems we may need to query those for the PK
-     *
-     * @param entityMap
-     * @return
-     */
-    public String generatePK(Cache<String, WithId> entityMap) {
-        int counter = 1;
-        while (true) {
-            String pk = String.valueOf(entityMap.size() + counter++);
-            if (!entityMap.containsKey(pk)) {
-                return pk;
-            }
-        }
-    }
-
     @SuppressWarnings("unchecked")
     public <T extends WithId> ListResult<T> fetchAll(Class<T> model, Function<ListResult<T>, ListResult<T>>... operators) {
 
@@ -178,7 +162,7 @@ public class DataManager implements DataAccessObjectRegistry {
         Optional<String> id = entity.getId();
         String idVal;
         if (!id.isPresent()) {
-            idVal = generatePK(cache);
+            idVal = KeyGenerator.createKey();
             entity = (T) entity.withId(idVal);
         } else {
             idVal = id.get();
