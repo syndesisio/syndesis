@@ -15,20 +15,13 @@
  */
 package com.redhat.ipaas.runtime;
 
-import com.redhat.ipaas.core.IPaasServerException;
-import com.redhat.ipaas.core.Json;
-import com.redhat.ipaas.dao.manager.DataManager;
-import com.redhat.ipaas.jsondb.JsonDB;
 import com.redhat.ipaas.jsondb.impl.SqlJsonDB;
 import org.skife.jdbi.v2.DBI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.io.IOException;
 
 /**
  * Creates and configures a DBI object
