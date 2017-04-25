@@ -208,19 +208,6 @@
           "secret": true,
           "componentProperty": true,
           "description": "Password used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows. Make sure that you append security token to the end of the password if using one."
-        },
-        "sObjectIdName": {
-          "kind": "parameter",
-          "displayName": "SObject Id Name",
-          "group": "common",
-          "required": false,
-          "type": "string",
-          "javaType": "java.lang.String",
-          "deprecated": false,
-          "secret": false,
-          "componentProperty": false,
-          "defaultValue": "TwitterScreenName__c",
-          "description": "SObject external ID field name"
         }
       },
       "actions": [
@@ -236,6 +223,19 @@
              "kind" : "none"
           },
           "properties": {
+            "sObjectIdName": {
+              "kind": "parameter",
+              "displayName": "SObject Id Name",
+              "group": "common",
+              "required": false,
+              "type": "string",
+              "javaType": "java.lang.String",
+              "deprecated": false,
+              "secret": false,
+              "componentProperty": false,
+              "defaultValue": "TwitterScreenName__c",
+              "description": "SObject external ID field name"
+            }
           },
           "camelConnectorGAV": "com.redhat.ipaas:salesforce-upsert-contact-connector:@ipaas-connectors.version@",
           "camelConnectorPrefix": "salesforce-upsert-contact"
