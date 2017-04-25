@@ -174,7 +174,13 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   getFormConfig(connection: Connection) {
     // TODO this either shouldn't be null or we need to just fetch the connector in a separate call
     if (connection.connector) {
-      return JSON.parse(JSON.stringify(connection.connector.properties));
+      const props = JSON.parse(JSON.stringify(connection.connector.properties));
+      if (connection.configuredProperties) {
+        Object.keys(connection.configuredProperties).forEach((key) => {
+          props[key].value = connection.configuredProperties[key];
+        });
+      }
+      return props;
     }
     return {};
   }
