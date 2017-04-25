@@ -3,7 +3,7 @@
 This project offers the online verification of https://github.com/syndesisio/connectors[Camel Connectors]. It provides a single Endpoint
 
 ```
-/verify
+/api/v1/verifier
 ```
 
 which take connector specific parameters as input and returns the result of the verification.
