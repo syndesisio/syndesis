@@ -121,6 +121,11 @@ export class AppPage {
     return element(by.className(elementClassName));
   }
 
+  getTitleByText(text: string): ElementFinder {
+    log.info(`searching for title ${text}`);
+    return element(by.cssContainingText('h2', text));
+  }
+
   async link(title: String): P<NavLink> {
     const links = await this.findNavLinks();
     return links.filter(l => l.text === title)[0];

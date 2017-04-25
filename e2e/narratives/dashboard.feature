@@ -8,7 +8,7 @@ Feature: Test to verify Dashboard links
     
   Scenario: Verify dashboard cards existence
     When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
-    Then she is presented with the "top-integrations,integration-board,recent-updates,ipaas-dashboard-connections" elements
+    Then she is presented with the "Top 5 Integrations, Integration Board, Recent Updates" tables
 
   Scenario: Verify dashboard links existence
     When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS

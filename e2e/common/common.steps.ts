@@ -102,6 +102,26 @@ class CommonSteps {
       .to.eventually.be.true.notify(callback);
   }
 
+  @then(/^she is presented with the "([^"]*)" tables*$/)
+  public expectTableTitlesPresent(tableTitles: string, callback: CallbackStepDefinition): void {
+
+    const tableTitlesArray = tableTitles.split(', ');
+
+    for (const tableTitle of tableTitlesArray) {
+      this.expectTableTitlePresent(tableTitle, callback);
+    }
+  }
+
+  public expectTableTitlePresent(tableTitle: string, callback: CallbackStepDefinition): void {
+
+    const table = this.world.app.getTitleByText(tableTitle);
+    expect(table.isPresent(), `There must be present a table ${tableTitle}`)
+      .to.eventually.be.true;
+
+    expect(table.isPresent(), `There must be enabled table ${tableTitle}`)
+      .to.eventually.be.true.notify(callback);
+  }
+
   @then(/^she is presented with the "([^"]*)" elements*$/)
   public expectElementsPresent(elementClassNames: string, callback: CallbackStepDefinition): void {
 
