@@ -6,6 +6,19 @@
       "description": "Http Connector",
       "icon": "http",
       "properties": {
+        "httpUri": {
+          "kind": "path",
+          "displayName": "Http Uri",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.net.URI",
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": false,
+          "description": "The url of the HTTP endpoint to call."
+        },
         "username": {
           "kind": "property",
           "displayName": "Username",
@@ -16,6 +29,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
+          "componentProperty": false,
           "description": "The username"
         },
         "password": {
@@ -28,7 +42,21 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
+          "componentProperty": false,
           "description": "The password"
+        },
+        "token": {
+          "kind": "property",
+          "displayName": "Token",
+          "group": "security",
+          "label": "security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "componentProperty": true,
+          "description": "The token"
         }
       }
   },
@@ -38,6 +66,20 @@
       "name": "Timer",
       "description": "Timer Connector",
       "icon": "fa-puzzle-piece",
-      "properties": {}
+      "properties": {
+        "period": {
+          "kind": "parameter",
+          "displayName": "Period",
+          "group": "consumer",
+          "required": false,
+          "type": "integer",
+          "javaType": "long",
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": false,
+          "defaultValue": 10000,
+          "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+        }
+      }
     }
 }

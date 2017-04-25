@@ -94,7 +94,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
             String gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
             log.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
 
-            ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, extractSecretsFrom(integration));
+            ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, extractApplicationPropertiesFrom(integration));
             log.info("{} : Created OpenShift resources", getLabel(integration));
         } else {
             log.info("{} : Skipping project generation because integration is in status {}",
@@ -178,17 +178,25 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return dataManager.fetchAll(Connector.class).getItems().stream().collect(Collectors.toMap(o -> o.getId().get(), o -> o));
     }
 
-    private void ensureOpenShiftResources(String integrationName, String gitCloneUrl, String webHookSecret, Map<String, String> secretData) {
+    private void ensureOpenShiftResources(String integrationName, String gitCloneUrl, String webHookSecret, Map<String, String> applicationProperties) {
         openShiftService.create(
             ImmutableOpenShiftDeployment.builder()
                                         .name(integrationName)
                                         .gitRepository(gitCloneUrl)
                                         .webhookSecret(webHookSecret)
-                                        .secretData(secretData)
+                                        .applicationProperties(applicationProperties)
                                         .build());
     }
 
-    private Map<String, String> extractSecretsFrom(Integration integration) {
+    /**
+     * Creates a {@link Map} that contains all the configuration that corresponds to application.properties.
+     * The configuration should include:
+     *  i) component properties
+     *  ii) sensitive endpoint properties that should be masked.
+     * @param integration
+     * @return
+     */
+    private Map<String, String> extractApplicationPropertiesFrom(Integration integration) {
         Map<String, String> secrets = new HashMap<>();
         Map<String, Connector> connectorMap = fetchConnectorsMap();
 
@@ -201,9 +209,30 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                             if (!connectorMap.containsKey(connectorId)) {
                                 throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
                             }
+                            String prefix = action.getCamelConnectorPrefix();
                             Connector connector = connectorMap.get(connectorId);
-                            secrets.putAll(connector.filterSecrets(connection.getConfiguredProperties()));
-                            secrets.putAll(connector.filterSecrets(step.getConfiguredProperties().orElse(new HashMap<String,String>())));
+
+                            //Handle component data
+                            secrets.putAll(connector.filterProperties(connection.getConfiguredProperties(),
+                                connector.isComponentProperty(),
+                                e -> prefix + "." + e.getKey(),
+                                e -> e.getValue()));
+
+                            secrets.putAll(connector.filterProperties(step.getConfiguredProperties().orElse(new HashMap<String,String>()),
+                                connector.isComponentProperty(),
+                                e -> prefix + "." + e.getKey(),
+                                e -> e.getValue()));
+
+                            //Handle sensitive data
+                            secrets.putAll(connector.filterProperties(connection.getConfiguredProperties(),
+                                connector.isSecret(),
+                                e -> prefix + "." + e.getKey(),
+                                e -> e.getValue()));
+
+                            secrets.putAll(connector.filterProperties(step.getConfiguredProperties().orElse(new HashMap<String,String>()),
+                                connector.isSecret(),
+                                e -> prefix + "." + e.getKey(),
+                                e -> e.getValue()));
                         });
                     });
                     continue;

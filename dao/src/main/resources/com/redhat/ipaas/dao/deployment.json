@@ -17,6 +17,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
+          "componentProperty": true,
           "description": "The access token"
         },
         "accessTokenSecret": {
@@ -29,6 +30,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
+          "componentProperty": true,
           "description": "The access token secret"
         },
         "consumerKey": {
@@ -41,6 +43,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
+          "componentProperty": true,
           "description": "The consumer key"
         },
         "consumerSecret": {
@@ -53,6 +56,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
+          "componentProperty": true,
           "description": "The consumer secret"
         }
       },
@@ -130,50 +134,93 @@
           "kind": "property",
           "displayName": "Login Url",
           "group": "security",
-          "label": "security",
-          "required": false,
+          "label": "common,security",
+          "required": true,
           "type": "string",
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": false,
+          "componentProperty": true,
           "defaultValue": "https://login.salesforce.com",
-          "description": "Salesforce login URL defaults to https://login.salesforce.com"
+          "description": "URL of the Salesforce instance by default set to https://login.salesforce.com"
         },
         "clientId": {
           "kind": "property",
           "displayName": "Client Id",
           "group": "security",
-          "label": "security",
-          "required": false,
+          "label": "common,security",
+          "required": true,
           "type": "string",
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
-          "description": "Salesforce connected application Consumer Key"
+          "componentProperty": true,
+          "description": "OAuth Consumer Key of the connected app configured in the Salesforce instance setup. Typically a connected app needs to be configured but one can be provided by installing a package."
         },
         "clientSecret": {
           "kind": "property",
           "displayName": "Client Secret",
           "group": "security",
-          "label": "security",
+          "label": "common,security",
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
-          "description": "Salesforce connected application Consumer Secret"
+          "componentProperty": true,
+          "description": "OAuth Consumer Secret of the connected app configured in the Salesforce instance setup."
         },
         "refreshToken": {
           "kind": "property",
           "displayName": "Refresh Token",
           "group": "security",
-          "label": "security",
+          "label": "common,security",
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
-          "description": "Salesforce connected application Consumer token"
+          "componentProperty": true,
+          "description": "Refresh token already obtained in the refresh token OAuth flow. One needs to setup a web application and configure a callback URL to receive the refresh token or configure using the builtin callback at https://login.salesforce.com/services/oauth2/success or https://test.salesforce.com/services/oauth2/success and then retrive the refresh_token from the URL at the end of the flow. Note that in development organizations Salesforce allows hosting the callback web application at localhost."
+        },
+        "userName": {
+          "kind": "property",
+          "displayName": "User Name",
+          "group": "security",
+          "label": "common,security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "componentProperty": true,
+          "description": "Username used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows."
+        },
+        "password": {
+          "kind": "property",
+          "displayName": "Password",
+          "group": "security",
+          "label": "common,security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "componentProperty": true,
+          "description": "Password used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows. Make sure that you append security token to the end of the password if using one."
+        },
+        "sObjectIdName": {
+          "kind": "parameter",
+          "displayName": "SObject Id Name",
+          "group": "common",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": false,
+          "defaultValue": "TwitterScreenName__c",
+          "description": "SObject external ID field name"
         }
       },
       "actions": [
@@ -262,6 +309,7 @@
               "javaType": "java.net.URI",
               "deprecated": false,
               "secret": false,
+              "componentProperty": false,
               "description": "The url of the HTTP endpoint to call."
             }
           },
@@ -289,6 +337,7 @@
               "javaType": "java.net.URI",
               "deprecated": false,
               "secret": false,
+              "componentProperty": false,
               "description": "The url of the HTTP endpoint to call."
             }
           },
@@ -327,6 +376,7 @@
               "javaType": "long",
               "deprecated": false,
               "secret": false,
+              "componentProperty": false,
               "defaultValue": 10000,
               "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
             }
@@ -355,6 +405,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": false,
+          "componentProperty": false,
           "description": "Host and port of HTTP service to use (override host in swagger schema)"
         },
         "api_key": {
@@ -367,6 +418,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
+          "componentProperty": false,
           "description": "The API Key used to access the service"
         }
       },
@@ -440,6 +492,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": false,
+          "componentProperty": false,
           "description": "Host and port of HTTP service to use (override host in swagger schema)"
         },
         "api_key": {
@@ -452,6 +505,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
+          "componentProperty": false,
           "description": "The API Key used to access the service"
         }
       },

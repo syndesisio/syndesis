@@ -31,7 +31,7 @@ public interface OpenShiftDeployment {
     Optional<String> getToken();
     Optional<String> getGitRepository();
     Optional<String> getWebhookSecret();
-    Optional<Map<String, String>> getSecretData();
+    Optional<Map<String, String>> getApplicationProperties();
 
     default RequestConfig getRequestConfig() {
         return new RequestConfigBuilder().withOauthToken(getToken().orElse(null)).build();
