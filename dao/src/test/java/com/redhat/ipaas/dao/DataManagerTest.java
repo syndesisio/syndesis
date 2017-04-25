@@ -44,6 +44,7 @@ public class DataManagerTest {
         //Create Data Manager
         dataManager = new DataManager(infinispan.getCaches(), objectMapper, new ArrayList<>(), "com/redhat/ipaas/dao/deployment.json");
         dataManager.init();
+        dataManager.resetDeploymentData();
     }
 
     @Test

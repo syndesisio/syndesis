@@ -75,7 +75,9 @@ public class DataManager implements DataAccessObjectRegistry {
         for (DataAccessObject dataAccessObject : dataAccessObjects) {
             registerDataAccessObject(dataAccessObject);
         }
+    }
 
+    public void resetDeploymentData() {
         if (dataFileName != null) {
             ReadApiClientData reader = new ReadApiClientData();
             try {
@@ -140,13 +142,14 @@ public class DataManager implements DataAccessObjectRegistry {
 
     @SuppressWarnings("unchecked")
     public <T extends WithId> ListResult<T> fetchAll(Class<T> model, Function<ListResult<T>, ListResult<T>>... operators) {
-        Kind kind = Kind.from(model);
-        Cache<String, WithId> cache = caches.getCache(kind.getModelName());
 
-        ListResult<T> result = ListResult.of((Collection<T>) cache.values());
-         
-        if( result == null ) {
+        ListResult<T> result;
+        if( getDataAccessObject(model)!=null ) {
             result = (ListResult<T>) doWithDataAccessObject(model, d -> d.fetchAll());
+        } else {
+            Kind kind = Kind.from(model);
+            Cache<String, WithId> cache = caches.getCache(kind.getModelName());
+            result = ListResult.of((Collection<T>) cache.values());
         }
 
         for (Function<ListResult<T>, ListResult<T>> operator : operators) {
@@ -222,13 +225,13 @@ public class DataManager implements DataAccessObjectRegistry {
 
         // Remove it out of the cache
         WithId entity = cache.remove(id);
+        boolean deletedInCache = entity != null;
+
         // And out of the DAO
-        boolean deletedInDAO = entity != null && Optional.ofNullable(
-            doWithDataAccessObject(model, d -> d.delete(entity))
-        ).orElse(Boolean.FALSE).booleanValue();
+        boolean deletedFromDAO = doWithDataAccessObject(model, d -> d.delete(id)) == Boolean.TRUE;
 
         // Return true if the entity was found in any of the two.
-        if ( deletedInDAO || entity != null ) {
+        if ( deletedInCache || deletedFromDAO ) {
             broadcast("deleted", kind.getModelName(), id);
             return true;
         } else {
