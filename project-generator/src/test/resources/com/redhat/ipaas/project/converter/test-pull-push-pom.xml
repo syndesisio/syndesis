@@ -16,6 +16,7 @@
     <spring-cloud-kubernetes.version>0.1.5</spring-cloud-kubernetes.version>
     <camel.version>@camel.version@</camel.version>
     <funktion.version>1.1.55</funktion.version>
+    <atlasmap.version>@atlasmap.version@</atlasmap.version>
   </properties>
 
   <repositories>
@@ -108,7 +109,7 @@
     <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>camel-atlasmap</artifactId>
-      <version>1.10.0-SNAPSHOT</version>
+      <version>${atlasmap.version}</version>
     </dependency>
 
     <!-- connectors used in this integration -->
