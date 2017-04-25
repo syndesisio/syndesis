@@ -66,6 +66,8 @@ jobs:
               exit 0
             fi
 
+            curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
+
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               DOCKER_IMAGE_TAG="latest"
             elif [ "${CIRCLE_BRANCH}" == "summit-demo" ]; then
@@ -78,8 +80,6 @@ jobs:
             if [ -z "${DOCKER_IMAGE_TAG}" ]; then
               exit 0
             fi
-
-            curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
 
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
             docker push rhipaas/ipaas-rest:${DOCKER_IMAGE_TAG} | cat -
