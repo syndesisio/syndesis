@@ -65,7 +65,15 @@ public class ConnectorCatalog {
     }
 
     public String buildEndpointUri(String scheme, Map<String, String> options) throws URISyntaxException {
-        return camelCatalog.asEndpointUri(scheme, options, false);
+        String result = camelCatalog.asEndpointUri(scheme, options, false);
+        // we need to strip off the colon bit.
+        if( result.equals(scheme+":")) {
+            result = scheme;
+        }
+        if( result.startsWith(scheme+":?")) {
+            result = scheme+result.substring(scheme.length()+1);
+        }
+        return result;
     }
 
 }
