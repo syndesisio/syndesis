@@ -1,0 +1,84 @@
+version: 2
+jobs:
+  build:
+    working_directory: /workspace
+    docker:
+    - image: node:7.9
+    environment:
+      CHROME_BIN: /usr/bin/chromium
+      DOCKER_VERSION: 17.04.0-ce
+
+    steps:
+    - run:
+        name: Install Chromium and Xvfb
+        command: apt-get update -qq && apt-get install -qq -y chromium Xvfb > /dev/null
+
+    - setup_remote_docker
+
+    - checkout
+
+    - restore_cache:
+        key: ipaas-ui-{{ checksum "package.json" }}
+
+    - run:
+        name: Install Dependencies
+        command: yarn install --no-progress
+
+    - save_cache:
+        key: ipaas-ui-{{ checksum "package.json" }}
+        paths:
+        - ~/.yarn
+        - ~/.cache/yarn
+
+    - run:
+        name: Run unit tests
+        command: |
+          rm -Rf ./coverage ./junit
+          mkdir ./coverage ./junit
+          ./karma-xvfb.sh
+
+    - store_test_results:
+        path: ./junit
+
+    - run:
+        name: Lint
+        command: yarn ng lint
+
+    - store_artifacts:
+        path: ./dist
+    - store_artifacts:
+        path: ./coverage
+    - store_artifacts:
+        path: ./junit
+
+    - deploy:
+        command: |
+          if [ "${CIRCLE_PROJECT_USERNAME}" != "redhat-ipaas" ]; then
+            exit 0
+          fi
+
+          if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            DOCKER_IMAGE_TAG="latest"
+          elif [ "${CIRCLE_BRANCH}" == "summit-demo" ]; then
+            DOCKER_IMAGE_TAG="${CIRCLE_BRANCH}"
+          elif [[ "${CIRCLE_TAG}" =~ "^v[0-9]+(\.[0-9]+){2}" ]]; then
+            DOCKER_IMAGE_TAG="${CIRCLE_TAG}"
+          fi
+
+          if [ -z "${DOCKER_IMAGE_TAG}" ]; then
+            exit 0
+          fi
+
+          curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
+
+          yarn ng build -- --aot --prod --progress=false
+          docker build -t rhipaas/ipaas-ui:${DOCKER_IMAGE_TAG} . | cat -
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
+          docker push rhipaas/ipaas-ui:${DOCKER_IMAGE_TAG} | cat -
+
+          if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            curl -fsSL https://github.com/openshift/origin/releases/download/v1.5.0/openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz | tar xz -C /usr/bin --strip-components 1
+            oc login --server=${OPENSHIFT_APISERVER} --token=${OPENSHIFT_TOKEN}
+            oc project ipaas-staging
+            oc import-image rhipaas/ipaas-ui:${DOCKER_IMAGE_TAG}
+          fi

@@ -7,5 +7,9 @@ ol {
 
   &.breadcrumb {
     padding: 0;
+
+    li {
+      cursor: default;
+    }
   }
 }

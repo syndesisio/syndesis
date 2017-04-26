@@ -1,12 +1,12 @@
 /**
  * Created by jludvice on 8.3.17.
  */
-import { CallbackStepDefinition } from 'cucumber';
+import { CallbackStepDefinition, TableDefinition } from 'cucumber';
 import { browser } from 'protractor';
 import { binding, given, then, when } from 'cucumber-tsflow';
 import { Promise as P } from 'es6-promise';
 import { expect, World } from './world';
-import { User } from './common';
+import { User, UserDetails } from './common';
 import { log } from '../../src/app/logging';
 /**
  * Generic steps that can be used in various features
@@ -21,14 +21,14 @@ class CommonSteps {
 
   @given(/^credentials for "([^"]*)"$/)
   public loadCredentials(alias: string, callback: CallbackStepDefinition): void {
-    this.world.user = new User(alias.toLowerCase(), 'asdfadf');
+    this.world.user = new User(alias.toLowerCase(), 'asdfadf', null);
     log.info(`using alias ${alias} with login ${this.world.user.username}`);
     callback();
   }
 
   @when(/^"(\w+)" logs into the iPaaS.*$/i)
   public login(alias: string): P<any> {
-    this.world.user = new User(alias.toLowerCase(), 'asdfadf');
+    this.world.user = new User(alias.toLowerCase(), 'asdfadf', null);
     // return this.app.login(this.world.user);
     return this.world.app.login(this.world.user);
   }

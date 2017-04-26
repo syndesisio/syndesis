@@ -6,7 +6,7 @@ import { DynamicFormControlModel, DynamicFormService, DynamicInputModel } from '
 
 import { FormFactoryService } from '../../common/forms.service';
 import { ConnectorStore } from '../../store/connector/connector.store';
-import { Connection, Connectors, Connector, Tag, TypeFactory } from '../../model';
+import { Connection, Connectors, Connector, TypeFactory } from '../../model';
 import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
 import { log, getCategory } from '../../logging';
@@ -122,7 +122,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   }
 
   get tagsArray(): string[] {
-    return (this.connection.tags || []).map((tag) => tag.name);
+    return this.connection.tags || [];
   }
 
   get tags(): string {
@@ -130,7 +130,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   }
 
   set tags(tags: string) {
-    this.connection.tags = tags.split(',').map((str) => <Tag> { name: str.trim() });
+    this.connection.tags = tags.split(',').map((str) => str.trim());
     this.connectionChange.emit(this.connection);
   }
 
@@ -174,7 +174,15 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   getFormConfig(connection: Connection) {
     // TODO this either shouldn't be null or we need to just fetch the connector in a separate call
     if (connection.connector) {
-      return JSON.parse(JSON.stringify(connection.connector.properties));
+      const props = JSON.parse(JSON.stringify(connection.connector.properties));
+      if (connection.configuredProperties) {
+        Object.keys(connection.configuredProperties).forEach((key) => {
+          props[key].value = connection.configuredProperties[key];
+        });
+      } else {
+        connection.configuredProperties = {};
+      }
+      return props;
     }
     return {};
   }
@@ -202,6 +210,11 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     if (formModel) {
       this._formGroup = this.formService.createFormGroup(formModel);
       this.formChangesSubscription = this._formGroup.valueChanges.subscribe((data) => {
+        Object.keys(data).forEach((key) => {
+          if (data[key] === null) {
+            delete data[key];
+          }
+        });
         this.connection.configuredProperties = data;
         this.connectionChange.emit(this.connection);
       });

@@ -3,6 +3,7 @@ import { Pipe } from '@angular/core';
 export class ObjectPropertyFilterConfig {
   filter: any;
   propertyName: string;
+  exact?: boolean;
 }
 
 
@@ -33,6 +34,9 @@ export class ObjectPropertyFilterPipe {
       }
       switch (typeof config.filter) {
         case 'string':
+          if (config.exact && config.filter.length > 0) {
+            return (<string>value) === config.filter;
+          }
           return (<string>value).toLowerCase().indexOf(config.filter.toLowerCase()) !== -1;
         case 'function':
           return config.filter(value);

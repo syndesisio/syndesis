@@ -30,10 +30,28 @@
       //----- Group 1: Icons ----------------->>
 
       &.icons {
-        padding: 1px;
+        overflow: visible;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        width: 13%;
 
-        [class^=" col-"], [class*=" col-"] {
+        .col-xs-12 {
           padding: 0;
+
+          .image-icon {
+            img {
+              display: inline-block;
+
+              &.start {
+                padding-right: 10px;
+              }
+
+              &.end {
+                padding-left: 10px;
+              }
+            }
+          }
         }
 
         .fa {
@@ -41,11 +59,9 @@
 
           &.fa-angle-right {
             font-size: 18px;
+            margin: 0;
+            padding: 0 10px;
           }
-        }
-        .image-icon > img {
-          width: 32px;
-          height: 32px;
         }
       }
 
@@ -75,17 +91,48 @@
 
         .active-inactive {
           padding: 5px;
+          text-align: center;
+
+          // In Progress State
 
           .in-progress {
+            margin: 0 auto;
+
             h3 {
               font-size: 12px;
               margin: 0;
             }
           }
 
-          .label {
-            padding: 6px;
-            cursor: pointer;
+          // Non-Pending States
+
+          .not-pending {
+            display: inline-block;
+            margin: 0 auto;
+            padding: 0 25px;
+
+            .label {
+              cursor: pointer;
+              padding: 6px;
+
+              &.label-custom {
+                background: $pf-black-300;
+                color: #000000;
+              }
+            }
+          }
+
+        }
+
+        .pass-fail {
+          i {
+            font-size: 16px;
+          }
+        }
+
+        .uses {
+          p {
+            margin: 0;
           }
         }
       }

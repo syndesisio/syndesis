@@ -77,7 +77,6 @@
 
         .chart {
           flex-grow: 1;
-          //margin-bottom: -5em;
           display: flex;
           justify-content: center;
           flex-direction: column;
@@ -87,6 +86,7 @@
           canvas {
             width: 80% !important;
             height: 80% !important;
+            z-index: 50;
           }
 
           .total-count {
@@ -118,20 +118,14 @@
             padding: 9px;
 
             &.active {
-              background: $pf-green-400;
-            }
-
-            &.deleted {
-              background: $pf-orange-400;
-            }
-
-            &.draft {
               background: $pf-blue-400;
             }
 
+            &.draft {
+              background: $pf-orange-400;
+            }
+
             &.inactive {
-              //background: $pf-black-200;
-              //background: $pf-custom-gray;
               background: $pf-black-300;
             }
           }
@@ -149,7 +143,7 @@
     .recent-updates {
       .update {
         border-bottom: 1px solid $pf-black-200;
-        cursor: default;
+        cursor: pointer;
         padding: 10px 0;
 
         &:hover {
@@ -168,12 +162,17 @@
     //----- Top 5 Integrations ----------------->>
 
     .top-integrations {
+      .card-pf-heading-details {
+        float: right;
+        font-size: 12px;
+        margin-bottom: 0;
+      }
+
       .integration {
         cursor: pointer;
         padding: 15px;
 
         &:hover {
-          //background: rgba(214, 238, 250, 0.36);
           background: $pf-blue-50;
         }
 
@@ -183,6 +182,10 @@
 
           ul {
             cursor: pointer;
+          }
+
+          .btn {
+            margin: 10px 5px 4px;
           }
         }
 
@@ -205,20 +208,26 @@
         }
 
         .icons {
-          padding: 0 0 0 6px;
+          overflow: visible;
+          margin: 0;
+          padding: 0;
+          text-align: center;
 
-          .list-view-pf-left {
-            display: table-cell;
-            padding-right: 0;
-            text-align: center;
-            vertical-align: top;
+          .col-xs-12 {
+            padding: 0;
 
-            .fa:first-child, .fa-angle-right {
-              margin-right: 15px;
-            }
+            .image-icon {
+              img {
+                display: inline-block;
 
-            .fa.fa-angle-right {
-              font-size: 18px;
+                &.start {
+                  padding-right: 10px;
+                }
+
+                &.end {
+                  padding-left: 10px;
+                }
+              }
             }
           }
         }
@@ -239,10 +248,13 @@
           padding: 0;
         }
 
-        .times-of-use {
+        .uses {
           line-height: 28px;
           padding: 0;
 
+          p {
+            margin: 0;
+          }
         }
       }
     }

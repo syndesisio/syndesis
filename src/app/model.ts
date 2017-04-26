@@ -7,16 +7,16 @@ export interface BaseEntity {
 }
 
 export interface ListResult extends BaseEntity {
+    totalCount: number;
     items: Array < {} >
     ;
-    totalCount: number;
 };
 export type ListResults = Array < ListResult > ;
 
 export interface ListResultWithId extends BaseEntity {
+    totalCount: number;
     items: Array < WithId >
     ;
-    totalCount: number;
 };
 export type ListResultWithIds = Array < ListResultWithId > ;
 
@@ -26,13 +26,13 @@ export interface WithId extends BaseEntity {
 export type WithIds = Array < WithId > ;
 
 export interface Action extends BaseEntity {
-    description: string;
-    outputDataShape: DataShape;
-    connectorId: string;
-    inputDataShape: DataShape;
+    properties: {};
     camelConnectorGAV: string;
     camelConnectorPrefix: string;
-    properties: {};
+    description: string;
+    inputDataShape: DataShape;
+    outputDataShape: DataShape;
+    connectorId: string;
     id: string;
     name: string;
 };
@@ -40,45 +40,46 @@ export type Actions = Array < Action > ;
 
 export interface ComponentProperty extends BaseEntity {
     javaType: string;
+    type: string;
+    defaultValue: string;
     displayName: string;
-    group: string;
-    required: boolean;
-    description: string;
     kind: string;
     secret: boolean;
     label: string;
+    description: string;
+    group: string;
+    required: boolean;
     deprecated: boolean;
-    type: string;
-    defaultValue: string;
 };
 export type ComponentPropertys = Array < ComponentProperty > ;
 
 export interface Connection extends BaseEntity {
-    tags: Array < Tag >
-    ;
     icon: string;
     organization: Organization;
-    position: string;
-    description: string;
-    userId: string;
     options: {};
-    connectorId: string;
-    configuredProperties: {};
+    description: string;
     connector: Connector;
+    userId: string;
+    lastUpdated: string;
+    createdDate: string;
+    connectorId: string;
     organizationId: string;
+    configuredProperties: {};
     id: string;
+    tags: Array < string >
+    ;
     name: string;
 };
 export type Connections = Array < Connection > ;
 
 export interface Connector extends BaseEntity {
     icon: string;
-    description: string;
-    connectorGroup: ConnectorGroup;
-    connectorGroupId: string;
     properties: {};
     actions: Array < Action >
     ;
+    connectorGroup: ConnectorGroup;
+    description: string;
+    connectorGroupId: string;
     id: string;
     name: string;
 };
@@ -91,10 +92,10 @@ export interface ConnectorGroup extends BaseEntity {
 export type ConnectorGroups = Array < ConnectorGroup > ;
 
 export interface DataShape extends BaseEntity {
-    kind: string;
+    type: string;
     exemplar: Array < string >
     ;
-    type: string;
+    kind: string;
 };
 export type DataShapes = Array < DataShape > ;
 
@@ -105,34 +106,36 @@ export interface Environment extends BaseEntity {
 export type Environments = Array < Environment > ;
 
 export interface Integration extends BaseEntity {
-    tags: Array < Tag >
-    ;
-    integrationTemplateId: string;
+    statusMessage: string;
     description: string;
+    gitRepo: string;
+    desiredStatus: "Draft" | "Pending" | "Activated" | "Deactivated" | "Deleted";
+    currentStatus: "Draft" | "Pending" | "Activated" | "Deactivated" | "Deleted";
+    configuration: string;
+    token: string;
     connections: Array < Connection >
     ;
-    userId: string;
     users: Array < User >
     ;
-    configuration: string;
-    currentStatus: "Draft" | "Activated" | "Deactivated" | "Deleted";
+    integrationTemplateId: string;
+    integrationTemplate: IntegrationTemplate;
+    userId: string;
     steps: Array < Step >
     ;
-    gitRepo: string;
-    integrationTemplate: IntegrationTemplate;
-    desiredStatus: "Draft" | "Activated" | "Deactivated" | "Deleted";
-    statusMessage: string;
     lastUpdated: string;
+    createdDate: string;
     timesUsed: number;
     id: string;
+    tags: Array < string >
+    ;
     name: string;
 };
 export type Integrations = Array < Integration > ;
 
 export interface IntegrationTemplate extends BaseEntity {
     organization: Organization;
-    userId: string;
     configuration: string;
+    userId: string;
     organizationId: string;
     id: string;
     name: string;
@@ -152,60 +155,50 @@ export type Organizations = Array < Organization > ;
 export interface Step extends BaseEntity {
     action: Action;
     connection: Connection;
+    name: string;
     stepKind: string;
     configuredProperties: {};
-    name: string;
     id: string;
 };
 export type Steps = Array < Step > ;
 
-export interface Tag extends BaseEntity {
-    connections: Array < Connection >
-    ;
-    integrationTemplate: Array < IntegrationTemplate >
-    ;
-    id: string;
-    name: string;
-};
-export type Tags = Array < Tag > ;
-
 export interface User extends BaseEntity {
-    lastName: string;
+    name: string;
     username: string;
-    firstName: string;
     fullName: string;
-    roleId: string;
+    lastName: string;
+    firstName: string;
     integrations: Array < Integration >
     ;
+    roleId: string;
     organizationId: string;
-    name: string;
     id: string;
 };
 export type Users = Array < User > ;
 
+export interface ListResultAction extends BaseEntity {
+    totalCount: number;
+    items: Array < Action >
+    ;
+};
+export type ListResultActions = Array < ListResultAction > ;
+
 export interface Error extends BaseEntity {
-    description: string;
-    code: string;
     parameters: Array < string >
     ;
     attributes: {};
+    description: string;
+    code: string;
 };
 export type Errors = Array < Error > ;
 
 export interface Result extends BaseEntity {
+    scope: "PARAMETERS" | "CONNECTIVITY";
     errors: Array < Error >
     ;
-    scope: "PARAMETERS" | "CONNECTIVITY";
     status: "OK" | "ERROR" | "UNSUPPORTED";
 };
 export type Results = Array < Result > ;
-
-export interface ListResultAction extends BaseEntity {
-    items: Array < Action >
-    ;
-    totalCount: number;
-};
-export type ListResultActions = Array < ListResultAction > ;
 
 export interface EventMessage extends BaseEntity {
     data: {};
@@ -213,18 +206,25 @@ export interface EventMessage extends BaseEntity {
 };
 export type EventMessages = Array < EventMessage > ;
 
+export interface ListResultString extends BaseEntity {
+    totalCount: number;
+    items: Array < string >
+    ;
+};
+export type ListResultStrings = Array < ListResultString > ;
+
 class TypeFactoryClass {
     createListResult() {
         return <ListResult > {
-            items: undefined,
             totalCount: undefined,
+            items: undefined,
         };
     };
 
     createListResultWithId() {
         return <ListResultWithId > {
-            items: undefined,
             totalCount: undefined,
+            items: undefined,
         };
     };
 
@@ -236,13 +236,13 @@ class TypeFactoryClass {
 
     createAction() {
         return <Action > {
-            description: undefined,
-            outputDataShape: undefined,
-            connectorId: undefined,
-            inputDataShape: undefined,
+            properties: undefined,
             camelConnectorGAV: undefined,
             camelConnectorPrefix: undefined,
-            properties: undefined,
+            description: undefined,
+            inputDataShape: undefined,
+            outputDataShape: undefined,
+            connectorId: undefined,
             id: undefined,
             name: undefined,
         };
@@ -251,33 +251,34 @@ class TypeFactoryClass {
     createComponentProperty() {
         return <ComponentProperty > {
             javaType: undefined,
+            type: undefined,
+            defaultValue: undefined,
             displayName: undefined,
-            group: undefined,
-            required: undefined,
-            description: undefined,
             kind: undefined,
             secret: undefined,
             label: undefined,
+            description: undefined,
+            group: undefined,
+            required: undefined,
             deprecated: undefined,
-            type: undefined,
-            defaultValue: undefined,
         };
     };
 
     createConnection() {
         return <Connection > {
-            tags: undefined,
             icon: undefined,
             organization: undefined,
-            position: undefined,
-            description: undefined,
-            userId: undefined,
             options: undefined,
-            connectorId: undefined,
-            configuredProperties: undefined,
+            description: undefined,
             connector: undefined,
+            userId: undefined,
+            lastUpdated: undefined,
+            createdDate: undefined,
+            connectorId: undefined,
             organizationId: undefined,
+            configuredProperties: undefined,
             id: undefined,
+            tags: undefined,
             name: undefined,
         };
     };
@@ -285,11 +286,11 @@ class TypeFactoryClass {
     createConnector() {
         return <Connector > {
             icon: undefined,
-            description: undefined,
-            connectorGroup: undefined,
-            connectorGroupId: undefined,
             properties: undefined,
             actions: undefined,
+            connectorGroup: undefined,
+            description: undefined,
+            connectorGroupId: undefined,
             id: undefined,
             name: undefined,
         };
@@ -304,9 +305,9 @@ class TypeFactoryClass {
 
     createDataShape() {
         return <DataShape > {
-            kind: undefined,
-            exemplar: undefined,
             type: undefined,
+            exemplar: undefined,
+            kind: undefined,
         };
     };
 
@@ -319,22 +320,24 @@ class TypeFactoryClass {
 
     createIntegration() {
         return <Integration > {
-            tags: undefined,
-            integrationTemplateId: undefined,
-            description: undefined,
-            connections: undefined,
-            userId: undefined,
-            users: undefined,
-            configuration: undefined,
-            currentStatus: undefined,
-            steps: undefined,
-            gitRepo: undefined,
-            integrationTemplate: undefined,
-            desiredStatus: undefined,
             statusMessage: undefined,
+            description: undefined,
+            gitRepo: undefined,
+            desiredStatus: undefined,
+            currentStatus: undefined,
+            configuration: undefined,
+            token: undefined,
+            connections: undefined,
+            users: undefined,
+            integrationTemplateId: undefined,
+            integrationTemplate: undefined,
+            userId: undefined,
+            steps: undefined,
             lastUpdated: undefined,
+            createdDate: undefined,
             timesUsed: undefined,
             id: undefined,
+            tags: undefined,
             name: undefined,
         };
     };
@@ -342,8 +345,8 @@ class TypeFactoryClass {
     createIntegrationTemplate() {
         return <IntegrationTemplate > {
             organization: undefined,
-            userId: undefined,
             configuration: undefined,
+            userId: undefined,
             organizationId: undefined,
             id: undefined,
             name: undefined,
@@ -363,57 +366,48 @@ class TypeFactoryClass {
         return <Step > {
             action: undefined,
             connection: undefined,
+            name: undefined,
             stepKind: undefined,
             configuredProperties: undefined,
-            name: undefined,
             id: undefined,
-        };
-    };
-
-    createTag() {
-        return <Tag > {
-            connections: undefined,
-            integrationTemplate: undefined,
-            id: undefined,
-            name: undefined,
         };
     };
 
     createUser() {
         return <User > {
-            lastName: undefined,
-            username: undefined,
-            firstName: undefined,
-            fullName: undefined,
-            roleId: undefined,
-            integrations: undefined,
-            organizationId: undefined,
             name: undefined,
+            username: undefined,
+            fullName: undefined,
+            lastName: undefined,
+            firstName: undefined,
+            integrations: undefined,
+            roleId: undefined,
+            organizationId: undefined,
             id: undefined,
-        };
-    };
-
-    createError() {
-        return <Error > {
-            description: undefined,
-            code: undefined,
-            parameters: undefined,
-            attributes: undefined,
-        };
-    };
-
-    createResult() {
-        return <Result > {
-            errors: undefined,
-            scope: undefined,
-            status: undefined,
         };
     };
 
     createListResultAction() {
         return <ListResultAction > {
-            items: undefined,
             totalCount: undefined,
+            items: undefined,
+        };
+    };
+
+    createError() {
+        return <Error > {
+            parameters: undefined,
+            attributes: undefined,
+            description: undefined,
+            code: undefined,
+        };
+    };
+
+    createResult() {
+        return <Result > {
+            scope: undefined,
+            errors: undefined,
+            status: undefined,
         };
     };
 
@@ -421,6 +415,13 @@ class TypeFactoryClass {
         return <EventMessage > {
             data: undefined,
             event: undefined,
+        };
+    };
+
+    createListResultString() {
+        return <ListResultString > {
+            totalCount: undefined,
+            items: undefined,
         };
     };
 
