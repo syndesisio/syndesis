@@ -22,7 +22,6 @@ import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.rest.v1.handler.BaseHandler;
 import com.redhat.ipaas.rest.v1.operations.*;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
@@ -51,16 +50,14 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Path(value = "/{id}/activate")
     @Consumes("application/json")
     public void activate(@PathParam("id") String id) {
-        update(id, new Integration.Builder().createFrom(get(id)).desiredStatus(Integration.Status.Activated).build());
+        updateStatus(id, Integration.Status.Activated);
     }
 
     @PUT
     @Path(value = "/{id}/deactivate")
     @Consumes("application/json")
     public void deactivate(@PathParam("id") String id) {
-        update(id, new Integration.Builder().createFrom(get(id))
-            .desiredStatus(Integration.Status.Activated)
-            .build());
+        updateStatus(id, Integration.Status.Deactivated);
     }
 
     @Override
@@ -93,6 +90,13 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             .build();
 
         return Creator.super.create(updatedIntegration);
+    }
+
+    private void updateStatus(String id, Integration.Status desiredStatus) {
+        this.update(id, new Integration.Builder()
+            .createFrom(get(id))
+            .desiredStatus(desiredStatus)
+            .build());
     }
 
 
