@@ -50,14 +50,14 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Path(value = "/{id}/activate")
     @Consumes("application/json")
     public void activate(@PathParam("id") String id) {
-        updateStatus(id, Integration.Status.Activated);
+        updateDesiredStatus(id, Integration.Status.Activated);
     }
 
     @PUT
     @Path(value = "/{id}/deactivate")
     @Consumes("application/json")
     public void deactivate(@PathParam("id") String id) {
-        updateStatus(id, Integration.Status.Deactivated);
+        updateDesiredStatus(id, Integration.Status.Deactivated);
     }
 
     @Override
@@ -92,11 +92,15 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         return Creator.super.create(updatedIntegration);
     }
 
-    private void updateStatus(String id, Integration.Status desiredStatus) {
+    private void updateDesiredStatus(String id, Integration.Status desiredStatus) {
         this.update(id, new Integration.Builder()
             .createFrom(get(id))
             .token(Tokens.getAuthenticationToken())
             .desiredStatus(desiredStatus)
+            // Set the current status to 'pending' immediately when
+            // a status change is requested.
+            // This status will be later changed by the activation handlers.
+            .currentStatus(Integration.Status.Pending)
             .build());
     }
 

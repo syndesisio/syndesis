@@ -40,6 +40,10 @@ import org.slf4j.LoggerFactory;
 
 public class ActivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
+    // Step used which should be performed only once per integration
+    static final String STEP_GITHUB = "github-setup";
+    static final String STEP_OPENSHIFT = "openshift-setup";
+
     private final DataManager dataManager;
     private final OpenShiftService openShiftService;
     private final GitHubService gitHubService;
@@ -62,13 +66,13 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
     @Override
     public StatusUpdate execute(Integration integration) {
         if (!integration.getToken().isPresent()) {
-            return new StatusUpdate(integration.getCurrentStatus(), "No token present");
+            return new StatusUpdate(integration.getCurrentStatus().orElse(null), "No token present");
         }
 
 
         if (isTokenExpired(integration)) {
             log.info("{} : Token is expired", getLabel(integration));
-            return new StatusUpdate(integration.getCurrentStatus(), "Token is expired");
+            return new StatusUpdate(integration.getCurrentStatus().orElse(null), "Token is expired");
         }
         String token = storeToken(integration);
 
@@ -86,45 +90,36 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
         // TODO: Verify Token and refresh if expired ....
 
-        int currentStep = integration.getCurrentStatusStep().orElse(0).intValue();
-        Integration.Status currentStatus = integration.getCurrentStatus().orElse(Integration.Status.Draft);
-        if( currentStatus != Integration.Status.Pending ) {
-            currentStep = 0;
-        }
-
+        List<String> stepsPerformed = integration.getStepsDone().orElse(new ArrayList<>());
         try {
             String gitCloneUrl = null;
-            switch (currentStep) {
-                default:
-                case 0:
-                    String gitHubUser = getGitHubUser();
-                    log.info("{} : Looked up GitHub user {}", getLabel(integration), gitHubUser);
+            if (!stepsPerformed.contains(STEP_GITHUB)) {
+                String gitHubUser = getGitHubUser();
+                log.info("{} : Looked up GitHub user {}", getLabel(integration), gitHubUser);
+                Map<String, byte[]> projectFiles = createProjectFiles(gitHubUser, integration);
+                log.info("{} : Created project files", getLabel(integration));
 
-                    Map<String, byte[]> projectFiles = createProjectFiles(gitHubUser, integration);
-                    log.info("{} : Created project files", getLabel(integration));
+                gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
+                log.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
+                stepsPerformed.add(STEP_GITHUB);
+            }
 
-                    gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
-                    log.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
-                    currentStep = 1;
+            if (!stepsPerformed.contains(STEP_OPENSHIFT)) {
+                if (gitCloneUrl==null) {
+                    gitCloneUrl = getCloneURL(integration);
+                }
+                createOpenShiftResources(integration.getName(), gitCloneUrl, secret, applicationProperties);
+                log.info("{} : Created OpenShift resources", getLabel(integration));
+                stepsPerformed.add(STEP_OPENSHIFT);
+            }
 
-                case 1:
-
-                    if( gitCloneUrl==null ) {
-                        gitCloneUrl = getCloneURL(integration);
-                    }
-                    ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, applicationProperties);
-                    log.info("{} : Created OpenShift resources", getLabel(integration));
-                    currentStep = 2;
-
-                case 2:
-                    if( openShiftService.isScaled(deployment) ) {
-                        return new StatusUpdate( Integration.Status.Activated);
-                    }
+            if (openShiftService.isScaled(deployment)) {
+                return new StatusUpdate(Integration.Status.Activated, stepsPerformed);
             }
         } catch (Exception e) {
             log.info("{} : Failure", getLabel(integration), e);
         }
-        return new StatusUpdate(Integration.Status.Pending, currentStep);
+        return new StatusUpdate(Integration.Status.Pending, stepsPerformed);
 
     }
 
@@ -206,7 +201,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return dataManager.fetchAll(Connector.class).getItems().stream().collect(Collectors.toMap(o -> o.getId().get(), o -> o));
     }
 
-    private void ensureOpenShiftResources(String integrationName, String gitCloneUrl, String webHookSecret, Properties applicationProperties) {
+    private void createOpenShiftResources(String integrationName, String gitCloneUrl, String webHookSecret, Properties applicationProperties) {
         openShiftService.create(
             ImmutableOpenShiftDeployment.builder()
                                         .name(integrationName)

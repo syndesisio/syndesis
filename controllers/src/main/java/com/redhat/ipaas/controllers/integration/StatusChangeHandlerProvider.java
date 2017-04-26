@@ -36,42 +36,38 @@ public interface StatusChangeHandlerProvider {
         StatusUpdate execute(Integration model);
 
         class StatusUpdate {
-            private Optional<Integration.Status> status;
-            private Optional<String> statusMessage;
-            private Optional<Integer> statusStep;
+            Integration.Status status;
+            String statusMessage;
+            List<String> stepsPerformed;
 
-            public StatusUpdate(Optional<Integration.Status> status, Optional<String> statusMessage, Optional<Integer> statusStep) {
+            public StatusUpdate(Integration.Status status, String statusMessage, List<String> stepsPerformed) {
                 this.status = status;
                 this.statusMessage = statusMessage;
-                this.statusStep = statusStep;
-            }
-
-            public StatusUpdate(Optional<Integration.Status> status, String statusMessage) {
-                this(status, Optional.of(statusMessage), Optional.empty());
+                this.stepsPerformed = stepsPerformed;
             }
 
             public StatusUpdate(Integration.Status status, String statusMessage) {
-                this(Optional.of(status), Optional.of(statusMessage), Optional.empty());
+                this(status, statusMessage, null);
             }
 
             public StatusUpdate(Integration.Status status) {
-                this(Optional.of(status), Optional.empty(), Optional.empty());
+                this(status, null, null);
             }
 
-            public StatusUpdate(Integration.Status status, int step) {
-                this(Optional.of(status), Optional.empty(), Optional.of(step));
+            public StatusUpdate(Integration.Status status, List<String> stepsPerformed) {
+                this(status, null, stepsPerformed != null && stepsPerformed.size() > 0 ? stepsPerformed : null);
             }
 
-            public Optional<Integration.Status> getStatus() {
+            public Integration.Status getStatus() {
                 return status;
             }
 
-            public Optional<String> getStatusMessage() {
+            public String getStatusMessage() {
                 return statusMessage;
             }
 
-            public Optional<Integer> getStatusStep() {
-                return statusStep;
+            public List<String> getStepsPerformed() {
+                return stepsPerformed;
             }
         }
     }

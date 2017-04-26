@@ -177,7 +177,7 @@ public class IntegrationController {
                             .createFrom(current)
                             .currentStatus(update.getStatus())
                             .statusMessage(update.getStatusMessage())
-                            .currentStatusStep(update.getStatusStep())
+                            .stepsDone(update.getStepsPerformed())
                             .lastUpdated(new Date())
                             .build());
                 }
