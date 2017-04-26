@@ -179,6 +179,8 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
         Object.keys(connection.configuredProperties).forEach((key) => {
           props[key].value = connection.configuredProperties[key];
         });
+      } else {
+        connection.configuredProperties = {};
       }
       return props;
     }
@@ -208,6 +210,11 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     if (formModel) {
       this._formGroup = this.formService.createFormGroup(formModel);
       this.formChangesSubscription = this._formGroup.valueChanges.subscribe((data) => {
+        Object.keys(data).forEach((key) => {
+          if (data[key] === null) {
+            delete data[key];
+          }
+        });
         this.connection.configuredProperties = data;
         this.connectionChange.emit(this.connection);
       });
