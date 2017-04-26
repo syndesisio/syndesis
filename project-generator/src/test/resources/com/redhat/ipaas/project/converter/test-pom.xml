@@ -12,10 +12,9 @@
   <packaging>jar</packaging>
 
   <properties>
-    <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
-    <spring-cloud-kubernetes.version>0.1.5</spring-cloud-kubernetes.version>
+    <spring-boot.version>@spring-boot.version@</spring-boot.version>
     <camel.version>@camel.version@</camel.version>
-    <funktion.version>1.1.55</funktion.version>
+    <funktion.version>@funktion.version@</funktion.version>
     <atlasmap.version>@atlasmap.version@</atlasmap.version>
   </properties>
 
@@ -94,13 +93,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>spring-cloud-kubernetes-bom</artifactId>
-        <version>${spring-cloud-kubernetes.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -145,10 +137,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.fabric8</groupId>
-      <artifactId>spring-cloud-kubernetes-core</artifactId>
     </dependency>
 
     <!-- Funktion runtime -->
