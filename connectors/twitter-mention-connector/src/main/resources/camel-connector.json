@@ -18,6 +18,7 @@
   "globalOptions" : [ "accessToken", "accessTokenSecret", "consumerKey", "consumerSecret" ],
   "componentOptions" : [ "accessToken", "accessTokenSecret", "consumerKey", "consumerSecret" ],
   "endpointValues" : {
-    "kind" : "timeline/mentions"
+    "kind" : "timeline/mentions",
+    "delay": "20000"
   }
 }
