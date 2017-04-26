@@ -153,7 +153,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withImage(" ").withImagePullPolicy("Always").withName(projectName).addNewPort().withContainerPort(8778).endPort()
             .addNewVolumeMount()
                 .withName("secret-volume")
-                .withMountPath("/opt/integration")
+                .withMountPath("/deployments/config")
                 .withReadOnly(false)
             .endVolumeMount()
             .endContainer()
@@ -208,7 +208,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     private static void ensureSecret(OpenShiftClient client, String projectName, Properties data) {
         Map<String, String> wrapped = new HashMap<>();
-        wrapped.put("secret.properties", toString(data));
+        wrapped.put("application.properties", toString(data));
 
         client.secrets().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata()
