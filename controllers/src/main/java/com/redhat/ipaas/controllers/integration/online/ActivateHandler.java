@@ -72,7 +72,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         }
         String token = storeToken(integration);
 
-        Map<String, String> applicationProperties = extractApplicationPropertiesFrom(integration);
+        Properties applicationProperties = extractApplicationPropertiesFrom(integration);
 
         OpenShiftDeployment deployment = OpenShiftDeployment
             .builder()
@@ -181,7 +181,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return dataManager.fetchAll(Connector.class).getItems().stream().collect(Collectors.toMap(o -> o.getId().get(), o -> o));
     }
 
-    private void ensureOpenShiftResources(String integrationName, String gitCloneUrl, String webHookSecret, Map<String, String> applicationProperties) {
+    private void ensureOpenShiftResources(String integrationName, String gitCloneUrl, String webHookSecret, Properties applicationProperties) {
         openShiftService.create(
             ImmutableOpenShiftDeployment.builder()
                                         .name(integrationName)
@@ -199,8 +199,8 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
      * @param integration
      * @return
      */
-    private Map<String, String> extractApplicationPropertiesFrom(Integration integration) {
-        Map<String, String> secrets = new HashMap<>();
+    private Properties extractApplicationPropertiesFrom(Integration integration) {
+        Properties secrets = new Properties();
         Map<String, Connector> connectorMap = fetchConnectorsMap();
 
         integration.getSteps().ifPresent(steps -> {

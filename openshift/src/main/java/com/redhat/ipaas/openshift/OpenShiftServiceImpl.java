@@ -15,6 +15,7 @@
  */
 package com.redhat.ipaas.openshift;
 
+import com.redhat.ipaas.core.IPaasServerException;
 import com.redhat.ipaas.core.Names;
 import com.redhat.ipaas.core.Tokens;
 
@@ -26,8 +27,11 @@ import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class OpenShiftServiceImpl implements OpenShiftService {
 
@@ -49,7 +53,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             DockerImage img = new DockerImage(config.getBuilderImage());
             ensureImageStreams(openShiftClient, sanitizedName, img);
             ensureDeploymentConfig(openShiftClient, sanitizedName, config.getIntegrationServiceAccount());
-            ensureSecret(openShiftClient, sanitizedName, d.getApplicationProperties().orElseGet(HashMap::new));
+            ensureSecret(openShiftClient, sanitizedName, d.getApplicationProperties().orElseGet(Properties::new));
             ensureBuildConfig(openShiftClient, sanitizedName,
                 d.getGitRepository().orElseThrow(()-> new IllegalStateException("Git repository is required")),
                 img,
@@ -149,7 +153,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withImage(" ").withImagePullPolicy("Always").withName(projectName).addNewPort().withContainerPort(8778).endPort()
             .addNewVolumeMount()
                 .withName("secret-volume")
-                .withMountPath("/opt/integration")
+                .withMountPath("/deployments/config")
                 .withReadOnly(false)
             .endVolumeMount()
             .endContainer()
@@ -202,14 +206,24 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return client.buildConfigs().withName(projectName).delete();
     }
 
-    private static void ensureSecret(OpenShiftClient client, String projectName, Map<String, String> data) {
+    private static void ensureSecret(OpenShiftClient client, String projectName, Properties data) {
         Map<String, String> wrapped = new HashMap<>();
-        wrapped.put("secret.properties", Serialization.asYaml(data));
+        wrapped.put("application.properties", toString(data));
 
         client.secrets().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata()
             .withStringData(wrapped)
             .done();
+    }
+
+    private static String toString(Properties data) {
+        try {
+            StringWriter w = new StringWriter();
+            data.store(w, "");
+            return w.toString();
+        } catch (IOException e) {
+            throw IPaasServerException.launderThrowable(e);
+        }
     }
 
     private static boolean removeSecret(OpenShiftClient client, String projectName) {

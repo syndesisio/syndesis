@@ -20,6 +20,7 @@ import org.immutables.value.Value;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
@@ -31,7 +32,7 @@ public interface OpenShiftDeployment {
     Optional<String> getToken();
     Optional<String> getGitRepository();
     Optional<String> getWebhookSecret();
-    Optional<Map<String, String>> getApplicationProperties();
+    Optional<Properties> getApplicationProperties();
 
     default RequestConfig getRequestConfig() {
         return new RequestConfigBuilder().withOauthToken(getToken().orElse(null)).build();
