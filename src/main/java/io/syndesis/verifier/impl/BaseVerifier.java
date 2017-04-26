@@ -70,21 +70,26 @@ public abstract class BaseVerifier implements Verifier {
         customize(params);
 
         // the connector must support ping check if its verifiable
-        List<VerifierResponse> resp = new ArrayList<VerifierResponse>();
+        List<VerifierResponse> resp = new ArrayList<>();
         for (Verifier.Scope scope :  Verifier.Scope.values()) {
-            ComponentVerifier.Result result = verifier.verify(toComponentScope(scope), params);
-            resp.add(toVerifierResponse(result));
-            log.info("PING: {} === {}",
-                     getConnectorAction(), result.getStatus());
-            if (result.getStatus() == ComponentVerifier.Result.Status.ERROR) {
-                log.error("{} --> ", getConnectorAction());
-                for (ComponentVerifier.VerificationError error : result.getErrors()) {
-                    log.error("   {} : {}", error.getCode(), error.getDescription());
+            try {
+                ComponentVerifier.Result result = verifier.verify(toComponentScope(scope), params);
+                resp.add(toVerifierResponse(result));
+                log.info("PING: {} === {}",
+                         getConnectorAction(), result.getStatus());
+                if (result.getStatus() == ComponentVerifier.Result.Status.ERROR) {
+                    log.error("{} --> ", getConnectorAction());
+                    for (ComponentVerifier.VerificationError error : result.getErrors()) {
+                        log.error("   {} : {}", error.getCode(), error.getDescription());
+                    }
                 }
-            }
-            if (result.getStatus() == ComponentVerifier.Result.Status.ERROR ||
-                result.getStatus() == ComponentVerifier.Result.Status.UNSUPPORTED) {
-                break;
+                if (result.getStatus() == ComponentVerifier.Result.Status.ERROR ||
+                    result.getStatus() == ComponentVerifier.Result.Status.UNSUPPORTED) {
+                    break;
+                }
+            } catch (Exception exp) {
+                resp.add(toExceptionResponse(exp, scope, params.keySet()));
+                log.error("Exception during verify with params {} and scope {} : {}", params, scope, exp.getMessage(), exp);
             }
         }
         return resp;
