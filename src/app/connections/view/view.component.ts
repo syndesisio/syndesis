@@ -24,6 +24,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   @Output() connectionChange = new EventEmitter<Connection>();
   @Input() mode = 'view';
   @Input() showName = true;
+  @Input() inView = false;
   validating = false;
   validateError: string = undefined;
   validateSuccess = false;

@@ -1,4 +1,4 @@
-<div class='connections detail' *ngIf='connection'>
-  <ipaas-connection-view-toolbar [connection]="connection | async"></ipaas-connection-view-toolbar>
-  <ipaas-connection-view [connection]="connection | async"></ipaas-connection-view>
+<div class='connections detail' *ngIf='conn'>
+  <ipaas-connection-view-toolbar [(connection)]="conn" [(mode)]="mode"></ipaas-connection-view-toolbar>
+  <ipaas-connection-view [(connection)]="conn" [mode]="mode" [inView]="true"></ipaas-connection-view>
 </div>
