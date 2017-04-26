@@ -195,6 +195,7 @@ oc new-app ipaas-dev \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
     -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} \
+    -p OPENSHIFT_OAUTH_DEFAULT_SCOPES="user:info user:check-access role:edit:$(oc project -q):! role:system:build-strategy-source:$(oc project -q)" \
     -p INSECURE_SKIP_VERIFY=true
 
 # Wait until all pods are running. Some pods are crashing at first, but are restarted
