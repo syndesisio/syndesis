@@ -72,11 +72,14 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         }
         String token = storeToken(integration);
 
+        Map<String, String> applicationProperties = extractApplicationPropertiesFrom(integration);
+
         OpenShiftDeployment deployment = OpenShiftDeployment
             .builder()
             .name(integration.getName())
             .replicas(1)
             .token(token)
+            .applicationProperties(applicationProperties)
             .build();
 
         String secret = createSecret();
@@ -94,7 +97,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
             String gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
             log.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
 
-            ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, extractApplicationPropertiesFrom(integration));
+            ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, applicationProperties);
             log.info("{} : Created OpenShift resources", getLabel(integration));
         } else {
             log.info("{} : Skipping project generation because integration is in status {}",
