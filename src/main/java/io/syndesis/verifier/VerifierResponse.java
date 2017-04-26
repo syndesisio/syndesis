@@ -88,7 +88,7 @@ public class VerifierResponse {
 
         public Builder error(String code, String description) {
             if (resp.errors == null) {
-                resp.errors = new ArrayList<Error>();
+                resp.errors = new ArrayList<>();
             }
             Error error = new Error();
             error.code = code;
@@ -133,7 +133,7 @@ public class VerifierResponse {
 
             public Builder endError() {
                 if (resp.errors == null) {
-                    resp.errors = new ArrayList<Error>();
+                    resp.errors = new ArrayList<>();
                 }
                 resp.errors.add(error);
                 error = new Error();

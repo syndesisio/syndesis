@@ -26,8 +26,19 @@ public interface Verifier {
 
     List<VerifierResponse> verify(Map<String, Object> parameters);
 
+    /**
+     * Scopes to check, in ascending order of sophistication.
+     * Each former scope must validate before the next scope can be verified.
+     */
     enum Scope {
+        /**
+         * Validation of given parameter combinations
+         */
         PARAMETERS,
+
+        /**
+         * Check for the real connectivity to the component endpoint
+         */
         CONNECTIVITY;
     }
 

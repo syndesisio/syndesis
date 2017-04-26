@@ -135,4 +135,25 @@ public abstract class BaseVerifier implements Verifier {
         }
         return builder.build();
     }
+
+    private VerifierResponse toExceptionResponse(Exception exp, Scope scope, Set<String> params) {
+        VerifierResponse.Builder builder = new VerifierResponse.Builder(Status.ERROR, scope);
+
+        return builder
+            .withError(ComponentVerifier.VerificationError.StandardCode.EXCEPTION.name())
+              .description(exp.getMessage())
+              .parameters(params)
+              .attributes(extractExceptionDetails(exp))
+            .endError()
+            .build();
+    }
+
+    private Map<String, Object> extractExceptionDetails(Exception exp) {
+        Map<String, Object> details = new HashMap<>();
+        details.put(ComponentVerifier.VerificationError.ExceptionAttribute.EXCEPTION_CLASS.name(),
+                    exp.getClass().getName());
+        details.put(ComponentVerifier.VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE.name(), exp);
+        return details;
+    }
+
 }
