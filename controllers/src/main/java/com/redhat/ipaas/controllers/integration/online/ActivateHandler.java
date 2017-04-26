@@ -86,29 +86,54 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
         // TODO: Verify Token and refresh if expired ....
 
-        Optional<Integration.Status> currentStatus = integration.getCurrentStatus();
-        if (!currentStatus.isPresent() || currentStatus.get() != Integration.Status.Pending) {
-            String gitHubUser = getGitHubUser();
-            log.info("{} : Looked up GitHub user {}", getLabel(integration), gitHubUser);
-
-            Map<String, byte[]> projectFiles = createProjectFiles(gitHubUser, integration);
-            log.info("{} : Created project files", getLabel(integration));
-
-            String gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
-            log.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
-
-            ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, applicationProperties);
-            log.info("{} : Created OpenShift resources", getLabel(integration));
-        } else {
-            log.info("{} : Skipping project generation because integration is in status {}",
-                     getLabel(integration), currentStatus.map(Enum::name).orElse("[none]"));
+        int currentStep = integration.getCurrentStatusStep().orElse(0).intValue();
+        Integration.Status currentStatus = integration.getCurrentStatus().orElse(Integration.Status.Draft);
+        if( currentStatus != Integration.Status.Pending ) {
+            currentStep = 0;
         }
 
-        Integration.Status status = openShiftService.isScaled(deployment) ?
-            Integration.Status.Activated : Integration.Status.Pending;
-        log.info("{} : Setting status to {}", getLabel(integration), status);
+        try {
+            String gitCloneUrl = null;
+            switch (currentStep) {
+                default:
+                case 0:
+                    String gitHubUser = getGitHubUser();
+                    log.info("{} : Looked up GitHub user {}", getLabel(integration), gitHubUser);
 
-        return new StatusUpdate(status);
+                    Map<String, byte[]> projectFiles = createProjectFiles(gitHubUser, integration);
+                    log.info("{} : Created project files", getLabel(integration));
+
+                    gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
+                    log.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
+                    currentStep = 1;
+
+                case 1:
+
+                    if( gitCloneUrl==null ) {
+                        gitCloneUrl = getCloneURL(integration);
+                    }
+                    ensureOpenShiftResources(integration.getName(), gitCloneUrl, secret, applicationProperties);
+                    log.info("{} : Created OpenShift resources", getLabel(integration));
+                    currentStep = 2;
+
+                case 2:
+                    if( openShiftService.isScaled(deployment) ) {
+                        return new StatusUpdate( Integration.Status.Activated);
+                    }
+            }
+        } catch (Exception e) {
+            log.info("{} : Failure", getLabel(integration), e);
+        }
+        return new StatusUpdate(Integration.Status.Pending, currentStep);
+
+    }
+
+    protected String getCloneURL(Integration integration)  {
+        try {
+            return gitHubService.getCloneURL(Names.sanitize(integration.getName()));
+        } catch (IOException e) {
+            throw IPaasServerException.launderThrowable(e);
+        }
     }
 
     private boolean isTokenExpired(Integration integration) {

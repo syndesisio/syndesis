@@ -38,4 +38,9 @@ public class GitHubServiceNoOp implements GitHubService {
     public String getApiUser() {
         return "noob";
     }
+
+    @Override
+    public String getCloneURL(String repoName) throws IOException {
+        return null;
+    }
 }

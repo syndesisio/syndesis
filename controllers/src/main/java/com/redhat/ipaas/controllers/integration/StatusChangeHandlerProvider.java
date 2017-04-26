@@ -38,22 +38,28 @@ public interface StatusChangeHandlerProvider {
         class StatusUpdate {
             private Optional<Integration.Status> status;
             private Optional<String> statusMessage;
+            private Optional<Integer> statusStep;
 
-            public StatusUpdate(Optional<Integration.Status> status, Optional<String> statusMessage) {
+            public StatusUpdate(Optional<Integration.Status> status, Optional<String> statusMessage, Optional<Integer> statusStep) {
                 this.status = status;
                 this.statusMessage = statusMessage;
+                this.statusStep = statusStep;
             }
 
             public StatusUpdate(Optional<Integration.Status> status, String statusMessage) {
-                this(status, Optional.of(statusMessage));
+                this(status, Optional.of(statusMessage), Optional.empty());
             }
 
             public StatusUpdate(Integration.Status status, String statusMessage) {
-                this(Optional.of(status), Optional.of(statusMessage));
+                this(Optional.of(status), Optional.of(statusMessage), Optional.empty());
             }
 
             public StatusUpdate(Integration.Status status) {
-                this(Optional.of(status), Optional.empty());
+                this(Optional.of(status), Optional.empty(), Optional.empty());
+            }
+
+            public StatusUpdate(Integration.Status status, int step) {
+                this(Optional.of(status), Optional.empty(), Optional.of(step));
             }
 
             public Optional<Integration.Status> getStatus() {
@@ -62,6 +68,10 @@ public interface StatusChangeHandlerProvider {
 
             public Optional<String> getStatusMessage() {
                 return statusMessage;
+            }
+
+            public Optional<Integer> getStatusStep() {
+                return statusStep;
             }
         }
     }
