@@ -20,6 +20,7 @@ import com.redhat.ipaas.core.Tokens;
 
 import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
+import io.fabric8.kubernetes.client.utils.Serialization;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
@@ -148,7 +149,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withImage(" ").withImagePullPolicy("Always").withName(projectName).addNewPort().withContainerPort(8778).endPort()
             .addNewVolumeMount()
                 .withName("secret-volume")
-                .withMountPath("/opt/integration/secrets.properties")
+                .withMountPath("/opt/integration")
                 .withReadOnly(false)
             .endVolumeMount()
             .endContainer()
@@ -201,10 +202,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return client.buildConfigs().withName(projectName).delete();
     }
 
-    private static void ensureSecret(OpenShiftClient client, String projectName, Map<String, String> secretData) {
+    private static void ensureSecret(OpenShiftClient client, String projectName, Map<String, String> data) {
+        Map<String, String> wrapped = new HashMap<>();
+        wrapped.put("secret.properties", Serialization.asYaml(data));
+
         client.secrets().withName(projectName).createOrReplaceWithNew()
             .withNewMetadata().withName(projectName).endMetadata()
-            .withStringData(secretData)
+            .withStringData(wrapped)
             .done();
     }
 
