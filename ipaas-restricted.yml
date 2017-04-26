@@ -2410,9 +2410,6 @@ objects:
     name: ipaas-rest
   - kind: ServiceAccount
     name: ipaas-integration
-  userNames:
-  - system:serviceaccount:ipaas-staging:ipaas-rest
-  - system:serviceaccount:ipaas-staging:ipaas-integration
 - apiVersion: v1
   kind: RoleBinding
   metadata:
