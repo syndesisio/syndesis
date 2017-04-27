@@ -96,10 +96,12 @@ public class IntegrationController {
     private void checkIntegrationStatusIfNotAlreadyInProgress(String id) {
         executor.execute(() -> {
             Integration integration = dataManager.fetch(Integration.class, id);
-            String scheduledKey = getIntegrationMarkerKey(integration);
-            // Don't start check is already a check is running
-            if (!scheduledChecks.contains(scheduledKey)) {
-                checkIntegrationStatus(integration);
+            if( integration!=null ) {
+                String scheduledKey = getIntegrationMarkerKey(integration);
+                // Don't start check is already a check is running
+                if (!scheduledChecks.contains(scheduledKey)) {
+                    checkIntegrationStatus(integration);
+                }
             }
         });
     }

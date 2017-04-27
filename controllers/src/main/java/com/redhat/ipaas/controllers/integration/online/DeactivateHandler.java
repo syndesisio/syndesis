@@ -20,6 +20,7 @@ import com.redhat.ipaas.core.Tokens;
 import com.redhat.ipaas.model.integration.Integration;
 import com.redhat.ipaas.openshift.OpenShiftDeployment;
 import com.redhat.ipaas.openshift.OpenShiftService;
+import io.fabric8.kubernetes.client.KubernetesClientException;
 
 import java.util.*;
 
@@ -53,7 +54,15 @@ public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChan
             ? Integration.Status.Deactivated
             : Integration.Status.Pending;
 
-        openShiftService.scale(deployment);
+        try {
+            openShiftService.scale(deployment);
+        } catch (KubernetesClientException e) {
+            // Ignore 404 errors, means the deployment does not exist for us
+            // to scale down
+            if( e.getCode() != 404 ) {
+                throw e;
+            }
+        }
 
         return new StatusUpdate(currentStatus);
     }
