@@ -189,11 +189,13 @@ public class DataManager implements DataAccessObjectRegistry {
         }
 
         String idVal = id.get();
-        if (!cache.containsKey(idVal)) {
+
+        WithId previous = doWithDataAccessObject(kind.getModelClass(), d -> d.update(entity));
+
+        if (!cache.containsKey(idVal) && previous==null) {
             throw new EntityNotFoundException("Can not find " + kind + " with id " + idVal);
         }
 
-        doWithDataAccessObject(kind.getModelClass(), d -> d.update(entity));
         cache.put(idVal, entity);
         broadcast("updated", kind.getModelName(), idVal);
 
