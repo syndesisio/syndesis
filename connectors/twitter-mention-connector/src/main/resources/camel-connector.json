@@ -17,8 +17,9 @@
   "outputDataType" : "java:twitter4j.Status",
   "globalOptions" : [ "accessToken", "accessTokenSecret", "consumerKey", "consumerSecret" ],
   "componentOptions" : [ "accessToken", "accessTokenSecret", "consumerKey", "consumerSecret" ],
+  "endpointOptions" : [ "delay" ],
   "endpointValues" : {
     "kind" : "timeline/mentions",
-    "delay": "20000"
+    "delay": "30000"
   }
 }
