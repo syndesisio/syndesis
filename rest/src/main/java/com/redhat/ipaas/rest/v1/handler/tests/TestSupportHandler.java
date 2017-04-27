@@ -20,9 +20,13 @@ import com.redhat.ipaas.dao.manager.DataAccessObject;
 import com.redhat.ipaas.dao.manager.DataManager;
 import com.redhat.ipaas.model.ListResult;
 import com.redhat.ipaas.model.WithId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +37,13 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(value = "endpoints.test_support.enabled")
 public class TestSupportHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(TestSupportHandler.class);
+
     private final DataManager dataMgr;
     private final List<DataAccessObject> daos;
+
+    @Context
+    private HttpServletRequest context;
 
     public TestSupportHandler(DataManager dataMgr, List<DataAccessObject> daos) {
         this.dataMgr = dataMgr;
@@ -44,6 +53,7 @@ public class TestSupportHandler {
     @GET
     @Path("/reset-db")
     public void resetDBToDefault() {
+        LOG.warn("user {} is resetting DB", context.getRemoteUser());
         deleteAllDBEntities();
         dataMgr.resetDeploymentData();
     }
@@ -52,6 +62,7 @@ public class TestSupportHandler {
     @Path("/restore-db")
     @Consumes(MediaType.APPLICATION_JSON)
     public void restoreDB(ModelData[] data) {
+        LOG.warn("user {} is restoring db state", context.getRemoteUser());
         deleteAllDBEntities();
         for (ModelData modelData : data) {
             dataMgr.store(modelData);
@@ -68,6 +79,7 @@ public class TestSupportHandler {
     @Path("/snapshot-db")
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<ModelData> snapshotDB() {
+        LOG.info("user {} is making snapshot", context.getRemoteUser());
         ArrayList<ModelData> result = new ArrayList<ModelData>();
         for (DataAccessObject dao : daos) {
             ListResult<? extends WithId> l = dao.fetchAll();
