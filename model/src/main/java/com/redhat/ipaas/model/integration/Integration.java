@@ -65,6 +65,8 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     Optional<Status> getCurrentStatus();
 
+    Optional<List<String>> getStepsDone();
+
     Optional<String> getStatusMessage();
 
     Optional<Date> getLastUpdated();

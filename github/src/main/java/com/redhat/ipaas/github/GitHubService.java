@@ -40,4 +40,12 @@ public interface GitHubService {
      * @return name of the current user
      */
     String getApiUser() throws IOException;
+
+    /**
+     * @param repoName repo to either create if not existent or to update
+     * @return the repositories clone URL or null if it does not exist
+     * @throws IOException if interaction with GitHub fails.
+     */
+    public String getCloneURL(String repoName) throws IOException;
+
 }

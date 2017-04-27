@@ -65,6 +65,15 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     @Override
+    public String getCloneURL(String repoName) throws IOException {
+        Repository repository = getRepository(repoName);
+        if( repository == null ) {
+            return null;
+        }
+        return repository.getCloneUrl();
+    }
+
+    @Override
     public String getApiUser() throws IOException {
         return userService.getUser().getLogin();
     }

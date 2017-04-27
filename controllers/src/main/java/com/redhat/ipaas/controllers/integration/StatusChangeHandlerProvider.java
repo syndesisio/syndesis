@@ -36,32 +36,38 @@ public interface StatusChangeHandlerProvider {
         StatusUpdate execute(Integration model);
 
         class StatusUpdate {
-            private Optional<Integration.Status> status;
-            private Optional<String> statusMessage;
+            private Integration.Status status;
+            private String statusMessage;
+            private List<String> stepsPerformed;
 
-            public StatusUpdate(Optional<Integration.Status> status, Optional<String> statusMessage) {
+            public StatusUpdate(Integration.Status status, String statusMessage, List<String> stepsPerformed) {
                 this.status = status;
                 this.statusMessage = statusMessage;
-            }
-
-            public StatusUpdate(Optional<Integration.Status> status, String statusMessage) {
-                this(status, Optional.of(statusMessage));
+                this.stepsPerformed = stepsPerformed;
             }
 
             public StatusUpdate(Integration.Status status, String statusMessage) {
-                this(Optional.of(status), Optional.of(statusMessage));
+                this(status, statusMessage, null);
             }
 
             public StatusUpdate(Integration.Status status) {
-                this(Optional.of(status), Optional.empty());
+                this(status, null, null);
             }
 
-            public Optional<Integration.Status> getStatus() {
+            public StatusUpdate(Integration.Status status, List<String> stepsPerformed) {
+                this(status, null, stepsPerformed != null && stepsPerformed.size() > 0 ? stepsPerformed : null);
+            }
+
+            public Integration.Status getStatus() {
                 return status;
             }
 
-            public Optional<String> getStatusMessage() {
+            public String getStatusMessage() {
                 return statusMessage;
+            }
+
+            public List<String> getStepsPerformed() {
+                return stepsPerformed;
             }
         }
     }

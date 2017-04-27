@@ -145,6 +145,10 @@ public class IntegrationController {
         }
     }
 
+    private String getLabel(Integration integration) {
+        return "Integration " + integration.getId().orElse("[none]");
+    }
+
     private void callStatusChangeHandler(StatusChangeHandlerProvider.StatusChangeHandler handler, String integrationId) {
         executor.submit(() -> {
             Integration integration = dataManager.fetch(Integration.class, integrationId);
@@ -161,6 +165,8 @@ public class IntegrationController {
                 StatusChangeHandlerProvider.StatusChangeHandler.StatusUpdate update = handler.execute(integration);
                 if (update!=null) {
 
+                    log.info("{} : Setting status to {}", getLabel(integration), update.getStatus());
+
                     // handler.execute might block for while so refresh our copy of the integration
                     // data before we update the current status
 
@@ -169,8 +175,9 @@ public class IntegrationController {
                     dataManager.update(
                         new Integration.Builder()
                             .createFrom(current)
-                            .currentStatus(update.getStatus())
-                            .statusMessage(update.getStatusMessage())
+                            .currentStatus(update.getStatus()) // Status must not be null
+                            .statusMessage(Optional.ofNullable(update.getStatusMessage()))
+                            .stepsDone(Optional.ofNullable(update.getStepsPerformed()))
                             .lastUpdated(new Date())
                             .build());
                 }
