@@ -70,12 +70,6 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             .statusMessage(Optional.empty())
             .lastUpdated(rightNow)
             .createdDate(rightNow)
-            // Set the current status to 'pending' or 'draft' immediately when
-            // This status will be later changed by the activation handlers.
-            // This is not the best place to set but should be done by the IntegrationController
-            // However because of how the Controller works (i.e. that any change to the integration
-            // within the controller will trigger an event again), the initial status must be set
-            // from the outside for the moment.
             .currentStatus(determineCurrentStatus(integration))
             .build();
         return Creator.super.create(updatedIntegration);
@@ -87,18 +81,23 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             .createFrom(integration)
             .token(Tokens.getAuthenticationToken())
             .lastUpdated(new Date())
-            // See above for the reasoning why to set the status here
             .currentStatus(determineCurrentStatus(integration))
             .build();
 
         Updater.super.update(id, updatedIntegration);
     }
 
+    // Determine the current status to 'pending' or 'draft' immediately depending on
+    // the desired stated. This status will be later changed by the activation handlers.
+    // This is not the best place to set but should be done by the IntegrationController
+    // However because of how the Controller works (i.e. that any change to the integration
+    // within the controller will trigger an event again), the initial status must be set
+    // from the outside for the moment.
     private Integration.Status determineCurrentStatus(Integration integration) {
         Integration.Status desiredStatus = integration.getDesiredStatus().orElse(Integration.Status.Draft);
-        return desiredStatus == Integration.Status.Activated ?
-                           Integration.Status.Pending :
-                           Integration.Status.Draft;
+        return desiredStatus == Integration.Status.Draft ?
+            Integration.Status.Draft :
+            Integration.Status.Pending;
     }
-    
+
 }
