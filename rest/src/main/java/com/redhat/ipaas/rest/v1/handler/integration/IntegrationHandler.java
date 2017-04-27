@@ -46,31 +46,16 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         return Kind.Integration;
     }
 
-    @PUT
-    @Path(value = "/{id}/activate")
-    @Consumes("application/json")
-    public void activate(@PathParam("id") String id) {
-        updateDesiredStatus(id, Integration.Status.Activated);
-    }
-
-    @PUT
-    @Path(value = "/{id}/deactivate")
-    @Consumes("application/json")
-    public void deactivate(@PathParam("id") String id) {
-        updateDesiredStatus(id, Integration.Status.Deactivated);
-    }
-
     @Override
     public Integration get(String id) {
         Integration integration = Getter.super.get(id);
 
         //fudging the timesUsed for now
         if (integration.getCurrentStatus().equals(Integration.Status.Activated)) {
-            Integration updatedIntegration = integration = new Integration.Builder()
+            return new Integration.Builder()
                     .createFrom(integration)
                     .timesUsed(BigInteger.valueOf(new Date().getTime()/1000000))
                     .build();
-            return updatedIntegration;
         } else {
             return integration;
         }
@@ -79,36 +64,22 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Override
     public Integration create(Integration integration) {
         Date rightNow = new Date();
-        Integration.Status desiredStatus = integration.getDesiredStatus().orElse(Integration.Status.Draft);
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(integration)
             .token(Tokens.getAuthenticationToken())
             .statusMessage(Optional.empty())
             .lastUpdated(rightNow)
             .createdDate(rightNow)
-            .currentStatus(desiredStatus == Integration.Status.Activated ?
-                               Integration.Status.Pending :
-                               Integration.Status.Draft)
-            .build();
-        return Creator.super.create(updatedIntegration);
-    }
-
-    private void updateDesiredStatus(String id, Integration.Status desiredStatus) {
-        this.update(id, new Integration.Builder()
-            .createFrom(get(id))
-            .token(Tokens.getAuthenticationToken())
-            .desiredStatus(desiredStatus)
-            // Set the current status to 'pending' immediately when
-            // a status change is requested.
+            // Set the current status to 'pending' or 'draft' immediately when
             // This status will be later changed by the activation handlers.
             // This is not the best place to set but should be done by the IntegrationController
             // However because of how the Controller works (i.e. that any change to the integration
             // within the controller will trigger an event again), the initial status must be set
             // from the outside for the moment.
-            .currentStatus(Integration.Status.Pending)
-            .build());
+            .currentStatus(determineCurrentStatus(integration))
+            .build();
+        return Creator.super.create(updatedIntegration);
     }
-
 
     @Override
     public void update(String id, Integration integration) {
@@ -116,8 +87,18 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             .createFrom(integration)
             .token(Tokens.getAuthenticationToken())
             .lastUpdated(new Date())
+            // See above for the reasoning why to set the status here
+            .currentStatus(determineCurrentStatus(integration))
             .build();
 
         Updater.super.update(id, updatedIntegration);
     }
+
+    private Integration.Status determineCurrentStatus(Integration integration) {
+        Integration.Status desiredStatus = integration.getDesiredStatus().orElse(Integration.Status.Draft);
+        return desiredStatus == Integration.Status.Activated ?
+                           Integration.Status.Pending :
+                           Integration.Status.Draft;
+    }
+    
 }
