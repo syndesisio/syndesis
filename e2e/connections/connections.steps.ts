@@ -42,6 +42,21 @@ class ConnectionSteps {
     // todo add more assertion on connection details page
   }
 
+  @then(/^Camilla can not see "([^"]*)" connection anymore$/)
+  public expectConnectionTitleNonPresent (connectionName: string, callback: CallbackStepDefinition): void {
+    const listComponent = new ConnectionsListComponent();
+    const connection = listComponent.getConnection(connectionName);
+    expect(connection.isPresent(), `There shouldnt be a present connection ${connectionName}`)
+      .to.eventually.be.false.notify(callback);
+  }
+
+  @when(/^Camilla deletes the "([^"]*)" connection*$/)
+  public deleteConnection(connectionName: string): P<any> {
+    // Write code here that turns the phrase above into concrete actions
+    const listComponent = new ConnectionsListComponent();
+    return listComponent.deleteConnection(connectionName);
+  }
+
   @when(/^Camilla selects the "([^"]*)" connection.*$/)
   public selectConnection(connectionName: string): P<any> {
     // Write code here that turns the phrase above into concrete actions
