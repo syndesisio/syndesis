@@ -100,6 +100,10 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             // Set the current status to 'pending' immediately when
             // a status change is requested.
             // This status will be later changed by the activation handlers.
+            // This is not the best place to set but should be done by the IntegrationController
+            // However because of how the Controller works (i.e. that any change to the integration
+            // within the controller will trigger an event again), the initial status must be set
+            // from the outside for the moment.
             .currentStatus(Integration.Status.Pending)
             .build());
     }
