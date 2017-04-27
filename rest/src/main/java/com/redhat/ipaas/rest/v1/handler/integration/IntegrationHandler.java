@@ -79,16 +79,17 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Override
     public Integration create(Integration integration) {
         Date rightNow = new Date();
+        Integration.Status desiredStatus = integration.getDesiredStatus().orElse(Integration.Status.Draft);
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(integration)
             .token(Tokens.getAuthenticationToken())
-            .currentStatus(Integration.Status.Draft)
-            .desiredStatus(Integration.Status.Activated)
             .statusMessage(Optional.empty())
             .lastUpdated(rightNow)
             .createdDate(rightNow)
+            .currentStatus(desiredStatus == Integration.Status.Activated ?
+                               Integration.Status.Pending :
+                               Integration.Status.Draft)
             .build();
-
         return Creator.super.create(updatedIntegration);
     }
 
