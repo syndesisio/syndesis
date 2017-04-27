@@ -36,9 +36,9 @@ public interface StatusChangeHandlerProvider {
         StatusUpdate execute(Integration model);
 
         class StatusUpdate {
-            Integration.Status status;
-            String statusMessage;
-            List<String> stepsPerformed;
+            private Integration.Status status;
+            private String statusMessage;
+            private List<String> stepsPerformed;
 
             public StatusUpdate(Integration.Status status, String statusMessage, List<String> stepsPerformed) {
                 this.status = status;

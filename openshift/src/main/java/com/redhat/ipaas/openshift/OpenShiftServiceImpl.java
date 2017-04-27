@@ -15,23 +15,21 @@
  */
 package com.redhat.ipaas.openshift;
 
-import com.redhat.ipaas.core.IPaasServerException;
-import com.redhat.ipaas.core.Names;
-import com.redhat.ipaas.core.Tokens;
-
-import io.fabric8.kubernetes.client.RequestConfig;
-import io.fabric8.kubernetes.client.RequestConfigBuilder;
-import io.fabric8.kubernetes.client.utils.Serialization;
-import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.fabric8.openshift.api.model.DeploymentConfigStatus;
-import io.fabric8.openshift.client.NamespacedOpenShiftClient;
-import io.fabric8.openshift.client.OpenShiftClient;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import com.redhat.ipaas.core.IPaasServerException;
+import com.redhat.ipaas.core.Names;
+import com.redhat.ipaas.core.Tokens;
+import io.fabric8.kubernetes.client.RequestConfig;
+import io.fabric8.kubernetes.client.RequestConfigBuilder;
+import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.fabric8.openshift.api.model.DeploymentConfigStatus;
+import io.fabric8.openshift.client.NamespacedOpenShiftClient;
+import io.fabric8.openshift.client.OpenShiftClient;
 
 public class OpenShiftServiceImpl implements OpenShiftService {
 
