@@ -21,7 +21,6 @@ import com.redhat.ipaas.core.Tokens;
 
 import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
-import io.fabric8.kubernetes.client.utils.Serialization;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
@@ -115,7 +114,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public String getGitHubWebHookUrl(OpenShiftDeployment d, String secret) {
         return String.format("%s/namespaces/%s/buildconfigs/%s/webhooks/%s/github",
-                             config.getOpenshiftApiBaseUrl(), config.getNamespace(), Names.sanitize(d.getName()), secret);
+                             config.getApiBaseUrl(), config.getNamespace(), Names.sanitize(d.getName()), secret);
     }
 
     private int nullSafe(Integer nr) {
