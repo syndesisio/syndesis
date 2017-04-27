@@ -175,9 +175,9 @@ public class IntegrationController {
                     dataManager.update(
                         new Integration.Builder()
                             .createFrom(current)
-                            .currentStatus(update.getStatus())
-                            .statusMessage(update.getStatusMessage())
-                            .stepsDone(update.getStepsPerformed())
+                            .currentStatus(update.getStatus()) // Status must not be null
+                            .statusMessage(Optional.of(update.getStatusMessage()))
+                            .stepsDone(Optional.of(update.getStepsPerformed()))
                             .lastUpdated(new Date())
                             .build());
                 }
