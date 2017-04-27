@@ -95,6 +95,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     private void updateStatus(String id, Integration.Status desiredStatus) {
         this.update(id, new Integration.Builder()
             .createFrom(get(id))
+            .token(Tokens.getAuthenticationToken())
             .desiredStatus(desiredStatus)
             .build());
     }
