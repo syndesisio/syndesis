@@ -176,8 +176,8 @@ public class IntegrationController {
                         new Integration.Builder()
                             .createFrom(current)
                             .currentStatus(update.getStatus()) // Status must not be null
-                            .statusMessage(Optional.of(update.getStatusMessage()))
-                            .stepsDone(Optional.of(update.getStepsPerformed()))
+                            .statusMessage(Optional.ofNullable(update.getStatusMessage()))
+                            .stepsDone(Optional.ofNullable(update.getStepsPerformed()))
                             .lastUpdated(new Date())
                             .build());
                 }
