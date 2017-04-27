@@ -18,8 +18,10 @@ package com.redhat.ipaas.openshift;
 import io.fabric8.openshift.client.OpenShiftConfig;
 import io.fabric8.openshift.client.OpenShiftConfigBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 @ConfigurationProperties("openshift")
+@Validated
 public class OpenShiftConfigurationProperties {
 
     public static final String SERVICE_CA_CERT_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt";
@@ -32,7 +34,7 @@ public class OpenShiftConfigurationProperties {
 
     private String builderImage = "fabric8/s2i-java:2.0.0";
 
-    private String openshiftApiBaseUrl;
+    private String apiBaseUrl;
 
     private String namespace;
 
@@ -66,12 +68,12 @@ public class OpenShiftConfigurationProperties {
         this.builderImage = builderImage;
     }
 
-    public String getOpenshiftApiBaseUrl() {
-        return openshiftApiBaseUrl;
+    public String getApiBaseUrl() {
+        return apiBaseUrl;
     }
 
-    public void setOpenshiftApiBaseUrl(String openshiftApiBaseUrl) {
-        this.openshiftApiBaseUrl = openshiftApiBaseUrl;
+    public void setApiBaseUrl(String apiBaseUrl) {
+        this.apiBaseUrl = apiBaseUrl;
     }
 
     public String getNamespace() {
