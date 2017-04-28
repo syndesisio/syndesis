@@ -6,7 +6,8 @@ MESSAGE=$(cat <<'EOF'
 #
 # Do not edit, this is a generated file.  To regenerate,  run: ./generator/run.sh
 #
-EOF)
+EOF
+)
 
 go get -u github.com/spf13/cobra github.com/spf13/pflag github.com/hoisie/mustache
 

@@ -2127,6 +2127,8 @@ objects:
         service: ipaas-github-proxy.${NAMESPACE}.svc
       openshift:
         openShiftHost: ipaas-openshift-proxy.${NAMESPACE}.svc
+        apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
+        namespace: ${NAMESPACE}
       keycloak:
         enabled: true
         configurationFile: file:config/ipaas-client.json
