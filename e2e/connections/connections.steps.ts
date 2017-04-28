@@ -4,6 +4,7 @@ import { CallbackStepDefinition, TableDefinition } from 'cucumber';
 import { ConnectionDetailPage } from './detail/detail.po';
 import { ConnectionsListComponent } from './list/list.po';
 import { ConnectionViewComponent } from './edit/edit.po';
+import { ConnectionCreatePage } from './edit/edit.po';
 import { log } from '../../src/app/logging';
 import util = require('util');
 
@@ -42,12 +43,27 @@ class ConnectionSteps {
     // todo add more assertion on connection details page
   }
 
+  @then(/^Camilla can see "([^"]*)" connection$/)
+  public expectConnectionTitlePresent (connectionName: string, callback: CallbackStepDefinition): void {
+    const listComponent = new ConnectionsListComponent();
+    const connection = listComponent.getConnection(connectionName);
+    expect(connection.isPresent(), `There should be a present connection ${connectionName}`)
+      .to.eventually.be.true.notify(callback);
+  }
+
   @then(/^Camilla can not see "([^"]*)" connection anymore$/)
   public expectConnectionTitleNonPresent (connectionName: string, callback: CallbackStepDefinition): void {
     const listComponent = new ConnectionsListComponent();
     const connection = listComponent.getConnection(connectionName);
     expect(connection.isPresent(), `There shouldnt be a present connection ${connectionName}`)
       .to.eventually.be.false.notify(callback);
+  }
+
+  @then(/^she is presented with a connection create page$/)
+  public editorOpened(callback: CallbackStepDefinition): void {
+    const page = new ConnectionCreatePage();
+    expect(page.rootElement().isPresent(), 'there must be edit page root element')
+      .to.eventually.be.true.notify(callback);
   }
 
   @when(/^Camilla deletes the "([^"]*)" connection*$/)

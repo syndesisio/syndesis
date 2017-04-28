@@ -8,6 +8,7 @@ import { Promise as P } from 'es6-promise';
 import { expect, World } from './world';
 import { User, UserDetails } from './common';
 import { log } from '../../src/app/logging';
+import { IntegrationsListPage } from '../integrations/list/list.po';
 /**
  * Generic steps that can be used in various features
  * They may change state through world class.
@@ -67,7 +68,7 @@ class CommonSteps {
     expect(currentLink.active, `${pageTitle} link must be active`).to.be.true;
   }
 
-  @then(/^(\w+)? ?is presented with the "([^"]*)" link$/)
+  @then(/^(\w+)? ?is presented with the "([^"]*)" link*$/)
   public async verifyLink(alias: string, linkTitle: string): P<any> {
     const currentLink = await this.world.app.getLink(linkTitle);
 
@@ -143,6 +144,13 @@ class CommonSteps {
       .to.eventually.be.true.notify(callback);
   }
 
+  @then(/^Integration "([^"]*)" is present in top 5 integrations$/)
+  public expectIntegrationPresent(name: string, callback: CallbackStepDefinition): void {
+    log.info(`Verifying integration ${name} is present in top 5 integrations`);
+    const page = new IntegrationsListPage();
+    expect(page.listComponent().isIntegrationPresentOnDashBoard(name), `Integration ${name} must be present`)
+      .to.eventually.be.true.notify(callback);
+  }
   /**
    * Scroll the webpage.
    *
