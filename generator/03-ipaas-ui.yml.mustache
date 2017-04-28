@@ -7,12 +7,14 @@
       component: ipaas-ui
     annotations:
       service.alpha.openshift.io/serving-cert-secret-name: ipaas-ui-tls
-#      service.alpha.openshift.io/dependencies: |
-#        [ {"name":"ipaas-keycloak","kind":"Service"},
-#          {"name":"ipaas-rest","kind":"Service"},
-#          {"name":"ipaas-verifier","kind":"Service"},
-#          {"name":"ipaas-datamapper","kind":"Service"},
-#          {"name":"ipaas-db","kind":"Service"} ]
+      service.alpha.openshift.io/dependencies: |
+        [ {"name":"ipaas-keycloak","kind":"Service"},
+          {"name":"ipaas-rest","kind":"Service"},
+          {"name":"ipaas-verifier","kind":"Service"},
+          {"name":"ipaas-datamapper","kind":"Service"},
+          {"name":"ipaas-github-proxy","kind":"Service"},
+          {"name":"ipaas-openshift-proxy","kind":"Service"},
+          {"name":"ipaas-db","kind":"Service"} ]
   spec:
     ports:
     - port: 2015
