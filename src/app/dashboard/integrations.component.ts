@@ -318,10 +318,8 @@ export class DashboardIntegrationsComponent implements OnInit {
         return 'Active';
       case 'Deactivated':
         return 'Inactive';
-      case 'Draft':
-        return 'Draft';
     }
-    return '';
+    return integration.currentStatus;
   }
 
 
