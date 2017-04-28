@@ -1,7 +1,11 @@
 #!/bin/bash
 
+echo "Remove IPaaS from ${KUBERNETES_NAMESPACE}"
+oc project ${KUBERNETES_NAMESPACE}
+
 echo "Displaying the list of Pods in project: ${KUBERNETES_NAMESPACE}"
 oc get pods -n ${KUBERNETES_NAMESPACE}
+
 echo "Removing IPaaS from ${KUBERNETES_NAMESPACE}"
 oc process ipaas \
     ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}.b6ff.rh-idev.openshiftapps.com \
