@@ -47,6 +47,9 @@ jobs:
             mkdir ./junit/
             find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} ./junit/ \;
 
+      - store_test_results:
+          path: ./junit
+
       - store_artifacts:
           path: ./junit
 
@@ -60,7 +63,7 @@ jobs:
 
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               DOCKER_IMAGE_TAG="latest"
-            elif [ "${CIRCLE_BRANCH}" == "summit-demo" ]; then
+            elif [[ "${CIRCLE_BRANCH}" =~ "^summit-demo" ]]; then
               DOCKER_IMAGE_TAG="${CIRCLE_BRANCH}"
               docker tag rhipaas/ipaas-verifier:latest rhipaas/ipaas-verifier:${DOCKER_IMAGE_TAG}
             elif [[ "${CIRCLE_TAG}" =~ "^v[0-9]+(\.[0-9]+){2}" ]]; then
