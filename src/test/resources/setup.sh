@@ -3,16 +3,15 @@
 # We pass the namespace on each command individually, because when this script is run inside a pod, all commands default to the pod namespace (ignoring commands like `oc project` etc)
 echo "Installing IPaaS in ${KUBERNETES_NAMESPACE}"
 
-oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml -n ${KUBERNETES_NAMESPACE} || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml -n ${KUBERNETES_NAMESPACE}
-oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-ephemeral-restricted.yml -n ${KUBERNETES_NAMESPACE}  || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas-ephemeral-restricted.yml -n ${KUBERNETES_NAMESPACE}
-oc new-app ipaas-ephemeral-restricted \
-    -p ROUTE_HOSTNAME=ipaas-testing.b6ff.rh-idev.openshiftapps.com \
+oc create -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml -n ${KUBERNETES_NAMESPACE}  || oc replace -f https://raw.githubusercontent.com/redhat-ipaas/openshift-templates/master/ipaas.yml -n ${KUBERNETES_NAMESPACE}
+
+oc new-app ipaas \
+    -p ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}.b6ff.rh-idev.openshiftapps.com \
+    -p KEYCLOAK_ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}-keycloack.b6ff.rh-idev.openshiftapps.com \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
-    -p OPENSHIFT_OAUTH_CLIENT_ID=system:serviceaccount:${KUBERNETES_NAMESPACE}:ipaas-oauth-client \
-    -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token ipaas-oauth-client -n ${KUBERNETES_NAMESPACE}) \
-    -p OPENSHIFT_OAUTH_DEFAULT_SCOPES="user:info user:check-access role:edit:${KUBERNETES_NAMESPACE}:! role:system:build-strategy-source:${KUBERNETES_NAMESPACE}" \
-    -p GITHUB_OAUTH_CLIENT_ID="iocanel" \
-    -p GITHUB_OAUTH_CLIENT_SECRET="changeme" \
+    -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_OAUTH_CLIENT_ID} \
+    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_OAUTH_CLIENT_SECRET} \
+    -p OPENSHIFT_OAUTH_CLIENT_ID=$(oc project -q) \
     -n ${KUBERNETES_NAMESPACE}
 
 

@@ -3,11 +3,10 @@
 echo "Displaying the list of Pods in project: ${KUBERNETES_NAMESPACE}"
 oc get pods -n ${KUBERNETES_NAMESPACE}
 echo "Removing IPaaS from ${KUBERNETES_NAMESPACE}"
-oc process redhat-ipaas-single-tenant  \
-    ROUTE_HOSTNAME=ipaas-testing.b6ff.rh-idev.openshiftapps.com \
+oc process ipaas \
+    ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}.b6ff.rh-idev.openshiftapps.com \
+    KEYCLOAK_ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}-keycloack.b6ff.rh-idev.openshiftapps.com \
     OPENSHIFT_MASTER=$(oc whoami --show-server) \
-    OPENSHIFT_OAUTH_CLIENT_ID=system:serviceaccount:${KUBERNETES_NAMESPACE}:ipaas-oauth-client \
-    OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token ipaas-oauth-client -n ${KUBERNETES_NAMESPACE}) \
-    OPENSHIFT_OAUTH_DEFAULT_SCOPES="user:info user:check-access role:edit:${KUBERNETES_NAMESPACE}:! role:system:build-strategy-source:${KUBERNETES_NAMESPACE}" \
-    GITHUB_OAUTH_CLIENT_ID="iocanel" \
-    GITHUB_OAUTH_CLIENT_SECRET="changeme" -n ${KUBERNETES_NAMESPACE}  | oc delete -f - -n ${KUBERNETES_NAMESPACE}
+    GITHUB_OAUTH_CLIENT_ID=${GITHUB_OAUTH_CLIENT_ID} \
+    GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_OAUTH_CLIENT_SECRET} \
+    OPENSHIFT_OAUTH_CLIENT_ID=$(oc project -q) \ -n ${KUBERNETES_NAMESPACE}  | oc delete -f - -n ${KUBERNETES_NAMESPACE}
