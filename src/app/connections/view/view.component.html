@@ -30,7 +30,7 @@
 
     <!-- Editing the connection configuration -->
 
-    <div class="col-md-8 col-md-offset-2"
+    <div [class]="inView ? '' : 'col-md-8 col-md-offset-2'"
          *ngSwitchCase="'edit'">
       <div class="card-pf">
         <h2 class="card-pf-title">
