@@ -1,8 +1,8 @@
-# Red Hat iPaaS UI
+# Syndesis UI
 
-[![CircleCI](https://circleci.com/gh/redhat-ipaas/ipaas-ui.svg?style=svg)](https://circleci.com/gh/redhat-ipaas/ipaas-ui)
+[![CircleCI](https://circleci.com/gh/syndesisio/syndesis-ui.svg?style=svg)](https://circleci.com/gh/syndesisio/syndesis-ui)
 
-The front end application or UI for Red Hat iPaaS - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages Red Hat's existing product architecture using OpenShift Online/Dedicated and Fuse Integration Services.
+The front end application or UI for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages Red Hat's existing product architecture using OpenShift Online/Dedicated and Fuse Integration Services.
 
 For the middle tier API that this client communicates with, please see the [ipaas-rest](https://github.com/redhat-ipaas/ipaas-rest) repo.
 
@@ -175,6 +175,6 @@ You can read our FAQ, located in our `/docs` directory, [here](/docs/faq.md).
 
 ## Data Mapper
 
-To update the data mapper, change the commit SHA in package.json to pick up the desired code revision, then run `yarn install`.  Verify that the projects still builds by running `yarn start:prod` and adjust the code as necessary based on the data mapper example usage in the [README](https://github.com/redhat-ipaas/datamapper-ui).
+To update the data mapper, change the commit SHA in package.json to pick up the desired code revision, then run `yarn install`.  Verify that the projects still builds by running `yarn start:prod` and adjust the code as necessary based on the data mapper example usage in the [README](https://github.com/syndesisio/datamapper-ui).
 
 When updating the SHA you should also run `yarn copy:assets` to bring over any assets the data mapper component needs, this tasks copies them all to `src/assets/dm`
