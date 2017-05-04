@@ -1,4 +1,4 @@
-package com.redhat.ipaas.systests;
+package io.syndesis.systests;
 
 import org.arquillian.cube.kubernetes.annotations.PortForward;
 import org.arquillian.cube.openshift.impl.requirement.RequiresOpenshift;
@@ -22,7 +22,7 @@ import okhttp3.Response;
 public class IPaaSRestTest {
 
     @ArquillianResource
-    @Named("ipaas-rest")
+    @Named("syndesis-rest")
     @PortForward
     URL restUrl;
 

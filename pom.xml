@@ -26,10 +26,10 @@
     <version>9</version>
   </parent>
 
-  <groupId>com.redhat.ipaas</groupId>
+  <groupId>io.syndesis</groupId>
   <artifactId>system-tests-project</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>iPaaS System Tests :: Project</name>
+  <name>Syndesis System Tests :: Project</name>
   <inceptionYear>2016</inceptionYear>
 
   <organization>
@@ -49,18 +49,18 @@
     central -->
   <developers>
     <developer>
-      <id>ipaas</id>
-      <name>IpaaS Development Team</name>
+      <id>syndesis</id>
+      <name>Syndesis Development Team</name>
       <organization>redhat</organization>
       <organizationUrl>http://redhat.com/</organizationUrl>
     </developer>
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:redhat-ipaas/ipaas-rest.git</connection>
-    <developerConnection>scm:git:git@github.com:redhat-ipaas/ipaas-rest.git
+    <connection>scm:git:git@github.com:syndesisio/syndesis-rest.git</connection>
+    <developerConnection>scm:git:git@github.com:syndesisio/syndesis-rest.git
     </developerConnection>
-    <url>http://github.com/redhat-ipaas/ipaas-rest/</url>
+    <url>http://github.com/syndesisio/syndesys-system-tests/</url>
     <tag>${project.version}</tag>
   </scm>
 

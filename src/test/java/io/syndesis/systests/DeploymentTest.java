@@ -1,6 +1,5 @@
-package com.redhat.ipaas.systests;
+package io.syndesis.systests;
 
-import org.arquillian.cube.kubernetes.api.Session;
 import org.arquillian.cube.openshift.impl.requirement.RequiresOpenshift;
 import org.arquillian.cube.requirement.ArquillianConditionalRunner;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -19,32 +18,32 @@ import io.fabric8.openshift.api.model.DeploymentConfig;
 public class DeploymentTest {
 
     @ArquillianResource
-    @Named("ipaas-ui")
-    DeploymentConfig ipassUi;
+    @Named("syndesis-ui")
+    DeploymentConfig ui;
 
     @ArquillianResource
-    @Named("ipaas-rest")
-    DeploymentConfig ipassRest;
+    @Named("syndesis-rest")
+    DeploymentConfig rest;
 
     @ArquillianResource
-    @Named("ipaas-keycloak")
-    DeploymentConfig ipassKeycloak;
+    @Named("syndesis-keycloak")
+    DeploymentConfig keycloak;
 
     @ArquillianResource
     KubernetesClient client;
 
     @Test
     public void uiShouldBeReady() {
-        Assert.assertTrue(Readiness.isDeploymentConfigReady(ipassUi));
+        Assert.assertTrue(Readiness.isDeploymentConfigReady(ui));
     }
 
     @Test
     public void restShouldBeReady() {
-        Assert.assertTrue(Readiness.isDeploymentConfigReady(ipassRest));
+        Assert.assertTrue(Readiness.isDeploymentConfigReady(rest));
     }
 
     @Test
     public void keycloakShouldBeReady() {
-        Assert.assertTrue(Readiness.isDeploymentConfigReady(ipassKeycloak));
+        Assert.assertTrue(Readiness.isDeploymentConfigReady(keycloak));
     }
 }

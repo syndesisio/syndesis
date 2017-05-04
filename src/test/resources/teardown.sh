@@ -1,13 +1,13 @@
 #!/bin/bash
 
-echo "Remove IPaaS from ${KUBERNETES_NAMESPACE}"
+echo "Remove Syndesis from ${KUBERNETES_NAMESPACE}"
 oc project ${KUBERNETES_NAMESPACE}
 
 echo "Displaying the list of Pods in project: ${KUBERNETES_NAMESPACE}"
 oc get pods -n ${KUBERNETES_NAMESPACE}
 
-echo "Removing IPaaS from ${KUBERNETES_NAMESPACE}"
-oc process ipaas \
+echo "Removing Syndesis from ${KUBERNETES_NAMESPACE}"
+oc process syndesis \
     ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}.b6ff.rh-idev.openshiftapps.com \
     KEYCLOAK_ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}-keycloack.b6ff.rh-idev.openshiftapps.com \
     OPENSHIFT_MASTER=$(oc whoami --show-server) \
