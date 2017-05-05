@@ -1,3 +1,3 @@
-# iPaaS Connectors
+# Syndesis Connectors
 
-Apache Camel Connectors for Red Hat iPaaS
+Apache Camel Connectors for Syndesis

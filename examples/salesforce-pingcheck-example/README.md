@@ -11,6 +11,6 @@ This example can be run from the command line using:
     
 ### Configuring Credentials
 
-The example uses a Red Hat iPaaS salesforce account for connecting to salesforce.
+The example uses a Red Hat Syndesis salesforce account for connecting to salesforce.
 
 You can configure your own accounts in the `application.properties` file.

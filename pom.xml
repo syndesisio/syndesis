@@ -24,11 +24,11 @@
     <version>9</version>
   </parent-->
 
-  <groupId>com.redhat.ipaas</groupId>
-  <artifactId>ipaas-connectors-project</artifactId>
+  <groupId>io.syndesis</groupId>
+  <artifactId>syndesis-connectors-project</artifactId>
   <version>0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>iPaaS Connectors :: Project</name>
+  <name>Syndesis Connectors :: Project</name>
 
   <inceptionYear>2017</inceptionYear>
 
@@ -49,27 +49,29 @@
     central -->
   <developers>
     <developer>
-      <id>ipaas</id>
-      <name>iPaaS Development Team</name>
-      <organization>redhat</organization>
-      <organizationUrl>http://redhat.com/</organizationUrl>
+      <id>syndesis</id>
+      <name>Syndesis Development Team</name>
     </developer>
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:redhat-ipaas/connectors.git</connection>
-    <developerConnection>scm:git:git@github.com:redhat-ipaas/connectors.git
+    <connection>scm:git:git@github.com:syndesisio/connectors.git</connection>
+    <developerConnection>scm:git:git@github.com:syndesisio/connectors.git
     </developerConnection>
-    <url>http://github.com/redhat-ipaas/connectors/</url>
+    <url>http://github.com/syndesisio/connectors/</url>
     <tag>${project.version}</tag>
   </scm>
 
   <distributionManagement>
     <repository>
-      <id>bintray-redhat-ipaas-maven</id>
-      <name>redhat-ipaas-maven</name>
-      <url>https://api.bintray.com/maven/redhat-ipaas/maven/connectors/;publish=1</url>
+      <id>sonatype-nexus-staging</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+      <uniqueVersion>false</uniqueVersion>
     </repository>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
   </distributionManagement>
 
   <repositories>

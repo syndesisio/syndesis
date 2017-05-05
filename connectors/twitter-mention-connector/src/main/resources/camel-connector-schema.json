@@ -11,8 +11,8 @@
     "async": false,
     "consumerOnly": true,
     "lenientProperties": false,
-    "javaType": "com.redhat.ipaas.connector.twitter.TwitterMentionComponent",
-    "groupId": "com.redhat.ipaas",
+    "javaType": "TwitterMentionComponent",
+    "groupId": "io.syndesis",
     "artifactId": "twitter-mention-connector",
     "version": "0.3-SNAPSHOT"
   },

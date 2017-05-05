@@ -11,8 +11,8 @@
     "async": false,
     "producerOnly": true,
     "lenientProperties": true,
-    "javaType": "com.redhat.ipaas.connector.daytrade.DayTradePlaceComponent",
-    "groupId": "com.redhat.ipaas",
+    "javaType": "DayTradePlaceComponent",
+    "groupId": "io.syndesis",
     "artifactId": "day-trade-place-connector",
     "version": "0.3-SNAPSHOT"
   },

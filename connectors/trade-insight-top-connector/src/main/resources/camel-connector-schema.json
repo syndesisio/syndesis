@@ -11,8 +11,8 @@
     "async": false,
     "consumerOnly": true,
     "lenientProperties": true,
-    "javaType": "com.redhat.ipaas.connector.tradeinsight.TradeInsightTopComponent",
-    "groupId": "com.redhat.ipaas",
+    "javaType": "TradeInsightTopComponent",
+    "groupId": "io.syndesis",
     "artifactId": "trade-insight-top-connector",
     "version": "0.3-SNAPSHOT"
   },

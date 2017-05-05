@@ -6,15 +6,15 @@
   "baseJavaType" : "org.apache.camel.component.rest.RestComponent",
   "name" : "DayTradeGetComponent",
   "scheme" : "day-trade-get",
-  "javaType" : "com.redhat.ipaas.connector.daytrade.DayTradeGetComponent",
-  "groupId" : "com.redhat.ipaas",
+  "javaType" : "io.syndesis.connector.daytrade.DayTradeGetComponent",
+  "groupId" : "io.syndesis",
   "artifactId" : "day-trade-get-connector",
   "version" : "0.3-SNAPSHOT",
   "description" : "Get trade by order id from Day Trade API server",
   "labels" : [ "daytrade" ],
   "pattern" : "To",
   "inputDataType" : "none",
-  "outputDataType" : "java:com.redhat.ipaas.connector.daytrade.Trade",
+  "outputDataType" : "java:io.syndesis.connector.daytrade.Trade",
   "globalOptions" : [ "host" ],
   "componentOptions" : [ "host" ],
   "componentOverrides" : {
@@ -29,6 +29,6 @@
     "path" : "/apis",
     "uriTemplate" : "/orders/{orderId}",
     "bindingMode" : "json",
-    "outType" : "com.redhat.ipaas.connector.daytrade.Trade"
+    "outType" : "io.syndesis.connector.daytrade.Trade"
   }
 }

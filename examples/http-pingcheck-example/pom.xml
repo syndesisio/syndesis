@@ -19,14 +19,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <parent>
-    <groupId>com.redhat.ipaas</groupId>
+    <groupId>io.syndesis</groupId>
     <artifactId>examples</artifactId>
     <version>0.3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>http-pingcheck-example</artifactId>
-  <name>iPaaS Connectors :: HTTP Ping Check Example</name>
+  <name>Syndesis Connectors :: HTTP Ping Check Example</name>
   <description>Validate http connector can connect</description>
   <packaging>jar</packaging>
 
@@ -34,7 +34,7 @@
 
     <!-- connectors used in this example -->
     <dependency>
-      <groupId>com.redhat.ipaas</groupId>
+      <groupId>io.syndesis</groupId>
       <artifactId>http-get-connector</artifactId>
       <version>${project.version}</version>
       <exclusions>
@@ -69,7 +69,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.5.0</version>
         <configuration>
-          <mainClass>com.redhat.ipaas.example.HttpPingCheckMain</mainClass>
+          <mainClass>io.syndesis.example.HttpPingCheckMain</mainClass>
           <includePluginDependencies>false</includePluginDependencies>
         </configuration>
       </plugin>

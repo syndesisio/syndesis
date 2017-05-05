@@ -11,8 +11,8 @@
     "async": false,
     "consumerOnly": true,
     "lenientProperties": false,
-    "javaType": "com.redhat.ipaas.connector.timer.PeriodicTimerComponent",
-    "groupId": "com.redhat.ipaas",
+    "javaType": "PeriodicTimerComponent",
+    "groupId": "io.syndesis",
     "artifactId": "timer-connector",
     "version": "0.3-SNAPSHOT"
   },
