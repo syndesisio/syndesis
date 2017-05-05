@@ -19,14 +19,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <parent>
-    <groupId>com.redhat.ipaas</groupId>
-    <artifactId>ipaas-connectors-project</artifactId>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-connectors-project</artifactId>
     <version>0.3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>connector-verify</artifactId>
-  <name>iPaaS Connectors :: Connector Verify</name>
+  <name>Syndesis Connectors :: Connector Verify</name>
   <description>CLI tooled used to verify connector connectivity</description>
   <packaging>jar</packaging>
 

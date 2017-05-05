@@ -1,1 +1,1 @@
-class=com.redhat.ipaas.connector.http.HttpGetComponent
+class=HttpGetComponent

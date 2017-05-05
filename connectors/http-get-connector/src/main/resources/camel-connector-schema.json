@@ -1,7 +1,7 @@
 {
   "component": {
     "kind": "component",
-    "baseScheme": "ipaas-http",
+    "baseScheme": "syndesis-http",
     "scheme": "http-get",
     "syntax": "http-get:serviceName",
     "title": "HTTP",
@@ -11,8 +11,8 @@
     "async": false,
     "producerOnly": true,
     "lenientProperties": true,
-    "javaType": "com.redhat.ipaas.connector.http.HttpGetComponent",
-    "groupId": "com.redhat.ipaas",
+    "javaType": "io.syndesis.connector.http.HttpGetComponent",
+    "groupId": "io.syndesis",
     "artifactId": "http-get-connector",
     "version": "0.3-SNAPSHOT"
   },

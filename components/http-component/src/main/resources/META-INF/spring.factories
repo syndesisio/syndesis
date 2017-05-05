@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.redhat.ipaas.component.HttpComponentAutoConfiguration
+io.syndesis.component.HttpComponentAutoConfiguration

@@ -1,1 +1,1 @@
-class=com.redhat.ipaas.connector.salesforce.SalesforceUpsertContactComponent
+class=SalesforceUpsertContactComponent

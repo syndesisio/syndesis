@@ -1,7 +1,7 @@
 {
   "component": {
     "kind": "component",
-    "baseScheme": "ipaas-http",
+    "baseScheme": "syndesis-http",
     "scheme": "http-post",
     "syntax": "http-post:serviceName",
     "title": "HTTP",
@@ -11,8 +11,8 @@
     "async": false,
     "producerOnly": true,
     "lenientProperties": true,
-    "javaType": "com.redhat.ipaas.connector.http.HttpPostComponent",
-    "groupId": "com.redhat.ipaas",
+    "javaType": "io.syndesis.connector.http.HttpPostComponent",
+    "groupId": "io.syndesis",
     "artifactId": "http-post-connector",
     "version": "0.3-SNAPSHOT"
   },

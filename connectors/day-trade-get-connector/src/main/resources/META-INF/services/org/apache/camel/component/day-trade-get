@@ -1,1 +1,1 @@
-class=com.redhat.ipaas.connector.daytrade.DayTradeGetComponent
+class=DayTradeGetComponent

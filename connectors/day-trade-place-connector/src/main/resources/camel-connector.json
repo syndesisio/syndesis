@@ -6,14 +6,14 @@
   "baseJavaType" : "org.apache.camel.component.rest.RestComponent",
   "name" : "DayTradePlaceComponent",
   "scheme" : "day-trade-place",
-  "javaType" : "com.redhat.ipaas.connector.daytrade.DayTradePlaceComponent",
-  "groupId" : "com.redhat.ipaas",
+  "javaType" : "io.syndesis.connector.daytrade.DayTradePlaceComponent",
+  "groupId" : "io.syndesis",
   "artifactId" : "day-trade-place-connector",
   "version" : "0.3-SNAPSHOT",
   "description" : "Place trade on Day Trade API server",
   "labels" : [ "daytrade" ],
   "pattern" : "To",
-  "inputDataType" : "java:com.redhat.ipaas.connector.daytrade.Trade",
+  "inputDataType" : "java:io.syndesis.connector.daytrade.Trade",
   "outputDataType" : "none",
   "globalOptions" : [ "host" ],
   "componentOptions" : [ "host" ],
@@ -29,6 +29,6 @@
     "path" : "/day-trade",
     "uriTemplate" : "/orders",
     "bindingMode" : "json",
-    "inType" : "com.redhat.ipaas.connector.daytrade.Trade"
+    "inType" : "io.syndesis.connector.daytrade.Trade"
   }
 }

@@ -11,8 +11,8 @@
     "async": false,
     "producerOnly": true,
     "lenientProperties": false,
-    "javaType": "com.redhat.ipaas.connector.salesforce.SalesforceUpsertContactComponent",
-    "groupId": "com.redhat.ipaas",
+    "javaType": "SalesforceUpsertContactComponent",
+    "groupId": "io.syndesis",
     "artifactId": "salesforce-upsert-contact-connector",
     "version": "0.3-SNAPSHOT"
   },
