@@ -30,6 +30,8 @@
   <packaging>pom</packaging>
   <name>Syndesis Connectors :: Project</name>
 
+  <url>http://syndesis.io</url>
+
   <inceptionYear>2017</inceptionYear>
 
   <organization>
@@ -295,7 +297,7 @@
       <id>release</id>
       <build>
         <plugins>
-          <!--plugin>
+          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
             <executions>
@@ -307,7 +309,7 @@
                 </goals>
               </execution>
             </executions>
-          </plugin-->
+          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
