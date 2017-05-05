@@ -33,7 +33,7 @@
 Linux:
 
     ./start-with-keycloak.sh
-    
+
 Windows:
 
     start-with-keycloak
@@ -79,7 +79,7 @@ $ TOKEN=$(curl \
     -d "password=password" \
     -d "grant_type=password" \
     "http://localhost:8282/auth/realms/syndesis-test/protocol/openid-connect/token" | jq -r .access_token)
-    
+
 $ curl http://localhost:8080/api/v1/components -H "Authorization: Bearer $TOKEN"
 
 # Validate the REST API requires the valid token - should return a 401
@@ -105,7 +105,7 @@ Ignore warning about not being able to remove old image.
 oc delete pod $(oc get pods | awk '{ print $1 }' | grep syndesis-rest)
 ```
 
-* Edit config 
+* Edit config
 
 ```
 oc edit cm syndesis-rest-config

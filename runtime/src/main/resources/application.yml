@@ -21,7 +21,7 @@ resteasy:
   jaxrs:
     app:
       registration: property
-      classes: com.redhat.ipaas.rest.v1.V1Application
+      classes: V1Application
 
 cors:
   allowedOrigins: "*"

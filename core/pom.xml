@@ -20,13 +20,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.redhat.ipaas</groupId>
-    <artifactId>ipaas-rest-parent</artifactId>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-rest-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>core</artifactId>
-  <name>iPaaS REST :: Core</name>
+  <name>Syndesis REST :: Core</name>
   <packaging>jar</packaging>
 
   <dependencies>
