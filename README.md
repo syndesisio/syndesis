@@ -1,10 +1,10 @@
-# Red Hat iPaaS API
+# Syndesis REST API
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/daf25eee770345c9b72a2b8aecb90182)](https://www.codacy.com/app/jimmidyson/ipaas-rest?utm_source=github.com&utm_medium=referral&utm_content=redhat-ipaas/ipaas-rest&utm_campaign=badger)
-[![CircleCI](https://circleci.com/gh/redhat-ipaas/ipaas-rest.png)](https://circleci.com/gh/redhat-ipaas/ipaas-rest)
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/v6ycvs9nw6o2t821/branch/master?svg=true)](https://ci.appveyor.com/project/jimmidyson/ipaas-rest/)
-[![Maven Central](https://img.shields.io/maven-central/v/com.redhat.ipaas/ipaas-rest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22redhat-ipaas%22%20AND%20a%3A%22ipaas-rest%22)
-[![Dependency Status](https://dependencyci.com/github/redhat-ipaas/ipaas-rest/badge)](https://dependencyci.com/github/redhat-ipaas/ipaas-rest)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/daf25eee770345c9b72a2b8aecb90182)](https://www.codacy.com/app/jimmidyson/syndesis-rest?utm_source=github.com&utm_medium=referral&utm_content=syndesisio/syndesis-rest&utm_campaign=badger)
+[![CircleCI](https://circleci.com/gh/syndesisio/syndesis-rest.png)](https://circleci.com/gh/syndesisio/syndesis-rest)
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/v6ycvs9nw6o2t821/branch/master?svg=true)](https://ci.appveyor.com/project/jimmidyson/syndesis-rest/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.redhat.syndesis/syndesis-rest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22syndesisio%22%20AND%20a%3A%22syndesis-rest%22)
+[![Dependency Status](https://dependencyci.com/github/syndesisio/syndesis-rest/badge)](https://dependencyci.com/github/syndesisio/syndesis-rest)
 
 - [Building](#building)
 - [Running](#run-in-development-mode)
@@ -13,7 +13,7 @@
 - [Authentication](#authentication)
 
 ### Swagger
-[![Swagger](http://dgrechka.net/swagger_validator_content_type_proxy.php?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-rest/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)](https://online.swagger.io/validator/debug?url=https://circleci.com/api/v1/project/redhat-ipaas/ipaas-rest/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)
+[![Swagger](http://dgrechka.net/swagger_validator_content_type_proxy.php?url=https://circleci.com/api/v1/project/syndesisio/syndesis-rest/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)](https://online.swagger.io/validator/debug?url=https://circleci.com/api/v1/project/syndesisio/syndesis-rest/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)
 
 # Building
 
@@ -25,7 +25,7 @@
               -p 5432:5432 \
               -e POSTGRES_USER=postgres \
               -e POSTGRES_PASSWORD=password \
-              -e POSTGRES_DB=ipaas \
+              -e POSTGRES_DB=syndesis \
               postgres
 
 # Run in development mode
@@ -49,7 +49,7 @@ Windows:
 * REST service: [http://localhost:8080/api/v1/](http://localhost:8080/api/v1/)
 * Swagger doc:  [http://localhost:8080/api/v1/swagger.json](http://localhost:8080/api/v1/swagger.json)
 
-There is a [staging URL](https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/api/v1/) on OpenShift dedicated that you can test with, along with the [Swagger JSON](https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/api/v1/swagger.json) [![Swagger UI](http://petstore.swagger.io/images/logo_small.png)](http://petstore.swagger.io/?url=https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/api/v1/swagger.json).
+There is a [staging URL](https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/api/v1/) on OpenShift dedicated that you can test with, along with the [Swagger JSON](https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/api/v1/swagger.json) [![Swagger UI](http://petstore.swagger.io/images/logo_small.png)](http://petstore.swagger.io/?url=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/api/v1/swagger.json).
 
 This demo endpoint has some preloaded data and can be used for testing and demoing purposes.
 
@@ -63,7 +63,7 @@ The header should look like:
     Authorization: Bearer MDQyODExLCJpc3MiOi...
 
 The current implementation uses [Keycloak](http://keycloak.org/) as an OAuth Authorization Server. Keycloak provides the capability
-to broker multiple identity providers and this allows the iPaaS to be independent of identity providers.
+to broker multiple identity providers and this allows Syndesis to be independent of identity providers.
 
 ## Getting an access token locally
 
@@ -78,7 +78,7 @@ $ TOKEN=$(curl \
     -d "username=user" \
     -d "password=password" \
     -d "grant_type=password" \
-    "http://localhost:8282/auth/realms/ipaas-test/protocol/openid-connect/token" | jq -r .access_token)
+    "http://localhost:8282/auth/realms/syndesis-test/protocol/openid-connect/token" | jq -r .access_token)
     
 $ curl http://localhost:8080/api/v1/components -H "Authorization: Bearer $TOKEN"
 
@@ -99,16 +99,16 @@ mvn fabric8:build -Dfabric8.mode=kubernetes
 
 Ignore warning about not being able to remove old image.
 
-* Kill Pod for `ipaas-rest`
+* Kill Pod for `syndesis-rest`
 
 ```
-oc delete pod $(oc get pods | awk '{ print $1 }' | grep ipaas-rest)
+oc delete pod $(oc get pods | awk '{ print $1 }' | grep syndesis-rest)
 ```
 
 * Edit config 
 
 ```
-oc edit cm ipaas-rest-config
+oc edit cm syndesis-rest-config
 ```
 
 * Get Token from developer-tool in Chrome when having the UI open
@@ -120,11 +120,11 @@ TOKEN="...."
 * Call the REST API with curl
 
 ```
-curl -k -v https://ipaas.192.168.64.3.xip.io/api/v1/integrations -H "Authorization: Bearer $TOKEN" -H "Accept: application/json" -H "Content-Type: application/json" -d '{ "name": "ipass-test-repo" }'
+curl -k -v https://syndesis.192.168.64.3.xip.io/api/v1/integrations -H "Authorization: Bearer $TOKEN" -H "Accept: application/json" -H "Content-Type: application/json" -d '{ "name": "syndesis-test-repo" }'
 ```
 
 * Port forward for remote debugging (set JAVA_OPTIONS in your DC to enable it)
 
 ```
-oc port-forward $(oc get pods | awk '{ print $1 }' | grep ipaas-rest) 8000:8000
+oc port-forward $(oc get pods | awk '{ print $1 }' | grep syndesis-rest) 8000:8000
 ```
