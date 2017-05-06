@@ -1,6 +1,6 @@
-### Red Hat iPaaS Verifier Service
+### Syndesis Verifier Service
 
-This project offers the online verification of https://github.com/redhat-ipaas/connectors[Camel Connectors]. It provides a single Endpoint
+This project offers the online verification of https://github.com/syndesisio/connectors[Camel Connectors]. It provides a single Endpoint
 
 ```
 /verify
@@ -11,12 +11,12 @@ which take connector specific parameters as input and returns the result of the 
 NOTE: Add detailed description of input and output parameters.
 
 
-This service is called from within https://github.com/redhat-ipaas/ipaas-rest[iPaaS Rest] as part of its `/connectors/verifier` endpoint.
+This service is called from within https://github.com/syndesisio/syndesis-rest[Syndesis Rest] as part of its `/connectors/verifier` endpoint.
 
 The data flow is:
 
 ```
-iPaaS UI --> iPaaS Rest --> iPaaS Verifier --> Camel Connectors
+Syndesis UI --> Syndesis Rest --> Syndesis Verifier --> Camel Connectors
 ```
 
 It's meant to be used in a synchronous flow.
