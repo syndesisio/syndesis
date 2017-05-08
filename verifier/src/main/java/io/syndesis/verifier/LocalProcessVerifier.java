@@ -37,7 +37,7 @@ import org.springframework.util.FileSystemUtils;
 public class LocalProcessVerifier {
 
     private final ProjectGenerator projectGenerator;
-    private String localMavenRepoLocation = null; // "/tmp/ipaas-local-mvn-repo";
+    private String localMavenRepoLocation = null; // "/tmp/syndesis-local-mvn-repo";
 
     public LocalProcessVerifier(ProjectGenerator projectGenerator) {
         this.projectGenerator = projectGenerator;
@@ -133,7 +133,7 @@ public class LocalProcessVerifier {
 
     private String getConnectorClasspath(Connector connector) throws IOException, InterruptedException {
         byte[] pom = new byte[0]; // TODO: Fix generation to use an Action projectGenerator.generatePom(connector);
-        java.nio.file.Path tmpDir = Files.createTempDirectory("ipaas-connector");
+        java.nio.file.Path tmpDir = Files.createTempDirectory("syndesis-connector");
         try {
             Files.write(tmpDir.resolve("pom.xml"), pom);
             ArrayList<String> args = new ArrayList<>();

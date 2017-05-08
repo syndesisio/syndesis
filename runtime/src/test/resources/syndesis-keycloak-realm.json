@@ -1,5 +1,5 @@
 {
-  "realm": "ipaas-test",
+  "realm": "syndesis-test",
   "enabled": true,
   "sslRequired": "none",
   "registrationAllowed": false,
@@ -46,7 +46,7 @@
   },
   "scopeMappings": [
     {
-      "client": "ipaas-test-client",
+      "client": "syndesis-test-client",
       "roles": [
         "user"
       ]
@@ -54,13 +54,13 @@
   ],
   "clients": [
     {
-      "clientId": "ipaas-test-client",
+      "clientId": "syndesis-test-client",
       "enabled": true,
       "publicClient": false,
       "bearerOnly": true
     },
     {
-      "clientId": "ipaas-ui",
+      "clientId": "syndesis-ui",
       "surrogateAuthRequired": false,
       "enabled": true,
       "clientAuthenticatorType": "client-secret",
@@ -94,7 +94,7 @@
   "clientScopeMappings": {
     "account": [
       {
-        "client": "ipaas-test-client",
+        "client": "syndesis-test-client",
         "roles": [
           "view-profile"
         ]

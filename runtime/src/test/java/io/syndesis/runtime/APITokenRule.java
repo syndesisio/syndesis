@@ -38,7 +38,7 @@ public class APITokenRule extends ExternalResource {
 
     private int keycloakPort = Integer.parseUnsignedInt(System.getProperty("keycloak.http.port", "8080"));
 
-    private String keycloakRealm = System.getProperty("keycloak.realm", "ipaas-test");
+    private String keycloakRealm = System.getProperty("keycloak.realm", "syndesis-test");
 
     private String keycloakProtocol = System.getProperty("keycloak.protocol", "openid-connect");
 

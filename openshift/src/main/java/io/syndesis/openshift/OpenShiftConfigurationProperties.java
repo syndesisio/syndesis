@@ -28,7 +28,7 @@ public class OpenShiftConfigurationProperties {
 
     private boolean enabled;
 
-    private String openShiftHost = "https://ipaas-openshift-proxy." + new OpenShiftConfigBuilder().build().getNamespace() + ".svc";
+    private String openShiftHost = "https://syndesis-openshift-proxy." + new OpenShiftConfigBuilder().build().getNamespace() + ".svc";
 
     private OpenShiftConfig openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(openShiftHost).withCaCertFile(SERVICE_CA_CERT_FILE).build();
 
@@ -38,7 +38,7 @@ public class OpenShiftConfigurationProperties {
 
     private String namespace;
 
-    private String integrationServiceAccount = "ipaas-integration";
+    private String integrationServiceAccount = "syndesis-integration";
 
     public boolean isEnabled() {
         return enabled;

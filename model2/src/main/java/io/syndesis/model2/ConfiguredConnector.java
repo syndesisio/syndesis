@@ -31,7 +31,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity(name = "ConfiguredConnector")
-@Table(name = "ipaas_configured_connector")
+@Table(name = "syndesis_configured_connector")
 public @Data class ConfiguredConnector implements Serializable {
 
     private static final long serialVersionUID = -5012309870194352171L;

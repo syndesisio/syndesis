@@ -129,7 +129,7 @@
               <contact>
                 <email>syndesis-dev@redhat.com</email>
                 <name>The Syndesis Developers</name>
-                <url>https://redhat-ipaas.github.io</url>
+                <url>https://syndesis.io/</url>
               </contact>
             </info>
             <schemes>http,https</schemes>

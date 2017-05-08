@@ -24,7 +24,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("github")
 public class GitHubProperties {
 
-    private String service = "ipaas-github-proxy";
+    private String service = "syndesis-github-proxy";
 
     public String getService() {
         return service;

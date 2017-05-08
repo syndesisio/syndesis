@@ -15,7 +15,7 @@
 #
 
 deployment:
-  file: com/redhat/ipaas/dao/deployment.json
+  file: io/syndesis/dao/deployment.json
 
 resteasy:
   jaxrs:
@@ -36,7 +36,7 @@ spring:
   zipkin:
     enabled: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/ipaas?sslmode=disable
+    url: jdbc:postgresql://localhost:5432/syndesis?sslmode=disable
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
@@ -74,11 +74,11 @@ openshift:
 # GitHub service specific config
 github:
   enabled: true
-  service: ipaas-github-proxy
+  service: syndesis-github-proxy
 
 verifier:
   kind: service
-  service: ipaas-verifier
+  service: syndesis-verifier
 
 generator:
   secretMaskingEnabled: true

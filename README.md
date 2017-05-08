@@ -1,9 +1,9 @@
 # Syndesis REST API
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/daf25eee770345c9b72a2b8aecb90182)](https://www.codacy.com/app/jimmidyson/syndesis-rest?utm_source=github.com&utm_medium=referral&utm_content=syndesisio/syndesis-rest&utm_campaign=badger)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/daf25eee770345c9b72a2b8aecb90182)](https://www.codacy.com/app/syndesisio/syndesis-rest)
 [![CircleCI](https://circleci.com/gh/syndesisio/syndesis-rest.png)](https://circleci.com/gh/syndesisio/syndesis-rest)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/v6ycvs9nw6o2t821/branch/master?svg=true)](https://ci.appveyor.com/project/jimmidyson/syndesis-rest/)
-[![Maven Central](https://img.shields.io/maven-central/v/com.redhat.syndesis/syndesis-rest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22syndesisio%22%20AND%20a%3A%22syndesis-rest%22)
+[![Maven Central](https://img.shields.io/maven-central/v/io.syndesis/syndesis-rest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22syndesisio%22%20AND%20a%3A%22syndesis-rest%22)
 [![Dependency Status](https://dependencyci.com/github/syndesisio/syndesis-rest/badge)](https://dependencyci.com/github/syndesisio/syndesis-rest)
 
 - [Building](#building)

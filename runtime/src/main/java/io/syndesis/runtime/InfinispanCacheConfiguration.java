@@ -38,7 +38,7 @@ public class InfinispanCacheConfiguration {
         return new DefaultCacheManager(
             new GlobalConfigurationBuilder().nonClusteredDefault()
                 .globalJmxStatistics().enable()
-                .defaultCacheName("ipaas-cache")
+                .defaultCacheName("syndesis-cache")
                 .build(),
             new ConfigurationBuilder().simpleCache(true)
                 .memory().evictionType(EvictionType.COUNT).size(maxEntries)

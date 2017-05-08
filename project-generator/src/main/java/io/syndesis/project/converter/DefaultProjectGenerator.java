@@ -103,7 +103,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
         Map<String, byte[]> contents = new HashMap<>();
         contents.put("README.md", generateFromRequest(request, readmeMustache));
-        contents.put("src/main/java/com/redhat/ipaas/example/Application.java", generateFromRequest(request, applicationJavaMustache));
+        contents.put("src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
         contents.put("src/main/resources/application.properties", generateFromRequest(request, applicationYmlMustache));
         contents.put("src/main/resources/funktion.yml", generateFlowYaml(contents, request));
         contents.put("pom.xml", generatePom(request.getIntegration()));
@@ -131,7 +131,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     /*
     Required for a local verifier, but does not work because the connector does not carry any GAV (but a
-    reference to a 'default' action. Or the mapping happens in the external ipaas-verifier service:
+    reference to a 'default' action. Or the mapping happens in the external syndesis-verifier service:
 
     public byte[] generatePom(Connector connector) throws IOException {
         Set<MavenGav> connectors = new LinkedHashSet<>();

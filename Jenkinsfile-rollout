@@ -16,11 +16,11 @@ slave {
                     }
 
                     stage 'System Tests'
-                    test(component: 'ipaas-rest', namespace: "${testingNamespace}", serviceAccount: 'jenkins')
+                    test(component: 'syndesis-rest', namespace: "${testingNamespace}", serviceAccount: 'jenkins')
 
                     stage 'Rollout'
-                    tag(sourceProject: 'ipaas-ci', imageStream: 'ipaas-rest')
-                    rollout(deploymentConfig: 'ipaas-rest', namespace: 'ipaas-staging')
+                    tag(sourceProject: 'syndesis-ci', imageStream: 'syndesis-rest')
+                    rollout(deploymentConfig: 'syndesis-rest', namespace: 'syndesis-staging')
                  }
 
         }

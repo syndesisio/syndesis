@@ -51,10 +51,9 @@
     central -->
   <developers>
     <developer>
-      <id>ipaas</id>
-      <name>IpaaS Development Team</name>
-      <organization>redhat</organization>
-      <organizationUrl>http://redhat.com/</organizationUrl>
+      <id>syndesis</id>
+      <name>Syndesis Development Team</name>
+      <organizationUrl>https://syndesis.io/</organizationUrl>
     </developer>
   </developers>
 

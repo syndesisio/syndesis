@@ -74,49 +74,49 @@
           "properties": {
           },
           "id": "io.syndesis:twitter-mention-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-mention"
         },
         {
           "name": "Search",
           "description": "Search tweets based one or more keywords",
           "id": "io.syndesis:twitter-search-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-search-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:twitter-search-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-search"
         },
         {
           "name": "Send a Tweet",
           "description": "Creates a new tweet",
           "id": "io.syndesis:twitter-tweet-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-tweet-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:twitter-tweet-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-tweet"
         },
         {
           "description": "Direct message a specific user",
           "name": "Send a Direct Message",
           "id": "io.syndesis:twitter-directmessage-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-directmessage-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:twitter-directmessage-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-directmessage"
         },
         {
           "description": "Retrieve tweets from my timeline",
           "name": "Get My Timeline",
           "id": "io.syndesis:twitter-mytimeline-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-mytimeline-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:twitter-mytimeline-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-mytimeline"
         },
         {
           "description": "Retrieve tweets from another user's timeline",
           "name": "Get A Timeline",
           "id": "io.syndesis:twitter-usertimeline-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-usertimeline-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:twitter-usertimeline-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-usertimeline"
         },
         {
           "description": "Retrieve tweets which retweet one of my tweets",
           "name": "Get Retweets",
           "id": "io.syndesis:twitter-retweets-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-retweets-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:twitter-retweets-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-retweets"
         }
       ]
@@ -237,43 +237,43 @@
               "description": "SObject external ID field name"
             }
           },
-          "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-upsert-contact"
         },{
           "id": "io.syndesis:salesforce-create-opportunity-connector:latest",
           "description": "Create a new Salesforce opportunity based on the input message",
           "name": "Create Opportunity",
-          "camelConnectorGAV": "io.syndesis:salesforce-create-opportunity-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:salesforce-create-opportunity-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-create-opportunity"
         },{
           "id": "io.syndesis:salesforce-create-lead-connector:latest",
           "description": "Create a new Salesforce lead based on the input message",
           "name": "Create Lead",
-          "camelConnectorGAV": "io.syndesis:salesforce-create-lead-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:salesforce-create-lead-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-create-lead"
         },{
           "id": "io.syndesis:salesforce-create-account-connector:latest",
           "description": "Create a new Salesforce account based on the input message",
           "name": "Create Account",
-          "camelConnectorGAV": "io.syndesis:salesforce-create-account-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:salesforce-create-account-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-create-account"
         },{
           "id": "io.syndesis:salesforce-create-case-connector:latest",
           "description": "Create a new Salesforce case based on the input message",
           "name": "Create Case",
-          "camelConnectorGAV": "io.syndesis:salesforce-create-case-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:salesforce-create-case-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-create-case"
         },{
           "id": "io.syndesis:salesforce-search-connector:latest",
           "description": "Execute a search in Salesforce using arbitrary SOQL",
           "name": "Search",
-          "camelConnectorGAV": "io.syndesis:salesforce-search-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:salesforce-search-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-search"
         },{
           "id": "io.syndesis:salesforce-notification-connector:latest",
           "description": "Trigger an integration when updates occur to a specific Salesforce object",
           "name": "Notification",
-          "camelConnectorGAV": "io.syndesis:salesforce-notification-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:salesforce-notification-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-notification"
         }
       ]
@@ -313,7 +313,7 @@
               "description": "The url of the HTTP endpoint to call."
             }
           },
-          "camelConnectorGAV": "io.syndesis:http-get-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "http-get"
         },
         {
@@ -341,7 +341,7 @@
               "description": "The url of the HTTP endpoint to call."
             }
           },
-          "camelConnectorGAV": "io.syndesis:http-post-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "http-post"
         }
       ]
@@ -381,7 +381,7 @@
               "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
             }
           },
-          "camelConnectorGAV": "io.syndesis:timer-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "periodic-timer"
         }
       ]
@@ -436,7 +436,7 @@
           "properties": {
           },
           "id": "io.syndesis:trade-insight-buy-connector:latest",
-          "camelConnectorGAV": "io.syndesis:trade-insight-buy-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:trade-insight-buy-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "trade-insight-buy"
         },
         {
@@ -452,7 +452,7 @@
           "properties": {
           },
           "id": "io.syndesis:trade-insight-sell-connector:latest",
-          "camelConnectorGAV": "io.syndesis:trade-insight-sell-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:trade-insight-sell-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "trade-insight-sell"
         },
         {
@@ -468,7 +468,7 @@
           "properties": {
           },
           "id": "io.syndesis:trade-insight-top-connector:latest",
-          "camelConnectorGAV": "io.syndesis:trade-insight-top-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:trade-insight-top-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "trade-insight-top"
         }
       ]
@@ -523,7 +523,7 @@
           "properties": {
           },
           "id": "io.syndesis:day-trade-place-connector:latest",
-          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "day-trade-place"
         },
         {
@@ -540,7 +540,7 @@
           "properties": {
           },
           "id": "io.syndesis:day-trade-place-connector:latest",
-          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "day-trade-place"
         },
         {
@@ -556,7 +556,7 @@
           "properties": {
           },
           "id": "io.syndesis:day-trade-place-connector:latest",
-          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "day-trade-place"
         }
       ]
@@ -581,7 +581,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:linkedin-connections-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:linkedin-connections-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "linkedin-connections"
         },
         {
@@ -594,7 +594,7 @@
           "outputDataShape": {
              "kind" : "none"
           },
-          "camelConnectorGAV": "io.syndesis:linkedin-invite-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:linkedin-invite-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "linkedin-invite"
         }
       ]
@@ -619,7 +619,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:servicenow-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:servicenow-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "servicenow"
         }
       ]
@@ -644,7 +644,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:github-pullrequest-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:github-pullrequest-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "github-pullrequest"
         },
         {
@@ -657,7 +657,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:github-tag-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:github-tag-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "github-tag"
         },
         {
@@ -670,7 +670,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:github-commit-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:github-commit-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "github-commit"
         }
       ]
@@ -695,7 +695,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:gmail-send-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:gmail-send-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "gmail-send"
         },
         {
@@ -708,7 +708,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:gmail-list-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:gmail-list-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "gmail-list"
         },
         {
@@ -721,7 +721,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:gmail-get-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:gmail-get-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "gmail-get"
         },
         {
@@ -734,7 +734,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:gmail-delete-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:gmail-delete-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "gmail-delete"
         }
       ]
@@ -759,7 +759,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:facebook-post-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:facebook-post-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "facebook-post"
         },
         {
@@ -772,7 +772,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:facebook-like-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:facebook-like-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "facebook-like"
         }
       ]
@@ -797,7 +797,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:jms-producer-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:jms-producer-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "jms-producer"
         },
         {
@@ -810,7 +810,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:jms-consumer-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:jms-consumer-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "jms-consumer"
         }
       ]
@@ -835,7 +835,7 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "camelConnectorGAV": "io.syndesis:ftp-connector:@ipaas-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:ftp-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "ftp"
         }
       ]
@@ -947,7 +947,7 @@
                 "type" : "twitter4j.Status"
             },
             "name": "Twitter Mention",
-            "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "twitter-mention",
             "properties": {
             }
@@ -993,7 +993,7 @@
             "outputDataShape": {
                "kind" : "none"
             },
-            "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "salesforce-upsert-contact",
             "connectorId": "io.syndesis:salesforce-upsert-contact-connector:latest",
             "properties": {
@@ -1040,7 +1040,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:timer-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "periodic-timer",
             "properties": {
               "period": {
@@ -1089,7 +1089,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-post",
             "properties": {
               "httpUri": {
@@ -1130,7 +1130,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-get",
             "properties": {
               "httpUri": {
@@ -1188,7 +1188,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:timer-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "periodic-timer",
             "properties": {
               "period": {
@@ -1237,7 +1237,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-post",
             "properties": {
               "httpUri": {
@@ -1278,7 +1278,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-get",
             "properties": {
               "httpUri": {
@@ -1336,7 +1336,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:timer-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "periodic-timer",
             "properties": {
               "period": {
@@ -1385,7 +1385,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-post",
             "properties": {
               "httpUri": {
@@ -1426,7 +1426,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-get",
             "properties": {
               "httpUri": {
@@ -1484,7 +1484,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:timer-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "periodic-timer",
             "properties": {
               "period": {
@@ -1533,7 +1533,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-post",
             "properties": {
               "httpUri": {
@@ -1574,7 +1574,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-get",
             "properties": {
               "httpUri": {
@@ -1632,7 +1632,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:timer-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "periodic-timer",
             "properties": {
               "period": {
@@ -1681,7 +1681,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-post",
             "properties": {
               "httpUri": {
@@ -1722,7 +1722,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-get",
             "properties": {
               "httpUri": {
@@ -1780,7 +1780,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:timer-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "periodic-timer",
             "properties": {
               "period": {
@@ -1829,7 +1829,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-post",
             "properties": {
               "httpUri": {
@@ -1870,7 +1870,7 @@
             "outputDataShape": {
                "kind" : "any"
             },
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@ipaas-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "http-get",
             "properties": {
               "httpUri": {
