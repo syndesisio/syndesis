@@ -26,7 +26,7 @@ public class HttpPostConnectorAutoConfiguration {
     @Lazy
     @Bean(name = "http-post-component")
     @ConditionalOnClass(CamelContext.class)
-    @ConditionalOnMissingBean(HttpPostComponent.class)
+    @ConditionalOnMissingBean(io.syndesis.connector.http.HttpPostComponent.class)
     public HttpPostComponent configureHttpPostComponent(
             CamelContext camelContext,
             HttpPostConnectorConfiguration configuration) throws Exception {

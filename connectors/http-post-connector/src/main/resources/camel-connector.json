@@ -2,7 +2,7 @@
   "baseScheme" : "syndesis-http",
   "baseGroupId" : "io.syndesis",
   "baseArtifactId" : "http-component",
-  "baseVersion" : "0.3-SNAPSHOT",
+  "baseVersion" : "0.4-SNAPSHOT",
   "baseJavaType" : "io.syndesis.component.HttpComponent",
   "name" : "HttpPostComponent",
   "scheme" : "http-post",

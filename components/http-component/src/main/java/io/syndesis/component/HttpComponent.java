@@ -34,6 +34,8 @@ public class HttpComponent extends org.apache.camel.component.http4.HttpComponen
     private Integer port;
     @Metadata(label = "producer", description = "The context-path")
     private String path;
+    @Metadata(label = "security", description = "Enable usage of global SSL context parameters")
+    private boolean useGlobalSslContextParameters;
 
     @Override
     public void doStart() throws Exception {
@@ -127,5 +129,15 @@ public class HttpComponent extends org.apache.camel.component.http4.HttpComponen
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    @Override
+    public boolean isUseGlobalSslContextParameters() {
+        return super.isUseGlobalSslContextParameters();
+    }
+
+    @Override
+    public void setUseGlobalSslContextParameters(boolean useGlobalSslContextParameters) {
+        super.setUseGlobalSslContextParameters(useGlobalSslContextParameters);
     }
 }
