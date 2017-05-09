@@ -1,4 +1,4 @@
-package io.syndesis.project.converter;
+package io.syndesis.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
