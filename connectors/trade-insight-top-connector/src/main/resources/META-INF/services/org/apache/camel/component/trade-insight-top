@@ -1,1 +1,1 @@
-class=TradeInsightTopComponent
+class=io.syndesis.connector.tradeinsight.TradeInsightTopComponent

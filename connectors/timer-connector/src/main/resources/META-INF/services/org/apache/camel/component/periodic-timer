@@ -1,1 +1,1 @@
-class=PeriodicTimerComponent
+class=io.syndesis.connector.timer.PeriodicTimerComponent

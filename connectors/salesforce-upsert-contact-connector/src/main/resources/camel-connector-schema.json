@@ -11,7 +11,7 @@
     "async": false,
     "producerOnly": true,
     "lenientProperties": false,
-    "javaType": "SalesforceUpsertContactComponent",
+    "javaType": "io.syndesis.connector.salesforce.SalesforceUpsertContactComponent",
     "groupId": "io.syndesis",
     "artifactId": "salesforce-upsert-contact-connector",
     "version": "0.3-SNAPSHOT"

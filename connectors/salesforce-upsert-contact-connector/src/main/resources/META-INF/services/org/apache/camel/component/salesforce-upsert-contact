@@ -1,1 +1,1 @@
-class=SalesforceUpsertContactComponent
+class=io.syndesis.connector.salesforce.SalesforceUpsertContactComponent

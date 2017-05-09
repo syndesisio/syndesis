@@ -11,7 +11,7 @@
     "async": false,
     "producerOnly": true,
     "lenientProperties": true,
-    "javaType": "DayTradePlaceComponent",
+    "javaType": "io.syndesis.connector.daytrade.DayTradePlaceComponent",
     "groupId": "io.syndesis",
     "artifactId": "day-trade-place-connector",
     "version": "0.3-SNAPSHOT"

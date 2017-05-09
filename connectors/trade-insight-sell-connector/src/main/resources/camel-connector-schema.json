@@ -11,7 +11,7 @@
     "async": false,
     "consumerOnly": true,
     "lenientProperties": true,
-    "javaType": "TradeInsightSellComponent",
+    "javaType": "io.syndesis.connector.tradeinsight.TradeInsightSellComponent",
     "groupId": "io.syndesis",
     "artifactId": "trade-insight-sell-connector",
     "version": "0.3-SNAPSHOT"
