@@ -19,7 +19,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * Finds the unique set of tags set on IPaas entities WithTags, which are
+ * Finds the unique set of tags set on Syndesis entities WithTags, which are
  * Connections and Integrations.
  *
  */

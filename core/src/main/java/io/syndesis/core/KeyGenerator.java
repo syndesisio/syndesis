@@ -51,7 +51,7 @@ public class KeyGenerator {
         try {
             return Base64.encodeBytes(buffer.array(), 2, 15, Base64.ORDERED);
         } catch (IOException e) {
-            throw new IPaasServerException(e);
+            throw new SyndesisServerException(e);
         }
     }
 

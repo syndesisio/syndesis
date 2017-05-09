@@ -28,7 +28,7 @@ cors:
 
 cache:
   cluster:
-    name: IPaaSCluster
+    name: SyndesisCluster
   max:
     entries: 100
 

@@ -44,7 +44,7 @@ public class EventBusToWebSocket extends EventBusToServerSentEvents {
 
 
     @Autowired
-    public EventBusToWebSocket(IPaaSCorsConfiguration cors, EventBus bus, EventReservationsHandler eventReservationsHandler) {
+    public EventBusToWebSocket(SyndesisCorsConfiguration cors, EventBus bus, EventReservationsHandler eventReservationsHandler) {
         super(cors, bus, eventReservationsHandler);
         path = DEFAULT_PATH;
     }

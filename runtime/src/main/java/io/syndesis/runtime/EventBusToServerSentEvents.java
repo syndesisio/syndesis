@@ -38,13 +38,13 @@ import org.springframework.stereotype.Component;
 public class EventBusToServerSentEvents implements UndertowDeploymentInfoCustomizer {
 
     public static final String DEFAULT_PATH = "/api/v1/event/streams";
-    protected final IPaaSCorsConfiguration cors;
+    protected final SyndesisCorsConfiguration cors;
     protected final EventBus bus;
     protected final EventReservationsHandler eventReservationsHandler;
     protected String path = DEFAULT_PATH;
 
     @Autowired
-    public EventBusToServerSentEvents(IPaaSCorsConfiguration cors, EventBus bus, EventReservationsHandler eventReservationsHandler) {
+    public EventBusToServerSentEvents(SyndesisCorsConfiguration cors, EventBus bus, EventReservationsHandler eventReservationsHandler) {
         this.cors = cors;
         this.bus = bus;
         this.eventReservationsHandler = eventReservationsHandler;

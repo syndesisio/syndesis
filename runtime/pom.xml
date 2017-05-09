@@ -119,7 +119,7 @@
               <version>v1</version>
               <description>
                 The Syndesis REST API connects to back-end services on the Syndesis and provides a single entry
-                point for the IpaaS Console. For console developement it can run in off-line mode where it only serves
+                point for the Syndesis UI. For console developement it can run in off-line mode where it only serves
                 responses from the response cache.
               </description>
               <license>

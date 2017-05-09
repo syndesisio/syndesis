@@ -17,7 +17,7 @@ package io.syndesis.dao.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.core.EventBus;
-import io.syndesis.core.IPaasServerException;
+import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.KeyGenerator;
 import io.syndesis.dao.init.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
@@ -121,7 +121,7 @@ public class DataManager implements DataAccessObjectRegistry {
             }
         } catch (Exception e) {
             LOGGER.warn("Cannot load entity from file: " + e);
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 

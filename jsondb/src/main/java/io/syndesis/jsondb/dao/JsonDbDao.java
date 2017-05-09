@@ -22,7 +22,7 @@ import java.util.LinkedHashMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import io.syndesis.core.IPaasServerException;
+import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.jsondb.JsonDB;
@@ -55,7 +55,7 @@ abstract public class JsonDbDao<T extends WithId> implements DataAccessObject<T>
             }
             return Json.mapper().readValue(json, getType());
         } catch (RuntimeException|IOException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 
@@ -77,7 +77,7 @@ abstract public class JsonDbDao<T extends WithId> implements DataAccessObject<T>
                 return ListResult.of(Collections.EMPTY_LIST);
             }
         } catch (RuntimeException|IOException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 
@@ -98,7 +98,7 @@ abstract public class JsonDbDao<T extends WithId> implements DataAccessObject<T>
             return entity;
 
         } catch (RuntimeException|IOException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 
@@ -116,7 +116,7 @@ abstract public class JsonDbDao<T extends WithId> implements DataAccessObject<T>
             return previousValue;
 
         } catch (RuntimeException|IOException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 
@@ -134,7 +134,7 @@ abstract public class JsonDbDao<T extends WithId> implements DataAccessObject<T>
             String dbPath = getCollectionPath()+"/:"+id;
             return jsondb.delete(dbPath);
         } catch (RuntimeException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 
@@ -144,7 +144,7 @@ abstract public class JsonDbDao<T extends WithId> implements DataAccessObject<T>
             String dbPath = getCollectionPath();
             jsondb.set(dbPath, "{}");
         } catch (RuntimeException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 }

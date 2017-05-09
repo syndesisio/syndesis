@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
-import io.syndesis.core.IPaasServerException;
+import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.Names;
 import io.syndesis.core.Tokens;
 import io.syndesis.dao.manager.DataManager;
@@ -127,7 +127,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         try {
             return gitHubService.getCloneURL(Names.sanitize(integration.getName()));
         } catch (IOException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 
@@ -161,7 +161,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
             dataManager.update(updatedIntegration);
             return gitCloneUrl;
         } catch (IOException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 
@@ -176,7 +176,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                 .build();
             return projectConverter.generate(request);
         } catch (IOException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 
@@ -184,7 +184,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         try {
             return gitHubService.getApiUser();
         } catch (IOException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 

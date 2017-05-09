@@ -28,7 +28,7 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties("cors")
-public class IPaaSCorsConfiguration {
+public class SyndesisCorsConfiguration {
 
     private List<String> allowedOrigins = Arrays.asList(CorsConfiguration.ALL);
 

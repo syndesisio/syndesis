@@ -38,7 +38,7 @@ public interface DataAccessObjectRegistry {
      * Finds the {@link DataAccessObject} for the specified type.
      * @param type  The class of the specified type.
      * @param <T>   The specified type.
-     * @return      The {@link DataAccessObject} or throws IPaasServerException.
+     * @return      The {@link DataAccessObject} or throws SyndesisServerException.
      */
     default <T extends WithId> DataAccessObject<T> getDataAccessObjectRequired(Class<T> type) {
         DataAccessObject dao = getDataAccessObjectMapping().get(type);
