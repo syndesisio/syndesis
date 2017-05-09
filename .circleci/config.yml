@@ -60,6 +60,9 @@ jobs:
       - store_artifacts:
           path: ./junit
 
+      - store_test_results:
+          path: ./junit
+
       - deploy:
           command: |
             if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
