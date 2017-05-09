@@ -30,8 +30,7 @@ public class ConnectorCatalogProperties {
     private List<String> connectorGAVs = new ArrayList<>(5);
 
     public ConnectorCatalogProperties() {
-        this.mavenRepos.put("jcenter", "https://jcenter.bintray.com");
-        this.mavenRepos.put("jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea");
+        this.mavenRepos.put("maven.central", "https://repo.maven.apache.org/maven2/");
     }
 
     public Map<String, String> getMavenRepos() {
