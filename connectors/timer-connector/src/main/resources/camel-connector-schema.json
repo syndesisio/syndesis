@@ -11,7 +11,7 @@
     "async": false,
     "consumerOnly": true,
     "lenientProperties": false,
-    "javaType": "PeriodicTimerComponent",
+    "javaType": "io.syndesis.connector.timer.PeriodicTimerComponent",
     "groupId": "io.syndesis",
     "artifactId": "timer-connector",
     "version": "0.3-SNAPSHOT"

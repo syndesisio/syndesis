@@ -1,1 +1,1 @@
-class=DayTradeGetComponent
+class=io.syndesis.connector.daytrade.DayTradeGetComponent

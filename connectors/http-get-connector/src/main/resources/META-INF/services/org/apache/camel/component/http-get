@@ -1,1 +1,1 @@
-class=HttpGetComponent
+class=io.syndesis.connector.http.HttpGetComponent

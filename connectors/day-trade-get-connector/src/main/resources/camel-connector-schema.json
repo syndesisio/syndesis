@@ -11,7 +11,7 @@
     "async": false,
     "producerOnly": true,
     "lenientProperties": true,
-    "javaType": "DayTradeGetComponent",
+    "javaType": "io.syndesis.connector.daytrade.DayTradeGetComponent",
     "groupId": "io.syndesis",
     "artifactId": "day-trade-get-connector",
     "version": "0.3-SNAPSHOT"

@@ -1,1 +1,1 @@
-class=HttpPostComponent
+class=io.syndesis.connector.http.HttpPostComponent

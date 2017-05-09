@@ -1,1 +1,1 @@
-class=TradeInsightBuyComponent
+class=io.syndesis.connector.tradeinsight.TradeInsightBuyComponent

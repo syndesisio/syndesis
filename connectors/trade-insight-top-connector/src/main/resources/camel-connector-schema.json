@@ -11,7 +11,7 @@
     "async": false,
     "consumerOnly": true,
     "lenientProperties": true,
-    "javaType": "TradeInsightTopComponent",
+    "javaType": "io.syndesis.connector.tradeinsight.TradeInsightTopComponent",
     "groupId": "io.syndesis",
     "artifactId": "trade-insight-top-connector",
     "version": "0.3-SNAPSHOT"

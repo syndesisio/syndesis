@@ -11,7 +11,7 @@
     "async": false,
     "consumerOnly": true,
     "lenientProperties": false,
-    "javaType": "TwitterMentionComponent",
+    "javaType": "io.syndesis.connector.twitter.TwitterMentionComponent",
     "groupId": "io.syndesis",
     "artifactId": "twitter-mention-connector",
     "version": "0.3-SNAPSHOT"
