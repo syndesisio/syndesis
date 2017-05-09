@@ -101,14 +101,15 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
+    <syndesis-connectors.version>0.4.1</syndesis-connectors.version>
+
     <assertj-core.version>3.6.2</assertj-core.version>
-    <camel.version>2.19.0.fuse-000036</camel.version>
+    <camel.version>2.19.0</camel.version>
     <jdbi.version>2.78</jdbi.version>
     <funktion.version>1.1.55</funktion.version>
     <hibernate.validator.version>5.3.4.Final</hibernate.validator.version>
     <immutables.version>2.4.0</immutables.version>
     <infinispan.version>9.0.0.Final</infinispan.version>
-    <syndesis-connectors.version>0.3.10</syndesis-connectors.version>
     <jackson.version>2.8.6</jackson.version>
     <javaee.api.version>7.0</javaee.api.version>
     <junit.version>4.12</junit.version>
