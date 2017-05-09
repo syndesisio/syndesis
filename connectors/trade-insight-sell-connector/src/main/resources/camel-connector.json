@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.tradeinsight.TradeInsightSellComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "trade-insight-sell-connector",
-  "version" : "0.3-SNAPSHOT",
+  "version" : "0.4-SNAPSHOT",
   "description" : "Fetches sell recommendation from Trade Insight API server",
   "labels" : [ "daytrade" ],
   "pattern" : "From",

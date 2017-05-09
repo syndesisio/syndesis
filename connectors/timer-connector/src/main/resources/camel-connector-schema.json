@@ -14,7 +14,7 @@
     "javaType": "io.syndesis.connector.timer.PeriodicTimerComponent",
     "groupId": "io.syndesis",
     "artifactId": "timer-connector",
-    "version": "0.3-SNAPSHOT"
+    "version": "0.4-SNAPSHOT"
   },
   "componentProperties": {
   },

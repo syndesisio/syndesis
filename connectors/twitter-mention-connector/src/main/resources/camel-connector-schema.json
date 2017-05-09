@@ -14,7 +14,7 @@
     "javaType": "io.syndesis.connector.twitter.TwitterMentionComponent",
     "groupId": "io.syndesis",
     "artifactId": "twitter-mention-connector",
-    "version": "0.3-SNAPSHOT"
+    "version": "0.4-SNAPSHOT"
   },
   "componentProperties": {
     "accessToken": { "kind": "property", "displayName": "Access Token", "group": "security", "label": "security", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": true, "description": "The access token" },

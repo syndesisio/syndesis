@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.twitter.TwitterMentionComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "twitter-mention-connector",
-  "version" : "0.3-SNAPSHOT",
+  "version" : "0.4-SNAPSHOT",
   "description" : "Send a notification when a name you specify is mentioned on Twitter.",
   "labels" : [ "twitter" ],
   "pattern" : "From",
