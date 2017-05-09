@@ -47,7 +47,7 @@ $ oc new-app syndesis -p \
 Replace _&lt;external hostname&gt;_ with a value that will resolve to the address of the OpenShift router.
 
 You have to chose an address or _&lt;external hostname&gt;_ which is routable on your system (and also resolvable from inside your cluster). For a development setup you can use an external DNS resolving service like xip.io or nip.io:
-Assuming that your OpenShift cluster is reachable under the IP address _ip_ then use `syndesis.`_ip_`.nip.io`.) (e.g. `ipass.127.0.0.1.nip.io` if your cluster is listening on localhost). With minishift you can retrieve the IP of the cluster with `minishift ip`.
+Assuming that your OpenShift cluster is reachable under the IP address _ip_ then use `syndesis.`_ip_`.nip.io`.) (e.g. `syndesis.127.0.0.1.nip.io` if your cluster is listening on localhost). With minishift you can retrieve the IP of the cluster with `minishift ip`.
 
 In order to use the GitHub integration you need a GitHub application registered at https://github.com/settings/developers For the registration, you will be asked for a _callback URL_. Please use the route you have given above: `https://<external hostname>` (e.g. `https://syndesis.127.0.0.1.nip.io`). GitHub will you then give a _client id_ and a _client secret_ which you set for the corresponding template parameters.
 

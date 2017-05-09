@@ -2,30 +2,30 @@
   kind: Service
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-verifier
-    name: ipaas-verifier
+      app: syndesis
+      component: syndesis-verifier
+    name: syndesis-verifier
   spec:
     ports:
     - port: 80
       protocol: TCP
       targetPort: 8080
     selector:
-      app: redhat-ipaas
-      component: ipaas-verifier
+      app: syndesis
+      component: syndesis-verifier
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-verifier
-    name: ipaas-verifier
+      app: syndesis
+      component: syndesis-verifier
+    name: syndesis-verifier
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-verifier
-      deploymentconfig: ipaas-verifier
+      app: syndesis
+      component: syndesis-verifier
+      deploymentconfig: syndesis-verifier
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -37,9 +37,9 @@
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-verifier
-          deploymentconfig: ipaas-verifier
+          app: syndesis
+          component: syndesis-verifier
+          deploymentconfig: syndesis-verifier
         annotations:
           pod.beta.kubernetes.io/init-containers: |-
             [{
@@ -53,7 +53,7 @@
                 "-ca-dir", "/usr/share/ca-certificates/mozilla"
               ],
               "volumeMounts": [{
-                "name": "ipaas-verifier-tls",
+                "name": "syndesis-verifier-tls",
                 "mountPath": "/tls-keystore"
               }]
             }]
@@ -72,11 +72,11 @@
           - -ca-dir
           - /usr/share/ca-certificates/mozilla
           volumeMounts:
-          - name: ipaas-verifier-tls
+          - name: syndesis-verifier-tls
             mountPath: /tls-keystore
-        serviceAccountName: ipaas-rest
+        serviceAccountName: syndesis-rest
         containers:
-        - name: ipaas-verifier
+        - name: syndesis-verifier
           env:
           - name: JAVA_APP_DIR
             value: /deployments
@@ -85,7 +85,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: rhipaas/ipaas-verifier:latest
+          image: syndesis/syndesis-verifier:latest
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -118,20 +118,20 @@
               cpu: 200m
               memory: 612Mi
           volumeMounts:
-          - name: ipaas-verifier-tls
+          - name: syndesis-verifier-tls
             mountPath: /tls-keystore
         volumes:
-        - name: ipaas-verifier-tls
+        - name: syndesis-verifier-tls
           emptyDir: {}
     triggers:
 {{^Dev}}
     - imageChangeParams:
         automatic: true
         containerNames:
-        - ipaas-verifier
+        - syndesis-verifier
         from:
           kind: ImageStreamTag
-          name: ipaas-verifier:latest
+          name: syndesis-verifier:latest
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange

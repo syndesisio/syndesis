@@ -13,17 +13,17 @@ go get -u github.com/spf13/cobra github.com/spf13/pflag github.com/hoisie/mustac
 
 cd $dir
 
-echo "$MESSAGE" > ${dir}/../ipaas.yml
-go run ipaas-template.go --name=ipaas >> ${dir}/../ipaas.yml
+echo "$MESSAGE" > ${dir}/../syndesis.yml
+go run syndesis-template.go --name=syndesis >> ${dir}/../syndesis.yml
 
-echo "$MESSAGE" > ${dir}/../ipaas-dev.yml
-go run ipaas-template.go --name=ipaas-dev --dev >> ${dir}/../ipaas-dev.yml
+echo "$MESSAGE" > ${dir}/../syndesis-dev.yml
+go run syndesis-template.go --name=syndesis-dev --dev >> ${dir}/../syndesis-dev.yml
 
-echo "$MESSAGE" > ${dir}/../ipaas-restricted.yml
-go run ipaas-template.go --name=ipaas-restricted --restricted >> ${dir}/../ipaas-restricted.yml
+echo "$MESSAGE" > ${dir}/../syndesis-restricted.yml
+go run syndesis-template.go --name=syndesis-restricted --restricted >> ${dir}/../syndesis-restricted.yml
 
-echo "$MESSAGE" > ${dir}/../ipaas-ephemeral-restricted.yml
-go run ipaas-template.go --name=ipaas-ephemeral-restricted --ephemeral --restricted >> ${dir}/../ipaas-ephemeral-restricted.yml
+echo "$MESSAGE" > ${dir}/../syndesis-ephemeral-restricted.yml
+go run syndesis-template.go --name=syndesis-ephemeral-restricted --ephemeral --restricted >> ${dir}/../syndesis-ephemeral-restricted.yml
 
-echo "$MESSAGE" > ${dir}/../ipaas-dev-restricted.yml
-go run ipaas-template.go --name=ipaas-dev-restricted --restricted --dev >> ${dir}/../ipaas-dev-restricted.yml
+echo "$MESSAGE" > ${dir}/../syndesis-dev-restricted.yml
+go run syndesis-template.go --name=syndesis-dev-restricted --restricted --dev >> ${dir}/../syndesis-dev-restricted.yml

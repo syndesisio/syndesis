@@ -1,44 +1,39 @@
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
-    name: ipaas-rest
+    name: syndesis-datamapper
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-- apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: ipaas-integration
-    labels:
-      app: redhat-ipaas
-      component: ipaas-rest
+      app: syndesis
+      component: syndesis-datamapper
+
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
+      app: syndesis
+      component: syndesis-datamapper
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-rest-tls
-    name: ipaas-rest
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-datamapper-tls
+    name: syndesis-datamapper
   spec:
     ports:
     - port: 80
       protocol: TCP
       targetPort: 8080
     selector:
-      app: redhat-ipaas
-      component: ipaas-rest
+      app: syndesis
+      component: syndesis-datamapper
+
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-    name: ipaas-rest
+      app: syndesis
+      component: syndesis-datamapper
+    name: syndesis-datamapper
   spec:
     host: ${ROUTE_HOSTNAME}
-    path: /api/v1
+    path: /v2/atlas
     port:
       targetPort: 8080
     tls:
@@ -46,21 +41,22 @@
       termination: edge
     to:
       kind: Service
-      name: ipaas-rest
+      name: syndesis-datamapper
       weight: 100
+
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-    name: ipaas-rest
+      app: syndesis
+      component: syndesis-datamapper
+    name: syndesis-datamapper
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-rest
-      deploymentconfig: ipaas-rest
+      app: syndesis
+      component: syndesis-datamapper
+      deploymentconfig: syndesis-datamapper
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -72,9 +68,9 @@
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-rest
-          deploymentconfig: ipaas-rest
+          app: syndesis
+          component: syndesis-datamapper
+          deploymentconfig: syndesis-datamapper
         annotations:
           pod.beta.kubernetes.io/init-containers: |-
             [{
@@ -88,7 +84,7 @@
                 "-ca-dir", "/usr/share/ca-certificates/mozilla"
               ],
               "volumeMounts": [{
-                "name": "ipaas-rest-tls",
+                "name": "syndesis-datamapper-tls",
                 "mountPath": "/tls-keystore"
               }]
             }]
@@ -107,12 +103,16 @@
           - -ca-dir
           - /usr/share/ca-certificates/mozilla
           volumeMounts:
-          - name: ipaas-rest-tls
+          - name: syndesis-datamapper-tls
             mountPath: /tls-keystore
-        serviceAccountName: ipaas-rest
+        serviceAccountName: syndesis-datamapper
         containers:
-        - name: ipaas-rest
+        - name: syndesis-datamapper
           env:
+          - name: HOME
+            value: /deployments
+          - name: JAVA_TOOL_OPTIONS
+            value: '-Duser.home=/deployments -Duser.name=jboss'
           - name: AB_JOLOKIA_OFF
             value: "true"
           - name: JAVA_APP_DIR
@@ -121,18 +121,10 @@
             value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-          - name: NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-          - name: ENDPOINTS_TEST_SUPPORT_ENABLED
-            value: ${TEST_SUPPORT_ENABLED}
-          - name: CONTROLLERS_INTEGRATION_ENABLED
-            value: ${CONTROLLERS_INTEGRATION_ENABLED}
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: rhipaas/ipaas-rest:latest
+          image: atlasmap/syndesis-datamapper:latest
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -148,7 +140,7 @@
           - containerPort: 8778
             name: jolokia
           volumeMounts:
-          - name: ipaas-rest-tls
+          - name: syndesis-datamapper-tls
             mountPath: /tls-keystore
           - name: config-volume
             mountPath: /deployments/config
@@ -160,60 +152,42 @@
               cpu: 200m
               memory: 612Mi
         volumes:
-        - name: ipaas-rest-tls
+        - name: syndesis-datamapper-tls
           emptyDir: {}
         - name: config-volume
           configMap:
-            name: ipaas-rest-config
+            name: syndesis-datamapper-config
     triggers:
+    - type: ConfigChange
 {{^Dev}}
     - imageChangeParams:
         automatic: true
         containerNames:
-        - ipaas-rest
+        - syndesis-datamapper
         from:
           kind: ImageStreamTag
-          name: ipaas-rest:latest
+          name: syndesis-datamapper:latest
       type: ImageChange
 {{/Dev}}
-    - type: ConfigChange
-
 
 - apiVersion: v1
   kind: ConfigMap
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-    name: ipaas-rest-config
+      app: syndesis
+      component: syndesis-datamapper
+    name: syndesis-datamapper-config
   data:
     application.yml: |-
-      deployment:
-        file: com/redhat/ipaas/dao/deployment.json
-      resteasy:
-        jaxrs:
-          app:
-            registration: property
-            classes: com.redhat.ipaas.rest.v1.V1Application
       cors:
 {{^Dev}}
         allowedOrigins: https://${ROUTE_HOSTNAME}
 {{/Dev}}{{#Dev}}
         allowedOrigins: http://localhost:4200, https://${ROUTE_HOSTNAME}
 {{/Dev}}
-      cache:
-        cluster:
-          name: IPaaSCluster
-        max:
-          entries: 100
       spring:
         zipkin:
           enabled: false
-        datasource:
-          url: jdbc:postgresql://ipaas-db:5432/ipaas?sslmode=disable
-          username: ${POSTGRESQL_USER}
-          password: ${POSTGRESQL_PASSWORD}
-          driver-class-name: org.postgresql.Driver
       security:
         basic:
           enabled: false
@@ -224,25 +198,3 @@
       endpoints:
         health:
           sensitive: false
-        jsondb:
-          enabled: true
-      github:
-        service: ipaas-github-proxy.${NAMESPACE}.svc
-      openshift:
-        openShiftHost: ipaas-openshift-proxy.${NAMESPACE}.svc
-        apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
-        namespace: ${NAMESPACE}
-      keycloak:
-        enabled: true
-        configurationFile: file:config/ipaas-client.json
-      dao:
-        kind: jsondb
-    ipaas-client.json: |-
-      {
-        "realm": "${KEYCLOAK_IPAAS_REALM_NAME}",
-        "bearer-only": true,
-        "auth-server-url": "https://${ROUTE_HOSTNAME}/auth",
-        "ssl-required": "external",
-        "resource": "ipaas-rest",
-        "allow-any-hostname" : ${KEYCLOAK_ALLOW_ANY_HOSTNAME}
-      }

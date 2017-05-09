@@ -4,11 +4,11 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: ipaas
+  name: syndesis-dev-restricted
 parameters:
 # Parameters with no defaults (has to be be provided when template is applied):
 - name: ROUTE_HOSTNAME
-  description: The external hostname to access the iPaaS
+  description: The external hostname to access Syndesis
   required: true
 - name: GITHUB_OAUTH_CLIENT_ID
   description: GitHub OAuth client ID
@@ -18,8 +18,8 @@ parameters:
   required: true
 # Parameters with defaults:
 - name: KEYCLOAK_ROUTE_HOSTNAME
-  description: The external hostname to access the iPaaS Keycloak directly
-  value: ipaas-keycloak.127.0.0.1.xip.io
+  description: The external hostname to access Syndesis Keycloak directly
+  value: syndesis-keycloak.127.0.0.1.xip.io
   required: true
 - name: KEYCLOAK_ADMIN_USERNAME
   description: The Keycloak admin username
@@ -30,12 +30,12 @@ parameters:
   generate: expression
   from: "[a-zA-Z0-9]{40}"
   required: true
-- name: KEYCLOAK_IPAAS_REALM_NAME
-  description: Keycloak iPaaS realm name
-  value: ipaas
+- name: KEYCLOAK_SYNDESIS_REALM_NAME
+  description: Keycloak Syndesis realm name
+  value: syndesis
   required: true
-- name: KEYCLOAK_IPAAS_REST_CLIENT_SECRET
-  description: iPaaS REST service client secret
+- name: KEYCLOAK_SYNDESIS_REST_CLIENT_SECRET
+  description: Syndesis REST service client secret
   generate: expression
   from: "[a-zA-Z0-9]{64}"
   required: true
@@ -49,7 +49,7 @@ parameters:
   required: true
 - name: OPENSHIFT_OAUTH_CLIENT_ID
   description: OpenShift OAuth client ID
-  value: ipaas
+  value: syndesis
   required: true
 - name: OPENSHIFT_OAUTH_CLIENT_SECRET
   description: OpenShift OAuth client secret
@@ -79,7 +79,7 @@ parameters:
 - description: Username for PostgreSQL user that will be used for accessing the database.
   displayName: PostgreSQL Connection Username
   name: POSTGRESQL_USER
-  value: ipaas
+  value: syndesis
 - description: Password for the PostgreSQL connection user.
   displayName: PostgreSQL Connection Password
   from: '[a-zA-Z0-9]{16}'
@@ -90,7 +90,7 @@ parameters:
   displayName: PostgreSQL Database Name
   name: POSTGRESQL_DATABASE
   required: true
-  value: ipaas
+  value: syndesis
 - description: Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi.
   displayName: Volume Capacity
   name: POSTGRESQL_VOLUME_CAPACITY
@@ -118,134 +118,44 @@ parameters:
   name: SESSION_LIFESPAN
   value: '36000'
 message: |-
-  Red Hat iPaaS is deployed to ${ROUTE_HOSTNAME}.
+  Syndesis is deployed to ${ROUTE_HOSTNAME}.
 
     FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
 objects:
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-rest
-    labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/rhipaas/ipaas-rest:latest
-      importPolicy:
-        scheduled: true
-      name: latest
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-keycloak
-    labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/jimmidyson/keycloak-openshift:2.5.4.Final
-      importPolicy:
-        scheduled: true
-      name: 2.5.4.Final
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-ui
-    labels:
-      app: redhat-ipaas
-      component: ipaas-ui
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/rhipaas/ipaas-ui:latest
-      importPolicy:
-        scheduled: true
-      name: latest
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-token-rp
-    labels:
-      app: redhat-ipaas
-      component: ipaas-token-rp
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/rhipaas/token-rp:v0.4.0
-      importPolicy:
-        scheduled: true
-      name: v0.4.0
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-datamapper
-    labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/atlasmap/ipaas-datamapper:latest
-      importPolicy:
-        scheduled: true
-      name: latest
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-verifier
-    labels:
-      app: redhat-ipaas
-      component: ipaas-verifier
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/rhipaas/ipaas-verifier:latest
-      importPolicy:
-        scheduled: true
-      name: latest
 
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
-    name: ipaas-datamapper
+    name: syndesis-datamapper
     labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
+      app: syndesis
+      component: syndesis-datamapper
 
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
+      app: syndesis
+      component: syndesis-datamapper
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-datamapper-tls
-    name: ipaas-datamapper
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-datamapper-tls
+    name: syndesis-datamapper
   spec:
     ports:
     - port: 80
       protocol: TCP
       targetPort: 8080
     selector:
-      app: redhat-ipaas
-      component: ipaas-datamapper
+      app: syndesis
+      component: syndesis-datamapper
 
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-    name: ipaas-datamapper
+      app: syndesis
+      component: syndesis-datamapper
+    name: syndesis-datamapper
   spec:
     host: ${ROUTE_HOSTNAME}
     path: /v2/atlas
@@ -256,22 +166,22 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: ipaas-datamapper
+      name: syndesis-datamapper
       weight: 100
 
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-    name: ipaas-datamapper
+      app: syndesis
+      component: syndesis-datamapper
+    name: syndesis-datamapper
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-      deploymentconfig: ipaas-datamapper
+      app: syndesis
+      component: syndesis-datamapper
+      deploymentconfig: syndesis-datamapper
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -283,9 +193,9 @@ objects:
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-datamapper
-          deploymentconfig: ipaas-datamapper
+          app: syndesis
+          component: syndesis-datamapper
+          deploymentconfig: syndesis-datamapper
         annotations:
           pod.beta.kubernetes.io/init-containers: |-
             [{
@@ -299,7 +209,7 @@ objects:
                 "-ca-dir", "/usr/share/ca-certificates/mozilla"
               ],
               "volumeMounts": [{
-                "name": "ipaas-datamapper-tls",
+                "name": "syndesis-datamapper-tls",
                 "mountPath": "/tls-keystore"
               }]
             }]
@@ -318,11 +228,11 @@ objects:
           - -ca-dir
           - /usr/share/ca-certificates/mozilla
           volumeMounts:
-          - name: ipaas-datamapper-tls
+          - name: syndesis-datamapper-tls
             mountPath: /tls-keystore
-        serviceAccountName: ipaas-datamapper
+        serviceAccountName: syndesis-datamapper
         containers:
-        - name: ipaas-datamapper
+        - name: syndesis-datamapper
           env:
           - name: HOME
             value: /deployments
@@ -336,7 +246,7 @@ objects:
             value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-          image: ' '
+          image: atlasmap/syndesis-datamapper:latest
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -352,7 +262,7 @@ objects:
           - containerPort: 8778
             name: jolokia
           volumeMounts:
-          - name: ipaas-datamapper-tls
+          - name: syndesis-datamapper-tls
             mountPath: /tls-keystore
           - name: config-volume
             mountPath: /deployments/config
@@ -364,34 +274,26 @@ objects:
               cpu: 200m
               memory: 612Mi
         volumes:
-        - name: ipaas-datamapper-tls
+        - name: syndesis-datamapper-tls
           emptyDir: {}
         - name: config-volume
           configMap:
-            name: ipaas-datamapper-config
+            name: syndesis-datamapper-config
     triggers:
     - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-datamapper
-        from:
-          kind: ImageStreamTag
-          name: ipaas-datamapper:latest
-      type: ImageChange
 
 
 - apiVersion: v1
   kind: ConfigMap
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-    name: ipaas-datamapper-config
+      app: syndesis
+      component: syndesis-datamapper
+    name: syndesis-datamapper-config
   data:
     application.yml: |-
       cors:
-        allowedOrigins: https://${ROUTE_HOSTNAME}
+        allowedOrigins: http://localhost:4200, https://${ROUTE_HOSTNAME}
 
       spring:
         zipkin:
@@ -409,10 +311,10 @@ objects:
 - apiVersion: v1
   kind: Service
   metadata:
-    name: ipaas-db
+    name: syndesis-db
     labels:
-      app: redhat-ipaas
-      component: ipaas-db
+      app: syndesis
+      component: syndesis-db
   spec:
     ports:
     - name: postgresql
@@ -421,8 +323,8 @@ objects:
       protocol: TCP
       targetPort: 5432
     selector:
-      app: redhat-ipaas
-      component: ipaas-db
+      app: syndesis
+      component: syndesis-db
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -430,10 +332,10 @@ objects:
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
-    name: ipaas-db
+    name: syndesis-db
     labels:
-      app: redhat-ipaas
-      component: ipaas-db
+      app: syndesis
+      component: syndesis-db
   spec:
     accessModes:
     - ReadWriteOnce
@@ -444,22 +346,22 @@ objects:
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
-    name: ipaas-db
+    name: syndesis-db
     labels:
-      app: redhat-ipaas
-      component: ipaas-db
+      app: syndesis
+      component: syndesis-db
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-db
+      app: syndesis
+      component: syndesis-db
     strategy:
       type: Recreate
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-db
+          app: syndesis
+          component: syndesis-db
       spec:
         containers:
         - capabilities: {}
@@ -495,11 +397,11 @@ objects:
               memory: ${POSTGRESQL_MEMORY_LIMIT}
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
-            name: ipaas-db-data
+            name: syndesis-db-data
         volumes:
-        - name: ipaas-db-data
+        - name: syndesis-db-data
           persistentVolumeClaim:
-            claimName: ipaas-db
+            claimName: syndesis-db
 
     triggers:
     - imageChangeParams:
@@ -516,32 +418,32 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
+      app: syndesis
+      component: syndesis-github-proxy
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-github-proxy-tls
-    name: ipaas-github-proxy
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-github-proxy-tls
+    name: syndesis-github-proxy
   spec:
     ports:
     - port: 443
       protocol: TCP
       targetPort: 8080
     selector:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
+      app: syndesis
+      component: syndesis-github-proxy
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
-    name: ipaas-github-proxy
+      app: syndesis
+      component: syndesis-github-proxy
+    name: syndesis-github-proxy
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
-      deploymentconfig: ipaas-github-proxy
+      app: syndesis
+      component: syndesis-github-proxy
+      deploymentconfig: syndesis-github-proxy
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -553,19 +455,19 @@ objects:
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-github-proxy
-          deploymentconfig: ipaas-github-proxy
+          app: syndesis
+          component: syndesis-github-proxy
+          deploymentconfig: syndesis-github-proxy
       spec:
         containers:
-        - name: ipaas-github-proxy
-          image: ' '
+        - name: syndesis-github-proxy
+          image: syndesis/token-rp:v0.4.0
 
           imagePullPolicy: IfNotPresent
           args:
-          - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
+          - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}
           - -proxy-url=https://api.github.com
-          - -client-id=ipaas-ui
+          - -client-id=syndesis-ui
           - -provider-alias=github
           - -provider-type=github
           - -tls-cert=/tls/tls.crt
@@ -584,26 +486,18 @@ objects:
             name: tls-volume
         volumes:
         - secret:
-            secretName: ipaas-github-proxy-tls
+            secretName: syndesis-github-proxy-tls
           name: tls-volume
     triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-github-proxy
-        from:
-          kind: ImageStreamTag
-          name: ipaas-token-rp:v0.4.0
-      type: ImageChange
 
     - type: ConfigChange
 - apiVersion: v1
   kind: Secret
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak-admin
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak-admin
   type: kubernetes.io/basic-auth
   stringData:
     username: ${KEYCLOAK_ADMIN_USERNAME}
@@ -613,30 +507,30 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
+      app: syndesis
+      component: syndesis-keycloak
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-keycloak-tls
-    name: ipaas-keycloak
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-keycloak-tls
+    name: syndesis-keycloak
   spec:
     ports:
     - port: 8080
       protocol: TCP
       targetPort: 8080
     selector:
-      app: redhat-ipaas
-      component: ipaas-keycloak
+      app: syndesis
+      component: syndesis-keycloak
 
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak-realm-${KEYCLOAK_IPAAS_REALM_NAME}
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak-realm-${KEYCLOAK_SYNDESIS_REALM_NAME}
   spec:
     host: ${ROUTE_HOSTNAME}
-    path: /auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
+    path: /auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}
     port:
       targetPort: 8080
     tls:
@@ -644,15 +538,15 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: ipaas-keycloak
+      name: syndesis-keycloak
       weight: 100
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak-resources
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak-resources
   spec:
     host: ${ROUTE_HOSTNAME}
     path: /auth/resources
@@ -663,15 +557,15 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: ipaas-keycloak
+      name: syndesis-keycloak
       weight: 100
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak-external
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak-external
   spec:
     host: ${KEYCLOAK_ROUTE_HOSTNAME}
     port:
@@ -681,22 +575,22 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: ipaas-keycloak
+      name: syndesis-keycloak
       weight: 100
 
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-      deploymentconfig: ipaas-keycloak
+      app: syndesis
+      component: syndesis-keycloak
+      deploymentconfig: syndesis-keycloak
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -708,9 +602,9 @@ objects:
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-keycloak
-          deploymentconfig: ipaas-keycloak
+          app: syndesis
+          component: syndesis-keycloak
+          deploymentconfig: syndesis-keycloak
         annotations:
           pod.beta.kubernetes.io/init-containers: |-
             [{
@@ -724,7 +618,7 @@ objects:
                 "-ca-dir", "/usr/share/ca-certificates/mozilla"
               ],
               "volumeMounts": [{
-                "name": "ipaas-keycloak-tls",
+                "name": "syndesis-keycloak-tls",
                 "mountPath": "/tls-keystore"
               }]
             }]
@@ -743,13 +637,13 @@ objects:
           - -ca-dir
           - /usr/share/ca-certificates/mozilla
           volumeMounts:
-          - name: ipaas-keycloak-tls
+          - name: syndesis-keycloak-tls
             mountPath: /tls-keystore
         containers:
         - args:
           - -b
           - 0.0.0.0
-          - -Dkeycloak.import=/opt/jboss/keycloak/standalone/configuration/ipaas-realm.json
+          - -Dkeycloak.import=/opt/jboss/keycloak/standalone/configuration/syndesis-realm.json
           - -Dkeycloak.migration.strategy=IGNORE_EXISTING
           - -Djavax.net.ssl.trustStore=/opt/jboss/keycloak/standalone/configuration/tls/openshift-truststore.jks
           env:
@@ -757,15 +651,15 @@ objects:
             valueFrom:
               secretKeyRef:
                 key: username
-                name: ipaas-keycloak-admin
+                name: syndesis-keycloak-admin
           - name: KEYCLOAK_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: password
-                name: ipaas-keycloak-admin
-          image: ' '
+                name: syndesis-keycloak-admin
+          image: jimmidyson/keycloak-openshift:2.5.4.Final
 
-          name: ipaas-keycloak
+          name: syndesis-keycloak
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
@@ -775,34 +669,26 @@ objects:
           ports:
           - containerPort: 8080
           volumeMounts:
-          - name: ipaas-keycloak-config
+          - name: syndesis-keycloak-config
             mountPath: /opt/jboss/keycloak/standalone/configuration/standalone.xml
             subPath: config/standalone.xml
-          - name: ipaas-keycloak-config
-            mountPath: /opt/jboss/keycloak/standalone/configuration/ipaas-realm.json
-            subPath: config/ipaas-realm.json
-          - name: ipaas-keycloak-tls
+          - name: syndesis-keycloak-config
+            mountPath: /opt/jboss/keycloak/standalone/configuration/syndesis-realm.json
+            subPath: config/syndesis-realm.json
+          - name: syndesis-keycloak-tls
             mountPath: /opt/jboss/keycloak/standalone/configuration/tls
         volumes:
-        - name: ipaas-keycloak-config
+        - name: syndesis-keycloak-config
           configMap:
-            name: ipaas-keycloak-config
+            name: syndesis-keycloak-config
             items:
             - key: standalone.xml
               path: config/standalone.xml
-            - key: ipaas-realm.json
-              path: config/ipaas-realm.json
-        - name: ipaas-keycloak-tls
+            - key: syndesis-realm.json
+              path: config/syndesis-realm.json
+        - name: syndesis-keycloak-tls
           emptyDir: {}
     triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-keycloak
-        from:
-          kind: ImageStreamTag
-          name: ipaas-keycloak:2.5.4.Final
-      type: ImageChange
 
     - type: ConfigChange
 
@@ -811,9 +697,9 @@ objects:
   kind: ConfigMap
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak-config
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak-config
   data:
     standalone.xml: |-
       <?xml version="1.0" encoding="UTF-8"?>
@@ -1337,9 +1223,9 @@ objects:
               </outbound-socket-binding>
           </socket-binding-group>
       </server>
-    ipaas-realm.json: |-
+    syndesis-realm.json: |-
       {
-        "realm": "${KEYCLOAK_IPAAS_REALM_NAME}",
+        "realm": "${KEYCLOAK_SYNDESIS_REALM_NAME}",
         "notBefore": 0,
         "revokeRefreshToken": false,
         "accessTokenLifespan": ${ACCESS_TOKEN_LIFESPAN},
@@ -1422,16 +1308,16 @@ objects:
             "roles": ["realm-admin"]
           } ],
           "broker": [{
-            "client": "ipaas-ui",
+            "client": "syndesis-ui",
             "roles": ["read-token"]
           }]
         },
         "clients": [{
-          "clientId": "ipaas-rest",
+          "clientId": "syndesis-rest",
           "surrogateAuthRequired": false,
           "enabled": true,
           "clientAuthenticatorType": "client-secret",
-          "secret": "${KEYCLOAK_IPAAS_REST_CLIENT_SECRET}",
+          "secret": "${KEYCLOAK_SYNDESIS_REST_CLIENT_SECRET}",
           "notBefore": 0,
           "bearerOnly": true,
           "consentRequired": false,
@@ -1447,11 +1333,11 @@ objects:
           "useTemplateScope": false,
           "useTemplateMappers": false
         }, {
-          "clientId": "ipaas-ui",
+          "clientId": "syndesis-ui",
           "surrogateAuthRequired": false,
           "enabled": true,
           "clientAuthenticatorType": "client-secret",
-          "redirectUris": [ "https://${ROUTE_HOSTNAME}/*" ],
+          "redirectUris": [ "https://${ROUTE_HOSTNAME}/*", "http://localhost:4200/*"],
 
           "webOrigins": [ "+" ],
           "notBefore": 0,
@@ -1821,32 +1707,32 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-openshift-proxy
+      app: syndesis
+      component: syndesis-openshift-proxy
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-openshift-proxy-tls
-    name: ipaas-openshift-proxy
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-openshift-proxy-tls
+    name: syndesis-openshift-proxy
   spec:
     ports:
     - port: 443
       protocol: TCP
       targetPort: 8080
     selector:
-      app: redhat-ipaas
-      component: ipaas-openshift-proxy
+      app: syndesis
+      component: syndesis-openshift-proxy
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-openshift-proxy
-    name: ipaas-openshift-proxy
+      app: syndesis
+      component: syndesis-openshift-proxy
+    name: syndesis-openshift-proxy
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-openshift-proxy
-      deploymentconfig: ipaas-openshift-proxy
+      app: syndesis
+      component: syndesis-openshift-proxy
+      deploymentconfig: syndesis-openshift-proxy
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -1858,19 +1744,19 @@ objects:
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-openshift-proxy
-          deploymentconfig: ipaas-openshift-proxy
+          app: syndesis
+          component: syndesis-openshift-proxy
+          deploymentconfig: syndesis-openshift-proxy
       spec:
         containers:
-        - name: ipaas-openshift-proxy
-          image: ' '
+        - name: syndesis-openshift-proxy
+          image: syndesis/token-rp:v0.4.0
 
           imagePullPolicy: IfNotPresent
           args:
-          - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
+          - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}
           - -proxy-url=${OPENSHIFT_MASTER}
-          - -client-id=ipaas-ui
+          - -client-id=syndesis-ui
           - -provider-alias=openshift
           - -provider-type=openshift
           - -tls-cert=/tls/tls.crt
@@ -1889,57 +1775,49 @@ objects:
             name: tls-volume
         volumes:
         - secret:
-            secretName: ipaas-openshift-proxy-tls
+            secretName: syndesis-openshift-proxy-tls
           name: tls-volume
     triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-openshift-proxy
-        from:
-          kind: ImageStreamTag
-          name: ipaas-token-rp:v0.4.0
-      type: ImageChange
 
     - type: ConfigChange
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
-    name: ipaas-rest
+    name: syndesis-rest
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
+      app: syndesis
+      component: syndesis-rest
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
-    name: ipaas-integration
+    name: syndesis-integration
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
+      app: syndesis
+      component: syndesis-rest
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
+      app: syndesis
+      component: syndesis-rest
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-rest-tls
-    name: ipaas-rest
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-rest-tls
+    name: syndesis-rest
   spec:
     ports:
     - port: 80
       protocol: TCP
       targetPort: 8080
     selector:
-      app: redhat-ipaas
-      component: ipaas-rest
+      app: syndesis
+      component: syndesis-rest
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-    name: ipaas-rest
+      app: syndesis
+      component: syndesis-rest
+    name: syndesis-rest
   spec:
     host: ${ROUTE_HOSTNAME}
     path: /api/v1
@@ -1950,21 +1828,21 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: ipaas-rest
+      name: syndesis-rest
       weight: 100
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-    name: ipaas-rest
+      app: syndesis
+      component: syndesis-rest
+    name: syndesis-rest
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-rest
-      deploymentconfig: ipaas-rest
+      app: syndesis
+      component: syndesis-rest
+      deploymentconfig: syndesis-rest
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -1976,9 +1854,9 @@ objects:
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-rest
-          deploymentconfig: ipaas-rest
+          app: syndesis
+          component: syndesis-rest
+          deploymentconfig: syndesis-rest
         annotations:
           pod.beta.kubernetes.io/init-containers: |-
             [{
@@ -1992,7 +1870,7 @@ objects:
                 "-ca-dir", "/usr/share/ca-certificates/mozilla"
               ],
               "volumeMounts": [{
-                "name": "ipaas-rest-tls",
+                "name": "syndesis-rest-tls",
                 "mountPath": "/tls-keystore"
               }]
             }]
@@ -2011,11 +1889,11 @@ objects:
           - -ca-dir
           - /usr/share/ca-certificates/mozilla
           volumeMounts:
-          - name: ipaas-rest-tls
+          - name: syndesis-rest-tls
             mountPath: /tls-keystore
-        serviceAccountName: ipaas-rest
+        serviceAccountName: syndesis-rest
         containers:
-        - name: ipaas-rest
+        - name: syndesis-rest
           env:
           - name: AB_JOLOKIA_OFF
             value: "true"
@@ -2033,7 +1911,7 @@ objects:
             value: ${TEST_SUPPORT_ENABLED}
           - name: CONTROLLERS_INTEGRATION_ENABLED
             value: ${CONTROLLERS_INTEGRATION_ENABLED}
-          image: ' '
+          image: syndesis/syndesis-rest:latest
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -2049,7 +1927,7 @@ objects:
           - containerPort: 8778
             name: jolokia
           volumeMounts:
-          - name: ipaas-rest-tls
+          - name: syndesis-rest-tls
             mountPath: /tls-keystore
           - name: config-volume
             mountPath: /deployments/config
@@ -2061,20 +1939,12 @@ objects:
               cpu: 200m
               memory: 612Mi
         volumes:
-        - name: ipaas-rest-tls
+        - name: syndesis-rest-tls
           emptyDir: {}
         - name: config-volume
           configMap:
-            name: ipaas-rest-config
+            name: syndesis-rest-config
     triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-rest
-        from:
-          kind: ImageStreamTag
-          name: ipaas-rest:latest
-      type: ImageChange
 
     - type: ConfigChange
 
@@ -2083,31 +1953,31 @@ objects:
   kind: ConfigMap
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-    name: ipaas-rest-config
+      app: syndesis
+      component: syndesis-rest
+    name: syndesis-rest-config
   data:
     application.yml: |-
       deployment:
-        file: com/redhat/ipaas/dao/deployment.json
+        file: io/syndesis/dao/deployment.json
       resteasy:
         jaxrs:
           app:
             registration: property
-            classes: com.redhat.ipaas.rest.v1.V1Application
+            classes: io.syndesis.rest.v1.V1Application
       cors:
-        allowedOrigins: https://${ROUTE_HOSTNAME}
+        allowedOrigins: http://localhost:4200, https://${ROUTE_HOSTNAME}
 
       cache:
         cluster:
-          name: IPaaSCluster
+          name: SyndesisCluster
         max:
           entries: 100
       spring:
         zipkin:
           enabled: false
         datasource:
-          url: jdbc:postgresql://ipaas-db:5432/ipaas?sslmode=disable
+          url: jdbc:postgresql://syndesis-db:5432/syndesis?sslmode=disable
           username: ${POSTGRESQL_USER}
           password: ${POSTGRESQL_PASSWORD}
           driver-class-name: org.postgresql.Driver
@@ -2124,57 +1994,57 @@ objects:
         jsondb:
           enabled: true
       github:
-        service: ipaas-github-proxy.${NAMESPACE}.svc
+        service: syndesis-github-proxy.${NAMESPACE}.svc
       openshift:
-        openShiftHost: ipaas-openshift-proxy.${NAMESPACE}.svc
+        openShiftHost: syndesis-openshift-proxy.${NAMESPACE}.svc
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
       keycloak:
         enabled: true
-        configurationFile: file:config/ipaas-client.json
+        configurationFile: file:config/syndesis-client.json
       dao:
         kind: jsondb
-    ipaas-client.json: |-
+    syndesis-client.json: |-
       {
-        "realm": "${KEYCLOAK_IPAAS_REALM_NAME}",
+        "realm": "${KEYCLOAK_SYNDESIS_REALM_NAME}",
         "bearer-only": true,
         "auth-server-url": "https://${ROUTE_HOSTNAME}/auth",
         "ssl-required": "external",
-        "resource": "ipaas-rest",
+        "resource": "syndesis-rest",
         "allow-any-hostname" : ${KEYCLOAK_ALLOW_ANY_HOSTNAME}
       }
 - apiVersion: v1
   kind: Service
   metadata:
-    name: ipaas-ui
+    name: syndesis-ui
     labels:
-      app: redhat-ipaas
-      component: ipaas-ui
+      app: syndesis
+      component: syndesis-ui
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-ui-tls
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-ui-tls
       service.alpha.openshift.io/dependencies: |
-        [ {"name":"ipaas-keycloak","kind":"Service"},
-          {"name":"ipaas-rest","kind":"Service"},
-          {"name":"ipaas-verifier","kind":"Service"},
-          {"name":"ipaas-datamapper","kind":"Service"},
-          {"name":"ipaas-github-proxy","kind":"Service"},
-          {"name":"ipaas-openshift-proxy","kind":"Service"},
-          {"name":"ipaas-db","kind":"Service"} ]
+        [ {"name":"syndesis-keycloak","kind":"Service"},
+          {"name":"syndesis-rest","kind":"Service"},
+          {"name":"syndesis-verifier","kind":"Service"},
+          {"name":"syndesis-datamapper","kind":"Service"},
+          {"name":"syndesis-github-proxy","kind":"Service"},
+          {"name":"syndesis-openshift-proxy","kind":"Service"},
+          {"name":"syndesis-db","kind":"Service"} ]
   spec:
     ports:
     - port: 2015
       protocol: TCP
       targetPort: 2015
     selector:
-      app: redhat-ipaas
-      component: ipaas-ui
+      app: syndesis
+      component: syndesis-ui
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-ui
-    name: ipaas-ui
+      app: syndesis
+      component: syndesis-ui
+    name: syndesis-ui
   spec:
     host: ${ROUTE_HOSTNAME}
     port:
@@ -2184,20 +2054,20 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: ipaas-ui
+      name: syndesis-ui
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-ui
-    name: ipaas-ui
+      app: syndesis
+      component: syndesis-ui
+    name: syndesis-ui
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-ui
-      deploymentconfig: ipaas-ui
+      app: syndesis
+      component: syndesis-ui
+      deploymentconfig: syndesis-ui
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -2209,13 +2079,13 @@ objects:
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-ui
-          deploymentconfig: ipaas-ui
+          app: syndesis
+          component: syndesis-ui
+          deploymentconfig: syndesis-ui
       spec:
         containers:
-        - name: ipaas-ui
-          image: ' '
+        - name: syndesis-ui
+          image: syndesis/syndesis-ui:latest
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -2234,41 +2104,33 @@ objects:
             items:
             - key: config.json
               path: config/config.json
-            name: ipaas-ui-config
+            name: syndesis-ui-config
           name: config-volume
     triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-ui
-        from:
-          kind: ImageStreamTag
-          name: ipaas-ui:latest
-      type: ImageChange
 
     - type: ConfigChange
 - apiVersion: v1
   kind: ConfigMap
   metadata:
-    name: ipaas-ui-config
+    name: syndesis-ui-config
     labels:
-      app: redhat-ipaas
-      component: ipaas-ui
+      app: syndesis
+      component: syndesis-ui
   data:
     config.json: |
       {
         "apiEndpoint": "https://${ROUTE_HOSTNAME}/api/v1",
-        "title": "Red Hat iPaaS",
+        "title": "Syndesis",
         "datamapper": {
           "baseJavaServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/java/",
           "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/"
         },
         "oauth": {
-          "clientId": "ipaas-ui",
+          "clientId": "syndesis-ui",
           "scopes": ["openid"],
           "oidc": true,
           "hybrid": true,
-          "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}",
+          "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}",
           "auto-link-github": ${CONTROLLERS_INTEGRATION_ENABLED}
         }
       }
@@ -2276,30 +2138,30 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-verifier
-    name: ipaas-verifier
+      app: syndesis
+      component: syndesis-verifier
+    name: syndesis-verifier
   spec:
     ports:
     - port: 80
       protocol: TCP
       targetPort: 8080
     selector:
-      app: redhat-ipaas
-      component: ipaas-verifier
+      app: syndesis
+      component: syndesis-verifier
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-verifier
-    name: ipaas-verifier
+      app: syndesis
+      component: syndesis-verifier
+    name: syndesis-verifier
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-verifier
-      deploymentconfig: ipaas-verifier
+      app: syndesis
+      component: syndesis-verifier
+      deploymentconfig: syndesis-verifier
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -2311,9 +2173,9 @@ objects:
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-verifier
-          deploymentconfig: ipaas-verifier
+          app: syndesis
+          component: syndesis-verifier
+          deploymentconfig: syndesis-verifier
         annotations:
           pod.beta.kubernetes.io/init-containers: |-
             [{
@@ -2327,7 +2189,7 @@ objects:
                 "-ca-dir", "/usr/share/ca-certificates/mozilla"
               ],
               "volumeMounts": [{
-                "name": "ipaas-verifier-tls",
+                "name": "syndesis-verifier-tls",
                 "mountPath": "/tls-keystore"
               }]
             }]
@@ -2346,17 +2208,17 @@ objects:
           - -ca-dir
           - /usr/share/ca-certificates/mozilla
           volumeMounts:
-          - name: ipaas-verifier-tls
+          - name: syndesis-verifier-tls
             mountPath: /tls-keystore
-        serviceAccountName: ipaas-rest
+        serviceAccountName: syndesis-rest
         containers:
-        - name: ipaas-verifier
+        - name: syndesis-verifier
           env:
           - name: JAVA_APP_DIR
             value: /deployments
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-          image: ' '
+          image: syndesis/syndesis-verifier:latest
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -2389,65 +2251,46 @@ objects:
               cpu: 200m
               memory: 612Mi
           volumeMounts:
-          - name: ipaas-verifier-tls
+          - name: syndesis-verifier-tls
             mountPath: /tls-keystore
         volumes:
-        - name: ipaas-verifier-tls
+        - name: syndesis-verifier-tls
           emptyDir: {}
     triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-verifier
-        from:
-          kind: ImageStreamTag
-          name: ipaas-verifier:latest
-      type: ImageChange
 
     - type: ConfigChange
-- apiVersion: v1
-  kind: OAuthClient
-  metadata:
-    name: ${OPENSHIFT_OAUTH_CLIENT_ID}
-    labels:
-      app: redhat-ipaas
-      component: ipaas-ui
-  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
-  redirectURIs:
-  - https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
-  grantMethod: prompt
 
 
 - apiVersion: v1
   kind: RoleBinding
   metadata:
-    name: ipaas:viewers
+    name: syndesis:viewers
     labels:
-      app: redhat-ipaas
+      app: syndesis
   roleRef:
     name: view
   subjects:
   - kind: ServiceAccount
-    name: ipaas-rest
+    name: syndesis-rest
   - kind: ServiceAccount
-    name: ipaas-integration
+    name: syndesis-integration
 - apiVersion: v1
   kind: RoleBinding
   metadata:
-    name: ipaas:admins
+    name: syndesis:admins
     labels:
-      app: redhat-ipaas
+      app: syndesis
   roleRef:
     name: admin
   subjects:
   - kind: ServiceAccount
-    name: ipaas-deployer
-    namespace: ipaas-staging
+    name: syndesis-deployer
+    namespace: syndesis-staging
   - kind: ServiceAccount
     name: jenkins
-    namespace: ipaas-ci
+    namespace: syndesis-ci
   - kind: Group
     name: dedicated-admins
   userNames:
-  - system:serviceaccount:ipaas-staging:ipaas-deployer
-  - system:serviceaccount:ipaas-ci:jenkins
+  - system:serviceaccount:syndesis-staging:syndesis-deployer
+  - system:serviceaccount:syndesis-ci:jenkins

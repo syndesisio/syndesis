@@ -1,609 +1,10 @@
-#
-# Do not edit, this is a generated file.  To regenerate,  run: ./generator/run.sh
-#
-apiVersion: v1
-kind: Template
-metadata:
-  name: ipaas-restricted
-parameters:
-# Parameters with no defaults (has to be be provided when template is applied):
-- name: ROUTE_HOSTNAME
-  description: The external hostname to access the iPaaS
-  required: true
-- name: GITHUB_OAUTH_CLIENT_ID
-  description: GitHub OAuth client ID
-  required: true
-- name: GITHUB_OAUTH_CLIENT_SECRET
-  description: GitHub OAuth client secret
-  required: true
-# Parameters with defaults:
-- name: KEYCLOAK_ROUTE_HOSTNAME
-  description: The external hostname to access the iPaaS Keycloak directly
-  value: ipaas-keycloak.127.0.0.1.xip.io
-  required: true
-- name: KEYCLOAK_ADMIN_USERNAME
-  description: The Keycloak admin username
-  value: admin
-  required: true
-- name: KEYCLOAK_ADMIN_PASSWORD
-  description: The Keycloak admin password
-  generate: expression
-  from: "[a-zA-Z0-9]{40}"
-  required: true
-- name: KEYCLOAK_IPAAS_REALM_NAME
-  description: Keycloak iPaaS realm name
-  value: ipaas
-  required: true
-- name: KEYCLOAK_IPAAS_REST_CLIENT_SECRET
-  description: iPaaS REST service client secret
-  generate: expression
-  from: "[a-zA-Z0-9]{64}"
-  required: true
-- name: KEYCLOAK_ALLOW_ANY_HOSTNAME
-  description: The Keycloack parameter to disable hostname validation on certificate
-  value: "false"
-  required: true
-- name: OPENSHIFT_MASTER
-  description: Public OpenShift master address
-  value: https://localhost:8443
-  required: true
-- name: OPENSHIFT_OAUTH_CLIENT_ID
-  description: OpenShift OAuth client ID
-  value: ipaas
-  required: true
-- name: OPENSHIFT_OAUTH_CLIENT_SECRET
-  description: OpenShift OAuth client secret
-  generate: expression
-  from: "[a-zA-Z0-9]{64}"
-  required: true
-- name: OPENSHIFT_OAUTH_DEFAULT_SCOPES
-  description: OpenShift OAuth default scopes
-  value: "user:full"
-  required: true
-- name: PEMTOKEYSTORE_IMAGE
-  description: PEM to keystore init container image
-  value: jimmidyson/pemtokeystore:v0.2.0
-  required: true
-- name: GITHUB_OAUTH_DEFAULT_SCOPES
-  description: GitHub OAuth default scopes
-  value: "user:email public_repo"
-  required: true
-- description: Maximum amount of memory the PostgreSQL container can use.
-  displayName: Memory Limit
-  name: POSTGRESQL_MEMORY_LIMIT
-  value: 512Mi
-- description: The OpenShift Namespace where the PostgreSQL ImageStream resides.
-  displayName: Namespace
-  name: POSTGRESQL_IMAGE_STREAM_NAMESPACE
-  value: openshift
-- description: Username for PostgreSQL user that will be used for accessing the database.
-  displayName: PostgreSQL Connection Username
-  name: POSTGRESQL_USER
-  value: ipaas
-- description: Password for the PostgreSQL connection user.
-  displayName: PostgreSQL Connection Password
-  from: '[a-zA-Z0-9]{16}'
-  generate: expression
-  name: POSTGRESQL_PASSWORD
-  required: true
-- description: Name of the PostgreSQL database accessed.
-  displayName: PostgreSQL Database Name
-  name: POSTGRESQL_DATABASE
-  required: true
-  value: ipaas
-- description: Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi.
-  displayName: Volume Capacity
-  name: POSTGRESQL_VOLUME_CAPACITY
-  required: true
-  value: 1Gi
-- description: Enables test-support endpoint on backend API
-  displayName: Test Support Enabled
-  name: TEST_SUPPORT_ENABLED
-  required: true
-  value: "true"
-- description: Ignore SSL errors in proxy containers
-  displayName: Insecure skip verify
-  name: INSECURE_SKIP_VERIFY
-  value: 'false'
-- description: Should deployment of integrations be enabled?
-  displayName: Enable Integration Deployment
-  name: CONTROLLERS_INTEGRATION_ENABLED
-  value: 'true'
-- description: How many seconds should an access token be valid?
-  displayName: Acess Token Lifespan
-  name: ACCESS_TOKEN_LIFESPAN
-  value: '300'
-- description: How long are idle SSO Sesions allow to exist?
-  displayName: Idle Session Lifespan
-  name: SESSION_LIFESPAN
-  value: '36000'
-message: |-
-  Red Hat iPaaS is deployed to ${ROUTE_HOSTNAME}.
-
-    FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
-objects:
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-rest
-    labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/rhipaas/ipaas-rest:latest
-      importPolicy:
-        scheduled: true
-      name: latest
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-keycloak
-    labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/jimmidyson/keycloak-openshift:2.5.4.Final
-      importPolicy:
-        scheduled: true
-      name: 2.5.4.Final
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-ui
-    labels:
-      app: redhat-ipaas
-      component: ipaas-ui
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/rhipaas/ipaas-ui:latest
-      importPolicy:
-        scheduled: true
-      name: latest
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-token-rp
-    labels:
-      app: redhat-ipaas
-      component: ipaas-token-rp
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/rhipaas/token-rp:v0.4.0
-      importPolicy:
-        scheduled: true
-      name: v0.4.0
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-datamapper
-    labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/atlasmap/ipaas-datamapper:latest
-      importPolicy:
-        scheduled: true
-      name: latest
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: ipaas-verifier
-    labels:
-      app: redhat-ipaas
-      component: ipaas-verifier
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: docker.io/rhipaas/ipaas-verifier:latest
-      importPolicy:
-        scheduled: true
-      name: latest
-
-- apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: ipaas-datamapper
-    labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-
-- apiVersion: v1
-  kind: Service
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-    annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-datamapper-tls
-    name: ipaas-datamapper
-  spec:
-    ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-
-- apiVersion: v1
-  kind: Route
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-    name: ipaas-datamapper
-  spec:
-    host: ${ROUTE_HOSTNAME}
-    path: /v2/atlas
-    port:
-      targetPort: 8080
-    tls:
-      insecureEdgeTerminationPolicy: Redirect
-      termination: edge
-    to:
-      kind: Service
-      name: ipaas-datamapper
-      weight: 100
-
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-    name: ipaas-datamapper
-  spec:
-    replicas: 1
-    selector:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-      deploymentconfig: ipaas-datamapper
-    strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 10800
-        updatePeriodSeconds: 1
-      type: Rolling
-    template:
-      metadata:
-        labels:
-          app: redhat-ipaas
-          component: ipaas-datamapper
-          deploymentconfig: ipaas-datamapper
-        annotations:
-          pod.beta.kubernetes.io/init-containers: |-
-            [{
-              "name": "openshift-ca-pemtokeystore",
-              "image": "${PEMTOKEYSTORE_IMAGE}",
-              "imagePullPolicy": "IfNotPresent",
-              "args": [
-                "-keystore", "/tls-keystore/openshift-truststore.jks",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
-                "-ca-dir", "/usr/share/ca-certificates/mozilla"
-              ],
-              "volumeMounts": [{
-                "name": "ipaas-datamapper-tls",
-                "mountPath": "/tls-keystore"
-              }]
-            }]
-      spec:
-        initContainers:
-        - name: openshift-ca-pemtokeystore
-          image: ${PEMTOKEYSTORE_IMAGE}
-          imagePullPolicy: IfNotPresent
-          args:
-          - -keystore
-          - /tls-keystore/openshift-truststore.jks
-          - -ca-file
-          - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-          - -ca-file
-          - /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-          - -ca-dir
-          - /usr/share/ca-certificates/mozilla
-          volumeMounts:
-          - name: ipaas-datamapper-tls
-            mountPath: /tls-keystore
-        serviceAccountName: ipaas-datamapper
-        containers:
-        - name: ipaas-datamapper
-          env:
-          - name: HOME
-            value: /deployments
-          - name: JAVA_TOOL_OPTIONS
-            value: '-Duser.home=/deployments -Duser.name=jboss'
-          - name: AB_JOLOKIA_OFF
-            value: "true"
-          - name: JAVA_APP_DIR
-            value: /deployments
-          - name: AB_OFF
-            value: "true"
-          - name: JAVA_OPTIONS
-            value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-          image: ' '
-
-          imagePullPolicy: IfNotPresent
-          readinessProbe:
-            httpGet:
-              path: "/health"
-              port: 8181
-            initialDelaySeconds: 5
-          ports:
-          - containerPort: 8080
-            name: http
-          - containerPort: 9779
-            name: prometheus
-          - containerPort: 8778
-            name: jolokia
-          volumeMounts:
-          - name: ipaas-datamapper-tls
-            mountPath: /tls-keystore
-          - name: config-volume
-            mountPath: /deployments/config
-          resources:
-            limits:
-              cpu: 2000m
-              memory: 612Mi
-            requests:
-              cpu: 200m
-              memory: 612Mi
-        volumes:
-        - name: ipaas-datamapper-tls
-          emptyDir: {}
-        - name: config-volume
-          configMap:
-            name: ipaas-datamapper-config
-    triggers:
-    - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-datamapper
-        from:
-          kind: ImageStreamTag
-          name: ipaas-datamapper:latest
-      type: ImageChange
-
-
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
-    name: ipaas-datamapper-config
-  data:
-    application.yml: |-
-      cors:
-        allowedOrigins: https://${ROUTE_HOSTNAME}
-
-      spring:
-        zipkin:
-          enabled: false
-      security:
-        basic:
-          enabled: false
-      management:
-        port: 8181
-        security:
-          enabled: true
-      endpoints:
-        health:
-          sensitive: false
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: ipaas-db
-    labels:
-      app: redhat-ipaas
-      component: ipaas-db
-  spec:
-    ports:
-    - name: postgresql
-      nodePort: 0
-      port: 5432
-      protocol: TCP
-      targetPort: 5432
-    selector:
-      app: redhat-ipaas
-      component: ipaas-db
-    sessionAffinity: None
-    type: ClusterIP
-  status:
-    loadBalancer: {}
-- apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    name: ipaas-db
-    labels:
-      app: redhat-ipaas
-      component: ipaas-db
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: ${POSTGRESQL_VOLUME_CAPACITY}
-    
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    name: ipaas-db
-    labels:
-      app: redhat-ipaas
-      component: ipaas-db
-  spec:
-    replicas: 1
-    selector:
-      app: redhat-ipaas
-      component: ipaas-db
-    strategy:
-      type: Recreate
-    template:
-      metadata:
-        labels:
-          app: redhat-ipaas
-          component: ipaas-db
-      spec:
-        containers:
-        - capabilities: {}
-          env:
-          - name: POSTGRESQL_USER
-            value: ${POSTGRESQL_USER}
-          - name: POSTGRESQL_PASSWORD
-            value: ${POSTGRESQL_PASSWORD}
-          - name: POSTGRESQL_DATABASE
-            value: ${POSTGRESQL_DATABASE}
-          image: ' '
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            initialDelaySeconds: 10
-            tcpSocket:
-              port: 5432
-            timeoutSeconds: 1
-          name: postgresql
-          ports:
-          - containerPort: 5432
-            protocol: TCP
-          readinessProbe:
-            exec:
-              command:
-              - /bin/sh
-              - -i
-              - -c
-              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
-            initialDelaySeconds: 5
-            timeoutSeconds: 1
-          resources:
-            limits:
-              memory: ${POSTGRESQL_MEMORY_LIMIT}
-          volumeMounts:
-          - mountPath: /var/lib/pgsql/data
-            name: ipaas-db-data
-        volumes:
-        - name: ipaas-db-data
-          persistentVolumeClaim:
-            claimName: ipaas-db
-
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - postgresql
-        from:
-          kind: ImageStreamTag
-          name: postgresql:9.5
-          namespace: ${POSTGRESQL_IMAGE_STREAM_NAMESPACE}
-      type: ImageChange
-    - type: ConfigChange
-- apiVersion: v1
-  kind: Service
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
-    annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-github-proxy-tls
-    name: ipaas-github-proxy
-  spec:
-    ports:
-    - port: 443
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
-    name: ipaas-github-proxy
-  spec:
-    replicas: 1
-    selector:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
-      deploymentconfig: ipaas-github-proxy
-    strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 600
-        updatePeriodSeconds: 1
-      type: Rolling
-    template:
-      metadata:
-        labels:
-          app: redhat-ipaas
-          component: ipaas-github-proxy
-          deploymentconfig: ipaas-github-proxy
-      spec:
-        containers:
-        - name: ipaas-github-proxy
-          image: ' '
-
-          imagePullPolicy: IfNotPresent
-          args:
-          - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
-          - -proxy-url=https://api.github.com
-          - -client-id=ipaas-ui
-          - -provider-alias=github
-          - -provider-type=github
-          - -tls-cert=/tls/tls.crt
-          - -tls-key=/tls/tls.key
-          - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-          - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-          - -insecure-skip-verify=${INSECURE_SKIP_VERIFY}
-          readinessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 1
-          ports:
-          - containerPort: 8080
-          volumeMounts:
-          - mountPath: /tls
-            name: tls-volume
-        volumes:
-        - secret:
-            secretName: ipaas-github-proxy-tls
-          name: tls-volume
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-github-proxy
-        from:
-          kind: ImageStreamTag
-          name: ipaas-token-rp:v0.4.0
-      type: ImageChange
-
-    - type: ConfigChange
 - apiVersion: v1
   kind: Secret
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak-admin
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak-admin
   type: kubernetes.io/basic-auth
   stringData:
     username: ${KEYCLOAK_ADMIN_USERNAME}
@@ -613,30 +14,30 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
+      app: syndesis
+      component: syndesis-keycloak
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-keycloak-tls
-    name: ipaas-keycloak
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-keycloak-tls
+    name: syndesis-keycloak
   spec:
     ports:
     - port: 8080
       protocol: TCP
       targetPort: 8080
     selector:
-      app: redhat-ipaas
-      component: ipaas-keycloak
+      app: syndesis
+      component: syndesis-keycloak
 
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak-realm-${KEYCLOAK_IPAAS_REALM_NAME}
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak-realm-${KEYCLOAK_SYNDESIS_REALM_NAME}
   spec:
     host: ${ROUTE_HOSTNAME}
-    path: /auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
+    path: /auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}
     port:
       targetPort: 8080
     tls:
@@ -644,15 +45,15 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: ipaas-keycloak
+      name: syndesis-keycloak
       weight: 100
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak-resources
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak-resources
   spec:
     host: ${ROUTE_HOSTNAME}
     path: /auth/resources
@@ -663,15 +64,15 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: ipaas-keycloak
+      name: syndesis-keycloak
       weight: 100
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak-external
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak-external
   spec:
     host: ${KEYCLOAK_ROUTE_HOSTNAME}
     port:
@@ -681,22 +82,22 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: ipaas-keycloak
+      name: syndesis-keycloak
       weight: 100
 
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-      deploymentconfig: ipaas-keycloak
+      app: syndesis
+      component: syndesis-keycloak
+      deploymentconfig: syndesis-keycloak
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -708,9 +109,9 @@ objects:
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-keycloak
-          deploymentconfig: ipaas-keycloak
+          app: syndesis
+          component: syndesis-keycloak
+          deploymentconfig: syndesis-keycloak
         annotations:
           pod.beta.kubernetes.io/init-containers: |-
             [{
@@ -724,7 +125,7 @@ objects:
                 "-ca-dir", "/usr/share/ca-certificates/mozilla"
               ],
               "volumeMounts": [{
-                "name": "ipaas-keycloak-tls",
+                "name": "syndesis-keycloak-tls",
                 "mountPath": "/tls-keystore"
               }]
             }]
@@ -743,13 +144,13 @@ objects:
           - -ca-dir
           - /usr/share/ca-certificates/mozilla
           volumeMounts:
-          - name: ipaas-keycloak-tls
+          - name: syndesis-keycloak-tls
             mountPath: /tls-keystore
         containers:
         - args:
           - -b
           - 0.0.0.0
-          - -Dkeycloak.import=/opt/jboss/keycloak/standalone/configuration/ipaas-realm.json
+          - -Dkeycloak.import=/opt/jboss/keycloak/standalone/configuration/syndesis-realm.json
           - -Dkeycloak.migration.strategy=IGNORE_EXISTING
           - -Djavax.net.ssl.trustStore=/opt/jboss/keycloak/standalone/configuration/tls/openshift-truststore.jks
           env:
@@ -757,15 +158,18 @@ objects:
             valueFrom:
               secretKeyRef:
                 key: username
-                name: ipaas-keycloak-admin
+                name: syndesis-keycloak-admin
           - name: KEYCLOAK_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: password
-                name: ipaas-keycloak-admin
+                name: syndesis-keycloak-admin
+{{^Dev}}
           image: ' '
-
-          name: ipaas-keycloak
+{{/Dev}}{{#Dev}}
+          image: jimmidyson/keycloak-openshift:2.5.4.Final
+{{/Dev}}
+          name: syndesis-keycloak
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
@@ -775,35 +179,36 @@ objects:
           ports:
           - containerPort: 8080
           volumeMounts:
-          - name: ipaas-keycloak-config
+          - name: syndesis-keycloak-config
             mountPath: /opt/jboss/keycloak/standalone/configuration/standalone.xml
             subPath: config/standalone.xml
-          - name: ipaas-keycloak-config
-            mountPath: /opt/jboss/keycloak/standalone/configuration/ipaas-realm.json
-            subPath: config/ipaas-realm.json
-          - name: ipaas-keycloak-tls
+          - name: syndesis-keycloak-config
+            mountPath: /opt/jboss/keycloak/standalone/configuration/syndesis-realm.json
+            subPath: config/syndesis-realm.json
+          - name: syndesis-keycloak-tls
             mountPath: /opt/jboss/keycloak/standalone/configuration/tls
         volumes:
-        - name: ipaas-keycloak-config
+        - name: syndesis-keycloak-config
           configMap:
-            name: ipaas-keycloak-config
+            name: syndesis-keycloak-config
             items:
             - key: standalone.xml
               path: config/standalone.xml
-            - key: ipaas-realm.json
-              path: config/ipaas-realm.json
-        - name: ipaas-keycloak-tls
+            - key: syndesis-realm.json
+              path: config/syndesis-realm.json
+        - name: syndesis-keycloak-tls
           emptyDir: {}
     triggers:
+{{^Dev}}
     - imageChangeParams:
         automatic: true
         containerNames:
-        - ipaas-keycloak
+        - syndesis-keycloak
         from:
           kind: ImageStreamTag
-          name: ipaas-keycloak:2.5.4.Final
+          name: syndesis-keycloak:2.5.4.Final
       type: ImageChange
-
+{{/Dev}}
     - type: ConfigChange
 
 
@@ -811,9 +216,9 @@ objects:
   kind: ConfigMap
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
-    name: ipaas-keycloak-config
+      app: syndesis
+      component: syndesis-keycloak
+    name: syndesis-keycloak-config
   data:
     standalone.xml: |-
       <?xml version="1.0" encoding="UTF-8"?>
@@ -1337,9 +742,9 @@ objects:
               </outbound-socket-binding>
           </socket-binding-group>
       </server>
-    ipaas-realm.json: |-
+    syndesis-realm.json: |-
       {
-        "realm": "${KEYCLOAK_IPAAS_REALM_NAME}",
+        "realm": "${KEYCLOAK_SYNDESIS_REALM_NAME}",
         "notBefore": 0,
         "revokeRefreshToken": false,
         "accessTokenLifespan": ${ACCESS_TOKEN_LIFESPAN},
@@ -1422,16 +827,16 @@ objects:
             "roles": ["realm-admin"]
           } ],
           "broker": [{
-            "client": "ipaas-ui",
+            "client": "syndesis-ui",
             "roles": ["read-token"]
           }]
         },
         "clients": [{
-          "clientId": "ipaas-rest",
+          "clientId": "syndesis-rest",
           "surrogateAuthRequired": false,
           "enabled": true,
           "clientAuthenticatorType": "client-secret",
-          "secret": "${KEYCLOAK_IPAAS_REST_CLIENT_SECRET}",
+          "secret": "${KEYCLOAK_SYNDESIS_REST_CLIENT_SECRET}",
           "notBefore": 0,
           "bearerOnly": true,
           "consentRequired": false,
@@ -1447,12 +852,15 @@ objects:
           "useTemplateScope": false,
           "useTemplateMappers": false
         }, {
-          "clientId": "ipaas-ui",
+          "clientId": "syndesis-ui",
           "surrogateAuthRequired": false,
           "enabled": true,
           "clientAuthenticatorType": "client-secret",
+{{#Dev}}
+          "redirectUris": [ "https://${ROUTE_HOSTNAME}/*", "http://localhost:4200/*"],
+{{/Dev}}{{^Dev}}
           "redirectUris": [ "https://${ROUTE_HOSTNAME}/*" ],
-
+{{/Dev}}
           "webOrigins": [ "+" ],
           "notBefore": 0,
           "bearerOnly": false,
@@ -1817,626 +1225,3 @@ objects:
         "clientAuthenticationFlow": "clients"
       }
 
-- apiVersion: v1
-  kind: Service
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-openshift-proxy
-    annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-openshift-proxy-tls
-    name: ipaas-openshift-proxy
-  spec:
-    ports:
-    - port: 443
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: redhat-ipaas
-      component: ipaas-openshift-proxy
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-openshift-proxy
-    name: ipaas-openshift-proxy
-  spec:
-    replicas: 1
-    selector:
-      app: redhat-ipaas
-      component: ipaas-openshift-proxy
-      deploymentconfig: ipaas-openshift-proxy
-    strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 600
-        updatePeriodSeconds: 1
-      type: Rolling
-    template:
-      metadata:
-        labels:
-          app: redhat-ipaas
-          component: ipaas-openshift-proxy
-          deploymentconfig: ipaas-openshift-proxy
-      spec:
-        containers:
-        - name: ipaas-openshift-proxy
-          image: ' '
-
-          imagePullPolicy: IfNotPresent
-          args:
-          - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
-          - -proxy-url=${OPENSHIFT_MASTER}
-          - -client-id=ipaas-ui
-          - -provider-alias=openshift
-          - -provider-type=openshift
-          - -tls-cert=/tls/tls.crt
-          - -tls-key=/tls/tls.key
-          - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-          - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-          - -insecure-skip-verify=${INSECURE_SKIP_VERIFY}
-          readinessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 1
-          ports:
-          - containerPort: 8080
-          volumeMounts:
-          - mountPath: /tls
-            name: tls-volume
-        volumes:
-        - secret:
-            secretName: ipaas-openshift-proxy-tls
-          name: tls-volume
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-openshift-proxy
-        from:
-          kind: ImageStreamTag
-          name: ipaas-token-rp:v0.4.0
-      type: ImageChange
-
-    - type: ConfigChange
-- apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: ipaas-rest
-    labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-- apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: ipaas-integration
-    labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-- apiVersion: v1
-  kind: Service
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-    annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-rest-tls
-    name: ipaas-rest
-  spec:
-    ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: redhat-ipaas
-      component: ipaas-rest
-- apiVersion: v1
-  kind: Route
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-    name: ipaas-rest
-  spec:
-    host: ${ROUTE_HOSTNAME}
-    path: /api/v1
-    port:
-      targetPort: 8080
-    tls:
-      insecureEdgeTerminationPolicy: Redirect
-      termination: edge
-    to:
-      kind: Service
-      name: ipaas-rest
-      weight: 100
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-    name: ipaas-rest
-  spec:
-    replicas: 1
-    selector:
-      app: redhat-ipaas
-      component: ipaas-rest
-      deploymentconfig: ipaas-rest
-    strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 10800
-        updatePeriodSeconds: 1
-      type: Rolling
-    template:
-      metadata:
-        labels:
-          app: redhat-ipaas
-          component: ipaas-rest
-          deploymentconfig: ipaas-rest
-        annotations:
-          pod.beta.kubernetes.io/init-containers: |-
-            [{
-              "name": "openshift-ca-pemtokeystore",
-              "image": "${PEMTOKEYSTORE_IMAGE}",
-              "imagePullPolicy": "IfNotPresent",
-              "args": [
-                "-keystore", "/tls-keystore/openshift-truststore.jks",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
-                "-ca-dir", "/usr/share/ca-certificates/mozilla"
-              ],
-              "volumeMounts": [{
-                "name": "ipaas-rest-tls",
-                "mountPath": "/tls-keystore"
-              }]
-            }]
-      spec:
-        initContainers:
-        - name: openshift-ca-pemtokeystore
-          image: ${PEMTOKEYSTORE_IMAGE}
-          imagePullPolicy: IfNotPresent
-          args:
-          - -keystore
-          - /tls-keystore/openshift-truststore.jks
-          - -ca-file
-          - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-          - -ca-file
-          - /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-          - -ca-dir
-          - /usr/share/ca-certificates/mozilla
-          volumeMounts:
-          - name: ipaas-rest-tls
-            mountPath: /tls-keystore
-        serviceAccountName: ipaas-rest
-        containers:
-        - name: ipaas-rest
-          env:
-          - name: AB_JOLOKIA_OFF
-            value: "true"
-          - name: JAVA_APP_DIR
-            value: /deployments
-          - name: AB_OFF
-            value: "true"
-          - name: JAVA_OPTIONS
-            value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-          - name: NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-          - name: ENDPOINTS_TEST_SUPPORT_ENABLED
-            value: ${TEST_SUPPORT_ENABLED}
-          - name: CONTROLLERS_INTEGRATION_ENABLED
-            value: ${CONTROLLERS_INTEGRATION_ENABLED}
-          image: ' '
-
-          imagePullPolicy: IfNotPresent
-          readinessProbe:
-            httpGet:
-              path: "/health"
-              port: 8181
-            initialDelaySeconds: 5
-          ports:
-          - containerPort: 8080
-            name: http
-          - containerPort: 9779
-            name: prometheus
-          - containerPort: 8778
-            name: jolokia
-          volumeMounts:
-          - name: ipaas-rest-tls
-            mountPath: /tls-keystore
-          - name: config-volume
-            mountPath: /deployments/config
-          resources:
-            limits:
-              cpu: 2000m
-              memory: 612Mi
-            requests:
-              cpu: 200m
-              memory: 612Mi
-        volumes:
-        - name: ipaas-rest-tls
-          emptyDir: {}
-        - name: config-volume
-          configMap:
-            name: ipaas-rest-config
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-rest
-        from:
-          kind: ImageStreamTag
-          name: ipaas-rest:latest
-      type: ImageChange
-
-    - type: ConfigChange
-
-
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-rest
-    name: ipaas-rest-config
-  data:
-    application.yml: |-
-      deployment:
-        file: com/redhat/ipaas/dao/deployment.json
-      resteasy:
-        jaxrs:
-          app:
-            registration: property
-            classes: com.redhat.ipaas.rest.v1.V1Application
-      cors:
-        allowedOrigins: https://${ROUTE_HOSTNAME}
-
-      cache:
-        cluster:
-          name: IPaaSCluster
-        max:
-          entries: 100
-      spring:
-        zipkin:
-          enabled: false
-        datasource:
-          url: jdbc:postgresql://ipaas-db:5432/ipaas?sslmode=disable
-          username: ${POSTGRESQL_USER}
-          password: ${POSTGRESQL_PASSWORD}
-          driver-class-name: org.postgresql.Driver
-      security:
-        basic:
-          enabled: false
-      management:
-        port: 8181
-        security:
-          enabled: true
-      endpoints:
-        health:
-          sensitive: false
-        jsondb:
-          enabled: true
-      github:
-        service: ipaas-github-proxy.${NAMESPACE}.svc
-      openshift:
-        openShiftHost: ipaas-openshift-proxy.${NAMESPACE}.svc
-        apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
-        namespace: ${NAMESPACE}
-      keycloak:
-        enabled: true
-        configurationFile: file:config/ipaas-client.json
-      dao:
-        kind: jsondb
-    ipaas-client.json: |-
-      {
-        "realm": "${KEYCLOAK_IPAAS_REALM_NAME}",
-        "bearer-only": true,
-        "auth-server-url": "https://${ROUTE_HOSTNAME}/auth",
-        "ssl-required": "external",
-        "resource": "ipaas-rest",
-        "allow-any-hostname" : ${KEYCLOAK_ALLOW_ANY_HOSTNAME}
-      }
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: ipaas-ui
-    labels:
-      app: redhat-ipaas
-      component: ipaas-ui
-    annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-ui-tls
-      service.alpha.openshift.io/dependencies: |
-        [ {"name":"ipaas-keycloak","kind":"Service"},
-          {"name":"ipaas-rest","kind":"Service"},
-          {"name":"ipaas-verifier","kind":"Service"},
-          {"name":"ipaas-datamapper","kind":"Service"},
-          {"name":"ipaas-github-proxy","kind":"Service"},
-          {"name":"ipaas-openshift-proxy","kind":"Service"},
-          {"name":"ipaas-db","kind":"Service"} ]
-  spec:
-    ports:
-    - port: 2015
-      protocol: TCP
-      targetPort: 2015
-    selector:
-      app: redhat-ipaas
-      component: ipaas-ui
-- apiVersion: v1
-  kind: Route
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-ui
-    name: ipaas-ui
-  spec:
-    host: ${ROUTE_HOSTNAME}
-    port:
-      targetPort: 2015
-    tls:
-      insecureEdgeTerminationPolicy: Redirect
-      termination: edge
-    to:
-      kind: Service
-      name: ipaas-ui
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-ui
-    name: ipaas-ui
-  spec:
-    replicas: 1
-    selector:
-      app: redhat-ipaas
-      component: ipaas-ui
-      deploymentconfig: ipaas-ui
-    strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 600
-        updatePeriodSeconds: 1
-      type: Rolling
-    template:
-      metadata:
-        labels:
-          app: redhat-ipaas
-          component: ipaas-ui
-          deploymentconfig: ipaas-ui
-      spec:
-        containers:
-        - name: ipaas-ui
-          image: ' '
-
-          imagePullPolicy: IfNotPresent
-          readinessProbe:
-            httpGet:
-              path: "/"
-              port: 2015
-            initialDelaySeconds: 1
-          ports:
-          - containerPort: 2015
-          volumeMounts:
-          - mountPath: /srv/config.json
-            name: config-volume
-            subPath: config/config.json
-        volumes:
-        - configMap:
-            items:
-            - key: config.json
-              path: config/config.json
-            name: ipaas-ui-config
-          name: config-volume
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-ui
-        from:
-          kind: ImageStreamTag
-          name: ipaas-ui:latest
-      type: ImageChange
-
-    - type: ConfigChange
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    name: ipaas-ui-config
-    labels:
-      app: redhat-ipaas
-      component: ipaas-ui
-  data:
-    config.json: |
-      {
-        "apiEndpoint": "https://${ROUTE_HOSTNAME}/api/v1",
-        "title": "Red Hat iPaaS",
-        "datamapper": {
-          "baseJavaServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/java/",
-          "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/"
-        },
-        "oauth": {
-          "clientId": "ipaas-ui",
-          "scopes": ["openid"],
-          "oidc": true,
-          "hybrid": true,
-          "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}",
-          "auto-link-github": ${CONTROLLERS_INTEGRATION_ENABLED}
-        }
-      }
-- apiVersion: v1
-  kind: Service
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-verifier
-    name: ipaas-verifier
-  spec:
-    ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: redhat-ipaas
-      component: ipaas-verifier
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: redhat-ipaas
-      component: ipaas-verifier
-    name: ipaas-verifier
-  spec:
-    replicas: 1
-    selector:
-      app: redhat-ipaas
-      component: ipaas-verifier
-      deploymentconfig: ipaas-verifier
-    strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 10800
-        updatePeriodSeconds: 1
-      type: Rolling
-    template:
-      metadata:
-        labels:
-          app: redhat-ipaas
-          component: ipaas-verifier
-          deploymentconfig: ipaas-verifier
-        annotations:
-          pod.beta.kubernetes.io/init-containers: |-
-            [{
-              "name": "openshift-ca-pemtokeystore",
-              "image": "${PEMTOKEYSTORE_IMAGE}",
-              "imagePullPolicy": "IfNotPresent",
-              "args": [
-                "-keystore", "/tls-keystore/openshift-truststore.jks",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
-                "-ca-dir", "/usr/share/ca-certificates/mozilla"
-              ],
-              "volumeMounts": [{
-                "name": "ipaas-verifier-tls",
-                "mountPath": "/tls-keystore"
-              }]
-            }]
-      spec:
-        initContainers:
-        - name: openshift-ca-pemtokeystore
-          image: ${PEMTOKEYSTORE_IMAGE}
-          imagePullPolicy: IfNotPresent
-          args:
-          - -keystore
-          - /tls-keystore/openshift-truststore.jks
-          - -ca-file
-          - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-          - -ca-file
-          - /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-          - -ca-dir
-          - /usr/share/ca-certificates/mozilla
-          volumeMounts:
-          - name: ipaas-verifier-tls
-            mountPath: /tls-keystore
-        serviceAccountName: ipaas-rest
-        containers:
-        - name: ipaas-verifier
-          env:
-          - name: JAVA_APP_DIR
-            value: /deployments
-          - name: JAVA_OPTIONS
-            value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-          image: ' '
-
-          imagePullPolicy: IfNotPresent
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-              scheme: HTTP
-            initialDelaySeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-              scheme: HTTP
-            initialDelaySeconds: 180
-          ports:
-          - containerPort: 8080
-            name: http
-            protocol: TCP
-          - containerPort: 9779
-            name: prometheus
-            protocol: TCP
-          - containerPort: 8778
-            name: jolokia
-            protocol: TCP
-          resources:
-            limits:
-              cpu: 2000m
-              memory: 612Mi
-            requests:
-              cpu: 200m
-              memory: 612Mi
-          volumeMounts:
-          - name: ipaas-verifier-tls
-            mountPath: /tls-keystore
-        volumes:
-        - name: ipaas-verifier-tls
-          emptyDir: {}
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ipaas-verifier
-        from:
-          kind: ImageStreamTag
-          name: ipaas-verifier:latest
-      type: ImageChange
-
-    - type: ConfigChange
-
-
-- apiVersion: v1
-  kind: RoleBinding
-  metadata:
-    name: ipaas:viewers
-    labels:
-      app: redhat-ipaas
-  roleRef:
-    name: view
-  subjects:
-  - kind: ServiceAccount
-    name: ipaas-rest
-  - kind: ServiceAccount
-    name: ipaas-integration
-- apiVersion: v1
-  kind: RoleBinding
-  metadata:
-    name: ipaas:admins
-    labels:
-      app: redhat-ipaas
-  roleRef:
-    name: admin
-  subjects:
-  - kind: ServiceAccount
-    name: ipaas-deployer
-    namespace: ipaas-staging
-  - kind: ServiceAccount
-    name: jenkins
-    namespace: ipaas-ci
-  - kind: Group
-    name: dedicated-admins
-  userNames:
-  - system:serviceaccount:ipaas-staging:ipaas-deployer
-  - system:serviceaccount:ipaas-ci:jenkins

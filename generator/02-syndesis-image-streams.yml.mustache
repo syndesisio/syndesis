@@ -2,25 +2,25 @@
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: ipaas-rest
+    name: syndesis-rest
     labels:
-      app: redhat-ipaas
-      component: ipaas-rest
+      app: syndesis
+      component: syndesis-rest
   spec:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/rhipaas/ipaas-rest:latest
+        name: docker.io/syndesis/syndesis-rest:latest
       importPolicy:
         scheduled: true
       name: latest
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: ipaas-keycloak
+    name: syndesis-keycloak
     labels:
-      app: redhat-ipaas
-      component: ipaas-keycloak
+      app: syndesis
+      component: syndesis-keycloak
   spec:
     tags:
     - from:
@@ -32,60 +32,60 @@
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: ipaas-ui
+    name: syndesis-ui
     labels:
-      app: redhat-ipaas
-      component: ipaas-ui
+      app: syndesis
+      component: syndesis-ui
   spec:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/rhipaas/ipaas-ui:latest
+        name: docker.io/syndesis/syndesis-ui:latest
       importPolicy:
         scheduled: true
       name: latest
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: ipaas-token-rp
+    name: syndesis-token-rp
     labels:
-      app: redhat-ipaas
-      component: ipaas-token-rp
+      app: syndesis
+      component: syndesis-token-rp
   spec:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/rhipaas/token-rp:v0.4.0
+        name: docker.io/syndesis/token-rp:v0.4.0
       importPolicy:
         scheduled: true
       name: v0.4.0
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: ipaas-datamapper
+    name: syndesis-datamapper
     labels:
-      app: redhat-ipaas
-      component: ipaas-datamapper
+      app: syndesis
+      component: syndesis-datamapper
   spec:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/atlasmap/ipaas-datamapper:latest
+        name: docker.io/atlasmap/syndesis-datamapper:latest
       importPolicy:
         scheduled: true
       name: latest
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: ipaas-verifier
+    name: syndesis-verifier
     labels:
-      app: redhat-ipaas
-      component: ipaas-verifier
+      app: syndesis
+      component: syndesis-verifier
   spec:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/rhipaas/ipaas-verifier:latest
+        name: docker.io/syndesis/syndesis-verifier:latest
       importPolicy:
         scheduled: true
       name: latest

@@ -2,32 +2,32 @@
   kind: Service
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
+      app: syndesis
+      component: syndesis-github-proxy
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: ipaas-github-proxy-tls
-    name: ipaas-github-proxy
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-github-proxy-tls
+    name: syndesis-github-proxy
   spec:
     ports:
     - port: 443
       protocol: TCP
       targetPort: 8080
     selector:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
+      app: syndesis
+      component: syndesis-github-proxy
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
-    name: ipaas-github-proxy
+      app: syndesis
+      component: syndesis-github-proxy
+    name: syndesis-github-proxy
   spec:
     replicas: 1
     selector:
-      app: redhat-ipaas
-      component: ipaas-github-proxy
-      deploymentconfig: ipaas-github-proxy
+      app: syndesis
+      component: syndesis-github-proxy
+      deploymentconfig: syndesis-github-proxy
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -39,22 +39,22 @@
     template:
       metadata:
         labels:
-          app: redhat-ipaas
-          component: ipaas-github-proxy
-          deploymentconfig: ipaas-github-proxy
+          app: syndesis
+          component: syndesis-github-proxy
+          deploymentconfig: syndesis-github-proxy
       spec:
         containers:
-        - name: ipaas-github-proxy
+        - name: syndesis-github-proxy
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: rhipaas/token-rp:v0.4.0
+          image: syndesis/token-rp:v0.4.0
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           args:
-          - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
+          - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}
           - -proxy-url=https://api.github.com
-          - -client-id=ipaas-ui
+          - -client-id=syndesis-ui
           - -provider-alias=github
           - -provider-type=github
           - -tls-cert=/tls/tls.crt
@@ -73,17 +73,17 @@
             name: tls-volume
         volumes:
         - secret:
-            secretName: ipaas-github-proxy-tls
+            secretName: syndesis-github-proxy-tls
           name: tls-volume
     triggers:
 {{^Dev}}
     - imageChangeParams:
         automatic: true
         containerNames:
-        - ipaas-github-proxy
+        - syndesis-github-proxy
         from:
           kind: ImageStreamTag
-          name: ipaas-token-rp:v0.4.0
+          name: syndesis-token-rp:v0.4.0
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange

@@ -4,44 +4,44 @@
   metadata:
     name: ${OPENSHIFT_OAUTH_CLIENT_ID}
     labels:
-      app: redhat-ipaas
-      component: ipaas-ui
+      app: syndesis
+      component: syndesis-ui
   secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
   redirectURIs:
-  - https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_IPAAS_REALM_NAME}
+  - https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}
   grantMethod: prompt
 {{/Restricted}}
 
 - apiVersion: v1
   kind: RoleBinding
   metadata:
-    name: ipaas:viewers
+    name: syndesis:viewers
     labels:
-      app: redhat-ipaas
+      app: syndesis
   roleRef:
     name: view
   subjects:
   - kind: ServiceAccount
-    name: ipaas-rest
+    name: syndesis-rest
   - kind: ServiceAccount
-    name: ipaas-integration
+    name: syndesis-integration
 - apiVersion: v1
   kind: RoleBinding
   metadata:
-    name: ipaas:admins
+    name: syndesis:admins
     labels:
-      app: redhat-ipaas
+      app: syndesis
   roleRef:
     name: admin
   subjects:
   - kind: ServiceAccount
-    name: ipaas-deployer
-    namespace: ipaas-staging
+    name: syndesis-deployer
+    namespace: syndesis-staging
   - kind: ServiceAccount
     name: jenkins
-    namespace: ipaas-ci
+    namespace: syndesis-ci
   - kind: Group
     name: dedicated-admins
   userNames:
-  - system:serviceaccount:ipaas-staging:ipaas-deployer
-  - system:serviceaccount:ipaas-ci:jenkins
+  - system:serviceaccount:syndesis-staging:syndesis-deployer
+  - system:serviceaccount:syndesis-ci:jenkins
