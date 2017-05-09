@@ -15,28 +15,28 @@
  */
 package io.syndesis.core;
 
-public class IPaasServerException extends RuntimeException {
+public class SyndesisServerException extends RuntimeException {
 
 	private static final long serialVersionUID = 3476018743129184217L;
 
-	public IPaasServerException() {
+	public SyndesisServerException() {
 		super();
 	}
 
-	public IPaasServerException(String message, Throwable cause, boolean enableSuppression,
-			boolean writableStackTrace) {
+	public SyndesisServerException(String message, Throwable cause, boolean enableSuppression,
+                                   boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
-	public IPaasServerException(String message, Throwable cause) {
+	public SyndesisServerException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public IPaasServerException(String message) {
+	public SyndesisServerException(String message) {
 		super(message);
 	}
 
-	public IPaasServerException(Throwable cause) {
+	public SyndesisServerException(Throwable cause) {
 		super(cause);
 	}
 
@@ -50,7 +50,7 @@ public class IPaasServerException extends RuntimeException {
 	    } else if (cause instanceof Error) {
 	      throw ((Error) cause);
 	    } else {
-	      throw new IPaasServerException(message, cause);
+	      throw new SyndesisServerException(message, cause);
 	    }
 	  }
 

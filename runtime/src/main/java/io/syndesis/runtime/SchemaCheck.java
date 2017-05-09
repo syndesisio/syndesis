@@ -15,7 +15,7 @@
  */
 package io.syndesis.runtime;
 
-import io.syndesis.core.IPaasServerException;
+import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.jsondb.impl.SqlJsonDB;
@@ -72,7 +72,7 @@ public class SchemaCheck {
         try {
             return Json.mapper().readValue(json, String.class);
         } catch (IOException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 
@@ -81,7 +81,7 @@ public class SchemaCheck {
         try {
             json = Json.mapper().writeValueAsString(value);
         } catch (IOException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
         jsondb.set("/cluster-properties/" + name, json);
     }

@@ -24,9 +24,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Provider
-public class IPaasServerExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Exception> {
+public class SyndesisServerExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Exception> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(IPaasServerExceptionMapper.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SyndesisServerExceptionMapper.class);
 
 	@Override
 	public Response toResponse(Exception e) {

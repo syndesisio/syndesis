@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import io.syndesis.core.IPaasServerException;
+import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.Names;
 import io.syndesis.core.Tokens;
 import io.fabric8.kubernetes.client.RequestConfig;
@@ -221,7 +221,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             data.store(w, "");
             return w.toString();
         } catch (IOException e) {
-            throw IPaasServerException.launderThrowable(e);
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 
