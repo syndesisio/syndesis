@@ -2,7 +2,7 @@
   "baseScheme" : "twitter",
   "baseGroupId" : "org.apache.camel",
   "baseArtifactId" : "camel-twitter",
-  "baseVersion" : "2.19.0.fuse-000036",
+  "baseVersion" : "2.19.0",
   "baseJavaType" : "org.apache.camel.component.twitter.TwitterComponent",
   "name" : "TwitterMention",
   "scheme" : "twitter-mention",
@@ -20,6 +20,6 @@
   "endpointOptions" : [ "delay" ],
   "endpointValues" : {
     "kind" : "timeline/mentions",
-    "delay": "30000"
+    "delay" : "30000"
   }
 }
