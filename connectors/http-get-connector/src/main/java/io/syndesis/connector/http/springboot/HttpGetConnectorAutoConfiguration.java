@@ -26,7 +26,7 @@ public class HttpGetConnectorAutoConfiguration {
     @Lazy
     @Bean(name = "http-get-component")
     @ConditionalOnClass(CamelContext.class)
-    @ConditionalOnMissingBean(HttpGetComponent.class)
+    @ConditionalOnMissingBean(io.syndesis.connector.http.HttpGetComponent.class)
     public HttpGetComponent configureHttpGetComponent(
             CamelContext camelContext,
             HttpGetConnectorConfiguration configuration) throws Exception {
