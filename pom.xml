@@ -76,51 +76,13 @@
     </snapshotRepository>
   </distributionManagement>
 
-  <repositories>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>jboss.ea</id>
-      <name>JBoss EA</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea</url>
-    </repository>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>jcenter-releases</id>
-      <name>jcenter</name>
-      <url>https://jcenter.bintray.com</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>jboss.ea</id>
-      <name>JBoss EA</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea</url>
-    </pluginRepository>
-    <pluginRepository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>jcenter-releases</id>
-      <name>jcenter</name>
-      <url>https://jcenter.bintray.com</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
-    <camel.version>2.19.0.fuse-000036</camel.version>
+    <camel.version>2.19.0</camel.version>
     <spring-boot.version>1.4.5.RELEASE</spring-boot.version>
 
     <!-- maven plugin version -->

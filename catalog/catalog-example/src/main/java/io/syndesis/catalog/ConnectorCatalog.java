@@ -41,7 +41,6 @@ public class ConnectorCatalog {
 
         // add 3rd party maven repos
         System.out.println("Adding bintray and jcenter as 3rd party Maven repositories");
-        maven.addMavenRepository("bintray", "https://dl.bintray.com/syndesisio/maven/");
         maven.addMavenRepository("jcenter", "https://jcenter.bintray.com");
     }
 
