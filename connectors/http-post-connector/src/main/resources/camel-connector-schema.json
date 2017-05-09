@@ -4,7 +4,7 @@
     "baseScheme": "syndesis-http",
     "scheme": "http-post",
     "syntax": "http-post:serviceName",
-    "title": "HTTP",
+    "title": "HttpPostComponent",
     "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL.",
     "label": "http",
     "deprecated": false,
