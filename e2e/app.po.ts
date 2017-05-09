@@ -130,24 +130,27 @@ export class AppPage {
     // need to disable angular wait before check for current url because we're being redirected outside of angular
     browser.waitForAngularEnabled(false);
 
-    this.goToUrl(AppPage.baseurl);
+    await this.goToUrl(AppPage.baseurl);
 
-    // wait either for login page or loaded ipaas app
-    await P.race([
-      browser.wait(ExpectedConditions.presenceOf(this.rootElement), 1000, 'ipaas root element - assuming we are already logged in'),
-      browser.wait(ExpectedConditions.presenceOf(element(by.css('input#login_field'))), 1000, 'Github login page' ).then(() => {
-        log.info('GitHub login page');
-        return new GithubLogin().login(user);
-      }),
-    ]);
+    let currentUrl = await browser.getCurrentUrl();
+    if (contains(currentUrl, 'github.com/login')) {
+      log.info('GitHub login page');
+      await new GithubLogin().login(user);
+    }
+    currentUrl = await browser.getCurrentUrl();
+    if (contains(currentUrl, 'auth/realms')) {
+      log.info('Keycloak login page');
+      await new KeycloakDetails().submitUserDetails(user.userDetails);
+    }
+    //We get authorize app request upon first clean login
+    currentUrl = await browser.getCurrentUrl();
+    if (contains(currentUrl, 'github.com/login/oauth')) {
+      log.info('Second GitHub AuthPage page');
+      await new GithubLogin().authorizeApp();
+    }
 
-    await P.race([
-      browser.wait(ExpectedConditions.presenceOf(this.rootElement), 1000, 'ipaas root element - assuming we are already logged in'),
-      browser.wait(ExpectedConditions.presenceOf(element(by.css('input#firstName'))), 1000, 'Keycloack login page' ).then(() => {
-        log.info('Keycloak first time visit page');
-        return new KeycloakDetails().submitUserDetails(user.userDetails);
-      }),
-    ]);
+    await browser.wait(ExpectedConditions.presenceOf(this.rootElement), 30 * 1000,
+    'ipaas root element - assuming we are already logged in');
 
     browser.waitForAngularEnabled(true);
     return this.goToUrl(AppPage.baseurl);
