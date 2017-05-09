@@ -1,7 +1,0 @@
-{
-  "realm": "ipaas-test",
-  "bearer-only": true,
-  "auth-server-url": "http://localhost:${keycloak.http.port}/auth",
-  "ssl-required": "none",
-  "resource": "ipaas-test"
-}

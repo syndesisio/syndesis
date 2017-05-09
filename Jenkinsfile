@@ -16,7 +16,7 @@ slave {
                     }
 
                     stage 'System Tests'
-                    test(component: 'ipaas-rest', namespace: "${testingNamespace}", serviceAccount: 'jenkins')
+                    test(component: 'syndesis-rest', namespace: "${testingNamespace}", serviceAccount: 'jenkins')
                  }
 
         }

@@ -20,13 +20,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.redhat.ipaas</groupId>
-    <artifactId>ipaas-rest-parent</artifactId>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-rest-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>runtime</artifactId>
-  <name>iPaaS REST :: Runtime</name>
+  <name>Syndesis REST :: Runtime</name>
   <packaging>jar</packaging>
 
   <properties>
@@ -89,7 +89,7 @@
           <generator>
             <config>
               <spring-boot>
-                <name>rhipaas/ipaas-rest:%l</name>
+                <name>syndesis/syndesis-rest:latest</name>
                 <from>${java-image}</from>
               </spring-boot>
             </config>
@@ -108,17 +108,17 @@
           </outputFormats>
           <attachSwaggerArtifact>true</attachSwaggerArtifact>
           <resourcePackages>
-            <resourcePackage>com.redhat.ipaas.rest.v1.handler.connection</resourcePackage>
-            <resourcePackage>com.redhat.ipaas.rest.v1.handler.environment</resourcePackage>
-            <resourcePackage>com.redhat.ipaas.rest.v1.handler.integration</resourcePackage>
-            <resourcePackage>com.redhat.ipaas.rest.v1.handler.user</resourcePackage>
+            <resourcePackage>io.syndesis.rest.v1.handler.connection</resourcePackage>
+            <resourcePackage>io.syndesis.rest.v1.handler.environment</resourcePackage>
+            <resourcePackage>io.syndesis.rest.v1.handler.integration</resourcePackage>
+            <resourcePackage>io.syndesis.rest.v1.handler.user</resourcePackage>
           </resourcePackages>
           <swaggerConfig>
             <info>
-              <title>Red Hat iPaaS API</title>
+              <title>Syndesis API</title>
               <version>v1</version>
               <description>
-                The Red Hat iPaaS REST API connects to back-end services on the iPaaS and provides a single entry
+                The Syndesis REST API connects to back-end services on the Syndesis and provides a single entry
                 point for the IpaaS Console. For console developement it can run in off-line mode where it only serves
                 responses from the response cache.
               </description>
@@ -127,9 +127,9 @@
                 <name>Apache 2.0</name>
               </license>
               <contact>
-                <email>ipaas-dev@redhat.com</email>
-                <name>The Red Hat iPaaS Developers</name>
-                <url>https://redhat-ipaas.github.io</url>
+                <email>syndesis@googlegroups.com</email>
+                <name>The Syndesis Community</name>
+                <url>https://syndesis.io/</url>
               </contact>
             </info>
             <schemes>http,https</schemes>
@@ -281,7 +281,7 @@
             <argument>-Djboss.ajp.port=${keycloak.ajp.port}</argument>
             <argument>-Djboss.http.port=${keycloak.http.port}</argument>
             <argument>-Djboss.https.port=${keycloak.https.port}</argument>
-            <argument>-Dkeycloak.import=${project.basedir}/src/test/resources/ipaas-keycloak-realm.json</argument>
+            <argument>-Dkeycloak.import=${project.basedir}/src/test/resources/syndesis-keycloak-realm.json</argument>
           </arguments>
           <skip>${skipITs}</skip>
         </configuration>
@@ -327,13 +327,13 @@
 
     <!-- Top most layer, entrypoint. It contains the deps to other modules -->
     <dependency>
-      <groupId>com.redhat.ipaas</groupId>
+      <groupId>io.syndesis</groupId>
       <artifactId>rest</artifactId>
     </dependency>
 
     <!-- DAO implementations: -->
     <dependency>
-      <groupId>com.redhat.ipaas</groupId>
+      <groupId>io.syndesis</groupId>
       <artifactId>jsondb</artifactId>
     </dependency>
 
@@ -479,7 +479,7 @@
                 <argument>-Djboss.ajp.port=${keycloak.ajp.port}</argument>
                 <argument>-Djboss.http.port=${keycloak.http.port}</argument>
                 <argument>-Djboss.https.port=${keycloak.https.port}</argument>
-                <argument>-Dkeycloak.import=${project.basedir}/src/test/resources/ipaas-keycloak-realm.json</argument>
+                <argument>-Dkeycloak.import=${project.basedir}/src/test/resources/syndesis-keycloak-realm.json</argument>
               </arguments>
               <skip>${skipITs}</skip>
             </configuration>
@@ -551,7 +551,7 @@
       <id>ci</id>
       <properties>
         <user.home>/home/jenkins</user.home>
-        <fabric8.namespace>ipaas-ci</fabric8.namespace>
+        <fabric8.namespace>syndesis-ci</fabric8.namespace>
         <java-image>fabric8/s2i-java:2.0</java-image>
         <fabric8.mode>openshift</fabric8.mode>
       </properties>

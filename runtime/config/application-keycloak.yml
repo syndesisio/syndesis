@@ -16,4 +16,4 @@
 
 keycloak:
   enabled: true
-  configurationFile: file:target/test-classes/ipaas-test-client.json
+  configurationFile: file:target/test-classes/syndesis-test-client.json

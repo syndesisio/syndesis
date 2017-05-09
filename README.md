@@ -1,9 +1,9 @@
 # Syndesis REST API
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/daf25eee770345c9b72a2b8aecb90182)](https://www.codacy.com/app/jimmidyson/syndesis-rest?utm_source=github.com&utm_medium=referral&utm_content=syndesisio/syndesis-rest&utm_campaign=badger)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/daf25eee770345c9b72a2b8aecb90182)](https://www.codacy.com/app/syndesisio/syndesis-rest)
 [![CircleCI](https://circleci.com/gh/syndesisio/syndesis-rest.png)](https://circleci.com/gh/syndesisio/syndesis-rest)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/v6ycvs9nw6o2t821/branch/master?svg=true)](https://ci.appveyor.com/project/jimmidyson/syndesis-rest/)
-[![Maven Central](https://img.shields.io/maven-central/v/com.redhat.syndesis/syndesis-rest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22syndesisio%22%20AND%20a%3A%22syndesis-rest%22)
+[![Maven Central](https://img.shields.io/maven-central/v/io.syndesis/syndesis-rest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22syndesisio%22%20AND%20a%3A%22syndesis-rest%22)
 [![Dependency Status](https://dependencyci.com/github/syndesisio/syndesis-rest/badge)](https://dependencyci.com/github/syndesisio/syndesis-rest)
 
 - [Building](#building)
@@ -33,7 +33,7 @@
 Linux:
 
     ./start-with-keycloak.sh
-    
+
 Windows:
 
     start-with-keycloak
@@ -79,7 +79,7 @@ $ TOKEN=$(curl \
     -d "password=password" \
     -d "grant_type=password" \
     "http://localhost:8282/auth/realms/syndesis-test/protocol/openid-connect/token" | jq -r .access_token)
-    
+
 $ curl http://localhost:8080/api/v1/components -H "Authorization: Bearer $TOKEN"
 
 # Validate the REST API requires the valid token - should return a 401
@@ -105,7 +105,7 @@ Ignore warning about not being able to remove old image.
 oc delete pod $(oc get pods | awk '{ print $1 }' | grep syndesis-rest)
 ```
 
-* Edit config 
+* Edit config
 
 ```
 oc edit cm syndesis-rest-config
