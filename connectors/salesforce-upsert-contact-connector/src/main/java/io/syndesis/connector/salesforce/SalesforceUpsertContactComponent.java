@@ -23,7 +23,7 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
 public class SalesforceUpsertContactComponent extends DefaultConnectorComponent {
 
     public SalesforceUpsertContactComponent() {
-        super("salesforce-upsert-contact", "SalesforceUpsertContactComponent");
+        super("salesforce-upsert-contact", SalesforceUpsertContactComponent.class.getName());
     }
 
 }
