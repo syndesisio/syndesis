@@ -49,17 +49,17 @@
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>timer-connector</artifactId>
-      <version>0.4.2</version>
+      <version>0.4.4</version>
     </dependency>
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>http-get-connector</artifactId>
-      <version>0.4.2</version>
+      <version>0.4.4</version>
     </dependency>
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>http-post-connector</artifactId>
-      <version>0.4.2</version>
+      <version>0.4.4</version>
     </dependency>
 
     <!-- spring-boot as runtime -->
