@@ -7,7 +7,7 @@ import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ng2-restangular';
 
-import { IPaaSCommonModule } from '../../common/common.module';
+import { SyndesisCommonModule } from '../../common/common.module';
 import { FlowViewComponent } from './flow-view/flow-view.component';
 import { FlowViewStepComponent } from './flow-view/flow-view-step.component';
 import { ConnectionsListComponent } from '../../connections/list/list.component';
@@ -32,7 +32,7 @@ describe('IntegrationsEditComponent', () => {
         CollapseModule,
         CommonModule,
         FormsModule,
-        IPaaSCommonModule,
+        SyndesisCommonModule,
         ModalModule,
         RestangularModule.forRoot(),
         RouterTestingModule.withRoutes([]),

@@ -1,5 +1,5 @@
 <div class="flow-view">
-  <ipaas-loading [loading]="loaded()">
+  <syndesis-loading [loading]="loaded()">
 
     <!-- Header -->
     <div class="row name" *ngIf="currentStepKind !== 'mapper'">
@@ -21,7 +21,7 @@
       <!-- First Step -->
       <div class="row steps start">
         <div class="step-line"></div>
-        <ipaas-integrations-flow-view-step [step]="startConnection()" [position]="0" [currentPosition]="currentPosition" [currentState]="currentState"></ipaas-integrations-flow-view-step>
+        <syndesis-integrations-flow-view-step [step]="startConnection()" [position]="0" [currentPosition]="currentPosition" [currentState]="currentState"></syndesis-integrations-flow-view-step>
       </div>
 
       <!-- First Step: Save or Add Step -->
@@ -56,7 +56,7 @@
       <template ngFor let-step [ngForOf]="getMiddleSteps()" let-position="index">
         <div class="row steps">
           <div class="step-line"></div>
-          <ipaas-integrations-flow-view-step [step]="step" [position]="position + 1" [currentPosition]="currentPosition" [currentState]="currentState"></ipaas-integrations-flow-view-step>
+          <syndesis-integrations-flow-view-step [step]="step" [position]="position + 1" [currentPosition]="currentPosition" [currentState]="currentState"></syndesis-integrations-flow-view-step>
         </div>
 
         <!-- Middle Steps: Save or Add Step -->
@@ -91,10 +91,10 @@
       <!-- Last Step -->
       <div class="row steps finish">
         <div class="step-line"></div>
-        <ipaas-integrations-flow-view-step [step]="endConnection()" [position]="-1" [currentPosition]="currentPosition" [currentState]="currentState"></ipaas-integrations-flow-view-step>
+        <syndesis-integrations-flow-view-step [step]="endConnection()" [position]="-1" [currentPosition]="currentPosition" [currentState]="currentState"></syndesis-integrations-flow-view-step>
       </div>
 
     </div>
-  </ipaas-loading>
+  </syndesis-loading>
 
 </div>

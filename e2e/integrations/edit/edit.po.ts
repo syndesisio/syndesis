@@ -1,4 +1,4 @@
-import { IPaaSComponent } from '../../common/common';
+import { SyndesisComponent } from '../../common/common';
 import { element, by, ElementFinder } from 'protractor';
 import { P } from '../../common/world';
 import { ConnectionsListComponent } from '../../connections/list/list.po';
@@ -20,11 +20,11 @@ export class FlowConnection {
 
 }
 
-export class FlowViewComponent implements IPaaSComponent {
+export class FlowViewComponent implements SyndesisComponent {
   static readonly nameSelector = 'input.form-control.integration-name';
 
   rootElement(): ElementFinder {
-    return element(by.css('ipaas-integrations-flow-view'));
+    return element(by.css('syndesis-integrations-flow-view'));
   }
 
   getIntegrationName(): P<string> {
@@ -42,9 +42,9 @@ export class FlowViewComponent implements IPaaSComponent {
   }
 }
 
-export class ListActionsComponent implements IPaaSComponent {
+export class ListActionsComponent implements SyndesisComponent {
   rootElement(): ElementFinder {
-    return element(by.css('ipaas-list-actions'));
+    return element(by.css('syndesis-list-actions'));
   }
 
   selectAction(name: string): P<any> {
@@ -54,9 +54,9 @@ export class ListActionsComponent implements IPaaSComponent {
 
 }
 
-export class ConnectionSelectComponent implements IPaaSComponent {
+export class ConnectionSelectComponent implements SyndesisComponent {
   rootElement(): ElementFinder {
-    return element(by.css('ipaas-integrations-connection-select'));
+    return element(by.css('syndesis-integrations-connection-select'));
   }
 
   connectionListComponent(): ConnectionsListComponent {
@@ -67,12 +67,12 @@ export class ConnectionSelectComponent implements IPaaSComponent {
 }
 
 
-export class IntegrationBasicsComponent implements IPaaSComponent {
+export class IntegrationBasicsComponent implements SyndesisComponent {
   static readonly nameSelector = 'input[name="nameInput"]';
   static readonly descriptionSelector = 'textarea[name="descriptionInput"]';
 
   rootElement(): ElementFinder {
-    return element(by.css('ipaas-integrations-integration-basics'));
+    return element(by.css('syndesis-integrations-integration-basics'));
   }
 
   setName(name: string): P<any> {
@@ -87,10 +87,10 @@ export class IntegrationBasicsComponent implements IPaaSComponent {
 
 }
 
-export class IntegrationEditPage implements IPaaSComponent {
+export class IntegrationEditPage implements SyndesisComponent {
 
   rootElement(): ElementFinder {
-    return element(by.css('ipaas-integrations-edit-page'));
+    return element(by.css('syndesis-integrations-edit-page'));
   }
 
   flowViewComponent(): FlowViewComponent {

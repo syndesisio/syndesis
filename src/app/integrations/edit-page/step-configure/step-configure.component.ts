@@ -14,7 +14,7 @@ import { log, getCategory } from '../../../logging';
 const category = getCategory('IntegrationsCreatePage');
 
 @Component({
-  selector: 'ipaas-integrations-step-configure',
+  selector: 'syndesis-integrations-step-configure',
   templateUrl: './step-configure.component.html',
   styleUrls: ['./step-configure.component.scss'],
 })

@@ -1,5 +1,5 @@
-<ipaas-loading [loading]="loading">
-  <div class="container-cards-pf ipaas-dashboard-integrations">
+<syndesis-loading [loading]="loading">
+  <div class="container-cards-pf syndesis-dashboard-integrations">
 
     <!-- Modal Container -->
 
@@ -287,10 +287,10 @@
 
     <div class="row row-cards-pf fourth-row">
 
-      <ipaas-dashboard-connections [connections]="connections | async"
+      <syndesis-dashboard-connections [connections]="connections | async"
                                    [loading]="loading"
-                                   (selectedConnection)="selectedConnection($event)"></ipaas-dashboard-connections>
+                                   (selectedConnection)="selectedConnection($event)"></syndesis-dashboard-connections>
 
     </div>
   </div>
-</ipaas-loading>
+</syndesis-loading>

@@ -21,8 +21,8 @@ class FirstPass {
   }
 
 
-  @when(/^Camilla navigates to the iPaaS "([^"]*)"$/)
-  public navigateIpaas(arg1: string, callback: CallbackStepDefinition): void {
+  @when(/^Camilla navigates to Syndesis "([^"]*)"$/)
+  public navigateSyndesis(arg1: string, callback: CallbackStepDefinition): void {
     // Write code here that turns the phrase above into concrete actions
     callback(null, 'pending');
   }

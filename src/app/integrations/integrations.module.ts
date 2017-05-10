@@ -8,7 +8,7 @@ import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { CollapseModule, ModalModule, PopoverModule, TabsModule, DropdownModule } from 'ng2-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
 import { TooltipModule } from 'ng2-bootstrap/tooltip';
-import { DataMapperModule } from 'ipaas.data.mapper';
+import { DataMapperModule } from 'syndesis.data.mapper';
 
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
 import { IntegrationBasicsComponent } from './edit-page/integration-basics/integration-basics.component';
@@ -28,7 +28,7 @@ import { IntegrationsListComponent } from './list/list.component';
 import { FlowViewComponent } from './edit-page/flow-view/flow-view.component';
 import { FlowViewStepComponent } from './edit-page/flow-view/flow-view-step.component';
 import { CurrentFlow } from './edit-page/current-flow.service';
-import { IPaaSCommonModule } from '../common/common.module';
+import { SyndesisCommonModule } from '../common/common.module';
 import { ConnectionsModule } from '../connections/connections.module';
 
 const editIntegrationChildRoutes = [
@@ -65,7 +65,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ConnectionsModule,
     TabsModule,
-    IPaaSCommonModule,
+    SyndesisCommonModule,
     CollapseModule,
     ToasterModule,
     TooltipModule,

@@ -33,11 +33,11 @@ import { ConfigService } from '../config.service';
     FormFactoryService,
   ],
 })
-export class IPaaSCommonModule {
+export class SyndesisCommonModule {
 
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: IPaaSCommonModule,
+      ngModule: SyndesisCommonModule,
       providers: [
         UserService,
         FormFactoryService,

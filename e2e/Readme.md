@@ -15,13 +15,13 @@ yarn e2e
 
 launch tests using remote web ui
 ```bash
-export IPAAS_UI_URL='https://ipaas-qe.b6ff.rh-idev.openshiftapps.com/'
-yarn e2e:ipaas-qe
+export SYNDESIS_UI_URL='https://syndesis-qe.b6ff.rh-idev.openshiftapps.com/'
+yarn e2e:syndesis-qe
 ```
 
 alternatively launch tests in Docker container with Xvfb
 ```bash
-export IPAAS_UI_URL='https://ipaas-qe.b6ff.rh-idev.openshiftapps.com/'
+export SYNDESIS_UI_URL='https://syndesis-qe.b6ff.rh-idev.openshiftapps.com/'
 yarn e2e:xvfb
 ```
 

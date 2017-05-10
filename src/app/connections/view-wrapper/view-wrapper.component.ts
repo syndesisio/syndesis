@@ -6,7 +6,7 @@ import { ConnectionStore } from '../../store/connection/connection.store';
 import { CurrentConnectionService } from '../create-page/current-connection';
 
 @Component({
-  selector: 'ipaas-connection-view-wrapper',
+  selector: 'syndesis-connection-view-wrapper',
   templateUrl: './view-wrapper.component.html',
   styleUrls: ['./view-wrapper.component.scss'],
 })

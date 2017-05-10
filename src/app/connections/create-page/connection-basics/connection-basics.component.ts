@@ -5,7 +5,7 @@ import { CurrentConnectionService } from '../current-connection';
 import { Connection } from '../../../model';
 
 @Component({
-  selector: 'ipaas-connections-connection-basics',
+  selector: 'syndesis-connections-connection-basics',
   templateUrl: 'connection-basics.component.html',
 })
 export class ConnectionsConnectionBasicsComponent implements OnInit {

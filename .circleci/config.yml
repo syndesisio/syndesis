@@ -18,14 +18,14 @@ jobs:
     - checkout
 
     - restore_cache:
-        key: ipaas-ui-{{ checksum "package.json" }}
+        key: syndesis-ui-{{ checksum "package.json" }}
 
     - run:
         name: Install Dependencies
         command: yarn install --no-progress
 
     - save_cache:
-        key: ipaas-ui-{{ checksum "package.json" }}
+        key: syndesis-ui-{{ checksum "package.json" }}
         paths:
         - ~/.yarn
         - ~/.cache/yarn
@@ -53,7 +53,7 @@ jobs:
 
     - deploy:
         command: |
-          if [ "${CIRCLE_PROJECT_USERNAME}" != "redhat-ipaas" ]; then
+          if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
             exit 0
           fi
 
@@ -72,13 +72,13 @@ jobs:
           curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
 
           yarn ng build -- --aot --prod --progress=false
-          docker build -t rhipaas/ipaas-ui:${DOCKER_IMAGE_TAG} . | cat -
+          docker build -t syndesisio/syndesis-ui:${DOCKER_IMAGE_TAG} . | cat -
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
-          docker push rhipaas/ipaas-ui:${DOCKER_IMAGE_TAG} | cat -
+          docker push syndesisio/syndesis-ui:${DOCKER_IMAGE_TAG} | cat -
 
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
             curl -fsSL https://github.com/openshift/origin/releases/download/v1.5.0/openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz | tar xz -C /usr/bin --strip-components 1
             oc login --server=${OPENSHIFT_APISERVER} --token=${OPENSHIFT_TOKEN}
-            oc project ipaas-staging
-            oc import-image rhipaas/ipaas-ui:${DOCKER_IMAGE_TAG}
+            oc project syndesis-staging
+            oc import-image syndesisio/syndesis-ui:${DOCKER_IMAGE_TAG}
           fi

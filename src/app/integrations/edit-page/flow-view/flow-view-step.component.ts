@@ -13,7 +13,7 @@ import { Integration, Step } from '../../../model';
 const category = getCategory('IntegrationsCreatePage');
 
 @Component({
-  selector: 'ipaas-integrations-flow-view-step',
+  selector: 'syndesis-integrations-flow-view-step',
   templateUrl: './flow-view-step.component.html',
   styleUrls: ['./flow-view-step.component.scss'],
 })

@@ -13,7 +13,7 @@ import WebElement = webdriver.WebElement;
  * Object representation on navigation link (element on left navbar).
  */
 class NavLink {
-  static readonly selector = 'body > ipaas-root > div > div > ul > li';
+  static readonly selector = 'body > syndesis-root > div > div > ul > li';
 
   text: string;
   href: string;
@@ -38,7 +38,7 @@ class SessionStorage {
    */
   getItem(key: string): P<string|null> {
     log.info(`Fetching session item '${key}' from browser session storage`);
-    // we may need to include  $('ipaas-root').isPresent().then() eventually
+    // we may need to include  $('syndesis-root').isPresent().then() eventually
     return browser.driver.executeScript((itemKey) => sessionStorage.getItem(itemKey), key);
   }
 }
@@ -48,8 +48,8 @@ class SessionStorage {
  */
 export class AppPage {
   static baseurl = '/';
-  rootElement = element(by.css('ipaas-root'));
-  // rootElement = element(by.css('ipaas-root'));
+  rootElement = element(by.css('syndesis-root'));
+  // rootElement = element(by.css('syndesis-root'));
 
   sessionStorage = new SessionStorage();
 
@@ -150,7 +150,7 @@ export class AppPage {
     }
 
     await browser.wait(ExpectedConditions.presenceOf(this.rootElement), 30 * 1000,
-    'ipaas root element - assuming we are already logged in');
+    'syndesis root element - assuming we are already logged in');
 
     browser.waitForAngularEnabled(true);
     return this.goToUrl(AppPage.baseurl);
@@ -159,7 +159,7 @@ export class AppPage {
 
   /**
    * Hook into browser and fetch config.json
-   * @returns {any} config.json used in ipaas app
+   * @returns {any} config.json used in syndesis app
    */
   getSettings(): P<any> {
     // jquery is invoked in the context of the browser

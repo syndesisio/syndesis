@@ -5,8 +5,8 @@ switch (env) {
     exports.config = require('./e2e/conf/protractor.local.conf').config;
     break;
 
-  case 'ipaas-qe':
-    exports.config = require('./e2e/conf/protractor.ipaas-qe.conf').config;
+  case 'syndesis-qe':
+    exports.config = require('./e2e/conf/protractor.syndesis-qe.conf').config;
     break;
 
   default:

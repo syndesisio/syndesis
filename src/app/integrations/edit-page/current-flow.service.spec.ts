@@ -9,14 +9,14 @@ import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationService } from '../../store/integration/integration.service';
 import { Connection, Integration, Step, Steps, Action, TypeFactory } from '../../model';
 import { EventsService } from '../../store/entity/events.service';
-import { IPaaSCommonModule } from '../../common/common.module';
+import { SyndesisCommonModule } from '../../common/common.module';
 
 describe('CurrentFlow', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RestangularModule.forRoot(),
-        IPaaSCommonModule,
+        SyndesisCommonModule,
       ],
       providers: [
         CurrentFlow,

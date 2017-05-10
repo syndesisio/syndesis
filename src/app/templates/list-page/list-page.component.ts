@@ -5,7 +5,7 @@ import { TemplateStore } from '../../store/template/template.store';
 import { IntegrationTemplates } from '../../model';
 
 @Component({
-  selector: 'ipaas-templates-list-page',
+  selector: 'syndesis-templates-list-page',
   templateUrl: './list-page.component.html',
   styleUrls: ['./list-page.component.scss'],
 })

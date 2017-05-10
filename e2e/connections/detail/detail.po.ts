@@ -6,7 +6,7 @@ import { P } from '../../common/world';
  */
 export class ConnectionDetailPage {
   connectionDetailElem(): ElementFinder {
-    return element(by.css('ipaas-connection-view'));
+    return element(by.css('syndesis-connection-view'));
   }
 
   connectionName(): P<string> {

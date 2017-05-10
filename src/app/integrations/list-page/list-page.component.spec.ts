@@ -10,7 +10,7 @@ import { ToasterModule } from 'angular2-toaster';
 import { TabsModule } from 'ng2-bootstrap/tabs';
 import { TooltipModule } from 'ng2-bootstrap/tooltip';
 
-import { IPaaSCommonModule } from '../../common/common.module';
+import { SyndesisCommonModule } from '../../common/common.module';
 import { IntegrationsListPage } from './list-page.component';
 import { IntegrationsListComponent } from '../list/list.component';
 import { IntegrationsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
@@ -23,7 +23,7 @@ describe('IntegrationsListPage', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        IPaaSCommonModule,
+        SyndesisCommonModule,
         StoreModule,
         RouterTestingModule.withRoutes([]),
         RestangularModule.forRoot(),

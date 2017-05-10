@@ -12,7 +12,7 @@ import { log, getCategory } from '../../../logging';
 const category = getCategory('IntegrationsCreatePage');
 
 @Component({
-  selector: 'ipaas-integrations-save-or-add-step',
+  selector: 'syndesis-integrations-save-or-add-step',
   templateUrl: 'save-or-add-step.component.html',
   styleUrls: ['./save-or-add-step.component.scss'],
 })

@@ -23,7 +23,7 @@ import { ConnectionsListComponent } from '../list/list.component';
 import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
 import { ConnectionViewComponent } from '../view/view.component';
 import { StoreModule } from '../../store/store.module';
-import { IPaaSCommonModule } from '../../common/common.module';
+import { SyndesisCommonModule } from '../../common/common.module';
 import { CurrentConnectionService } from '../create-page/current-connection';
 
 describe('ConnectionViewPage', () => {
@@ -39,7 +39,7 @@ describe('ConnectionViewPage', () => {
           ReactiveFormsModule,
           DynamicFormsCoreModule.forRoot(),
           DynamicFormsBootstrapUIModule,
-          IPaaSCommonModule,
+          SyndesisCommonModule,
           StoreModule,
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),

@@ -8,7 +8,7 @@ import { FlowPage } from '../flow-page';
 import { Step, Steps, TypeFactory } from '../../../model';
 
 @Component({
-  selector: 'ipaas-integrations-step-select',
+  selector: 'syndesis-integrations-step-select',
   templateUrl: './step-select.component.html',
   styleUrls: ['./step-select.component.scss'],
 })

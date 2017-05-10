@@ -12,8 +12,8 @@ export class User {
     this.alias = alias;
     this.description = description;
 
-    const envUsername = process.env[`IPAAS_${alias.toUpperCase()}_USERNAME`] || null;
-    const envPassword = process.env[`IPAAS_${alias.toUpperCase()}_PASSWORD`] || null;
+    const envUsername = process.env[`SYNDESIS_${alias.toUpperCase()}_USERNAME`] || null;
+    const envPassword = process.env[`SYNDESIS_${alias.toUpperCase()}_PASSWORD`] || null;
 
     if (envUsername === null || envPassword === null) {
       const data = require('../data/users.json').users;
@@ -52,6 +52,6 @@ export class UserDetails {
 /**
  * Represents ui component that has it's angular selector.
  */
-export interface IPaaSComponent {
+export interface SyndesisComponent {
   rootElement(): ElementFinder;
 }

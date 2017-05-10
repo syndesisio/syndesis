@@ -7,17 +7,17 @@ export const environment = Object.freeze({
   production: false,
   config: {
     apiEndpoint: 'http://localhost:8080/api/v1',
-    title: 'DEVELOPMENT - Red Hat iPaaS',
+    title: 'DEVELOPMENT - Syndesis',
     datamapper: {
       baseJavaServiceUrl: 'https://localhost:8585/v2/atlas/java/',
       baseMappingServiceUrl: 'https://localhost:8585/v2/atlas/',
     },
     oauth: {
-      clientId: 'ipaas-ui',
+      clientId: 'syndesis-ui',
       scopes: [],
       oidc: true,
       hybrid: true,
-      issuer: 'http://localhost:8282/auth/realms/ipaas-test',
+      issuer: 'http://localhost:8282/auth/realms/syndesis-test',
     },
   },
 });

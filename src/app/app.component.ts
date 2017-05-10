@@ -14,7 +14,7 @@ import { saveAs } from 'file-saver';
 import { ModalDirective } from 'ng2-bootstrap';
 
 @Component({
-  selector: 'ipaas-root',
+  selector: 'syndesis-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,15 +25,15 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('importDBModal') public importDBModal: ModalDirective;
 
   // White BG
-  logoWhiteBg = 'assets/images/rh_ipaas_small.svg';
+  logoWhiteBg = 'assets/images/syndesis-logo-svg-white.svg';
   iconWhiteBg = 'assets/images/glasses_logo.svg';
 
   // Dark BG
-  logoDarkBg = 'assets/images/rh_ipaas_small.svg';
+  logoDarkBg = 'assets/images/syndesis-logo-svg-white.svg';
   iconDarkBg = 'assets/images/glasses_logo.svg';
 
   loggedIn = false;
-  title = 'Red Hat iPaaS';
+  title = 'Syndesis';
   url = 'https://www.twitter.com/jboss';
   user: Observable<User>;
 
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   exportDB() {
     this.testSupport.snapshotDB().subscribe((value: Response) => {
       const blob = new Blob([value.text()], {type: 'text/plain;charset=utf-8'});
-      saveAs(blob, 'ipaas-db-export.json');
+      saveAs(blob, 'syndesis-db-export.json');
     });
   }
 

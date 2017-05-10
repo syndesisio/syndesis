@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-import { IPaaSCommonModule } from '../common/common.module';
+import { SyndesisCommonModule } from '../common/common.module';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ng2-bootstrap';
@@ -28,7 +28,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     TemplatesModule,
-    IPaaSCommonModule,
+    SyndesisCommonModule,
     ChartsModule,
     ModalModule,
     ToasterModule,

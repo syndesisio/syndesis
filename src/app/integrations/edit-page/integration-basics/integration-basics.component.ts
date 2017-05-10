@@ -6,7 +6,7 @@ import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { FlowPage } from '../flow-page';
 
 @Component({
-  selector: 'ipaas-integrations-integration-basics',
+  selector: 'syndesis-integrations-integration-basics',
   templateUrl: 'integration-basics.component.html',
   styleUrls: ['./integration-basics.component.scss'],
 })

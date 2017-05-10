@@ -1,5 +1,5 @@
-<ipaas-loading [loading]="loading">
-  <div class='row text-center ipaas-dashboard-empty-state'>
+<syndesis-loading [loading]="loading">
+  <div class='row text-center syndesis-dashboard-empty-state'>
 
     <!-- Page Header & Content Area  -->
 
@@ -31,14 +31,14 @@
     <div class="second-row">
       <h2>Suggested Connections</h2>
 
-      <ipaas-dashboard-connections [connections]="connections | async"
+      <syndesis-dashboard-connections [connections]="connections | async"
                                    [loading]="loading"
-                                   (selectedConnection)="selectedConnection($event)"></ipaas-dashboard-connections>
+                                   (selectedConnection)="selectedConnection($event)"></syndesis-dashboard-connections>
 
       <!--
-      <ipaas-popular-templates [templates]="templates | async" [loading]="loading | async"></ipaas-popular-templates>
+      <syndesis-popular-templates [templates]="templates | async" [loading]="loading | async"></syndesis-popular-templates>
       -->
     </div>
   </div>
-</ipaas-loading>
+</syndesis-loading>
 

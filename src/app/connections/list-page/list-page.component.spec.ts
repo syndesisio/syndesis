@@ -10,7 +10,7 @@ import { DropdownModule } from 'ng2-bootstrap/dropdown';
 import { ToasterModule } from 'angular2-toaster';
 import { StoreModule } from '../../store/store.module';
 
-import { IPaaSCommonModule } from '../../common/common.module';
+import { SyndesisCommonModule } from '../../common/common.module';
 import { ConnectionsListPage } from './list-page.component';
 import { ConnectionsListComponent } from '../list/list.component';
 import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
@@ -22,7 +22,7 @@ describe('ConnectionListPage', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        IPaaSCommonModule,
+        SyndesisCommonModule,
         StoreModule,
         RouterTestingModule.withRoutes([]),
         RestangularModule.forRoot(),

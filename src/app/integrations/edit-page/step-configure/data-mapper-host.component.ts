@@ -2,17 +2,17 @@ import { ChangeDetectorRef, Component, ViewChild, OnInit, OnDestroy } from '@ang
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { DocumentDefinition } from 'ipaas.data.mapper';
-import { MappingDefinition } from 'ipaas.data.mapper';
-import { ConfigModel } from 'ipaas.data.mapper';
-import { MappingModel } from 'ipaas.data.mapper';
+import { DocumentDefinition } from 'syndesis.data.mapper';
+import { MappingDefinition } from 'syndesis.data.mapper';
+import { ConfigModel } from 'syndesis.data.mapper';
+import { MappingModel } from 'syndesis.data.mapper';
 
-import { InitializationService } from 'ipaas.data.mapper';
-import { ErrorHandlerService } from 'ipaas.data.mapper';
-import { DocumentManagementService } from 'ipaas.data.mapper';
-import { MappingManagementService } from 'ipaas.data.mapper';
+import { InitializationService } from 'syndesis.data.mapper';
+import { ErrorHandlerService } from 'syndesis.data.mapper';
+import { DocumentManagementService } from 'syndesis.data.mapper';
+import { MappingManagementService } from 'syndesis.data.mapper';
 
-import { DataMapperAppComponent } from 'ipaas.data.mapper';
+import { DataMapperAppComponent } from 'syndesis.data.mapper';
 
 import { ConfigService } from '../../../config.service';
 import { IntegrationSupportService } from '../../../store/integration-support.service';
@@ -29,7 +29,7 @@ const category = getCategory('Connections');
 const MAPPING_KEY = 'atlasmapping';
 
 @Component({
-  selector: 'ipaas-data-mapper-host',
+  selector: 'syndesis-data-mapper-host',
   template: `
     <div *ngIf="initialized" class="data-mapper-host">
       <data-mapper #dataMapperComponent [cfg]="cfg"></data-mapper>
@@ -80,8 +80,8 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
       this.cfg.initCfg.baseMappingServiceUrl = configService.getSettings('datamapper', 'baseMappingServiceUrl');
     } catch (err) {
       // run with defaults
-      this.cfg.initCfg.baseJavaServiceUrl = 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/java/';
-      this.cfg.initCfg.baseMappingServiceUrl = 'https://ipaas-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
+      this.cfg.initCfg.baseJavaServiceUrl = 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/java/';
+      this.cfg.initCfg.baseMappingServiceUrl = 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
     }
   }
 
