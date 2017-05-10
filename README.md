@@ -163,8 +163,6 @@ The template to use in the installation instructions depend on your use case:
 Depending on your role please use the appropriate template in the instructions below.
 
 ### Install instructions
-> Please note that there is currently a switch for Minishift with regard to the default DNS reflector. For Minishift 1.0.0-rc.2 please use `xip.io` as the domain. For Minishift 1.0.0-rc.2 you have to use `nip.io` but you have also have to use the parameter `INSECURE_SKIP_VERIFY=true` because the internal certs still refer to `xip.io`. This should be fixed in the final 1.0.0 version of Minishift.
-
 
 ```bash
 # Fire up minishift if not alread running. Please note that we need v1.5.0 right now
