@@ -9,7 +9,7 @@ import { ModalModule } from 'ng2-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
 import { DropdownModule } from 'ng2-bootstrap/dropdown';
 
-import { IPaaSCommonModule } from '../common/common.module';
+import { SyndesisCommonModule } from '../common/common.module';
 import { ConnectionsCreatePage } from './create-page/create-page.component';
 import { ConnectionsConnectionBasicsComponent } from './create-page/connection-basics/connection-basics.component';
 import { ConnectionsConfigureFieldsComponent } from './create-page/configure-fields/configure-fields.component';
@@ -31,7 +31,7 @@ import { CurrentConnectionService } from './create-page/current-connection';
     DynamicFormsCoreModule,
     DynamicFormsBootstrapUIModule,
     RouterModule,
-    IPaaSCommonModule,
+    SyndesisCommonModule,
     ToasterModule,
     ModalModule,
     DropdownModule,

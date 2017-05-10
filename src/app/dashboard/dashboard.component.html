@@ -1,13 +1,13 @@
-<div class="ipaas-dashboard">
+<div class="syndesis-dashboard">
   
   <!-- At Least One Integration -->
   
-  <ipaas-dashboard-integrations *ngIf="integrations.length !== 0"
+  <syndesis-dashboard-integrations *ngIf="integrations.length !== 0"
                                [integrations]="integrations | async"
-                               [loading]="loading | async"></ipaas-dashboard-integrations>
+                               [loading]="loading | async"></syndesis-dashboard-integrations>
   
   <!-- No Integrations -->
   
-  <ipaas-dashboard-empty-state *ngIf="integrations.length === 0"
-                               [loading]="loading | async"></ipaas-dashboard-empty-state>
+  <syndesis-dashboard-empty-state *ngIf="integrations.length === 0"
+                               [loading]="loading | async"></syndesis-dashboard-empty-state>
 </div>

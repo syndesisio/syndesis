@@ -14,7 +14,7 @@ import { log, getCategory } from '../../logging';
 const category = getCategory('Connections');
 
 @Component({
-  selector: 'ipaas-connection-view',
+  selector: 'syndesis-connection-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
 })

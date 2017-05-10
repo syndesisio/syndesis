@@ -11,7 +11,7 @@ import { ToasterModule } from 'angular2-toaster';
 import { TooltipModule } from 'ng2-bootstrap/tooltip';
 import { DropdownModule } from 'ng2-bootstrap/dropdown';
 
-import { IPaaSCommonModule } from '../common/common.module';
+import { SyndesisCommonModule } from '../common/common.module';
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
 //import { PopularTemplatesComponent } from './populartemplates.component';
@@ -27,7 +27,7 @@ describe('DashboardComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        IPaaSCommonModule,
+        SyndesisCommonModule,
         ChartsModule,
         ModalModule.forRoot(),
         ToasterModule,

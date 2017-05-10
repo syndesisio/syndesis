@@ -1,4 +1,4 @@
-import { IPaaSComponent } from '../../common/common';
+import { SyndesisComponent } from '../../common/common';
 import { ElementFinder, $, promise } from 'protractor';
 import { P } from '../../common/world';
 import { log } from '../../../src/app/logging';
@@ -25,12 +25,12 @@ export class TextEntity {
 }
 
 
-export class ConnectionViewComponent implements IPaaSComponent {
+export class ConnectionViewComponent implements SyndesisComponent {
   name = new TextEntity(this.rootElement().$('input[name="nameInput"]'));
   description = new TextEntity(this.rootElement().$('textarea[name="descriptionInput"]'));
 
   rootElement(): ElementFinder {
-    return $('ipaas-connection-view');
+    return $('syndesis-connection-view');
   }
 
   /**
@@ -50,9 +50,9 @@ export class ConnectionViewComponent implements IPaaSComponent {
 }
 
 
-export class ConnectionCreatePage implements IPaaSComponent {
+export class ConnectionCreatePage implements SyndesisComponent {
 
   rootElement(): ElementFinder {
-    return $('ipaas-connection-create-page');
+    return $('syndesis-connection-create-page');
   }
 }

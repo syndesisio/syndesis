@@ -10,7 +10,7 @@ import { IntegrationStore } from '../../store/integration/integration.store';
 import { log, getCategory } from '../../logging';
 
 @Component({
-  selector: 'ipaas-integrations-list',
+  selector: 'syndesis-integrations-list',
   templateUrl: './list.component.html',
   styleUrls: [ './list.component.scss' ],
 })

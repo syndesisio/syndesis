@@ -19,7 +19,7 @@ import { ConnectionViewComponent } from './view.component';
 import { ConnectionsListComponent } from '../list/list.component';
 import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
 import { StoreModule } from '../../store/store.module';
-import { IPaaSCommonModule } from '../../common/common.module';
+import { SyndesisCommonModule } from '../../common/common.module';
 
 describe('ConnectionViewComponent', () => {
   let component: ConnectionViewComponent;
@@ -33,7 +33,7 @@ describe('ConnectionViewComponent', () => {
         ReactiveFormsModule,
         DynamicFormsCoreModule.forRoot(),
         DynamicFormsBootstrapUIModule,
-        IPaaSCommonModule,
+        SyndesisCommonModule,
         StoreModule,
         RouterTestingModule.withRoutes([]),
         ModalModule,

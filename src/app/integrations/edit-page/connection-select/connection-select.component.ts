@@ -15,7 +15,7 @@ const category = getCategory('Integrations');
 
 @Component({
   moduleId: module.id,
-  selector: 'ipaas-integrations-connection-select',
+  selector: 'syndesis-integrations-connection-select',
   templateUrl: 'connection-select.component.html',
   styleUrls: [ './connection-select.component.scss' ],
 })

@@ -89,14 +89,14 @@
 
     <div *ngSwitchCase="'create1'">
       <div class="connector-list">
-        <ipaas-connections-list-toolbar [(filter)]="filter"
+        <syndesis-connections-list-toolbar [(filter)]="filter"
                                         [(sort)]="sort"
-                                        [showCreate]="false"></ipaas-connections-list-toolbar>
+                                        [showCreate]="false"></syndesis-connections-list-toolbar>
 
-        <ipaas-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort"
+        <syndesis-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort"
                                 [loading]="loading | async"
                                 [showKebab]="false"
-                                (onSelected)="onSelected($event)"></ipaas-connections-list>
+                                (onSelected)="onSelected($event)"></syndesis-connections-list>
       </div>
     </div>
 

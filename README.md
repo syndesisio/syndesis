@@ -4,7 +4,7 @@
 
 The front end application or UI for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages Red Hat's existing product architecture using OpenShift Online/Dedicated and Fuse Integration Services.
 
-For the middle tier API that this client communicates with, please see the [ipaas-rest](https://github.com/redhat-ipaas/ipaas-rest) repo.
+For the middle tier API that this client communicates with, please see the [syndesis-rest](https://github.com/redhat-syndesis/syndesis-rest) repo.
 
 Included in this stack are the following technologies:
 
@@ -26,10 +26,10 @@ Clone/download the repo start editing `app.component.ts` inside [`/src/app/`](/s
 
 ```bash
 # clone our repo
-git clone https://github.com/redhat-ipaas/ipaas-ui.git
+git clone https://github.com/redhat-syndesis/syndesis-ui.git
 
-# change directory to iPaaS
-cd ipaas-ui
+# change directory to Syndesis
+cd syndesis-ui
 
 # install the dependencies
 yarn
@@ -61,13 +61,13 @@ Go to [http://0.0.0.0:4200](http://0.0.0.0:4200) or [http://localhost:4200](http
 We use the component approach in our starter. This is the new standard for developing Angular apps and a great way to ensure maintainable code by encapsulation of our behavior logic. A component is basically a self contained app, usually in a single file or a folder with each concern as a file: style, template, specs, e2e, and component class.
 
 ```plain
-ipaas-ui/
+syndesis-ui/
  │
  ├──docs/                         * our documentation
  |   ├──commands.md               * additional cli commands available to us
  |   ├──contributing.md           * contribution guidelines
  |   ├──entities.md               * entities/models and their relationships for reference
- │   ├──faq.md                    * frequently asked questions about using ipaas
+ │   ├──faq.md                    * frequently asked questions about using syndesis
  │   ├──overview.md               * a technical overview for understanding the project
  │   └──typescript.md             * some typescript tips and resources
  │
@@ -94,7 +94,7 @@ ipaas-ui/
  │
  ├──.gitignore                    * let git know which files to ignore and not stage for commit
  ├──karma.conf.js                 * karma, our test runner, config file
- ├──LICENSE                       * iPaaS is available for use under the Apache 2.0 license
+ ├──LICENSE                       * Syndesis is available for use under the Apache 2.0 license
  ├──npm-shrinkwrap.json           * npm's way of allowing us to control exact versions of dependencies
  ├──package.json                  * what npm uses to manage it's dependencies
  ├──protractor.conf.js            * protractor, our e2e testing framework, config file
@@ -118,7 +118,7 @@ You do *not* need to install Angular CLI globally, but we recommend it if you'd 
 
 ### Installing
 
-* `fork` the ipaas repo
+* `fork` the syndesis repo
 * `clone` your fork
 * `yarn` to install all dependencies
 * `yarn start` or `ng serve` to start the dev server

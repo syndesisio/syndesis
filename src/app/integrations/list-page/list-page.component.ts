@@ -7,7 +7,7 @@ import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integrations } from '../../model';
 
 @Component({
-  selector: 'ipaas-integrations-list-page',
+  selector: 'syndesis-integrations-list-page',
   templateUrl: './list-page.component.html',
   styleUrls: ['./list-page.component.scss'],
 })

@@ -16,7 +16,7 @@ import { FlowViewStepComponent } from './flow-view-step.component';
 import { IntegrationStore } from '../../../store/integration/integration.store';
 import { IntegrationService } from '../../../store/integration/integration.service';
 import { CurrentFlow } from '../current-flow.service';
-import { IPaaSCommonModule } from '../../../common/common.module';
+import { SyndesisCommonModule } from '../../../common/common.module';
 import { ConnectionsModule } from '../../../connections/connections.module';
 import { EventsService } from '../../../store/entity/events.service';
 
@@ -36,7 +36,7 @@ describe('IntegrationsCreateComponent', () => {
         TabsModule.forRoot(),
         PopoverModule.forRoot(),
         CollapseModule.forRoot(),
-        IPaaSCommonModule,
+        SyndesisCommonModule,
         CollapseModule,
       ],
       declarations: [

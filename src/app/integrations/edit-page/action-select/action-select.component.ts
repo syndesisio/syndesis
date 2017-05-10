@@ -14,7 +14,7 @@ import { ObjectPropertyFilterConfig } from '../../../common/object-property-filt
 const category = getCategory('Integrations');
 
 @Component({
-  selector: 'ipaas-integrations-action-select',
+  selector: 'syndesis-integrations-action-select',
   templateUrl: 'action-select.component.html',
   styleUrls: [ './action-select.component.scss' ],
 })

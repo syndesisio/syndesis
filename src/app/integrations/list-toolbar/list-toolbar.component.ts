@@ -4,7 +4,7 @@ import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe
 import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
 
 @Component({
-  selector: 'ipaas-integrations-list-toolbar',
+  selector: 'syndesis-integrations-list-toolbar',
   templateUrl: './list-toolbar.component.html',
   styleUrls: ['./list-toolbar.component.scss'],
 })

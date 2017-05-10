@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { IPaaSCommonModule } from '../common/common.module';
+import { SyndesisCommonModule } from '../common/common.module';
 import { TemplatesListPage } from './list-page/list-page.component';
 import { ListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { TemplatesListComponent } from './list/list.component';
@@ -13,7 +13,7 @@ import { TemplatesListComponent } from './list/list.component';
     CommonModule,
     FormsModule,
     RouterModule,
-    IPaaSCommonModule,
+    SyndesisCommonModule,
   ],
   declarations: [
     TemplatesListPage,

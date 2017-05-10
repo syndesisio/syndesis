@@ -10,7 +10,7 @@ import { IntegrationStore } from '../store/integration/integration.store';
 const category = getCategory('Dashboard');
 
 @Component({
-  selector: 'ipaas-dashboard',
+  selector: 'syndesis-dashboard',
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {

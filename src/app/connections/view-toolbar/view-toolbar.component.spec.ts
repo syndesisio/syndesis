@@ -9,7 +9,7 @@ import { MockBackend } from '@angular/http/testing';
 
 import { ConnectionViewToolbarComponent } from './view-toolbar.component';
 import { StoreModule } from '../../store/store.module';
-import { IPaaSCommonModule } from '../../common/common.module';
+import { SyndesisCommonModule } from '../../common/common.module';
 import { CurrentConnectionService } from '../create-page/current-connection';
 
 describe('ConnectionViewToolbarComponent', () => {
@@ -22,7 +22,7 @@ describe('ConnectionViewToolbarComponent', () => {
         imports: [
           CommonModule,
           RouterTestingModule.withRoutes([]),
-          IPaaSCommonModule,
+          SyndesisCommonModule,
           StoreModule,
         ],
         declarations: [ConnectionViewToolbarComponent],

@@ -12,7 +12,7 @@ import { ChildAwarePage } from './child-aware-page';
 const category = getCategory('IntegrationsEditPage');
 
 @Component({
-  selector: 'ipaas-integrations-edit-page',
+  selector: 'syndesis-integrations-edit-page',
   templateUrl: './edit-page.component.html',
   styleUrls: [ './edit-page.component.scss' ],
 })

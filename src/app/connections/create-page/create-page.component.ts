@@ -8,7 +8,7 @@ import { log, getCategory } from '../../logging';
 const category = getCategory('Connections');
 
 @Component({
-  selector: 'ipaas-connection-create-page',
+  selector: 'syndesis-connection-create-page',
   templateUrl: 'create-page.component.html',
   styleUrls: ['./create-page.component.scss'],
 })

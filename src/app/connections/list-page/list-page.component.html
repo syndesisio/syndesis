@@ -1,4 +1,4 @@
 <div class='connections list'>
-  <ipaas-connections-list-toolbar [(filter)]="filter" [(sort)]="sort"></ipaas-connections-list-toolbar>
-  <ipaas-connections-list [connections]="connections | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async" (onSelected)="onSelected($event)"></ipaas-connections-list>
+  <syndesis-connections-list-toolbar [(filter)]="filter" [(sort)]="sort"></syndesis-connections-list-toolbar>
+  <syndesis-connections-list [connections]="connections | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async" (onSelected)="onSelected($event)"></syndesis-connections-list>
 </div>
