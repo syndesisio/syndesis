@@ -2,9 +2,9 @@
 
 [![CircleCI](https://circleci.com/gh/syndesisio/syndesis-ui.svg?style=svg)](https://circleci.com/gh/syndesisio/syndesis-ui)
 
-The front end application or UI for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages Red Hat's existing product architecture using OpenShift Online/Dedicated and Fuse Integration Services.
+The front end application or UI for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages open source technologies like Apache Camel, OpenShift and Kubernetes to provide a rock-solid user experience.
 
-For the middle tier API that this client communicates with, please see the [syndesis-rest](https://github.com/redhat-syndesis/syndesis-rest) repo.
+For the middle tier API that this client communicates with, please see the [syndesis-rest](https://github.com/syndesisio/syndesis-rest) repo.
 
 Included in this stack are the following technologies:
 
@@ -26,7 +26,7 @@ Clone/download the repo start editing `app.component.ts` inside [`/src/app/`](/s
 
 ```bash
 # clone our repo
-git clone https://github.com/redhat-syndesis/syndesis-ui.git
+git clone https://github.com/syndesisio/syndesis-ui.git
 
 # change directory to Syndesis
 cd syndesis-ui
