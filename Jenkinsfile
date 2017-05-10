@@ -16,7 +16,7 @@ slave {
                     }
 
                     stage 'System Tests'
-                    test(component: 'ipaas-verifier', namespace: "${testingNamespace}", serviceAccount: 'jenkins')
+                    test(component: 'syndesis-verifier', namespace: "${testingNamespace}", serviceAccount: 'jenkins')
                  }
 
         }

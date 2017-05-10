@@ -1,4 +1,4 @@
-package com.redhat.ipaas.verifier.impl;
+package io.syndesis.verifier.impl;
 
 import org.springframework.stereotype.Component;
 
@@ -6,10 +6,9 @@ import org.springframework.stereotype.Component;
  * @author roland
  * @since 28/03/2017
  */
-@Component("twitter")
-public class TwitterVerifier extends BaseVerifier {
-
+@Component("http")
+public class HttpVerifier extends BaseVerifier {
     protected String getConnectorAction() {
-        return "twitter-mention";
+        return "http-get";
     }
 }

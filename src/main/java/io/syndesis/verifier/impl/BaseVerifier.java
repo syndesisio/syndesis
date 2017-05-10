@@ -1,12 +1,13 @@
-package com.redhat.ipaas.verifier.impl;
+package io.syndesis.verifier.impl;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import com.redhat.ipaas.verifier.Verifier;
-import com.redhat.ipaas.verifier.VerifierResponse;
+import io.syndesis.verifier.Verifier;
+import io.syndesis.verifier.VerifierResponse;
 import org.apache.camel.*;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.slf4j.Logger;
@@ -61,7 +62,7 @@ public abstract class BaseVerifier implements Verifier {
                      getConnectorAction(), result.getStatus());
             if (result.getStatus() == ComponentVerifier.Result.Status.ERROR) {
                 log.error("{} --> ", getConnectorAction());
-                for (ComponentVerifier.Error error : result.getErrors()) {
+                for (ComponentVerifier.VerificationError error : result.getErrors()) {
                     log.error("   {} : {}", error.getCode(), error.getDescription());
                 }
             }
@@ -101,11 +102,18 @@ public abstract class BaseVerifier implements Verifier {
             new VerifierResponse.Builder(result.getStatus().name(),
                                          result.getScope().name());
         if (result.getErrors() != null) {
-            for (ComponentVerifier.Error error : result.getErrors()) {
-                builder.withError(error.getCode())
+            for (ComponentVerifier.VerificationError error : result.getErrors()) {
+                builder.withError(error.getCode().getName())
                          .description(error.getDescription())
-                         .parameters(error.getParameters())
-                         .attributes(error.getAttributes())
+                         .parameters(error.getParameterKeys())
+                         .attributes(
+                             error.getDetails().entrySet().stream().collect(
+                                 Collectors.toMap(
+                                     e -> e.getKey().name(),
+                                     e -> e.getValue()
+                                 )
+                             )
+                         )
                        .endError();
             }
         }

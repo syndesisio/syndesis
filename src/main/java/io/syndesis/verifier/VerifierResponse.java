@@ -1,4 +1,4 @@
-package com.redhat.ipaas.verifier;
+package io.syndesis.verifier;
 
 import java.util.*;
 
@@ -104,16 +104,14 @@ public class VerifierResponse {
 
             public ErrorBuilder parameters(Set<String> params) {
                 if (params != null) {
-                    error.parameters = new HashSet<String>();
-                    error.parameters.addAll(params);
+                    error.parameters = new HashSet<String>(params);
                 }
                 return this;
             }
 
             public ErrorBuilder attributes(Map<String, Object> attributes) {
                 if (attributes != null) {
-                    error.attributes = new HashMap<String, Object>();
-                    error.attributes.putAll(attributes);
+                    error.attributes = new HashMap<String, Object>(attributes);
                 }
                 return this;
             }

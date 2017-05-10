@@ -1,8 +1,7 @@
-package com.redhat.ipaas.verifier.impl;
+package io.syndesis.verifier.impl;
 
 import java.util.Map;
 
-import com.redhat.ipaas.verifier.impl.BaseVerifier;
 import org.springframework.stereotype.Component;
 
 /**

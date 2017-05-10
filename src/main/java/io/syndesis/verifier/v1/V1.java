@@ -1,4 +1,4 @@
-package com.redhat.ipaas.verifier.v1;
+package io.syndesis.verifier.v1;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
