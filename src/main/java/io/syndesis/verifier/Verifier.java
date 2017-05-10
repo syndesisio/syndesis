@@ -1,4 +1,4 @@
-package com.redhat.ipaas.verifier;
+package io.syndesis.verifier;
 
 import java.util.List;
 import java.util.Map;

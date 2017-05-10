@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.ipaas.verifier.v1;
+package io.syndesis.verifier.v1;
 
-import java.util.*;
+import io.syndesis.verifier.Verifier;
+import io.syndesis.verifier.VerifierRegistry;
+import io.syndesis.verifier.VerifierResponse;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-
-import com.redhat.ipaas.verifier.*;
-import org.springframework.stereotype.Component;
+import java.util.*;
 
 @Component
 @Path("/verifier")
