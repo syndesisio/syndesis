@@ -24,7 +24,7 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
 public class TwitterMentionComponent extends DefaultConnectorComponent {
     
     public TwitterMentionComponent() {
-        super("twitter-mention", "TwitterMentionComponent");
+        super("twitter-mention", TwitterMentionComponent.class.getName());
 
         setBeforeConsumer(exchange -> {
             exchange.getIn().setHeader(Exchange.CONTENT_TYPE, "application/java-byte-code");

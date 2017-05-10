@@ -23,7 +23,7 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
 public class HttpGetComponent extends DefaultConnectorComponent {
     
     public HttpGetComponent() {
-        super("http-get", "HttpGetComponent");
+        super("http-get", HttpGetComponent.class.getName());
     }
 
 }

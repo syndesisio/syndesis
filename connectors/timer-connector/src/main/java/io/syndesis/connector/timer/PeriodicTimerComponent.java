@@ -23,7 +23,7 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
 public class PeriodicTimerComponent extends DefaultConnectorComponent {
     
     public PeriodicTimerComponent() {
-        super("periodic-timer", "PeriodicTimerComponent");
+        super("periodic-timer", PeriodicTimerComponent.class.getName());
     }
 
 }

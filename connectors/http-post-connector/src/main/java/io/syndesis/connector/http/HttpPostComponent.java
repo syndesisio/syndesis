@@ -23,7 +23,7 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
 public class HttpPostComponent extends DefaultConnectorComponent {
     
     public HttpPostComponent() {
-        super("http-post", "HttpPostComponent");
+        super("http-post", HttpPostComponent.class.getName());
     }
 
 }
