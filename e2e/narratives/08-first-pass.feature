@@ -4,8 +4,8 @@ Feature: Sprint 8 narrative
   https://issues.jboss.org/browse/IPAAS-153
 
   Scenario: First pass at login, homepage
-    When "Camilla" logs into Syndesis URL for her installation (e.g. rh-syndesis.[openshift online domain].com)
-    Then Camilla is presented with Syndesis page "Dashboard"
+    When "Camilla" logs into the Syndesis URL for her installation (e.g. rh-syndesis.[openshift online domain].com)
+    Then Camilla is presented with the Syndesis page "Dashboard"
 
   Scenario: Explore connections
     When "Camilla" navigates to the "Connections" page to see what's available in Syndesis
@@ -31,5 +31,5 @@ Feature: Sprint 8 narrative
     When Camilla clicks on the "Save as Draft" button
     And she defines integration name "My awesome first integration"
     And click on the "Publish" button
-    Then Camilla is presented with Syndesis page "Integrations"
+    Then Camilla is presented with the Syndesis page "Integrations"
     And Integration "My awesome first integration" is present in integrations list
