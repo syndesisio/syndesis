@@ -47,7 +47,7 @@ class ConnectionSteps {
   public expectConnectionTitlePresent (connectionName: string, callback: CallbackStepDefinition): void {
     const listComponent = new ConnectionsListComponent();
     const connection = listComponent.getConnection(connectionName);
-    expect(connection.isPresent(), `There should be a present connection ${connectionName}`)
+    expect(connection.isPresent(), `There should be present connection ${connectionName}`)
       .to.eventually.be.true.notify(callback);
   }
 

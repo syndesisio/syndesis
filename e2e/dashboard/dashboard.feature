@@ -48,7 +48,7 @@ Feature: Test to verify Dashboard links
     Then Camilla is presented with the iPaaS page "Connections"
     
     When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
-    Then Camilla can see "dashboard verification connection" connection
+    Then Camilla can see "dashboard verification connection" connection on dashboard page
     
     When Camilla clicks on the "View All Connections" link
     Then Camilla deletes the "dashboard verification connection" connection
@@ -88,3 +88,6 @@ Feature: Test to verify Dashboard links
     When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
     Then Integration "dashboard verification integration" is present in top 5 integrations
     And Camilla is presented with the "dashboard verification integration" link
+    
+    When Camilla deletes the "Awesome integration for delete" integration in top 5 integrations
+    Then Camilla can not see "Awesome integration for delete" integration in top 5 integrations anymore

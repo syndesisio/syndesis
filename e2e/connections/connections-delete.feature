@@ -13,7 +13,7 @@ Feature: Test to verify delete action
     Given credentials for "Camilla"
     And clean application state
 
-  Scenario: Create connection happy path
+  Scenario: Create connection happy path and then delete it
     When "Camilla" navigates to the "Connections" page
     And click on the "Create Connection" button
     And Camilla selects the "Twitter" connection
