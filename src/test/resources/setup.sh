@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ -z "${OPENSHIFT_TEMPLATE_FROM_WORKSPACE}" ]; then
+if [ ! -z ${OPENSHIFT_TEMPLATE_FROM_WORKSPACE} ]; then
     TEMPLATE_URL="file:///${WORKSPACE}/syndesis.yml"
-elif [ -z "${OPENSHIFT_TEMPLATES_FROM_GITHUB_COMMIT}" ]; then
+elif [ ! -z ${OPENSHIFT_TEMPLATES_FROM_GITHUB_COMMIT} ]; then
     TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/openshift-templates/${OPENSHIFT_TEMPLATES_GIT_COMMIT}/syndesis.yml"
 else
     TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis.yml"
