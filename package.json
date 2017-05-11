@@ -61,7 +61,7 @@
     "patternfly": "3.20.0",
     "pluralize": "3.1.0",
     "rxjs": "5.1.1",
-    "syndesis.data.mapper": "https://github.com/syndesisio/datamapper-ui.git#9b80f66338dc9b14c42b8288162a48921e54cb46",
+    "syndesis.data.mapper": "https://github.com/syndesisio/syndesis-datamapper-ui.git#9b80f66338dc9b14c42b8288162a48921e54cb46",
     "tether": "1.4.0",
     "ts-helpers": "1.1.2",
     "typescript-logging": "^0.2.1",
