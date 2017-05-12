@@ -3,8 +3,6 @@ import { Promise as P } from 'es6-promise';
 import { element, by, ElementFinder } from 'protractor';
 import { IPaaSComponent } from '../../common/common';
 import { log } from '../../../src/app/logging';
-import WebElement = webdriver.WebElement;
-import IWebElementFinders = webdriver.IWebElementFinders;
 
 export class ConnectionsListComponent implements IPaaSComponent {
   rootElement(): ElementFinder {

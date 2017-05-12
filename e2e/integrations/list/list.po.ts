@@ -1,7 +1,6 @@
 import { IPaaSComponent } from '../../common/common';
 import { element, $, by, ElementFinder } from 'protractor';
 import { P } from '../../common/world';
-import { AppPage } from '../../app.po';
 import { log } from '../../../src/app/logging';
 
 export class IntegrationsListComponent implements IPaaSComponent {
