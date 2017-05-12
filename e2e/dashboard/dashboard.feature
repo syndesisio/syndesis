@@ -3,27 +3,27 @@ Feature: Test to verify Dashboard links
   https://issues.jboss.org/browse/IPAAS-289
   
   Scenario: First pass at login, homepage
-    When "Camilla" logs into the iPaaS URL for her installation (e.g. rh-ipaas.[openshift online domain].com)
-    Then Camilla is presented with the iPaaS page "Dashboard"
+    When "Camilla" logs into the Syndesis URL for her installation (e.g. rh-syndesis.[openshift online domain].com)
+    Then Camilla is presented with the Syndesis page "Dashboard"
     
   Scenario: Verify dashboard cards existence
-    When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
+    When "Camilla" navigates to the "Dashboard" page to see what's available in the Syndesis
     Then she is presented with the "Top 5 Integrations, Integration Board, Recent Updates" tables
 
   Scenario: Verify dashboard links existence
-    When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
+    When "Camilla" navigates to the "Dashboard" page to see what's available in the Syndesis
     Then she is presented with the "Create Integration" button
     And she is presented with the "Create Connection" button
     And Camilla is presented with the "View All Integrations" link
     And Camilla is presented with the "View All Connections" link
 
   Scenario: Verify View "View All Connections" link
-  	When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
+  	When "Camilla" navigates to the "Dashboard" page to see what's available in the Syndesis
     Then Camilla clicks on the "View All Connections" link
-    And Camilla is presented with the iPaaS page "Connections"
+    And Camilla is presented with the Syndesis page "Connections"
 
   Scenario: Verify "Create Connection" button
-    When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
+    When "Camilla" navigates to the "Dashboard" page to see what's available in the Syndesis
     And Camilla clicks on the "Create Connection" button
     Then she is presented with a connection create page
 
@@ -45,9 +45,9 @@ Feature: Test to verify Dashboard links
     And type "dashboard verification connection" into connection name
     And type "connection for dashboard verification" into connection description
     And click on the "Create" button
-    Then Camilla is presented with the iPaaS page "Connections"
+    Then Camilla is presented with the Syndesis page "Connections"
     
-    When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
+    When "Camilla" navigates to the "Dashboard" page to see what's available in the Syndesis
     Then Camilla can see "dashboard verification connection" connection on dashboard page
     
     When Camilla clicks on the "View All Connections" link
@@ -55,12 +55,12 @@ Feature: Test to verify Dashboard links
     Then Camilla can not see "dashboard verification connection" connection anymore
     
   Scenario: Verify View "View All Integrations" link
-  	When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
+  	When "Camilla" navigates to the "Dashboard" page to see what's available in the Syndesis
     Then Camilla clicks on the "View All Integrations" link
-    And Camilla is presented with the iPaaS page "Integrations"
+    And Camilla is presented with the Syndesis page "Integrations"
 
   Scenario: Verify "Create integration" button
-    When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
+    When "Camilla" navigates to the "Dashboard" page to see what's available in the Syndesis
     And Camilla clicks on the "Create Integration" button
     Then she is presented with a visual integration editor
   
@@ -82,10 +82,10 @@ Feature: Test to verify Dashboard links
     When Camilla clicks on the "Save as Draft" button
     And she defines integration name "dashboard verification integration"
     And click on the "Publish" button
-    Then Camilla is presented with the iPaaS page "Integrations"
+    Then Camilla is presented with the Syndesis page "Integrations"
     And Integration "dashboard verification integration" is present in integrations list
     
-    When "Camilla" navigates to the "Dashboard" page to see what's available in the iPaaS
+    When "Camilla" navigates to the "Dashboard" page to see what's available in the Syndesis
     Then Integration "dashboard verification integration" is present in top 5 integrations
     And Camilla is presented with the "dashboard verification integration" link
     

@@ -1,11 +1,11 @@
 import { Promise as P } from 'es6-promise';
 import { element, by, ElementFinder } from 'protractor';
-import { IPaaSComponent } from '../common/common';
+import { SyndesisComponent } from '../common/common';
 import { log } from '../../src/app/logging';
 
-export class DashboardPage implements IPaaSComponent {
+export class DashboardPage implements SyndesisComponent {
   rootElement(): ElementFinder {
-    return element(by.css('ipaas-dashboard'));
+    return element(by.css('syndesis-dashboard'));
   }
 
   getConnection(connectionTitle: string): ElementFinder {

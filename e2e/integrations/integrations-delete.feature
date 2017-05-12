@@ -22,7 +22,7 @@ Feature: Test to verify delete action
     When Camilla clicks on the "Save as Draft" button
     And she defines integration name "Awesome integration for delete"
     And click on the "Publish" button
-    Then Camilla is presented with the iPaaS page "Integrations"
+    Then Camilla is presented with the Syndesis page "Integrations"
     And Integration "Awesome integration for delete" is present in integrations list
 
     When Camilla deletes the "Awesome integration for delete" integration

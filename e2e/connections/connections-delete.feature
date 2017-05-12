@@ -25,7 +25,7 @@ Feature: Test to verify delete action
     And type "doomed twitter connection" into connection name
     And type "this connection is determined to non-existence" into connection description
     And click on the "Create" button
-    Then Camilla is presented with the iPaaS page "Connections"
+    Then Camilla is presented with the Syndesis page "Connections"
     
     When Camilla deletes the "doomed twitter connection" connection
     Then Camilla can not see "doomed twitter connection" connection anymore
