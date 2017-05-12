@@ -178,10 +178,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/syndesis/token-rp:v0.5.0
+        name: docker.io/syndesis/token-rp:v0.6.0
       importPolicy:
         scheduled: true
-      name: v0.5.0
+      name: v0.6.0
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -593,7 +593,7 @@ objects:
         - syndesis-github-proxy
         from:
           kind: ImageStreamTag
-          name: syndesis-token-rp:v0.5.0
+          name: syndesis-token-rp:v0.6.0
       type: ImageChange
 
     - type: ConfigChange
@@ -1898,7 +1898,7 @@ objects:
         - syndesis-openshift-proxy
         from:
           kind: ImageStreamTag
-          name: syndesis-token-rp:v0.5.0
+          name: syndesis-token-rp:v0.6.0
       type: ImageChange
 
     - type: ConfigChange

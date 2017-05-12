@@ -48,7 +48,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: syndesis/token-rp:v0.5.0
+          image: syndesis/token-rp:v0.6.0
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           args:
@@ -83,7 +83,7 @@
         - syndesis-github-proxy
         from:
           kind: ImageStreamTag
-          name: syndesis-token-rp:v0.5.0
+          name: syndesis-token-rp:v0.6.0
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange
