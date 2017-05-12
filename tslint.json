@@ -120,13 +120,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "ipaas",
+      "syndesis",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "ipaas",
+      "syndesis",
       "kebab-case"
     ],
     "use-input-property-decorator": true,

@@ -1,10 +1,10 @@
-<ipaas-loading [loading]="!(integration | async)">
+<syndesis-loading [loading]="!(integration | async)">
   <div class="integrations edit" *ngIf="integration | async">
     <div [class]="getPageRow()">
 
       <!-- Sidebar -->
       <div [class]="getSidebarClass()">
-        <ipaas-integrations-flow-view></ipaas-integrations-flow-view>
+        <syndesis-integrations-flow-view></syndesis-integrations-flow-view>
       </div>
 
       <!-- Add/Edit Integration -->
@@ -13,4 +13,4 @@
       </div>
     </div>
   </div>
-</ipaas-loading>
+</syndesis-loading>

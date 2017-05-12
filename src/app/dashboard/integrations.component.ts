@@ -14,7 +14,7 @@ import { IntegrationStore } from '../store/integration/integration.store';
 const category = getCategory('Dashboard');
 
 @Component({
-  selector: 'ipaas-dashboard-integrations',
+  selector: 'syndesis-dashboard-integrations',
   templateUrl: './integrations.component.html',
   styleUrls: ['./integrations.component.scss'],
 })
@@ -318,10 +318,8 @@ export class DashboardIntegrationsComponent implements OnInit {
         return 'Active';
       case 'Deactivated':
         return 'Inactive';
-      case 'Draft':
-        return 'Draft';
     }
-    return '';
+    return integration.currentStatus;
   }
 
 

@@ -10,7 +10,7 @@ import { DropdownModule } from 'ng2-bootstrap/dropdown';
 import { ToasterModule } from 'angular2-toaster';
 import { StoreModule } from '../../store/store.module';
 
-import { IPaaSCommonModule } from '../../common/common.module';
+import { SyndesisCommonModule } from '../../common/common.module';
 import { ConnectionsListComponent } from './list.component';
 
 describe('ConnectionsListComponent', () => {
@@ -21,7 +21,7 @@ describe('ConnectionsListComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         CommonModule,
-        IPaaSCommonModule,
+        SyndesisCommonModule,
         RouterTestingModule.withRoutes([]),
         ModalModule.forRoot(),
         DropdownModule.forRoot(),

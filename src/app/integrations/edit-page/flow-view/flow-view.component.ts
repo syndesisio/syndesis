@@ -12,7 +12,7 @@ import { ChildAwarePage } from '../child-aware-page';
 const category = getCategory('IntegrationsCreatePage');
 
 @Component({
-  selector: 'ipaas-integrations-flow-view',
+  selector: 'syndesis-integrations-flow-view',
   templateUrl: './flow-view.component.html',
   styleUrls: ['./flow-view.component.scss'],
 })

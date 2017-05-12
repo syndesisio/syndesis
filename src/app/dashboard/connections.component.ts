@@ -8,7 +8,7 @@ import { ConnectionStore } from '../store/connection/connection.store';
 const category = getCategory('Dashboard');
 
 @Component({
-  selector: 'ipaas-dashboard-connections',
+  selector: 'syndesis-dashboard-connections',
   templateUrl: './connections.component.html',
   styleUrls: ['./connections.component.scss'],
 })

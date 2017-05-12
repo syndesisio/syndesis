@@ -1,11 +1,12 @@
-import { IPaaSComponent } from '../../common/common';
-import { element, $, by, ElementFinder } from 'protractor';
+import { SyndesisComponent } from '../../common/common';
+import { $, by, ElementFinder } from 'protractor';
 import { P } from '../../common/world';
 import { log } from '../../../src/app/logging';
 
-export class IntegrationsListComponent implements IPaaSComponent {
+
+export class IntegrationsListComponent implements SyndesisComponent {
   rootElement(): ElementFinder {
-    return element(by.css('ipaas-integrations-list'));
+    return $('syndesis-integrations-list');
   }
 
   isIntegrationPresent(name: string): P<boolean> {
@@ -15,9 +16,9 @@ export class IntegrationsListComponent implements IPaaSComponent {
 }
 
 
-export class IntegrationsListPage implements IPaaSComponent {
+export class IntegrationsListPage implements SyndesisComponent {
   rootElement(): ElementFinder {
-    return $('ipaas-integrations-list-page');
+    return $('syndesis-integrations-list-page');
   }
 
   listComponent(): IntegrationsListComponent {

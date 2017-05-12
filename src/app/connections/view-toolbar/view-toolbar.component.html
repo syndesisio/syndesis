@@ -12,16 +12,30 @@
           <li class='active'><strong>Connection Details</strong></li>
         </ol>
       </div>
-      <div class="toolbar-pf-action-right" *ngIf="connection">
-        <!--
+      <div class="toolbar-pf-action-right"
+           *ngIf="connection">
         <div class="form-group">
-          <a [routerLink]="['/connections', connection.id, 'edit']">
-            <button class="btn btn-link" type="button">
-              <span class="fa fa-edit"></span>
-            </button>
-          </a>
+          <button *ngIf="mode === 'view'"
+                  class="btn btn-primary"
+                  type="button"
+                  (click)="doEdit()">
+              Edit
+          </button>
+          <button *ngIf="mode === 'edit'"
+                  [disabled]="saving"
+                  class="btn btn-default"
+                  type="button"
+                  (click)="cancel()">
+              Cancel
+          </button>
+          <button *ngIf="mode === 'edit'"
+                  [disabled]="saving"
+                  class="btn btn-primary"
+                  type="button"
+                  (click)="doSave()">
+              <span *ngIf="saving" class="spinner spinner-sm spinner-inline"></span> Save
+          </button>
         </div>
-        -->
       </div>
     </div>
   </div>

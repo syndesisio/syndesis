@@ -53,10 +53,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   }));
 
-  it(`should have as title 'Red Hat iPaaS'`, async(() => {
+  it(`should have as title 'Syndesis'`, async(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('Red Hat iPaaS');
+    expect(app.title).toEqual('Syndesis');
   }));
 
 });

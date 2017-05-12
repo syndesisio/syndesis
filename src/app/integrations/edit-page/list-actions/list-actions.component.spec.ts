@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ToasterModule } from 'angular2-toaster';
 
-import { IPaaSCommonModule } from '../../../common/common.module';
+import { SyndesisCommonModule } from '../../../common/common.module';
 import { ListActionsComponent } from './list-actions.component';
 import { StoreModule } from '../../../store/store.module';
 
@@ -15,7 +15,7 @@ describe('ListActionsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        IPaaSCommonModule,
+        SyndesisCommonModule,
         RouterTestingModule.withRoutes([]),
         ToasterModule,
         StoreModule,

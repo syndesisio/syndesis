@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'ipaas-loading',
+  selector: 'syndesis-loading',
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss'],
 })

@@ -1,17 +1,17 @@
 {
-  "commment":"This config should for testing against a minishift using the ipaas-dev application templates.",
-  "apiEndpoint": "https://ipaas.192.168.64.2.xip.io/api/v1",
-  "title": "Red Hat iPaaS",
+  "commment":"This config should for testing against a minishift using the syndesis-dev application templates.",
+  "apiEndpoint": "https://syndesis.192.168.64.2.xip.io/api/v1",
+  "title": "Syndesis",
   "datamapper": {
-    "baseJavaServiceUrl": "https://ipaas.192.168.64.2.xip.io/v2/atlas/java/",
-    "baseMappingServiceUrl": "https://ipaas.192.168.64.2.xip.io/v2/atlas/"
+    "baseJavaServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/java/",
+    "baseMappingServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/"
   },
   "oauth": {
-    "clientId": "ipaas-ui",
+    "clientId": "syndesis-ui",
     "scopes": ["openid"],
     "oidc": true,
     "hybrid": true,
-    "issuer": "https://ipaas.192.168.64.2.xip.io/auth/realms/ipaas",
+    "issuer": "https://syndesis.192.168.64.2.xip.io/auth/realms/syndesis",
     "auto-link-github": true
   }
 }

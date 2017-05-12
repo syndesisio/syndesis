@@ -10,7 +10,7 @@ import { ObjectPropertySortConfig } from '../../../common/object-property-sort.p
 const category = getCategory('Actions');
 
 @Component({
-  selector: 'ipaas-list-actions',
+  selector: 'syndesis-list-actions',
   templateUrl: './list-actions.component.html',
   styleUrls: ['./list-actions.component.scss'],
 })

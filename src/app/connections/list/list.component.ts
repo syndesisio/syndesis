@@ -9,7 +9,7 @@ import { Connections, Connection } from '../../model';
 const category = getCategory('Connections');
 
 @Component({
-  selector: 'ipaas-connections-list',
+  selector: 'syndesis-connections-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
 })

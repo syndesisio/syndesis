@@ -23,7 +23,7 @@ export const OAUTH_TOKEN_NAME = 'access_token';
 /**
  * Wrap http status code and response data into single object.
  */
-export interface IpaasResult {
+export interface SyndesisResult {
   statusCode: number;
   data: any;
 }
@@ -73,9 +73,9 @@ export class World {
   }
 
 
-  async authRequest(urlString: string, method: string = 'GET'): P<IpaasResult> {
+  async authRequest(urlString: string, method: string = 'GET'): P<SyndesisResult> {
     const link = url.parse(urlString);
-    const deferred: Deferred<IpaasResult> = new Deferred();
+    const deferred: Deferred<SyndesisResult> = new Deferred();
 
     const token = await this.getOauthToken();
     const options: http.RequestOptions = {
@@ -99,7 +99,7 @@ export class World {
 
       res.on('end', () => {
         log.info(`http request finished with status: ${res.statusCode}`);
-        const result: IpaasResult = {
+        const result: SyndesisResult = {
           statusCode: res.statusCode,
           data: data,
         };

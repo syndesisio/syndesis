@@ -1,12 +1,12 @@
 import * as webdriver from 'selenium-webdriver';
 import { Promise as P } from 'es6-promise';
 import { element, by, ElementFinder } from 'protractor';
-import { IPaaSComponent } from '../../common/common';
+import { SyndesisComponent } from '../../common/common';
 import { log } from '../../../src/app/logging';
 
-export class ConnectionsListComponent implements IPaaSComponent {
+export class ConnectionsListComponent implements SyndesisComponent {
   rootElement(): ElementFinder {
-    return element(by.css('ipaas-connections-list'));
+    return element(by.css('syndesis-connections-list'));
   }
 
   async countConnections(): P<number> {
@@ -40,9 +40,9 @@ export class ConnectionsListComponent implements IPaaSComponent {
   }
 }
 
-export class ConnectionsListPage implements IPaaSComponent {
+export class ConnectionsListPage implements SyndesisComponent {
   rootElement(): ElementFinder {
-    return element(by.css('ipaas-connections-list-page'));
+    return element(by.css('syndesis-connections-list-page'));
   }
 
   listComponent(): ConnectionsListComponent {

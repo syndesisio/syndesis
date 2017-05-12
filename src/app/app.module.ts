@@ -22,14 +22,14 @@ import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 import { AppRoutingModule } from './approuting/approuting.module';
 import { StoreModule } from './store/store.module';
-import { IPaaSCommonModule } from './common/common.module';
+import { SyndesisCommonModule } from './common/common.module';
 
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';
 import { UserService } from './common/user.service';
 import { log } from './logging';
 
-import { DataMapperModule } from 'ipaas.data.mapper';
+import { DataMapperModule } from 'syndesis.data.mapper';
 
 export function appInitializer(configService: ConfigService, oauthService: OAuthService, userService: UserService, ngZone: NgZone) {
   return () => {
@@ -56,10 +56,10 @@ export function appInitializer(configService: ConfigService, oauthService: OAuth
         // If this is the first flow, authenticating against OpenShift, then we shouldn't
         // do the hybrid flow. Let's store whether this is the first IDP in session storage
         // so it survives the multiple required redirects.
-        let firstIDP = sessionStorage.getItem('ipaas-first-idp');
+        let firstIDP = sessionStorage.getItem('syndesis-first-idp');
         if (!firstIDP) {
           firstIDP = 'true';
-          sessionStorage.setItem('ipaas-first-idp', firstIDP);
+          sessionStorage.setItem('syndesis-first-idp', firstIDP);
         }
 
         // Store whether the oidc client was configured as hybrid so we can enable token refreshes.
@@ -74,7 +74,7 @@ export function appInitializer(configService: ConfigService, oauthService: OAuth
         }
 
         // Set this back so that second flow through we do the proper code flow to get a refresh token.
-        sessionStorage.setItem('ipaas-first-idp', 'false');
+        sessionStorage.setItem('syndesis-first-idp', 'false');
         oauthService.hybrid = originalHybrid;
 
         let autoLinkGithHub = configService.getSettings('oauth')['auto-link-github'];
@@ -94,7 +94,7 @@ export function appInitializer(configService: ConfigService, oauthService: OAuth
       }
 
       // Remove this marker from session storage as it has served it's purpose.
-      sessionStorage.removeItem('ipaas-first-idp');
+      sessionStorage.removeItem('syndesis-first-idp');
 
       // Use the token to load our user details and set up the refresh token flow.
       oauthService.loadUserProfile().then(() => {
@@ -171,7 +171,7 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     TypeaheadModule.forRoot(),
     AppRoutingModule,
     StoreModule,
-    IPaaSCommonModule.forRoot(),
+    SyndesisCommonModule.forRoot(),
     OAuthModule.forRoot(),
     ToasterModule,
     DataMapperModule,

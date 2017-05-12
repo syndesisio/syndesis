@@ -28,7 +28,7 @@ class CommonSteps {
     callback();
   }
 
-  @when(/^"(\w+)" logs into the iPaaS.*$/i)
+  @when(/^"(\w+)" logs into the Syndesis.*$/i)
   public login(alias: string): P<any> {
     this.world.user = new User(alias.toLowerCase(), 'asdfadf', null);
     // return this.app.login(this.world.user);
@@ -61,7 +61,7 @@ class CommonSteps {
     return link.element.click();
   }
 
-  @then(/^(\w+)? ?is presented with the iPaaS page "([^"]*)"$/)
+  @then(/^(\w+)? ?is presented with the Syndesis page "([^"]*)"$/)
   public async verifyHomepage(alias: string, pageTitle: string): P<any> {
     // Write code here that turns the phrase above into concrete actions
     const currentLink = await this.world.app.link(pageTitle);

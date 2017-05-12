@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { ConnectionStore } from '../../store/connection/connection.store';
 
 @Component({
-  selector: 'ipaas-connection-view-page',
+  selector: 'syndesis-connection-view-page',
   templateUrl: './view-page.component.html',
 })
 export class ConnectionViewPage implements OnDestroy {

@@ -5,7 +5,7 @@ import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ng2-restangular';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { IPaaSCommonModule } from '../../common/common.module';
+import { SyndesisCommonModule } from '../../common/common.module';
 import { TemplatesListPage } from './list-page.component';
 import { TemplatesListComponent } from '../list/list.component';
 import { ListToolbarComponent } from '../list-toolbar/list-toolbar.component';
@@ -17,7 +17,7 @@ describe('TemplatesListPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [IPaaSCommonModule, StoreModule, RestangularModule.forRoot(), RouterTestingModule.withRoutes([])],
+      imports: [SyndesisCommonModule, StoreModule, RestangularModule.forRoot(), RouterTestingModule.withRoutes([])],
       declarations: [TemplatesListPage, ListToolbarComponent, TemplatesListComponent],
       providers: [
         MockBackend,

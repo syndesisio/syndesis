@@ -14,7 +14,7 @@ import { log, getCategory } from '../../logging';
 const category = getCategory('Connections');
 
 @Component({
-  selector: 'ipaas-connection-view',
+  selector: 'syndesis-connection-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
 })
@@ -24,6 +24,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
   @Output() connectionChange = new EventEmitter<Connection>();
   @Input() mode = 'view';
   @Input() showName = true;
+  @Input() inView = false;
   validating = false;
   validateError: string = undefined;
   validateSuccess = false;

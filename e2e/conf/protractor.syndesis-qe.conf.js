@@ -7,15 +7,15 @@ let merge = require('merge');
 let baseConfig = require('./protractor.base.conf').config;
 
 // ensure we have ui url defined
-let ipaasUrl = process.env.IPAAS_UI_URL || null;
-if (ipaasUrl === null) {
-  throw new Error("You must specify shell env IPAAS_UI_URL");
+let syndesisUrl = process.env.SYNDESIS_UI_URL || null;
+if (syndesisUrl === null) {
+  throw new Error("You must specify shell env SYNDESIS_UI_URL");
 }
-console.log(`Using ipaas ui on url ${ipaasUrl}`);
+console.log(`Using syndesis ui on url ${syndesisUrl}`);
 
 // changes specific to local testing
 exports.config = merge(baseConfig, {
 
-  baseUrl: ipaasUrl,
+  baseUrl: syndesisUrl,
 
 });
