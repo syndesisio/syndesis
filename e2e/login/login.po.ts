@@ -53,6 +53,17 @@ export class GithubLogin implements LoginPage {
   }
 }
 
+export class OpenShiftAuthorize {
+
+  submitSelector = 'input[name="approve"]';
+
+  async authorizeAccess(): P<any> {
+    const submitButton = element(by.css(this.submitSelector));
+    browser.wait(ExpectedConditions.presenceOf(submitButton), 10000, 'Wait for submit button');
+    return submitButton.getWebElement().click();
+  }
+}
+
 export class KeycloakDetails {
 
   loginSelector = 'input#username';

@@ -3,7 +3,7 @@ import * as webdriver from 'selenium-webdriver';
 import { Promise as P } from 'es6-promise';
 import { User, UserDetails } from './common/common';
 import { contains } from './common/world';
-import { GithubLogin, KeycloakDetails } from './login/login.po';
+import { GithubLogin, KeycloakDetails, OpenShiftAuthorize } from './login/login.po';
 import { log } from '../src/app/logging';
 import * as jQuery from 'jquery';
 import WebElement = webdriver.WebElement;
@@ -128,14 +128,26 @@ export class AppPage {
 
   async login(user: User): P<any> {
     // need to disable angular wait before check for current url because we're being redirected outside of angular
-    browser.waitForAngularEnabled(false);
-
+    browser.waitForAngular()
+      .then(() => {
+        log.info('Landed on Angular page, continue with tests');
+        return P.resolve;
+    })
+      .catch(() => {
+        log.info('Wait for Angular failed, continue with login processs');
+    });
     await this.goToUrl(AppPage.baseurl);
-
+    
+    browser.waitForAngularEnabled(false);
     let currentUrl = await browser.getCurrentUrl();
     if (contains(currentUrl, 'github.com/login')) {
       log.info('GitHub login page');
       await new GithubLogin().login(user);
+    }
+    currentUrl = await browser.getCurrentUrl();
+    if (contains(currentUrl, 'oauth/authorize/approve')) {
+      log.info('Authorize access login page');
+      await new OpenShiftAuthorize().authorizeAccess();
     }
     currentUrl = await browser.getCurrentUrl();
     if (contains(currentUrl, 'auth/realms')) {
