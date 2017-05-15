@@ -89,5 +89,5 @@ Feature: Test to verify Dashboard links
     Then Integration "dashboard verification integration" is present in top 5 integrations
     And Camilla is presented with the "dashboard verification integration" link
     
-    When Camilla deletes the "Awesome integration for delete" integration in top 5 integrations
-    Then Camilla can not see "Awesome integration for delete" integration in top 5 integrations anymore
+    When Camilla deletes the "dashboard verification integration" integration in top 5 integrations
+    Then Camilla can not see "dashboard verification integration" integration in top 5 integrations anymore
