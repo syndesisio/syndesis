@@ -24,7 +24,7 @@ oc create -f ${TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}  || oc replace -f ${TEMP
 oc new-app syndesis \
     -p ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}.b6ff.rh-idev.openshiftapps.com \
     -p KEYCLOAK_ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}-keycloack.b6ff.rh-idev.openshiftapps.com \
-    -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
+    -p OPENSHIFT_MASTER=${OPENSHIFT_MASTER} \
     -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_OAUTH_CLIENT_ID} \
     -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_OAUTH_CLIENT_SECRET} \
     -p OPENSHIFT_OAUTH_CLIENT_ID=$(oc project -q) \
