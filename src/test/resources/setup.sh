@@ -10,8 +10,8 @@ else
 fi
 
 #Configure OPENSHIFT_MASTER
-if [ ! -z ${OPENSHIFT_MASTER} ]; then
-    OPENSHIFT_MASTER="$(oc project -q)"
+if [ -z ${OPENSHIFT_MASTER} ]; then
+    OPENSHIFT_MASTER="$(oc whoami --show-server)"
 fi
 
 
