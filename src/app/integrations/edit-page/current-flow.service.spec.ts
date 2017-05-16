@@ -2,7 +2,7 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
-import { RestangularModule } from 'ng2-restangular';
+import { RestangularModule } from 'ngx-restangular';
 
 import { CurrentFlow, FlowEvent } from './current-flow.service';
 import { IntegrationStore } from '../../store/integration/integration.store';

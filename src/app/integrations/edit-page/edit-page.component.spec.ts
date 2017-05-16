@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
-import { RestangularModule } from 'ng2-restangular';
+import { RestangularModule } from 'ngx-restangular';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { FlowViewComponent } from './flow-view/flow-view.component';
@@ -15,9 +15,9 @@ import { ConnectionsListToolbarComponent } from '../../connections/list-toolbar/
 import { StoreModule } from '../../store/store.module';
 import { CurrentFlow } from './current-flow.service';
 
-import { ModalModule } from 'ng2-bootstrap/modal';
-import { CollapseModule } from 'ng2-bootstrap';
-import { PopoverModule } from 'ng2-bootstrap';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { CollapseModule } from 'ngx-bootstrap';
+import { PopoverModule } from 'ngx-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
 
 import { IntegrationsEditPage } from './edit-page.component';

@@ -1,4 +1,4 @@
-import { Restangular } from 'ng2-restangular';
+import { Restangular } from 'ngx-restangular';
 import { Observable } from 'rxjs/Observable';
 
 import { BaseEntity } from '../../model';

@@ -3,10 +3,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
-import { RestangularModule } from 'ng2-restangular';
+import { RestangularModule } from 'ngx-restangular';
 
-import { ModalModule } from 'ng2-bootstrap/modal';
-import { DropdownModule } from 'ng2-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ToasterModule } from 'angular2-toaster';
 import { StoreModule } from '../../store/store.module';
 
@@ -27,7 +27,7 @@ describe('ConnectionListPage', () => {
         RouterTestingModule.withRoutes([]),
         RestangularModule.forRoot(),
         ModalModule.forRoot(),
-        DropdownModule.forRoot(),
+        BsDropdownModule.forRoot(),
         ToasterModule,
       ],
       declarations: [ConnectionsListPage, ConnectionsListComponent, ConnectionsListToolbarComponent],

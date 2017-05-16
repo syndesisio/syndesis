@@ -3,12 +3,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
-import { RestangularModule } from 'ng2-restangular';
+import { RestangularModule } from 'ngx-restangular';
 
-import { ModalModule } from 'ng2-bootstrap/modal';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
-import { TabsModule } from 'ng2-bootstrap/tabs';
-import { TooltipModule } from 'ng2-bootstrap/tooltip';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { IntegrationsListPage } from './list-page.component';

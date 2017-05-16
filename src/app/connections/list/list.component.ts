@@ -1,5 +1,5 @@
 import { Component, Input, Output, OnInit, EventEmitter, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { ModalDirective } from 'ng2-bootstrap/modal';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
 
 import { ConnectionStore } from '../../store/connection/connection.store';

@@ -5,9 +5,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
-import { ModalModule } from 'ng2-bootstrap/modal';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
-import { DropdownModule } from 'ng2-bootstrap/dropdown';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { SyndesisCommonModule } from '../common/common.module';
 import { ConnectionsCreatePage } from './create-page/create-page.component';
@@ -34,7 +34,7 @@ import { CurrentConnectionService } from './create-page/current-connection';
     SyndesisCommonModule,
     ToasterModule,
     ModalModule,
-    DropdownModule,
+    BsDropdownModule,
   ],
   declarations: [
     ConnectionsCreatePage,

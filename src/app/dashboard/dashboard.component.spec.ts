@@ -3,13 +3,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
-import { RestangularModule } from 'ng2-restangular';
+import { RestangularModule } from 'ngx-restangular';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
-import { ModalModule } from 'ng2-bootstrap/modal';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
-import { TooltipModule } from 'ng2-bootstrap/tooltip';
-import { DropdownModule } from 'ng2-bootstrap/dropdown';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { SyndesisCommonModule } from '../common/common.module';
 import { DashboardComponent } from './dashboard.component';
@@ -32,7 +32,7 @@ describe('DashboardComponent', () => {
         ModalModule.forRoot(),
         ToasterModule,
         TooltipModule.forRoot(),
-        DropdownModule.forRoot(),
+        BsDropdownModule.forRoot(),
         StoreModule,
         RouterTestingModule.withRoutes([]),
         RestangularModule.forRoot(),

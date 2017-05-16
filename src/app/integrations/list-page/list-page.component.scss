@@ -1,6 +1,6 @@
 @import '../../../scss/colors';
 .integrations.list-page {
-  /* TODO this can go away when ng2-bootstrap supports custom classes on tabset */
+  /* TODO this can go away when ngx-bootstrap supports custom classes on tabset */
   /deep/ .nav-tabs {
     font-size: 12px;
     border-bottom: 1px solid #ededed;

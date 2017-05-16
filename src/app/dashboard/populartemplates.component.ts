@@ -5,7 +5,6 @@ import { IntegrationTemplates } from '../model';
 @Component({
   selector: 'syndesis-popular-templates',
   templateUrl: './populartemplates.component.html',
-  styleUrls: [],
 })
 export class PopularTemplatesComponent {
 

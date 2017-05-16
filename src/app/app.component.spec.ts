@@ -4,10 +4,10 @@ import { TestBed, async } from '@angular/core/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { RestangularModule } from 'ng2-restangular';
+import { RestangularModule } from 'ngx-restangular';
 import { OAuthModule } from 'angular-oauth2-oidc-hybrid';
 
-import { CollapseModule, DropdownModule, ModalModule } from 'ng2-bootstrap';
+import { CollapseModule, BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';
@@ -26,7 +26,7 @@ describe('AppComponent', () => {
         RouterTestingModule.withRoutes([]),
         OAuthModule.forRoot(),
         CollapseModule.forRoot(),
-        DropdownModule.forRoot(),
+        BsDropdownModule.forRoot(),
       ],
       providers: [
         ConfigService,

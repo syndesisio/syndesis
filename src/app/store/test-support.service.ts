@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 
-import { Restangular } from 'ng2-restangular';
+import { Restangular } from 'ngx-restangular';
 
 import { Integration } from '../model';
 
