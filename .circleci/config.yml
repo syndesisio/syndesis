@@ -30,6 +30,10 @@ jobs:
         - ~/.yarn
         - ~/.cache/yarn
 
+    - run: Run AOT compile
+        command: |
+          yarn ng build -- --aot --prod --progress=false
+
     - run:
         name: Run unit tests
         command: |
