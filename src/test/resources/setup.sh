@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#Configure the TEMPLATE_URL
 if [ ! -z ${OPENSHIFT_TEMPLATE_FROM_WORKSPACE} ]; then
     TEMPLATE_URL="file:///${WORKSPACE}/syndesis.yml"
 elif [ ! -z ${OPENSHIFT_TEMPLATES_FROM_GITHUB_COMMIT} ]; then
@@ -7,6 +8,12 @@ elif [ ! -z ${OPENSHIFT_TEMPLATES_FROM_GITHUB_COMMIT} ]; then
 else
     TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis.yml"
 fi
+
+#Configure OPENSHIFT_MASTER
+if [ ! -z ${OPENSHIFT_MASTER} ]; then
+    OPENSHIFT_MASTER="$(oc project -q)"
+fi
+
 
 # We pass the namespace on each command individually, because when this script is run inside a pod, all commands default to the pod namespace (ignoring commands like `oc project` etc)
 echo "Installing Syndesis in ${KUBERNETES_NAMESPACE} from: ${TEMPLATE_URL}"
@@ -20,7 +27,7 @@ oc new-app syndesis \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_OAUTH_CLIENT_ID} \
     -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_OAUTH_CLIENT_SECRET} \
-    -p OPENSHIFT_OAUTH_CLIENT_ID=$(oc project -q) \
+    -p OPENSHIFT_OAUTH_CLIENT_ID=${OPENSHIFT_MASTER} \
     -n ${KUBERNETES_NAMESPACE}
 
 

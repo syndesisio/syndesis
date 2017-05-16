@@ -12,6 +12,8 @@ import javax.inject.Named;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.internal.readiness.Readiness;
 import io.fabric8.openshift.api.model.DeploymentConfig;
+import static io.fabric8.kubernetes.assertions.Assertions.assertThat;
+
 
 @RunWith(ArquillianConditionalRunner.class)
 @RequiresOpenshift
@@ -35,6 +37,7 @@ public class DeploymentTest {
     @Test
     public void uiShouldBeReady() {
         Assert.assertTrue(Readiness.isDeploymentConfigReady(ui));
+        assertThat(client).replicationController("syndesis-rest").has()
     }
 
     @Test
