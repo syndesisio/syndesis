@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { RestangularModule } from 'ng2-restangular';
+import { RestangularModule } from 'ngx-restangular';
 import { OAuthService, OAuthModule } from 'angular-oauth2-oidc-hybrid';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
@@ -12,12 +12,12 @@ import { Observable } from 'rxjs/Observable';
 
 import { TabsModule,
          ModalModule,
-         DropdownModule,
+         BsDropdownModule,
          CollapseModule,
          AlertModule,
          PopoverModule,
          TooltipModule,
-         TypeaheadModule } from 'ng2-bootstrap';
+         TypeaheadModule } from 'ngx-bootstrap';
 import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 import { AppRoutingModule } from './approuting/approuting.module';
@@ -164,7 +164,7 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     TabsModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
-    DropdownModule.forRoot(),
+    BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
     AlertModule.forRoot(),
     PopoverModule.forRoot(),

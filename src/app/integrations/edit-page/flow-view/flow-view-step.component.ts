@@ -1,9 +1,9 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
-import { ModalDirective } from 'ng2-bootstrap/modal';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { PopoverDirective } from 'ng2-bootstrap/popover';
+import { PopoverDirective } from 'ngx-bootstrap/popover';
 
 import { ChildAwarePage } from '../child-aware-page';
 import { log, getCategory } from '../../../logging';

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Restangular } from 'ng2-restangular';
+import { Restangular } from 'ngx-restangular';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 import { Response } from '@angular/http';
 
@@ -11,7 +11,7 @@ import { log } from './logging';
 import { UserService } from './common/user.service';
 import { User } from './model';
 import { saveAs } from 'file-saver';
-import { ModalDirective } from 'ng2-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap';
 
 @Component({
   selector: 'syndesis-root',

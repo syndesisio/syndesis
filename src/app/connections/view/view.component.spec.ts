@@ -10,7 +10,7 @@ import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { ModalModule } from 'ng2-bootstrap/modal';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
 
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';

@@ -5,8 +5,8 @@ import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { ModalModule } from 'ng2-bootstrap/modal';
-import { DropdownModule } from 'ng2-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ToasterModule } from 'angular2-toaster';
 import { StoreModule } from '../../store/store.module';
 
@@ -24,7 +24,7 @@ describe('ConnectionsListComponent', () => {
         SyndesisCommonModule,
         RouterTestingModule.withRoutes([]),
         ModalModule.forRoot(),
-        DropdownModule.forRoot(),
+        BsDropdownModule.forRoot(),
         ToasterModule,
         StoreModule,
       ],

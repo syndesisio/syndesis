@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef, ViewChildren } 
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { PopoverDirective } from 'ng2-bootstrap/popover';
+import { PopoverDirective } from 'ngx-bootstrap/popover';
 
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';

@@ -5,10 +5,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { SyndesisCommonModule } from '../common/common.module';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
-import { ModalModule } from 'ng2-bootstrap';
+import { ModalModule } from 'ngx-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
-import { TooltipModule } from 'ng2-bootstrap/tooltip';
-import { DropdownModule } from 'ng2-bootstrap/dropdown';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
@@ -33,7 +33,7 @@ const routes: Routes = [
     ModalModule,
     ToasterModule,
     TooltipModule,
-    DropdownModule,
+    BsDropdownModule,
   ],
   declarations: [
     DashboardComponent,

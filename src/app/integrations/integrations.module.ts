@@ -5,9 +5,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
-import { CollapseModule, ModalModule, PopoverModule, TabsModule, DropdownModule } from 'ng2-bootstrap';
+import { CollapseModule, ModalModule, PopoverModule, TabsModule, BsDropdownModule } from 'ngx-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
-import { TooltipModule } from 'ng2-bootstrap/tooltip';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from 'syndesis.data.mapper';
 
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
@@ -71,7 +71,7 @@ const routes: Routes = [
     TooltipModule,
     ModalModule,
     PopoverModule,
-    DropdownModule,
+    BsDropdownModule,
     DataMapperModule,
   ],
   declarations: [

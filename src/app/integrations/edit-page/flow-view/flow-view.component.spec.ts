@@ -4,12 +4,12 @@ import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TabsModule } from 'ng2-bootstrap';
-import { CollapseModule } from 'ng2-bootstrap';
-import { PopoverModule } from 'ng2-bootstrap';
-import { ModalModule } from 'ng2-bootstrap/modal';
+import { TabsModule } from 'ngx-bootstrap';
+import { CollapseModule } from 'ngx-bootstrap';
+import { PopoverModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
-import { RestangularModule } from 'ng2-restangular';
+import { RestangularModule } from 'ngx-restangular';
 
 import { FlowViewComponent } from './flow-view.component';
 import { FlowViewStepComponent } from './flow-view-step.component';
