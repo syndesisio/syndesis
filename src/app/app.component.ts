@@ -66,6 +66,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.importDBModal.show();
   }
 
+  hideModal() {
+    this.importDBModal.hide();
+  }
+
   importDB(event) {
     const file = event.srcElement.files[0];
     const reader = new FileReader();

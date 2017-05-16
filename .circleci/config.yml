@@ -31,6 +31,11 @@ jobs:
         - ~/.cache/yarn
 
     - run:
+        name: Run AOT compile
+        command: |
+          yarn ng build -- --aot --prod --progress=false
+
+    - run:
         name: Run unit tests
         command: |
           rm -Rf ./coverage ./junit
