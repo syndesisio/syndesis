@@ -6,18 +6,18 @@ There exist different flavours of OpenShift templates, with the following charac
 
 | Template | Descripton |
 | -------- | ---------- |
-| [syndesis.yml](https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis.yml) | Full production when setting up on a cluster with full access rights. Uses image streams under the hoods. |
-| [syndesis-dev.yml](https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis-dev.yml) | Same as above, but with direct references to Docker images so that they locally created images (e.g. against a Minishift Docker daemon) can be used directly. |
-| [syndesis-restricted.yml](https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis-restricted.yml) | If running in an restricted environment without admin access this template should be used. See the [section](#running-single-tenant) below for detailed usage instructions. |
-| [syndesis-dev-restricted.yml](https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis-dev-restricted.yml) | Same as above, but as a developer version with using direct Docker images |
-| [syndesis-restricted-ephemeral.yml](https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis-restricted-ephemeral.yml) | A variant of `syndesis-restricted.yml` which does only use temporary persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue. |
+| [syndesis.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis.yml) | Full production when setting up on a cluster with full access rights. Uses image streams under the hoods. |
+| [syndesis-dev.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev.yml) | Same as above, but with direct references to Docker images so that they locally created images (e.g. against a Minishift Docker daemon) can be used directly. |
+| [syndesis-restricted.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-restricted.yml) | If running in an restricted environment without admin access this template should be used. See the [section](#running-single-tenant) below for detailed usage instructions. |
+| [syndesis-dev-restricted.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev-restricted.yml) | Same as above, but as a developer version with using direct Docker images |
+| [syndesis-restricted-ephemeral.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-restricted-ephemeral.yml) | A variant of `syndesis-restricted.yml` which does only use temporary persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue. |
 
-More about the differences can be found in this [issue](https://github.com/syndesisio/openshift-templates/issues/28)
+More about the differences can be found in this [issue](https://github.com/syndesisio/syndesis-openshift-templates/issues/28)
 
 In order to apply the templates you can directly refer to the given files via its GitHub URL:
 
 ```bash
-$ oc create -f https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis.yml
+$ oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis.yml
 ```
 
 All of these templates are generated from a single source [syndesis.yml.mustache](generator/syndesis.yml.mustache). So instead of editing individual descriptors you have to change this master template and then run `generator/run.sh`.
@@ -85,7 +85,7 @@ You can use either [Minishift](https://github.com/minishift/minishift) or [`oc c
 Once they are started and you have logged in with `oc login -u system:admin`, run:
 
 ```bash
-$ oc create -n openshift -f https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis.yml
+$ oc create -n openshift -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis.yml
 $ oc new-project syndesis
 # Create app with the required params
 $ oc new-app syndesis -p ROUTE_HOSTNAME=syndesis.127.0.0.1.nip.io -p GITHUB_CLIENT_ID=... -p GITHUB_CLIENT_SECRET=...
@@ -118,7 +118,7 @@ OpenShift includes the ability for a service account to act as a limited OAuthCl
 for more details). Let's create the service account with the correct redirect URIs enabled:
 
 ```bash
-$ oc create -f https://raw.githubusercontent.com/syndesisio/openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml
+$ oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml
 ```
 
 #### Create the template to use
@@ -126,7 +126,7 @@ $ oc create -f https://raw.githubusercontent.com/syndesisio/openshift-templates/
 We will create the template in the project, rather than in the openshift namespace as it is assumed the user does not have cluster-admin rights:
 
 ```bash
-$ oc create -f https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis-dev-restricted.yml
+$ oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev-restricted.yml
 ```
 
 #### Create the new app
@@ -187,7 +187,7 @@ GITHUB_CLIENT_ID=....
 GITHUB_CLIENT_SECRET=....
 
 # Install the OpenShift template (syndesis-dev.yml or syndesis.yml)
-oc create -f https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis-dev.yml
+oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev.yml
 
 # Create an App. Add the propert GitHub credentials. Use "syndesis-dev" or "syndesis" depending on the template
 # you have installed
