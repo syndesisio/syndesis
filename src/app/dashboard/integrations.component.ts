@@ -93,7 +93,7 @@ export class DashboardIntegrationsComponent implements OnInit {
     const inactive = [];
     let total = 0;
 
-    this.integrations.forEach(function(a) {
+    (this.integrations || []).forEach(function(a) {
       /* TODO - too noisy
       log.debugc(() => 'Integration: ' + JSON.stringify(a));
       log.debugc(() => 'currentStatus: ' + JSON.stringify(a.currentStatus));
