@@ -27,7 +27,7 @@
       <!-- First Step: Save or Add Step -->
       <div class="row step-insert" *ngIf="currentState === 'save-or-add-step'" (click)="pop1.toggle()" (mouseover)="pop1.show()" (mouseleave)="pop1.hide()">
           <div class="step-line"></div>
-        <template #firstPopTemplate>
+        <ng-template #firstPopTemplate>
           <div class="popover-body">
             <div *ngIf="!selectedKind || selectedKind === 'step'">
               <a (click)="insertStepAfter(0)">Add a step</a>
@@ -36,7 +36,7 @@
               <a (click)="insertConnectionAfter(0)">Add a connection</a>
             </div>
           </div>
-        </template>
+        </ng-template>
         <div class="col-md-2 square-icon" [popover]="firstPopTemplate"  placement="right" #pop1="bs-popover">
           <p>
             <i class="fa fa-plus-square">{{ maybeShowPopover(pop1) }}</i>
@@ -53,7 +53,7 @@
       </div>
 
       <!-- Middle Steps -->
-      <template ngFor let-step [ngForOf]="getMiddleSteps()" let-position="index">
+      <ng-template ngFor let-step [ngForOf]="getMiddleSteps()" let-position="index">
         <div class="row steps">
           <div class="step-line"></div>
           <syndesis-integrations-flow-view-step [step]="step" [position]="position + 1" [currentPosition]="currentPosition" [currentState]="currentState"></syndesis-integrations-flow-view-step>
@@ -62,7 +62,7 @@
         <!-- Middle Steps: Save or Add Step -->
         <div class="row step-insert" *ngIf="currentState === 'save-or-add-step'" (click)="pop.toggle()" (mouseover)="pop.show()" (mouseleave)="pop.hide()">
           <div class="step-line"></div>
-          <template #firstPopTemplate>
+          <ng-template #firstPopTemplate>
             <div class="popover-body">
               <div *ngIf="!selectedKind || selectedKind === 'step'">
                 <a (click)="insertStepAfter(position + 1)">Add a step</a>
@@ -71,7 +71,7 @@
                 <a (click)="insertConnectionAfter(position + 1)">Add a connection</a>
               </div>
             </div>
-          </template>
+          </ng-template>
           <div class="col-md-2 square-icon" [popover]="firstPopTemplate" placement="right" #pop="bs-popover">
             <p>
               <i class="fa fa-plus-square"></i>
@@ -86,7 +86,7 @@
           <div class="col-md-10">
           </div>
         </div>
-      </template>
+      </ng-template>
 
       <!-- Last Step -->
       <div class="row steps finish">

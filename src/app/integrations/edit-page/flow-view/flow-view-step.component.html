@@ -55,11 +55,11 @@
            *ngIf="step.stepKind === 'endpoint' && step.connection"
            src="../../../assets/icons/{{ step.connection.connectorId }}.integration.png">
     </p>
-    <template #tooltipPopover>
+    <ng-template #tooltipPopover>
       <div *ngIf="step.stepKind === 'endpoint'">
         Connection: <strong> {{ step.connection.name }} </strong>
       </div>
-    </template>
+    </ng-template>
   </div>
 
 
