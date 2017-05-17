@@ -128,17 +128,9 @@ export class AppPage {
 
   async login(user: User): P<any> {
     // need to disable angular wait before check for current url because we're being redirected outside of angular
-    browser.waitForAngular()
-      .then(() => {
-        log.info('Landed on Angular page, continue with tests');
-        return P.resolve;
-    })
-      .catch(() => {
-        log.info('Wait for Angular failed, continue with login processs');
-    });
-    await this.goToUrl(AppPage.baseurl);
-    
     browser.waitForAngularEnabled(false);
+    await this.goToUrl(AppPage.baseurl);
+
     let currentUrl = await browser.getCurrentUrl();
     if (contains(currentUrl, 'github.com/login')) {
       log.info('GitHub login page');
