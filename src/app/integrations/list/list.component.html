@@ -108,8 +108,8 @@
 
           <div *ngIf="integration.currentStatus !== 'Pending'"
                class="not-pending">
-              <span class="label label-{{ getLabelClass(integration.currentStatus) }}"
-                    disabled>{{ getStatusText(integration.currentStatus) }}</span>
+            <span class="label label-{{ getLabelClass(integration.currentStatus) }}"
+                  disabled>{{ getStatusText(integration.currentStatus) }}</span>
           </div>
         </div>
 
@@ -151,14 +151,13 @@
 
           <!-- Actions -->
 
-          <div class="col-xs-2 actions">
+          <div class="col-xs-2 actions" *ngIf="integration.currentStatus !== 'Deleted'">
             <div dropdown
                  class="dropdown pull-right dropdown-kebab-pf">
               <button dropdownToggle
                       class="btn btn-link"
                       type="button"
                       id="dropdownKebabRight9"
-                      data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="true">
                     <span class="fa fa-ellipsis-v"></span>
