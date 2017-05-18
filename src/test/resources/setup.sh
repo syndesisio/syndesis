@@ -1,12 +1,33 @@
 #!/bin/bash
 
-#Configure the TEMPLATE_URL
-if [ ! -z ${OPENSHIFT_TEMPLATE_FROM_WORKSPACE} ]; then
-    TEMPLATE_URL="file:///${WORKSPACE}/syndesis.yml"
+#   External Environment Variables
+#
+#1. KUBERNETES_NAMESPACE:                   The target namespace.
+#2. SYNDESIS_TEMPLATE_TYPE:                 The template type to use (e.g. syndesis, syndesis-restricted, syndesis-ephemeral-restricted.
+#3. SYNDESIS_TEMPLATE_URL:                  The full url to the templates to use.
+#4. OPENSHIFT_TEMPLATE_FROM_WORKSPACE:      Flag to enable reading the template from the ${WORKSPACE} environment variable.
+#5. OPENSHIFT_TEMPLATES_FROM_GITHUB_COMMIT: The sha of the actual commit to use. Meant to be used for pull request validation (currently unused?).
+#
+#   Template Parameter Values:
+#
+#   OPENSHIFT_MASTER
+#   GITHUB_OAUTH_CLIENT_ID
+#   GITHUB_OAUTH_CLIENT_SECRET
+
+#Configure the SYNDESIS_TEMPLATE_TYPE
+if [ -z ${SYNDESIS_TEMPLATE_TYPE} ]; then
+    SYNDESIS_TEMPLATE_TYPE="syndesis"
+fi
+
+#Configure the SYNDESIS_TEMPLATE_URL
+if [ ! -z ${SYNDESIS_TEMPLATE_URL} ]; then
+    true
+elif [ ! -z ${OPENSHIFT_TEMPLATE_FROM_WORKSPACE} ]; then
+    SYNDESIS_TEMPLATE_URL="file:///${WORKSPACE}/syndesis.yml"
 elif [ ! -z ${OPENSHIFT_TEMPLATES_FROM_GITHUB_COMMIT} ]; then
-    TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/openshift-templates/${OPENSHIFT_TEMPLATES_GIT_COMMIT}/syndesis.yml"
+    SYNDESIS_TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/openshift-templates/${OPENSHIFT_TEMPLATES_GIT_COMMIT}/${SYNDESIS_TEMPLATE_TYPE}.yml"
 else
-    TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis.yml"
+    SYNDESIS_TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/openshift-templates/master/${SYNDESIS_TEMPLATE_TYPE}.yml"
 fi
 
 #Configure OPENSHIFT_MASTER
@@ -16,10 +37,10 @@ fi
 
 
 # We pass the namespace on each command individually, because when this script is run inside a pod, all commands default to the pod namespace (ignoring commands like `oc project` etc)
-echo "Installing Syndesis in ${KUBERNETES_NAMESPACE} from: ${TEMPLATE_URL}"
+echo "Installing Syndesis in ${KUBERNETES_NAMESPACE} from: ${SYNDESIS_TEMPLATE_URL}"
 oc project ${KUBERNETES_NAMESPACE}
 
-oc create -f ${TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}  || oc replace -f ${TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}
+oc create -f ${SYNDESIS_TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}  || oc replace -f ${SYNDESIS_TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}
 
 oc new-app syndesis \
     -p ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}.b6ff.rh-idev.openshiftapps.com \
