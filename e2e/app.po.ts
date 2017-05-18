@@ -121,6 +121,26 @@ export class AppPage {
     return element(by.className(elementClassName));
   }
 
+  getTitleByText(text: string): ElementFinder {
+    log.info(`searching for title ${text}`);
+    return element(by.cssContainingText('h2', text));
+  }
+
+  clickDeleteIntegration(integrationName: string, rootElement: ElementFinder): P<any> {
+    log.info(`clicking delete link for integration ${integrationName}`);
+    log.info(`root element ${rootElement}`);
+
+    const parentElement = rootElement.all(by.className('integration')).filter(function(elem, index) {
+      return elem.element(by.className('name')).getText().then(function(text) {
+        return text === integrationName;
+      });
+    });
+
+    parentElement.first().element(by.id('dropdownKebabRight9')).click();
+    this.rootElement.element(by.linkText('Delete')).click();
+    return this.rootElement.element(by.buttonText('Delete')).click();
+  }
+
   async link(title: String): P<NavLink> {
     const links = await this.findNavLinks();
     return links.filter(l => l.text === title)[0];

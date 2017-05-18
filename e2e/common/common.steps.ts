@@ -8,6 +8,8 @@ import { Promise as P } from 'es6-promise';
 import { expect, World } from './world';
 import { User, UserDetails } from './common';
 import { log } from '../../src/app/logging';
+import { IntegrationsListPage, IntegrationsListComponent } from '../integrations/list/list.po';
+import { DashboardPage } from '../dashboard/dashboard.po';
 /**
  * Generic steps that can be used in various features
  * They may change state through world class.
@@ -67,7 +69,7 @@ class CommonSteps {
     expect(currentLink.active, `${pageTitle} link must be active`).to.be.true;
   }
 
-  @then(/^(\w+)? ?is presented with the "([^"]*)" link$/)
+  @then(/^(\w+)? ?is presented with the "([^"]*)" link*$/)
   public async verifyLink(alias: string, linkTitle: string): P<any> {
     const currentLink = await this.world.app.getLink(linkTitle);
 
@@ -102,6 +104,26 @@ class CommonSteps {
       .to.eventually.be.true.notify(callback);
   }
 
+  @then(/^she is presented with the "([^"]*)" tables*$/)
+  public expectTableTitlesPresent(tableTitles: string, callback: CallbackStepDefinition): void {
+
+    const tableTitlesArray = tableTitles.split(', ');
+
+    for (const tableTitle of tableTitlesArray) {
+      this.expectTableTitlePresent(tableTitle, callback);
+    }
+  }
+
+  public expectTableTitlePresent(tableTitle: string, callback: CallbackStepDefinition): void {
+
+    const table = this.world.app.getTitleByText(tableTitle);
+    expect(table.isPresent(), `There must be present a table ${tableTitle}`)
+      .to.eventually.be.true;
+
+    expect(table.isPresent(), `There must be enabled table ${tableTitle}`)
+      .to.eventually.be.true.notify(callback);
+  }
+
   @then(/^she is presented with the "([^"]*)" elements*$/)
   public expectElementsPresent(elementClassNames: string, callback: CallbackStepDefinition): void {
 
@@ -121,6 +143,59 @@ class CommonSteps {
 
     expect(element.isPresent(), `There must be enabled element ${elementClassName}`)
       .to.eventually.be.true.notify(callback);
+  }
+
+  @then(/^Integration "([^"]*)" is present in top 5 integrations$/)
+  public expectIntegrationPresentinTopFive(name: string, callback: CallbackStepDefinition): void {
+    log.info(`Verifying integration ${name} is present in top 5 integrations`);
+    const page = new DashboardPage();
+    expect(page.isIntegrationPresent(name), `Integration ${name} must be present`)
+      .to.eventually.be.true.notify(callback);
+  }
+
+  @then(/^Camilla can see "([^"]*)" connection on dashboard page$/)
+  public expectConnectionTitlePresent (connectionName: string, callback: CallbackStepDefinition): void {
+    const dashboard = new DashboardPage();
+    const connection = dashboard.getConnection(connectionName);
+    expect(connection.isPresent(), `There should be present connection ${connectionName}`)
+      .to.eventually.be.true.notify(callback);
+  }
+
+  @then(/^Camilla can not see "([^"]*)" connection on dashboard page anymore$/)
+  public expectConnectionTitleNonPresent (connectionName: string, callback: CallbackStepDefinition): void {
+    const dashboard = new DashboardPage();
+    const connection = dashboard.getConnection(connectionName);
+    expect(connection.isPresent(), `There shouldnt be a present connection ${connectionName}`)
+      .to.eventually.be.false.notify(callback);
+  }
+
+  @when(/^Camilla deletes the "([^"]*)" integration*$/)
+  public deleteIntegration(integrationName: string): P<any> {
+    const listComponent = new IntegrationsListComponent();
+    return this.world.app.clickDeleteIntegration(integrationName, listComponent.rootElement());
+  }
+
+  @then(/^Camilla can not see "([^"]*)" integration anymore$/)
+  public expectIntegrationPresent(name: string, callback: CallbackStepDefinition): void {
+    log.info(`Verifying if integration ${name} is present`);
+    const page = new IntegrationsListPage();
+    expect(page.listComponent().isIntegrationPresent(name), `Integration ${name} must be present`)
+      .to.eventually.be.false.notify(callback);
+  }
+
+  @when(/^Camilla deletes the "([^"]*)" integration in top 5 integrations$/)
+  public deleteIntegrationOnDashboard(integrationName: string): P<any> {
+    log.info(`Trying to delete ${integrationName} on top 5 integrations table`);
+    const dashboard = new DashboardPage();
+    return this.world.app.clickDeleteIntegration(integrationName, dashboard.rootElement());
+  }
+
+  @then(/^Camilla can not see "([^"]*)" integration in top 5 integrations anymore$/)
+  public expectIntegrationPresentOnDashboard(name: string, callback: CallbackStepDefinition): void {
+    log.info(`Verifying if integration ${name} is present`);
+    const dashboard = new DashboardPage();
+    expect(dashboard.isIntegrationPresent(name), `Integration ${name} must be present`)
+      .to.eventually.be.false.notify(callback);
   }
 
   /**
