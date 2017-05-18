@@ -62,42 +62,41 @@
             <!-- Card Heading -->
 
             <div class="card-pf-heading-kebab">
-
               <!-- Card Actions -->
-
-              <div *ngIf="showKebab"
-                   dropdown
-                   class="dropdown dropdown-kebab-pf pull-right"
-                   container="body">
-                <button dropdownToggle
-                        class="btn btn-link dropdown-toggle"
-                        type="button"
-                        id="dropdownKebabRight9">
+              <div *ngIf="showKebab">
+                <div dropdown
+                     class="dropdown dropdown-kebab-pf pull-right">
+                  <button dropdownToggle
+                          class="btn btn-link dropdown-toggle"
+                          type="button"
+                          id="dropdownKebabRight9"
+                          (click)="$event.stopPropagation()">
                   <span class="fa fa-ellipsis-v"></span>
                 </button>
-                <ul *dropdownMenu
-                    class="dropdown-menu dropdown-menu-right"
-                    role="menu">
-                  <li role="menuitem">
-                    <a [routerLink]="['/connections', connection.id]"
-                       class="dropdown-item">View</a>
-                  </li>
-                  <!--
+                  <ul *dropdownMenu
+                      class="dropdown-menu dropdown-menu-right"
+                      role="menu">
+                    <li role="menuitem">
+                      <a [routerLink]="['/connections', connection.id]"
+                         class="dropdown-item">View</a>
+                    </li>
+                    <!--
                     <li role="menuitem">
                       <a [routerLink]="['/connections/edit', connection.id]"
                         class="dropdown-item">Edit</a>
                     </li>
                     -->
-                  <!--
+                    <!--
                     <li role="menuitem">
                       <a class="dropdown-item">Duplicate</a>
                     </li>
                     -->
-                  <li>
-                    <a (click)="requestDelete(connection); $event.stopPropagation()"
-                       class="dropdown-item">Delete</a>
-                  </li>
-                </ul>
+                    <li>
+                      <a (click)="requestDelete(connection); $event.stopPropagation()"
+                         class="dropdown-item">Delete</a>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
 
