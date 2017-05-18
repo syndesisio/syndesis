@@ -1,6 +1,6 @@
-### IPaaS System Tests
+### Syndesis System Tests
 
-This repository contains system tests for Redhat IPaaS.
+This repository contains system tests for Syndesis.
 These test are meant to be run against Openshift _(either within or pointing to an Openshift installation)_.
 
 #### Running the tests
@@ -21,7 +21,7 @@ In such cases you can create a new project on manually and run the tests inside 
 #### The testing framework
 
 This project is using [Arquillian Cube](https://github.com/arquillian/arquillian-cube) as testing Framework.
-Arquillian creates a namespace, installs IPaaS in it and once everything is ready, it starts the test suite.
+Arquillian creates a namespace, installs Syndesis in it and once everything is ready, it starts the test suite.
 
 More documentation at [Arquillian Cube with Kubernetes and Openshift](https://github.com/arquillian/arquillian-cube/blob/master/docs/kubernetes.adoc).
 
