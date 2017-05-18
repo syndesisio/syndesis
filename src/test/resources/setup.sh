@@ -25,9 +25,9 @@ if [ ! -z ${SYNDESIS_TEMPLATE_URL} ]; then
 elif [ ! -z ${OPENSHIFT_TEMPLATE_FROM_WORKSPACE} ]; then
     SYNDESIS_TEMPLATE_URL="file:///${WORKSPACE}/syndesis.yml"
 elif [ ! -z ${OPENSHIFT_TEMPLATES_FROM_GITHUB_COMMIT} ]; then
-    SYNDESIS_TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/openshift-templates/${OPENSHIFT_TEMPLATES_GIT_COMMIT}/${SYNDESIS_TEMPLATE_TYPE}.yml"
+    SYNDESIS_TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/${OPENSHIFT_TEMPLATES_GIT_COMMIT}/${SYNDESIS_TEMPLATE_TYPE}.yml"
 else
-    SYNDESIS_TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/openshift-templates/master/${SYNDESIS_TEMPLATE_TYPE}.yml"
+    SYNDESIS_TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/${SYNDESIS_TEMPLATE_TYPE}.yml"
 fi
 
 #Configure OPENSHIFT_MASTER
