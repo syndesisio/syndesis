@@ -18,11 +18,12 @@ Included in this stack are the following technologies:
 * Code Analysis: [Codelyzer](https://github.com/mgechev/codelyzer) (TsLint rules for static code analysis of Angular 2 TypeScript projects)
 * Charts: [ng2-charts](https://github.com/valor-software/ng2-charts) (Data Visualization)
 
-## Quick Start
+## UI Developer Quick Start
 
 **Make sure you have node version >= 6.x.x and Yarn version >= 0.18.1**
 
-Clone/download the repo start editing `app.component.ts` inside [`/src/app/`](/src/app/app.component.ts)
+First get a developer deployment of Syndesis running in a minishift enviorment as described in the 
+[Syndesis Quickstart](https://syndesis.io/quickstart/).  Then do the following to get a local developer UI with hot reloading running against the Syndesis backend running in minishift:
 
 ```bash
 # clone our repo
@@ -31,14 +32,14 @@ git clone https://github.com/syndesisio/syndesis-ui.git
 # change directory to Syndesis
 cd syndesis-ui
 
+# Configure the UI
+sed "s/192.168.64.2/$(minishift ip)/" src/config.json.minishift > src/config.json
+
 # install the dependencies
 yarn
 
 # start the server
 yarn start
-
-# or start the server with angular-cli:
-ng serve
 ```
 
 Go to [http://0.0.0.0:4200](http://0.0.0.0:4200) or [http://localhost:4200](http://localhost:4200) in your browser.
