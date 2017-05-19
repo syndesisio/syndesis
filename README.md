@@ -6,21 +6,9 @@ The front end application or UI for Syndesis - a flexible, customizable, cloud-h
 
 For the middle tier API that this client communicates with, please see the [syndesis-rest](https://github.com/syndesisio/syndesis-rest) repo.
 
-Included in this stack are the following technologies:
-
-* Language: [TypeScript](http://www.typescriptlang.org) (JavaScript with @Types)
-* Framework: [Angular 2](https://angular.io/)
-* Module Bundler: [Angular CLI](https://cli.angular.io)
-* Design Patterns: [PatternFly](https://www.patternfly.org/)
-* Testing: [Cucumber.js](https://cucumber.io/) (BDD Unit Test Framework), [Karma](https://karma-runner.github.io/1.0/index.html) (Unit Test Runner), [Protractor](http://www.protractortest.org/#/) (E2E Framework), [Istanbul](https://github.com/gotwarlost/istanbul) (Code Coverage)
-* Linting: [TsLint](https://github.com/palantir/tslint) (Linting for TypeScript)
-* Logging: [typescript-logging](https://github.com/mreuvers/typescript-logging) (TypeScript Logging)
-* Code Analysis: [Codelyzer](https://github.com/mgechev/codelyzer) (TsLint rules for static code analysis of Angular 2 TypeScript projects)
-* Charts: [ng2-charts](https://github.com/valor-software/ng2-charts) (Data Visualization)
-
 ## UI Developer Quick Start
 
-**Make sure you have node version >= 6.x.x and Yarn version >= 0.18.1**
+**Make sure you have installed [node](https://nodejs.org/en/download/) version >= 6.x.x and [Yarn](https://yarnpkg.com/en/docs/install) version >= 0.18.1**
 
 First get a developer deployment of Syndesis running in a minishift enviorment as described in the 
 [Syndesis Quickstart](https://syndesis.io/quickstart/).  Then do the following to get a local developer UI with hot reloading running against the Syndesis backend running in minishift:
@@ -46,6 +34,7 @@ Go to [http://0.0.0.0:4200](http://0.0.0.0:4200) or [http://localhost:4200](http
 
 ## Table of Contents
 
+* [Technology Stack](#technology-stack)
 * [File Structure](#file-structure)
 * [Getting Started](#getting-started)
   * [Dependencies](#dependencies)
@@ -56,6 +45,20 @@ Go to [http://0.0.0.0:4200](http://0.0.0.0:4200) or [http://localhost:4200](http
 * [Contributing](#contributing)
 * [Resources](#resources)
 * [Data Mapper Updates](#data-mapper)
+
+### Technology Stack
+
+Included in this stack are the following technologies:
+
+* Language: [TypeScript](http://www.typescriptlang.org) (JavaScript with @Types)
+* Framework: [Angular 2](https://angular.io/)
+* Module Bundler: [Angular CLI](https://cli.angular.io)
+* Design Patterns: [PatternFly](https://www.patternfly.org/)
+* Testing: [Cucumber.js](https://cucumber.io/) (BDD Unit Test Framework), [Karma](https://karma-runner.github.io/1.0/index.html) (Unit Test Runner), [Protractor](http://www.protractortest.org/#/) (E2E Framework), [Istanbul](https://github.com/gotwarlost/istanbul) (Code Coverage)
+* Linting: [TsLint](https://github.com/palantir/tslint) (Linting for TypeScript)
+* Logging: [typescript-logging](https://github.com/mreuvers/typescript-logging) (TypeScript Logging)
+* Code Analysis: [Codelyzer](https://github.com/mgechev/codelyzer) (TsLint rules for static code analysis of Angular 2 TypeScript projects)
+* Charts: [ng2-charts](https://github.com/valor-software/ng2-charts) (Data Visualization)
 
 ### File Structure
 
