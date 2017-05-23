@@ -3,7 +3,7 @@
  */
 import { binding, then, when } from 'cucumber-tsflow';
 import { CallbackStepDefinition } from 'cucumber';
-import { expect, World } from '../common/world';
+import { expect, P, World } from '../common/world';
 import { IntegrationEditPage, ListActionsComponent } from '../integrations/edit/edit.po';
 import { log } from '../../src/app/logging';
 import { IntegrationsListPage } from '../integrations/list/list.po';
@@ -27,11 +27,28 @@ class IntegrationSteps {
 
 
   @then(/^she is presented with a visual integration editor$/)
-  public editorOpened(callback: CallbackStepDefinition): void {
+  public editorOpened(): P<any> {
     // Write code here that turns the phrase above into concrete actions
     const page = new IntegrationEditPage();
-    expect(page.rootElement().isPresent(), 'there must be edit page root element')
-      .to.eventually.be.true.notify(callback);
+    return expect(page.rootElement().isPresent(), 'there must be edit page root element')
+      .to.eventually.be.true;
+  }
+
+  @then(/^she is presented with a visual integration editor for "([^"]*)"$/)
+  public editorOpenedFor(integrationName: string): P<any> {
+    return this.editorOpened().then(() => {
+      // ensure we're on editor page and then check integration name
+        const page = new IntegrationEditPage();
+        return expect(page.flowViewComponent().getIntegrationName(), `editor must display integration name ${integrationName}`)
+          .to.eventually.be.equal(integrationName);
+      }
+    ).catch(e => P.reject(e));
+  }
+
+  @when(/^Camilla selects the "([^"]*)" integration.*$/)
+  public selectConnection(itegrationName: string): P<any> {
+    const page = new IntegrationsListPage();
+    return page.listComponent().goToIntegration(itegrationName);
   }
 
   @when(/^she selects "([^"]*)" integration action$/)

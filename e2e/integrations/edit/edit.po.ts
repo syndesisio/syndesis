@@ -28,7 +28,9 @@ export class FlowViewComponent implements SyndesisComponent {
   }
 
   getIntegrationName(): P<string> {
-    return this.rootElement().element(by.css(FlowViewComponent.nameSelector)).getText();
+    return this.rootElement()
+      .element(by.css(FlowViewComponent.nameSelector))
+      .getAttribute('value');
   }
 
   /**
