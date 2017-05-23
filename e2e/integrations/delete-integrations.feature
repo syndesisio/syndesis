@@ -2,7 +2,7 @@
 Feature: Test to verify delete action
   https://issues.jboss.org/browse/IPAAS-290
 
-  Scenario: Create integration draft and delete it
+  Scenario: Create integration as draft and delete it
     When "Camilla" navigates to the "Home" page
     And clicks on the "Create Integration" button to create a new integration.
     Then she is presented with a visual integration editor
@@ -18,7 +18,7 @@ Feature: Test to verify delete action
     And click on the "Save" button
 
     And she defines integration name "Awesome integration for delete"
-    And click on the "Camilla clicks on the "Save as Draft" button" button
+    And click on the Camilla clicks on the "Save as Draft" button
     Then Camilla is presented with the Syndesis page "Integrations"
     And Integration "Awesome integration for delete" is present in integrations list
 
