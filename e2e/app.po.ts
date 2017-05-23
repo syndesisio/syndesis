@@ -152,7 +152,8 @@ export class AppPage {
     await this.goToUrl(AppPage.baseurl);
 
     let currentUrl = await browser.getCurrentUrl();
-    if (contains(currentUrl, 'github.com/login')) {
+    const isAppLoaded = await this.rootElement.element(by.css('span.username')).isPresent();
+    if (contains(currentUrl, 'github.com/login') || !isAppLoaded) {
       log.info('GitHub login page');
       await new GithubLogin().login(user);
     }
