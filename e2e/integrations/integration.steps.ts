@@ -38,11 +38,10 @@ class IntegrationSteps {
   public editorOpenedFor(integrationName: string): P<any> {
     return this.editorOpened().then(() => {
       // ensure we're on editor page and then check integration name
-        const page = new IntegrationEditPage();
-        return expect(page.flowViewComponent().getIntegrationName(), `editor must display integration name ${integrationName}`)
-          .to.eventually.be.equal(integrationName);
-      }
-    ).catch(e => P.reject(e));
+      const page = new IntegrationEditPage();
+      return expect(page.flowViewComponent().getIntegrationName(), `editor must display integration name ${integrationName}`)
+        .to.eventually.be.equal(integrationName);
+    }).catch(e => P.reject(e));
   }
 
   @when(/^Camilla selects the "([^"]*)" integration.*$/)

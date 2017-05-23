@@ -86,25 +86,25 @@ export class World {
       path: link.path,
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        "Accept": "application/json",
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     };
 
     log.info(`invoking http request with options: ${JSON.stringify(options)}`);
     const req = https.request(options, (res) => {
-      let data = '';
+      let receivedData = '';
 
       res.on('data', chunk => {
         log.debug(`data chunk (${Object.prototype.toString.call(chunk)}): ${chunk}`);
-        data += chunk;
+        receivedData += chunk;
       });
 
       res.on('end', () => {
         log.info(`http request finished with status: ${res.statusCode}`);
         const result: SyndesisResult = {
           statusCode: res.statusCode,
-          data: data,
+          data: receivedData,
         };
         deferred.resolve(result);
       });

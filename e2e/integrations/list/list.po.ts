@@ -9,7 +9,7 @@ export class IntegrationsListComponent implements SyndesisComponent {
     return $('syndesis-integrations-list');
   }
 
-  private integrationEntry(name: string): ElementFinder{
+  private integrationEntry(name: string): ElementFinder {
     return this.rootElement().element(by.cssContainingText('div.name', name));
   }
 
@@ -18,11 +18,11 @@ export class IntegrationsListComponent implements SyndesisComponent {
     return this.integrationEntry(name).isPresent();
   }
 
-  goToIntegration(integrationName: string): P<any>{
+  goToIntegration(integrationName: string): P<any> {
     return this.integrationEntry(integrationName).getWebElement().click();
   }
 
-  editIntegration(name: string): P<any>{
+  editIntegration(name: string): P<any> {
     return this.integrationEntry(name).click();
   }
 }
