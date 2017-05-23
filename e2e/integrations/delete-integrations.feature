@@ -18,7 +18,7 @@ Feature: Test to verify delete action
     And click on the "Save" button
 
     And she defines integration name "Awesome integration for delete"
-    And click on the Camilla clicks on the "Save as Draft" button
+    And click on the "Save as Draft" button
     Then Camilla is presented with the Syndesis page "Integrations"
     And Integration "Awesome integration for delete" is present in integrations list
 
