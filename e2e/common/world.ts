@@ -2,10 +2,11 @@ import { User } from './common';
 import { Promise as P } from 'es6-promise';
 import { AppPage } from '../app.po';
 import { log } from '../../src/app/logging';
-import https= require('https');
-import http= require('http');
+import https = require('https');
+import http = require('http');
 import url = require('url');
 import request = require('request');
+import fs = require('fs-extra');
 
 
 // let r  = require('request');
@@ -73,40 +74,48 @@ export class World {
   }
 
 
-  async authRequest(urlString: string, method: string = 'GET'): P<SyndesisResult> {
+  async authRequest(urlString: string, method: string = 'GET', data: string = null, encoding: string = null): P<SyndesisResult> {
     const link = url.parse(urlString);
     const deferred: Deferred<SyndesisResult> = new Deferred();
 
     const token = await this.getOauthToken();
     const options: http.RequestOptions = {
-      method: 'GET',
+      method: method,
       protocol: link.protocol,
       hostname: link.hostname,
       path: link.path,
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     };
 
     log.info(`invoking http request with options: ${JSON.stringify(options)}`);
-    https.request(options, (res) => {
-      let data = '';
+    const req = https.request(options, (res) => {
+      let receivedData = '';
 
       res.on('data', chunk => {
         log.debug(`data chunk (${Object.prototype.toString.call(chunk)}): ${chunk}`);
-        data += chunk;
+        receivedData += chunk;
       });
 
       res.on('end', () => {
         log.info(`http request finished with status: ${res.statusCode}`);
         const result: SyndesisResult = {
           statusCode: res.statusCode,
-          data: data,
+          data: receivedData,
         };
         deferred.resolve(result);
       });
 
-    }).end();
+    });
+
+    if (data !== null) {
+      log.info(`writing data buffer to request`);
+      req.write(data);
+    }
+    req.end();
     return deferred.promise;
   }
 
@@ -117,6 +126,24 @@ export class World {
     const result = await this.authRequest(`${link}/test-support/reset-db`);
     if (result.statusCode !== 204) {
       throw new Error(`Failed to reset state. Response: '${JSON.stringify(result)}`);
+    }
+    return true;
+  }
+
+  async setState(jsonName: string): P<any> {
+    const link = await this.app.getApiUrl();
+
+    const jsonPath = `e2e/data/${jsonName}`;
+    log.info(`resetting state from file ${jsonPath}`);
+    if (!fs.existsSync(jsonPath)) {
+      return P.reject(`File path ${jsonPath} doesn't exist`);
+    }
+
+    const data: string = fs.readFileSync(jsonPath);
+    log.debug(`data: ${data}`);
+    const result = await this.authRequest(`${link}/test-support/restore-db`, 'POST', data);
+    if (result.statusCode !== 204) {
+      throw new Error(`Failed to set state. Response: '${JSON.stringify(result)}`);
     }
     return true;
   }

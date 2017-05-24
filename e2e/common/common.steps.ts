@@ -43,6 +43,13 @@ class CommonSteps {
     return this.world.resetState();
   }
 
+  @given(/^application state "([^"]*)"$/)
+  public async setState(jsonName: string): P<any> {
+    // user must be logged in (we need his token)
+    const result = await this.world.app.login(this.world.user);
+    // reset state or fail this step
+    return this.world.setState(jsonName);
+  }
 
   /**
    * This method uses async/await and returns promise once it's done
