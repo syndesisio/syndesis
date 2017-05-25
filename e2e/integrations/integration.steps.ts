@@ -18,11 +18,9 @@ class IntegrationSteps {
   }
 
   @when(/defines integration name "([^"]*)"$/)
-  public defineIntegrationName(integrationName: string, callback: CallbackStepDefinition): void {
-    // Write code here that turns the phrase above into concrete actions
+  public defineIntegrationName(integrationName: string): P<any> {
     const page = new IntegrationEditPage();
-
-    page.basicsComponent().setName(integrationName).then(() => callback());
+    return page.basicsComponent().setName(integrationName);
   }
 
 
@@ -51,9 +49,9 @@ class IntegrationSteps {
   }
 
   @when(/^she selects "([^"]*)" integration action$/)
-  public selectIntegrationAction(action: string, callback): void {
+  public selectIntegrationAction(action: string): P<any> {
     const page = new ListActionsComponent();
-    page.selectAction(action).then(() => callback());
+    return page.selectAction(action);
   }
 
 
