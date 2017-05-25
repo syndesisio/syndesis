@@ -47,18 +47,14 @@ parameters:
   description: Public OpenShift master address
   value: https://localhost:8443
   required: true
-- name: OPENSHIFT_OAUTH_CLIENT_ID
-  description: OpenShift OAuth client ID
-  value: syndesis
+- name: OPENSHIFT_PROJECT
+  description: The name of the OpenShift project Syndesis is being deployed into.
+  displayName: OpenShift project to deploy into
   required: true
 - name: OPENSHIFT_OAUTH_CLIENT_SECRET
   description: OpenShift OAuth client secret
   generate: expression
   from: "[a-zA-Z0-9]{64}"
-  required: true
-- name: OPENSHIFT_OAUTH_DEFAULT_SCOPES
-  description: OpenShift OAuth default scopes
-  value: "user:full"
   required: true
 - name: PEMTOKEYSTORE_IMAGE
   description: PEM to keystore init container image
@@ -1364,8 +1360,8 @@ objects:
           "config": {
             "openshiftUrl": "${OPENSHIFT_MASTER}",
             "clientSecret": "${OPENSHIFT_OAUTH_CLIENT_SECRET}",
-            "clientId": "${OPENSHIFT_OAUTH_CLIENT_ID}",
-            "defaultScope": "${OPENSHIFT_OAUTH_DEFAULT_SCOPES}",
+            "clientId": "system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client",
+            "defaultScope": "user:info user:check-access role:edit:${OPENSHIFT_PROJECT}:! role:system:build-strategy-source:${OPENSHIFT_PROJECT}",
             "useJwksUrl": "true"
           }
         }, {

@@ -789,8 +789,8 @@
           "config": {
             "openshiftUrl": "${OPENSHIFT_MASTER}",
             "clientSecret": "${OPENSHIFT_OAUTH_CLIENT_SECRET}",
-            "clientId": "${OPENSHIFT_OAUTH_CLIENT_ID}",
-            "defaultScope": "${OPENSHIFT_OAUTH_DEFAULT_SCOPES}",
+            "clientId": {{#Restricted}}"system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client"{{/Restricted}}{{^Restricted}}"${OPENSHIFT_OAUTH_CLIENT_ID}"{{/Restricted}},
+            "defaultScope": {{#Restricted}}"user:info user:check-access role:edit:${OPENSHIFT_PROJECT}:! role:system:build-strategy-source:${OPENSHIFT_PROJECT}"{{/Restricted}}{{^Restricted}}"${OPENSHIFT_OAUTH_DEFAULT_SCOPES}"{{/Restricted}},
             "useJwksUrl": "true"
           }
         }, {
