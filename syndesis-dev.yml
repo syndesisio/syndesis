@@ -2285,23 +2285,3 @@ objects:
     name: syndesis-rest
   - kind: ServiceAccount
     name: syndesis-integration
-- apiVersion: v1
-  kind: RoleBinding
-  metadata:
-    name: syndesis:admins
-    labels:
-      app: syndesis
-  roleRef:
-    name: admin
-  subjects:
-  - kind: ServiceAccount
-    name: syndesis-deployer
-    namespace: syndesis-staging
-  - kind: ServiceAccount
-    name: jenkins
-    namespace: syndesis-ci
-  - kind: Group
-    name: dedicated-admins
-  userNames:
-  - system:serviceaccount:syndesis-staging:syndesis-deployer
-  - system:serviceaccount:syndesis-ci:jenkins
