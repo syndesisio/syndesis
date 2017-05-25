@@ -15,14 +15,17 @@
  */
 package io.syndesis.rest;
 
+import java.util.Optional;
+
 public final class Version {
 
     private Version() {
     }
 
     public static String getVersion() {
-        return "${project.version}";
-    }
+        final String packageVersion = Version.class.getPackage().getImplementationVersion();
 
+        return Optional.ofNullable(packageVersion).orElse("DEVELOPMENT");
+    }
 
 }
