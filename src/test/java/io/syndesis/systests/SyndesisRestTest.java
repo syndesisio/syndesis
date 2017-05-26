@@ -19,7 +19,7 @@ import okhttp3.Response;
 
 @RunWith(ArquillianConditionalRunner.class)
 @RequiresOpenshift
-public class IPaaSRestTest {
+public class SyndesisRestTest {
 
     @ArquillianResource
     @Named("syndesis-rest")
