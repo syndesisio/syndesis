@@ -137,9 +137,11 @@ You can now use the template and the ServiceAccount created above to deploy the 
 $ oc new-app syndesis-dev-restricted \
     -p ROUTE_HOSTNAME=<EXTERNAL_HOSTNAME> \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
-    -p OPENSHIFT_OAUTH_CLIENT_ID=system:serviceaccount:$(oc project -q):syndesis-oauth-client \
+    -p OPENSHIFT_PROJECT=$(oc project -q) \
     -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
-    -p OPENSHIFT_OAUTH_DEFAULT_SCOPES="user:info user:check-access role:edit:$(oc project -q):! role:system:build-strategy-source:$(oc project -q)"
+    -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
+    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} \
+    -p INSECURE_SKIP_VERIFY=true
 ```
 
 Replace `EXTERNAL_HOSTNAME` appropriately with your public Syndesis address (something like `syndesis.127.0.0.1.nip.io` works great if you are using `oc cluster up` locally).
