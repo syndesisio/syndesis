@@ -15,26 +15,25 @@
 #   GITHUB_OAUTH_CLIENT_SECRET
 
 #Configure the SYNDESIS_TEMPLATE_TYPE
-if [ -z ${SYNDESIS_TEMPLATE_TYPE} ]; then
+if [ -z "${SYNDESIS_TEMPLATE_TYPE}" ]; then
     SYNDESIS_TEMPLATE_TYPE="syndesis"
 fi
 
 #Configure the SYNDESIS_TEMPLATE_URL
-if [ ! -z ${SYNDESIS_TEMPLATE_URL} ]; then
+if [ -n "${SYNDESIS_TEMPLATE_URL}" ]; then
     true
-elif [ ! -z ${OPENSHIFT_TEMPLATE_FROM_WORKSPACE} ]; then
+elif [ -n "${OPENSHIFT_TEMPLATE_FROM_WORKSPACE}" ]; then
     SYNDESIS_TEMPLATE_URL="file:///${WORKSPACE}/syndesis.yml"
-elif [ ! -z ${OPENSHIFT_TEMPLATES_FROM_GITHUB_COMMIT} ]; then
+elif [ -n "${OPENSHIFT_TEMPLATES_FROM_GITHUB_COMMIT}" ]; then
     SYNDESIS_TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/${OPENSHIFT_TEMPLATES_GIT_COMMIT}/${SYNDESIS_TEMPLATE_TYPE}.yml"
 else
     SYNDESIS_TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/${SYNDESIS_TEMPLATE_TYPE}.yml"
 fi
 
 #Configure OPENSHIFT_MASTER
-if [ -z ${OPENSHIFT_MASTER} ]; then
+if [ -z "${OPENSHIFT_MASTER}" ]; then
     OPENSHIFT_MASTER="$(oc whoami --show-server)"
 fi
-
 
 # We pass the namespace on each command individually, because when this script is run inside a pod, all commands default to the pod namespace (ignoring commands like `oc project` etc)
 echo "Installing Syndesis in ${KUBERNETES_NAMESPACE} from: ${SYNDESIS_TEMPLATE_URL}"
