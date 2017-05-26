@@ -48,7 +48,7 @@ class FileContent {
         if (content == null) {
             return null;
         }
-        return new String(Base64.getEncoder().encode(content));
+        return Base64.getEncoder().encodeToString(content);
     }
 
     public String getContent() {

@@ -27,13 +27,13 @@ import org.springframework.stereotype.Component;
 @Provider
 public class IllegalArgumentExceptionMapper implements ExceptionMapper<IllegalArgumentException> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(IllegalArgumentExceptionMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IllegalArgumentExceptionMapper.class);
 
-	@Override
-	public Response toResponse(IllegalArgumentException e) {
-		LOG.error(e.getMessage(),e);
-		RestError error = new RestError("Illegal Argument on Call " + e.getMessage(), "Please check your sorting arguments", 400);
-		return Response.status(error.errorCode).entity(error).build();
-	}
+    @Override
+    public Response toResponse(IllegalArgumentException e) {
+        LOG.error(e.getMessage(),e);
+        RestError error = new RestError("Illegal Argument on Call " + e.getMessage(), "Please check your sorting arguments", 400);
+        return Response.status(error.errorCode).entity(error).build();
+    }
 
 }

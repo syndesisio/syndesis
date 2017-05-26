@@ -19,6 +19,7 @@ import io.syndesis.core.Tokens;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.Integration.Status;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.swagger.annotations.Api;
 import io.syndesis.rest.v1.operations.Creator;
@@ -54,7 +55,8 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         Integration integration = Getter.super.get(id);
 
         //fudging the timesUsed for now
-        if (integration.getCurrentStatus().equals(Integration.Status.Activated)) {
+        Optional<Status> currentStatus = integration.getCurrentStatus();
+        if (currentStatus.isPresent() && currentStatus.get() == Integration.Status.Activated) {
             return new Integration.Builder()
                     .createFrom(integration)
                     .timesUsed(BigInteger.valueOf(new Date().getTime()/1000000))

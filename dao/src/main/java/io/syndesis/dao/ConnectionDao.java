@@ -22,7 +22,7 @@ import io.syndesis.model.connection.Connection;
 public interface ConnectionDao extends DataAccessObject<Connection> {
 
     @Override
-    default public Class<Connection> getType() {
+    default Class<Connection> getType() {
         return Connection.class;
     }
 

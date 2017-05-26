@@ -28,13 +28,13 @@ import org.springframework.stereotype.Component;
 @Provider
 public class EntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotFoundException> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(EntityNotFoundExceptionMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EntityNotFoundExceptionMapper.class);
 
-	@Override
-	public Response toResponse(EntityNotFoundException e) {
-		LOG.error(e.getMessage(),e);
-		RestError error = new RestError("Entity Not Found Exception " + e.getMessage(), "Please check your request data", 404);
-		return Response.status(error.errorCode).entity(error).build();
-	}
+    @Override
+    public Response toResponse(EntityNotFoundException e) {
+        LOG.error(e.getMessage(),e);
+        RestError error = new RestError("Entity Not Found Exception " + e.getMessage(), "Please check your request data", 404);
+        return Response.status(error.errorCode).entity(error).build();
+    }
 
 }

@@ -15,22 +15,28 @@
  */
 package io.syndesis.rest.v1.handler.tests;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+
 import io.syndesis.dao.init.ModelData;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.WithId;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("/test-support")
 @org.springframework.stereotype.Component

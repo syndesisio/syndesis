@@ -16,9 +16,8 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>syndesis-rest-parent</artifactId>
     <groupId>io.syndesis</groupId>
@@ -37,6 +36,11 @@
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>model</artifactId>
     </dependency>
 
     <dependency>
@@ -77,6 +81,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
     </dependency>
@@ -97,9 +106,38 @@
     </dependency>
 
     <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <optional>true</optional>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.spec.javax.ws.rs</groupId>
+      <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate.javax.persistence</groupId>
+      <artifactId>hibernate-jpa-2.1-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
@@ -115,5 +153,49 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
+
+  <build>
+
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <ignoredUnusedDeclaredDependencies>
+            <ignoredUnusedDeclaredDependency>io.syndesis:github</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:controllers</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:openshift</ignoredUnusedDeclaredDependency>
+          </ignoredUnusedDeclaredDependencies>
+          <ignoredUsedUndeclaredDependencies>
+            <!-- if declared complains about being unused -->
+            <ignoredUnusedDeclaredDependency>com.google.code.findbugs:findbugs-annotations</ignoredUnusedDeclaredDependency>
+          </ignoredUsedUndeclaredDependencies>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.ning.maven.plugins</groupId>
+        <artifactId>maven-dependency-versions-check-plugin</artifactId>
+        <configuration>
+          <exceptions>
+            <exception>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-annotations</artifactId>
+              <expectedVersion>2.8.4</expectedVersion>
+              <resolvedVersion>2.8.0</resolvedVersion>
+            </exception>
+          </exceptions>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
+  </build>
 </project>

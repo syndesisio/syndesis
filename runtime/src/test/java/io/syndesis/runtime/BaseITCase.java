@@ -15,27 +15,35 @@
  */
 package io.syndesis.runtime;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Paths;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.jsondb.impl.SqlJsonDB;
+
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
-
-import javax.annotation.PostConstruct;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Paths;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -100,16 +100,19 @@ public class EventBusToServerSentEvents implements UndertowDeploymentInfoCustomi
             responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_ORIGIN), origin);
 
             String value = requestHeaders.getFirst(CorsHeaders.ACCESS_CONTROL_REQUEST_HEADERS);
-            if (value != null)
+            if (value != null) {
                 responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_HEADERS), value);
+            }
 
             value = requestHeaders.getFirst(CorsHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS);
-            if (value != null)
+            if (value != null) {
                 responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS), value);
+            }
 
             value = requestHeaders.getFirst(CorsHeaders.ACCESS_CONTROL_REQUEST_METHOD);
-            if (value != null)
+            if (value != null) {
                 responseHeaders.put(new HttpString(CorsHeaders.ACCESS_CONTROL_ALLOW_METHODS), value);
+            }
         }
 
         String uri = exchange.getRequestURI();

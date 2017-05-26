@@ -38,18 +38,18 @@
     <!-- ===================================================================================== -->
 
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.fabric8.funktion</groupId>
+      <artifactId>funktion-model</artifactId>
     </dependency>
 
     <dependency>
@@ -58,8 +58,18 @@
     </dependency>
 
     <dependency>
-      <groupId>io.fabric8.funktion</groupId>
-      <artifactId>funktion-model</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>findbugs-annotations</artifactId>
     </dependency>
 
         <!-- === Test ============================================================================ -->
@@ -75,6 +85,23 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <ignoredUnusedDeclaredDependencies>io.fabric8.funktion:funktion-model</ignoredUnusedDeclaredDependencies>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

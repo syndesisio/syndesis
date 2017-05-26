@@ -28,7 +28,8 @@ import lombok.Data;
 
 @Entity(name = "ConnectorProperty")
 @Table(name = "syndesis_connector_property")
-public @Data class ConnectorProperty implements Serializable{
+@Data
+public class ConnectorProperty implements Serializable{
 
     private static final long serialVersionUID = 9055427838470721582L;
     @Id

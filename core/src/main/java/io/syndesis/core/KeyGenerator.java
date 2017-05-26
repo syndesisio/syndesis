@@ -28,9 +28,9 @@ import java.util.Random;
  */
 public class KeyGenerator {
 
-    static private long lastTimestamp = System.currentTimeMillis();
-    static private final byte randomnessByte;
-    static private long randomnessLong;
+    private static long lastTimestamp = System.currentTimeMillis();
+    private static final byte randomnessByte;
+    private static long randomnessLong;
 
     private KeyGenerator() {}
 
@@ -40,7 +40,7 @@ public class KeyGenerator {
         randomnessLong = random.nextLong();
     }
 
-    static public String createKey() {
+    public static String createKey() {
         long now = System.currentTimeMillis();
 
         ByteBuffer buffer = ByteBuffer.wrap(new byte[8 + 1 + 8]);
@@ -55,7 +55,7 @@ public class KeyGenerator {
         }
     }
 
-    protected synchronized static long getRandomPart(long timeStamp) {
+    protected static synchronized long getRandomPart(long timeStamp) {
         if( timeStamp == lastTimestamp ) {
             // increment the randomness.
             randomnessLong ++;

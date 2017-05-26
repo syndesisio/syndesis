@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 
 public interface WithProperties {
 
+    @SuppressFBWarnings("SE_BAD_FIELD")
     Map<String, ConfigurationProperty> getProperties();
 
     @JsonIgnore

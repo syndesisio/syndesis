@@ -22,7 +22,7 @@ import io.syndesis.model.user.User;
 public interface UserDao extends DataAccessObject<User> {
 
     @Override
-    default public Class<User> getType() {
+    default Class<User> getType() {
         return User.class;
     }
 

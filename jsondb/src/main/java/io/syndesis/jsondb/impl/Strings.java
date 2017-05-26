@@ -20,28 +20,28 @@ package io.syndesis.jsondb.impl;
  */
 public class Strings {
 
-    static public String prefix(String base, String prefix) {
+    public static String prefix(String base, String prefix) {
         if( !base.startsWith(prefix) ) {
             return prefix + base;
         }
         return base;
     }
 
-    static public String suffix(String base, String suffix) {
+    public static String suffix(String base, String suffix) {
         if( !base.endsWith(suffix) ) {
             return base+suffix;
         }
         return base;
     }
 
-    static public String trimPrefix(String value, String prefix) {
+    public static String trimPrefix(String value, String prefix) {
         if( value.startsWith(prefix) ) {
             return value.substring(prefix.length());
         }
         return value;
     }
 
-    static public String trimSuffix(String value, String suffix) {
+    public static String trimSuffix(String value, String suffix) {
         if( value.endsWith(suffix) ) {
             return value.substring(0, value.length()-suffix.length());
         }

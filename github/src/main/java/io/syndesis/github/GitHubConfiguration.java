@@ -17,10 +17,13 @@ package io.syndesis.github;
 
 import io.syndesis.github.backend.ExtendedContentsService;
 import io.syndesis.github.backend.KeycloakTokenAwareGitHubClient;
+
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Configured in spring.factories so that tis configuration is automatically picked

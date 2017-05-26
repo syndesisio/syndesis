@@ -21,7 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import io.syndesis.github.backend.ExtendedContentsService;
-import org.eclipse.egit.github.core.*;
+
+import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryContents;
+import org.eclipse.egit.github.core.RepositoryHook;
+import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;

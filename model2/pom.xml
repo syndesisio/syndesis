@@ -31,21 +31,18 @@
 
   <dependencies>
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
-    <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>core</artifactId>
-    </dependency>
+
     <!-- ===================================================================================== -->
 
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.eclipse.persistence</groupId>
-      <artifactId>javax.persistence</artifactId>
-      <version>2.1.0</version>
+      <groupId>org.hibernate.javax.persistence</groupId>
+      <artifactId>hibernate-jpa-2.1-api</artifactId>
     </dependency>
 
     <dependency>

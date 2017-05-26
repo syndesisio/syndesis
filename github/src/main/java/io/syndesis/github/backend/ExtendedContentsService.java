@@ -21,7 +21,8 @@ import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.ContentsService;
 
-import static org.eclipse.egit.github.core.client.IGitHubConstants.*;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_CONTENTS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 
 /**
  * Extend ContentsService for creating and updating files
@@ -32,27 +33,28 @@ public class ExtendedContentsService extends ContentsService {
         super(client);
     }
 
-	public void createFile(IRepositoryIdProvider repository, String message, String path, byte[] content) throws IOException {
-		StringBuilder uri = createContentsUri(repository, path);
-		client.put(uri.toString(), new FileContent(path, message, content, null),null /* no response serialization */);
-	}
-
-	public void updateFile(IRepositoryIdProvider repository, String message, String path, String sha, byte[] content) throws IOException {
-		StringBuilder uri = createContentsUri(repository, path);
-		client.put(uri.toString(), new FileContent(path, message, content, sha),null /* no response serialization */);
+    public void createFile(IRepositoryIdProvider repository, String message, String path, byte[] content) throws IOException {
+        StringBuilder uri = createContentsUri(repository, path);
+        client.put(uri.toString(), new FileContent(path, message, content, null),null /* no response serialization */);
     }
 
-	private StringBuilder createContentsUri(IRepositoryIdProvider repository, String path) {
-		String id = getId(repository);
-		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-		uri.append('/').append(id);
-		uri.append(SEGMENT_CONTENTS);
-		if (path != null && path.length() > 0) {
-			if (path.charAt(0) != '/')
-				uri.append('/');
-			uri.append(path);
-		}
-		return uri;
-	}
+    public void updateFile(IRepositoryIdProvider repository, String message, String path, String sha, byte[] content) throws IOException {
+        StringBuilder uri = createContentsUri(repository, path);
+        client.put(uri.toString(), new FileContent(path, message, content, sha),null /* no response serialization */);
+    }
+
+    private StringBuilder createContentsUri(IRepositoryIdProvider repository, String path) {
+        String id = getId(repository);
+        StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+        uri.append('/').append(id);
+        uri.append(SEGMENT_CONTENTS);
+        if (path != null && path.length() > 0) {
+            if (path.charAt(0) != '/') {
+                uri.append('/');
+            }
+            uri.append(path);
+        }
+        return uri;
+    }
 }
 

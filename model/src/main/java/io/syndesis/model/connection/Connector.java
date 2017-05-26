@@ -33,6 +33,7 @@ import org.immutables.value.Value;
 public interface Connector extends WithId<Connector>, WithName, WithProperties, Serializable {
 
     @Override
+    @Value.Default
     default Kind getKind() {
         return Kind.Connector;
     }

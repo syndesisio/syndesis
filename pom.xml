@@ -16,14 +16,13 @@
     limitations under the License.
 
 -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>9</version>
+    <groupId>org.basepom</groupId>
+    <artifactId>basepom-oss</artifactId>
+    <version>23</version>
   </parent>
 
   <groupId>io.syndesis</groupId>
@@ -96,22 +95,20 @@
   </pluginRepositories>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <syndesis-connectors.version>0.4.4</syndesis-connectors.version>
 
     <assertj-core.version>3.6.2</assertj-core.version>
+    <caffeine.version>2.4.0</caffeine.version>
     <camel.version>2.19.0</camel.version>
     <jdbi.version>2.78</jdbi.version>
     <funktion.version>1.1.55</funktion.version>
     <hibernate.validator.version>5.3.4.Final</hibernate.validator.version>
-    <immutables.version>2.4.0</immutables.version>
+    <immutables.version>2.5.1</immutables.version>
     <infinispan.version>9.0.0.Final</infinispan.version>
-    <jackson.version>2.8.6</jackson.version>
-    <javaee.api.version>7.0</javaee.api.version>
+    <jackson.version>2.8.8</jackson.version>
     <junit.version>4.12</junit.version>
     <keycloak.version>2.5.1.Final</keycloak.version>
     <kubernetes.client.version>2.2.13</kubernetes.client.version>
@@ -120,36 +117,28 @@
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <resteasy-spring-boot-starter.version>2.3.0-RELEASE</resteasy-spring-boot-starter.version>
     <resteasy.version>3.1.1.Final</resteasy.version>
+    <spring.version>4.3.7.RELEASE</spring.version>
     <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
     <spring-cloud.version>Camden.SR5</spring-cloud.version>
     <spring-cloud-kubernetes.version>0.1.5</spring-cloud-kubernetes.version>
+    <spring-cloud-sleuth.version>1.1.2.RELEASE</spring-cloud-sleuth.version>
+    <spring-security.version>4.2.2.RELEASE</spring-security.version>
     <swagger.version>1.5.12</swagger.version>
+    <sqlite-jdbc.version>3.16.1</sqlite-jdbc.version>
+    <undertow.version>1.4.11.Final</undertow.version>
     <atlasmap.version>1.10.0</atlasmap.version>
 
     <!-- maven plugin version -->
-    <maven-dependency-plugin.version>3.0.0</maven-dependency-plugin.version>
-    <maven-enforcer-plugin.version>1.3.1</maven-enforcer-plugin.version>
-    <!-- Stick to 2.18.1 until 2.19.2 is out due to https://issues.apache.org/jira/browse/SUREFIRE-1198 -->
-    <maven-failsafe-plugin.version>2.18.1</maven-failsafe-plugin.version>
-    <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
-    <maven-jar-plugin.version>3.0.1</maven-jar-plugin.version>
-    <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
-    <maven-resources-plugin.version>3.0.1</maven-resources-plugin.version>
-    <maven-source-plugin.version>2.4</maven-source-plugin.version>
-    <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+    <dep.plugin.dependency.version>3.0.0</dep.plugin.dependency.version>
 
     <!-- third party plugin version -->
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
     <build-helper-maven-plugin.version>1.12</build-helper-maven-plugin.version>
     <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
     <fabric8-maven-plugin.version>3.3.0</fabric8-maven-plugin.version>
-    <git-commit-id-plugin.version>2.2.2</git-commit-id-plugin.version>
-    <jacoco-maven-plugin.version>0.7.8</jacoco-maven-plugin.version>
-    <license-maven-plugin.version>3.0</license-maven-plugin.version>
     <process-exec-maven-plugin.version>0.8</process-exec-maven-plugin.version>
     <swagger-maven-plugin.version>1.0.0</swagger-maven-plugin.version>
     <swagger2markup-maven-plugin.version>1.1.0</swagger2markup-maven-plugin.version>
-    <templating-maven-plugin.version>1.0.0</templating-maven-plugin.version>
   </properties>
 
   <modules>
@@ -306,9 +295,10 @@
       </dependency>
 
       <dependency>
-        <groupId>javax</groupId>
-        <artifactId>javaee-api</artifactId>
-        <version>${javaee.api.version}</version>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>javax.ws.rs-api</artifactId>
+        <version>2.0.1</version>
+        <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -331,9 +321,152 @@
       </dependency>
 
       <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${spring.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aop</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+        <version>${spring-security.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        <version>${spring-security.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        <version>${spring-security.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>${spring-boot.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-sleuth-core</artifactId>
+        <version>${spring-cloud-sleuth.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>spring-cloud-kubernetes-core</artifactId>
+        <version>${spring-cloud-kubernetes.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>io.undertow</groupId>
+        <artifactId>undertow-servlet</artifactId>
+        <version>${undertow.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.servlet</groupId>
+            <artifactId>jboss-servlet-api_3.1_spec</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.spec.javax.ws.rs</groupId>
+        <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+        <version>1.0.1.Beta1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.spec.javax.annotation</groupId>
+        <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+        <version>1.0.0.Final</version>
+      </dependency>
+
+      <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
-        <version>3.0.1</version>
+        <version>${dep.findbugs.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>findbugs-annotations</artifactId>
+        <version>${dep.findbugs.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy</artifactId>
+        <version>2.4.11</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.ben-manes.caffeine</groupId>
+        <artifactId>caffeine</artifactId>
+        <version>${caffeine.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.5</version>
       </dependency>
 
       <!-- Testing Dependencies -->
@@ -363,6 +496,12 @@
         <groupId>com.paypal.springboot</groupId>
         <artifactId>resteasy-spring-boot-starter</artifactId>
         <version>${resteasy-spring-boot-starter.version}</version>
+        <exclusions>
+          <exclusion>
+          <groupId>com.google.code.findbugs</groupId>
+          <artifactId>annotations</artifactId>
+        </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -374,12 +513,22 @@
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>annotations</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
       <dependency>
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-client</artifactId>
+        <version>${resteasy.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jaxrs</artifactId>
         <version>${resteasy.version}</version>
       </dependency>
 
@@ -406,9 +555,25 @@
         <version>${keycloak.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-core</artifactId>
+        <version>${keycloak.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-adapter-core</artifactId>
+        <version>${keycloak.version}</version>
+      </dependency>
+      <dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>${postgresql.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.xerial</groupId>
+        <artifactId>sqlite-jdbc</artifactId>
+        <version>${sqlite-jdbc.version}</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.jdbi</groupId>
@@ -437,17 +602,6 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>${maven-jar-plugin.version}</version>
-          <configuration>
-            <archive>
-              <manifest>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-            </archive>
-          </configuration>
-        </plugin>
-        <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
           <version>${spring-boot.version}</version>
@@ -473,39 +627,6 @@
           <version>${asciidoctor-maven-plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>${build-helper-maven-plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>${maven-failsafe-plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>pl.project13.maven</groupId>
-          <artifactId>git-commit-id-plugin</artifactId>
-          <version>${git-commit-id-plugin.version}</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>revision</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <verbose>true</verbose>
-            <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
-            <generateGitPropertiesFile>true</generateGitPropertiesFile>
-            <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <version>${maven-dependency-plugin.version}</version>
-        </plugin>
-        <plugin>
           <groupId>com.bazaarvoice.maven.plugins</groupId>
           <artifactId>process-exec-maven-plugin</artifactId>
           <version>${process-exec-maven-plugin.version}</version>
@@ -518,23 +639,10 @@
       </plugins>
     </pluginManagement>
     <plugins>
+
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>templating-maven-plugin</artifactId>
-        <version>${templating-maven-plugin.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>filter-sources</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <inherited>true</inherited>
-        <version>${maven-surefire-plugin.version}</version>
         <configuration>
           <environmentVariables>
             <ENV_VAR_EXISTS>value</ENV_VAR_EXISTS>
@@ -542,36 +650,18 @@
           </environmentVariables>
         </configuration>
       </plugin>
+
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>${maven-gpg-plugin.version}</version>
         <configuration>
           <passphrase>${gpg.passphrase}</passphrase>
-          <useAgent>true</useAgent>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco-maven-plugin.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-              <goal>prepare-agent-integration</goal>
-              <goal>report</goal>
-              <goal>report-integration</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+
       <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>${license-maven-plugin.version}</version>
         <configuration>
-          <aggregate>true</aggregate>
           <header>header.txt</header>
           <properties>
             <owner>Red Hat, Inc.</owner>
@@ -579,7 +669,6 @@
           <excludes>
             <exclude>.editorconfig</exclude>
             <exclude>license.txt</exclude>
-            <exclude>**/*.adoc</exclude>
             <exclude>.mention-bot</exclude>
             <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
             <exclude>mvnw*</exclude>
@@ -588,6 +677,23 @@
           </excludes>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredClassPatterns>
+            <ignoredClassPattern>io.fabric8.kubernetes.client.*</ignoredClassPattern>
+            <ignoredClassPattern>org.infinispan.util.*</ignoredClassPattern>
+            <ignoredClassPattern>org.springframework.security.crypto.*</ignoredClassPattern>
+            <ignoredClassPattern>org.objectweb.asm.*</ignoredClassPattern>
+          </ignoredClassPatterns>
+          <ignoredResourcePatterns>
+            <ignoredResourcePattern>features.xml</ignoredResourcePattern>
+          </ignoredResourcePatterns>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
@@ -597,22 +703,7 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
-            <version>${maven-enforcer-plugin.version}</version>
             <executions>
               <execution>
                 <id>enforce-no-snapshots</id>
@@ -630,44 +721,6 @@
               </execution>
             </executions>
           </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>${maven-javadoc-plugin.version}</version>
-            <configuration>
-              <includeDependencySources>${javadoc.include.deps}
-              </includeDependencySources>
-              <dependencySourceIncludes>
-                <dependencySourceInclude>${javadoc.source.includes}
-                </dependencySourceInclude>
-              </dependencySourceIncludes>
-              <excludePackageNames>${javadoc.package.excludes}</excludePackageNames>
-            </configuration>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-                <configuration>
-                  <additionalparam>${javadoc.opts}</additionalparam>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>${maven-source-plugin.version}</version>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
         </plugins>
       </build>
     </profile>
@@ -681,4 +734,5 @@
       </properties>
     </profile>
   </profiles>
+
 </project>

@@ -22,7 +22,7 @@ import io.syndesis.model.integration.Integration;
 public interface IntegrationDao extends DataAccessObject<Integration> {
 
     @Override
-    default public Class<Integration> getType() {
+    default Class<Integration> getType() {
         return Integration.class;
     }
 

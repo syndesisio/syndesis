@@ -39,44 +39,44 @@ public class ReadApiClientDataTest {
 
     private final static ObjectMapper mapper = Json.mapper();
 
-	@Test
-	public void deserializeModelDataTest() throws IOException {
+    @Test
+    public void deserializeModelDataTest() throws IOException {
 
-	    Integration integrationIn = new Integration.Builder()
-	                .desiredStatus(Integration.Status.Activated)
-	                .tags(new TreeSet<String>(Arrays.asList("tag1", "tag2")))
-	                .createdDate(new Date())
-	                .build();
-	    String integrationJson = mapper.writeValueAsString(integrationIn);
-	    System.out.println(integrationJson);
-	    Integration integrationOut = mapper.readValue(integrationJson, Integration.class);
-	    Assert.assertEquals(integrationIn.getDesiredStatus(), integrationOut.getDesiredStatus());
+        Integration integrationIn = new Integration.Builder()
+                    .desiredStatus(Integration.Status.Activated)
+                    .tags(new TreeSet<String>(Arrays.asList("tag1", "tag2")))
+                    .createdDate(new Date())
+                    .build();
+        String integrationJson = mapper.writeValueAsString(integrationIn);
+        System.out.println(integrationJson);
+        Integration integrationOut = mapper.readValue(integrationJson, Integration.class);
+        Assert.assertEquals(integrationIn.getDesiredStatus(), integrationOut.getDesiredStatus());
 
-		//serialize
-		ConnectorGroup cg = new ConnectorGroup.Builder().id("label").name("label").build();
-		ModelData mdIn = new ModelData(Kind.ConnectorGroup, cg);
-		Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdIn.getDataAsJson());
+        //serialize
+        ConnectorGroup cg = new ConnectorGroup.Builder().id("label").name("label").build();
+        ModelData mdIn = new ModelData(Kind.ConnectorGroup, cg);
+        Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdIn.getDataAsJson());
 
-		//deserialize
-		String json = mapper.writeValueAsString(mdIn);
-		ModelData mdOut = mapper.readValue(json, ModelData.class);
-		Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdOut.getDataAsJson());
-	}
+        //deserialize
+        String json = mapper.writeValueAsString(mdIn);
+        ModelData mdOut = mapper.readValue(json, ModelData.class);
+        Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdOut.getDataAsJson());
+    }
 
-	@Test
-	public void loadApiClientDataTest() throws IOException {
-		List<ModelData> modelDataList = new ReadApiClientData().readDataFromFile("io/syndesis/dao/deployment.json");
-		System.out.println("Found " + modelDataList.size() + " entities.");
-		Assert.assertTrue("We should find some ModelData", 0 < modelDataList.size());
+    @Test
+    public void loadApiClientDataTest() throws IOException {
+        List<ModelData> modelDataList = new ReadApiClientData().readDataFromFile("io/syndesis/dao/deployment.json");
+        System.out.println("Found " + modelDataList.size() + " entities.");
+        Assert.assertTrue("We should find some ModelData", 0 < modelDataList.size());
         List<Connector> connectorList = new ArrayList<>();
-		for (ModelData md : modelDataList) {
-			if (md.getKind() == Kind.Connector) {
-				Connector cg = (Connector) md.getData();
-				connectorList.add(cg);
-			}
-		}
-		System.out.println("Found " + connectorList.size() + " Connectors");
-		Assert.assertTrue("We should find some Connectors", 0 < connectorList.size());
-	}
+        for (ModelData md : modelDataList) {
+            if (md.getKind() == Kind.Connector) {
+                Connector cg = (Connector) md.getData();
+                connectorList.add(cg);
+            }
+        }
+        System.out.println("Found " + connectorList.size() + " Connectors");
+        Assert.assertTrue("We should find some Connectors", 0 < connectorList.size());
+    }
 
 }

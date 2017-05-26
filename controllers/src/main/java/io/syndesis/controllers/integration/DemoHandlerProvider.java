@@ -15,9 +15,13 @@
  */
 package io.syndesis.controllers.integration;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import io.syndesis.model.integration.Integration;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +38,7 @@ public class DemoHandlerProvider implements StatusChangeHandlerProvider {
                             );
     }
 
-    class DemoHandler implements StatusChangeHandler {
+    static class DemoHandler implements StatusChangeHandler {
         private final Integration.Status status;
         private final long waitMillis;
 

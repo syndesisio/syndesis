@@ -82,4 +82,8 @@ crashlytics-build.properties
 # OS X files
 .DS_Store
 
+# PMD and Checkstyle config files (auto generated)
+.pmd
+.pmdruleset.xml
+.checkstyle
 
