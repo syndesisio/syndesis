@@ -14,20 +14,20 @@ I have two initial requirements for filtering data in an integration:
 In both cases, I expect to be able to apply basic string operations to the data to form a filter expression (contains, does not contain, starts with).  For more details on options, see the Operator Support section here:
 http://camel.apache.org/simple.html
 
-Similar to logging, it would be nice if the UI provided help in creating filter expressions for new/inexperienced users (like through clickable examples).  The interface should also allow for advanced users to enter free form expressions.
+Similar to logging, the UI should help in creating filter expressions for new/inexperienced users (like through clickable examples or typed form inputs).  The interface should also allow for advanced users to enter free form expressions.
 
 ### Tasks
 
 #### syndesis-ui
 
-* Evalute which editing modes should be supported
+* Evaluate which editing modes should be supported
   - Plain text fields (body & header filter) for complete control
   - Form like editing / creation of filter rules
 * Wonder whether it would be possible to list all available fields at that point e.g. in a drop down box ? (e.g. like for the datamapper ?)
 * We could have lines of dropdowns. Would be cool if the second drop down would change choices based on the data type of the given field.
 
 ```
-[ field_a, field_b, ... ]  [ contains, contains not, matches, is larger than, is smaller than, is, not... ] [ input text field for value]
+[ field_a, field_b, ... ]  [ contains, matches, ... (everythin supported by simple lang) ] [ input text field for value]
 ```
 
 * Multiple such lines could be combined for a singled filter. These lines would be combined with a logical "AND"
