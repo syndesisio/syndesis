@@ -3883,9 +3883,9 @@ ng2-material-dropdown@0.7.7:
   version "0.7.7"
   resolved "https://registry.yarnpkg.com/ng2-material-dropdown/-/ng2-material-dropdown-0.7.7.tgz#5f107cbd99c8c6362d869e0ac99e85b8c59aceab"
 
-ng2-tag-input@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/ng2-tag-input/-/ng2-tag-input-1.3.0.tgz#87875846fa035c284048f33e4cef571480f1b0d1"
+ng2-tag-input@1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/ng2-tag-input/-/ng2-tag-input-1.2.9.tgz#abb9e0407e570fbba2d32c8507efe02f6499545a"
   dependencies:
     ng2-material-dropdown "0.7.7"
 

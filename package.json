@@ -57,7 +57,7 @@
     "lodash": "4.17.4",
     "merge": "^1.2.0",
     "ng2-charts": "1.5.0",
-    "ng2-tag-input": "^1.3.0",
+    "ng2-tag-input": "1.2.9",
     "ngx-bootstrap": "1.6.6",
     "ngx-restangular": "1.0.9",
     "patternfly": "3.20.0",
