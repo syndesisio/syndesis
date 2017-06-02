@@ -8,7 +8,6 @@ import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { TagInputModule } from 'ng2-tag-input';
 
 import { SyndesisCommonModule } from '../common/common.module';
 import { ConnectionsCreatePage } from './create-page/create-page.component';
@@ -36,7 +35,6 @@ import { CurrentConnectionService } from './create-page/current-connection';
     ToasterModule,
     ModalModule,
     BsDropdownModule,
-    TagInputModule,
   ],
   declarations: [
     ConnectionsCreatePage,
