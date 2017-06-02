@@ -1,7 +1,6 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';
 import { MockBackend } from '@angular/http/testing';
 import { CommonModule } from '@angular/common';
@@ -13,7 +12,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
-import { TagInputModule } from 'ng2-tag-input';
 
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 
@@ -40,8 +38,6 @@ describe('ConnectionViewComponent', () => {
         RouterTestingModule.withRoutes([]),
         ModalModule,
         ToasterModule,
-        BrowserAnimationsModule,
-        TagInputModule,
       ],
       declarations: [
         ConnectionViewComponent,

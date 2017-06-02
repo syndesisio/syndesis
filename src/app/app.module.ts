@@ -1,5 +1,4 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, NgZone, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +18,6 @@ import { TabsModule,
          PopoverModule,
          TooltipModule,
          TypeaheadModule } from 'ngx-bootstrap';
-import { TagInputModule } from 'ng2-tag-input';
 import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 import { AppRoutingModule } from './approuting/approuting.module';
@@ -157,7 +155,6 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
@@ -172,7 +169,6 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     AlertModule.forRoot(),
     PopoverModule.forRoot(),
     TypeaheadModule.forRoot(),
-    TagInputModule,
     AppRoutingModule,
     StoreModule,
     SyndesisCommonModule.forRoot(),
