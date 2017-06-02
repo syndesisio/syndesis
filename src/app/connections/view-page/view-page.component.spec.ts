@@ -1,6 +1,7 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockBackend } from '@angular/http/testing';
@@ -15,6 +16,7 @@ import { RestangularModule } from 'ngx-restangular';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
+import { TagInputModule } from 'ng2-tag-input';
 
 import { ConnectionViewPage } from './view-page.component';
 import { ConnectionViewWrapperComponent } from '../view-wrapper/view-wrapper.component';
@@ -45,6 +47,8 @@ describe('ConnectionViewPage', () => {
           RestangularModule.forRoot(),
           ModalModule,
           ToasterModule,
+          BrowserAnimationsModule,
+          TagInputModule,
         ],
         declarations: [
           ConnectionViewPage,
