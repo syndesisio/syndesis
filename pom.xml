@@ -74,18 +74,6 @@
 
   <repositories>
     <repository>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>internal</id>
-      <layout>default</layout>
-      <name>An internal repository for things not released yet</name>
-      <url>file://${pom.basedir}/.localrepo</url>
-    </repository>
-    <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
@@ -123,7 +111,7 @@
     <arquillian-cube.version>1.4.0</arquillian-cube.version>
 
     <junit.version>4.12</junit.version>
-    <kubernetes-client.version>2.2.13</kubernetes-client.version>
+    <kubernetes-client.version>2.3.1</kubernetes-client.version>
   </properties>
 
   <dependencyManagement>
