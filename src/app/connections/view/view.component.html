@@ -19,7 +19,7 @@
         <div class="description">{{description}}</div>
         <div class="tags">
           <span class="label label-primary"
-                *ngFor="let tag of tagsArray">{{tag}}</span>
+                *ngFor="let tag of tags">{{tag}}</span>
         </div>
       </div>
     </div>
@@ -90,13 +90,13 @@
     <div *ngSwitchCase="'create1'">
       <div class="connector-list">
         <syndesis-connections-list-toolbar [(filter)]="filter"
-                                        [(sort)]="sort"
-                                        [showCreate]="false"></syndesis-connections-list-toolbar>
+                                           [(sort)]="sort"
+                                           [showCreate]="false"></syndesis-connections-list-toolbar>
 
         <syndesis-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort"
-                                [loading]="loading | async"
-                                [showKebab]="false"
-                                (onSelected)="onSelected($event)"></syndesis-connections-list>
+                                   [loading]="loading | async"
+                                   [showKebab]="false"
+                                   (onSelected)="onSelected($event)"></syndesis-connections-list>
       </div>
     </div>
 
@@ -135,11 +135,14 @@
               <div class="form-group">
                 <label class="col-sm-4 control-label">Tag(s)</label>
                 <div class="col-sm-8">
-                  <input type="text"
-                         name="tagsInput"
-                         data-id="tagsInput"
-                         [(ngModel)]="tags"
-                         class="form-control">
+                  <tag-input [(ngModel)]="tags"
+                             name="tags"
+                             data-id="tags"
+                             theme="bootstrap"
+                             [editable]="true"
+                             [modelAsStrings]="true"
+                             [ripple]="false"
+                             [inputId]="tagsInput"></tag-input>
                 </div>
               </div>
             </form>
