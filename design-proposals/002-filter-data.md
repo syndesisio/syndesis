@@ -29,7 +29,7 @@ For the typed definition of a filter, filtering breaks down in several sub-conce
 * A **Filter Rule** contains one or more **Filter Statements**. The 
 
 A _Filter Step_ is a regular `Step` with a type "filter". 
-_Filter Rules_ and _Filter Statements_ are part of the configuration of this step and stored in the properties of a step (_TODO: The domain object `IntegrationConnectionStep_ seems to be supeflous).
+_Filter Rules_ and _Filter Statements_ are part of the configuration of this step and stored in the properties of a step (_TODO: The domain object `IntegrationConnectionStep` seems to be supeflous_).
 
 The lowest building block is a a `FilterStatement`. It has the following properties:
 
