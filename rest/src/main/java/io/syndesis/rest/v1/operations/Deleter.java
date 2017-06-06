@@ -15,7 +15,10 @@
  */
 package io.syndesis.rest.v1.operations;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 import io.syndesis.dao.manager.WithDataManager;
 import io.syndesis.model.WithId;

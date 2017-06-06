@@ -33,7 +33,7 @@ import io.syndesis.model.WithId;
 /**
  * Implements a DataAccessObject using the {@see: JsonDB}.
  */
-abstract public class JsonDbDao<T extends WithId> implements DataAccessObject<T> {
+public abstract class JsonDbDao<T extends WithId> implements DataAccessObject<T> {
 
     private final JsonDB jsondb;
 

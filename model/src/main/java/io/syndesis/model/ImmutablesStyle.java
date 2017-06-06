@@ -20,13 +20,12 @@ import org.immutables.value.Value;
 @Value.Style(
     jdkOnly = true,
     visibility = Value.Style.ImplementationVisibility.PACKAGE,
-    defaultAsDefault = true,
     headerComments = true,
     depluralize = true,
     typeAbstract = "*",
     allParameters = true,
     from = "createFrom",
     validationMethod = Value.Style.ValidationMethod.VALIDATION_API
-)
+    )
 public @interface ImmutablesStyle {
 }

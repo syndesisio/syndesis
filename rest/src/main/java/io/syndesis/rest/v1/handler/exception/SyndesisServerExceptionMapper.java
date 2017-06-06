@@ -26,13 +26,13 @@ import org.springframework.stereotype.Component;
 @Provider
 public class SyndesisServerExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Exception> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SyndesisServerExceptionMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SyndesisServerExceptionMapper.class);
 
-	@Override
-	public Response toResponse(Exception e) {
-		LOG.error(e.getMessage(),e);
-		RestError error = new RestError("Internal Server Exception. " + e.getMessage(), "Please contact the administrator and file a bug report", 500);
-		return Response.status(error.errorCode).entity(error).build();
-	}
+    @Override
+    public Response toResponse(Exception e) {
+        LOG.error(e.getMessage(),e);
+        RestError error = new RestError("Internal Server Exception. " + e.getMessage(), "Please contact the administrator and file a bug report", 500);
+        return Response.status(error.errorCode).entity(error).build();
+    }
 
 }

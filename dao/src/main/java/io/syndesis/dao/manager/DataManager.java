@@ -15,17 +15,30 @@
  */
 package io.syndesis.dao.manager;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.syndesis.core.EventBus;
-import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.KeyGenerator;
+import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.init.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
-
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.WithId;
+
 import org.infinispan.Cache;
 import org.infinispan.manager.CacheContainer;
 import org.slf4j.Logger;
@@ -33,12 +46,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import java.util.*;
-import java.util.function.Function;
 
 @Service
 public class DataManager implements DataAccessObjectRegistry {
@@ -207,15 +214,16 @@ public class DataManager implements DataAccessObjectRegistry {
     public <T extends WithId> boolean delete(Class<T> model, String id) {
         Kind kind = Kind.from(model);
         Map<String, WithId> cache = caches.getCache(kind.getModelName());
-        if (id == null || id.equals(""))
+        if (id == null || id.equals("")) {
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
+        }
 
         // Remove it out of the cache
         WithId entity = cache.remove(id);
         boolean deletedInCache = entity != null;
 
         // And out of the DAO
-        boolean deletedFromDAO = doWithDataAccessObject(model, d -> d.delete(id)) == Boolean.TRUE;
+        boolean deletedFromDAO = Boolean.TRUE.equals(doWithDataAccessObject(model, d -> d.delete(id)));
 
         // Return true if the entity was found in any of the two.
         if ( deletedInCache || deletedFromDAO ) {

@@ -17,35 +17,35 @@ package io.syndesis.rest.v1.handler.exception;
 
 public class RestError {
 
-	String developerMsg;
-	String userMsg;
-	Integer errorCode;
+    String developerMsg;
+    String userMsg;
+    Integer errorCode;
 
-	public RestError() {
-	}
+    public RestError() {
+    }
 
-	public RestError(String developerMsg, String userMsg, Integer errorCode) {
-		this.developerMsg = developerMsg;
-		this.userMsg = userMsg;
-		this.errorCode = errorCode;
-	}
-	public String getDeveloperMsg() {
-		return developerMsg;
-	}
-	public void setDeveloperMsg(String developerMsg) {
-		this.developerMsg = developerMsg;
-	}
-	public String getUserMsg() {
-		return userMsg;
-	}
-	public void setUserMsg(String userMsg) {
-		this.userMsg = userMsg;
-	}
-	public Integer getErrorCode() {
-		return errorCode;
-	}
-	public void setErrorCode(Integer errorCode) {
-		this.errorCode = errorCode;
-	}
+    public RestError(String developerMsg, String userMsg, Integer errorCode) {
+        this.developerMsg = developerMsg;
+        this.userMsg = userMsg;
+        this.errorCode = errorCode;
+    }
+    public String getDeveloperMsg() {
+        return developerMsg;
+    }
+    public void setDeveloperMsg(String developerMsg) {
+        this.developerMsg = developerMsg;
+    }
+    public String getUserMsg() {
+        return userMsg;
+    }
+    public void setUserMsg(String userMsg) {
+        this.userMsg = userMsg;
+    }
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
+    }
 }
 

@@ -41,24 +41,24 @@ public interface EventBus {
      * @param handler the callback that will receive the events.
      * @return the previously registered subscription with that id or null.
      */
-    public Subscription subscribe(String subscriberId, Subscription handler);
+    Subscription subscribe(String subscriberId, Subscription handler);
 
     /**
      * Removes a subscription from the event bus.
      * @param subscriberId unique id for the subscription.
      * @return the previously registered subscription with that id or null if not registered.
      */
-    public Subscription unsubscribe(String subscriberId);
+    Subscription unsubscribe(String subscriberId);
 
     /**
      * Send an event to all subscribers in a bus.  The event MAY get delivered to the subscriptions
      * after this call returns.
      */
-    public void broadcast(String event, String data);
+    void broadcast(String event, String data);
 
     /**
      * Send an event to a specific subscriber on the bus.  The event MAY get delivered to the subscriptions
      * after this call returns.
      */
-    public void send(String subscriberId, String event, String data);
+    void send(String subscriberId, String event, String data);
 }

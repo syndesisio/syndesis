@@ -15,13 +15,14 @@
  */
 package io.syndesis.controllers.integration.online;
 
+import java.util.Collections;
+import java.util.Set;
+
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.core.Tokens;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.openshift.OpenShiftDeployment;
 import io.syndesis.openshift.OpenShiftService;
-
-import java.util.*;
 
 public class DeleteHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 

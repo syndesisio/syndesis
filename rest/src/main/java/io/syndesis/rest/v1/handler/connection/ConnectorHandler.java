@@ -15,6 +15,17 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import io.swagger.annotations.Api;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.connection.Connector;
@@ -22,13 +33,6 @@ import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.verifier.Verifier;
-import io.swagger.annotations.Api;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-
-import java.util.List;
-import java.util.Map;
 
 @Path("/connectors")
 @Api(value = "connectors")

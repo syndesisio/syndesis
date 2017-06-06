@@ -15,15 +15,25 @@
  */
 package io.syndesis.verifier;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import io.syndesis.model.connection.Connector;
 import io.syndesis.project.converter.ProjectGenerator;
 
 import org.springframework.util.FileSystemUtils;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // Needs to be adapted to new API signature.
 /*
@@ -37,6 +47,8 @@ import org.springframework.util.FileSystemUtils;
 public class LocalProcessVerifier {
 
     private final ProjectGenerator projectGenerator;
+
+    @SuppressFBWarnings("UWF_NULL_FIELD")
     private String localMavenRepoLocation = null; // "/tmp/syndesis-local-mvn-repo";
 
     public LocalProcessVerifier(ProjectGenerator projectGenerator) {
@@ -164,7 +176,7 @@ public class LocalProcessVerifier {
     }
 
     private String parseClasspath(InputStream inputStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         boolean useNextLine = true;
         String result = null;
         String line;

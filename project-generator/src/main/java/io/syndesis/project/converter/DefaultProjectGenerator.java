@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -46,30 +46,32 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class DefaultProjectGenerator implements ProjectGenerator {
 
-    private final static String MAPPER = "mapper";
-    private final static ObjectMapper YAML_OBJECT_MAPPER = YamlHelper.createYamlMapper();
-    private final static String PLACEHOLDER_FORMAT = "{{%s}}";
+    private static final String MAPPER = "mapper";
+    private static final ObjectMapper YAML_OBJECT_MAPPER = YamlHelper.createYamlMapper();
+    private static final String PLACEHOLDER_FORMAT = "{{%s}}";
 
     private MustacheFactory mf = new DefaultMustacheFactory();
 
     private Mustache readmeMustache = mf.compile(
-        new InputStreamReader(getClass().getResourceAsStream("templates/README.md.mustache")),
+        new InputStreamReader(getClass().getResourceAsStream("templates/README.md.mustache"), UTF_8),
         "README.md"
     );
     private Mustache applicationJavaMustache = mf.compile(
-        new InputStreamReader(getClass().getResourceAsStream("templates/Application.java.mustache")),
+        new InputStreamReader(getClass().getResourceAsStream("templates/Application.java.mustache"), UTF_8),
         "Application.java"
     );
 
     private Mustache applicationYmlMustache = mf.compile(
-        new InputStreamReader(getClass().getResourceAsStream("templates/application.properties.mustache")),
+        new InputStreamReader(getClass().getResourceAsStream("templates/application.properties.mustache"), UTF_8),
         "application.properties"
     );
 
     private Mustache pomMustache = mf.compile(
-        new InputStreamReader(getClass().getResourceAsStream("templates/pom.xml.mustache")),
+        new InputStreamReader(getClass().getResourceAsStream("templates/pom.xml.mustache"), UTF_8),
         "pom.xml"
     );
 
@@ -201,7 +203,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return YAML_OBJECT_MAPPER.writeValueAsBytes(funktion);
     }
 
-    static private byte[] utf8(String value) {
+    private static byte[] utf8(String value) {
         if (value == null) {
             return null;
         }
@@ -238,7 +240,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     private byte[] generate(Object obj, Mustache template) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        template.execute(new PrintWriter(bos), obj).flush();
+        template.execute(new OutputStreamWriter(bos, UTF_8), obj).flush();
         return bos.toByteArray();
     }
 

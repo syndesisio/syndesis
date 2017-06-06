@@ -22,7 +22,7 @@ import io.syndesis.model.integration.IntegrationPattern;
 public interface IntegrationPatternDao extends DataAccessObject<IntegrationPattern> {
 
     @Override
-    default public Class<IntegrationPattern> getType() {
+    default Class<IntegrationPattern> getType() {
         return IntegrationPattern.class;
     }
 

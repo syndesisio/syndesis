@@ -17,41 +17,41 @@ package io.syndesis.core;
 
 public class SyndesisServerException extends RuntimeException {
 
-	private static final long serialVersionUID = 3476018743129184217L;
+    private static final long serialVersionUID = 3476018743129184217L;
 
-	public SyndesisServerException() {
-		super();
-	}
+    public SyndesisServerException() {
+        super();
+    }
 
-	public SyndesisServerException(String message, Throwable cause, boolean enableSuppression,
+    public SyndesisServerException(String message, Throwable cause, boolean enableSuppression,
                                    boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 
-	public SyndesisServerException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public SyndesisServerException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public SyndesisServerException(String message) {
-		super(message);
-	}
+    public SyndesisServerException(String message) {
+        super(message);
+    }
 
-	public SyndesisServerException(Throwable cause) {
-		super(cause);
-	}
+    public SyndesisServerException(Throwable cause) {
+        super(cause);
+    }
 
-	public static RuntimeException launderThrowable(Throwable cause) {
-	    return launderThrowable("An error has occurred.", cause);
-	  }
+    public static RuntimeException launderThrowable(Throwable cause) {
+        return launderThrowable("An error has occurred.", cause);
+      }
 
-	  public static RuntimeException launderThrowable(String message, Throwable cause) {
-	    if (cause instanceof RuntimeException) {
-	      return ((RuntimeException) cause);
-	    } else if (cause instanceof Error) {
-	      throw ((Error) cause);
-	    } else {
-	      throw new SyndesisServerException(message, cause);
-	    }
-	  }
+      public static RuntimeException launderThrowable(String message, Throwable cause) {
+        if (cause instanceof RuntimeException) {
+          return ((RuntimeException) cause);
+        } else if (cause instanceof Error) {
+          throw ((Error) cause);
+        } else {
+          throw new SyndesisServerException(message, cause);
+        }
+      }
 
 }

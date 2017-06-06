@@ -39,6 +39,11 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
+      <artifactId>model</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
       <artifactId>dao</artifactId>
     </dependency>
 
@@ -59,16 +64,34 @@
       <artifactId>jdbi</artifactId>
     </dependency>
 
-    <!-- for the very handy Base64 that supports the ordered option -->
     <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-common</artifactId>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <optional>true</optional>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
     </dependency>
 
     <!-- For test resource -->
@@ -81,7 +104,6 @@
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.16.1</version>
       <scope>test</scope>
     </dependency>
 

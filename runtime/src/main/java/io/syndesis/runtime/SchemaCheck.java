@@ -32,7 +32,7 @@ import java.io.IOException;
  */
 @Service
 public class SchemaCheck {
-    static private final Logger LOG = LoggerFactory.getLogger(SchemaCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SchemaCheck.class);
 
     @Value("${dao.schema.version}")
     private String daoSchemaVersion;

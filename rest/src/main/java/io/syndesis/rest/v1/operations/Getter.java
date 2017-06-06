@@ -16,12 +16,15 @@
 package io.syndesis.rest.v1.operations;
 
 import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import io.swagger.annotations.ApiParam;
 import io.syndesis.dao.manager.WithDataManager;
 import io.syndesis.model.WithId;
-import io.swagger.annotations.ApiParam;
 
 public interface Getter<T extends WithId> extends Resource<T>, WithDataManager {
 

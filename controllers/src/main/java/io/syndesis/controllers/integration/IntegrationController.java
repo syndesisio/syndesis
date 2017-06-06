@@ -16,8 +16,15 @@
 package io.syndesis.controllers.integration;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -28,6 +35,7 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Kind;
 import io.syndesis.model.integration.Integration;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +56,7 @@ public class IntegrationController {
     private ExecutorService executor;
     private ScheduledExecutorService scheduler;
 
-    private final static long SCHEDULE_INTERVAL_IN_SECONDS = 60;
+    private static final long SCHEDULE_INTERVAL_IN_SECONDS = 60;
 
     @Autowired
     public IntegrationController(DataManager dataManager, EventBus eventBus, StatusChangeHandlerProvider handlerFactory) {

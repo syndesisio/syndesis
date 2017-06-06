@@ -15,20 +15,6 @@
  */
 package io.syndesis.jsondb.impl;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import io.syndesis.core.EventBus;
-import io.syndesis.core.KeyGenerator;
-import io.syndesis.jsondb.JsonDBException;
-import io.syndesis.jsondb.GetOptions;
-import io.syndesis.jsondb.JsonDB;
-
-import org.skife.jdbi.v2.*;
-import org.skife.jdbi.v2.tweak.ResultSetMapper;
-import org.skife.jdbi.v2.util.IntegerColumnMapper;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,6 +25,25 @@ import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+
+import io.syndesis.core.EventBus;
+import io.syndesis.core.KeyGenerator;
+import io.syndesis.jsondb.GetOptions;
+import io.syndesis.jsondb.JsonDB;
+import io.syndesis.jsondb.JsonDBException;
+
+import org.skife.jdbi.v2.DBI;
+import org.skife.jdbi.v2.Handle;
+import org.skife.jdbi.v2.PreparedBatch;
+import org.skife.jdbi.v2.ResultIterator;
+import org.skife.jdbi.v2.StatementContext;
+import org.skife.jdbi.v2.tweak.ResultSetMapper;
+import org.skife.jdbi.v2.util.IntegerColumnMapper;
 
 /**
  * Implements the JsonDB via DBI/JDBC
@@ -192,7 +197,7 @@ public class SqlJsonDB implements JsonDB {
         private long batchSize;
         private PreparedBatch insertBatch;
 
-        public BatchManager(Handle dbi) {
+        private BatchManager(Handle dbi) {
             this.dbi = dbi;
         }
 
@@ -320,7 +325,7 @@ public class SqlJsonDB implements JsonDB {
         return dbi.update(sql, params.toArray());
     }
 
-    static private LinkedList<String> getAllParentPaths(String baseDBPath) {
+    private static LinkedList<String> getAllParentPaths(String baseDBPath) {
         LinkedList<String> params = new LinkedList<String>();
         Pattern compile = Pattern.compile("/[^/]*$");
         String current = Strings.trimSuffix(baseDBPath, "/");

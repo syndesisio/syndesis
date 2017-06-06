@@ -15,11 +15,6 @@
  */
 package io.syndesis.jsondb.impl;
 
-import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.core.JsonToken;
-import io.syndesis.jsondb.GetOptions;
-import io.syndesis.jsondb.JsonDBException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,24 +26,36 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.fasterxml.jackson.core.JsonToken.*;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonStreamContext;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.JsonTokenId;
+
+import io.syndesis.jsondb.GetOptions;
+import io.syndesis.jsondb.JsonDBException;
+
+import static com.fasterxml.jackson.core.JsonToken.END_ARRAY;
+import static com.fasterxml.jackson.core.JsonToken.END_OBJECT;
+import static com.fasterxml.jackson.core.JsonToken.FIELD_NAME;
+import static com.fasterxml.jackson.core.JsonToken.START_ARRAY;
+import static com.fasterxml.jackson.core.JsonToken.VALUE_NULL;
 
 /**
  * Helper methods for converting between JsonRecord lists and Json
  */
 public class JsonRecordSupport {
 
-    public static Pattern INTEGER_PATTERN;
-    static {
-        INTEGER_PATTERN = Pattern.compile("^\\d+$");
-    }
+    public static final Pattern INTEGER_PATTERN = Pattern.compile("^\\d+$");
 
     private static class PathPart {
         private final String path;
 
         private int idx;
 
-        public PathPart(String path, boolean array) {
+        private PathPart(String path, boolean array) {
             this.path = path;
             this.idx = array ? 0 : -1;
         }
@@ -70,11 +77,11 @@ public class JsonRecordSupport {
         }
     }
 
-    static public Consumer<JsonRecord> recordsToJsonStream(String dbPath, OutputStream output, GetOptions options) throws IOException {
+    public static Consumer<JsonRecord> recordsToJsonStream(String dbPath, OutputStream output, GetOptions options) throws IOException {
         return new JsonRecordConsumer(dbPath, output, options);
     }
 
-    static public void jsonStreamToRecords(String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
+    public static void jsonStreamToRecords(String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
         JsonParser jp = new JsonFactory().createParser(is);
 
         jsonStreamToRecords(jp, dbPath, consumer);
@@ -221,7 +228,7 @@ public class JsonRecordSupport {
         private final LinkedList<PathPart> currentPath = new LinkedList<>();
         private final LinkedHashSet<String> shallowObjects = new LinkedHashSet<>();
 
-        public JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
+        private JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
             this.base = base;
             this.output = output;
             this.options = options.clone();

@@ -17,13 +17,14 @@ package io.syndesis.model.connection;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = DataShape.Builder.class)
-public interface DataShape {
+public interface DataShape extends Serializable {
 
     String getKind();
 

@@ -32,7 +32,8 @@ import lombok.Data;
 
 @Entity(name = "ActionInstance")
 @Table(name = "syndesis_action_instance")
-public @Data class ActionInstance implements Serializable {
+@Data
+public class ActionInstance implements Serializable {
 
     private static final long serialVersionUID = 4151168555047111446L;
     @Id

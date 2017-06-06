@@ -46,6 +46,6 @@ public interface GitHubService {
      * @return the repositories clone URL or null if it does not exist
      * @throws IOException if interaction with GitHub fails.
      */
-    public String getCloneURL(String repoName) throws IOException;
+    String getCloneURL(String repoName) throws IOException;
 
 }
