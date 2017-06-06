@@ -32,7 +32,7 @@ export class ConfigService {
   }
 
   load(configJson: string = defaultConfigJson): Promise<ConfigService> {
-    return this._http.get(configJson).map(res => res.json())
+    return <Promise<ConfigService>> this._http.get(configJson).map(res => res.json())
       .toPromise()
       .then((config) => {
         log.debugc(() => 'Received config: ' + JSON.stringify(config, undefined, 2), category);
