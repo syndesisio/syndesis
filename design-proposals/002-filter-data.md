@@ -87,12 +87,12 @@ In the case of a "form" filter, the "simple" expression is calculated when the s
 Example for a persistent integration step:
 
 ```json
-{ 
+[{ 
   "id": "1",
   "stepKind": "filter",
   "configuredProperties": {
     "type": "form",
-    "simple" : "${body} contains \"antman\" || ${in.header.publisher} =~ \"DC Comics\""
+    "simple" : "${body} contains \"antman\" || ${in.header.publisher} =~ \"DC Comics\"",
     "rules" : [
       [ 
          { 
@@ -109,14 +109,16 @@ Example for a persistent integration step:
          }
       ]      
     ]
-  },
+  }
+},
+{
   "id": "2",
   "stepKind": "filter",
   "configuredProperties": {
     "type": "text",
     "simple": "${in.header.region} =~ \"asia\" || ${body} regex \"bat(wo)?man\""
   }
-}
+}]
 ```
 
 The example is simplified in so far as the value to the "rules" field for step with id "1" must be enterd as a single line string with newlines replaced by "\n" since the value of a property is currently only allowed to be a string. 
