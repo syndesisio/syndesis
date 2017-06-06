@@ -233,6 +233,7 @@
                 <!-- workaround suggested in https://github.com/spring-projects/spring-boot/issues/6254 -->
                 <additionalClasspathElement>${project.build.outputDirectory}</additionalClasspathElement>
               </additionalClasspathElements>
+              <forkedProcessTimeoutInSeconds>150</forkedProcessTimeoutInSeconds>
               <systemProperties>
                 <keycloak.http.port>${keycloak.http.port}</keycloak.http.port>
               </systemProperties>
