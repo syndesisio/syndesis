@@ -20,8 +20,15 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Unit tests for KeyGenerator
+ */
 public class KeyGeneratorTest {
 
+    /**
+     * Generate keys in a tight loop and verify that we don't generate a dup key
+     * since keys have a timestamp component to them.
+     */
     @Test
     public void testCreateKey() {
         // Check to make sure we don't generate dup keys
@@ -33,6 +40,10 @@ public class KeyGeneratorTest {
         }
     }
 
+    /**
+     * Generate keys in a tight loop and verify that we don't generate a dup key
+     * since keys have a timestamp component to them.
+     */
     @Test
     public void testGetRandomPart() {
         long last = KeyGenerator.getRandomPart(0);
