@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { log, getCategory } from '../logging';
 
-import { Connection, Connections } from '../model';
+import { Connection, Connections, Integrations } from '../model';
 import { ConnectionStore } from '../store/connection/connection.store';
 
 const category = getCategory('Dashboard');
@@ -17,6 +17,7 @@ const category = getCategory('Dashboard');
 export class EmptyStateComponent implements OnInit {
   connections: Observable<Connections>;
   @Input() loading: boolean;
+  @Input() integrations: Integrations;
   truncateLimit = 80;
   truncateTrail = '…';
 
