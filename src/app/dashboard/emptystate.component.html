@@ -1,4 +1,4 @@
-<div *ngIf="!loading && !integrations.length">
+<div *ngIf="!loading && (!integrations || !integrations.length)">
   <div class='row text-center syndesis-dashboard-empty-state'>
 
     <!-- Page Header & Content Area  -->
