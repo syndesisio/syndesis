@@ -769,7 +769,7 @@ objects:
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
-              path: "/auth"
+              path: "/auth/"
               port: 8080
             initialDelaySeconds: 15
           ports:
@@ -1816,7 +1816,6 @@ objects:
         "resetCredentialsFlow": "reset credentials",
         "clientAuthenticationFlow": "clients"
       }
-
 - apiVersion: v1
   kind: Service
   metadata:
