@@ -23,43 +23,42 @@ Similar to logging, the UI should help in creating filter expressions for new/in
 
 #### UI defined filter (typed)
 
-For the typed definition of a filter, filtering breaks down in several sub-concepts:
+For the typed definition of a filter, a **filter step** contains one or more **filter rules** which are combined with _and_ or _or_
 
-* A **Filter Step** contains one or more **Filter Rules**. Multiple **Filter Rules** are combined with logical `OR`.
-* A **Filter Rule** contains one or more **Filter Statements**. The 
-
-A _Filter Step_ is a regular `Step` with a type "filter". 
-_Filter Rules_ and _Filter Statements_ are part of the configuration of this step and stored in the properties of a step (_TODO: The domain object `IntegrationConnectionStep` seems to be supeflous_).
-
-The lowest building block is a a `FilterStatement`. It has the following properties:
+A _filter step_ is a regular `Step` with a type "filter". 
+_Filter rules_ are part of the configuration of this step and stored in the properties of a step.
+The lowest building block is a a `FilterRule`. It has the following properties:
 
 * **type** : On which part of the message to apply the filter. Can be either "header", "body" or "properties".
 * **key** : The key to use to extract a message value (e.g. header or property name). The key is empty when type is equals to body.
 * **op** : The operator to use for the filter
 * **value** : The value used by the operator to determine whether a filter applies.
-
+* **combinator** : How this rule is combined with the previous rule. The value can be either `&&` or `||`. The first filter rule's combinator is ignored when building up the expression.
+ 
 "type" and "key" could also be combined to a selector (which e.g. then would have the format `type.key`)
 
-A `FilterRule` is then a list of `FilterStatements`.
 The configuration of a `FilterStep` is then a list of `FilterRules`.
 
 For example, the following configuration
 
 ```yaml
-- - type: "body"
-    op: "contains"
-    value: "antman"
-  - type: "header"
-    key: "region"
-    op: "=~"
-    value: "asia"
-- - type: "body"
-    op: "regex"
-    value: "bat(wo)?man"
-  - type: "header"
-    key: "publisher"
-    op: "=~"
-    value: "DC Comics"
+- type: "body"
+  op: "contains"
+  value: "antman"
+- type: "header"    
+  key: "region"
+  op: "=~"
+  value: "asia"
+  combinator: "&&"
+- type: "body"
+  op: "regex"
+  value: "bat(wo)?man"
+  combinator: "||"
+- type: "header"
+  key: "publisher"
+  op: "=~"
+  value: "DC Comics"
+  combinator: "&&"
 ```
 
 would be stored as a property "filter" on the integration step. It translates later to simple lang expression
@@ -68,7 +67,7 @@ would be stored as a property "filter" on the integration step. It translates la
 ${body} contains "antman" && ${in.header.region} =~ "asia" || ${body} regex "bat(wo)?man" && ${in.header.publisher} =~ "DC Comics"
 ```
 
-Since `&&` has always higher precedence than `||` this works even when the simple language [does not support parentheses](http://camel.apache.org/simple.html)
+The simple expression language [does not support parentheses](http://camel.apache.org/simple.html) nor precedence of operators so the expression is always evaluated from left to right.
 
 #### Text based filter (freeform)
 
@@ -94,20 +93,17 @@ Example for a persistent integration step:
     "type": "form",
     "simple" : "${body} contains \"antman\" || ${in.header.publisher} =~ \"DC Comics\"",
     "rules" : [
-      [ 
-         { 
-           "type": "body",
-           "op": "contains",
-           "value": "antman"
-         }
-      ],
-      [
-         { 
-           "type": "header",
-           "op": "=~",
-           "value": "DC Comics"
-         }
-      ]      
+       { 
+         "type": "body",
+         "op": "contains",
+         "value": "antman"
+       },
+       { 
+         "type": "header",
+         "op": "=~",
+         "value": "DC Comics",
+         "combinator": "&&"
+       }
     ]
   }
 },
@@ -116,7 +112,7 @@ Example for a persistent integration step:
   "stepKind": "filter",
   "configuredProperties": {
     "type": "text",
-    "simple": "${in.header.region} =~ \"asia\" || ${body} regex \"bat(wo)?man\""
+    "simple": "${in.header.region} contains \"asia\" || ${body} regex \"bat(wo)?man\""
   }
 }]
 ```
@@ -130,17 +126,17 @@ If switching to JPA it is recommended to use a more typed approach which `Filter
 An initial design suggestion can be found [here](https://redhat.invisionapp.com/share/KNBZYX1W3)
 and the comments on this are collected on https://github.com/syndesisio/syndesis-ui/issues/569
 
-The domain model above reflects the first suggestion to model `&&` and `||` within the filter step. 
-For the form type, the filter should be presented as a list of lists: The outer list is the overall "filter step" which contains "filter rules" as elements. Each "filter rule" is a list, too and contains "filter statements". This list is built up from the statements. 
-
-In a first version we can assume that a "filter step" only consist of a single "filter rule" in order to avoid too complex UI interaction. This means, that no "OR" is supported then (as each "filter rules" elements are combined with AND).
-
-The reason to use a two-level definition leading to this list of lists is, that allowing free selection of "and" and "or" might easily leads to confusion for the citizen developer. Also, it looks easier to hide the very technical boolean algebra issue and allow a more rigid structure for the overall construct which is easier to grasp mentally (everythin in a rule is combined with "AND", all rules are combined with "OR").
-
 One big open point is from where to get the metadata to e.g. provide a list of header keys which can be selected from a dropdown in the "key" field. Is there some metadata which contains such values ?
+
+A `FilterStep` is not associated with a connection, and hence has no access to meta data coming from a connector.
 
 ### Misc / Open Points
 
 * How to add the filter step to funktion.yml when deploying the integration
 * Define proper REST API based on the domain model provided above
 * Evaluate connection to logging (i.e. should dropped message be logged ?)
+* How to obtain the meta data to present in the dropdown boxes (or intellisense completion) for the header / property keys ?
+
+### Remarks
+
+* The current domain object `IntegrationConnectionStep` seems to be supeflous and should be deleted then.
