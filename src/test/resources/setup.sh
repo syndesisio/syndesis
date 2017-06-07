@@ -23,7 +23,7 @@ fi
 if [ -n "${SYNDESIS_TEMPLATE_URL}" ]; then
     true
 elif [ -n "${OPENSHIFT_TEMPLATE_FROM_WORKSPACE}" ]; then
-    SYNDESIS_TEMPLATE_URL="file:///${WORKSPACE}/syndesis.yml"
+    SYNDESIS_TEMPLATE_URL="${WORKSPACE}/${SYNDESIS_TEMPLATE_TYPE}.yml"
 elif [ -n "${OPENSHIFT_TEMPLATES_FROM_GITHUB_COMMIT}" ]; then
     SYNDESIS_TEMPLATE_URL="https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/${OPENSHIFT_TEMPLATES_GIT_COMMIT}/${SYNDESIS_TEMPLATE_TYPE}.yml"
 else
