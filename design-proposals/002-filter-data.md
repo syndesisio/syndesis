@@ -14,7 +14,7 @@ I have two initial requirements for filtering data in an integration:
 * Based on content in the body.
 * Based on content in a message header.
 
-In both cases, I expect to be able to apply basic string operations to the data to form a filter expression (contains, does not contain, starts with).  For more details on options, see the Operator Support section here:
+In both cases, I expect to be able to apply basic string operations to the data to form a filter expression (e.g. contains, does not contain, starts with ...).  For the full list of supported operators, see the Operator Support section here:
 http://camel.apache.org/simple.html
 
 Similar to logging, the UI should help in creating filter expressions for new/inexperienced users (like through clickable examples or typed form inputs).  The interface should also allow for advanced users to enter free form expressions.
@@ -117,7 +117,7 @@ Example for a persistent integration step:
 }]
 ```
 
-The example is simplified in so far as the value to the "rules" field for step with id "1" must be enterd as a single line string with newlines replaced by "\n" since the value of a property is currently only allowed to be a string. 
+The example is simplified in so far as the value to the "rules" field for step with id "1" must be entered as a single line string with newlines replaced by "\n" since the value of a property is currently only allowed to be a string. 
 
 If switching to JPA it is recommended to use a more typed approach which `FilterStep` being a subclass of `Step` and having the relation to "filter rules" and "filter statements" in seperate tables, which are linked together.
 
@@ -139,4 +139,4 @@ A `FilterStep` is not associated with a connection, and hence has no access to m
 
 ### Remarks
 
-* The current domain object `IntegrationConnectionStep` seems to be supeflous and should be deleted then.
+* The current domain object `IntegrationConnectionStep` seems to be superfluous and should be deleted then.
