@@ -42,6 +42,7 @@ export class ConnectionsListPage implements OnInit {
   }
 
   onSelected(connection: Connection) {
+    this.store.clear();
     this.router.navigate(['connections', connection.id]);
   }
 

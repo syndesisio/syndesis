@@ -100,6 +100,12 @@ export abstract class AbstractStore<T extends BaseEntity, L extends Array<T>,
     }
   }
 
+  // Use clear() to clear the current resource so views don't show stale data
+  clear(): void {
+    this._current.next(undefined);
+    this._loading.next(true);
+  }
+
   load(id: string, retries = 0) {
     this._loading.next(true);
     this.service.get(id).subscribe(

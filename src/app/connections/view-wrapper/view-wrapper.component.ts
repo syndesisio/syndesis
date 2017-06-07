@@ -1,5 +1,6 @@
-import { Component, OnInit, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { Connection } from '../../model';
 import { ConnectionStore } from '../../store/connection/connection.store';
@@ -10,29 +11,18 @@ import { CurrentConnectionService } from '../create-page/current-connection';
   templateUrl: './view-wrapper.component.html',
   styleUrls: ['./view-wrapper.component.scss'],
 })
-export class ConnectionViewWrapperComponent implements OnInit {
-  connection: Observable<Connection>;
+export class ConnectionViewWrapperComponent implements OnInit, OnDestroy {
 
+  connection: Observable<Connection>;
   public mode = 'view';
 
   constructor(
     private store: ConnectionStore,
-    public current: CurrentConnectionService,
-    public detector: ChangeDetectorRef,
-    ) { }
+    ) {
+      this.connection = this.store.resource;
+    }
 
-  get conn() {
-    return this.current.connection;
-  }
+  ngOnInit() { }
 
-  set conn(connection: Connection) {
-    this.current.connection = connection;
-  }
-
-  ngOnInit() {
-    this.store.resource.subscribe((connection) => {
-      this.current.connection = connection;
-      this.detector.detectChanges();
-    });
-  }
+  ngOnDestroy() { }
 }
