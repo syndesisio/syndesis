@@ -135,11 +135,19 @@
           image: syndesis/syndesis-rest:latest
 {{/Dev}}
           imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8181
+              scheme: HTTP
+            initialDelaySeconds: 180
+            timeoutSeconds: 3
           readinessProbe:
             httpGet:
               path: "/health"
               port: 8181
             initialDelaySeconds: 5
+            timeoutSeconds: 3
           ports:
           - containerPort: 8080
             name: http
@@ -147,6 +155,7 @@
             name: prometheus
           - containerPort: 8778
             name: jolokia
+          workingDir: /deployments
           volumeMounts:
           - name: syndesis-rest-tls
             mountPath: /tls-keystore
