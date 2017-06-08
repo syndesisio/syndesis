@@ -2031,11 +2031,19 @@ objects:
           image: ' '
 
           imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8181
+              scheme: HTTP
+            initialDelaySeconds: 180
+            timeoutSeconds: 3
           readinessProbe:
             httpGet:
               path: "/health"
               port: 8181
             initialDelaySeconds: 5
+            timeoutSeconds: 3
           ports:
           - containerPort: 8080
             name: http
@@ -2043,6 +2051,7 @@ objects:
             name: prometheus
           - containerPort: 8778
             name: jolokia
+          workingDir: /deployments
           volumeMounts:
           - name: syndesis-rest-tls
             mountPath: /tls-keystore
@@ -2357,15 +2366,17 @@ objects:
           readinessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: 8181
               scheme: HTTP
             initialDelaySeconds: 10
+            timeoutSeconds: 3
           livenessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: 8181
               scheme: HTTP
             initialDelaySeconds: 180
+            timeoutSeconds: 3
           ports:
           - containerPort: 8080
             name: http
@@ -2383,12 +2394,19 @@ objects:
             requests:
               cpu: 200m
               memory: 612Mi
+          # spring-boot automatically picks up application.yml from ./config
+          workingDir: /deployments
           volumeMounts:
           - name: syndesis-verifier-tls
             mountPath: /tls-keystore
+          - name: config-volume
+            mountPath: /deployments/config
         volumes:
         - name: syndesis-verifier-tls
           emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: syndesis-verifier-config
     triggers:
     - imageChangeParams:
         automatic: true
@@ -2400,6 +2418,28 @@ objects:
       type: ImageChange
 
     - type: ConfigChange
+
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: syndesis
+      component: syndesis-verifier
+    name: syndesis-verifier-config
+  data:
+    application.yml: |-
+      server:
+        port: 8080
+      # We only want the status, not the full data. Hence security on, sensitive off.
+      # See https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-monitoring.html
+      # For details
+      management:
+        port: 8181
+        security:
+          enabled: true
+      endpoints:
+        health:
+          sensitive: false
 
 
 - apiVersion: v1
