@@ -33,7 +33,7 @@
     <module>http-pull-push-example</module>
     <module>twitter-salesforce-example</module>
     <module>trade-buy-place-example</module>
-    
+    <module>twitter-search-example</module>   
     <module>http-pingcheck-example</module>
     <module>salesforce-pingcheck-example</module>
     <module>twitter-pingcheck-example</module>
