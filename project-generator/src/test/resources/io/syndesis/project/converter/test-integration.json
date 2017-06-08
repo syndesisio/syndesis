@@ -35,8 +35,8 @@
             }
           },
           "name": "PeriodicTimer",
-          "id": "io.syndesis_timer-connector_0.4.4",
-          "camelConnectorGAV": "io.syndesis:timer-connector:0.4.4",
+          "id": "io.syndesis_timer-connector_@syndesis-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "periodic-timer"
         },
         "configuredProperties": {
@@ -72,8 +72,8 @@
             }
           },
           "name": "HTTP GET",
-          "id": "io.syndesis:http-get-connector:0.4.4",
-          "camelConnectorGAV": "io.syndesis:http-get-connector:0.4.4",
+          "id": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "http-get"
         },
         "configuredProperties": {
@@ -117,8 +117,8 @@
             }
           },
           "name": "HTTP POST",
-          "id": "io.syndesis:http-post-connector:0.4.4",
-          "camelConnectorGAV": "io.syndesis:http-post-connector:0.4.4",
+          "id": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+          "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "http-post"
         },
         "configuredProperties": {
