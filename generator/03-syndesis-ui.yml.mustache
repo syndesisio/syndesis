@@ -76,11 +76,17 @@
           image: syndesis/syndesis-ui:latest
 {{/Dev}}
           imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: "/"
+              port: 2015
+            timeoutSeconds: 5
           readinessProbe:
             httpGet:
               path: "/"
               port: 2015
             initialDelaySeconds: 1
+            timeoutSeconds: 5
           ports:
           - containerPort: 2015
           volumeMounts:

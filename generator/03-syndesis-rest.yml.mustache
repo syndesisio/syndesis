@@ -141,13 +141,13 @@
               port: 8181
               scheme: HTTP
             initialDelaySeconds: 180
-            timeoutSeconds: 3
+            timeoutSeconds: 5
           readinessProbe:
             httpGet:
               path: "/health"
               port: 8181
             initialDelaySeconds: 5
-            timeoutSeconds: 3
+            timeoutSeconds: 5
           ports:
           - containerPort: 8080
             name: http

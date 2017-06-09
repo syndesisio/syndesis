@@ -94,14 +94,14 @@
               port: 8181
               scheme: HTTP
             initialDelaySeconds: 10
-            timeoutSeconds: 3
+            timeoutSeconds: 5
           livenessProbe:
             httpGet:
               path: /health
               port: 8181
               scheme: HTTP
             initialDelaySeconds: 180
-            timeoutSeconds: 3
+            timeoutSeconds: 5
           ports:
           - containerPort: 8080
             name: http

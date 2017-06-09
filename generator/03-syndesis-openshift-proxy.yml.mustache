@@ -62,10 +62,15 @@
           - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
           - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
           - -insecure-skip-verify=${INSECURE_SKIP_VERIFY}
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 5
           readinessProbe:
             tcpSocket:
               port: 8080
             initialDelaySeconds: 1
+            timeoutSeconds: 5
           ports:
           - containerPort: 8080
           volumeMounts:
