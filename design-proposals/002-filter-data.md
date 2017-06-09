@@ -67,7 +67,30 @@ would be stored as a property "filter" on the integration step. It translates la
 ${body} contains "antman" && ${in.header.region} =~ "asia" || ${body} regex "bat(wo)?man" && ${in.header.publisher} =~ "DC Comics"
 ```
 
-The simple expression language [does not support parentheses](http://camel.apache.org/simple.html) nor precedence of operators so the expression is always evaluated from left to right.
+The simple expression language [does not support parentheses](http://camel.apache.org/simple.html) nor precedence of operators so the expression is always evaluated from left to right. It should be considered to ommit logical operations like this for now. It can be added easily to the UI later, too.
+
+##### Fixed background data
+
+For the `keys` as well as for the possible `operators` the UI needs a list of values which can be chosen. The list of operators should be fixed, whereas it should be possible to add a freeform key (but with suggestion of a set of given keys). 
+
+This background data can be obtained by a dedicated API call to an endpoint `../integrations/filter/options` which takes an existing integration ID (if the intergration has already been created, otherwise the ids of all connections before this filter step need to be send to the API server) as parameter.
+
+It returns all data required to build the form:
+
+```json
+{
+  "header" : [ "headerKey1", "headerKey2", .... ],
+  "body" : [ "bodyKey1", "bodyKey2", .... ],
+  "op" : [
+    { "label": "contains (ignore case)",  "operator": "=~"},
+    { "label": "contains", "operator": "contains"},
+    { "label": "matches", "operatos": "regex"},
+    ......
+  ]
+}
+```
+
+It's up to the server how to determine this data set. Ideally the connector themselves provide this meta information (which could be done also by e.g. reflection on the body type).
 
 #### Text based filter (freeform)
 
@@ -121,14 +144,14 @@ The example is simplified in so far as the value to the "rules" field for step w
 
 If switching to JPA it is recommended to use a more typed approach which `FilterStep` being a subclass of `Step` and having the relation to "filter rules" and "filter statements" in seperate tables, which are linked together.
 
+
 ### UI
 
 An initial design suggestion can be found [here](https://redhat.invisionapp.com/share/KNBZYX1W3)
-and the comments on this are collected on https://github.com/syndesisio/syndesis-ui/issues/569
+and the comments on this are collected in https://github.com/syndesisio/syndesis-ui/issues/569
 
-One big open point is from where to get the metadata to e.g. provide a list of header keys which can be selected from a dropdown in the "key" field. Is there some metadata which contains such values ?
+The meta data for the list of header, body, property keys (e.g. for the possible value for 'key' for all possible 'types' should be obtainable via a rest call). The 'keys' themselves are freely typable because it is assumed that not all possible keys can be predicted during design time. It is recommended to use textfield with autosuggestions while typing. How to obtain this meta data is described above in "Fixed background data".
 
-A `FilterStep` is not associated with a connection, and hence has no access to meta data coming from a connector.
 
 ### Misc / Open Points
 
