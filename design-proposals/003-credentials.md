@@ -28,7 +28,7 @@ My requirements are:
 ## Discussion 
 
 The idea of credential provider is to encapsulate managing specifics of 3rd party SaaS credentials.
-Currently credentials are represented by connection properties that are marked as secret. This proposes an abstraction over existing connection properties with the ability to implement specific functionality for getting credentials such as OAuth tokens from 3rd party SaaS solutions. As such existing connection properties and their persistance as k8s secrets would remain the same, the UI would also have the choice of either managing the connection properties in the same way as it is currently done or can call into credentials provider implementation, specific to each SaaS solution, that would *apply* credentials to connection properties on the backend.
+Currently credentials are represented by connection properties that are marked as secret. This proposes an abstraction over existing connection properties with the ability to implement specific functionality for getting credentials such as OAuth tokens from 3rd party SaaS solutions. As such existing connection properties and their persistence as k8s secrets would remain the same, the UI would also have the choice of either managing the connection properties in the same way as it is currently done or can call into credentials provider implementation, specific to each SaaS solution, that would *apply* credentials to connection properties on the backend.
 Each 3rd party SaaS can have slightly different OAuth flow which mandates the need for credential provider, a plug in, possibly shipped as a separate artifact and discovered at runtime, mounted at `/api/{version}/credentials/{connector}` to facilitate the OAuth flow and manage (i.e. *apply*) the resulting credentials.
 Considering that OAuth requires per-user and per-application secrets, there is a need for system (Syndesis owned) and user (citizen user owned) credentials. Melding of those would be also responsibility of credential provider.
 Management of user and system credentials is also performed by credential provider, for instance initial setup of system credentials or refresh of user credentials.
@@ -42,9 +42,9 @@ Credential provider consists of:
 
 There are two types of domain objects, differentiated by security: public data for UI and sensitive secrets for the backend.
 
-Credentials need to be combined or linked together with other credentialsm, this has merits when considering that OAuth credentials are partialy owned by the user and partialy owned by the system. For example Syndesis owns non-public credentials (OAuth Client Secret, X.509 certificate and private key) and semi-public (OAuth Client ID), that need to be used during acquisition and in a running integration together with private credentials associated with the user (username, OAuth authorization token, OAuth refresh token). This makes for two credentials with two different security and lifecycle requirements.
+Credentials need to be combined or linked together with other credentials, this has merits when considering that OAuth credentials are partialy owned by the user and partialy owned by the system. For example Syndesis owns non-public credentials (OAuth Client Secret, X.509 certificate and private key) and semi-public (OAuth Client ID), that need to be used during acquisition and in a running integration together with private credentials associated with the user (username, OAuth authorization token, OAuth refresh token). This makes for two credentials with two different security and lifecycle requirements.
 
-NOTE: Salesforce supports using x509 certificates for OAuth flow, and that should be prefered as the refreshing OAuth token can be performed within certificate's expiry i.e. not depending on the refresh token.
+NOTE: Salesforce supports using x509 certificates for OAuth flow, and that should be preferred as the refreshing OAuth token can be performed within certificate's expiry i.e. not depending on the refresh token.
 
 ### Credential view model
 
@@ -54,7 +54,7 @@ The credential name can be auto generated (e.g. "Salesforce credentials for user
 
 View model credential properties:
 
- * **id**        : System assigned identifier for the credential, e.g. UUID or sequence
+ * **id**        : System assigned identifier for the credential, e.g. UUID
  * **name**      : Name of the credential, for humans, e.g. "Salesforce credentials for user@example.com"
  * **connector** : Conector type (label) that the credential applies to, e.g. "salesforce"
  * **created**   : Date/time the credential was created
