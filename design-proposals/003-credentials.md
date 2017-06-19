@@ -16,14 +16,13 @@ High level goals are:
 
 ## User Story
 
-As a citizen user I would like to connect to 3rd party service that require me to authenticate using credentials. Credentials that I provide or that are received during the authorization with the 3rd party service would need to be stored in Syndesis so I can manage them. For example when connecting to Salesforce the I grant Syndesis rights to perform actions on my behalf by, and in order to do that I would like to choose "connect to Salesforce" in Syndesis authenticate against Salesforce to authorize that access and not be prompted again for authorization. Syndesis in turn would apply the credentials received in the authorization process with Salesforce to my Salesforce connection, and perform any management needed, such as refreshing the the received credentials. I would like to have the ability to manage credentials that are stored in Syndesis.
+As a citizen user I would like to connect to 3rd party service that require me to authenticate using credentials. Credentials that I provide or that are received during the authorization with the 3rd party service would need to be stored in Syndesis so I can manage them. For example when connecting to Salesforce the I grant Syndesis rights to perform actions on my behalf by, and in order to do that I would like to choose "connect to Salesforce" in Syndesis authenticate against Salesforce to authorize that access and not be prompted again for authorization. Syndesis in turn would apply the credentials received in the authorization process with Salesforce to my Salesforce connection, and perform any management needed, such as refreshing the the received credentials.
 
 My requirements are:
 
  * Simplicity in authorization flow ("connect to Salesforce" button)
  * Secure storage of authorization data (credentials)
- * Ability to manage credentials: delete and update
- * Ability to apply credentials to connections
+ * Have Syndesis manage credential lifecycle
 
 ## Discussion 
 
@@ -35,11 +34,11 @@ Considering that OAuth requires per-user and per-application secrets, there is a
 
 Management of user and system credentials is also performed by credential provider, for instance initial setup of system credentials or refresh of user credentials.
 
-Credential provider consists of:
- * **handler** - to implement OAuth flow (REST)
- * **applicator** - to apply credentials to connection properties
- * **deployer** - to augment k8s deployment descriptor
- * **manager** - to manage credentials
+
+## User interaction
+
+A citizen user during the creation of new connection selects `conect to _Service_`, this leads the user to the 3rd party service requiring the users credential to authorise Syndesis access on the users behalf. The user authenticates and authorizes Syndesis's access, and is returned to the same create connection screen which now shows that Syndesis is allowed to access the service.
+The negative outcome is also possible if the user does not authorize Syndesis or if there is an error in the process, at that point user should be given an opportunity to retry the process.
 
 ## Domain
 
@@ -141,14 +140,45 @@ To interact with the credentials API:
 | GET | /api/{version}/connectors/{connector}/credentials | List all the ways a credential can be acquired for a {connector} |
 | POST | /api/{version}/connectors/{connector}/credentials | Acquire new credential for connector with label {connector} |
 | \* | /api/{version}/connectors/{connector}/credentials/\*\* | Handle interaction with 3rd party services during credential acquisition |
-| GET | /api/{version}/credentials | List all credentials created by the current tennant |
-| DELETE | /api/{version}/credentials/{id} | Remove credential from the system |
 
 ### Examples
 
-#### Acquisition example
+#### Acquisition example with Salesforce
 
 Here is an example of credential workflow starting with acquisition for Salesforce:
+
+![Alt text](https://g.gravizo.com/source/salesforce_example?https%3A%2F%2Fraw.githubusercontent.com%2Fzregvart%2Fsyndesis-project%2Fcredentials%2Fdesign-proposals%2F003-credentials.md)
+<details>
+<summary></summary>
+salesforce_example
+@startuml
+actor User
+User -> Syndesis: (1) List methods for Salesforce
+activate Syndesis
+Syndesis --> User: [JWT Flow]
+deactivate Syndesis
+User -> Syndesis: (2) Connect to Salesforce (JWT Flow)
+activate Syndesis
+Syndesis -> Salesforce: (3) Redirect to Salesforce (via User agent)
+deactivate Syndesis
+User -> Salesforce: Authorize Syndesis
+activate Salesforce
+Salesforce --> Syndesis: (4) Send authorization code (via User agent)
+deactivate Salesforce
+activate Syndesis
+Syndesis -> Salesforce: (5) Request authorization
+activate Salesforce
+Salesforce --> Syndesis: [Authorization tokens]
+deactivate Salesforce
+Syndesis -> Syndesis: (6) Store authorization tokens
+Syndesis --> User: Authorization successful
+deactivate Syndesis
+@enduml
+salesforce_example
+</details>
+
+Details of the exchange:
+
  1. UI lists all methods of credential acquisition
 ```http
 GET /api/v1/connectors/salesforce/credentials HTTP/1.1
