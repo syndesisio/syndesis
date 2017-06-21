@@ -15,13 +15,13 @@ Following the https://redhat-ipaas.github.io/designs/[UX walkthrough] the follow
 | Each _connection type_ a certain set of fields is available (these has been defined externally and originate from the supported Camel component fields). These fields can be selected in the https://redhat.invisionapp.com/share/9E9OFJDX3#/screens[second step] when creating a _connection_.
 
 | _connection value_
-| `ConfiguredConnectorProperty`
+| `ConnectionProperty`
 | This is the data entered for the _connection fields_ as entered in https://redhat.invisionapp.com/share/C29OFJJH8#/screens[step 2] when creating a connection. It refers to the _connection field_.
 
 | _connection_
-| `ConfiguredConnector`
+| `Connection`
 | The _connection type_ and the _connection values_ together are the _connection_. 
-This is also used during the creation of an _integration_ when selecting the _connection_ (like https://redhat.invisionapp.com/share/3994CEWT6#/screens[here] in the lower half). `ConfiguredConnector` is associated with a single `Connector` and refers to multiple `ConfiguredConnectorProperty` objects.
+This is also used during the creation of an _integration_ when selecting the _connection_ (like https://redhat.invisionapp.com/share/3994CEWT6#/screens[here] in the lower half). `Connection` is associated with a single `Connector` and refers to multiple `ConnectionProperty` objects.
 
 | _action_
 | `Action`
