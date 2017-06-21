@@ -25,7 +25,7 @@ This is also used during the creation of an _integration_ when selecting the _co
 
 | _action_
 | `Action`
-| Each `Connector` has one or more `Action`s associated. For example: A "Twitter" `Connector` has several `Actions`: "TwitterMention", "TwitterSearch", ... The _action_ is selected during the creation of an _integration_ as part of the https://redhat.invisionapp.com/share/JG9JWFD5H#/screens/221870785[integration wizard]
+| Each `Connector` has one or more `Action` s associated. For example: A "Twitter" `Connector` has several `Actions`: "TwitterMention", "TwitterSearch", ... The _action_ is selected during the creation of an _integration_ as part of the https://redhat.invisionapp.com/share/JG9JWFD5H#/screens/221870785[integration wizard]
 
 | _action field_
 | `ActionProperty`
