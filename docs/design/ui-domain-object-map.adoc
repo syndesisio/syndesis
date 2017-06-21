@@ -33,7 +33,7 @@ This is also used during the creation of an _integration_ when selecting the _co
 
 | _action value_
 | `ActionInstanceProperty`
-| Analogous to the _connection value_s specified when creating a _connection_ which holds the values configured, the _action value_ holds the `Action` specific configuration values.
+| Analogous to the _connection value_ s specified when creating a _connection_ which holds the values configured, the _action value_ holds the `Action` specific configuration values.
 
 | _start / end connection_ (looking for a better name)
 | `ActionInstance`
