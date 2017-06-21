@@ -1,0 +1,43 @@
+The https://github.com/redhat-ipaas/ipaas-rest[ipaas-rest] server use an own domain model which can be inferred from this https://github.com/rhuss/ipaas-rest/blob/69e4a8a65a4d0b297e803ae2e1f283739199cf5d/docs/database/schema.png[schema].
+
+Following the https://redhat-ipaas.github.io/designs/[UX walkthrough] the following mappings can be inferred (all UX objects are in _italics_, all domain objects in `FixedWidth`.
+
+[cols="1,1,2"]
+|===
+| UI / View | Domain | Descriptions
+
+| _connection type_
+| `Connector`
+| The overall category for an _connection_ as it can be selected in the https://redhat.invisionapp.com/share/RS9OFJ9YK#/screens[first step] when creating a _connection_
+
+| _connection field_
+| `ConnectorProperty`
+| Each _connection type_ a certain set of fields is available (these has been defined externally and originate from the supported Camel component fields). These fields can be selected in the https://redhat.invisionapp.com/share/9E9OFJDX3#/screens[second step] when creating a _connection_. When all fields 
+
+| _connection value_
+| `ConfiguredConnectorProperty`
+| This is the data entered for the _connection fields_ as entered in https://redhat.invisionapp.com/share/C29OFJJH8#/screens[step 2] when creating a connection. It refers to the _connection field_.
+
+| _connection_
+| `ConfiguredConnector`
+| The _connection type_ and the _connection values_ together are the _connection_. 
+This is also used during the creation of an _integration_ when selecting the _connection_ (like https://redhat.invisionapp.com/share/3994CEWT6#/screens[here] in the lower half). `ConfiguredConnector` is associated with a single `Connector` and refers to multiple `ConfigureConnectorProperty` objects.
+
+| _action_
+| `Action`
+| Each `Connector` has one or more `Action`s associated. For example: A "Twitter" `Connector` has several `Actions`: "TwitterMention", "TwitterSearch", ... The _action_ is selected during the creation of an _integration_ as part of the https://redhat.invisionapp.com/share/JG9JWFD5H#/screens/221870785[integration wizard]
+
+| _action field_
+| `ActionProperty`
+| These are the possible field values which can be edited when configuring the connection as part of an integration as shown as  this https://redhat.invisionapp.com/share/HW9OF54BQ#/screens[step in the integration wizard].
+
+| _action value_
+| `ActionInstanceProperty`
+| Analogous to the _connection value_s specified when creating a _connection_ which holds the values configured, the _action value_ holds the `Action` specific configuration values.
+
+| _start / end connection_ (looking for a better name)
+| `ActionInstance`
+| The fully configured _connection_ with the selected action and references to the _connection values_ and the _action values_. Its created as part of the integration wizard when the start / end connections has been added, like after this https://redhat.invisionapp.com/share/HW9OF54BQ#/screens[step]
+
+|===
+
