@@ -21,7 +21,7 @@ Following the https://redhat-ipaas.github.io/designs/[UX walkthrough] the follow
 | _connection_
 | `ConfiguredConnector`
 | The _connection type_ and the _connection values_ together are the _connection_. 
-This is also used during the creation of an _integration_ when selecting the _connection_ (like https://redhat.invisionapp.com/share/3994CEWT6#/screens[here] in the lower half). `ConfiguredConnector` is associated with a single `Connector` and refers to multiple `ConfigureConnectorProperty` objects.
+This is also used during the creation of an _integration_ when selecting the _connection_ (like https://redhat.invisionapp.com/share/3994CEWT6#/screens[here] in the lower half). `ConfiguredConnector` is associated with a single `Connector` and refers to multiple `ConfiguredConnectorProperty` objects.
 
 | _action_
 | `Action`
