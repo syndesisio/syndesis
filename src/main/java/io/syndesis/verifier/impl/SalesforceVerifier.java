@@ -1,7 +1,5 @@
 package io.syndesis.verifier.impl;
 
-import java.util.Map;
-
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,12 +8,8 @@ import org.springframework.stereotype.Component;
  */
 @Component("salesforce")
 public class SalesforceVerifier extends BaseVerifier {
-    protected String getConnectorAction() {
-        return "salesforce-upsert-contact";
-    }
-
     @Override
-    protected void customize(Map<String, Object> params) {
-        params.put("operationName", "UPSERT_SOBJECT");
+    protected String getConnectorAction() {
+        return "salesforce";
     }
 }
