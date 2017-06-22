@@ -98,6 +98,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <basepom.test.timeout>300</basepom.test.timeout>
+    <basepom.check.skip-all>true</basepom.check.skip-all>
 
     <syndesis-connectors.version>0.4.4</syndesis-connectors.version>
 
@@ -732,6 +733,28 @@
       </activation>
       <properties>
         <javadoc.opts>-Xdoclint:none</javadoc.opts>
+      </properties>
+    </profile>
+    <profile>
+      <id>ci</id>
+      <properties>
+        <basepom.check.skip-all>false</basepom.check.skip-all>
+        <user.home>/home/jenkins</user.home>
+        <fabric8.namespace>syndesis-ci</fabric8.namespace>
+        <java-image>fabric8/s2i-java:2.0</java-image>
+        <fabric8.mode>openshift</fabric8.mode>
+      </properties>
+    </profile>
+    <profile>
+      <id>checks</id>
+      <activation>
+        <property>
+          <name>syndesis.profile</name>
+          <value>ci</value>
+        </property>
+      </activation> 
+      <properties>
+        <basepom.check.skip-all>false</basepom.check.skip-all>
       </properties>
     </profile>
   </profiles>

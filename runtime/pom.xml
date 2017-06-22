@@ -751,14 +751,5 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>ci</id>
-      <properties>
-        <user.home>/home/jenkins</user.home>
-        <fabric8.namespace>syndesis-ci</fabric8.namespace>
-        <java-image>fabric8/s2i-java:2.0</java-image>
-        <fabric8.mode>openshift</fabric8.mode>
-      </properties>
-    </profile>
   </profiles>
 </project>
