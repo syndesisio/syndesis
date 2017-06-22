@@ -1,0 +1,48 @@
+<div class="basic-filter">
+  <div class="clearfix">
+
+    <div class="title">
+      <h1>Configure Basic Filter Step</h1>
+    </div>
+
+    <p>Fill out the fields associated with the selected step.</p>
+
+    <div class="overflow-hidden content-margin container-fluid">
+
+      <form [formGroup]="formGroup">
+
+        <dynamic-form-bootstrap-control *ngFor="let controlModel of basicFilterModel"
+                                        [group]="formGroup"
+                                        [model]="controlModel"
+                                        (change)="onChange($event)">
+
+          <ng-template modelId="rulesFormArray"
+                       let-context="context"
+                       let-index="index">
+
+            <div class="pull-right">
+
+              <button type="button"
+                      class="btn btn-danger btn-sm rounded"
+                      (click)="remove(context, index)">&#10005;
+              </button>
+              <button type="button"
+                      class="btn btn-success btn-sm rounded"
+                      (click)="insert(context, index + 1)">&#43;
+              </button>
+
+            </div>
+
+          </ng-template>
+
+        </dynamic-form-bootstrap-control>
+
+      </form>
+
+      <!--button (click)="test()" type="button">Test</button-->
+
+      <pre>{{formGroup.value | json}}</pre>
+
+    </div>
+  </div>
+</div>

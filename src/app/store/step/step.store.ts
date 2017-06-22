@@ -47,15 +47,14 @@ export class StepStore {
       id: undefined,
       connection: undefined,
       action: undefined,
-      name: 'Filter',
-      description: 'Filter incoming data based on a set of criteria',
-      stepKind: 'filter',
+      name: 'Basic Filter',
+      description: 'Continue the integration only if criteria you specify in simple input fields are met. Suitable for' +
+      ' most integrations.',
+      stepKind: 'basic-filter',
       properties: {
         filter: {
-          type: 'textarea',
-          displayName: 'Only continue if',
+          displayName: 'Only continue if incoming data match all of the following',
           required: true,
-          rows: 10,
         },
       },
       configuredProperties: undefined,
