@@ -82,9 +82,9 @@ The Credential provider should implement the following Java interface:
 ```java
 interface CredentialProvider {
     /**
-     * All AcquisitionMethod that this CredentialProvider supports
+     * AcquisitionMethod that this CredentialProvider supports
      */
-    AcquisitionMethod[] acquisitionMethods();
+    AcquisitionMethod acquisitionMethod();
     /**
      * Begin acquisition of the credential by returning the information
      * to the UI on how to proceed and make any arrangements needed 
@@ -138,7 +138,7 @@ To interact with the credentials API:
 | HTTP Verb | Path | Description |
 | --------- | ---- | ----------- |
 | GET | /api/{version}/connectors/{connector}/credentials | List all the ways a credential can be acquired for a {connector} |
-| POST | /api/{version}/connectors/{connector}/credentials | Acquire new credential for connector with label {connector} |
+| POST | /api/{version}/connections/{id}/credentials | Acquire new credential for connection with identifier {id} |
 | \* | /api/{version}/connectors/{connector}/credentials/\*\* | Handle interaction with 3rd party services during credential acquisition |
 
 ### Examples
@@ -153,26 +153,30 @@ Here is an example of credential workflow starting with acquisition for Salesfor
 salesforce_example
 @startuml
 actor User
-User -> Syndesis: (1) List methods for Salesforce
-activate Syndesis
-Syndesis --> User: [JWT Flow]
-deactivate Syndesis
-User -> Syndesis: (2) Connect to Salesforce (JWT Flow)
-activate Syndesis
-Syndesis -> Salesforce: (3) Redirect to Salesforce (via User agent)
-deactivate Syndesis
-User -> Salesforce: Authorize Syndesis
+User -> "Syndesis UI": Create connection to Salesforce
+"Syndesis UI" -> "Syndesis REST": (1) Determine credential metadata
+activate "Syndesis REST"
+"Syndesis REST" --> "Syndesis UI": metadata
+deactivate "Syndesis REST"
+User -> "Syndesis UI": Connect to salesforce
+"Syndesis UI" -> "Syndesis REST": (2) Connect to Salesforce [returnUrl]
+activate "Syndesis REST"
+"Syndesis REST" --> "Syndesis UI": [redirect, Salesforce login URL]
+deactivate "Syndesis REST"
+"Syndesis UI" --> User: (3) Redirect to Salesforce login
+User -> Salesforce: Authenticate and authorize Syndesis
 activate Salesforce
-Salesforce --> Syndesis: (4) Send authorization code (via User agent)
+Salesforce --> User: (4) Redirect to submit authorization codes
 deactivate Salesforce
-activate Syndesis
-Syndesis -> Salesforce: (5) Request authorization
+User -> "Syndesis REST": Submit authorization codes (redirect)
+activate "Syndesis REST"
+"Syndesis REST" -> Salesforce: (5) Request authorization
 activate Salesforce
-Salesforce --> Syndesis: [Authorization tokens]
+Salesforce --> "Syndesis REST": [Authorization tokens]
 deactivate Salesforce
-Syndesis -> Syndesis: (6) Store authorization tokens
-Syndesis --> User: Authorization successful
-deactivate Syndesis
+"Syndesis REST" -> "Syndesis REST": (6) Store authorization tokens
+"Syndesis REST" --> User: Authorization successful
+deactivate "Syndesis REST"
 @enduml
 salesforce_example
 </details>
@@ -187,25 +191,23 @@ Accept: application/json
 ```json
 {
   "response": {
-    "methods": [{
-      "type": "jwt-oauth",
+    "method": {
       "label": "Connect to Salesforce",
       "icon": "x-salesforce",
       "description": "You will be redirected to Salesforce to authorize OAuth usage."
-    }]
+    }
   }
 }
 ```
  2. Citizen user chooses "Connect to Salesforce", this results in creation of new credential acquisition:
 ```http
-POST /api/v1/connectors/salesforce/credentials HTTP/1.1
+POST /api/v1/connections/__some_id__/credentials HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 ```
 ```json
 {
   "input": {
-    "method": "jwt-oauth",
     "returnUrl": "https://{syndesis-ui}/..."
   }
 }
