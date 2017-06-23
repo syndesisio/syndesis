@@ -23,42 +23,88 @@ Similar to logging, the UI should help in creating filter expressions for new/in
 
 #### UI defined filter (typed)
 
-For the typed definition of a filter, a **filter step** contains one or more **filter rules** which are combined with _and_ or _or_
+For the typed definition of a filter, a **filter step** contains one or more **filter rules** which are all combined either _and_ or _or_
 
-A _filter step_ is a regular `Step` with a type "filter". 
-_Filter rules_ are part of the configuration of this step and stored in the properties of a step.
-The lowest building block is a a `FilterRule`. It has the following properties:
+A `FilterStep` is a regular `Step` of type "filter". It has the following structure:
 
-* **type** : On which part of the message to apply the filter. Can be either "header", "body" or "properties".
-* **key** : The key to use to extract a message value (e.g. header or property name). The key is empty when type is equals to body.
-* **op** : The operator to use for the filter
-* **value** : The value used by the operator to determine whether a filter applies.
-* **combinator** : How this rule is combined with the previous rule. The value can be either `&&` or `||`. The first filter rule's combinator is ignored when building up the expression.
- 
-"type" and "key" could also be combined to a selector (which e.g. then would have the format `type.key`)
+```java
+// A step used as filter
+class FilterStep extends Step {
+  // Descriptive name used for labeling in the UI
+  String name;
 
-The configuration of a `FilterStep` is then a list of `FilterRules`.
+  // Type of filter, which is either "RULE" or "TEXT"
+  FilterType type;
+  
+  // Predicate can be either "AND" (every) or "OR" (any)
+  FilterPredicate predicate;
+  
+  // List of rules to combine. null when type is "SIMPLE"
+  List<FilterRule> rules;
+  
+  // Filter in the simple expression language. It is either the provided
+  // freeform expression when type it "TEXT" or the calculated 
+  // filter text when type is "RULE" (but can be initially null)
+  String simple;
+}
+
+
+```java
+// Whether it is a basic or advanced filter
+enum FilterType {
+    // Rule based filter which consists of a list of rules
+    RULE,
+    
+    // Freeform filter using the simple expression language
+    TEXT
+}
+```
+
+```java
+// Type how FilterRules are to be combined
+enum FilterPredicate {
+  // Every rule must match for the filter to pass
+  ANY,
+  
+  // Any rule must match for the filter to pass
+  OR;
+}
+```
+
+```java
+// Single rule used in FilterStep
+class FilterRule {
+  // Path expression within the message on which to filter. Can be part of header, body, properties
+  // The path must match the syntax used by the datamapper
+  String path;
+  
+  // Operator to use for the filter. The value comes from meta dara obtained by the UI in 
+  // a separate call. Example: "contains"
+  String op;
+  
+  // Value used by operator to decide whether the filter applies
+  String value;
+}
+```
 
 For example, the following configuration
 
 ```yaml
-- type: "body"
-  op: "contains"
-  value: "antman"
-- type: "header"    
-  key: "region"
-  op: "=~"
-  value: "asia"
-  combinator: "&&"
-- type: "body"
-  op: "regex"
-  value: "bat(wo)?man"
-  combinator: "||"
-- type: "header"
-  key: "publisher"
-  op: "=~"
-  value: "DC Comics"
-  combinator: "&&"
+- name: "Filter on random data"
+  type: "AND"
+  rules:
+  - path: "body.text"
+    op: "contains"
+    value: "antman"
+  - path: "header.region"    
+    op: "=~"
+    value: "asia"
+  - path: "body.text"
+    op: "regex"
+    value: "bat(wo)?man"
+  - path: "header.publisher"
+    op: "=~"
+    value: "DC Comics"
 ```
 
 would be stored as a property "filter" on the integration step. It translates later to simple lang expression
@@ -67,22 +113,21 @@ would be stored as a property "filter" on the integration step. It translates la
 ${body} contains "antman" && ${in.header.region} =~ "asia" || ${body} regex "bat(wo)?man" && ${in.header.publisher} =~ "DC Comics"
 ```
 
-The simple expression language [does not support parentheses](http://camel.apache.org/simple.html) nor precedence of operators so the expression is always evaluated from left to right. It should be considered to ommit logical operations like this for now. It can be added easily to the UI later, too.
+The simple expression language [does not support parentheses](http://camel.apache.org/simple.html) nor precedence of operators so the expression is always evaluated from left to right. That is the reason why only "AND" or "OR" is allowed to combine all rules (since this can be savely evaluated from left to right).
 
 ##### Fixed background data
 
-For the `keys` as well as for the possible `operators` the UI needs a list of values which can be chosen. The list of operators should be fixed, whereas it should be possible to add a freeform key (but with suggestion of a set of given keys). 
+For the `path` as well as for the possible `operators` the UI needs a list of values which can be chosen. The list of operators should be fixed, whereas it should be possible to add a freeform path (but with suggestion of a set of given paths). 
 
-This background data can be obtained by a dedicated API call to an endpoint `../integrations/filter/options` which takes an existing integration ID (if the intergration has already been created, otherwise the ids of all connections before this filter step need to be send to the API server) as parameter.
+This background data can be obtained by a dedicated API call to an endpoint `/api/{version}/integrations/filter/options` which takes an existing integration ID (if the intergration has already been created, otherwise the ids of all connections before this filter step need to be send to the API server) as parameter.
 
 It returns all data required to build the form:
 
 ```json
 {
-  "header" : [ "headerKey1", "headerKey2", .... ],
-  "body" : [ "bodyKey1", "bodyKey2", .... ],
+  "paths" : [ "path1", "path2", .... ],
   "op" : [
-    { "label": "contains (ignore case)",  "operator": "=~"},
+    { "label": "contains (ignore case)",  "operator": "~~"},
     { "label": "contains", "operator": "contains"},
     { "label": "matches", "operatos": "regex"},
     ......
@@ -100,7 +145,7 @@ It should be possible to add a simple expression directly as text. Ideally there
 
 Currently the configuration of a step is a plain properties map object in JSON. Each FilterStep supports the following properties:
 
-* **type** : Either "form" or "text" for the two modes described above.
+* **type** : Either "rule" or "text" for the two modes described above.
 * **simple** : The simple filter expression to apply.
 * **rules** : The rules as defined above for a "form" typed integration.
 
@@ -113,19 +158,18 @@ Example for a persistent integration step:
   "id": "1",
   "stepKind": "filter",
   "configuredProperties": {
-    "type": "form",
+    "type": "rule",
+    "predicate": "AND",
     "simple" : "${body} contains \"antman\" || ${in.header.publisher} =~ \"DC Comics\"",
     "rules" : [
        { 
-         "type": "body",
-         "op": "contains",
+         "path": "body.text",
          "value": "antman"
        },
        { 
-         "type": "header",
+         "path": "header.kind",
          "op": "=~",
          "value": "DC Comics",
-         "combinator": "&&"
        }
     ]
   }
@@ -142,16 +186,26 @@ Example for a persistent integration step:
 
 The example is simplified in so far as the value to the "rules" field for step with id "1" must be entered as a single line string with newlines replaced by "\n" since the value of a property is currently only allowed to be a string. 
 
-If switching to JPA it is recommended to use a more typed approach which `FilterStep` being a subclass of `Step` and having the relation to "filter rules" and "filter statements" in seperate tables, which are linked together.
+If switching to JPA it is recommended to use a more typed approach which `FilterStep` being a subclass of `Step` and having the relation to "filter rules" in a seperate table, which are linked together.
 
+### API
+
+To interact with the filter API:
+
+| HTTP Verb | Path | Description |
+| --------- | ---- | ----------- |
+| GET | /api/{version}/integrations/filters/options | Get the filter background dara to populate the step form |
+
+The defined filters are added to integrations like as other steps.
 
 ### UI
 
-An initial design suggestion can be found [here](https://redhat.invisionapp.com/share/KNBZYX1W3)
+An initial design suggestion can be found [here](https://redhat.invisionapp.com/share/9BC79TYHZ)
 and the comments on this are collected in https://github.com/syndesisio/syndesis-ui/issues/569
 
-The meta data for the list of header, body, property keys (e.g. for the possible value for 'key' for all possible 'types' should be obtainable via a rest call). The 'keys' themselves are freely typable because it is assumed that not all possible keys can be predicted during design time. It is recommended to use textfield with autosuggestions while typing. How to obtain this meta data is described above in "Fixed background data".
+The meta data for the list of header, body, property keys (e.g. for the possible value for 'key' for all possible 'types' should be obtainable via a rest call). The 'paths' themselves are freely typable because it is assumed that not all possible keys can be predicted during design time. It is recommended to use textfield with autosuggestions while typing. How to obtain this meta data is described above in "Fixed background data".
 
+![Alt text](images/design-filter.png)
 
 ### Misc / Open Points
 
