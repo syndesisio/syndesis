@@ -41,7 +41,7 @@ oc project ${KUBERNETES_NAMESPACE}
 
 oc create -f ${SYNDESIS_TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}  || oc replace -f ${SYNDESIS_TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}
 
-oc new-app syndesis \
+oc new-app ${SYNDESIS_TEMPLATE_TYPE}  \
     -p ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}.b6ff.rh-idev.openshiftapps.com \
     -p KEYCLOAK_ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}-keycloack.b6ff.rh-idev.openshiftapps.com \
     -p OPENSHIFT_MASTER=${OPENSHIFT_MASTER} \
