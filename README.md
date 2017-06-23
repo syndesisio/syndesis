@@ -11,6 +11,7 @@ There exist different flavours of OpenShift templates, with the following charac
 | [syndesis-restricted.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-restricted.yml) | If running in an restricted environment without admin access this template should be used. See the [section](#running-single-tenant) below for detailed usage instructions. |
 | [syndesis-dev-restricted.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev-restricted.yml) | Same as above, but as a developer version with using direct Docker images |
 | [syndesis-restricted-ephemeral.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-restricted-ephemeral.yml) | A variant of `syndesis-restricted.yml` which does only use temporary persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue. |
+| [syndesis-ci.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-ci.yml) | A variant of `syndesis.yml` which makes limit use of probes. Mostly needed for testing as a workaround to the [http readiness and liveness probe fail](https://bugzilla.redhat.com/show_bug.cgi?id=1457399) issue. |
 
 More about the differences can be found in this [issue](https://github.com/syndesisio/syndesis-openshift-templates/issues/28)
 

@@ -39,6 +39,7 @@ type Context struct {
 	Dev        bool
 	Ephemeral  bool
 	Restricted bool
+	Probeless  bool
 }
 
 var context = Context{}
@@ -48,6 +49,7 @@ func init() {
 	installCommand.PersistentFlags().BoolVar(&context.Dev, "dev", false, "Developer mode?")
 	installCommand.PersistentFlags().BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
 	installCommand.PersistentFlags().BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
+	installCommand.PersistentFlags().BoolVar(&context.Probeless, "probeless", false, "Without probes")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 }
 

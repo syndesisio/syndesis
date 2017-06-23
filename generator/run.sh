@@ -27,3 +27,6 @@ go run syndesis-template.go --name=syndesis-ephemeral-restricted --ephemeral --r
 
 echo "$MESSAGE" > ${dir}/../syndesis-dev-restricted.yml
 go run syndesis-template.go --name=syndesis-dev-restricted --restricted --dev >> ${dir}/../syndesis-dev-restricted.yml
+
+echo "$MESSAGE" > ${dir}/../syndesis-ci.yml
+go run syndesis-template.go --name=syndesis-ci --probeless  >> ${dir}/../syndesis-ci.yml

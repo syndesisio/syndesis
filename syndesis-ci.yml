@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: syndesis-restricted
+  name: syndesis-ci
 parameters:
 # Parameters with no defaults (has to be be provided when template is applied):
 - name: ROUTE_HOSTNAME
@@ -47,14 +47,18 @@ parameters:
   description: Public OpenShift master address
   value: https://localhost:8443
   required: true
-- name: OPENSHIFT_PROJECT
-  description: The name of the OpenShift project Syndesis is being deployed into.
-  displayName: OpenShift project to deploy into
+- name: OPENSHIFT_OAUTH_CLIENT_ID
+  description: OpenShift OAuth client ID
+  value: syndesis
   required: true
 - name: OPENSHIFT_OAUTH_CLIENT_SECRET
   description: OpenShift OAuth client secret
   generate: expression
   from: "[a-zA-Z0-9]{64}"
+  required: true
+- name: OPENSHIFT_OAUTH_DEFAULT_SCOPES
+  description: OpenShift OAuth default scopes
+  value: "user:full"
   required: true
 - name: PEMTOKEYSTORE_IMAGE
   description: PEM to keystore init container image
@@ -576,15 +580,7 @@ objects:
           - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
           - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
           - -insecure-skip-verify=${INSECURE_SKIP_VERIFY}
-          readinessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 5
-          livenessProbe:
-            tcpSocket:
-              port: 8080
-            timeoutSeconds: 5 
+
           ports:
           - containerPort: 8080
           volumeMounts:
@@ -775,17 +771,7 @@ objects:
 
           name: syndesis-keycloak
           imagePullPolicy: IfNotPresent
-          livenessProbe:
-            httpGet:
-              path: "/auth/"
-              port: 8080
-            timeoutSeconds: 5
-          readinessProbe:
-            httpGet:
-              path: "/auth/"
-              port: 8080
-            initialDelaySeconds: 15
-            timeoutSeconds: 5
+
           ports:
           - containerPort: 8080
           volumeMounts:
@@ -1398,8 +1384,8 @@ objects:
           "config": {
             "openshiftUrl": "${OPENSHIFT_MASTER}",
             "clientSecret": "${OPENSHIFT_OAUTH_CLIENT_SECRET}",
-            "clientId": "system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client",
-            "defaultScope": "user:info user:check-access role:edit:${OPENSHIFT_PROJECT}:! role:system:build-strategy-source:${OPENSHIFT_PROJECT}",
+            "clientId": "${OPENSHIFT_OAUTH_CLIENT_ID}",
+            "defaultScope": "${OPENSHIFT_OAUTH_DEFAULT_SCOPES}",
             "useJwksUrl": "true"
           }
         }, {
@@ -1891,15 +1877,7 @@ objects:
           - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
           - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
           - -insecure-skip-verify=${INSECURE_SKIP_VERIFY}
-          livenessProbe:
-            tcpSocket:
-              port: 8080
-            timeoutSeconds: 5
-          readinessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 1
-            timeoutSeconds: 5
+
           ports:
           - containerPort: 8080
           volumeMounts:
@@ -2245,17 +2223,7 @@ objects:
           image: ' '
 
           imagePullPolicy: IfNotPresent
-          livenessProbe:
-            httpGet:
-              path: "/"
-              port: 2015
-            timeoutSeconds: 5
-          readinessProbe:
-            httpGet:
-              path: "/"
-              port: 2015
-            initialDelaySeconds: 1
-            timeoutSeconds: 5 
+
           ports:
           - containerPort: 2015
           volumeMounts:
@@ -2392,20 +2360,7 @@ objects:
           image: ' '
 
           imagePullPolicy: IfNotPresent
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8181
-              scheme: HTTP
-            initialDelaySeconds: 10
-            timeoutSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8181
-              scheme: HTTP
-            initialDelaySeconds: 180
-            timeoutSeconds: 5 
+
           ports:
           - containerPort: 8080
             name: http
@@ -2469,6 +2424,17 @@ objects:
       endpoints:
         health:
           sensitive: false
+- apiVersion: v1
+  kind: OAuthClient
+  metadata:
+    name: ${OPENSHIFT_OAUTH_CLIENT_ID}
+    labels:
+      app: syndesis
+      component: syndesis-ui
+  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
+  redirectURIs:
+  - https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}
+  grantMethod: prompt
 
 
 - apiVersion: v1
