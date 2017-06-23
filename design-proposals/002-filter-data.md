@@ -1,7 +1,7 @@
 ## Filter data in integration flow
 
 * Issue: https://github.com/syndesisio/syndesis-project/issues/2
-* Sprint: 12
+* Sprint: 13
 * Affected Repos:
   - syndesis-rest
   - syndesis-ui
