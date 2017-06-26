@@ -490,7 +490,7 @@ objects:
           livenessProbe:
             tcpSocket:
               port: 8080
-            timeoutSeconds: 5 
+            timeoutSeconds: 5
           ports:
           - containerPort: 8080
           volumeMounts:
@@ -2129,7 +2129,7 @@ objects:
               path: "/"
               port: 2015
             initialDelaySeconds: 1
-            timeoutSeconds: 5 
+            timeoutSeconds: 5
           ports:
           - containerPort: 2015
           volumeMounts:
@@ -2271,7 +2271,7 @@ objects:
               port: 8181
               scheme: HTTP
             initialDelaySeconds: 180
-            timeoutSeconds: 5 
+            timeoutSeconds: 5
           ports:
           - containerPort: 8080
             name: http
