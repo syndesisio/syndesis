@@ -47,7 +47,7 @@ class FilterStep extends Step {
   // filter text when type is "RULE" (but can be initially null)
   String simple;
 }
-
+```
 
 ```java
 // Whether it is a basic or advanced filter
