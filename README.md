@@ -161,7 +161,7 @@ The template to use in the installation instructions depend on your use case:
 
 * **Developer** : Use the template `syndesis-dev` which directly references Docker images without image streams. Then when before building you images e.g. with `mvn fabric8:build` set your `DOCKER_HOST` envvar to use the Minishift Docker daemon via `eval $(minishift docker-env)`. After you have created a new image you simply only need to kill the appropriate pod so that the new pod spinning up will use the freshly created image. 
 
-* **Tester** / **User** : In case you only want to have the latest version of Syndesis on your local Minishift installation, use the template `syndesis` which uses image stream refering to the published Docker Hub images. Minishift will update its images and trigger a redeployment when the images at Docker Hub changes. Therefor it checks every 15 minutes for a change image. You do not have to do anything to get your application updated except for waiting on Minishift to pick up ew images.
+* **Tester** / **User** : In case you only want to have the latest version of Syndesis on your local Minishift installation, use the template `syndesis` which uses image stream refering to the published Docker Hub images. Minishift will update its images and trigger a redeployment when the images at Docker Hub changes. Therefore it checks every 15 minutes for a change image. You do not have to do anything to get your application updated except for waiting on Minishift to pick up new images.
 
 Depending on your role please use the appropriate template in the instructions below.
 
