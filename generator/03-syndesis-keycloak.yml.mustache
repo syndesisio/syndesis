@@ -171,6 +171,7 @@
 {{/Dev}}
           name: syndesis-keycloak
           imagePullPolicy: IfNotPresent
+{{^Probeless}}
           livenessProbe:
             httpGet:
               path: "/auth/"
@@ -181,7 +182,7 @@
               path: "/auth/"
               port: 8080
             initialDelaySeconds: 15
-            timeoutSeconds: 5
+            timeoutSeconds: 5{{/Probeless}}
           ports:
           - containerPort: 8080
           volumeMounts:

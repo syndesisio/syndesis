@@ -76,6 +76,7 @@
           image: syndesis/syndesis-ui:latest
 {{/Dev}}
           imagePullPolicy: IfNotPresent
+{{^Probeless}}
           livenessProbe:
             httpGet:
               path: "/"
@@ -86,7 +87,7 @@
               path: "/"
               port: 2015
             initialDelaySeconds: 1
-            timeoutSeconds: 5
+            timeoutSeconds: 5{{/Probeless}}
           ports:
           - containerPort: 2015
           volumeMounts:
