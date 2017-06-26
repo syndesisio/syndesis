@@ -16,7 +16,7 @@
 
 #Configure the SYNDESIS_TEMPLATE_TYPE
 if [ -z "${SYNDESIS_TEMPLATE_TYPE}" ]; then
-    SYNDESIS_TEMPLATE_TYPE="syndesis"
+    SYNDESIS_TEMPLATE_TYPE="syndesis-ci"
 fi
 
 #Configure the SYNDESIS_TEMPLATE_URL
