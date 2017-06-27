@@ -99,6 +99,8 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <basepom.test.timeout>300</basepom.test.timeout>
     <basepom.check.skip-all>true</basepom.check.skip-all>
+    <basepom.test.timeout>150</basepom.test.timeout>
+    <basepom.failsafe.timeout>150</basepom.failsafe.timeout>
 
     <syndesis-connectors.version>0.4.4</syndesis-connectors.version>
 
