@@ -37,10 +37,6 @@
 
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 
-    <!-- Base image to use for Docker images. Pinned to 1.2.3 since 1.2.4 has issues because
-         of Java 1.8.0_121 (1.2.3 is running 1.8.0_111) -->
-    <java-image>fabric8/java-jboss-openjdk8-jdk:1.2.3</java-image>
-
     <keycloak.start.script>./standalone.sh</keycloak.start.script>
     <keycloak.cli.script>./jboss-cli.sh</keycloak.cli.script>
   </properties>
@@ -87,7 +83,6 @@
             <config>
               <spring-boot>
                 <name>syndesis/syndesis-rest:latest</name>
-                <from>${java-image}</from>
               </spring-boot>
             </config>
           </generator>
