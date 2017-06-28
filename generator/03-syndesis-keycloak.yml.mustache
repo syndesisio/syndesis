@@ -176,13 +176,12 @@
             httpGet:
               path: "/auth/"
               port: 8080
-            timeoutSeconds: 5
+            initialDelaySeconds: 180
           readinessProbe:
             httpGet:
               path: "/auth/"
               port: 8080
-            initialDelaySeconds: 15
-            timeoutSeconds: 5{{/Probeless}}
+            initialDelaySeconds: 10{{/Probeless}}
           ports:
           - containerPort: 8080
           volumeMounts:
