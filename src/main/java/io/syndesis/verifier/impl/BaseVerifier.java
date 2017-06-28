@@ -28,7 +28,7 @@ public abstract class BaseVerifier implements Verifier {
         camel = new DefaultCamelContext();
         camel.start();
 
-        Component verifierComponent = camel.getComponent(getConnectorAction());
+        Component verifierComponent = camel.getComponent(getConnectorAction(), true, false);
         if (verifierComponent instanceof VerifiableComponent) {
             VerifiableComponent vc = (VerifiableComponent) verifierComponent;
             verifier = vc.getVerifier();
