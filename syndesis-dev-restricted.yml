@@ -249,14 +249,12 @@ objects:
             httpGet:
               path: "/health"
               port: 8181
-            initialDelaySeconds: 5
-            timeoutSeconds: 5
+            initialDelaySeconds: 10
           livenessProbe:
             httpGet:
               path: "/health"
               port: 8181
-            initialDelaySeconds: 5
-            timeoutSeconds: 5
+            initialDelaySeconds: 180
           ports:
           - containerPort: 8080
             name: http
@@ -378,10 +376,9 @@ objects:
           image: ' '
           imagePullPolicy: IfNotPresent
           livenessProbe:
-            initialDelaySeconds: 5
+            initialDelaySeconds: 60
             tcpSocket:
               port: 5432
-            timeoutSeconds: 5
           name: postgresql
           ports:
           - containerPort: 5432
@@ -393,8 +390,7 @@ objects:
               - -i
               - -c
               - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
-            initialDelaySeconds: 1
-            timeoutSeconds: 5
+            initialDelaySeconds: 10
           resources:
             limits:
               memory: ${POSTGRESQL_MEMORY_LIMIT}
@@ -482,11 +478,10 @@ objects:
             tcpSocket:
               port: 8080
             initialDelaySeconds: 10
-            timeoutSeconds: 5
           livenessProbe:
+            initialDelaySeconds: 180
             tcpSocket:
               port: 8080
-            timeoutSeconds: 5
           ports:
           - containerPort: 8080
           volumeMounts:
@@ -673,13 +668,12 @@ objects:
             httpGet:
               path: "/auth/"
               port: 8080
-            timeoutSeconds: 5
+            initialDelaySeconds: 180
           readinessProbe:
             httpGet:
               path: "/auth/"
               port: 8080
-            initialDelaySeconds: 15
-            timeoutSeconds: 5
+            initialDelaySeconds: 10
           ports:
           - containerPort: 8080
           volumeMounts:
@@ -1778,14 +1772,13 @@ objects:
           - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
           - -insecure-skip-verify=${INSECURE_SKIP_VERIFY}
           livenessProbe:
+            initialDelaySeconds: 180
             tcpSocket:
               port: 8080
-            timeoutSeconds: 5
           readinessProbe:
             tcpSocket:
               port: 8080
-            initialDelaySeconds: 1
-            timeoutSeconds: 5
+            initialDelaySeconds: 10
           ports:
           - containerPort: 8080
           volumeMounts:
@@ -1938,13 +1931,11 @@ objects:
               port: 8181
               scheme: HTTP
             initialDelaySeconds: 180
-            timeoutSeconds: 5
           readinessProbe:
             httpGet:
               path: "/health"
               port: 8181
-            initialDelaySeconds: 5
-            timeoutSeconds: 5
+            initialDelaySeconds: 10
           ports:
           - containerPort: 8080
             name: http
@@ -2119,13 +2110,12 @@ objects:
             httpGet:
               path: "/"
               port: 2015
-            timeoutSeconds: 5
+            initialDelaySeconds: 3
           readinessProbe:
             httpGet:
               path: "/"
               port: 2015
             initialDelaySeconds: 1
-            timeoutSeconds: 5
           ports:
           - containerPort: 2015
           volumeMounts:
@@ -2260,14 +2250,12 @@ objects:
               port: 8181
               scheme: HTTP
             initialDelaySeconds: 10
-            timeoutSeconds: 5
           livenessProbe:
             httpGet:
               path: /health
               port: 8181
               scheme: HTTP
             initialDelaySeconds: 180
-            timeoutSeconds: 5
           ports:
           - containerPort: 8080
             name: http

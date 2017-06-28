@@ -67,11 +67,10 @@
             tcpSocket:
               port: 8080
             initialDelaySeconds: 10
-            timeoutSeconds: 5
           livenessProbe:
+            initialDelaySeconds: 180
             tcpSocket:
-              port: 8080
-            timeoutSeconds: 5{{/Probeless}}
+              port: 8080{{/Probeless}}
           ports:
           - containerPort: 8080
           volumeMounts:

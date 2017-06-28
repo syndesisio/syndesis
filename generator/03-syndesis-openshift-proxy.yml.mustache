@@ -64,14 +64,13 @@
           - -insecure-skip-verify=${INSECURE_SKIP_VERIFY}
 {{^Probeless}}
           livenessProbe:
+            initialDelaySeconds: 180
             tcpSocket:
               port: 8080
-            timeoutSeconds: 5
           readinessProbe:
             tcpSocket:
               port: 8080
-            initialDelaySeconds: 1
-            timeoutSeconds: 5{{/Probeless}}
+            initialDelaySeconds: 10{{/Probeless}}
           ports:
           - containerPort: 8080
           volumeMounts:
