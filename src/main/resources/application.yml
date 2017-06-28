@@ -1,2 +1,14 @@
 server:
   port: 8080
+
+# We only want the status, not the full data. Hence security on, sensitive off.
+# See https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-monitoring.html
+# For details
+management:
+  port: 8080
+  security:
+    enabled: true
+
+endpoints:
+  health:
+    sensitive: false
