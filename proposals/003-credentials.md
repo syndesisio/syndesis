@@ -147,7 +147,7 @@ To interact with the credentials API:
 
 Here is an example of credential workflow starting with acquisition for Salesforce:
 
-![Alt text](https://g.gravizo.com/source/salesforce_example?https%3A%2F%2Fraw.githubusercontent.com%2Fzregvart%2Fsyndesis-project%2Fcredentials%2Fdesign-proposals%2F003-credentials.md)
+![Alt text](https://g.gravizo.com/source/salesforce_example?https%3A%2F%2Fraw.githubusercontent.com%2Fsyndesisio%2Fsyndesis-project%2Fmaster%2Fproposals%2F003-credentials.md)
 <details>
 <summary></summary>
 salesforce_example
