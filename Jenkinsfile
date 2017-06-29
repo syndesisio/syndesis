@@ -1,5 +1,7 @@
 def mavenVersion='3.3.9'
-node {
+//We need a node so that we can have access to environemnt variables.
+//The allocated node will actually be the Jenkins master (which is expected to provide these variables) as long as it has available executors.
+node { 
     slave {
         withOpenshift {
                 withMaven(mavenImage: "maven:${mavenVersion}", 
