@@ -15,9 +15,12 @@
  */
 package io.syndesis.rest.v1.handler.integration;
 
+import io.swagger.annotations.ApiParam;
 import io.syndesis.core.Tokens;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
+import io.syndesis.model.filter.FilterOptions;
+import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Integration.Status;
 import io.syndesis.rest.v1.handler.BaseHandler;
@@ -30,7 +33,11 @@ import io.syndesis.rest.v1.operations.Updater;
 
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -92,6 +99,20 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         Updater.super.update(id, updatedIntegration);
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}/filter/options")
+    public FilterOptions getFilterOptions(@PathParam("id") @ApiParam(required = true) String id) {
+        return getGlobalFilterOptions();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/filter/options")
+    public FilterOptions getGlobalFilterOptions() {
+        return new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS).build();
+    }
+
     // Determine the current status to 'pending' or 'draft' immediately depending on
     // the desired stated. This status will be later changed by the activation handlers.
     // This is not the best place to set but should be done by the IntegrationController
@@ -104,5 +125,4 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             Integration.Status.Draft :
             Integration.Status.Pending;
     }
-
 }
