@@ -40,7 +40,7 @@ public class TwitterSearchConnectorTest {
         }
 
         Assert.assertNotNull("No TwitterConsumerPolling found", twitterEnpoint);
-        Assert.assertTrue(twitterEnpoint.getEndpointUri().startsWith("twitter-search-component:"));
+        Assert.assertTrue(twitterEnpoint.getEndpointUri().startsWith("twitter:"));
         Assert.assertEquals("camelsearchtest", twitterEnpoint.getKeywords());
         Assert.assertFalse(twitterEnpoint.isFilterOld());
     }
@@ -56,7 +56,7 @@ public class TwitterSearchConnectorTest {
             return new RouteBuilder() {
                 @Override
                 public void configure() throws Exception {
-                    from("tw-search?keywords=camelsearchtest&filterOld=false")
+                    from("twitter-search?keywords=camelsearchtest&filterOld=false")
                         .noAutoStartup()
                         .to("mock:result");
                 }

@@ -34,7 +34,6 @@
   
   <!-- temporarily overriding until camel release -->
   <properties>
-  	<camel.version>2.20.0-SNAPSHOT</camel.version>
   	<spring-boot-version>1.5.3.RELEASE</spring-boot-version>
   	<maven-jar-plugin-version>3.0.2</maven-jar-plugin-version>
   </properties>
