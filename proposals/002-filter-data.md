@@ -200,7 +200,7 @@ The defined filters are added to integrations like as other steps.
 
 ### UI
 
-An initial design suggestion can be found [here](https://redhat.invisionapp.com/share/9BC79TYHZ)
+An initial design suggestion can be found [here](https://redhat.invisionapp.com/share/9BC79TYHZ) and the final design is in [002-filter-step.pdf](../design/002-filter-step.pdf)
 and the comments on this are collected in https://github.com/syndesisio/syndesis-ui/issues/569
 
 The meta data for the list of header, body, property keys (e.g. for the possible value for 'key' for all possible 'types' should be obtainable via a rest call). The 'paths' themselves are freely typable because it is assumed that not all possible keys can be predicted during design time. It is recommended to use textfield with autosuggestions while typing. How to obtain this meta data is described above in "Fixed background data".
