@@ -15,6 +15,7 @@
  */
 package io.syndesis.rest.v1.handler.exception;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
@@ -32,7 +33,6 @@ public class SyndesisServerExceptionMapper implements javax.ws.rs.ext.ExceptionM
     public Response toResponse(Exception e) {
         LOG.error(e.getMessage(),e);
         RestError error = new RestError("Internal Server Exception. " + e.getMessage(), "Please contact the administrator and file a bug report", 500);
-        return Response.status(error.errorCode).entity(error).build();
+        return Response.status(error.errorCode).type(MediaType.APPLICATION_JSON_TYPE).entity(error).build();
     }
-
 }

@@ -16,6 +16,7 @@
 package io.syndesis.rest.v1.handler.exception;
 
 import javax.persistence.EntityNotFoundException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -34,7 +35,7 @@ public class EntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotF
     public Response toResponse(EntityNotFoundException e) {
         LOG.error(e.getMessage(),e);
         RestError error = new RestError("Entity Not Found Exception " + e.getMessage(), "Please check your request data", 404);
-        return Response.status(error.errorCode).entity(error).build();
+        return Response.status(error.errorCode).type(MediaType.APPLICATION_JSON_TYPE).entity(error).build();
     }
 
 }
