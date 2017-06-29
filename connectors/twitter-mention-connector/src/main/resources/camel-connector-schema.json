@@ -23,6 +23,7 @@
     "consumerSecret": { "kind": "property", "displayName": "Consumer Secret", "group": "security", "label": "security", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": true, "description": "The consumer secret" }
   },
   "properties": {
+    "sinceId": { "kind": "parameter", "displayName": "Since Id", "group": "filter", "label": "consumer,filter", "required": false, "type": "integer", "javaType": "long", "deprecated": false, "secret": false, "defaultValue": 1, "description": "The last tweet id which will be used for pulling the tweets. It is useful when the camel route is restarted after a long running." },
     "delay": { "kind": "parameter", "displayName": "Delay", "group": "scheduler", "label": "consumer,scheduler", "required": false, "type": "integer", "javaType": "long", "optionalPrefix": "consumer.", "deprecated": false, "secret": false, "defaultValue": 30000, "description": "Milliseconds before the next poll." }
   }
 }
