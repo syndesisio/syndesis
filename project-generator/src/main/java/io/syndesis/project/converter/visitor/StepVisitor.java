@@ -16,7 +16,10 @@
 
 package io.syndesis.project.converter.visitor;
 
+
+import io.syndesis.integration.model.steps.Step;
+
 public interface StepVisitor {
 
-     void visit(StepVisitorContext stepContext);
+     Step visit(StepVisitorContext stepContext);
 }

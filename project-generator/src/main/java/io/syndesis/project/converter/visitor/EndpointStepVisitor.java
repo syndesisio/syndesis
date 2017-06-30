@@ -16,9 +16,11 @@
 
 package io.syndesis.project.converter.visitor;
 
-
 import io.syndesis.integration.model.StepKinds;
 import io.syndesis.integration.model.steps.Endpoint;
+import io.syndesis.core.SyndesisServerException;
+import io.syndesis.model.connection.Action;
+import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.GenerateProjectRequest;
@@ -54,25 +56,27 @@ public class EndpointStepVisitor implements StepVisitor {
     }
 
     @Override
-    public void visit(StepVisitorContext visitorContext) {
+    public io.syndesis.integration.model.steps.Step visit(StepVisitorContext visitorContext) {
         Step step = visitorContext.getStep();
         GenerateProjectRequest request = generatorContext.getRequest();
-        step.getAction().ifPresent(action -> {
-                step.getConnection().ifPresent(connection -> {
-                    try {
-                        String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
-                        if (!request.getConnectors().containsKey(connectorId)) {
-                            throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
-                        }
+        if (!step.getAction().isPresent() || !step.getConnection().isPresent()) {
+            return null;
+        }
 
-                        Connector connector = request.getConnectors().get(connectorId);
-                        generatorContext.getFlow().addStep(createEndpointStep(connector, action.getCamelConnectorPrefix(),
-                            connection.getConfiguredProperties(), step.getConfiguredProperties().orElse(new HashMap<String, String>())));
-                    } catch (IOException | URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                });
-            });
+        Action action = step.getAction().orElseThrow(() -> new IllegalStateException("Action is not present"));
+        Connection connection = step.getConnection().orElseThrow(() -> new IllegalStateException("Action is not present"));
+
+        try {
+            String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
+            if (!request.getConnectors().containsKey(connectorId)) {
+                throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
+            }
+
+            Connector connector = request.getConnectors().get(connectorId);
+            return createEndpointStep(connector, action.getCamelConnectorPrefix(), connection.getConfiguredProperties(), step.getConfiguredProperties().orElse(new HashMap<String, String>()));
+        } catch (IOException | URISyntaxException e) {
+            throw SyndesisServerException.launderThrowable(e);
+        }
     }
 
     private io.syndesis.integration.model.steps.Step createEndpointStep(Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws IOException, URISyntaxException {

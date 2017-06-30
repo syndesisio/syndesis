@@ -187,6 +187,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                     .request(request)
                     .contents(contents)
                     .flow(flow)
+                    .visitorFactoryRegistry(registry)
                     .build();
 
                 StepVisitorContext stepContext = new StepVisitorContext.Builder()
@@ -207,9 +208,9 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         StepVisitorFactory factory = registry.get(stepContext.getStep().getStepKind());
 
         StepVisitor visitor = factory.create(generatorContext);
-        visitor.visit(stepContext);
+        generatorContext.getFlow().addStep(visitor.visit(stepContext));
         if (stepContext.hasNext()) {
-            visitStep(generatorContext, stepContext.next());
+             visitStep(generatorContext, stepContext.next());
         }
     }
 

@@ -17,6 +17,7 @@
 package io.syndesis.project.converter.visitor;
 
 import io.syndesis.core.Json;
+import io.syndesis.core.SyndesisServerException;
 import io.syndesis.model.integration.Step;
 
 import java.io.IOException;
@@ -46,15 +47,15 @@ public class GenericStepVisitor implements StepVisitor {
     }
 
     @Override
-    public void visit(StepVisitorContext stepContext) {
+    public io.syndesis.integration.model.steps.Step visit(StepVisitorContext stepContext) {
         try {
             Step step = stepContext.getStep();
-            HashMap<String, Object> stepJSON = new HashMap<>(step.getConfiguredProperties().orElse(new HashMap<String, String>()));
+            HashMap<String, Object> stepJSON = new HashMap<>(step.getConfiguredProperties().orElse(new HashMap<>()));
             stepJSON.put("kind", step.getStepKind());
             String json = Json.mapper().writeValueAsString(stepJSON);
-            generatorContext.getFlow().addStep(Json.mapper().readValue(json, io.syndesis.integration.model.steps.Step.class));
+            return Json.mapper().readValue(json, io.syndesis.integration.model.steps.Step.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 }

@@ -37,6 +37,7 @@ public class GeneratorContext {
     private final Map<String, byte[]> contents;
     private final ConnectorCatalog connectorCatalog;
     private final ProjectGeneratorProperties generatorProperties;
+    private final StepVisitorFactoryRegistry visitorFactoryRegistry;
 
     public static class Builder {
 
@@ -45,6 +46,7 @@ public class GeneratorContext {
         private Map<String, byte[]> contents;
         private ConnectorCatalog connectorCatalog;
         private ProjectGeneratorProperties generatorProperties;
+        private StepVisitorFactoryRegistry visitorFactoryRegistry;
 
         public Builder request(GenerateProjectRequest request) {
             this.request = request;
@@ -71,17 +73,23 @@ public class GeneratorContext {
             return this;
         }
 
+        public Builder visitorFactoryRegistry(StepVisitorFactoryRegistry visitorFactoryRegistry) {
+            this.visitorFactoryRegistry = visitorFactoryRegistry;
+            return this;
+        }
+
         public GeneratorContext build() {
-            return new GeneratorContext(request, flow, contents, connectorCatalog, generatorProperties);
+            return new GeneratorContext(request, flow, contents, connectorCatalog, generatorProperties, visitorFactoryRegistry);
         }
     }
 
-    private GeneratorContext(GenerateProjectRequest request, Flow flow, Map<String, byte[]> contents, ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties) {
+    private GeneratorContext(GenerateProjectRequest request, Flow flow, Map<String, byte[]> contents, ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties, StepVisitorFactoryRegistry visitorFactoryRegistry) {
         this.request = request;
         this.flow = flow;
         this.contents = contents;
         this.connectorCatalog = connectorCatalog;
         this.generatorProperties = generatorProperties;
+        this.visitorFactoryRegistry = visitorFactoryRegistry;
     }
 
     public GenerateProjectRequest getRequest() {
@@ -102,5 +110,9 @@ public class GeneratorContext {
 
     public ProjectGeneratorProperties getGeneratorProperties() {
         return generatorProperties;
+    }
+
+    public StepVisitorFactoryRegistry getVisitorFactoryRegistry() {
+        return visitorFactoryRegistry;
     }
 }

@@ -18,6 +18,7 @@ package io.syndesis.project.converter.visitor;
 
 
 import io.syndesis.integration.model.steps.Endpoint;
+import io.syndesis.integration.model.steps.Step;
 
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -46,13 +47,13 @@ public class DataMapperStepVisitor implements StepVisitor {
     }
 
     @Override
-    public void visit(StepVisitorContext stepContext) {
+    public Step visit(StepVisitorContext stepContext) {
         Map<String, String> configuredProperties = stepContext.getStep().getConfiguredProperties().get();
 
         String resourceName = "mapping-step-" + stepContext.getIndex() + ".json";
         byte[] resourceData = utf8(configuredProperties.get("atlasmapping"));
         generatorContext.getContents().put("src/main/resources/" + resourceName, resourceData);
-        generatorContext.getFlow().addStep(new Endpoint("atlas:" + resourceName));
+        return new Endpoint("atlas:" + resourceName);
     }
 
     private static byte[] utf8(String value) {
