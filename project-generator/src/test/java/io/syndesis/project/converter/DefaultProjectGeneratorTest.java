@@ -27,7 +27,9 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 
-import org.junit.Assert;
+import io.syndesis.project.converter.visitor.DataMapperStepVisitor;
+import io.syndesis.project.converter.visitor.EndpointStepVisitor;
+import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DefaultProjectGeneratorTest {
 
 	private static Properties properties = new Properties();
-	
+
     static {
             System.setProperty("groovy.grape.report.downloads", "true");
             System.setProperty("ivy.message.logger.level", "3");
@@ -61,6 +63,8 @@ public class DefaultProjectGeneratorTest {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().registerModule(new Jdk8Module());
     private static final TypeReference<HashMap<String, Connector>> CONNECTOR_MAP_TYPE_REF = new TypeReference<HashMap<String, Connector>>() {
     };
+
+    private final StepVisitorFactoryRegistry registry = new StepVisitorFactoryRegistry(Arrays.asList(new DataMapperStepVisitor.Factory(), new EndpointStepVisitor.Factory()));
 
     private Map<String, Connector> connectors = new HashMap<>();
 
@@ -89,7 +93,7 @@ public class DefaultProjectGeneratorTest {
             .connectors(connectors)
             .build();
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), new ProjectGeneratorProperties()).generate(request);
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), new ProjectGeneratorProperties(), registry).generate(request);
 
         assertFileContents(files.get("README.md"), "test-README.md");
         assertFileContents(files.get("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
@@ -120,7 +124,7 @@ public class DefaultProjectGeneratorTest {
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
         generatorProperties.setSecretMaskingEnabled(true);
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), generatorProperties).generate(request);
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), generatorProperties, registry).generate(request);
 
 
         assertFileContents(files.get("src/main/resources/application.properties"), "test-application.properties");
@@ -141,7 +145,7 @@ public class DefaultProjectGeneratorTest {
             .connectors(connectors)
             .build();
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), new ProjectGeneratorProperties()).generate(request);
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), new ProjectGeneratorProperties(), registry).generate(request);
 
         assertFileContents(files.get("README.md"), "test-pull-push-README.md");
         assertFileContents(files.get("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
@@ -188,7 +192,7 @@ public class DefaultProjectGeneratorTest {
             .connectors(connectors)
             .build();
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), new ProjectGeneratorProperties()).generate(request);
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), new ProjectGeneratorProperties(), registry).generate(request);
 
         assertFileContents(files.get("src/main/resources/syndesis.yml"), "test-mapper-syndesis.yml");
         assertThat(new String(files.get("src/main/resources/mapping-step-2.json"))).isEqualTo("{}");

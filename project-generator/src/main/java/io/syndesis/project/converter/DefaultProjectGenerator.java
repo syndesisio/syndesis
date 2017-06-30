@@ -45,6 +45,11 @@ import io.syndesis.integration.support.YamlHelper;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
+import io.syndesis.project.converter.visitor.GeneratorContext;
+import io.syndesis.project.converter.visitor.StepVisitor;
+import io.syndesis.project.converter.visitor.StepVisitorContext;
+import io.syndesis.project.converter.visitor.StepVisitorFactory;
+import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,9 +73,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
-    private static final String MAPPER = "mapper";
     private static final ObjectMapper YAML_OBJECT_MAPPER = YamlHelper.createYamlMapper();
-    private static final String PLACEHOLDER_FORMAT = "{{%s}}";
 
     private MustacheFactory mf = new DefaultMustacheFactory();
 
@@ -102,12 +105,14 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     */
     private final ConnectorCatalog connectorCatalog;
     private final ProjectGeneratorProperties generatorProperties;
+    private final StepVisitorFactoryRegistry registry;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public DefaultProjectGenerator(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties) {
+    public DefaultProjectGenerator(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties, StepVisitorFactoryRegistry registry) {
         this.connectorCatalog = connectorCatalog;
         this.generatorProperties = generatorProperties;
+        this.registry = registry;
     }
 
     @Override
@@ -176,82 +181,36 @@ public class DefaultProjectGenerator implements ProjectGenerator {
             Queue<Step> remaining = new LinkedList<>(steps);
             Step first = remaining.remove();
             if (first != null) {
-                visitStep(request, flow, contents, 1, first, remaining);
+                GeneratorContext generatorContext = new GeneratorContext.Builder()
+                    .connectorCatalog(connectorCatalog)
+                    .generatorProperties(generatorProperties)
+                    .request(request)
+                    .contents(contents)
+                    .flow(flow)
+                    .build();
+
+                StepVisitorContext stepContext = new StepVisitorContext.Builder()
+                    .index(1)
+                    .step(first)
+                    .remaining(remaining)
+                    .build();
+
+                visitStep(generatorContext, stepContext);
             }
         });
-
         SyndesisModel syndesisModel = new SyndesisModel();
         syndesisModel.addFlow(flow);
         return YAML_OBJECT_MAPPER.writeValueAsBytes(syndesisModel);
     }
 
-    private void visitStep(GenerateProjectRequest request, Flow flow, Map<String, byte[]> contents, int index, Step step, Queue<Step> remaining) {
-        if (step.getStepKind().equals(StepKinds.ENDPOINT)) {
-            step.getAction().ifPresent(action -> {
-                step.getConnection().ifPresent(connection -> {
-                    try {
-                        String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
-                        if (!request.getConnectors().containsKey(connectorId)) {
-                            throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
-                        }
+    private void visitStep(GeneratorContext generatorContext, StepVisitorContext stepContext) {
+        StepVisitorFactory factory = registry.get(stepContext.getStep().getStepKind());
 
-                        Connector connector = request.getConnectors().get(connectorId);
-                        flow.addStep(createEndpointStep(connector, action.getCamelConnectorPrefix(),
-                            connection.getConfiguredProperties(), step.getConfiguredProperties().orElse(new HashMap<String, String>())));
-                    } catch (URISyntaxException e) {
-                        throw new IllegalStateException(e);
-                    }
-                });
-            });
-        } else if ( MAPPER.equals(step.getStepKind())) {
-            Map<String, String> configuredProperties = step.getConfiguredProperties().get();
-
-            String resourceName = "mapping-step-" + index + ".json";
-            byte[] resourceData = utf8(configuredProperties.get("atlasmapping"));
-            contents.put("src/main/resources/" + resourceName, resourceData);
-            flow.addStep(new Endpoint("atlas:" + resourceName));
-        } else {
-            try {
-                HashMap<String, Object> stepJSON = new HashMap<>(step.getConfiguredProperties().orElse(new HashMap<String, String>()));
-                stepJSON.put("kind", step.getStepKind());
-                String json = Json.mapper().writeValueAsString(stepJSON);
-                flow.addStep(Json.mapper().readValue(json, io.syndesis.integration.model.steps.Step.class));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        StepVisitor visitor = factory.create(generatorContext);
+        visitor.visit(stepContext);
+        if (stepContext.hasNext()) {
+            visitStep(generatorContext, stepContext.next());
         }
-
-        Step next = remaining.isEmpty() ? null : remaining.remove();
-        if (next != null) {
-            visitStep(request, flow, contents, ++index, next, remaining);
-        }
-    }
-
-    private static byte[] utf8(String value) {
-        if (value == null) {
-            return null;
-        }
-        return value.getBytes(UTF_8);
-    }
-
-    private io.syndesis.integration.model.steps.Step createEndpointStep(Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws URISyntaxException {
-        Map<String, String> properties = connector.filterProperties(aggregate(connectionConfiguredProperties, stepConfiguredProperties), connector.isEndpointProperty());
-        Map<String, String> secrets = connector.filterProperties(properties, connector.isSecret(),
-            e -> e.getKey(),
-            e -> String.format(PLACEHOLDER_FORMAT, camelConnectorPrefix + "." + e.getKey()));
-
-        // TODO Remove this hack... when we can read endpointValues from connector schema then we should use those as initial properties.
-        if ("periodic-timer".equals(camelConnectorPrefix)) {
-            properties.put("timerName", "every");
-        }
-
-        Map<String, String> maskedProperties = generatorProperties.isSecretMaskingEnabled() ? aggregate(properties, secrets) : properties;
-        String endpointUri = connectorCatalog.buildEndpointUri(camelConnectorPrefix, maskedProperties);
-        return new Endpoint(endpointUri);
-    }
-
-    private static Map<String, String> aggregate(Map<String, String> ... maps) {
-        return Stream.of(maps).flatMap(map -> map.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue));
     }
 
     private byte[] generateFromRequest(GenerateProjectRequest request, Mustache template) throws IOException {
