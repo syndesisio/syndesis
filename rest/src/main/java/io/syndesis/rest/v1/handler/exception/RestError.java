@@ -15,10 +15,26 @@
  */
 package io.syndesis.rest.v1.handler.exception;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({"errorCode", "userMsg", "developerMsg"})
+@JsonDeserialize(
+    using = JsonDeserializer.None.class
+)
 public class RestError {
 
+    @JsonProperty("developerMsg")
     String developerMsg;
+
+    @JsonProperty("userMsg")
     String userMsg;
+
+    @JsonProperty("errorCode")
     Integer errorCode;
 
     public RestError() {
