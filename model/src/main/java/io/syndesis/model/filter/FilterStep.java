@@ -15,10 +15,14 @@
  */
 package io.syndesis.model.filter;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.integration.Step;
+import org.immutables.value.Value;
 
 import java.util.List;
 
+@Value.Immutable
+@JsonDeserialize(builder = FilterStep.Builder.class)
 public interface FilterStep extends Step {
 
     /**
@@ -42,5 +46,9 @@ public interface FilterStep extends Step {
      * filter text when type is "RULE" (but can be initially null)
      */
     String getSimple();
+
+
+    class Builder extends ImmutableFilterStep.Builder {
+    }
 
 }

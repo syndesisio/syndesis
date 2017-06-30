@@ -36,7 +36,7 @@ public interface FilterRule {
      * Operator to use for the filter. The value comes from meta dara obtained by the UI in
      * a separate call. Example: "contains"
      */
-    Op getOp();
+    String getOp();
 
     /**
      * Value used by operator to decide whether the filter applies

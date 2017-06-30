@@ -15,8 +15,12 @@
  */
 package io.syndesis.model.filter;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum FilterType {
 
+    @JsonProperty("text")
     TEXT,
+    @JsonProperty("rule")
     RULE
 }

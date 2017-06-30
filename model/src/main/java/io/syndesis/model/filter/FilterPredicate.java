@@ -15,6 +15,8 @@
  */
 package io.syndesis.model.filter;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by iocanel on 6/29/17.
  */
@@ -22,10 +24,12 @@ public enum FilterPredicate {
     /**
      * Every rule must match for the filter to pass
      */
-    ANY,
+    @JsonProperty("and")
+    AND,
 
     /**
      *  Any rule must match for the filter to pass
      */
+    @JsonProperty("or")
     OR
 }
