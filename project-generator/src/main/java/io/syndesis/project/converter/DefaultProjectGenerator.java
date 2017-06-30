@@ -49,6 +49,23 @@ import io.syndesis.model.integration.Step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class DefaultProjectGenerator implements ProjectGenerator {
 
     private static final String MAPPER = "mapper";
@@ -152,56 +169,62 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     private byte[] generateFlowYaml(Map<String, byte[]> contents, GenerateProjectRequest request) throws JsonProcessingException {
         Flow flow = new Flow();
         request.getIntegration().getSteps().ifPresent(steps -> {
-            int stepCounter=0;
-            for (Step step : steps) {
-                stepCounter++;
-                if (step.getStepKind().equals(StepKinds.ENDPOINT)) {
-                    step.getAction().ifPresent(action -> {
-                        step.getConnection().ifPresent(connection -> {
-                            try {
-                                String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
-                                if (!request.getConnectors().containsKey(connectorId)) {
-                                    throw new IllegalStateException("Connector:["+connectorId+"] not found.");
-                                }
+            if (steps.isEmpty()) {
+                return;
+            }
 
-                                Connector connector = request.getConnectors().get(connectorId);
-                                flow.addStep(createEndpointStep(connector, action.getCamelConnectorPrefix(),
-                                        connection.getConfiguredProperties(), step.getConfiguredProperties().orElse(new HashMap<String,String>())));
-                            } catch (URISyntaxException e) {
-                                throw new IllegalStateException(e);
-                            }
-                        });
-                    });
-                    continue;
-                }
-
-                if ( MAPPER.equals(step.getStepKind()) ) {
-
-                    Map<String, String> configuredProperties = step.getConfiguredProperties().get();
-
-                    String resourceName = "mapping-step-" + stepCounter + ".json";
-                    byte[] resourceData = utf8(configuredProperties.get("atlasmapping"));
-                    contents.put("src/main/resources/" + resourceName, resourceData);
-                    flow.addStep(new Endpoint("atlas:"+resourceName));
-
-                    continue;
-                }
-
-                try {
-                    HashMap<String, Object> stepJSON = new HashMap<>(step.getConfiguredProperties().orElse(new HashMap<String,String>()));
-                    stepJSON.put("kind", step.getStepKind());
-                    String json = Json.mapper().writeValueAsString(stepJSON);
-                    flow.addStep(Json.mapper().readValue(json, io.syndesis.integration.model.steps.Step.class));
-                    continue;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            Queue<Step> remaining = new LinkedList<>(steps);
+            Step first = remaining.remove();
+            if (first != null) {
+                visitStep(request, flow, contents, 1, first, remaining);
             }
         });
 
         SyndesisModel syndesisModel = new SyndesisModel();
         syndesisModel.addFlow(flow);
         return YAML_OBJECT_MAPPER.writeValueAsBytes(syndesisModel);
+    }
+
+    private void visitStep(GenerateProjectRequest request, Flow flow, Map<String, byte[]> contents, int index, Step step, Queue<Step> remaining) {
+        if (step.getStepKind().equals(StepKinds.ENDPOINT)) {
+            step.getAction().ifPresent(action -> {
+                step.getConnection().ifPresent(connection -> {
+                    try {
+                        String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
+                        if (!request.getConnectors().containsKey(connectorId)) {
+                            throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
+                        }
+
+                        Connector connector = request.getConnectors().get(connectorId);
+                        flow.addStep(createEndpointStep(connector, action.getCamelConnectorPrefix(),
+                            connection.getConfiguredProperties(), step.getConfiguredProperties().orElse(new HashMap<String, String>())));
+                    } catch (URISyntaxException e) {
+                        throw new IllegalStateException(e);
+                    }
+                });
+            });
+        } else if ( MAPPER.equals(step.getStepKind())) {
+            Map<String, String> configuredProperties = step.getConfiguredProperties().get();
+
+            String resourceName = "mapping-step-" + index + ".json";
+            byte[] resourceData = utf8(configuredProperties.get("atlasmapping"));
+            contents.put("src/main/resources/" + resourceName, resourceData);
+            flow.addStep(new Endpoint("atlas:" + resourceName));
+        } else {
+            try {
+                HashMap<String, Object> stepJSON = new HashMap<>(step.getConfiguredProperties().orElse(new HashMap<String, String>()));
+                stepJSON.put("kind", step.getStepKind());
+                String json = Json.mapper().writeValueAsString(stepJSON);
+                flow.addStep(Json.mapper().readValue(json, io.syndesis.integration.model.steps.Step.class));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Step next = remaining.isEmpty() ? null : remaining.remove();
+        if (next != null) {
+            visitStep(request, flow, contents, ++index, next, remaining);
+        }
     }
 
     private static byte[] utf8(String value) {
