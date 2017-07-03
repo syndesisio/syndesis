@@ -1,27 +1,33 @@
 import { Injectable } from '@angular/core';
-import { ComponentProperty } from '../model';
-import { DynamicFormControlModel, DynamicCheckboxModel, DynamicInputModel, DynamicTextAreaModel } from '@ng2-dynamic-forms/core';
+import { ConfigurationProperty } from '../model';
+import {
+  DynamicFormControlModel,
+  DynamicCheckboxModel,
+  DynamicInputModel,
+  DynamicTextAreaModel,
+} from '@ng2-dynamic-forms/core';
 
-export interface ConfiguredComponentProperty extends ComponentProperty {
+export interface ConfiguredConfigurationProperty extends ConfigurationProperty {
   value: any;
   rows?: number;
   cols?: number;
-
 }
 
 @Injectable()
 export class FormFactoryService {
-
-  createFormModel(properties: Map<string, ConfiguredComponentProperty> |
-                              Map<string, ComponentProperty> |
-                              Map<string, any> |
-                              {}): DynamicFormControlModel[] {
+  createFormModel(
+    properties:
+      | Map<string, ConfiguredConfigurationProperty>
+      | Map<string, ConfigurationProperty>
+      | Map<string, any>
+      | {},
+  ): DynamicFormControlModel[] {
     const answer = <DynamicFormControlModel[]>[];
     for (const key in properties) {
       if (!properties.hasOwnProperty(key)) {
         continue;
       }
-      const value = <ConfiguredComponentProperty> properties[key];
+      const value = <ConfiguredConfigurationProperty>properties[key];
       let formField: any;
       let type = (value.type || '').toLowerCase();
       // first normalize the type
@@ -51,43 +57,49 @@ export class FormFactoryService {
           value: value.value || value.defaultValue,
         });
       } else if (type === 'textarea') {
-        formField = new DynamicTextAreaModel({
-          id: key,
-          label: value.displayName || key,
-          placeholder: value.description,
-          value: value.value || value.defaultValue,
-          required: value.required,
-          rows: value.rows,
-          cols: value.cols,
-        }, {
-          element: {
-            label: 'control-label',
+        formField = new DynamicTextAreaModel(
+          {
+            id: key,
+            label: value.displayName || key,
+            placeholder: value.description,
+            value: value.value || value.defaultValue,
+            required: value.required,
+            rows: value.rows,
+            cols: value.cols,
           },
-          grid: {
-            control: 'col-sm-9',
-            label: 'col-sm-3',
+          {
+            element: {
+              label: 'control-label',
+            },
+            grid: {
+              control: 'col-sm-9',
+              label: 'col-sm-3',
+            },
           },
-        });
+        );
       } else {
         if (value.secret) {
           type = 'password';
         }
-        formField = new DynamicInputModel({
-          id: key,
-          label: type === 'hidden' ? null : value.displayName || key,
-          placeholder: type === 'hidden' ? null : value.description,
-          inputType: type,
-          value: value.value || value.defaultValue,
-          required: value.required,
-        }, {
-          element: {
-            label: 'control-label',
+        formField = new DynamicInputModel(
+          {
+            id: key,
+            label: type === 'hidden' ? null : value.displayName || key,
+            placeholder: type === 'hidden' ? null : value.description,
+            inputType: type,
+            value: value.value || value.defaultValue,
+            required: value.required,
           },
-          grid: {
-            control: 'col-sm-9',
-            label: 'col-sm-3',
+          {
+            element: {
+              label: 'control-label',
+            },
+            grid: {
+              control: 'col-sm-9',
+              label: 'col-sm-3',
+            },
           },
-        });
+        );
       }
 
       if (formField) {
@@ -96,5 +108,4 @@ export class FormFactoryService {
     }
     return answer;
   }
-
 }

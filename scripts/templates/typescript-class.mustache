@@ -8,7 +8,7 @@ export interface BaseEntity {
 
 {{#definitions}}
 export interface {{&name}} extends BaseEntity {{#tsType}}{{> type}}{{/tsType}};
-export type {{&name}}s = Array<{{&name}}>;
+export type {{#pluralize}}{{&name}}{{/pluralize}} = Array<{{&name}}>;
 
 {{/definitions}}
 
