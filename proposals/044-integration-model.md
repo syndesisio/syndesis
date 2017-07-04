@@ -27,10 +27,10 @@ _Attention: THIS IS WORK-IN-PROGRESS. The current draft below does **not** consi
 
 ## Integration state model
 
-[!Integration state model](images/integration-state.png "Integration State Model")
+![Integration state model](images/integration-state.png "Integration State Model")
 
 | State       | Description |
-| =========== | =========== |
+| ----------- |------------ |
 | Draft | Initial state of an integration |
 | Active | Integration is running |
 | Inactive | Integration has been stopped|
