@@ -1,4 +1,4 @@
-FROM jimmidyson/caddy:v0.9.5
+FROM syndesis/caddy:v0.10.4
 MAINTAINER Syndesis Developers <syndesis@googlegroups.com>
 
 COPY Caddyfile /etc/Caddyfile
