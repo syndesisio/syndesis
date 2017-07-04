@@ -30,7 +30,7 @@
             <directory>${project.basedir}/dist</directory>
             <outputDirectory>/srv</outputDirectory>
             <includes>
-                <include>*</include>
+                <include>**</include>
             </includes>
             <fileMode>0644</fileMode>
         </fileSet>
