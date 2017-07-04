@@ -23,14 +23,14 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
+        <version>\${spring-boot.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-spring-boot-dependencies</artifactId>
-        <version>${camel.version}</version>
+        <version>\${camel.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -42,7 +42,7 @@
     <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>camel-atlasmap</artifactId>
-      <version>${atlasmap.version}</version>
+      <version>\${atlasmap.version}</version>
     </dependency>
 
     <!-- connectors used in this integration -->
@@ -76,19 +76,19 @@
     <dependency>
       <groupId>io.fabric8.funktion</groupId>
       <artifactId>funktion-model</artifactId>
-      <version>${funktion.version}</version>
+      <version>\${funktion.version}</version>
     </dependency>
     <dependency>
       <groupId>io.fabric8.funktion</groupId>
       <artifactId>funktion-runtime</artifactId>
-      <version>${funktion.version}</version>
+      <version>\${funktion.version}</version>
     </dependency>
 
     <!-- testing -->
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test</artifactId>
-      <version>${camel.version}</version>
+      <version>\${camel.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -100,7 +100,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
+        <version>\${spring-boot.version}</version>
         <executions>
           <execution>
             <goals>
