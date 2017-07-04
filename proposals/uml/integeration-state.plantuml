@@ -1,0 +1,22 @@
+@startuml
+
+[*] --> Draft : New
+Draft --> [*] : Delete
+Draft -right-> Active : Publish
+Draft: Used during development
+Draft: Pre-deployment
+
+Active -right-> Inactive : Stop
+Active: Integration is running
+Inactive -left-> Active : Start
+Inactive: Integration has been stopped
+Inactive --> Deleted : Unpublish
+
+Active --> Error
+Error --> Active
+Error: Error occured when running / publishing
+Error -right-> Deleted
+Draft --> Error
+
+Deleted: Marked as deleted
+@enduml
