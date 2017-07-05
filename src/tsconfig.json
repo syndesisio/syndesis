@@ -5,12 +5,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "lib": [
-      "es6",
-      "dom"
-    ],
+    "lib": ["es6", "dom"],
     "mapRoot": "./",
-    "module": "es6",
+    "module": "commonjs",
     "moduleResolution": "node",
     "noUnusedParameters": false,
     "noUnusedLocals": false,
@@ -18,9 +15,7 @@
     "outDir": "../dist/out-tsc",
     "sourceMap": true,
     "target": "es5",
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
+    "typeRoots": ["../node_modules/@types"],
     "paths": {
       "@angular/*": ["../node_modules/@angular/*"]
     }
