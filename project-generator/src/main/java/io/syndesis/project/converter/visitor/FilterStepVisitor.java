@@ -62,6 +62,9 @@ public class FilterStepVisitor implements StepVisitor {
                 case TEXT:
                     filter.setExpression(step.getSimple());
                     break;
+                default:
+                    //do nothing
+                    break;
             }
 
             List<io.fabric8.funktion.model.steps.Step> steps = new ArrayList<>();

@@ -27,8 +27,6 @@ public class GenericStepVisitor implements StepVisitor {
 
     public static final String GENERIC = "generic";
 
-    private final GeneratorContext generatorContext;
-
     public static class Factory implements StepVisitorFactory<GenericStepVisitor> {
 
         @Override
@@ -38,12 +36,8 @@ public class GenericStepVisitor implements StepVisitor {
 
         @Override
         public GenericStepVisitor create(GeneratorContext generatorContext) {
-            return new GenericStepVisitor(generatorContext);
+            return new GenericStepVisitor();
         }
-    }
-
-    public GenericStepVisitor(GeneratorContext generatorContext) {
-        this.generatorContext = generatorContext;
     }
 
     @Override

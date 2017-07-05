@@ -16,8 +16,11 @@
 package io.syndesis.project.converter;
 
 import io.syndesis.connector.catalog.ConnectorCatalog;
-
-import io.syndesis.project.converter.visitor.*;
+import io.syndesis.project.converter.visitor.DataMapperStepVisitor;
+import io.syndesis.project.converter.visitor.EndpointStepVisitor;
+import io.syndesis.project.converter.visitor.FilterStepVisitor;
+import io.syndesis.project.converter.visitor.StepVisitorFactory;
+import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

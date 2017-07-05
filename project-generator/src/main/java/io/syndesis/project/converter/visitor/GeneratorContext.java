@@ -83,6 +83,10 @@ public class GeneratorContext {
         }
     }
 
+    public static GeneratorContext.Builder newBuilder() {
+        return new GeneratorContext.Builder();
+    }
+
     private GeneratorContext(GenerateProjectRequest request, Flow flow, Map<String, byte[]> contents, ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties, StepVisitorFactoryRegistry visitorFactoryRegistry) {
         this.request = request;
         this.flow = flow;
