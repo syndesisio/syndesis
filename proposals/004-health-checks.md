@@ -10,7 +10,7 @@ Syndesis - Camel Health Check
 There is two kind of health checks required for Syndesis:
 
 * Technical health checks which ensure that the Integration itself is running, but not whether the components are without faults. This healthcheck is used as liveness and readiness checks for OpenShift
-* Status of an integration with respect to the backends. This status should be visualised in the Syndesis UI to give direct feedback to the user. It must not be the case that a faulty backend restarts the backend.
+* Status of an integration with respect to the backends. This status should be visualised in the Syndesis UI to give direct feedback to the user. It must not be the case that a faulty backend restarts the integration.
 
 ### Technical health checks
 
