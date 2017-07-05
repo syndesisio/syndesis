@@ -1,22 +1,22 @@
 @startuml
 
 [*] --> Draft : New
+[*] --> Draft : Change existing integration
 Draft --> [*] : Delete
 Draft -right-> Active : Publish
-Draft: Used during development
-Draft: Pre-deployment
+Draft: Used for design\nand and changing integrations
 
-Active -right-> Inactive : Stop
+Active -right-> Inactive : Resume
 Active: Integration is running
-Inactive -left-> Active : Start
-Inactive: Integration has been stopped
-Inactive --> Deleted : Unpublish
+Inactive -left-> Active : Suspend
+Inactive: Integration has been stopped,\nbut pod still running
+Inactive --> Undeployed : Undeploy
 
 Active --> Error
 Error --> Active
 Error: Error occured when running / publishing
-Error -right-> Deleted
+Error -right-> Undeployed
 Draft --> Error
 
-Deleted: Marked as deleted
+Undeployed: No pod running
 @enduml
