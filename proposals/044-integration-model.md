@@ -26,16 +26,20 @@ When rethinking the integration and the state model, the following points should
 
 _Attention: THIS IS WORK-IN-PROGRESS. The propsoal is PRed early to collect early feedback_
 
-
 ## Integration state model
 
-Technical an Integration is the domain object describing a Camel Route. 
+An Integration is the domain object describing a Camel Route.
 It is managed by `syndesis-rest` and `syndesis-ui`. 
-During design time this object only lives in this domain. 
-After a "Publish" operation the integration is transformed in an runnable artefact. 
+
+An integration starts its life in the state _Draft_. 
+An integration is in this state has no runtime artefact attached and can be freely changed and saved by an user to the database. 
+Changing a draft integration is a cheap operation.
+
+After a "Publish" operation the integration is then transformed in an runnable artefact. 
 This runnable artefact consists of a GitHub repo containing the code and configuration and an OpenShift resource configuration which transforms this code into a running application, backed by an integration pod.
 Running integrations can be suspended and resumed without destroying the deployment.
 
+Once an integration is published it becomes immutable. 
 
 ![Integration state model](images/integration-state.png "Integration State Model")
 
@@ -56,7 +60,7 @@ After an activation there is no way back to the _Draft_ state.
 
 ### Active
 
-An _active_ integration is a running integration. This state can be either created from a _Draft_ state when the integration gets published of from an _Inactive_ state when a suspended integration is started again.
+An _active_ integration is a running integration. This state can be either created from a _Draft_ state when the integration gets published from an _Inactive_ state when a suspended integration is started again.
 
 ### Inactive
 
@@ -128,36 +132,11 @@ That way it is ensured that only a single version of an integration is active.
 
 ## Data model
 
-The following data model only highlights the parts which are specific to the lifecycle model:
+The following data model only highlights the parts which are specific to the lifecycle model.
+
+The state itself is modelled with a simple enum:
 
 ```java
-public class Integration {
-    
-    // Unique name of the integration
-    String name;
-    
-    // Current state of the integration
-    IntegrationState currentState;
-    
-    // Target state of the integration    
-    IntegrationState targetState;
-    
-    // The version of the integration which was the origin of this integration
-    // 0 if this is a new integration
-    int parentVersion;
-    
-    // Version of this integratin
-    int version;
-  
-    // Message describing the state further (e.g. error message)
-    String stateMessage;
-    
-    // Whether this integration has converged to its target state
-    boolean isPending() {
-        return currentState != targetState;
-    }
-}
-
 enum IntegrationState {
   
     // Initial state of an undeployed integration
@@ -177,19 +156,134 @@ enum IntegrationState {
 }
 ```
 
+For the integration itself, two models are possible which group various integration versions together:
+
+### Explicit Integration grouping
+
+For modelling an integration with its versioned instanced explicitely we have a two-level:
+
+
+```java
+public class Integration {
+    
+    // Name of the integration
+    String name;
+    
+    // List of integration instances for different versions
+    List<IntegrationInstance> integrationInstances;
+    
+    // Get the currently deployed instanc (active / inactive) or null
+    IntegrationInstance getDeployedInstance();
+    
+    // Get the current integration instance in state draft
+    IntegrationInstance getDraftInstance();
+    
+    // More global properties ....
+}
+```
+
+```java
+public class IntegrationInstance {
+  
+    // The integration this instance belongs to
+    Integration integration;
+  
+    // Current state of the integration
+    IntegrationState currentState;
+    
+    // Target state of the integration    
+    IntegrationState targetState;
+    
+    // The version of the integration instance which was the origin of this integration
+    // 0 if this is a new integration
+    int parentVersion;
+    
+    // Version of this integration instance
+    int version;
+  
+    // Message describing the state further (e.g. error message)
+    String stateMessage;
+    
+    // Whether this integration has converged to its target state
+    boolean isPending() {
+        return currentState != targetState;
+    }
+    
+    // All other props specific for a version of an integration
+    // ....
+}
+```
+
+### Implicit Integration instance grouping via groupId
+
+The following model is simpler than an explicit group modelling and connects together all integration with the same `groupId`. 
+Disadvantage of this approach is if every integration-global property is changed then **every** integration object must be updated, too (whereas in the explicit case only the grouping object needs to be updated).
+
+```java
+public class Integration {
+    
+    // Name of the integration
+    String name;
+    
+    // Label like groupId. Every Integration with the same groupId 
+    // belong together and build an implicit group. This groupId must 
+    // not change.
+    String groupId;
+
+    // Current state of the integration
+    IntegrationState currentState;
+    
+    // Target state of the integration    
+    IntegrationState targetState;
+    
+    // The version of the integration instance which was the origin of this integration
+    // 0 if this is a new integration
+    int parentVersion;
+    
+    // Version of this integration instance
+    int version;
+  
+    // Message describing the state further (e.g. error message)
+    String stateMessage;
+    
+    // Whether this integration has converged to its target state
+    boolean isPending() {
+        return currentState != targetState;
+    }
+
+    // All other props specific for a version of an integration
+    // ....
+}
+```
+
 ## Deployment
 
 Deployment goes when an integration with `currentState == Draft` set `targetState = Active`. 
+This happens when you publish an integration.
 Several actions will be performed by the controller:
 
 * A GitHub repository will be created if this is the first version of an integration (parentVersion == 0). 
 * If it is an new version of an existing integration (e.g. because a user changed something), a new Git branch is created from the old version's branch. This branch is named after the version.
 * The runtime files are created and commit to the Git repository
 * If this is an update of an existing integration, a currently running or suspended integration (`currentState == Active or Inactive`) is set to `targetState = Undeployed` (which triggers an undeployment on behalf of the controller)
-* The resource descriptors are created for this integration and applied to OpenShift.
+* A new OpenShift build is created which in turns triggers a redeployment
 
-Open Question: For an update should an exisiting `DeploymentConfig` be reused (and e.g. doing a rolling update) or should we create a new `DeploymentConfig` ?
+Question: It would be awesome if we could change the state for an _Active_ integration to _Undeployed_ by watching OpenShift for update deployments so that we can mark the old integration as _Undeployed_ and the new as _Active_. Is this possible with OpenShift ? How to correlate OpenShift deployments with integration versions ?
 
+
+### Updating
+
+When changing an integration the following steps and checks are performed. 
+Please keep in mind that all integration objects with the same name belong together, they are just variants in different versions.
+
+* If there is already an integration with this name in state _Draft_, update this integration.
+* If there is no integration in _Draft_ but one in _Active_, the active integration is cloned to a new integration with the same name and in state _Draft_. This integration then can be changed freely and saved to the DB.
+* When the changed integration gets published, it's `targetState` is set from "Draft" to "Active". 
+* A controller in syndesis-rest detects, that integration with `currentState == Draft` and `targetStat == Active`. The controller then performs these operations in the background:
+  - For an integration with `currentState == Active|Inactive` set `targetState = Undeployed`
+  - Create / Update the GitHub repo
+  - Trigger an OpenShift build  
+  
 ## UI changes and updates
 
 Within the UI the state of an integration should be visualized. 
