@@ -1,9 +1,0 @@
----
-flows:
-- steps:
-  - kind: "endpoint"
-    uri: "direct:start"
-  - kind: "log"
-    message: "Hello ${body}"
-  - kind: "endpoint"
-    uri: "mock:results"

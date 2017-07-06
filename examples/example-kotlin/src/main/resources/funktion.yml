@@ -1,7 +1,0 @@
-flows:
-  - trigger: http
-    name: red
-    steps:
-    - kind: function
-      name: io.fabric8.funktion.example.Main::wine
-    trace: false
