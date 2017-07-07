@@ -103,12 +103,12 @@
     <basepom.failsafe.timeout>150</basepom.failsafe.timeout>
 
     <syndesis-connectors.version>0.4.4</syndesis-connectors.version>
+    <syndesis-integration-runtime.version>0.1.1</syndesis-integration-runtime.version>
 
     <assertj-core.version>3.6.2</assertj-core.version>
     <caffeine.version>2.4.0</caffeine.version>
     <camel.version>2.19.0</camel.version>
     <jdbi.version>2.78</jdbi.version>
-    <funktion.version>1.1.55</funktion.version>
     <hibernate.validator.version>5.3.4.Final</hibernate.validator.version>
     <immutables.version>2.5.1</immutables.version>
     <infinispan.version>9.0.0.Final</infinispan.version>
@@ -291,11 +291,10 @@
         <version>${project.version}</version>
       </dependency>
 
-      <!-- Funktion -->
       <dependency>
-        <groupId>io.fabric8.funktion</groupId>
-        <artifactId>funktion-model</artifactId>
-        <version>${funktion.version}</version>
+        <groupId>io.syndesis.integration-runtime</groupId>
+        <artifactId>model</artifactId>
+        <version>${syndesis-integration-runtime.version}</version>
       </dependency>
 
       <dependency>

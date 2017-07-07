@@ -19,10 +19,10 @@ import java.io.Serializable;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.integration.model.StepKinds;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
-import io.fabric8.funktion.model.StepKinds;
 
 import org.immutables.value.Value;
 

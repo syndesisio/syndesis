@@ -22,14 +22,14 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.core.Json;
+import io.syndesis.integration.model.Flow;
+import io.syndesis.integration.model.StepKinds;
+import io.syndesis.integration.model.SyndesisModel;
+import io.syndesis.integration.model.steps.Endpoint;
+import io.syndesis.integration.support.YamlHelper;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
-import io.fabric8.funktion.model.Flow;
-import io.fabric8.funktion.model.Funktion;
-import io.fabric8.funktion.model.StepKinds;
-import io.fabric8.funktion.model.steps.Endpoint;
-import io.fabric8.funktion.support.YamlHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +107,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         contents.put("README.md", generateFromRequest(request, readmeMustache));
         contents.put("src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
         contents.put("src/main/resources/application.properties", generateFromRequest(request, applicationYmlMustache));
-        contents.put("src/main/resources/funktion.yml", generateFlowYaml(contents, request));
+        contents.put("src/main/resources/syndesis.yml", generateFlowYaml(contents, request));
         contents.put("pom.xml", generatePom(request.getIntegration()));
 
         return contents;
@@ -190,7 +190,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                     HashMap<String, Object> stepJSON = new HashMap<>(step.getConfiguredProperties().orElse(new HashMap<String,String>()));
                     stepJSON.put("kind", step.getStepKind());
                     String json = Json.mapper().writeValueAsString(stepJSON);
-                    flow.addStep(Json.mapper().readValue(json, io.fabric8.funktion.model.steps.Step.class));
+                    flow.addStep(Json.mapper().readValue(json, io.syndesis.integration.model.steps.Step.class));
                     continue;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -198,9 +198,9 @@ public class DefaultProjectGenerator implements ProjectGenerator {
             }
         });
 
-        Funktion funktion = new Funktion();
-        funktion.addFlow(flow);
-        return YAML_OBJECT_MAPPER.writeValueAsBytes(funktion);
+        SyndesisModel syndesisModel = new SyndesisModel();
+        syndesisModel.addFlow(flow);
+        return YAML_OBJECT_MAPPER.writeValueAsBytes(syndesisModel);
     }
 
     private static byte[] utf8(String value) {
@@ -210,7 +210,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return value.getBytes(Charset.forName("UTF-8"));
     }
 
-    private io.fabric8.funktion.model.steps.Step createEndpointStep(Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws IOException, URISyntaxException {
+    private io.syndesis.integration.model.steps.Step createEndpointStep(Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws IOException, URISyntaxException {
         Map<String, String> properties = connector.filterProperties(aggregate(connectionConfiguredProperties, stepConfiguredProperties), connector.isEndpointProperty());
         Map<String, String> secrets = connector.filterProperties(properties, connector.isSecret(),
             e -> e.getKey(),

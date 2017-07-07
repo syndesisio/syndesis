@@ -14,7 +14,7 @@
   <properties>
     <spring-boot.version>@spring-boot.version@</spring-boot.version>
     <camel.version>@camel.version@</camel.version>
-    <funktion.version>@funktion.version@</funktion.version>
+    <syndesis-integration-runtime.version>@syndesis-integration-runtime.version@</syndesis-integration-runtime.version>
     <atlasmap.version>@atlasmap.version@</atlasmap.version>
   </properties>
 
@@ -72,16 +72,16 @@
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
 
-    <!-- Funktion runtime -->
+    <!-- Integration runtime -->
     <dependency>
-      <groupId>io.fabric8.funktion</groupId>
-      <artifactId>funktion-model</artifactId>
-      <version>\${funktion.version}</version>
+      <groupId>io.syndesis.integration-runtime</groupId>
+      <artifactId>model</artifactId>
+      <version>\${syndesis-integration-runtime.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.fabric8.funktion</groupId>
-      <artifactId>funktion-runtime</artifactId>
-      <version>\${funktion.version}</version>
+      <groupId>io.syndesis.integration-runtime</groupId>
+      <artifactId>runtime</artifactId>
+      <version>\${syndesis-integration-runtime.version}</version>
     </dependency>
 
     <!-- testing -->

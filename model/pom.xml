@@ -48,8 +48,8 @@
     </dependency>
 
     <dependency>
-      <groupId>io.fabric8.funktion</groupId>
-      <artifactId>funktion-model</artifactId>
+      <groupId>io.syndesis.integration-runtime</groupId>
+      <artifactId>model</artifactId>
     </dependency>
 
     <dependency>
@@ -98,7 +98,7 @@
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
         <configuration>
-          <ignoredUnusedDeclaredDependencies>io.fabric8.funktion:funktion-model</ignoredUnusedDeclaredDependencies>
+          <ignoredUnusedDeclaredDependencies>io.syndesis.integration-runtime:model</ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
     </plugins>
