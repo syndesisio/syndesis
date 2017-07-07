@@ -6,9 +6,7 @@ import { Action, Actions } from '../../model';
 
 @Injectable()
 export class ActionService extends RESTService<Action, Actions> {
-
   constructor(restangular: Restangular) {
     super(restangular.service('actions'), 'action');
   }
-
 }

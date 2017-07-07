@@ -12,18 +12,19 @@ describe('ListActionsComponent', () => {
   let component: ListActionsComponent;
   let fixture: ComponentFixture<ListActionsComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        SyndesisCommonModule,
-        RouterTestingModule.withRoutes([]),
-        ToasterModule,
-        StoreModule,
-      ],
-      declarations: [ListActionsComponent],
-    })
-      .compileComponents();
-  }));
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SyndesisCommonModule,
+          RouterTestingModule.withRoutes([]),
+          ToasterModule,
+          StoreModule,
+        ],
+        declarations: [ListActionsComponent],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ListActionsComponent);

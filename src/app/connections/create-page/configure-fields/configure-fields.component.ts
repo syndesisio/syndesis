@@ -13,7 +13,7 @@ export class ConnectionsConfigureFieldsComponent implements OnInit {
     private current: CurrentConnectionService,
     private route: ActivatedRoute,
     private router: Router,
-  ) { }
+  ) {}
 
   get connection(): Connection {
     return this.current.connection;
@@ -23,5 +23,5 @@ export class ConnectionsConfigureFieldsComponent implements OnInit {
     this.current.connection = connection;
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 }

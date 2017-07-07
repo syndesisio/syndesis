@@ -32,9 +32,9 @@ describe('ConnectionViewPage', () => {
   let component: ConnectionViewPage;
   let fixture: ComponentFixture<ConnectionViewPage>;
 
-  beforeEach(async(() => {
-    TestBed
-      .configureTestingModule({
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
         imports: [
           CommonModule,
           FormsModule,
@@ -63,14 +63,16 @@ describe('ConnectionViewPage', () => {
           CurrentConnectionService,
           { provide: RequestOptions, useClass: BaseRequestOptions },
           {
-            provide: Http, useFactory: (backend, options) => {
+            provide: Http,
+            useFactory: (backend, options) => {
               return new Http(backend, options);
-            }, deps: [MockBackend, RequestOptions],
+            },
+            deps: [MockBackend, RequestOptions],
           },
         ],
-      })
-      .compileComponents();
-  }));
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConnectionViewPage);
@@ -78,5 +80,7 @@ describe('ConnectionViewPage', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => { expect(component).toBeTruthy(); });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

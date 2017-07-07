@@ -9,19 +9,12 @@ import { ListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { TemplatesListComponent } from './list/list.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    SyndesisCommonModule,
-  ],
+  imports: [CommonModule, FormsModule, RouterModule, SyndesisCommonModule],
   declarations: [
     TemplatesListPage,
     TemplatesListComponent,
     ListToolbarComponent,
   ],
-  exports: [
-    TemplatesListComponent,
-  ],
+  exports: [TemplatesListComponent],
 })
-export class TemplatesModule { }
+export class TemplatesModule {}

@@ -12,7 +12,6 @@ import { Integrations } from '../../model';
   styleUrls: ['./list-page.component.scss'],
 })
 export class IntegrationsListPage implements OnInit {
-
   integrations: Observable<Integrations>;
 
   loading: Observable<boolean>;
@@ -41,5 +40,4 @@ export class IntegrationsListPage implements OnInit {
   ngOnInit() {
     this.store.loadAll();
   }
-
 }

@@ -17,10 +17,10 @@ const category = getCategory('Integrations');
   moduleId: module.id,
   selector: 'syndesis-integrations-connection-select',
   templateUrl: 'connection-select.component.html',
-  styleUrls: [ './connection-select.component.scss' ],
+  styleUrls: ['./connection-select.component.scss'],
 })
-export class IntegrationsSelectConnectionComponent extends FlowPage implements OnInit, OnDestroy {
-
+export class IntegrationsSelectConnectionComponent extends FlowPage
+  implements OnInit, OnDestroy {
   connections: Observable<Connections>;
   loading: Observable<boolean>;
   filter: ObjectPropertyFilterConfig = {
@@ -40,7 +40,7 @@ export class IntegrationsSelectConnectionComponent extends FlowPage implements O
     public route: ActivatedRoute,
     public router: Router,
     public detector: ChangeDetectorRef,
-    ) {
+  ) {
     super(currentFlow, route, router, detector);
     this.loading = store.loading;
     this.connections = store.list;
@@ -53,7 +53,9 @@ export class IntegrationsSelectConnectionComponent extends FlowPage implements O
       position: this.position,
       connection: connection,
       onSave: () => {
-        this.router.navigate(['action-select', this.position], { relativeTo: this.route.parent });
+        this.router.navigate(['action-select', this.position], {
+          relativeTo: this.route.parent,
+        });
       },
     });
   }
@@ -75,7 +77,8 @@ export class IntegrationsSelectConnectionComponent extends FlowPage implements O
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.params.pluck<Params, string>('position')
+    this.routeSubscription = this.route.params
+      .pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
         this.currentFlow.events.emit({
@@ -103,5 +106,4 @@ export class IntegrationsSelectConnectionComponent extends FlowPage implements O
   ngOnDestroy() {
     this.routeSubscription.unsubscribe();
   }
-
 }

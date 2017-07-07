@@ -15,7 +15,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 .flow-view-step {
-
   ////////////////////////////////////////////////////////////////////////////////
   // SIDEBAR: COMMON, REGARDLESS OF STATE
   ////////////////////////////////////////////////////////////////////////////////
@@ -37,9 +36,6 @@
     right: 15px;
     cursor: pointer;
   }
-
-
-
 
   ////////////////////////////////////////////////////////////////////////////////
   // SIDEBAR: LEFT HAND (VERTICAL PROGRESS LINE & ICON)
@@ -63,10 +59,10 @@
       padding: 11px;
       width: 55px;
       height: 55px;
-      background-color: #FFFFFF;
+      background-color: #ffffff;
 
       &.not-connection {
-        background-color: #FFFFFF;
+        background-color: #ffffff;
         border-width: 10px;
         padding: 5px 0px;
         border-radius: 100px;
@@ -81,20 +77,17 @@
         margin-top: 1px;
       }
 
-
       //----- Sidebar: Progress Line: Active State ----------------->>
 
       &.active {
         border-color: $pf-blue-400;
       }
 
-
       //----- Sidebar: Progress Line: Inactive State ----------------->>
 
       &.inactive {
-        border-color: #D0D0D0;
+        border-color: #d0d0d0;
       }
-
 
       //----- Sidebar: Progress Line: Complete State ----------------->>
 
@@ -104,12 +97,11 @@
         }
       }
 
-
       //----- Sidebar: Progress Line: Incomplete State ----------------->>
 
       &.incomplete {
         .fa {
-          color: #D1D1D1;
+          color: #d1d1d1;
         }
       }
     }
@@ -121,9 +113,6 @@
     }
   }
 
-
-
-
   ////////////////////////////////////////////////////////////////////////////////
   // SIDEBAR: RIGHT HAND (PROGRESS MENU)
   ////////////////////////////////////////////////////////////////////////////////
@@ -134,23 +123,21 @@
     padding-right: 0;
     padding-top: 19px;
 
-
     //----- Sidebar: Menu & Parent Step Container ----------------->>
 
     .step-container {
-
-      .fa.fa-chevron-down, .fa.fa-chevron-right {
+      .fa.fa-chevron-down,
+      .fa.fa-chevron-right {
         font-size: x-small;
         padding-right: 5px;
         margin-right: 5px;
       }
 
-
       // Active State for Entire Container of Single Step
 
       &.active {
         .fa.fa-trash {
-          color: #FFFFFF;
+          color: #ffffff;
         }
       }
 
@@ -164,31 +151,28 @@
         padding: 8px 100% 8px 8px;
         text-transform: uppercase;
 
-
         //----- Sidebar: Menu: Parent Step: Active State ----------------->>
 
         &.active {
-          background-color: #158ACC;
-          color: #FFFFFF;
+          background-color: #158acc;
+          color: #ffffff;
         }
-
 
         //----- Sidebar: Menu: Parent Step: Inactive State ----------------->>
 
-        &.inactive {}
-
+        &.inactive {
+        }
 
         //----- Sidebar: Menu: Parent Step: Complete State ----------------->>
 
-        &.complete {}
-
+        &.complete {
+        }
 
         //----- Sidebar: Menu: Parent Step: Incomplete State ----------------->>
 
-        &.incomplete {}
+        &.incomplete {
+        }
       }
-
-
 
       //----- Sidebar: Menu: Sub Steps ----------------->>
 
@@ -204,7 +188,6 @@
         -webkit-margin-start: 0;
         -webkit-margin-end: 0;
 
-
         // Each Step
 
         li {
@@ -213,34 +196,32 @@
           margin: 7px 0 0 0;
           padding: 5px 5px 5px 30px;
 
-
           //----- Sidebar: Menu: Sub Step: Active State ----------------->>
 
           &.active {
-            background-color: #D6EEFA;
-            border-bottom: 1px solid #B8DFF3;
-            border-top: 1px solid #B8DFF3;
+            background-color: #d6eefa;
+            border-bottom: 1px solid #b8dff3;
+            border-top: 1px solid #b8dff3;
             color: #363636;
             cursor: pointer;
           }
 
-
           //----- Sidebar: Menu: Sub Step: Inactive State ----------------->>
 
-          &.inactive {}
-
+          &.inactive {
+          }
 
           //----- Sidebar: Menu: Sub Step: Complete State ----------------->>
 
-          &.complete {}
-
+          &.complete {
+          }
 
           //----- Sidebar: Menu: Sub Step: Incomplete State ----------------->>
 
-          &.incomplete {}
+          &.incomplete {
+          }
         }
       }
     }
   }
-
 }

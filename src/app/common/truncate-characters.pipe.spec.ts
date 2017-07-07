@@ -1,7 +1,6 @@
 import { TruncateCharactersPipe } from './truncate-characters.pipe';
 
 describe('TruncateCharactersPipe', () => {
-
   let pipe: TruncateCharactersPipe;
 
   beforeEach(() => {

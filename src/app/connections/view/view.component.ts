@@ -1,8 +1,20 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService, DynamicInputModel } from '@ng2-dynamic-forms/core';
+import {
+  DynamicFormControlModel,
+  DynamicFormService,
+  DynamicInputModel,
+} from '@ng2-dynamic-forms/core';
 
 import { FormFactoryService } from '../../common/forms.service';
 import { ConnectorStore } from '../../store/connector/connector.store';
@@ -19,7 +31,6 @@ const category = getCategory('Connections');
   styleUrls: ['./view.component.scss'],
 })
 export class ConnectionViewComponent implements OnInit, OnDestroy {
-
   @Input() connection: Connection = TypeFactory.createConnection();
   @Output() connectionChange = new EventEmitter<Connection>();
   @Input() mode = 'view';
@@ -69,38 +80,43 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     const data = formGroup.value;
     const sanitized: any = {};
     // TODO for some reason some keys have spaces at the beginning
-    for ( const key in data ) {
+    for (const key in data) {
       if (!data.hasOwnProperty(key)) {
         continue;
       }
       sanitized[key.trim()] = data[key] || '';
     }
-    this.store.validate(connector.id, sanitized).subscribe((resp) => {
-      setTimeout(() => {
-        this.validating = false;
-        let errorHit = false;
-        (<Array<any>>resp).forEach((info) => {
-          if (!errorHit) {
-            if (info['status'] === 'ERROR') {
-              errorHit = true;
-              this.validateError = (<Array<any>>info)['errors'].map((err) => {
-                return err['description'];
-              }).join(', \n');
+    this.store.validate(connector.id, sanitized).subscribe(
+      resp => {
+        setTimeout(() => {
+          this.validating = false;
+          let errorHit = false;
+          (<Array<any>>resp).forEach(info => {
+            if (!errorHit) {
+              if (info['status'] === 'ERROR') {
+                errorHit = true;
+                this.validateError = (<Array<any>>info)['errors']
+                  .map(err => {
+                    return err['description'];
+                  })
+                  .join(', \n');
+              }
             }
+          });
+          if (!errorHit) {
+            this.validateSuccess = true;
           }
-        });
-        if (!errorHit) {
-          this.validateSuccess = true;
-        }
-        this.detector.detectChanges();
-      }, 10);
-    }, (err) => {
-      setTimeout(() => {
-        this.validateError = err.message ? err.message : err;
-        this.validating = false;
-        this.detector.detectChanges();
-      }, 10);
-    });
+          this.detector.detectChanges();
+        }, 10);
+      },
+      err => {
+        setTimeout(() => {
+          this.validateError = err.message ? err.message : err;
+          this.validating = false;
+          this.detector.detectChanges();
+        }, 10);
+      },
+    );
   }
 
   get name(): string {
@@ -173,7 +189,7 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     if (connection.connector) {
       const props = JSON.parse(JSON.stringify(connection.connector.properties));
       if (connection.configuredProperties) {
-        Object.keys(connection.configuredProperties).forEach((key) => {
+        Object.keys(connection.configuredProperties).forEach(key => {
           props[key].value = connection.configuredProperties[key];
         });
       } else {
@@ -206,15 +222,17 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     const formModel = this.formModel;
     if (formModel) {
       this._formGroup = this.formService.createFormGroup(formModel);
-      this.formChangesSubscription = this._formGroup.valueChanges.subscribe((data) => {
-        Object.keys(data).forEach((key) => {
-          if (data[key] === null) {
-            delete data[key];
-          }
-        });
-        this.connection.configuredProperties = data;
-        this.connectionChange.emit(this.connection);
-      });
+      this.formChangesSubscription = this._formGroup.valueChanges.subscribe(
+        data => {
+          Object.keys(data).forEach(key => {
+            if (data[key] === null) {
+              delete data[key];
+            }
+          });
+          this.connection.configuredProperties = data;
+          this.connectionChange.emit(this.connection);
+        },
+      );
       return this._formGroup;
     } else {
       return undefined;
@@ -233,12 +251,11 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     switch (this.mode) {
       case 'create1':
         this.store.loadAll();
-      break;
+        break;
       default:
         // nothing to do
-      break;
+        break;
     }
-
   }
 
   ngOnDestroy() {
@@ -246,5 +263,4 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
       this.formChangesSubscription.unsubscribe();
     }
   }
-
 }

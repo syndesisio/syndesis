@@ -15,7 +15,6 @@ const category = getCategory('Actions');
   styleUrls: ['./list-actions.component.scss'],
 })
 export class ListActionsComponent implements OnInit {
-
   truncateLimit = 80;
   truncateTrail = '…';
   selectedId = undefined;
@@ -48,6 +47,9 @@ export class ListActionsComponent implements OnInit {
   }
 
   ngOnInit() {
-    log.debugc(() => 'Got actions: ' + JSON.stringify(this.actions, undefined, 2), category);
+    log.debugc(
+      () => 'Got actions: ' + JSON.stringify(this.actions, undefined, 2),
+      category,
+    );
   }
 }

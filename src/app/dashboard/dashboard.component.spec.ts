@@ -24,37 +24,40 @@ describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        SyndesisCommonModule,
-        ChartsModule,
-        ModalModule.forRoot(),
-        ToasterModule,
-        TooltipModule.forRoot(),
-        BsDropdownModule.forRoot(),
-        StoreModule,
-        RouterTestingModule.withRoutes([]),
-        RestangularModule.forRoot(),
-      ],
-      declarations: [
-        DashboardComponent,
-        EmptyStateComponent,
-        DashboardConnectionsComponent,
-        DashboardIntegrationsComponent,
-      ],
-      providers: [
-        MockBackend,
-        { provide: RequestOptions, useClass: BaseRequestOptions },
-        {
-          provide: Http, useFactory: (backend, options) => {
-            return new Http(backend, options);
-          }, deps: [MockBackend, RequestOptions],
-        },
-      ],
-    })
-      .compileComponents();
-  }));
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SyndesisCommonModule,
+          ChartsModule,
+          ModalModule.forRoot(),
+          ToasterModule,
+          TooltipModule.forRoot(),
+          BsDropdownModule.forRoot(),
+          StoreModule,
+          RouterTestingModule.withRoutes([]),
+          RestangularModule.forRoot(),
+        ],
+        declarations: [
+          DashboardComponent,
+          EmptyStateComponent,
+          DashboardConnectionsComponent,
+          DashboardIntegrationsComponent,
+        ],
+        providers: [
+          MockBackend,
+          { provide: RequestOptions, useClass: BaseRequestOptions },
+          {
+            provide: Http,
+            useFactory: (backend, options) => {
+              return new Http(backend, options);
+            },
+            deps: [MockBackend, RequestOptions],
+          },
+        ],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DashboardComponent);

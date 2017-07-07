@@ -19,30 +19,37 @@ describe('ConnectionListPage', () => {
   let component: ConnectionsListPage;
   let fixture: ComponentFixture<ConnectionsListPage>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        SyndesisCommonModule,
-        StoreModule,
-        RouterTestingModule.withRoutes([]),
-        RestangularModule.forRoot(),
-        ModalModule.forRoot(),
-        BsDropdownModule.forRoot(),
-        ToasterModule,
-      ],
-      declarations: [ConnectionsListPage, ConnectionsListComponent, ConnectionsListToolbarComponent],
-      providers: [
-        MockBackend,
-        { provide: RequestOptions, useClass: BaseRequestOptions },
-        {
-          provide: Http, useFactory: (backend, options) => {
-            return new Http(backend, options);
-          }, deps: [MockBackend, RequestOptions],
-        },
-      ],
-    })
-      .compileComponents();
-  }));
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SyndesisCommonModule,
+          StoreModule,
+          RouterTestingModule.withRoutes([]),
+          RestangularModule.forRoot(),
+          ModalModule.forRoot(),
+          BsDropdownModule.forRoot(),
+          ToasterModule,
+        ],
+        declarations: [
+          ConnectionsListPage,
+          ConnectionsListComponent,
+          ConnectionsListToolbarComponent,
+        ],
+        providers: [
+          MockBackend,
+          { provide: RequestOptions, useClass: BaseRequestOptions },
+          {
+            provide: Http,
+            useFactory: (backend, options) => {
+              return new Http(backend, options);
+            },
+            deps: [MockBackend, RequestOptions],
+          },
+        ],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConnectionsListPage);

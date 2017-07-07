@@ -35,7 +35,6 @@ $flow-view-container-min-height: 0;
 }
 
 .flow-view {
-
   .bold {
     font-weight: bold;
   }
@@ -54,9 +53,10 @@ $flow-view-container-min-height: 0;
       padding-right: 6px;
     }
 
-    .start, .finish {
+    .start,
+    .finish {
       h5 {
-        background-color: #EDEDED;
+        background-color: #ededed;
         cursor: pointer;
         display: inline;
         padding: 5px;
@@ -76,13 +76,13 @@ $flow-view-container-min-height: 0;
             padding: 5px 5px 5px 17px;
 
             &.active {
-              background-color: #D6EEFA;
-              border-bottom: 1px solid #B8DFF3;
-              border-top: 1px solid #B8DFF3;
+              background-color: #d6eefa;
+              border-bottom: 1px solid #b8dff3;
+              border-top: 1px solid #b8dff3;
             }
 
             &.inactive {
-              color: #D1D1D1;
+              color: #d1d1d1;
             }
           }
         }
@@ -97,7 +97,7 @@ $flow-view-container-min-height: 0;
 
   .name {
     margin-top: -10px;
-    border-bottom: 1px #D9D9D9 solid;
+    border-bottom: 1px #d9d9d9 solid;
 
     .integration-name {
       background: none;
@@ -108,7 +108,7 @@ $flow-view-container-min-height: 0;
       font-style: normal;
 
       &.ng-invalid {
-        color: #FF0000;
+        color: #ff0000;
       }
     }
 
@@ -116,7 +116,6 @@ $flow-view-container-min-height: 0;
       margin-top: -20px;
     }
   }
-
 
   ////////////////////////////////////////////////////////////////////////////////
   // LEFT-HAND NAV BAR W/ STEPS
@@ -126,8 +125,8 @@ $flow-view-container-min-height: 0;
     position: relative;
     top: -29px;
     height: 80px;
-    margin-top:-15%;
-    margin-bottom:-15%;
+    margin-top: -15%;
+    margin-bottom: -15%;
 
     a {
       text-decoration: none;
@@ -142,7 +141,7 @@ $flow-view-container-min-height: 0;
 
     .square-icon {
       .fa.fa-plus-square {
-        color: #158ACC;
+        color: #158acc;
         background-color: white;
         font-size: x-large;
         margin: 0;
@@ -185,6 +184,4 @@ $flow-view-container-min-height: 0;
       }
     }
   }
-
-
 }

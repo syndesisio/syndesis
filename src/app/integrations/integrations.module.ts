@@ -5,7 +5,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
-import { CollapseModule, ModalModule, PopoverModule, TabsModule, BsDropdownModule } from 'ngx-bootstrap';
+import {
+  CollapseModule,
+  ModalModule,
+  PopoverModule,
+  TabsModule,
+  BsDropdownModule,
+} from 'ngx-bootstrap';
 import { ToasterModule } from 'angular2-toaster';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from 'syndesis.data.mapper';
@@ -34,11 +40,23 @@ import { ConnectionsModule } from '../connections/connections.module';
 const editIntegrationChildRoutes = [
   { path: 'save-or-add-step', component: IntegrationsSaveOrAddStepComponent },
   { path: 'integration-basics', component: IntegrationBasicsComponent },
-  { path: 'connection-select/:position', component: IntegrationsSelectConnectionComponent },
-  { path: 'action-select/:position', component: IntegrationsSelectActionComponent },
-  { path: 'action-configure/:position', component: IntegrationsConfigureActionComponent },
+  {
+    path: 'connection-select/:position',
+    component: IntegrationsSelectConnectionComponent,
+  },
+  {
+    path: 'action-select/:position',
+    component: IntegrationsSelectActionComponent,
+  },
+  {
+    path: 'action-configure/:position',
+    component: IntegrationsConfigureActionComponent,
+  },
   { path: 'step-select/:position', component: IntegrationsStepSelectComponent },
-  { path: 'step-configure/:position', component: IntegrationsStepConfigureComponent },
+  {
+    path: 'step-configure/:position',
+    component: IntegrationsStepConfigureComponent,
+  },
 ];
 
 const routes: Routes = [
@@ -94,9 +112,6 @@ const routes: Routes = [
     FlowViewStepComponent,
     ListActionsComponent,
   ],
-  providers: [
-    CurrentFlow,
-  ],
+  providers: [CurrentFlow],
 })
-export class IntegrationsModule {
-}
+export class IntegrationsModule {}

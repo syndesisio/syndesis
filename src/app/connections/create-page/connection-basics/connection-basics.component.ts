@@ -13,7 +13,7 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
     private current: CurrentConnectionService,
     public route: ActivatedRoute,
     public router: Router,
-  ) { }
+  ) {}
 
   get connection(): Connection {
     return this.current.connection;
@@ -22,9 +22,11 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
   set connection(connection: Connection) {
     this.current.connection = connection;
     if (this.current.connection.connector) {
-      this.router.navigate(['..', 'configure-fields'], { relativeTo: this.route });
+      this.router.navigate(['..', 'configure-fields'], {
+        relativeTo: this.route,
+      });
     }
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 }

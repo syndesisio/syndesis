@@ -8,13 +8,14 @@ describe('IntegrationsListToolbarComponent', () => {
   let component: IntegrationsListToolbarComponent;
   let fixture: ComponentFixture<IntegrationsListToolbarComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([])],
-      declarations: [IntegrationsListToolbarComponent],
-    })
-      .compileComponents();
-  }));
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [RouterTestingModule.withRoutes([])],
+        declarations: [IntegrationsListToolbarComponent],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(IntegrationsListToolbarComponent);

@@ -22,11 +22,7 @@ import { TemplateStore } from './template/template.store';
 import { StepStore } from './step/step.store';
 
 @NgModule({
-  imports: [
-    HttpModule,
-    RestangularModule,
-    OAuthModule,
-  ],
+  imports: [HttpModule, RestangularModule, OAuthModule],
   providers: [
     ActionService,
     ConnectionService,
@@ -45,10 +41,15 @@ import { StepStore } from './step/step.store';
   ],
 })
 export class StoreModule {
-  constructor( @Optional() @SkipSelf() parentModule: StoreModule) {
+  constructor(
+    @Optional()
+    @SkipSelf()
+    parentModule: StoreModule,
+  ) {
     if (parentModule) {
       throw new Error(
-        'StoreModule is already loaded. Import it in the AppModule only');
+        'StoreModule is already loaded. Import it in the AppModule only',
+      );
     }
   }
 }

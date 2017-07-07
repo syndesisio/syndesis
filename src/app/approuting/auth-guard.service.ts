@@ -6,8 +6,10 @@ import { UserService } from '../common/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
-
-  constructor(private oauthService: OAuthService, private userService: UserService) { }
+  constructor(
+    private oauthService: OAuthService,
+    private userService: UserService,
+  ) {}
 
   canActivate(): boolean {
     return this.oauthService.hasValidAccessToken();
@@ -16,5 +18,4 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   canActivateChild(): boolean {
     return this.oauthService.hasValidAccessToken();
   }
-
 }

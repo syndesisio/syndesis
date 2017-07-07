@@ -1,4 +1,12 @@
-import { Component, Input, Output, OnInit, EventEmitter, ViewChild, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  OnInit,
+  EventEmitter,
+  ViewChild,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ToasterService } from 'angular2-toaster';
 
@@ -14,7 +22,6 @@ const category = getCategory('Connections');
   styleUrls: ['./list.component.scss'],
 })
 export class ConnectionsListComponent implements OnInit {
-
   truncateTrail = '…';
   selectedId = undefined;
   selectedForDelete: Connection = undefined;
@@ -32,35 +39,38 @@ export class ConnectionsListComponent implements OnInit {
     public toasterService: ToasterService,
     public store: ConnectionStore,
     public detector: ChangeDetectorRef,
-    ) { }
-
+  ) {}
 
   //-----  Delete ------------------->>
 
   // Actual delete action once the user confirms
   deleteAction(connection: Connection) {
     this.hideModal();
-    const sub = this.store.delete(connection).subscribe(() => {
-      const toast = {
-        type: 'success',
-        title: 'Delete Successful',
-        body: 'Connection successfully deleted.',
-      };
-      sub.unsubscribe();
-      setTimeout(() => {
-        this.toasterService.pop(toast);
-      }, 10);
-    }, (err: any) => {
-      const toast = {
-        type: 'error',
-        title: 'Delete Failed',
-        body: 'Failed to delete connection: ', err,
-      };
-      sub.unsubscribe();
-      setTimeout(() => {
-        this.toasterService.pop(toast);
-      }, 10);
-    });
+    const sub = this.store.delete(connection).subscribe(
+      () => {
+        const toast = {
+          type: 'success',
+          title: 'Delete Successful',
+          body: 'Connection successfully deleted.',
+        };
+        sub.unsubscribe();
+        setTimeout(() => {
+          this.toasterService.pop(toast);
+        }, 10);
+      },
+      (err: any) => {
+        const toast = {
+          type: 'error',
+          title: 'Delete Failed',
+          body: 'Failed to delete connection: ',
+          err,
+        };
+        sub.unsubscribe();
+        setTimeout(() => {
+          this.toasterService.pop(toast);
+        }, 10);
+      },
+    );
   }
 
   // Open modal to confirm delete
@@ -69,7 +79,6 @@ export class ConnectionsListComponent implements OnInit {
     this.selectedForDelete = connection;
     this.showModal();
   }
-
 
   //-----  Modals ------------------->>
 
@@ -84,13 +93,14 @@ export class ConnectionsListComponent implements OnInit {
   //-----  Toast ------------------->>
 
   // Show toast notification
-  popToast(toast) {
-  }
-
+  popToast(toast) {}
 
   //-----  Selecting a Connection ------------------->>
   onSelect(connection: Connection) {
-    log.debugc(() => 'Selected connection (list): ' + connection.name, category);
+    log.debugc(
+      () => 'Selected connection (list): ' + connection.name,
+      category,
+    );
     this.selectedId = connection.id;
     this.onSelected.emit(connection);
   }
@@ -102,7 +112,10 @@ export class ConnectionsListComponent implements OnInit {
   //----- Initialization ------------------->>
 
   ngOnInit() {
-    log.debugc(() => 'Got connections: ' + JSON.stringify(this.connections, undefined, 2), category);
+    log.debugc(
+      () =>
+        'Got connections: ' + JSON.stringify(this.connections, undefined, 2),
+      category,
+    );
   }
-
 }

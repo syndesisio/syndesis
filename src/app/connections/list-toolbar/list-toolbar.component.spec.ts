@@ -8,13 +8,14 @@ describe('ConnectionsListToolbarComponent', () => {
   let component: ConnectionsListToolbarComponent;
   let fixture: ComponentFixture<ConnectionsListToolbarComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([])],
-      declarations: [ConnectionsListToolbarComponent],
-    })
-      .compileComponents();
-  }));
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [RouterTestingModule.withRoutes([])],
+        declarations: [ConnectionsListToolbarComponent],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConnectionsListToolbarComponent);

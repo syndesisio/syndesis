@@ -26,7 +26,8 @@ export class ObjectPropertySortPipe {
           }
           // we give up here
           return 1;
-        default: // we give up here too
+        default:
+          // we give up here too
           return 1;
       }
     });
@@ -35,5 +36,4 @@ export class ObjectPropertySortPipe {
     }
     return answer;
   }
-
 }

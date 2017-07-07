@@ -2,7 +2,10 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService } from '@ng2-dynamic-forms/core';
+import {
+  DynamicFormControlModel,
+  DynamicFormService,
+} from '@ng2-dynamic-forms/core';
 
 import { FlowPage } from '../flow-page';
 import { StepStore } from '../../../store/step/step.store';
@@ -18,8 +21,8 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './step-configure.component.html',
   styleUrls: ['./step-configure.component.scss'],
 })
-export class IntegrationsStepConfigureComponent extends FlowPage implements OnInit, OnDestroy {
-
+export class IntegrationsStepConfigureComponent extends FlowPage
+  implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   position: number;
   step: Step = <Step>{};
@@ -50,7 +53,10 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
   continue(data: any) {
     const step = this.currentFlow.getStep(this.position);
     if (step.stepKind === 'mapper') {
-      this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
+      this.router.navigate(['save-or-add-step'], {
+        queryParams: { validate: true },
+        relativeTo: this.route.parent,
+      });
       return;
     }
     if (!data) {
@@ -68,7 +74,10 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
       position: this.position,
       properties: properties,
       onSave: () => {
-        this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
+        this.router.navigate(['save-or-add-step'], {
+          queryParams: { validate: true },
+          relativeTo: this.route.parent,
+        });
       },
     });
   }
@@ -90,12 +99,17 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.params.pluck<Params, string>('position')
+    this.routeSubscription = this.route.params
+      .pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
-        const step = this.step = <Step>this.currentFlow.getStep(this.position);
+        const step = (this.step = <Step>this.currentFlow.getStep(
+          this.position,
+        ));
         if (!step) {
-          this.router.navigate(['step-select', this.position], { relativeTo: this.route.parent });
+          this.router.navigate(['step-select', this.position], {
+            relativeTo: this.route.parent,
+          });
           return;
         }
         const stepDef = this.stepStore.getStepConfig(step.stepKind);
@@ -104,7 +118,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
           return;
         }
         this.formConfig = JSON.parse(JSON.stringify(stepDef.properties));
-        const values: any = this.getConfiguredProperties(step.configuredProperties);
+        const values: any = this.getConfiguredProperties(
+          step.configuredProperties,
+        );
         for (const key in values) {
           if (!values.hasOwnProperty(key)) {
             continue;
@@ -123,7 +139,10 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
           this.continue({});
           return;
         }
-        log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
+        log.debugc(
+          () => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2),
+          category,
+        );
         this.formModel = this.formFactory.createFormModel(this.formConfig);
         this.formGroup = this.formService.createFormGroup(this.formModel);
         setTimeout(() => {

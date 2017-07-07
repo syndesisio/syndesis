@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef, ViewChildren } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef,
+  ViewChildren,
+} from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -16,8 +23,8 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './flow-view.component.html',
   styleUrls: ['./flow-view.component.scss'],
 })
-export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestroy {
-
+export class FlowViewComponent extends ChildAwarePage
+  implements OnInit, OnDestroy {
   i: Integration;
   flowSubscription: Subscription;
   childRouteSubscription: Subscription;
@@ -32,9 +39,11 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
     public detector: ChangeDetectorRef,
   ) {
     super(currentFlow, route, router);
-    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
-      this.handleFlowEvent(event);
-    });
+    this.flowSubscription = this.currentFlow.events.subscribe(
+      (event: FlowEvent) => {
+        this.handleFlowEvent(event);
+      },
+    );
   }
 
   get currentPosition() {
@@ -88,7 +97,7 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
   }
 
   insertStepAfter(position: number) {
-    this.popovers.forEach((popover) => {
+    this.popovers.forEach(popover => {
       popover.hide();
     });
     this.selectedKind = undefined;
@@ -99,7 +108,7 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
   }
 
   insertConnectionAfter(position: number) {
-    this.popovers.forEach((popover) => {
+    this.popovers.forEach(popover => {
       popover.hide();
     });
     this.selectedKind = undefined;
@@ -107,7 +116,9 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
     const step = TypeFactory.createStep();
     step.stepKind = 'endpoint';
     this.currentFlow.steps.splice(target, 0, step);
-    this.router.navigate(['connection-select', target], { relativeTo: this.route });
+    this.router.navigate(['connection-select', target], {
+      relativeTo: this.route,
+    });
   }
 
   get integrationName() {
@@ -115,8 +126,13 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
   }
 
   maybeShowPopover(popover: PopoverDirective) {
-    if (this.getMiddleSteps() && !this.getMiddleSteps().length && popover && !popover.isOpen) {
-      setTimeout( () => {
+    if (
+      this.getMiddleSteps() &&
+      !this.getMiddleSteps().length &&
+      popover &&
+      !popover.isOpen
+    ) {
+      setTimeout(() => {
         popover.show();
       }, 10);
     }
@@ -132,18 +148,18 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
       case 'integration-connection-configure':
         break;
       case 'integration-add-step':
-          switch (event['type']) {
-            case 'connection':
-              this.insertConnectionAfter(0);
-              return;
-            case 'step':
-              this.insertStepAfter(0);
-              return;
-          }
+        switch (event['type']) {
+          case 'connection':
+            this.insertConnectionAfter(0);
+            return;
+          case 'step':
+            this.insertStepAfter(0);
+            return;
+        }
         break;
       case 'integration-show-popouts':
         this.selectedKind = event['type'];
-        this.popovers.forEach((popover) => {
+        this.popovers.forEach(popover => {
           popover.show();
         });
         break;
@@ -151,12 +167,9 @@ export class FlowViewComponent extends ChildAwarePage implements OnInit, OnDestr
     this.detector.detectChanges();
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.flowSubscription.unsubscribe();
   }
-
 }

@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  EventEmitter,
+  Input,
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -12,17 +18,14 @@ import { CurrentConnectionService } from '../create-page/current-connection';
   styleUrls: ['./view-wrapper.component.scss'],
 })
 export class ConnectionViewWrapperComponent implements OnInit, OnDestroy {
-
   connection: Observable<Connection>;
   public mode = 'view';
 
-  constructor(
-    private store: ConnectionStore,
-    ) {
-      this.connection = this.store.resource;
-    }
+  constructor(private store: ConnectionStore) {
+    this.connection = this.store.resource;
+  }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
-  ngOnDestroy() { }
+  ngOnDestroy() {}
 }

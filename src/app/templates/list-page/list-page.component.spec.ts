@@ -15,22 +15,34 @@ describe('TemplatesListPage', () => {
   let component: TemplatesListPage;
   let fixture: ComponentFixture<TemplatesListPage>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [SyndesisCommonModule, StoreModule, RestangularModule.forRoot(), RouterTestingModule.withRoutes([])],
-      declarations: [TemplatesListPage, ListToolbarComponent, TemplatesListComponent],
-      providers: [
-        MockBackend,
-        { provide: RequestOptions, useClass: BaseRequestOptions },
-        {
-          provide: Http, useFactory: (backend, options) => {
-            return new Http(backend, options);
-          }, deps: [MockBackend, RequestOptions],
-        },
-      ],
-    })
-      .compileComponents();
-  }));
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SyndesisCommonModule,
+          StoreModule,
+          RestangularModule.forRoot(),
+          RouterTestingModule.withRoutes([]),
+        ],
+        declarations: [
+          TemplatesListPage,
+          ListToolbarComponent,
+          TemplatesListComponent,
+        ],
+        providers: [
+          MockBackend,
+          { provide: RequestOptions, useClass: BaseRequestOptions },
+          {
+            provide: Http,
+            useFactory: (backend, options) => {
+              return new Http(backend, options);
+            },
+            deps: [MockBackend, RequestOptions],
+          },
+        ],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TemplatesListPage);

@@ -4,7 +4,6 @@
 // PATTERNFLY CARD LAYOUT
 ////////////////////////////////////////////////////////////////////////////////
 
-
 body.cards-pf {
   background-color: $pf-custom-gray;
 }
@@ -14,7 +13,6 @@ body.cards-pf {
   font-weight: 600;
   margin-bottom: 10px;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // PATTERNFLY VERTICAL NAVIGATION
@@ -34,7 +32,6 @@ body.cards-pf {
   }
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // TABS
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +47,10 @@ body.cards-pf {
         border: none;
         cursor: pointer;
 
-        &.active, &.active:hover, &.active:focus, &.active:visited {
+        &.active,
+        &.active:hover,
+        &.active:focus,
+        &.active:visited {
           background: none;
           border-bottom: solid 1px $pf-blue-300;
         }
@@ -64,7 +64,6 @@ body.cards-pf {
   }
 
   .tab-content {
-    background: #FFFFFF;
+    background: #ffffff;
   }
 }
-

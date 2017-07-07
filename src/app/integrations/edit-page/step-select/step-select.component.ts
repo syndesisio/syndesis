@@ -12,8 +12,8 @@ import { Step, Steps, TypeFactory } from '../../../model';
   templateUrl: './step-select.component.html',
   styleUrls: ['./step-select.component.scss'],
 })
-export class IntegrationsStepSelectComponent extends FlowPage implements OnInit {
-
+export class IntegrationsStepSelectComponent extends FlowPage
+  implements OnInit {
   steps: Steps;
   routeSubscription: Subscription;
   position: number;
@@ -56,7 +56,7 @@ export class IntegrationsStepSelectComponent extends FlowPage implements OnInit 
     }
     switch (step.stepKind) {
       case 'log':
-        return 'Sends a message to the integration\'s log';
+        return "Sends a message to the integration's log";
       case 'mapper':
         return 'Map fields from the input type to the output type';
     }
@@ -78,13 +78,16 @@ export class IntegrationsStepSelectComponent extends FlowPage implements OnInit 
       position: this.position,
       step: step,
       onSave: () => {
-        this.router.navigate(['step-configure', this.position], { relativeTo: this.route.parent });
+        this.router.navigate(['step-configure', this.position], {
+          relativeTo: this.route.parent,
+        });
       },
     });
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.params.pluck<Params, string>('position')
+    this.routeSubscription = this.route.params
+      .pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
         this.currentFlow.events.emit({
@@ -93,5 +96,5 @@ export class IntegrationsStepSelectComponent extends FlowPage implements OnInit 
         });
       })
       .subscribe();
-   }
+  }
 }

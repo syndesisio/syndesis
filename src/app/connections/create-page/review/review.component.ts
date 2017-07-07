@@ -8,9 +8,7 @@ import { Connection } from '../../../model';
   templateUrl: 'review.component.html',
 })
 export class ConnectionsReviewComponent implements OnInit {
-  constructor(
-    private current: CurrentConnectionService,
-  ) { }
+  constructor(private current: CurrentConnectionService) {}
 
   get connection(): Connection {
     return this.current.connection;
@@ -20,6 +18,5 @@ export class ConnectionsReviewComponent implements OnInit {
     this.current.connection = connection;
   }
 
-
-  ngOnInit() { }
+  ngOnInit() {}
 }

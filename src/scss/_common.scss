@@ -1,8 +1,6 @@
-
 ////////////////////////////////////////////////////////////////////////////////
 // COMMON & HELPER CLASSES
 ////////////////////////////////////////////////////////////////////////////////
-
 
 //----- Centers a Division ----------------->>
 
@@ -23,18 +21,16 @@ a.disabled {
   cursor: default;
 }
 
-
 //----- Vertically Align Contents in a Division ----------------->>
 
 .vertical-align {
   display: flex;
   flex-direction: row;
 
-  [class^="col-"], [class*=" col-"] {
+  [class^="col-"],
+  [class*=" col-"] {
     display: flex;
     align-items: center;
     //justify-content: center; /* Optional, to align inner items horizontally inside the column */
   }
 }
-
-

@@ -21,15 +21,16 @@ export class EmptyStateComponent implements OnInit {
   truncateLimit = 80;
   truncateTrail = '…';
 
-  constructor(private connectionStore: ConnectionStore,
-              private router: Router) {
+  constructor(
+    private connectionStore: ConnectionStore,
+    private router: Router,
+  ) {
     this.connections = this.connectionStore.list;
   }
 
   selectedConnection(connection: Connection) {
     this.router.navigate(['/connections', connection.id]);
   }
-
 
   ngOnInit() {
     this.connectionStore.loadAll();

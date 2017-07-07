@@ -6,7 +6,6 @@ export class ObjectPropertyFilterConfig {
   exact?: boolean;
 }
 
-
 @Pipe({
   name: 'objectPropertyFilter',
   pure: false,
@@ -37,7 +36,11 @@ export class ObjectPropertyFilterPipe {
           if (config.exact && config.filter.length > 0) {
             return (<string>value) === config.filter;
           }
-          return (<string>value).toLowerCase().indexOf(config.filter.toLowerCase()) !== -1;
+          return (
+            (<string>value)
+              .toLowerCase()
+              .indexOf(config.filter.toLowerCase()) !== -1
+          );
         case 'function':
           return config.filter(value);
         case 'number':

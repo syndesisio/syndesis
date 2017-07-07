@@ -11,15 +11,16 @@ import { ConnectionStore } from '../../store/connection/connection.store';
 export class ConnectionViewPage implements OnDestroy, OnInit {
   private idSubscription: Subscription;
 
-  constructor(private store: ConnectionStore,
-              private route: ActivatedRoute) {
-  }
+  constructor(private store: ConnectionStore, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.idSubscription = this.route.params.pluck<Params, string>('id')
-      .map((id) => this.store.load(id))
+    this.idSubscription = this.route.params
+      .pluck<Params, string>('id')
+      .map(id => this.store.load(id))
       .subscribe();
   }
 
-  ngOnDestroy() { this.idSubscription.unsubscribe(); }
+  ngOnDestroy() {
+    this.idSubscription.unsubscribe();
+  }
 }

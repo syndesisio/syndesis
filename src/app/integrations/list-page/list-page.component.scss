@@ -19,11 +19,10 @@
   /deep/ .nav-tabs > li.active > a,
   /deep/ .nav-tabs > li.active > a:active,
   /deep/ .nav-tabs > li.active > a:focus,
-  /deep/ .nav-tabs > li.active >a:hover {
+  /deep/ .nav-tabs > li.active > a:hover {
     background-color: transparent;
     color: #0088ce;
     border-bottom: 1px solid #0088ce !important;
     border-bottom-color: #0088ce !important;
   }
-
 }

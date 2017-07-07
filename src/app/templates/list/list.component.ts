@@ -8,9 +8,7 @@ import { IntegrationTemplates } from '../../model';
   styleUrls: ['./list.component.scss'],
 })
 export class TemplatesListComponent {
-
   @Input() templates: IntegrationTemplates;
 
   @Input() loading: boolean;
-
 }

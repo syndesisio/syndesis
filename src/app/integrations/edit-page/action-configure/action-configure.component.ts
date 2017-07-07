@@ -2,7 +2,10 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService } from '@ng2-dynamic-forms/core';
+import {
+  DynamicFormControlModel,
+  DynamicFormService,
+} from '@ng2-dynamic-forms/core';
 
 import { Action, Step } from '../../../model';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
@@ -15,10 +18,10 @@ const category = getCategory('IntegrationsCreatePage');
 @Component({
   selector: 'syndesis-integrations-action-configure',
   templateUrl: 'action-configure.component.html',
-  styleUrls: [ './action-configure.component.scss' ],
+  styleUrls: ['./action-configure.component.scss'],
 })
-export class IntegrationsConfigureActionComponent extends FlowPage implements OnInit, OnDestroy {
-
+export class IntegrationsConfigureActionComponent extends FlowPage
+  implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   position: number;
   action: Action = <Action>{};
@@ -53,22 +56,27 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
       position: this.position,
       properties: data,
       onSave: () => {
-        this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
+        this.router.navigate(['save-or-add-step'], {
+          queryParams: { validate: true },
+          relativeTo: this.route.parent,
+        });
       },
     });
-
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.params.pluck<Params, string>('position')
+    this.routeSubscription = this.route.params
+      .pluck<Params, string>('position')
       .map((position: string) => {
         if (this.position !== undefined) {
           return;
         }
         this.position = Number.parseInt(position);
-        const step = <Step> this.currentFlow.getStep(this.position);
+        const step = <Step>this.currentFlow.getStep(this.position);
         if (!step) {
-          this.router.navigate(['connection-select', this.position], { relativeTo: this.route.parent });
+          this.router.navigate(['connection-select', this.position], {
+            relativeTo: this.route.parent,
+          });
           return;
         }
         this.action = step.action;
@@ -94,7 +102,9 @@ export class IntegrationsConfigureActionComponent extends FlowPage implements On
             this.detector.detectChanges();
           }, 30);
         } else {
-          this.router.navigate(['action-select', this.position], { relativeTo: this.route.parent });
+          this.router.navigate(['action-select', this.position], {
+            relativeTo: this.route.parent,
+          });
           return;
         }
         this.currentFlow.events.emit({

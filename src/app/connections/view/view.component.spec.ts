@@ -27,39 +27,42 @@ describe('ConnectionViewComponent', () => {
   let component: ConnectionViewComponent;
   let fixture: ComponentFixture<ConnectionViewComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        DynamicFormsCoreModule.forRoot(),
-        DynamicFormsBootstrapUIModule,
-        SyndesisCommonModule,
-        StoreModule,
-        RouterTestingModule.withRoutes([]),
-        ModalModule,
-        ToasterModule,
-        BrowserAnimationsModule,
-        TagInputModule,
-      ],
-      declarations: [
-        ConnectionViewComponent,
-        ConnectionsListComponent,
-        ConnectionsListToolbarComponent,
-      ],
-      providers: [
-        MockBackend,
-        { provide: RequestOptions, useClass: BaseRequestOptions },
-        {
-          provide: Http, useFactory: (backend, options) => {
-            return new Http(backend, options);
-          }, deps: [MockBackend, RequestOptions],
-        },
-      ],
-
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          CommonModule,
+          FormsModule,
+          ReactiveFormsModule,
+          DynamicFormsCoreModule.forRoot(),
+          DynamicFormsBootstrapUIModule,
+          SyndesisCommonModule,
+          StoreModule,
+          RouterTestingModule.withRoutes([]),
+          ModalModule,
+          ToasterModule,
+          BrowserAnimationsModule,
+          TagInputModule,
+        ],
+        declarations: [
+          ConnectionViewComponent,
+          ConnectionsListComponent,
+          ConnectionsListToolbarComponent,
+        ],
+        providers: [
+          MockBackend,
+          { provide: RequestOptions, useClass: BaseRequestOptions },
+          {
+            provide: Http,
+            useFactory: (backend, options) => {
+              return new Http(backend, options);
+            },
+            deps: [MockBackend, RequestOptions],
+          },
+        ],
       }).compileComponents();
-  }));
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConnectionViewComponent);
@@ -67,5 +70,7 @@ describe('ConnectionViewComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => { expect(component).toBeTruthy(); });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

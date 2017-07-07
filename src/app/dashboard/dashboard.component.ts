@@ -21,7 +21,10 @@ export class DashboardComponent implements OnInit {
   truncateLimit = 80;
   truncateTrail = '…';
 
-  constructor(private connectionStore: ConnectionStore, private integrationStore: IntegrationStore) {
+  constructor(
+    private connectionStore: ConnectionStore,
+    private integrationStore: IntegrationStore,
+  ) {
     this.connections = this.connectionStore.list;
     this.integrations = this.integrationStore.list;
     this.loading = this.connectionStore.loading;

@@ -11,14 +11,16 @@ import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { Observable } from 'rxjs/Observable';
 
-import { TabsModule,
-         ModalModule,
-         BsDropdownModule,
-         CollapseModule,
-         AlertModule,
-         PopoverModule,
-         TooltipModule,
-         TypeaheadModule } from 'ngx-bootstrap';
+import {
+  TabsModule,
+  ModalModule,
+  BsDropdownModule,
+  CollapseModule,
+  AlertModule,
+  PopoverModule,
+  TooltipModule,
+  TypeaheadModule,
+} from 'ngx-bootstrap';
 import { TagInputModule } from 'ng2-tag-input';
 import { ToasterModule, ToasterService } from 'angular2-toaster';
 
@@ -33,106 +35,130 @@ import { log } from './logging';
 
 import { DataMapperModule } from 'syndesis.data.mapper';
 
-export function appInitializer(configService: ConfigService, oauthService: OAuthService, userService: UserService, ngZone: NgZone) {
+export function appInitializer(
+  configService: ConfigService,
+  oauthService: OAuthService,
+  userService: UserService,
+  ngZone: NgZone,
+) {
   return () => {
-    return configService.load().then(() => {
-      oauthService.clientId = configService.getSettings('oauth', 'clientId');
-      oauthService.scope = (configService.getSettings('oauth', 'scopes') as string[]).join(' ');
-      oauthService.oidc = configService.getSettings('oauth', 'oidc');
-      oauthService.hybrid = configService.getSettings('oauth', 'hybrid');
-      oauthService.setStorage(sessionStorage);
-      oauthService.issuer = configService.getSettings('oauth', 'issuer');
+    return configService
+      .load()
+      .then(() => {
+        oauthService.clientId = configService.getSettings('oauth', 'clientId');
+        oauthService.scope = (configService.getSettings(
+          'oauth',
+          'scopes',
+        ) as string[]).join(' ');
+        oauthService.oidc = configService.getSettings('oauth', 'oidc');
+        oauthService.hybrid = configService.getSettings('oauth', 'hybrid');
+        oauthService.setStorage(sessionStorage);
+        oauthService.issuer = configService.getSettings('oauth', 'issuer');
 
-      return oauthService.loadDiscoveryDocument();
-    }).then(() => {
-      // If we don't have a valid token, then let's try to get one. This means we haven't logged in at all.
-      if (!oauthService.hasValidAccessToken()) {
-        // Let's get the current location for the redirect URI.
-        let currentLocation = window.location.href;
-        const hashIndex = currentLocation.indexOf('#');
-        if (hashIndex > 0) {
-           currentLocation = currentLocation.substring(0, hashIndex);
+        return oauthService.loadDiscoveryDocument();
+      })
+      .then(() => {
+        // If we don't have a valid token, then let's try to get one. This means we haven't logged in at all.
+        if (!oauthService.hasValidAccessToken()) {
+          // Let's get the current location for the redirect URI.
+          let currentLocation = window.location.href;
+          const hashIndex = currentLocation.indexOf('#');
+          if (hashIndex > 0) {
+            currentLocation = currentLocation.substring(0, hashIndex);
+          }
+          oauthService.redirectUri = currentLocation;
+
+          // If this is the first flow, authenticating against OpenShift, then we shouldn't
+          // do the hybrid flow. Let's store whether this is the first IDP in session storage
+          // so it survives the multiple required redirects.
+          let firstIDP = sessionStorage.getItem('syndesis-first-idp');
+          if (!firstIDP) {
+            firstIDP = 'true';
+            sessionStorage.setItem('syndesis-first-idp', firstIDP);
+          }
+
+          // Store whether the oidc client was configured as hybrid so we can enable token refreshes.
+          const originalHybrid = oauthService.hybrid;
+          oauthService.hybrid = oauthService.hybrid && firstIDP !== 'true';
+
+          // Before we kick off the implicit flow, we should check that this isn't a redirect back from the auth server
+          // and the token isn't present in the location hash - tryLogin does that.
+          if (!oauthService.tryLogin()) {
+            // There is no token stored or in location hash so kick off implicit flow.
+            return oauthService.initImplicitFlow();
+          }
+
+          // Set this back so that second flow through we do the proper code flow to get a refresh token.
+          sessionStorage.setItem('syndesis-first-idp', 'false');
+          oauthService.hybrid = originalHybrid;
+
+          let autoLinkGithHub = configService.getSettings('oauth')[
+            'auto-link-github'
+          ];
+          if (autoLinkGithHub === undefined) {
+            autoLinkGithHub = true;
+          }
+
+          // If this wasn't the autolink flow then rekick off flow with state set to autolink.
+          if (autoLinkGithHub && oauthService.state !== 'autolink') {
+            // Client suggested IDP works great with Keycloak.
+            oauthService.loginUrl += '?kc_idp_hint=github';
+            // Clear session storage before trying again.
+            oauthService.logOut(true);
+            // And kick off the login flow again.
+            return oauthService.initImplicitFlow('autolink');
+          }
         }
-        oauthService.redirectUri = currentLocation;
 
-        // If this is the first flow, authenticating against OpenShift, then we shouldn't
-        // do the hybrid flow. Let's store whether this is the first IDP in session storage
-        // so it survives the multiple required redirects.
-        let firstIDP = sessionStorage.getItem('syndesis-first-idp');
-        if (!firstIDP) {
-          firstIDP = 'true';
-          sessionStorage.setItem('syndesis-first-idp', firstIDP);
-        }
+        // Remove this marker from session storage as it has served it's purpose.
+        sessionStorage.removeItem('syndesis-first-idp');
 
-        // Store whether the oidc client was configured as hybrid so we can enable token refreshes.
-        const originalHybrid = oauthService.hybrid;
-        oauthService.hybrid = oauthService.hybrid && firstIDP !== 'true';
+        // Use the token to load our user details and set up the refresh token flow.
+        oauthService.loadUserProfile().then(() => {
+          userService.setUser(oauthService.getIdentityClaims());
 
-        // Before we kick off the implicit flow, we should check that this isn't a redirect back from the auth server
-        // and the token isn't present in the location hash - tryLogin does that.
-        if (!oauthService.tryLogin()) {
-          // There is no token stored or in location hash so kick off implicit flow.
-          return oauthService.initImplicitFlow();
-        }
-
-        // Set this back so that second flow through we do the proper code flow to get a refresh token.
-        sessionStorage.setItem('syndesis-first-idp', 'false');
-        oauthService.hybrid = originalHybrid;
-
-        let autoLinkGithHub = configService.getSettings('oauth')['auto-link-github'];
-        if (autoLinkGithHub === undefined) {
-          autoLinkGithHub = true;
-        }
-
-        // If this wasn't the autolink flow then rekick off flow with state set to autolink.
-        if (autoLinkGithHub && oauthService.state !== 'autolink') {
-          // Client suggested IDP works great with Keycloak.
-          oauthService.loginUrl += '?kc_idp_hint=github';
-          // Clear session storage before trying again.
-          oauthService.logOut(true);
-          // And kick off the login flow again.
-          return oauthService.initImplicitFlow('autolink');
-        }
-      }
-
-      // Remove this marker from session storage as it has served it's purpose.
-      sessionStorage.removeItem('syndesis-first-idp');
-
-      // Use the token to load our user details and set up the refresh token flow.
-      oauthService.loadUserProfile().then(() => {
-        userService.setUser(oauthService.getIdentityClaims());
-
-        // Only do refreshes if we're doing a hybrid oauth flow.
-        if (oauthService.hybrid) {
-          ngZone.runOutsideAngular(() => {
-            // see https://christianliebel.com/2016/11/angular-2-protractor-timeout-heres-fix/
-            // registered observable / timeout makes protractor wait forever
-            Observable.interval(1000 * 60).subscribe(
-              () => {
+          // Only do refreshes if we're doing a hybrid oauth flow.
+          if (oauthService.hybrid) {
+            ngZone.runOutsideAngular(() => {
+              // see https://christianliebel.com/2016/11/angular-2-protractor-timeout-heres-fix/
+              // registered observable / timeout makes protractor wait forever
+              Observable.interval(1000 * 60).subscribe(() => {
                 ngZone.run(() => {
-                  oauthService.refreshToken().catch(
-                    (reason) => log.errorc(() => 'Failed to refresh token', () => new Error(reason)),
-                  );
+                  oauthService
+                    .refreshToken()
+                    .catch(reason =>
+                      log.errorc(
+                        () => 'Failed to refresh token',
+                        () => new Error(reason),
+                      ),
+                    );
                 });
-              },
-            );
-          });
-        }
+              });
+            });
+          }
+        });
       });
-    });
   };
 }
 
-export function restangularProviderConfigurer(restangularProvider: any, config: ConfigService, oauthService: OAuthService) {
+export function restangularProviderConfigurer(
+  restangularProvider: any,
+  config: ConfigService,
+  oauthService: OAuthService,
+) {
   restangularProvider.setPlainByDefault(true);
   restangularProvider.setBaseUrl(config.getSettings().apiEndpoint);
 
-  restangularProvider.addFullRequestInterceptor((_element, _operation, _path, _url, headers) => {
-    const accessToken = oauthService.getAccessToken();
-    return {
-      headers: Object.assign({}, headers, { Authorization: 'Bearer ' + accessToken }),
-    };
-  });
+  restangularProvider.addFullRequestInterceptor(
+    (_element, _operation, _path, _url, headers) => {
+      const accessToken = oauthService.getAccessToken();
+      return {
+        headers: Object.assign({}, headers, {
+          Authorization: 'Bearer ' + accessToken,
+        }),
+      };
+    },
+  );
 
   restangularProvider.addResponseInterceptor((data: any, operation: string) => {
     if (operation === 'getList' && data && Array.isArray(data.items)) {
@@ -152,9 +178,7 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -163,7 +187,10 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
     HttpModule,
     DynamicFormsCoreModule.forRoot(),
     DynamicFormsBootstrapUIModule,
-    RestangularModule.forRoot([ConfigService, OAuthService], restangularProviderConfigurer),
+    RestangularModule.forRoot(
+      [ConfigService, OAuthService],
+      restangularProviderConfigurer,
+    ),
     TabsModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
@@ -193,4 +220,4 @@ export function restangularProviderConfigurer(restangularProvider: any, config: 
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

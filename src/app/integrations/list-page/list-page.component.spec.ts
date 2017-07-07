@@ -20,35 +20,38 @@ describe('IntegrationsListPage', () => {
   let component: IntegrationsListPage;
   let fixture: ComponentFixture<IntegrationsListPage>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        SyndesisCommonModule,
-        StoreModule,
-        RouterTestingModule.withRoutes([]),
-        RestangularModule.forRoot(),
-        ModalModule.forRoot(),
-        TooltipModule.forRoot(),
-        TabsModule.forRoot(),
-        ToasterModule,
-      ],
-      declarations: [
-        IntegrationsListPage,
-        IntegrationsListComponent,
-        IntegrationsListToolbarComponent,
-      ],
-      providers: [
-        MockBackend,
-        { provide: RequestOptions, useClass: BaseRequestOptions },
-        {
-          provide: Http, useFactory: (backend, options) => {
-            return new Http(backend, options);
-          }, deps: [MockBackend, RequestOptions],
-        },
-      ],
-    })
-      .compileComponents();
-  }));
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SyndesisCommonModule,
+          StoreModule,
+          RouterTestingModule.withRoutes([]),
+          RestangularModule.forRoot(),
+          ModalModule.forRoot(),
+          TooltipModule.forRoot(),
+          TabsModule.forRoot(),
+          ToasterModule,
+        ],
+        declarations: [
+          IntegrationsListPage,
+          IntegrationsListComponent,
+          IntegrationsListToolbarComponent,
+        ],
+        providers: [
+          MockBackend,
+          { provide: RequestOptions, useClass: BaseRequestOptions },
+          {
+            provide: Http,
+            useFactory: (backend, options) => {
+              return new Http(backend, options);
+            },
+            deps: [MockBackend, RequestOptions],
+          },
+        ],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(IntegrationsListPage);

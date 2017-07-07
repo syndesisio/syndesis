@@ -24,44 +24,44 @@ describe('IntegrationsCreateComponent', () => {
   let component: FlowViewComponent;
   let fixture: ComponentFixture<FlowViewComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        FormsModule,
-        RouterTestingModule.withRoutes([]),
-        RestangularModule.forRoot(),
-        ConnectionsModule,
-        ModalModule,
-        TabsModule.forRoot(),
-        PopoverModule.forRoot(),
-        CollapseModule.forRoot(),
-        SyndesisCommonModule,
-        CollapseModule,
-      ],
-      declarations: [
-        FlowViewComponent,
-        FlowViewStepComponent,
-      ],
-      providers: [
-        MockBackend,
-        {
-          provide: RequestOptions,
-          useClass: BaseRequestOptions,
-        },
-        {
-          provide: Http, useFactory: (backend, options) => {
-          return new Http(backend, options);
-        }, deps: [MockBackend, RequestOptions],
-        },
-        CurrentFlow,
-        IntegrationStore,
-        IntegrationService,
-        EventsService,
-      ],
-    })
-      .compileComponents();
-  }));
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          CommonModule,
+          FormsModule,
+          RouterTestingModule.withRoutes([]),
+          RestangularModule.forRoot(),
+          ConnectionsModule,
+          ModalModule,
+          TabsModule.forRoot(),
+          PopoverModule.forRoot(),
+          CollapseModule.forRoot(),
+          SyndesisCommonModule,
+          CollapseModule,
+        ],
+        declarations: [FlowViewComponent, FlowViewStepComponent],
+        providers: [
+          MockBackend,
+          {
+            provide: RequestOptions,
+            useClass: BaseRequestOptions,
+          },
+          {
+            provide: Http,
+            useFactory: (backend, options) => {
+              return new Http(backend, options);
+            },
+            deps: [MockBackend, RequestOptions],
+          },
+          CurrentFlow,
+          IntegrationStore,
+          IntegrationService,
+          EventsService,
+        ],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FlowViewComponent);

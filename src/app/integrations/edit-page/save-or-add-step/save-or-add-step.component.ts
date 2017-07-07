@@ -16,8 +16,8 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: 'save-or-add-step.component.html',
   styleUrls: ['./save-or-add-step.component.scss'],
 })
-export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnInit, OnDestroy {
-
+export class IntegrationsSaveOrAddStepComponent extends FlowPage
+  implements OnInit, OnDestroy {
   integration: Integration;
   errorMessage: any = undefined;
 
@@ -56,7 +56,9 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
     return this.currentFlow.getStep(this.getCurrentPosition(route));
   }
 
-  goBack() { /* this should be a no-op */ }
+  goBack() {
+    /* this should be a no-op */
+  }
 
   handleFlowEvent(event: FlowEvent) {
     switch (event.kind) {
@@ -92,7 +94,9 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
     const step = TypeFactory.createStep();
     step.stepKind = 'endpoint';
     this.currentFlow.steps.splice(target, 0, step);
-    this.router.navigate(['connection-select', target], { relativeTo: this.route });
+    this.router.navigate(['connection-select', target], {
+      relativeTo: this.route,
+    });
   }
 
   startConnection() {
@@ -118,20 +122,27 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
 
   validateFlow() {
     if (this.currentFlow.getStartConnection() === undefined) {
-      this.router.navigate(['connection-select', this.currentFlow.getFirstPosition()], { relativeTo: this.route.parent });
+      this.router.navigate(
+        ['connection-select', this.currentFlow.getFirstPosition()],
+        { relativeTo: this.route.parent },
+      );
       return;
     }
     if (this.currentFlow.getEndConnection() === undefined) {
-      this.router.navigate(['connection-select', this.currentFlow.getLastPosition()], { relativeTo: this.route.parent });
+      this.router.navigate(
+        ['connection-select', this.currentFlow.getLastPosition()],
+        { relativeTo: this.route.parent },
+      );
       return;
     }
   }
 
   ngOnInit() {
-    const validate = this.route.queryParams.map(params => params['validate'] || false);
+    const validate = this.route.queryParams.map(
+      params => params['validate'] || false,
+    );
     if (validate) {
       this.validateFlow();
     }
   }
-
 }

@@ -18,22 +18,17 @@ const category = getCategory('IntegrationsCreatePage');
   styleUrls: ['./flow-view-step.component.scss'],
 })
 export class FlowViewStepComponent extends ChildAwarePage {
-
   // the step object in the current flow
-  @Input()
-  step: Step;
+  @Input() step: Step;
 
   // the position in the integration flow
-  @Input()
-  position: number;
+  @Input() position: number;
 
   // the current step in the flow the user is working with
-  @Input()
-  currentPosition: number;
+  @Input() currentPosition: number;
 
   // the current state/page of the current step
-  @Input()
-  currentState: string;
+  @Input() currentState: string;
 
   @ViewChild('childModal') public deleteModal: ModalDirective;
   @ViewChild('pop') public pop: PopoverDirective;
@@ -68,12 +63,14 @@ export class FlowViewStepComponent extends ChildAwarePage {
       return 'fa fa-plus';
     }
     const step = this.step;
-    switch ( step.stepKind ) {
+    switch (step.stepKind) {
       case 'endpoint':
         if (!this.step.connection) {
           return 'fa fa-plus';
         }
-        return this.step.connection.icon ? 'fa ' + step.connection.icon : 'fa fa-airplane';
+        return this.step.connection.icon
+          ? 'fa ' + step.connection.icon
+          : 'fa fa-airplane';
       case 'log':
         return 'fa fa-newspaper-o';
       default:
@@ -84,7 +81,11 @@ export class FlowViewStepComponent extends ChildAwarePage {
   showDelete() {
     switch (this.step.stepKind) {
       case 'endpoint':
-        return this.step.connection && this.step.action && this.step.configuredProperties;
+        return (
+          this.step.connection &&
+          this.step.action &&
+          this.step.configuredProperties
+        );
       default:
         return this.step.stepKind && this.step.configuredProperties;
     }
@@ -109,11 +110,17 @@ export class FlowViewStepComponent extends ChildAwarePage {
       position: position,
       onSave: () => {
         if (isFirst) {
-          this.router.navigate(['connection-select', position], { relativeTo: this.route });
+          this.router.navigate(['connection-select', position], {
+            relativeTo: this.route,
+          });
         } else if (isLast) {
-          this.router.navigate(['connection-select', position], { relativeTo: this.route });
+          this.router.navigate(['connection-select', position], {
+            relativeTo: this.route,
+          });
         } else {
-          this.router.navigate(['save-or-add-step'], { relativeTo: this.route });
+          this.router.navigate(['save-or-add-step'], {
+            relativeTo: this.route,
+          });
         }
       },
     });
@@ -174,7 +181,10 @@ export class FlowViewStepComponent extends ChildAwarePage {
       }
     }
     let answer = 'inactive';
-    if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
+    if (
+      (this.currentState === state || !state) &&
+      this.getPosition() === this.currentPosition
+    ) {
       answer = 'active';
     }
     if (this.getTextClass(state) !== 'active') {
@@ -193,7 +203,11 @@ export class FlowViewStepComponent extends ChildAwarePage {
   getMenuCompleteClass(state: string) {
     switch (this.step.stepKind) {
       case 'endpoint':
-        if (this.step.connection && this.step.action && this.step.configuredProperties) {
+        if (
+          this.step.connection &&
+          this.step.action &&
+          this.step.configuredProperties
+        ) {
           return 'complete';
         }
         break;
@@ -229,7 +243,10 @@ export class FlowViewStepComponent extends ChildAwarePage {
         }
         break;
     }
-    if ((this.currentState === state || !state) && this.getPosition() === this.currentPosition) {
+    if (
+      (this.currentState === state || !state) &&
+      this.getPosition() === this.currentPosition
+    ) {
       return 'active';
     }
     return '';
@@ -251,7 +268,9 @@ export class FlowViewStepComponent extends ChildAwarePage {
           break;
       }
     }
-    this.router.navigate([page, this.getPosition()], { relativeTo: this.route });
+    this.router.navigate([page, this.getPosition()], {
+      relativeTo: this.route,
+    });
   }
 
   getStepText() {

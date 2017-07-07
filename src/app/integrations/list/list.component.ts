@@ -12,10 +12,9 @@ import { log, getCategory } from '../../logging';
 @Component({
   selector: 'syndesis-integrations-list',
   templateUrl: './list.component.html',
-  styleUrls: [ './list.component.scss' ],
+  styleUrls: ['./list.component.scss'],
 })
 export class IntegrationsListComponent {
-
   private toast;
   currentAction: string = undefined;
   selectedIntegration: Integration = undefined;
@@ -26,12 +25,12 @@ export class IntegrationsListComponent {
 
   @Input() loading: boolean;
 
-  constructor(public store: IntegrationStore,
-              public toasterService: ToasterService,
-              public route: ActivatedRoute,
-              public router: Router) {
-
-  }
+  constructor(
+    public store: IntegrationStore,
+    public toasterService: ToasterService,
+    public route: ActivatedRoute,
+    public router: Router,
+  ) {}
 
   doAction(action: string, integration: Integration) {
     switch (action) {
@@ -45,7 +44,9 @@ export class IntegrationsListComponent {
   }
 
   goto(integration: Integration) {
-    this.router.navigate([ 'edit', integration.id, 'save-or-add-step' ], { relativeTo: this.route });
+    this.router.navigate(['edit', integration.id, 'save-or-add-step'], {
+      relativeTo: this.route,
+    });
   }
 
   //-----  Activate/Deactivate ------------------->>
@@ -53,14 +54,22 @@ export class IntegrationsListComponent {
   // TODO: Refactor into single method for both cases
   // Open modal to confirm activation
   requestActivate(integration: Integration) {
-    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration[ 'id' ]));
+    log.debugc(
+      () =>
+        'Selected integration for activation: ' +
+        JSON.stringify(integration['id']),
+    );
     this.selectedIntegration = integration;
     this.showModal('activate');
   }
 
   // Open modal to confirm deactivation
   requestDeactivate(integration: Integration) {
-    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration[ 'id' ]));
+    log.debugc(
+      () =>
+        'Selected integration for deactivation: ' +
+        JSON.stringify(integration['id']),
+    );
     this.selectedIntegration = integration;
     this.showModal('deactivate');
   }
@@ -68,89 +77,110 @@ export class IntegrationsListComponent {
   // TODO: Refactor into single method for both cases
   // Actual activate/deactivate action once the user confirms
   activateAction(integration: Integration) {
-    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration[ 'id' ]));
+    log.debugc(
+      () =>
+        'Selected integration for activation: ' +
+        JSON.stringify(integration['id']),
+    );
     this.hideModal();
     const i = JSON.parse(JSON.stringify(integration));
     i.desiredStatus = 'Activated';
-    this.store.update(i).subscribe(() => {
-      const toast = {
-        type: 'success',
-        title: 'Integration is activating',
-        body: 'Please allow a moment for the integration to fully activate.',
-      };
-      setTimeout(this.popToast(toast), 1000);
-    }, (reason: any) => {
-      const toast = {
-        type: 'error',
-        title: 'Failed to activate integration',
-        body: 'Error activating integration: ' + reason,
-      };
-      setTimeout(this.popToast(toast), 1000);
-    });
+    this.store.update(i).subscribe(
+      () => {
+        const toast = {
+          type: 'success',
+          title: 'Integration is activating',
+          body: 'Please allow a moment for the integration to fully activate.',
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+      (reason: any) => {
+        const toast = {
+          type: 'error',
+          title: 'Failed to activate integration',
+          body: 'Error activating integration: ' + reason,
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+    );
   }
 
   // Actual activate/deactivate action once the user confirms
   deactivateAction(integration: Integration) {
-    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration[ 'id' ]));
+    log.debugc(
+      () =>
+        'Selected integration for deactivation: ' +
+        JSON.stringify(integration['id']),
+    );
     this.hideModal();
     const i = JSON.parse(JSON.stringify(integration));
     i.desiredStatus = 'Deactivated';
-    this.store.update(i).subscribe(() => {
-      const toast = {
-        type: 'success',
-        title: 'Integration is deactivating',
-        body: 'Please allow a moment for the integration to be deactivated.',
-      };
-      setTimeout(this.popToast(toast), 1000);
-    }, (reason: any) => {
-      const toast = {
-        type: 'error',
-        title: 'Failed to deactivate integration',
-        body: 'Error deactivating integration: ' + reason,
-      };
-      setTimeout(this.popToast(toast), 1000);
-    });
+    this.store.update(i).subscribe(
+      () => {
+        const toast = {
+          type: 'success',
+          title: 'Integration is deactivating',
+          body: 'Please allow a moment for the integration to be deactivated.',
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+      (reason: any) => {
+        const toast = {
+          type: 'error',
+          title: 'Failed to deactivate integration',
+          body: 'Error deactivating integration: ' + reason,
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+    );
   }
 
   // Actual delete action once the user confirms
   deleteAction(integration: Integration) {
-    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration[ 'id' ]));
+    log.debugc(
+      () =>
+        'Selected integration for delete: ' + JSON.stringify(integration['id']),
+    );
     this.hideModal();
-    this.store.delete(integration).subscribe(() => {
-      const toast = {
-        type: 'success',
-        title: 'Delete Successful',
-        body: 'Integration successfully deleted.',
-      };
-      setTimeout(this.popToast(toast), 1000);
-    }, (reason: any) => {
-      const toast = {
-        type: 'error',
-        title: 'Failed to delete integration',
-        body: 'Error deleting integration: ' + reason,
-      };
-      setTimeout(this.popToast(toast), 1000);
-    });
+    this.store.delete(integration).subscribe(
+      () => {
+        const toast = {
+          type: 'success',
+          title: 'Delete Successful',
+          body: 'Integration successfully deleted.',
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+      (reason: any) => {
+        const toast = {
+          type: 'error',
+          title: 'Failed to delete integration',
+          body: 'Error deleting integration: ' + reason,
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+    );
   }
 
   // Open modal to confirm delete
   requestDelete(integration: Integration) {
-    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration[ 'id' ]));
+    log.debugc(
+      () =>
+        'Selected integration for delete: ' + JSON.stringify(integration['id']),
+    );
     this.selectedIntegration = integration;
     this.showModal('delete');
   }
 
-
   //-----  Icons ------------------->>
 
   getStart(integration: Integration) {
-    return integration.steps[ 0 ];
+    return integration.steps[0];
   }
 
   getFinish(integration: Integration) {
-    return integration.steps.slice(-1)[ 0 ];
+    return integration.steps.slice(-1)[0];
   }
-
 
   //-----  Dropdown Action Checks ------------------->>
 
@@ -252,7 +282,6 @@ export class IntegrationsListComponent {
         return currentStatus;
     }
   }
-
 
   //-----  Modals ------------------->>
 

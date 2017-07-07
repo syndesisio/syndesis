@@ -19,7 +19,6 @@ let instance: ConfigService = undefined;
 
 @Injectable()
 export class ConfigService {
-
   private settingsRepository: any = defaults;
 
   constructor(private _http: Http) {
@@ -32,16 +31,33 @@ export class ConfigService {
   }
 
   load(configJson: string = defaultConfigJson): Promise<ConfigService> {
-    return <Promise<ConfigService>> this._http.get(configJson).map(res => res.json())
+    return <Promise<ConfigService>>this._http
+      .get(configJson)
+      .map(res => res.json())
       .toPromise()
-      .then((config) => {
-        log.debugc(() => 'Received config: ' + JSON.stringify(config, undefined, 2), category);
-        this.settingsRepository = Object.freeze(_.merge({}, this.settingsRepository, config));
-        log.debugc(() => 'Using merged config: ' + JSON.stringify(this.settingsRepository, undefined, 2), category);
+      .then(config => {
+        log.debugc(
+          () => 'Received config: ' + JSON.stringify(config, undefined, 2),
+          category,
+        );
+        this.settingsRepository = Object.freeze(
+          _.merge({}, this.settingsRepository, config),
+        );
+        log.debugc(
+          () =>
+            'Using merged config: ' +
+            JSON.stringify(this.settingsRepository, undefined, 2),
+          category,
+        );
         return this;
       })
       .catch(() => {
-        log.warnc(() => 'Error: Configuration service unreachable! Using defaults: ' + JSON.stringify(this.settingsRepository), category);
+        log.warnc(
+          () =>
+            'Error: Configuration service unreachable! Using defaults: ' +
+            JSON.stringify(this.settingsRepository),
+          category,
+        );
       });
   }
 
@@ -51,7 +67,9 @@ export class ConfigService {
     }
 
     if (!this.settingsRepository[group]) {
-      throw new Error(`Error: No setting found with the specified group [${group}]!`);
+      throw new Error(
+        `Error: No setting found with the specified group [${group}]!`,
+      );
     }
 
     if (!key) {
@@ -59,10 +77,11 @@ export class ConfigService {
     }
 
     if (this.settingsRepository[group][key] === undefined) {
-      throw new Error(`Error: No setting found with the specified group/key [${group}/${key}]!`);
+      throw new Error(
+        `Error: No setting found with the specified group/key [${group}/${key}]!`,
+      );
     }
 
     return this.settingsRepository[group][key];
   }
-
 }
