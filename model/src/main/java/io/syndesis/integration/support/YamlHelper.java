@@ -29,6 +29,7 @@ public class YamlHelper {
         ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory()
                 .configure(YAMLGenerator.Feature.MINIMIZE_QUOTES, true)
                 .configure(YAMLGenerator.Feature.ALWAYS_QUOTE_NUMBERS_AS_STRINGS, true)
+                .configure(YAMLGenerator.Feature.USE_NATIVE_TYPE_ID, false)
         );
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY).
                 enable(SerializationFeature.INDENT_OUTPUT).
