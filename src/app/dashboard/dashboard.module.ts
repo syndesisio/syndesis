@@ -43,5 +43,4 @@ const routes: Routes = [
     PopularTemplatesComponent,
   ],
 })
-export class DashboardModule {
-}
+export class DashboardModule {}

@@ -57,8 +57,6 @@ import { CurrentConnectionService } from './create-page/current-connection';
     ConnectionViewToolbarComponent,
     ConnectionViewComponent,
   ],
-  providers: [
-    CurrentConnectionService,
-  ],
+  providers: [CurrentConnectionService],
 })
-export class ConnectionsModule { }
+export class ConnectionsModule {}

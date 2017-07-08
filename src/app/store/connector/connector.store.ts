@@ -6,7 +6,11 @@ import { AbstractStore } from '../entity/entity.store';
 import { EventsService } from '../entity/events.service';
 
 @Injectable()
-export class ConnectorStore extends AbstractStore<Connector, Connectors, ConnectorService> {
+export class ConnectorStore extends AbstractStore<
+  Connector,
+  Connectors,
+  ConnectorService
+> {
   constructor(ConnectorService: ConnectorService, eventService: EventsService) {
     super(ConnectorService, eventService, [], <Connector>{});
   }

@@ -7,17 +7,21 @@ import { RestangularModule } from 'ngx-restangular';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationService } from '../../store/integration/integration.service';
-import { Connection, Integration, Step, Steps, Action, TypeFactory } from '../../model';
+import {
+  Connection,
+  Integration,
+  Step,
+  Steps,
+  Action,
+  TypeFactory,
+} from '../../model';
 import { EventsService } from '../../store/entity/events.service';
 import { SyndesisCommonModule } from '../../common/common.module';
 
 describe('CurrentFlow', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RestangularModule.forRoot(),
-        SyndesisCommonModule,
-      ],
+      imports: [RestangularModule.forRoot(), SyndesisCommonModule],
       providers: [
         CurrentFlow,
         IntegrationStore,
@@ -26,16 +30,19 @@ describe('CurrentFlow', () => {
         MockBackend,
         { provide: RequestOptions, useClass: BaseRequestOptions },
         {
-          provide: Http, useFactory: (backend, options) => {
+          provide: Http,
+          useFactory: (backend, options) => {
             return new Http(backend, options);
-          }, deps: [MockBackend, RequestOptions],
-        }],
+          },
+          deps: [MockBackend, RequestOptions],
+        },
+      ],
     });
   });
 
   function getDummyIntegration(): Integration {
     const rc = TypeFactory.createIntegration();
-    rc.steps = <Steps> [];
+    rc.steps = <Steps>[];
 
     const step1 = TypeFactory.createStep();
     step1.stepKind = 'endpoint';
@@ -64,31 +71,43 @@ describe('CurrentFlow', () => {
     return rc;
   }
 
-  it('should return the first step in the flow', inject([CurrentFlow], (service: CurrentFlow) => {
-    service.integration = getDummyIntegration();
-    const conn = service.getStartConnection();
-    expect(conn.connectorId).toEqual('timer');
-  }));
+  it(
+    'should return the first step in the flow',
+    inject([CurrentFlow], (service: CurrentFlow) => {
+      service.integration = getDummyIntegration();
+      const conn = service.getStartConnection();
+      expect(conn.connectorId).toEqual('timer');
+    }),
+  );
 
-  it('should return the last step in the flow', inject([CurrentFlow], (service: CurrentFlow) => {
-    service.integration = getDummyIntegration();
-    const conn = service.getEndConnection();
-    expect(conn.connectorId).toEqual('http');
-  }));
+  it(
+    'should return the last step in the flow',
+    inject([CurrentFlow], (service: CurrentFlow) => {
+      service.integration = getDummyIntegration();
+      const conn = service.getEndConnection();
+      expect(conn.connectorId).toEqual('http');
+    }),
+  );
 
-  it('should return the middle steps in the flow', inject([CurrentFlow], (service: CurrentFlow) => {
-    service.integration = getDummyIntegration();
-    const steps: Step[] = service.getMiddleSteps();
-    expect(steps.length).toEqual(2);
-    expect(steps[0].id).toEqual('3');
-    expect(steps[0].stepKind).toEqual('endpoint');
-  }));
+  it(
+    'should return the middle steps in the flow',
+    inject([CurrentFlow], (service: CurrentFlow) => {
+      service.integration = getDummyIntegration();
+      const steps: Step[] = service.getMiddleSteps();
+      expect(steps.length).toEqual(2);
+      expect(steps[0].id).toEqual('3');
+      expect(steps[0].stepKind).toEqual('endpoint');
+    }),
+  );
 
-  it('Should return an undefined start and end connection with an empty integration', inject([CurrentFlow], (service: CurrentFlow) => {
-    service.integration = <Integration> {};
-    expect(service.getStartConnection()).toBeUndefined();
-    expect(service.getEndConnection()).toBeUndefined();
-    expect(service.getFirstPosition()).toEqual(0);
-    expect(service.getLastPosition()).toEqual(1);
-  }));
+  it(
+    'Should return an undefined start and end connection with an empty integration',
+    inject([CurrentFlow], (service: CurrentFlow) => {
+      service.integration = <Integration>{};
+      expect(service.getStartConnection()).toBeUndefined();
+      expect(service.getEndConnection()).toBeUndefined();
+      expect(service.getFirstPosition()).toEqual(0);
+      expect(service.getLastPosition()).toEqual(1);
+    }),
+  );
 });

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Step, Steps, TypeFactory } from '../../model';
 
-
 export interface StepKind extends Step {
   name: string;
   description: string;
@@ -11,7 +10,6 @@ export type StepKinds = Array<StepKind>;
 
 @Injectable()
 export class StepStore {
-
   steps: StepKind[] = [
     {
       id: undefined,
@@ -29,7 +27,7 @@ export class StepStore {
       action: undefined,
       name: 'Log',
       stepKind: 'log',
-      description: 'Sends a message to the integration\'s log',
+      description: "Sends a message to the integration's log",
       configuredProperties: undefined,
       properties: {
         message: {
@@ -68,7 +66,8 @@ export class StepStore {
       action: undefined,
       name: 'Store Data',
       stepKind: 'storeData',
-      description: 'Store data from an invocation to be used later in the integration',
+      description:
+        'Store data from an invocation to be used later in the integration',
       properties: {},
       configuredProperties: undefined,
     },
@@ -88,7 +87,8 @@ export class StepStore {
       action: undefined,
       name: 'Call Route',
       stepKind: 'callRoute',
-      description: 'Call a child integration route from the main integration flow',
+      description:
+        'Call a child integration route from the main integration flow',
       properties: {},
       configuredProperties: undefined,
     },
@@ -108,19 +108,18 @@ export class StepStore {
       action: undefined,
       name: 'Split',
       stepKind: 'split',
-      description: 'Split received data into data subsets that can be processed individually',
+      description:
+        'Split received data into data subsets that can be processed individually',
       properties: {},
       configuredProperties: undefined,
     },
   ];
 
   getStepConfig(kind: string) {
-    return this.steps.find((step) => step.stepKind === kind);
+    return this.steps.find(step => step.stepKind === kind);
   }
 
   getSteps() {
     return this.steps;
   }
-
-
 }

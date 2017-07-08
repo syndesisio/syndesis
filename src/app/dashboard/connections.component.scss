@@ -19,11 +19,11 @@
         width: 106px;
       }
 
-
       .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
         cursor: pointer;
 
-        a:hover, a:focus {
+        a:hover,
+        a:focus {
           cursor: pointer;
           text-decoration: none;
         }

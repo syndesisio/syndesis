@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "Apache-2.0",
   "scripts": {
+    "format": "yarn prettier -- --single-quote --trailing-comma all --write \"./src/**/*.{ts,css,scss,js,json}\"",
     "generate": "node ./scripts/generate-ts.js",
     "copy:assets": "yarn ncp node_modules/syndesis.data.mapper/src/assets/dm src/assets/dm",
     "start": "yarn ng serve",
@@ -97,6 +98,7 @@
     "karma-jasmine": "1.1.0",
     "karma-junit-reporter": "1.2.0",
     "ncp": "^2.0.0",
+    "prettier": "^1.5.2",
     "protractor": "5.1.1",
     "protractor-cucumber-framework": "^0.6.0",
     "sass-lint": "1.10.2",

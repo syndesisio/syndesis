@@ -6,12 +6,21 @@ import { AbstractStore } from '../entity/entity.store';
 import { EventsService } from '../entity/events.service';
 
 @Injectable()
-export class IntegrationStore extends AbstractStore<Integration, Integrations, IntegrationService> {
-  constructor(integrationService: IntegrationService, eventService: EventsService) {
+export class IntegrationStore extends AbstractStore<
+  Integration,
+  Integrations,
+  IntegrationService
+> {
+  constructor(
+    integrationService: IntegrationService,
+    eventService: EventsService,
+  ) {
     super(integrationService, eventService, [], <Integration>{});
   }
 
-  protected get kind() { return 'Integration'; }
+  protected get kind() {
+    return 'Integration';
+  }
 
   newInstance(): Integration {
     const integration = TypeFactory.createIntegration();
@@ -21,5 +30,4 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
     integration.steps = [start, end];
     return integration;
   }
-
 }

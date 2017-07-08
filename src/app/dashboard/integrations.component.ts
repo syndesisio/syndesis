@@ -19,7 +19,6 @@ const category = getCategory('Dashboard');
   styleUrls: ['./integrations.component.scss'],
 })
 export class DashboardIntegrationsComponent implements OnInit {
-
   @ViewChild('childModal') public childModal: ModalDirective;
 
   connections: Observable<Connections>;
@@ -30,11 +29,7 @@ export class DashboardIntegrationsComponent implements OnInit {
   currentAction: string = undefined;
   truncateTrail = '…';
 
-  public doughnutChartLabels: string[] = [
-    'Active',
-    'Draft',
-    'Inactive',
-  ];
+  public doughnutChartLabels: string[] = ['Active', 'Draft', 'Inactive'];
 
   get doughnutChartData() {
     return [
@@ -46,13 +41,15 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   public doughnutChartType = 'doughnut';
   public doughnutChartLegend = false;
-  public doughnutChartColors = [{
-    backgroundColor: [
-      '#0088CE', // PatternFly Blue 400, Active
-      '#EC7A08', // PatternFly Orange 400, Draft
-      '#D1D1D1', // PatternFly Black 300, Inactive
-    ],
-  }];
+  public doughnutChartColors = [
+    {
+      backgroundColor: [
+        '#0088CE', // PatternFly Blue 400, Active
+        '#EC7A08', // PatternFly Orange 400, Draft
+        '#D1D1D1', // PatternFly Black 300, Inactive
+      ],
+    },
+  ];
   public doughnutChartOptions: any = {
     cutoutPercentage: 75,
   };
@@ -60,16 +57,16 @@ export class DashboardIntegrationsComponent implements OnInit {
   private toasterService: ToasterService;
   private toast;
 
-  constructor(private connectionStore: ConnectionStore,
-              private integrationStore: IntegrationStore,
-              public route: ActivatedRoute,
-              private router: Router,
-              toasterService: ToasterService) {
+  constructor(
+    private connectionStore: ConnectionStore,
+    private integrationStore: IntegrationStore,
+    public route: ActivatedRoute,
+    private router: Router,
+    toasterService: ToasterService,
+  ) {
     this.connections = this.connectionStore.list;
     this.toasterService = toasterService;
   }
-
-
 
   //-----  Icons ------------------->>
 
@@ -81,7 +78,8 @@ export class DashboardIntegrationsComponent implements OnInit {
   }
 
   getFinishIcon(integration: Integration) {
-    const connection = integration.steps[integration.steps.length - 1].connection;
+    const connection =
+      integration.steps[integration.steps.length - 1].connection;
     return (connection || {})['icon'] || 'fa-plane';
   }
 
@@ -139,7 +137,6 @@ export class DashboardIntegrationsComponent implements OnInit {
     return this.filterIntegrations().total;
   }
 
-
   public chartClicked(e: any): void {
     //log.debugc(() => 'Click event: ' + JSON.stringify(e));
     log.debugc(() => 'Click event: ' + e);
@@ -148,7 +145,6 @@ export class DashboardIntegrationsComponent implements OnInit {
   public chartHovered(e: any): void {
     log.debugc(() => 'Hover event: ' + JSON.stringify(e));
   }
-
 
   //-----  Modals ------------------->>
 
@@ -166,14 +162,22 @@ export class DashboardIntegrationsComponent implements OnInit {
   // TODO: Refactor into single method for both cases
   // Open modal to confirm activation
   requestActivate(integration: Integration) {
-    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration['id']));
+    log.debugc(
+      () =>
+        'Selected integration for activation: ' +
+        JSON.stringify(integration['id']),
+    );
     this.selectedIntegration = integration;
     this.showModal('activate');
   }
 
   // Open modal to confirm deactivation
   requestDeactivate(integration: Integration) {
-    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration['id']));
+    log.debugc(
+      () =>
+        'Selected integration for deactivation: ' +
+        JSON.stringify(integration['id']),
+    );
     this.selectedIntegration = integration;
     this.showModal('deactivate');
   }
@@ -181,76 +185,99 @@ export class DashboardIntegrationsComponent implements OnInit {
   // TODO: Refactor into single method for both cases
   // Actual activate/deactivate action once the user confirms
   activateAction(integration: Integration) {
-    log.debugc(() => 'Selected integration for activation: ' + JSON.stringify(integration['id']));
+    log.debugc(
+      () =>
+        'Selected integration for activation: ' +
+        JSON.stringify(integration['id']),
+    );
     this.hideModal();
     const i = JSON.parse(JSON.stringify(integration));
     i.desiredStatus = 'Activated';
-    this.integrationStore.update(i).subscribe(() => {
-      const toast = {
-        type: 'success',
-        title: 'Integration is activating',
-        body: 'Please allow a moment for the integration to fully activate.',
-      };
-      setTimeout(this.popToast(toast), 1000);
-    }, (reason: any) => {
-      const toast = {
-        type: 'error',
-        title: 'Failed to activate integration',
-        body: 'Error activating integration: ' + reason,
-      };
-      setTimeout(this.popToast(toast), 1000);
-    });
+    this.integrationStore.update(i).subscribe(
+      () => {
+        const toast = {
+          type: 'success',
+          title: 'Integration is activating',
+          body: 'Please allow a moment for the integration to fully activate.',
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+      (reason: any) => {
+        const toast = {
+          type: 'error',
+          title: 'Failed to activate integration',
+          body: 'Error activating integration: ' + reason,
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+    );
   }
 
   // Actual activate/deactivate action once the user confirms
   deactivateAction(integration: Integration) {
-    log.debugc(() => 'Selected integration for deactivation: ' + JSON.stringify(integration['id']));
+    log.debugc(
+      () =>
+        'Selected integration for deactivation: ' +
+        JSON.stringify(integration['id']),
+    );
     this.hideModal();
     const i = JSON.parse(JSON.stringify(integration));
     i.desiredStatus = 'Deactivated';
-    this.integrationStore.update(i).subscribe(() => {
-      const toast = {
-        type: 'success',
-        title: 'Integration is deactivating',
-        body: 'Please allow a moment for the integration to be deactivated.',
-      };
-      setTimeout(this.popToast(toast), 1000);
-    }, (reason: any) => {
-      const toast = {
-        type: 'error',
-        title: 'Failed to deactivate integration',
-        body: 'Error deactivating integration: ' + reason,
-      };
-      setTimeout(this.popToast(toast), 1000);
-    });
+    this.integrationStore.update(i).subscribe(
+      () => {
+        const toast = {
+          type: 'success',
+          title: 'Integration is deactivating',
+          body: 'Please allow a moment for the integration to be deactivated.',
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+      (reason: any) => {
+        const toast = {
+          type: 'error',
+          title: 'Failed to deactivate integration',
+          body: 'Error deactivating integration: ' + reason,
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+    );
   }
 
   //-----  Delete ------------------->>
 
   // Actual delete action once the user confirms
   deleteAction(integration: Integration) {
-    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
+    log.debugc(
+      () =>
+        'Selected integration for delete: ' + JSON.stringify(integration['id']),
+    );
     this.hideModal();
-    this.integrationStore.delete(integration).subscribe(() => {
-      const toast = {
-        type: 'success',
-        title: 'Delete Successful',
-        body: 'Integration successfully deleted.',
-      };
-      setTimeout(this.popToast(toast), 1000);
-    }, (reason: any) => {
-      const toast = {
-        type: 'error',
-        title: 'Failed to delete integration',
-        body: 'Error deleting integration: ' + reason,
-      };
-      setTimeout(this.popToast(toast), 1000);
-    });
+    this.integrationStore.delete(integration).subscribe(
+      () => {
+        const toast = {
+          type: 'success',
+          title: 'Delete Successful',
+          body: 'Integration successfully deleted.',
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+      (reason: any) => {
+        const toast = {
+          type: 'error',
+          title: 'Failed to delete integration',
+          body: 'Error deleting integration: ' + reason,
+        };
+        setTimeout(this.popToast(toast), 1000);
+      },
+    );
   }
 
   // Open modal to confirm delete
   requestDelete(integration: Integration) {
-    log.debugc(() => 'Selected integration for delete: ' + JSON.stringify(integration['id']));
+    log.debugc(
+      () =>
+        'Selected integration for delete: ' + JSON.stringify(integration['id']),
+    );
     this.selectedIntegration = integration;
     this.showModal('delete');
   }
@@ -294,7 +321,6 @@ export class DashboardIntegrationsComponent implements OnInit {
     }
   }
 
-
   //-----  Recent Updates Section ------------------->>
 
   public getLabelClass(integration): string {
@@ -322,7 +348,6 @@ export class DashboardIntegrationsComponent implements OnInit {
     return integration.currentStatus;
   }
 
-
   //-----  Icons ------------------->>
 
   getStart(integration: Integration) {
@@ -333,7 +358,6 @@ export class DashboardIntegrationsComponent implements OnInit {
     return integration.steps.slice(-1)[0];
   }
 
-
   //-----  Selecting a Connection or Integration ------------------->>
 
   selectedConnection(connection: Connection) {
@@ -341,9 +365,11 @@ export class DashboardIntegrationsComponent implements OnInit {
   }
 
   goto(integration: Integration) {
-    this.router.navigate(['/integrations/edit', integration.id, 'save-or-add-step'], { relativeTo: this.route });
+    this.router.navigate(
+      ['/integrations/edit', integration.id, 'save-or-add-step'],
+      { relativeTo: this.route },
+    );
   }
-
 
   //-----  Times Used ------------------->>
 
@@ -370,8 +396,11 @@ export class DashboardIntegrationsComponent implements OnInit {
   //-----  Initialization ------------------->>
 
   ngOnInit() {
-    log.debugc(() => 'Got integrations: ' + JSON.stringify(this.integrations, undefined, 2), category);
+    log.debugc(
+      () =>
+        'Got integrations: ' + JSON.stringify(this.integrations, undefined, 2),
+      category,
+    );
     this.connectionStore.loadAll();
   }
-
 }

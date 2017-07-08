@@ -1,4 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
@@ -18,10 +24,9 @@ import { ModalDirective } from 'ngx-bootstrap';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ Restangular, TestSupportService ],
+  providers: [Restangular, TestSupportService],
 })
 export class AppComponent implements OnInit, AfterViewInit {
-
   @ViewChild('importDBModal') public importDBModal: ModalDirective;
 
   // White BG
@@ -41,8 +46,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private oauthService: OAuthService,
     private userService: UserService,
     public testSupport: TestSupportService,
-    ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.loggedIn = this.oauthService.hasValidAccessToken();
@@ -57,7 +61,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   exportDB() {
     this.testSupport.snapshotDB().subscribe((value: Response) => {
-      const blob = new Blob([value.text()], {type: 'text/plain;charset=utf-8'});
+      const blob = new Blob([value.text()], {
+        type: 'text/plain;charset=utf-8',
+      });
       saveAs(blob, 'syndesis-db-export.json');
     });
   }
@@ -88,14 +94,19 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    $(document).ready(function () {
+    $(document).ready(function() {
       // matchHeight the contents of each .card-pf and then the .card-pf itself
-      $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
-      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
-      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
+      $(
+        ".row-cards-pf > [class*='col'] > .card-pf .card-pf-title",
+      ).matchHeight();
+      $(
+        ".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body",
+      ).matchHeight();
+      $(
+        ".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer",
+      ).matchHeight();
       $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
     });
     $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation() : '';
   }
-
 }

@@ -105,8 +105,8 @@ export interface Integration extends BaseEntity {
   connections: Array<Connection>;
   users: Array<User>;
   description: string;
-  desiredStatus: "Draft" | "Pending" | "Activated" | "Deactivated" | "Deleted";
-  currentStatus: "Draft" | "Pending" | "Activated" | "Deactivated" | "Deleted";
+  desiredStatus: 'Draft' | 'Pending' | 'Activated' | 'Deactivated' | 'Deleted';
+  currentStatus: 'Draft' | 'Pending' | 'Activated' | 'Deactivated' | 'Deleted';
   statusMessage: string;
   configuration: string;
   token: string;
@@ -176,8 +176,8 @@ export type Errors = Array<Error>;
 
 export interface Result extends BaseEntity {
   errors: Array<Error>;
-  scope: "PARAMETERS" | "CONNECTIVITY";
-  status: "OK" | "ERROR" | "UNSUPPORTED";
+  scope: 'PARAMETERS' | 'CONNECTIVITY';
+  status: 'OK' | 'ERROR' | 'UNSUPPORTED';
 }
 export type Results = Array<Result>;
 
@@ -203,20 +203,20 @@ class TypeFactoryClass {
   createListResult() {
     return <ListResult>{
       items: undefined,
-      totalCount: undefined
+      totalCount: undefined,
     };
   }
 
   createListResultWithId() {
     return <ListResultWithId>{
       items: undefined,
-      totalCount: undefined
+      totalCount: undefined,
     };
   }
 
   createWithId() {
     return <WithId>{
-      id: undefined
+      id: undefined,
     };
   }
 
@@ -230,7 +230,7 @@ class TypeFactoryClass {
       camelConnectorGAV: undefined,
       id: undefined,
       name: undefined,
-      properties: undefined
+      properties: undefined,
     };
   }
 
@@ -247,7 +247,7 @@ class TypeFactoryClass {
       label: undefined,
       group: undefined,
       type: undefined,
-      defaultValue: undefined
+      defaultValue: undefined,
     };
   }
 
@@ -266,7 +266,7 @@ class TypeFactoryClass {
       createdDate: undefined,
       id: undefined,
       tags: undefined,
-      name: undefined
+      name: undefined,
     };
   }
 
@@ -279,14 +279,14 @@ class TypeFactoryClass {
       properties: undefined,
       actions: undefined,
       id: undefined,
-      name: undefined
+      name: undefined,
     };
   }
 
   createConnectorGroup() {
     return <ConnectorGroup>{
       id: undefined,
-      name: undefined
+      name: undefined,
     };
   }
 
@@ -294,14 +294,14 @@ class TypeFactoryClass {
     return <DataShape>{
       exemplar: undefined,
       kind: undefined,
-      type: undefined
+      type: undefined,
     };
   }
 
   createEnvironment() {
     return <Environment>{
       id: undefined,
-      name: undefined
+      name: undefined,
     };
   }
 
@@ -326,7 +326,7 @@ class TypeFactoryClass {
       timesUsed: undefined,
       id: undefined,
       tags: undefined,
-      name: undefined
+      name: undefined,
     };
   }
 
@@ -337,7 +337,7 @@ class TypeFactoryClass {
       organizationId: undefined,
       userId: undefined,
       id: undefined,
-      name: undefined
+      name: undefined,
     };
   }
 
@@ -346,7 +346,7 @@ class TypeFactoryClass {
       environments: undefined,
       users: undefined,
       id: undefined,
-      name: undefined
+      name: undefined,
     };
   }
 
@@ -357,7 +357,7 @@ class TypeFactoryClass {
       configuredProperties: undefined,
       stepKind: undefined,
       name: undefined,
-      id: undefined
+      id: undefined,
     };
   }
 
@@ -371,7 +371,7 @@ class TypeFactoryClass {
       organizationId: undefined,
       lastName: undefined,
       name: undefined,
-      id: undefined
+      id: undefined,
     };
   }
 
@@ -380,7 +380,7 @@ class TypeFactoryClass {
       description: undefined,
       code: undefined,
       parameters: undefined,
-      attributes: undefined
+      attributes: undefined,
     };
   }
 
@@ -388,28 +388,28 @@ class TypeFactoryClass {
     return <Result>{
       errors: undefined,
       scope: undefined,
-      status: undefined
+      status: undefined,
     };
   }
 
   createListResultAction() {
     return <ListResultAction>{
       items: undefined,
-      totalCount: undefined
+      totalCount: undefined,
     };
   }
 
   createEventMessage() {
     return <EventMessage>{
       data: undefined,
-      event: undefined
+      event: undefined,
     };
   }
 
   createListResultString() {
     return <ListResultString>{
       items: undefined,
-      totalCount: undefined
+      totalCount: undefined,
     };
   }
 }

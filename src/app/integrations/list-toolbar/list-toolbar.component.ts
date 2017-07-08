@@ -9,27 +9,23 @@ import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.
   styleUrls: ['./list-toolbar.component.scss'],
 })
 export class IntegrationsListToolbarComponent {
-
   @Input()
   filter: ObjectPropertyFilterConfig = {
     filter: '',
     propertyName: 'name',
   };
-  @Output()
-  filterChange = new EventEmitter<ObjectPropertyFilterConfig>();
+  @Output() filterChange = new EventEmitter<ObjectPropertyFilterConfig>();
 
   @Input()
   sort: ObjectPropertySortConfig = {
     sortField: 'name',
-    descending: false ,
+    descending: false,
   };
-  @Output()
-  sortChange = new EventEmitter<ObjectPropertySortConfig>();
+  @Output() sortChange = new EventEmitter<ObjectPropertySortConfig>();
 
-  @Input()
-  showCreate = true;
+  @Input() showCreate = true;
 
-  constructor() { }
+  constructor() {}
 
   setPropertyName(propertyName: string) {
     this.filter.propertyName = propertyName;
@@ -50,5 +46,4 @@ export class IntegrationsListToolbarComponent {
     this.filter.filter = value;
     this.filterChange.emit(this.filter);
   }
-
 }

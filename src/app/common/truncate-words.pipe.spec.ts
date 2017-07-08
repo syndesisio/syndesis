@@ -1,7 +1,6 @@
 import { TruncateWordsPipe } from './truncate-words.pipe';
 
 describe('TruncateWordsPipe', () => {
-
   let pipe: TruncateWordsPipe;
 
   beforeEach(() => {

@@ -16,7 +16,6 @@ const category = getCategory('Connections');
   styleUrls: ['./list-page.component.scss'],
 })
 export class ConnectionsListPage implements OnInit {
-
   connections: Observable<Connections>;
 
   loading: Observable<boolean>;
@@ -31,8 +30,7 @@ export class ConnectionsListPage implements OnInit {
     descending: false,
   };
 
-  constructor(private store: ConnectionStore,
-              private router: Router) {
+  constructor(private store: ConnectionStore, private router: Router) {
     this.loading = store.loading;
     this.connections = store.list;
   }
@@ -45,5 +43,4 @@ export class ConnectionsListPage implements OnInit {
     this.store.clear();
     this.router.navigate(['connections', connection.id]);
   }
-
 }

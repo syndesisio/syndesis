@@ -1,13 +1,10 @@
 @import '../../../scss/colors';
 
 .connections-view {
-
-
   ////////////////////////////////////////////////////////////////////////////////
   // COMMON ACROSS ALL CONNECTION STATES
   // These classes apply to the 'Create', 'Edit', and 'View' states.
   ////////////////////////////////////////////////////////////////////////////////
-
 
   .card-pf {
     .card-pf-body {
@@ -31,11 +28,10 @@
   // selector/directive. The .create and .edit classes are applied to them under these conditions.
   ////////////////////////////////////////////////////////////////////////////////
 
-
   //----- Create & Edit Connection State Common Overrides the Connection List ----------------->>
 
-  &.create, &.edit {
-
+  &.create,
+  &.edit {
     .cards-pf .row-cards-pf:first-child {
       padding-top: 0;
     }
@@ -84,7 +80,6 @@
     }
   }
 
-
   //----- Create a Connection - Specific Overrides to the Connection List ----------------->>
 
   &.create {
@@ -122,8 +117,8 @@
 
   //----- Edit & Configure a Connection - Specific Overrides to the Connection List ----------------->>
 
-  &.edit {}
-
+  &.edit {
+  }
 
   //----- View a Connection - Specific Overrides to the Connection List ----------------->>
 

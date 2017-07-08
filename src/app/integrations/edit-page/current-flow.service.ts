@@ -3,7 +3,13 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
 import { IntegrationStore } from '../../store/integration/integration.store';
-import { Action, Integration, Step, Connection, TypeFactory } from '../../model';
+import {
+  Action,
+  Integration,
+  Step,
+  Connection,
+  TypeFactory,
+} from '../../model';
 import { log, getCategory } from '../../logging';
 
 const category = getCategory('CurrentFlow');
@@ -15,19 +21,20 @@ export class FlowEvent {
 
 @Injectable()
 export class CurrentFlow {
-
   private _integration: Integration;
   private subscription: Subscription;
 
   events = new EventEmitter<FlowEvent>();
 
-  constructor( private store: IntegrationStore ) {
-    this.subscription = this.events.subscribe((event: FlowEvent) => this.handleEvent(event));
+  constructor(private store: IntegrationStore) {
+    this.subscription = this.events.subscribe((event: FlowEvent) =>
+      this.handleEvent(event),
+    );
   }
 
   isValid() {
     // TODO more validations on the integration
-    return (this.integration.name && this.integration.name.length);
+    return this.integration.name && this.integration.name.length;
   }
 
   getStartConnection(): Connection {
@@ -114,7 +121,10 @@ export class CurrentFlow {
       case 'integration-remove-step': {
         {
           const position = +event['position'];
-          if (position === this.getFirstPosition() || position === this.getLastPosition()) {
+          if (
+            position === this.getFirstPosition() ||
+            position === this.getLastPosition()
+          ) {
             this.steps[position] = TypeFactory.createStep();
           } else {
             this.steps.splice(position, 1);
@@ -126,7 +136,7 @@ export class CurrentFlow {
       case 'integration-set-step':
         {
           const position = +event['position'];
-          const step = <Step> event['step'];
+          const step = <Step>event['step'];
           this.steps[position] = TypeFactory.createStep();
           this.steps[position].stepKind = step.stepKind;
           this.maybeDoAction(event['onSave']);
@@ -147,27 +157,34 @@ export class CurrentFlow {
         break;
       case 'integration-set-action':
         {
-          const position = +event[ 'position' ];
-          const action = event[ 'action' ];
+          const position = +event['position'];
+          const action = event['action'];
           // TODO no step here should really raise an error
           const step = this.steps[position] || TypeFactory.createStep();
           step.action = action;
           step.stepKind = 'endpoint';
           this.steps[position] = step;
           this.maybeDoAction(event['onSave']);
-          log.debugc(() => 'Set action ' + action.name + ' at position: ' + position, category);
+          log.debugc(
+            () => 'Set action ' + action.name + ' at position: ' + position,
+            category,
+          );
         }
         break;
       case 'integration-set-connection':
         {
-          const position = +event[ 'position' ];
-          const connection = event[ 'connection' ];
+          const position = +event['position'];
+          const connection = event['connection'];
           const step = TypeFactory.createStep();
           step.stepKind = 'endpoint';
           step.connection = connection;
           this.steps[position] = step;
           this.maybeDoAction(event['onSave']);
-          log.debugc(() => 'Set connection ' + connection.name + ' at position: ' + position, category);
+          log.debugc(
+            () =>
+              'Set connection ' + connection.name + ' at position: ' + position,
+            category,
+          );
         }
         break;
       case 'integration-set-property':
@@ -176,24 +193,35 @@ export class CurrentFlow {
         break;
       case 'integration-save':
         {
-        log.debugc(() => 'Saving integration: ' + this.integration);
+          log.debugc(() => 'Saving integration: ' + this.integration);
           // poor man's clone in case we need to munge the data
           const integration = this.getIntegrationClone();
-          const sub = this.store.updateOrCreate(integration).subscribe((i: Integration) => {
-            log.debugc(() => 'Saved integration: ' + JSON.stringify(i, undefined, 2), category);
-            const action = event[ 'action' ];
-            if (action && typeof action === 'function') {
-              action(i);
-            }
-            sub.unsubscribe();
-          }, (reason: any) => {
-            log.debugc(() => 'Error saving integration: ' + JSON.stringify(reason, undefined, 2), category);
-            const errorAction = event[ 'error' ];
-            if (errorAction && typeof errorAction === 'function') {
-              errorAction(reason);
-            }
-            sub.unsubscribe();
-          });
+          const sub = this.store.updateOrCreate(integration).subscribe(
+            (i: Integration) => {
+              log.debugc(
+                () => 'Saved integration: ' + JSON.stringify(i, undefined, 2),
+                category,
+              );
+              const action = event['action'];
+              if (action && typeof action === 'function') {
+                action(i);
+              }
+              sub.unsubscribe();
+            },
+            (reason: any) => {
+              log.debugc(
+                () =>
+                  'Error saving integration: ' +
+                  JSON.stringify(reason, undefined, 2),
+                category,
+              );
+              const errorAction = event['error'];
+              if (errorAction && typeof errorAction === 'function') {
+                errorAction(reason);
+              }
+              sub.unsubscribe();
+            },
+          );
         }
         break;
     }
@@ -223,19 +251,17 @@ export class CurrentFlow {
   }
 
   set integration(i: Integration) {
-    this._integration = <Integration> i;
+    this._integration = <Integration>i;
     log.debugc(() => 'Integration reset for current flow', category);
     this.events.emit({
       kind: 'integration-updated',
       integration: this.integration,
     });
     if (!this.steps || !this.steps.length) {
-      log.debugc(() => 'Integration has no steps, assuming it\'s new', category);
+      log.debugc(() => "Integration has no steps, assuming it's new", category);
       this.events.emit({
         kind: 'integration-no-connections',
       });
     }
   }
-
-
 }

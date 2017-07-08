@@ -11,9 +11,7 @@ import { FormFactoryService } from './forms.service';
 import { ConfigService } from '../config.service';
 
 @NgModule({
-  imports: [
-    CommonModule,
-  ],
+  imports: [CommonModule],
   declarations: [
     ObjectPropertyFilterPipe,
     ObjectPropertySortPipe,
@@ -28,22 +26,13 @@ import { ConfigService } from '../config.service';
     TruncateWordsPipe,
     LoadingComponent,
   ],
-  providers: [
-    ConfigService,
-    FormFactoryService,
-  ],
+  providers: [ConfigService, FormFactoryService],
 })
 export class SyndesisCommonModule {
-
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: SyndesisCommonModule,
-      providers: [
-        UserService,
-        FormFactoryService,
-        ConfigService,
-      ],
+      providers: [UserService, FormFactoryService, ConfigService],
     };
   }
-
 }

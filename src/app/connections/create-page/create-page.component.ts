@@ -17,7 +17,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     private current: CurrentConnectionService,
     private route: ActivatedRoute,
     private router: Router,
-  ) { }
+  ) {}
 
   get connection(): Connection {
     return this.current.connection;
@@ -40,9 +40,9 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       case 'connection-basics':
         return this.connection.name && this.connection.connector;
       case 'configure-fields':
-        // TODO validate form
+      // TODO validate form
       case 'review':
-        // TODO is this ever going to be false?
+      // TODO is this ever going to be false?
     }
     return true;
   }
@@ -80,7 +80,10 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
         target.push('connection-basics');
         break;
       case 'review':
-        if (!this.current.connection.connector.properties || this.current.connection.connector.properties === '') {
+        if (
+          !this.current.connection.connector.properties ||
+          this.current.connection.connector.properties === ''
+        ) {
           target.push('connection-basics');
         } else {
           target.push('configure-fields');
@@ -100,7 +103,10 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     const target = [];
     switch (page) {
       case 'connection-basics':
-        if (!this.current.connection.connector.properties || this.current.connection.connector.properties === '') {
+        if (
+          !this.current.connection.connector.properties ||
+          this.current.connection.connector.properties === ''
+        ) {
           target.push('review');
         } else {
           target.push('configure-fields');
@@ -117,7 +123,12 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
             this.router.navigate(['..'], { relativeTo: this.route });
           },
           error: (reason: any) => {
-            log.debugc(() => 'Error creating connection: ' + JSON.stringify(reason, undefined, 2), category);
+            log.debugc(
+              () =>
+                'Error creating connection: ' +
+                JSON.stringify(reason, undefined, 2),
+              category,
+            );
           },
         });
         // TODO
@@ -136,10 +147,14 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     if (this.getCurrentPage() !== 'connection-basics') {
       this.router.navigate(['connection-basics'], { relativeTo: this.route });
     }
-    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().hideMenu() : '';
+    $.fn.setupVerticalNavigation
+      ? $.fn.setupVerticalNavigation().hideMenu()
+      : '';
   }
 
   ngOnDestroy() {
-    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().showMenu() : '';
+    $.fn.setupVerticalNavigation
+      ? $.fn.setupVerticalNavigation().showMenu()
+      : '';
   }
 }

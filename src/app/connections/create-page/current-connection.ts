@@ -12,20 +12,19 @@ const category = getCategory('CurrentConnectionService');
 export class ConnectionEvent {
   kind: string;
   [name: string]: any;
-};
+}
 
 @Injectable()
 export class CurrentConnectionService {
-
   private _connection: Connection;
   private subscription: Subscription;
 
   events = new EventEmitter<ConnectionEvent>();
 
-  constructor(
-    private store: ConnectionStore,
-  ) {
-    this.subscription = this.events.subscribe((event: ConnectionEvent) => this.handleEvent(event));
+  constructor(private store: ConnectionStore) {
+    this.subscription = this.events.subscribe((event: ConnectionEvent) =>
+      this.handleEvent(event),
+    );
   }
 
   handleEvent(event: ConnectionEvent) {
@@ -51,7 +50,9 @@ export class CurrentConnectionService {
 
   saveConnection(event: ConnectionEvent) {
     // poor man's clone
-    const connection = <Connection> JSON.parse(JSON.stringify(event['connection'] || this.connection));
+    const connection = <Connection>JSON.parse(
+      JSON.stringify(event['connection'] || this.connection),
+    );
     // just in case this leaks through from the form
     for (const prop in connection.connector.properties) {
       if (!prop.hasOwnProperty(prop)) {
@@ -59,22 +60,31 @@ export class CurrentConnectionService {
       }
       delete connection.connector.properties[prop]['value'];
     }
-    const sub = this.store.updateOrCreate(connection).subscribe((c: Connection) => {
-      log.debugc(() => 'Saved connection: ' + JSON.stringify(c, undefined, 2), category);
-      const action = event['action'];
-      if (action && typeof action === 'function') {
-        action(c);
-      }
-      sub.unsubscribe();
-    }, (reason: any) => {
-      log.debugc(() => 'Error saving connection: ' + JSON.stringify(reason, undefined, 2), category);
-      const errorAction = event['error'];
-      if (errorAction && typeof errorAction === 'function') {
-        errorAction(reason);
-      }
-      sub.unsubscribe();
-    });
-
+    const sub = this.store.updateOrCreate(connection).subscribe(
+      (c: Connection) => {
+        log.debugc(
+          () => 'Saved connection: ' + JSON.stringify(c, undefined, 2),
+          category,
+        );
+        const action = event['action'];
+        if (action && typeof action === 'function') {
+          action(c);
+        }
+        sub.unsubscribe();
+      },
+      (reason: any) => {
+        log.debugc(
+          () =>
+            'Error saving connection: ' + JSON.stringify(reason, undefined, 2),
+          category,
+        );
+        const errorAction = event['error'];
+        if (errorAction && typeof errorAction === 'function') {
+          errorAction(reason);
+        }
+        sub.unsubscribe();
+      },
+    );
   }
 
   get connection(): Connection {

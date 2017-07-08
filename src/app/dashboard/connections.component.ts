@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
 import { log, getCategory } from '../logging';
 
@@ -13,7 +20,6 @@ const category = getCategory('Dashboard');
   styleUrls: ['./connections.component.scss'],
 })
 export class DashboardConnectionsComponent implements OnInit {
-
   selectedId = undefined;
 
   @Input() connections: Connections;
@@ -22,22 +28,24 @@ export class DashboardConnectionsComponent implements OnInit {
 
   truncateTrail = '…';
 
-
   //-----  Selecting a Connection ------------------->>
 
-
   onSelect(connection: Connection) {
-    log.debugc(() => 'Selected connection (list): ' + connection.name, category);
+    log.debugc(
+      () => 'Selected connection (list): ' + connection.name,
+      category,
+    );
     this.selectedId = connection.id;
     this.selectedConnection.emit(connection);
   }
 
-
-
   //----- Initialization ------------------->>
 
   ngOnInit() {
-    log.debugc(() => 'Got connections: ' + JSON.stringify(this.connections, undefined, 2), category);
+    log.debugc(
+      () =>
+        'Got connections: ' + JSON.stringify(this.connections, undefined, 2),
+      category,
+    );
   }
-
 }

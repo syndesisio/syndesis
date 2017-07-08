@@ -26,44 +26,47 @@ describe('IntegrationsEditComponent', () => {
   let component: IntegrationsEditPage;
   let fixture: ComponentFixture<IntegrationsEditPage>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        CollapseModule,
-        CommonModule,
-        FormsModule,
-        SyndesisCommonModule,
-        ModalModule,
-        RestangularModule.forRoot(),
-        RouterTestingModule.withRoutes([]),
-        PopoverModule.forRoot(),
-        CollapseModule.forRoot(),
-        StoreModule,
-        ToasterModule,
-      ],
-      declarations: [
-        IntegrationsEditPage,
-        ConnectionsListComponent,
-        ConnectionsListToolbarComponent,
-        FlowViewComponent,
-        FlowViewStepComponent,
-      ],
-      providers: [
-        MockBackend,
-        {
-          provide: RequestOptions,
-          useClass: BaseRequestOptions,
-        },
-        {
-          provide: Http, useFactory: (backend, options) => {
-            return new Http(backend, options);
-          }, deps: [MockBackend, RequestOptions],
-        },
-        CurrentFlow,
-      ],
-    })
-      .compileComponents();
-  }));
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          CollapseModule,
+          CommonModule,
+          FormsModule,
+          SyndesisCommonModule,
+          ModalModule,
+          RestangularModule.forRoot(),
+          RouterTestingModule.withRoutes([]),
+          PopoverModule.forRoot(),
+          CollapseModule.forRoot(),
+          StoreModule,
+          ToasterModule,
+        ],
+        declarations: [
+          IntegrationsEditPage,
+          ConnectionsListComponent,
+          ConnectionsListToolbarComponent,
+          FlowViewComponent,
+          FlowViewStepComponent,
+        ],
+        providers: [
+          MockBackend,
+          {
+            provide: RequestOptions,
+            useClass: BaseRequestOptions,
+          },
+          {
+            provide: Http,
+            useFactory: (backend, options) => {
+              return new Http(backend, options);
+            },
+            deps: [MockBackend, RequestOptions],
+          },
+          CurrentFlow,
+        ],
+      }).compileComponents();
+    }),
+  );
 
   // TODO: Add separate test for editing
   beforeEach(() => {

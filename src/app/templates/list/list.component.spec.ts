@@ -9,13 +9,14 @@ describe('TemplatesListComponent', () => {
   let component: TemplatesListComponent;
   let fixture: ComponentFixture<TemplatesListComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [SyndesisCommonModule, RouterTestingModule.withRoutes([])],
-      declarations: [TemplatesListComponent],
-    })
-      .compileComponents();
-  }));
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [SyndesisCommonModule, RouterTestingModule.withRoutes([])],
+        declarations: [TemplatesListComponent],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TemplatesListComponent);

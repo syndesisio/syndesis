@@ -6,7 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./list-toolbar.component.scss'],
 })
 export class ListToolbarComponent {
-
-  constructor() { }
-
+  constructor() {}
 }

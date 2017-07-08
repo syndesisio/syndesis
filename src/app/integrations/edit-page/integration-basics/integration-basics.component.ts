@@ -11,22 +11,27 @@ import { FlowPage } from '../flow-page';
   styleUrls: ['./integration-basics.component.scss'],
 })
 export class IntegrationBasicsComponent extends FlowPage {
-
   constructor(
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
     public detector: ChangeDetectorRef,
-    ) {
+  ) {
     super(currentFlow, route, router, detector);
   }
 
   canContinue() {
-    return this.currentFlow.integration.name && this.currentFlow.integration.name !== '';
+    return (
+      this.currentFlow.integration.name &&
+      this.currentFlow.integration.name !== ''
+    );
   }
 
   continue() {
-    this.router.navigate(['save-or-add-step'], { queryParams: { validate: true }, relativeTo: this.route.parent });
+    this.router.navigate(['save-or-add-step'], {
+      queryParams: { validate: true },
+      relativeTo: this.route.parent,
+    });
   }
 
   get name(): string {
@@ -63,12 +68,11 @@ export class IntegrationBasicsComponent extends FlowPage {
   }
 
   set tags(tags: string) {
-    const _tags = tags.split(',').map((str) => str.trim());
+    const _tags = tags.split(',').map(str => str.trim());
     this.currentFlow.events.emit({
       kind: 'integration-set-property',
       property: 'tags',
       value: _tags,
     });
   }
-
 }

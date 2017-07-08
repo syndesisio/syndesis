@@ -14,10 +14,10 @@ const category = getCategory('IntegrationsEditPage');
 @Component({
   selector: 'syndesis-integrations-edit-page',
   templateUrl: './edit-page.component.html',
-  styleUrls: [ './edit-page.component.scss' ],
+  styleUrls: ['./edit-page.component.scss'],
 })
-export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDestroy {
-
+export class IntegrationsEditPage extends ChildAwarePage
+  implements OnInit, OnDestroy {
   integration: Observable<Integration>;
   private readonly loading: Observable<boolean>;
 
@@ -29,18 +29,21 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
   _canContinue = false;
   position: number;
 
-  constructor( public currentFlow: CurrentFlow,
-              public store: IntegrationStore,
-              public route: ActivatedRoute,
-              public router: Router,
-              public detector: ChangeDetectorRef,
-               ) {
+  constructor(
+    public currentFlow: CurrentFlow,
+    public store: IntegrationStore,
+    public route: ActivatedRoute,
+    public router: Router,
+    public detector: ChangeDetectorRef,
+  ) {
     super(currentFlow, route, router);
     this.integration = this.store.resource;
     this.loading = this.store.loading;
-    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
-      this.handleFlowEvent(event);
-    });
+    this.flowSubscription = this.currentFlow.events.subscribe(
+      (event: FlowEvent) => {
+        this.handleFlowEvent(event);
+      },
+    );
   }
 
   getPageRow() {
@@ -96,13 +99,18 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
   }
 
   ngOnInit() {
-    this.integrationSubscription = this.integration.subscribe((i: Integration) => {
-      this.currentFlow.integration = i;
-    });
-    this.routeSubscription = this.route.params.pluck<Params, string>('integrationId')
+    this.integrationSubscription = this.integration.subscribe(
+      (i: Integration) => {
+        this.currentFlow.integration = i;
+      },
+    );
+    this.routeSubscription = this.route.params
+      .pluck<Params, string>('integrationId')
       .map((integrationId: string) => this.store.loadOrCreate(integrationId))
       .subscribe();
-    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().hideMenu() : '';
+    $.fn.setupVerticalNavigation
+      ? $.fn.setupVerticalNavigation().hideMenu()
+      : '';
   }
 
   ngOnDestroy() {
@@ -111,7 +119,8 @@ export class IntegrationsEditPage extends ChildAwarePage implements OnInit, OnDe
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
     }
-    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation().showMenu() : '';
+    $.fn.setupVerticalNavigation
+      ? $.fn.setupVerticalNavigation().showMenu()
+      : '';
   }
-
 }

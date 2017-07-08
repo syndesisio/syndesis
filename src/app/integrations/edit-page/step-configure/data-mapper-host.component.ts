@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ViewChild,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -42,10 +48,16 @@ const MAPPING_KEY = 'atlasmapping';
       }
     `,
   ],
-  providers: [InitializationService, ConfigService, MappingManagementService, ErrorHandlerService, DocumentManagementService],
+  providers: [
+    InitializationService,
+    ConfigService,
+    MappingManagementService,
+    ErrorHandlerService,
+    DocumentManagementService,
+  ],
 })
-export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestroy {
-
+export class DataMapperHostComponent extends FlowPage
+  implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   position: number;
   initialized = false;
@@ -76,12 +88,20 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     this.cfg.mappingService = mappingService;
     this.cfg.errorService = errorService;
     try {
-      this.cfg.initCfg.baseJavaServiceUrl = configService.getSettings('datamapper', 'baseJavaServiceUrl');
-      this.cfg.initCfg.baseMappingServiceUrl = configService.getSettings('datamapper', 'baseMappingServiceUrl');
+      this.cfg.initCfg.baseJavaServiceUrl = configService.getSettings(
+        'datamapper',
+        'baseJavaServiceUrl',
+      );
+      this.cfg.initCfg.baseMappingServiceUrl = configService.getSettings(
+        'datamapper',
+        'baseMappingServiceUrl',
+      );
     } catch (err) {
       // run with defaults
-      this.cfg.initCfg.baseJavaServiceUrl = 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/java/';
-      this.cfg.initCfg.baseMappingServiceUrl = 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
+      this.cfg.initCfg.baseJavaServiceUrl =
+        'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/java/';
+      this.cfg.initCfg.baseMappingServiceUrl =
+        'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
     }
   }
 
@@ -108,9 +128,14 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
     const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
     // TODO we'll want to parse the dataType and maybe set the right config value
-    const inputDocDef = this.createDocumentDefinition(start.action.outputDataShape, true);
+    const inputDocDef = this.createDocumentDefinition(
+      start.action.outputDataShape,
+      true,
+    );
     this.cfg.sourceDocs.push(inputDocDef);
-    const outputDocDef = this.createDocumentDefinition(end.action.inputDataShape);
+    const outputDocDef = this.createDocumentDefinition(
+      end.action.inputDataShape,
+    );
     this.cfg.targetDocs.push(outputDocDef);
     // TODO for now set a really long timeout
     this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;
@@ -118,28 +143,35 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
       const mappingDefinition = new MappingDefinition();
       // Existing mappings, load from the route
       try {
-        this.mappingService.deserializeMappingServiceJSON(JSON.parse(mappings), mappingDefinition);
+        this.mappingService.deserializeMappingServiceJSON(
+          JSON.parse(mappings),
+          mappingDefinition,
+        );
       } catch (err) {
         // TODO popup or error alert?  At least catch this so we initialize
         log.warn('Failed to deserialize mappings: ' + err, category);
       }
       this.cfg.mappings = mappingDefinition;
     }
-    this.mappingService.saveMappingOutput$.subscribe((saveHandler: Function) => {
-      const json = this.mappingService.serializeMappingsToJSON(this.cfg.mappings);
-      const properties = {
-        atlasmapping: JSON.stringify(json),
-      };
-      this.currentFlow.events.emit({
-        kind: 'integration-set-properties',
-        position: this.position,
-        properties: properties,
-        onSave: () => {
-          this.mappingService.handleMappingSaveSuccess(saveHandler);
-          log.debugc(() => 'Saved mapping file: ' + json, category);
-        },
-      });
-    });
+    this.mappingService.saveMappingOutput$.subscribe(
+      (saveHandler: Function) => {
+        const json = this.mappingService.serializeMappingsToJSON(
+          this.cfg.mappings,
+        );
+        const properties = {
+          atlasmapping: JSON.stringify(json),
+        };
+        this.currentFlow.events.emit({
+          kind: 'integration-set-properties',
+          position: this.position,
+          properties: properties,
+          onSave: () => {
+            this.mappingService.handleMappingSaveSuccess(saveHandler);
+            log.debugc(() => 'Saved mapping file: ' + json, category);
+          },
+        });
+      },
+    );
     // make sure the property is set on the integration
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
@@ -166,22 +198,25 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
     this.detector.detectChanges();
     log.debugc(() => 'Fetching POM for integration', category);
     this.support.requestPom(this.currentFlow.getIntegrationClone()).subscribe(
-      (data) => {
+      data => {
         const pom = data['_body'];
         log.debugc(() => 'Fetched POM for integration: ' + pom, category);
         this.cfg.initCfg.classPath = null;
         this.cfg.initCfg.pomPayload = pom;
         this.initializationService.initialize();
-      }, (err) => {
+      },
+      err => {
         // do our best I guess
         log.warnc(() => 'failed to fetch pom: ', JSON.parse(err), category);
         this.cfg.initCfg.classPath = '';
         this.initializationService.initialize();
-      });
+      },
+    );
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.params.pluck<Params, string>('position')
+    this.routeSubscription = this.route.params
+      .pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
         setTimeout(() => {
@@ -194,6 +229,4 @@ export class DataMapperHostComponent extends FlowPage implements OnInit, OnDestr
   ngOnDestroy() {
     this.routeSubscription.unsubscribe();
   }
-
-
 }

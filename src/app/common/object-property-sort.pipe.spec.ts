@@ -50,7 +50,10 @@ describe('ObjectPropertySortPipe', () => {
   });
 
   it('will sort an array of objects', () => {
-    const results = pipe.transform(testArray, { sortField: 'name', descending: false });
+    const results = pipe.transform(testArray, {
+      sortField: 'name',
+      descending: false,
+    });
 
     expect(results.length).toEqual(4);
     const result1: any = results.shift();
@@ -64,7 +67,10 @@ describe('ObjectPropertySortPipe', () => {
   });
 
   it('will sort an array of objects in reverse', () => {
-    const results = pipe.transform(testArray, { sortField: 'name', descending: true });
+    const results = pipe.transform(testArray, {
+      sortField: 'name',
+      descending: true,
+    });
 
     expect(results.length).toEqual(4);
     const result1: any = results.shift();
@@ -78,7 +84,10 @@ describe('ObjectPropertySortPipe', () => {
   });
 
   it('will sort an array of objects using numbers', () => {
-    const results = pipe.transform(testArray, { sortField: 'number', descending: false });
+    const results = pipe.transform(testArray, {
+      sortField: 'number',
+      descending: false,
+    });
 
     expect(results.length).toEqual(4);
     const result1: any = results.shift();
@@ -90,5 +99,4 @@ describe('ObjectPropertySortPipe', () => {
     expect(result4.name).toEqual('foo');
     expect(result3.name).toEqual('yum');
   });
-
 });

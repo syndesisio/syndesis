@@ -14,14 +14,20 @@ describe('ConfigService', () => {
         MockBackend,
         { provide: RequestOptions, useClass: BaseRequestOptions },
         {
-          provide: Http, useFactory: (backend, options) => {
+          provide: Http,
+          useFactory: (backend, options) => {
             return new Http(backend, options);
-          }, deps: [MockBackend, RequestOptions],
-        }],
+          },
+          deps: [MockBackend, RequestOptions],
+        },
+      ],
     });
   });
 
-  it('should ...', inject([ConfigService], (service: ConfigService) => {
-    expect(service).toBeTruthy();
-  }));
+  it(
+    'should ...',
+    inject([ConfigService], (service: ConfigService) => {
+      expect(service).toBeTruthy();
+    }),
+  );
 });

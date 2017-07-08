@@ -10,7 +10,6 @@ import { IntegrationTemplates } from '../../model';
   styleUrls: ['./list-page.component.scss'],
 })
 export class TemplatesListPage implements OnInit {
-
   templates: Observable<IntegrationTemplates>;
   loading: Observable<boolean>;
 
@@ -22,5 +21,4 @@ export class TemplatesListPage implements OnInit {
   ngOnInit() {
     this.store.loadAll();
   }
-
 }

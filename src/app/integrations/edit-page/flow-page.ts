@@ -5,7 +5,6 @@ import { CurrentFlow, FlowEvent } from './current-flow.service';
 import { Integration, Step, TypeFactory } from '../../model';
 
 export abstract class FlowPage implements OnDestroy {
-
   flowSubscription: Subscription;
   errorMessage: any = undefined;
   saveInProgress = false;
@@ -17,9 +16,11 @@ export abstract class FlowPage implements OnDestroy {
     public router: Router,
     public detector: ChangeDetectorRef,
   ) {
-    this.flowSubscription = this.currentFlow.events.subscribe((event: FlowEvent) => {
-      this.handleFlowEvent(event);
-    });
+    this.flowSubscription = this.currentFlow.events.subscribe(
+      (event: FlowEvent) => {
+        this.handleFlowEvent(event);
+      },
+    );
   }
 
   cancel() {
@@ -36,8 +37,13 @@ export abstract class FlowPage implements OnDestroy {
 
   doSave() {
     this.errorMessage = undefined;
-    if (!this.currentFlow.integration.name || this.currentFlow.integration.name === '') {
-      this.router.navigate(['integration-basics'], { relativeTo: this.route.parent });
+    if (
+      !this.currentFlow.integration.name ||
+      this.currentFlow.integration.name === ''
+    ) {
+      this.router.navigate(['integration-basics'], {
+        relativeTo: this.route.parent,
+      });
       this.saveInProgress = false;
       this.publishInProgress = false;
       return;
@@ -53,7 +59,7 @@ export abstract class FlowPage implements OnDestroy {
         */
         router.navigate(['/integrations']);
       },
-      error: (error) => {
+      error: error => {
         setTimeout(() => {
           this.errorMessage = error;
           this.saveInProgress = false;
@@ -75,15 +81,15 @@ export abstract class FlowPage implements OnDestroy {
     this.doSave();
   }
 
-  publish(status: 'Draft' | 'Activated' | 'Deactivated' | 'Deleted' = 'Activated') {
+  publish(
+    status: 'Draft' | 'Activated' | 'Deactivated' | 'Deleted' = 'Activated',
+  ) {
     this.currentFlow.integration.desiredStatus = status;
     this.publishInProgress = true;
     this.doSave();
   }
 
-
   ngOnDestroy() {
     this.flowSubscription.unsubscribe();
   }
-
 }

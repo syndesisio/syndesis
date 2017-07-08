@@ -11,24 +11,27 @@ import { ConnectionsReviewComponent } from './create-page/review/review.componen
 
 const routes: Routes = [
   { path: '', component: ConnectionsListPage, pathMatch: 'full' },
-  { path: 'create', component: ConnectionsCreatePage, children: [
-    { path: 'connection-basics', component: ConnectionsConnectionBasicsComponent },
-    { path: 'configure-fields', component: ConnectionsConfigureFieldsComponent },
-    { path: 'review', component: ConnectionsReviewComponent },
-    { path: '**', redirectTo: 'connection-basics', pathMatch: 'full' },
-  ] },
+  {
+    path: 'create',
+    component: ConnectionsCreatePage,
+    children: [
+      {
+        path: 'connection-basics',
+        component: ConnectionsConnectionBasicsComponent,
+      },
+      {
+        path: 'configure-fields',
+        component: ConnectionsConfigureFieldsComponent,
+      },
+      { path: 'review', component: ConnectionsReviewComponent },
+      { path: '**', redirectTo: 'connection-basics', pathMatch: 'full' },
+    ],
+  },
   { path: ':id', component: ConnectionViewPage, pathMatch: 'full' },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(routes),
-    ConnectionsModule,
-  ],
-  exports: [
-    RouterModule,
-  ],
+  imports: [RouterModule.forChild(routes), ConnectionsModule],
+  exports: [RouterModule],
 })
-export class ConnectionsRoutesModule { }
-
-
+export class ConnectionsRoutesModule {}

@@ -16,9 +16,9 @@ describe('ConnectionViewToolbarComponent', () => {
   let component: ConnectionViewToolbarComponent;
   let fixture: ComponentFixture<ConnectionViewToolbarComponent>;
 
-  beforeEach(async(() => {
-    TestBed
-      .configureTestingModule({
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
         imports: [
           CommonModule,
           RouterTestingModule.withRoutes([]),
@@ -31,14 +31,16 @@ describe('ConnectionViewToolbarComponent', () => {
           CurrentConnectionService,
           { provide: RequestOptions, useClass: BaseRequestOptions },
           {
-            provide: Http, useFactory: (backend, options) => {
+            provide: Http,
+            useFactory: (backend, options) => {
               return new Http(backend, options);
-            }, deps: [MockBackend, RequestOptions],
+            },
+            deps: [MockBackend, RequestOptions],
           },
         ],
-      })
-      .compileComponents();
-  }));
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConnectionViewToolbarComponent);
@@ -46,5 +48,7 @@ describe('ConnectionViewToolbarComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => { expect(component).toBeTruthy(); });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

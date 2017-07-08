@@ -8,7 +8,6 @@ import { Integration } from '../model';
 
 @Injectable()
 export class IntegrationSupportService {
-
   service: Restangular = undefined;
 
   constructor(
@@ -21,9 +20,10 @@ export class IntegrationSupportService {
 
   requestPom(integration: Integration) {
     const url = this.service.one('generate').one('pom.xml').getRestangularUrl();
-    const headers = new Headers({ Authorization: 'Bearer ' + this.oauth.getAccessToken() });
+    const headers = new Headers({
+      Authorization: 'Bearer ' + this.oauth.getAccessToken(),
+    });
     const options = new RequestOptions({ headers: headers });
     return this.http.post(url, integration, options);
   }
-
 }

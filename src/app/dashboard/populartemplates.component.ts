@@ -7,9 +7,7 @@ import { IntegrationTemplates } from '../model';
   templateUrl: './populartemplates.component.html',
 })
 export class PopularTemplatesComponent {
-
   @Input() templates: IntegrationTemplates;
 
   @Input() loading: boolean;
-
 }

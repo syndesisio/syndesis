@@ -4,12 +4,13 @@ import { Observable } from 'rxjs/Observable';
 import { BaseEntity } from '../../model';
 
 export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
-
-  protected constructor(public restangularService: Restangular, public kind: String) {
-  }
+  protected constructor(
+    public restangularService: Restangular,
+    public kind: String,
+  ) {}
 
   get(id: string): Observable<T> {
-    return this.restangularService.one( id ).get();
+    return this.restangularService.one(id).get();
   }
 
   list(): Observable<L> {
@@ -17,15 +18,14 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
   }
 
   create(obj: T): Observable<T> {
-    return this.restangularService.post( obj );
+    return this.restangularService.post(obj);
   }
 
   update(obj: T): Observable<T> {
-    return this.restangularService.one( obj.id ).customPUT(obj);
+    return this.restangularService.one(obj.id).customPUT(obj);
   }
 
   delete(obj: T) {
-    return this.restangularService.one( obj.id ).remove();
+    return this.restangularService.one(obj.id).remove();
   }
-
 }

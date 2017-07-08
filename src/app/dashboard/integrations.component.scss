@@ -5,12 +5,13 @@
   cursor: default;
   margin: 15px;
 
-  a, a:visited {
+  a,
+  a:visited {
     color: $pf-blue-400;
     cursor: pointer;
 
     &.btn {
-      color: #FFFFFF;
+      color: #ffffff;
     }
 
     &:hover {
@@ -42,7 +43,8 @@
       margin: 0;
     }
 
-    [class^="col-"], [class*=" col-"] {
+    [class^="col-"],
+    [class*=" col-"] {
       padding: 0;
 
       h1 {
@@ -50,7 +52,6 @@
       }
     }
   }
-
 
   ////////////////////////////////////////////////////////////////////////////////
   // FIRST ROW
@@ -71,7 +72,6 @@
     //----- Integration Board ----------------->>
 
     .integration-board {
-
       .card-pf-body {
         overflow: auto;
 
@@ -100,9 +100,10 @@
             }
 
             @media (max-width: 1020px) {
-              .text { display: none }
+              .text {
+                display: none;
+              }
             }
-
           }
         }
       }
@@ -137,7 +138,6 @@
       }
     }
 
-
     //----- Recent Updates ----------------->>
 
     .recent-updates {
@@ -155,9 +155,10 @@
         }
       }
 
-      .update:last-child { border-bottom: none; }
+      .update:last-child {
+        border-bottom: none;
+      }
     }
-
 
     //----- Top 5 Integrations ----------------->>
 
@@ -194,7 +195,7 @@
           padding: 0;
 
           .btn.btn-primary {
-            background: #199BD1;
+            background: #199bd1;
             border: none;
             font-family: inherit;
             font-weight: 100;
@@ -237,7 +238,10 @@
           line-height: 28px;
           padding: 0;
 
-          a, a:visited, a:hover, a:focus {
+          a,
+          a:visited,
+          a:hover,
+          a:focus {
             color: inherit;
             text-decoration: none;
           }
@@ -259,7 +263,6 @@
       }
     }
   }
-
 
   ////////////////////////////////////////////////////////////////////////////////
   // THIRD ROW

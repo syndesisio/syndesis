@@ -9,9 +9,6 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(routes),
-    TemplatesModule,
-  ],
+  imports: [RouterModule.forChild(routes), TemplatesModule],
 })
-export class TemplateRoutesModule { }
+export class TemplateRoutesModule {}

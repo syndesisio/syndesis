@@ -13,20 +13,15 @@ const category = getCategory('Connections');
   styleUrls: ['./view-toolbar.component.scss'],
 })
 export class ConnectionViewToolbarComponent {
-
-  @Input()
-  mode = 'view';
+  @Input() mode = 'view';
 
   saving = false;
 
-  @Output()
-  modeChange = new EventEmitter<string>();
+  @Output() modeChange = new EventEmitter<string>();
 
   @Input() connection: Connection;
 
-  constructor(
-    private current: CurrentConnectionService,
-  ) { }
+  constructor(private current: CurrentConnectionService) {}
 
   doEdit() {
     this.mode = 'edit';
@@ -50,9 +45,13 @@ export class ConnectionViewToolbarComponent {
       },
       error: (reason: any) => {
         this.saving = false;
-        log.debugc(() => 'Error creating connection: ' + JSON.stringify(reason, undefined, 2), category);
+        log.debugc(
+          () =>
+            'Error creating connection: ' +
+            JSON.stringify(reason, undefined, 2),
+          category,
+        );
       },
     });
   }
-
 }
