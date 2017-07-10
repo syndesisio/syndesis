@@ -4,7 +4,7 @@ Syndesis - Camel Health Check
 * Issues:
   * https://github.com/syndesisio/syndesis-project/issues/42
   * https://issues.apache.org/jira/browse/CAMEL-11443
-  
+
 * Branches:
   * https://github.com/lburgazzoli/apache-camel/tree/CAMEL-11443
 
@@ -31,47 +31,37 @@ These are Syndesis specific and requires new functionality developed into Apache
 
 The existing Camel health check from camel-spring-boot (`/health` HTTP REST endpoint) can be used as-is, however as we want Syndesis to be more in control of errors, we would need to ensure that the readiness/liveness probes reports OK even if an integration startup and cannot connect to a remote system, and would be in error.
 
-When Apache Camel startup then Camel routes will startup by default, and as part of their startup then the (route consumers) will often connect to remote systems,
-and in case of connection errors those will be thrown as exception and Camel will fail to startup. Only a handful of Camel components has built-in failover/retry in those situatations.
+When Apache Camel startup then Camel routes will startup by default, and as part of their startup then the (route consumers) will often connect to remote systems, and in case of connection errors those will be thrown as exception and Camel will fail to startup. Only a handful of Camel components has built-in failover/retry in those situatations.
 
 For Syndesis we would need to be in full control, and therefore we will need to ensure Apache Camel can startup even if there is a connection problem with a remote system. This requires to configure Apache Camel to not auto start the routes, which can be done in Spring Boot by configuring `application.properties` with the following:
 
     camel.springboot.auto-startup = false
 
-By doing so no routes is automatic startup up, but we would then need to defer starting these routes and do this using another way. Therefore we implement a new `RouteController` which will be responsible for starting up the routes in a controlled manner.
+By doing so no routes is automatic startup up, but we would then need to defer starting these routes and do this using another way.
 
-The `RouteController` will be bootstrapped via the `RoutePolicyFactory` where we in the `onInit` callback can register the routes to the `RouteController` which then
-runs as a background thread and orchestrates starting the routes. The `RouteController` will then be responsbible for starting up all these routes, and have support for periodically retry in case a route fails to startup. And only when all routes has been started the `RouteController` has completed starting up all the routes.
+When using spring,the camel context can be configured using beans from the registry [1] therefore we can add a new auto discovered `RouteController` SPI which will be the responsible for starting up the routes in a controlled manner.
 
-We would need to make the discovery and bootstrap of the `RouteController` very easy, which we can do using Camel's existing `RoutePolicyFactory`.
+NOTE: as the idea of a route controller has been brought up for Camel 3.0, the  RouteController will be an early preview SPI.
+
+NOTE: as refactoring the route mamagement requires to change camel-core, the first implementation leverages `RoutePolicy`/`RoutePolicyFactory`
+
+The `RouteController` implementation will sets `autoStartup = false` and will install its own `RoutePolicyFactory` which then creates a `RoutePolicy`  for each route an where we in the `onInit` callback can register the routes to the `RouteController` which then runs as a background thread and orchestrates starting the routes. The `RouteController` will then be responsbible for starting up all these routes, and have support for periodically retry in case a route fails to startup. And only when all routes has been started the `RouteController` has completed starting up all the routes.
 
 In Camel with Spring Boot we can setup this in the `Main` class via something along the following code lines:
 
-    @Bean
-    RouteController newRouteController(CamelContext camelContext) {
-        return new RouteController(camelContext);
-    }
-
-    @Bean
-    RoutePolicyFactory newRouteController(RouteController controller) {
-        return new RouteControllerRoutePolicyFactory(controller);
-    }
-
-Or:
-
+```java
     @Bean
     RouteController newRouteController(CamelContext camelContext) {
         // The route controller is also in charge to add add its own
         // RoutePolicyFactory to the camel context
         return new RouteController(camelContext);
     }
+```    
 
-There should be one shared instance of `RouteController` which is given to the `RoutePolicyFactory`, which then creates a `RoutePolicy` for each route that will be controlled.
 
-TODO: We could make `RouteController` an SPI in Apache Camel and provide it OOTB in Apache Camel. Then we can have Camel auto detect if its enabled on startup
-and then automatic set `autoStartup = false`, and then let the `RouteController` startup the routes (We have this idea for Camel 3.0). This can then make it even
-easier to enable. The `RouteController` should have configuration setting to specify how often to retry starting failed routes (we may need to have backoff etc).
-We can then implement a `DefaultRouteController` in camel-core, and then make it easy to use by setting `CamelContext.setRouteControllerEnabled(true)` (find a good name). With Camel on Spring Boot then its a matter of setting this in the `application.properties` via `camel.springboot.route-controller.enabled = true`.
+TODO:
+- The `RouteController` should have configuration setting to specify how often to retry starting failed routes (we may need to have backoff etc).
+- We can then implement a `DefaultRouteController` in camel-core, and then make it easy to use by setting `CamelContext.setRouteControllerEnabled(true)` (find a good name). With Camel on Spring Boot then its a matter of setting this in the `application.properties` via `camel.springboot.route-controller.enabled = true`.
 
 Besides starting up routes the `RouteController` should have a Java, JMX API, and REST which can report back status of the running integrations (i.e. running routes).
 At minimum it should collect status of each route with details:
@@ -89,3 +79,5 @@ The `RouteController` should also have APIs to force starting a route on demand,
 
 The `RouteController` will have a `ScheduledExecutorService` where we schedule tasks to attempt to start the routes.
 
+=== References
+- [1] http://camel.apache.org/advanced-configuration-of-camelcontext-using-spring.html
