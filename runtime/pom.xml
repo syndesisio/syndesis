@@ -305,6 +305,12 @@
               <expectedVersion>2.8.3</expectedVersion>
             </exception>
             <exception>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-annotations</artifactId>
+              <resolvedVersion>2.8.0</resolvedVersion>
+              <expectedVersion>2.8.6</expectedVersion>
+            </exception>
+            <exception>
               <groupId>com.google.guava</groupId>
               <artifactId>guava</artifactId>
               <resolvedVersion>18.0</resolvedVersion>

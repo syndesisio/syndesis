@@ -26,13 +26,13 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import io.fabric8.funktion.model.StepKinds;
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.core.Names;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.Tokens;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.github.GitHubService;
+import io.syndesis.integration.model.StepKinds;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;

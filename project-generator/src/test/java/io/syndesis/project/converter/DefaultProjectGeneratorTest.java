@@ -84,7 +84,7 @@ public class DefaultProjectGeneratorTest {
         assertFileContents(files.get("README.md"), "test-README.md");
         assertFileContents(files.get("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
         assertFileContents(files.get("src/main/resources/application.properties"), "test-application.properties");
-        assertFileContents(files.get("src/main/resources/funktion.yml"), "test-funktion.yml");
+        assertFileContents(files.get("src/main/resources/syndesis.yml"), "test-syndesis.yml");
         assertFileContents(files.get("pom.xml"), "test-pom.xml");
     }
 
@@ -114,7 +114,7 @@ public class DefaultProjectGeneratorTest {
 
 
         assertFileContents(files.get("src/main/resources/application.properties"), "test-application.properties");
-        assertFileContents(files.get("src/main/resources/funktion.yml"), "test-funktion-with-secrets.yml");
+        assertFileContents(files.get("src/main/resources/syndesis.yml"), "test-syndesis-with-secrets.yml");
     }
 
 
@@ -136,7 +136,7 @@ public class DefaultProjectGeneratorTest {
         assertFileContents(files.get("README.md"), "test-pull-push-README.md");
         assertFileContents(files.get("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
         assertFileContents(files.get("src/main/resources/application.properties"), "test-pull-push-application.properties");
-        assertFileContents(files.get("src/main/resources/funktion.yml"), "test-pull-push-funktion.yml");
+        assertFileContents(files.get("src/main/resources/syndesis.yml"), "test-pull-push-syndesis.yml");
         assertFileContents(files.get("pom.xml"), "test-pull-push-pom.xml");
     }
 
@@ -180,7 +180,7 @@ public class DefaultProjectGeneratorTest {
 
         Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), new ProjectGeneratorProperties()).generate(request);
 
-        assertFileContents(files.get("src/main/resources/funktion.yml"), "test-mapper-funktion.yml");
+        assertFileContents(files.get("src/main/resources/syndesis.yml"), "test-mapper-syndesis.yml");
         assertThat(new String(files.get("src/main/resources/mapping-step-2.json"))).isEqualTo("{}");
     }
 

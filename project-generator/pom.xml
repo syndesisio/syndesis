@@ -79,8 +79,8 @@
     </dependency>
 
     <dependency>
-      <groupId>io.fabric8.funktion</groupId>
-      <artifactId>funktion-model</artifactId>
+      <groupId>io.syndesis.integration-runtime</groupId>
+      <artifactId>model</artifactId>
     </dependency>
 
     <dependency>
