@@ -1,9 +1,12 @@
 Syndesis - Camel Health Check
 =============================================
 
-* Issus:
+* Issues:
   * https://github.com/syndesisio/syndesis-project/issues/42
   * https://issues.apache.org/jira/browse/CAMEL-11443
+  
+* Branches:
+  * https://github.com/lburgazzoli/apache-camel/tree/CAMEL-11443
 
 ## Background
 
@@ -85,3 +88,4 @@ To expose this API in Rest we can use Spring Actuate which allows to expose such
 The `RouteController` should also have APIs to force starting a route on demand, eg so an user can click a button, and then it will immediately schedule to run a task that attempts to start the route.
 
 The `RouteController` will have a `ScheduledExecutorService` where we schedule tasks to attempt to start the routes.
+
