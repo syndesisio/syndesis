@@ -6,9 +6,9 @@ Draft --> [*] : Delete
 Draft -right-> Active : Publish
 Draft: Used for design and\nchanging IntegrationRevisions
 
-Active -right-> Inactive : Resume
+Active -right-> Inactive : Suspend
 Active: IntegrationRevision is running
-Inactive -left-> Active : Suspend
+Inactive -left-> Active : Resume
 Inactive: IntegrationRevision has been stopped,\nbut Pod is still running
 Inactive --> Undeployed : Undeploy
 
