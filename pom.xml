@@ -103,6 +103,7 @@
     <basepom.failsafe.timeout>150</basepom.failsafe.timeout>
 
     <syndesis-connectors.version>0.4.5</syndesis-connectors.version>
+    <syndesis-integration-runtime.version>0.1.1</syndesis-integration-runtime.version>
 
     <assertj-core.version>3.6.2</assertj-core.version>
     <caffeine.version>2.4.0</caffeine.version>
