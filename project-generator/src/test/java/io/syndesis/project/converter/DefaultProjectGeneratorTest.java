@@ -27,6 +27,7 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,16 +39,25 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DefaultProjectGeneratorTest {
 
+	private static Properties properties = new Properties();
+	
     static {
             System.setProperty("groovy.grape.report.downloads", "true");
             System.setProperty("ivy.message.logger.level", "3");
+            try {
+                properties.load(DefaultProjectGeneratorTest.class.getResourceAsStream("test.properties"));
+            } catch (IOException e) {
+                Assert.fail("Can't read the test.properties");
+            }
     }
 
+    private static final String CONNECTOR_VERSION=properties.getProperty("syndesis-connectors.version");
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().registerModule(new Jdk8Module());
     private static final TypeReference<HashMap<String, Connector>> CONNECTOR_MAP_TYPE_REF = new TypeReference<HashMap<String, Connector>>() {
     };
@@ -61,10 +71,10 @@ public class DefaultProjectGeneratorTest {
 
     @Test
     public void testConvert() throws Exception {
-        Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("io.syndesis:timer-connector:0.4.4").build()).build();
-        Step step2 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("httpUri", "http://localhost:8080/hello")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-get").camelConnectorGAV("io.syndesis:http-get-connector:0.4.4").build()).build();
+        Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTOR_VERSION).build()).build();
+        Step step2 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("httpUri", "http://localhost:8080/hello")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-get").camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTOR_VERSION).build()).build();
         Step step3 = new Step.Builder().stepKind("log").configuredProperties(map("message", "Hello World! ${body}")).build();
-        Step step4 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-post").camelConnectorGAV("io.syndesis:http-post-connector:0.4.4").build()).build();
+        Step step4 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-post").camelConnectorGAV("io.syndesis:http-post-connector:" + CONNECTOR_VERSION).build()).build();
 
         GenerateProjectRequest request = ImmutableGenerateProjectRequest
             .builder()
@@ -91,8 +101,8 @@ public class DefaultProjectGeneratorTest {
 
     @Test
     public void testConverterWithPasswordMasking() throws Exception {
-        Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("io.syndesis:timer-connector:0.4.4").build()).build();
-        Step step2 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("httpUri", "http://localhost:8080/hello", "username", "admin", "password", "admin", "token", "mytoken")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-get").camelConnectorGAV("io.syndesis:http-get-connector:0.4.4").build()).build();
+        Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTOR_VERSION).build()).build();
+        Step step2 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("httpUri", "http://localhost:8080/hello", "username", "admin", "password", "admin", "token", "mytoken")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-get").camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTOR_VERSION).build()).build();
 
         GenerateProjectRequest request = ImmutableGenerateProjectRequest
             .builder()
@@ -160,11 +170,11 @@ public class DefaultProjectGeneratorTest {
 
     @Test
     public void testMapper() throws Exception {
-        Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("io.syndesis:timer-connector:0.4.4").build()).build();
+        Step step1 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTOR_VERSION).build()).build();
         Map<String, String> props = new HashMap<>();
         props.put("atlasmapping", "{}");
         Step step2 = new Step.Builder().stepKind("mapper").configuredProperties(props).build();
-        Step step3 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-post").camelConnectorGAV("io.syndesis:http-post-connector:0.4.4").build()).build();
+        Step step3 = new Step.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-post").camelConnectorGAV("io.syndesis:http-post-connector:" + CONNECTOR_VERSION).build()).build();
 
         GenerateProjectRequest request = ImmutableGenerateProjectRequest
             .builder()
