@@ -16,8 +16,8 @@
 
 package io.syndesis.project.converter.visitor;
 
-import io.fabric8.funktion.model.StepKinds;
-import io.fabric8.funktion.model.steps.Filter;
+import io.syndesis.integration.model.StepKinds;
+import io.syndesis.integration.model.steps.Filter;
 import io.syndesis.model.filter.FilterStep;
 import io.syndesis.model.integration.Step;
 
@@ -49,7 +49,7 @@ public class FilterStepVisitor implements StepVisitor {
     }
 
     @Override
-    public io.fabric8.funktion.model.steps.Step visit(StepVisitorContext stepContext) {
+    public io.syndesis.integration.model.steps.Step visit(StepVisitorContext stepContext) {
         Step s = stepContext.getStep();
         if (s instanceof FilterStep) {
             Filter filter = new Filter();
@@ -67,7 +67,7 @@ public class FilterStepVisitor implements StepVisitor {
                     break;
             }
 
-            List<io.fabric8.funktion.model.steps.Step> steps = new ArrayList<>();
+            List<io.syndesis.integration.model.steps.Step> steps = new ArrayList<>();
             while (stepContext.hasNext()) {
                 steps.add(visit(stepContext.next()));
             }
