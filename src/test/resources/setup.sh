@@ -35,6 +35,12 @@ if [ -z "${OPENSHIFT_MASTER}" ]; then
     OPENSHIFT_MASTER="$(oc whoami --show-server)"
 fi
 
+#Configure the SYNDESIS_E2E_SECRET
+if [ -z ${SYNDESIS_E2E_SECRET} ]; then
+    GITHUB_OAUTH_CLIENT_ID=${GITHUB_E2E_OAUTH_CLIENT_ID}
+    GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_E2E_OAUTH_CLIENT_SECRET}
+fi
+
 # We pass the namespace on each command individually, because when this script is run inside a pod, all commands default to the pod namespace (ignoring commands like `oc project` etc)
 echo "Installing Syndesis in ${KUBERNETES_NAMESPACE} from: ${SYNDESIS_TEMPLATE_URL}"
 oc project ${KUBERNETES_NAMESPACE}
