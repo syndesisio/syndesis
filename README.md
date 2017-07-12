@@ -179,7 +179,9 @@ Configuration files live in `/config`. Configuration files are currently availab
 
 ## Contributing
 
-Pull requests are always welcome. Please read through our [Contribution](/docs/contributing.md) guidelines in the `/docs` directory.
+Pull requests are always welcome. Please read through our [Contribution](https://syndesis.io/community/contributing/) guidelines for submitting improvements.
+
+New feature development should generally follow [these guidelines](https://syndesis.io/community/engineering_guidelines/).
 
 ## Frequently Asked Questions (FAQ)
 
@@ -187,6 +189,6 @@ You can read our FAQ, located in our `/docs` directory, [here](/docs/faq.md).
 
 ## Data Mapper
 
-To update the data mapper, change the commit SHA in package.json to pick up the desired code revision, then run `yarn install`.  Verify that the projects still builds by running `yarn start:prod` and adjust the code as necessary based on the data mapper example usage in the [README](https://github.com/syndesisio/datamapper-ui).
+To update the data mapper, change the commit SHA in package.json to pick up the desired code revision, then run `yarn install`.  Verify that the projects still builds by running `yarn start:prod` and adjust the code as necessary based on the data mapper example usage in the [README](https://github.com/atlasmap/atlasmap-ui).
 
 When updating the SHA you should also run `yarn copy:assets` to bring over any assets the data mapper component needs, this tasks copies them all to `src/assets/dm`
