@@ -2,8 +2,10 @@
   "apiEndpoint": "http://localhost:8080/api/v1",
   "title": "Syndesis",
   "datamapper": {
-    "baseJavaServiceUrl": "https://localhost:8585/v2/atlas/java/",
-    "baseMappingServiceUrl": "https://localhost:8585/v2/atlas/"
+    "baseJavaInspectionServiceUrl": "http://localhost:8585/v2/atlas/java/",
+    "baseXMLInspectionServiceUrl": "http://localhost:8585/v2/atlas/xml/",
+    "baseJSONInspectionServiceUrl": "http://localhost:8585/v2/atlas/json/",
+    "baseMappingServiceUrl": "http://localhost:8585/v2/atlas/"
   },
   "oauth": {
     "clientId": "syndesis-ui",
@@ -14,3 +16,4 @@
     "auto-link-github": true
   }
 }
+

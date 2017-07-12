@@ -3,7 +3,9 @@
   "apiEndpoint": "https://syndesis.192.168.64.2.xip.io/api/v1",
   "title": "Syndesis",
   "datamapper": {
-    "baseJavaServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/java/",
+    "baseJavaInspectionServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/java/",
+    "baseXMLInspectionServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/xml/",
+    "baseJSONInspectionServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/json/",
     "baseMappingServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/"
   },
   "oauth": {
