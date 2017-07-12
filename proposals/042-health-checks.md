@@ -60,9 +60,9 @@ In Camel with Spring Boot we can setup this in the `Main` class via something al
 
 
 TODO:
-- The `RouteController` should have configuration setting to specify how often to retry starting failed routes (we may need to have backoff etc).
-- The `RouteController` could have an optional `ScheduledExecutorService` where we schedule tasks to attempt to start the routes.
-- We can then implement a `DefaultRouteController` in camel-core, and then make it easy to use by setting `CamelContext.setRouteControllerEnabled(true)` (find a good name). With Camel on Spring Boot then its a matter of setting this in the `application.properties` via `camel.springboot.route-controller.enabled = true`.
+- We can then implement a `DefaultRouteController` in camel-core which in 3.0 which will take over the current route management and then one can either configure its behavior or implement its own using DefaultRouteController as base class.
+- The syndesis `RouteController` should have configuration setting to specify how often to retry starting failed routes (we may need to have backoff etc).
+
 
 Besides starting up routes the `RouteController` should have a Java, JMX API, and REST which can report back status of the running integrations (i.e. running routes) and should also have APIs to force starting a route on demand, eg so an user can click a button, and then it will immediately schedule to run a task that attempts to start the route.
 
