@@ -21,7 +21,7 @@ import {
   TooltipModule,
   TypeaheadModule,
 } from 'ngx-bootstrap';
-import { TagInputModule } from 'ng2-tag-input';
+import { TagInputModule } from 'ngx-chips';
 import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 import { AppRoutingModule } from './approuting/approuting.module';
