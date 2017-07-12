@@ -13,7 +13,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
-import { TagInputModule } from 'ng2-tag-input';
+import { TagInputModule } from 'ngx-chips';
 
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 
