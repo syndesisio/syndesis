@@ -8,4 +8,6 @@ Access UX design resource and documentation for Syndesis.
 * ### Regular Dashboard
 
 ## Create an Integration
+* ### Salesforce Dynamic Object
+
 ## Create a Connection
