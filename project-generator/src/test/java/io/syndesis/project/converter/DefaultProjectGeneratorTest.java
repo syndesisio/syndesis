@@ -65,8 +65,6 @@ public class DefaultProjectGeneratorTest {
                 Assert.fail("Can't read the test.properties");
             }
     }
-
-    private static final String CONNECTOR_VERSION=properties.getProperty("syndesis-connectors.version");
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().registerModule(new Jdk8Module());
     private static final TypeReference<HashMap<String, Connector>> CONNECTOR_MAP_TYPE_REF = new TypeReference<HashMap<String, Connector>>() {
     };

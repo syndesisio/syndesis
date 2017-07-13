@@ -49,7 +49,7 @@ public class Application extends SpringBootServletInitializer {
     }
 
     @Bean
-    RestTemplate restTemplate() {
+    public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
