@@ -639,6 +639,15 @@
           <artifactId>exec-maven-plugin</artifactId>
           <version>${exec-maven-plugin.version}</version>
         </plugin>
+        <plugin>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <configuration>
+            <configLocation>../checkstyle.xml</configLocation>
+            <propertyExpansion>
+              checkstyle.suppression.file=../checkstyle-suppressions.xml
+            </propertyExpansion>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -694,6 +703,16 @@
           <ignoredResourcePatterns>
             <ignoredResourcePattern>features.xml</ignoredResourcePattern>
           </ignoredResourcePatterns>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <configLocation>checkstyle.xml</configLocation>
+          <propertyExpansion>
+            checkstyle.suppression.file=checkstyle-suppressions.xml
+          </propertyExpansion>
         </configuration>
       </plugin>
 
