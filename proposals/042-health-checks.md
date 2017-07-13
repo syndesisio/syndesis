@@ -114,5 +114,11 @@ An example of what /camelroutes could return is:
 
 NOTE: the path could be changed like endpoints.camelroutes.path = /camel/routes
 
-=== References
+### User interaction
+
+- if a user stops a running or failing route then the route will be moved out of the route controller supervision so the user can decide when to restart the route
+- if a user starts a stopped or failing route then the route will be moved to the route controller supervision and eventually fail again shortly
+
+## References
+
 - [1] http://camel.apache.org/advanced-configuration-of-camelcontext-using-spring.html
