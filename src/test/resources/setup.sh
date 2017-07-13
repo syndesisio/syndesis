@@ -38,10 +38,10 @@ fi
 #Configure the SYNDESIS_E2E_SECRET
 if [ -n "${SYNDESIS_E2E_SECRET}" ]; then
 	if [ -n "${GITHUB_E2E_OAUTH_CLIENT_ID}" ] && [ -n "${GITHUB_E2E_OAUTH_CLIENT_SECRET}" ]; then
-		echo "Using End to End Github account" 
+		echo "Using End to End Github account"
     		GITHUB_OAUTH_CLIENT_ID=${GITHUB_E2E_OAUTH_CLIENT_ID}
     		GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_E2E_OAUTH_CLIENT_SECRET}
-	else 
+	else
 		echo "Warning: You provided SYNDESIS_E2E_SECRET but one of GITHUB_E2E_OAUTH_CLIENT_ID or GITHUB_E2E_OAUTH_CLIENT_SECRET is empty!"
 	fi
 fi
@@ -71,10 +71,16 @@ oc new-app ${SYNDESIS_TEMPLATE_TYPE}  \
     -p OPENSHIFT_OAUTH_CLIENT_ID=$(oc project -q) \
     -n ${KUBERNETES_NAMESPACE}
 
-
-#Move image streams (one by one) inside the test namespace
-mkdir -p /tmp/syndesis-test-resources/
-for i in `oc get is -n syndesis-ci | grep -v NAME | cut -d" " -f1`; do
+# If env variable `SYNDESIS_DOCKERHUB_IMAGES` IS provided by template will be used
+if [ -n "${SYNDESIS_RELEASED_IMAGES}" ]; then
+  echo "ImageStreams specified by template will be used"
+  # no op required
+else
+  # Move image streams (one by one) inside the test namespace
+  echo "ImageStreams from CI namespace will be used"
+  mkdir -p /tmp/syndesis-test-resources/
+  for i in `oc get is -n syndesis-ci | grep -v NAME | cut -d" " -f1`; do
     oc export is $i -n syndesis-ci > /tmp/syndesis-test-resources/$i.yml
     oc create -n "${KUBERNETES_NAMESPACE}" -f /tmp/syndesis-test-resources/$i.yml 2> /dev/null || oc replace -n "${KUBERNETES_NAMESPACE}" -f /tmp/syndesis-test-resources/$i.yml;
-done
+  done
+fi
