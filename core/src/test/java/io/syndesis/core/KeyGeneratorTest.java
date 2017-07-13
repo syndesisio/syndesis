@@ -15,6 +15,16 @@
  */
 package io.syndesis.core;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,10 +42,33 @@ public class KeyGeneratorTest {
         // Check to make sure we don't generate dup keys
         String last = KeyGenerator.createKey();
         for (int i = 0; i < 1000000; i++) {
-            String key = KeyGenerator.createKey();
+            final String key = KeyGenerator.createKey();
             Assert.assertNotEquals(key, last);
             last = key;
         }
+    }
+
+    @Test
+    public void testCreateKeyMultithreaded() {
+        final int count = 100000;
+
+        final Collection<Callable<String>> tasks = IntStream.range(0, count).boxed()
+            .map(i -> (Callable<String>) () -> KeyGenerator.createKey()).collect(Collectors.toList());
+
+        final ForkJoinPool pool = ForkJoinPool.commonPool();
+
+        final List<Future<String>> results = pool.invokeAll(tasks);
+
+        final Set<String> keys = results.stream().map(t -> {
+            try {
+                return t.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new IllegalStateException(e);
+            }
+        }).collect(Collectors.toSet());
+
+        Assert.assertEquals("If " + count + " key generations are performed in parallel, it should yield " + count
+            + " of distinct keys", count, keys.size());
     }
 
     /**
@@ -44,11 +77,10 @@ public class KeyGeneratorTest {
      */
     @Test
     public void testGetRandomPart() {
-        long last = KeyGenerator.getRandomPart(0);
+        final long last = KeyGenerator.getRandomPart(0);
         for (int i = 0; i < 1000000; i++) {
-            long key = KeyGenerator.getRandomPart(0);
+            final long key = KeyGenerator.getRandomPart(0);
             Assert.assertNotEquals(key, last);
         }
     }
-
 }
