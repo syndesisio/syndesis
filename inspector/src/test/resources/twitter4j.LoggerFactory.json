@@ -1,0 +1,32 @@
+{
+  "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+  "value": null,
+  "collection": null,
+  "status": null,
+  "annotations": null,
+  "modifiers": null,
+  "name": null,
+  "path": null,
+  "className": "twitter4j.LoggerFactory",
+  "type": null,
+  "getMethod": null,
+  "setMethod": null,
+  "primitive": false,
+  "array": false,
+  "arrayDimensions": null,
+  "synthetic": false,
+  "javaEnumFields": {
+    "javaEnumField": []
+  },
+  "javaFields": {
+    "javaField": []
+  },
+  "packageName": "twitter4j",
+  "annotation": false,
+  "annonymous": false,
+  "enumeration": false,
+  "localClass": false,
+  "memberClass": false,
+  "uri": "atlas:java?className=twitter4j.LoggerFactory",
+  "interface": false
+}

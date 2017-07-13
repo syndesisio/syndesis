@@ -102,7 +102,6 @@ public class DefaultProjectGeneratorTest {
                 .build())
             .connectors(connectors)
             .build();
-
         Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), new ProjectGeneratorProperties(), registry).generate(request);
 
         assertFileContents(files.get("README.md"), "test-README.md");

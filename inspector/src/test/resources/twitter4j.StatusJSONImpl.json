@@ -1,0 +1,4922 @@
+{
+  "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+  "value": null,
+  "collection": null,
+  "status": null,
+  "annotations": null,
+  "modifiers": null,
+  "name": null,
+  "path": null,
+  "className": "twitter4j.StatusJSONImpl",
+  "type": null,
+  "getMethod": null,
+  "setMethod": null,
+  "primitive": false,
+  "array": false,
+  "arrayDimensions": null,
+  "synthetic": false,
+  "javaEnumFields": {
+    "javaEnumField": []
+  },
+  "javaFields": {
+    "javaField": [
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "FINAL",
+            "PRIVATE",
+            "STATIC"
+          ]
+        },
+        "name": "logger",
+        "path": null,
+        "className": "twitter4j.Logger",
+        "type": "COMPLEX",
+        "getMethod": null,
+        "setMethod": null,
+        "primitive": false,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": [
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "FINAL",
+                  "PRIVATE",
+                  "STATIC"
+                ]
+              },
+              "name": "LOGGER_FACTORY",
+              "path": null,
+              "className": "twitter4j.LoggerFactory",
+              "type": "COMPLEX",
+              "getMethod": null,
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": "twitter4j",
+              "annotation": false,
+              "annonymous": false,
+              "enumeration": false,
+              "localClass": false,
+              "memberClass": false,
+              "uri": "atlas:java?className=twitter4j.LoggerFactory",
+              "interface": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "FINAL",
+                  "PRIVATE",
+                  "STATIC"
+                ]
+              },
+              "name": "LOGGER_FACTORY_IMPLEMENTATION",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": null,
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "infoEnabled",
+              "path": null,
+              "className": "boolean",
+              "type": "BOOLEAN",
+              "getMethod": "isInfoEnabled",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "debugEnabled",
+              "path": null,
+              "className": "boolean",
+              "type": "BOOLEAN",
+              "getMethod": "isDebugEnabled",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "errorEnabled",
+              "path": null,
+              "className": "boolean",
+              "type": "BOOLEAN",
+              "getMethod": "isErrorEnabled",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "warnEnabled",
+              "path": null,
+              "className": "boolean",
+              "type": "BOOLEAN",
+              "getMethod": "isWarnEnabled",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            }
+          ]
+        },
+        "packageName": "twitter4j",
+        "annotation": false,
+        "annonymous": false,
+        "enumeration": false,
+        "localClass": false,
+        "memberClass": false,
+        "uri": "atlas:java?className=twitter4j.Logger",
+        "interface": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "BLACK_LIST",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "FINAL",
+            "PRIVATE",
+            "STATIC"
+          ]
+        },
+        "name": "serialVersionUID",
+        "path": null,
+        "className": "long",
+        "type": "LONG",
+        "getMethod": null,
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "createdAt",
+        "path": null,
+        "className": "java.util.Date",
+        "type": "COMPLEX",
+        "getMethod": "getCreatedAt",
+        "setMethod": null,
+        "primitive": false,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": [
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "FINAL",
+                  "PRIVATE",
+                  "STATIC"
+                ]
+              },
+              "name": "gcal",
+              "path": null,
+              "className": "sun.util.calendar.BaseCalendar",
+              "type": "COMPLEX",
+              "getMethod": null,
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": [
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "JANUARY",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "FEBRUARY",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "MARCH",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "APRIL",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "MAY",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "JUNE",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "JULY",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "AUGUST",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "SEPTEMBER",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "OCTOBER",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "NOVEMBER",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "DECEMBER",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "SUNDAY",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "MONDAY",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "TUESDAY",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "WEDNESDAY",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "THURSDAY",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "FRIDAY",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PUBLIC",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "SATURDAY",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PRIVATE",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "BASE_YEAR",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": [
+                        "FINAL",
+                        "PRIVATE",
+                        "STATIC"
+                      ]
+                    },
+                    "name": "FIXED_DATES",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": null,
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": true,
+                    "arrayDimensions": 1,
+                    "synthetic": false
+                  }
+                ]
+              },
+              "packageName": "sun.util.calendar",
+              "annotation": false,
+              "annonymous": false,
+              "enumeration": false,
+              "localClass": false,
+              "memberClass": false,
+              "uri": "atlas:java?className=sun.util.calendar.BaseCalendar",
+              "interface": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "CACHED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "PRIVATE",
+                  "STATIC"
+                ]
+              },
+              "name": "jcal",
+              "path": null,
+              "className": "sun.util.calendar.BaseCalendar",
+              "type": "COMPLEX",
+              "getMethod": null,
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": null,
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "PRIVATE",
+                  "TRANSIENT"
+                ]
+              },
+              "name": "fastTime",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": null,
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "NOT_FOUND",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "PRIVATE",
+                  "TRANSIENT"
+                ]
+              },
+              "name": "cdate",
+              "path": null,
+              "className": "sun.util.calendar.BaseCalendar.Date",
+              "type": "COMPLEX",
+              "getMethod": null,
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": null,
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "PRIVATE",
+                  "STATIC"
+                ]
+              },
+              "name": "defaultCenturyStart",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": null,
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "BLACK_LIST",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "FINAL",
+                  "PRIVATE",
+                  "STATIC"
+                ]
+              },
+              "name": "serialVersionUID",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": null,
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "FINAL",
+                  "PRIVATE",
+                  "STATIC"
+                ]
+              },
+              "name": "wtb",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": null,
+              "setMethod": null,
+              "primitive": true,
+              "array": true,
+              "arrayDimensions": 1,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "FINAL",
+                  "PRIVATE",
+                  "STATIC"
+                ]
+              },
+              "name": "ttb",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": null,
+              "setMethod": null,
+              "primitive": true,
+              "array": true,
+              "arrayDimensions": 1,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "time",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": "getTime",
+              "setMethod": "setTime",
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "date",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getDate",
+              "setMethod": "setDate",
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "year",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getYear",
+              "setMethod": "setYear",
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "day",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getDay",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "timeImpl",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": "getTimeImpl",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "timezoneOffset",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getTimezoneOffset",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "CACHED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "julianCalendar",
+              "path": null,
+              "className": "sun.util.calendar.BaseCalendar",
+              "type": "COMPLEX",
+              "getMethod": "getJulianCalendar",
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": "atlas:java?className=sun.util.calendar.BaseCalendar",
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "NOT_FOUND",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "calendarDate",
+              "path": null,
+              "className": "sun.util.calendar.BaseCalendar.Date",
+              "type": "COMPLEX",
+              "getMethod": "getCalendarDate",
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": "atlas:java?className=sun.util.calendar.BaseCalendar.Date",
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "month",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getMonth",
+              "setMethod": "setMonth",
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "hours",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getHours",
+              "setMethod": "setHours",
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "minutes",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getMinutes",
+              "setMethod": "setMinutes",
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "seconds",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getSeconds",
+              "setMethod": "setSeconds",
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            }
+          ]
+        },
+        "packageName": "java.util",
+        "annotation": false,
+        "annonymous": false,
+        "enumeration": false,
+        "localClass": false,
+        "memberClass": false,
+        "uri": "atlas:java?className=java.util.Date",
+        "interface": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "id",
+        "path": null,
+        "className": "long",
+        "type": "LONG",
+        "getMethod": "getId",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "text",
+        "path": null,
+        "className": "java.lang.String",
+        "type": "STRING",
+        "getMethod": "getText",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "source",
+        "path": null,
+        "className": "java.lang.String",
+        "type": "STRING",
+        "getMethod": "getSource",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "isTruncated",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": null,
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "inReplyToStatusId",
+        "path": null,
+        "className": "long",
+        "type": "LONG",
+        "getMethod": "getInReplyToStatusId",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "inReplyToUserId",
+        "path": null,
+        "className": "long",
+        "type": "LONG",
+        "getMethod": "getInReplyToUserId",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "isFavorited",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": null,
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "isRetweeted",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": null,
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "favoriteCount",
+        "path": null,
+        "className": "int",
+        "type": "INTEGER",
+        "getMethod": "getFavoriteCount",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "inReplyToScreenName",
+        "path": null,
+        "className": "java.lang.String",
+        "type": "STRING",
+        "getMethod": "getInReplyToScreenName",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "geoLocation",
+        "path": null,
+        "className": "twitter4j.GeoLocation",
+        "type": "COMPLEX",
+        "getMethod": "getGeoLocation",
+        "setMethod": null,
+        "primitive": false,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": [
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "BLACK_LIST",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "FINAL",
+                  "PRIVATE",
+                  "STATIC"
+                ]
+              },
+              "name": "serialVersionUID",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": null,
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "PRIVATE"
+                ]
+              },
+              "name": "latitude",
+              "path": null,
+              "className": "double",
+              "type": "DOUBLE",
+              "getMethod": "getLatitude",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": [
+                  "PRIVATE"
+                ]
+              },
+              "name": "longitude",
+              "path": null,
+              "className": "double",
+              "type": "DOUBLE",
+              "getMethod": "getLongitude",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            }
+          ]
+        },
+        "packageName": "twitter4j",
+        "annotation": false,
+        "annonymous": false,
+        "enumeration": false,
+        "localClass": false,
+        "memberClass": false,
+        "uri": "atlas:java?className=twitter4j.GeoLocation",
+        "interface": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "place",
+        "path": null,
+        "className": "twitter4j.Place",
+        "type": "COMPLEX",
+        "getMethod": "getPlace",
+        "setMethod": null,
+        "primitive": false,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": [
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "country",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getCountry",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "fullName",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getFullName",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "streetAddress",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getStreetAddress",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "countryCode",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getCountryCode",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "placeType",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getPlaceType",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "boundingBoxType",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getBoundingBoxType",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "CACHED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "boundingBoxCoordinates",
+              "path": null,
+              "className": "twitter4j.GeoLocation",
+              "type": "COMPLEX",
+              "getMethod": "getBoundingBoxCoordinates",
+              "setMethod": null,
+              "primitive": false,
+              "array": true,
+              "arrayDimensions": 2,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": "atlas:java?className=twitter4j.GeoLocation",
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "geometryType",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getGeometryType",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "CACHED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "geometryCoordinates",
+              "path": null,
+              "className": "twitter4j.GeoLocation",
+              "type": "COMPLEX",
+              "getMethod": "getGeometryCoordinates",
+              "setMethod": null,
+              "primitive": false,
+              "array": true,
+              "arrayDimensions": 2,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": "atlas:java?className=twitter4j.GeoLocation",
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "CACHED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "containedWithIn",
+              "path": null,
+              "className": "twitter4j.Place",
+              "type": "COMPLEX",
+              "getMethod": "getContainedWithIn",
+              "setMethod": null,
+              "primitive": false,
+              "array": true,
+              "arrayDimensions": 1,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": "atlas:java?className=twitter4j.Place",
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "name",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getName",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "uRL",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getURL",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "id",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getId",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            }
+          ]
+        },
+        "packageName": "twitter4j",
+        "annotation": false,
+        "annonymous": false,
+        "enumeration": false,
+        "localClass": false,
+        "memberClass": false,
+        "uri": "atlas:java?className=twitter4j.Place",
+        "interface": true
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "retweetCount",
+        "path": null,
+        "className": "long",
+        "type": "LONG",
+        "getMethod": "getRetweetCount",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "isPossiblySensitive",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": null,
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "lang",
+        "path": null,
+        "className": "java.lang.String",
+        "type": "STRING",
+        "getMethod": "getLang",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "contributorsIDs",
+        "path": null,
+        "className": "long",
+        "type": "LONG",
+        "getMethod": null,
+        "setMethod": null,
+        "primitive": true,
+        "array": true,
+        "arrayDimensions": 1,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "retweetedStatus",
+        "path": null,
+        "className": "twitter4j.Status",
+        "type": "COMPLEX",
+        "getMethod": "getRetweetedStatus",
+        "setMethod": null,
+        "primitive": false,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": [
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "truncated",
+              "path": null,
+              "className": "boolean",
+              "type": "BOOLEAN",
+              "getMethod": "isTruncated",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "retweeted",
+              "path": null,
+              "className": "boolean",
+              "type": "BOOLEAN",
+              "getMethod": "isRetweeted",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "favorited",
+              "path": null,
+              "className": "boolean",
+              "type": "BOOLEAN",
+              "getMethod": "isFavorited",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "text",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getText",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "possiblySensitive",
+              "path": null,
+              "className": "boolean",
+              "type": "BOOLEAN",
+              "getMethod": "isPossiblySensitive",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "CACHED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "createdAt",
+              "path": null,
+              "className": "java.util.Date",
+              "type": "COMPLEX",
+              "getMethod": "getCreatedAt",
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": "atlas:java?className=java.util.Date",
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "source",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getSource",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "inReplyToStatusId",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": "getInReplyToStatusId",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "inReplyToUserId",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": "getInReplyToUserId",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "inReplyToScreenName",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getInReplyToScreenName",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "CACHED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "geoLocation",
+              "path": null,
+              "className": "twitter4j.GeoLocation",
+              "type": "COMPLEX",
+              "getMethod": "getGeoLocation",
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": "atlas:java?className=twitter4j.GeoLocation",
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "CACHED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "place",
+              "path": null,
+              "className": "twitter4j.Place",
+              "type": "COMPLEX",
+              "getMethod": "getPlace",
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": "atlas:java?className=twitter4j.Place",
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "contributors",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": "getContributors",
+              "setMethod": null,
+              "primitive": true,
+              "array": true,
+              "arrayDimensions": 1,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "favoriteCount",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getFavoriteCount",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "user",
+              "path": null,
+              "className": "twitter4j.User",
+              "type": "COMPLEX",
+              "getMethod": "getUser",
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": [
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "timeZone",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getTimeZone",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "description",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getDescription",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+                    "value": null,
+                    "collection": null,
+                    "status": "CACHED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "status",
+                    "path": null,
+                    "className": "twitter4j.Status",
+                    "type": "COMPLEX",
+                    "getMethod": "getStatus",
+                    "setMethod": null,
+                    "primitive": false,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false,
+                    "javaEnumFields": {
+                      "javaEnumField": []
+                    },
+                    "javaFields": {
+                      "javaField": []
+                    },
+                    "packageName": null,
+                    "annotation": null,
+                    "annonymous": null,
+                    "enumeration": null,
+                    "localClass": null,
+                    "memberClass": null,
+                    "uri": "atlas:java?className=twitter4j.Status",
+                    "interface": null
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileImageURL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileImageURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "screenName",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getScreenName",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "contributorsEnabled",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isContributorsEnabled",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "biggerProfileImageURL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getBiggerProfileImageURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "defaultProfile",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isDefaultProfile",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "miniProfileImageURL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getMiniProfileImageURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "originalProfileImageURL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getOriginalProfileImageURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileImageURLHttps",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileImageURLHttps",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "biggerProfileImageURLHttps",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getBiggerProfileImageURLHttps",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "miniProfileImageURLHttps",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getMiniProfileImageURLHttps",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "originalProfileImageURLHttps",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getOriginalProfileImageURLHttps",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "defaultProfileImage",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isDefaultProfileImage",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "followersCount",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": "getFollowersCount",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileBackgroundColor",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileBackgroundColor",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileTextColor",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileTextColor",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileLinkColor",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileLinkColor",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "friendsCount",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": "getFriendsCount",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileSidebarFillColor",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileSidebarFillColor",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileSidebarBorderColor",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileSidebarBorderColor",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileUseBackgroundImage",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isProfileUseBackgroundImage",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "showAllInlineMedia",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isShowAllInlineMedia",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "favouritesCount",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": "getFavouritesCount",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "utcOffset",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": "getUtcOffset",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileBackgroundImageURL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileBackgroundImageURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileBackgroundImageUrlHttps",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileBackgroundImageUrlHttps",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileBannerURL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileBannerURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileBannerRetinaURL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileBannerRetinaURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileBannerIPadURL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileBannerIPadURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileBannerIPadRetinaURL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileBannerIPadRetinaURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileBannerMobileURL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileBannerMobileURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileBannerMobileRetinaURL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getProfileBannerMobileRetinaURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "profileBackgroundTiled",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isProfileBackgroundTiled",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "statusesCount",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": "getStatusesCount",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "geoEnabled",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isGeoEnabled",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "verified",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isVerified",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "translator",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isTranslator",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "listedCount",
+                    "path": null,
+                    "className": "int",
+                    "type": "INTEGER",
+                    "getMethod": "getListedCount",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "followRequestSent",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isFollowRequestSent",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "descriptionURLEntities",
+                    "path": null,
+                    "className": "twitter4j.URLEntity",
+                    "type": "COMPLEX",
+                    "getMethod": "getDescriptionURLEntities",
+                    "setMethod": null,
+                    "primitive": false,
+                    "array": true,
+                    "arrayDimensions": 1,
+                    "synthetic": false,
+                    "javaEnumFields": {
+                      "javaEnumField": []
+                    },
+                    "javaFields": {
+                      "javaField": [
+                        {
+                          "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                          "value": null,
+                          "collection": null,
+                          "status": "SUPPORTED",
+                          "annotations": null,
+                          "modifiers": {
+                            "modifier": []
+                          },
+                          "name": "text",
+                          "path": null,
+                          "className": "java.lang.String",
+                          "type": "STRING",
+                          "getMethod": "getText",
+                          "setMethod": null,
+                          "primitive": true,
+                          "array": false,
+                          "arrayDimensions": null,
+                          "synthetic": false
+                        },
+                        {
+                          "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                          "value": null,
+                          "collection": null,
+                          "status": "SUPPORTED",
+                          "annotations": null,
+                          "modifiers": {
+                            "modifier": []
+                          },
+                          "name": "expandedURL",
+                          "path": null,
+                          "className": "java.lang.String",
+                          "type": "STRING",
+                          "getMethod": "getExpandedURL",
+                          "setMethod": null,
+                          "primitive": true,
+                          "array": false,
+                          "arrayDimensions": null,
+                          "synthetic": false
+                        },
+                        {
+                          "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                          "value": null,
+                          "collection": null,
+                          "status": "SUPPORTED",
+                          "annotations": null,
+                          "modifiers": {
+                            "modifier": []
+                          },
+                          "name": "start",
+                          "path": null,
+                          "className": "int",
+                          "type": "INTEGER",
+                          "getMethod": "getStart",
+                          "setMethod": null,
+                          "primitive": true,
+                          "array": false,
+                          "arrayDimensions": null,
+                          "synthetic": false
+                        },
+                        {
+                          "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                          "value": null,
+                          "collection": null,
+                          "status": "SUPPORTED",
+                          "annotations": null,
+                          "modifiers": {
+                            "modifier": []
+                          },
+                          "name": "end",
+                          "path": null,
+                          "className": "int",
+                          "type": "INTEGER",
+                          "getMethod": "getEnd",
+                          "setMethod": null,
+                          "primitive": true,
+                          "array": false,
+                          "arrayDimensions": null,
+                          "synthetic": false
+                        },
+                        {
+                          "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                          "value": null,
+                          "collection": null,
+                          "status": "SUPPORTED",
+                          "annotations": null,
+                          "modifiers": {
+                            "modifier": []
+                          },
+                          "name": "displayURL",
+                          "path": null,
+                          "className": "java.lang.String",
+                          "type": "STRING",
+                          "getMethod": "getDisplayURL",
+                          "setMethod": null,
+                          "primitive": true,
+                          "array": false,
+                          "arrayDimensions": null,
+                          "synthetic": false
+                        },
+                        {
+                          "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                          "value": null,
+                          "collection": null,
+                          "status": "SUPPORTED",
+                          "annotations": null,
+                          "modifiers": {
+                            "modifier": []
+                          },
+                          "name": "uRL",
+                          "path": null,
+                          "className": "java.lang.String",
+                          "type": "STRING",
+                          "getMethod": "getURL",
+                          "setMethod": null,
+                          "primitive": true,
+                          "array": false,
+                          "arrayDimensions": null,
+                          "synthetic": false
+                        }
+                      ]
+                    },
+                    "packageName": "twitter4j",
+                    "annotation": false,
+                    "annonymous": false,
+                    "enumeration": false,
+                    "localClass": false,
+                    "memberClass": false,
+                    "uri": "atlas:java?className=twitter4j.URLEntity",
+                    "interface": true
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+                    "value": null,
+                    "collection": null,
+                    "status": "CACHED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "uRLEntity",
+                    "path": null,
+                    "className": "twitter4j.URLEntity",
+                    "type": "COMPLEX",
+                    "getMethod": "getURLEntity",
+                    "setMethod": null,
+                    "primitive": false,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false,
+                    "javaEnumFields": {
+                      "javaEnumField": []
+                    },
+                    "javaFields": {
+                      "javaField": []
+                    },
+                    "packageName": null,
+                    "annotation": null,
+                    "annonymous": null,
+                    "enumeration": null,
+                    "localClass": null,
+                    "memberClass": null,
+                    "uri": "atlas:java?className=twitter4j.URLEntity",
+                    "interface": null
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+                    "value": null,
+                    "collection": null,
+                    "status": "CACHED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "createdAt",
+                    "path": null,
+                    "className": "java.util.Date",
+                    "type": "COMPLEX",
+                    "getMethod": "getCreatedAt",
+                    "setMethod": null,
+                    "primitive": false,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false,
+                    "javaEnumFields": {
+                      "javaEnumField": []
+                    },
+                    "javaFields": {
+                      "javaField": []
+                    },
+                    "packageName": null,
+                    "annotation": null,
+                    "annonymous": null,
+                    "enumeration": null,
+                    "localClass": null,
+                    "memberClass": null,
+                    "uri": "atlas:java?className=java.util.Date",
+                    "interface": null
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "withheldInCountries",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getWithheldInCountries",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": true,
+                    "arrayDimensions": 1,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "lang",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getLang",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "name",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getName",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "location",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getLocation",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "uRL",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getURL",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "id",
+                    "path": null,
+                    "className": "long",
+                    "type": "LONG",
+                    "getMethod": "getId",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  },
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "protected",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isProtected",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  }
+                ]
+              },
+              "packageName": "twitter4j",
+              "annotation": false,
+              "annonymous": false,
+              "enumeration": false,
+              "localClass": false,
+              "memberClass": false,
+              "uri": "atlas:java?className=twitter4j.User",
+              "interface": true
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "retweet",
+              "path": null,
+              "className": "boolean",
+              "type": "BOOLEAN",
+              "getMethod": "isRetweet",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "CACHED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "retweetedStatus",
+              "path": null,
+              "className": "twitter4j.Status",
+              "type": "COMPLEX",
+              "getMethod": "getRetweetedStatus",
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": "atlas:java?className=twitter4j.Status",
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "retweetCount",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getRetweetCount",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "retweetedByMe",
+              "path": null,
+              "className": "boolean",
+              "type": "BOOLEAN",
+              "getMethod": "isRetweetedByMe",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "currentUserRetweetId",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": "getCurrentUserRetweetId",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "scopes",
+              "path": null,
+              "className": "twitter4j.Scopes",
+              "type": "COMPLEX",
+              "getMethod": "getScopes",
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": [
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "placeIds",
+                    "path": null,
+                    "className": "java.lang.String",
+                    "type": "STRING",
+                    "getMethod": "getPlaceIds",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": true,
+                    "arrayDimensions": 1,
+                    "synthetic": false
+                  }
+                ]
+              },
+              "packageName": "twitter4j",
+              "annotation": false,
+              "annonymous": false,
+              "enumeration": false,
+              "localClass": false,
+              "memberClass": false,
+              "uri": "atlas:java?className=twitter4j.Scopes",
+              "interface": true
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "withheldInCountries",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getWithheldInCountries",
+              "setMethod": null,
+              "primitive": true,
+              "array": true,
+              "arrayDimensions": 1,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "quotedStatusId",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": "getQuotedStatusId",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "CACHED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "quotedStatus",
+              "path": null,
+              "className": "twitter4j.Status",
+              "type": "COMPLEX",
+              "getMethod": "getQuotedStatus",
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": "atlas:java?className=twitter4j.Status",
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "lang",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getLang",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "id",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": "getId",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            }
+          ]
+        },
+        "packageName": "twitter4j",
+        "annotation": false,
+        "annonymous": false,
+        "enumeration": false,
+        "localClass": false,
+        "memberClass": false,
+        "uri": "atlas:java?className=twitter4j.Status",
+        "interface": true
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "userMentionEntities",
+        "path": null,
+        "className": "twitter4j.UserMentionEntity",
+        "type": "COMPLEX",
+        "getMethod": "getUserMentionEntities",
+        "setMethod": null,
+        "primitive": false,
+        "array": true,
+        "arrayDimensions": 1,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": [
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "text",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getText",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "screenName",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getScreenName",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "start",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getStart",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "end",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getEnd",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "name",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getName",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "id",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": "getId",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            }
+          ]
+        },
+        "packageName": "twitter4j",
+        "annotation": false,
+        "annonymous": false,
+        "enumeration": false,
+        "localClass": false,
+        "memberClass": false,
+        "uri": "atlas:java?className=twitter4j.UserMentionEntity",
+        "interface": true
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "CACHED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "urlEntities",
+        "path": null,
+        "className": "twitter4j.URLEntity",
+        "type": "COMPLEX",
+        "getMethod": null,
+        "setMethod": null,
+        "primitive": false,
+        "array": true,
+        "arrayDimensions": 1,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": []
+        },
+        "packageName": null,
+        "annotation": null,
+        "annonymous": null,
+        "enumeration": null,
+        "localClass": null,
+        "memberClass": null,
+        "uri": null,
+        "interface": null
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "hashtagEntities",
+        "path": null,
+        "className": "twitter4j.HashtagEntity",
+        "type": "COMPLEX",
+        "getMethod": "getHashtagEntities",
+        "setMethod": null,
+        "primitive": false,
+        "array": true,
+        "arrayDimensions": 1,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": [
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "text",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getText",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "start",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getStart",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "end",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getEnd",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            }
+          ]
+        },
+        "packageName": "twitter4j",
+        "annotation": false,
+        "annonymous": false,
+        "enumeration": false,
+        "localClass": false,
+        "memberClass": false,
+        "uri": "atlas:java?className=twitter4j.HashtagEntity",
+        "interface": true
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "mediaEntities",
+        "path": null,
+        "className": "twitter4j.MediaEntity",
+        "type": "COMPLEX",
+        "getMethod": "getMediaEntities",
+        "setMethod": null,
+        "primitive": false,
+        "array": true,
+        "arrayDimensions": 1,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": [
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "mediaURLHttps",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getMediaURLHttps",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "sizes",
+              "path": null,
+              "className": "java.util.Map",
+              "type": "COMPLEX",
+              "getMethod": "getSizes",
+              "setMethod": null,
+              "primitive": false,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": [
+                  {
+                    "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+                    "value": null,
+                    "collection": null,
+                    "status": "SUPPORTED",
+                    "annotations": null,
+                    "modifiers": {
+                      "modifier": []
+                    },
+                    "name": "empty",
+                    "path": null,
+                    "className": "boolean",
+                    "type": "BOOLEAN",
+                    "getMethod": "isEmpty",
+                    "setMethod": null,
+                    "primitive": true,
+                    "array": false,
+                    "arrayDimensions": null,
+                    "synthetic": false
+                  }
+                ]
+              },
+              "packageName": "java.util",
+              "annotation": false,
+              "annonymous": false,
+              "enumeration": false,
+              "localClass": false,
+              "memberClass": false,
+              "uri": "atlas:java?className=java.util.Map",
+              "interface": true
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "mediaURL",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getMediaURL",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "id",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": "getId",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "type",
+              "path": null,
+              "className": "java.lang.String",
+              "type": "STRING",
+              "getMethod": "getType",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            }
+          ]
+        },
+        "packageName": "twitter4j",
+        "annotation": false,
+        "annonymous": false,
+        "enumeration": false,
+        "localClass": false,
+        "memberClass": false,
+        "uri": "atlas:java?className=twitter4j.MediaEntity",
+        "interface": true
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "extendedMediaEntities",
+        "path": null,
+        "className": "twitter4j.ExtendedMediaEntity",
+        "type": "COMPLEX",
+        "getMethod": "getExtendedMediaEntities",
+        "setMethod": null,
+        "primitive": false,
+        "array": true,
+        "arrayDimensions": 1,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": [
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "videoAspectRatioHeight",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getVideoAspectRatioHeight",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "videoDurationMillis",
+              "path": null,
+              "className": "long",
+              "type": "LONG",
+              "getMethod": "getVideoDurationMillis",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+              "value": null,
+              "collection": null,
+              "status": "NOT_FOUND",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "videoVariants",
+              "path": null,
+              "className": "twitter4j.ExtendedMediaEntity.Variant",
+              "type": "COMPLEX",
+              "getMethod": "getVideoVariants",
+              "setMethod": null,
+              "primitive": false,
+              "array": true,
+              "arrayDimensions": 1,
+              "synthetic": false,
+              "javaEnumFields": {
+                "javaEnumField": []
+              },
+              "javaFields": {
+                "javaField": []
+              },
+              "packageName": null,
+              "annotation": null,
+              "annonymous": null,
+              "enumeration": null,
+              "localClass": null,
+              "memberClass": null,
+              "uri": "atlas:java?className=twitter4j.ExtendedMediaEntity.Variant",
+              "interface": null
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "videoAspectRatioWidth",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getVideoAspectRatioWidth",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            }
+          ]
+        },
+        "packageName": "twitter4j",
+        "annotation": false,
+        "annonymous": false,
+        "enumeration": false,
+        "localClass": false,
+        "memberClass": false,
+        "uri": "atlas:java?className=twitter4j.ExtendedMediaEntity",
+        "interface": true
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "symbolEntities",
+        "path": null,
+        "className": "twitter4j.SymbolEntity",
+        "type": "COMPLEX",
+        "getMethod": "getSymbolEntities",
+        "setMethod": null,
+        "primitive": false,
+        "array": true,
+        "arrayDimensions": 1,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": [
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "start",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getStart",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            },
+            {
+              "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+              "value": null,
+              "collection": null,
+              "status": "SUPPORTED",
+              "annotations": null,
+              "modifiers": {
+                "modifier": []
+              },
+              "name": "end",
+              "path": null,
+              "className": "int",
+              "type": "INTEGER",
+              "getMethod": "getEnd",
+              "setMethod": null,
+              "primitive": true,
+              "array": false,
+              "arrayDimensions": null,
+              "synthetic": false
+            }
+          ]
+        },
+        "packageName": "twitter4j",
+        "annotation": false,
+        "annonymous": false,
+        "enumeration": false,
+        "localClass": false,
+        "memberClass": false,
+        "uri": "atlas:java?className=twitter4j.SymbolEntity",
+        "interface": true
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "currentUserRetweetId",
+        "path": null,
+        "className": "long",
+        "type": "LONG",
+        "getMethod": "getCurrentUserRetweetId",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "CACHED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "scopes",
+        "path": null,
+        "className": "twitter4j.Scopes",
+        "type": "COMPLEX",
+        "getMethod": "getScopes",
+        "setMethod": null,
+        "primitive": false,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": []
+        },
+        "packageName": null,
+        "annotation": null,
+        "annonymous": null,
+        "enumeration": null,
+        "localClass": null,
+        "memberClass": null,
+        "uri": null,
+        "interface": null
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "CACHED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "user",
+        "path": null,
+        "className": "twitter4j.User",
+        "type": "COMPLEX",
+        "getMethod": "getUser",
+        "setMethod": null,
+        "primitive": false,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": []
+        },
+        "packageName": null,
+        "annotation": null,
+        "annonymous": null,
+        "enumeration": null,
+        "localClass": null,
+        "memberClass": null,
+        "uri": null,
+        "interface": null
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "withheldInCountries",
+        "path": null,
+        "className": "java.lang.String",
+        "type": "STRING",
+        "getMethod": "getWithheldInCountries",
+        "setMethod": null,
+        "primitive": true,
+        "array": true,
+        "arrayDimensions": 1,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "CACHED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "quotedStatus",
+        "path": null,
+        "className": "twitter4j.Status",
+        "type": "COMPLEX",
+        "getMethod": "getQuotedStatus",
+        "setMethod": null,
+        "primitive": false,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": []
+        },
+        "packageName": null,
+        "annotation": null,
+        "annonymous": null,
+        "enumeration": null,
+        "localClass": null,
+        "memberClass": null,
+        "uri": null,
+        "interface": null
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "PRIVATE"
+          ]
+        },
+        "name": "quotedStatusId",
+        "path": null,
+        "className": "long",
+        "type": "LONG",
+        "getMethod": "getQuotedStatusId",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "truncated",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": "isTruncated",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "retweeted",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": "isRetweeted",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "favorited",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": "isFavorited",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "possiblySensitive",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": "isPossiblySensitive",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "contributors",
+        "path": null,
+        "className": "long",
+        "type": "LONG",
+        "getMethod": "getContributors",
+        "setMethod": null,
+        "primitive": true,
+        "array": true,
+        "arrayDimensions": 1,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "retweet",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": "isRetweet",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "retweetedByMe",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": "isRetweetedByMe",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "CACHED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "uRLEntities",
+        "path": null,
+        "className": "twitter4j.URLEntity",
+        "type": "COMPLEX",
+        "getMethod": "getURLEntities",
+        "setMethod": null,
+        "primitive": false,
+        "array": true,
+        "arrayDimensions": 1,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": []
+        },
+        "packageName": null,
+        "annotation": null,
+        "annonymous": null,
+        "enumeration": null,
+        "localClass": null,
+        "memberClass": null,
+        "uri": "atlas:java?className=twitter4j.URLEntity",
+        "interface": null
+      }
+    ]
+  },
+  "packageName": "twitter4j",
+  "annotation": false,
+  "annonymous": false,
+  "enumeration": false,
+  "localClass": false,
+  "memberClass": false,
+  "uri": "atlas:java?className=twitter4j.StatusJSONImpl",
+  "interface": false
+}

@@ -169,6 +169,7 @@
     <module>rest</module>
     <module>runtime</module>
     <module>verifier</module>
+    <module>inspector</module>
   </modules>
 
   <dependencyManagement>
@@ -291,6 +292,12 @@
       <dependency>
         <groupId>io.syndesis</groupId>
         <artifactId>controllers</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>inspector</artifactId>
         <version>${project.version}</version>
       </dependency>
 
