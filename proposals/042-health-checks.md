@@ -4,6 +4,7 @@ Syndesis - Camel Health Check
 * Issues:
   * https://github.com/syndesisio/syndesis-project/issues/42
   * https://issues.apache.org/jira/browse/CAMEL-11443
+  * https://issues.apache.org/jira/browse/CAMEL-10026
 
 * Branches:
   * https://github.com/lburgazzoli/apache-camel/tree/CAMEL-11443
