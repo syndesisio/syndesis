@@ -118,7 +118,7 @@ NOTE: the path could be changed like endpoints.camelroutes.path = /camel/routes
 ]
 ```
 
-- Example of /camelroutes/{id}/info
+- Example of /camelroutes/{id}/info (no error)
 
 ```json
 {
@@ -147,6 +147,81 @@ NOTE: the path could be changed like endpoints.camelroutes.path = /camel/routes
     "totalProcessingTime": 0
   }
 }
+```
+
+- Example of /camelroutes/{id}/info (with error)
+
+```json
+{
+  "id": "undertow",
+  "uptimeMillis": 0,
+  "status": "Stopped",
+  "properties": {
+    "parent": "795f165c",
+    "rest": "false",
+    "description": null,
+    "id": "undertow",
+    "route.start.exception": {
+      "cause": {
+        "cause": null,
+        "stackTrace": [
+          {
+            "methodName": "bind0",
+            "fileName": "Net.java",
+            "lineNumber": -2,
+            "className": "sun.nio.ch.Net",
+            "nativeMethod": true
+          },
+          ...,
+          {
+            "methodName": "run",
+            "fileName": "Thread.java",
+            "lineNumber": 748,
+            "className": "java.lang.Thread",
+            "nativeMethod": false
+          }
+        ],
+        "message": "Address already in use",
+        "localizedMessage": "Address already in use",
+        "suppressed": []
+      },
+      "stackTrace": [
+        {
+          "methodName": "start",
+          "fileName": "Undertow.java",
+          "lineNumber": 214,
+          "className": "io.undertow.Undertow",
+          "nativeMethod": false
+        },
+        ...,
+        {
+          "methodName": "run",
+          "fileName": "Thread.java",
+          "lineNumber": 748,
+          "className": "java.lang.Thread",
+          "nativeMethod": false
+        }
+      ],
+      "message": "java.net.BindException: Address already in use",
+      "localizedMessage": "java.net.BindException: Address already in use",
+      "suppressed": []
+    }
+  },
+  "details": {
+    "deltaProcessingTime": 0,
+    "exchangesInflight": 0,
+    "exchangesTotal": 0,
+    "externalRedeliveries": 0,
+    "failuresHandled": 0,
+    "lastProcessingTime": -1,
+    "maxProcessingTime": 0,
+    "meanProcessingTime": -1,
+    "minProcessingTime": 0,
+    "redeliveries": 0,
+    "totalProcessingTime": 0
+  }
+}
+
 ```
 
 NOTE: the route.controller property can be used to check if a route is managed by the route controller or it is up to the user to restart it (i.e. after the nunmber of configured attempts has exhausted)
