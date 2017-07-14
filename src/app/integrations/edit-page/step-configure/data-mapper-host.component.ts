@@ -32,7 +32,7 @@ import { Step, DataShape, TypeFactory } from '../../../model';
 import { log, getCategory } from '../../../logging';
 
 /*
- * Example host component: 
+ * Example host component:
  *
  * https://github.com/atlasmap/atlasmap-ui/blob/master/src/app/lib/syndesis-data-mapper/components/data.mapper.example.host.component.ts
  */
@@ -86,15 +86,15 @@ export class DataMapperHostComponent extends FlowPage
     super(currentFlow, route, router, detector);
     this.cfg = initializationService.cfg;
 
-    var baseUrl = "https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/";
-    this.cfg.initCfg.baseJavaInspectionServiceUrl = 
-      this.fetchServiceUrl("baseJavaInspectionServiceUrl", baseUrl + "java/", configService);
-    this.cfg.initCfg.baseXMLInspectionServiceUrl = 
-      this.fetchServiceUrl("baseXMLInspectionServiceUrl", baseUrl + "xml/", configService);
-    this.cfg.initCfg.baseJSONInspectionServiceUrl = 
-      this.fetchServiceUrl("baseJSONInspectionServiceUrl", baseUrl + "json/", configService);
-    this.cfg.initCfg.baseMappingServiceUrl = 
-      this.fetchServiceUrl("baseMappingServiceUrl", baseUrl, configService);
+    const baseUrl = 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
+    this.cfg.initCfg.baseJavaInspectionServiceUrl =
+      this.fetchServiceUrl('baseJavaInspectionServiceUrl', baseUrl + 'java/', configService);
+    this.cfg.initCfg.baseXMLInspectionServiceUrl =
+      this.fetchServiceUrl('baseXMLInspectionServiceUrl', baseUrl + 'xml/', configService);
+    this.cfg.initCfg.baseJSONInspectionServiceUrl =
+      this.fetchServiceUrl('baseJSONInspectionServiceUrl', baseUrl + 'json/', configService);
+    this.cfg.initCfg.baseMappingServiceUrl =
+      this.fetchServiceUrl('baseMappingServiceUrl', baseUrl, configService);
   }
 
   private fetchServiceUrl(configKey: string, defaultUrl: string, configService: ConfigService): string {
@@ -108,7 +108,7 @@ export class DataMapperHostComponent extends FlowPage
   createDocumentDefinition(dataShape: DataShape, isSource: boolean = false) {
     // TODO: for xml/json docs, we need a document contents
     // reference for document contents: DocumentManagementService.generateMock* methods
-    var documentContents: string = null;
+    const documentContents: string = null;
     // TODO not sure what to do for `none` or `any` here
     switch (dataShape.kind) {
       case 'java':
@@ -146,7 +146,7 @@ export class DataMapperHostComponent extends FlowPage
     );
     this.createDocumentDefinition(
       end.action.inputDataShape,
-      false
+      false,
     );
 
     // TODO for now set a really long timeout
@@ -158,7 +158,7 @@ export class DataMapperHostComponent extends FlowPage
         MappingSerializer.deserializeMappingServiceJSON(
           JSON.parse(mappings),
           mappingDefinition,
-          this.cfg
+          this.cfg,
         );
       } catch (err) {
         // TODO popup or error alert?  At least catch this so we initialize
