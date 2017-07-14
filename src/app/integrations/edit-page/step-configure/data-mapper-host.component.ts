@@ -120,7 +120,7 @@ export class DataMapperHostComponent extends FlowPage
       case 'xml-instance':
         this.cfg.addXMLInstanceDocument(dataShape.type, documentContents, isSource);
         break;
-      case 'xml-instance':
+      case 'xml-schema':
         this.cfg.addXMLSchemaDocument(dataShape.type, documentContents, isSource);
         break;
     }
