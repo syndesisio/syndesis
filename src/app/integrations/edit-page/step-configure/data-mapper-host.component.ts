@@ -17,6 +17,7 @@ import { InitializationService } from 'syndesis.data.mapper';
 import { ErrorHandlerService } from 'syndesis.data.mapper';
 import { DocumentManagementService } from 'syndesis.data.mapper';
 import { MappingManagementService } from 'syndesis.data.mapper';
+import { MappingSerializer } from 'syndesis.data.mapper';
 
 import { DataMapperAppComponent } from 'syndesis.data.mapper';
 
@@ -29,6 +30,12 @@ import { FlowPage } from '../flow-page';
 import { Step, DataShape, TypeFactory } from '../../../model';
 
 import { log, getCategory } from '../../../logging';
+
+/*
+ * Example host component:
+ *
+ * https://github.com/atlasmap/atlasmap-ui/blob/master/src/app/lib/syndesis-data-mapper/components/data.mapper.example.host.component.ts
+ */
 
 const category = getCategory('Connections');
 
@@ -71,50 +78,52 @@ export class DataMapperHostComponent extends FlowPage
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public documentService: DocumentManagementService,
-    public mappingService: MappingManagementService,
-    public errorService: ErrorHandlerService,
     public configService: ConfigService,
     public initializationService: InitializationService,
     public support: IntegrationSupportService,
     public detector: ChangeDetectorRef,
   ) {
     super(currentFlow, route, router, detector);
-    documentService.cfg = this.cfg;
-    mappingService.cfg = this.cfg;
-    initializationService.cfg = this.cfg;
-    this.cfg.initializationService = initializationService;
-    this.cfg.documentService = documentService;
-    this.cfg.mappingService = mappingService;
-    this.cfg.errorService = errorService;
+    this.cfg = initializationService.cfg;
+
+    const baseUrl = 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
+    this.cfg.initCfg.baseJavaInspectionServiceUrl =
+      this.fetchServiceUrl('baseJavaInspectionServiceUrl', baseUrl + 'java/', configService);
+    this.cfg.initCfg.baseXMLInspectionServiceUrl =
+      this.fetchServiceUrl('baseXMLInspectionServiceUrl', baseUrl + 'xml/', configService);
+    this.cfg.initCfg.baseJSONInspectionServiceUrl =
+      this.fetchServiceUrl('baseJSONInspectionServiceUrl', baseUrl + 'json/', configService);
+    this.cfg.initCfg.baseMappingServiceUrl =
+      this.fetchServiceUrl('baseMappingServiceUrl', baseUrl, configService);
+  }
+
+  private fetchServiceUrl(configKey: string, defaultUrl: string, configService: ConfigService): string {
     try {
-      this.cfg.initCfg.baseJavaServiceUrl = configService.getSettings(
-        'datamapper',
-        'baseJavaServiceUrl',
-      );
-      this.cfg.initCfg.baseMappingServiceUrl = configService.getSettings(
-        'datamapper',
-        'baseMappingServiceUrl',
-      );
+      return configService.getSettings('datamapper', configKey);
     } catch (err) {
-      // run with defaults
-      this.cfg.initCfg.baseJavaServiceUrl =
-        'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/java/';
-      this.cfg.initCfg.baseMappingServiceUrl =
-        'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
+      return defaultUrl;
     }
   }
 
   createDocumentDefinition(dataShape: DataShape, isSource: boolean = false) {
-    const answer = new DocumentDefinition();
-    answer.isSource = isSource;
+    // TODO: for xml/json docs, we need a document contents
+    // reference for document contents: DocumentManagementService.generateMock* methods
+    const documentContents: string = null;
     // TODO not sure what to do for `none` or `any` here
     switch (dataShape.kind) {
       case 'java':
-        answer.initCfg.documentIdentifier = dataShape.type;
+        this.cfg.addJavaDocument(dataShape.type, isSource);
+        break;
+      case 'json':
+        this.cfg.addJSONDocument(dataShape.type, documentContents, isSource);
+        break;
+      case 'xml-instance':
+        this.cfg.addXMLInstanceDocument(dataShape.type, documentContents, isSource);
+        break;
+      case 'xml-schema':
+        this.cfg.addXMLSchemaDocument(dataShape.type, documentContents, isSource);
         break;
     }
-    return answer;
   }
 
   initialize() {
@@ -127,25 +136,29 @@ export class DataMapperHostComponent extends FlowPage
 
     const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
     const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
+
+    //TODO: need to loop through document config for multi-source
+
     // TODO we'll want to parse the dataType and maybe set the right config value
-    const inputDocDef = this.createDocumentDefinition(
+    this.createDocumentDefinition(
       start.action.outputDataShape,
       true,
     );
-    this.cfg.sourceDocs.push(inputDocDef);
-    const outputDocDef = this.createDocumentDefinition(
+    this.createDocumentDefinition(
       end.action.inputDataShape,
+      false,
     );
-    this.cfg.targetDocs.push(outputDocDef);
+
     // TODO for now set a really long timeout
     this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;
     if (mappings) {
       const mappingDefinition = new MappingDefinition();
       // Existing mappings, load from the route
       try {
-        this.mappingService.deserializeMappingServiceJSON(
+        MappingSerializer.deserializeMappingServiceJSON(
           JSON.parse(mappings),
           mappingDefinition,
+          this.cfg,
         );
       } catch (err) {
         // TODO popup or error alert?  At least catch this so we initialize
@@ -153,11 +166,11 @@ export class DataMapperHostComponent extends FlowPage
       }
       this.cfg.mappings = mappingDefinition;
     }
-    this.mappingService.saveMappingOutput$.subscribe(
+
+    //subscribe to mapping save callback from data mapper
+    this.cfg.mappingService.saveMappingOutput$.subscribe(
       (saveHandler: Function) => {
-        const json = this.mappingService.serializeMappingsToJSON(
-          this.cfg.mappings,
-        );
+        const json = this.cfg.mappingService.serializeMappingsToJSON();
         const properties = {
           atlasmapping: JSON.stringify(json),
         };
@@ -166,12 +179,13 @@ export class DataMapperHostComponent extends FlowPage
           position: this.position,
           properties: properties,
           onSave: () => {
-            this.mappingService.handleMappingSaveSuccess(saveHandler);
+            this.cfg.mappingService.handleMappingSaveSuccess(saveHandler);
             log.debugc(() => 'Saved mapping file: ' + json, category);
           },
         });
       },
     );
+
     // make sure the property is set on the integration
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
