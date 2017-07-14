@@ -167,6 +167,21 @@ export class DataMapperHostComponent extends FlowPage
       this.cfg.mappings = mappingDefinition;
     }
 
+    // enable debug / mock data flags for data mapper
+    const debugConfigKeys: string[] = ['addMockJSONMappings',
+      'addMockJavaSources', 'addMockXMLInstanceSources', 'addMockXMLSchemaSources', 'addMockJSONSources',
+      'addMockJavaTarget', 'addMockXMLInstanceTarget', 'addMockXMLSchemaTarget', 'addMockJSONTarget',
+      'debugDocumentServiceCalls', 'debugMappingServiceCalls', 'debugClassPathServiceCalls',
+      'debugValidationServiceCalls', 'debugFieldActionServiceCalls', 'debugDocumentParsing',
+    ];
+    for (const debugConfigKey of debugConfigKeys) {
+      let debugKeyValue = false;
+      try {
+        debugKeyValue = this.configService.getSettings('datamapper', debugConfigKey);
+      } catch (err) { }
+      this.cfg.initCfg[debugConfigKey] = debugKeyValue;
+    }
+
     //subscribe to mapping save callback from data mapper
     this.cfg.mappingService.saveMappingOutput$.subscribe(
       (saveHandler: Function) => {
