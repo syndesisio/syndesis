@@ -21,7 +21,7 @@ import io.syndesis.model.WithId;
 
 public interface DataAccessObjectRegistry {
 
-    Map<Class, DataAccessObject> getDataAccessObjectMapping();
+    <T extends WithId<T>> Map<Class<T>, DataAccessObject<T>> getDataAccessObjectMapping();
 
     /**
      * Finds the {@link DataAccessObject} for the specified type.
@@ -29,8 +29,8 @@ public interface DataAccessObjectRegistry {
      * @param <T>   The specified type.
      * @return      The {@link DataAccessObject} if found, or null no matching {@link DataAccessObject} was found.
      */
-    default <T extends WithId> DataAccessObject<T> getDataAccessObject(Class<T> type) {
-        return getDataAccessObjectMapping().get(type);
+    default <T extends WithId<T>> DataAccessObject<T> getDataAccessObject(Class<T> type) {
+        return this.<T>getDataAccessObjectMapping().get(type);
     }
 
 
@@ -40,20 +40,20 @@ public interface DataAccessObjectRegistry {
      * @param <T>   The specified type.
      * @return      The {@link DataAccessObject} or throws SyndesisServerException.
      */
-    default <T extends WithId> DataAccessObject<T> getDataAccessObjectRequired(Class<T> type) {
-        DataAccessObject dao = getDataAccessObjectMapping().get(type);
+    default <T extends WithId<T>> DataAccessObject<T> getDataAccessObjectRequired(Class<T> type) {
+        final DataAccessObject<T> dao = this.<T>getDataAccessObjectMapping().get(type);
         if (dao != null) {
-            return (DataAccessObject<T>) getDataAccessObjectMapping().get(type);
+            return dao;
         }
         throw new IllegalArgumentException("No data access object found for type: [" + type + "].");
     }
 
     /**
-     * Regiester a {@link DataAccessObject}.
+     * Register a {@link DataAccessObject}.
      * @param dataAccessObject  The {@link DataAccessObject} to register.
      * @param <T>               The type of the {@link DataAccessObject}.
      */
-    default <T extends WithId> void registerDataAccessObject(DataAccessObject<T> dataAccessObject) {
-        getDataAccessObjectMapping().put(dataAccessObject.getType(), dataAccessObject);
+    default <T extends WithId<T>> void registerDataAccessObject(DataAccessObject<T> dataAccessObject) {
+        this.<T>getDataAccessObjectMapping().put(dataAccessObject.getType(), dataAccessObject);
     }
 }

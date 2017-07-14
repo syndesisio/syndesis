@@ -64,7 +64,7 @@ public class ConnectorTest {
         em.persist(connector);
 
         //fetch Connector
-        Connector c = (Connector)em.find(Connector.class, connector.getId());
+        Connector c = em.find(Connector.class, connector.getId());
         assertNotNull(c);
         assertEquals(connector.getId(), c.getId());
         assertNotNull(c.getConnectorProperties());
@@ -97,12 +97,12 @@ public class ConnectorTest {
         em.flush();
 
         //fetch the Connector
-        Connector updatedConnector = (Connector)em.find(Connector.class, connector.getId());
+        Connector updatedConnector = em.find(Connector.class, connector.getId());
         assertEquals("updatedConnector", updatedConnector.getName());
         ConnectorProperty connectorProperty2 = updatedConnector.getConnectorProperties().iterator().next();
         assertEquals(true,connectorProperty2.isRequired());
 
-        ConnectorProperty cP = (ConnectorProperty) em.find(ConnectorProperty.class, connectorProperty2.getId());
+        ConnectorProperty cP = em.find(ConnectorProperty.class, connectorProperty2.getId());
         assertNotNull(cP);
 
         //fetch all connectors
@@ -118,7 +118,7 @@ public class ConnectorTest {
         em.getTransaction().commit();
 
         //make sure the Connector is gone
-        Connector deletedConnector = (Connector)em.find(Connector.class, connector.getId());
+        Connector deletedConnector = em.find(Connector.class, connector.getId());
         assertNull(deletedConnector);
 
         //also make sure the properties got deleted (cascade delete on properties)

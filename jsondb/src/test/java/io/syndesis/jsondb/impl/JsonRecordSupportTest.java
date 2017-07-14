@@ -15,8 +15,6 @@
  */
 package io.syndesis.jsondb.impl;
 
-import java.io.IOException;
-
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JsonRecordSupportTest {
 
     @Test
-    public void testDataTypes() throws IOException {
+    public void testDataTypes() {
 
         // see: http://www.zanopha.com/docs/elen.pdf
 
@@ -41,7 +39,7 @@ public class JsonRecordSupportTest {
     }
 
     @Test
-    public void testSmallValues() throws IOException {
+    public void testSmallValues() {
         for (int i = 0; i < 10; i++) {
             String r1 = JsonRecordSupport.toLexSortableString(i, '+');
             int r2 = JsonRecordSupport.fromLexSortableStringToInt(r1, '+');

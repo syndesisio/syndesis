@@ -15,11 +15,26 @@
  */
 package io.syndesis.project.converter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+
 import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.core.Json;
 import io.syndesis.integration.model.Flow;
@@ -30,23 +45,9 @@ import io.syndesis.integration.support.YamlHelper;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
@@ -166,8 +167,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                                 Connector connector = request.getConnectors().get(connectorId);
                                 flow.addStep(createEndpointStep(connector, action.getCamelConnectorPrefix(),
                                         connection.getConfiguredProperties(), step.getConfiguredProperties().orElse(new HashMap<String,String>())));
-                            } catch (IOException | URISyntaxException e) {
-                                e.printStackTrace();
+                            } catch (URISyntaxException e) {
+                                throw new IllegalStateException(e);
                             }
                         });
                     });
@@ -207,10 +208,10 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         if (value == null) {
             return null;
         }
-        return value.getBytes(Charset.forName("UTF-8"));
+        return value.getBytes(UTF_8);
     }
 
-    private io.syndesis.integration.model.steps.Step createEndpointStep(Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws IOException, URISyntaxException {
+    private io.syndesis.integration.model.steps.Step createEndpointStep(Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws URISyntaxException {
         Map<String, String> properties = connector.filterProperties(aggregate(connectionConfiguredProperties, stepConfiguredProperties), connector.isEndpointProperty());
         Map<String, String> secrets = connector.filterProperties(properties, connector.isSecret(),
             e -> e.getKey(),
@@ -226,7 +227,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return new Endpoint(endpointUri);
     }
 
-    private static Map<String, String> aggregate(Map<String, String> ... maps) throws IOException {
+    private static Map<String, String> aggregate(Map<String, String> ... maps) {
         return Stream.of(maps).flatMap(map -> map.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue));
     }
 

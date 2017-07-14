@@ -16,7 +16,6 @@
 package io.syndesis.dao.manager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +25,6 @@ import java.util.function.Function;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.syndesis.core.EventBus;
 import io.syndesis.core.KeyGenerator;
@@ -52,26 +49,24 @@ public class DataManager implements DataAccessObjectRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class.getName());
 
-    private ObjectMapper mapper;
     private CacheContainer caches;
     private final EventBus eventBus;
 
     @Value("${deployment.file}")
     private String dataFileName;
 
-    private final List<DataAccessObject> dataAccessObjects = new ArrayList<>();
-    private final Map<Class, DataAccessObject> dataAccessObjectMapping = new HashMap<>();
+    private final List<DataAccessObject<?>> dataAccessObjects = new ArrayList<>();
+    private final Map<Class<? extends WithId<?>>, DataAccessObject<?>> dataAccessObjectMapping = new HashMap<>();
 
     // Constructor to help with testing.
-    public DataManager(CacheContainer caches, ObjectMapper mapper, List<DataAccessObject> dataAccessObjects, String dataFileName) {
-        this(caches, mapper, dataAccessObjects, (EventBus)null);
+    public DataManager(CacheContainer caches, List<DataAccessObject<?>> dataAccessObjects, String dataFileName) {
+        this(caches, dataAccessObjects, (EventBus)null);
         this.dataFileName = dataFileName;
     }
 
     // Inject mandatory via constructor injection.
     @Autowired
-    public DataManager(CacheContainer caches, ObjectMapper mapper, List<DataAccessObject> dataAccessObjects, EventBus eventBus) {
-        this.mapper = mapper;
+    public DataManager(CacheContainer caches, List<DataAccessObject<?>> dataAccessObjects, EventBus eventBus) {
         this.caches = caches;
         this.eventBus = eventBus;
         if (dataAccessObjects != null) {
@@ -81,7 +76,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
     @PostConstruct
     public void init() {
-        for (DataAccessObject dataAccessObject : dataAccessObjects) {
+        for (DataAccessObject<?> dataAccessObject : dataAccessObjects) {
             registerDataAccessObject(dataAccessObject);
         }
     }
@@ -90,8 +85,8 @@ public class DataManager implements DataAccessObjectRegistry {
         if (dataFileName != null) {
             ReadApiClientData reader = new ReadApiClientData();
             try {
-                List<ModelData> mdList = reader.readDataFromFile(dataFileName);
-                for (ModelData modelData : mdList) {
+                List<ModelData<?>> mdList = reader.readDataFromFile(dataFileName);
+                for (ModelData<?> modelData : mdList) {
                     store(modelData);
                 }
             } catch (Exception e) {
@@ -101,24 +96,23 @@ public class DataManager implements DataAccessObjectRegistry {
 
     }
 
-    public void store(ModelData modelData) {
+    public <T extends WithId<T>> void store(ModelData<T> modelData) {
         try {
-            Class<? extends WithId> clazz = (Class<? extends WithId>) modelData.getKind().modelClass;
             Kind kind = modelData.getKind();
 
             LOGGER.debug(kind + ":" + modelData.getDataAsJson());
-            WithId entity = (WithId) modelData.getData();
+            T entity = modelData.getData();
             Optional<String> id = entity.getId();
             if (!id.isPresent()) {
                 LOGGER.warn("Cannot load entity from file since it's missing an id: " + modelData.toJson());
             } else {
-                WithId prev = null;
+                WithId<?> prev = null;
                 try {
-                    prev = fetch(kind.getModelClass(), id.get());
+                    prev = this.<T>fetch(kind.getModelClass(), id.get());
                 } catch (RuntimeException e) {
                     // Lets try to wipe out the previous record in case
                     // we are running into something like a schema change.
-                    delete(kind.getModelClass(), id.get());
+                    this.<T>delete(kind.getModelClass(), id.get());
                 }
                 if (prev == null) {
                     create(entity);
@@ -132,16 +126,15 @@ public class DataManager implements DataAccessObjectRegistry {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends WithId> ListResult<T> fetchAll(Class<T> model, Function<ListResult<T>, ListResult<T>>... operators) {
+    public <T extends WithId<T>> ListResult<T> fetchAll(Class<T> model, Function<ListResult<T>, ListResult<T>>... operators) {
 
         ListResult<T> result;
         if( getDataAccessObject(model)!=null ) {
-            result = (ListResult<T>) doWithDataAccessObject(model, d -> d.fetchAll());
+            result = doWithDataAccessObject(model, d -> d.fetchAll());
         } else {
             Kind kind = Kind.from(model);
-            Cache<String, WithId> cache = caches.getCache(kind.getModelName());
-            result = ListResult.of((Collection<T>) cache.values());
+            Cache<String, T> cache = caches.getCache(kind.getModelName());
+            result = ListResult.of(cache.values());
         }
 
         for (Function<ListResult<T>, ListResult<T>> operator : operators) {
@@ -150,13 +143,13 @@ public class DataManager implements DataAccessObjectRegistry {
         return result;
     }
 
-    public <T extends WithId> T fetch(Class<T> model, String id) {
+    public <T extends WithId<T>> T fetch(Class<T> model, String id) {
         Kind kind = Kind.from(model);
-        Map<String, WithId> cache = caches.getCache(kind.getModelName());
+        Map<String, T> cache = caches.getCache(kind.getModelName());
 
-        T value = (T) cache.get(id);
+        T value = cache.get(id);
         if ( value == null) {
-            value = doWithDataAccessObject(model, d -> (T) d.fetch(id));
+            value = this.<T, T>doWithDataAccessObject(model, d -> d.fetch(id));
             if (value != null) {
                 cache.put(id, value);
             }
@@ -164,32 +157,34 @@ public class DataManager implements DataAccessObjectRegistry {
         return value;
     }
 
-    public <T extends WithId> T create(T entity) {
+    public <T extends WithId<T>> T create(final T entity) {
         Kind kind = entity.getKind();
-        Cache<String, WithId> cache = caches.getCache(kind.getModelName());
+        Cache<String, T> cache = caches.getCache(kind.getModelName());
         Optional<String> id = entity.getId();
         String idVal;
+
+        final T entityToCreate;
         if (!id.isPresent()) {
             idVal = KeyGenerator.createKey();
-            entity = (T) entity.withId(idVal);
+            entityToCreate = entity.withId(idVal);
         } else {
             idVal = id.get();
             if (cache.keySet().contains(idVal)) {
                 throw new EntityExistsException("There already exists a "
                     + kind + " with id " + idVal);
             }
+            entityToCreate = entity;
         }
 
-        T finalEntity = entity;
-        doWithDataAccessObject(kind.getModelClass(), d -> d.create(finalEntity));
-        cache.put(idVal, finalEntity);
+        this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> d.create(entityToCreate));
+        cache.put(idVal, entity);
         broadcast("created", kind.getModelName(), idVal);
-        return finalEntity;
+        return entity;
     }
 
-    public void update(WithId entity) {
+    public <T extends WithId<T>> void update(T entity) {
         Kind kind = entity.getKind();
-        Map<String, WithId> cache = caches.getCache(kind.getModelName());
+        Map<String, T> cache = caches.getCache(kind.getModelName());
 
         Optional<String> id = entity.getId();
         if (!id.isPresent()) {
@@ -198,7 +193,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
         String idVal = id.get();
 
-        WithId previous = doWithDataAccessObject(kind.getModelClass(), d -> d.update(entity));
+        T previous = this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> d.update(entity));
 
         if (!cache.containsKey(idVal) && previous==null) {
             throw new EntityNotFoundException("Can not find " + kind + " with id " + idVal);
@@ -211,15 +206,15 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
 
-    public <T extends WithId> boolean delete(Class<T> model, String id) {
+    public <T extends WithId<T>> boolean delete(Class<T> model, String id) {
         Kind kind = Kind.from(model);
-        Map<String, WithId> cache = caches.getCache(kind.getModelName());
+        Map<String, WithId<T>> cache = caches.getCache(kind.getModelName());
         if (id == null || id.equals("")) {
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
         }
 
         // Remove it out of the cache
-        WithId entity = cache.remove(id);
+        WithId<T> entity = cache.remove(id);
         boolean deletedInCache = entity != null;
 
         // And out of the DAO
@@ -229,14 +224,14 @@ public class DataManager implements DataAccessObjectRegistry {
         if ( deletedInCache || deletedFromDAO ) {
             broadcast("deleted", kind.getModelName(), id);
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
-    public <T extends WithId> void deleteAll(Class<T> model) {
+    public <T extends WithId<T>> void deleteAll(Class<T> model) {
         Kind kind = Kind.from(model);
-        Map<String, WithId> cache = caches.getCache(kind.getModelName());
+        Map<String, WithId<T>> cache = caches.getCache(kind.getModelName());
         cache.clear();
 
         doWithDataAccessObject(model, d -> {
@@ -246,10 +241,9 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     @Override
-    public Map<Class, DataAccessObject> getDataAccessObjectMapping() {
+    public Map<Class<? extends WithId<?>>, DataAccessObject<?>> getDataAccessObjectMapping() {
         return dataAccessObjectMapping;
     }
-
 
     /**
      * Perform a simple action if a {@link DataAccessObject} for the specified kind exists.
@@ -259,8 +253,8 @@ public class DataManager implements DataAccessObjectRegistry {
      * @param <O>           The return type.
      * @return              The outcome of the function.
      */
-    private <O> O doWithDataAccessObject(Class model, Function<DataAccessObject, O> function) {
-        DataAccessObject dataAccessObject = getDataAccessObject(model);
+    private <T extends WithId<T>, R> R doWithDataAccessObject(Class<T> model, Function<DataAccessObject<T>, R> function) {
+        DataAccessObject<T> dataAccessObject = getDataAccessObject(model);
         if (dataAccessObject != null) {
             return function.apply(dataAccessObject);
         }

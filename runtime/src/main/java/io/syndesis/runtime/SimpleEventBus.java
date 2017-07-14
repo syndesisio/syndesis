@@ -30,19 +30,23 @@ public class SimpleEventBus implements EventBus {
 
     private final ConcurrentHashMap<String, Subscription> subscriptions = new ConcurrentHashMap<>();
 
+    @Override
     public Subscription subscribe(String subscriberId, Subscription handler) {
         return subscriptions.put(subscriberId, handler);
     }
+    @Override
     public Subscription unsubscribe(String subscriberId) {
         return subscriptions.remove(subscriberId);
     }
 
+    @Override
     public void broadcast(String event, String data) {
         for (Map.Entry<String, Subscription> entry : subscriptions.entrySet()) {
             entry.getValue().onEvent(event, data);
         }
     }
 
+    @Override
     public void send(String subscriberId, String event, String data) {
         Subscription sub = subscriptions.get(subscriberId);
         if( sub!=null ) {

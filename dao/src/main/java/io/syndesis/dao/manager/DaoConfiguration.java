@@ -19,7 +19,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Configured in spring.factories so that tis configuration is automatically picked
+ * Configured in spring.factories so that this configuration is automatically picked
  * up when included in the classpath.
  */
 @Configuration

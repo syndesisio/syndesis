@@ -36,6 +36,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Connection.Builder.class)
 public interface Connection extends WithId<Connection>, WithTags, WithName, Serializable {
 
+    @Override
     default Kind getKind() {
         return Kind.Connection;
     }

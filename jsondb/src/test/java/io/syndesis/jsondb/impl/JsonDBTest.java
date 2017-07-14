@@ -29,6 +29,7 @@ import org.sqlite.SQLiteDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -191,14 +192,15 @@ public class JsonDBTest {
         )));
 
         String json = jsondb.getAsString("/test", prettyPrint);
-        ArrayList<Map> items = new ArrayList<Map>(mapper.readValue(json, LinkedHashMap.class).values());
+        @SuppressWarnings("unchecked")
+        List<Map<?, ?>> items = new ArrayList<>(mapper.readValue(json, LinkedHashMap.class).values());
         assertThat(items).hasSize(2);
-        assertThat(((Map) items.get(0)).get("name")).isEqualTo("Hiram Chirino");
-        assertThat(((Map) items.get(1)).get("name")).isEqualTo("Ana Chirino");
+        assertThat((items.get(0)).get("name")).isEqualTo("Hiram Chirino");
+        assertThat((items.get(1)).get("name")).isEqualTo("Ana Chirino");
     }
 
     @Test
-    public void testCreateKey() throws IOException {
+    public void testCreateKey() {
         String lastkey = jsondb.createKey();
         for (int i = 0; i < 20000; i++) {
             String key = jsondb.createKey();
@@ -320,7 +322,7 @@ public class JsonDBTest {
         );
 
         jsondb.set("/", mapper.writeValueAsString(user));
-        HashMap result = mapper.readValue(jsondb.getAsString(""), HashMap.class);
+        Map<?, ?> result = mapper.readValue(jsondb.getAsString(""), HashMap.class);
         assertThat(result).hasSize(2);
 
         assertThat(jsondb.delete("/badpath")).isFalse();
@@ -352,7 +354,7 @@ public class JsonDBTest {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(file)) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             copy(is, os);
-            return new String(os.toByteArray(), "UTF-8");
+            return new String(os.toByteArray(), StandardCharsets.UTF_8);
         }
     }
 
@@ -363,7 +365,7 @@ public class JsonDBTest {
         }
     }
 
-    // Helper method to help constuct maps with consize syntax
+    // Helper method to help construct maps with concise syntax
     private HashMap<String, Object> map(Object... values) {
         HashMap<String, Object> rc = new HashMap<String, Object>() {
             @Override

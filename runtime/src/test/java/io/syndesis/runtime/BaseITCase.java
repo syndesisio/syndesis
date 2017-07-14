@@ -15,7 +15,6 @@
  */
 package io.syndesis.runtime;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -58,7 +57,7 @@ public abstract class BaseITCase {
     protected DataManager dataManager;
 
     @BeforeClass
-    public static void envSetup() throws UnsupportedEncodingException {
+    public static void envSetup() {
         // If the keycloak.http.port is not configured.. configure it now so that
         // our test cases work in an IDE without having to do additional config.
         if( System.getProperty("keycloak.http.port")==null ) {

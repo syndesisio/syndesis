@@ -128,32 +128,27 @@ public class SqlJsonDB implements JsonDB {
 
         Consumer<OutputStream> result = null;
         final Handle h = dbi.open();
-        try {
-            String sql = "select path,value,kind from jsondb where path LIKE :like order by path";
-            ResultIterator<JsonRecord> iterator = h.createQuery(sql)
+        String sql = "select path,value,kind from jsondb where path LIKE :like order by path";
+        ResultIterator<JsonRecord> iterator = h.createQuery(sql)
                 .bind("like", like)
                 .map(JsonRecordMapper.INSTANCE)
                 .iterator();
-            if( iterator.hasNext() ) {
-                result = output -> {
-                    try {
-                        try {
-                            Consumer<JsonRecord> toJson = JsonRecordSupport.recordsToJsonStream(baseDBPath, output, o);
-                            iterator.forEachRemaining(toJson);
-                            toJson.accept(null);
-                        } catch (IOException e) {
-                            throw new JsonDBException(e);
-                        }
-                    } finally {
-                        h.close();
-                    }
-                };
-            }
-
-        } finally {
-            if( result==null ) {
-                h.close();
-            }
+        if( iterator.hasNext() ) {
+            result = output -> {
+                try {
+                    Consumer<JsonRecord> toJson = JsonRecordSupport.recordsToJsonStream(baseDBPath, output, o);
+                    iterator.forEachRemaining(toJson);
+                    toJson.accept(null);
+                } catch (IOException e) {
+                    throw new JsonDBException(e);
+                } finally {
+                    iterator.close();
+                    h.close();
+                }
+            };
+        } else {
+            iterator.close();
+            h.close();
         }
 
         return result;
@@ -262,41 +257,40 @@ public class SqlJsonDB implements JsonDB {
             try {
                 BatchManager mb = new BatchManager(dbi);
 
-                JsonParser jp = new JsonFactory().createParser(is);
+                try (JsonParser jp = new JsonFactory().createParser(is)) {
+                    JsonToken nextToken = jp.nextToken();
+                    if (nextToken != JsonToken.START_OBJECT ) {
+                        throw new JsonParseException(jp, "Update did not contain a json object");
+                    }
 
-                JsonToken nextToken = jp.nextToken();
-                if (nextToken != JsonToken.START_OBJECT ) {
-                    throw new JsonParseException(jp, "Update did not contain a json object");
-                }
+                    while(true) {
 
-                while(true) {
+                        nextToken = jp.nextToken();
+                        if (nextToken == JsonToken.END_OBJECT ) {
+                            break;
+                        }
+                        if (nextToken != JsonToken.FIELD_NAME ) {
+                            throw new JsonParseException(jp, "Expected a field name");
+                        }
+
+                        String key = Strings.suffix(path, "/")+jp.getCurrentName();
+                        updatePaths.add(key);
+                        String baseDBPath = JsonRecordSupport.convertToDBPath(key);
+                        mb.deleteRecordsForSet(baseDBPath);
+
+                        try {
+                            JsonRecordSupport.jsonStreamToRecords(jp, baseDBPath, mb.createSetConsumer());
+                        } catch (IOException e) {
+                            throw new JsonDBException(e);
+                        }
+                    }
 
                     nextToken = jp.nextToken();
-                    if (nextToken == JsonToken.END_OBJECT ) {
-                        break;
+                    if (nextToken != null) {
+                        throw new JsonParseException(jp, "Document did not terminate as expected.");
                     }
-                    if (nextToken != JsonToken.FIELD_NAME ) {
-                        throw new JsonParseException(jp, "Expected a field name");
-                    }
-
-                    String key = Strings.suffix(path, "/")+jp.getCurrentName();
-                    updatePaths.add(key);
-                    String baseDBPath = JsonRecordSupport.convertToDBPath(key);
-                    mb.deleteRecordsForSet(baseDBPath);
-
-                    try {
-                        JsonRecordSupport.jsonStreamToRecords(jp, baseDBPath, mb.createSetConsumer());
-                    } catch (IOException e) {
-                        throw new JsonDBException(e);
-                    }
+                    mb.flush();
                 }
-
-                nextToken = jp.nextToken();
-                if (nextToken != null) {
-                    throw new JsonParseException(jp, "Document did not terminate as expected.");
-                }
-                mb.flush();
-
             } catch (IOException e) {
                 throw new JsonDBException(e);
             }
@@ -348,24 +342,22 @@ public class SqlJsonDB implements JsonDB {
 
     private static class JsonRecordMapper implements ResultSetMapper<JsonRecord> {
         private static final JsonRecordMapper INSTANCE = new JsonRecordMapper();
+        @Override
         public JsonRecord map(int index, ResultSet r, StatementContext ctx) throws SQLException {
             return JsonRecord.of(r.getString("path"), r.getString("value"), r.getInt("kind"));
         }
     }
 
     private void withTransaction(Consumer<Handle> cb) {
-        final Handle h = dbi.open();
-        boolean committed = false;
-        try {
-            h.begin();
-            cb.accept(h);
-            h.commit();
-            committed  = true;
-        } finally {
-            if( !committed ) {
+        try (final Handle h = dbi.open()) {
+            try {
+                h.begin();
+                cb.accept(h);
+                h.commit();
+            } catch (RuntimeException e) {
                 h.rollback();
+                throw e;
             }
-            h.close();
         }
     }
 }

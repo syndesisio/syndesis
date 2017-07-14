@@ -46,12 +46,12 @@ public class TestSupportHandler {
     private static final Logger LOG = LoggerFactory.getLogger(TestSupportHandler.class);
 
     private final DataManager dataMgr;
-    private final List<DataAccessObject> daos;
+    private final List<DataAccessObject<?>> daos;
 
     @Context
     private HttpServletRequest context;
 
-    public TestSupportHandler(DataManager dataMgr, List<DataAccessObject> daos) {
+    public TestSupportHandler(DataManager dataMgr, List<DataAccessObject<?>> daos) {
         this.dataMgr = dataMgr;
         this.daos = daos.stream().filter(x -> !x.isReadOnly()).collect(Collectors.toList());
     }
@@ -67,16 +67,16 @@ public class TestSupportHandler {
     @POST
     @Path("/restore-db")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void restoreDB(ModelData[] data) {
+    public void restoreDB(ModelData<?>[] data) {
         LOG.warn("user {} is restoring db state", context.getRemoteUser());
         deleteAllDBEntities();
-        for (ModelData modelData : data) {
+        for (ModelData<?> modelData : data) {
             dataMgr.store(modelData);
         }
     }
 
     private void deleteAllDBEntities() {
-        for (DataAccessObject dao : daos) {
+        for (DataAccessObject<?> dao : daos) {
             dataMgr.deleteAll(dao.getType());
         }
     }
@@ -84,13 +84,15 @@ public class TestSupportHandler {
     @GET
     @Path("/snapshot-db")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<ModelData> snapshotDB() {
+    public ArrayList<ModelData<?>> snapshotDB() {
         LOG.info("user {} is making snapshot", context.getRemoteUser());
-        ArrayList<ModelData> result = new ArrayList<ModelData>();
-        for (DataAccessObject dao : daos) {
-            ListResult<? extends WithId> l = dao.fetchAll();
-            for (WithId entity : l.getItems()) {
-                result.add(new ModelData(entity.getKind(), entity));
+        ArrayList<ModelData<?>> result = new ArrayList<>();
+        for (DataAccessObject<?> dao : daos) {
+            ListResult<? extends WithId<?>> l = dao.fetchAll();
+            for (WithId<?> entity : l.getItems()) {
+                @SuppressWarnings({"unchecked", "rawtypes"})
+                ModelData<?> modelData = new ModelData(entity.getKind(), entity);
+                result.add(modelData);
             }
         }
         return result;

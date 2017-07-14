@@ -32,17 +32,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class T3stSupportITCase extends BaseITCase {
 
     @Test
-    public void createAndGetIntegration() throws InterruptedException {
+    public void createAndGetIntegration() {
 
         // Reset to fresh startup state..
         get("/api/v1/test-support/reset-db", null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // We should have some initial data in the snapshot since we start up with deployment.json
-        ResponseEntity<ModelData[]> r1 = get("/api/v1/test-support/snapshot-db", ModelData[].class);
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        Class<ModelData<?>[]> type = (Class) ModelData[].class;
+        ResponseEntity<ModelData<?>[]> r1 = get("/api/v1/test-support/snapshot-db", type);
         assertThat(r1.getBody().length).isGreaterThan(1);
 
         // restoring to no data should.. leave us with no data.
-        ModelData[] NO_DATA = new ModelData[]{};
+        ModelData<?>[] NO_DATA = new ModelData[]{};
         post("/api/v1/test-support/restore-db", NO_DATA, null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // Lets add an integration...
@@ -55,21 +57,21 @@ public class T3stSupportITCase extends BaseITCase {
         post("/api/v1/integrations", integration, Integration.class);
 
         // Snapshot should only contain the integration entity..
-        ResponseEntity<ModelData[]> r2 = get("/api/v1/test-support/snapshot-db", ModelData[].class);
+        ResponseEntity<ModelData<?>[]> r2 = get("/api/v1/test-support/snapshot-db", type);
         assertThat(r2.getBody().length).isEqualTo(1);
 
         // Reset to fresh startup state..
         get("/api/v1/test-support/reset-db", null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // Verify that the new state has the same number of entities as the original
-        ResponseEntity<ModelData[]> r3 = get("/api/v1/test-support/snapshot-db", ModelData[].class);
+        ResponseEntity<ModelData<?>[]> r3 = get("/api/v1/test-support/snapshot-db", type);
         assertThat(r3.getBody().length).isEqualTo(r1.getBody().length);
 
         // restoring 1 item of data
         post("/api/v1/test-support/restore-db", r2.getBody(), null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // Snapshot should only contain the integration entity..
-        ResponseEntity<ModelData[]> r4 = get("/api/v1/test-support/snapshot-db", ModelData[].class);
+        ResponseEntity<ModelData<?>[]> r4 = get("/api/v1/test-support/snapshot-db", type);
         assertThat(r4.getBody().length).isEqualTo(1);
 
     }

@@ -49,7 +49,7 @@ public class ReflectiveSorterTest {
         }
 
         toSort.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "DESC")));
-        List reversed = Arrays.asList(expectedNames);
+        List<String> reversed = Arrays.asList(expectedNames);
         Collections.reverse(reversed);
 
         for (int i = 0; i < expectedNames.length; i++) {
@@ -151,14 +151,17 @@ public class ReflectiveSorterTest {
             this.birthYear = birthYear;
         }
 
+        @Override
         public String getFirstName() {
             return firstName;
         }
 
+        @Override
         public String getLastName() {
             return lastName;
         }
 
+        @Override
         public int getBirthYear() {
             return birthYear;
         }

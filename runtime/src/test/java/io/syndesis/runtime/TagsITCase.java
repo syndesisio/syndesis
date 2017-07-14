@@ -47,6 +47,6 @@ public class TagsITCase extends BaseITCase {
         public ArrayList<String> getItems() {
             return items;
         }
-    };
+    }
 
 }

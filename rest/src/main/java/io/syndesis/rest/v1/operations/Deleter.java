@@ -23,13 +23,13 @@ import javax.ws.rs.PathParam;
 import io.syndesis.dao.manager.WithDataManager;
 import io.syndesis.model.WithId;
 
-public interface Deleter<T extends WithId> extends Resource<T>, WithDataManager {
+public interface Deleter<T extends WithId<T>> extends Resource, WithDataManager {
 
     @DELETE
     @Consumes("application/json")
     @Path(value = "/{id}")
     default void delete(@PathParam("id") String id) {
-        Class<T> modelClass = (Class<T>) resourceKind().getModelClass();
+        Class<T> modelClass = resourceKind().getModelClass();
         getDataManager().delete(modelClass, id);
     }
 

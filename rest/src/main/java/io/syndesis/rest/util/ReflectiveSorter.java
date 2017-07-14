@@ -100,7 +100,7 @@ public class ReflectiveSorter<T> implements Function<ListResult<T>, ListResult<T
     }
 
 
-    private Method getGetMethodOfType(Class clazz, String fieldName, Class ... types) {
+    private Method getGetMethodOfType(Class<?> clazz, String fieldName, Class<?> ... types) {
         // Check direct:
         Method ret = extractMethod(clazz, fieldName, types);
         if (ret != null) {
@@ -108,7 +108,7 @@ public class ReflectiveSorter<T> implements Function<ListResult<T>, ListResult<T
         }
 
         // Check interfaces :
-        for (Class intf : clazz.getInterfaces()) {
+        for (Class<?> intf : clazz.getInterfaces()) {
             ret = extractMethod(intf, fieldName, types);
             if (ret != null) {
                 return ret;
@@ -116,15 +116,15 @@ public class ReflectiveSorter<T> implements Function<ListResult<T>, ListResult<T
         }
 
         // Check parent:
-        Class superClass = clazz.getSuperclass();
+        Class<?> superClass = clazz.getSuperclass();
         return superClass != null ? getGetMethodOfType(superClass, fieldName, types) : null;
     }
 
-    private Method extractMethod(Class clazz, String fieldName, Class[] types) {
+    private Method extractMethod(Class<?> clazz, String fieldName, Class<?>[] types) {
         try {
             Method method = clazz.getDeclaredMethod("get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1));
-            Class returnType = method.getReturnType();
-            for (Class type : types) {
+            Class<?> returnType = method.getReturnType();
+            for (Class<?> type : types) {
                 if (returnType.isAssignableFrom(type)) {
                     return method;
                 }

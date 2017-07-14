@@ -15,20 +15,20 @@
  */
 package io.syndesis.dao;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class DataManagerTest {
 
@@ -37,12 +37,10 @@ public class DataManagerTest {
 
     private DataManager dataManager = null;
 
-    private ObjectMapper objectMapper = Json.mapper();
-
     @Before
     public void setup() {
         //Create Data Manager
-        dataManager = new DataManager(infinispan.getCaches(), objectMapper, new ArrayList<>(), "io/syndesis/dao/deployment.json");
+        dataManager = new DataManager(infinispan.getCaches(), new ArrayList<>(), "io/syndesis/dao/deployment.json");
         dataManager.init();
         dataManager.resetDeploymentData();
     }

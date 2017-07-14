@@ -29,7 +29,7 @@ import io.syndesis.rest.util.ReflectiveSorter;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 
-public interface Lister<T extends WithId> extends Resource<T>, WithDataManager {
+public interface Lister<T extends WithId<T>> extends Resource, WithDataManager {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -47,7 +47,7 @@ public interface Lister<T extends WithId> extends Resource<T>, WithDataManager {
 
     })
     default ListResult<T> list(@Context UriInfo uriInfo) {
-        Class<T> clazz = (Class<T>)resourceKind().getModelClass();
+        Class<T> clazz = resourceKind().getModelClass();
         return getDataManager().fetchAll(
             clazz,
             new ReflectiveSorter<>(clazz, new SortOptionsFromQueryParams(uriInfo)),

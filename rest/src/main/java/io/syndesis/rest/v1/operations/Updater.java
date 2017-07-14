@@ -23,7 +23,7 @@ import javax.ws.rs.PathParam;
 import io.syndesis.dao.manager.WithDataManager;
 import io.syndesis.model.WithId;
 
-public interface Updater<T extends WithId> extends Resource<T>, WithDataManager {
+public interface Updater<T extends WithId<T>> extends Resource, WithDataManager {
 
     @PUT
     @Path(value = "/{id}")

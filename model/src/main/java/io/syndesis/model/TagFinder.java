@@ -31,7 +31,7 @@ public class TagFinder {
         if (items.getItems()!=null) {
             for (WithTags item : items.getItems()) {
                 if (item.getTags().isPresent()) {
-                    for (String tag: (SortedSet<String>) item.getTags().get()) {
+                    for (String tag: item.getTags().get()) {
                         tags.add(tag);
                     }
                 }

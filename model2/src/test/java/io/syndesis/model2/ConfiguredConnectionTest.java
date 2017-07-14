@@ -65,17 +65,17 @@ public class ConfiguredConnectionTest {
         em.persist(configuredConnector);
 
         //fetch ConfiguredConnector
-        ConfiguredConnector c = (ConfiguredConnector) em.find(ConfiguredConnector.class, configuredConnector.getId());
+        ConfiguredConnector c = em.find(ConfiguredConnector.class, configuredConnector.getId());
         assertNotNull(c);
 
         //delete ConfiguredConnector
         em.remove(c);
 
         //make sure ConfiguredConnector is gone
-        ConfiguredConnector deletedConfiguredConnector = (ConfiguredConnector)em.find(ConfiguredConnector.class, configuredConnector.getId());
+        ConfiguredConnector deletedConfiguredConnector = em.find(ConfiguredConnector.class, configuredConnector.getId());
         assertNull(deletedConfiguredConnector);
         //make sure the connector is still there
-        Connector c2 = (Connector)em.find(Connector.class, connector.getId());
+        Connector c2 = em.find(Connector.class, connector.getId());
         assertNotNull(c2);
 	}
 }

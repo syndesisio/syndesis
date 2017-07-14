@@ -15,32 +15,33 @@
  */
 package io.syndesis.dao.init;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+
 import io.syndesis.core.Json;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ToJson;
-
-import java.io.IOException;
+import io.syndesis.model.WithId;
 
 /**
  * Used to read the deployment.json file from the client GUI project
  *
  */
-public class ModelData implements ToJson {
+public class ModelData<T extends WithId<T>> implements ToJson {
 
     private Kind kind;
-    private Object data;
+    private T data;
     private String json;
 
     public ModelData() {
     }
 
-    public ModelData(Kind kind, Object data) {
-        super();
+    public ModelData(Kind kind, T data) {
         this.kind = kind;
         this.data = data;
     }
@@ -71,15 +72,17 @@ public class ModelData implements ToJson {
     }
 
     @JsonIgnore
-    public Object getData() throws IOException {
+    public T getData() throws IOException {
         if (data == null && kind != null && json != null) {
-            data = Json.mapper().readValue(json, kind.getModelClass());
+            @SuppressWarnings("unchecked")
+            final Class<T> modelClass = (Class<T>) kind.getModelClass();
+            data = Json.mapper().readValue(json, modelClass);
         }
         return data;
     }
 
     @JsonIgnore
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
         this.json = null;
     }

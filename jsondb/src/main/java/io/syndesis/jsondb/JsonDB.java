@@ -17,10 +17,9 @@ package io.syndesis.jsondb;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 /**
@@ -70,15 +69,11 @@ public interface JsonDB {
      * @return the json result or null if the path does not exist
      */
     default String getAsString(String path, GetOptions options)  {
-        try {
-            byte[] data = getAsByteArray(path, options);
-            if( data==null ) {
-                return null;
-            }
-            return new String(data, "UTF-8");
-        } catch (IOException e) {
-            throw new JsonDBException(e);
+        byte[] data = getAsByteArray(path, options);
+        if( data==null ) {
+            return null;
         }
+        return new String(data, StandardCharsets.UTF_8);
     }
 
     /**
@@ -89,11 +84,7 @@ public interface JsonDB {
      * @param json value to set it to, can be a json primitive or struct
      */
     default void set(String path, String json)  {
-        try {
-            set(path, json.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new JsonDBException(e);
-        }
+        set(path, json.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -101,11 +92,7 @@ public interface JsonDB {
      * @param json value to set it to, can be a json primitive or struct
      */
     default void update(String path, String json)  {
-        try {
-            update(path, json.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new JsonDBException(e);
-        }
+        update(path, json.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -117,11 +104,7 @@ public interface JsonDB {
      * @return the field name that was added to the path object
      */
     default String push(String path, String json) {
-        try {
-            return push(path, json.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new JsonDBException(e);
-        }
+        return push(path, json.getBytes(StandardCharsets.UTF_8));
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -135,6 +118,7 @@ public interface JsonDB {
     }
 
     default byte[] getAsByteArray(String path, GetOptions options) {
+        @SuppressWarnings("resource")
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         if( !getAsStream(path, options, os) ) {
             return null;

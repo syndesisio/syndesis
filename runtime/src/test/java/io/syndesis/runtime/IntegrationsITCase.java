@@ -29,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationsITCase extends BaseITCase {
 
+    @Override
     @Before
     public void clearDB() {
         super.clearDB();
@@ -113,6 +114,6 @@ public class IntegrationsITCase extends BaseITCase {
         public ArrayList<Integration> getItems() {
             return items;
         }
-    };
+    }
 
 }
