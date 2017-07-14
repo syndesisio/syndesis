@@ -62,15 +62,15 @@
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: syndesis-datamapper
+    name: syndesis-atlasmap
     labels:
       app: syndesis
-      component: syndesis-datamapper
+      component: syndesis-atlasmap
   spec:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/atlasmap/syndesis-datamapper:latest
+        name: docker.io/atlasmap/atlasmap:latest
       importPolicy:
         scheduled: true
       name: latest
