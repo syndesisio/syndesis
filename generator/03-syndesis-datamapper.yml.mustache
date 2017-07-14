@@ -1,20 +1,20 @@
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
-    name: syndesis-datamapper
+    name: syndesis-atlasmap
     labels:
       app: syndesis
-      component: syndesis-datamapper
+      component: syndesis-atlasmap
 
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
       app: syndesis
-      component: syndesis-datamapper
+      component: syndesis-atlasmap
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: syndesis-datamapper-tls
-    name: syndesis-datamapper
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-atlasmap-tls
+    name: syndesis-atlasmap
   spec:
     ports:
     - port: 80
@@ -22,15 +22,15 @@
       targetPort: 8080
     selector:
       app: syndesis
-      component: syndesis-datamapper
+      component: syndesis-atlasmap
 
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
       app: syndesis
-      component: syndesis-datamapper
-    name: syndesis-datamapper
+      component: syndesis-atlasmap
+    name: syndesis-atlasmap
   spec:
     host: ${ROUTE_HOSTNAME}
     path: /v2/atlas
@@ -41,7 +41,7 @@
       termination: edge
     to:
       kind: Service
-      name: syndesis-datamapper
+      name: syndesis-atlasmap
       weight: 100
 
 - apiVersion: v1
@@ -49,14 +49,14 @@
   metadata:
     labels:
       app: syndesis
-      component: syndesis-datamapper
-    name: syndesis-datamapper
+      component: syndesis-atlasmap
+    name: syndesis-atlasmap
   spec:
     replicas: 1
     selector:
       app: syndesis
-      component: syndesis-datamapper
-      deploymentconfig: syndesis-datamapper
+      component: syndesis-atlasmap
+      deploymentconfig: syndesis-atlasmap
     strategy:
       rollingParams:
         intervalSeconds: 1
@@ -69,8 +69,8 @@
       metadata:
         labels:
           app: syndesis
-          component: syndesis-datamapper
-          deploymentconfig: syndesis-datamapper
+          component: syndesis-atlasmap
+          deploymentconfig: syndesis-atlasmap
         annotations:
           pod.beta.kubernetes.io/init-containers: |-
             [{
@@ -84,7 +84,7 @@
                 "-ca-dir", "/usr/share/ca-certificates/mozilla"
               ],
               "volumeMounts": [{
-                "name": "syndesis-datamapper-tls",
+                "name": "syndesis-atlasmap-tls",
                 "mountPath": "/tls-keystore"
               }]
             }]
@@ -103,11 +103,11 @@
           - -ca-dir
           - /usr/share/ca-certificates/mozilla
           volumeMounts:
-          - name: syndesis-datamapper-tls
+          - name: syndesis-atlasmap-tls
             mountPath: /tls-keystore
-        serviceAccountName: syndesis-datamapper
+        serviceAccountName: syndesis-atlasmap
         containers:
-        - name: syndesis-datamapper
+        - name: atlasmap
           env:
           - name: HOME
             value: /deployments
@@ -124,7 +124,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: atlasmap/syndesis-datamapper:latest
+          image: atlasmap/atlasmap:latest
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -145,7 +145,7 @@
           - containerPort: 8778
             name: jolokia
           volumeMounts:
-          - name: syndesis-datamapper-tls
+          - name: syndesis-atlasmap-tls
             mountPath: /tls-keystore
           - name: config-volume
             mountPath: /deployments/config
@@ -157,21 +157,21 @@
               cpu: 200m
               memory: 612Mi
         volumes:
-        - name: syndesis-datamapper-tls
+        - name: syndesis-atlasmap-tls
           emptyDir: {}
         - name: config-volume
           configMap:
-            name: syndesis-datamapper-config
+            name: syndesis-atlasmap-config
     triggers:
     - type: ConfigChange
 {{^Dev}}
     - imageChangeParams:
         automatic: true
         containerNames:
-        - syndesis-datamapper
+        - atlasmap
         from:
           kind: ImageStreamTag
-          name: syndesis-datamapper:latest
+          name: syndesis-atlasmap:latest
       type: ImageChange
 {{/Dev}}
 
@@ -180,8 +180,8 @@
   metadata:
     labels:
       app: syndesis
-      component: syndesis-datamapper
-    name: syndesis-datamapper-config
+      component: syndesis-atlasmap
+    name: syndesis-atlasmap-config
   data:
     application.yml: |-
       cors:
