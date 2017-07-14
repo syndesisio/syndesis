@@ -46,12 +46,12 @@ if [ -n "${SYNDESIS_E2E_SECRET}" ]; then
 	fi
 fi
 
-if [ -n "${GITHUB_OAUTH_CLIENT_ID}" ]; then
+if [ -z "${GITHUB_OAUTH_CLIENT_ID}" ]; then
 	echo "GITHUB_OAUTH_CLIENT_ID not found. Aborting!"
 	exit 1
 fi
 
-if [ -n "${GITHUB_OAUTH_CLIENT_SECRET}" ]; then
+if [ -z "${GITHUB_OAUTH_CLIENT_SECRET}" ]; then
 	echo "GITHUB_OAUTH_CLIENT_SECRET not found. Aborting!"
 	exit 1
 fi
