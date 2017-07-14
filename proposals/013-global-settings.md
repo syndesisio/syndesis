@@ -26,6 +26,9 @@ This section of the global configuration will contain the OAuth client parameter
 
 Some global configuration options may affect connections and integrations that are already deployed and running.  When the configuration is changed, I would expect that those changes should somehow be propogated to any integrations that I'm running.
 
+#### Database
+Syndesis developers sometimes need to export and import the underlying database.  Currently this is handled via menu items in the user dropdown menu.  However it may make more sense for these items to live in the global settings page instead, where the options would only be visible when syndesis has been started with the appropriate flags.
+
 ## User Story
 
 *TBD*
