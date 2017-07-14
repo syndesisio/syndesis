@@ -6,7 +6,22 @@
     "baseJavaInspectionServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/java/",
     "baseXMLInspectionServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/xml/",
     "baseJSONInspectionServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/json/",
-    "baseMappingServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/"
+    "baseMappingServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/",
+    "addMockJSONMappings": false,
+    "addMockJavaSources": false,
+    "addMockXMLInstanceSources": false,
+    "addMockXMLSchemaSources": false,
+    "addMockJSONSources": false,
+    "addMockJavaTarget": false,
+    "addMockXMLInstanceTarget": false,
+    "addMockXMLSchemaTarget": false,
+    "addMockJSONTarget": false,
+    "debugDocumentServiceCalls": false,
+    "debugMappingServiceCalls": false,
+    "debugClassPathServiceCalls": false,
+    "debugValidationServiceCalls": false,
+    "debugFieldActionServiceCalls": false,
+    "debugDocumentParsing": false
   },
   "oauth": {
     "clientId": "syndesis-ui",
