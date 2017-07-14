@@ -36,9 +36,24 @@ if [ -z "${OPENSHIFT_MASTER}" ]; then
 fi
 
 #Configure the SYNDESIS_E2E_SECRET
-if [ -n ${SYNDESIS_E2E_SECRET} ]; then
-    GITHUB_OAUTH_CLIENT_ID=${GITHUB_E2E_OAUTH_CLIENT_ID}
-    GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_E2E_OAUTH_CLIENT_SECRET}
+if [ -n "${SYNDESIS_E2E_SECRET}" ]; then
+	if [ -n "${GITHUB_E2E_OAUTH_CLIENT_ID}" ] && [ -n "${GITHUB_E2E_OAUTH_CLIENT_SECRET}" ]; then
+		echo "Using End to End Github account" 
+    		GITHUB_OAUTH_CLIENT_ID=${GITHUB_E2E_OAUTH_CLIENT_ID}
+    		GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_E2E_OAUTH_CLIENT_SECRET}
+	else 
+		echo "Warning: You provided SYNDESIS_E2E_SECRET but one of GITHUB_E2E_OAUTH_CLIENT_ID or GITHUB_E2E_OAUTH_CLIENT_SECRET is empty!"
+	fi
+fi
+
+if [ -n "${GITHUB_OAUTH_CLIENT_ID}" ]; then
+	echo "GITHUB_OAUTH_CLIENT_ID not found. Aborting!"
+	exit 1
+fi
+
+if [ -n "${GITHUB_OAUTH_CLIENT_SECRET}" ]; then
+	echo "GITHUB_OAUTH_CLIENT_SECRET not found. Aborting!"
+	exit 1
 fi
 
 # We pass the namespace on each command individually, because when this script is run inside a pod, all commands default to the pod namespace (ignoring commands like `oc project` etc)

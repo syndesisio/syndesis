@@ -1,6 +1,6 @@
 node {
+    stage 'Validate system test scripts via arquillian steps'
     inNamespace(cloud: 'openshift', prefix: 'stest-selfcheck') {
-    	stage 'Test templates'
     	checkout scm
     	createEnvironment(
 	  cloud: 'openshift',
