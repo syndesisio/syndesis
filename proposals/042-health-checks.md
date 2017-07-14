@@ -89,7 +89,9 @@ The MVC endpoint could expose the following api:
 | POST | /camelroutes/{id}/start | Attempt to start the route identified by {id} |
 | POST | /camelroutes/{id}/stop | Attempt to stop the route identified by {id} |
 
-An example of what /camelroutes could return is:
+NOTE: the path could be changed like endpoints.camelroutes.path = /camel/routes
+
+- Example of /camelroutes
 
 ```json
 [
@@ -113,7 +115,38 @@ An example of what /camelroutes could return is:
 ]
 ```
 
-NOTE: the path could be changed like endpoints.camelroutes.path = /camel/routes
+- Example of /camelroutes/{id}/info
+
+```json
+{
+  "id": "undertow",
+  "uptime": "11.744 seconds",
+  "uptimeMillis": 11744,
+  "status": "Started",
+  "properties": {
+    "parent": "223e6c41",
+    "rest": "false",
+    "route.controller": "sample.camel.ApplicationRouteController",
+    "description": null,
+    "id": "undertow"
+  },
+  "details": {
+    "deltaProcessingTime": 0,
+    "exchangesInflight": 0,
+    "exchangesTotal": 0,
+    "externalRedeliveries": 0,
+    "failuresHandled": 0,
+    "lastProcessingTime": -1,
+    "maxProcessingTime": 0,
+    "meanProcessingTime": -1,
+    "minProcessingTime": 0,
+    "redeliveries": 0,
+    "totalProcessingTime": 0
+  }
+}
+```
+
+NOTE: the route.controller property can be used to check if a route is managed by the route controller or it is up to the user to restart it (i.e. after the nunmber of configured attempts has exhausted)
 
 ### User interaction
 
