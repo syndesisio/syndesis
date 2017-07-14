@@ -8,6 +8,9 @@ Syndesis - Camel Health Check
 
 * Branches:
   * https://github.com/lburgazzoli/apache-camel/tree/CAMEL-11443
+  
+* Example:
+  * https://github.com/lburgazzoli/apache-camel/tree/CAMEL-11443/examples/camel-example-spring-boot-routecontroller
 
 ## Background
 
