@@ -66,7 +66,7 @@
     "patternfly": "3.20.0",
     "pluralize": "5.0.0",
     "rxjs": "5.4.1",
-    "syndesis.data.mapper": "https://github.com/atlasmap/atlasmap-ui.git#5d7c70c631cebe9ee08d161493298d6eb726b088",
+    "syndesis.data.mapper": "https://github.com/atlasmap/atlasmap-ui.git#95fde83d9d10129656aecfb91a36ba7d070d4db5",
     "tether": "1.4.0",
     "ts-helpers": "1.1.2",
     "typescript-logging": "^0.2.1",
