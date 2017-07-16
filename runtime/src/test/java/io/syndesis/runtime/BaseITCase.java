@@ -159,7 +159,9 @@ public abstract class BaseITCase {
         if( body!=null ) {
             headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
         }
-        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        if (token != null) {
+            headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        }
         ResponseEntity<T> response = restTemplate().exchange(url, method, new HttpEntity<>(body, headers), responseClass);
         if( expectedStatus!=null ) {
             assertThat(response.getStatusCode()).as("status code").isEqualTo(expectedStatus);

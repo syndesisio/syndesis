@@ -26,6 +26,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import io.swagger.annotations.Api;
+import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.connection.Connector;
@@ -34,16 +35,21 @@ import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.verifier.Verifier;
 
+import org.springframework.stereotype.Component;
+
 @Path("/connectors")
 @Api(value = "connectors")
-@org.springframework.stereotype.Component
+@Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector> {
 
     private final Verifier verifier;
 
-    public ConnectorHandler(DataManager dataMgr, Verifier verifier) {
+    private final Credentials credentials;
+
+    public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials) {
         super(dataMgr);
         this.verifier = verifier;
+        this.credentials = credentials;
     }
 
     @Override
@@ -52,7 +58,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     }
 
     @Path("/{id}/actions")
-    public ConnectorActionHandler getActions(@PathParam("id") String connectorId) {
+    public ConnectorActionHandler getActions(@PathParam("id") final String connectorId) {
         return new ConnectorActionHandler(getDataManager(), connectorId);
     }
 
@@ -60,7 +66,13 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}/verifier")
-    public List<Verifier.Result> verifyConnectionParameters(@PathParam("id") String connectorId, Map<String, String> props) {
+    public List<Verifier.Result> verifyConnectionParameters(@PathParam("id") final String connectorId,
+        final Map<String, String> props) {
         return verifier.verify(connectorId, props);
+    }
+
+    @Path("/{id}/credentials")
+    public ConnectorCredentialHandler credentials(final @PathParam("id") String connectorId) {
+        return new ConnectorCredentialHandler(credentials, connectorId);
     }
 }
