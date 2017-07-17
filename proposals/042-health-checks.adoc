@@ -1,15 +1,15 @@
 = Syndesis - Camel Health Check
 
 * Issues:
-  * https://github.com/syndesisio/syndesis-project/issues/42
-  * https://issues.apache.org/jira/browse/CAMEL-11443
-  * https://issues.apache.org/jira/browse/CAMEL-10026
+** https://github.com/syndesisio/syndesis-project/issues/42
+** https://issues.apache.org/jira/browse/CAMEL-11443
+*** https://issues.apache.org/jira/browse/CAMEL-10026
 
 * Branches:
-  * https://github.com/lburgazzoli/apache-camel/tree/CAMEL-11443
+** https://github.com/lburgazzoli/apache-camel/tree/CAMEL-11443
   
 * Example:
-  * https://github.com/lburgazzoli/apache-camel/tree/CAMEL-11443/examples/camel-example-spring-boot-routecontroller
+** https://github.com/lburgazzoli/apache-camel/tree/CAMEL-11443/examples/camel-example-spring-boot-routecontroller
 
 == Background
 
@@ -42,7 +42,7 @@ For Syndesis we would need to be in full control, and therefore we will need to 
 
 By doing so no routes is automatic startup up, but we would then need to defer starting these routes and do this using another way.
 
-When using spring,the camel context can be configured using beans from the registry [1] therefore we can add a new auto discovered `RouteController` SPI which will be the responsible for starting up the routes in a controlled manner.
+When using spring,the camel context can be configured using beans from the registry footnote:[http://camel.apache.org/advanced-configuration-of-camelcontext-using-spring.html[advanced-configuration]] therefore we can add a new auto discovered `RouteController` SPI which will be the responsible for starting up the routes in a controlled manner.
 
 NOTE: as the idea of a route controller has been brought up for Camel 3.0, the  RouteController will be an early preview SPI.
 
@@ -52,15 +52,15 @@ The `RouteController` implementation will sets `autoStartup = false` and will in
 
 In Camel with Spring Boot we can setup this in the `Main` class via something along the following code lines:
 
-```java
-    @Bean
-    RouteController newRouteController(CamelContext camelContext) {
-        // The route controller is also in charge to add add its own
-        // RoutePolicyFactory to the camel context
-        return new RouteController(camelContext);
-    }
-```    
-
+[source,java]
+----
+@Bean
+RouteController newRouteController(CamelContext camelContext) {
+    // The route controller is also in charge to add add its own
+    // RoutePolicyFactory to the camel context
+    return new RouteController(camelContext);
+}
+----
 
 TODO:
 - We can then implement a `DefaultRouteController` in camel-core which in 3.0 which will take over the current route management and then one can either configure its behavior or implement its own using DefaultRouteController as base class.
@@ -84,18 +84,21 @@ To expose this API in Rest we can use Spring Actuate which allows to expose such
 
 The MVC endpoint could expose the following api:
 
-| HTTP Verb | Path | Description |
-| --------- | ---- | ----------- |
-| GET | /camelroutes | List all the routes with minimal information |
-| GET | /camelroutes/{id}/info | Provide detailed information about the route identified by {id} |
-| POST | /camelroutes/{id}/start | Attempt to start the route identified by {id} |
-| POST | /camelroutes/{id}/stop | Attempt to stop the route identified by {id} |
+[cols="3*", options="header"]
+|===
+| HTTP Verb | Path | Description 
+| GET | /camelroutes | List all the routes with minimal information
+| GET | /camelroutes/{id}/info | Provide detailed information about the route identified by {id}
+| POST | /camelroutes/{id}/start | Attempt to start the route identified by {id}
+| POST | /camelroutes/{id}/stop | Attempt to stop the route identified by {id}
+|===
 
 NOTE: the path could be changed like endpoints.camelroutes.path = /camel/routes
 
 - Example of /camelroutes
-
-```json
++
+[source,json]
+----
 [
   {
     "id": "bar",
@@ -115,11 +118,12 @@ NOTE: the path could be changed like endpoints.camelroutes.path = /camel/routes
     "status": "Stopped"
   }
 ]
-```
+----
 
 - Example of /camelroutes/{id}/info (no error)
-
-```json
++
+[source,json]
+----
 {
   "id": "undertow",
   "uptime": "6.218 seconds",
@@ -139,16 +143,16 @@ NOTE: the path could be changed like endpoints.camelroutes.path = /camel/routes
     "totalProcessingTime": 0,
     "hasRouteController": true
   }
-}
-```
+----
 
 - Example of /camelroutes/{id}/info (with error)
-
-```json
++
+[source,json]
+----
 {
   "id": "undertow",
   "uptimeMillis": 0,
-  "status": "Stopped",,
+  "status": "Stopped",
   "details": {
     "deltaProcessingTime": 0,
     "exchangesInflight": 0,
@@ -198,8 +202,7 @@ NOTE: the path could be changed like endpoints.camelroutes.path = /camel/routes
     "hasRouteController": true
   }
 }
-
-```
+----
 
 NOTE: the ``hasRouteController`` property can be used to check if a route is managed by the route controller or it is up to the user to restart it (i.e. after the nunmber of configured attempts has exhausted)
 
@@ -207,7 +210,3 @@ NOTE: the ``hasRouteController`` property can be used to check if a route is man
 
 - if a user stops a running or failing route then the route will be moved out of the route controller supervision so the user can decide when to restart the route
 - if a user starts a stopped or failing route then the route will be moved to the route controller supervision and eventually fail again shortly
-
-=== References
-
-- [1] http://camel.apache.org/advanced-configuration-of-camelcontext-using-spring.html
