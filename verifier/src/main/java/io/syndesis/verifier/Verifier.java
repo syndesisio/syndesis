@@ -17,6 +17,7 @@ package io.syndesis.verifier;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
@@ -56,7 +57,7 @@ public interface Verifier {
         String getCode();
 
         // A description of the error in plain english
-        String getDescription();
+        Optional<String> getDescription();
 
         // List of parameters which caused this particular verification to fail
         List<String> getParameters();
