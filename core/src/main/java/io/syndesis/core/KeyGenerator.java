@@ -15,11 +15,15 @@
  */
 package io.syndesis.core;
 
-import org.keycloak.common.util.Base64;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static java.lang.System.currentTimeMillis;
+
+import org.keycloak.common.util.Base64;
 
 /**
  * Generates lexically sortable unique keys based on:
@@ -32,40 +36,43 @@ import java.util.Random;
  */
 public class KeyGenerator {
 
-    private static long lastTimestamp = System.currentTimeMillis();
+    private static AtomicLong lastTimestamp = new AtomicLong(currentTimeMillis());
     private static final byte randomnessByte;
-    private static long randomnessLong;
+    private static AtomicLong randomnessLong;
+
+    static {
+        final Random random = ThreadLocalRandom.current();
+        randomnessByte = (byte) random.nextInt();
+        randomnessLong = new AtomicLong(random.nextLong());
+    }
 
     private KeyGenerator() {}
 
-    static {
-        Random random = new Random();
-        randomnessByte = (byte) random.nextInt();
-        randomnessLong = random.nextLong();
-    }
-
     public static String createKey() {
-        long now = System.currentTimeMillis();
+        final long now = currentTimeMillis();
 
-        ByteBuffer buffer = ByteBuffer.wrap(new byte[8 + 1 + 8]);
+        final ByteBuffer buffer = ByteBuffer.wrap(new byte[8 + 1 + 8]);
         buffer.putLong(now);
         buffer.put(randomnessByte);
+
         buffer.putLong(getRandomPart(now));
 
         try {
             return Base64.encodeBytes(buffer.array(), 2, 15, Base64.ORDERED);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new SyndesisServerException(e);
         }
     }
 
-    protected static synchronized long getRandomPart(long timeStamp) {
-        if( timeStamp == lastTimestamp ) {
-            // increment the randomness.
-            randomnessLong ++;
-        } else {
-            lastTimestamp = timeStamp;
-        }
-        return randomnessLong;
+    protected static long getRandomPart(final long timeStamp) {
+        return randomnessLong.updateAndGet(randomVal -> {
+            long current;
+            do {
+                current = lastTimestamp.get();
+                randomVal++;
+            } while (!lastTimestamp.compareAndSet(current, timeStamp));
+
+            return randomVal;
+        });
     }
 }
