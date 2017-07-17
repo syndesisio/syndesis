@@ -88,6 +88,12 @@ public abstract class ChildSteps<T extends ChildSteps> extends Step {
         return step;
     }
 
+    public Log log(String message, String loggingLevel, String logger, String marker) {
+        Log step = new Log(message, loggingLevel, logger, marker);
+        addStep(step);
+        return step;
+    }
+
     // Properties
     //-------------------------------------------------------------------------
 

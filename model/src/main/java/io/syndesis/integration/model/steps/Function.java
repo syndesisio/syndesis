@@ -16,16 +16,19 @@
  */
 package io.syndesis.integration.model.steps;
 
-import io.syndesis.integration.model.StepKinds;
+import com.google.auto.service.AutoService;
 
 /**
  * Invokes a function with the current payload
  */
+@AutoService(Step.class)
 public class Function extends Step {
+    public static final String KIND = "function";
+
     private String name;
 
     public Function() {
-        super(StepKinds.FUNCTION);
+        super(KIND);
     }
 
     public Function(String name) {

@@ -17,17 +17,20 @@
 package io.syndesis.integration.model.steps;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.syndesis.integration.model.StepKinds;
+import com.google.auto.service.AutoService;
 
 /**
  * If a filter expression is matched then it invokes the child steps
  */
+@AutoService(Step.class)
 @JsonPropertyOrder({"expression", "steps"})
 public class Filter extends ChildSteps<Filter> {
+    public static final String KIND = "filter";
+
     private String expression;
 
     public Filter() {
-        super(StepKinds.FILTER);
+        super(KIND);
     }
 
     public Filter(String expression) {
@@ -41,7 +44,7 @@ public class Filter extends ChildSteps<Filter> {
     }
 
     public String getKind() {
-        return StepKinds.FILTER;
+        return KIND;
     }
 
     public String getExpression() {

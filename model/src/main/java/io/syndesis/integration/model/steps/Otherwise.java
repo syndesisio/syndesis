@@ -16,20 +16,23 @@
  */
 package io.syndesis.integration.model.steps;
 
-import io.syndesis.integration.model.StepKinds;
+import com.google.auto.service.AutoService;
 
 import java.util.List;
 
 /**
  * Represents the otherwise clause in a {@link Choice}
  */
+@AutoService(Step.class)
 public class Otherwise extends ChildSteps<Otherwise> {
+    public static final String KIND = "otherwise";
+
     public Otherwise() {
-        super(StepKinds.OTHERWISE);
+        super(KIND);
     }
 
     public Otherwise(List<Step> steps) {
-        super(StepKinds.OTHERWISE, steps);
+        super(KIND, steps);
     }
 
     @Override
@@ -38,8 +41,7 @@ public class Otherwise extends ChildSteps<Otherwise> {
     }
 
     public String getKind() {
-        return StepKinds.OTHERWISE;
+        return KIND;
     }
-
 
 }

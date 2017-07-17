@@ -16,19 +16,22 @@
  */
 package io.syndesis.integration.model.steps;
 
-import io.syndesis.integration.model.StepKinds;
+import com.google.auto.service.AutoService;
 
 /**
  * Sets the payload body
  */
+@AutoService(Step.class)
 public class Log extends Step {
+    public static final String KIND = "log";
+
     private String message;
     private String marker;
     private String logger;
     private String loggingLevel = "INFO";
 
     public Log() {
-        super(StepKinds.LOG);
+        super(KIND);
     }
 
     public Log(String message, String loggingLevel, String logger, String marker) {

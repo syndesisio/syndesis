@@ -81,7 +81,8 @@
     <rest-assured.version>3.0.0</rest-assured.version>
     <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
     <spring-boot-plugin.version>1.5.3.RELEASE</spring-boot-plugin.version>
-    <dep.plugin.dependency.version>3.0.0</dep.plugin.dependency.version>
+    <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
+    <auto-service.version>1.0-rc3</auto-service.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -123,7 +124,13 @@
       <dependency>
         <groupId>io.syndesis.integration-runtime</groupId>
         <artifactId>model</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.auto.service</groupId>
+        <artifactId>auto-service</artifactId>
+        <version>${auto-service.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -150,6 +157,14 @@
             <exclude>mvnw*</exclude>
             <exclude>**/spring.factories</exclude>
           </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <ignoredUnusedDeclaredDependencies>
+            <ignoredUnusedDeclaredDependency>com.google.auto.service:auto-service</ignoredUnusedDeclaredDependency>
+          </ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
     </plugins>
