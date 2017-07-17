@@ -71,7 +71,7 @@ oc new-app ${SYNDESIS_TEMPLATE_TYPE}  \
     -p OPENSHIFT_OAUTH_CLIENT_ID=$(oc project -q) \
     -n ${KUBERNETES_NAMESPACE}
 
-# If env variable `SYNDESIS_DOCKERHUB_IMAGES` IS provided by template will be used
+# If env variable `SYNDESIS_RELEASED_IMAGES` IS provided by template will be used
 if [ -n "${SYNDESIS_RELEASED_IMAGES}" ]; then
   echo "ImageStreams specified by template will be used"
   # no op required
