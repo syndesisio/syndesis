@@ -17,7 +17,7 @@ package io.syndesis.rest.v1.operations;
 
 import io.syndesis.model.Kind;
 
-public interface Resource<T> {
+public interface Resource {
 
     Kind resourceKind();
 

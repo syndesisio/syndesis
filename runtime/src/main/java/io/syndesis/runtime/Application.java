@@ -34,7 +34,7 @@ public class Application extends SpringBootServletInitializer {
 
     @Bean
     @Autowired
-    public UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory(SimpleEventBus bus, List<UndertowDeploymentInfoCustomizer> customizers) {
+    public UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory(List<UndertowDeploymentInfoCustomizer> customizers) {
         UndertowEmbeddedServletContainerFactory factory = new UndertowEmbeddedServletContainerFactory();
         for (UndertowDeploymentInfoCustomizer customizer : customizers) {
             factory.addDeploymentInfoCustomizers(customizer);

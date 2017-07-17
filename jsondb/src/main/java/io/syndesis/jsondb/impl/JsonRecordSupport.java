@@ -18,6 +18,7 @@ package io.syndesis.jsondb.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -82,13 +83,13 @@ public class JsonRecordSupport {
     }
 
     public static void jsonStreamToRecords(String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
-        JsonParser jp = new JsonFactory().createParser(is);
+        try (JsonParser jp = new JsonFactory().createParser(is)) {
+            jsonStreamToRecords(jp, dbPath, consumer);
 
-        jsonStreamToRecords(jp, dbPath, consumer);
-
-        JsonToken jsonToken = jp.nextToken();
-        if (jsonToken != null) {
-            throw new JsonParseException(jp, "Document did not terminate as expected.");
+            JsonToken jsonToken = jp.nextToken();
+            if (jsonToken != null) {
+                throw new JsonParseException(jp, "Document did not terminate as expected.");
+            }
         }
     }
 
@@ -235,7 +236,7 @@ public class JsonRecordSupport {
 
             if( this.options.callback()!=null ) {
                 String backack = this.options.callback() + "(";
-                output.write(backack.getBytes("UTF-8"));
+                output.write(backack.getBytes(StandardCharsets.UTF_8));
             }
             this.jg = new JsonFactory().createGenerator(output);
             if( options.prettyPrint() ) {
@@ -380,29 +381,9 @@ public class JsonRecordSupport {
             }
             jg.flush();
             if( options.callback()!=null ) {
-                output.write(")".getBytes("UTF-8"));
+                output.write(")".getBytes(StandardCharsets.UTF_8));
             }
             jg.close();
-        }
-
-        private String currentPath() {
-            LinkedList<String> path = new LinkedList<>();
-
-            JsonStreamContext oc = jg.getOutputContext();
-            while (oc != null) {
-                if (!oc.inRoot()) {
-                    if (oc.getCurrentName() != null) {
-                        path.addFirst(oc.getCurrentName());
-                    } else {
-                        path.addFirst("" + oc.getCurrentIndex());
-                    }
-                }
-                oc = oc.getParent();
-            }
-            if (path.isEmpty()) {
-                return "/";
-            }
-            return "/" + path.stream().collect(Collectors.joining("/")) + "/";
         }
 
         private void writeValue(JsonRecord value) throws IOException {

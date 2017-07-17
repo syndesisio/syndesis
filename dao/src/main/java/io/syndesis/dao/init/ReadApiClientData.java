@@ -23,9 +23,12 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
+
 import io.syndesis.core.Json;
 
 public class ReadApiClientData {
+
+    private static final TypeReference<List<ModelData<?>>> MODEL_DATA_TYPE = new TypeReference<List<ModelData<?>>>(){};
 
     /**
      *
@@ -35,12 +38,13 @@ public class ReadApiClientData {
      * @throws JsonMappingException
      * @throws IOException
      */
-    public List<ModelData> readDataFromFile(String fileName) throws JsonParseException, JsonMappingException, IOException {
-        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
-        if (is==null) {
-            throw new FileNotFoundException("Cannot find file " + fileName + " on classpath");
+    public List<ModelData<?>> readDataFromFile(String fileName) throws JsonParseException, JsonMappingException, IOException {
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
+            if (is==null) {
+                throw new FileNotFoundException("Cannot find file " + fileName + " on classpath");
+            }
+            return Json.mapper().readValue(is, MODEL_DATA_TYPE);
         }
-        return Json.mapper().readValue(is, new TypeReference<List<ModelData>>(){});
     }
 
 }

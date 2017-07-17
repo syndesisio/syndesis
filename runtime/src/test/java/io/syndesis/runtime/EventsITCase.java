@@ -60,41 +60,40 @@ public class EventsITCase extends BaseITCase {
         List<Recordings.Invocation> invocations = recordedInvocations(handler);
         CountDownLatch countDownLatch = resetRecorderLatch(handler, 2);
 
-        EventSource eventSource = new EventSource.Builder(handler, uri).build();
-        eventSource.start();
+        try (EventSource eventSource = new EventSource.Builder(handler, uri).build()) {
+            eventSource.start();
 
-        assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
+            assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
 
-        // workaround issues in EventSource
-        reorderEventSourceInvocations(invocations);
+            // workaround issues in EventSource
+            reorderEventSourceInvocations(invocations);
 
-        assertThat(invocations.get(0).getMethod().getName()).isEqualTo("onOpen");
+            assertThat(invocations.get(0).getMethod().getName()).isEqualTo("onOpen");
 
-        // We auto get a message letting us know we connected.
-        assertThat(invocations.get(1).getMethod().getName()).isEqualTo("onMessage");
-        assertThat(invocations.get(1).getArgs()[0]).isEqualTo("message");
-        assertThat(((MessageEvent) invocations.get(1).getArgs()[1]).getData()).isEqualTo("connected");
+            // We auto get a message letting us know we connected.
+            assertThat(invocations.get(1).getMethod().getName()).isEqualTo("onMessage");
+            assertThat(invocations.get(1).getArgs()[0]).isEqualTo("message");
+            assertThat(((MessageEvent) invocations.get(1).getArgs()[1]).getData()).isEqualTo("connected");
 
-        /////////////////////////////////////////////////////
-        // Test that we get notified of created entities
-        /////////////////////////////////////////////////////
-        invocations.clear();
-        countDownLatch = resetRecorderLatch(handler, 1);
+            /////////////////////////////////////////////////////
+            // Test that we get notified of created entities
+            /////////////////////////////////////////////////////
+            invocations.clear();
+            countDownLatch = resetRecorderLatch(handler, 1);
 
-        Integration integration = new Integration.Builder()
-            .id("1001")
-            .name("test")
-            .desiredStatus(Integration.Status.Draft)
-            .currentStatus(Integration.Status.Draft)
-            .build();
-        post("/api/v1/integrations", integration, Integration.class);
+            Integration integration = new Integration.Builder()
+                .id("1001")
+                .name("test")
+                .desiredStatus(Integration.Status.Draft)
+                .currentStatus(Integration.Status.Draft)
+                .build();
+            post("/api/v1/integrations", integration, Integration.class);
 
-        assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
-        assertThat(invocations.get(0).getArgs()[0]).isEqualTo("change-event");
-        assertThat(((MessageEvent) invocations.get(0).getArgs()[1]).getData())
-            .isEqualTo(ChangeEvent.of("created", "integration", "1001").toJson());
-
-        eventSource.close();
+            assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
+            assertThat(invocations.get(0).getArgs()[0]).isEqualTo("change-event");
+            assertThat(((MessageEvent) invocations.get(0).getArgs()[1]).getData())
+                .isEqualTo(ChangeEvent.of("created", "integration", "1001").toJson());
+        }
     }
 
 
@@ -131,16 +130,14 @@ public class EventsITCase extends BaseITCase {
         // Using a random uuid should not work either.
         String uuid = UUID.randomUUID().toString();
         URI uri = resolveURI(EventBusToServerSentEvents.DEFAULT_PATH + "/" + uuid);
-        EventSource eventSource = new EventSource.Builder(handler, uri).build();
-        eventSource.start();
+        try (EventSource eventSource = new EventSource.Builder(handler, uri).build()) {
+            eventSource.start();
 
-        assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
-        assertThat(invocations.get(0).getMethod().getName()).isEqualTo("onError");
-        assertThat(invocations.get(0).getArgs()[0].toString())
-            .isEqualTo("com.launchdarkly.eventsource.UnsuccessfulResponseException: Unsuccessful response code received from stream: 404");
-
-        eventSource.close();
-
+            assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
+            assertThat(invocations.get(0).getMethod().getName()).isEqualTo("onError");
+            assertThat(invocations.get(0).getArgs()[0].toString())
+                .isEqualTo("com.launchdarkly.eventsource.UnsuccessfulResponseException: Unsuccessful response code received from stream: 404");
+        }
     }
 
     @Test

@@ -17,7 +17,7 @@ package io.syndesis.model;
 
 import java.util.Optional;
 
-public interface WithId<T extends WithId> extends WithKind {
+public interface WithId<T extends WithId<T>> extends WithKind {
 
     Optional<String> getId();
 

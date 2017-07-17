@@ -23,7 +23,7 @@ import javax.ws.rs.core.MediaType;
 import io.syndesis.dao.manager.WithDataManager;
 import io.syndesis.model.WithId;
 
-public interface Creator<T extends WithId> extends Resource<T>, WithDataManager {
+public interface Creator<T extends WithId<T>> extends Resource, WithDataManager {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)

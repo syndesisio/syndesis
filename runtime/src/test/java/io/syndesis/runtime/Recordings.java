@@ -109,20 +109,20 @@ public class Recordings {
         if (as.isInterface()) {
             // If it's just an interface, use standard java reflect proxying
             return as.cast(Proxy.newProxyInstance(as.getClassLoader(), new Class[]{as}, new RecordingInvocationHandler(object)));
-        } else {
-            // If it's a class then use gclib to implement a subclass to implement proxying
-            RecordingInvocationHandler ih = new RecordingInvocationHandler(object);
-            Enhancer enhancer = new Enhancer();
-            enhancer.setSuperclass(as);
-            enhancer.setInterfaces(new Class[]{RecordingProxy.class});
-            enhancer.setCallback(new org.springframework.cglib.proxy.InvocationHandler() {
-                @Override
-                public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-                    return ih.invoke(o, method, objects);
-                }
-            });
-            return as.cast(enhancer.create());
         }
+
+        // If it's a class then use gclib to implement a subclass to implement proxying
+        RecordingInvocationHandler ih = new RecordingInvocationHandler(object);
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(as);
+        enhancer.setInterfaces(new Class[]{RecordingProxy.class});
+        enhancer.setCallback(new org.springframework.cglib.proxy.InvocationHandler() {
+            @Override
+            public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+                return ih.invoke(o, method, objects);
+            }
+        });
+        return as.cast(enhancer.create());
     }
 
     static public CountDownLatch resetRecorderLatch(Object object, int count) {

@@ -71,9 +71,9 @@ public class JsonDBResource {
         } else if ("silent".equals(print)) {
             if( jsondb.exists(path) ) {
                 return Response.noContent().build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND).build();
             }
+
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
         if( shallow!=null ) {
             options.shallow(true);

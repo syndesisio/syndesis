@@ -18,6 +18,7 @@ package io.syndesis.runtime;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,9 @@ import org.springframework.http.ResponseEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class APIDocsITCase extends BaseITCase {
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static final Class<Map<String, Map<?, ?>>> TYPE = (Class) Map.class;
 
     @Test
     public void testSwaggerJson() {
@@ -42,16 +46,16 @@ public class APIDocsITCase extends BaseITCase {
 
     @Test
     public void testSwaggerYaml() {
-        ResponseEntity<Map> response = restTemplate().getForEntity("/api/v1/swagger.yaml", Map.class);
+        ResponseEntity<Map<String, Map<?, ?>>> response = restTemplate().getForEntity("/api/v1/swagger.yaml", TYPE);
         assertThat(response.getStatusCode()).as("swagger yaml response code").isEqualTo(HttpStatus.OK);
-        assertThat(((Map) response.getBody().get("paths")).size()).as("swagger json number of paths").isPositive();
+        assertThat((response.getBody().get("paths")).size()).as("swagger json number of paths").isPositive();
     }
 
     @Test
     public void testSwaggerYamlWithToken() {
-        ResponseEntity<Map> response = get("/api/v1/swagger.yaml", Map.class);
+        ResponseEntity<Map<String, Map<?, ?>>> response = get("/api/v1/swagger.yaml", TYPE);
         assertThat(response.getStatusCode()).as("swagger yaml response code").isEqualTo(HttpStatus.OK);
-        assertThat(((Map) response.getBody().get("paths")).size()).as("swagger json number of paths").isPositive();
+        assertThat((response.getBody().get("paths")).size()).as("swagger json number of paths").isPositive();
     }
 
     @Test

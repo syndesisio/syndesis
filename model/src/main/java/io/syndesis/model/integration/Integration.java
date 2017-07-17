@@ -34,7 +34,7 @@ import java.util.Optional;
 @JsonDeserialize(builder = Integration.Builder.class)
 public interface Integration extends WithId<Integration>, WithTags, WithName, Serializable {
 
-    enum Status { Draft, Pending, Activated, Deactivated, Deleted};
+    enum Status { Draft, Pending, Activated, Deactivated, Deleted}
 
     @Override
     default Kind getKind() {

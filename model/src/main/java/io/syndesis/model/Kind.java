@@ -45,10 +45,10 @@ public enum Kind {
     ;
 
     public final String modelName;
-    public final Class<? extends WithId> modelClass;
+    public final Class<? extends WithId<?>> modelClass;
 
     private static final HashMap<String, Kind> nameMap = new HashMap<>();
-    private static final HashMap<Class, Kind> modelMap = new HashMap<>();
+    private static final HashMap<Class<?>, Kind> modelMap = new HashMap<>();
     static {
         for (Kind kind : Kind.values()) {
             nameMap.put(kind.modelName, kind);
@@ -56,11 +56,11 @@ public enum Kind {
         }
     }
 
-    Kind(Class<? extends WithId> model) {
+    Kind(Class<? extends WithId<?>> model) {
         this(name(model.getSimpleName()), model);
     }
 
-    Kind(String name, Class<? extends WithId> model) {
+    Kind(String name, Class<? extends WithId<?>> model) {
         this.modelName = name;
         this.modelClass = model;
     }
@@ -86,7 +86,7 @@ public enum Kind {
     public static Kind from(String x) {
         Kind kind = nameMap.get(x);
         if( kind == null ) {
-            throw new IllegalArgumentException("No matching Lind found.");
+            throw new IllegalArgumentException("No matching Kind found.");
         }
         return kind;
     }
@@ -95,8 +95,9 @@ public enum Kind {
         return modelName;
     }
 
-    public Class<? extends WithId> getModelClass() {
-        return modelClass;
+    @SuppressWarnings("unchecked")
+    public <T extends WithId<T>> Class<T> getModelClass() {
+        return (Class<T>) modelClass;
     }
 
 }

@@ -18,7 +18,7 @@ package io.syndesis.dao.manager;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.WithId;
 
-public interface DataAccessObject<T extends WithId> {
+public interface DataAccessObject<T extends WithId<T>> {
 
     /**
      * @return true if this object cannot be used to create/update entities.
@@ -78,8 +78,8 @@ public interface DataAccessObject<T extends WithId> {
 
 
     default void deleteAll() {
-        ListResult<? extends WithId> l = fetchAll();
-        for (WithId entity : l.getItems()) {
+        ListResult<T> l = fetchAll();
+        for (T entity : l.getItems()) {
             delete(entity);
         }
     }

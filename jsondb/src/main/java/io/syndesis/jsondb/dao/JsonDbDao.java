@@ -33,7 +33,7 @@ import io.syndesis.model.WithId;
 /**
  * Implements a DataAccessObject using the {@see: JsonDB}.
  */
-public abstract class JsonDbDao<T extends WithId> implements DataAccessObject<T> {
+public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject<T> {
 
     private final JsonDB jsondb;
 
@@ -73,9 +73,9 @@ public abstract class JsonDbDao<T extends WithId> implements DataAccessObject<T>
                 LinkedHashMap<String, T> map = mapper.readValue(json, mapType);
 
                 return ListResult.of(map.values());
-            } else {
-                return ListResult.of(Collections.EMPTY_LIST);
             }
+
+            return ListResult.of(Collections.<T>emptyList());
         } catch (RuntimeException|IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
@@ -105,7 +105,7 @@ public abstract class JsonDbDao<T extends WithId> implements DataAccessObject<T>
     @Override
     public T update(T entity) {
         try {
-            T previousValue = this.fetch((String) entity.getId().get());
+            T previousValue = this.fetch(entity.getId().get());
 
             // Only update if the entity existed.
             if( previousValue !=null ) {

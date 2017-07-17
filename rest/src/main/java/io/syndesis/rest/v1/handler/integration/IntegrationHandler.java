@@ -61,9 +61,9 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
                     .createFrom(integration)
                     .timesUsed(BigInteger.valueOf(new Date().getTime()/1000000))
                     .build();
-        } else {
-            return integration;
         }
+
+        return integration;
     }
 
     @Override

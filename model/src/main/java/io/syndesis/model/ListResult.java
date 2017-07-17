@@ -47,7 +47,7 @@ public interface ListResult<T> {
     }
 
     static <T> ListResult<T> of(Collection<T> items) {
-        return new Builder().items(items).totalCount(items.size()).build();
+        return new Builder<T>().items(items).totalCount(items.size()).build();
     }
 
 

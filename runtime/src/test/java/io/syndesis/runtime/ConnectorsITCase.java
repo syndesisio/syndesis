@@ -50,7 +50,9 @@ public class ConnectorsITCase extends BaseITCase {
 
     @Test
     public void connectorListWithValidToken() {
-        ResponseEntity<ListResult> response = get("/api/v1/connectors", ListResult.class);
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        Class<ListResult<Connector>> type = (Class) ListResult.class;
+        ResponseEntity<ListResult<Connector>> response = get("/api/v1/connectors", type);
         assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
         ListResult<Connector> result = response.getBody();
         assertThat(result.getTotalCount()).as("connectors total").isGreaterThan(2);

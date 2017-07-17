@@ -26,13 +26,13 @@ import io.swagger.annotations.ApiParam;
 import io.syndesis.dao.manager.WithDataManager;
 import io.syndesis.model.WithId;
 
-public interface Getter<T extends WithId> extends Resource<T>, WithDataManager {
+public interface Getter<T extends WithId<T>> extends Resource, WithDataManager {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
     default T get(@PathParam("id") @ApiParam(required = true) String id) {
-        Class<T> modelClass = (Class<T>) resourceKind().getModelClass();
+        Class<T> modelClass = resourceKind().getModelClass();
         T result = getDataManager().fetch(modelClass, id);
         if( result == null ) {
             throw new EntityNotFoundException();

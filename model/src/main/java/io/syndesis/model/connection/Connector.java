@@ -44,6 +44,7 @@ public interface Connector extends WithId<Connector>, WithName, WithProperties, 
 
     String getIcon();
 
+    @Override
     Map<String, ConfigurationProperty> getProperties();
 
     String getDescription();
