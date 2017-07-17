@@ -78,9 +78,5 @@ if [ -n "${SYNDESIS_RELEASED_IMAGES}" ]; then
 else
   # Move image streams (one by one) inside the test namespace
   echo "ImageStreams from CI namespace will be used"
-  mkdir -p /tmp/syndesis-test-resources/
-  for i in `oc get is -n syndesis-ci | grep -v NAME | cut -d" " -f1`; do
-    oc export is $i -n syndesis-ci > /tmp/syndesis-test-resources/$i.yml
-    oc create -n "${KUBERNETES_NAMESPACE}" -f /tmp/syndesis-test-resources/$i.yml 2> /dev/null || oc replace -n "${KUBERNETES_NAMESPACE}" -f /tmp/syndesis-test-resources/$i.yml;
-  done
+  oc export is -n syndesis-ci | oc apply -f - -n "${KUBERNETES_NAMESPACE}"
 fi
