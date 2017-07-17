@@ -260,7 +260,7 @@
             </artifactItem>
           </artifactItems>
           <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>com.paypal.springboot:resteasy-spring-boot-starter</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.jboss.resteasy:resteasy-jaxrs</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.fabric8:spring-cloud-kubernetes-core</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-actuator</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-jdbc</ignoredUnusedDeclaredDependency>
@@ -531,6 +531,10 @@
     <dependency>
       <groupId>com.paypal.springboot</groupId>
       <artifactId>resteasy-spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxrs</artifactId>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>

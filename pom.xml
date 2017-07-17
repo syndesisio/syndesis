@@ -499,6 +499,7 @@
         <groupId>com.paypal.springboot</groupId>
         <artifactId>resteasy-spring-boot-starter</artifactId>
         <version>${resteasy-spring-boot-starter.version}</version>
+        <scope>runtime</scope>
         <exclusions>
           <exclusion>
           <groupId>com.google.code.findbugs</groupId>

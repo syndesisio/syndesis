@@ -19,7 +19,9 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import io.swagger.jaxrs.config.BeanConfig;
+import org.springframework.stereotype.Component;
 
+@Component
 @ApplicationPath("/api/v1")
 public class V1Application extends Application {
 
