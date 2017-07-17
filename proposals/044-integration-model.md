@@ -28,8 +28,8 @@ When rethinking the integration and the state model, the following points are co
 An `Integration` is the domain object describing Camel Routes used for performing integration tasks. 
 Each `Integration` has properties which can be changed by a user from the UI like its name, so its mutable.
 
-The actual logic like the connectors used and the configuration is encapsulated in an `IntegrationRevision`. 
-Multiple `IntegrationRevision` can be connected to a single `Integration`.
+The actual logic like the used connectors used and the configuration is encapsulated in an `IntegrationRevision`. 
+Multiple `IntegrationRevision`s can be connected to a single `Integration`.
 Each `IntegrationRevision` represents a certain version of the defined integration and can be in different states.
 
 Both objects are managed by `syndesis-rest` and `syndesis-ui`. 
@@ -43,15 +43,15 @@ After a "Publish" UI operation the current revision is then transformed into a r
 This runnable artefact consists of a GitHub repo containing the code and configuration plus an OpenShift resource configuration which transforms this code into running application pods.
 Running integration revisions can be suspended and resumed without destroying the deployment.
 
-Once an integration revision is published and transfered to the state _Active_ it becomes **immutable** and can not be changed afterwards (except for state related properties).
+Once an `IntegrationRevision` is published and transfered to the state _Active_ it becomes **immutable** and can not be changed afterwards (except for state related properties).
 
-`IntegrationRevisions` can be in one of the following state:
+An `IntegrationRevision` can be in one of the following state:
 
-![Integration state model](images/integration-state.png "Integration State Model")
+![IntegrationRevision state model](images/integration-state.png "Integration Revision State Model")
 
 | State       | Description |
 | ----------- |------------ |
-| Draft | Initial state of an integration. The `IntegrationRevision` is not yet deployed |
+| Draft | Initial state of an `IntegrationRevision`. The `IntegrationRevision` is not yet deployed |
 | Active | `IntegrationRevision` is deployed and running |
 | Inactive | `IntegrationRevision` is deployed but is not running|
 | Undeployed | An `IntegrationRevision` has been undeployed | 
@@ -80,6 +80,7 @@ An integration revision which was published is never deleted but can be undeploy
 
 The error state indicates that the integration revision is not running. This state can no be entered via UI but only as a side effect in the backends. 
 An integration revision can enter the error state any time. 
+The `targetState` stays untouched (as is `== currentState` when being in equillibrium) so that the controlled know which state to reconcile again to get out of the error state (which might not be possible in every case).
 
 ## State reconciliation 
 
@@ -100,7 +101,7 @@ This state is modelled implicitely by comparing both state variables.
 The error state is typically part of a `currentState`. 
 The backend controllers try to get out of the error state by might give up at some point. 
 
-Every state change (current or target) should be tracked as event in an event table for auditing purposes (todo: ask keith)
+Every state change (current or target) should be tracked as event in an event table for auditing purposes.
 
 ## Operations
 
@@ -113,13 +114,13 @@ The following operations change the `targetState`. The `targetState` could be up
 
 * **Suspend** sets the target state to _Inactive_. This operation should be only be possible if the `currentState` is _Active_.
 
-* **Resume** is an operation which can be used when the `currentState` is _Inactive_ and the revision should be re-activated. This sets the `targetState` to _Active_
+* **Resume** is an operation which can be used when the `currentState` is _Inactive_ and the revision should be re-activated. This sets the `targetState` to _Active_.
 
 * **Undeploy** marks an integration revision's targetState as _Undeployed_. An integration should be _Inactive_ before the _Undelpoyed_ state can be reached.
 
 * **Delete** is the operation which removes an integration revision in a _Draft_ state.  
 
-The `syndesis-rest` backend in this case will simply validate the context (i.e. whether the operation is allowed), updates the `targetState` and the returns to `syndesis-ui`. 
+The `syndesis-rest` backend in this case will simply validate the context (i.e. whether the operation is allowed), updates the `targetState` and then returns to `syndesis-ui`. 
 A background controller detects the state change and performs the proper actions to reach the target state. 
 
 ## Versioning
