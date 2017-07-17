@@ -15,10 +15,15 @@
  */
 package io.syndesis.runtime;
 
+import java.util.List;
+
+import javax.servlet.http.HttpSessionEvent;
+
 import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.keycloak.adapters.springsecurity.filter.KeycloakAuthenticationProcessingFilter;
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter;
+import org.keycloak.adapters.springsecurity.management.HttpSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -40,6 +45,34 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
 @ConditionalOnProperty("keycloak.enabled")
 public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter {
+
+    // the default HttpSessionManager tries to access HttpSession, when used with Infinispan spring-session support
+    // the session is `null`, see AbstractApplicationPublisherBridge::emitSessionCreatedEvent
+    static class NopHttpSessionManager extends HttpSessionManager {
+
+        public static final HttpSessionManager INSTANCE = new NopHttpSessionManager();
+
+        @Override
+        public void logoutAll() {
+            // nop
+        }
+
+        @Override
+        public void logoutHttpSessions(final List<String> ids) {
+            // nop
+        }
+
+        @Override
+        public void sessionCreated(final HttpSessionEvent event) {
+            // nop
+        }
+
+        @Override
+        public void sessionDestroyed(final HttpSessionEvent event) {
+            // nop
+        }
+    }
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(keycloakAuthenticationProvider());
@@ -66,6 +99,11 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
     }
 
     @Override
+    protected HttpSessionManager httpSessionManager() {
+        return NopHttpSessionManager.INSTANCE;
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .sessionAuthenticationStrategy(sessionAuthenticationStrategy()).and()
@@ -74,6 +112,7 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
             .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()).and().authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers("/api/v1/swagger.*").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/v1/credentials/callback").permitAll()
             .antMatchers("/api/v1/**").authenticated()
             .anyRequest().permitAll();
 

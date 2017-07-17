@@ -15,12 +15,19 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import java.util.Date;
+
+import javax.persistence.EntityNotFoundException;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+
+import io.swagger.annotations.Api;
+import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.rest.v1.handler.BaseHandler;
-import io.swagger.annotations.Api;
 import io.syndesis.rest.v1.operations.Creator;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
@@ -29,17 +36,17 @@ import io.syndesis.rest.v1.operations.Updater;
 
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
-import javax.ws.rs.Path;
-
 @Path("/connections")
 @Api(value = "connections")
 @Component
-public class ConnectionHandler extends BaseHandler implements Lister<Connection>, Getter<Connection>, Creator<Connection>, Deleter<Connection>, Updater<Connection> {
+public class ConnectionHandler extends BaseHandler
+implements Lister<Connection>, Getter<Connection>, Creator<Connection>, Deleter<Connection>, Updater<Connection> {
 
-    public ConnectionHandler(DataManager dataMgr) {
+    private final Credentials credentials;
+
+    public ConnectionHandler(final DataManager dataMgr, final Credentials credentials) {
         super(dataMgr);
+        this.credentials = credentials;
     }
 
     @Override
@@ -48,31 +55,36 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
     }
 
     @Override
-    public Connection get(String id) {
+    public Connection get(final String id) {
         Connection connection = Getter.super.get(id);
         if (connection.getConnectorId().isPresent()) {
-            Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId().get());
+            final Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId().get());
             connection = new Connection.Builder().createFrom(connection).connector(connector).build();
         }
         return connection;
     }
 
     @Override
-    public Connection create(Connection connection) {
-        Date rightNow = new Date();
-        Connection updatedConnection = new Connection.Builder().createFrom(connection)
-                .createdDate(rightNow)
-                .lastUpdated(rightNow)
-                .build();
+    public Connection create(final Connection connection) {
+        final Date rightNow = new Date();
+        final Connection updatedConnection = new Connection.Builder().createFrom(connection).createdDate(rightNow)
+            .lastUpdated(rightNow).build();
         return Creator.super.create(updatedConnection);
     }
 
     @Override
-    public void update(String id, Connection connection) {
-        Connection updatedConnection = new Connection.Builder().createFrom(connection)
-                .lastUpdated(new Date())
-                .build();
+    public void update(final String id, final Connection connection) {
+        final Connection updatedConnection = new Connection.Builder().createFrom(connection).lastUpdated(new Date())
+            .build();
         Updater.super.update(id, updatedConnection);
+    }
+
+    @Path("/{id}/credentials")
+    public ConnectionCredentialHandler credentials(final @PathParam("id") String connectionId) {
+        final String connectorId = get(connectionId).getConnector().flatMap(Connector::getId)
+            .orElseThrow(() -> new EntityNotFoundException(connectionId));
+
+        return new ConnectionCredentialHandler(credentials, connectionId, connectorId);
     }
 
 }

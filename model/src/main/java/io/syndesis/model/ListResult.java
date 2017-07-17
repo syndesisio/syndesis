@@ -17,6 +17,7 @@ package io.syndesis.model;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collector;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
@@ -50,5 +51,8 @@ public interface ListResult<T> {
         return new Builder<T>().items(items).totalCount(items.size()).build();
     }
 
+    static <T> Collector<T, Builder<T>, Builder<T>> collector() {
+        return Collector.of(Builder::new, Builder::addItem, (b1, b2) -> b1.addAllItems(b2.build().getItems()));
+    }
 
 }
