@@ -15,6 +15,9 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -52,6 +55,18 @@ public class ConnectionCredentialHandler {
     public Acquisition create(final AcquisitionRequest request, @Context final HttpServletRequest httpRequest) {
         final ServletWebRequest webRequest = new ServletWebRequest(httpRequest);
 
-        return credentials.acquire(connectionId, connectorId, request.returnUrl(), webRequest);
+        return credentials.acquire(connectionId, connectorId, absoluteTo(httpRequest, request), webRequest);
+    }
+
+    protected static URI absoluteTo(final HttpServletRequest httpRequest, final AcquisitionRequest request) {
+        final URI current = URI.create(httpRequest.getRequestURL().toString());
+        final URI returnUrl = request.returnUrl();
+
+        try {
+            return new URI(current.getScheme(), null, current.getHost(), current.getPort(), returnUrl.getPath(),
+                returnUrl.getQuery(), returnUrl.getFragment());
+        } catch (final URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

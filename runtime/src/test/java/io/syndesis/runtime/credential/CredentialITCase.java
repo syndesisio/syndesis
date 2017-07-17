@@ -144,9 +144,15 @@ public class CredentialITCase extends BaseITCase {
             CredentialFlowState.class);
 
         final CredentialFlowState expected = new CredentialFlowState.Builder().key("test-state")
-            .providerId("test-provider").connectionId("test-connection").returnUrl(URI.create("/ui#state")).build();
+            .providerId("test-provider").connectionId("test-connection").build();
 
-        assertThat(credentialFlowState).as("The flow state should be as expected").isEqualTo(expected);
+        assertThat(credentialFlowState).as("The flow state should be as expected")
+            .isEqualToIgnoringGivenFields(expected, "returnUrl");
+        final URI returnUrl = credentialFlowState.getReturnUrl();
+        assertThat(returnUrl).isNotNull();
+        assertThat(returnUrl.isAbsolute()).isTrue();
+        assertThat(returnUrl.getPath()).isEqualTo("/ui");
+        assertThat(returnUrl.getFragment()).isEqualTo("state");
     }
 
     @Test
