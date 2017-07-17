@@ -133,7 +133,7 @@
     <atlasmap.version>1.10.0</atlasmap.version>
 
     <!-- maven plugin version -->
-    <dep.plugin.dependency.version>3.0.0</dep.plugin.dependency.version>
+    <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
 
     <!-- third party plugin version -->
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
@@ -572,6 +572,7 @@
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>${postgresql.version}</version>
+        <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>org.xerial</groupId>

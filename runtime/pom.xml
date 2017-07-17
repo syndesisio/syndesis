@@ -246,21 +246,22 @@
             <goals>
               <goal>unpack</goal>
             </goals>
+            <configuration>
+              <skip>${skipITs}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.keycloak</groupId>
+                  <artifactId>keycloak-server-dist</artifactId>
+                  <version>${keycloak.version}</version>
+                  <type>tar.gz</type>
+                  <outputDirectory>${project.build.directory}/keycloak</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
           </execution>
         </executions>
         <configuration>
-          <skip>${skipITs}</skip>
-          <artifactItems>
-            <artifactItem>
-              <groupId>org.keycloak</groupId>
-              <artifactId>keycloak-server-dist</artifactId>
-              <version>${keycloak.version}</version>
-              <type>tar.gz</type>
-              <outputDirectory>${project.build.directory}/keycloak</outputDirectory>
-            </artifactItem>
-          </artifactItems>
           <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>org.jboss.resteasy:resteasy-jaxrs</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.fabric8:spring-cloud-kubernetes-core</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-actuator</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-jdbc</ignoredUnusedDeclaredDependency>
@@ -270,7 +271,6 @@
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-websocket</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.cloud:spring-cloud-starter-security</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.cloud:spring-cloud-starter-zipkin</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>postgresql:postgresql</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
