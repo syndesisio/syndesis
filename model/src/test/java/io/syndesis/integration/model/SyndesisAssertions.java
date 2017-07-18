@@ -42,14 +42,14 @@ public class SyndesisAssertions {
     public static Endpoint assertEndpointStep(Flow flow, int index, String expectedUri) {
         Endpoint step = assertFlowHasStep(flow, index, Endpoint.class);
         assertThat(step.getUri()).describedAs("flow " + flow + " step " + index + " endpoint " + step + " URI").isEqualTo(expectedUri);
-        assertThat(step.getKind()).describedAs("flow " + flow + " step " + index + " endpoint " + step + " kind").isEqualTo(StepKinds.ENDPOINT);
+        assertThat(step.getKind()).describedAs("flow " + flow + " step " + index + " endpoint " + step + " kind").isEqualTo(Endpoint.KIND);
         return step;
     }
 
     public static Function assertFunctionStep(Flow flow, int index, String expectedName) {
         Function step = assertFlowHasStep(flow, index, Function.class);
         assertThat(step.getName()).describedAs("flow " + flow + " step " + index + " endpoint " + step + " name").isEqualTo(expectedName);
-        assertThat(step.getKind()).describedAs("flow " + flow + " step " + index + " endpoint " + step + " kind").isEqualTo(StepKinds.FUNCTION);
+        assertThat(step.getKind()).describedAs("flow " + flow + " step " + index + " endpoint " + step + " kind").isEqualTo(Function.KIND);
         return step;
     }
 

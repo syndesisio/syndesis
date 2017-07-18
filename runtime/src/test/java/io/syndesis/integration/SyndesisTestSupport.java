@@ -16,8 +16,8 @@
  */
 package io.syndesis.integration;
 
-import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.model.SyndesisHelpers;
+import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.runtime.SyndesisRouteBuilder;
 import org.apache.camel.Exchange;
 import org.apache.camel.RoutesBuilder;

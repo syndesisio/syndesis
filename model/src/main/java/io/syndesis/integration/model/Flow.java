@@ -19,15 +19,15 @@ package io.syndesis.integration.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.syndesis.integration.model.steps.Choice;
 import io.syndesis.integration.model.steps.Endpoint;
+import io.syndesis.integration.model.steps.Filter;
+import io.syndesis.integration.model.steps.Function;
 import io.syndesis.integration.model.steps.Log;
 import io.syndesis.integration.model.steps.SetBody;
 import io.syndesis.integration.model.steps.SetHeaders;
+import io.syndesis.integration.model.steps.Split;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.model.steps.Throttle;
 import io.syndesis.integration.support.Strings;
-import io.syndesis.integration.model.steps.Filter;
-import io.syndesis.integration.model.steps.Function;
-import io.syndesis.integration.model.steps.Split;
 
 import java.util.ArrayList;
 import java.util.List;

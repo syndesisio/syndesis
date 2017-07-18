@@ -17,17 +17,20 @@
 package io.syndesis.integration.model.steps;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.syndesis.integration.model.StepKinds;
+import com.google.auto.service.AutoService;
 
 /**
  * Splits the payload into multiple messages
  */
+@AutoService(Step.class)
 @JsonPropertyOrder({"expression", "steps"})
 public class Split extends ChildSteps<Split> {
+    public static final String KIND = "split";
+
     private String expression;
 
     public Split() {
-        super(StepKinds.SPLIT);
+        super(KIND);
     }
 
     public Split(String expression) {
@@ -41,7 +44,7 @@ public class Split extends ChildSteps<Split> {
     }
 
     public String getKind() {
-        return StepKinds.SPLIT;
+        return KIND;
     }
 
     public String getExpression() {
