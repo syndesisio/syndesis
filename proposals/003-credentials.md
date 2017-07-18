@@ -37,7 +37,7 @@ Management of user and system credentials is also performed by credential provid
 
 ## User interaction
 
-A citizen user during the creation of new connection selects `conect to _Service_`, this leads the user to the 3rd party service requiring the users credential to authorize Syndesis access on the users behalf. The user authenticates and authorizes Syndesis's access, and is returned to the same create connection screen which now shows that Syndesis is allowed to access the service.
+A citizen user during the creation of new connection selects `connect to _Service_`, this leads the user to the 3rd party service requiring the users credential to authorize Syndesis access on the users behalf. The user authenticates and authorizes Syndesis's access, and is returned to the same create connection screen which now shows that Syndesis is allowed to access the service.
 The negative outcome is also possible if the user does not authorize Syndesis or if there is an error in the process, at that point user should be given an opportunity to retry the process.
 
 ## Domain
