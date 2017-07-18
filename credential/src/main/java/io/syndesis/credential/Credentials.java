@@ -17,6 +17,7 @@ package io.syndesis.credential;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -45,6 +46,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
@@ -55,6 +57,8 @@ public final class Credentials {
     private static final Pattern API_BASE_PATH = Pattern.compile("(/[^/]+/[^/]+)/.*");
 
     private static final MultiValueMap<String, String> EMPTY = new LinkedMultiValueMap<>();
+
+    protected static final String CREDENTIAL_FLOW_STATE_SESSION_KEY = "credentialFlowState";
 
     private final CredentialProviderLocator credentialProviderLocator;
 
@@ -101,7 +105,10 @@ public final class Credentials {
         }
     }
 
-    public URI finishAcquisition(final String oauthState, final NativeWebRequest request) {
+    public URI finishAcquisition(final NativeWebRequest request) {
+        final String oauthState = Optional.ofNullable(request.getParameter("state")).orElseGet(
+            () -> (String) request.getAttribute(CREDENTIAL_FLOW_STATE_SESSION_KEY, RequestAttributes.SCOPE_SESSION));
+
         final CredentialFlowState flowState = state.get(oauthState, CredentialFlowState.class);
 
         if (flowState == null) {
@@ -218,15 +225,14 @@ public final class Credentials {
         final OAuthToken oAuthToken;
         final OAuth1Version oAuthVersion = oauthOperations.getVersion();
 
-        final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        parameters.set("state", stateKey);
+        request.setAttribute(CREDENTIAL_FLOW_STATE_SESSION_KEY, stateKey, RequestAttributes.SCOPE_SESSION);
 
         if (oAuthVersion == OAuth1Version.CORE_10) {
-            parameters.setCallbackUrl(callbackUrlFor(request, params));
+            parameters.setCallbackUrl(callbackUrlFor(request, EMPTY));
 
             oAuthToken = oauthOperations.fetchRequestToken(null, null);
         } else if (oAuthVersion == OAuth1Version.CORE_10_REVISION_A) {
-            oAuthToken = oauthOperations.fetchRequestToken(callbackUrlFor(request, params), null);
+            oAuthToken = oauthOperations.fetchRequestToken(callbackUrlFor(request, EMPTY), null);
         } else {
             throw new IllegalStateException("Unsupported OAuth 1 version: " + oAuthVersion);
         }

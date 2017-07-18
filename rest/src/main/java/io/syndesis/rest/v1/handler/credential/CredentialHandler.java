@@ -20,7 +20,6 @@ import java.net.URI;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
@@ -43,10 +42,10 @@ public class CredentialHandler {
 
     @GET
     @Path("/callback")
-    public Response callback(@QueryParam("state") final String state, @Context final HttpServletRequest httpRequest) {
+    public Response callback(@Context final HttpServletRequest httpRequest) {
         final ServletWebRequest webRequest = new ServletWebRequest(httpRequest);
 
-        final URI location = credentials.finishAcquisition(state, webRequest);
+        final URI location = credentials.finishAcquisition(webRequest);
 
         return Response.temporaryRedirect(location).build();
     }
