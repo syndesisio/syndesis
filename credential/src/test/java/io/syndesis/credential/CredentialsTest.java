@@ -16,7 +16,6 @@
 package io.syndesis.credential;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,6 +46,7 @@ import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
@@ -116,19 +116,21 @@ public class CredentialsTest {
         final Acquisition acquisition = credentials.acquire("connectionId", "providerId", URI.create("/ui#state"),
             request);
 
+        final ArgumentCaptor<String> capturedState = ArgumentCaptor.forClass(String.class);
+        verify(request).setAttribute(eq(Credentials.CREDENTIAL_FLOW_STATE_SESSION_KEY), capturedState.capture(),
+            eq(RequestAttributes.SCOPE_SESSION));
+        final String stateValue = capturedState.getValue();
+
         final Acquisition expected = new Acquisition.Builder().type(Type.REDIRECT)
             .url("https://provider.io/oauth/authorize").build();
         assertThat(acquisition).isEqualTo(expected);
         final OAuth1Parameters oAuth1Parameters = parameters.getValue();
         assertThat(oAuth1Parameters.getCallbackUrl()).isNull();
-        final List<String> capturedState = oAuth1Parameters.get("state");
-        assertThat(capturedState).hasSize(1);
-        final String stateValue = capturedState.get(0);
-        assertThat(stateValue).isNotEmpty();
 
         final CredentialFlowState flowState = new CredentialFlowState.Builder().key(stateValue)
             .connectionId("connectionId").providerId("providerId").returnUrl(URI.create("/ui#state")).token(token)
             .build();
+
         verify(state).put(stateValue, flowState);
     }
 
@@ -150,15 +152,16 @@ public class CredentialsTest {
         final Acquisition acquisition = credentials.acquire("connectionId", "providerId", URI.create("/ui#state"),
             request);
 
+        final ArgumentCaptor<String> capturedState = ArgumentCaptor.forClass(String.class);
+        verify(request).setAttribute(eq(Credentials.CREDENTIAL_FLOW_STATE_SESSION_KEY), capturedState.capture(),
+            eq(RequestAttributes.SCOPE_SESSION));
+        final String stateValue = capturedState.getValue();
+
         final Acquisition expected = new Acquisition.Builder().type(Type.REDIRECT)
             .url("https://provider.io/oauth/authorize").build();
         assertThat(acquisition).isEqualTo(expected);
         final OAuth1Parameters oAuth1Parameters = parameters.getValue();
         assertThat(oAuth1Parameters.getCallbackUrl()).isEqualTo("https://syndesis.io/api/v1/credentials/callback");
-        final List<String> capturedState = oAuth1Parameters.get("state");
-        assertThat(capturedState).hasSize(1);
-        final String stateValue = capturedState.get(0);
-        assertThat(stateValue).isNotEmpty();
 
         final CredentialFlowState flowState = new CredentialFlowState.Builder().key(stateValue)
             .connectionId("connectionId").providerId("providerId").returnUrl(URI.create("/ui#state")).token(token)
@@ -248,7 +251,10 @@ public class CredentialsTest {
         applicator.setConsumerSecretProperty("consumerSecretProperty");
         when((OAuth1Applicator) locator.getApplicator("providerId")).thenReturn(applicator);
 
-        final URI uri = credentials.finishAcquisition("state", request);
+        when(request.getAttribute(Credentials.CREDENTIAL_FLOW_STATE_SESSION_KEY, RequestAttributes.SCOPE_SESSION))
+            .thenReturn("state");
+
+        final URI uri = credentials.finishAcquisition(request);
 
         assertThat(uri).isEqualTo(URI.create("/ui#state"));
         final AuthorizedRequestToken capturedRequestToken = requestToken.getValue();
@@ -293,7 +299,9 @@ public class CredentialsTest {
         when(operations.exchangeForAccess("code", "https://syndesis.io/api/v1/credentials/callback", null))
             .thenReturn(new AccessGrant("accessToken", "scope", "refreshToken", 1L));
 
-        final URI uri = credentials.finishAcquisition("state", request);
+        when(request.getParameter("state")).thenReturn("state");
+
+        final URI uri = credentials.finishAcquisition(request);
 
         assertThat(uri).isEqualTo(URI.create("/ui#state"));
 
