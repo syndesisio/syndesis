@@ -44,7 +44,7 @@ public class FunctionHandler implements StepHandler<Function> {
         uri += "?method=" + method;
       }
       uri = routeBuilder.convertEndpointURI(uri);
-      route = route.to("json:marshal").to(uri);
+      route = route.to(uri);
     }
     return route;
   }

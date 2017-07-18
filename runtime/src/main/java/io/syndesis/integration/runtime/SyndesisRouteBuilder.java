@@ -119,65 +119,55 @@ public class SyndesisRouteBuilder extends RouteBuilder {
             name = "flow" + (syndesisIndex + 1);
             flow.setName(name);
         }
+
         RouteDefinition route = null;
         List<Step> steps = flow.getSteps();
-        int validSteps = 0;
-        if (steps != null) {
-            for (Step item : steps) {
-                if (item instanceof Function) {
-                    Function function = (Function) item;
-                    String functionName = function.getName();
-                    if (!Strings.isEmpty(functionName)) {
-                        if (route != null) {
-                            route.to("json:marshal");
-                        }
-                        String method = null;
-                        int idx = functionName.indexOf("::");
-                        if (idx > 0) {
-                            method = functionName.substring(idx + 2);
-                            functionName = functionName.substring(0, idx);
-                        }
-                        String uri = "class:" + functionName;
-                        if (method != null) {
-                            uri += "?method=" + method;
-                        }
-                        route = fromOrTo(route, name, uri, message);
 
-                        message.append(functionName);
-                        if (method != null) {
-                            message.append("." + method + "()");
-                        } else {
-                            message.append(".main()");
-                        }
-                        validSteps++;
+        if (steps == null || steps.isEmpty()) {
+            throw new IllegalStateException("No valid steps! Invalid flow " + flow);
+        }
+
+        for (Step item : steps) {
+            if (item instanceof Function) {
+                Function function = (Function) item;
+                String functionName = function.getName();
+                if (!Strings.isEmpty(functionName)) {
+                    String method = null;
+                    int idx = functionName.indexOf("::");
+                    if (idx > 0) {
+                        method = functionName.substring(idx + 2);
+                        functionName = functionName.substring(0, idx);
                     }
-                } else if (item instanceof Endpoint) {
-                    Endpoint invokeEndpoint = (Endpoint) item;
-                    String uri = invokeEndpoint.getUri();
-                    if (!Strings.isEmpty(uri)) {
-                        if (route != null) {
-                            route.to("json:marshal");
-                        }
-                        route = fromOrTo(route, name, uri, message);
-                        message.append(uri);
-                        validSteps++;
+                    String uri = "class:" + functionName;
+                    if (method != null) {
+                        uri += "?method=" + method;
                     }
-                } else {
-                    addStep(route, item);
-                    validSteps++;
+                    route = fromOrTo(route, name, uri, message);
+
+                    message.append(functionName);
+                    if (method != null) {
+                        message.append("." + method + "()");
+                    } else {
+                        message.append(".main()");
+                    }
                 }
+            } else if (item instanceof Endpoint) {
+                Endpoint invokeEndpoint = (Endpoint) item;
+                String uri = invokeEndpoint.getUri();
+                if (!Strings.isEmpty(uri)) {
+                    route = fromOrTo(route, name, uri, message);
+                    message.append(uri);
+                }
+            } else {
+                addStep(route, item);
             }
         }
-        if (route == null || validSteps == 0) {
-            throw new IllegalStateException("No valid steps! Invalid flow " + flow);
 
-        }
         if (flow.isLogResultEnabled()) {
             String chain = "log:" + name + "?showStreams=true";
             route.to(chain);
             message.append(" => ");
             message.append(chain);
-            validSteps++;
         }
         LOG.info(message.toString());
 
