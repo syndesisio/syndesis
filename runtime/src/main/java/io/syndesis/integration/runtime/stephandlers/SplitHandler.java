@@ -21,6 +21,7 @@ import io.syndesis.integration.runtime.SyndesisRouteBuilder;
 import org.apache.camel.Expression;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.SplitDefinition;
+import org.apache.camel.model.dataformat.JsonLibrary;
 
 @AutoService(StepHandler.class)
 public class SplitHandler implements StepHandler<Split> {
@@ -32,7 +33,7 @@ public class SplitHandler implements StepHandler<Split> {
   @Override
   public ProcessorDefinition handle(Split step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
     Expression expression = routeBuilder.getMandatoryExpression(step, step.getExpression());
-    SplitDefinition split = route.split(expression);
+    ProcessorDefinition split = route.split(expression).marshal().json(JsonLibrary.Jackson);
     return routeBuilder.addSteps(split, step.getSteps());
   }
 }

@@ -32,7 +32,7 @@ public class EndpointHandler implements StepHandler<Endpoint> {
     String uri = step.getUri();
     if (!Strings.isEmpty(uri)) {
       uri = routeBuilder.convertEndpointURI(uri);
-      route = route.to("json:marshal").to(uri);
+      route = route.to(uri);
     }
     return route;
   }
