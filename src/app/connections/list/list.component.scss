@@ -31,7 +31,6 @@
 
       .card-pf-body {
         height: 240px;
-        overflow: hidden;
 
         .card-pf-heading-kebab {
           .dropdown-kebab-pf {
@@ -55,7 +54,8 @@
 
             .dropdown-menu.dropdown-menu-right {
               left: auto;
-              right: 1px;
+              right: -1px;
+              top: 26px;
             }
           }
         }

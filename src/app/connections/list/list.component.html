@@ -65,14 +65,15 @@
               <!-- Card Actions -->
               <div *ngIf="showKebab">
                 <div dropdown
-                     class="dropdown dropdown-kebab-pf pull-right">
+                     class="dropdown dropdown-kebab-pf pull-right"
+                     placement="bottom">
                   <button dropdownToggle
                           class="btn btn-link dropdown-toggle"
                           type="button"
                           id="dropdownKebabRight9"
                           (click)="$event.stopPropagation()">
-                  <span class="fa fa-ellipsis-v"></span>
-                </button>
+                    <span class="fa fa-ellipsis-v"></span>
+                  </button>
                   <ul *dropdownMenu
                       class="dropdown-menu dropdown-menu-right"
                       role="menu">
