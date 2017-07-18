@@ -15,25 +15,22 @@
  */
 package io.syndesis.credential;
 
+import org.springframework.social.connect.ConnectionFactory;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.springframework.social.connect.ConnectionFactory;
 
 final class CredentialProviderRegistry implements CredentialProviderLocator {
 
     private final Map<String, CredentialProvider<?, ?>> providers = new ConcurrentHashMap<>();
 
     public <A, T> void addCredentialProvider(final CredentialProvider<A, T> credentialProvider) {
-        final ConnectionFactory<A> connectionFactory = credentialProvider.connectionFactory();
-        final String providerId = connectionFactory.getProviderId();
-
-        providers.put(providerId, credentialProvider);
+        providers.put(credentialProvider.id(), credentialProvider);
     }
 
     @Override
-    public Applicator<?> getApplicator(final String providerId) {
-        return providerWithId(providerId).applicator();
+    public Applicator<?> getApplicator(final String id) {
+        return providerWithId(id).applicator();
     }
 
     @Override

@@ -15,41 +15,34 @@
  */
 package io.syndesis.credential;
 
-import java.util.Collections;
-import java.util.List;
-
 import io.syndesis.dao.manager.DataManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+import java.util.Optional;
+
 @Configuration
 public class CredentialConfiguration {
 
-    private List<CredentialProviderConfiguration> configurations = Collections.emptyList();
-
     @Bean
-    public CredentialProviderLocator credentialProviderLocator() {
-        final DefaultCredentialProviderFactoryConfigurer configurer = new DefaultCredentialProviderFactoryConfigurer();
-
-        for (final CredentialProviderConfiguration configuration : configurations) {
-            configuration.addCredentialProviderTo(configurer);
+    @Autowired()
+    public CredentialProviderLocator credentialProviderLocator(Optional<List<CredentialProvider>> providers) {
+        final CredentialProviderRegistry registry = new CredentialProviderRegistry();
+        if ( providers.isPresent() ) {
+            for (CredentialProvider provider : providers.get()) {
+                registry.addCredentialProvider(provider);
+            }
         }
-
-        return configurer.getCredentialProviderLocator();
+        return registry;
     }
 
     @Bean
     public Credentials credentials(final CredentialProviderLocator connectionProviderLocator,
         final DataManager dataManager, final CacheManager cacheManager) {
         return new Credentials(connectionProviderLocator, dataManager, cacheManager);
-    }
-
-    @Autowired(required = false)
-    public void setCredentialProviderConfigurers(final List<CredentialProviderConfiguration> configurations) {
-        this.configurations = configurations;
     }
 
 }

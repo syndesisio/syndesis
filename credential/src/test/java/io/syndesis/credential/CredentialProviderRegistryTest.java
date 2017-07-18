@@ -33,8 +33,8 @@ public class CredentialProviderRegistryTest {
 
         @SuppressWarnings("unchecked")
         final ConnectionFactory<Object> connectionFactory = mock(ConnectionFactory.class);
+        when(provider.id()).thenReturn("a-provider");
         when(provider.connectionFactory()).thenReturn(connectionFactory);
-        when(connectionFactory.getProviderId()).thenReturn("a-provider");
 
         registry.addCredentialProvider(provider);
 

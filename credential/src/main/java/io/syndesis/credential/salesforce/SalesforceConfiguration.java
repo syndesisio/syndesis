@@ -17,17 +17,15 @@ package io.syndesis.credential.salesforce;
 
 import io.syndesis.credential.Applicator;
 import io.syndesis.credential.CredentialProvider;
-import io.syndesis.credential.CredentialProviderConfiguration;
-import io.syndesis.credential.CredentialProviderConfigurer;
 import io.syndesis.credential.DefaultCredentialProvider;
 import io.syndesis.credential.OAuth2Applicator;
 import io.syndesis.model.connection.Connection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.social.config.annotation.SocialConfigurerAdapter;
 import org.springframework.social.oauth2.AccessGrant;
@@ -39,7 +37,7 @@ import org.springframework.social.salesforce.connect.SalesforceConnectionFactory
 @ConditionalOnClass({SocialConfigurerAdapter.class, SalesforceConnectionFactory.class})
 @ConditionalOnProperty(prefix = "spring.social.salesforce", name = "app-id")
 @EnableConfigurationProperties(SalesforceProperties.class)
-public class SalesforceConfiguration implements CredentialProviderConfiguration {
+public class SalesforceConfiguration {
 
     protected final SalesforceApplicator applicator;
 
@@ -79,12 +77,10 @@ public class SalesforceConfiguration implements CredentialProviderConfiguration 
         applicator = new SalesforceApplicator(salesforceProperties);
     }
 
-    @Override
-    public void addCredentialProviderTo(final CredentialProviderConfigurer configurer) {
-        final CredentialProvider<Salesforce, AccessGrant> credentialProvider = new DefaultCredentialProvider<>(
-            salesforce, applicator);
-
-        configurer.addCredentialProvider(credentialProvider);
+    @Bean
+    public CredentialProvider<Salesforce, AccessGrant> create() {
+        return new DefaultCredentialProvider<>(
+            "salesforce", salesforce, applicator);
     }
 
     protected static SalesforceConnectionFactory

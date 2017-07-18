@@ -23,7 +23,6 @@ import io.syndesis.credential.Acquisition;
 import io.syndesis.credential.AcquisitionMethod;
 import io.syndesis.credential.CredentialFlowState;
 import io.syndesis.credential.CredentialProvider;
-import io.syndesis.credential.CredentialProviderConfiguration;
 import io.syndesis.credential.Credentials;
 import io.syndesis.credential.OAuth2Applicator;
 import io.syndesis.model.connection.Connection;
@@ -66,12 +65,13 @@ public class CredentialITCase extends BaseITCase {
 
     public static class TestConfiguration {
         @Bean
-        public static CredentialProviderConfiguration provider() {
+        public CredentialProvider<Object, AccessGrant> provider() {
             @SuppressWarnings("unchecked")
             final CredentialProvider<Object, AccessGrant> credentialProvider = mock(CredentialProvider.class);
 
             @SuppressWarnings("unchecked")
             final OAuth2ConnectionFactory<Object> connectionFactory = mock(OAuth2ConnectionFactory.class);
+            when(credentialProvider.id()).thenReturn("test-provider");
             when(connectionFactory.getProviderId()).thenReturn("test-provider");
 
             when(credentialProvider.connectionFactory()).thenReturn(connectionFactory);
@@ -97,7 +97,7 @@ public class CredentialITCase extends BaseITCase {
 
             when(credentialProvider.applicator()).thenReturn(applicator);
 
-            return configurer -> configurer.addCredentialProvider(credentialProvider);
+            return credentialProvider;
         }
     }
 
