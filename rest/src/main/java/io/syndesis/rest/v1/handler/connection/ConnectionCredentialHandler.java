@@ -66,7 +66,8 @@ public class ConnectionCredentialHandler {
             return new URI(current.getScheme(), null, current.getHost(), current.getPort(), returnUrl.getPath(),
                 returnUrl.getQuery(), returnUrl.getFragment());
         } catch (final URISyntaxException e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException("Unable to generate URI based on the current (`" + current
+                + "`) and the return (`" + returnUrl + "`) URLs", e);
         }
     }
 }
