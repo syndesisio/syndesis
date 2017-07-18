@@ -61,7 +61,7 @@ export class FormFactoryService {
           {
             id: key,
             label: value.displayName || key,
-            placeholder: value.description,
+            hint: value.description,
             value: value.value || value.defaultValue,
             required: value.required,
             rows: value.rows,
@@ -85,7 +85,7 @@ export class FormFactoryService {
           {
             id: key,
             label: type === 'hidden' ? null : value.displayName || key,
-            placeholder: type === 'hidden' ? null : value.description,
+            hint: type === 'hidden' ? null : value.description,
             inputType: type,
             value: value.value || value.defaultValue,
             required: value.required,
