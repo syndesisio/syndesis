@@ -116,13 +116,13 @@
   dependencies:
     tsickle "^0.21.0"
 
-"@ng2-dynamic-forms/core@1.4.17":
-  version "1.4.17"
-  resolved "https://registry.yarnpkg.com/@ng2-dynamic-forms/core/-/core-1.4.17.tgz#60e532dbed67eda8e6ceda541e0dd641a622c792"
+"@ng2-dynamic-forms/core@1.4.20":
+  version "1.4.20"
+  resolved "https://registry.yarnpkg.com/@ng2-dynamic-forms/core/-/core-1.4.20.tgz#bfc81832ea35663c43f84db529c10d2fd1948a5b"
 
-"@ng2-dynamic-forms/ui-bootstrap@1.4.17":
-  version "1.4.17"
-  resolved "https://registry.yarnpkg.com/@ng2-dynamic-forms/ui-bootstrap/-/ui-bootstrap-1.4.17.tgz#b7606635479b3df9cbc06de3a8c002fddd770a99"
+"@ng2-dynamic-forms/ui-bootstrap@1.4.20":
+  version "1.4.20"
+  resolved "https://registry.yarnpkg.com/@ng2-dynamic-forms/ui-bootstrap/-/ui-bootstrap-1.4.20.tgz#192f09ac71ad0ae441ebcbe5a9af289cc6c73fba"
 
 "@ngtools/json-schema@1.0.9":
   version "1.0.9"
@@ -5495,12 +5495,6 @@ rx@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/rx/-/rx-4.1.0.tgz#a5f13ff79ef3b740fe30aa803fb09f98805d4782"
 
-rxjs@5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.1.1.tgz#fc48922965bc6c5efbcc0fe46e90a3af64137a7b"
-  dependencies:
-    symbol-observable "^1.0.1"
-
 rxjs@5.4.1, rxjs@^5.0.0, rxjs@^5.0.1:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.1.tgz#b62f757f279445d265a18a58fb0a70dc90e91626"
@@ -6125,9 +6119,9 @@ symbol-observable@^1.0.1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.4.tgz#29bf615d4aa7121bdd898b22d4b3f9bc4e2aa03d"
 
-"syndesis.data.mapper@https://github.com/syndesisio/syndesis-datamapper-ui.git#9476d91ec03c0e4885f3005876c67216130ef98d":
+"syndesis.data.mapper@https://github.com/atlasmap/atlasmap-ui.git#95fde83d9d10129656aecfb91a36ba7d070d4db5":
   version "1.0.0"
-  resolved "https://github.com/syndesisio/syndesis-datamapper-ui.git#9476d91ec03c0e4885f3005876c67216130ef98d"
+  resolved "https://github.com/atlasmap/atlasmap-ui.git#95fde83d9d10129656aecfb91a36ba7d070d4db5"
   dependencies:
     "@angular/common" ">=4.1.0"
     "@angular/compiler" ">=4.1.0"
@@ -6144,7 +6138,7 @@ symbol-observable@^1.0.1:
     moment "^2.18.1"
     ncp "^2.0.0"
     ngx-bootstrap "1.6.6"
-    rxjs "5.1.1"
+    rxjs "5.4.1"
     systemjs "0.19.40"
     zone.js ">=0.8.4"
 
