@@ -15,15 +15,15 @@
  */
 package io.syndesis.credential.twitter;
 
-import io.syndesis.credential.CredentialProviderConfiguration;
-import io.syndesis.credential.CredentialProviderConfigurer;
+import io.syndesis.credential.CredentialProvider;
 import io.syndesis.credential.DefaultCredentialProvider;
 import io.syndesis.credential.OAuth1Applicator;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.social.TwitterProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.social.config.annotation.SocialConfigurerAdapter;
 import org.springframework.social.oauth1.OAuthToken;
@@ -34,12 +34,13 @@ import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 @ConditionalOnClass({SocialConfigurerAdapter.class, TwitterConnectionFactory.class})
 @ConditionalOnProperty(prefix = "spring.social.twitter", name = "app-id")
 @EnableConfigurationProperties(TwitterProperties.class)
-public class TwitterConfiguration implements CredentialProviderConfiguration {
+public class TwitterConfiguration {
+
 
     private final OAuth1Applicator applicator;
-
     private final TwitterConnectionFactory twitter;
 
+    @Autowired
     protected TwitterConfiguration(final TwitterProperties properties) {
         twitter = new TwitterConnectionFactory(properties.getAppId(), properties.getAppSecret());
         applicator = new OAuth1Applicator(properties);
@@ -49,13 +50,10 @@ public class TwitterConfiguration implements CredentialProviderConfiguration {
         applicator.setAccessTokenValueProperty("accessToken");
     }
 
-    @Override
-    public void addCredentialProviderTo(final CredentialProviderConfigurer configurer) {
-        final DefaultCredentialProvider<Twitter, OAuthToken> twitterCredentialProvider = new DefaultCredentialProvider<>(
-            twitter, applicator);
-
-        configurer.addCredentialProvider(twitterCredentialProvider);
-
+    @Bean
+    public CredentialProvider<Twitter, OAuthToken> create() {
+        return new DefaultCredentialProvider<>(
+            "twitter", twitter, applicator);
     }
 
 }

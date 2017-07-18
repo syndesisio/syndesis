@@ -23,9 +23,17 @@ public class DefaultCredentialProvider<A, T> implements CredentialProvider<A, T>
 
     private final ConnectionFactory<A> connectionFactory;
 
-    public DefaultCredentialProvider(final ConnectionFactory<A> connectionFactory, final Applicator<T> applicator) {
+    private final String id;
+
+    public DefaultCredentialProvider(String id, final ConnectionFactory<A> connectionFactory, final Applicator<T> applicator) {
+        this.id = id;
         this.connectionFactory = connectionFactory;
         this.applicator = applicator;
+    }
+
+    @Override
+    public String id() {
+        return id;
     }
 
     @Override

@@ -19,6 +19,8 @@ import org.springframework.social.connect.ConnectionFactory;
 
 public interface CredentialProvider<A, T> {
 
+    String id();
+
     Applicator<T> applicator();
 
     ConnectionFactory<A> connectionFactory();

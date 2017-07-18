@@ -32,4 +32,11 @@ public interface CredentialProviderLocator {
      */
     ConnectionFactory<?> getConnectionFactory(String providerId);
 
+    /**
+     * Adds or replaces a CredentialProvider in the locator.
+     *
+     * @param credentialProvider the provider to add
+     */
+    public <A, T> void addCredentialProvider(final CredentialProvider<A, T> credentialProvider);
+
 }
