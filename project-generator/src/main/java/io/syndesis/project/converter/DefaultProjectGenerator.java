@@ -15,45 +15,42 @@
  */
 package io.syndesis.project.converter;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-
 import io.syndesis.connector.catalog.ConnectorCatalog;
-import io.syndesis.core.Json;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.integration.model.StepKinds;
 import io.syndesis.integration.model.SyndesisModel;
-import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.integration.support.YamlHelper;
-import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
-
+import io.syndesis.project.converter.visitor.GeneratorContext;
+import io.syndesis.project.converter.visitor.StepVisitor;
+import io.syndesis.project.converter.visitor.StepVisitorContext;
+import io.syndesis.project.converter.visitor.StepVisitorFactory;
+import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class DefaultProjectGenerator implements ProjectGenerator {
 
-    private static final String MAPPER = "mapper";
     private static final ObjectMapper YAML_OBJECT_MAPPER = YamlHelper.createYamlMapper();
-    private static final String PLACEHOLDER_FORMAT = "{{%s}}";
 
     private MustacheFactory mf = new DefaultMustacheFactory();
 
@@ -85,12 +82,14 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     */
     private final ConnectorCatalog connectorCatalog;
     private final ProjectGeneratorProperties generatorProperties;
+    private final StepVisitorFactoryRegistry registry;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public DefaultProjectGenerator(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties) {
+    public DefaultProjectGenerator(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties, StepVisitorFactoryRegistry registry) {
         this.connectorCatalog = connectorCatalog;
         this.generatorProperties = generatorProperties;
+        this.registry = registry;
     }
 
     @Override
@@ -152,83 +151,44 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     private byte[] generateFlowYaml(Map<String, byte[]> contents, GenerateProjectRequest request) throws JsonProcessingException {
         Flow flow = new Flow();
         request.getIntegration().getSteps().ifPresent(steps -> {
-            int stepCounter=0;
-            for (Step step : steps) {
-                stepCounter++;
-                if (step.getStepKind().equals(StepKinds.ENDPOINT)) {
-                    step.getAction().ifPresent(action -> {
-                        step.getConnection().ifPresent(connection -> {
-                            try {
-                                String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
-                                if (!request.getConnectors().containsKey(connectorId)) {
-                                    throw new IllegalStateException("Connector:["+connectorId+"] not found.");
-                                }
+            if (steps.isEmpty()) {
+                return;
+            }
 
-                                Connector connector = request.getConnectors().get(connectorId);
-                                flow.addStep(createEndpointStep(connector, action.getCamelConnectorPrefix(),
-                                        connection.getConfiguredProperties(), step.getConfiguredProperties().orElse(new HashMap<String,String>())));
-                            } catch (URISyntaxException e) {
-                                throw new IllegalStateException(e);
-                            }
-                        });
-                    });
-                    continue;
-                }
+            Queue<Step> remaining = new LinkedList<>(steps);
+            Step first = remaining.remove();
+            if (first != null) {
+                GeneratorContext generatorContext = new GeneratorContext.Builder()
+                    .connectorCatalog(connectorCatalog)
+                    .generatorProperties(generatorProperties)
+                    .request(request)
+                    .contents(contents)
+                    .flow(flow)
+                    .visitorFactoryRegistry(registry)
+                    .build();
 
-                if ( MAPPER.equals(step.getStepKind()) ) {
+                StepVisitorContext stepContext = new StepVisitorContext.Builder()
+                    .index(1)
+                    .step(first)
+                    .remaining(remaining)
+                    .build();
 
-                    Map<String, String> configuredProperties = step.getConfiguredProperties().get();
-
-                    String resourceName = "mapping-step-" + stepCounter + ".json";
-                    byte[] resourceData = utf8(configuredProperties.get("atlasmapping"));
-                    contents.put("src/main/resources/" + resourceName, resourceData);
-                    flow.addStep(new Endpoint("atlas:"+resourceName));
-
-                    continue;
-                }
-
-                try {
-                    HashMap<String, Object> stepJSON = new HashMap<>(step.getConfiguredProperties().orElse(new HashMap<String,String>()));
-                    stepJSON.put("kind", step.getStepKind());
-                    String json = Json.mapper().writeValueAsString(stepJSON);
-                    flow.addStep(Json.mapper().readValue(json, io.syndesis.integration.model.steps.Step.class));
-                    continue;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                visitStep(generatorContext, stepContext);
             }
         });
-
         SyndesisModel syndesisModel = new SyndesisModel();
         syndesisModel.addFlow(flow);
         return YAML_OBJECT_MAPPER.writeValueAsBytes(syndesisModel);
     }
 
-    private static byte[] utf8(String value) {
-        if (value == null) {
-            return null;
+    private void visitStep(GeneratorContext generatorContext, StepVisitorContext stepContext) {
+        StepVisitorFactory factory = registry.get(stepContext.getStep().getStepKind());
+
+        StepVisitor visitor = factory.create(generatorContext);
+        generatorContext.getFlow().addStep(visitor.visit(stepContext));
+        if (stepContext.hasNext()) {
+             visitStep(generatorContext, stepContext.next());
         }
-        return value.getBytes(UTF_8);
-    }
-
-    private io.syndesis.integration.model.steps.Step createEndpointStep(Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws URISyntaxException {
-        Map<String, String> properties = connector.filterProperties(aggregate(connectionConfiguredProperties, stepConfiguredProperties), connector.isEndpointProperty());
-        Map<String, String> secrets = connector.filterProperties(properties, connector.isSecret(),
-            e -> e.getKey(),
-            e -> String.format(PLACEHOLDER_FORMAT, camelConnectorPrefix + "." + e.getKey()));
-
-        // TODO Remove this hack... when we can read endpointValues from connector schema then we should use those as initial properties.
-        if ("periodic-timer".equals(camelConnectorPrefix)) {
-            properties.put("timerName", "every");
-        }
-
-        Map<String, String> maskedProperties = generatorProperties.isSecretMaskingEnabled() ? aggregate(properties, secrets) : properties;
-        String endpointUri = connectorCatalog.buildEndpointUri(camelConnectorPrefix, maskedProperties);
-        return new Endpoint(endpointUri);
-    }
-
-    private static Map<String, String> aggregate(Map<String, String> ... maps) {
-        return Stream.of(maps).flatMap(map -> map.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue));
     }
 
     private byte[] generateFromRequest(GenerateProjectRequest request, Mustache template) throws IOException {

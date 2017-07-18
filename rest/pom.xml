@@ -72,6 +72,10 @@
       <groupId>io.syndesis</groupId>
       <artifactId>verifier</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>inspector</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>

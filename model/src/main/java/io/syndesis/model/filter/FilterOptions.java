@@ -13,34 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.integration;
+package io.syndesis.model.filter;
+
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.model.Kind;
-import io.syndesis.model.WithId;
-import io.syndesis.model.connection.Action;
-import io.syndesis.model.connection.Connection;
+import org.immutables.value.Value;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
 
-@JsonDeserialize(using = StepDeserializer.class)
-public interface Step extends WithId<Step>, Serializable {
+@Value.Immutable
+@JsonDeserialize(builder = FilterOptions.Builder.class)
+public interface FilterOptions extends Serializable {
 
-    @Override
-    default Kind getKind() {
-        return Kind.Step;
+    List<String> getPaths();
+    List<Op> getOps();
+
+    class Builder extends ImmutableFilterOptions.Builder {
     }
-
-    Optional<Action> getAction();
-
-    Optional<Connection> getConnection();
-
-    String getStepKind();
-
-    Optional<Map<String, String>> getConfiguredProperties();
-
-    String getName();
-
 }

@@ -28,6 +28,7 @@ import org.springframework.boot.context.embedded.undertow.UndertowDeploymentInfo
 import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(exclude = {TwitterAutoConfiguration.class, FacebookAutoConfiguration.class,
     LinkedInAutoConfiguration.class, SocialWebAutoConfiguration.class})
@@ -45,6 +46,11 @@ public class Application extends SpringBootServletInitializer {
             factory.addDeploymentInfoCustomizers(customizer);
         }
         return factory;
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 }

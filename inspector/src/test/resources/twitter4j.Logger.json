@@ -1,0 +1,175 @@
+{
+  "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+  "value": null,
+  "collection": null,
+  "status": null,
+  "annotations": null,
+  "modifiers": null,
+  "name": null,
+  "path": null,
+  "className": "twitter4j.Logger",
+  "type": null,
+  "getMethod": null,
+  "setMethod": null,
+  "primitive": false,
+  "array": false,
+  "arrayDimensions": null,
+  "synthetic": false,
+  "javaEnumFields": {
+    "javaEnumField": []
+  },
+  "javaFields": {
+    "javaField": [
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaClass",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "FINAL",
+            "PRIVATE",
+            "STATIC"
+          ]
+        },
+        "name": "LOGGER_FACTORY",
+        "path": null,
+        "className": "twitter4j.LoggerFactory",
+        "type": "COMPLEX",
+        "getMethod": null,
+        "setMethod": null,
+        "primitive": false,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false,
+        "javaEnumFields": {
+          "javaEnumField": []
+        },
+        "javaFields": {
+          "javaField": []
+        },
+        "packageName": "twitter4j",
+        "annotation": false,
+        "annonymous": false,
+        "enumeration": false,
+        "localClass": false,
+        "memberClass": false,
+        "uri": "atlas:java?className=twitter4j.LoggerFactory",
+        "interface": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": [
+            "FINAL",
+            "PRIVATE",
+            "STATIC"
+          ]
+        },
+        "name": "LOGGER_FACTORY_IMPLEMENTATION",
+        "path": null,
+        "className": "java.lang.String",
+        "type": "STRING",
+        "getMethod": null,
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "debugEnabled",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": "isDebugEnabled",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "infoEnabled",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": "isInfoEnabled",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "warnEnabled",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": "isWarnEnabled",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      },
+      {
+        "jsonType": "com.mediadriver.atlas.java.v2.JavaField",
+        "value": null,
+        "collection": null,
+        "status": "SUPPORTED",
+        "annotations": null,
+        "modifiers": {
+          "modifier": []
+        },
+        "name": "errorEnabled",
+        "path": null,
+        "className": "boolean",
+        "type": "BOOLEAN",
+        "getMethod": "isErrorEnabled",
+        "setMethod": null,
+        "primitive": true,
+        "array": false,
+        "arrayDimensions": null,
+        "synthetic": false
+      }
+    ]
+  },
+  "packageName": "twitter4j",
+  "annotation": false,
+  "annonymous": false,
+  "enumeration": false,
+  "localClass": false,
+  "memberClass": false,
+  "uri": "atlas:java?className=twitter4j.Logger",
+  "interface": false
+}
