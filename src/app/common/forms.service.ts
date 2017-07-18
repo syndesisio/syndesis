@@ -71,8 +71,7 @@ export class FormFactoryService {
         formField = new DynamicTextAreaModel(
           {
             id: key,
-            label: value.displayName || key,
-            hint: value.description,
+            label: (value.displayName || key) + `<span class="glyphicon glyphicon-info-sign"></span>`,
             value: value.value || value.defaultValue,
             required: value.required,
             rows: value.rows,
@@ -95,8 +94,7 @@ export class FormFactoryService {
         formField = new DynamicInputModel(
           {
             id: key,
-            label: type === 'hidden' ? null : value.displayName || key,
-            hint: type === 'hidden' ? null : value.description,
+            label: type === 'hidden' ? null : (value.displayName || key) + `<span class="glyphicon glyphicon-info-sign"></span>`,
             inputType: type,
             value: value.value || value.defaultValue,
             required: value.required,
