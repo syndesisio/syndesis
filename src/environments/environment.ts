@@ -9,8 +9,10 @@ export const environment = Object.freeze({
     apiEndpoint: 'http://localhost:8080/api/v1',
     title: 'DEVELOPMENT - Syndesis',
     datamapper: {
-      baseJavaServiceUrl: 'https://localhost:8585/v2/atlas/java/',
-      baseMappingServiceUrl: 'https://localhost:8585/v2/atlas/',
+      baseJavaInspectionServiceUrl: 'http://localhost:8585/v2/atlas/java/',
+      baseXMLInspectionServiceUrl: 'http://localhost:8585/v2/atlas/xml/',
+      baseJSONInspectionServiceUrl: 'http://localhost:8585/v2/atlas/json/',
+      baseMappingServiceUrl: 'http://localhost:8585/v2/atlas/',
     },
     oauth: {
       clientId: 'syndesis-ui',
@@ -18,6 +20,7 @@ export const environment = Object.freeze({
       oidc: true,
       hybrid: true,
       issuer: 'http://localhost:8282/auth/realms/syndesis-test',
+      'auto-link-github': true,
     },
   },
 });
