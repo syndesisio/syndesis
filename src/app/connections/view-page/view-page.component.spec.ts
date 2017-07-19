@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
-import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ngx-restangular';
@@ -27,6 +26,7 @@ import { ConnectionViewComponent } from '../view/view.component';
 import { StoreModule } from '../../store/store.module';
 import { SyndesisCommonModule } from '../../common/common.module';
 import { CurrentConnectionService } from '../create-page/current-connection';
+import { DynamicFormsPatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
 
 describe('ConnectionViewPage', () => {
   let component: ConnectionViewPage;
@@ -40,7 +40,7 @@ describe('ConnectionViewPage', () => {
           FormsModule,
           ReactiveFormsModule,
           DynamicFormsCoreModule.forRoot(),
-          DynamicFormsBootstrapUIModule,
+          DynamicFormsPatternflyUIModule,
           SyndesisCommonModule,
           StoreModule,
           RouterTestingModule.withRoutes([]),

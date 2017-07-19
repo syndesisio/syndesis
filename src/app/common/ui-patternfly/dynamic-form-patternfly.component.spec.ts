@@ -22,6 +22,7 @@ import {
     DynamicTextAreaModel,
     DynamicTimePickerModel,
 } from '@ng2-dynamic-forms/core';
+import { TooltipModule }  from 'ngx-bootstrap/tooltip';
 import { PatternflyFormControlType, DynamicFormPatternflyComponent } from './dynamic-form-patternfly.component';
 
 describe('DynamicFormPatternflyComponent test suite', () => {
@@ -53,7 +54,7 @@ describe('DynamicFormPatternflyComponent test suite', () => {
 
         TestBed.configureTestingModule({
 
-            imports: [ReactiveFormsModule, DynamicFormsCoreModule.forRoot(), TextMaskModule],
+            imports: [ReactiveFormsModule, DynamicFormsCoreModule.forRoot(), TextMaskModule, TooltipModule.forRoot()],
             declarations: [DynamicFormPatternflyComponent]
 
         }).compileComponents().then(() => {
