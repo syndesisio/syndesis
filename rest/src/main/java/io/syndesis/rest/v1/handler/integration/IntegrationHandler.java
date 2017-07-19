@@ -106,7 +106,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/{id}/filter/options")
+    @Path(value = "/{id}/filters/options")
     public FilterOptions getFilterOptions(@PathParam("id") @ApiParam(required = true) String id) {
         FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
         Integration integration = Getter.super.get(id);
@@ -128,7 +128,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/filter/options")
+    @Path(value = "/filters/options")
     public FilterOptions getGlobalFilterOptions() {
         return new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS).build();
     }

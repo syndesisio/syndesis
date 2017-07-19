@@ -24,7 +24,7 @@ import org.springframework.http.ResponseEntity;
 public class FilterITCase extends BaseITCase {
     @Test
     public void shouldGetGlobalFilterOptions() {
-       ResponseEntity<FilterOptions> response = get("/api/v1/integrations/filter/options", FilterOptions.class, tokenRule.validToken(), HttpStatus.OK);
+       ResponseEntity<FilterOptions> response = get("/api/v1/integrations/filters/options", FilterOptions.class, tokenRule.validToken(), HttpStatus.OK);
        FilterOptions filterOptions = response.getBody();
        Assert.assertNotNull(filterOptions);
     }
