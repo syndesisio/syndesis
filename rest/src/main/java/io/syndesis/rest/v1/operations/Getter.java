@@ -16,6 +16,7 @@
 package io.syndesis.rest.v1.operations;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -31,7 +32,7 @@ public interface Getter<T extends WithId<T>> extends Resource, WithDataManager {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
-    default T get(@PathParam("id") @ApiParam(required = true) String id) {
+    default T get(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
         Class<T> modelClass = resourceKind().getModelClass();
         T result = getDataManager().fetch(modelClass, id);
         if( result == null ) {

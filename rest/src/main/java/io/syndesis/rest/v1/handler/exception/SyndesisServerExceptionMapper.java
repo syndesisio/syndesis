@@ -15,24 +15,22 @@
  */
 package io.syndesis.rest.v1.handler.exception;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @Provider
-public class SyndesisServerExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Exception> {
+public class SyndesisServerExceptionMapper extends BaseExceptionMapper<Exception> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SyndesisServerExceptionMapper.class);
+    public SyndesisServerExceptionMapper() {
+        super(Response.Status.INTERNAL_SERVER_ERROR, "Please contact the administrator and file a bug report");
+    }
 
     @Override
-    public Response toResponse(Exception e) {
-        LOG.error(e.getMessage(),e);
-        RestError error = new RestError("Internal Server Exception. " + e.getMessage(), "Please contact the administrator and file a bug report", 500);
-        return Response.status(error.errorCode).type(MediaType.APPLICATION_JSON_TYPE).entity(error).build();
+    protected String developerMessage(final Exception exception) {
+        return "Internal Server Exception. " + exception.getMessage();
     }
+
 }

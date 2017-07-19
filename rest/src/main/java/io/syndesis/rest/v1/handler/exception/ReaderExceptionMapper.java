@@ -15,23 +15,23 @@
  */
 package io.syndesis.rest.v1.handler.exception;
 
-import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.jboss.resteasy.spi.ReaderException;
 import org.springframework.stereotype.Component;
 
+/**
+ * RESTEasy will use the built in {@link ExceptionMapper} if we don't specify
+ * our own mapper, and the built in mapper will not produce JSON output.
+ */
 @Component
 @Provider
-public class EntityNotFoundExceptionMapper extends BaseExceptionMapper<EntityNotFoundException> {
+public class ReaderExceptionMapper extends BaseExceptionMapper<ReaderException> {
 
-    public EntityNotFoundExceptionMapper() {
-        super(Response.Status.NOT_FOUND, "Please check your request data");
-    }
-
-    @Override
-    protected String developerMessage(final EntityNotFoundException exception) {
-        return "Entity Not Found Exception " + exception.getMessage();
+    public ReaderExceptionMapper() {
+        super(Response.Status.BAD_REQUEST, "Please make sure that you're sending the correct parameters");
     }
 
 }

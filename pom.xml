@@ -579,6 +579,12 @@
       </dependency>
 
       <dependency>
+          <groupId>org.jboss.resteasy</groupId>
+          <artifactId>resteasy-validator-provider-11</artifactId>
+          <version>${resteasy.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>io.swagger</groupId>
         <artifactId>swagger-jaxrs</artifactId>
         <version>${swagger.version}</version>
@@ -782,6 +788,7 @@
           <ignoredResourcePatterns>
             <ignoredResourcePattern>features.xml</ignoredResourcePattern>
             <ignoredResourcePattern>org/infinispan/.*</ignoredResourcePattern>
+            <ignoredResourcePattern>ValidationMessages.properties</ignoredResourcePattern>
           </ignoredResourcePatterns>
         </configuration>
       </plugin>
