@@ -7,9 +7,9 @@
 
     <p>Fill out the fields associated with the selected step.</p>
 
-    <div class="overflow-hidden content-margin container-fluid">
+    <div class="overflow-hidden content-margin basic-filter-form-container">
 
-      <form [formGroup]="formGroup">
+      <form [formGroup]="formGroup" class="basic-filter-form">
 
         <dynamic-form-bootstrap-control *ngFor="let controlModel of basicFilterModel"
                                         [group]="formGroup"
@@ -21,16 +21,11 @@
                        let-index="index">
 
             <div class="pull-right">
-
               <button type="button"
+                      *ngIf="index !== 0"
                       class="btn btn-danger btn-sm rounded"
                       (click)="remove(context, index)">&#10005;
               </button>
-              <button type="button"
-                      class="btn btn-success btn-sm rounded"
-                      (click)="insert(context, index + 1)">&#43;
-              </button>
-
             </div>
 
           </ng-template>
@@ -39,9 +34,7 @@
 
       </form>
 
-      <!--button (click)="test()" type="button">Test</button-->
-
-      <pre>{{formGroup.value | json}}</pre>
+      <button (click)="add()" type="button">Add</button>
 
     </div>
   </div>

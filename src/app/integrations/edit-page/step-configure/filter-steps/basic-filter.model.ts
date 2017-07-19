@@ -32,7 +32,7 @@ export const BASIC_FILTER_MODEL = [
             label: 'control-label pull-left',
           },
           grid: {
-            control: 'col-xs-3',
+            control: 'col-xs-3 match-select',
           },
         },
       ),
@@ -121,7 +121,7 @@ export const BASIC_FILTER_MODEL = [
         },
         {
           element: {
-            container: 'form-inline form-array',
+            container: 'form-inline form-array rules-group',
           },
         },
       ),

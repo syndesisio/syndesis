@@ -7,6 +7,8 @@ import {
   DynamicInputModel,
 } from '@ng2-dynamic-forms/core';
 
+import { CurrentFlow, FlowEvent } from '../../current-flow.service';
+
 import { BASIC_FILTER_MODEL } from './basic-filter.model';
 import { log, getCategory } from '../../../../logging';
 import { BasicFilter } from './filter.interface';
@@ -15,6 +17,7 @@ import { BasicFilter } from './filter.interface';
   selector: 'syndesis-basic-filter',
   templateUrl: './basic-filter.component.html',
   encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./basic-filter.component.scss'],
 })
 
 export class BasicFilterComponent implements OnInit {
@@ -51,16 +54,24 @@ export class BasicFilterComponent implements OnInit {
   };
   @Output() filterChange = new EventEmitter<BasicFilter>();
 
-  constructor(private formService: DynamicFormService) {
+  constructor(public currentFlow: CurrentFlow,
+              private formService: DynamicFormService) {
   }
 
   ngOnInit() {
+    /*
+    this.currentFlow.getFilterOptions().toPromise().then((resp:any) => {
+      log.debugc(
+        () => 'filter option response: ' + resp,
+      );
+    });
+    */
     this.formGroup = this.formService.createFormGroup(this.basicFilterModel);
 
     this.exampleControl = this.formGroup.get('filterSettingsGroup').get('matchSelect') as FormControl;
     this.exampleModel = this.formService.findById('matchSelect', this.basicFilterModel) as DynamicInputModel;
 
-    this.arrayControl = this.formGroup.get('rulesGroup').get('bootstrapFormArray') as FormArray;
+    this.arrayControl = this.formGroup.get('rulesGroup').get('rulesFormArray') as FormArray;
     this.arrayModel = this.formService.findById('rulesFormArray', this.basicFilterModel) as DynamicFormArrayModel;
   }
 

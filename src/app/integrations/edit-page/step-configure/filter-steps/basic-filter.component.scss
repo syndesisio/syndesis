@@ -1,0 +1,20 @@
+.basic-filter {
+  .basic-filter-form-container {
+    background: #FFFFFF;
+    padding: 30px;
+
+    .basic-filter-form {
+      .rules-group {
+        .form-group {
+          padding: 10px 0;
+
+          .input-group {
+            .input-group-addon {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -228,6 +228,15 @@ export class CurrentFlow {
     // log.debugc(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);
   }
 
+  /**
+   * Function to retrieve the form data for the basic filter
+   * @returns {Observable<any>}
+   * @memberof CurrentFlow
+   */
+  getFilterOptions(): Observable<any> {
+    return this.store.service.restangularService.one('filters').one('options').get();
+  }
+
   getIntegrationClone(): Integration {
     return JSON.parse(JSON.stringify(this.integration));
   }
