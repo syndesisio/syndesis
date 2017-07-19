@@ -77,9 +77,9 @@
           <div *ngIf="formModel && formGroup">
             <form class="form-horizontal"
                   [formGroup]="formGroup">
-              <dynamic-form-bootstrap-control *ngFor="let controlModel of formModel"
+              <dynamic-form-patternfly-control *ngFor="let controlModel of formModel"
                                               [group]="formGroup"
-                                              [model]="controlModel"></dynamic-form-bootstrap-control>
+                                              [model]="controlModel"></dynamic-form-patternfly-control>
             </form>
           </div>
         </div>
