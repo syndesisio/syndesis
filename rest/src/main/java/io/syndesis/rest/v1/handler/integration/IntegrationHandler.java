@@ -50,7 +50,7 @@ import java.util.Optional;
 @Component
 public class IntegrationHandler extends BaseHandler implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration> {
 
-    private ClassInspector classInspector;
+    private final ClassInspector classInspector;
 
     public IntegrationHandler(DataManager dataMgr, ClassInspector classInspector) {
         super(dataMgr);
@@ -121,8 +121,6 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
                 }
             });
         });
-
-        integration.getSteps().get().get(0).getAction().get().getOutputDataShape();
         return getGlobalFilterOptions();
     }
 
