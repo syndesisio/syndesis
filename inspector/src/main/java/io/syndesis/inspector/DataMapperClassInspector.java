@@ -36,7 +36,7 @@ public class DataMapperClassInspector implements ClassInspector {
 
     private static final String INSPECTOR_URL_FORMAT = "http://%s/%s?%s=%s";
 
-
+    private static final String JAVA_CLASS = "JavaClass";
     private static final String JAVA_FIELDS = "javaFields";
     private static final String JAVA_FIELD = "javaField";
 
@@ -100,19 +100,22 @@ public class DataMapperClassInspector implements ClassInspector {
         try {
             JsonNode node = Json.mapper().readTree(json);
             if (node != null) {
-                JsonNode fields = node.get(JAVA_FIELDS);
-                if (fields != null) {
-                    JsonNode field = fields.get(JAVA_FIELD);
-                    if (field != null && field.isArray()) {
-                        for (JsonNode f : field) {
-                            String name = f.get(NAME).asText();
-                            String fieldClassName = f.get(CLASSNAME).asText();
-                            Boolean isPrimitive = f.get(PRIMITIVE).asBoolean();
-                            if (isPrimitive || isTerminal(fieldClassName)) {
-                                paths.add(prefix + DEFAULT_SEPARATOR + name);
-                                continue;
-                            } else {
-                                paths.addAll(getPathsForJavaClassName(prefix + DEFAULT_SEPARATOR + name, fieldClassName, visited));
+                JsonNode javaClass = node.get(JAVA_CLASS);
+                if (javaClass != null) {
+                    JsonNode fields = javaClass.get(JAVA_FIELDS);
+                    if (fields != null) {
+                        JsonNode field = fields.get(JAVA_FIELD);
+                        if (field != null && field.isArray()) {
+                            for (JsonNode f : field) {
+                                String name = f.get(NAME).asText();
+                                String fieldClassName = f.get(CLASSNAME).asText();
+                                Boolean isPrimitive = f.get(PRIMITIVE).asBoolean();
+                                if (isPrimitive || isTerminal(fieldClassName)) {
+                                    paths.add(prefix + DEFAULT_SEPARATOR + name);
+                                    continue;
+                                } else {
+                                    paths.addAll(getPathsForJavaClassName(prefix + DEFAULT_SEPARATOR + name, fieldClassName, visited));
+                                }
                             }
                         }
                     }
