@@ -63,6 +63,23 @@ export class StepStore {
       id: undefined,
       connection: undefined,
       action: undefined,
+      name: 'Advanced Filter',
+      description: 'Filter incoming data based on a set of criteria',
+      stepKind: 'filter',
+      properties: {
+        filter: {
+          type: 'textarea',
+          displayName: 'Only continue if',
+          required: true,
+          rows: 10,
+        },
+      },
+      configuredProperties: undefined,
+    },
+    {
+      id: undefined,
+      connection: undefined,
+      action: undefined,
       name: 'Store Data',
       stepKind: 'storeData',
       description:
