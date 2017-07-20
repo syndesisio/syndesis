@@ -168,7 +168,7 @@ export class DataMapperHostComponent extends FlowPage
     }
 
     // enable debug / mock data flags for data mapper
-    const debugConfigKeys: string[] = ['addMockJSONMappings',
+    const debugConfigKeys: string[] = ['discardNonMockSources', 'addMockJSONMappings', 'addMockJavaSingleSource', 
       'addMockJavaSources', 'addMockXMLInstanceSources', 'addMockXMLSchemaSources', 'addMockJSONSources',
       'addMockJavaTarget', 'addMockXMLInstanceTarget', 'addMockXMLSchemaTarget', 'addMockJSONTarget',
       'debugDocumentServiceCalls', 'debugMappingServiceCalls', 'debugClassPathServiceCalls',
