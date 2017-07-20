@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -77,13 +78,13 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}/verifier")
-    public List<Verifier.Result> verifyConnectionParameters(@PathParam("id") final String connectorId,
+    public List<Verifier.Result> verifyConnectionParameters(@NotNull @PathParam("id") final String connectorId,
         final Map<String, String> props) {
         return verifier.verify(connectorId, props);
     }
 
     @Path("/{id}/credentials")
-    public ConnectorCredentialHandler credentials(final @PathParam("id") String connectorId) {
+    public ConnectorCredentialHandler credentials(@NotNull final @PathParam("id") String connectorId) {
         return new ConnectorCredentialHandler(credentials, connectorId);
     }
 

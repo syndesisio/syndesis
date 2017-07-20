@@ -15,7 +15,9 @@
  */
 package io.syndesis.rest.v1.handler.exception;
 
-import javax.persistence.EntityNotFoundException;
+import java.util.stream.Collectors;
+
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
@@ -23,15 +25,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Provider
-public class EntityNotFoundExceptionMapper extends BaseExceptionMapper<EntityNotFoundException> {
+public class ConstraintViolationExceptionMapper extends BaseExceptionMapper<ConstraintViolationException> {
 
-    public EntityNotFoundExceptionMapper() {
-        super(Response.Status.NOT_FOUND, "Please check your request data");
+    public ConstraintViolationExceptionMapper() {
+        super(Response.Status.BAD_REQUEST, "Please make sure that you're sending the correct parameters");
     }
 
     @Override
-    protected String developerMessage(final EntityNotFoundException exception) {
-        return "Entity Not Found Exception " + exception.getMessage();
+    protected String developerMessage(final ConstraintViolationException exception) {
+        return exception.getConstraintViolations()
+            .stream().map(c -> " - value `" + c.getInvalidValue() + "` specified at `" + c.getPropertyPath()
+                + "` is invalid: " + c.getMessage())
+            .collect(Collectors.joining(", ", "Invalid values specified: ", ""));
+
     }
 
 }

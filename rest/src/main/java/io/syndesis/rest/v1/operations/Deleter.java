@@ -15,11 +15,13 @@
  */
 package io.syndesis.rest.v1.operations;
 
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import io.swagger.annotations.ApiParam;
 import io.syndesis.dao.manager.WithDataManager;
 import io.syndesis.model.WithId;
 
@@ -28,7 +30,7 @@ public interface Deleter<T extends WithId<T>> extends Resource, WithDataManager 
     @DELETE
     @Consumes("application/json")
     @Path(value = "/{id}")
-    default void delete(@PathParam("id") String id) {
+    default void delete(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
         Class<T> modelClass = resourceKind().getModelClass();
         getDataManager().delete(modelClass, id);
     }
