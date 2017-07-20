@@ -138,6 +138,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage
         // Now check if we've a custom view for this step kind
         switch (step.stepKind) {
           case 'basic-filter':
+            //this.filterForm = stepDef.properties;
+            this.filterForm = this.getConfiguredProperties(step.configuredProperties || {});
+            return;
           case 'mapper':
             log.debugc(
               () =>
