@@ -28,8 +28,8 @@ export class BasicFilterComponent implements OnInit {
   exampleControl: FormControl;
   exampleModel: DynamicInputModel;
 
-  arrayControl: FormArray;
-  arrayModel: DynamicFormArrayModel;
+  rulesArrayControl: FormArray;
+  rulesArrayModel: DynamicFormArrayModel;
 
   @Input()
   basicFilterObject: BasicFilter = {
@@ -60,9 +60,7 @@ export class BasicFilterComponent implements OnInit {
 
   ngOnInit() {
     this.currentFlow.getFilterOptions().toPromise().then((resp: any) => {
-      log.debugc(
-        () => 'Filter option response: ' + resp,
-      );
+      log.info('Filter option response: ' + JSON.stringify(resp));
     });
 
     this.formGroup = this.formService.createFormGroup(this.basicFilterModel);
@@ -70,29 +68,37 @@ export class BasicFilterComponent implements OnInit {
     this.exampleControl = this.formGroup.get('filterSettingsGroup').get('matchSelect') as FormControl;
     this.exampleModel = this.formService.findById('matchSelect', this.basicFilterModel) as DynamicInputModel;
 
-    this.arrayControl = this.formGroup.get('rulesGroup').get('rulesFormArray') as FormArray;
-    this.arrayModel = this.formService.findById('rulesFormArray', this.basicFilterModel) as DynamicFormArrayModel;
+    this.rulesArrayControl = this.formGroup.get('rulesGroup').get('rulesFormArray') as FormArray;
+    this.rulesArrayModel = this.formService.findById('rulesFormArray', this.basicFilterModel) as DynamicFormArrayModel;
   }
 
   // Manage Individual Fields
   add() {
-    this.formService.addFormArrayGroup(this.arrayControl, this.arrayModel);
-    log.debugc(
-      () => 'basicFilterModel: ' + this.basicFilterModel,
-    );
+    this.formService.addFormArrayGroup(this.rulesArrayControl, this.rulesArrayModel);
+    log.info('basicFilterModel: ' + JSON.stringify(this.basicFilterModel));
   }
 
   remove(context: DynamicFormArrayModel, index: number) {
-    this.formService.removeFormArrayGroup(index, this.arrayControl, context);
+    this.formService.removeFormArrayGroup(index, this.rulesArrayControl, context);
   }
 
   onChange($event) {
+    this.basicFilterObject.configuredProperties = {
+      type: 'rule',
+      predicate: '',
+      simple: '',
+      rules: [
+        {
+          path: '',
+          op: '',
+          value: '',
+        },
+      ],
+    };
+
     this.filterChange.emit(this.basicFilterObject);
-    log.debugc(
-      () => 'this.basicFilterObject: ' + this.basicFilterObject,
-    );
-    log.debugc(
-      () => 'CHANGE event on $(event.model.id): ' + $event,
-    );
+    log.info('this.basicFilterObject: ' + JSON.stringify(this.basicFilterObject));
+    log.info('this.basicFilterModel: ' + JSON.stringify(this.basicFilterModel));
+    log.info('CHANGE event on $(event.model.id): ' + $event);
   }
 }

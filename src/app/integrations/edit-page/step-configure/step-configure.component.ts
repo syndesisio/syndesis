@@ -69,7 +69,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     }
     if (this.filterForm) {
       data = this.filterForm;
-      log.debugc(() => 'Filterform: ' + data);
+      log.info('filterForm: ' + JSON.stringify(this.filterForm));
     }
     if (!data) {
       data = this.formGroup.value || {};
@@ -130,7 +130,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
 
         // Step exists, get its configuration
         const stepDef = this.stepStore.getStepConfig(step.stepKind);
-        log.debugc(() => 'stepConfig: ' + JSON.stringify(stepDef));
+        log.info('stepConfig: ' + JSON.stringify(stepDef));
         if (!stepDef) {
           // TODO if we don't have a definition for this step then ???
           return;
@@ -139,12 +139,10 @@ export class IntegrationsStepConfigureComponent extends FlowPage
         switch (step.stepKind) {
           case 'basic-filter':
             this.filterForm = this.getConfiguredProperties(step.configuredProperties || {});
+            log.info('this.filterForm: ' + JSON.stringify(this.filterForm));
             return;
           case 'mapper':
-            log.debugc(
-              () =>
-                'No form configuration, skipping the form building service..',
-            );
+            log.info('No form configuration, skipping the form building service..');
             return;
         }
         this.formConfig = JSON.parse(JSON.stringify(stepDef.properties));
@@ -169,10 +167,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
           this.continue({});
           return;
         }
-        log.debugc(
-          () => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2),
-          category,
-        );
+        log.info('Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
 
         // Call formService to build the form
         this.formModel = this.formFactory.createFormModel(this.formConfig);

@@ -1,0 +1,484 @@
+[
+  {
+    "cls": {
+      "element": {
+        "container": "",
+        "control": "",
+        "errors": "",
+        "group": "",
+        "hint": "",
+        "host": "",
+        "label": ""
+      },
+      "grid": {
+        "container": "",
+        "control": "",
+        "errors": "",
+        "group": "",
+        "hint": "",
+        "host": "",
+        "label": ""
+      }
+    },
+    "disabled": false,
+    "errorMessages": null,
+    "id": "filterSettingsGroup",
+    "label": null,
+    "name": "filterSettingsGroup",
+    "relation": [],
+    "group": [
+      {
+        "cls": {
+          "element": {
+            "container": "",
+            "control": "",
+            "errors": "",
+            "group": "",
+            "hint": "",
+            "host": "",
+            "label": "control-label pull-left"
+          },
+          "grid": {
+            "container": "",
+            "control": "col-xs-3 match-select",
+            "errors": "",
+            "group": "",
+            "hint": "",
+            "host": "",
+            "label": ""
+          }
+        },
+        "disabled": false,
+        "errorMessages": null,
+        "id": "matchSelect",
+        "label": "Continue only if incoming data match ",
+        "name": "matchSelect",
+        "relation": [],
+        "asyncValidators": null,
+        "hint": null,
+        "required": false,
+        "tabIndex": null,
+        "validators": null,
+        "value": "all",
+        "options": [
+          {
+            "disabled": false,
+            "label": "ALL of the following",
+            "value": "all"
+          },
+          {
+            "disabled": false,
+            "label": "ANY of the following",
+            "value": "any"
+          }
+        ],
+        "type": "SELECT",
+        "filterable": false,
+        "multiple": false,
+        "placeholder": ""
+      }
+    ],
+    "type": "GROUP",
+    "asyncValidator": null,
+    "legend": null,
+    "validator": null
+  },
+  {
+    "cls": {
+      "element": {
+        "container": "",
+        "control": "",
+        "errors": "",
+        "group": "",
+        "hint": "",
+        "host": "",
+        "label": ""
+      },
+      "grid": {
+        "container": "",
+        "control": "",
+        "errors": "",
+        "group": "",
+        "hint": "",
+        "host": "",
+        "label": ""
+      }
+    },
+    "disabled": false,
+    "errorMessages": null,
+    "id": "rulesGroup",
+    "label": null,
+    "name": "rulesGroup",
+    "relation": [],
+    "group": [
+      {
+        "cls": {
+          "element": {
+            "container": "form-inline form-array rules-group",
+            "control": "",
+            "errors": "",
+            "group": "",
+            "hint": "",
+            "host": "",
+            "label": ""
+          },
+          "grid": {
+            "container": "",
+            "control": "",
+            "errors": "",
+            "group": "",
+            "hint": "",
+            "host": "",
+            "label": ""
+          }
+        },
+        "disabled": false,
+        "errorMessages": null,
+        "id": "rulesFormArray",
+        "label": null,
+        "name": "rulesFormArray",
+        "relation": [],
+        "groups": [
+          {
+            "group": [
+              {
+                "cls": {
+                  "element": {
+                    "container": "form-group col-xs-3",
+                    "control": "",
+                    "errors": "",
+                    "group": "",
+                    "hint": "",
+                    "host": "",
+                    "label": ""
+                  },
+                  "grid": {
+                    "container": "",
+                    "control": "input-group",
+                    "errors": "",
+                    "group": "",
+                    "hint": "",
+                    "host": "",
+                    "label": ""
+                  }
+                },
+                "disabled": false,
+                "errorMessages": null,
+                "id": "dataToBeFiltered",
+                "label": null,
+                "name": "dataToBeFiltered",
+                "relation": [],
+                "asyncValidators": null,
+                "hint": null,
+                "required": false,
+                "tabIndex": null,
+                "validators": null,
+                "value": "Status.Text",
+                "autoComplete": "on",
+                "autoFocus": false,
+                "maxLength": 51,
+                "minLength": null,
+                "placeholder": "Status.Text",
+                "prefix": null,
+                "readOnly": false,
+                "spellCheck": false,
+                "suffix": "Browse...",
+                "type": "INPUT",
+                "accept": null,
+                "inputType": "text",
+                "list": null,
+                "mask": null,
+                "max": null,
+                "min": null,
+                "multiple": null,
+                "pattern": null,
+                "step": null
+              },
+              {
+                "cls": {
+                  "element": {
+                    "container": "form-group col-xs-3",
+                    "control": "",
+                    "errors": "",
+                    "group": "",
+                    "hint": "",
+                    "host": "",
+                    "label": "control-label"
+                  },
+                  "grid": {
+                    "container": "",
+                    "control": "input-group",
+                    "errors": "",
+                    "group": "",
+                    "hint": "",
+                    "host": "",
+                    "label": ""
+                  }
+                },
+                "disabled": false,
+                "errorMessages": null,
+                "id": "conditions",
+                "label": null,
+                "name": "conditions",
+                "relation": [],
+                "asyncValidators": null,
+                "hint": null,
+                "required": false,
+                "tabIndex": null,
+                "validators": null,
+                "value": "starts-with",
+                "options": [
+                  {
+                    "disabled": false,
+                    "label": "Contains",
+                    "value": "contains"
+                  },
+                  {
+                    "disabled": false,
+                    "label": "Does Not Contain",
+                    "value": "does-not-contain"
+                  },
+                  {
+                    "disabled": false,
+                    "label": "Matches Regex",
+                    "value": "matches-regex"
+                  },
+                  {
+                    "disabled": false,
+                    "label": "Does Not Match Regex",
+                    "value": "does-not-match-regex"
+                  },
+                  {
+                    "disabled": false,
+                    "label": "Starts With",
+                    "value": "starts-with"
+                  },
+                  {
+                    "disabled": false,
+                    "label": "Ends With",
+                    "value": "ends-with"
+                  }
+                ],
+                "type": "SELECT",
+                "filterable": false,
+                "multiple": false,
+                "placeholder": ""
+              },
+              {
+                "cls": {
+                  "element": {
+                    "container": "",
+                    "control": "",
+                    "errors": "",
+                    "group": "",
+                    "hint": "",
+                    "host": "",
+                    "label": ""
+                  },
+                  "grid": {
+                    "container": "input-group col-xs-4 keywords",
+                    "control": "",
+                    "errors": "",
+                    "group": "",
+                    "hint": "",
+                    "host": "",
+                    "label": ""
+                  }
+                },
+                "disabled": false,
+                "errorMessages": null,
+                "id": "valueToCheckFor",
+                "label": null,
+                "name": "valueToCheckFor",
+                "relation": [],
+                "asyncValidators": null,
+                "hint": null,
+                "required": false,
+                "tabIndex": null,
+                "validators": null,
+                "value": "Rachel",
+                "autoComplete": "on",
+                "autoFocus": false,
+                "maxLength": null,
+                "minLength": null,
+                "placeholder": "Keywords to check for...",
+                "prefix": null,
+                "readOnly": false,
+                "spellCheck": false,
+                "suffix": null,
+                "type": "INPUT",
+                "accept": null,
+                "inputType": "text",
+                "list": null,
+                "mask": null,
+                "max": null,
+                "min": null,
+                "multiple": null,
+                "pattern": null,
+                "step": null
+              }
+            ],
+            "index": 0
+          }
+        ],
+        "type": "ARRAY",
+        "asyncValidator": null,
+        "groupAsyncValidator": null,
+        "groupPrototype": [
+          {
+            "cls": {
+              "element": {
+                "container": "form-group col-xs-3",
+                "control": "",
+                "errors": "",
+                "group": "",
+                "hint": "",
+                "host": "",
+                "label": ""
+              },
+              "grid": {
+                "container": "",
+                "control": "input-group",
+                "errors": "",
+                "group": "",
+                "hint": "",
+                "host": "",
+                "label": ""
+              }
+            },
+            "disabled": false,
+            "errorMessages": null,
+            "id": "dataToBeFiltered",
+            "label": null,
+            "name": "dataToBeFiltered",
+            "relation": [],
+            "asyncValidators": null,
+            "hint": null,
+            "required": false,
+            "tabIndex": null,
+            "validators": null,
+            "value": null,
+            "autoComplete": "on",
+            "autoFocus": false,
+            "maxLength": 51,
+            "minLength": null,
+            "placeholder": "Status.Text",
+            "prefix": null,
+            "readOnly": false,
+            "spellCheck": false,
+            "suffix": "Browse...",
+            "type": "INPUT",
+            "accept": null,
+            "inputType": "text",
+            "list": null,
+            "mask": null,
+            "max": null,
+            "min": null,
+            "multiple": null,
+            "pattern": null,
+            "step": null
+          },
+          {
+            "cls": {
+              "element": {
+                "container": "form-group col-xs-3",
+                "control": "",
+                "errors": "",
+                "group": "",
+                "hint": "",
+                "host": "",
+                "label": "control-label"
+              },
+              "grid": {
+                "container": "",
+                "control": "input-group",
+                "errors": "",
+                "group": "",
+                "hint": "",
+                "host": "",
+                "label": ""
+              }
+            },
+            "disabled": false,
+            "errorMessages": null,
+            "id": "conditions",
+            "label": null,
+            "name": "conditions",
+            "relation": [],
+            "asyncValidators": null,
+            "hint": null,
+            "required": false,
+            "tabIndex": null,
+            "validators": null,
+            "value": "contains",
+            "options": [],
+            "type": "SELECT",
+            "filterable": false,
+            "multiple": false,
+            "placeholder": ""
+          },
+          {
+            "cls": {
+              "element": {
+                "container": "",
+                "control": "",
+                "errors": "",
+                "group": "",
+                "hint": "",
+                "host": "",
+                "label": ""
+              },
+              "grid": {
+                "container": "input-group col-xs-4 keywords",
+                "control": "",
+                "errors": "",
+                "group": "",
+                "hint": "",
+                "host": "",
+                "label": ""
+              }
+            },
+            "disabled": false,
+            "errorMessages": null,
+            "id": "valueToCheckFor",
+            "label": null,
+            "name": "valueToCheckFor",
+            "relation": [],
+            "asyncValidators": null,
+            "hint": null,
+            "required": false,
+            "tabIndex": null,
+            "validators": null,
+            "value": null,
+            "autoComplete": "on",
+            "autoFocus": false,
+            "maxLength": null,
+            "minLength": null,
+            "placeholder": "Keywords to check for...",
+            "prefix": null,
+            "readOnly": false,
+            "spellCheck": false,
+            "suffix": null,
+            "type": "INPUT",
+            "accept": null,
+            "inputType": "text",
+            "list": null,
+            "mask": null,
+            "max": null,
+            "min": null,
+            "multiple": null,
+            "pattern": null,
+            "step": null
+          }
+        ],
+        "groupValidator": null,
+        "initialCount": 1,
+        "validator": null
+      }
+    ],
+    "type": "GROUP",
+    "asyncValidator": null,
+    "legend": null,
+    "validator": null
+  }
+]
