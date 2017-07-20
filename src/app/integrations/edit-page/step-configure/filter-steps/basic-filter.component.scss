@@ -5,7 +5,14 @@
 
     .basic-filter-form {
       .rule-buttons {
-        padding: 10px 0;
+        padding: 12px 0;
+
+        a, a:hover, a:active, a:visited, a:focus {
+          cursor: pointer;
+          font-size: initial;
+          text-decoration: none;
+          vertical-align: middle;
+        }
       }
 
       .rules-group {

@@ -17,7 +17,7 @@ import { BasicFilter } from './filter.interface';
   selector: 'syndesis-basic-filter',
   templateUrl: './basic-filter.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./basic-filter.component.scss'],
+  styleUrls: [ './basic-filter.component.scss' ],
 })
 
 export class BasicFilterComponent implements OnInit {
@@ -38,8 +38,8 @@ export class BasicFilterComponent implements OnInit {
     'configuredProperties': {
       'type': 'rule',
       'predicate': 'AND',
-      'simple' : '${body} contains \'antman\' || ${in.header.publisher} =~ \'DC Comics\'',
-      'rules' : [
+      'simple': '${body} contains \'antman\' || ${in.header.publisher} =~ \'DC Comics\'',
+      'rules': [
         {
           'path': 'body.text',
           'value': 'antman',
@@ -59,13 +59,12 @@ export class BasicFilterComponent implements OnInit {
   }
 
   ngOnInit() {
-    /*
-    this.currentFlow.getFilterOptions().toPromise().then((resp:any) => {
+    this.currentFlow.getFilterOptions().toPromise().then((resp: any) => {
       log.debugc(
-        () => 'filter option response: ' + resp,
+        () => 'Filter option response: ' + resp,
       );
     });
-    */
+
     this.formGroup = this.formService.createFormGroup(this.basicFilterModel);
 
     this.exampleControl = this.formGroup.get('filterSettingsGroup').get('matchSelect') as FormControl;
