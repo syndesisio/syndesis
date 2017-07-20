@@ -145,7 +145,10 @@ The repo is commitizen friendly, after making some changes:
 
 `yarn commit`
 
-to commit them
+to commit them. `yarn commit` is the same as running `git cz` in this case. So, you can use all the git commit options, 
+for example: `yarn commit -am 'Blah blah blah''`.
+
+Don't forget to add your files to staging first with `git add -A`. This is a `git commit` tool, not a total `git` replacement.
 
 #### Production
 *Requires having `angular-cli` installed globally.*

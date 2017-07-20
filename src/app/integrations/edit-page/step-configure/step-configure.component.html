@@ -35,6 +35,13 @@
             </div>
           </div>
         </div>
+        <div *ngSwitchCase="'basic-filter'">
+          <div class="row">
+            <div class="col-md-12">
+              <syndesis-basic-filter [basicFilterObject]="filterForm"></syndesis-basic-filter>
+            </div>
+          </div>
+        </div>
         <div *ngSwitchDefault>
           <div class="title">
             <h1>Configure {{ step.stepKind }}</h1>
