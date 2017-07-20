@@ -1,4 +1,10 @@
-import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
@@ -19,7 +25,7 @@ const category = getCategory('IntegrationsCreatePage');
 @Component({
   selector: 'syndesis-integrations-step-configure',
   templateUrl: './step-configure.component.html',
-  styleUrls: [ './step-configure.component.scss' ],
+  styleUrls: ['./step-configure.component.scss'],
 })
 export class IntegrationsStepConfigureComponent extends FlowPage
   implements OnInit, OnDestroy {
@@ -30,17 +36,17 @@ export class IntegrationsStepConfigureComponent extends FlowPage
   formGroup: FormGroup;
   formConfig: any;
   cfg: any = undefined;
-  //filterForm: any;
+  filterForm: any;
 
-  @Input() filterForm: any;
-
-  constructor(public currentFlow: CurrentFlow,
-              public route: ActivatedRoute,
-              public router: Router,
-              public formFactory: FormFactoryService,
-              public formService: DynamicFormService,
-              public detector: ChangeDetectorRef,
-              public stepStore: StepStore) {
+  constructor(
+    public currentFlow: CurrentFlow,
+    public route: ActivatedRoute,
+    public router: Router,
+    public formFactory: FormFactoryService,
+    public formService: DynamicFormService,
+    public detector: ChangeDetectorRef,
+    public stepStore: StepStore,
+  ) {
     super(currentFlow, route, router, detector);
   }
 
@@ -48,14 +54,14 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     const step = this.currentFlow.getStep(this.position);
     step.stepKind = undefined;
     step.configuredProperties = undefined;
-    super.goBack([ 'step-select', this.position ]);
+    super.goBack(['step-select', this.position]);
   }
 
   continue(data: any) {
     const step = this.currentFlow.getStep(this.position);
     switch (step.stepKind) {
       case 'mapper':
-        this.router.navigate([ 'save-or-add-step' ], {
+        this.router.navigate(['save-or-add-step'], {
           queryParams: { validate: true },
           relativeTo: this.route.parent,
         });
@@ -73,14 +79,14 @@ export class IntegrationsStepConfigureComponent extends FlowPage
       if (!data.hasOwnProperty(key)) {
         continue;
       }
-      properties[ key ] = data[ key ];
+      properties[key] = data[key];
     }
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
       properties: properties,
       onSave: () => {
-        this.router.navigate([ 'save-or-add-step' ], {
+        this.router.navigate(['save-or-add-step'], {
           queryParams: { validate: true },
           relativeTo: this.route.parent,
         });
@@ -114,10 +120,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage
         const step = (this.step = <Step>this.currentFlow.getStep(
           this.position,
         ));
-
         // If no Step exists, redirect to the Select Step view
         if (!step) {
-          this.router.navigate([ 'step-select', this.position ], {
+          this.router.navigate(['step-select', this.position], {
             relativeTo: this.route.parent,
           });
           return;
@@ -125,17 +130,20 @@ export class IntegrationsStepConfigureComponent extends FlowPage
 
         // Step exists, get its configuration
         const stepDef = this.stepStore.getStepConfig(step.stepKind);
-        log.debugc(
-          () => 'stepConfig: ' + JSON.stringify(stepDef),
-        );
+        log.debugc(() => 'stepConfig: ' + JSON.stringify(stepDef));
         if (!stepDef) {
           // TODO if we don't have a definition for this step then ???
-          switch (step.stepKind) {
-            case 'basic-filter':
-            case 'mapper':
-              log.debugc(() => 'No form configuration, skipping the form building service..');
-              return;
-          }
+          return;
+        }
+        // Now check if we've a custom view for this step kind
+        switch (step.stepKind) {
+          case 'basic-filter':
+          case 'mapper':
+            log.debugc(
+              () =>
+                'No form configuration, skipping the form building service..',
+            );
+            return;
         }
         this.formConfig = JSON.parse(JSON.stringify(stepDef.properties));
         const values: any = this.getConfiguredProperties(
@@ -146,11 +154,11 @@ export class IntegrationsStepConfigureComponent extends FlowPage
             continue;
           }
           // TODO hack to handle an unconfigured step
-          const value = values[ key ];
+          const value = values[key];
           if (typeof value === 'object') {
             continue;
           }
-          const item = this.formConfig[ key ];
+          const item = this.formConfig[key];
           if (item) {
             item.value = value;
           }
