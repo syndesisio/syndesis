@@ -45,7 +45,7 @@ export const BASIC_FILTER_MODEL = [
       new DynamicFormArrayModel(
         {
           id: 'rulesFormArray',
-          initialCount: 5,
+          initialCount: 2,
           groupFactory: () => {
             return [
               new DynamicInputModel(
