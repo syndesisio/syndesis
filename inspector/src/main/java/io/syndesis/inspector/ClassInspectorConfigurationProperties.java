@@ -20,7 +20,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("inspector")
 public class ClassInspectorConfigurationProperties {
 
-    private static final String DEFAULT_INSPECTOR_HOST = "syndesis-datamapper";
+    private static final String DEFAULT_INSPECTOR_HOST = "syndesis-atlasmap";
 
     private String host = DEFAULT_INSPECTOR_HOST;
     private int port = 80;
