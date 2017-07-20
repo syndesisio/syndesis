@@ -108,11 +108,11 @@ export const BASIC_FILTER_MODEL = [
               new DynamicInputModel(
                 {
                   id: 'valueToCheckFor',
-                  placeholder: 'e.g. Red Hat',
+                  placeholder: 'Keywords to check for...',
                 },
                 {
                   grid: {
-                    container: 'input-group',
+                    container: 'input-group col-xs-4 keywords',
                   },
                 },
               ),

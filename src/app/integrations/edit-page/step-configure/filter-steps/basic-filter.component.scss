@@ -4,9 +4,19 @@
     padding: 30px;
 
     .basic-filter-form {
+      .rule-buttons {
+        padding: 10px 0;
+      }
+
       .rules-group {
         .form-group {
           padding: 10px 0;
+
+          &.keywords {
+            input {
+              width: 100%;
+            }
+          }
 
           .input-group {
             .input-group-addon {
@@ -15,6 +25,10 @@
           }
         }
       }
+    }
+
+    .add-rule {
+      cursor: pointer;
     }
   }
 }

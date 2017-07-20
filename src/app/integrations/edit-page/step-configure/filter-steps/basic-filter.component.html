@@ -20,7 +20,7 @@
                        let-context="context"
                        let-index="index">
 
-            <div class="pull-right">
+            <div class="pull-right rule-buttons">
               <button type="button"
                       *ngIf="index !== 0"
                       class="btn btn-danger btn-sm rounded"
@@ -34,7 +34,7 @@
 
       </form>
 
-      <button (click)="add()" type="button">Add</button>
+      <a (click)="add()" class="add-rule">+ Add another rule</a>
 
     </div>
   </div>
