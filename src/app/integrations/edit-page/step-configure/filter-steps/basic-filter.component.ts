@@ -17,7 +17,7 @@ import { BasicFilter } from './filter.interface';
   selector: 'syndesis-basic-filter',
   templateUrl: './basic-filter.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./basic-filter.component.scss'],
+  styleUrls: [ './basic-filter.component.scss' ],
 })
 
 export class BasicFilterComponent implements OnInit {
@@ -38,8 +38,8 @@ export class BasicFilterComponent implements OnInit {
     'configuredProperties': {
       'type': 'rule',
       'predicate': 'AND',
-      'simple' : '${body} contains \'antman\' || ${in.header.publisher} =~ \'DC Comics\'',
-      'rules' : [
+      'simple': '${body} contains \'antman\' || ${in.header.publisher} =~ \'DC Comics\'',
+      'rules': [
         {
           'path': 'body.text',
           'value': 'antman',
@@ -59,13 +59,12 @@ export class BasicFilterComponent implements OnInit {
   }
 
   ngOnInit() {
-    /*
-    this.currentFlow.getFilterOptions().toPromise().then((resp:any) => {
+    this.currentFlow.getFilterOptions().toPromise().then((resp: any) => {
       log.debugc(
-        () => 'filter option response: ' + resp,
+        () => 'Filter option response: ' + resp,
       );
     });
-    */
+
     this.formGroup = this.formService.createFormGroup(this.basicFilterModel);
 
     this.exampleControl = this.formGroup.get('filterSettingsGroup').get('matchSelect') as FormControl;
@@ -78,10 +77,6 @@ export class BasicFilterComponent implements OnInit {
   // Manage Individual Fields
   add() {
     this.formService.addFormArrayGroup(this.arrayControl, this.arrayModel);
-  }
-
-  insert(context: DynamicFormArrayModel, index: number) {
-    this.formService.insertFormArrayGroup(index, this.arrayControl, context);
     log.debugc(
       () => 'basicFilterModel: ' + this.basicFilterModel,
     );
@@ -91,27 +86,13 @@ export class BasicFilterComponent implements OnInit {
     this.formService.removeFormArrayGroup(index, this.arrayControl, context);
   }
 
-  clear() {
-    this.formService.clearFormArray(this.arrayControl, this.arrayModel);
-  }
-
-  onBlur($event) {
-    log.debugc(
-      () => 'BLUR event on $(event.model.id): ' + $event,
-    );
-  }
-
   onChange($event) {
-    this.basicFilterObject = $event.value;
     this.filterChange.emit(this.basicFilterObject);
     log.debugc(
-      () => 'CHANGE event on $(event.model.id): ' + $event,
+      () => 'this.basicFilterObject: ' + this.basicFilterObject,
     );
-  }
-
-  onFocus($event) {
     log.debugc(
-      () => 'FOCUS event on $(event.model.id): ' + $event,
+      () => 'CHANGE event on $(event.model.id): ' + $event,
     );
   }
 }

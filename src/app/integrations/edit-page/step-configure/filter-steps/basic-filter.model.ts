@@ -45,7 +45,7 @@ export const BASIC_FILTER_MODEL = [
       new DynamicFormArrayModel(
         {
           id: 'rulesFormArray',
-          initialCount: 5,
+          initialCount: 1,
           groupFactory: () => {
             return [
               new DynamicInputModel(
@@ -108,11 +108,11 @@ export const BASIC_FILTER_MODEL = [
               new DynamicInputModel(
                 {
                   id: 'valueToCheckFor',
-                  placeholder: 'e.g. Red Hat',
+                  placeholder: 'Keywords to check for...',
                 },
                 {
                   grid: {
-                    container: 'input-group',
+                    container: 'input-group col-xs-4 keywords',
                   },
                 },
               ),

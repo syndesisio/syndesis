@@ -9,7 +9,8 @@
 
     <div class="overflow-hidden content-margin basic-filter-form-container">
 
-      <form [formGroup]="formGroup" class="basic-filter-form">
+      <form [formGroup]="formGroup"
+            class="basic-filter-form">
 
         <dynamic-form-bootstrap-control *ngFor="let controlModel of basicFilterModel"
                                         [group]="formGroup"
@@ -20,12 +21,11 @@
                        let-context="context"
                        let-index="index">
 
-            <div class="pull-right">
-              <button type="button"
-                      *ngIf="index !== 0"
-                      class="btn btn-danger btn-sm rounded"
-                      (click)="remove(context, index)">&#10005;
-              </button>
+            <div class="pull-right rule-buttons">
+              <a *ngIf="index !== 0"
+                 class="fa fa-trash-o"
+                 (click)="remove(context, index)">
+              </a>
             </div>
 
           </ng-template>
@@ -34,7 +34,9 @@
 
       </form>
 
-      <button (click)="add()" type="button">Add</button>
+      <a (click)="add()"
+         class="add-rule">+ Add another rule
+      </a>
 
     </div>
   </div>
