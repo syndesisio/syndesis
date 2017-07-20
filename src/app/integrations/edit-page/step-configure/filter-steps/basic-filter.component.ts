@@ -77,10 +77,6 @@ export class BasicFilterComponent implements OnInit {
   // Manage Individual Fields
   add() {
     this.formService.addFormArrayGroup(this.arrayControl, this.arrayModel);
-  }
-
-  insert(context: DynamicFormArrayModel, index: number) {
-    this.formService.insertFormArrayGroup(index, this.arrayControl, context);
     log.debugc(
       () => 'basicFilterModel: ' + this.basicFilterModel,
     );
@@ -90,27 +86,11 @@ export class BasicFilterComponent implements OnInit {
     this.formService.removeFormArrayGroup(index, this.arrayControl, context);
   }
 
-  clear() {
-    this.formService.clearFormArray(this.arrayControl, this.arrayModel);
-  }
-
-  onBlur($event) {
-    log.debugc(
-      () => 'BLUR event on $(event.model.id): ' + $event,
-    );
-  }
-
   onChange($event) {
     this.basicFilterObject = $event.value;
     this.filterChange.emit(this.basicFilterObject);
     log.debugc(
       () => 'CHANGE event on $(event.model.id): ' + $event,
-    );
-  }
-
-  onFocus($event) {
-    log.debugc(
-      () => 'FOCUS event on $(event.model.id): ' + $event,
     );
   }
 }
