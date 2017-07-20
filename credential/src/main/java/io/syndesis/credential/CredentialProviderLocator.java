@@ -19,6 +19,13 @@ import org.springframework.social.connect.ConnectionFactory;
 
 public interface CredentialProviderLocator {
 
+    /**
+     * Adds or replaces a CredentialProvider in the locator.
+     *
+     * @param credentialProvider the provider to add
+     */
+    <A, T> void addCredentialProvider(final CredentialProvider<A, T> credentialProvider);
+
     Applicator<?> getApplicator(String providerId);
 
     /**
@@ -31,12 +38,5 @@ public interface CredentialProviderLocator {
      * @return the requested ConnectionFactory
      */
     ConnectionFactory<?> getConnectionFactory(String providerId);
-
-    /**
-     * Adds or replaces a CredentialProvider in the locator.
-     *
-     * @param credentialProvider the provider to add
-     */
-    public <A, T> void addCredentialProvider(final CredentialProvider<A, T> credentialProvider);
 
 }

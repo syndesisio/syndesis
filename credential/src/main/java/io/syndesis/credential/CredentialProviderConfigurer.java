@@ -15,8 +15,8 @@
  */
 package io.syndesis.credential;
 
-public interface CredentialProviderFactoryConfigurer {
+public interface CredentialProviderConfigurer {
 
-    <A, T> void addCredentialProvider(CredentialProvider<A, T> credentialProvider);
+    void addCredentialProvider(CredentialProviderLocator providerLocator);
 
 }

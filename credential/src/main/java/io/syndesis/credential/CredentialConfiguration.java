@@ -16,27 +16,17 @@
 package io.syndesis.credential;
 
 import io.syndesis.dao.manager.DataManager;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
-import java.util.Optional;
 
 @Configuration
 public class CredentialConfiguration {
 
     @Bean
-    @Autowired()
-    public CredentialProviderLocator credentialProviderLocator(Optional<List<CredentialProvider>> providers) {
-        final CredentialProviderRegistry registry = new CredentialProviderRegistry();
-        if ( providers.isPresent() ) {
-            for (CredentialProvider provider : providers.get()) {
-                registry.addCredentialProvider(provider);
-            }
-        }
-        return registry;
+    public CredentialProviderLocator credentialProviderLocator() {
+        return new CredentialProviderRegistry();
     }
 
     @Bean
@@ -44,5 +34,4 @@ public class CredentialConfiguration {
         final DataManager dataManager, final CacheManager cacheManager) {
         return new Credentials(connectionProviderLocator, dataManager, cacheManager);
     }
-
 }
