@@ -13,7 +13,7 @@ export const BASIC_FILTER_MODEL = [
     group: [
       new DynamicSelectModel<string>(
         {
-          id: 'matchSelect',
+          id: 'predicate',
           label: 'Continue only if incoming data match ',
           options: Observable.of([
             {
