@@ -12,4 +12,5 @@ Access UX design resource and documentation for Syndesis.
 * ### [Salesforce Dynamic Object](designs/salesforceobjects/salesforceobjects.md)
 * ### [Integration Summary Page](designs/integrationsummary/integrationsummary.md)
 
+
 ## Create a Connection
