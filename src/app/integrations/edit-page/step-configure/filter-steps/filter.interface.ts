@@ -3,8 +3,8 @@ export interface BasicFilter {
   stepKind: string;
   configuredProperties: {
     type: string;
-    predicate: string;
-    simple: string;
+    predicate: any;
+    simple?: string;
     rules?: Rule[];
   };
 }

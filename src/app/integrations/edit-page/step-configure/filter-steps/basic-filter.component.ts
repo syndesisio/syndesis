@@ -25,8 +25,8 @@ export class BasicFilterComponent implements OnInit {
   basicFilterModel: DynamicFormControlModel[] = BASIC_FILTER_MODEL;
   formGroup: FormGroup;
 
-  exampleControl: FormControl;
-  exampleModel: DynamicInputModel;
+  predicateControl: FormControl;
+  predicateModel: DynamicInputModel;
 
   rulesArrayControl: FormArray;
   rulesArrayModel: DynamicFormArrayModel;
@@ -65,8 +65,8 @@ export class BasicFilterComponent implements OnInit {
 
     this.formGroup = this.formService.createFormGroup(this.basicFilterModel);
 
-    this.exampleControl = this.formGroup.get('filterSettingsGroup').get('matchSelect') as FormControl;
-    this.exampleModel = this.formService.findById('matchSelect', this.basicFilterModel) as DynamicInputModel;
+    this.predicateControl = this.formGroup.get('filterSettingsGroup').get('predicate') as FormControl;
+    this.predicateModel = this.formService.findById('predicate', this.basicFilterModel) as DynamicInputModel;
 
     this.rulesArrayControl = this.formGroup.get('rulesGroup').get('rulesFormArray') as FormArray;
     this.rulesArrayModel = this.formService.findById('rulesFormArray', this.basicFilterModel) as DynamicFormArrayModel;
@@ -83,10 +83,15 @@ export class BasicFilterComponent implements OnInit {
   }
 
   onChange($event) {
+    //const simple;
+    //const rules = this.formService;
+
+    log.info('predicateModel: ' + JSON.stringify(this.predicateModel));
+    log.info('predicateModel["value"]: ' + JSON.stringify(this.predicateModel['value']));
+
     this.basicFilterObject.configuredProperties = {
       type: 'rule',
-      predicate: '',
-      simple: '',
+      predicate: this.predicateModel['value'],
       rules: [
         {
           path: '',
@@ -96,9 +101,12 @@ export class BasicFilterComponent implements OnInit {
       ],
     };
 
+    log.info('this.basicFilterObject.configuredProperties: ' + JSON.stringify(this.basicFilterObject.configuredProperties));
+
+
     this.filterChange.emit(this.basicFilterObject);
     log.info('this.basicFilterObject: ' + JSON.stringify(this.basicFilterObject));
-    log.info('this.basicFilterModel: ' + JSON.stringify(this.basicFilterModel));
+    //log.info('this.basicFilterModel: ' + JSON.stringify(this.basicFilterModel));
     log.info('CHANGE event on $(event.model.id): ' + $event);
   }
 }
