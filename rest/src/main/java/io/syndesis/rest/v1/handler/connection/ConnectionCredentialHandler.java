@@ -20,6 +20,8 @@ import java.net.URISyntaxException;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
@@ -52,7 +54,7 @@ public class ConnectionCredentialHandler {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Acquisition create(final AcquisitionRequest request, @Context final HttpServletRequest httpRequest) {
+    public Acquisition create(@NotNull @Valid final AcquisitionRequest request, @Context final HttpServletRequest httpRequest) {
         final ServletWebRequest webRequest = new ServletWebRequest(httpRequest);
 
         return credentials.acquire(connectionId, connectorId, absoluteTo(httpRequest, request), webRequest);
@@ -60,7 +62,7 @@ public class ConnectionCredentialHandler {
 
     protected static URI absoluteTo(final HttpServletRequest httpRequest, final AcquisitionRequest request) {
         final URI current = URI.create(httpRequest.getRequestURL().toString());
-        final URI returnUrl = request.returnUrl();
+        final URI returnUrl = request.getReturnUrl();
 
         try {
             return new URI(current.getScheme(), null, current.getHost(), current.getPort(), returnUrl.getPath(),

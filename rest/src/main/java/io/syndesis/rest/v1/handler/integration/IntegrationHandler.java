@@ -35,6 +35,7 @@ import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.operations.Updater;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -50,7 +51,7 @@ import java.util.Optional;
 @Component
 public class IntegrationHandler extends BaseHandler implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration> {
 
-    private ClassInspector classInspector;
+    private final ClassInspector classInspector;
 
     public IntegrationHandler(DataManager dataMgr, ClassInspector classInspector) {
         super(dataMgr);
@@ -107,7 +108,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}/filters/options")
-    public FilterOptions getFilterOptions(@PathParam("id") @ApiParam(required = true) String id) {
+    public FilterOptions getFilterOptions(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
         FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
         Integration integration = Getter.super.get(id);
 
@@ -121,8 +122,6 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
                 }
             });
         });
-
-        integration.getSteps().get().get(0).getAction().get().getOutputDataShape();
         return getGlobalFilterOptions();
     }
 

@@ -15,13 +15,14 @@
  */
 package io.syndesis.rest.v1.handler.setup;
 
-import io.swagger.annotations.Api;
-import io.syndesis.core.SuppressFBWarnings;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.connection.Connector;
-import org.springframework.stereotype.Component;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -31,11 +32,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+
+import io.swagger.annotations.Api;
+import io.syndesis.core.SuppressFBWarnings;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.connection.Connector;
+
+import org.springframework.stereotype.Component;
 
 /**
  * This rest endpoint handles working with global oauth settings.
@@ -89,7 +93,7 @@ public class OAuthAppHandler {
     @PUT
     @Path(value = "/{id}")
     @Consumes("application/json")
-    public void update(@PathParam("id") String id, OAuthApp app) {
+    public void update(@NotNull @PathParam("id") String id, @NotNull @Valid OAuthApp app) {
         Connector connector = dataMgr.fetch(Connector.class, id);
         if( connector==null ) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);

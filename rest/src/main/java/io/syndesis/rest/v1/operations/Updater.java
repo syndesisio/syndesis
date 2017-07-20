@@ -15,11 +15,14 @@
  */
 package io.syndesis.rest.v1.operations;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import io.swagger.annotations.ApiParam;
 import io.syndesis.dao.manager.WithDataManager;
 import io.syndesis.model.WithId;
 
@@ -28,7 +31,7 @@ public interface Updater<T extends WithId<T>> extends Resource, WithDataManager 
     @PUT
     @Path(value = "/{id}")
     @Consumes("application/json")
-    default void update(@PathParam("id") String id, T obj) {
+    default void update(@NotNull @PathParam("id") @ApiParam(required = true) String id, @NotNull @Valid T obj) {
         getDataManager().update(obj);
     }
 

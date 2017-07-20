@@ -25,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 @Value.Immutable
 @JsonDeserialize(builder = AcquisitionRequest.Builder.class)
 @Validated
+@Value.Style(passAnnotations = RelativeUri.class)
 public interface AcquisitionRequest {
 
     class Builder extends ImmutableAcquisitionRequest.Builder {
@@ -33,5 +34,5 @@ public interface AcquisitionRequest {
     }
 
     @RelativeUri
-    URI returnUrl();
+    URI getReturnUrl();
 }
