@@ -45,8 +45,8 @@ public class DataMapperClassInspectorTest {
         List<String> paths = dataMapperClassInspector.getPaths("twitter4j.StatusJSONImpl");
 
         Assert.assertNotNull(paths);
-        Assert.assertTrue(paths.contains("/id"));
-        Assert.assertTrue(paths.contains("/logger/infoEnabled"));
+        Assert.assertTrue(paths.contains("StatusJSONImpl.id"));
+        Assert.assertTrue(paths.contains("StatusJSONImpl.logger.infoEnabled"));
     }
 
     @Test
@@ -57,6 +57,14 @@ public class DataMapperClassInspectorTest {
         List<String> paths = dataMapperClassInspector.getPaths("twitter4j.Status");
 
         Assert.assertNotNull(paths);
-        Assert.assertTrue(paths.contains("/id"));
+        Assert.assertTrue(paths.contains("Status.id"));
+    }
+
+    @Test
+    public void shouldExtractClassName() throws Exception {
+        DataMapperClassInspector dataMapperClassInspector = new DataMapperClassInspector(infinispan.getCaches(), new RestTemplate(), config);
+        Assert.assertEquals("Status", dataMapperClassInspector.getClassName("Status"));
+        Assert.assertEquals("Status", dataMapperClassInspector.getClassName("twitter4j.Status"));
+        Assert.assertEquals("Status", dataMapperClassInspector.getClassName("more.twitter4j.Status"));
     }
 }

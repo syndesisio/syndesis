@@ -45,7 +45,7 @@ public class DataMapperClassInspector implements ClassInspector {
     private static final String PRIMITIVE = "primitive";
 
 
-    private static final String DEFAULT_SEPARATOR = "/";
+    private static final String DEFAULT_SEPARATOR = ".";
 
     private static final String JAVA_LANG = "java.lang";
     private static final String JAVA_UTIL = "java.util";
@@ -64,26 +64,26 @@ public class DataMapperClassInspector implements ClassInspector {
     }
 
     @Override
-    public List<String> getPaths(String className) {
+    public List<String> getPaths(String fullyQualifiedName) {
         Cache<String, List<String>> cache = caches.getCache(CACHE_NAME);
-        if (cache.containsKey(className)) {
-            return cache.get(className);
+        if (cache.containsKey(fullyQualifiedName)) {
+            return cache.get(fullyQualifiedName);
         }
-        List<String> paths = getPathsForJavaClassName("", className, new ArrayList<>());
-        cache.put(className, paths);
+        List<String> paths = getPathsForJavaClassName(getClassName(fullyQualifiedName), fullyQualifiedName, new ArrayList<>());
+        cache.put(fullyQualifiedName, paths);
         return paths;
     }
 
-    protected List<String> getPathsForJavaClassName(String prefix, String className, List<String> visited) {
-        if (visited.contains(className)) {
+    protected List<String> getPathsForJavaClassName(String prefix, String fullyQualifiedName, List<String> visited) {
+        if (visited.contains(fullyQualifiedName)) {
             return Collections.emptyList();
         } else {
-            visited.add(className);
+            visited.add(fullyQualifiedName);
         }
 
         ResponseEntity<String> response = null;
         try {
-            response = restTemplate.getForEntity(getClassInspectionUrl(config, className), String.class);
+            response = restTemplate.getForEntity(getClassInspectionUrl(config, fullyQualifiedName), String.class);
 
         } catch (Exception e) {
             if (config.isStrict()) {
@@ -128,15 +128,22 @@ public class DataMapperClassInspector implements ClassInspector {
         return paths;
     }
 
+    protected static String getClassName(String fullyQualifiedName) {
+        int index = fullyQualifiedName.lastIndexOf(".");
+        if (index > 0) {
+            return fullyQualifiedName.substring(index + 1);
+        } else return fullyQualifiedName;
+    }
+
     /**
      * Checks if the the specified class name is terminal (we can't further expand the path).
      * Examples of terminals are primitive, or java.lang classes.
      *
-     * @param className The specified class name.
+     * @param fullyQualifiedName The specified class name.
      * @return True if terminal, false otherwise.
      */
-    protected static boolean isTerminal(String className) {
-        return className == null || className.startsWith(JAVA_LANG) || className.startsWith(JAVA_UTIL);
+    protected static boolean isTerminal(String fullyQualifiedName) {
+        return fullyQualifiedName == null || fullyQualifiedName.startsWith(JAVA_LANG) || fullyQualifiedName.startsWith(JAVA_UTIL);
     }
 
     protected static String getClassInspectionUrl(ClassInspectorConfigurationProperties config, String className) {
