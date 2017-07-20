@@ -34,7 +34,7 @@ import java.util.List;
 @Component
 public class DataMapperClassInspector implements ClassInspector {
 
-    private static final String INSPECTOR_URL_FORMAT = "http://%s/v2/atlas/java?className=%s";
+    private static final String INSPECTOR_URL_FORMAT = "http://%s/%s?%s=%s";
 
 
     private static final String JAVA_FIELDS = "javaFields";
@@ -83,7 +83,8 @@ public class DataMapperClassInspector implements ClassInspector {
 
         ResponseEntity<String> response = null;
         try {
-            response = restTemplate.getForEntity(String.format(INSPECTOR_URL_FORMAT, config.getHost() + ":" + config.getPort(), className), String.class);
+            response = restTemplate.getForEntity(getClassInspectionUrl(config, className), String.class);
+
         } catch (Exception e) {
             if (config.isStrict()) {
                 throw SyndesisServerException.launderThrowable(e);
@@ -133,5 +134,13 @@ public class DataMapperClassInspector implements ClassInspector {
      */
     protected static boolean isTerminal(String className) {
         return className == null || className.startsWith(JAVA_LANG) || className.startsWith(JAVA_UTIL);
+    }
+
+    protected static String getClassInspectionUrl(ClassInspectorConfigurationProperties config, String className) {
+        return String.format(INSPECTOR_URL_FORMAT,
+            config.getHost() + ":" + config.getPort(),
+            config.getPath(),
+            config.getClassNameParameter(),
+            className);
     }
 }
