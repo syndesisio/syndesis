@@ -9,4 +9,6 @@ Access UX design resource and documentation for Syndesis.
 * ### [Global Settings Page](designs/global-settings-page/global_settings_page_overview.md)
 
 ## Create an Integration
+* ### [Salesforce Dynamic Objects](designs/salesforceobjects/salesforceobjects.md)
+
 ## Create a Connection
