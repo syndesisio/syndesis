@@ -349,6 +349,12 @@
               <resolvedVersion>1.52</resolvedVersion>
               <expectedVersion>1.55</expectedVersion>
             </exception>
+            <exception>
+              <groupId>org.objenesis</groupId>
+              <artifactId>objenesis</artifactId>
+              <resolvedVersion>2.1</resolvedVersion>
+              <expectedVersion>2.5.1</expectedVersion>
+            </exception>
           </exceptions>
         </configuration>
       </plugin>
@@ -662,6 +668,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-test</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

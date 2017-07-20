@@ -15,12 +15,15 @@
  */
 package io.syndesis.rest.v1.handler.setup;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
+import io.syndesis.core.SuppressFBWarnings;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.connection.Connector;
+import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -32,14 +35,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import io.swagger.annotations.Api;
-import io.syndesis.core.SuppressFBWarnings;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.connection.Connector;
-
-import org.springframework.stereotype.Component;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 /**
  * This rest endpoint handles working with global oauth settings.
@@ -77,17 +77,37 @@ public class OAuthAppHandler {
         List<Connector> items = dataMgr.fetchAll(Connector.class).getItems();
         items.forEach(connector -> {
             if (isOauthConnector(connector)) {
-                OAuthApp app = new OAuthApp();
-                app.id = connector.getId().get();
-                app.name = connector.getName();
-                app.icon = connector.getIcon();
-                app.clientId = getPropertyTaggedAs(connector, "oauth-client-id");
-                app.clientSecret = getPropertyTaggedAs(connector, "oauth-client-secret");
-                apps.add(app);
+                apps.add(createOAuthApp(connector));
             }
         });
 
         return apps;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}")
+    public OAuthApp get(@PathParam("id") @ApiParam(required = true) String id) {
+
+        Connector connector = dataMgr.fetch(Connector.class, id);
+        if( connector == null ) {
+            throw new EntityNotFoundException();
+        }
+        if (isOauthConnector(connector)) {
+            return createOAuthApp(connector);
+        } else {
+            throw new EntityNotFoundException();
+        }
+    }
+
+    private static OAuthApp createOAuthApp(Connector connector) {
+        OAuthApp app = new OAuthApp();
+        app.id = connector.getId().get();
+        app.name = connector.getName();
+        app.icon = connector.getIcon();
+        app.clientId = getPropertyTaggedAs(connector, "oauth-client-id");
+        app.clientSecret = getPropertyTaggedAs(connector, "oauth-client-secret");
+        return app;
     }
 
     @PUT
@@ -111,7 +131,7 @@ public class OAuthAppHandler {
         dataMgr.update(connector);
     }
 
-    private boolean isOauthConnector(Connector connector) {
+    private static boolean isOauthConnector(Connector connector) {
         TreeSet EMPTY = new TreeSet();
         return connector.getProperties().values().stream().anyMatch(x -> {
                 return x.getTags().orElse(EMPTY).contains("oauth-client-id");
@@ -119,7 +139,7 @@ public class OAuthAppHandler {
         );
     }
 
-    private String getPropertyTaggedAs(Connector connector, String name) {
+    private static String getPropertyTaggedAs(Connector connector, String name) {
         if( connector.getProperties() == null ) {
             return null;
         }
@@ -132,7 +152,7 @@ public class OAuthAppHandler {
         return null;
     }
 
-    private void setPropertyTaggedAs(Connector connector, Map<String, String> configuredProperties, String name, String value) {
+    private static void setPropertyTaggedAs(Connector connector, Map<String, String> configuredProperties, String name, String value) {
         TreeSet EMPTY = new TreeSet();
         for (Map.Entry<String,ConfigurationProperty> entry : connector.getProperties().entrySet()) {
             if( entry.getValue().getTags().orElse(EMPTY).contains(name) ) {

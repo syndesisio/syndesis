@@ -15,6 +15,7 @@
  */
 package io.syndesis.credential.salesforce;
 
+import io.syndesis.credential.salesforce.SalesforceConfiguration.SalesforceApplicator;
 import io.syndesis.model.connection.Connection;
 
 import org.junit.Test;
@@ -48,10 +49,9 @@ public class SalesforceApplicatorTest {
 
         when(salesforce.createConnection(accessGrant)).thenReturn(salesforceConnection);
 
-        final SalesforceConfiguration salesforceConfiguration = new SalesforceConfiguration(salesforce, properties);
-
         final Connection.Builder mutableConnection = new Connection.Builder();
-        salesforceConfiguration.applicator.additionalApplication(mutableConnection, accessGrant);
+        final SalesforceApplicator applicator = new SalesforceApplicator(salesforce, properties);
+        applicator.additionalApplication(mutableConnection, accessGrant);
 
         assertThat(((Connection) mutableConnection.build()).getConfiguredProperties())
             .containsExactly(entry("instanceUrl", "https://instance.salesforce.com"));

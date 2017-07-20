@@ -16,6 +16,7 @@
 package io.syndesis.credential.salesforce;
 
 import io.syndesis.credential.Applicator;
+import io.syndesis.credential.CredentialProvider;
 import io.syndesis.credential.CredentialProviderLocator;
 import io.syndesis.credential.DefaultCredentialProvider;
 import io.syndesis.credential.OAuth2Applicator;
@@ -38,14 +39,14 @@ import org.springframework.social.salesforce.connect.SalesforceConnectionFactory
 @EnableConfigurationProperties(SalesforceProperties.class)
 public class SalesforceConfiguration {
 
-    protected final SalesforceApplicator applicator;
+    protected static final class SalesforceApplicator extends OAuth2Applicator {
 
-    protected final SalesforceConnectionFactory salesforce;
+        private final SalesforceConnectionFactory salesforce;
 
-    protected final class SalesforceApplicator extends OAuth2Applicator {
-
-        public SalesforceApplicator(final SocialProperties socialProperties) {
+        public SalesforceApplicator(final SalesforceConnectionFactory salesforce,
+            final SocialProperties socialProperties) {
             super(socialProperties);
+            this.salesforce = salesforce;
 
             setClientIdProperty("clientId");
             setClientSecretProperty("clientSecret");
@@ -68,15 +69,14 @@ public class SalesforceConfiguration {
     @Autowired
     public SalesforceConfiguration(final SalesforceProperties salesforceProperties,
         final CredentialProviderLocator locator) {
-        this(createConnectionFactory(salesforceProperties), salesforceProperties);
-
-        locator.addCredentialProvider(new DefaultCredentialProvider<>("salesforce", salesforce, applicator));
+        locator.addCredentialProvider(create(salesforceProperties));
     }
 
-    protected SalesforceConfiguration(final SalesforceConnectionFactory salesforce,
-        final SocialProperties salesforceProperties) {
-        this.salesforce = salesforce;
-        applicator = new SalesforceApplicator(salesforceProperties);
+    public static CredentialProvider<Salesforce, AccessGrant> create(final SalesforceProperties salesforceProperties) {
+        final SalesforceConnectionFactory connectionFactory = createConnectionFactory(salesforceProperties);
+
+        return new DefaultCredentialProvider<>("salesforce", connectionFactory,
+            new SalesforceApplicator(connectionFactory, salesforceProperties));
     }
 
     protected static SalesforceConnectionFactory
