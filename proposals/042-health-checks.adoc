@@ -6,10 +6,10 @@
 ** https://issues.apache.org/jira/browse/CAMEL-10026
 
 * Branches:
-** https://github.com/lburgazzoli/apache-camel/tree/CAMEL-11443
+** https://github.com/apache/camel (master)
   
 * Example:
-** https://github.com/lburgazzoli/apache-camel/tree/CAMEL-11443/examples/camel-example-spring-boot-routecontroller
+** https://github.com/apache/camel/tree/master/examples/camel-example-spring-boot-routecontroller
 
 == Background
 
