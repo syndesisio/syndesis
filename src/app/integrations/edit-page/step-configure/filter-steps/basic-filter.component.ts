@@ -87,8 +87,10 @@ export class BasicFilterComponent implements OnInit {
   }
 
   onChange($event) {
-    this.basicFilterObject = $event.value;
     this.filterChange.emit(this.basicFilterObject);
+    log.debugc(
+      () => 'this.basicFilterObject: ' + this.basicFilterObject,
+    );
     log.debugc(
       () => 'CHANGE event on $(event.model.id): ' + $event,
     );

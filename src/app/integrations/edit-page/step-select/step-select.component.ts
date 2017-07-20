@@ -6,6 +6,7 @@ import { StepStore, StepKind, StepKinds } from '../../../store/step/step.store';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { FlowPage } from '../flow-page';
 import { Step, Steps, TypeFactory } from '../../../model';
+import { log, getCategory } from '../../../logging';
 
 @Component({
   selector: 'syndesis-integrations-step-select',
@@ -70,6 +71,7 @@ export class IntegrationsStepSelectComponent extends FlowPage
   }
 
   isSelected(step: Step) {
+    log.debugc(() => 'Step: ' + step);
     const _step = this.currentFlow.getStep(this.position);
     return _step && step.stepKind === _step.stepKind;
   }
