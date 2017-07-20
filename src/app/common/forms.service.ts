@@ -50,12 +50,23 @@ export class FormFactoryService {
       }
       // then use the appropriate ng2 dynamic forms constructor
       if (type === 'checkbox') {
-        formField = new DynamicCheckboxModel({
-          id: key,
-          label: value.displayName || key,
-          hint: value.description,
-          value: value.value || value.defaultValue,
-        });
+        formField = new DynamicCheckboxModel(
+          {
+            id: key,
+            label: value.displayName || key,
+            hint: value.description,
+            value: value.value || value.defaultValue,
+          },
+          {
+            element: {
+              control: 'element-control checkbox',
+            },
+            grid: {
+              control: 'col-sm-offset-3 col-sm-9',
+              label: '',
+            },
+          },
+        );
       } else if (type === 'textarea') {
         formField = new DynamicTextAreaModel(
           {
