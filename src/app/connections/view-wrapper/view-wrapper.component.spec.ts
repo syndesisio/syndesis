@@ -11,7 +11,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
-import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
@@ -25,6 +24,7 @@ import { ConnectionViewComponent } from '../view/view.component';
 import { StoreModule } from '../../store/store.module';
 import { SyndesisCommonModule } from '../../common/common.module';
 import { CurrentConnectionService } from '../create-page/current-connection';
+import { DynamicFormsPatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
 
 describe('ConnectionViewWrapperComponent', () => {
   let component: ConnectionViewWrapperComponent;
@@ -38,7 +38,7 @@ describe('ConnectionViewWrapperComponent', () => {
           FormsModule,
           ReactiveFormsModule,
           DynamicFormsCoreModule.forRoot(),
-          DynamicFormsBootstrapUIModule,
+          DynamicFormsPatternflyUIModule,
           SyndesisCommonModule,
           StoreModule,
           RouterTestingModule.withRoutes([]),

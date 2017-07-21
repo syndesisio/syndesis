@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
-import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -22,6 +21,7 @@ import { ConnectionsListComponent } from '../list/list.component';
 import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
 import { StoreModule } from '../../store/store.module';
 import { SyndesisCommonModule } from '../../common/common.module';
+import { DynamicFormsPatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
 
 describe('ConnectionViewComponent', () => {
   let component: ConnectionViewComponent;
@@ -35,7 +35,7 @@ describe('ConnectionViewComponent', () => {
           FormsModule,
           ReactiveFormsModule,
           DynamicFormsCoreModule.forRoot(),
-          DynamicFormsBootstrapUIModule,
+          DynamicFormsPatternflyUIModule,
           SyndesisCommonModule,
           StoreModule,
           RouterTestingModule.withRoutes([]),

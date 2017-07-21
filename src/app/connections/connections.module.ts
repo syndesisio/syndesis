@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
-import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToasterModule } from 'angular2-toaster';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TagInputModule } from 'ngx-chips';
 
 import { SyndesisCommonModule } from '../common/common.module';
+import { DynamicFormsPatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 import { ConnectionsCreatePage } from './create-page/create-page.component';
 import { ConnectionsConnectionBasicsComponent } from './create-page/connection-basics/connection-basics.component';
 import { ConnectionsConfigureFieldsComponent } from './create-page/configure-fields/configure-fields.component';
@@ -30,7 +30,7 @@ import { CurrentConnectionService } from './create-page/current-connection';
     FormsModule,
     ReactiveFormsModule,
     DynamicFormsCoreModule,
-    DynamicFormsBootstrapUIModule,
+    DynamicFormsPatternflyUIModule,
     RouterModule,
     SyndesisCommonModule,
     ToasterModule,
