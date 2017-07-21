@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ListToolbarProperties } from '../../common/toolbar/list-toolbar.component';
 
 @Component({
-  selector: 'oauth-clients',
+  selector: 'syndesis-oauth-clients',
   templateUrl: 'oauth-clients.component.html',
 })
 export class OAuthClientsComponent implements OnInit {
