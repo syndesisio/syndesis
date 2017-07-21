@@ -47,48 +47,6 @@
                   *ngIf="isConfigured(item)"
                   (click)="promptRemoveCredentials(item)">Remove</button>
         </div>
-
-        <!--
-        <div class="list-pf-container">
-          <div class="list-view-pf-checkbox">
-            <span (click)="item.expanded = !item.expanded">
-            <i *ngIf="!item.expanded" class="fa fa-chevron-right"></i>
-            <i *ngIf="item.expanded" class="fa fa-chevron-down"></i>
-          </span>
-          </div>
-          <div class="list-view-pf-actions">
-            <button *ngIf="!item.expanded"
-                    class="btn btn-default"
-                    (click)="item.expanded = !item.expanded">
-                  <ng-container *ngIf="!isConfigured(item)">Register</ng-container>
-                  <ng-container *ngIf="isConfigured(item)">Edit</ng-container>
-                </button>
-            <button class="btn btn-default"
-                    *ngIf="isConfigured(item)"
-                    (click)="promptRemoveCredentials(item)">Remove</button>
-          </div>
-          <div class="list-view-pf-main-info">
-            <div class="list-view-pf-left">
-              <span class="fa {{ item.client.icon }} list-view-pf-icon-sm"></span>
-            </div>
-            <div class="list-view-pf-body">
-              <div class="list-view-pf-description">
-                <div class="list-group-item-heading">
-                  {{item.client.name}}
-                </div>
-                <div class="list-group-item-text">
-                  <ng-container *ngIf="!isConfigured(item)">
-                    <i>Client ID and client secret not configured.</i>
-                  </ng-container>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="item.expanded">
-          HEllo world!
-        </div>
-          -->
       </ng-template>
 
       <!-- list item's expansion -->
