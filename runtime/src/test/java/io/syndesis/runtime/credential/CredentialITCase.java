@@ -23,6 +23,7 @@ import io.syndesis.credential.Acquisition;
 import io.syndesis.credential.AcquisitionMethod;
 import io.syndesis.credential.CredentialFlowState;
 import io.syndesis.credential.CredentialProvider;
+import io.syndesis.credential.CredentialProviderLocator;
 import io.syndesis.credential.Credentials;
 import io.syndesis.credential.OAuth2Applicator;
 import io.syndesis.model.connection.Connection;
@@ -38,7 +39,6 @@ import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,7 +64,11 @@ public class CredentialITCase extends BaseITCase {
     private CacheManager cache;
 
     public static class TestConfiguration {
-        @Bean
+
+        public TestConfiguration(CredentialProviderLocator locator) {
+            locator.addCredentialProvider(provider());
+        }
+
         public CredentialProvider<Object, AccessGrant> provider() {
             @SuppressWarnings("unchecked")
             final CredentialProvider<Object, AccessGrant> credentialProvider = mock(CredentialProvider.class);

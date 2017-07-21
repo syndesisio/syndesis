@@ -15,7 +15,6 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,13 +33,11 @@ import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.ClassInspector;
 import io.syndesis.model.Kind;
-import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.DataShape;
 import io.syndesis.model.connection.DataShapeKinds;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
-import io.syndesis.model.integration.Integration;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;

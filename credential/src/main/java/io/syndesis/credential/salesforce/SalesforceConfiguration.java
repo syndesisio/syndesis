@@ -16,25 +16,24 @@
 package io.syndesis.credential.salesforce;
 
 import io.syndesis.credential.Applicator;
-import io.syndesis.credential.CredentialProvider;
+import io.syndesis.credential.CredentialProviderLocator;
 import io.syndesis.credential.DefaultCredentialProvider;
 import io.syndesis.credential.OAuth2Applicator;
 import io.syndesis.model.connection.Connection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.social.config.annotation.SocialConfigurerAdapter;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Template;
 import org.springframework.social.salesforce.api.Salesforce;
 import org.springframework.social.salesforce.connect.SalesforceConnectionFactory;
 
 @Configuration
-@ConditionalOnClass({SocialConfigurerAdapter.class, SalesforceConnectionFactory.class})
+@ConditionalOnClass(SalesforceConnectionFactory.class)
 @ConditionalOnProperty(prefix = "spring.social.salesforce", name = "app-id")
 @EnableConfigurationProperties(SalesforceProperties.class)
 public class SalesforceConfiguration {
@@ -67,20 +66,17 @@ public class SalesforceConfiguration {
     }
 
     @Autowired
-    public SalesforceConfiguration(final SalesforceProperties salesforceProperties) {
+    public SalesforceConfiguration(final SalesforceProperties salesforceProperties,
+        final CredentialProviderLocator locator) {
         this(createConnectionFactory(salesforceProperties), salesforceProperties);
+
+        locator.addCredentialProvider(new DefaultCredentialProvider<>("salesforce", salesforce, applicator));
     }
 
     protected SalesforceConfiguration(final SalesforceConnectionFactory salesforce,
         final SocialProperties salesforceProperties) {
         this.salesforce = salesforce;
         applicator = new SalesforceApplicator(salesforceProperties);
-    }
-
-    @Bean
-    public CredentialProvider<Salesforce, AccessGrant> create() {
-        return new DefaultCredentialProvider<>(
-            "salesforce", salesforce, applicator);
     }
 
     protected static SalesforceConnectionFactory
