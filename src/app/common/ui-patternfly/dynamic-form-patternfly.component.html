@@ -24,7 +24,7 @@
 
     <div *ngIf="type === 2" [ngClass]="model.cls.grid.control">
 
-        <div class="checkbox" [class.disabled]="model.disabled">
+        <div [class.disabled]="model.disabled" [ngClass]="model.cls.element.control || 'checkbox'">
 
             <label>
 
@@ -70,8 +70,7 @@
                                                     (change)="onValueChange($event)"
                                                     (focus)="onFocusChange($event)"></dynamic-form-patternfly-control>
 
-                    <ng-template [ngTemplateOutlet]="template?.templateRef"
-                                 [ngTemplateOutletContext]="groupModel"></ng-template>
+                    <ng-container *ngTemplateOutlet="template?.templateRef; context: groupModel"></ng-container>
 
                 </div>
 
@@ -149,18 +148,16 @@
 
                 <legend *ngIf="model.legend" [innerHTML]="model.legend"></legend>
 
-                <div *ngFor="let option of model.options$ | async" class="radio">
+                <div *ngFor="let option of model.options$ | async" [ngClass]="model.cls.element.control || 'radio'">
 
                     <label>
 
                         <input type="radio"
                                [formControlName]="model.id"
                                [name]="model.name"
-                               [ngClass]="model.cls.element.control"
                                [value]="option.value"
                                (blur)="onFocusChange($event)"
                                (focus)="onFocusChange($event)"/><span [innerHTML]="option.label"></span></label>
-
                 </div>
 
             </fieldset>
@@ -228,6 +225,7 @@
     <ng-template *ngIf="type !== 1 && template?.align === 'END'"
                  [ngTemplateOutlet]="template.templateRef"
                  [ngTemplateOutletContext]="model"></ng-template>
+
 
     <ng-content></ng-content>
 

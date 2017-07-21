@@ -22,7 +22,7 @@ import {
     DynamicTextAreaModel,
     DynamicTimePickerModel,
 } from '@ng2-dynamic-forms/core';
-import { TooltipModule }  from 'ngx-bootstrap/tooltip';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PatternflyFormControlType, DynamicFormPatternflyComponent } from './dynamic-form-patternfly.component';
 
 describe('DynamicFormPatternflyComponent test suite', () => {
@@ -33,7 +33,7 @@ describe('DynamicFormPatternflyComponent test suite', () => {
             new DynamicDatePickerModel({id: 'datepicker'}),
             new DynamicEditorModel({id: 'editor'}),
             new DynamicFileUploadModel({id: 'upload', url: ''}),
-            new DynamicFormArrayModel({id: 'formArray', createGroup: () => []}),
+            new DynamicFormArrayModel({id: 'formArray', groupFactory: () => []}),
             new DynamicFormGroupModel({id: 'formGroup', group: []}),
             new DynamicInputModel({id: 'input', maxLength: 51}),
             new DynamicRadioGroupModel({id: 'radioGroup'}),
@@ -164,7 +164,7 @@ describe('DynamicFormPatternflyComponent test suite', () => {
 
     it('should determine correct form control type', () => {
 
-        let testFn = DynamicFormPatternflyComponent.getFormControlType;
+        const testFn = DynamicFormPatternflyComponent.getFormControlType;
 
         expect(testFn(formModel[0])).toEqual(PatternflyFormControlType.Checkbox);
 
