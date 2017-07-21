@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-12">
+  <div class="container col-md-12">
     <h1>OAuth Client Management</h1>
     <p>Register Syndesis with the applications you want to connect to in an integration. Find out more about this at <a>Syndesis Help</a>.
 
@@ -8,37 +8,99 @@
                              [(filter)]="filter"
                              [(sort)]="sort"></syndesis-list-toolbar>
 
-      <!-- One list item -->
-      <ng-template #listItem
+      <!-- One list item, main row -->
+      <ng-template #listItemMain
                    let-item="item">
-        <div class="list-view-pf-checkbox">
-          <i class="fa fa-chevron-right"></i>
+        <div class="list-pf-chevron"
+             (click)="item.expanded = !item.expanded">
+          <span *ngIf="item.expanded"
+                class="fa fa-angle-down"></span>
+          <span *ngIf="!item.expanded"
+                class="fa fa-angle-right"></span>
         </div>
-        <div class="list-view-pf-actions">
-          <button class="btn btn-default">Register</button>
-          <button class="btn btn-default">Edit</button>
-          <button class="btn btn-default">Remove</button>
-        </div>
-        <div class="list-view-pf-main-info">
-          <div class="list-view-pf-left">
-            <span class="fa {{ item.icon }} list-view-pf-icon-sm"></span>
+        <div class="list-pf-content list-pf-content-flex">
+          <div class="list-pf-left">
+            <span class="fa {{ item.client.icon }} list-pf-icon list-pf-icon-bordered list-pf-icon-small"></span>
           </div>
-          <div class="list-view-pf-body">
-            <div class="list-view-pf-description">
-              <div class="list-group-item-heading">
-                {{item.name}}
+          <div class="list-pf-content-wrapper">
+            <div class="list-pf-main-content">
+              <div class="list-pf-title">
+                {{ item.client.name }}
               </div>
-              <div class="list-group-item-text">
-                <i>Client ID and client secret not configured.</i>
+              <div class="list-pf-description">
+                <ng-container *ngIf="!isConfigured(item)">
+                  <i>Client ID and client secret not configured.</i>
+                </ng-container>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="list-pf-actions">
+          <button *ngIf="!item.expanded"
+                  class="btn btn-default"
+                  (click)="item.expanded = !item.expanded">
+                  <ng-container *ngIf="!isConfigured(item)">Register</ng-container>
+                  <ng-container *ngIf="isConfigured(item)">Edit</ng-container>
+                </button>
+          <button class="btn btn-default"
+                  *ngIf="isConfigured(item)"
+                  (click)="promptRemoveCredentials(item)">Remove</button>
+        </div>
+
+        <!--
+        <div class="list-pf-container">
+          <div class="list-view-pf-checkbox">
+            <span (click)="item.expanded = !item.expanded">
+            <i *ngIf="!item.expanded" class="fa fa-chevron-right"></i>
+            <i *ngIf="item.expanded" class="fa fa-chevron-down"></i>
+          </span>
+          </div>
+          <div class="list-view-pf-actions">
+            <button *ngIf="!item.expanded"
+                    class="btn btn-default"
+                    (click)="item.expanded = !item.expanded">
+                  <ng-container *ngIf="!isConfigured(item)">Register</ng-container>
+                  <ng-container *ngIf="isConfigured(item)">Edit</ng-container>
+                </button>
+            <button class="btn btn-default"
+                    *ngIf="isConfigured(item)"
+                    (click)="promptRemoveCredentials(item)">Remove</button>
+          </div>
+          <div class="list-view-pf-main-info">
+            <div class="list-view-pf-left">
+              <span class="fa {{ item.client.icon }} list-view-pf-icon-sm"></span>
+            </div>
+            <div class="list-view-pf-body">
+              <div class="list-view-pf-description">
+                <div class="list-group-item-heading">
+                  {{item.client.name}}
+                </div>
+                <div class="list-group-item-text">
+                  <ng-container *ngIf="!isConfigured(item)">
+                    <i>Client ID and client secret not configured.</i>
+                  </ng-container>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <div *ngIf="item.expanded">
+          HEllo world!
+        </div>
+          -->
+      </ng-template>
+
+      <!-- list item's expansion -->
+      <ng-template #listItemExpansion
+                   let-item="item">
+        Hello!
       </ng-template>
 
       <!-- List displayed here -->
-      <syndesis-list-view-rows [items]="oauthClients"
-                               [template]="listItem">
-      </syndesis-list-view-rows>
+      <syndesis-list-expansion [items]="items"
+                               [mainTemplate]="listItemMain"
+                               [expansionTemplate]="listItemExpansion">
+      </syndesis-list-expansion>
   </div>
 </div>

@@ -6,6 +6,7 @@ import { ListToolbarProperties } from '../../common/toolbar/list-toolbar.compone
   templateUrl: 'oauth-clients.component.html',
 })
 export class OAuthClientsComponent implements OnInit {
+  items = [];
   oauthClients = [
     {
       id: 'twitter',
@@ -18,8 +19,8 @@ export class OAuthClientsComponent implements OnInit {
       id: 'saleforce',
       name: 'Salesforce',
       icon: 'fa-salesforce',
-      clientId: '',
-      clientSecret: '',
+      clientId: 'blah',
+      clientSecret: 'blah',
     },
     {
       id: 'facebook',
@@ -45,8 +46,20 @@ export class OAuthClientsComponent implements OnInit {
   filter: undefined;
   sort: undefined;
   constructor() {}
+  isConfigured(item) {
+    const client = item.client;
+    return (client.clientId && client.clientId !== '') && (client.clientSecret && client.clientSecret !== '');
+  }
+  promptRemoveCredentials(item) {
+
+  }
 
   ngOnInit() {
-
+    this.oauthClients.forEach((client) => {
+      this.items.push({
+        expanded: false,
+        client: client,
+      });
+    });
   }
 }

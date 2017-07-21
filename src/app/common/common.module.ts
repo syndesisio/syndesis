@@ -11,6 +11,7 @@ import { FormFactoryService } from './forms.service';
 import { ConfigService } from '../config.service';
 import { ListToolbarComponent } from './toolbar/list-toolbar.component';
 import { ListViewRowsComponent } from './list-view-rows/list-view-rows.component';
+import { ListExpansionComponent } from './list-expansion/list-expansion.component';
 
 @NgModule({
   imports: [CommonModule],
@@ -22,6 +23,7 @@ import { ListViewRowsComponent } from './list-view-rows/list-view-rows.component
     LoadingComponent,
     ListToolbarComponent,
     ListViewRowsComponent,
+    ListExpansionComponent,
   ],
   exports: [
     ObjectPropertyFilterPipe,
@@ -31,6 +33,7 @@ import { ListViewRowsComponent } from './list-view-rows/list-view-rows.component
     LoadingComponent,
     ListToolbarComponent,
     ListViewRowsComponent,
+    ListExpansionComponent,
   ],
   providers: [ConfigService, FormFactoryService],
 })
