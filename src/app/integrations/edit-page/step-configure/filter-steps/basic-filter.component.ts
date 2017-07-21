@@ -48,7 +48,7 @@ export class BasicFilterComponent implements OnInit {
       },
     ],
   };
-  @Output() filterChange = new EventEmitter<BasicFilter>();
+  @Output() basicFilterObjectChange = new EventEmitter<BasicFilter>();
 
   constructor(public currentFlow: CurrentFlow,
               private formService: DynamicFormService) {
@@ -92,7 +92,7 @@ export class BasicFilterComponent implements OnInit {
 
     //log.info('this.formGroup.value: ' + JSON.stringify(this.formGroup.value));
 
-    this.filterChange.emit(formattedProperties);
+    this.basicFilterObjectChange.emit(formattedProperties);
 
     log.info('formattedProperties: ' + JSON.stringify(formattedProperties));
   }
