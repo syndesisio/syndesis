@@ -70,6 +70,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     if (this.filterForm) {
       data = this.filterForm;
       log.info('filterForm: ' + JSON.stringify(this.filterForm));
+      log.info('data: ' + JSON.stringify(data));
+      log.info('step: ' + JSON.stringify(step));
+      log.info('this.formGroup.value: ' + JSON.stringify(this.formGroup.value));
     }
     if (!data) {
       data = this.formGroup.value || {};
@@ -139,6 +142,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
         switch (step.stepKind) {
           case 'basic-filter':
             this.filterForm = this.getConfiguredProperties(step.configuredProperties || {});
+            log.info('step: ' + JSON.stringify(step));
             log.info('this.filterForm: ' + JSON.stringify(this.filterForm));
             return;
           case 'mapper':

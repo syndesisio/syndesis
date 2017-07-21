@@ -1,10 +1,8 @@
 export interface BasicFilter {
-  configuredProperties: {
-    type: string;
-    predicate: any;
-    simple?: string;
-    rules?: Rule[];
-  };
+  type: string;
+  predicate: any;
+  simple?: string;
+  rules?: Rule[];
 }
 
 export interface Rule {

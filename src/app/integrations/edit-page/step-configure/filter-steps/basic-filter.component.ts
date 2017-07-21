@@ -33,22 +33,20 @@ export class BasicFilterComponent implements OnInit {
 
   @Input()
   basicFilterObject: BasicFilter = {
-    'configuredProperties': {
-      'type': 'rule',
-      'predicate': 'AND',
-      'simple': '${body} contains \'antman\' || ${in.header.publisher} =~ \'DC Comics\'',
-      'rules': [
-        {
-          'path': 'body.text',
-          'value': 'antman',
-        },
-        {
-          'path': 'header.kind',
-          'op': '=~',
-          'value': 'DC Comics',
-        },
-      ],
-    },
+    'type': 'rule',
+    'predicate': 'AND',
+    'simple': '${body} contains \'antman\' || ${in.header.publisher} =~ \'DC Comics\'',
+    'rules': [
+      {
+        'path': 'body.text',
+        'value': 'antman',
+      },
+      {
+        'path': 'header.kind',
+        'op': '=~',
+        'value': 'DC Comics',
+      },
+    ],
   };
   @Output() filterChange = new EventEmitter<BasicFilter>();
 
@@ -58,8 +56,10 @@ export class BasicFilterComponent implements OnInit {
 
   ngOnInit() {
     this.currentFlow.getFilterOptions().toPromise().then((resp: any) => {
-      //log.info('Filter option response: ' + JSON.stringify(resp));
+      log.info('Filter option response: ' + JSON.stringify(resp));
     });
+
+    log.info('this.basicFilterObject: ' + JSON.stringify(this.basicFilterObject));
 
     this.formGroup = this.formService.createFormGroup(this.basicFilterModel);
 
@@ -85,17 +85,15 @@ export class BasicFilterComponent implements OnInit {
     //log.info('rulesGroup: ' + JSON.stringify(formGroupObj));
 
     const formattedProperties: BasicFilter = {
-      configuredProperties: {
-        type: 'rule',
-        predicate: formGroupObj.filterSettingsGroup.predicate,
-        rules: formGroupObj.rulesGroup.rulesFormArray,
-      },
+      type: 'rule',
+      predicate: formGroupObj.filterSettingsGroup.predicate,
+      rules: formGroupObj.rulesGroup.rulesFormArray,
     };
 
     //log.info('this.formGroup.value: ' + JSON.stringify(this.formGroup.value));
 
     this.filterChange.emit(formattedProperties);
 
-    //log.info('formattedProperties: ' + JSON.stringify(formattedProperties));
+    log.info('formattedProperties: ' + JSON.stringify(formattedProperties));
   }
 }
