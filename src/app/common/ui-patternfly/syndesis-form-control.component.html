@@ -58,7 +58,7 @@
                 <div *ngFor="let groupModel of model.groups; let idx = index" role="group"
                      [formGroupName]="idx" [ngClass]="[model.cls.element.group, model.cls.grid.group]">
 
-                    <dynamic-form-patternfly-control *ngFor="let item of groupModel.group"
+                    <syndesis-form-control *ngFor="let item of groupModel.group"
                                                     [bindId]="false"
                                                     [context]="groupModel"
                                                     [group]="control.at(idx)"
@@ -68,7 +68,7 @@
                                                     [ngClass]="[item.cls.element.host, item.cls.grid.host]"
                                                     (blur)="onFocusChange($event)"
                                                     (change)="onValueChange($event)"
-                                                    (focus)="onFocusChange($event)"></dynamic-form-patternfly-control>
+                                                    (focus)="onFocusChange($event)"></syndesis-form-control>
 
                     <ng-container *ngTemplateOutlet="template?.templateRef; context: groupModel"></ng-container>
 
@@ -85,7 +85,7 @@
 
                 <legend *ngIf="model.legend" [innerHTML]="model.legend"></legend>
 
-                <dynamic-form-patternfly-control *ngFor="let controlModel of model.group"
+                <syndesis-form-control *ngFor="let controlModel of model.group"
                                                 [asBootstrapFormGroup]="false"
                                                 [group]="control"
                                                 [hasErrorMessaging]="controlModel.hasErrorMessages"
@@ -94,7 +94,7 @@
                                                 [ngClass]="[controlModel.cls.element.host, controlModel.cls.grid.host]"
                                                 (blur)="onFocusChange($event)"
                                                 (change)="onValueChange($event)"
-                                                (focus)="onFocusChange($event)"></dynamic-form-patternfly-control>
+                                                (focus)="onFocusChange($event)"></syndesis-form-control>
             </fieldset>
 
 

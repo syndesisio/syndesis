@@ -26,7 +26,7 @@ import {
     DYNAMIC_FORM_CONTROL_TYPE_TEXTAREA,
 } from '@ng2-dynamic-forms/core';
 
-export const enum PatternflyFormControlType {
+export const enum SyndesisFormControlType {
 
     Array = 1, //'ARRAY',
     Checkbox = 2, //'CHECKBOX',
@@ -40,8 +40,8 @@ export const enum PatternflyFormControlType {
 @Component({
 
     moduleId: module.id,
-    selector: 'dynamic-form-patternfly-control',
-    templateUrl: './dynamic-form-patternfly.component.html',
+    selector: 'syndesis-form-control',
+    templateUrl: './syndesis-form-control.component.html',
   /* tslint:disable no-unused-css*/
     styles: [`
 :host >>> .tooltip-inner {
@@ -49,7 +49,7 @@ export const enum PatternflyFormControlType {
   word-wrap: break-word;"
     }`],
 })
-export class DynamicFormPatternflyComponent extends DynamicFormControlComponent implements OnChanges {
+export class SyndesisFormComponent extends DynamicFormControlComponent implements OnChanges {
 
     @Input() asBootstrapFormGroup= true;
     @Input() bindId= true;
@@ -65,7 +65,7 @@ export class DynamicFormPatternflyComponent extends DynamicFormControlComponent 
 
     @ContentChildren(DynamicTemplateDirective) contentTemplates: QueryList<DynamicTemplateDirective>;
 
-    type: PatternflyFormControlType | null;
+    type: SyndesisFormControlType | null;
 
     constructor(protected validationService: DynamicFormValidationService) {
         super(validationService);
@@ -75,35 +75,35 @@ export class DynamicFormPatternflyComponent extends DynamicFormControlComponent 
         super.ngOnChanges(changes);
 
         if (changes['model']) {
-            this.type = DynamicFormPatternflyComponent.getFormControlType(this.model);
+            this.type = SyndesisFormComponent.getFormControlType(this.model);
         }
     }
 
-    static getFormControlType(model: DynamicFormControlModel): PatternflyFormControlType | null {
+    static getFormControlType(model: DynamicFormControlModel): SyndesisFormControlType | null {
 
         switch (model.type) {
 
             case DYNAMIC_FORM_CONTROL_TYPE_ARRAY:
-                return PatternflyFormControlType.Array;
+                return SyndesisFormControlType.Array;
 
             case DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX:
-                return PatternflyFormControlType.Checkbox;
+                return SyndesisFormControlType.Checkbox;
 
             case DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX_GROUP:
             case DYNAMIC_FORM_CONTROL_TYPE_GROUP:
-                return PatternflyFormControlType.Group;
+                return SyndesisFormControlType.Group;
 
             case DYNAMIC_FORM_CONTROL_TYPE_INPUT:
-                return PatternflyFormControlType.Input;
+                return SyndesisFormControlType.Input;
 
             case DYNAMIC_FORM_CONTROL_TYPE_RADIO_GROUP:
-                return PatternflyFormControlType.RadioGroup;
+                return SyndesisFormControlType.RadioGroup;
 
             case DYNAMIC_FORM_CONTROL_TYPE_SELECT:
-                return PatternflyFormControlType.Select;
+                return SyndesisFormControlType.Select;
 
             case DYNAMIC_FORM_CONTROL_TYPE_TEXTAREA:
-                return PatternflyFormControlType.TextArea;
+                return SyndesisFormControlType.TextArea;
 
             default:
                 return null;

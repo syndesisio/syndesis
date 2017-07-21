@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TextMaskModule } from 'angular2-text-mask';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { DynamicFormPatternflyComponent } from './dynamic-form-patternfly.component';
+import { SyndesisFormComponent } from './syndesis-form-control.component';
 
 @NgModule({
 
@@ -16,11 +16,11 @@ import { DynamicFormPatternflyComponent } from './dynamic-form-patternfly.compon
         TooltipModule.forRoot(),
     ],
     declarations: [
-        DynamicFormPatternflyComponent,
+        SyndesisFormComponent,
     ],
     exports: [
         DynamicFormsCoreModule,
-        DynamicFormPatternflyComponent,
+        SyndesisFormComponent,
     ]
 })
 

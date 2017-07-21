@@ -77,9 +77,9 @@
           <div *ngIf="formModel && formGroup">
             <form class="form-horizontal"
                   [formGroup]="formGroup">
-              <dynamic-form-patternfly-control *ngFor="let controlModel of formModel"
+              <syndesis-form-control *ngFor="let controlModel of formModel"
                                               [group]="formGroup"
-                                              [model]="controlModel"></dynamic-form-patternfly-control>
+                                              [model]="controlModel"></syndesis-form-control>
             </form>
           </div>
         </div>

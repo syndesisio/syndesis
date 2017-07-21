@@ -23,9 +23,9 @@ import {
     DynamicTimePickerModel,
 } from '@ng2-dynamic-forms/core';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { PatternflyFormControlType, DynamicFormPatternflyComponent } from './dynamic-form-patternfly.component';
+import { SyndesisFormControlType, SyndesisFormComponent } from './syndesis-form-control.component';
 
-describe('DynamicFormPatternflyComponent test suite', () => {
+describe('SyndesisFormComponent test suite', () => {
 
     let formModel = [
             new DynamicCheckboxModel({id: 'checkbox'}),
@@ -45,8 +45,8 @@ describe('DynamicFormPatternflyComponent test suite', () => {
         ],
         testModel = formModel[7] as DynamicInputModel,
         formGroup: FormGroup,
-        fixture: ComponentFixture<DynamicFormPatternflyComponent>,
-        component: DynamicFormPatternflyComponent,
+        fixture: ComponentFixture<SyndesisFormComponent>,
+        component: SyndesisFormComponent,
         debugElement: DebugElement,
         testElement: DebugElement;
 
@@ -55,11 +55,11 @@ describe('DynamicFormPatternflyComponent test suite', () => {
         TestBed.configureTestingModule({
 
             imports: [ReactiveFormsModule, DynamicFormsCoreModule.forRoot(), TextMaskModule, TooltipModule.forRoot()],
-            declarations: [DynamicFormPatternflyComponent]
+            declarations: [SyndesisFormComponent]
 
         }).compileComponents().then(() => {
 
-            fixture = TestBed.createComponent(DynamicFormPatternflyComponent);
+            fixture = TestBed.createComponent(SyndesisFormComponent);
 
             component = fixture.componentInstance;
             debugElement = fixture.debugElement;
@@ -108,7 +108,7 @@ describe('DynamicFormPatternflyComponent test suite', () => {
         expect(component.isInvalid).toBe(false);
         expect(component.showErrorMessages).toBe(false);
 
-        expect(component.type).toEqual(PatternflyFormControlType.Input);
+        expect(component.type).toEqual(SyndesisFormControlType.Input);
     });
 
     it('should have an input element', () => {
@@ -164,11 +164,11 @@ describe('DynamicFormPatternflyComponent test suite', () => {
 
     it('should determine correct form control type', () => {
 
-        const testFn = DynamicFormPatternflyComponent.getFormControlType;
+        const testFn = SyndesisFormComponent.getFormControlType;
 
-        expect(testFn(formModel[0])).toEqual(PatternflyFormControlType.Checkbox);
+        expect(testFn(formModel[0])).toEqual(SyndesisFormControlType.Checkbox);
 
-        expect(testFn(formModel[1])).toEqual(PatternflyFormControlType.Group);
+        expect(testFn(formModel[1])).toEqual(SyndesisFormControlType.Group);
 
         expect(testFn(formModel[2])).toBeNull();
 
@@ -176,21 +176,21 @@ describe('DynamicFormPatternflyComponent test suite', () => {
 
         expect(testFn(formModel[4])).toBeNull();
 
-        expect(testFn(formModel[5])).toEqual(PatternflyFormControlType.Array);
+        expect(testFn(formModel[5])).toEqual(SyndesisFormControlType.Array);
 
-        expect(testFn(formModel[6])).toEqual(PatternflyFormControlType.Group);
+        expect(testFn(formModel[6])).toEqual(SyndesisFormControlType.Group);
 
-        expect(testFn(formModel[7])).toEqual(PatternflyFormControlType.Input);
+        expect(testFn(formModel[7])).toEqual(SyndesisFormControlType.Input);
 
-        expect(testFn(formModel[8])).toEqual(PatternflyFormControlType.RadioGroup);
+        expect(testFn(formModel[8])).toEqual(SyndesisFormControlType.RadioGroup);
 
-        expect(testFn(formModel[9])).toEqual(PatternflyFormControlType.Select);
+        expect(testFn(formModel[9])).toEqual(SyndesisFormControlType.Select);
 
         expect(testFn(formModel[10])).toBeNull();
 
         expect(testFn(formModel[11])).toBeNull();
 
-        expect(testFn(formModel[12])).toEqual(PatternflyFormControlType.TextArea);
+        expect(testFn(formModel[12])).toEqual(SyndesisFormControlType.TextArea);
 
         expect(testFn(formModel[13])).toBeNull();
     });
