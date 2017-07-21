@@ -1,6 +1,4 @@
 export interface BasicFilter {
-  id?: string;
-  stepKind: string;
   configuredProperties: {
     type: string;
     predicate: any;
