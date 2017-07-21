@@ -10,6 +10,7 @@ import { UserService } from './user.service';
 import { FormFactoryService } from './forms.service';
 import { ConfigService } from '../config.service';
 import { ListToolbarComponent } from './toolbar/list-toolbar.component';
+import { ListViewRowsComponent } from './list-view-rows/list-view-rows.component';
 
 @NgModule({
   imports: [CommonModule],
@@ -20,6 +21,7 @@ import { ListToolbarComponent } from './toolbar/list-toolbar.component';
     TruncateWordsPipe,
     LoadingComponent,
     ListToolbarComponent,
+    ListViewRowsComponent,
   ],
   exports: [
     ObjectPropertyFilterPipe,
@@ -28,6 +30,7 @@ import { ListToolbarComponent } from './toolbar/list-toolbar.component';
     TruncateWordsPipe,
     LoadingComponent,
     ListToolbarComponent,
+    ListViewRowsComponent,
   ],
   providers: [ConfigService, FormFactoryService],
 })

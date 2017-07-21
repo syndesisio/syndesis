@@ -46,5 +46,7 @@ export class OAuthClientsComponent implements OnInit {
   sort: undefined;
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+
+  }
 }

@@ -1,7 +1,44 @@
 <div class="row">
   <div class="col-md-12">
     <h1>OAuth Client Management</h1>
-    <p>Register Syndesis with the applications you want to connect to in an integration.  Find out more about this at <a>Syndesis Help</a>.
-    <syndesis-list-toolbar [properties]="toolbarProperties" [(filter)]="filter" [(sort)]="sort"></syndesis-list-toolbar>
+    <p>Register Syndesis with the applications you want to connect to in an integration. Find out more about this at <a>Syndesis Help</a>.
+
+      <!-- Toolbar -->
+      <syndesis-list-toolbar [properties]="toolbarProperties"
+                             [(filter)]="filter"
+                             [(sort)]="sort"></syndesis-list-toolbar>
+
+      <!-- One list item -->
+      <ng-template #listItem
+                   let-item="item">
+        <div class="list-view-pf-checkbox">
+          <i class="fa fa-chevron-right"></i>
+        </div>
+        <div class="list-view-pf-actions">
+          <button class="btn btn-default">Register</button>
+          <button class="btn btn-default">Edit</button>
+          <button class="btn btn-default">Remove</button>
+        </div>
+        <div class="list-view-pf-main-info">
+          <div class="list-view-pf-left">
+            <span class="fa {{ item.icon }} list-view-pf-icon-sm"></span>
+          </div>
+          <div class="list-view-pf-body">
+            <div class="list-view-pf-description">
+              <div class="list-group-item-heading">
+                {{item.name}}
+              </div>
+              <div class="list-group-item-text">
+                <i>Client ID and client secret not configured.</i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- List displayed here -->
+      <syndesis-list-view-rows [items]="oauthClients"
+                               [template]="listItem">
+      </syndesis-list-view-rows>
   </div>
 </div>
