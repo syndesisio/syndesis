@@ -43,11 +43,7 @@ export const enum SyndesisFormControlType {
     selector: 'syndesis-form-control',
     templateUrl: './syndesis-form-control.component.html',
   /* tslint:disable no-unused-css*/
-    styles: [`
-:host >>> .tooltip-inner {
-  min-width: 200px;
-  word-wrap: break-word;"
-    }`],
+    styleUrls: ['./syndesis-form-control.scss'],
 })
 export class SyndesisFormComponent extends DynamicFormControlComponent implements OnChanges {
 
@@ -66,18 +62,6 @@ export class SyndesisFormComponent extends DynamicFormControlComponent implement
     @ContentChildren(DynamicTemplateDirective) contentTemplates: QueryList<DynamicTemplateDirective>;
 
     type: SyndesisFormControlType | null;
-
-    constructor(protected validationService: DynamicFormValidationService) {
-        super(validationService);
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        super.ngOnChanges(changes);
-
-        if (changes['model']) {
-            this.type = SyndesisFormComponent.getFormControlType(this.model);
-        }
-    }
 
     static getFormControlType(model: DynamicFormControlModel): SyndesisFormControlType | null {
 
@@ -109,4 +93,18 @@ export class SyndesisFormComponent extends DynamicFormControlComponent implement
                 return null;
         }
     }
+
+    constructor(protected validationService: DynamicFormValidationService) {
+        super(validationService);
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        super.ngOnChanges(changes);
+
+        if (changes['model']) {
+            this.type = SyndesisFormComponent.getFormControlType(this.model);
+        }
+    }
+
+
 }

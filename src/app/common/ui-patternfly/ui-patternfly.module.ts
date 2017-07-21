@@ -21,7 +21,7 @@ import { SyndesisFormComponent } from './syndesis-form-control.component';
     exports: [
         DynamicFormsCoreModule,
         SyndesisFormComponent,
-    ]
+    ],
 })
 
 export class DynamicFormsPatternflyUIModule {

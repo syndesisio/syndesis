@@ -27,7 +27,7 @@ import { SyndesisFormControlType, SyndesisFormComponent } from './syndesis-form-
 
 describe('SyndesisFormComponent test suite', () => {
 
-    let formModel = [
+    const formModel = [
             new DynamicCheckboxModel({id: 'checkbox'}),
             new DynamicCheckboxGroupModel({id: 'checkboxGroup', group: []}),
             new DynamicDatePickerModel({id: 'datepicker'}),
@@ -41,21 +41,21 @@ describe('SyndesisFormComponent test suite', () => {
             new DynamicSliderModel({id: 'slider'}),
             new DynamicSwitchModel({id: 'switch'}),
             new DynamicTextAreaModel({id: 'textarea'}),
-            new DynamicTimePickerModel({id: 'timepicker'})
-        ],
-        testModel = formModel[7] as DynamicInputModel,
-        formGroup: FormGroup,
-        fixture: ComponentFixture<SyndesisFormComponent>,
-        component: SyndesisFormComponent,
-        debugElement: DebugElement,
-        testElement: DebugElement;
+            new DynamicTimePickerModel({id: 'timepicker'}),
+        ];
+    const testModel = formModel[7] as DynamicInputModel;
+    let formGroup: FormGroup;
+    let fixture: ComponentFixture<SyndesisFormComponent>;
+    let component: SyndesisFormComponent;
+    let debugElement: DebugElement;
+    let testElement: DebugElement;
 
     beforeEach(async(() => {
 
         TestBed.configureTestingModule({
 
             imports: [ReactiveFormsModule, DynamicFormsCoreModule.forRoot(), TextMaskModule, TooltipModule.forRoot()],
-            declarations: [SyndesisFormComponent]
+            declarations: [SyndesisFormComponent],
 
         }).compileComponents().then(() => {
 
@@ -76,7 +76,7 @@ describe('SyndesisFormComponent test suite', () => {
         component.ngOnChanges({
 
             group: new SimpleChange(null, component.group, true),
-            model: new SimpleChange(null, component.model, true)
+            model: new SimpleChange(null, component.model, true),
         });
 
         fixture.detectChanges();
