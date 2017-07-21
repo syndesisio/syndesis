@@ -83,15 +83,56 @@ export class BasicFilterComponent implements OnInit {
   }
 
   onChange($event) {
-    //const simple;
-    //const rules = this.formService;
+    //this.formService.findById('path', this.rulesArrayModel).value;
+    const formattedRules = [];
+    const formattedRule = {
+      path: '',
+      op: '',
+      value: '',
+    };
 
-    log.info('predicateModel: ' + JSON.stringify(this.predicateModel));
-    log.info('predicateModel["value"]: ' + JSON.stringify(this.predicateModel['value']));
+    //const json: string = JSON.stringify(this.basicFilterModel);
+    //log.info('json Form: ' + json);
+    //log.info('predicateModel: ' + JSON.stringify(this.predicateModel));
+    //log.info('rulesArrayModel: ' + JSON.stringify(this.rulesArrayModel));
+    //log.info('rulesArrayModel.groups: ' + JSON.stringify(this.rulesArrayModel.groups));
+    log.info('rulesArrayModel.groupPrototype: ' + JSON.stringify(this.rulesArrayModel.groupPrototype));
 
+    for (const rule of this.rulesArrayModel.groupPrototype) {
+      log.info('Rule: ' + JSON.stringify(rule));
+      /*
+      log.info('rule.path: ' + JSON.stringify(rule.id === 'path' ? rule['value'] : null));
+      log.info('rule.op: ' + JSON.stringify(rule.id === 'op' ? rule['value'] : null));
+      log.info('rule.value: ' + JSON.stringify(rule.id === 'value' ? rule['value'] : null));
+      */
+
+      switch(rule.id) {
+        case 'path':
+          formattedRule.path = rule['value'];
+          break;
+        case 'op':
+          formattedRule.op = rule['value'];
+          break;
+        case 'value':
+          formattedRule.value = rule['value'];
+          break;
+      }
+      log.info('Pushing formattedRule to formattedRules array: ' + JSON.stringify(formattedRule));
+      formattedRules.push(formattedRule);
+/*
+      formattedRules.push({
+        path: rule.id === 'path' ? rule['value'] : null,
+        op: rule.id === 'op' ? rule['value'] : null,
+        value: rule.id === 'value' ? rule['value'] : null,
+      });
+      */
+    }
+    log.info('findById path: ' + JSON.stringify(this.formService.findById('path', this.rulesArrayModel.groupPrototype)));
+
+    /*
     this.basicFilterObject.configuredProperties = {
       type: 'rule',
-      predicate: this.predicateModel['value'],
+      predicate: this.predicateModel.value,
       rules: [
         {
           path: '',
@@ -100,6 +141,7 @@ export class BasicFilterComponent implements OnInit {
         },
       ],
     };
+    */
 
     log.info('this.basicFilterObject.configuredProperties: ' + JSON.stringify(this.basicFilterObject.configuredProperties));
 
@@ -107,6 +149,6 @@ export class BasicFilterComponent implements OnInit {
     this.filterChange.emit(this.basicFilterObject);
     log.info('this.basicFilterObject: ' + JSON.stringify(this.basicFilterObject));
     //log.info('this.basicFilterModel: ' + JSON.stringify(this.basicFilterModel));
-    log.info('CHANGE event on $(event.model.id): ' + $event);
+    //log.info('CHANGE event on $(event.model.id): ' + $event);
   }
 }

@@ -93,7 +93,6 @@ export const BASIC_FILTER_MODEL = [
                       value: 'ends with',
                     },
                   ]),
-                  value: 'contains',
                 },
                 {
                   element: {
