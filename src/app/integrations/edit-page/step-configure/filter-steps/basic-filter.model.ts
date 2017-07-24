@@ -53,7 +53,7 @@ export const BASIC_FILTER_MODEL = [
                   id: 'path',
                   maxLength: 51,
                   placeholder: 'Status.Text',
-                  suffix: 'Browse...', // This is just a suffix; this whole field needs to change
+                  //suffix: 'Browse...', // This is just a suffix; this whole field needs to change
                 },
                 {
                   element: {
