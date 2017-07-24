@@ -25,34 +25,30 @@ export class BasicFilterComponent implements OnInit {
   basicFilterModel: DynamicFormControlModel[] = BASIC_FILTER_MODEL;
   formGroup: FormGroup;
 
-  exampleControl: FormControl;
-  exampleModel: DynamicInputModel;
+  predicateControl: FormControl;
+  predicateModel: DynamicInputModel;
 
-  arrayControl: FormArray;
-  arrayModel: DynamicFormArrayModel;
+  rulesArrayControl: FormArray;
+  rulesArrayModel: DynamicFormArrayModel;
 
   @Input()
   basicFilterObject: BasicFilter = {
-    'id': '1',
-    'stepKind': 'filter',
-    'configuredProperties': {
-      'type': 'rule',
-      'predicate': 'AND',
-      'simple': '${body} contains \'antman\' || ${in.header.publisher} =~ \'DC Comics\'',
-      'rules': [
-        {
-          'path': 'body.text',
-          'value': 'antman',
-        },
-        {
-          'path': 'header.kind',
-          'op': '=~',
-          'value': 'DC Comics',
-        },
-      ],
-    },
+    'type': 'rule',
+    'predicate': 'AND',
+    'simple': '${body} contains \'antman\' || ${in.header.publisher} =~ \'DC Comics\'',
+    'rules': [
+      {
+        'path': 'body.text',
+        'value': 'antman',
+      },
+      {
+        'path': 'header.kind',
+        'op': '=~',
+        'value': 'DC Comics',
+      },
+    ],
   };
-  @Output() filterChange = new EventEmitter<BasicFilter>();
+  @Output() basicFilterObjectChange = new EventEmitter<BasicFilter>();
 
   constructor(public currentFlow: CurrentFlow,
               private formService: DynamicFormService) {
@@ -60,39 +56,44 @@ export class BasicFilterComponent implements OnInit {
 
   ngOnInit() {
     this.currentFlow.getFilterOptions().toPromise().then((resp: any) => {
-      log.debugc(
-        () => 'Filter option response: ' + resp,
-      );
+      log.info('Filter option response: ' + JSON.stringify(resp));
     });
+
+    log.info('this.basicFilterObject: ' + JSON.stringify(this.basicFilterObject));
 
     this.formGroup = this.formService.createFormGroup(this.basicFilterModel);
 
-    this.exampleControl = this.formGroup.get('filterSettingsGroup').get('matchSelect') as FormControl;
-    this.exampleModel = this.formService.findById('matchSelect', this.basicFilterModel) as DynamicInputModel;
+    this.predicateControl = this.formGroup.get('filterSettingsGroup').get('predicate') as FormControl;
+    this.predicateModel = this.formService.findById('predicate', this.basicFilterModel) as DynamicInputModel;
 
-    this.arrayControl = this.formGroup.get('rulesGroup').get('rulesFormArray') as FormArray;
-    this.arrayModel = this.formService.findById('rulesFormArray', this.basicFilterModel) as DynamicFormArrayModel;
+    this.rulesArrayControl = this.formGroup.get('rulesGroup').get('rulesFormArray') as FormArray;
+    this.rulesArrayModel = this.formService.findById('rulesFormArray', this.basicFilterModel) as DynamicFormArrayModel;
   }
 
   // Manage Individual Fields
   add() {
-    this.formService.addFormArrayGroup(this.arrayControl, this.arrayModel);
-    log.debugc(
-      () => 'basicFilterModel: ' + this.basicFilterModel,
-    );
+    this.formService.addFormArrayGroup(this.rulesArrayControl, this.rulesArrayModel);
+    //log.info('basicFilterModel: ' + JSON.stringify(this.basicFilterModel));
   }
 
   remove(context: DynamicFormArrayModel, index: number) {
-    this.formService.removeFormArrayGroup(index, this.arrayControl, context);
+    this.formService.removeFormArrayGroup(index, this.rulesArrayControl, context);
   }
 
   onChange($event) {
-    this.filterChange.emit(this.basicFilterObject);
-    log.debugc(
-      () => 'this.basicFilterObject: ' + this.basicFilterObject,
-    );
-    log.debugc(
-      () => 'CHANGE event on $(event.model.id): ' + $event,
-    );
+    const formGroupObj = this.formGroup.value;
+    //log.info('rulesGroup: ' + JSON.stringify(formGroupObj));
+
+    const formattedProperties: BasicFilter = {
+      type: 'rule',
+      predicate: formGroupObj.filterSettingsGroup.predicate,
+      rules: formGroupObj.rulesGroup.rulesFormArray,
+    };
+
+    //log.info('this.formGroup.value: ' + JSON.stringify(this.formGroup.value));
+
+    this.basicFilterObjectChange.emit(formattedProperties);
+
+    log.info('formattedProperties: ' + JSON.stringify(formattedProperties));
   }
 }

@@ -13,19 +13,19 @@ export const BASIC_FILTER_MODEL = [
     group: [
       new DynamicSelectModel<string>(
         {
-          id: 'matchSelect',
+          id: 'predicate',
           label: 'Continue only if incoming data match ',
           options: Observable.of([
             {
               label: 'ALL of the following',
-              value: 'all',
+              value: 'AND',
             },
             {
               label: 'ANY of the following',
-              value: 'any',
+              value: 'OR',
             },
           ]),
-          value: 'all',
+          value: 'AND',
         },
         {
           element: {
@@ -50,7 +50,7 @@ export const BASIC_FILTER_MODEL = [
             return [
               new DynamicInputModel(
                 {
-                  id: 'dataToBeFiltered',
+                  id: 'path',
                   maxLength: 51,
                   placeholder: 'Status.Text',
                   suffix: 'Browse...', // This is just a suffix; this whole field needs to change
@@ -66,7 +66,7 @@ export const BASIC_FILTER_MODEL = [
               ),
               new DynamicSelectModel<string>(
                 {
-                  id: 'conditions',
+                  id: 'op',
                   options: Observable.of([
                     {
                       label: 'Contains',
@@ -74,26 +74,25 @@ export const BASIC_FILTER_MODEL = [
                     },
                     {
                       label: 'Does Not Contain',
-                      value: 'does-not-contain',
+                      value: 'not contains',
                     },
                     {
                       label: 'Matches Regex',
-                      value: 'matches-regex',
+                      value: 'regex',
                     },
                     {
                       label: 'Does Not Match Regex',
-                      value: 'does-not-match-regex',
+                      value: 'not regex',
                     },
                     {
                       label: 'Starts With',
-                      value: 'starts-with',
+                      value: 'starts with',
                     },
                     {
                       label: 'Ends With',
-                      value: 'ends-with',
+                      value: 'ends with',
                     },
                   ]),
-                  value: 'contains',
                 },
                 {
                   element: {
@@ -107,8 +106,8 @@ export const BASIC_FILTER_MODEL = [
               ),
               new DynamicInputModel(
                 {
-                  id: 'valueToCheckFor',
-                  placeholder: 'Keywords to check for...',
+                  id: 'value',
+                  placeholder: 'Keywords...',
                 },
                 {
                   grid: {
