@@ -26,6 +26,12 @@ const routes: Routes = [
       '../connections/connections-routes.module#ConnectionsRoutesModule',
     canActivate: [AuthGuard],
   },
+  {
+    path: 'settings',
+    loadChildren:
+      '../settings/settings.module#SettingsModule',
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({

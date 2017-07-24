@@ -698,13 +698,13 @@ bootstrap-datepicker@~1.6.4:
   dependencies:
     jquery ">=1.7.1"
 
-bootstrap-select@~1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-select/-/bootstrap-select-1.10.0.tgz#9499679e70004dbc00872522322d3b93a0f132e4"
+bootstrap-select@^1.12.2:
+  version "1.12.4"
+  resolved "https://registry.yarnpkg.com/bootstrap-select/-/bootstrap-select-1.12.4.tgz#7f15d3c0ce978868d9c09c70f96624f55fa02ee1"
   dependencies:
     jquery ">=1.8"
 
-bootstrap-switch@~3.3.2:
+bootstrap-switch@~3.3.4:
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/bootstrap-switch/-/bootstrap-switch-3.3.4.tgz#70e0aeb2a877c0dc766991de108e2170fc29a2ff"
 
@@ -712,7 +712,7 @@ bootstrap-touchspin@~3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/bootstrap-touchspin/-/bootstrap-touchspin-3.1.1.tgz#9779deac72aaf577e5e762b8512c747c871d9597"
 
-bootstrap@3.3.7, bootstrap@3.3.x, bootstrap@^3.0, bootstrap@^3.3.7, bootstrap@~3.3.7:
+bootstrap@3.3.7, bootstrap@3.3.x, bootstrap@^3.3, bootstrap@^3.3.7, bootstrap@~3.3.7:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.3.7.tgz#5a389394549f23330875a3b150656574f8a9eb71"
 
@@ -1666,9 +1666,9 @@ datatables.net@>=1.10.9:
   dependencies:
     jquery ">=1.7"
 
-datatables@~1.10.12:
-  version "1.10.13"
-  resolved "https://registry.yarnpkg.com/datatables/-/datatables-1.10.13.tgz#9bb2dec6f7dcf02049a00e4f0e7d3fe009c39346"
+datatables.net@^1.10.15:
+  version "1.10.15"
+  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.10.15.tgz#c789077bbfe385e75ff5a233fa5f23251a72df68"
   dependencies:
     jquery ">=1.7"
 
@@ -2039,13 +2039,14 @@ entities@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.1.tgz#6e5c2d0a5621b5dadaecef80b90edfb5cd7772f0"
 
-eonasdan-bootstrap-datetimepicker@~4.15.35:
-  version "4.15.35"
-  resolved "https://registry.yarnpkg.com/eonasdan-bootstrap-datetimepicker/-/eonasdan-bootstrap-datetimepicker-4.15.35.tgz#aec96923e95b6b51e1c04a999ce017929d7396f8"
+eonasdan-bootstrap-datetimepicker@^4.17.47:
+  version "4.17.47"
+  resolved "https://registry.yarnpkg.com/eonasdan-bootstrap-datetimepicker/-/eonasdan-bootstrap-datetimepicker-4.17.47.tgz#7a49970044065276e7965efd16f822735219e735"
   dependencies:
-    bootstrap "^3.0"
-    jquery ">=1.8.3 <2.2.0"
-    moment "~2.8"
+    bootstrap "^3.3"
+    jquery "^1.8.3 || ^2.0 || ^3.0"
+    moment "^2.10"
+    moment-timezone "^0.4.0"
 
 errno@^0.1.1, errno@^0.1.3:
   version "0.1.4"
@@ -2511,9 +2512,9 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
-font-awesome@~4.6.3:
-  version "4.6.3"
-  resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.6.3.tgz#86933651540ee00874c664017f50f2172f6531a2"
+font-awesome@^4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
 
 for-in@^0.1.3:
   version "0.1.8"
@@ -3509,17 +3510,17 @@ jodid25519@^1.0.0:
   dependencies:
     jsbn "~0.1.0"
 
-jquery-match-height@~0.7.0:
+jquery-match-height@^0.7.2:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/jquery-match-height/-/jquery-match-height-0.7.2.tgz#f8d9f3ba5314daab109cf07408674be204be5f0e"
 
-jquery@3.1.1, "jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, jquery@>=1.7.1, jquery@>=1.8:
+jquery@3.1.1, "jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, jquery@>=1.7.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.1.1.tgz#347c1c21c7e004115e0a4da32cece041fad3c8a3"
 
-"jquery@>=1.8.3 <2.2.0", jquery@~2.1.4:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.1.4.tgz#228bde698a0c61431dc2630a6a154f15890d2317"
+jquery@>=1.8, "jquery@^1.8.3 || ^2.0 || ^3.0", jquery@~3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
 
 js-base64@^2.1.5, js-base64@^2.1.8, js-base64@^2.1.9:
   version "2.1.9"
@@ -4107,17 +4108,19 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
-moment@2.18.1, moment@^2.10.6, moment@^2.18.1:
+moment-timezone@^0.4.0, moment-timezone@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.4.1.tgz#81f598c3ad5e22cdad796b67ecd8d88d0f5baa06"
+  dependencies:
+    moment ">= 2.6.0"
+
+moment@2.18.1, "moment@>= 2.6.0", moment@^2.10, moment@^2.10.6, moment@^2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
 moment@~2.14.1:
   version "2.14.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.14.1.tgz#b35b27c47e57ed2ddc70053d6b07becdb291741c"
-
-moment@~2.8:
-  version "2.8.4"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.8.4.tgz#cc174aabb19223efff5699a9467805a2789838bf"
 
 ms@0.7.1:
   version "0.7.1"
@@ -4639,29 +4642,30 @@ patternfly-bootstrap-treeview@~2.1.0:
     bootstrap "3.3.x"
     jquery ">= 2.1.x"
 
-patternfly@3.20.0:
-  version "3.20.0"
-  resolved "https://registry.yarnpkg.com/patternfly/-/patternfly-3.20.0.tgz#d1be3bf8d6b91ee5cc57c852cba106bf2d66ee15"
+patternfly@3.25.1:
+  version "3.25.1"
+  resolved "https://registry.yarnpkg.com/patternfly/-/patternfly-3.25.1.tgz#2cb95924ea0300ff5c720be876b949257befaf9d"
   dependencies:
     bootstrap "~3.3.7"
-    font-awesome "~4.6.3"
-    jquery "~2.1.4"
+    font-awesome "^4.7.0"
+    jquery "~3.2.1"
   optionalDependencies:
     bootstrap-datepicker "~1.6.4"
-    bootstrap-select "~1.10.0"
-    bootstrap-switch "~3.3.2"
+    bootstrap-select "^1.12.2"
+    bootstrap-switch "~3.3.4"
     bootstrap-touchspin "~3.1.1"
     c3 "~0.4.11"
     d3 "~3.5.17"
-    datatables "~1.10.12"
+    datatables.net "^1.10.15"
     datatables.net-colreorder "~1.3.2"
     datatables.net-colreorder-bs "~1.3.2"
     datatables.net-select "~1.2.0"
     drmonty-datatables-colvis "~1.1.2"
-    eonasdan-bootstrap-datetimepicker "~4.15.35"
+    eonasdan-bootstrap-datetimepicker "^4.17.47"
     google-code-prettify "~1.0.5"
-    jquery-match-height "~0.7.0"
+    jquery-match-height "^0.7.2"
     moment "~2.14.1"
+    moment-timezone "^0.4.1"
     patternfly-bootstrap-combobox "~1.1.7"
     patternfly-bootstrap-treeview "~2.1.0"
 
