@@ -122,7 +122,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
                 }
             });
         });
-        return getGlobalFilterOptions();
+        return builder.build();
     }
 
     @GET
