@@ -1,4 +1,5 @@
 import { Pipe } from '@angular/core';
+import { getPropertyValue } from './object-property-filter.pipe';
 
 export class ObjectPropertySortConfig {
   sortField: string;
@@ -15,8 +16,8 @@ export class ObjectPropertySortPipe {
     }
     // operate on a clone
     const answer = objects.slice(0).sort((a, b) => {
-      const propA = a[config.sortField];
-      const propB = b[config.sortField];
+      const propA = getPropertyValue(a, config.sortField);
+      const propB = getPropertyValue(b, config.sortField);
       switch (typeof propA) {
         case 'string':
           return (<string>propA).localeCompare(propB);
