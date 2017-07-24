@@ -108,9 +108,11 @@ export class IntegrationsEditPage extends ChildAwarePage
       .pluck<Params, string>('integrationId')
       .map((integrationId: string) => this.store.loadOrCreate(integrationId))
       .subscribe();
+      /*
     $.fn.setupVerticalNavigation
       ? $.fn.setupVerticalNavigation().hideMenu()
       : '';
+      */
   }
 
   ngOnDestroy() {
@@ -119,8 +121,10 @@ export class IntegrationsEditPage extends ChildAwarePage
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
     }
+    /*
     $.fn.setupVerticalNavigation
       ? $.fn.setupVerticalNavigation().showMenu()
       : '';
+      */
   }
 }
