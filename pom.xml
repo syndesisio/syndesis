@@ -142,7 +142,7 @@
     <atlasmap.version>1.10.0</atlasmap.version>
 
     <!-- maven plugin version -->
-    <dep.plugin.dependency.version>3.0.0</dep.plugin.dependency.version>
+    <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
 
     <!-- third party plugin version -->
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
@@ -570,6 +570,7 @@
         <groupId>com.paypal.springboot</groupId>
         <artifactId>resteasy-spring-boot-starter</artifactId>
         <version>${resteasy-spring-boot-starter.version}</version>
+        <scope>runtime</scope>
         <exclusions>
           <exclusion>
             <groupId>com.google.code.findbugs</groupId>
@@ -648,6 +649,7 @@
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>${postgresql.version}</version>
+        <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>org.xerial</groupId>

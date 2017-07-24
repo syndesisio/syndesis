@@ -246,21 +246,22 @@
             <goals>
               <goal>unpack</goal>
             </goals>
+            <configuration>
+              <skip>${skipITs}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.keycloak</groupId>
+                  <artifactId>keycloak-server-dist</artifactId>
+                  <version>${keycloak.version}</version>
+                  <type>tar.gz</type>
+                  <outputDirectory>${project.build.directory}/keycloak</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
           </execution>
         </executions>
         <configuration>
-          <skip>${skipITs}</skip>
-          <artifactItems>
-            <artifactItem>
-              <groupId>org.keycloak</groupId>
-              <artifactId>keycloak-server-dist</artifactId>
-              <version>${keycloak.version}</version>
-              <type>tar.gz</type>
-              <outputDirectory>${project.build.directory}/keycloak</outputDirectory>
-            </artifactItem>
-          </artifactItems>
           <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>com.paypal.springboot:resteasy-spring-boot-starter</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.fabric8:spring-cloud-kubernetes-core</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-actuator</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-jdbc</ignoredUnusedDeclaredDependency>
@@ -562,6 +563,10 @@
         <artifactId>resteasy-validator-provider-11</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxrs</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>

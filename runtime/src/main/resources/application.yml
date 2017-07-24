@@ -17,12 +17,6 @@
 deployment:
   file: io/syndesis/dao/deployment.json
 
-resteasy:
-  jaxrs:
-    app:
-      registration: property
-      classes: io.syndesis.rest.v1.V1Application
-
 cors:
   allowedOrigins: "*"
 
