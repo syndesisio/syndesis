@@ -51,11 +51,16 @@ public interface Connector extends WithId<Connector>, WithName, WithProperties, 
 
     List<Action> getActions();
 
+    Map<String, String> getConfiguredProperties();
+
     @Override
     default Connector withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
+        return builder().id(id).build();
     }
 
+    default Builder builder() {
+        return new Builder().createFrom(this);
+    }
 
 
     class Builder extends ImmutableConnector.Builder {

@@ -116,7 +116,7 @@ public class SqlJsonDB implements JsonDB {
     public Consumer<OutputStream> getAsStreamingOutput(String path, GetOptions options) {
 
         GetOptions o;
-        if( options!=null ) {
+        if (options != null) {
             o = options;
         } else {
             o = new GetOptions();
@@ -124,33 +124,45 @@ public class SqlJsonDB implements JsonDB {
 
         // Lets normalize the path a bit
         String baseDBPath = JsonRecordSupport.convertToDBPath(path);
-        String like = baseDBPath+"%";
+        String like = baseDBPath + "%";
 
         Consumer<OutputStream> result = null;
         final Handle h = dbi.open();
-        String sql = "select path,value,kind from jsondb where path LIKE :like order by path";
-        ResultIterator<JsonRecord> iterator = h.createQuery(sql)
+        try {
+            // Creating the iterator could fail with a runtime exception,
+            String sql = "select path,value,kind from jsondb where path LIKE :like order by path";
+            ResultIterator<JsonRecord> iterator = h.createQuery(sql)
                 .bind("like", like)
                 .map(JsonRecordMapper.INSTANCE)
                 .iterator();
-        if( iterator.hasNext() ) {
-            result = output -> {
-                try {
-                    Consumer<JsonRecord> toJson = JsonRecordSupport.recordsToJsonStream(baseDBPath, output, o);
-                    iterator.forEachRemaining(toJson);
-                    toJson.accept(null);
-                } catch (IOException e) {
-                    throw new JsonDBException(e);
-                } finally {
-                    iterator.close();
-                    h.close();
+            try {
+                // At this point we know if we can produce results..
+                if (iterator.hasNext()) {
+                    result = output -> {
+                        try {
+                            Consumer<JsonRecord> toJson = JsonRecordSupport.recordsToJsonStream(baseDBPath, output, o);
+                            iterator.forEachRemaining(toJson);
+                            toJson.accept(null);
+                        } catch (IOException e) {
+                            throw new JsonDBException(e);
+                        } finally {
+                            iterator.close();
+                            h.close();
+                        }
+                    };
                 }
-            };
-        } else {
-            iterator.close();
-            h.close();
+            } finally {
+                // if we are producing results, then defer closing the iterator
+                if (result == null) {
+                    iterator.close();
+                }
+            }
+        } finally {
+            // if we are producing results, then defer closing the handle
+            if (result == null) {
+                h.close();
+            }
         }
-
         return result;
     }
 

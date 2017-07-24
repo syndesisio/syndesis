@@ -17,7 +17,7 @@
 
 -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.syndesis</groupId>
@@ -271,6 +271,10 @@
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-websocket</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.cloud:spring-cloud-starter-security</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.cloud:spring-cloud-starter-zipkin</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>postgresql:postgresql</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.github.mikegirard:spring-social-salesforce</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.social:spring-social-twitter</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.jboss.resteasy:resteasy-validator-provider-11</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
@@ -436,6 +440,27 @@
       <artifactId>verifier</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>credential</artifactId>
+    </dependency>
+
+    <!-- Credentials to support -->
+    <dependency>
+      <groupId>org.springframework.social</groupId>
+      <artifactId>spring-social-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.mikegirard</groupId>
+      <artifactId>spring-social-salesforce</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.social</groupId>
+      <artifactId>spring-social-twitter</artifactId>
+    </dependency>
+
     <!-- DAO implementations: -->
     <dependency>
       <groupId>io.syndesis</groupId>
@@ -532,6 +557,12 @@
       <groupId>com.paypal.springboot</groupId>
       <artifactId>resteasy-spring-boot-starter</artifactId>
     </dependency>
+
+    <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-validator-provider-11</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jaxrs</artifactId>
@@ -614,13 +645,18 @@
     </dependency>
 
     <dependency>
+      <groupId>org.infinispan</groupId>
+      <artifactId>infinispan-spring4-embedded</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
 
     <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
     </dependency>
 
     <dependency>
@@ -751,6 +787,106 @@
             <configuration>
               <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 -server -Xms256m -Xmx512m</jvmArguments>
             </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>deploy</id>
+      <activation>
+        <property>
+          <name>deploy</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>deploy</id>
+                <goals>
+                  <goal>resource</goal>
+                  <goal>build</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <mode>kubernetes</mode>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>flash</id>
+      <activation>
+        <property>
+          <name>deploy</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctor-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase/>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>io.github.swagger2markup</groupId>
+            <artifactId>swagger2markup-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase/>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>reserve-ports</id>
+                <phase/>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.bazaarvoice.maven.plugins</groupId>
+            <artifactId>process-exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>start-keycloak</id>
+                <phase/>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>stop-keycloak</id>
+                <phase/>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>unpack-keycloak</id>
+                <phase/>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>

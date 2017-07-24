@@ -15,24 +15,34 @@
  */
 package io.syndesis.rest.v1.handler.integration;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import io.syndesis.core.Tokens;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.inspector.ClassInspector;
 import io.syndesis.model.Kind;
+import io.syndesis.model.connection.DataShape;
+import io.syndesis.model.connection.DataShapeKinds;
+import io.syndesis.model.filter.FilterOptions;
+import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Integration.Status;
 import io.syndesis.rest.v1.handler.BaseHandler;
-import io.swagger.annotations.Api;
 import io.syndesis.rest.v1.operations.Creator;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.operations.Updater;
-
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 
@@ -41,8 +51,11 @@ import java.util.Optional;
 @Component
 public class IntegrationHandler extends BaseHandler implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration> {
 
-    public IntegrationHandler(DataManager dataMgr) {
+    private final ClassInspector classInspector;
+
+    public IntegrationHandler(DataManager dataMgr, ClassInspector classInspector) {
         super(dataMgr);
+        this.classInspector = classInspector;
     }
 
     @Override
@@ -92,6 +105,33 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         Updater.super.update(id, updatedIntegration);
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}/filters/options")
+    public FilterOptions getFilterOptions(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
+        FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
+        Integration integration = Getter.super.get(id);
+
+        integration.getSteps().orElse(Collections.emptyList()).forEach(s -> {
+            s.getAction().ifPresent(a -> {
+                DataShape dataShape = a.getOutputDataShape();
+                String kind = dataShape.getKind();
+                if (kind.equals(DataShapeKinds.JAVA)) {
+                    String type = dataShape.getType();
+                    builder.addAllPaths(classInspector.getPaths(type));
+                }
+            });
+        });
+        return getGlobalFilterOptions();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/filters/options")
+    public FilterOptions getGlobalFilterOptions() {
+        return new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS).build();
+    }
+
     // Determine the current status to 'pending' or 'draft' immediately depending on
     // the desired stated. This status will be later changed by the activation handlers.
     // This is not the best place to set but should be done by the IntegrationController
@@ -104,5 +144,4 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             Integration.Status.Draft :
             Integration.Status.Pending;
     }
-
 }

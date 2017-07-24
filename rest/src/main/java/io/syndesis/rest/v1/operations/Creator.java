@@ -15,6 +15,8 @@
  */
 package io.syndesis.rest.v1.operations;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
@@ -28,7 +30,7 @@ public interface Creator<T extends WithId<T>> extends Resource, WithDataManager 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes("application/json")
-    default T create(T obj) {
+    default T create(@NotNull @Valid T obj) {
         return getDataManager().create(obj);
     }
 

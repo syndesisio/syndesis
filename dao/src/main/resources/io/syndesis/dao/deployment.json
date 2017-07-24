@@ -6,6 +6,7 @@
       "name": "Twitter",
       "description": "Direct and event-driven interaction with Twitter timelines, searches, and messages",
       "icon": "fa-twitter",
+      "configuredProperties": {},
       "properties": {
         "accessToken": {
           "kind": "property",
@@ -15,6 +16,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":[],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -28,6 +30,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":[],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -41,6 +44,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":["oauth-client-id"],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -54,6 +58,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":["oauth-client-secret"],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -92,7 +97,8 @@
               "required": false,
               "type": "boolean",
               "javaType": "boolean",
-              "deprecated": false,
+              "tags":[],
+          "deprecated": false,
               "secret": false,
               "defaultValue": true,
               "description": "Filter out old tweets that have previously been polled. This state is stored in memory only and is based on last tweet id."
@@ -105,7 +111,8 @@
               "required": false,
               "type": "string",
               "javaType": "java.lang.String",
-              "deprecated": false,
+              "tags":[],
+          "deprecated": false,
               "secret": false,
               "description": "Multiple search values can be separated with comma"
             },
@@ -117,7 +124,8 @@
               "required": false,
               "type": "integer",
               "javaType": "long",
-              "deprecated": false,
+              "tags":[],
+          "deprecated": false,
               "secret": false,
               "defaultValue": 5000,
               "description": "Milliseconds before the next poll."
@@ -169,6 +177,7 @@
       "name": "Salesforce",
       "description": "Cloud-based Customer Relationship Management",
       "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
       "properties": {
         "loginUrl": {
           "kind": "property",
@@ -178,6 +187,7 @@
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":[],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
@@ -192,6 +202,7 @@
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":["oauth-client-id"],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -205,6 +216,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":["oauth-client-secret"],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -218,6 +230,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":[],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -231,6 +244,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":[],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -244,6 +258,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":[],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -270,7 +285,8 @@
               "required": false,
               "type": "string",
               "javaType": "java.lang.String",
-              "deprecated": false,
+              "tags":[],
+          "deprecated": false,
               "secret": false,
               "componentProperty": false,
               "defaultValue": "TwitterScreenName__c",
@@ -326,6 +342,7 @@
       "name": "HTTP",
       "description": "Interact with APIs and plain HTTP endpoints",
       "icon": "fa-globe",
+      "configuredProperties": {},
       "properties": {},
       "actions": [
         {
@@ -347,7 +364,8 @@
               "required": true,
               "type": "string",
               "javaType": "java.net.URI",
-              "deprecated": false,
+              "tags":[],
+          "deprecated": false,
               "secret": false,
               "componentProperty": false,
               "description": "The url of the HTTP endpoint to call."
@@ -375,7 +393,8 @@
               "required": true,
               "type": "string",
               "javaType": "java.net.URI",
-              "deprecated": false,
+              "tags":[],
+          "deprecated": false,
               "secret": false,
               "componentProperty": false,
               "description": "The url of the HTTP endpoint to call."
@@ -394,6 +413,7 @@
       "name": "Timer",
       "description": "Timer Connector",
       "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
       "properties": {},
       "actions": [
         {
@@ -414,7 +434,8 @@
               "required": false,
               "type": "integer",
               "javaType": "long",
-              "deprecated": false,
+              "tags":[],
+          "deprecated": false,
               "secret": false,
               "componentProperty": false,
               "defaultValue": 10000,
@@ -434,6 +455,7 @@
       "name": "Trade Insight",
       "description": "Trade Insight API connector",
       "icon": "fa-usd",
+      "configuredProperties": {},
       "properties": {
         "host": {
           "kind": "property",
@@ -443,6 +465,7 @@
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":[],
           "deprecated": false,
           "secret": false,
           "componentProperty": false,
@@ -456,6 +479,7 @@
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":[],
           "deprecated": false,
           "secret": true,
           "componentProperty": false,
@@ -521,6 +545,7 @@
       "name": "Day Trade",
       "description": "Day Trade API connector",
       "icon": "fa-usd",
+      "configuredProperties": {},
       "properties": {
         "host": {
           "kind": "property",
@@ -530,6 +555,7 @@
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":[],
           "deprecated": false,
           "secret": false,
           "componentProperty": false,
@@ -543,6 +569,7 @@
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
+          "tags":[],
           "deprecated": false,
           "secret": true,
           "componentProperty": false,
@@ -609,6 +636,7 @@
       "name": "LinkedIn",
       "description": "Connect and interact with your professional social network",
       "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
       "properties": {},
       "actions": [
         {
@@ -647,6 +675,7 @@
       "name": "ServiceNow",
       "description": "Cloud-based IT Service Management",
       "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
       "properties": {},
       "actions": [
         {
@@ -672,6 +701,7 @@
       "name": "GitHub",
       "description": "Manage code on GitHub through commits, pull requests, tags, and more",
       "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
       "properties": {},
       "actions": [
         {
@@ -723,6 +753,7 @@
       "name": "GMail",
       "description": "Send and receive email using Google's Gmail service",
       "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
       "properties": {},
       "actions": [
         {
@@ -787,6 +818,7 @@
       "name": "Facebook",
       "description": "Access Facebook social network features such as posts, users, checkins, etc",
       "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
       "properties": {},
       "actions": [
         {
@@ -825,6 +857,7 @@
       "name": "Messaging",
       "description": "Produce and consume messages for event-driven interaction",
       "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
       "properties": {},
       "actions": [
         {
@@ -863,6 +896,7 @@
       "name": "File Transfer",
       "description": "Remote, secure file transfer",
       "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
       "properties": {},
       "actions": [
         {
@@ -1090,7 +1124,8 @@
                 "required": false,
                 "type": "integer",
                 "javaType": "long",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "defaultValue": 10000,
                 "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
@@ -1140,7 +1175,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
@@ -1181,7 +1217,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
@@ -1238,7 +1275,8 @@
                 "required": false,
                 "type": "integer",
                 "javaType": "long",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "defaultValue": 10000,
                 "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
@@ -1288,7 +1326,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
@@ -1329,7 +1368,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
@@ -1386,7 +1426,8 @@
                 "required": false,
                 "type": "integer",
                 "javaType": "long",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "defaultValue": 10000,
                 "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
@@ -1436,7 +1477,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
@@ -1477,7 +1519,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
@@ -1534,7 +1577,8 @@
                 "required": false,
                 "type": "integer",
                 "javaType": "long",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "defaultValue": 10000,
                 "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
@@ -1584,7 +1628,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
@@ -1625,7 +1670,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
@@ -1682,7 +1728,8 @@
                 "required": false,
                 "type": "integer",
                 "javaType": "long",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "defaultValue": 10000,
                 "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
@@ -1732,7 +1779,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
@@ -1773,7 +1821,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
@@ -1830,7 +1879,8 @@
                 "required": false,
                 "type": "integer",
                 "javaType": "long",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "defaultValue": 10000,
                 "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
@@ -1880,7 +1930,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }
@@ -1921,7 +1972,8 @@
                 "required": true,
                 "type": "string",
                 "javaType": "java.net.URI",
-                "deprecated": false,
+                "tags":[],
+          "deprecated": false,
                 "secret": false,
                 "description": "The url of the HTTP endpoint to call."
               }

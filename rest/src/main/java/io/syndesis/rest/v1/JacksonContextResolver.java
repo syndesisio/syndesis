@@ -35,6 +35,7 @@ public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
         this.objectMapper = Json.mapper();
     }
 
+    @Override
     public ObjectMapper getContext(Class<?> objectType) {
         return objectMapper;
     }

@@ -16,11 +16,12 @@
 package io.syndesis.model.connection;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.model.WithTags;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConfigurationProperty.Builder.class)
-public interface ConfigurationProperty {
+public interface ConfigurationProperty extends WithTags {
 
     String getKind();
     String getDisplayName();

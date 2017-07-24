@@ -15,26 +15,22 @@
  */
 package io.syndesis.rest.v1.handler.exception;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @Provider
-public class IllegalArgumentExceptionMapper implements ExceptionMapper<IllegalArgumentException> {
+public class IllegalArgumentExceptionMapper extends BaseExceptionMapper<IllegalArgumentException> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(IllegalArgumentExceptionMapper.class);
+    public IllegalArgumentExceptionMapper() {
+        super(Response.Status.BAD_REQUEST, "Please check your sorting arguments");
+    }
 
     @Override
-    public Response toResponse(IllegalArgumentException e) {
-        LOG.error(e.getMessage(),e);
-        RestError error = new RestError("Illegal Argument on Call " + e.getMessage(), "Please check your sorting arguments", 400);
-        return Response.status(error.errorCode).type(MediaType.APPLICATION_JSON_TYPE).entity(error).build();
+    protected String developerMessage(IllegalArgumentException exception) {
+        return "Illegal Argument on Call " + exception.getMessage();
     }
 
 }

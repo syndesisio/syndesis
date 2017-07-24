@@ -162,6 +162,13 @@ public interface JsonDB {
         return getAsStreamingOutput(path, null);
     }
 
+    /**
+     * If a non-null consumer is returned, it must be used to avoid leaking resources.
+     *
+     * @param path
+     * @param options
+     * @return
+     */
     Consumer<OutputStream> getAsStreamingOutput(String path, GetOptions options);
 
     void set(String path, InputStream body);

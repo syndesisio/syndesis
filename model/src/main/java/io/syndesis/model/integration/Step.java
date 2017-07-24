@@ -20,14 +20,12 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.Connection;
-import org.immutables.value.Value;
 
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;
 
-@Value.Immutable
-@JsonDeserialize(builder = Step.Builder.class)
+@JsonDeserialize(using = StepDeserializer.class)
 public interface Step extends WithId<Step>, Serializable {
 
     @Override
@@ -44,13 +42,5 @@ public interface Step extends WithId<Step>, Serializable {
     Optional<Map<String, String>> getConfiguredProperties();
 
     String getName();
-
-    @Override
-    default Step withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
-    }
-
-    class Builder extends ImmutableStep.Builder {
-    }
 
 }

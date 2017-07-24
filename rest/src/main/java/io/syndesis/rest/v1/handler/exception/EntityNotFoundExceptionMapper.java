@@ -16,26 +16,22 @@
 package io.syndesis.rest.v1.handler.exception;
 
 import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @Provider
-public class EntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotFoundException> {
+public class EntityNotFoundExceptionMapper extends BaseExceptionMapper<EntityNotFoundException> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EntityNotFoundExceptionMapper.class);
+    public EntityNotFoundExceptionMapper() {
+        super(Response.Status.NOT_FOUND, "Please check your request data");
+    }
 
     @Override
-    public Response toResponse(EntityNotFoundException e) {
-        LOG.error(e.getMessage(),e);
-        RestError error = new RestError("Entity Not Found Exception " + e.getMessage(), "Please check your request data", 404);
-        return Response.status(error.errorCode).type(MediaType.APPLICATION_JSON_TYPE).entity(error).build();
+    protected String developerMessage(final EntityNotFoundException exception) {
+        return "Entity Not Found Exception " + exception.getMessage();
     }
 
 }

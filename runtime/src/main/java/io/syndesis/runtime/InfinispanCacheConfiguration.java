@@ -20,7 +20,9 @@ import org.infinispan.configuration.global.GlobalConfigurationBuilder;
 import org.infinispan.eviction.EvictionType;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
+import org.infinispan.spring.provider.SpringEmbeddedCacheManager;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -47,4 +49,8 @@ public class InfinispanCacheConfiguration {
         );
     }
 
+    @Bean
+    public CacheManager cacheManager(final EmbeddedCacheManager nativeCacheManager) {
+        return new SpringEmbeddedCacheManager(nativeCacheManager);
+    }
 }
