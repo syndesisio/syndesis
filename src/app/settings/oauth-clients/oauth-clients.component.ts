@@ -1,11 +1,43 @@
 import { Component, OnInit } from '@angular/core';
-import { ListToolbarProperties } from '../../common/toolbar/list-toolbar.component';
+import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
+import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
 
 @Component({
   selector: 'syndesis-oauth-clients',
   templateUrl: 'oauth-clients.component.html',
 })
 export class OAuthClientsComponent implements OnInit {
+  filter: ObjectPropertyFilterConfig = {
+    filter: '',
+    propertyName: 'client.name',
+  };
+  sort: ObjectPropertySortConfig = {
+    sortField: 'client.name',
+    descending: false,
+  };
+  listConfig = {
+    multiSelect: false,
+    selectItems: false,
+    showCheckbox: false,
+  };
+  toolbarConfig = {
+    filterConfig: {
+      fields: [{
+        id: 'client.name',
+        title: 'Name',
+        placeholder: 'Filter by Name...',
+        type: 'text',
+      }],
+    },
+    sortConfig: {
+      fields: [{
+        id: 'client.name',
+        title: 'Name',
+        sortType: 'alpha',
+      }],
+      isAscending: true,
+    },
+  };
   items = [];
   oauthClients = [
     {
@@ -37,15 +69,21 @@ export class OAuthClientsComponent implements OnInit {
       clientSecret: '',
     },
   ];
-  toolbarProperties = [
-    {
-      key: 'name',
-      label: 'Name',
-    },
-  ];
-  filter: undefined;
-  sort: undefined;
   constructor() {}
+  filterChanged($event) {
+    // TODO update our pipe to handle multiple filters
+    if ($event.appliedFilters.length === 0) {
+      this.filter.filter = '';
+    }
+    $event.appliedFilters.forEach((filter) => {
+      this.filter.propertyName = filter.field.id;
+      this.filter.filter = filter.value;
+    });
+  }
+  sortChanged($event) {
+    this.sort.sortField = $event.field.id;
+    this.sort.descending = !$event.isAscending;
+  }
   isConfigured(item) {
     const client = item.client;
     return (client.clientId && client.clientId !== '') && (client.clientSecret && client.clientSecret !== '');

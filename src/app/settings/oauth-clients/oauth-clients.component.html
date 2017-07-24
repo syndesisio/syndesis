@@ -4,9 +4,19 @@
     <p>Register Syndesis with the applications you want to connect to in an integration. Find out more about this at <a>Syndesis Help</a>.
 
       <!-- Toolbar -->
-      <syndesis-list-toolbar [properties]="toolbarProperties"
-                             [(filter)]="filter"
-                             [(sort)]="sort"></syndesis-list-toolbar>
+      <pfng-toolbar
+        [config]="toolbarConfig"
+        (onFilterChange)="filterChanged($event)"
+        (onSortChange)="sortChanged($event)">
+      </pfng-toolbar>
+
+      <!-- List displayed here -->
+      <pfng-list [items]="items | objectPropertyFilter:filter | objectPropertySort:sort"
+                 [config]="listConfig"
+                 [itemTemplate]="listItemMain"
+                 [actionTemplate]="actions"
+                 [expandTemplate]="listItemExpansion">
+      </pfng-list>
 
       <!-- One list item, main row -->
       <ng-template #listItemMain
@@ -36,6 +46,11 @@
             </div>
           </div>
         </div>
+      </ng-template>
+
+      <!-- list item actions -->
+      <ng-template #actions
+                   let-item="item">
         <div class="list-pf-actions">
           <button *ngIf="!item.expanded"
                   class="btn btn-default"
@@ -55,10 +70,5 @@
         Hello!
       </ng-template>
 
-      <!-- List displayed here -->
-      <syndesis-list-expansion [items]="items"
-                               [mainTemplate]="listItemMain"
-                               [expansionTemplate]="listItemExpansion">
-      </syndesis-list-expansion>
   </div>
 </div>
