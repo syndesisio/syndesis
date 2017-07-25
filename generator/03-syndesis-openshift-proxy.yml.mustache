@@ -48,7 +48,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: syndesis/token-rp:v0.6.0
+          image: syndesis/token-rp:v0.6.2
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           args:
@@ -88,7 +88,7 @@
         - syndesis-openshift-proxy
         from:
           kind: ImageStreamTag
-          name: syndesis-token-rp:v0.6.0
+          name: syndesis-token-rp:v0.6.2
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange
