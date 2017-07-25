@@ -460,7 +460,7 @@ objects:
       spec:
         containers:
         - name: syndesis-github-proxy
-          image: syndesis/token-rp:v0.6.0
+          image: syndesis/token-rp:v0.6.2
 
           imagePullPolicy: IfNotPresent
           args:
@@ -1757,7 +1757,7 @@ objects:
       spec:
         containers:
         - name: syndesis-openshift-proxy
-          image: syndesis/token-rp:v0.6.0
+          image: syndesis/token-rp:v0.6.2
 
           imagePullPolicy: IfNotPresent
           args:
