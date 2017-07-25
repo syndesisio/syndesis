@@ -9,8 +9,8 @@ import { SyndesisCommonModule } from '../common/common.module';
 import { DynamicFormsPatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 
 import { SettingsRootComponent } from './settings-root.component';
-import { OAuthClientsComponent } from './oauth-clients/oauth-clients.component';
-import { OAuthClientFormComponent } from './oauth-clients/oauth-client-form.component';
+import { OAuthAppsComponent } from './oauth-apps/oauth-apps.component';
+import { OAuthAppFormComponent } from './oauth-apps/oauth-app-form.component';
 
 const routes: Routes = [
   {
@@ -19,7 +19,7 @@ const routes: Routes = [
     children: [
       {
         path: 'oauth-clients',
-        component: OAuthClientsComponent,
+        component: OAuthAppsComponent,
       },
       {
         path: '',
@@ -44,8 +44,8 @@ const routes: Routes = [
   exports: [],
   declarations: [
     SettingsRootComponent,
-    OAuthClientsComponent,
-    OAuthClientFormComponent,
+    OAuthAppsComponent,
+    OAuthAppFormComponent,
   ],
   providers: [],
 })
