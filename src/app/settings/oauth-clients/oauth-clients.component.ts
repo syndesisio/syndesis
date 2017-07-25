@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+
 import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
 
 @Component({
   selector: 'syndesis-oauth-clients',
   templateUrl: 'oauth-clients.component.html',
+  styleUrls: ['./oauth-clients.component.scss'],
 })
 export class OAuthClientsComponent implements OnInit {
+  // Pipe configuration
   filter: ObjectPropertyFilterConfig = {
     filter: '',
     propertyName: 'client.name',
@@ -15,11 +18,13 @@ export class OAuthClientsComponent implements OnInit {
     sortField: 'client.name',
     descending: false,
   };
+  // List configuration
   listConfig = {
     multiSelect: false,
     selectItems: false,
     showCheckbox: false,
   };
+  // Toolbar configuration
   toolbarConfig = {
     filterConfig: {
       fields: [{
@@ -38,6 +43,7 @@ export class OAuthClientsComponent implements OnInit {
       isAscending: true,
     },
   };
+  // Data
   items = [];
   oauthClients = [
     {

@@ -1,0 +1,10 @@
+@import '../../../scss/colors';
+/deep/ .toolbar-pf {
+  background: inherit;
+  box-shadow: none;
+  border-bottom-color: transparent;
+}
+
+/deep/ .list-pf-item {
+  background: $pf-white;
+}

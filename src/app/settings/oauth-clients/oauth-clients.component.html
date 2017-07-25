@@ -1,13 +1,12 @@
-<div class="row">
+<div class="row oauth-clients">
   <div class="container col-md-12">
     <h1>OAuth Client Management</h1>
     <p>Register Syndesis with the applications you want to connect to in an integration. Find out more about this at <a>Syndesis Help</a>.
 
       <!-- Toolbar -->
-      <pfng-toolbar
-        [config]="toolbarConfig"
-        (onFilterChange)="filterChanged($event)"
-        (onSortChange)="sortChanged($event)">
+      <pfng-toolbar [config]="toolbarConfig"
+                    (onFilterChange)="filterChanged($event)"
+                    (onSortChange)="sortChanged($event)">
       </pfng-toolbar>
 
       <!-- List displayed here -->
@@ -67,7 +66,9 @@
       <!-- list item's expansion -->
       <ng-template #listItemExpansion
                    let-item="item">
-        Hello!
+        <div *ngIf="item.expanded">
+          <syndesis-oauth-client-form [item]="item"></syndesis-oauth-client-form>
+        </div>
       </ng-template>
 
   </div>
