@@ -77,9 +77,9 @@ public class DataMapperClassInspector implements ClassInspector {
     protected List<String> getPathsForJavaClassName(String prefix, String fullyQualifiedName, List<String> visited) {
         if (visited.contains(fullyQualifiedName)) {
             return Collections.emptyList();
-        } else {
-            visited.add(fullyQualifiedName);
         }
+
+        visited.add(fullyQualifiedName);
 
         ResponseEntity<String> response = null;
         try {
@@ -113,9 +113,9 @@ public class DataMapperClassInspector implements ClassInspector {
                                 if (isPrimitive || isTerminal(fieldClassName)) {
                                     paths.add(prefix + DEFAULT_SEPARATOR + name);
                                     continue;
-                                } else {
-                                    paths.addAll(getPathsForJavaClassName(prefix + DEFAULT_SEPARATOR + name, fieldClassName, visited));
                                 }
+
+                                paths.addAll(getPathsForJavaClassName(prefix + DEFAULT_SEPARATOR + name, fieldClassName, visited));
                             }
                         }
                     }
@@ -132,7 +132,9 @@ public class DataMapperClassInspector implements ClassInspector {
         int index = fullyQualifiedName.lastIndexOf(".");
         if (index > 0) {
             return fullyQualifiedName.substring(index + 1);
-        } else return fullyQualifiedName;
+        }
+
+        return fullyQualifiedName;
     }
 
     /**

@@ -15,13 +15,11 @@
  */
 package io.syndesis.rest.v1.handler.setup;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
-import io.syndesis.core.SuppressFBWarnings;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.connection.Connector;
-import org.springframework.stereotype.Component;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -35,11 +33,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
+import io.syndesis.core.SuppressFBWarnings;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.connection.Connector;
+
+import org.springframework.stereotype.Component;
 
 /**
  * This rest endpoint handles working with global oauth settings.
@@ -95,9 +97,9 @@ public class OAuthAppHandler {
         }
         if (isOauthConnector(connector)) {
             return createOAuthApp(connector);
-        } else {
-            throw new EntityNotFoundException();
         }
+
+        throw new EntityNotFoundException();
     }
 
     private static OAuthApp createOAuthApp(Connector connector) {
@@ -132,9 +134,8 @@ public class OAuthAppHandler {
     }
 
     private static boolean isOauthConnector(Connector connector) {
-        TreeSet EMPTY = new TreeSet();
         return connector.getProperties().values().stream().anyMatch(x -> {
-                return x.getTags().orElse(EMPTY).contains("oauth-client-id");
+                return x.getTags().orElse(Collections.emptySortedSet()).contains("oauth-client-id");
             }
         );
     }
@@ -143,9 +144,8 @@ public class OAuthAppHandler {
         if( connector.getProperties() == null ) {
             return null;
         }
-        TreeSet EMPTY = new TreeSet();
         for (Map.Entry<String,ConfigurationProperty> entry : connector.getProperties().entrySet()) {
-            if( entry.getValue().getTags().orElse(EMPTY).contains(name) ) {
+            if( entry.getValue().getTags().orElse(Collections.emptySortedSet()).contains(name) ) {
                 return connector.getConfiguredProperties().get(entry.getKey());
             }
         }
@@ -153,9 +153,8 @@ public class OAuthAppHandler {
     }
 
     private static void setPropertyTaggedAs(Connector connector, Map<String, String> configuredProperties, String name, String value) {
-        TreeSet EMPTY = new TreeSet();
         for (Map.Entry<String,ConfigurationProperty> entry : connector.getProperties().entrySet()) {
-            if( entry.getValue().getTags().orElse(EMPTY).contains(name) ) {
+            if( entry.getValue().getTags().orElse(Collections.emptySortedSet()).contains(name) ) {
                 configuredProperties.put(entry.getKey(), value);
                 return;
             }
