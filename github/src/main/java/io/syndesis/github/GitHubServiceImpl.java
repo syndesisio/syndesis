@@ -17,18 +17,18 @@ package io.syndesis.github;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import io.syndesis.github.backend.ExtendedContentsService;
+import io.syndesis.core.Tokens;
+import io.syndesis.git.GitWorkflow;
 
 import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.RepositoryContents;
 import org.eclipse.egit.github.core.RepositoryHook;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -42,12 +42,10 @@ import org.springframework.stereotype.Service;
 public class GitHubServiceImpl implements GitHubService {
 
     private final RepositoryService repositoryService;
-    private final ExtendedContentsService contentsService;
     private final UserService userService;
 
-    public GitHubServiceImpl(RepositoryService repositoryService, ExtendedContentsService contentsService, UserService userService) {
+    public GitHubServiceImpl(RepositoryService repositoryService, UserService userService) {
         this.repositoryService = repositoryService;
-        this.contentsService = contentsService;
         this.userService = userService;
     }
 
@@ -84,7 +82,7 @@ public class GitHubServiceImpl implements GitHubService {
 
     // =====================================================================================
 
-    private Repository getRepository(String name) throws IOException {
+    protected Repository getRepository(String name) throws IOException {
         User user = userService.getUser();
         try {
             return repositoryService.getRepository(user.getLogin(), name);
@@ -96,25 +94,21 @@ public class GitHubServiceImpl implements GitHubService {
         }
     }
 
-    private Repository createRepo(String name) throws IOException {
+    protected Repository createRepo(String name) throws IOException {
         Repository repo = new Repository();
         repo.setName(name);
         return repositoryService.createRepository(repo);
     }
 
     private void createOrUpdateFiles(Repository repo, String message, Map<String, byte[]> files) throws IOException {
-        for (Map.Entry<String, byte[]> entry : files.entrySet()) {
-            // Wait a bit to let GitHub catch up
-            // See http://stackoverflow.com/questions/19576601/github-api-issue-with-file-upload for details
-            sleep(1000L);
-            createOrUpdateFile(repo, message, entry.getKey(), entry.getValue());
+        GitWorkflow gitWorkflow = new GitWorkflow();
+        Repository repository = getRepository(repo.getName());
+        if (repository == null) {
+            repository = createRepo(repo.getName());
+            gitWorkflow.createFiles(repo.getHtmlUrl(), repo.getName(), message, files, new UsernamePasswordCredentialsProvider(Tokens.getAuthenticationToken(), "") );
+        } else {
+            gitWorkflow.updateFiles(repo.getHtmlUrl(), repo.getName(), message, files, new UsernamePasswordCredentialsProvider(Tokens.getAuthenticationToken(), "") );
         }
-    }
-
-    private void sleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {}
     }
 
     private void createWebHookAsBuildTrigger(Repository repository, String url) throws IOException {
@@ -133,32 +127,5 @@ public class GitHubServiceImpl implements GitHubService {
         hook.setName("web");
         hook.setActive(true);
         return hook;
-    }
-
-    private void createOrUpdateFile(Repository repo, String message, String path, byte[] content) throws IOException {
-        String sha = getFileSha(repo, path);
-        if (sha != null) {
-            contentsService.updateFile(repo, message, path, sha, content);
-        } else {
-            contentsService.createFile(repo, message, path, content);
-        }
-    }
-
-    private String getFileSha(Repository repository, String path) throws IOException {
-        try {
-            List<RepositoryContents> contents = contentsService.getContents(repository, path);
-            if (contents ==  null) {
-                return null;
-            }
-            if (contents.size() > 1) {
-                throw new IllegalArgumentException("Given path " + path + " doesn't specify a file");
-            }
-            return contents.get(0).getSha();
-        } catch (RequestException e) {
-            if (e.getStatus() != HttpStatus.NOT_FOUND.value()) {
-                throw e;
-            }
-            return null;
-        }
     }
 }
