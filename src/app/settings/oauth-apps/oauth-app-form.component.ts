@@ -51,6 +51,7 @@ export function getOAuthAppForm(settings: any) {
 })
 export class OAuthAppFormComponent implements OnInit {
   @Input() item: any = {};
+
   loading = false;
   error: any = null;
   message: any = null;
@@ -70,18 +71,23 @@ export class OAuthAppFormComponent implements OnInit {
     this.loading = true;
     this.error = null;
     this.message = null;
-    this.store.update(app).subscribe(() => {
-      this.loading = false;
-      this.formGroup.enable();
-      this.message = 'success';
-      this.detector.detectChanges();
-    }, (error: any) => {
-      this.loading = false;
-      this.formGroup.enable();
-      this.message = null;
-      this.error = error;
-      this.detector.detectChanges();
-    });
+    const sub = this.store.update(app).subscribe(
+      () => {
+        this.loading = false;
+        this.message = 'success';
+        sub.unsubscribe();
+        this.item.client = app;
+        this.detector.detectChanges();
+      },
+      (error: any) => {
+        this.loading = false;
+        this.formGroup.enable();
+        this.message = null;
+        this.error = error;
+        sub.unsubscribe();
+        this.detector.detectChanges();
+      },
+    );
   }
 
   ngOnInit() {

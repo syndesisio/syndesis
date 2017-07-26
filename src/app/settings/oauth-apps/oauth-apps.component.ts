@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '../../model';
 import { Observable } from 'rxjs/Observable';
@@ -17,6 +18,10 @@ export interface OAuthAppListItem {
   styleUrls: ['./oauth-apps.component.scss'],
 })
 export class OAuthAppsComponent implements OnInit {
+  // Modal
+  @ViewChild('childModal') public childModal: ModalDirective;
+  // Holds the candidate for clearing credentials
+  selectedItem: OAuthAppListItem;
   // Pipe configuration
   filter: ObjectPropertyFilterConfig = {
     filter: '',
@@ -62,10 +67,12 @@ export class OAuthAppsComponent implements OnInit {
 
   items: Array<OAuthAppListItem> = [];
 
-  constructor(public store: OAuthAppStore) {
+  constructor(public store: OAuthAppStore, public detector: ChangeDetectorRef) {
     this.loading = store.loading;
     this.list = store.list;
   }
+
+  // Handles events when the user interacts with the toolbar filter
   filterChanged($event) {
     // TODO update our pipe to handle multiple filters
     if ($event.appliedFilters.length === 0) {
@@ -76,22 +83,24 @@ export class OAuthAppsComponent implements OnInit {
       this.filter.filter = filter.value;
     });
   }
+
+  // Handles events when the user interacts with the toolbar sort
   sortChanged($event) {
     this.sort.sortField = $event.field.id;
     this.sort.descending = !$event.isAscending;
   }
+
+  // Returns whether or not this item has stored credentials
   isConfigured(item) {
-    const client = item.client;
+    const client = item.client || {};
     return (
       client.clientId &&
       client.clientId !== '' &&
       (client.clientSecret && client.clientSecret !== '')
     );
   }
-  promptRemoveCredentials(item) {
-    // TODO
-  }
 
+  // view initialization
   ngOnInit() {
     this.list.subscribe((apps: OAuthApps) => {
       const oldItems = this.items;

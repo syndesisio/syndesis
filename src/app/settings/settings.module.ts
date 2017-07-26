@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
+import { ModalModule } from 'ngx-bootstrap';
 import { ListModule, ToolbarModule } from 'patternfly-ng';
 import { SyndesisCommonModule } from '../common/common.module';
 import { DynamicFormsPatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
@@ -11,6 +12,7 @@ import { DynamicFormsPatternflyUIModule } from '../common/ui-patternfly/ui-patte
 import { SettingsRootComponent } from './settings-root.component';
 import { OAuthAppsComponent } from './oauth-apps/oauth-apps.component';
 import { OAuthAppFormComponent } from './oauth-apps/oauth-app-form.component';
+import { OAuthAppModal } from './oauth-apps/oauth-app-modal.component';
 
 const routes: Routes = [
   {
@@ -38,6 +40,7 @@ const routes: Routes = [
     DynamicFormsPatternflyUIModule,
     ListModule,
     ToolbarModule,
+    ModalModule,
     RouterModule.forChild(routes),
     SyndesisCommonModule,
   ],
@@ -46,6 +49,7 @@ const routes: Routes = [
     SettingsRootComponent,
     OAuthAppsComponent,
     OAuthAppFormComponent,
+    OAuthAppModal,
   ],
   providers: [],
 })
