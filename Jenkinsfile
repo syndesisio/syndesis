@@ -2,6 +2,8 @@ def mavenVersion='3.3.9'
 //We need a node so that we can have access to environemnt variables.
 //The allocated node will actually be the Jenkins master (which is expected to provide these variables) as long as it has available executors.
 node {
+    echo "Using branch: ${env.BRANCH_NAME}:"
+
     slave {
         withOpenshift {
             withMaven(
@@ -10,8 +12,7 @@ node {
                     containerEnvVar(key:'GITHUB_OAUTH_CLIENT_ID', value: "${env.GITHUB_OAUTH_CLIENT_ID}"),
                     containerEnvVar(key:'GITHUB_OAUTH_CLIENT_SECRET', value: "${env.GITHUB_OAUTH_CLIENT_SECRET}")
                 ],
-                serviceAccount: "jenkins", mavenSettingsXmlSecret: 'm2-settings'
-            ) {
+                serviceAccount: "jenkins", mavenSettingsXmlSecret: 'm2-settings') {
                 inside {
                     def testingNamespace = generateProjectName()
 
@@ -24,6 +25,14 @@ node {
 
                     stage 'System Tests'
                     test(component: 'syndesis-rest', namespace: "${testingNamespace}", serviceAccount: 'jenkins')
+
+                    if ("master".equals("${env.BRANCH_NAME}")) {
+                        stage 'Rollout'
+                        tag(sourceProject: 'syndesis-ci', imageStream: 'syndesis-rest')
+                        rollout(deploymentConfig: 'syndesis-rest', namespace: 'syndesis-staging')
+                    } else {
+                        echo "This is a pull request build not rolling out"
+                    }
                 }
             }
         }
