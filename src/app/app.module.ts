@@ -40,6 +40,7 @@ export function appInitializer(
   oauthService: OAuthService,
   userService: UserService,
   ngZone: NgZone,
+  toasterService: ToasterService,
 ) {
   return () => {
     return configService
@@ -126,12 +127,23 @@ export function appInitializer(
                 ngZone.run(() => {
                   oauthService
                     .refreshToken()
-                    .catch(reason =>
+                    .catch(reason => {
                       log.errorc(
                         () => 'Failed to refresh token',
                         () => new Error(reason),
-                      ),
-                    );
+                      );
+                      toasterService.pop({
+                        type: 'warning',
+                        title: 'Your session has expired!',
+                        body: 'Please refresh the page by clicking here or your browser reload button',
+                        showCloseButton: false,
+                        timeout: -1,
+                        clickHandler: toast => {
+                          location.reload();
+                          return true;
+                        },
+                      });
+                    });
                 });
               });
             });
@@ -211,12 +223,13 @@ export function restangularProviderConfigurer(
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
-      deps: [ConfigService, OAuthService, UserService, NgZone],
+      deps: [ConfigService, OAuthService, UserService, NgZone, ToasterService],
       multi: true,
     },
     ConfigService,
     OAuthService,
     UserService,
+    ToasterService,
   ],
   bootstrap: [AppComponent],
 })
