@@ -31,7 +31,7 @@ abstract class BaseExceptionMapper<E extends Throwable> implements ExceptionMapp
 
     private final String userMessage;
 
-    public BaseExceptionMapper(final Status status, final String userMessage) {
+    protected BaseExceptionMapper(final Status status, final String userMessage) {
         this.status = status;
         this.userMessage = userMessage;
     }
