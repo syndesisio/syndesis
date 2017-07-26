@@ -14,7 +14,7 @@ export class IntegrationSupportService {
 
   constructor(public restangular: Restangular,
               public http: Http,
-              public oauth: OAuthService,) {
+              public oauth: OAuthService) {
     this.service = restangular.service('integration-support');
     this.filterService = restangular.service('/');
   }
