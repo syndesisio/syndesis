@@ -12,7 +12,7 @@ import { DynamicFormsPatternflyUIModule } from '../common/ui-patternfly/ui-patte
 import { SettingsRootComponent } from './settings-root.component';
 import { OAuthAppsComponent } from './oauth-apps/oauth-apps.component';
 import { OAuthAppFormComponent } from './oauth-apps/oauth-app-form.component';
-import { OAuthAppModal } from './oauth-apps/oauth-app-modal.component';
+import { OAuthAppModalComponent } from './oauth-apps/oauth-app-modal.component';
 
 const routes: Routes = [
   {
@@ -49,7 +49,7 @@ const routes: Routes = [
     SettingsRootComponent,
     OAuthAppsComponent,
     OAuthAppFormComponent,
-    OAuthAppModal,
+    OAuthAppModalComponent,
   ],
   providers: [],
 })

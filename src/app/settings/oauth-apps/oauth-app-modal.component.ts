@@ -7,7 +7,7 @@ import { OAuthApp, OAuthApps } from '../../model';
   selector: 'syndesis-oauth-app-modal',
   templateUrl: './oauth-app-modal.component.html',
 })
-export class OAuthAppModal implements OnInit {
+export class OAuthAppModalComponent implements OnInit {
   // Modal
   @ViewChild('childModal') public childModal: ModalDirective;
   // Holds the candidate for clearing credentials
