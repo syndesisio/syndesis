@@ -211,7 +211,6 @@ export class IntegrationsListComponent {
   canDelete(currentStatus) {
     switch (currentStatus) {
       case 'Deleted':
-      case 'Pending':
         return false;
       default:
         return true;
