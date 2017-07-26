@@ -81,12 +81,10 @@
                       <a [routerLink]="['/connections', connection.id]"
                          class="dropdown-item">View</a>
                     </li>
-                    <!--
                     <li role="menuitem">
-                      <a [routerLink]="['/connections/edit', connection.id]"
+                      <a [routerLink]="['/connections', connection.id]" [queryParams]="{ edit: true }"
                         class="dropdown-item">Edit</a>
                     </li>
-                    -->
                     <!--
                     <li role="menuitem">
                       <a class="dropdown-item">Duplicate</a>
