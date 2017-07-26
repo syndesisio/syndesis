@@ -177,9 +177,9 @@ public class DataManager implements DataAccessObjectRegistry {
         }
 
         this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> d.create(entityToCreate));
-        cache.put(idVal, entity);
+        cache.put(idVal, entityToCreate);
         broadcast("created", kind.getModelName(), idVal);
-        return entity;
+        return entityToCreate;
     }
 
     public <T extends WithId<T>> void update(T entity) {

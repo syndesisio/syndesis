@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
@@ -29,6 +30,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DataManagerTest {
 
@@ -111,4 +114,22 @@ public class DataManagerTest {
         Assert.assertEquals(int2.getDesiredStatus(), int3.getDesiredStatus());
     }
 
+    @Test
+    public void createShouldCreateWithUnspecifiedIds() {
+        final Connector given = new Connector.Builder().icon("my-icon").build();
+        final Connector got = dataManager.create(given);
+
+        assertThat(got).isEqualToIgnoringGivenFields(given, "id");
+        assertThat(got.getId()).isPresent();
+        assertThat(infinispan.getCaches().getCache(Kind.Connector.modelName).get(got.getId().get())).isSameAs(got);
+    }
+
+    @Test
+    public void createShouldCreateWithSpecifiedId() {
+        final Connector connector = new Connector.Builder().id("custom-id").build();
+        final Connector got = dataManager.create(connector);
+
+        assertThat(got).isSameAs(connector);
+        assertThat(infinispan.getCaches().getCache(Kind.Connector.modelName).get("custom-id")).isSameAs(connector);
+    }
 }
