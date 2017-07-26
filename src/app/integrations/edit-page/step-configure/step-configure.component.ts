@@ -44,7 +44,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
               public formFactory: FormFactoryService,
               public formService: DynamicFormService,
               public detector: ChangeDetectorRef,
-              public stepStore: StepStore,) {
+              public stepStore: StepStore) {
     super(currentFlow, route, router, detector);
   }
 
