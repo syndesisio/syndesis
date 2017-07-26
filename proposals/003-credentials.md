@@ -58,6 +58,17 @@ To interact with the credentials API:
 | POST | /api/{version}/connections/{id}/credentials | Acquire new credential for connection with identifier {id} |
 | \* | /api/{version}/credentials/callback | Handle interaction with 3rd party services during credential acquisition |
 
+## Persisting state
+
+OAuth flow state that consists of:
+ - connection id - identifies the connection for which the OAuth flow is performed
+ - provider id - identifies the credential provider that will handle the OAuth flow
+ - return URL - given by the UI, used to redirect the user in case of successful OAuth flow
+ - OAuth state key - used to prevent replay attacks
+ - OAuth token - needed for OAuth1 flow
+
+The flow state is persisted in a HTTP cookie keyed by the id of connection. Tampering of the cookie is prevented by using RFC 6896 for Cookie processing.
+
 ### Examples
 
 #### Acquisition example with Salesforce
@@ -127,11 +138,15 @@ Accept: application/json
 ```json
 {
   "type": "REDIRECT",
-  "url": "https://login.salesforce.com/services/oauth2/authorize?client_id=..."
+  "url": "https://login.salesforce.com/services/oauth2/authorize?client_id=...",
+  "state": {
+    "persist": "COOKIE",
+    "spec": "connection-__some_id__-oauth=__BASE64URL__;Path=/credentials/callback; Secure; HttpOnly"
+  }
 }
 
 ```
-3. UI redirects user to the specified `url`, and Salesforce in turn redirects to OAuth callback:
+3. UI persists the state as requested in a HTTP cookie UI named `connection-__some_id__-oauth` with the given value and redirects user to the specified `url`, and Salesforce in turn redirects to OAuth callback:
 ```http
 GET /services/oauth2/authorize?... HTTP/1.1
 Host: login.salesforce.com
@@ -143,6 +158,8 @@ Location: https://{syndesis-rest}/api/v1/credentials/callback?code=...
 4. Credential provider for Salesforce processes the request, extracts the `code` and returns to the URL provided by the UI in 2. (`returnUrl`)
 ```http
 GET /api/v1/connectors/salesforce/credentials/callback?code=... HTTP/1.1
+
+Cookie: connection-__some_id__-oauth=__BASE64URL__
 ```
 ```http
 HTTP/1.1 302 Moved Temporarily
