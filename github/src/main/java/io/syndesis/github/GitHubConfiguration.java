@@ -15,7 +15,6 @@
  */
 package io.syndesis.github;
 
-import io.syndesis.github.backend.ExtendedContentsService;
 import io.syndesis.github.backend.KeycloakTokenAwareGitHubClient;
 
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -39,11 +38,6 @@ public class GitHubConfiguration {
     @Bean
     public RepositoryService repositoryService(GitHubProperties props) {
         return new RepositoryService(new KeycloakTokenAwareGitHubClient(props.getService()));
-    }
-
-    @Bean
-    public ExtendedContentsService contentsService(GitHubProperties props) {
-        return new ExtendedContentsService(new KeycloakTokenAwareGitHubClient(props.getService()));
     }
 
     @Bean
