@@ -45,6 +45,7 @@ describe('CurrentFlow', () => {
     rc.steps = <Steps>[];
 
     const step1 = TypeFactory.createStep();
+    step1.id = 'foobar';
     step1.stepKind = 'endpoint';
     step1.connection = TypeFactory.createConnection();
     step1.connection.connectorId = 'timer';
@@ -63,6 +64,7 @@ describe('CurrentFlow', () => {
     rc.steps.push(step3);
 
     const step4 = TypeFactory.createStep();
+    step4.id = '4';
     step4.stepKind = 'endpoint';
     step4.connection = TypeFactory.createConnection();
     step4.connection.connectorId = 'http';
@@ -70,6 +72,44 @@ describe('CurrentFlow', () => {
     rc.steps.push(step4);
     return rc;
   }
+
+  it(
+    'should return the previous connection',
+    inject([CurrentFlow], (service: CurrentFlow) => {
+      service.integration = getDummyIntegration();
+      const step = service.getPreviousConnection(2);
+      expect(step.id).toEqual('3');
+    }),
+  );
+
+  it(
+    'should return the subsequent connection',
+    inject([CurrentFlow], (service: CurrentFlow) => {
+      service.integration = getDummyIntegration();
+      const step = service.getSubsequentConnection(2);
+      expect(step.id).toEqual('4');
+    }),
+  );
+
+  it(
+    'should return all subsequent connections',
+    inject([CurrentFlow], (service: CurrentFlow) => {
+      service.integration = getDummyIntegration();
+      const steps = service.getSubsequentConnections(2);
+      expect(steps.length).toEqual(1);
+      expect(steps[0].id).toEqual('4');
+    }),
+  );
+
+  it(
+    'should return all previous connections',
+    inject([CurrentFlow], (service: CurrentFlow) => {
+      service.integration = getDummyIntegration();
+      const steps = service.getPreviousConnections(2);
+      expect(steps.length).toEqual(2);
+      expect(steps[0].id).toEqual('foobar');
+    }),
+  );
 
   it(
     'should return the first step in the flow',

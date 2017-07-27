@@ -60,7 +60,46 @@ export class CurrentFlow {
     return this.steps.slice(1, -1);
   }
 
-  getPreviousConnections(position): Array<Step> {
+  /**
+   * Return all steps in the flow after the supplied position
+   *
+   * @param {any} position
+   * @returns {Array<Step>}
+   * @memberof CurrentFlow
+   */
+  getSubsequentSteps(position): Array<Step> {
+    if (!this._integration) {
+      return undefined;
+    }
+    if (!this._integration.steps) {
+      this._integration.steps = [];
+    }
+    return this._integration.steps.slice(position);
+  }
+
+  /**
+   * Return all steps in the flow after the supplied position that are connctions
+   *
+   * @param {any} position
+   * @returns {Array<Step>}
+   * @memberof CurrentFlow
+   */
+  getSubsequentConnections(position): Array<Step> {
+    const answer = this.getSubsequentSteps(position);
+    if (answer) {
+      return answer.filter((s) => s.stepKind === 'endpoint');
+    }
+    return null;
+  }
+
+  /**
+   * Return all steps in the flow before the supplied position
+   *
+   * @param {any} position
+   * @returns {Array<Step>}
+   * @memberof CurrentFlow
+   */
+  getPreviousSteps(position): Array<Step> {
     if (!this._integration) {
       return undefined;
     } else {
@@ -71,11 +110,43 @@ export class CurrentFlow {
     }
   }
 
-  // Returns the connection before the current step (e.g. for data handling)
+  /**
+   * Return all steps that are connections in the flow before the supplied position
+   *
+   * @param {any} position
+   * @returns {Array<Step>}
+   * @memberof CurrentFlow
+   */
+  getPreviousConnections(position): Array<Step> {
+    const answer = this.getPreviousSteps(position);
+    if (answer) {
+      return answer.filter(s => s.stepKind === 'endpoint');
+    }
+    return null;
+  }
+
+  /**
+   * Return the first connection in the flow before the supplied position
+   *
+   * @param {any} position
+   * @returns {Step}
+   * @memberof CurrentFlow
+   */
   getPreviousConnection(position): Step {
-    const slicedSteps = this.getPreviousConnections(position);
-    const found = slicedSteps.find(step => step.stepKind === 'endpoint');
-    return found || null;
+    const connections = this.getPreviousConnections(position).reverse();
+    return connections[0];
+  }
+
+  /**
+   * Return the first connection in the flow after the supplied position
+   *
+   * @param {any} position
+   * @returns {Step}
+   * @memberof CurrentFlow
+   */
+  getSubsequentConnection(position): Step {
+    const connections = this.getSubsequentConnections(position);
+    return connections[0];
   }
 
   getFirstPosition(): number {
@@ -109,7 +180,7 @@ export class CurrentFlow {
     if (!this.integration) {
       return undefined;
     }
-    return this.steps[ position ];
+    return this.steps[position];
   }
 
   isEmpty(): boolean {
@@ -137,104 +208,109 @@ export class CurrentFlow {
     switch (event.kind) {
       case 'integration-remove-step': {
         {
-          const position = +event[ 'position' ];
+          const position = +event['position'];
           if (
             position === this.getFirstPosition() ||
             position === this.getLastPosition()
           ) {
-            this.steps[ position ] = TypeFactory.createStep();
+            this.steps[position] = TypeFactory.createStep();
           } else {
             this.steps.splice(position, 1);
           }
-          this.maybeDoAction(event[ 'onSave' ]);
+          this.maybeDoAction(event['onSave']);
         }
         break;
       }
-      case 'integration-set-step': {
-        const position = +event[ 'position' ];
-        const step = <Step>event[ 'step' ];
-        this.steps[ position ] = TypeFactory.createStep();
-        this.steps[ position ].stepKind = step.stepKind;
-        this.maybeDoAction(event[ 'onSave' ]);
-        log.debugc(() => 'Set step at position: ' + position, category);
-      }
+      case 'integration-set-step':
+        {
+          const position = +event['position'];
+          const step = <Step>event['step'];
+          this.steps[position] = TypeFactory.createStep();
+          this.steps[position].stepKind = step.stepKind;
+          this.maybeDoAction(event['onSave']);
+          log.debugc(() => 'Set step at position: ' + position, category);
+        }
         break;
-      case 'integration-set-properties': {
-        const position = +event[ 'position' ];
-        const action = event[ 'action' ];
-        const properties = event[ 'properties' ];
-        const step = this.steps[ position ] || TypeFactory.createStep();
-        step.configuredProperties = properties;
-        this.steps[ position ] = step;
-        this.maybeDoAction(event[ 'onSave' ]);
-        log.debugc(() => 'Set properties at position: ' + position, category);
-      }
+      case 'integration-set-properties':
+        {
+          const position = +event['position'];
+          const action = event['action'];
+          const properties = event['properties'];
+          const step = this.steps[position] || TypeFactory.createStep();
+          step.configuredProperties = properties;
+          this.steps[position] = step;
+          this.maybeDoAction(event['onSave']);
+          log.debugc(() => 'Set properties at position: ' + position, category);
+        }
         break;
-      case 'integration-set-action': {
-        const position = +event[ 'position' ];
-        const action = event[ 'action' ];
-        // TODO no step here should really raise an error
-        const step = this.steps[ position ] || TypeFactory.createStep();
-        step.action = action;
-        step.stepKind = 'endpoint';
-        this.steps[ position ] = step;
-        this.maybeDoAction(event[ 'onSave' ]);
-        log.debugc(
-          () => 'Set action ' + action.name + ' at position: ' + position,
-          category,
-        );
-      }
+      case 'integration-set-action':
+        {
+          const position = +event['position'];
+          const action = event['action'];
+          // TODO no step here should really raise an error
+          const step = this.steps[position] || TypeFactory.createStep();
+          step.action = action;
+          step.stepKind = 'endpoint';
+          this.steps[position] = step;
+          this.maybeDoAction(event['onSave']);
+          log.debugc(
+            () => 'Set action ' + action.name + ' at position: ' + position,
+            category,
+          );
+        }
         break;
-      case 'integration-set-connection': {
-        const position = +event[ 'position' ];
-        const connection = event[ 'connection' ];
-        const step = TypeFactory.createStep();
-        step.stepKind = 'endpoint';
-        step.connection = connection;
-        this.steps[ position ] = step;
-        this.maybeDoAction(event[ 'onSave' ]);
-        log.debugc(
-          () =>
-            'Set connection ' + connection.name + ' at position: ' + position,
-          category,
-        );
-      }
+      case 'integration-set-connection':
+        {
+          const position = +event['position'];
+          const connection = event['connection'];
+          const step = TypeFactory.createStep();
+          step.stepKind = 'endpoint';
+          step.connection = connection;
+          this.steps[position] = step;
+          this.maybeDoAction(event['onSave']);
+          log.debugc(
+            () =>
+              'Set connection ' + connection.name + ' at position: ' + position,
+            category,
+          );
+        }
         break;
       case 'integration-set-property':
-        this._integration[ event[ 'property' ] ] = event[ 'value' ];
-        this.maybeDoAction(event[ 'onSave' ]);
+        this._integration[event['property']] = event['value'];
+        this.maybeDoAction(event['onSave']);
         break;
-      case 'integration-save': {
-        log.debugc(() => 'Saving integration: ' + this.integration);
-        // poor man's clone in case we need to munge the data
-        const integration = this.getIntegrationClone();
-        const sub = this.store.updateOrCreate(integration).subscribe(
-          (i: Integration) => {
-            log.debugc(
-              () => 'Saved integration: ' + JSON.stringify(i, undefined, 2),
-              category,
-            );
-            const action = event[ 'action' ];
-            if (action && typeof action === 'function') {
-              action(i);
-            }
-            sub.unsubscribe();
-          },
-          (reason: any) => {
-            log.debugc(
-              () =>
-                'Error saving integration: ' +
-                JSON.stringify(reason, undefined, 2),
-              category,
-            );
-            const errorAction = event[ 'error' ];
-            if (errorAction && typeof errorAction === 'function') {
-              errorAction(reason);
-            }
-            sub.unsubscribe();
-          },
-        );
-      }
+      case 'integration-save':
+        {
+          log.debugc(() => 'Saving integration: ' + this.integration);
+          // poor man's clone in case we need to munge the data
+          const integration = this.getIntegrationClone();
+          const sub = this.store.updateOrCreate(integration).subscribe(
+            (i: Integration) => {
+              log.debugc(
+                () => 'Saved integration: ' + JSON.stringify(i, undefined, 2),
+                category,
+              );
+              const action = event['action'];
+              if (action && typeof action === 'function') {
+                action(i);
+              }
+              sub.unsubscribe();
+            },
+            (reason: any) => {
+              log.debugc(
+                () =>
+                  'Error saving integration: ' +
+                  JSON.stringify(reason, undefined, 2),
+                category,
+              );
+              const errorAction = event['error'];
+              if (errorAction && typeof errorAction === 'function') {
+                errorAction(reason);
+              }
+              sub.unsubscribe();
+            },
+          );
+        }
         break;
     }
     // log.debugc(() => 'integration: ' + JSON.stringify(this._integration, undefined, 2), category);
