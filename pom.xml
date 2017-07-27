@@ -25,7 +25,7 @@
 
   <groupId>io.syndesis</groupId>
   <artifactId>integration-runtime</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1.2</version>
   <packaging>pom</packaging>
 
   <name>Syndesis: Integration Runtime</name>
@@ -60,7 +60,7 @@
     <developerConnection>scm:git:git@github.com:syndesisio/syndesis-rest.git
     </developerConnection>
     <url>http://github.com/syndesisio/syndesis-rest/</url>
-    <tag>${project.version}</tag>
+    <tag>v0.1.2</tag>
   </scm>
 
   <distributionManagement>
