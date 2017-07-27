@@ -137,14 +137,13 @@ Accept: application/json
 ```
 ```json
 {
-  "type": "REDIRECT",
-  "url": "https://login.salesforce.com/services/oauth2/authorize?client_id=...",
+  "redirectUrl": "https://login.salesforce.com/services/oauth2/authorize?client_id=...&response_type=code&redirect_uri=...&scope&state=...",
+  "type": "OAUTH2",
   "state": {
     "persist": "COOKIE",
-    "spec": "connection-__some_id__-oauth=__BASE64URL__;Path=/credentials/callback; Secure; HttpOnly"
+    "spec": "cred-o2-...=...;Version=1;Path=/credentials/callback;Secure;HttpOnly"
   }
 }
-
 ```
 3. UI persists the state as requested in a HTTP cookie UI named `connection-__some_id__-oauth` with the given value and redirects user to the specified `url`, and Salesforce in turn redirects to OAuth callback:
 ```http
@@ -159,7 +158,7 @@ Location: https://{syndesis-rest}/api/v1/credentials/callback?code=...
 ```http
 GET /api/v1/connectors/salesforce/credentials/callback?code=... HTTP/1.1
 
-Cookie: connection-__some_id__-oauth=__BASE64URL__
+Cookie: cred-o2-...=...
 ```
 ```http
 HTTP/1.1 302 Moved Temporarily
