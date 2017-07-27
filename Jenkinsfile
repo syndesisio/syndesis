@@ -2,7 +2,9 @@ def mavenVersion='3.3.9'
 //We need a node so that we can have access to environemnt variables.
 //The allocated node will actually be the Jenkins master (which is expected to provide these variables) as long as it has available executors.
 node {
-    echo "Using branch: ${env.BRANCH_NAME}:"
+
+    def branch = "${env.BRANCH_NAME}"
+    echo "Using branch: ${branch}."
 
     slave {
         withOpenshift {
@@ -26,12 +28,12 @@ node {
                     stage 'System Tests'
                     test(component: 'syndesis-rest', namespace: "${testingNamespace}", serviceAccount: 'jenkins')
 
-                    if ("master".equals("${env.BRANCH_NAME}")) {
+                    if ("master" == branch) {
                         stage 'Rollout'
                         tag(sourceProject: 'syndesis-ci', imageStream: 'syndesis-rest')
                         rollout(deploymentConfig: 'syndesis-rest', namespace: 'syndesis-staging')
                     } else {
-                        echo "This is a pull request build not rolling out"
+                        echo "Branch: ${branch} is not master. Skipping rollout"
                     }
                 }
             }
