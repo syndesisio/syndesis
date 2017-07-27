@@ -1,9 +1,11 @@
 import {
   Component,
+  ElementRef,
   Input,
   OnInit,
   OnDestroy,
   ChangeDetectorRef,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
@@ -30,7 +32,10 @@ export class FlowViewComponent extends ChildAwarePage
   childRouteSubscription: Subscription;
   urls: UrlSegment[];
   selectedKind: string = undefined;
+  editingName = false;
+
   @ViewChildren(PopoverDirective) popovers: PopoverDirective[];
+  @ViewChild('nameInput') nameInput: ElementRef;
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -63,8 +68,13 @@ export class FlowViewComponent extends ChildAwarePage
     }
   }
 
-  editIntegrationBasics() {
-    this.router.navigate(['integration-basics'], { relativeTo: this.route });
+  startEditingName() {
+    this.editingName = true;
+    this.nameInput.nativeElement.select();
+  }
+
+  stopEditingName() {
+    this.editingName = false;
   }
 
   loaded() {
@@ -123,6 +133,14 @@ export class FlowViewComponent extends ChildAwarePage
 
   get integrationName() {
     return (this.currentFlow.integration || { name: '' }).name || '';
+  }
+
+  set integrationName(name: string) {
+    this.currentFlow.events.emit({
+      kind: 'integration-set-property',
+      property: 'name',
+      value: name,
+    });
   }
 
   maybeShowPopover(popover: PopoverDirective) {

@@ -5,12 +5,9 @@
     <div class="row name" *ngIf="currentStepKind !== 'mapper'">
       <div class="col-md-12">
         <div class="form-group">
-          <div class="clickable" *ngIf="currentState !== 'integration-basics'" (click)="editIntegrationBasics()">
-            <input type="text" class="form-control integration-name" placeholder="Enter integration name..." [ngModel]="integrationName" readonly>
-            <span class="pficon pficon-edit pull-right"></span>
-          </div>
-          <div *ngIf="currentState === 'integration-basics'">
-            <input type="text" class="form-control integration-name" placeholder="Enter integration name..." readonly>
+          <div class="clickable" (click)="startEditingName()">
+            <input type="text" #nameInput class="form-control integration-name" placeholder="Enter integration name..." [(ngModel)]="integrationName" [readonly]="!editingName" (blur)="stopEditingName()">
+            <span class="pficon pficon-edit pull-right" *ngIf="!editingName"></span>
           </div>
         </div>
       </div>
