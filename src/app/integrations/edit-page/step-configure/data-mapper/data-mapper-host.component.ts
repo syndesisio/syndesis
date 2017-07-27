@@ -21,15 +21,15 @@ import { MappingSerializer } from 'syndesis.data.mapper';
 
 import { DataMapperAppComponent } from 'syndesis.data.mapper';
 
-import { ConfigService } from '../../../config.service';
-import { IntegrationSupportService } from '../../../store/integration-support.service';
+import { ConfigService } from '../../../../config.service';
+import { IntegrationSupportService } from '../../../../store/integration-support.service';
 
-import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { FlowPage } from '../flow-page';
+import { CurrentFlow, FlowEvent } from '../../current-flow.service';
+import { FlowPage } from '../../flow-page';
 
-import { Step, DataShape, TypeFactory } from '../../../model';
+import { Step, DataShape, TypeFactory } from '../../../../model';
 
-import { log, getCategory } from '../../../logging';
+import { log, getCategory } from '../../../../logging';
 
 /*
  * Example host component:
@@ -37,7 +37,7 @@ import { log, getCategory } from '../../../logging';
  * https://github.com/atlasmap/atlasmap-ui/blob/master/src/app/lib/syndesis-data-mapper/components/data.mapper.example.host.component.ts
  */
 
-const category = getCategory('Connections');
+const category = getCategory('data-mapper');
 
 const MAPPING_KEY = 'atlasmapping';
 
@@ -68,6 +68,8 @@ export class DataMapperHostComponent extends FlowPage
   routeSubscription: Subscription;
   position: number;
   initialized = false;
+  sourceDocTypes = [];
+  targetDocTypes = [];
 
   @ViewChild('dataMapperComponent')
   public dataMapperComponent: DataMapperAppComponent;
@@ -86,18 +88,35 @@ export class DataMapperHostComponent extends FlowPage
     super(currentFlow, route, router, detector);
     this.cfg = initializationService.cfg;
 
-    const baseUrl = 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
-    this.cfg.initCfg.baseJavaInspectionServiceUrl =
-      this.fetchServiceUrl('baseJavaInspectionServiceUrl', baseUrl + 'java/', configService);
-    this.cfg.initCfg.baseXMLInspectionServiceUrl =
-      this.fetchServiceUrl('baseXMLInspectionServiceUrl', baseUrl + 'xml/', configService);
-    this.cfg.initCfg.baseJSONInspectionServiceUrl =
-      this.fetchServiceUrl('baseJSONInspectionServiceUrl', baseUrl + 'json/', configService);
-    this.cfg.initCfg.baseMappingServiceUrl =
-      this.fetchServiceUrl('baseMappingServiceUrl', baseUrl, configService);
+    const baseUrl =
+      'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
+    this.cfg.initCfg.baseJavaInspectionServiceUrl = this.fetchServiceUrl(
+      'baseJavaInspectionServiceUrl',
+      baseUrl + 'java/',
+      configService,
+    );
+    this.cfg.initCfg.baseXMLInspectionServiceUrl = this.fetchServiceUrl(
+      'baseXMLInspectionServiceUrl',
+      baseUrl + 'xml/',
+      configService,
+    );
+    this.cfg.initCfg.baseJSONInspectionServiceUrl = this.fetchServiceUrl(
+      'baseJSONInspectionServiceUrl',
+      baseUrl + 'json/',
+      configService,
+    );
+    this.cfg.initCfg.baseMappingServiceUrl = this.fetchServiceUrl(
+      'baseMappingServiceUrl',
+      baseUrl,
+      configService,
+    );
   }
 
-  private fetchServiceUrl(configKey: string, defaultUrl: string, configService: ConfigService): string {
+  private fetchServiceUrl(
+    configKey: string,
+    defaultUrl: string,
+    configService: ConfigService,
+  ): string {
     try {
       return configService.getSettings('datamapper', configKey);
     } catch (err) {
@@ -106,22 +125,49 @@ export class DataMapperHostComponent extends FlowPage
   }
 
   createDocumentDefinition(dataShape: DataShape, isSource: boolean = false) {
+    if (!dataShape || !dataShape.type || !dataShape.kind) {
+      // skip
+      return;
+    }
+    const type = dataShape.type;
+    const kind = dataShape.kind;
+    // avoid passing duplicates off to the data mapper
+    if (isSource) {
+      if (this.sourceDocTypes.find((d) => d === type)) {
+        return;
+      }
+      this.sourceDocTypes.push(type);
+    } else {
+      if (this.targetDocTypes.find((d) => d === type)) {
+        return;
+      }
+      this.targetDocTypes.push(type);
+    }
+    log.infoc(() => 'Adding document definition: ' + type + ' isSource: ' + isSource, category);
     // TODO: for xml/json docs, we need a document contents
     // reference for document contents: DocumentManagementService.generateMock* methods
     const documentContents: string = null;
     // TODO not sure what to do for `none` or `any` here
-    switch (dataShape.kind) {
+    switch (kind) {
       case 'java':
-        this.cfg.addJavaDocument(dataShape.type, isSource);
+        this.cfg.addJavaDocument(type, isSource);
         break;
       case 'json':
-        this.cfg.addJSONDocument(dataShape.type, documentContents, isSource);
+        this.cfg.addJSONDocument(type, documentContents, isSource);
         break;
       case 'xml-instance':
-        this.cfg.addXMLInstanceDocument(dataShape.type, documentContents, isSource);
+        this.cfg.addXMLInstanceDocument(
+          type,
+          documentContents,
+          isSource,
+        );
         break;
       case 'xml-schema':
-        this.cfg.addXMLSchemaDocument(dataShape.type, documentContents, isSource);
+        this.cfg.addXMLSchemaDocument(
+          type,
+          documentContents,
+          isSource,
+        );
         break;
     }
   }
@@ -134,20 +180,16 @@ export class DataMapperHostComponent extends FlowPage
     }
     this.cfg.mappings = new MappingDefinition();
 
-    const start = this.currentFlow.getStep(this.currentFlow.getFirstPosition());
-    const end = this.currentFlow.getStep(this.currentFlow.getLastPosition());
-
-    //TODO: need to loop through document config for multi-source
+    const connections = this.currentFlow.getPreviousConnections(this.position);
+    log.infoc(() => 'Connections before me: ' + JSON.stringify(connections.map((c) => c.connection.name)), category);
+    const next = this.currentFlow.getSubsequentConnection(this.position);
+    log.infoc(() => 'Connections after me: ' + JSON.stringify(next.connection.name), category);
 
     // TODO we'll want to parse the dataType and maybe set the right config value
-    this.createDocumentDefinition(
-      start.action.outputDataShape,
-      true,
-    );
-    this.createDocumentDefinition(
-      end.action.inputDataShape,
-      false,
-    );
+    connections.forEach(c => {
+      this.createDocumentDefinition(c.action.outputDataShape, true);
+    });
+    this.createDocumentDefinition(next.action.inputDataShape, false);
 
     // TODO for now set a really long timeout
     this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;
@@ -168,17 +210,31 @@ export class DataMapperHostComponent extends FlowPage
     }
 
     // enable debug / mock data flags for data mapper
-    const debugConfigKeys: string[] = ['addMockJSONMappings',
-      'addMockJavaSources', 'addMockXMLInstanceSources', 'addMockXMLSchemaSources', 'addMockJSONSources',
-      'addMockJavaTarget', 'addMockXMLInstanceTarget', 'addMockXMLSchemaTarget', 'addMockJSONTarget',
-      'debugDocumentServiceCalls', 'debugMappingServiceCalls', 'debugClassPathServiceCalls',
-      'debugValidationServiceCalls', 'debugFieldActionServiceCalls', 'debugDocumentParsing',
+    const debugConfigKeys: string[] = [
+      'addMockJSONMappings',
+      'addMockJavaSources',
+      'addMockXMLInstanceSources',
+      'addMockXMLSchemaSources',
+      'addMockJSONSources',
+      'addMockJavaTarget',
+      'addMockXMLInstanceTarget',
+      'addMockXMLSchemaTarget',
+      'addMockJSONTarget',
+      'debugDocumentServiceCalls',
+      'debugMappingServiceCalls',
+      'debugClassPathServiceCalls',
+      'debugValidationServiceCalls',
+      'debugFieldActionServiceCalls',
+      'debugDocumentParsing',
     ];
     for (const debugConfigKey of debugConfigKeys) {
       let debugKeyValue = false;
       try {
-        debugKeyValue = this.configService.getSettings('datamapper', debugConfigKey);
-      } catch (err) { }
+        debugKeyValue = this.configService.getSettings(
+          'datamapper',
+          debugConfigKey,
+        );
+      } catch (err) {}
       this.cfg.initCfg[debugConfigKey] = debugKeyValue;
     }
 

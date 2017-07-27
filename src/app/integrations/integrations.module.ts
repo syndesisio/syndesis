@@ -23,7 +23,7 @@ import { IntegrationsSelectActionComponent } from './edit-page/action-select/act
 import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
 import { IntegrationsStepSelectComponent } from './edit-page/step-select/step-select.component';
 import { IntegrationsStepConfigureComponent } from './edit-page/step-configure/step-configure.component';
-import { DataMapperHostComponent } from './edit-page/step-configure/data-mapper-host.component';
+import { DataMapperHostComponent } from './edit-page/step-configure/data-mapper/data-mapper-host.component';
 import { BasicFilterComponent } from './edit-page/step-configure/filter-steps/basic-filter.component';
 import { ListActionsComponent } from './edit-page/list-actions/list-actions.component';
 import { IntegrationsListPage } from './list-page/list-page.component';
