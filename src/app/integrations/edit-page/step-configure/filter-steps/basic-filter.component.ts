@@ -8,6 +8,7 @@ import {
 } from '@ng2-dynamic-forms/core';
 
 import { CurrentFlow, FlowEvent } from '../../current-flow.service';
+import { IntegrationSupportService } from '../../../../store/integration-support.service';
 
 import { BASIC_FILTER_MODEL } from './basic-filter.model';
 import { log, getCategory } from '../../../../logging';
@@ -24,13 +25,13 @@ export class BasicFilterComponent implements OnInit {
 
   basicFilterModel: DynamicFormControlModel[] = BASIC_FILTER_MODEL;
   formGroup: FormGroup;
-
   predicateControl: FormControl;
   predicateModel: DynamicInputModel;
-
   rulesArrayControl: FormArray;
   rulesArrayModel: DynamicFormArrayModel;
 
+  @Input() step;
+  @Input() position;
   @Input()
   basicFilterObject: BasicFilter = {
     'type': 'rule',
@@ -51,15 +52,16 @@ export class BasicFilterComponent implements OnInit {
   @Output() basicFilterObjectChange = new EventEmitter<BasicFilter>();
 
   constructor(public currentFlow: CurrentFlow,
+              public integrationSupport: IntegrationSupportService,
               private formService: DynamicFormService) {
   }
 
   ngOnInit() {
-    this.currentFlow.getFilterOptions().toPromise().then((resp: any) => {
-      log.info('Filter option response: ' + JSON.stringify(resp));
-    });
+    const prevStep = this.currentFlow.getPreviousConnection(this.position);
 
-    log.info('this.basicFilterObject: ' + JSON.stringify(this.basicFilterObject));
+    this.integrationSupport.getFilterOptions(prevStep.connection.id, prevStep.action.id).toPromise().then((resp: any) => {
+      //log.info('Filter option response: ' + JSON.stringify(resp));
+    });
 
     this.formGroup = this.formService.createFormGroup(this.basicFilterModel);
 
@@ -73,7 +75,6 @@ export class BasicFilterComponent implements OnInit {
   // Manage Individual Fields
   add() {
     this.formService.addFormArrayGroup(this.rulesArrayControl, this.rulesArrayModel);
-    //log.info('basicFilterModel: ' + JSON.stringify(this.basicFilterModel));
   }
 
   remove(context: DynamicFormArrayModel, index: number) {
@@ -82,7 +83,6 @@ export class BasicFilterComponent implements OnInit {
 
   onChange($event) {
     const formGroupObj = this.formGroup.value;
-    //log.info('rulesGroup: ' + JSON.stringify(formGroupObj));
 
     const formattedProperties: BasicFilter = {
       type: 'rule',
@@ -90,10 +90,6 @@ export class BasicFilterComponent implements OnInit {
       rules: formGroupObj.rulesGroup.rulesFormArray,
     };
 
-    //log.info('this.formGroup.value: ' + JSON.stringify(this.formGroup.value));
-
     this.basicFilterObjectChange.emit(formattedProperties);
-
-    log.info('formattedProperties: ' + JSON.stringify(formattedProperties));
   }
 }
