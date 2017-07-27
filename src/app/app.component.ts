@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 import { Response } from '@angular/http';
+import { ToasterConfig } from 'angular2-toaster';
 
 import { TestSupportService } from './store/test-support.service';
 
@@ -41,6 +42,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   title = 'Syndesis';
   url = 'https://www.twitter.com/jboss';
   user: Observable<User>;
+
+  public toasterconfig: ToasterConfig = new ToasterConfig({
+    preventDuplicates: true,
+  });
 
   constructor(
     private oauthService: OAuthService,
