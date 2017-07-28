@@ -86,7 +86,7 @@ export class DataMapperHostComponent extends FlowPage
     public detector: ChangeDetectorRef,
   ) {
     super(currentFlow, route, router, detector);
-    this.resetConfig();    
+    this.resetConfig();
   }
 
   private resetConfig(): void {
@@ -114,7 +114,7 @@ export class DataMapperHostComponent extends FlowPage
       'baseMappingServiceUrl',
       baseUrl,
       this.configService,
-    );    
+    );
   }
 
   private fetchServiceUrl(
