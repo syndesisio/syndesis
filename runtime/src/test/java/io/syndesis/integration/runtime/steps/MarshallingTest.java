@@ -43,7 +43,7 @@ public class MarshallingTest {
   public void testLowercaseKind() throws Exception {
     ObjectMapper om = SyndesisHelpers.createObjectMapper();
     String marshalled = om.writeValueAsString(step);
-    Assertions.assertThat(marshalled).containsPattern("(?m)^kind: \"" + step.getKind() + "\"$");
+    Assertions.assertThat(marshalled).containsPattern("(?m)^kind: " + step.getKind() + "$");
   }
 
 }
