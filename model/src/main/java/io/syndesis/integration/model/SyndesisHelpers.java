@@ -16,9 +16,11 @@
  */
 package io.syndesis.integration.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
@@ -145,13 +147,22 @@ public class SyndesisHelpers {
      * Creates a configured Jackson object mapper for parsing YAML
      */
     public static ObjectMapper createObjectMapper() {
-        YAMLFactory yamlFactory = new YAMLFactory();
-        yamlFactory.configure(YAMLGenerator.Feature.USE_NATIVE_TYPE_ID, false);
+        YAMLFactory yamlFactory = new YAMLFactory()
+            .configure(YAMLGenerator.Feature.USE_NATIVE_TYPE_ID, false)
+            .configure(YAMLGenerator.Feature.MINIMIZE_QUOTES, true)
+            .configure(YAMLGenerator.Feature.ALWAYS_QUOTE_NUMBERS_AS_STRINGS, true)
+            .configure(YAMLGenerator.Feature.USE_NATIVE_TYPE_ID, false);
+
         ObjectMapper om = new ObjectMapper(yamlFactory);
 
         for (Step step : ServiceLoader.load(Step.class, SyndesisHelpers.class.getClassLoader())) {
             om.registerSubtypes(new NamedType(step.getClass(), step.getKind()));
         }
+
+        om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY).
+            enable(SerializationFeature.INDENT_OUTPUT).
+            disable(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS).
+            disable(SerializationFeature.WRITE_NULL_MAP_VALUES);
 
         return om;
     }
