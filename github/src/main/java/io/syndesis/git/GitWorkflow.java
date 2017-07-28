@@ -39,7 +39,7 @@ public class GitWorkflow {
     private static final Logger log = LoggerFactory.getLogger(GitWorkflow.class);
     /**
      * Commits and pushes the files to the Git Repository
-     *
+*
      * @param repo- an existing github repository
      * @param message- commit message
      * @param files- map of file paths along with their content
@@ -73,7 +73,6 @@ public class GitWorkflow {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
-
     public RevCommit updateFiles(String repoHtmlUrl, String repoName, String message, Map<String, byte[]> files,
             UsernamePasswordCredentialsProvider credentials) {
 
