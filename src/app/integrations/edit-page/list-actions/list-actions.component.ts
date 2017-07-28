@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { ToasterService } from 'angular2-toaster';
 
 import { Actions, Action } from '../../../model';
 import { log, getCategory } from '../../../logging';
@@ -18,7 +17,6 @@ export class ListActionsComponent implements OnInit {
   truncateLimit = 80;
   truncateTrail = '…';
   selectedId = undefined;
-  private toasterService: ToasterService;
   @Input() actions: Actions;
   @Input() loading: boolean;
   @Output() onSelected: EventEmitter<Action> = new EventEmitter();

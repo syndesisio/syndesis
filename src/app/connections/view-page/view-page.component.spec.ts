@@ -14,7 +14,6 @@ import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ngx-restangular';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { ToasterModule } from 'angular2-toaster';
 import { TagInputModule } from 'ngx-chips';
 
 import { ConnectionViewPage } from './view-page.component';
@@ -46,7 +45,6 @@ describe('ConnectionViewPage', () => {
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),
           ModalModule,
-          ToasterModule,
           BrowserAnimationsModule,
           TagInputModule,
         ],

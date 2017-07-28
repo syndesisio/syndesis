@@ -6,7 +6,6 @@ import { SyndesisCommonModule } from '../common/common.module';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ngx-bootstrap';
-import { ToasterModule } from 'angular2-toaster';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
@@ -31,7 +30,6 @@ const routes: Routes = [
     SyndesisCommonModule,
     ChartsModule,
     ModalModule,
-    ToasterModule,
     TooltipModule,
     BsDropdownModule,
   ],

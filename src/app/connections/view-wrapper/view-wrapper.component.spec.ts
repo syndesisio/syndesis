@@ -13,7 +13,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { ToasterModule } from 'angular2-toaster';
 import { TagInputModule } from 'ngx-chips';
 
 import { ConnectionViewWrapperComponent } from './view-wrapper.component';
@@ -44,7 +43,6 @@ describe('ConnectionViewWrapperComponent', () => {
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),
           ModalModule,
-          ToasterModule,
           BrowserAnimationsModule,
           TagInputModule,
         ],

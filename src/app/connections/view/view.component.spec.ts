@@ -11,7 +11,6 @@ import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { ToasterModule } from 'angular2-toaster';
 import { TagInputModule } from 'ngx-chips';
 
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
@@ -40,7 +39,6 @@ describe('ConnectionViewComponent', () => {
           StoreModule,
           RouterTestingModule.withRoutes([]),
           ModalModule,
-          ToasterModule,
           BrowserAnimationsModule,
           TagInputModule,
         ],

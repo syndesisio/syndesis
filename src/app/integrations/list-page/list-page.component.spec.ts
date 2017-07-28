@@ -6,9 +6,9 @@ import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ngx-restangular';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { ToasterModule } from 'angular2-toaster';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { IntegrationsListPage } from './list-page.component';
@@ -31,7 +31,7 @@ describe('IntegrationsListPage', () => {
           ModalModule.forRoot(),
           TooltipModule.forRoot(),
           TabsModule.forRoot(),
-          ToasterModule,
+          NotificationModule,
         ],
         declarations: [
           IntegrationsListPage,

@@ -11,7 +11,6 @@ import {
   TabsModule,
   BsDropdownModule,
 } from 'ngx-bootstrap';
-import { ToasterModule } from 'angular2-toaster';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from 'syndesis.data.mapper';
 
@@ -84,7 +83,6 @@ const routes: Routes = [
     TabsModule,
     SyndesisCommonModule,
     CollapseModule,
-    ToasterModule,
     TooltipModule,
     ModalModule,
     PopoverModule,

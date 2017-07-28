@@ -7,9 +7,9 @@ import { RestangularModule } from 'ngx-restangular';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { ToasterModule } from 'angular2-toaster';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../common/common.module';
 import { DashboardComponent } from './dashboard.component';
@@ -31,12 +31,12 @@ describe('DashboardComponent', () => {
           SyndesisCommonModule,
           ChartsModule,
           ModalModule.forRoot(),
-          ToasterModule,
           TooltipModule.forRoot(),
           BsDropdownModule.forRoot(),
           StoreModule,
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),
+          NotificationModule,
         ],
         declarations: [
           DashboardComponent,
