@@ -18,16 +18,24 @@ package io.syndesis.runtime.credential;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Collections;
+import java.util.UUID;
 
-import io.syndesis.credential.Acquisition;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.NewCookie;
+
 import io.syndesis.credential.AcquisitionMethod;
+import io.syndesis.credential.AcquisitionResponse;
+import io.syndesis.credential.AcquisitionResponse.State;
 import io.syndesis.credential.CredentialFlowState;
 import io.syndesis.credential.CredentialProvider;
 import io.syndesis.credential.CredentialProviderLocator;
-import io.syndesis.credential.Credentials;
 import io.syndesis.credential.OAuth2Applicator;
+import io.syndesis.credential.OAuth2CredentialFlowState;
+import io.syndesis.credential.OAuth2CredentialProvider;
+import io.syndesis.credential.Type;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.runtime.Application;
 import io.syndesis.runtime.BaseITCase;
 import io.syndesis.runtime.credential.CredentialITCase.TestConfiguration;
@@ -38,8 +46,9 @@ import org.junit.Test;
 import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.social.SocialProperties;
-import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
@@ -61,32 +70,18 @@ import static org.springframework.web.util.UriUtils.encode;
 public class CredentialITCase extends BaseITCase {
 
     @Autowired
-    private CacheManager cache;
+    ClientSideState clientSideState;
 
     public static class TestConfiguration {
 
-        public TestConfiguration(CredentialProviderLocator locator) {
+        public TestConfiguration(final CredentialProviderLocator locator) {
             locator.addCredentialProvider(provider());
         }
 
-        public CredentialProvider<Object, AccessGrant> provider() {
-            @SuppressWarnings("unchecked")
-            final CredentialProvider<Object, AccessGrant> credentialProvider = mock(CredentialProvider.class);
-
+        public CredentialProvider provider() {
             @SuppressWarnings("unchecked")
             final OAuth2ConnectionFactory<Object> connectionFactory = mock(OAuth2ConnectionFactory.class);
-            when(credentialProvider.id()).thenReturn("test-provider");
-            when(connectionFactory.getProviderId()).thenReturn("test-provider");
-
-            when(credentialProvider.connectionFactory()).thenReturn(connectionFactory);
             when(connectionFactory.generateState()).thenReturn("test-state");
-
-            final OAuth2Operations operations = spy(new OAuth2Template("testClientId", "testClientSecret",
-                "https://test/oauth2/authorize", "https://test/oauth2/token"));
-            doReturn(new AccessGrant("token")).when(operations).exchangeForAccess(Matchers.anyString(),
-                Matchers.anyString(), Matchers.any(MultiValueMap.class));
-
-            when(connectionFactory.getOAuthOperations()).thenReturn(operations);
 
             final SocialProperties properties = new SocialProperties() {
             };
@@ -99,7 +94,15 @@ public class CredentialITCase extends BaseITCase {
             applicator.setClientSecretProperty("clientSecret");
             applicator.setRefreshTokenProperty("refreshToken");
 
-            when(credentialProvider.applicator()).thenReturn(applicator);
+            final CredentialProvider credentialProvider = new OAuth2CredentialProvider<>("test-provider",
+                connectionFactory, applicator);
+
+            final OAuth2Operations operations = spy(new OAuth2Template("testClientId", "testClientSecret",
+                "https://test/oauth2/authorize", "https://test/oauth2/token"));
+            doReturn(new AccessGrant("token")).when(operations).exchangeForAccess(Matchers.anyString(),
+                Matchers.anyString(), Matchers.any(MultiValueMap.class));
+
+            when(connectionFactory.getOAuthOperations()).thenReturn(operations);
 
             return credentialProvider;
         }
@@ -109,7 +112,6 @@ public class CredentialITCase extends BaseITCase {
     public void cleanupDatabase() {
         dataManager.delete(Connector.class, "test-provider");
         dataManager.delete(Connection.class, "test-connection");
-        cache.getCache(Credentials.CACHE_NAME).evict("test-state");
     }
 
     @Before
@@ -122,18 +124,17 @@ public class CredentialITCase extends BaseITCase {
 
     @Test
     public void shouldInitiateCredentialFlow() throws UnsupportedEncodingException {
-        final ResponseEntity<Acquisition> acquisitionResponse = post("/api/v1/connections/test-connection/credentials",
-            Collections.singletonMap("returnUrl", "/ui#state"), Acquisition.class, tokenRule.validToken(),
-            HttpStatus.OK);
+        final ResponseEntity<AcquisitionResponse> acquisitionResponse = post(
+            "/api/v1/connections/test-connection/credentials", Collections.singletonMap("returnUrl", "/ui#state"),
+            AcquisitionResponse.class, tokenRule.validToken(), HttpStatus.ACCEPTED);
 
         assertThat(acquisitionResponse.hasBody()).as("Should present a acquisition response in the HTTP body").isTrue();
 
-        final Acquisition acquisition = acquisitionResponse.getBody();
+        final AcquisitionResponse response = acquisitionResponse.getBody();
+        assertThat(response.getType()).isEqualTo(Type.OAUTH2);
 
-        assertThat(acquisition.getType()).isEqualTo(Acquisition.Type.REDIRECT);
-
-        final String redirectUrl = acquisition.getUrl();
-        assertThat(redirectUrl).as("Should redirect to Salesforce and contain the correct callback URL")
+        final String redirectUrl = response.getRedirectUrl();
+        assertThat(redirectUrl).as("Should redirect to Salesforce and containthe correct callback URL")
             .startsWith("https://test/oauth2/authorize?client_id=testClientId&response_type=code&redirect_uri=")
             .contains(encode("/api/v1/credentials/callback", "ASCII"));
 
@@ -144,10 +145,16 @@ public class CredentialITCase extends BaseITCase {
 
         assertThat(state).as("state parameter should be set").isNotEmpty();
 
-        final CredentialFlowState credentialFlowState = cache.getCache(Credentials.CACHE_NAME).get(state,
-            CredentialFlowState.class);
+        final State responseStateInstruction = response.state();
+        assertThat(responseStateInstruction).as("acquisition response should contain the state instruction")
+            .isNotNull();
+        assertThat(responseStateInstruction.persist()).isEqualByComparingTo(State.Persist.COOKIE);
+        assertThat(responseStateInstruction.spec()).isNotEmpty();
 
-        final CredentialFlowState expected = new CredentialFlowState.Builder().key("test-state")
+        final CredentialFlowState credentialFlowState = clientSideState
+            .restoreFrom(Cookie.valueOf(responseStateInstruction.spec()), CredentialFlowState.class);
+
+        final CredentialFlowState expected = new OAuth2CredentialFlowState.Builder().key("test-state")
             .providerId("test-provider").connectionId("test-connection").build();
 
         assertThat(credentialFlowState).as("The flow state should be as expected")
@@ -170,19 +177,23 @@ public class CredentialITCase extends BaseITCase {
 
         final AcquisitionMethod acquisitionMethod = acquisitionMethodEntity.getBody();
 
-        final AcquisitionMethod salesforce = new AcquisitionMethod.Builder().type(AcquisitionMethod.Type.OAUTH2)
-            .label("test-provider").icon("test-provider").label("test-provider").description("test-provider").build();
+        final AcquisitionMethod salesforce = new AcquisitionMethod.Builder().type(Type.OAUTH2).label("test-provider")
+            .icon("test-provider").label("test-provider").description("test-provider").build();
 
         assertThat(acquisitionMethod).isEqualTo(salesforce);
     }
 
     @Test
     public void shouldReceiveCallbacksFromResourceProviders() {
-        cache.getCache(Credentials.CACHE_NAME).put("test-state", new CredentialFlowState.Builder()
-            .connectionId("test-connection").providerId("test-provider").returnUrl(URI.create("/ui#state")).build());
+        final OAuth2CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder()
+            .connectionId("test-connection").providerId("test-provider").key(UUID.randomUUID().toString())
+            .returnUrl(URI.create("/ui#state")).build();
 
-        final ResponseEntity<Void> callbackResponse = get("/api/v1/credentials/callback?state=test-state", Void.class,
-            null, HttpStatus.TEMPORARY_REDIRECT);
+        final HttpHeaders cookies = persistAsCookie(flowState);
+
+        final ResponseEntity<Void> callbackResponse = http(HttpMethod.GET,
+            "/api/v1/credentials/callback?state=test-state", null, Void.class, null, cookies,
+            HttpStatus.TEMPORARY_REDIRECT);
 
         assertThat(callbackResponse.getStatusCode()).as("Status should be temporarry redirect (307)")
             .isEqualTo(HttpStatus.TEMPORARY_REDIRECT);
@@ -194,6 +205,15 @@ public class CredentialITCase extends BaseITCase {
 
         assertThat(connection.getConfiguredProperties()).containsOnly(entry("accessToken", "token"),
             entry("clientId", "appId"), entry("clientSecret", "appSecret"));
+    }
+
+    private HttpHeaders persistAsCookie(final OAuth2CredentialFlowState flowState) {
+        final NewCookie cookie = clientSideState.persist(flowState.persistenceKey(), "/api/v1/credentials/callback",
+            flowState);
+
+        final HttpHeaders cookies = new HttpHeaders();
+        cookies.add(HttpHeaders.COOKIE, cookie.toString());
+        return cookies;
     }
 
 }

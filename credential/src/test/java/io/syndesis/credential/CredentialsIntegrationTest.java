@@ -17,15 +17,14 @@ package io.syndesis.credential;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import io.syndesis.core.EventBus;
 import io.syndesis.credential.CredentialsIntegrationTest.TestConfiguration;
 import io.syndesis.dao.ConnectionDao;
+import io.syndesis.dao.manager.DataManager;
 
-import org.infinispan.manager.CacheContainer;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,10 +39,6 @@ import org.springframework.boot.autoconfigure.social.LinkedInAutoConfiguration;
 import org.springframework.boot.autoconfigure.social.SocialWebAutoConfiguration;
 import org.springframework.boot.autoconfigure.social.TwitterAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -84,24 +79,13 @@ public class CredentialsIntegrationTest {
     @Configuration
     public static class TestConfiguration {
         @Bean
-        public CacheContainer cacheContainer() {
-            return mock(CacheContainer.class);
-        }
-
-        @Bean
-        public CacheManager cacheManager() {
-            final SimpleCacheManager cacheManager = new SimpleCacheManager();
-
-            final Cache cache = new ConcurrentMapCache(Credentials.CACHE_NAME);
-
-            cacheManager.setCaches(Collections.singletonList(cache));
-
-            return cacheManager;
-        }
-
-        @Bean
         public ConnectionDao connectionDao() {
             return mock(ConnectionDao.class);
+        }
+
+        @Bean
+        public DataManager dataManager() {
+            return new DataManager(null, null, (String) null);
         }
 
         @Bean
@@ -128,8 +112,7 @@ public class CredentialsIntegrationTest {
 
     @Test
     public void shouldSupportResourceProviders() {
-        assertThat(credentialProviderLocator.getConnectionFactory(PROVIDER)).isNotNull();
-        assertThat(credentialProviderLocator.getApplicator(PROVIDER)).isNotNull();
+        assertThat(credentialProviderLocator.providerWithId(PROVIDER)).isNotNull();
     }
 
     @Parameters(name = "provider={0}")

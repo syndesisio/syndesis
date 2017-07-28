@@ -16,7 +16,6 @@
 package io.syndesis.credential;
 
 import org.junit.Test;
-import org.springframework.social.connect.ConnectionFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -28,23 +27,18 @@ public class CredentialProviderRegistryTest {
     public void shouldAllowProviderRegistration() {
         final CredentialProviderRegistry registry = new CredentialProviderRegistry();
 
-        @SuppressWarnings("unchecked")
-        final CredentialProvider<Object, ?> provider = mock(CredentialProvider.class);
-
-        @SuppressWarnings("unchecked")
-        final ConnectionFactory<Object> connectionFactory = mock(ConnectionFactory.class);
+        final CredentialProvider provider = mock(CredentialProvider.class);
         when(provider.id()).thenReturn("a-provider");
-        when(provider.connectionFactory()).thenReturn(connectionFactory);
 
         registry.addCredentialProvider(provider);
 
-        assertThat(registry.getConnectionFactory("a-provider")).isEqualTo(connectionFactory);
+        assertThat(registry.providerWithId("a-provider")).isSameAs(provider);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldComplainAboutUnregisteredProviders() {
         final CredentialProviderRegistry registry = new CredentialProviderRegistry();
 
-        registry.getConnectionFactory("unregistered");
+        registry.providerWithId("unregistered");
     }
 }

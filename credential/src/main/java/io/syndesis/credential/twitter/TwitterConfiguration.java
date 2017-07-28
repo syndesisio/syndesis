@@ -17,8 +17,8 @@ package io.syndesis.credential.twitter;
 
 import io.syndesis.credential.CredentialProvider;
 import io.syndesis.credential.CredentialProviderLocator;
-import io.syndesis.credential.DefaultCredentialProvider;
 import io.syndesis.credential.OAuth1Applicator;
+import io.syndesis.credential.OAuth1CredentialProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -26,8 +26,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.social.TwitterProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.social.oauth1.OAuthToken;
-import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 
 @Configuration
@@ -41,7 +39,7 @@ public class TwitterConfiguration {
         locator.addCredentialProvider(create(properties));
     }
 
-    public static CredentialProvider<Twitter, OAuthToken> create(final TwitterProperties properties) {
+    public static CredentialProvider create(final TwitterProperties properties) {
         final TwitterConnectionFactory twitter = new TwitterConnectionFactory(properties.getAppId(),
             properties.getAppSecret());
         final OAuth1Applicator applicator = new OAuth1Applicator(properties);
@@ -49,7 +47,8 @@ public class TwitterConfiguration {
         applicator.setConsumerSecretProperty("consumerSecret");
         applicator.setAccessTokenSecretProperty("accessTokenSecret");
         applicator.setAccessTokenValueProperty("accessToken");
-        return new DefaultCredentialProvider<>("twitter", twitter, applicator);
+
+        return new OAuth1CredentialProvider<>("twitter", twitter, applicator);
     }
 
 }

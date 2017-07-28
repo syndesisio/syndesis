@@ -17,27 +17,61 @@ package io.syndesis.credential;
 
 import java.net.URI;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import javax.servlet.http.HttpServletRequest;
 
-import org.immutables.value.Value;
-import org.springframework.social.oauth1.OAuthToken;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@Value.Immutable
-@JsonDeserialize(builder = CredentialFlowState.Builder.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({@JsonSubTypes.Type(value = ImmutableOAuth1CredentialFlowState.class, name = "OAUTH1"),
+    @JsonSubTypes.Type(value = ImmutableOAuth2CredentialFlowState.class, name = "OAUTH2")})
 public interface CredentialFlowState {
 
-    class Builder extends ImmutableCredentialFlowState.Builder {
-        // builder implemented by Immutables, access allowed through this
-        // subclass
+    String CREDENTIAL_PREFIX = "cred-o";
+
+    String OAUTH1_CREDENTIAL_PREFIX = CREDENTIAL_PREFIX + "1-";
+
+    String OAUTH2_CREDENTIAL_PREFIX = CREDENTIAL_PREFIX + "2-";
+
+    interface Builder {
+
+        CredentialFlowState build();
+
+        Builder connectionId(String connectionId);
+
+        Builder key(String key);
+
+        Builder providerId(String providerId);
+
+        Builder redirectUrl(String redirectUrl);
+
+        Builder returnUrl(URI returnUrl);
+
+        Builder withAll(CredentialFlowState state);
+
     }
+
+    Builder builder();
 
     String getConnectionId();
 
+    String getKey();
+
     String getProviderId();
+
+    @JsonIgnore
+    String getRedirectUrl();
 
     URI getReturnUrl();
 
-    String getKey();
+    default String persistenceKey() {
+        return statePrefix() + getKey();
+    }
 
-    OAuthToken getToken();
+    String statePrefix();
+
+    Type type();
+
+    CredentialFlowState updateFrom(HttpServletRequest request);
 }

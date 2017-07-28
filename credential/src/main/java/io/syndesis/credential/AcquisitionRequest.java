@@ -28,7 +28,7 @@ import org.springframework.validation.annotation.Validated;
 @Value.Style(passAnnotations = RelativeUri.class)
 public interface AcquisitionRequest {
 
-    class Builder extends ImmutableAcquisitionRequest.Builder {
+    final class Builder extends ImmutableAcquisitionRequest.Builder {
         // builder implemented by Immutables, access allowed through this
         // subclass
     }
