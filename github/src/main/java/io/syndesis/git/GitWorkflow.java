@@ -126,10 +126,8 @@ public class GitWorkflow {
     private void writeFiles(Path workingDir, Map<String, byte[]> files) throws IOException {
         for (Map.Entry<String, byte[]> entry : files.entrySet()) {
             File file = new File(workingDir.toString() + File.separator + entry.getKey());
-            if (!file.getParentFile().exists()) {
-                if (file.getParentFile().mkdirs()) {
-                    throw new IOException("Cannot create direcory " + file.getParentFile());
-                }
+            if (!file.getParentFile().exists() && file.getParentFile().mkdirs()) {
+                throw new IOException("Cannot create direcory " + file.getParentFile());
             }
             Files.write(file.toPath(), entry.getValue());
         }
