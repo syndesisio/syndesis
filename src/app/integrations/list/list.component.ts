@@ -193,50 +193,6 @@ export class IntegrationsListComponent {
     return integration.steps.slice(-1)[0];
   }
 
-  //-----  Dropdown Action Checks ------------------->>
-
-  canActivate(currentStatus) {
-    switch (currentStatus) {
-      case 'Activated':
-      case 'Deleted':
-      case 'Draft':
-      case 'Pending':
-        return false;
-      default:
-        return true;
-    }
-  }
-
-  canDeactivate(currentStatus) {
-    switch (currentStatus) {
-      case 'Deactivated':
-      case 'Deleted':
-      case 'Draft':
-      case 'Pending':
-        return false;
-      default:
-        return true;
-    }
-  }
-
-  canDelete(currentStatus) {
-    switch (currentStatus) {
-      case 'Deleted':
-        return false;
-      default:
-        return true;
-    }
-  }
-
-  canEdit(currentStatus) {
-    switch (currentStatus) {
-      case 'Deleted':
-        return false;
-      default:
-        return true;
-    }
-  }
-
   //-----  Get Status Icon Class ------------------->>
 
   getLabelClass(currentStatus) {

@@ -147,43 +147,13 @@
 
           <!-- Actions -->
 
-          <div class="col-xs-2 actions" *ngIf="integration.currentStatus !== 'Deleted'">
-            <div dropdown
-                 class="dropdown pull-right dropdown-kebab-pf">
-              <button dropdownToggle
-                      class="btn btn-link"
-                      type="button"
-                      id="dropdownKebabRight9"
-                      aria-haspopup="true"
-                      aria-expanded="true">
-                    <span class="fa fa-ellipsis-v"></span>
-                  </button>
-              <ul *dropdownMenu
-                  class="dropdown-menu dropdown-menu-right"
-                  aria-labelledby="dropdownKebabRight9">
-                <li role="menuitem"
-                    *ngIf="canEdit(integration.currentStatus)">
-                  <a [routerLink]="['edit', integration.id, 'save-or-add-step']">Edit</a>
-                </li>
-                <li role="menuitem"
-                    *ngIf="canActivate(integration.currentStatus)">
-                  <a (click)="requestActivate(integration)">Activate</a>
-                </li>
-                <li role="menuitem"
-                    *ngIf="canDeactivate(integration.currentStatus)">
-                  <a (click)="requestDeactivate(integration)">Deactivate</a>
-                </li>
-                <!--
-                    <li>
-                      <a>Duplicate</a>
-                    </li>
-                    -->
-                <li role="menuitem"
-                    *ngIf="canDelete(integration.currentStatus)">
-                  <a (click)="requestDelete(integration)">Delete</a>
-                </li>
-              </ul>
-            </div>
+          <div class="col-xs-2">
+            <syndesis-integration-actions [integration]="integration"
+                                          (activate)="requestActivate($event)"
+                                          (deactivate)="requestDeactivate($event)"
+                                          (delete)="requestDelete($event)"
+                                          (edit)="goto($event)">
+            </syndesis-integration-actions>
           </div>
 
         </div>

@@ -9,11 +9,11 @@ import {
   ModalModule,
   PopoverModule,
   TabsModule,
-  BsDropdownModule,
 } from 'ngx-bootstrap';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from 'syndesis.data.mapper';
 
+import { IntegrationActionsModule } from './actions/actions.module';
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
 import { IntegrationBasicsComponent } from './edit-page/integration-basics/integration-basics.component';
 import { IntegrationsSelectConnectionComponent } from './edit-page/connection-select/connection-select.component';
@@ -86,8 +86,8 @@ const routes: Routes = [
     TooltipModule,
     ModalModule,
     PopoverModule,
-    BsDropdownModule,
     DataMapperModule,
+    IntegrationActionsModule,
   ],
   declarations: [
     DataMapperHostComponent,

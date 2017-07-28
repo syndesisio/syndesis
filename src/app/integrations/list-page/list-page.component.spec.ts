@@ -15,6 +15,7 @@ import { IntegrationsListPage } from './list-page.component';
 import { IntegrationsListComponent } from '../list/list.component';
 import { IntegrationsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
 import { StoreModule } from '../../store/store.module';
+import { IntegrationActionsModule } from '../actions/actions.module';
 
 describe('IntegrationsListPage', () => {
   let component: IntegrationsListPage;
@@ -32,6 +33,7 @@ describe('IntegrationsListPage', () => {
           TooltipModule.forRoot(),
           TabsModule.forRoot(),
           NotificationModule,
+          IntegrationActionsModule,
         ],
         declarations: [
           IntegrationsListPage,
