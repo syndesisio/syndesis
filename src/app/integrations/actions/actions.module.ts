@@ -9,11 +9,11 @@ import { IntegrationActionsComponent } from './actions.component';
     BsDropdownModule,
   ],
   declarations: [
-    IntegrationActionsComponent
+    IntegrationActionsComponent,
   ],
   exports: [
-    IntegrationActionsComponent
-  ]
+    IntegrationActionsComponent,
+  ],
 })
 export class IntegrationActionsModule {
 }

@@ -38,7 +38,7 @@ describe('DashboardComponent', () => {
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),
           NotificationModule,
-          IntegrationActionsModule
+          IntegrationActionsModule,
         ],
         declarations: [
           DashboardComponent,

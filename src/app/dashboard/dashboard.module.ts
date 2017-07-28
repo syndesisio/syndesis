@@ -33,7 +33,7 @@ const routes: Routes = [
     ModalModule,
     TooltipModule,
     BsDropdownModule,
-    IntegrationActionsModule
+    IntegrationActionsModule,
   ],
   declarations: [
     DashboardComponent,

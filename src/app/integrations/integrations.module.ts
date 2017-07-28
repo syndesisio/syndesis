@@ -8,7 +8,7 @@ import {
   CollapseModule,
   ModalModule,
   PopoverModule,
-  TabsModule
+  TabsModule,
 } from 'ngx-bootstrap';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from 'syndesis.data.mapper';
@@ -87,7 +87,7 @@ const routes: Routes = [
     ModalModule,
     PopoverModule,
     DataMapperModule,
-    IntegrationActionsModule
+    IntegrationActionsModule,
   ],
   declarations: [
     DataMapperHostComponent,

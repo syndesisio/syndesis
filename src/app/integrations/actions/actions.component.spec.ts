@@ -4,7 +4,6 @@ import { TypeFactory, Integration } from '../../model';
 describe('IntegrationActionsComponent', () => {
 
   let component: IntegrationActionsComponent;
-  let integration: Integration;
 
   beforeEach(() => {
     component = new IntegrationActionsComponent();

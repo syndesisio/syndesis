@@ -3,7 +3,7 @@ import { Integration } from '../../model';
 
 @Component({
   selector: 'syndesis-integration-actions',
-  templateUrl: './actions.component.html'
+  templateUrl: './actions.component.html',
 })
 export class IntegrationActionsComponent {
 
