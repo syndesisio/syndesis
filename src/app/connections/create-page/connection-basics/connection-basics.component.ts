@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { CurrentConnectionService } from '../current-connection';
+import {
+  CurrentConnectionService,
+  ConnectionEvent,
+} from '../current-connection';
 import { Connection } from '../../../model';
 
 @Component({
@@ -21,12 +24,20 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
 
   set connection(connection: Connection) {
     this.current.connection = connection;
-    if (this.current.connection.connector) {
-      this.router.navigate(['..', 'configure-fields'], {
-        relativeTo: this.route,
-      });
-    }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    const subscription = this.current.events.subscribe(
+      (event: ConnectionEvent) => {
+        switch (event.kind) {
+          case 'connection-set-connection':
+            this.router.navigate(['..', 'configure-fields'], {
+              relativeTo: this.route,
+            });
+            return;
+        }
+        subscription.unsubscribe();
+      },
+    );
+  }
 }

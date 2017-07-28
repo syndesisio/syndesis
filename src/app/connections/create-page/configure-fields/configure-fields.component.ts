@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CurrentConnectionService } from '../current-connection';
 import { Connection } from '../../../model';
+
+import { log } from '../../../logging';
 
 @Component({
   selector: 'syndesis-connections-configure-fields',
@@ -13,6 +15,7 @@ export class ConnectionsConfigureFieldsComponent implements OnInit {
     private current: CurrentConnectionService,
     private route: ActivatedRoute,
     private router: Router,
+    private detector: ChangeDetectorRef,
   ) {}
 
   get connection(): Connection {
@@ -23,5 +26,8 @@ export class ConnectionsConfigureFieldsComponent implements OnInit {
     this.current.connection = connection;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    log.infoc(() => 'Credentials: ' + JSON.stringify(this.current.credentials));
+    log.infoc(() => 'hasCredentials: ' + this.current.hasCredentials());
+  }
 }
