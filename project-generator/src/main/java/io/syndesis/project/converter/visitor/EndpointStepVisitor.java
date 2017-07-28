@@ -16,7 +16,6 @@
 
 package io.syndesis.project.converter.visitor;
 
-import io.syndesis.integration.model.StepKinds;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.model.connection.Action;
@@ -42,7 +41,7 @@ public class EndpointStepVisitor implements StepVisitor {
 
         @Override
         public String getStepKind() {
-            return StepKinds.ENDPOINT;
+            return Endpoint.KIND;
         }
 
         @Override

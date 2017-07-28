@@ -32,8 +32,6 @@ public enum Kind {
 
     Integration(io.syndesis.model.integration.Integration.class),
     IntegrationConnectionStep( io.syndesis.model.integration.IntegrationConnectionStep.class),
-    IntegrationPattern( io.syndesis.model.integration.IntegrationPattern.class),
-    IntegrationPatternGroup(io.syndesis.model.integration.IntegrationPatternGroup.class),
     IntegrationRuntime(io.syndesis.model.integration.IntegrationRuntime.class),
     IntegrationTemplate(io.syndesis.model.integration.IntegrationTemplate.class),
     IntegrationTemplateConnectionStep(io.syndesis.model.integration.IntegrationTemplateConnectionStep.class),

@@ -16,7 +16,6 @@
 
 package io.syndesis.project.converter.visitor;
 
-import io.syndesis.integration.model.StepKinds;
 import io.syndesis.integration.model.steps.Filter;
 import io.syndesis.model.filter.FilterStep;
 import io.syndesis.model.integration.Step;
@@ -35,7 +34,7 @@ public class FilterStepVisitor implements StepVisitor {
 
         @Override
         public String getStepKind() {
-            return StepKinds.FILTER;
+            return Filter.KIND;
         }
 
         @Override

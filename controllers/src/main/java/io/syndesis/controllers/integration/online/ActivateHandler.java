@@ -32,7 +32,7 @@ import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.Tokens;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.github.GitHubService;
-import io.syndesis.integration.model.StepKinds;
+import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
@@ -233,7 +233,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
         integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
-                if (step.getStepKind().equals(StepKinds.ENDPOINT)) {
+                if (step.getStepKind().equals(Endpoint.KIND)) {
                     step.getAction().ifPresent(action -> {
                         step.getConnection().ifPresent(connection -> {
                             String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
