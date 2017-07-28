@@ -1,6 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
 
 import { IntegrationStore } from '../../store/integration/integration.store';
 import {
@@ -59,6 +58,95 @@ export class CurrentFlow {
       return [];
     }
     return this.steps.slice(1, -1);
+  }
+
+  /**
+   * Return all steps in the flow after the supplied position
+   *
+   * @param {any} position
+   * @returns {Array<Step>}
+   * @memberof CurrentFlow
+   */
+  getSubsequentSteps(position): Array<Step> {
+    if (!this._integration) {
+      return undefined;
+    }
+    if (!this._integration.steps) {
+      this._integration.steps = [];
+    }
+    return this._integration.steps.slice(position);
+  }
+
+  /**
+   * Return all steps in the flow after the supplied position that are connctions
+   *
+   * @param {any} position
+   * @returns {Array<Step>}
+   * @memberof CurrentFlow
+   */
+  getSubsequentConnections(position): Array<Step> {
+    const answer = this.getSubsequentSteps(position);
+    if (answer) {
+      return answer.filter((s) => s.stepKind === 'endpoint');
+    }
+    return null;
+  }
+
+  /**
+   * Return all steps in the flow before the supplied position
+   *
+   * @param {any} position
+   * @returns {Array<Step>}
+   * @memberof CurrentFlow
+   */
+  getPreviousSteps(position): Array<Step> {
+    if (!this._integration) {
+      return undefined;
+    } else {
+      if (!this._integration.steps) {
+        this._integration.steps = [];
+      }
+      return this._integration.steps.slice(0, position);
+    }
+  }
+
+  /**
+   * Return all steps that are connections in the flow before the supplied position
+   *
+   * @param {any} position
+   * @returns {Array<Step>}
+   * @memberof CurrentFlow
+   */
+  getPreviousConnections(position): Array<Step> {
+    const answer = this.getPreviousSteps(position);
+    if (answer) {
+      return answer.filter(s => s.stepKind === 'endpoint');
+    }
+    return null;
+  }
+
+  /**
+   * Return the first connection in the flow before the supplied position
+   *
+   * @param {any} position
+   * @returns {Step}
+   * @memberof CurrentFlow
+   */
+  getPreviousConnection(position): Step {
+    const connections = this.getPreviousConnections(position).reverse();
+    return connections[0];
+  }
+
+  /**
+   * Return the first connection in the flow after the supplied position
+   *
+   * @param {any} position
+   * @returns {Step}
+   * @memberof CurrentFlow
+   */
+  getSubsequentConnection(position): Step {
+    const connections = this.getSubsequentConnections(position);
+    return connections[0];
   }
 
   getFirstPosition(): number {
@@ -252,13 +340,11 @@ export class CurrentFlow {
 
   set integration(i: Integration) {
     this._integration = <Integration>i;
-    log.debugc(() => 'Integration reset for current flow', category);
     this.events.emit({
       kind: 'integration-updated',
       integration: this.integration,
     });
     if (!this.steps || !this.steps.length) {
-      log.debugc(() => "Integration has no steps, assuming it's new", category);
       this.events.emit({
         kind: 'integration-no-connections',
       });

@@ -6,6 +6,7 @@ import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RestangularModule } from 'ngx-restangular';
 import { OAuthModule } from 'angular-oauth2-oidc-hybrid';
+import { NotificationModule } from 'patternfly-ng';
 
 import { CollapseModule, BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 
@@ -27,6 +28,7 @@ describe('AppComponent', () => {
         OAuthModule.forRoot(),
         CollapseModule.forRoot(),
         BsDropdownModule.forRoot(),
+        NotificationModule,
       ],
       providers: [
         ConfigService,

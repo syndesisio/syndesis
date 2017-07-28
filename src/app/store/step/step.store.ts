@@ -47,7 +47,23 @@ export class StepStore {
       id: undefined,
       connection: undefined,
       action: undefined,
-      name: 'Filter',
+      name: 'Basic Filter',
+      description: 'Continue the integration only if criteria you specify in simple input fields are met. Suitable for' +
+      ' most integrations.',
+      stepKind: 'basic-filter',
+      properties: {
+        filter: {
+          displayName: 'Only continue if incoming data match all of the following',
+          required: true,
+        },
+      },
+      configuredProperties: undefined,
+    },
+    {
+      id: undefined,
+      connection: undefined,
+      action: undefined,
+      name: 'Advanced Filter',
       description: 'Filter incoming data based on a set of criteria',
       stepKind: 'filter',
       properties: {

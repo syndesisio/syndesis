@@ -6,12 +6,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
-import { ToasterModule } from 'angular2-toaster';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { IntegrationsListComponent } from './list.component';
 import { StoreModule } from '../../store/store.module';
+import { IntegrationActionsModule } from '../actions/actions.module';
 
 describe('IntegrationsListComponent', () => {
   let component: IntegrationsListComponent;
@@ -28,8 +29,9 @@ describe('IntegrationsListComponent', () => {
           TooltipModule.forRoot(),
           BsDropdownModule.forRoot(),
           TabsModule.forRoot(),
-          ToasterModule,
           StoreModule,
+          NotificationModule,
+          IntegrationActionsModule,
         ],
         declarations: [IntegrationsListComponent],
       }).compileComponents();

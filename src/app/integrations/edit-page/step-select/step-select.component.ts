@@ -6,6 +6,7 @@ import { StepStore, StepKind, StepKinds } from '../../../store/step/step.store';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { FlowPage } from '../flow-page';
 import { Step, Steps, TypeFactory } from '../../../model';
+import { log, getCategory } from '../../../logging';
 
 @Component({
   selector: 'syndesis-integrations-step-select',
@@ -44,6 +45,8 @@ export class IntegrationsStepSelectComponent extends FlowPage
         return 'Log';
       case 'mapper':
         return 'Data Mapper';
+      case 'basic-filter':
+        return 'Basic Filter';
       default:
         // TODO not ideal
         return step.stepKind;
@@ -59,10 +62,16 @@ export class IntegrationsStepSelectComponent extends FlowPage
         return "Sends a message to the integration's log";
       case 'mapper':
         return 'Map fields from the input type to the output type';
+      case 'basic-filter':
+        return 'Continue the integration only if criteria you specify in simple input fields are met. Suitable for most' +
+          ' integrations.';
+      case 'advanced-filter':
+        return 'Continue the integration only if criteria you define in scripting language expressions are met.';
     }
   }
 
   isSelected(step: Step) {
+    log.debugc(() => 'Step: ' + step);
     const _step = this.currentFlow.getStep(this.position);
     return _step && step.stepKind === _step.stepKind;
   }

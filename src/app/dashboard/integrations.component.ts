@@ -1,9 +1,8 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { NotificationService, NotificationType } from 'patternfly-ng';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { ToasterService } from 'angular2-toaster';
 
 import { log, getCategory } from '../logging';
 
@@ -54,18 +53,14 @@ export class DashboardIntegrationsComponent implements OnInit {
     cutoutPercentage: 75,
   };
 
-  private toasterService: ToasterService;
-  private toast;
-
   constructor(
     private connectionStore: ConnectionStore,
     private integrationStore: IntegrationStore,
     public route: ActivatedRoute,
     private router: Router,
-    toasterService: ToasterService,
+    private notificationService: NotificationService,
   ) {
     this.connections = this.connectionStore.list;
-    this.toasterService = toasterService;
   }
 
   //-----  Icons ------------------->>
@@ -195,20 +190,24 @@ export class DashboardIntegrationsComponent implements OnInit {
     i.desiredStatus = 'Activated';
     this.integrationStore.update(i).subscribe(
       () => {
-        const toast = {
-          type: 'success',
-          title: 'Integration is activating',
-          body: 'Please allow a moment for the integration to fully activate.',
-        };
-        setTimeout(this.popToast(toast), 1000);
+        setTimeout(this.popNotification(
+          {
+            type      : NotificationType.SUCCESS,
+            header    : 'Integration is activating',
+            message   : 'Please allow a moment for the integration to fully activate.',
+            showClose : true,
+          },
+        ), 1000);
       },
       (reason: any) => {
-        const toast = {
-          type: 'error',
-          title: 'Failed to activate integration',
-          body: 'Error activating integration: ' + reason,
-        };
-        setTimeout(this.popToast(toast), 1000);
+        setTimeout(this.popNotification(
+          {
+            type      : NotificationType.DANGER,
+            header    : 'Failed to activate integration',
+            message   : `Error activating integration: ${reason}`,
+            showClose : true,
+          },
+        ), 1000);
       },
     );
   }
@@ -225,20 +224,24 @@ export class DashboardIntegrationsComponent implements OnInit {
     i.desiredStatus = 'Deactivated';
     this.integrationStore.update(i).subscribe(
       () => {
-        const toast = {
-          type: 'success',
-          title: 'Integration is deactivating',
-          body: 'Please allow a moment for the integration to be deactivated.',
-        };
-        setTimeout(this.popToast(toast), 1000);
+        setTimeout(this.popNotification(
+          {
+            type      : NotificationType.SUCCESS,
+            header    : 'Integration is deactivating',
+            message   : 'Please allow a moment for the integration to be deactivated.',
+            showClose : true,
+          },
+        ), 1000);
       },
       (reason: any) => {
-        const toast = {
-          type: 'error',
-          title: 'Failed to deactivate integration',
-          body: 'Error deactivating integration: ' + reason,
-        };
-        setTimeout(this.popToast(toast), 1000);
+        setTimeout(this.popNotification(
+          {
+            type      : NotificationType.DANGER,
+            header    : 'Failed to deactivate integration',
+            message   : `Error deactivating integration: ${reason}`,
+            showClose : true,
+          },
+        ), 1000);
       },
     );
   }
@@ -254,20 +257,24 @@ export class DashboardIntegrationsComponent implements OnInit {
     this.hideModal();
     this.integrationStore.delete(integration).subscribe(
       () => {
-        const toast = {
-          type: 'success',
-          title: 'Delete Successful',
-          body: 'Integration successfully deleted.',
-        };
-        setTimeout(this.popToast(toast), 1000);
+        setTimeout(this.popNotification(
+          {
+            type      : NotificationType.SUCCESS,
+            header    : 'Delete Successful',
+            message   : 'Integration successfully deleted.',
+            showClose : true,
+          },
+        ), 1000);
       },
       (reason: any) => {
-        const toast = {
-          type: 'error',
-          title: 'Failed to delete integration',
-          body: 'Error deleting integration: ' + reason,
-        };
-        setTimeout(this.popToast(toast), 1000);
+        setTimeout(this.popNotification(
+          {
+            type      : NotificationType.DANGER,
+            header    : 'Failed to delete integration',
+            message   : `Error deleting integration: ${reason}`,
+            showClose : true,
+          },
+        ), 1000);
       },
     );
   }
@@ -386,13 +393,6 @@ export class DashboardIntegrationsComponent implements OnInit {
     */
   }
 
-  //-----  Toast ------------------->>
-
-  // Show toast notification
-  popToast(toast) {
-    this.toasterService.pop(toast);
-  }
-
   //-----  Initialization ------------------->>
 
   ngOnInit() {
@@ -402,5 +402,19 @@ export class DashboardIntegrationsComponent implements OnInit {
       category,
     );
     this.connectionStore.loadAll();
+  }
+
+  //-----  Toast ------------------->>
+
+  // Show toast notification
+  popNotification(notification) {
+    this.notificationService.message(
+      notification.type,
+      notification.header,
+      notification.message,
+      false,
+      null,
+      [],
+    );
   }
 }

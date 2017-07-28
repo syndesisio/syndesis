@@ -6,6 +6,17 @@ export class ObjectPropertyFilterConfig {
   exact?: boolean;
 }
 
+export function getPropertyValue(obj: any, prop: string): any {
+  const parts = prop.split('.');
+  const part = parts.shift();
+  const value = obj[part];
+  if (parts.length) {
+    return getPropertyValue(value, parts.join('.'));
+  } else {
+    return value;
+  }
+}
+
 @Pipe({
   name: 'objectPropertyFilter',
   pure: false,
@@ -14,16 +25,6 @@ export class ObjectPropertyFilterPipe {
   transform(objects: any[], config: ObjectPropertyFilterConfig) {
     if (!config || !('filter' in config) || !('propertyName' in config)) {
       return objects;
-    }
-    function getPropertyValue(obj: any, prop: string): any {
-      const parts = prop.split('.');
-      const part = parts.shift();
-      const value = obj[part];
-      if (parts.length) {
-        return getPropertyValue(value, parts.join('.'));
-      } else {
-        return value;
-      }
     }
     return objects.filter((obj: any) => {
       const value = getPropertyValue(obj, config.propertyName);

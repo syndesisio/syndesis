@@ -1,4 +1,12 @@
 <div class="app">
+
+  <pfng-toast-notification-list
+    [notifications]="notifications"
+    (onActionSelect)="handleAction($event)"
+    (onCloseSelect)="handleClose($event)"
+    [showClose]="showClose">
+  </pfng-toast-notification-list>
+
   <header *ngIf="loggedIn">
 
     <!-- Navbar: Logged Out -->
@@ -114,14 +122,15 @@
           <span class="list-group-item-value">Connections</span>
         </a>
       </li>
-      <!--
-      <li class="list-group-item" routerLinkActive="active">
-        <a [routerLink]=" ['admin'] ">
-          <span class="fa fa-lock" data-toggle="tooltip" title="Admin"></span>
-          <span class="list-group-item-value">Admin</span>
+      <li class="list-group-item"
+          routerLinkActive="active">
+        <a [routerLink]=" ['settings'] ">
+          <span class="fa fa-lock"
+                data-toggle="tooltip"
+                title="Settings"></span>
+          <span class="list-group-item-value">Settings</span>
         </a>
       </li>
-      -->
     </ul>
   </div>
   <main class="container-fluid container-pf-nav-pf-vertical"
@@ -130,12 +139,21 @@
   </main>
 
   <!-- Modal Container -->
-  <div bsModal #importDBModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="activateModal" aria-hidden="true">
+  <div bsModal
+       #importDBModal="bs-modal"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="activateModal"
+       aria-hidden="true">
     <div class="modal-dialog modal-md">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title pull-left">Import Selection</h4>
-          <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <button type="button"
+                  class="close pull-right"
+                  aria-label="Close"
+                  (click)="hideModal()">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -143,12 +161,15 @@
           <div>
             <div>
               Please select the data file to import:
-              <input type="file" id="file-import" (change)="importDB($event)">
+              <input type="file"
+                     id="file-import"
+                     (change)="importDB($event)">
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="pull-right btn btn-cancel" (click)="hideModal()">Cancel
+          <button class="pull-right btn btn-cancel"
+                  (click)="hideModal()">Cancel
           </button>
         </div>
       </div>

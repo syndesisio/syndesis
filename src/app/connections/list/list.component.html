@@ -2,9 +2,6 @@
   <div class="container-cards-pf connections-list">
     <div class="row row-cards-pf cards">
 
-      <!-- Toast Notification Container -->
-      <toaster-container></toaster-container>
-
       <!-- Delete Modal Container -->
       <div bsModal
            #childModal="bs-modal"
@@ -65,14 +62,15 @@
               <!-- Card Actions -->
               <div *ngIf="showKebab">
                 <div dropdown
-                     class="dropdown dropdown-kebab-pf pull-right">
+                     class="dropdown dropdown-kebab-pf pull-right"
+                     placement="bottom">
                   <button dropdownToggle
                           class="btn btn-link dropdown-toggle"
                           type="button"
                           id="dropdownKebabRight9"
                           (click)="$event.stopPropagation()">
-                  <span class="fa fa-ellipsis-v"></span>
-                </button>
+                    <span class="fa fa-ellipsis-v"></span>
+                  </button>
                   <ul *dropdownMenu
                       class="dropdown-menu dropdown-menu-right"
                       role="menu">
@@ -80,12 +78,10 @@
                       <a [routerLink]="['/connections', connection.id]"
                          class="dropdown-item">View</a>
                     </li>
-                    <!--
                     <li role="menuitem">
-                      <a [routerLink]="['/connections/edit', connection.id]"
+                      <a [routerLink]="['/connections', connection.id]" [queryParams]="{ edit: true }"
                         class="dropdown-item">Edit</a>
                     </li>
-                    -->
                     <!--
                     <li role="menuitem">
                       <a class="dropdown-item">Duplicate</a>

@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-md-12">
+    <p></p>
+    <ul class="nav nav-tabs nav-tabs-pf">
+      <li routerLinkActive="active">
+        <a>My Account</a>
+      </li>
+      <li routerLinkActive="active">
+        <a [routerLink]="['oauth-clients']">OAuth Client Management</a>
+      </li>
+      <li routerLinkActive="active">
+        <a>Placeholder</a>
+      </li>
+    </ul>
+    <router-outlet></router-outlet>
+  </div>
+</div>

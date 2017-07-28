@@ -1,0 +1,39 @@
+<div bsModal
+     #childModal="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="activateModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Remove OAuth Credentials?</h4>
+        <button type="button"
+                class="close pull-right"
+                aria-label="Close"
+                (click)="hideModal()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Are you sure you want to clear the credentials for {{item?.client.name}}?
+        </p>
+        <p>
+          <strong>This operation cannot be undone!</strong>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="pull-right btn btn-primary"
+                (click)="removeCredentials()">
+                    Remove
+            </button>
+        <button class="pull-right btn btn-cancel"
+                (click)="hideModal()">
+                    Cancel
+            </button>
+      </div>
+    </div>
+  </div>
+</div>

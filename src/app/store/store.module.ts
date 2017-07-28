@@ -11,6 +11,8 @@ import { ConnectorService } from './connector/connector.service';
 import { EventsService } from './entity/events.service';
 import { IntegrationService } from './integration/integration.service';
 import { TemplateService } from './template/template.service';
+import { OAuthAppService } from './oauthApp/oauth-app.service';
+
 import { IntegrationSupportService } from './integration-support.service';
 import { TestSupportService } from './test-support.service';
 
@@ -20,6 +22,7 @@ import { ConnectorStore } from './connector/connector.store';
 import { IntegrationStore } from './integration/integration.store';
 import { TemplateStore } from './template/template.store';
 import { StepStore } from './step/step.store';
+import { OAuthAppStore } from './oauthApp/oauth-app.store';
 
 @NgModule({
   imports: [HttpModule, RestangularModule, OAuthModule],
@@ -38,6 +41,8 @@ import { StepStore } from './step/step.store';
     TemplateStore,
     TestSupportService,
     StepStore,
+    OAuthAppService,
+    OAuthAppStore,
   ],
 })
 export class StoreModule {

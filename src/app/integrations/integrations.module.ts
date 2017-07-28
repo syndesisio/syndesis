@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
@@ -10,12 +9,11 @@ import {
   ModalModule,
   PopoverModule,
   TabsModule,
-  BsDropdownModule,
 } from 'ngx-bootstrap';
-import { ToasterModule } from 'angular2-toaster';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from 'syndesis.data.mapper';
 
+import { IntegrationActionsModule } from './actions/actions.module';
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
 import { IntegrationBasicsComponent } from './edit-page/integration-basics/integration-basics.component';
 import { IntegrationsSelectConnectionComponent } from './edit-page/connection-select/connection-select.component';
@@ -24,9 +22,9 @@ import { IntegrationsSelectActionComponent } from './edit-page/action-select/act
 import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
 import { IntegrationsStepSelectComponent } from './edit-page/step-select/step-select.component';
 import { IntegrationsStepConfigureComponent } from './edit-page/step-configure/step-configure.component';
-import { DataMapperHostComponent } from './edit-page/step-configure/data-mapper-host.component';
+import { DataMapperHostComponent } from './edit-page/step-configure/data-mapper/data-mapper-host.component';
+import { BasicFilterComponent } from './edit-page/step-configure/filter-steps/basic-filter.component';
 import { ListActionsComponent } from './edit-page/list-actions/list-actions.component';
-
 import { IntegrationsListPage } from './list-page/list-page.component';
 import { IntegrationsListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { IntegrationsFilterPipe } from './integrations-filter.pipe';
@@ -85,15 +83,15 @@ const routes: Routes = [
     TabsModule,
     SyndesisCommonModule,
     CollapseModule,
-    ToasterModule,
     TooltipModule,
     ModalModule,
     PopoverModule,
-    BsDropdownModule,
     DataMapperModule,
+    IntegrationActionsModule,
   ],
   declarations: [
     DataMapperHostComponent,
+    BasicFilterComponent,
     IntegrationsConfigureActionComponent,
     IntegrationsEditPage,
     IntegrationBasicsComponent,
@@ -112,6 +110,7 @@ const routes: Routes = [
     FlowViewStepComponent,
     ListActionsComponent,
   ],
-  providers: [CurrentFlow],
+  providers: [ CurrentFlow ],
 })
-export class IntegrationsModule {}
+export class IntegrationsModule {
+}

@@ -68,9 +68,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     this.routeSubscription = this.route.params
       .pluck<Params, string>('position')
       .map((position: string) => {
-        if (this.position !== undefined) {
-          return;
-        }
+        log.infoc(() => 'Rendering action configuration at position ' + position, category);
         this.position = Number.parseInt(position);
         const step = <Step>this.currentFlow.getStep(this.position);
         if (!step) {
@@ -94,9 +92,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
             this.continue({});
             return;
           }
-          //log.debugc(() => 'Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
           this.formModel = this.formFactory.createFormModel(this.formConfig);
-          //log.debugc(() => 'Form model: ' + JSON.stringify(this.formModel, undefined, 2), category);
           this.formGroup = this.formService.createFormGroup(this.formModel);
           setTimeout(() => {
             this.detector.detectChanges();

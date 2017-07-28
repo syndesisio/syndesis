@@ -79,12 +79,11 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     this.validating = true;
     const data = formGroup.value;
     const sanitized: any = {};
-    // TODO for some reason some keys have spaces at the beginning
-    for (const key in data) {
-      if (!data.hasOwnProperty(key)) {
-        continue;
-      }
-      sanitized[key.trim()] = data[key] || '';
+    // last minute sanitization, strip out any null/empty values
+    for (const key of Object.keys(data)) {
+      const trimmed = key.trim();
+      const value = data[key] || '';
+      sanitized[trimmed] = value === '' ? undefined : value;
     }
     this.store.validate(connector.id, sanitized).subscribe(
       resp => {

@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 import { Response } from '@angular/http';
+import { Notification, NotificationEvent, NotificationService } from 'patternfly-ng';
 
 import { TestSupportService } from './store/test-support.service';
 
@@ -42,15 +43,21 @@ export class AppComponent implements OnInit, AfterViewInit {
   url = 'https://www.twitter.com/jboss';
   user: Observable<User>;
 
+  notifications: Notification[];
+  showClose: boolean;
+
   constructor(
     private oauthService: OAuthService,
     private userService: UserService,
     public testSupport: TestSupportService,
+    private notificationService: NotificationService,
   ) {}
 
   ngOnInit() {
     this.loggedIn = this.oauthService.hasValidAccessToken();
     this.user = this.userService.user;
+    this.notifications = this.notificationService.getNotifications();
+    this.showClose = true;
   }
 
   resetDB() {
@@ -87,6 +94,16 @@ export class AppComponent implements OnInit, AfterViewInit {
     };
     reader.readAsText(file, 'text/plain;charset=utf-8');
     this.importDBModal.hide();
+  }
+
+  handleAction($event: NotificationEvent): void {
+    if ($event.action.id === 'reload') {
+      location.reload();
+    }
+  }
+
+  handleClose($event: NotificationEvent): void {
+    this.notificationService.remove($event.notification);
   }
 
   logout() {

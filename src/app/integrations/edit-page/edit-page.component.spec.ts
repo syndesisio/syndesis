@@ -18,7 +18,6 @@ import { CurrentFlow } from './current-flow.service';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CollapseModule } from 'ngx-bootstrap';
 import { PopoverModule } from 'ngx-bootstrap';
-import { ToasterModule } from 'angular2-toaster';
 
 import { IntegrationsEditPage } from './edit-page.component';
 
@@ -40,7 +39,6 @@ describe('IntegrationsEditComponent', () => {
           PopoverModule.forRoot(),
           CollapseModule.forRoot(),
           StoreModule,
-          ToasterModule,
         ],
         declarations: [
           IntegrationsEditPage,

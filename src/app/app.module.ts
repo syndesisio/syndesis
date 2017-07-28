@@ -4,6 +4,7 @@ import { NgModule, NgZone, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import * as _ from 'lodash';
 
 import { RestangularModule } from 'ngx-restangular';
 import { OAuthService, OAuthModule } from 'angular-oauth2-oidc-hybrid';
@@ -22,7 +23,7 @@ import {
   TypeaheadModule,
 } from 'ngx-bootstrap';
 import { TagInputModule } from 'ngx-chips';
-import { ToasterModule, ToasterService } from 'angular2-toaster';
+import { Notification, NotificationModule, NotificationService, NotificationType } from 'patternfly-ng';
 
 import { AppRoutingModule } from './approuting/approuting.module';
 import { StoreModule } from './store/store.module';
@@ -40,6 +41,7 @@ export function appInitializer(
   oauthService: OAuthService,
   userService: UserService,
   ngZone: NgZone,
+  notificationService: NotificationService,
 ) {
   return () => {
     return configService
@@ -120,18 +122,31 @@ export function appInitializer(
           // Only do refreshes if we're doing a hybrid oauth flow.
           if (oauthService.hybrid) {
             ngZone.runOutsideAngular(() => {
+
+              const notification: Notification = {
+                type          : NotificationType.WARNING,
+                header        : 'Session expired!',
+                message       : 'Please refresh this page by clicking this link or your browser reload button',
+                primaryAction : { id: 'reload', title: 'Reload this page' },
+                moreActions   : [],
+                showClose     : false,
+              };
+
               // see https://christianliebel.com/2016/11/angular-2-protractor-timeout-heres-fix/
               // registered observable / timeout makes protractor wait forever
               Observable.interval(1000 * 60).subscribe(() => {
                 ngZone.run(() => {
                   oauthService
                     .refreshToken()
-                    .catch(reason =>
+                    .catch(reason => {
                       log.errorc(
                         () => 'Failed to refresh token',
                         () => new Error(reason),
-                      ),
-                    );
+                      );
+                      if (!_.includes(notificationService.getNotifications(), notification)) {
+                        notificationService.getNotifications().push(notification);
+                      }
+                    });
                 });
               });
             });
@@ -204,14 +219,14 @@ export function restangularProviderConfigurer(
     StoreModule,
     SyndesisCommonModule.forRoot(),
     OAuthModule.forRoot(),
-    ToasterModule,
     DataMapperModule,
+    NotificationModule,
   ],
   providers: [
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
-      deps: [ConfigService, OAuthService, UserService, NgZone],
+      deps: [ConfigService, OAuthService, UserService, NgZone, NotificationService],
       multi: true,
     },
     ConfigService,

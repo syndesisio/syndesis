@@ -6,7 +6,6 @@ import { SyndesisCommonModule } from '../common/common.module';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ngx-bootstrap';
-import { ToasterModule } from 'angular2-toaster';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
@@ -18,6 +17,7 @@ import { TemplatesModule } from '../templates/templates.module';
 
 import { DashboardConnectionsComponent } from './connections.component';
 import { DashboardIntegrationsComponent } from './integrations.component';
+import { IntegrationActionsModule } from '../integrations/actions/actions.module';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' },
@@ -31,9 +31,9 @@ const routes: Routes = [
     SyndesisCommonModule,
     ChartsModule,
     ModalModule,
-    ToasterModule,
     TooltipModule,
     BsDropdownModule,
+    IntegrationActionsModule,
   ],
   declarations: [
     DashboardComponent,
