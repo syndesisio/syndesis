@@ -17,7 +17,6 @@ package io.syndesis.credential;
 
 import io.syndesis.dao.manager.DataManager;
 
-import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,7 +30,7 @@ public class CredentialConfiguration {
 
     @Bean
     public Credentials credentials(final CredentialProviderLocator connectionProviderLocator,
-        final DataManager dataManager, final CacheManager cacheManager) {
-        return new Credentials(connectionProviderLocator, dataManager, cacheManager);
+        final DataManager dataManager) {
+        return new Credentials(connectionProviderLocator, dataManager);
     }
 }

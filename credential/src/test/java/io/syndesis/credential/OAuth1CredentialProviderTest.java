@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.v1.handler.connection;
-
-import java.net.URI;
-
-import javax.servlet.http.HttpServletRequest;
+package io.syndesis.credential;
 
 import org.junit.Test;
+import org.springframework.social.connect.support.OAuth1ConnectionFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-public class ConnectionCredentialHandlerTest {
+public class OAuth1CredentialProviderTest {
 
     @Test
-    public void shouldAbsolutizeReturnUrl() {
-        final HttpServletRequest httpRequest = mock(HttpServletRequest.class);
+    public void shouldCreateAcquisitionMethod() {
+        @SuppressWarnings("unchecked")
+        final OAuth1CredentialProvider<?> oauth1 = new OAuth1CredentialProvider<>("provider1",
+            mock(OAuth1ConnectionFactory.class), mock(Applicator.class));
 
-        when(httpRequest.getRequestURL())
-            .thenReturn(new StringBuffer("https://syndesis.io/api/v1/connections/1/credentials"));
+        final ImmutableAcquisitionMethod method1 = new AcquisitionMethod.Builder().description("provider1")
+            .label("provider1").icon("provider1").type(Type.OAUTH1).build();
 
-        final URI uri = ConnectionCredentialHandler.absoluteTo(httpRequest, URI.create("/ui?ret=true#state"));
-
-        assertThat(uri).isEqualTo(URI.create("https://syndesis.io/ui?ret=true#state"));
+        assertThat(oauth1.acquisitionMethod()).isEqualTo(method1);
     }
+
 }

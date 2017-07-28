@@ -110,8 +110,10 @@
               <title>Syndesis API</title>
               <version>v1</version>
               <description>
-                The Syndesis REST API connects to back-end services on the Syndesis and provides a single entry
-                point for the Syndesis UI. For console developement it can run in off-line mode where it only serves
+                The Syndesis REST API connects to back-end services on the Syndesis and provides a single
+                entry
+                point for the Syndesis UI. For console developement it can run in off-line mode where it only
+                serves
                 responses from the response cache.
               </description>
               <license>
@@ -565,8 +567,13 @@
     </dependency>
 
     <dependency>
-        <groupId>org.jboss.resteasy</groupId>
-        <artifactId>resteasy-validator-provider-11</artifactId>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-validator-provider-11</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.spec.javax.ws.rs</groupId>
+      <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
     </dependency>
 
     <dependency>
@@ -653,6 +660,11 @@
     <dependency>
       <groupId>org.infinispan</groupId>
       <artifactId>infinispan-spring4-embedded</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
 
     <dependency>
@@ -847,7 +859,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase/>
+                <phase />
               </execution>
             </executions>
           </plugin>
@@ -857,7 +869,7 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase/>
+                <phase />
               </execution>
             </executions>
           </plugin>
@@ -867,7 +879,7 @@
             <executions>
               <execution>
                 <id>reserve-ports</id>
-                <phase/>
+                <phase />
               </execution>
             </executions>
           </plugin>
@@ -877,7 +889,7 @@
             <executions>
               <execution>
                 <id>start-keycloak</id>
-                <phase/>
+                <phase />
               </execution>
             </executions>
           </plugin>
@@ -887,7 +899,7 @@
             <executions>
               <execution>
                 <id>stop-keycloak</id>
-                <phase/>
+                <phase />
               </execution>
             </executions>
           </plugin>
@@ -896,7 +908,7 @@
             <executions>
               <execution>
                 <id>unpack-keycloak</id>
-                <phase/>
+                <phase />
               </execution>
             </executions>
           </plugin>

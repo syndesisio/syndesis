@@ -15,17 +15,25 @@
  */
 package io.syndesis.credential;
 
-public interface CredentialProviderLocator {
+import java.util.Optional;
 
-    /**
-     * Adds or replaces a CredentialProvider in the locator.
-     *
-     * @param credentialProvider the provider to add
-     */
-    <A, T> void addCredentialProvider(CredentialProvider credentialProvider);
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-    /**
-     * Looks up a CredentialProvider by providerId.
-     */
-    CredentialProvider providerWithId(String providerId);
+import org.immutables.value.Value;
+
+@Value.Immutable
+
+@JsonDeserialize(builder = AcquisitionFlow.Builder.class)
+public interface AcquisitionFlow {
+
+    final class Builder extends ImmutableAcquisitionFlow.Builder {
+        // builder implemented by Immutables, access allowed through this
+        // subclass
+    }
+
+    String getRedirectUrl();
+
+    Type getType();
+
+    Optional<CredentialFlowState> state();
 }

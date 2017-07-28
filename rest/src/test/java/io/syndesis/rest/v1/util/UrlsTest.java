@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.v1.handler.connection;
+package io.syndesis.rest.v1.util;
 
 import java.net.URI;
 
@@ -25,17 +25,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ConnectionCredentialHandlerTest {
+public class UrlsTest {
 
     @Test
-    public void shouldAbsolutizeReturnUrl() {
-        final HttpServletRequest httpRequest = mock(HttpServletRequest.class);
+    public void shouldComputeApiBase() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getRequestURL()).thenReturn(new StringBuffer("https://syndesis.io/api/v1/resource/subresource"));
 
-        when(httpRequest.getRequestURL())
-            .thenReturn(new StringBuffer("https://syndesis.io/api/v1/connections/1/credentials"));
+        assertThat(Urls.apiBase(request)).isEqualTo(URI.create("https://syndesis.io/api/v1/"));
+    }
 
-        final URI uri = ConnectionCredentialHandler.absoluteTo(httpRequest, URI.create("/ui?ret=true#state"));
-
-        assertThat(uri).isEqualTo(URI.create("https://syndesis.io/ui?ret=true#state"));
+    @Test
+    public void shouldComputeBasePath() {
+        assertThat(Urls.basePath("/api/v1/resource/subresource")).isEqualTo("/api/v1/");
+        assertThat(Urls.basePath("/api/v1")).isEqualTo("/api/v1/");
+        assertThat(Urls.basePath("/api/v1/")).isEqualTo("/api/v1/");
+        assertThat(Urls.basePath("/api/v1/resource")).isEqualTo("/api/v1/");
     }
 }

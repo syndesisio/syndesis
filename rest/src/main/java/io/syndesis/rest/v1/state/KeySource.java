@@ -13,26 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.credential;
+package io.syndesis.rest.v1.state;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import javax.crypto.SecretKey;
 
-import org.immutables.value.Value;
+public interface KeySource {
 
-@Value.Immutable
-@JsonDeserialize(builder = Acquisition.Builder.class)
-public interface Acquisition {
+    SecretKey encryptionKey();
 
-    class Builder extends ImmutableAcquisition.Builder {
-        // builder implemented by Immutables, access allowed through this
-        // subclass
-    }
+    SecretKey authenticationKey();
 
-    enum Type {
-        REDIRECT
-    }
-
-    Type getType();
-
-    String getUrl();
 }

@@ -29,13 +29,9 @@ public interface AcquisitionMethod {
 
     AcquisitionMethod NONE = new Builder().build();
 
-    class Builder extends ImmutableAcquisitionMethod.Builder {
+    final class Builder extends ImmutableAcquisitionMethod.Builder {
         // builder implemented by Immutables, access allowed through this
         // subclass
-    }
-
-    enum Type {
-        OAUTH1, OAUTH2
     }
 
     String getDescription();

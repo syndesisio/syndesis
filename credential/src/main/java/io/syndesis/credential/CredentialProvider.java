@@ -15,14 +15,18 @@
  */
 package io.syndesis.credential;
 
-import org.springframework.social.connect.ConnectionFactory;
+import java.net.URI;
 
-public interface CredentialProvider<A, T> {
+import io.syndesis.model.connection.Connection;
+
+public interface CredentialProvider {
+
+    AcquisitionMethod acquisitionMethod();
+
+    Connection finish(Connection connection, CredentialFlowState flowState, URI baseUrl);
 
     String id();
 
-    Applicator<T> applicator();
-
-    ConnectionFactory<A> connectionFactory();
+    CredentialFlowState prepare(URI baseUrl, URI returnUrl, String connectionId);
 
 }
