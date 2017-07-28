@@ -22,9 +22,9 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.integration.model.Flow;
+import io.syndesis.integration.model.SyndesisHelpers;
 import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.model.steps.Endpoint;
-import io.syndesis.integration.support.YamlHelper;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.visitor.GeneratorContext;
@@ -50,7 +50,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
-    private static final ObjectMapper YAML_OBJECT_MAPPER = YamlHelper.createYamlMapper();
+    private static final ObjectMapper YAML_OBJECT_MAPPER = SyndesisHelpers.createObjectMapper();
 
     private MustacheFactory mf = new DefaultMustacheFactory();
 
