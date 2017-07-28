@@ -8,6 +8,11 @@
   <name>Syndesis UI</name>
   <description>syndesis :: ${project.artifactId}</description>
   <url>https://syndesis.io/</url>
+  <scm>
+    <connection>scm:git:https://github.com/syndesisio/syndesis-ui.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:syndesisio/syndesis-ui.git</developerConnection>
+    <url>http://github.com/syndesisio/syndesis-ui</url>
+  </scm>
   <organization>
     <name>JBoss by Red Hat</name>
     <url>http://jboss.org</url>
@@ -16,6 +21,11 @@
     <system>github</system>
     <url>https://github.com/syndesisio/syndesis.io/issues</url>
   </issueManagement>
+  <developers>
+    <developer>
+      <name>Syndesis committers</name>
+    </developer>
+  </developers>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
