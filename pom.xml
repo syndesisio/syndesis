@@ -779,6 +779,7 @@
             <exclude>mvnw*</exclude>
             <exclude>**/resources/**/test-*</exclude>
             <exclude>**/*.mustache</exclude>
+            <exclude>**/test/resources/**</exclude>
           </excludes>
         </configuration>
       </plugin>

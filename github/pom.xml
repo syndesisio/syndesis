@@ -67,10 +67,15 @@
       <groupId>org.keycloak</groupId>
       <artifactId>keycloak-spring-security-adapter</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.eclipse.jgit</groupId>
       <artifactId>org.eclipse.jgit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
@@ -85,7 +90,7 @@
       <artifactId>javax.el</artifactId>
       <scope>test</scope>
     </dependency>
-    
+
   </dependencies>
 
   <build>

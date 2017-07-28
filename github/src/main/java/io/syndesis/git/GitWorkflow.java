@@ -39,7 +39,7 @@ public class GitWorkflow {
     private static final Logger log = LoggerFactory.getLogger(GitWorkflow.class);
     /**
      * Commits and pushes the files to the Git Repository
-     * 
+     *
      * @param repo- an existing github repository
      * @param message- commit message
      * @param files- map of file paths along with their content
@@ -52,7 +52,9 @@ public class GitWorkflow {
         try {
             // create temporary directory
             Path workingDir = Files.createTempDirectory(repoName);
-            if (log.isDebugEnabled()) log.debug("Created temporary directory {}", workingDir.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("Created temporary directory {}", workingDir.toString());
+            }
 
             // git init
             Git git = Git.init().setDirectory(workingDir.toFile()).call();
@@ -64,57 +66,70 @@ public class GitWorkflow {
             remoteAddCommand.call();
 
             RevCommit commit = commitAndPush(git, message, credentials);
-            workingDir.toFile().delete();
+            removeWorkingDir(workingDir);
             return commit;
 
         } catch (Exception e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
-    
+
     public RevCommit updateFiles(String repoHtmlUrl, String repoName, String message, Map<String, byte[]> files,
             UsernamePasswordCredentialsProvider credentials) {
 
         try {
             // create temporary directory
             Path workingDir = Files.createTempDirectory(repoName);
-            if (log.isDebugEnabled()) log.debug("Created temporary directory {}", workingDir.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("Created temporary directory {}", workingDir.toString());
+            }
 
             // git clone
             Git git = Git.cloneRepository().setDirectory(workingDir.toFile()).setURI(repoHtmlUrl).call();
             writeFiles(workingDir, files);
 
             RevCommit commit =  commitAndPush(git, message, credentials);
-            
-            // cleanup tmp dir
-            workingDir.toFile().delete();
-            
+            removeWorkingDir(workingDir);
+
+
             return commit;
         } catch (Exception e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
+
+    private void removeWorkingDir(Path workingDir) {
+        // cleanup tmp dir
+        if (!workingDir.toFile().delete()) {
+            log.warn("Could not delete temporary directory {}", workingDir);
+        }
+    }
+
     /**
      * Write files to the file system
-     * 
+     *
      * @param workingDir
      * @param files
      * @throws IOException
      */
     private void writeFiles(Path workingDir, Map<String, byte[]> files) throws IOException {
-        for (String filePath : files.keySet()) {
-            File file = new File(workingDir.toString() + File.separator + filePath);
-            file.getParentFile().mkdirs();
-            Files.write(file.toPath(), files.get(filePath));
+        for (Map.Entry<String, byte[]> entry : files.entrySet()) {
+            File file = new File(workingDir.toString() + File.separator + entry.getKey());
+            if (!file.getParentFile().mkdirs()) {
+                throw new IOException("Cannot create direcory " + file.getParentFile());
+            }
+            Files.write(file.toPath(), entry.getValue());
         }
     }
-        
-    private RevCommit commitAndPush(Git git, String message, UsernamePasswordCredentialsProvider credentials) 
+
+    private RevCommit commitAndPush(Git git, String message, UsernamePasswordCredentialsProvider credentials)
             throws NoFilepatternException, GitAPIException {
 
         // git add .
         git.add().addFilepattern(".").call();
-        if (log.isDebugEnabled()) log.debug("git add all file");
+        if (log.isDebugEnabled()) {
+            log.debug("git add all file");
+        }
 
         // git commit
         RevCommit commit = git.commit().setMessage(message).call();
@@ -122,8 +137,9 @@ public class GitWorkflow {
 
         // git push -f, not merging but simply forcing the push (for now)
         Iterable<PushResult> pushResult = git.push().setCredentialsProvider(credentials).setForce(true).call();
-        if (!pushResult.iterator().next().getMessages().equals("")) 
+        if (!pushResult.iterator().next().getMessages().equals("")) {
             log.warn("git push messages: {}", pushResult.iterator().next().getMessages());
+        }
 
         return commit;
 

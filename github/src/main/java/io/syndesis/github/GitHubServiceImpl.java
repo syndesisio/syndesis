@@ -104,7 +104,7 @@ public class GitHubServiceImpl implements GitHubService {
         GitWorkflow gitWorkflow = new GitWorkflow();
         Repository repository = getRepository(repo.getName());
         if (repository == null) {
-            repository = createRepo(repo.getName());
+            createRepo(repo.getName());
             gitWorkflow.createFiles(repo.getHtmlUrl(), repo.getName(), message, files, new UsernamePasswordCredentialsProvider(Tokens.getAuthenticationToken(), "") );
         } else {
             gitWorkflow.updateFiles(repo.getHtmlUrl(), repo.getName(), message, files, new UsernamePasswordCredentialsProvider(Tokens.getAuthenticationToken(), "") );
