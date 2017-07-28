@@ -31,6 +31,7 @@ import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.FileSystemUtils;
 
 import io.syndesis.core.SyndesisServerException;
 
@@ -38,9 +39,11 @@ public class GitWorkflow {
 
     private static final Logger log = LoggerFactory.getLogger(GitWorkflow.class);
     /**
-     * Commits and pushes the files to the Git Repository
-*
-     * @param repo- an existing github repository
+     * Creates a new remote git repository and does the initial commit&push of all the project files
+     * the files to it.
+     *
+     * @param repoHTMLUrl- the HTML (not ssh) url to a git repository
+     * @param repoName - the name of the git repository
      * @param message- commit message
      * @param files- map of file paths along with their content
      * @param credentials- Git credentials, for example username/password, authToken, personal access token
@@ -73,6 +76,16 @@ public class GitWorkflow {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
+    /**
+     * Updates an existing git repository with the current version of project files.
+     *
+     * @param repoHTMLUrl- the HTML (not ssh) url to a git repository
+     * @param repoName - the name of the git repository
+     * @param message- commit message
+     * @param files- map of file paths along with their content
+     * @param credentials- Git credentials, for example username/password, authToken, personal access token
+     * @return RevCommit, the commit info
+     */
     public RevCommit updateFiles(String repoHtmlUrl, String repoName, String message, Map<String, byte[]> files,
             UsernamePasswordCredentialsProvider credentials) {
 
@@ -90,16 +103,15 @@ public class GitWorkflow {
             RevCommit commit =  commitAndPush(git, message, credentials);
             removeWorkingDir(workingDir);
 
-
             return commit;
         } catch (Exception e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
 
-    private void removeWorkingDir(Path workingDir) {
+    private void removeWorkingDir(Path workingDir) throws IOException {
         // cleanup tmp dir
-        if (!workingDir.toFile().delete()) {
+        if (!FileSystemUtils.deleteRecursively(workingDir.toFile())) {
             log.warn("Could not delete temporary directory {}", workingDir);
         }
     }
@@ -114,8 +126,10 @@ public class GitWorkflow {
     private void writeFiles(Path workingDir, Map<String, byte[]> files) throws IOException {
         for (Map.Entry<String, byte[]> entry : files.entrySet()) {
             File file = new File(workingDir.toString() + File.separator + entry.getKey());
-            if (!file.getParentFile().mkdirs()) {
-                throw new IOException("Cannot create direcory " + file.getParentFile());
+            if (!file.getParentFile().exists()) {
+                if (file.getParentFile().mkdirs()) {
+                    throw new IOException("Cannot create direcory " + file.getParentFile());
+                }
             }
             Files.write(file.toPath(), entry.getValue());
         }

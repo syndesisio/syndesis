@@ -56,8 +56,7 @@ public class GitHubServiceITCase {
     @BeforeClass
     public static void before() throws IOException {
 
-        // TODO property should be defined in your maven settings.xml
-        authToken = System.getProperties().getProperty("github-oauth-token");
+        authToken = System.getProperties().getProperty("github.oauth.token");
 
         Assert.assertNotNull(authToken);
 
@@ -107,6 +106,7 @@ public class GitHubServiceITCase {
 
         try {
             URL url = this.getClass().getResource(PROJECT_DIR);
+            System.out.println("Reading sample project from " +  url);
             //Read from classpath sample-github-project into map
             Map<String, byte[]> files = new HashMap<String, byte[]>();
             Files.find(Paths.get(url.getPath()), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile())

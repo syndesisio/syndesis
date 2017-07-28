@@ -864,6 +864,11 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <github.oauth.token>${github.oauth.token}</github.oauth.token>
+              </systemPropertyVariables>
+            </configuration>
             <executions>
               <execution>
                 <goals>
