@@ -42,7 +42,12 @@ export class FlowViewStepComponent extends ChildAwarePage {
   }
 
   showTooltip() {
-    if (this.step.stepKind === 'endpoint') {
+    if (
+      this.step.stepKind &&
+      this.step.stepKind === 'endpoint' &&
+      this.step.connection &&
+      this.step.connection.name
+    ) {
       this.pop.show();
     }
   }
