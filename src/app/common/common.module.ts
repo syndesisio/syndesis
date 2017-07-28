@@ -1,5 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NotificationModule, NotificationService } from 'patternfly-ng';
 
 import { ObjectPropertyFilterPipe } from './object-property-filter.pipe';
 import { ObjectPropertySortPipe } from './object-property-sort.pipe';
@@ -11,7 +12,9 @@ import { FormFactoryService } from './forms.service';
 import { ConfigService } from '../config.service';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+  ],
   declarations: [
     ObjectPropertyFilterPipe,
     ObjectPropertySortPipe,
@@ -26,13 +29,21 @@ import { ConfigService } from '../config.service';
     TruncateWordsPipe,
     LoadingComponent,
   ],
-  providers: [ConfigService, FormFactoryService],
+  providers: [
+    ConfigService,
+    FormFactoryService,
+  ],
 })
 export class SyndesisCommonModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: SyndesisCommonModule,
-      providers: [UserService, FormFactoryService, ConfigService],
+      providers: [
+        UserService,
+        FormFactoryService,
+        ConfigService,
+        NotificationService,
+      ],
     };
   }
 }

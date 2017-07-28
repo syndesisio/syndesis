@@ -33,7 +33,6 @@
         "../node_modules/bootstrap/dist/css/bootstrap.css",
         "../node_modules/patternfly/dist/css/patternfly.css",
         "../node_modules/patternfly/dist/css/patternfly-additions.css",
-        "../node_modules/angular2-toaster/toaster.css",
         "styles.scss"
       ],
       "scripts": [

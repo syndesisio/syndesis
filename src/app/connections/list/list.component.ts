@@ -8,7 +8,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { ToasterService } from 'angular2-toaster';
+import { NotificationService, NotificationType } from 'patternfly-ng';
 
 import { ConnectionStore } from '../../store/connection/connection.store';
 import { log, getCategory } from '../../logging';
@@ -26,8 +26,6 @@ export class ConnectionsListComponent implements OnInit {
   selectedId = undefined;
   selectedForDelete: Connection = undefined;
 
-  private toast;
-
   @ViewChild('childModal') public childModal: ModalDirective;
 
   @Input() connections: Connections;
@@ -36,9 +34,9 @@ export class ConnectionsListComponent implements OnInit {
   @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
 
   constructor(
-    public toasterService: ToasterService,
     public store: ConnectionStore,
     public detector: ChangeDetectorRef,
+    private notificationService: NotificationService,
   ) {}
 
   //-----  Delete ------------------->>
@@ -48,26 +46,29 @@ export class ConnectionsListComponent implements OnInit {
     this.hideModal();
     const sub = this.store.delete(connection).subscribe(
       () => {
-        const toast = {
-          type: 'success',
-          title: 'Delete Successful',
-          body: 'Connection successfully deleted.',
-        };
         sub.unsubscribe();
         setTimeout(() => {
-          this.toasterService.pop(toast);
+          this.popNotification(
+            {
+              type      : NotificationType.SUCCESS,
+              header    : 'Delete Successful',
+              message   : 'Connection successfully deleted.',
+              showClose : true,
+            },
+          );
         }, 10);
       },
       (err: any) => {
-        const toast = {
-          type: 'error',
-          title: 'Delete Failed',
-          body: 'Failed to delete connection: ',
-          err,
-        };
         sub.unsubscribe();
         setTimeout(() => {
-          this.toasterService.pop(toast);
+          this.popNotification(
+            {
+              type      : NotificationType.DANGER,
+              header    : 'Delete Failed',
+              message   : `Failed to delete connection: ${err}`,
+              showClose : true,
+            },
+          );
         }, 10);
       },
     );
@@ -90,11 +91,6 @@ export class ConnectionsListComponent implements OnInit {
     this.childModal.hide();
   }
 
-  //-----  Toast ------------------->>
-
-  // Show toast notification
-  popToast(toast) {}
-
   //-----  Selecting a Connection ------------------->>
   onSelect(connection: Connection) {
     log.debugc(
@@ -116,6 +112,19 @@ export class ConnectionsListComponent implements OnInit {
       () =>
         'Got connections: ' + JSON.stringify(this.connections, undefined, 2),
       category,
+    );
+  }
+
+  //-----  Toast ------------------->>
+
+  popNotification(notification) {
+    this.notificationService.message(
+      notification.type,
+      notification.header,
+      notification.message,
+      false,
+      null,
+      [],
     );
   }
 }

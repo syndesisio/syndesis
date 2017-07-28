@@ -1,6 +1,11 @@
 <div class="app">
-  <!-- Toast Notification Container -->
-  <toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+
+  <pfng-toast-notification-list
+    [notifications]="notifications"
+    (onActionSelect)="handleAction($event)"
+    (onCloseSelect)="handleClose($event)"
+    [showClose]="showClose">
+  </pfng-toast-notification-list>
 
   <header *ngIf="loggedIn">
 
