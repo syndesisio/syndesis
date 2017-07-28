@@ -45,7 +45,7 @@ const MAPPING_KEY = 'atlasmapping';
   selector: 'syndesis-data-mapper-host',
   template: `
     <div *ngIf="initialized" class="data-mapper-host">
-      <data-mapper #dataMapperComponent [cfg]="cfg"></data-mapper>
+      <data-mapper #dataMapperComponent></data-mapper>
     </div>
   `,
   styles: [
@@ -86,30 +86,35 @@ export class DataMapperHostComponent extends FlowPage
     public detector: ChangeDetectorRef,
   ) {
     super(currentFlow, route, router, detector);
-    this.cfg = initializationService.cfg;
+    this.resetConfig();    
+  }
+
+  private resetConfig(): void {
+    this.initializationService.resetConfig();
+    this.cfg = this.initializationService.cfg;
 
     const baseUrl =
       'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
     this.cfg.initCfg.baseJavaInspectionServiceUrl = this.fetchServiceUrl(
       'baseJavaInspectionServiceUrl',
       baseUrl + 'java/',
-      configService,
+      this.configService,
     );
     this.cfg.initCfg.baseXMLInspectionServiceUrl = this.fetchServiceUrl(
       'baseXMLInspectionServiceUrl',
       baseUrl + 'xml/',
-      configService,
+      this.configService,
     );
     this.cfg.initCfg.baseJSONInspectionServiceUrl = this.fetchServiceUrl(
       'baseJSONInspectionServiceUrl',
       baseUrl + 'json/',
-      configService,
+      this.configService,
     );
     this.cfg.initCfg.baseMappingServiceUrl = this.fetchServiceUrl(
       'baseMappingServiceUrl',
       baseUrl,
-      configService,
-    );
+      this.configService,
+    );    
   }
 
   private fetchServiceUrl(
@@ -173,6 +178,7 @@ export class DataMapperHostComponent extends FlowPage
   }
 
   initialize() {
+    this.resetConfig();
     const step = this.currentFlow.getStep(this.position);
     let mappings = undefined;
     if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
