@@ -12,6 +12,7 @@ import { NotificationModule } from 'patternfly-ng';
 import { SyndesisCommonModule } from '../../common/common.module';
 import { IntegrationsListComponent } from './list.component';
 import { StoreModule } from '../../store/store.module';
+import { IntegrationActionsModule } from '../actions/actions.module';
 
 describe('IntegrationsListComponent', () => {
   let component: IntegrationsListComponent;
@@ -30,6 +31,7 @@ describe('IntegrationsListComponent', () => {
           TabsModule.forRoot(),
           StoreModule,
           NotificationModule,
+          IntegrationActionsModule,
         ],
         declarations: [IntegrationsListComponent],
       }).compileComponents();

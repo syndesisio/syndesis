@@ -17,6 +17,7 @@ import { TemplatesModule } from '../templates/templates.module';
 
 import { DashboardConnectionsComponent } from './connections.component';
 import { DashboardIntegrationsComponent } from './integrations.component';
+import { IntegrationActionsModule } from '../integrations/actions/actions.module';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' },
@@ -32,6 +33,7 @@ const routes: Routes = [
     ModalModule,
     TooltipModule,
     BsDropdownModule,
+    IntegrationActionsModule
   ],
   declarations: [
     DashboardComponent,
