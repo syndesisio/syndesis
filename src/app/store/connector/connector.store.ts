@@ -22,4 +22,8 @@ export class ConnectorStore extends AbstractStore<
   validate(id: string, data: Map<string, string>) {
     return this.service.validate(id, data);
   }
+
+  credentials(id: string) {
+    return this.service.credentials(id);
+  }
 }

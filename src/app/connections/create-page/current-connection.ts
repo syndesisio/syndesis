@@ -3,7 +3,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
 import { ConnectionStore } from '../../store/connection/connection.store';
-import { Connection } from '../../model';
+import { ConnectorStore } from '../../store/connector/connector.store';
+import { Connection, Connector, Connections, Connectors } from '../../model';
 
 import { log, getCategory } from '../../logging';
 
@@ -17,11 +18,15 @@ export class ConnectionEvent {
 @Injectable()
 export class CurrentConnectionService {
   private _connection: Connection;
+  private _credentials: any;
   private subscription: Subscription;
 
   events = new EventEmitter<ConnectionEvent>();
 
-  constructor(private store: ConnectionStore) {
+  constructor(
+    private store: ConnectionStore,
+    private connectorStore: ConnectorStore,
+  ) {
     this.subscription = this.events.subscribe((event: ConnectionEvent) =>
       this.handleEvent(event),
     );
@@ -48,7 +53,25 @@ export class CurrentConnectionService {
     }
   }
 
-  saveConnection(event: ConnectionEvent) {
+  private fetchCredentials() {
+    if (!this._connection || !this._connection.connectorId) {
+      this._credentials = undefined;
+      return Observable.empty();
+    }
+    const connectorId = this._connection.connectorId;
+    return Observable.create(observer => {
+      this.connectorStore
+        .credentials(connectorId)
+        .subscribe((resp: any) => {
+          // enrich the response with the connectorId
+          this._credentials = { ...resp, ...{ connectorId: connectorId } };
+          observer.next(this._credentials);
+          observer.complete();
+        });
+    });
+  }
+
+  private saveConnection(event: ConnectionEvent) {
     // poor man's clone
     const connection = <Connection>JSON.parse(
       JSON.stringify(event['connection'] || this.connection),
@@ -87,15 +110,54 @@ export class CurrentConnectionService {
     );
   }
 
+  get credentials(): any {
+    return this._credentials;
+  }
+
+  hasCredentials(): boolean {
+    return this._credentials && this._credentials.type !== undefined;
+  }
+
   get connection(): Connection {
     return this._connection;
   }
 
   set connection(connection: Connection) {
     this._connection = connection;
-    this.events.emit({
-      kind: 'connection-set-connection',
-      connection: this._connection,
-    });
+    const connectorId = connection.connectorId;
+    // only query for credentials if the stored ones don't match the passed in connector
+    if (
+      !connection ||
+      !connectorId ||
+      (this._credentials && this._credentials.connectorId === connectorId)
+    ) {
+      this.events.emit({
+        kind: 'connection-set-connection',
+        connection: this._connection,
+      });
+      return;
+    }
+    // fetch any credentials for the connector
+    const sub = this.fetchCredentials().subscribe(
+      () => {
+        sub.unsubscribe();
+        this.events.emit({
+          kind: 'connection-set-connection',
+          connection: this._connection,
+        });
+      },
+      error => {
+        log.infoc(
+          () =>
+            'Failed to fetch connector credentials: ' + JSON.stringify(error),
+          category,
+        );
+        sub.unsubscribe();
+        this.events.emit({
+          kind: 'connection-set-connection',
+          connection: this._connection,
+        });
+      },
+    );
   }
 }
