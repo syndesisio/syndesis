@@ -9,7 +9,6 @@ import * as _ from 'lodash';
 import { RestangularModule } from 'ngx-restangular';
 import { OAuthService, OAuthModule } from 'angular-oauth2-oidc-hybrid';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
-import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import { Observable } from 'rxjs/Observable';
 
 import {
@@ -201,7 +200,6 @@ export function restangularProviderConfigurer(
     ReactiveFormsModule,
     HttpModule,
     DynamicFormsCoreModule.forRoot(),
-    DynamicFormsBootstrapUIModule,
     RestangularModule.forRoot(
       [ConfigService, OAuthService],
       restangularProviderConfigurer,
