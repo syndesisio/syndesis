@@ -168,13 +168,9 @@ Depending on your role please use the appropriate template in the instructions b
 ### Install instructions
 
 ```bash
-# Fire up minishift if not alread running. Please note that we need v1.5.0 right now
-# for auto creating volumes. Alternatively you could use the provided script tools/create-pv-minishift.sh
-# to create the PV on your own. Also, you need to add some memory, 4192 or more is recommended
-minishift start --openshift-version=v1.5.0 --memory 4192
-
-# Tip: If you want to switch the openshift version permanently use:
-# minishift config set openshift-version 1.5.0
+# Fire up minishift if not alread running. 
+# 4 MB of memories are recommended
+minishift start --memory 4192
 
 # Login as admin
 oc login -u system:admin
