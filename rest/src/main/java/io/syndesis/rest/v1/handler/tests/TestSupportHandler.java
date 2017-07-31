@@ -28,12 +28,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import io.syndesis.core.Tokens;
 import io.syndesis.dao.init.ModelData;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.WithId;
 
+import io.syndesis.model.integration.Integration;
+import io.syndesis.openshift.OpenShiftDeployment;
+import io.syndesis.openshift.OpenShiftService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -47,19 +51,23 @@ public class TestSupportHandler {
 
     private final DataManager dataMgr;
     private final List<DataAccessObject<?>> daos;
+    private final OpenShiftService openShiftService;
 
     @Context
     private HttpServletRequest context;
 
-    public TestSupportHandler(DataManager dataMgr, List<DataAccessObject<?>> daos) {
+    public TestSupportHandler(DataManager dataMgr, List<DataAccessObject<?>> daos, OpenShiftService openShiftService) {
         this.dataMgr = dataMgr;
         this.daos = daos.stream().filter(x -> !x.isReadOnly()).collect(Collectors.toList());
+        this.openShiftService = openShiftService;
     }
 
     @GET
     @Path("/reset-db")
     public void resetDBToDefault() {
         LOG.warn("user {} is resetting DB", context.getRemoteUser());
+        // Deployments must be also deleted because we it is not possible to reach them after deleting DB.
+        deleteDeployments();
         deleteAllDBEntities();
         dataMgr.resetDeploymentData();
     }
@@ -72,6 +80,27 @@ public class TestSupportHandler {
         deleteAllDBEntities();
         for (ModelData<?> modelData : data) {
             dataMgr.store(modelData);
+        }
+    }
+
+    @GET
+    @Path("/delete-deployments")
+    public void deleteDeployments() {
+        LOG.warn("user {} is deleting all integration deploymets", context.getRemoteUser());
+        List<Integration> integrations = dataMgr.fetchAll(Integration.class).getItems();
+        for (Integration i : integrations) {
+            OpenShiftDeployment deployment = OpenShiftDeployment
+                .builder()
+                .name(i.getName())
+                .token(Tokens.getAuthenticationToken())
+                .build();
+
+            if (openShiftService.exists(deployment)) {
+                openShiftService.delete(deployment);
+                LOG.debug("Deleting integration \"{}\"", i.getName());
+            } else {
+                LOG.debug("Skipping integration named \"{}\". No such deployment found.", i.getName());
+            }
         }
     }
 
