@@ -1,5 +1,27 @@
 <div class="wizard-pf-contents">
-  <syndesis-connection-view [(connection)]="connection"
-                            [mode]="'edit'"
-                            [showName]="false"></syndesis-connection-view>
+  <ng-container *ngIf='!hasCredentials'>
+    <syndesis-connection-view [(connection)]="connection"
+                              [mode]="'edit'"
+                              [showName]="false"></syndesis-connection-view>
+  </ng-container>
+  <ng-container *ngIf='hasCredentials'>
+    <div class="row row-cards-pf connections-view">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="card-pf">
+          <div class="card-pf-title">
+            {{ connection?.connector?.name }}
+          </div>
+          <div class="card-pf-body">
+            <p>
+              Log into your {{ connection?.connector?.name }} account to grant authorization for Syndesis to act on your behalf
+            </p>
+            <p class="text-center">
+              <button class="btn btn-primary"
+                      (click)="acquireCredentials()">Connect {{ connection?.connector?.name }}</button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </div>

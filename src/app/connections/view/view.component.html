@@ -76,10 +76,13 @@
           </div>
           <div *ngIf="formModel && formGroup">
             <form class="form-horizontal"
-                  [formGroup]="formGroup">
+                  [formGroup]="formGroup" *ngIf="formModel.length">
               <syndesis-form-control *ngFor="let controlModel of formModel"
                                               [group]="formGroup"
                                               [model]="controlModel"></syndesis-form-control>
+            </form>
+            <form *ngIf="!formModel.length">
+              <p class="alert alert-info">There are no properties to configure</p>
             </form>
           </div>
         </div>
