@@ -26,8 +26,19 @@ export class ConnectionsConfigureFieldsComponent implements OnInit {
     this.current.connection = connection;
   }
 
+  get hasCredentials() {
+    return this.current.hasCredentials();
+  }
+
+  acquireCredentials() {
+    // TODO
+    window.alert('I don\'t work yet');
+  }
+
   ngOnInit() {
+    /*
     log.infoc(() => 'Credentials: ' + JSON.stringify(this.current.credentials));
     log.infoc(() => 'hasCredentials: ' + this.current.hasCredentials());
+    */
   }
 }

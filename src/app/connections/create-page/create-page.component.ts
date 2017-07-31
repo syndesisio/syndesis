@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NavigationService } from '../../common/navigation.service';
@@ -19,6 +19,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private nav: NavigationService,
+    private detector: ChangeDetectorRef,
   ) {}
 
   get connection(): Connection {
@@ -96,6 +97,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     }
     if (target.length) {
       this.router.navigate(target, { relativeTo: this.route });
+
     }
   }
 
