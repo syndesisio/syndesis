@@ -8,6 +8,7 @@ import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ngx-restangular';
 
 import { SyndesisCommonModule } from '../../common/common.module';
+import { NavigationService } from '../../common/navigation.service';
 import { FlowViewComponent } from './flow-view/flow-view.component';
 import { FlowViewStepComponent } from './flow-view/flow-view-step.component';
 import { ConnectionsListComponent } from '../../connections/list/list.component';
@@ -60,6 +61,7 @@ describe('IntegrationsEditComponent', () => {
             },
             deps: [MockBackend, RequestOptions],
           },
+          NavigationService,
           CurrentFlow,
         ],
       }).compileComponents();

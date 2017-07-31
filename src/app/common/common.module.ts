@@ -10,6 +10,7 @@ import { LoadingComponent } from './loading/loading.component';
 import { UserService } from './user.service';
 import { FormFactoryService } from './forms.service';
 import { ConfigService } from '../config.service';
+import { NavigationService } from './navigation.service';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ export class SyndesisCommonModule {
         FormFactoryService,
         ConfigService,
         NotificationService,
+        NavigationService,
       ],
     };
   }

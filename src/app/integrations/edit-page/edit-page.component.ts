@@ -3,6 +3,7 @@ import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import { NavigationService } from '../../common/navigation.service';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integration } from '../../model';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
@@ -35,6 +36,7 @@ export class IntegrationsEditPage extends ChildAwarePage
     public route: ActivatedRoute,
     public router: Router,
     public detector: ChangeDetectorRef,
+    public nav: NavigationService,
   ) {
     super(currentFlow, route, router);
     this.integration = this.store.resource;
@@ -108,11 +110,7 @@ export class IntegrationsEditPage extends ChildAwarePage
       .pluck<Params, string>('integrationId')
       .map((integrationId: string) => this.store.loadOrCreate(integrationId))
       .subscribe();
-      /*
-    $.fn.setupVerticalNavigation
-      ? $.fn.setupVerticalNavigation().hideMenu()
-      : '';
-      */
+    this.nav.hide();
   }
 
   ngOnDestroy() {
@@ -121,10 +119,6 @@ export class IntegrationsEditPage extends ChildAwarePage
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
     }
-    /*
-    $.fn.setupVerticalNavigation
-      ? $.fn.setupVerticalNavigation().showMenu()
-      : '';
-      */
+    this.nav.show();
   }
 }

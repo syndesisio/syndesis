@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { NavigationService } from '../../common/navigation.service';
 import { CurrentConnectionService } from './current-connection';
 import { Connection, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
@@ -17,6 +18,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     private current: CurrentConnectionService,
     private route: ActivatedRoute,
     private router: Router,
+    private nav: NavigationService,
   ) {}
 
   get connection(): Connection {
@@ -147,18 +149,10 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     if (this.getCurrentPage() !== 'connection-basics') {
       this.router.navigate(['connection-basics'], { relativeTo: this.route });
     }
-    /*
-    $.fn.setupVerticalNavigation
-      ? $.fn.setupVerticalNavigation().hideMenu()
-      : '';
-      */
+    this.nav.hide();
   }
 
   ngOnDestroy() {
-    /*
-    $.fn.setupVerticalNavigation
-      ? $.fn.setupVerticalNavigation().showMenu()
-      : '';
-      */
+    this.nav.show();
   }
 }
