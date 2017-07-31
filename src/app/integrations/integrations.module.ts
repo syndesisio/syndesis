@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
-import { DynamicFormsBootstrapUIModule } from '@ng2-dynamic-forms/ui-bootstrap';
 import {
   CollapseModule,
   ModalModule,
@@ -13,6 +12,7 @@ import {
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from 'syndesis.data.mapper';
 
+import { DynamicFormsPatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 import { IntegrationActionsModule } from './actions/actions.module';
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
 import { IntegrationBasicsComponent } from './edit-page/integration-basics/integration-basics.component';
@@ -77,7 +77,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     DynamicFormsCoreModule,
-    DynamicFormsBootstrapUIModule,
+    DynamicFormsPatternflyUIModule,
     RouterModule.forChild(routes),
     ConnectionsModule,
     TabsModule,

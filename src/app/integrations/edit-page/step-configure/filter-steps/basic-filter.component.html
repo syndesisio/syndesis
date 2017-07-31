@@ -13,10 +13,10 @@
       <form [formGroup]="formGroup"
             class="basic-filter-form">
 
-        <dynamic-form-bootstrap-control *ngFor="let controlModel of basicFilterModel"
-                                        [group]="formGroup"
-                                        [model]="controlModel"
-                                        (change)="onChange($event)">
+        <syndesis-form-control *ngFor="let controlModel of basicFilterModel"
+                               [group]="formGroup"
+                               [model]="controlModel"
+                               (change)="onChange($event)">
 
           <ng-template modelId="rulesFormArray"
                        let-context="context"
@@ -31,7 +31,7 @@
 
           </ng-template>
 
-        </dynamic-form-bootstrap-control>
+        </syndesis-form-control>
 
       </form>
 
