@@ -1,6 +1,6 @@
 # Creating Staging environment
 
-These are the instructions how to re-create our staging enviroment.
+Here are the instructions how to re-create our staging enviroment, including re-configuratiom of the CI.
 
 ```
 # Create new project
@@ -33,7 +33,11 @@ oc new-app syndesis-restricted \
 oc create sa syndesis-deployer
 oc sa get-token syndesis-deployer
 
-# Take this token and insert it to the followin circle-builds
-# as environment variable OPENSHIFT_TOKEN:
+# Take this token and insert it to the following circle-builds
+# as environment variable OPENSHIFT_TOKEN 
 # - https://circleci.com/gh/syndesisio/syndesis-ui/edit#env-vars
+# Also check that there is an OPENSHIFT_APISERVER env var (pointing to the staging installation)
+
+# Grant jenkins user from syndesis-ci project the proper rights:
+oc adm policy add-role-to-user admin system:serviceaccount:syndesis-ci:jenkins -n syndesis-staging
 ```
