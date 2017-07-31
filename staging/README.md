@@ -32,7 +32,7 @@ oc new-app syndesis-restricted \
 # Create deployer SA and get the deploy token
 oc create sa syndesis-deployer
 oc sa get-token syndesis-deployer
-oc adm policy add-role-to-user admin system:serviceaccount:syndesis-staging:syndesis-deployer -n syndesis-staging
+oc adm policy add-role-to-user edit system:serviceaccount:syndesis-staging:syndesis-deployer -n syndesis-staging
 
 # Take this token and insert it to the following circle-builds
 # as environment variable OPENSHIFT_TOKEN 
