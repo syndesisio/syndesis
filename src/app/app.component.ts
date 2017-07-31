@@ -15,6 +15,7 @@ import { TestSupportService } from './store/test-support.service';
 
 import { log } from './logging';
 
+import { NavigationService } from './common/navigation.service';
 import { UserService } from './common/user.service';
 import { User } from './model';
 import { saveAs } from 'file-saver';
@@ -51,6 +52,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private userService: UserService,
     public testSupport: TestSupportService,
     private notificationService: NotificationService,
+    private nav: NavigationService,
   ) {}
 
   ngOnInit() {
@@ -124,6 +126,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       ).matchHeight();
       $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
     });
-    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation() : '';
+    this.nav.initialize();
   }
 }

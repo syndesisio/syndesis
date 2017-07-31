@@ -13,6 +13,7 @@ import { CollapseModule, BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';
 import { UserService } from './common/user.service';
+import { NavigationService } from './common/navigation.service';
 import { StoreModule } from './store/store.module';
 
 import { TestSupportService } from './store/test-support.service';
@@ -34,6 +35,7 @@ describe('AppComponent', () => {
         ConfigService,
         UserService,
         TestSupportService,
+        NavigationService,
         MockBackend,
         { provide: RequestOptions, useClass: BaseRequestOptions },
         {
