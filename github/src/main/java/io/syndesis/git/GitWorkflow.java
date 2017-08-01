@@ -15,16 +15,10 @@
  */
 package io.syndesis.git;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
-
+import io.syndesis.core.SyndesisServerException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.URIish;
@@ -33,24 +27,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.FileSystemUtils;
 
-import io.syndesis.core.SyndesisServerException;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
 
 public class GitWorkflow {
 
     private static final Logger log = LoggerFactory.getLogger(GitWorkflow.class);
+
     /**
      * Creates a new remote git repository and does the initial commit&push of all the project files
      * the files to it.
      *
-     * @param repoHTMLUrl- the HTML (not ssh) url to a git repository
-     * @param repoName - the name of the git repository
-     * @param message- commit message
-     * @param files- map of file paths along with their content
+     * @param repoHtmlUrl- the HTML (not ssh) url to a git repository
+     * @param repoName     - the name of the git repository
+     * @param message-     commit message
+     * @param files-       map of file paths along with their content
      * @param credentials- Git credentials, for example username/password, authToken, personal access token
      * @return RevCommit, the commit info
      */
     public RevCommit createFiles(String repoHtmlUrl, String repoName, String message, Map<String, byte[]> files,
-            UsernamePasswordCredentialsProvider credentials) {
+                                 UsernamePasswordCredentialsProvider credentials) {
 
         try {
             // create temporary directory
@@ -76,18 +75,19 @@ public class GitWorkflow {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
+
     /**
      * Updates an existing git repository with the current version of project files.
      *
-     * @param repoHTMLUrl- the HTML (not ssh) url to a git repository
-     * @param repoName - the name of the git repository
-     * @param message- commit message
-     * @param files- map of file paths along with their content
+     * @param repoHtmlUrl- the HTML (not ssh) url to a git repository
+     * @param repoName     - the name of the git repository
+     * @param message-     commit message
+     * @param files-       map of file paths along with their content
      * @param credentials- Git credentials, for example username/password, authToken, personal access token
      * @return RevCommit, the commit info
      */
     public RevCommit updateFiles(String repoHtmlUrl, String repoName, String message, Map<String, byte[]> files,
-            UsernamePasswordCredentialsProvider credentials) {
+                                 UsernamePasswordCredentialsProvider credentials) {
 
         try {
             // create temporary directory
@@ -100,7 +100,7 @@ public class GitWorkflow {
             Git git = Git.cloneRepository().setDirectory(workingDir.toFile()).setURI(repoHtmlUrl).call();
             writeFiles(workingDir, files);
 
-            RevCommit commit =  commitAndPush(git, message, credentials);
+            RevCommit commit = commitAndPush(git, message, credentials);
             removeWorkingDir(workingDir);
 
             return commit;
@@ -125,16 +125,16 @@ public class GitWorkflow {
      */
     private void writeFiles(Path workingDir, Map<String, byte[]> files) throws IOException {
         for (Map.Entry<String, byte[]> entry : files.entrySet()) {
-            File file = new File(workingDir.toString() + File.separator + entry.getKey());
-            if (!file.getParentFile().exists() && file.getParentFile().mkdirs()) {
-                throw new IOException("Cannot create direcory " + file.getParentFile());
+            File file = new File(workingDir.toString(), entry.getKey());
+            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
+                throw new IOException("Cannot create directory " + file.getParentFile());
             }
             Files.write(file.toPath(), entry.getValue());
         }
     }
 
     private RevCommit commitAndPush(Git git, String message, UsernamePasswordCredentialsProvider credentials)
-            throws NoFilepatternException, GitAPIException {
+        throws GitAPIException {
 
         // git add .
         git.add().addFilepattern(".").call();
