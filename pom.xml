@@ -139,7 +139,7 @@
     <swagger.version>1.5.12</swagger.version>
     <sqlite-jdbc.version>3.16.1</sqlite-jdbc.version>
     <undertow.version>1.4.13.Final</undertow.version>
-    <atlasmap.version>1.10.0</atlasmap.version>
+    <atlasmap.version>1.16.0-SNAPSHOT</atlasmap.version>
 
     <!-- maven plugin version -->
     <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
@@ -170,6 +170,7 @@
     <module>runtime</module>
     <module>verifier</module>
     <module>inspector</module>
+    <module>syndesis-maven-plugin</module>
   </modules>
 
   <dependencyManagement>
