@@ -15,26 +15,6 @@
  */
 package io.syndesis.project.converter;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import io.syndesis.connector.catalog.ConnectorCatalog;
-import io.syndesis.connector.catalog.ConnectorCatalogProperties;
-import io.syndesis.model.connection.Action;
-import io.syndesis.model.connection.Connection;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.filter.*;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.SimpleStep;
-import io.syndesis.model.integration.Step;
-
-import io.syndesis.project.converter.visitor.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.context.annotation.FilterType;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -44,6 +24,31 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import io.syndesis.connector.catalog.ConnectorCatalog;
+import io.syndesis.connector.catalog.ConnectorCatalogProperties;
+import io.syndesis.model.connection.Action;
+import io.syndesis.model.connection.Connection;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.filter.ExpressionFilterStep;
+import io.syndesis.model.filter.FilterPredicate;
+import io.syndesis.model.filter.FilterRule;
+import io.syndesis.model.filter.RuleFilterStep;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.SimpleStep;
+import io.syndesis.model.integration.Step;
+import io.syndesis.project.converter.visitor.DataMapperStepVisitor;
+import io.syndesis.project.converter.visitor.EndpointStepVisitor;
+import io.syndesis.project.converter.visitor.ExpressionFilterStepVisitor;
+import io.syndesis.project.converter.visitor.RuleFilterStepVisitor;
+import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
