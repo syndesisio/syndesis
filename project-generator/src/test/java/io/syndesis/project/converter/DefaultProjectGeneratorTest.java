@@ -24,21 +24,16 @@ import io.syndesis.connector.catalog.ConnectorCatalogProperties;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.filter.FilterPredicate;
-import io.syndesis.model.filter.FilterRule;
-import io.syndesis.model.filter.FilterStep;
-import io.syndesis.model.filter.FilterType;
+import io.syndesis.model.filter.*;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 
-import io.syndesis.project.converter.visitor.DataMapperStepVisitor;
-import io.syndesis.project.converter.visitor.EndpointStepVisitor;
-import io.syndesis.project.converter.visitor.FilterStepVisitor;
-import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import io.syndesis.project.converter.visitor.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.annotation.FilterType;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -69,10 +64,12 @@ public class DefaultProjectGeneratorTest {
     private static final TypeReference<HashMap<String, Connector>> CONNECTOR_MAP_TYPE_REF = new TypeReference<HashMap<String, Connector>>() {
     };
 
-    private final StepVisitorFactoryRegistry registry = new StepVisitorFactoryRegistry(Arrays.asList(new DataMapperStepVisitor.Factory(),
-        new EndpointStepVisitor.Factory(),
-        new FilterStepVisitor.Factory()
-    ));
+    private final StepVisitorFactoryRegistry registry = new StepVisitorFactoryRegistry(
+        Arrays.asList(new DataMapperStepVisitor.Factory(),
+                      new EndpointStepVisitor.Factory(),
+                      new RuleFilterStepVisitor.Factory(),
+                      new ExpressionFilterStepVisitor.Factory()
+                     ));
 
     private Map<String, Connector> connectors = new HashMap<>();
 
@@ -207,19 +204,19 @@ public class DefaultProjectGeneratorTest {
 
 
     @Test
-    public void testWithFiler() throws Exception {
+    public void testWithFilter() throws Exception {
         Step step1 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("io.syndesis:timer-connector:0.4.5").build()).build();
         //Step step1 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).action(new Action.Builder().connectorId("twitter").camelConnectorPrefix("twitter-mention").camelConnectorGAV("io.syndesis:twitter-mention-connector:0.4.5").build()).build();
-        Step step2 = new FilterStep.Builder().stepKind("filter")
-            .type(FilterType.RULE)
-            .predicate(FilterPredicate.AND)
-            .addRule(new FilterRule.Builder()
-            .path("$in.header.counter")
+        Step step2 = new RuleFilterStep.Builder().predicate(FilterPredicate.AND)
+                                                 .addRule(new FilterRule.Builder()
+            .path("in.header.counter")
                 .op(">")
                 .value("10")
             .build()).build();
 
         Step step3 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-post").camelConnectorGAV("io.syndesis:http-post-connector:0.4.5").build()).build();
+
+        Step step4 = new ExpressionFilterStep.Builder().configuredProperties(map("filter", "${body.germanSecondLeagueChampion} equals 'FCN'")).build();
 
         GenerateProjectRequest request = ImmutableGenerateProjectRequest
             .builder()
@@ -228,12 +225,13 @@ public class DefaultProjectGeneratorTest {
             .integration(new Integration.Builder()
                 .id("test-integration")
                 .name("Test Integration")
-                .steps( Arrays.asList(step1, step2, step3))
+                .steps( Arrays.asList(step1, step2, step3, step4))
                 .build())
             .connectors(connectors)
             .build();
 
         Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(new ConnectorCatalogProperties()), new ProjectGeneratorProperties(), registry).generate(request);
+
 
         assertFileContents(files.get("src/main/resources/syndesis.yml"), "test-filter-syndesis.yml");
     }

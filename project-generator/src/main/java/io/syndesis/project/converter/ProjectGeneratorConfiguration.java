@@ -16,11 +16,7 @@
 package io.syndesis.project.converter;
 
 import io.syndesis.connector.catalog.ConnectorCatalog;
-import io.syndesis.project.converter.visitor.DataMapperStepVisitor;
-import io.syndesis.project.converter.visitor.EndpointStepVisitor;
-import io.syndesis.project.converter.visitor.FilterStepVisitor;
-import io.syndesis.project.converter.visitor.StepVisitorFactory;
-import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import io.syndesis.project.converter.visitor.*;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,7 +48,12 @@ public class ProjectGeneratorConfiguration {
     }
 
     @Bean
-    public StepVisitorFactory<FilterStepVisitor> filterStepVisitorFactory() {
-        return new FilterStepVisitor.Factory();
+    public StepVisitorFactory<RuleFilterStepVisitor> ruleFilterStepVisitorFactory() {
+        return new RuleFilterStepVisitor.Factory();
+    }
+
+    @Bean
+    public StepVisitorFactory<ExpressionFilterStepVisitor> expressionFilterStepVisitorFactory() {
+        return new ExpressionFilterStepVisitor.Factory();
     }
 }

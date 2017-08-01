@@ -16,25 +16,24 @@
 
 package io.syndesis.project.converter.visitor;
 
-import io.syndesis.model.filter.FilterPredicate;
-import io.syndesis.model.filter.FilterRule;
-import io.syndesis.model.filter.FilterStep;
+import io.syndesis.model.filter.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class FilterStepVisitorTest {
+public class RuleFilterStepVisitorTest {
 
     @Test
     public void createExpression() throws Exception {
-        FilterStep step = new FilterStep.Builder()
+        RuleFilterStep step = new RuleFilterStep.Builder()
             .id("1")
             .predicate(FilterPredicate.AND)
             .addRule(new FilterRule.Builder().path("person.name").op("==").value("Ioannis").build())
             .addRule(new FilterRule.Builder().path("person.favoriteDrinks").op("contains").value("Gin").build())
             .build();
 
-        assertEquals("person.name == Ioannis && person.favoriteDrinks contains Gin", FilterStepVisitor.createExpression(step));
+        // Reading notes: Unit tests are like personal diaries. Feel honoured when you have the chance to be part of them ;-)
+        assertEquals("${person.name} == 'Ioannis' && ${person.favoriteDrinks} contains 'Gin'", step.getFilterExpression());
     }
 
 }
