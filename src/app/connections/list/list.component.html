@@ -46,7 +46,7 @@
 
       <!-- Each Connection's Card Container -->
 
-      <div class="col-xs-12 col-sm-3 col-md-2 card"
+      <div class="connection col-xs-12 col-sm-3 col-md-2 card" title="{{connection.name}}"
            *ngFor="let connection of connections"
            (click)="onSelect(connection, $event)">
 
