@@ -5,6 +5,7 @@ import { NavigationService } from '../../common/navigation.service';
 import { CurrentConnectionService } from './current-connection';
 import { Connection, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
+import { CanComponentDeactivate } from '../../common/can-deactivate-guard.service';
 
 const category = getCategory('Connections');
 
@@ -69,7 +70,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.router.navigate(['..'], { relativeTo: this.route });
+    this.router.navigate(['cancel'], { relativeTo: this.route });
   }
 
   goBack() {

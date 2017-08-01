@@ -14,6 +14,7 @@ import { ConnectionsCreatePage } from './create-page/create-page.component';
 import { ConnectionsConnectionBasicsComponent } from './create-page/connection-basics/connection-basics.component';
 import { ConnectionsConfigureFieldsComponent } from './create-page/configure-fields/configure-fields.component';
 import { ConnectionsReviewComponent } from './create-page/review/review.component';
+import { ConnectionsCancelComponent } from './create-page/cancel.component';
 import { ConnectionsListPage } from './list-page/list-page.component';
 import { ConnectionsListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { ConnectionsListComponent } from './list/list.component';
@@ -41,6 +42,7 @@ import { CurrentConnectionService } from './create-page/current-connection';
     ConnectionsConnectionBasicsComponent,
     ConnectionsConfigureFieldsComponent,
     ConnectionsReviewComponent,
+    ConnectionsCancelComponent,
     ConnectionsListPage,
     ConnectionsListToolbarComponent,
     ConnectionsListComponent,

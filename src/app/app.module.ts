@@ -31,6 +31,7 @@ import { SyndesisCommonModule } from './common/common.module';
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';
 import { UserService } from './common/user.service';
+import { CanDeactivateGuard } from './common/can-deactivate-guard.service';
 import { log } from './logging';
 
 import { DataMapperModule } from 'syndesis.data.mapper';
@@ -230,6 +231,7 @@ export function restangularProviderConfigurer(
     ConfigService,
     OAuthService,
     UserService,
+    CanDeactivateGuard,
   ],
   bootstrap: [AppComponent],
 })

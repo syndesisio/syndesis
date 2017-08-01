@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 
 import {
   CurrentConnectionService,
   ConnectionEvent,
 } from '../current-connection';
 import { Connection } from '../../../model';
+import { CanComponentDeactivate } from '../../../common/can-deactivate-guard.service';
 
 @Component({
   selector: 'syndesis-connections-connection-basics',
   templateUrl: 'connection-basics.component.html',
 })
-export class ConnectionsConnectionBasicsComponent implements OnInit {
+export class ConnectionsConnectionBasicsComponent implements OnInit, CanComponentDeactivate {
+
   constructor(
     private current: CurrentConnectionService,
     public route: ActivatedRoute,
@@ -39,5 +41,11 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
         subscription.unsubscribe();
       },
     );
+  }
+
+  canDeactivate(nextState: RouterStateSnapshot) {
+    return nextState.url === '/connections/create/cancel' ||
+           nextState.url === '/connections/create/configure-fields' ||
+           window.confirm('Discard changes?');
   }
 }
