@@ -12,7 +12,7 @@ User clicks on "Connect Twitter" button to start OAuth flow.
 
 ![Image of choosing object](img/oauth.png)
 
-1. Clicking on button opens a new tab and takes user there.
+1. Clicking on button directs user to service provider in same tab. At end of OAuth flow user is directed back to iPaaS.
 1. OAuth will be different for each service but be sure to state what iPaaS will be doing.
 1. Buttons to either Authorize app or Cancel. Both buttons will close tab and bring user back to iPaaS
 1. iPaaS logo and app information when applicable
