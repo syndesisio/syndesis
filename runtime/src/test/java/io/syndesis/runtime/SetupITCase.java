@@ -15,21 +15,22 @@
  */
 package io.syndesis.runtime;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+import io.syndesis.credential.CredentialProvider;
 import io.syndesis.credential.CredentialProviderLocator;
-import io.syndesis.credential.DefaultCredentialProvider;
+import io.syndesis.credential.OAuth1CredentialProvider;
 import io.syndesis.rest.v1.handler.setup.OAuthAppHandler;
-import org.junit.Before;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.social.connect.ConnectionFactory;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.given;
 
@@ -40,11 +41,6 @@ public class SetupITCase extends BaseITCase {
 
     @Autowired
     protected CredentialProviderLocator locator;
-
-    @Before
-    public void resetDB() {
-        super.resetDB();
-    }
 
     @Test
     public void getOauthApps() {
@@ -63,11 +59,11 @@ public class SetupITCase extends BaseITCase {
     }
 
     @Test
-    public void updateOauthApp() throws InterruptedException {
+    public void updateOauthApp() {
 
         // Lets register a null connection factory for twitter, in case one was previously registered.
-        locator.addCredentialProvider(new DefaultCredentialProvider<>("twitter", null, null));
-        assertThat(locator.getConnectionFactory("twitter")).isNull();
+        OAuth1CredentialProvider<Void> initial = new OAuth1CredentialProvider<Void>("twitter", null, null);
+        locator.addCredentialProvider(initial);
 
         // Validate initial state assumptions.
         getOauthApps();
@@ -95,15 +91,15 @@ public class SetupITCase extends BaseITCase {
         given().ignoreExceptions().await()
             .atMost(10, SECONDS)
             .pollInterval(1, SECONDS)
-            .until(() ->{
+            .until(() -> {
+                final CredentialProvider twitterCredentialProvider = locator.providerWithId("twitter");
 
-            ConnectionFactory<?>twitterConnectionFactory = locator.getConnectionFactory("twitter");
-            assertThat(twitterConnectionFactory).isNotNull();
-            return true;
-        });
+                // preparing is something we could not do with a `null` ConnectionFactory
+                assertThat(twitterCredentialProvider).isNotSameAs(initial);
+
+                return true;
+            });
 
     }
-
-
 
 }

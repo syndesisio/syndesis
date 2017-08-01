@@ -18,8 +18,8 @@ package io.syndesis.credential.salesforce;
 import io.syndesis.credential.Applicator;
 import io.syndesis.credential.CredentialProvider;
 import io.syndesis.credential.CredentialProviderLocator;
-import io.syndesis.credential.DefaultCredentialProvider;
 import io.syndesis.credential.OAuth2Applicator;
+import io.syndesis.credential.OAuth2CredentialProvider;
 import io.syndesis.model.connection.Connection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,10 +72,10 @@ public class SalesforceConfiguration {
         locator.addCredentialProvider(create(salesforceProperties));
     }
 
-    public static CredentialProvider<Salesforce, AccessGrant> create(final SalesforceProperties salesforceProperties) {
+    public static CredentialProvider create(final SalesforceProperties salesforceProperties) {
         final SalesforceConnectionFactory connectionFactory = createConnectionFactory(salesforceProperties);
 
-        return new DefaultCredentialProvider<>("salesforce", connectionFactory,
+        return new OAuth2CredentialProvider<>("salesforce", connectionFactory,
             new SalesforceApplicator(connectionFactory, salesforceProperties));
     }
 

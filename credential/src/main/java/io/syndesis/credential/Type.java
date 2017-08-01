@@ -15,24 +15,6 @@
  */
 package io.syndesis.credential;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import org.immutables.value.Value;
-
-@Value.Immutable
-@JsonDeserialize(builder = Acquisition.Builder.class)
-public interface Acquisition {
-
-    class Builder extends ImmutableAcquisition.Builder {
-        // builder implemented by Immutables, access allowed through this
-        // subclass
-    }
-
-    enum Type {
-        REDIRECT
-    }
-
-    Type getType();
-
-    String getUrl();
+public enum Type {
+    OAUTH1, OAUTH2
 }

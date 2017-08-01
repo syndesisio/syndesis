@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.dao;
+package io.syndesis.rest.v1.state;
 
+import javax.crypto.SecretKey;
 
-import io.syndesis.dao.manager.DataAccessObject;
-import io.syndesis.model.integration.IntegrationPattern;
+public interface KeySource {
 
-public interface IntegrationPatternDao extends DataAccessObject<IntegrationPattern> {
+    SecretKey encryptionKey();
 
-    @Override
-    default Class<IntegrationPattern> getType() {
-        return IntegrationPattern.class;
-    }
+    SecretKey authenticationKey();
 
 }

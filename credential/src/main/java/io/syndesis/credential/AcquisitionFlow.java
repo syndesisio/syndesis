@@ -13,31 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.integration;
+package io.syndesis.credential;
 
-import java.io.Serializable;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.model.Kind;
-import io.syndesis.model.WithId;
-import io.syndesis.model.WithName;
+
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(builder = IntegrationPatternGroup.Builder.class)
-public interface IntegrationPatternGroup extends WithId<IntegrationPatternGroup>, WithName, Serializable {
 
-    @Override
-    default Kind getKind() {
-        return Kind.IntegrationPatternGroup;
+@JsonDeserialize(builder = AcquisitionFlow.Builder.class)
+public interface AcquisitionFlow {
+
+    final class Builder extends ImmutableAcquisitionFlow.Builder {
+        // builder implemented by Immutables, access allowed through this
+        // subclass
     }
 
-    @Override
-    default IntegrationPatternGroup withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
-    }
+    String getRedirectUrl();
 
-    class Builder extends ImmutableIntegrationPatternGroup.Builder {
-    }
+    Type getType();
 
+    Optional<CredentialFlowState> state();
 }

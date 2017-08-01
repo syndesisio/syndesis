@@ -15,8 +15,6 @@
  */
 package io.syndesis.credential;
 
-import org.springframework.social.connect.ConnectionFactory;
-
 public interface CredentialProviderLocator {
 
     /**
@@ -24,19 +22,10 @@ public interface CredentialProviderLocator {
      *
      * @param credentialProvider the provider to add
      */
-    <A, T> void addCredentialProvider(final CredentialProvider<A, T> credentialProvider);
-
-    Applicator<?> getApplicator(String providerId);
+    <A, T> void addCredentialProvider(CredentialProvider credentialProvider);
 
     /**
-     * Lookup a ConnectionFactory by providerId; for example, "facebook". The
-     * returned factory can be used to create connections to the provider. Used
-     * to support connection creation in a dynamic manner across the set of
-     * registered providers.
-     *
-     * @param providerId the provider ID used to look up the ConnectionFactory.
-     * @return the requested ConnectionFactory
+     * Looks up a CredentialProvider by providerId.
      */
-    ConnectionFactory<?> getConnectionFactory(String providerId);
-
+    CredentialProvider providerWithId(String providerId);
 }

@@ -46,7 +46,11 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {"client.state.authenticationAlgorithm=HmacSHA1",
+        "client.state.authenticationKey=oNXU5SBpNnU1UI/4ZkUAA2Gzikc=",
+        "client.state.encryptionAlgorithm=AES/CBC/PKCS5Padding", "client.state.encryptionKey=IIAyKXfJTrIvjS6G9dHJLA==",
+        "client.state.tid=1"})
 @ActiveProfiles("test")
 public abstract class BaseITCase {
 
@@ -155,7 +159,10 @@ public abstract class BaseITCase {
     }
 
     protected <T> ResponseEntity<T> http(HttpMethod method, String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {
-        HttpHeaders headers = new HttpHeaders();
+        return http(method, url, body, responseClass, token, new HttpHeaders(), expectedStatus);
+    }
+
+    protected <T> ResponseEntity<T> http(HttpMethod method, String url, Object body, Class<T> responseClass, String token, HttpHeaders headers, HttpStatus expectedStatus) {
         if( body!=null ) {
             headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
         }

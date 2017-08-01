@@ -22,9 +22,9 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.integration.model.Flow;
-import io.syndesis.integration.model.StepKinds;
+import io.syndesis.integration.model.SyndesisHelpers;
 import io.syndesis.integration.model.SyndesisModel;
-import io.syndesis.integration.support.YamlHelper;
+import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.visitor.GeneratorContext;
@@ -50,7 +50,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
-    private static final ObjectMapper YAML_OBJECT_MAPPER = YamlHelper.createYamlMapper();
+    private static final ObjectMapper YAML_OBJECT_MAPPER = SyndesisHelpers.createObjectMapper();
 
     private MustacheFactory mf = new DefaultMustacheFactory();
 
@@ -117,7 +117,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         Set<MavenGav> connectors = new LinkedHashSet<>();
         integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
-                if (step.getStepKind().equals(StepKinds.ENDPOINT)) {
+                if (step.getStepKind().equals(Endpoint.KIND)) {
                     step.getAction().ifPresent(action -> {
                         String[] splitGav = action.getCamelConnectorGAV().split(":");
                         if (splitGav.length == 3) {
