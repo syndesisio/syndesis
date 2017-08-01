@@ -43,10 +43,12 @@ public class GitHubServiceImpl implements GitHubService {
 
     private final RepositoryService repositoryService;
     private final UserService userService;
+    private GitWorkflow gitWorkflow;
 
-    public GitHubServiceImpl(RepositoryService repositoryService, UserService userService) {
+    public GitHubServiceImpl(RepositoryService repositoryService, UserService userService, GitWorkflow gitWorkflow) {
         this.repositoryService = repositoryService;
         this.userService = userService;
+        this.gitWorkflow = gitWorkflow;
     }
 
     @Override
@@ -101,7 +103,6 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     private void createOrUpdateFiles(Repository repo, String message, Map<String, byte[]> files) throws IOException {
-        GitWorkflow gitWorkflow = new GitWorkflow();
         Repository repository = getRepository(repo.getName());
         if (repository == null) {
             createRepo(repo.getName());

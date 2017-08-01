@@ -25,35 +25,46 @@ import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
+@Service
+@ConditionalOnProperty(value = "git.enabled", matchIfMissing = true, havingValue = "true")
 public class GitWorkflow {
 
     private static final Logger log = LoggerFactory.getLogger(GitWorkflow.class);
+
+    private final GitProperties gitProperties;
+
+    public GitWorkflow(GitProperties gitProperties) {
+        this.gitProperties = gitProperties;
+    }
 
     /**
      * Creates a new remote git repository and does the initial commit&push of all the project files
      * the files to it.
      *
-     * @param repoHtmlUrl- the HTML (not ssh) url to a git repository
-     * @param repoName     - the name of the git repository
-     * @param message-     commit message
-     * @param files-       map of file paths along with their content
-     * @param credentials- Git credentials, for example username/password, authToken, personal access token
+     * @param remoteGitRepoHttpUrl- the HTML (not ssh) url to a git repository
+     * @param repoName              - the name of the git repository
+     * @param message-              commit message
+     * @param files-                map of file paths along with their content
+     * @param credentials-          Git credentials, for example username/password, authToken, personal access token
      * @return RevCommit, the commit info
      */
-    public RevCommit createFiles(String repoHtmlUrl, String repoName, String message, Map<String, byte[]> files,
+    public RevCommit createFiles(String remoteGitRepoHttpUrl, String repoName, String message, Map<String, byte[]> files,
                                  UsernamePasswordCredentialsProvider credentials) {
 
         try {
             // create temporary directory
-            Path workingDir = Files.createTempDirectory(repoName);
+            Path workingDir = Files.createTempDirectory(Paths.get(gitProperties.getLocalGitRepoPath()), repoName);
             if (log.isDebugEnabled()) {
                 log.debug("Created temporary directory {}", workingDir.toString());
             }
@@ -64,7 +75,7 @@ public class GitWorkflow {
 
             RemoteAddCommand remoteAddCommand = git.remoteAdd();
             remoteAddCommand.setName("origin");
-            remoteAddCommand.setUri(new URIish(repoHtmlUrl));
+            remoteAddCommand.setUri(new URIish(remoteGitRepoHttpUrl));
             remoteAddCommand.call();
 
             RevCommit commit = commitAndPush(git, message, credentials);
@@ -79,25 +90,25 @@ public class GitWorkflow {
     /**
      * Updates an existing git repository with the current version of project files.
      *
-     * @param repoHtmlUrl- the HTML (not ssh) url to a git repository
-     * @param repoName     - the name of the git repository
-     * @param message-     commit message
-     * @param files-       map of file paths along with their content
-     * @param credentials- Git credentials, for example username/password, authToken, personal access token
+     * @param remoteGitRepoHttpUrl- the HTML (not ssh) url to a git repository
+     * @param repoName              - the name of the git repository
+     * @param message-              commit message
+     * @param files-                map of file paths along with their content
+     * @param credentials-          Git credentials, for example username/password, authToken, personal access token
      * @return RevCommit, the commit info
      */
-    public RevCommit updateFiles(String repoHtmlUrl, String repoName, String message, Map<String, byte[]> files,
+    public RevCommit updateFiles(String remoteGitRepoHttpUrl, String repoName, String message, Map<String, byte[]> files,
                                  UsernamePasswordCredentialsProvider credentials) {
 
         try {
             // create temporary directory
-            Path workingDir = Files.createTempDirectory(repoName);
+            Path workingDir = Files.createTempDirectory(Paths.get(gitProperties.getLocalGitRepoPath()), repoName);
             if (log.isDebugEnabled()) {
                 log.debug("Created temporary directory {}", workingDir.toString());
             }
 
             // git clone
-            Git git = Git.cloneRepository().setDirectory(workingDir.toFile()).setURI(repoHtmlUrl).call();
+            Git git = Git.cloneRepository().setDirectory(workingDir.toFile()).setURI(remoteGitRepoHttpUrl).call();
             writeFiles(workingDir, files);
 
             RevCommit commit = commitAndPush(git, message, credentials);

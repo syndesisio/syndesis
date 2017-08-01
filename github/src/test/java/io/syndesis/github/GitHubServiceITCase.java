@@ -15,6 +15,7 @@
  */
 package io.syndesis.github;
 
+import io.syndesis.git.GitProperties;
 import io.syndesis.git.GitWorkflow;
 import org.assertj.core.api.Assertions;
 import org.eclipse.egit.github.core.Repository;
@@ -26,7 +27,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -50,11 +51,12 @@ public class GitHubServiceITCase {
     private static String PROJECT_DIR = "/sample-github-project";
     private static String REPO_NAME = "syndesis-itcase";
 
-    private static GitHubClient client = null;
-    private static GitHubService githubService = null;
+    private GitHubClient client = null;
+    private GitHubService githubService = null;
+    private GitWorkflow gitWorkflow = new GitWorkflow(new GitProperties());
 
-    @BeforeClass
-    public static void before() throws IOException {
+    @Before
+    public void before() throws IOException {
 
         authToken = System.getProperties().getProperty("github.oauth.token");
 
@@ -65,7 +67,7 @@ public class GitHubServiceITCase {
         client.setOAuth2Token(authToken);
 
         // Now that we have a client we create one of our GitHubService
-        githubService = new GitHubServiceImpl(new RepositoryService(client), new UserService(client));
+        githubService = new GitHubServiceImpl(new RepositoryService(client), new UserService(client), gitWorkflow);
 
     }
 
@@ -121,16 +123,15 @@ public class GitHubServiceITCase {
                 }
             });
 
-        GitWorkflow wf = new GitWorkflow();
         Repository repository = ((GitHubServiceImpl) githubService).getRepository(REPO_NAME);
         RevCommit commit = null;
         if (repository == null) {
             repository = ((GitHubServiceImpl) githubService).createRepo(REPO_NAME);
-            commit = wf.createFiles(repository.getHtmlUrl(), repository.getName(), "my itcase initial message", files,
+            commit = gitWorkflow.createFiles(repository.getHtmlUrl(), repository.getName(), "my itcase initial message", files,
                 new UsernamePasswordCredentialsProvider(authToken, ""));
 
         } else {
-            commit = wf.updateFiles(repository.getHtmlUrl(), repository.getName(), "my itcase update message", files,
+            commit = gitWorkflow.updateFiles(repository.getHtmlUrl(), repository.getName(), "my itcase update message", files,
                 new UsernamePasswordCredentialsProvider(authToken, ""));
         }
         Path workingDir = Files.createTempDirectory(repository.getName());
