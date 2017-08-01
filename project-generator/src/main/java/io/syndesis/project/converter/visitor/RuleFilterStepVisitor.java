@@ -1,8 +1,6 @@
 package io.syndesis.project.converter.visitor;
 
-import io.syndesis.integration.model.steps.Filter;
 import io.syndesis.model.filter.RuleFilterStep;
-import io.syndesis.model.integration.Step;
 
 /**
  * @author roland

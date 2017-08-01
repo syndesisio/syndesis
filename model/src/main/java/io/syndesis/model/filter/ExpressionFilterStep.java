@@ -15,14 +15,11 @@
  */
 package io.syndesis.model.filter;
 
+import java.util.Collections;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.model.integration.Step;
 import org.immutables.value.Value;
-
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(builder = ExpressionFilterStep.Builder.class)

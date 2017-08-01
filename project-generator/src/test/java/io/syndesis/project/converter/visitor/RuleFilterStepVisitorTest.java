@@ -16,10 +16,12 @@
 
 package io.syndesis.project.converter.visitor;
 
-import io.syndesis.model.filter.*;
+import io.syndesis.model.filter.FilterPredicate;
+import io.syndesis.model.filter.FilterRule;
+import io.syndesis.model.filter.RuleFilterStep;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class RuleFilterStepVisitorTest {
 
