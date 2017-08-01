@@ -15,6 +15,17 @@
  */
 package io.syndesis.project.converter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -34,17 +45,6 @@ import io.syndesis.project.converter.visitor.StepVisitorFactory;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
