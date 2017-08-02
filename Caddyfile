@@ -4,5 +4,5 @@ gzip
 prometheus
 rewrite {
   ext /
-  to {path} {path}/ /index.html
+  to {path} {path}/ /
 }
