@@ -238,7 +238,7 @@
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
               <expectedVersion>2.8.4</expectedVersion>
-              <resolvedVersion>2.8.0</resolvedVersion>
+              <resolvedVersion>2.8.8</resolvedVersion>
             </exception>
           </exceptions>
         </configuration>
