@@ -8,6 +8,8 @@ import { ConnectionsCreatePage } from './create-page/create-page.component';
 import { ConnectionsConnectionBasicsComponent } from './create-page/connection-basics/connection-basics.component';
 import { ConnectionsConfigureFieldsComponent } from './create-page/configure-fields/configure-fields.component';
 import { ConnectionsReviewComponent } from './create-page/review/review.component';
+import { ConnectionsCancelComponent } from './create-page/cancel.component';
+import { CanDeactivateGuard } from '../common/can-deactivate-guard.service';
 
 const routes: Routes = [
   { path: '', component: ConnectionsListPage, pathMatch: 'full' },
@@ -18,12 +20,19 @@ const routes: Routes = [
       {
         path: 'connection-basics',
         component: ConnectionsConnectionBasicsComponent,
+        canDeactivate: [CanDeactivateGuard],
       },
       {
         path: 'configure-fields',
         component: ConnectionsConfigureFieldsComponent,
+        canDeactivate: [CanDeactivateGuard],
       },
-      { path: 'review', component: ConnectionsReviewComponent },
+      {
+        path: 'review',
+        component: ConnectionsReviewComponent,
+        canDeactivate: [CanDeactivateGuard],
+      },
+      { path: 'cancel', component: ConnectionsCancelComponent},
       { path: '**', redirectTo: 'connection-basics', pathMatch: 'full' },
     ],
   },
