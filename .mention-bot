@@ -8,5 +8,6 @@
   "fallbackNotifyForPaths": [{
     "name": "kahboom",
     "files": ["**/*"]
-  }]
+  }],
+  "userBlacklist": "jludvice"
 }
