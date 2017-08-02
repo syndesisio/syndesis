@@ -304,31 +304,31 @@
             <exception>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
-              <resolvedVersion>2.8.0</resolvedVersion>
+              <resolvedVersion>2.8.8</resolvedVersion>
               <expectedVersion>2.5.4</expectedVersion>
             </exception>
             <exception>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
-              <resolvedVersion>2.8.0</resolvedVersion>
+              <resolvedVersion>2.8.8</resolvedVersion>
               <expectedVersion>2.6.0</expectedVersion>
             </exception>
             <exception>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
-              <resolvedVersion>2.8.0</resolvedVersion>
+              <resolvedVersion>2.8.8</resolvedVersion>
               <expectedVersion>2.7.0</expectedVersion>
             </exception>
             <exception>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
-              <resolvedVersion>2.8.0</resolvedVersion>
+              <resolvedVersion>2.8.8</resolvedVersion>
               <expectedVersion>2.8.3</expectedVersion>
             </exception>
             <exception>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
-              <resolvedVersion>2.8.0</resolvedVersion>
+              <resolvedVersion>2.8.8</resolvedVersion>
               <expectedVersion>2.8.6</expectedVersion>
             </exception>
             <exception>

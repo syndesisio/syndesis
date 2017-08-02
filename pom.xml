@@ -167,10 +167,10 @@
     <module>openshift</module>
     <module>project-generator</module>
     <module>rest</module>
+    <module>syndesis-maven-plugin</module>
     <module>runtime</module>
     <module>verifier</module>
     <module>inspector</module>
-    <module>syndesis-maven-plugin</module>
   </modules>
 
   <dependencyManagement>
@@ -458,6 +458,12 @@
             <artifactId>spring-social-web</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson.version}</version>
       </dependency>
 
       <dependency>
