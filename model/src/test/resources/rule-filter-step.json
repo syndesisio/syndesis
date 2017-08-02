@@ -1,12 +1,12 @@
 {
   "id": "1",
-  "stepKind": "filter",
-  "type": "rule",
+  "kind": "step",
+  "stepKind": "rule-filter",
   "predicate": "and",
-  "simple": "${body} contains \"antman\" || ${in.header.publisher} =~ \"DC Comics\"",
   "rules": [
     {
       "path": "body.text",
+      "op": "==",
       "value": "antman"
     },
     {

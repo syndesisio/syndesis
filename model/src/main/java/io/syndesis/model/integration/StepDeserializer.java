@@ -17,12 +17,12 @@
 package io.syndesis.model.integration;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.syndesis.model.filter.FilterStep;
+import io.syndesis.model.filter.ExpressionFilterStep;
+import io.syndesis.model.filter.RuleFilterStep;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,21 +30,22 @@ import java.util.Map;
 
 public class StepDeserializer extends JsonDeserializer<Step> {
 
-    private static final String KIND = "stepKind";
+    private static final String STEP_KIND = "stepKind";
 
     private static final Class<SimpleStep> DEFAULT_STEP_TYPE = SimpleStep.class;
-    private static final Map<String, Class<? extends Step>> EXCEPTIONS = new HashMap<>();
+    private static final Map<String, Class<? extends Step>> KIND_TO_STEP_MAPPING = new HashMap<>();
 
     static {
-        EXCEPTIONS.put("filter", FilterStep.class);
+        KIND_TO_STEP_MAPPING.put(ExpressionFilterStep.STEP_KIND, ExpressionFilterStep.class);
+        KIND_TO_STEP_MAPPING.put(RuleFilterStep.STEP_KIND, RuleFilterStep.class);
     }
 
     @Override
-    public Step deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Step deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         ObjectNode node = jp.readValueAsTree();
-        JsonNode kind = node.get(KIND);
-        if (kind != null) {
-            String value = kind.textValue();
+        JsonNode stepKind = node.get(STEP_KIND);
+        if (stepKind != null) {
+            String value = stepKind.textValue();
             Class<? extends Step> resourceType = getTypeForName(value);
             if (resourceType == null) {
                 throw ctxt.mappingException("No step type found for kind:" + value);
@@ -55,8 +56,8 @@ public class StepDeserializer extends JsonDeserializer<Step> {
         return null;
     }
 
-    private static Class getTypeForName(String name) {
-        Class result = EXCEPTIONS.get(name);
+    private static Class<? extends Step> getTypeForName(String name) {
+        Class result = KIND_TO_STEP_MAPPING.get(name);
         if (result == null) {
             return DEFAULT_STEP_TYPE;
         }

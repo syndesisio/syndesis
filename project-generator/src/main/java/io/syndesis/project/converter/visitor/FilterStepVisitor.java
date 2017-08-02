@@ -22,50 +22,21 @@ import io.syndesis.model.integration.Step;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
-public class FilterStepVisitor implements StepVisitor {
+public abstract class FilterStepVisitor implements StepVisitor {
 
-    private static final String SPACE = " ";
     private final GeneratorContext generatorContext;
 
-    public static class Factory implements StepVisitorFactory<FilterStepVisitor> {
-
-        @Override
-        public String getStepKind() {
-            return Filter.KIND;
-        }
-
-        @Override
-        public FilterStepVisitor create(GeneratorContext generatorContext) {
-            return new FilterStepVisitor(generatorContext);
-        }
-    }
-
-    public FilterStepVisitor(GeneratorContext generatorContext) {
+    FilterStepVisitor(GeneratorContext generatorContext) {
         this.generatorContext = generatorContext;
     }
 
     @Override
     public io.syndesis.integration.model.steps.Step visit(StepVisitorContext stepContext) {
-        Step s = stepContext.getStep();
-        if (s instanceof FilterStep) {
-            Filter filter = new Filter();
-            FilterStep step = (FilterStep) s;
-
-            switch (step.getType()) {
-                case RULE:
-                    filter.setExpression(createExpression(step));
-                    break;
-                case TEXT:
-                    filter.setExpression(step.getSimple());
-                    break;
-                default:
-                    //do nothing
-                    break;
-            }
-
+        Step step = stepContext.getStep();
+        if (step instanceof FilterStep && step.getStepKind().equals(getStepKind())) {
+            Filter filter = createFilter((FilterStep) step);
             List<io.syndesis.integration.model.steps.Step> steps = new ArrayList<>();
             while (stepContext.hasNext()) {
                 steps.add(visit(stepContext.next()));
@@ -79,11 +50,11 @@ public class FilterStepVisitor implements StepVisitor {
         }
     }
 
-
-    protected static String createExpression(FilterStep step) {
-        return step.getRules().stream().map(r ->
-            r.getPath() + SPACE +
-                r.getOp() + SPACE +
-                r.getValue()).collect(Collectors.joining(SPACE + step.getPredicate().getOperator() + SPACE));
+    private Filter createFilter(FilterStep s) {
+        Filter ret = new Filter();
+        ret.setExpression(s.getFilterExpression());
+        return ret;
     }
+
+    protected abstract String getStepKind();
 }

@@ -31,10 +31,7 @@ public enum Kind {
     Organization(io.syndesis.model.environment.Organization.class),
 
     Integration(io.syndesis.model.integration.Integration.class),
-    IntegrationConnectionStep( io.syndesis.model.integration.IntegrationConnectionStep.class),
     IntegrationRuntime(io.syndesis.model.integration.IntegrationRuntime.class),
-    IntegrationTemplate(io.syndesis.model.integration.IntegrationTemplate.class),
-    IntegrationTemplateConnectionStep(io.syndesis.model.integration.IntegrationTemplateConnectionStep.class),
     Step(io.syndesis.model.integration.Step.class),
 
     Permission(io.syndesis.model.user.Permission.class),
@@ -65,7 +62,7 @@ public enum Kind {
 
     private static String name(String value) {
         String regex = "(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])";
-        return Arrays.stream(value.split(regex)).map(x->x.toLowerCase()).collect(Collectors.joining("-"));
+        return Arrays.stream(value.split(regex)).map(String::toLowerCase).collect(Collectors.joining("-"));
     }
 
     @Override
