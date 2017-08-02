@@ -36,14 +36,14 @@
         <h2 class="card-pf-title">
           {{ connection?.connector?.name }} Configuration
           <div class="pull-right"
-               *ngIf="formGroup">
+               *ngIf="formGroup(); let fg">
             <p *ngIf="validating"
                class="inline-block">Validating, please wait...
               <span class="spinner spinner-xs spinner-inline"></span>
             </p>
             <button *ngIf="showButton(connection?.connector?.id)"
-                    [disabled]="!formGroup.valid || validating"
-                    (click)="doValidate(connection.connector, formGroup)"
+                    [disabled]="!fg.valid || validating"
+                    (click)="doValidate(connection.connector, fg)"
                     class="btn btn-primary">Validate
             </button>
           </div>
@@ -74,16 +74,19 @@
               <strong>{{ connection.connector.name }}</strong> has been successfully validated
             </div>
           </div>
-          <div *ngIf="formModel && formGroup">
-            <form class="form-horizontal"
-                  [formGroup]="formGroup" *ngIf="formModel.length">
-              <syndesis-form-control *ngFor="let controlModel of formModel"
-                                              [group]="formGroup"
-                                              [model]="controlModel"></syndesis-form-control>
-            </form>
-            <form *ngIf="!formModel.length">
-              <p class="alert alert-info">There are no properties to configure</p>
-            </form>
+          <div *ngIf="formModel(); let fm">
+            <div *ngIf="formGroup(fm); let fg">
+              <form class="form-horizontal"
+                    [formGroup]="fg"
+                    *ngIf="fm.length">
+                <syndesis-form-control *ngFor="let controlModel of fm"
+                                      [group]="fg"
+                                      [model]="controlModel"></syndesis-form-control>
+              </form>
+              <form *ngIf="!fm.length">
+                <p class="alert alert-info">There are no properties to configure</p>
+              </form>
+            </div>
           </div>
         </div>
       </div>
