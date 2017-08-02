@@ -52,17 +52,13 @@ public class DataManager implements DataAccessObjectRegistry {
     private CacheContainer caches;
     private final EventBus eventBus;
 
-    @Value("${deployment.file}")
-    private String dataFileName;
+    @Value("${deployment.file:io/syndesis/dao/deployment.json}")
+    private String dataFileName = "io/syndesis/dao/deployment.json";
+    @Value("${deployment.load-demo-data:true}")
+    private boolean loadDemoData = true;
 
     private final List<DataAccessObject<?>> dataAccessObjects = new ArrayList<>();
     private final Map<Class<? extends WithId<?>>, DataAccessObject<?>> dataAccessObjectMapping = new HashMap<>();
-
-    // Constructor to help with testing.
-    public DataManager(CacheContainer caches, List<DataAccessObject<?>> dataAccessObjects, String dataFileName) {
-        this(caches, dataAccessObjects, (EventBus)null);
-        this.dataFileName = dataFileName;
-    }
 
     // Inject mandatory via constructor injection.
     @Autowired
@@ -83,17 +79,23 @@ public class DataManager implements DataAccessObjectRegistry {
 
     public void resetDeploymentData() {
         if (dataFileName != null) {
-            ReadApiClientData reader = new ReadApiClientData();
-            try {
-                List<ModelData<?>> mdList = reader.readDataFromFile(dataFileName);
-                for (ModelData<?> modelData : mdList) {
-                    store(modelData);
-                }
-            } catch (Exception e) {
-                throw new IllegalStateException("Cannot read dummy startup data due to: " + e.getMessage(), e);
-            }
+            loadData(this.dataFileName);
         }
+        if( loadDemoData ) {
+            loadData("io/syndesis/dao/demo-data.json");
+        }
+    }
 
+    private void loadData(String file) {
+        ReadApiClientData reader = new ReadApiClientData();
+        try {
+            List<ModelData<?>> mdList = reader.readDataFromFile(file);
+            for (ModelData<?> modelData : mdList) {
+                store(modelData);
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Cannot read dummy startup data due to: " + e.getMessage(), e);
+        }
     }
 
     public <T extends WithId<T>> void store(ModelData<T> modelData) {

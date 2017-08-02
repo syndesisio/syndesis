@@ -14,9 +14,6 @@
 # limitations under the License.
 #
 
-deployment:
-  file: io/syndesis/dao/deployment.json
-
 cors:
   allowedOrigins: "*"
 
