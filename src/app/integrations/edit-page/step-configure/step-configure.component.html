@@ -9,8 +9,19 @@
           <div class="toolbar-pf-actions">
             <div class="inline-block">
               <ol class="breadcrumb">
-                <li><a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Dashboard</a></li>
-                <li class="active">Configure {{ step.stepKind }}</li>
+                <li>
+                  <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Home</a>
+                </li>
+                <li>
+                  <a [routerLink]="['/integrations']">Integrations</a>
+                </li>
+                <li>
+                  <a *ngIf="integrationName"
+                     [routerLink]="['/integrations', 'edit', currentFlow.integration.id, 'save-or-add-step']">{{integrationName}}</a>
+                  <ng-container *ngIf="!integrationName">New Integration</ng-container>
+                </li>
+
+                <li class="active">Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</li>
               </ol>
             </div>
             <div class="toolbar-pf-action-right">
@@ -20,7 +31,14 @@
               -->
               <button type="button"
                       class="btn btn-primary"
-                      (click)="continue()">Next <i class="fa fa-chevron-right"></i></button>
+                      (click)="continue()">
+                <ng-container *ngIf="step.configuredProperties">
+                  Done
+                </ng-container>
+                <ng-container *ngIf="!step.configuredProperties">
+                  Next <i class="fa fa-chevron-right"></i>
+                </ng-container>
+              </button>
             </div>
           </div>
         </div>
@@ -46,7 +64,7 @@
         </div>
         <div *ngSwitchDefault>
           <div class="title">
-            <h1>Configure {{ step.stepKind }}</h1>
+            <h1>Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</h1>
           </div>
           <p>Fill out the fields associated with the selected step.</p>
           <div *ngIf="formGroup">

@@ -6,6 +6,8 @@ import { ObjectPropertyFilterPipe } from './object-property-filter.pipe';
 import { ObjectPropertySortPipe } from './object-property-sort.pipe';
 import { TruncateCharactersPipe } from './truncate-characters.pipe';
 import { TruncateWordsPipe } from './truncate-words.pipe';
+import { CapitalizePipe } from './capitalize.pipe';
+import { TitleizePipe } from './titleize.pipe';
 import { LoadingComponent } from './loading/loading.component';
 import { UserService } from './user.service';
 import { FormFactoryService } from './forms.service';
@@ -22,6 +24,8 @@ import { NavigationService } from './navigation.service';
     TruncateCharactersPipe,
     TruncateWordsPipe,
     LoadingComponent,
+    CapitalizePipe,
+    TitleizePipe,
   ],
   exports: [
     ObjectPropertyFilterPipe,
@@ -29,6 +33,8 @@ import { NavigationService } from './navigation.service';
     TruncateCharactersPipe,
     TruncateWordsPipe,
     LoadingComponent,
+    CapitalizePipe,
+    TitleizePipe,
   ],
   providers: [
     ConfigService,

@@ -136,7 +136,7 @@
             (click)="goto('step-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
-        {{ getStepText() }}
+        {{ getStepText() | titleize:{separator: '-'} | capitalize}}
       </span>
 
       <!-- Sub Steps -->
