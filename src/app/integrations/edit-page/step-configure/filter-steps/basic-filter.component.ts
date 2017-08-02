@@ -10,7 +10,7 @@ import {
 import { CurrentFlow, FlowEvent } from '../../current-flow.service';
 import { IntegrationSupportService } from '../../../../store/integration-support.service';
 
-import { BASIC_FILTER_MODEL } from './basic-filter.model';
+import { createBasicFilterModel, findById } from './basic-filter.model';
 import { log, getCategory } from '../../../../logging';
 import { BasicFilter } from './filter.interface';
 
@@ -23,7 +23,7 @@ import { BasicFilter } from './filter.interface';
 
 export class BasicFilterComponent implements OnInit {
 
-  basicFilterModel: DynamicFormControlModel[] = BASIC_FILTER_MODEL;
+  basicFilterModel: DynamicFormControlModel[] = createBasicFilterModel();
   formGroup: FormGroup;
   predicateControl: FormControl;
   predicateModel: DynamicInputModel;
@@ -66,10 +66,10 @@ export class BasicFilterComponent implements OnInit {
     this.formGroup = this.formService.createFormGroup(this.basicFilterModel);
 
     this.predicateControl = this.formGroup.get('filterSettingsGroup').get('predicate') as FormControl;
-    this.predicateModel = this.formService.findById('predicate', this.basicFilterModel) as DynamicInputModel;
+    this.predicateModel = findById('predicate', this.basicFilterModel) as DynamicInputModel;
 
     this.rulesArrayControl = this.formGroup.get('rulesGroup').get('rulesFormArray') as FormArray;
-    this.rulesArrayModel = this.formService.findById('rulesFormArray', this.basicFilterModel) as DynamicFormArrayModel;
+    this.rulesArrayModel = findById('rulesFormArray', this.basicFilterModel) as DynamicFormArrayModel;
   }
 
   // Manage Individual Fields
