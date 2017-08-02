@@ -101,6 +101,11 @@ parameters:
   name: TEST_SUPPORT_ENABLED
   required: true
   value: "true"
+- description: Enables starting up with demo data
+  displayName: Demo Data Enabled
+  name: DEMO_DATA_ENABLED
+  required: true
+  value: "true"
 - description: Ignore SSL errors in proxy containers
   displayName: Insecure skip verify
   name: INSECURE_SKIP_VERIFY
@@ -2107,7 +2112,7 @@ objects:
   data:
     application.yml: |-
       deployment:
-        file: io/syndesis/dao/deployment.json
+        load-demo-data: ${DEMO_DATA_ENABLED}
       resteasy:
         jaxrs:
           app:

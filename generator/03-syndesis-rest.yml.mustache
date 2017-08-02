@@ -215,7 +215,7 @@
   data:
     application.yml: |-
       deployment:
-        file: io/syndesis/dao/deployment.json
+        load-demo-data: ${DEMO_DATA_ENABLED}
       resteasy:
         jaxrs:
           app:
