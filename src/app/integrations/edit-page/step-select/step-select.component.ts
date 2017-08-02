@@ -8,6 +8,7 @@ import { FlowPage } from '../flow-page';
 import { Step, Steps, TypeFactory } from '../../../model';
 import { log, getCategory } from '../../../logging';
 
+
 @Component({
   selector: 'syndesis-integrations-step-select',
   templateUrl: './step-select.component.html',
@@ -63,8 +64,10 @@ export class IntegrationsStepSelectComponent extends FlowPage
       case 'mapper':
         return 'Map fields from the input type to the output type';
       case 'basic-filter':
-        return 'Continue the integration only if criteria you specify in simple input fields are met. Suitable for most' +
-          ' integrations.';
+        return (
+          'Continue the integration only if criteria you specify in simple input fields are met. Suitable for most' +
+          ' integrations.'
+        );
       case 'advanced-filter':
         return 'Continue the integration only if criteria you define in scripting language expressions are met.';
     }

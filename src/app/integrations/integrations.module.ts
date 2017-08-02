@@ -21,6 +21,7 @@ import { IntegrationsConfigureActionComponent } from './edit-page/action-configu
 import { IntegrationsSelectActionComponent } from './edit-page/action-select/action-select.component';
 import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
 import { IntegrationsStepSelectComponent } from './edit-page/step-select/step-select.component';
+import { StepVisiblePipe } from './edit-page/step-select/step-visible.pipe';
 import { IntegrationsStepConfigureComponent } from './edit-page/step-configure/step-configure.component';
 import { DataMapperHostComponent } from './edit-page/step-configure/data-mapper/data-mapper-host.component';
 import { BasicFilterComponent } from './edit-page/step-configure/filter-steps/basic-filter.component';
@@ -109,6 +110,7 @@ const routes: Routes = [
     FlowViewComponent,
     FlowViewStepComponent,
     ListActionsComponent,
+    StepVisiblePipe,
   ],
   providers: [ CurrentFlow ],
 })

@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Step, Steps, TypeFactory } from '../../model';
+import { Connection, Action, Step, Steps, TypeFactory } from '../../model';
 
 export interface StepKind extends Step {
   name: string;
   description: string;
   properties: any;
+  visible?: (
+    position: number,
+    previous: Array<Step>,
+    subsequent: Array<Step>,
+  ) => boolean;
 }
 export type StepKinds = Array<StepKind>;
 
@@ -18,6 +23,32 @@ export class StepStore {
       name: 'Data Mapper',
       description: 'Map fields from the input type to the output type',
       stepKind: 'mapper',
+      visible: (
+        position: number,
+        previous: Array<Step>,
+        subsequent: Array<Step>,
+      ): boolean => {
+        // previous and subsequent steps need to have input and output data shapes respectively
+        const prev = previous.filter(s => {
+          return (
+            s.action &&
+            s.action.outputDataShape &&
+            s.action.outputDataShape.type
+          );
+        });
+        if (!prev.length) {
+          return false;
+        }
+        const subs = subsequent.filter(s => {
+          return (
+            s.action && s.action.inputDataShape && s.action.inputDataShape.type
+          );
+        });
+        if (!subs.length) {
+          return false;
+        }
+        return true;
+      },
       properties: {},
       configuredProperties: undefined,
     },
@@ -48,12 +79,14 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Basic Filter',
-      description: 'Continue the integration only if criteria you specify in simple input fields are met. Suitable for' +
-      ' most integrations.',
+      description:
+        'Continue the integration only if criteria you specify in simple input fields are met. Suitable for' +
+        ' most integrations.',
       stepKind: 'basic-filter',
       properties: {
         filter: {
-          displayName: 'Only continue if incoming data match all of the following',
+          displayName:
+            'Only continue if incoming data match all of the following',
           required: true,
         },
       },

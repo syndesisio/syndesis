@@ -1,0 +1,29 @@
+import { Component, Pipe } from '@angular/core';
+import { StepStore, StepKind, StepKinds } from '../../../store/step/step.store';
+import { CurrentFlow } from '../current-flow.service';
+import { Step, Steps, TypeFactory } from '../../../model';
+
+export class StepVisibleConfig {
+  position: number;
+}
+
+@Pipe({
+  name: 'stepVisible',
+  pure: false,
+})
+export class StepVisiblePipe {
+  constructor(
+    private currentFlow: CurrentFlow,
+  ) {}
+  transform(objects: Array<StepKind>, config: StepVisibleConfig) {
+    const position = config.position;
+    const previous = this.currentFlow.getPreviousSteps(config.position);
+    const subsequent = this.currentFlow.getSubsequentSteps(config.position);
+    return objects.filter((s: StepKind) => {
+      if (s.visible && typeof s.visible === 'function') {
+        return s.visible(position, previous, subsequent);
+      }
+      return true;
+    });
+  }
+}
