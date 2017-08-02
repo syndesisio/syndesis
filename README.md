@@ -78,6 +78,7 @@ Once all pods are started up, you should be able to access the Syndesis at `http
 | **POSTGRESQL_VOLUME_CAPACITY** | Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi | 1Gi |
 | **INSECURE_SKIP_VERIFY** | Whether to skip the verification of SSL certificates for internal services | false |
 | **TEST_SUPPORT_ENABLED** | Whether test support for e2e test is enabled | false |
+| **DEMO_DATA_ENABLED** | Whether demo data is automatically imported on startup | true |
 
 ## Running as a Cluster Admin
 
