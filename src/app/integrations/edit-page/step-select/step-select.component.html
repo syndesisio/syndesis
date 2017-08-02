@@ -32,13 +32,9 @@
     </div>
     <p>Choose a step from below</p>
     <div class="list-group list-view-pf list-view-pf-view">
-<<<<<<< HEAD
-      <div class="step list-group-item" title="{{step.name}}"
-           *ngFor="let step of steps"
-=======
-      <div class="list-group-item"
+      <div class="step list-group-item"
+           title="{{step.name}}"
            *ngFor="let step of steps | stepVisible:{position: position}"
->>>>>>> feat(integrations): hide data mapper if the integration is missing types
            (click)="onSelect(step)"
            [class.active]="isSelected(step)">
         <div class="list-view-pf-main-info">
