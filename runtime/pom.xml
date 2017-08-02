@@ -52,6 +52,21 @@
     </testResources>
 
     <plugins>
+
+      <plugin>
+        <groupId>io.syndesis</groupId>
+        <artifactId>syndesis-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <executions>
+          <execution>
+            <id>generate-mapper-inspections</id>
+            <goals>
+              <goal>generate-mapper-inspections</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
