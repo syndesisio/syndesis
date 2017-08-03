@@ -15,6 +15,8 @@
  */
 package io.syndesis.core;
 
+import java.util.Locale;
+
 public final class Names {
 
     private static final String INVALID_CHARACTER_REGEX = "[^a-zA-Z0-9-]";
@@ -40,7 +42,7 @@ public final class Names {
         return trimmed
             .replaceAll(SPACE, DASH)
             .replaceAll(INVALID_CHARACTER_REGEX, BLANK)
-            .toLowerCase()
+            .toLowerCase(Locale.US)
             .chars()
             .filter(i -> !String.valueOf(i).matches(INVALID_CHARACTER_REGEX))
             .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)

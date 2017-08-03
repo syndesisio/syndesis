@@ -231,11 +231,11 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
 
     static class DockerImage {
-        private String image;
+        private final String image;
 
         private String tag = "latest";
 
-        private String shortName;
+        private final String shortName;
 
         DockerImage(String fullImage) {
             image = fullImage;

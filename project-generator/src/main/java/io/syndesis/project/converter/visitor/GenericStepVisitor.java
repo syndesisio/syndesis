@@ -16,14 +16,14 @@
 
 package io.syndesis.project.converter.visitor;
 
+import java.io.IOException;
+import java.util.HashMap;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.syndesis.core.Json;
+
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.integration.model.SyndesisHelpers;
 import io.syndesis.model.integration.Step;
-
-import java.io.IOException;
-import java.util.HashMap;
 
 public class GenericStepVisitor implements StepVisitor {
 

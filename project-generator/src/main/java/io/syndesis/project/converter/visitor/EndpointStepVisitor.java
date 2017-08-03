@@ -57,7 +57,6 @@ public class EndpointStepVisitor implements StepVisitor {
     @Override
     public io.syndesis.integration.model.steps.Step visit(StepVisitorContext visitorContext) {
         Step step = visitorContext.getStep();
-        GenerateProjectRequest request = generatorContext.getRequest();
         if (!step.getAction().isPresent() || !step.getConnection().isPresent()) {
             return null;
         }
@@ -65,6 +64,7 @@ public class EndpointStepVisitor implements StepVisitor {
         Action action = step.getAction().orElseThrow(() -> new IllegalStateException("Action is not present"));
         Connection connection = step.getConnection().orElseThrow(() -> new IllegalStateException("Action is not present"));
 
+        GenerateProjectRequest request = generatorContext.getRequest();
         try {
             String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
             if (!request.getConnectors().containsKey(connectorId)) {

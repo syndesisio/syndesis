@@ -21,9 +21,13 @@ import org.keycloak.common.VerificationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class Tokens {
+public final class Tokens {
 
-    private static ThreadLocal<String> OAUTH_TOKEN = new InheritableThreadLocal<>();
+    private static final ThreadLocal<String> OAUTH_TOKEN = new InheritableThreadLocal<>();
+
+    private Tokens() {
+        // utility class
+    }
 
     public static String getAuthenticationToken() {
         String stringToken = OAUTH_TOKEN.get();

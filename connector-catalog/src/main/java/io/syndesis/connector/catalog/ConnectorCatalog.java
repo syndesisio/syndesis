@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class ConnectorCatalog {
 
-    private static final Logger log = LoggerFactory.getLogger(ConnectorCatalog.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConnectorCatalog.class);
 
     private final CamelConnectorCatalog connectorCatalog;
     private final CamelCatalog camelCatalog;
@@ -51,14 +51,14 @@ public class ConnectorCatalog {
         }
     }
 
-    public void addConnector(String gav) {
+    public final void addConnector(String gav) {
         String[] splitGAV = gav.split(":");
         if (splitGAV.length == 3) {
             String groupId = splitGAV[0];
             String artifactId = splitGAV[1];
             String version = splitGAV[2];
 
-           log.info("Downloading Maven GAV: " + groupId + ":" + artifactId + ":" + version);
+            LOG.info("Downloading Maven GAV: {}:{}:{}", groupId, artifactId, version);
 
             maven.addArtifactToCatalog(camelCatalog, connectorCatalog, groupId, artifactId, version);
         }

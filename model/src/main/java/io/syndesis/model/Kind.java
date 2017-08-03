@@ -16,7 +16,10 @@
 package io.syndesis.model;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum Kind {
@@ -42,13 +45,19 @@ public enum Kind {
     public final String modelName;
     public final Class<? extends WithId<?>> modelClass;
 
-    private static final HashMap<String, Kind> nameMap = new HashMap<>();
-    private static final HashMap<Class<?>, Kind> modelMap = new HashMap<>();
+    private static final Map<String, Kind> NAME_MAP;
+    private static final Map<Class<?>, Kind> MODEL_MAP;
     static {
+        final Map<String, Kind> kindByName = new HashMap<>();
+        final Map<Class<?>, Kind> kindByType = new HashMap<>();
+
         for (Kind kind : Kind.values()) {
-            nameMap.put(kind.modelName, kind);
-            modelMap.put(kind.modelClass, kind);
+            kindByName.put(kind.modelName, kind);
+            kindByType.put(kind.modelClass, kind);
         }
+
+        NAME_MAP = Collections.unmodifiableMap(kindByName);
+        MODEL_MAP = Collections.unmodifiableMap(kindByType);
     }
 
     Kind(Class<? extends WithId<?>> model) {
@@ -62,7 +71,7 @@ public enum Kind {
 
     private static String name(String value) {
         String regex = "(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])";
-        return Arrays.stream(value.split(regex)).map(String::toLowerCase).collect(Collectors.joining("-"));
+        return Arrays.stream(value.split(regex)).map(x->x.toLowerCase(Locale.US)).collect(Collectors.joining("-"));
     }
 
     @Override
@@ -71,7 +80,7 @@ public enum Kind {
     }
 
     public static Kind from(Class<?> x) {
-        Kind kind = modelMap.get(x);
+        Kind kind = MODEL_MAP.get(x);
         if( kind == null ) {
             throw new IllegalArgumentException("No matching Kind found.");
         }
@@ -79,7 +88,7 @@ public enum Kind {
     }
 
     public static Kind from(String x) {
-        Kind kind = nameMap.get(x);
+        Kind kind = NAME_MAP.get(x);
         if( kind == null ) {
             throw new IllegalArgumentException("No matching Kind found.");
         }

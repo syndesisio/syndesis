@@ -74,7 +74,7 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(keycloakAuthenticationProvider());
     }
 
@@ -104,6 +104,7 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .sessionAuthenticationStrategy(sessionAuthenticationStrategy()).and()

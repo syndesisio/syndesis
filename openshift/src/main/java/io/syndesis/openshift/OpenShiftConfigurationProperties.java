@@ -24,13 +24,15 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class OpenShiftConfigurationProperties {
 
+    private static final String DEFAULT_INTEGRATION_SA = "syndesis-integration";
+
     public static final String SERVICE_CA_CERT_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt";
 
     private boolean enabled;
 
     private String openShiftHost = "https://syndesis-openshift-proxy." + new OpenShiftConfigBuilder().build().getNamespace() + ".svc";
 
-    private OpenShiftConfig openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(openShiftHost).withCaCertFile(SERVICE_CA_CERT_FILE).build();
+    private final OpenShiftConfig openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(openShiftHost).withCaCertFile(SERVICE_CA_CERT_FILE).build();
 
     private String builderImage = "fabric8/s2i-java:2.0.0";
 
@@ -38,7 +40,7 @@ public class OpenShiftConfigurationProperties {
 
     private String namespace;
 
-    private String integrationServiceAccount = "syndesis-integration";
+    private String integrationServiceAccount = DEFAULT_INTEGRATION_SA;
 
     public boolean isEnabled() {
         return enabled;
@@ -86,5 +88,9 @@ public class OpenShiftConfigurationProperties {
 
     public String getIntegrationServiceAccount() {
         return integrationServiceAccount;
+    }
+
+    public void setIntegrationServiceAccount(String integrationServiceAccount) {
+        this.integrationServiceAccount = integrationServiceAccount;
     }
 }

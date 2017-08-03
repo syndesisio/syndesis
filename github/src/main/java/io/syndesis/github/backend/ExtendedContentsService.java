@@ -45,9 +45,9 @@ public class ExtendedContentsService extends ContentsService {
 
     private StringBuilder createContentsUri(IRepositoryIdProvider repository, String path) {
         String id = getId(repository);
-        StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
-        uri.append('/').append(id);
-        uri.append(SEGMENT_CONTENTS);
+        StringBuilder uri = new StringBuilder(SEGMENT_REPOS)
+            .append('/').append(id)
+            .append(SEGMENT_CONTENTS);
         if (path != null && path.length() > 0) {
             if (path.charAt(0) != '/') {
                 uri.append('/');
