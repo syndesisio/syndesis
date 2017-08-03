@@ -214,6 +214,7 @@ export class CurrentFlow {
             position === this.getLastPosition()
           ) {
             this.steps[position] = TypeFactory.createStep();
+            this.steps[position].stepKind = 'endpoint';
           } else {
             this.steps.splice(position, 1);
           }

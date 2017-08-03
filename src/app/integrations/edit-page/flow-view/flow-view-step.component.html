@@ -63,26 +63,22 @@
   </div>
 
 
-  <!-- Progress Menu -->
-
+  <!-- Step Item Wrapper -->
   <div class="col-md-9 menu"
        *ngIf="currentStepKind !== 'mapper'"
        [ngSwitch]="step.stepKind">
 
-    <!-- Endpoint Steps -->
-
+    <!-- Connection Steps -->
     <div *ngSwitchCase="'endpoint'"
          [class]="getParentActiveClass() + ' step-container'">
 
       <!-- Delete Icon -->
-
       <i *ngIf="showDelete()"
          class="delete-icon fa fa-lg fa-trash"
          (click)="deletePrompt()"></i>
 
 
-      <!-- Parent Step -->
-
+      <!-- Connection Title -->
       <span [class]="getParentClass()"
             (click)="goto('action-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
@@ -90,8 +86,7 @@
         {{ getStepText() }}
       </span>
 
-      <!-- Sub Steps -->
-
+      <!-- Connection Sub Pages -->
       <ul [collapse]="isCollapsed()"
           class="sub-steps">
         <li *ngIf="!step.connection"
@@ -119,19 +114,16 @@
     </div>
 
     <!-- Default Steps -->
-
     <div *ngSwitchDefault
          [class]="getParentActiveClass() + ' step-container'">
 
       <!-- Delete Icon -->
-
       <i *ngIf="showDelete()"
          class="delete-icon fa fa-lg fa-trash"
          [class.add-step-or-connection]="step.stepKind !== 'endpoint'"
          (click)="deletePrompt()"></i>
 
-      <!-- Parent Step Heading -->
-
+      <!-- Step Heading -->
       <span [class]="getParentClass()"
             (click)="goto('step-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
@@ -139,8 +131,7 @@
         {{ getStepText() | titleize:{separator: '-'} | capitalize}}
       </span>
 
-      <!-- Sub Steps -->
-
+      <!-- Step Sub Pages -->
       <ul [collapse]="isCollapsed()"
           class="sub-steps">
         <li *ngIf="!step.stepKind"

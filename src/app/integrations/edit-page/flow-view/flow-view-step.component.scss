@@ -147,6 +147,11 @@
         //background-color: #E7E7E7;
         background-color: $pf-black-300;
         cursor: pointer;
+
+        &.disabled {
+          cursor: default;
+        }
+
         display: inline;
         padding: 8px 100% 8px 8px;
         text-transform: uppercase;
