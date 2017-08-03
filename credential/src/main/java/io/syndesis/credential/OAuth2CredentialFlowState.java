@@ -15,27 +15,62 @@
  */
 package io.syndesis.credential;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.databind.util.Converter;
 
 import org.immutables.value.Value;
+import org.springframework.social.oauth1.OAuthToken;
+import org.springframework.social.oauth2.AccessGrant;
 
 @Value.Immutable
 @JsonDeserialize(builder = OAuth2CredentialFlowState.Builder.class)
 public interface OAuth2CredentialFlowState extends CredentialFlowState {
+
+    final class AccessGrantConverter implements Converter<Map<String, String>, AccessGrant> {
+
+        @Override
+        public AccessGrant convert(final Map<String, String> value) {
+            final String expireTimeString = value.get("expireTime");
+            final Long expireTime = Optional.ofNullable(expireTimeString).map(Long::valueOf).orElse(null);
+
+            return new AccessGrant(value.get("accessToken"), value.get("scope"), value.get("refreshToken"), expireTime);
+        }
+
+        @Override
+        public JavaType getInputType(final TypeFactory typeFactory) {
+            return typeFactory.constructMapLikeType(HashMap.class, String.class, String.class);
+        }
+
+        @Override
+        public JavaType getOutputType(final TypeFactory typeFactory) {
+            return typeFactory.constructType(OAuthToken.class);
+        }
+
+    }
 
     final class Builder extends ImmutableOAuth2CredentialFlowState.Builder implements CredentialFlowState.Builder {
         @Override
         public CredentialFlowState.Builder withAll(final CredentialFlowState state) {
             return createFrom(state);
         }
+
     }
 
     @Override
     default Builder builder() {
         return new Builder();
     }
+
+    @JsonDeserialize(converter = AccessGrantConverter.class)
+    AccessGrant getAccessGrant();
 
     String getCode();
 

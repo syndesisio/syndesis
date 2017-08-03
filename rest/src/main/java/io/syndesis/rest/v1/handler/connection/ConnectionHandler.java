@@ -16,12 +16,15 @@
 package io.syndesis.rest.v1.handler.connection;
 
 import java.util.Date;
+import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
 
 import io.swagger.annotations.Api;
+import io.syndesis.credential.CredentialFlowState;
 import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
@@ -46,6 +49,12 @@ public class ConnectionHandler extends BaseHandler
     private final Credentials credentials;
 
     private final ClientSideState state;
+
+    @Context
+    private HttpServletRequest request;
+
+    @Context
+    private HttpServletResponse response;
 
     public ConnectionHandler(final DataManager dataMgr, final Credentials credentials, final ClientSideState state) {
         super(dataMgr);
@@ -73,7 +82,14 @@ public class ConnectionHandler extends BaseHandler
         final Date rightNow = new Date();
         final Connection updatedConnection = new Connection.Builder().createFrom(connection).createdDate(rightNow)
             .lastUpdated(rightNow).build();
-        return Creator.super.create(updatedConnection);
+
+        final Optional<CredentialFlowState> flowState = CredentialFlowState.Builder
+            .restoreFrom(state::restoreFrom, request, response).findFirst();
+
+        final Connection connectionToCreate = flowState.map(s -> credentials.apply(updatedConnection, s))
+            .orElse(updatedConnection);
+
+        return Creator.super.create(connectionToCreate);
     }
 
     @Override
@@ -81,14 +97,6 @@ public class ConnectionHandler extends BaseHandler
         final Connection updatedConnection = new Connection.Builder().createFrom(connection).lastUpdated(new Date())
             .build();
         Updater.super.update(id, updatedConnection);
-    }
-
-    @Path("/{id}/credentials")
-    public ConnectionCredentialHandler credentials(final @PathParam("id") String connectionId) {
-        final String connectorId = get(connectionId).getConnector().flatMap(Connector::getId)
-            .orElseThrow(() -> new EntityNotFoundException(connectionId));
-
-        return new ConnectionCredentialHandler(credentials, state, connectionId, connectorId);
     }
 
 }
