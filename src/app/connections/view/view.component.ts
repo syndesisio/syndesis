@@ -49,6 +49,8 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     sortField: 'name',
     descending: false,
   };
+  _formModel: DynamicFormControlModel[];
+  _formGroup: FormGroup;
   formChangesSubscription: Subscription;
   configuredProperties: any;
 
@@ -197,21 +199,29 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
     return {};
   }
 
-  formModel() {
+  get formModel() {
+    if (this._formModel) {
+      return this._formModel;
+    }
     if (!this.connection) {
       return undefined;
     }
     const config = this.getFormConfig(this.connection);
     if (config) {
-      return this.formFactory.createFormModel(config);
+      this._formModel = this.formFactory.createFormModel(config);
+      return this._formModel;
     }
     return undefined;
   }
 
-  formGroup(formModel = this.formModel()) {
+  get formGroup() {
+    if (this._formGroup) {
+      return this._formGroup;
+    }
+    const formModel = this.formModel;
     if (formModel) {
-      const formGroup = this.formService.createFormGroup(formModel);
-      this.formChangesSubscription = formGroup.valueChanges.subscribe(
+      this._formGroup = this.formService.createFormGroup(formModel);
+      this.formChangesSubscription = this._formGroup.valueChanges.subscribe(
         data => {
           Object.keys(data).forEach(key => {
             if (data[key] === null) {
@@ -222,10 +232,18 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
           this.connectionChange.emit(this.connection);
         },
       );
-      return formGroup;
+      return this._formGroup;
     } else {
       return undefined;
     }
+  }
+
+  set formModel(formModel: DynamicFormControlModel[]) {
+    this._formModel = formModel;
+  }
+
+  set formGroup(formGroup: FormGroup) {
+    this._formGroup = formGroup;
   }
 
   ngOnInit() {
