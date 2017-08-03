@@ -46,7 +46,7 @@ export class IntegrationsStepSelectComponent extends FlowPage
         return 'Log';
       case 'mapper':
         return 'Data Mapper';
-      case 'basic-filter':
+      case 'rule-filter':
         return 'Basic Filter';
       default:
         // TODO not ideal
@@ -63,7 +63,7 @@ export class IntegrationsStepSelectComponent extends FlowPage
         return "Sends a message to the integration's log";
       case 'mapper':
         return 'Map fields from the input type to the output type';
-      case 'basic-filter':
+      case 'rule-filter':
         return (
           'Continue the integration only if criteria you specify in simple input fields are met. Suitable for most' +
           ' integrations.'
