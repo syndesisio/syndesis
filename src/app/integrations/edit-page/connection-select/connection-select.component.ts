@@ -71,7 +71,7 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
       return 'start';
     }
     if (this.position === this.currentFlow.getLastPosition()) {
-      return 'end';
+      return 'finish';
     }
     return '';
   }

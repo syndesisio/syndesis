@@ -23,6 +23,10 @@ export abstract class FlowPage implements OnDestroy {
     );
   }
 
+  get integrationName() {
+    return this.currentFlow.integration.name;
+  }
+
   cancel() {
     this.router.navigate(['integrations']);
   }
