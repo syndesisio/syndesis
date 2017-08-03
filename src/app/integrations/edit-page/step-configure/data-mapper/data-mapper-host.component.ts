@@ -300,7 +300,7 @@ export class DataMapperHostComponent extends FlowPage
       },
       err => {
         // do our best I guess
-        log.warnc(() => 'failed to fetch pom: ', JSON.parse(err), category);
+        log.warnc(() => 'failed to fetch pom: ' + JSON.parse(err['_body']), category);
         this.cfg.initCfg.classPath = '';
         this.initializationService.initialize();
       },
