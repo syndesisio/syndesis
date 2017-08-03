@@ -84,6 +84,9 @@ export class FlowViewStepComponent extends ChildAwarePage {
   }
 
   showDelete() {
+    if (this.currentState !== 'save-or-add-step') {
+      return false;
+    }
     switch (this.step.stepKind) {
       case 'endpoint':
         return (
@@ -144,6 +147,10 @@ export class FlowViewStepComponent extends ChildAwarePage {
     if (this.getPosition() === this.currentPosition) {
       //clazz = 'current';
       clazz = 'active';
+    }
+    const step = this.currentFlow.getStep(this.currentPosition);
+    if (step && !this.stepIsComplete(step)) {
+      clazz = clazz + ' disabled';
     }
     return 'parent-step ' + clazz;
   }
@@ -257,6 +264,21 @@ export class FlowViewStepComponent extends ChildAwarePage {
     return '';
   }
 
+  stepIsComplete(step: Step) {
+    switch (step.stepKind) {
+      case 'endpoint':
+        if (!step.connection || !step.action || !step.configuredProperties) {
+          return false;
+        }
+        break;
+      default:
+        if (!step.stepKind || !step.configuredProperties) {
+          return false;
+        }
+    }
+    return true;
+  }
+
   goto(page: string) {
     if (!page) {
       if (!this.isCollapsed()) {
@@ -272,6 +294,12 @@ export class FlowViewStepComponent extends ChildAwarePage {
           page = 'step-select';
           break;
       }
+    }
+    // validate that the step is complete before we move
+    const step = this.currentFlow.getStep(this.currentPosition);
+    // step can be null if we're on the save or add step page
+    if (step && !this.stepIsComplete(step)) {
+      return;
     }
     this.router.navigate([page, this.getPosition()], {
       relativeTo: this.route,
