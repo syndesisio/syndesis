@@ -13,6 +13,16 @@ export interface StepKind extends Step {
 }
 export type StepKinds = Array<StepKind>;
 
+export const DATA_MAPPER = 'mapper';
+export const BASIC_FILTER = 'rule-filter';
+export const ADVANCED_FILTER = 'filter';
+export const STORE_DATA = 'storeData';
+export const SET_DATA = 'setData';
+export const CALL_ROUTE = 'callRoute';
+export const CONDITIONAL_PROCESSING = 'conditionalProcessing';
+export const SPLIT = 'split';
+export const LOG = 'log';
+
 @Injectable()
 export class StepStore {
   steps: StepKind[] = [
@@ -22,7 +32,7 @@ export class StepStore {
       action: undefined,
       name: 'Data Mapper',
       description: 'Map fields from the input type to the output type',
-      stepKind: 'mapper',
+      stepKind: DATA_MAPPER,
       visible: (
         position: number,
         previous: Array<Step>,
@@ -57,7 +67,7 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Log',
-      stepKind: 'log',
+      stepKind: LOG,
       description: "Sends a message to the integration's log",
       configuredProperties: undefined,
       properties: {
@@ -82,7 +92,7 @@ export class StepStore {
       description:
         'Continue the integration only if criteria you specify in simple input fields are met. Suitable for' +
         ' most integrations.',
-      stepKind: 'rule-filter',
+      stepKind: BASIC_FILTER,
       properties: undefined,
       configuredProperties: undefined,
     },
@@ -91,8 +101,9 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Advanced Filter',
-      description: 'Continue the integration only if criteria you define in scripting language expressions are met.',
-      stepKind: 'filter',
+      description:
+        'Continue the integration only if criteria you define in scripting language expressions are met.',
+      stepKind: ADVANCED_FILTER,
       properties: {
         filter: {
           type: 'textarea',
@@ -108,7 +119,7 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Store Data',
-      stepKind: 'storeData',
+      stepKind: STORE_DATA,
       description:
         'Store data from an invocation to be used later in the integration',
       properties: {},
@@ -119,7 +130,7 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Set Data',
-      stepKind: 'setData',
+      stepKind: SET_DATA,
       description: 'Enrich data used within an integration',
       properties: {},
       configuredProperties: undefined,
@@ -129,7 +140,7 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Call Route',
-      stepKind: 'callRoute',
+      stepKind: CALL_ROUTE,
       description:
         'Call a child integration route from the main integration flow',
       properties: {},
@@ -140,7 +151,7 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Conditional Processing',
-      stepKind: 'conditionalProcessing',
+      stepKind: CONDITIONAL_PROCESSING,
       description: 'Add conditions and multiple paths for processing data',
       properties: {},
       configuredProperties: undefined,
@@ -150,7 +161,7 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Split',
-      stepKind: 'split',
+      stepKind: SPLIT,
       description:
         'Split received data into data subsets that can be processed individually',
       properties: {},

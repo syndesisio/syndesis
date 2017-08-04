@@ -23,17 +23,16 @@ import { BasicFilter } from './filter.interface';
 
 export class BasicFilterComponent implements OnInit {
 
-  basicFilterModel: DynamicFormControlModel[] = createBasicFilterModel();
+  basicFilterModel: DynamicFormControlModel[];
   formGroup: FormGroup;
   predicateControl: FormControl;
   predicateModel: DynamicInputModel;
   rulesArrayControl: FormArray;
   rulesArrayModel: DynamicFormArrayModel;
 
-  @Input() step;
   @Input() position;
   @Input()
-  basicFilterObject: BasicFilter = {
+  configuredProperties: BasicFilter = {
     'type': 'rule',
     'predicate': 'AND',
     'simple': '${body} contains \'antman\' || ${in.header.publisher} =~ \'DC Comics\'',
@@ -49,7 +48,7 @@ export class BasicFilterComponent implements OnInit {
       },
     ],
   };
-  @Output() basicFilterObjectChange = new EventEmitter<BasicFilter>();
+  @Output() configuredPropertiesChange = new EventEmitter<BasicFilter>();
 
   constructor(public currentFlow: CurrentFlow,
               public integrationSupport: IntegrationSupportService,
@@ -57,6 +56,7 @@ export class BasicFilterComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.basicFilterModel = createBasicFilterModel(this.configuredProperties);
     const prevStep = this.currentFlow.getPreviousConnection(this.position);
 
     this.integrationSupport.getFilterOptions(prevStep.connection.id, prevStep.action.id).toPromise().then((resp: any) => {
@@ -90,6 +90,6 @@ export class BasicFilterComponent implements OnInit {
       rules: formGroupObj.rulesGroup.rulesFormArray,
     };
 
-    this.basicFilterObjectChange.emit(formattedProperties);
+    this.configuredPropertiesChange.emit(formattedProperties);
   }
 }
