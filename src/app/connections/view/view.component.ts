@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   Output,
+  OnChanges,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -30,7 +31,7 @@ const category = getCategory('Connections');
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
 })
-export class ConnectionViewComponent implements OnInit, OnDestroy {
+export class ConnectionViewComponent implements OnInit, OnChanges, OnDestroy {
   @Input() connection: Connection = TypeFactory.createConnection();
   @Output() connectionChange = new EventEmitter<Connection>();
   @Input() mode = 'view';
@@ -254,6 +255,13 @@ export class ConnectionViewComponent implements OnInit, OnDestroy {
       default:
         // nothing to do
         break;
+    }
+  }
+
+  ngOnChanges(changes: any) {
+    if (changes.connection) {
+      delete this._formGroup;
+      delete this._formModel;
     }
   }
 
