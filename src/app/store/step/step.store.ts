@@ -82,14 +82,8 @@ export class StepStore {
       description:
         'Continue the integration only if criteria you specify in simple input fields are met. Suitable for' +
         ' most integrations.',
-      stepKind: 'basic-filter',
-      properties: {
-        filter: {
-          displayName:
-            'Only continue if incoming data match all of the following',
-          required: true,
-        },
-      },
+      stepKind: 'rule-filter',
+      properties: undefined,
       configuredProperties: undefined,
     },
     {

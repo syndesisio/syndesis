@@ -87,6 +87,8 @@ export class FlowViewStepComponent extends ChildAwarePage {
     if (this.currentState !== 'save-or-add-step') {
       return false;
     }
+    return true;
+    /*
     switch (this.step.stepKind) {
       case 'endpoint':
         return (
@@ -97,6 +99,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
       default:
         return this.step.stepKind && this.step.configuredProperties;
     }
+      */
   }
 
   deletePrompt() {
@@ -326,6 +329,9 @@ export class FlowViewStepComponent extends ChildAwarePage {
         }
         return 'Set up this connection';
       default:
+        if (this.step.name) {
+          return this.step.name;
+        }
         if (this.step.stepKind) {
           return this.step.stepKind;
         } else {
