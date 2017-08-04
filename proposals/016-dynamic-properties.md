@@ -27,12 +27,12 @@ To interact with the dynamic parameter API:
 
 | HTTP Verb | Path | Description |
 | --------- | ---- | ----------- |
-| POST      | /api/{version}/connections/{connectionId}/actions/{actionId}/parameter/options | Lists available property values for given chosen property values |
+| POST      | /api/{version}/connections/{connectionId}/actions/{actionId}/parameters | Lists available property values for given chosen property values |
 
 Swagger snippet:
 
 ```yaml
-/connections/{id}/actions/{actionId}/parameter/options:
+/connections/{id}/actions/{actionId}/parameters:
   post:
     tags:
     - "connections"
@@ -77,10 +77,41 @@ Swagger snippet:
 
 ### Example
 
-If the user is working with Salesforce Action _create or update_ Salesforce object and has already picked the _Contact_ Salesforce object to create or update and wishes to determine possible values for the Salesforce object unique ID field, the following request is issued:
+Considering that the user has selected Salesforce connection and _create or update_ (`io.syndesis:salesforce-create-or-update:latest`) action, and now needs to specify the required parameters for that action: Salesforce object type (`sObjectName`) and Salesforce unique ID field (`sObjectIdName`).
+
+At this point there are no parameter values the user has specified, so the UI tries to determine parameter values suggestions by posting an empty JSON object (`{}`):
 
 ```http
-POST /api/v1/connections/2/actions/io.syndesis:salesforce-create-or-update:latest/parameter/options
+POST /api/v1/connections/2/actions/io.syndesis:salesforce-create-or-update:latest/parameters
+Content-Type: application/json
+
+{
+}
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "sObjectName": [
+    {
+      "displayValue": "Account",
+      "value": "Account"
+    },
+    {
+      "displayValue": "Contact",
+      "value": "Contact"
+    },...
+  ]
+}
+
+```
+
+The backend by the specified action determines that the prerequisite for _sObjectIdName_ parameter has not been specified (no _sObjectName_ given), and returns only the value suggestions for parameters without prerequisites - in this case _sObjectName_.
+
+The user picks the _Contact_ Salesforce object to create or update and wishes to determine possible values for the Salesforce object unique ID field, the following request is issued:
+
+```http
+POST /api/v1/connections/2/actions/io.syndesis:salesforce-create-or-update:latest/parameters
 Content-Type: application/json
 
 {
@@ -103,3 +134,5 @@ Content-Type: application/json
   ]
 }
 ```
+
+The UI has passed the current property value pairs to the backend and the backend has determined that the prerequisite for _sObjectIdName_ has been specifed, so it provides _sObjectIdName_ suggestions.
