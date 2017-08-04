@@ -16,7 +16,6 @@
 package io.syndesis.dao.manager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,11 +49,13 @@ public class DataManager implements DataAccessObjectRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class.getName());
 
-    private CacheContainer caches;
+    private final CacheContainer caches;
     private final EventBus eventBus;
 
     @Value("${deployment.file:io/syndesis/dao/deployment.json}")
+    @SuppressWarnings("PMD.ImmutableField") // @Value cannot be applied to final properties
     private String dataFileName = "io/syndesis/dao/deployment.json";
+    @SuppressWarnings("PMD.ImmutableField") // @Value cannot be applied to final properties
     @Value("${deployment.load-demo-data:true}")
     private boolean loadDemoData = true;
 
@@ -94,7 +95,7 @@ public class DataManager implements DataAccessObjectRegistry {
             for (ModelData<?> modelData : mdList) {
                 store(modelData);
             }
-        } catch (Exception e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             throw new IllegalStateException("Cannot read dummy startup data due to: " + e.getMessage(), e);
         }
     }
