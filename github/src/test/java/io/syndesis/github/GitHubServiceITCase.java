@@ -50,15 +50,15 @@ public class GitHubServiceITCase {
     //
     // curl https://api.github.com/authorizations --user "<USER_NAME>" --data '{"scopes":["repo", "delete_repo"],"note":"Syndesis-GitHubServiceITCase", "client_id":"<CLIENT_ID>", "client_secret":"<CLIENT_SECRET>" }'
 
-    private static String authToken = null;
+    private static String authToken;
 
     // test project directory
-    private static String PROJECT_DIR = "/sample-github-project";
-    private static String REPO_NAME = "syndesis-itcase";
+    private static final String PROJECT_DIR = "/sample-github-project";
+    private static final String REPO_NAME = "syndesis-itcase";
 
-    private GitHubClient client = null;
-    private GitHubServiceImpl githubService = null;
-    private GitWorkflow gitWorkflow = new GitWorkflow(new GitProperties());
+    private GitHubClient client;
+    private GitHubServiceImpl githubService;
+    private final GitWorkflow gitWorkflow = new GitWorkflow(new GitProperties());
     private DefaultMockServer webserver;
 
     @Before
