@@ -14,7 +14,11 @@ import {
 } from '@ng2-dynamic-forms/core';
 
 import { FlowPage } from '../flow-page';
-import { StepStore } from '../../../store/step/step.store';
+import {
+  StepStore,
+  DATA_MAPPER,
+  BASIC_FILTER,
+} from '../../../store/step/step.store';
 import { FormFactoryService } from '../../../common/forms.service';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { Action, Step } from '../../../model';
@@ -25,26 +29,28 @@ const category = getCategory('IntegrationsCreatePage');
 @Component({
   selector: 'syndesis-integrations-step-configure',
   templateUrl: './step-configure.component.html',
-  styleUrls: [ './step-configure.component.scss' ],
+  styleUrls: ['./step-configure.component.scss'],
 })
 export class IntegrationsStepConfigureComponent extends FlowPage
   implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   position: number;
   step: Step = <Step>{};
-  formModel: DynamicFormControlModel[];
-  formGroup: FormGroup;
+  formModel: DynamicFormControlModel[] = undefined;
+  formGroup: FormGroup = undefined;
   formConfig: any;
   cfg: any = undefined;
-  filterForm: any;
+  filterProperties: any = undefined;
 
-  constructor(public currentFlow: CurrentFlow,
-              public route: ActivatedRoute,
-              public router: Router,
-              public formFactory: FormFactoryService,
-              public formService: DynamicFormService,
-              public detector: ChangeDetectorRef,
-              public stepStore: StepStore) {
+  constructor(
+    public currentFlow: CurrentFlow,
+    public route: ActivatedRoute,
+    public router: Router,
+    public formFactory: FormFactoryService,
+    public formService: DynamicFormService,
+    public detector: ChangeDetectorRef,
+    public stepStore: StepStore,
+  ) {
     super(currentFlow, route, router, detector);
   }
 
@@ -52,43 +58,32 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     const step = this.currentFlow.getStep(this.position);
     step.stepKind = undefined;
     step.configuredProperties = undefined;
-    super.goBack([ 'step-select', this.position ]);
+    super.goBack(['step-select', this.position]);
   }
 
   continue(data: any) {
     const step = this.currentFlow.getStep(this.position);
     switch (step.stepKind) {
-      case 'mapper':
-        this.router.navigate([ 'save-or-add-step' ], {
+      case BASIC_FILTER:
+        data = this.filterProperties;
+        break;
+      case DATA_MAPPER:
+        this.router.navigate(['save-or-add-step'], {
           queryParams: { validate: true },
           relativeTo: this.route.parent,
         });
         return;
+      default:
+        data = this.formGroup ? this.formGroup.value : {};
     }
-    if (this.filterForm) {
-      data = this.filterForm;
-      log.info('filterForm: ' + JSON.stringify(this.filterForm));
-    }
-    if (!data && this.formGroup) {
-      data = this.formGroup.value || {};
-    }
-    // Safety net
-    if (!data) {
-      data = {};
-    }
-    const properties = {};
-    for (const key in data) {
-      if (!data.hasOwnProperty(key)) {
-        continue;
-      }
-      properties[ key ] = data[ key ];
-    }
+    // set a copy in the integration
+    const properties = JSON.parse(JSON.stringify(data));
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
       properties: properties,
       onSave: () => {
-        this.router.navigate([ 'save-or-add-step' ], {
+        this.router.navigate(['save-or-add-step'], {
           queryParams: { validate: true },
           relativeTo: this.route.parent,
         });
@@ -98,9 +93,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage
 
   getToolbarClass() {
     switch (this.currentFlow.getStep(this.position).stepKind) {
-      case 'rule-filter':
+      case BASIC_FILTER:
         return 'toolbar basic-filter';
-      case 'mapper':
+      case DATA_MAPPER:
         return 'toolbar mapper';
     }
     return 'toolbar';
@@ -124,7 +119,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
         ));
         // If no Step exists, redirect to the Select Step view
         if (!step) {
-          this.router.navigate([ 'step-select', this.position ], {
+          this.router.navigate(['step-select', this.position], {
             relativeTo: this.route.parent,
           });
           return;
@@ -139,13 +134,15 @@ export class IntegrationsStepConfigureComponent extends FlowPage
         }
         // Now check if we've a custom view for this step kind
         switch (step.stepKind) {
-          case 'rule-filter':
-            this.filterForm = this.getConfiguredProperties(step.configuredProperties || {});
-            log.info('step: ' + JSON.stringify(step));
-            log.info('this.filterForm: ' + JSON.stringify(this.filterForm));
+          case BASIC_FILTER:
+            this.filterProperties = this.getConfiguredProperties(
+              step.configuredProperties || {},
+            );
             return;
-          case 'mapper':
-            log.info('No form configuration, skipping the form building service..');
+          case DATA_MAPPER:
+            log.info(
+              'No form configuration, skipping the form building service..',
+            );
             return;
         }
         this.formConfig = JSON.parse(JSON.stringify(stepDef.properties));
@@ -157,11 +154,11 @@ export class IntegrationsStepConfigureComponent extends FlowPage
             continue;
           }
           // TODO hack to handle an unconfigured step
-          const value = values[ key ];
+          const value = values[key];
           if (typeof value === 'object') {
             continue;
           }
-          const item = this.formConfig[ key ];
+          const item = this.formConfig[key];
           if (item) {
             item.value = value;
           }
@@ -170,7 +167,10 @@ export class IntegrationsStepConfigureComponent extends FlowPage
           this.continue({});
           return;
         }
-        log.info('Form config: ' + JSON.stringify(this.formConfig, undefined, 2), category);
+        log.info(
+          'Form config: ' + JSON.stringify(this.formConfig, undefined, 2),
+          category,
+        );
 
         // Call formService to build the form
         this.formModel = this.formFactory.createFormModel(this.formConfig);

@@ -56,8 +56,7 @@
         <div *ngSwitchCase="'rule-filter'">
           <div class="row">
             <div class="col-md-12">
-              <syndesis-basic-filter [(basicFilterObject)]="filterForm"
-                                     [(step)]="step"
+              <syndesis-basic-filter [(configuredProperties)]="filterProperties"
                                      [position]="position"></syndesis-basic-filter>
             </div>
           </div>
