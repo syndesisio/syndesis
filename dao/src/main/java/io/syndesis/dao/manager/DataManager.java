@@ -17,10 +17,10 @@ package io.syndesis.dao.manager;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 import javax.annotation.PostConstruct;
@@ -57,7 +57,7 @@ public class DataManager implements DataAccessObjectRegistry {
     private String dataFileName;
 
     private final List<DataAccessObject<?>> dataAccessObjects = new ArrayList<>();
-    private final Map<Class<? extends WithId<?>>, DataAccessObject<?>> dataAccessObjectMapping = new HashMap<>();
+    private final Map<Class<? extends WithId<?>>, DataAccessObject<?>> dataAccessObjectMapping = new ConcurrentHashMap<>();
 
     // Constructor to help with testing.
     public DataManager(CacheContainer caches, List<DataAccessObject<?>> dataAccessObjects, String dataFileName) {

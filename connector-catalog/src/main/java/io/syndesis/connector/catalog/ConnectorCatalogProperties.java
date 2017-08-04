@@ -15,17 +15,17 @@
  */
 package io.syndesis.connector.catalog;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("camel.connector.catalog")
 public class ConnectorCatalogProperties {
 
-    private Map<String, String> mavenRepos = new HashMap<>(1);
+    private Map<String, String> mavenRepos = new ConcurrentHashMap<>(1);
 
     private List<String> connectorGAVs = new ArrayList<>(5);
 

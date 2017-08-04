@@ -49,8 +49,8 @@ import org.slf4j.LoggerFactory;
 public class ActivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
     // Step used which should be performed only once per integration
-    static final String STEP_GITHUB = "github-setup";
-    static final String STEP_OPENSHIFT = "openshift-setup";
+    /* default */ static final String STEP_GITHUB = "github-setup";
+    /* default */ static final String STEP_OPENSHIFT = "openshift-setup";
 
     private final DataManager dataManager;
     private final OpenShiftService openShiftService;
@@ -59,7 +59,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivateHandler.class);
 
-    ActivateHandler(DataManager dataManager, OpenShiftService openShiftService,
+    /* default */ ActivateHandler(DataManager dataManager, OpenShiftService openShiftService,
                     GitHubService gitHubService, ProjectGenerator projectConverter) {
         this.dataManager = dataManager;
         this.openShiftService = openShiftService;

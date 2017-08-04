@@ -39,6 +39,7 @@ public class ModelData<T extends WithId<T>> implements ToJson {
     private String json;
 
     public ModelData() {
+        // makes it easier to handle as a Java bean
     }
 
     public ModelData(Kind kind, T data) {

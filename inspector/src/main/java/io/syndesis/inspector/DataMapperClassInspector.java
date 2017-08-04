@@ -52,9 +52,9 @@ public class DataMapperClassInspector implements ClassInspector {
 
     private static final String CACHE_NAME = ClassInspector.class.getName();
 
-    private CacheContainer caches;
-    private RestTemplate restTemplate;
-    private ClassInspectorConfigurationProperties config;
+    private final CacheContainer caches;
+    private final RestTemplate restTemplate;
+    private final ClassInspectorConfigurationProperties config;
 
 
     protected DataMapperClassInspector(CacheContainer caches, RestTemplate restTemplate, ClassInspectorConfigurationProperties config) {

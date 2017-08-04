@@ -32,6 +32,7 @@ import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 @ConditionalOnClass(TwitterConnectionFactory.class)
 @ConditionalOnProperty(prefix = "spring.social.twitter", name = "app-id")
 @EnableConfigurationProperties(TwitterProperties.class)
+@SuppressWarnings("PMD.UseUtilityClass")
 public class TwitterConfiguration {
 
     @Autowired
