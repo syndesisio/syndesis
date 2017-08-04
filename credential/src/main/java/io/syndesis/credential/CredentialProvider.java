@@ -23,10 +23,12 @@ public interface CredentialProvider {
 
     AcquisitionMethod acquisitionMethod();
 
-    Connection finish(Connection connection, CredentialFlowState flowState, URI baseUrl);
+    Connection applyTo(Connection connection, CredentialFlowState flowState);
+
+    CredentialFlowState finish(CredentialFlowState flowState, URI baseUrl);
 
     String id();
 
-    CredentialFlowState prepare(URI baseUrl, URI returnUrl, String connectionId);
+    CredentialFlowState prepare(URI baseUrl, URI returnUrl);
 
 }

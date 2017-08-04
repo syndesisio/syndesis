@@ -18,6 +18,7 @@ package io.syndesis.runtime.credential;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.core.Cookie;
@@ -123,9 +124,27 @@ public class CredentialITCase extends BaseITCase {
     }
 
     @Test
+    public void shouldApplyOAuthPropertiesToNewlyCreatedConnections() {
+        final OAuth2CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder().providerId("test-provider")
+            .key("key").accessGrant(new AccessGrant("token")).build();
+
+        final HttpHeaders cookies = persistAsCookie(flowState);
+
+        final Connection newConnection = new Connection.Builder().build();
+        final ResponseEntity<Connection> connectionResponse = http(HttpMethod.POST, "/api/v1/connections",
+            newConnection, Connection.class, tokenRule.validToken(), cookies, HttpStatus.OK);
+
+        assertThat(connectionResponse.hasBody()).as("Should contain created connection").isTrue();
+
+        final Connection createdConnection = connectionResponse.getBody();
+        assertThat(createdConnection.getConfiguredProperties()).containsOnly(entry("accessToken", "token"),
+            entry("clientId", "appId"), entry("clientSecret", "appSecret"));
+    }
+
+    @Test
     public void shouldInitiateCredentialFlow() throws UnsupportedEncodingException {
         final ResponseEntity<AcquisitionResponse> acquisitionResponse = post(
-            "/api/v1/connections/test-connection/credentials", Collections.singletonMap("returnUrl", "/ui#state"),
+            "/api/v1/connectors/test-provider/credentials", Collections.singletonMap("returnUrl", "/ui#state"),
             AcquisitionResponse.class, tokenRule.validToken(), HttpStatus.ACCEPTED);
 
         assertThat(acquisitionResponse.hasBody()).as("Should present a acquisition response in the HTTP body").isTrue();
@@ -155,7 +174,7 @@ public class CredentialITCase extends BaseITCase {
             .restoreFrom(Cookie.valueOf(responseStateInstruction.spec()), CredentialFlowState.class);
 
         final CredentialFlowState expected = new OAuth2CredentialFlowState.Builder().key("test-state")
-            .providerId("test-provider").connectionId("test-connection").build();
+            .providerId("test-provider").build();
 
         assertThat(credentialFlowState).as("The flow state should be as expected")
             .isEqualToIgnoringGivenFields(expected, "returnUrl");
@@ -185,9 +204,8 @@ public class CredentialITCase extends BaseITCase {
 
     @Test
     public void shouldReceiveCallbacksFromResourceProviders() {
-        final OAuth2CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder()
-            .connectionId("test-connection").providerId("test-provider").key(UUID.randomUUID().toString())
-            .returnUrl(URI.create("/ui#state")).build();
+        final OAuth2CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder().providerId("test-provider")
+            .key(UUID.randomUUID().toString()).returnUrl(URI.create("/ui#state")).build();
 
         final HttpHeaders cookies = persistAsCookie(flowState);
 
@@ -201,10 +219,15 @@ public class CredentialITCase extends BaseITCase {
         assertThat(callbackResponse.getHeaders().getLocation().toString())
             .matches("http.?://localhost:[0-9]*/api/v1/ui#state");
 
-        final Connection connection = dataManager.fetch(Connection.class, "test-connection");
+        final List<String> receivedCookies = callbackResponse.getHeaders().get("Set-Cookie");
+        assertThat(receivedCookies).hasSize(1);
 
-        assertThat(connection.getConfiguredProperties()).containsOnly(entry("accessToken", "token"),
-            entry("clientId", "appId"), entry("clientSecret", "appSecret"));
+        final OAuth2CredentialFlowState endingFlowState = clientSideState
+            .restoreFrom(Cookie.valueOf(receivedCookies.get(0)), OAuth2CredentialFlowState.class);
+
+        // AccessGrant does not implement equals/hashCode
+        assertThat(endingFlowState).isEqualToIgnoringGivenFields(flowState, "accessGrant");
+        assertThat(endingFlowState.getAccessGrant()).isEqualToComparingFieldByField(new AccessGrant("token"));
     }
 
     private HttpHeaders persistAsCookie(final OAuth2CredentialFlowState flowState) {

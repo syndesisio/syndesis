@@ -15,8 +15,6 @@
  */
 package io.syndesis.credential;
 
-import io.syndesis.dao.manager.DataManager;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,8 +27,7 @@ public class CredentialConfiguration {
     }
 
     @Bean
-    public Credentials credentials(final CredentialProviderLocator connectionProviderLocator,
-        final DataManager dataManager) {
-        return new Credentials(connectionProviderLocator, dataManager);
+    public Credentials credentials(final CredentialProviderLocator connectionProviderLocator) {
+        return new Credentials(connectionProviderLocator);
     }
 }

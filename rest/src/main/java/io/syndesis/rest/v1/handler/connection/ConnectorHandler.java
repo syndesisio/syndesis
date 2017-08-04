@@ -41,6 +41,7 @@ import io.syndesis.model.filter.Op;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
+import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
 
 import org.springframework.stereotype.Component;
@@ -53,12 +54,15 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     private final Verifier verifier;
     private final Credentials credentials;
     private final ClassInspector classInspector;
+    private final ClientSideState state;
 
-    public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, ClassInspector classInspector) {
+    public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials,
+        final ClassInspector classInspector, final ClientSideState state) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
         this.classInspector = classInspector;
+        this.state = state;
     }
 
     @Override
@@ -82,13 +86,14 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     @Path("/{id}/credentials")
     public ConnectorCredentialHandler credentials(@NotNull final @PathParam("id") String connectorId) {
-        return new ConnectorCredentialHandler(credentials, connectorId);
+        return new ConnectorCredentialHandler(credentials, state, connectorId);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{connectorId}/actions/{actionId}/filters/options")
-    public FilterOptions getFilterOptions(@PathParam("connectorId") @ApiParam(required = true) String connectorId, @PathParam("actionId") @ApiParam(required = true) String actionId) {
+    public FilterOptions getFilterOptions(@PathParam("connectorId") @ApiParam(required = true) String connectorId,
+        @PathParam("actionId") @ApiParam(required = true) String actionId) {
         FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
         Connector connector = getDataManager().fetch(Connector.class, connectorId);
 
@@ -96,9 +101,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             return builder.build();
         }
 
-        connector.getActions().stream()
-            .filter(a -> actionId.equals(a.getId().orElse(null)))
-            .findFirst()
+        connector.getActions().stream().filter(a -> actionId.equals(a.getId().orElse(null))).findFirst()
             .ifPresent(a -> {
                 DataShape dataShape = a.getOutputDataShape();
                 String kind = dataShape.getKind();

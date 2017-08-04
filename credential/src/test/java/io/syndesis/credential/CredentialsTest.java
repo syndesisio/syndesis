@@ -18,9 +18,6 @@ package io.syndesis.credential;
 import java.net.URI;
 import java.util.Optional;
 
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.connection.Connection;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +41,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -53,20 +49,15 @@ public class CredentialsTest {
     private Credentials credentials;
 
     @Mock
-    private DataManager dataManager;
-
-    @Mock
     private CredentialProviderLocator locator;
 
     private final SocialProperties properties = new SocialProperties() {
+        // simple social properties just for test purposes
     };
 
     @Before
     public void setupMocks() {
-        final Connection connection = new Connection.Builder().build();
-        when(dataManager.fetch(Connection.class, "connectionId")).thenReturn(connection);
-
-        credentials = new Credentials(locator, dataManager);
+        credentials = new Credentials(locator);
 
         properties.setAppId("appId");
         properties.setAppSecret("appSecret");
@@ -90,12 +81,12 @@ public class CredentialsTest {
         when(operations.buildAuthorizeUrl(eq("value"), parameters.capture()))
             .thenReturn("https://provider.io/oauth/authorize");
 
-        final AcquisitionFlow acquisition = credentials.acquire("connectionId", "providerId",
-            URI.create("https://syndesis.io/api/v1/"), URI.create("https://syndesis.io/ui#state"));
+        final AcquisitionFlow acquisition = credentials.acquire("providerId", URI.create("https://syndesis.io/api/v1/"),
+            URI.create("https://syndesis.io/ui#state"));
 
-        final CredentialFlowState expectedFlowState = new OAuth1CredentialFlowState.Builder()
-            .connectionId("connectionId").providerId("providerId").redirectUrl("https://provider.io/oauth/authorize")
-            .returnUrl(URI.create("https://syndesis.io/ui#state")).token(token).build();
+        final CredentialFlowState expectedFlowState = new OAuth1CredentialFlowState.Builder().providerId("providerId")
+            .redirectUrl("https://provider.io/oauth/authorize").returnUrl(URI.create("https://syndesis.io/ui#state"))
+            .token(token).build();
 
         final AcquisitionFlow expected = new AcquisitionFlow.Builder().type(Type.OAUTH1)
             .redirectUrl("https://provider.io/oauth/authorize").state(expectedFlowState).build();
@@ -129,12 +120,11 @@ public class CredentialsTest {
         when(operations.buildAuthorizeUrl(eq("value"), parameters.capture()))
             .thenReturn("https://provider.io/oauth/authorize");
 
-        final AcquisitionFlow acquisition = credentials.acquire("connectionId", "providerId",
-            URI.create("https://syndesis.io/api/v1/"), URI.create("/ui#state"));
+        final AcquisitionFlow acquisition = credentials.acquire("providerId", URI.create("https://syndesis.io/api/v1/"),
+            URI.create("/ui#state"));
 
-        final CredentialFlowState expectedFlowState = new OAuth1CredentialFlowState.Builder()
-            .connectionId("connectionId").providerId("providerId").redirectUrl("https://provider.io/oauth/authorize")
-            .returnUrl(URI.create("/ui#state")).token(token).build();
+        final CredentialFlowState expectedFlowState = new OAuth1CredentialFlowState.Builder().providerId("providerId")
+            .redirectUrl("https://provider.io/oauth/authorize").returnUrl(URI.create("/ui#state")).token(token).build();
 
         final AcquisitionFlow expected = new AcquisitionFlow.Builder().type(Type.OAUTH1)
             .redirectUrl("https://provider.io/oauth/authorize").state(expectedFlowState).build();
@@ -165,11 +155,11 @@ public class CredentialsTest {
         final ArgumentCaptor<OAuth2Parameters> parameters = ArgumentCaptor.forClass(OAuth2Parameters.class);
         when(operations.buildAuthorizeUrl(parameters.capture())).thenReturn("https://provider.io/oauth/authorize");
 
-        final AcquisitionFlow acquisition = credentials.acquire("connectionId", "providerId",
-            URI.create("https://syndesis.io/api/v1/"), URI.create("/ui#state"));
+        final AcquisitionFlow acquisition = credentials.acquire("providerId", URI.create("https://syndesis.io/api/v1/"),
+            URI.create("/ui#state"));
 
         final CredentialFlowState expectedFlowState = new OAuth2CredentialFlowState.Builder().key("state-token")
-            .connectionId("connectionId").providerId("providerId").redirectUrl("https://provider.io/oauth/authorize")
+            .providerId("providerId").redirectUrl("https://provider.io/oauth/authorize")
             .returnUrl(URI.create("/ui#state")).build();
 
         final AcquisitionFlow expected = new AcquisitionFlow.Builder().type(Type.OAUTH2)
@@ -206,27 +196,19 @@ public class CredentialsTest {
         applicator.setConsumerKeyProperty("consumerKeyProperty");
         applicator.setConsumerSecretProperty("consumerSecretProperty");
 
-        final CredentialFlowState flowState = new OAuth1CredentialFlowState.Builder().connectionId("connectionId")
-            .providerId("providerId").token(token).returnUrl(URI.create("/ui#state")).verifier("verifier").build();
+        final CredentialFlowState flowState = new OAuth1CredentialFlowState.Builder().providerId("providerId")
+            .token(token).returnUrl(URI.create("/ui#state")).verifier("verifier").build();
 
-        final URI uri = credentials.finishAcquisition(flowState, URI.create("https://www.example.com"));
+        final CredentialFlowState finalFlowState = credentials.finishAcquisition(flowState,
+            URI.create("https://www.example.com"));
 
-        assertThat(uri).isEqualTo(URI.create("/ui#state"));
         final AuthorizedRequestToken capturedRequestToken = requestToken.getValue();
         assertThat(capturedRequestToken.getValue()).isEqualTo("value");
         assertThat(capturedRequestToken.getSecret()).isEqualTo("secret");
         assertThat(capturedRequestToken.getVerifier()).isEqualTo("verifier");
 
-        final ArgumentCaptor<Connection> updatedConnection = ArgumentCaptor.forClass(Connection.class);
-        verify(dataManager).update(updatedConnection.capture());
-
-        final Connection capturedConnection = updatedConnection.getValue();
-        final Connection expected = new Connection.Builder()
-            .putConfiguredProperty("accessTokenSecretProperty", "tokenSecret")
-            .putConfiguredProperty("accessTokenValueProperty", "tokenValue")
-            .putConfiguredProperty("consumerKeyProperty", "appId")
-            .putConfiguredProperty("consumerSecretProperty", "appSecret").build();
-        assertThat(capturedConnection).isEqualToIgnoringGivenFields(expected, "lastUpdated");
+        assertThat(finalFlowState)
+            .isEqualTo(new OAuth1CredentialFlowState.Builder().createFrom(flowState).accessToken(accessToken).build());
     }
 
     @Test
@@ -244,25 +226,18 @@ public class CredentialsTest {
         final OAuth2Operations operations = mock(OAuth2Operations.class);
         when(oauth2.getOAuthOperations()).thenReturn(operations);
 
+        final AccessGrant accessGrant = new AccessGrant("accessToken", "scope", "refreshToken", 1L);
         when(operations.exchangeForAccess("code", "https://syndesis.io/api/v1/credentials/callback", null))
-            .thenReturn(new AccessGrant("accessToken", "scope", "refreshToken", 1L));
+            .thenReturn(accessGrant);
 
-        final CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder().connectionId("connectionId")
-            .providerId("providerId").returnUrl(URI.create("/ui#state")).code("code").state("state").build();
+        final CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder().providerId("providerId")
+            .returnUrl(URI.create("/ui#state")).code("code").state("state").build();
 
-        final URI uri = credentials.finishAcquisition(flowState, URI.create("https://syndesis.io/api/v1/"));
+        final CredentialFlowState finalFlowState = credentials.finishAcquisition(flowState,
+            URI.create("https://syndesis.io/api/v1/"));
 
-        assertThat(uri).isEqualTo(URI.create("/ui#state"));
-
-        final ArgumentCaptor<Connection> updatedConnection = ArgumentCaptor.forClass(Connection.class);
-        verify(dataManager).update(updatedConnection.capture());
-
-        final Connection capturedConnection = updatedConnection.getValue();
-        final Connection expected = new Connection.Builder().putConfiguredProperty("accessTokenProperty", "accessToken")
-            .putConfiguredProperty("clientIdProperty", "appId")
-            .putConfiguredProperty("clientSecretProperty", "appSecret")
-            .putConfiguredProperty("refreshTokenProperty", "refreshToken").build();
-        assertThat(capturedConnection).isEqualToIgnoringGivenFields(expected, "lastUpdated");
+        assertThat(finalFlowState)
+            .isEqualTo(new OAuth2CredentialFlowState.Builder().createFrom(flowState).accessGrant(accessGrant).build());
     }
 
 }

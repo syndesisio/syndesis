@@ -65,6 +65,8 @@ public interface OAuth1CredentialFlowState extends CredentialFlowState {
         return new Builder();
     }
 
+    OAuthToken getAccessToken();
+
     @JsonDeserialize(converter = OAuthTokenConverter.class)
     OAuthToken getToken();
 

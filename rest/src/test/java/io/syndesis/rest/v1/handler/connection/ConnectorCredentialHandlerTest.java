@@ -25,8 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ConnectionCredentialHandlerTest {
-
+public class ConnectorCredentialHandlerTest {
     @Test
     public void shouldAbsolutizeReturnUrl() {
         final HttpServletRequest httpRequest = mock(HttpServletRequest.class);
@@ -34,7 +33,7 @@ public class ConnectionCredentialHandlerTest {
         when(httpRequest.getRequestURL())
             .thenReturn(new StringBuffer("https://syndesis.io/api/v1/connections/1/credentials"));
 
-        final URI uri = ConnectionCredentialHandler.absoluteTo(httpRequest, URI.create("/ui?ret=true#state"));
+        final URI uri = ConnectorCredentialHandler.absoluteTo(httpRequest, URI.create("/ui?ret=true#state"));
 
         assertThat(uri).isEqualTo(URI.create("https://syndesis.io/ui?ret=true#state"));
     }

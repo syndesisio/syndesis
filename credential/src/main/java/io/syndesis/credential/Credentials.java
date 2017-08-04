@@ -17,7 +17,6 @@ package io.syndesis.credential;
 
 import java.net.URI;
 
-import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.Connection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +26,16 @@ import org.springframework.stereotype.Component;
 public final class Credentials {
     private final CredentialProviderLocator credentialProviderLocator;
 
-    private final DataManager dataManager;
-
     @Autowired
-    public Credentials(final CredentialProviderLocator credentialProviderLocator, final DataManager dataManager) {
+    public Credentials(final CredentialProviderLocator credentialProviderLocator) {
         this.credentialProviderLocator = credentialProviderLocator;
-        this.dataManager = dataManager;
     }
 
-    public AcquisitionFlow acquire(final String connectionId, final String providerId, final URI baseUrl,
-        final URI returnUrl) {
+    public AcquisitionFlow acquire(final String providerId, final URI baseUrl, final URI returnUrl) {
 
         final CredentialProvider credentialProvider = providerFor(providerId);
 
-        final CredentialFlowState flowState = credentialProvider.prepare(baseUrl, returnUrl, connectionId);
+        final CredentialFlowState flowState = credentialProvider.prepare(baseUrl, returnUrl);
 
         return new AcquisitionFlow.Builder().type(flowState.type()).redirectUrl(flowState.getRedirectUrl())
             .state(flowState).build();
@@ -54,22 +49,26 @@ public final class Credentials {
         }
     }
 
-    public URI finishAcquisition(final CredentialFlowState flowState, final URI baseUrl) {
-        final String connectionId = flowState.getConnectionId();
-        final Connection connection = dataManager.fetch(Connection.class, connectionId);
+    public Connection apply(final Connection updatedConnection, final CredentialFlowState flowState) {
+        final CredentialProvider credentialProvider = providerFrom(flowState);
 
-        final String providerId = flowState.getProviderId();
-        final CredentialProvider credentialProvider = providerFor(providerId);
+        return credentialProvider.applyTo(updatedConnection, flowState);
+    }
 
-        final Connection updatedConnection = credentialProvider.finish(connection, flowState, baseUrl);
+    public CredentialFlowState finishAcquisition(final CredentialFlowState flowState, final URI baseUrl) {
+        final CredentialProvider credentialProvider = providerFrom(flowState);
 
-        dataManager.update(updatedConnection);
-
-        return flowState.getReturnUrl();
+        return credentialProvider.finish(flowState, baseUrl);
     }
 
     /* default */ CredentialProvider providerFor(final String providerId) {
         return credentialProviderLocator.providerWithId(providerId);
+    }
+
+    /* default */ CredentialProvider providerFrom(final CredentialFlowState flowState) {
+        final String providerId = flowState.getProviderId();
+
+        return providerFor(providerId);
     }
 
 }
