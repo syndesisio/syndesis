@@ -22,12 +22,10 @@ import java.util.Base64;
  */
 class FileContent {
 
-    private String content;
-    private String path;
-    private String message;
-    private String sha;
-
-    FileContent() {}
+    private final String content;
+    private final String path;
+    private final String message;
+    private final String sha;
 
     FileContent(String path, String message, byte[] content, String sha) {
         this.path = assertNotNull("path", path);

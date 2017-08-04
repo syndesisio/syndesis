@@ -49,12 +49,15 @@ public final class OAuth1CredentialProvider<A> extends BaseCredentialProvider {
     }
 
     @Override
-    public Connection finish(final Connection connection, final CredentialFlowState givenFlowState, final URI baseUrl) {
-        if (!(givenFlowState instanceof OAuth1CredentialFlowState)) {
-            throw new IllegalArgumentException("Expected flow state to be OAUTH1, given: " + givenFlowState);
-        }
+    public Connection applyTo(final Connection connection, final CredentialFlowState givenFlowState) {
+        final OAuth1CredentialFlowState flowState = flowState(givenFlowState);
 
-        final OAuth1CredentialFlowState flowState = (OAuth1CredentialFlowState) givenFlowState;
+        return applicator.applyTo(connection, flowState.getAccessToken());
+    }
+
+    @Override
+    public CredentialFlowState finish(final CredentialFlowState givenFlowState, final URI baseUrl) {
+        final OAuth1CredentialFlowState flowState = flowState(givenFlowState);
 
         final AuthorizedRequestToken requestToken = new AuthorizedRequestToken(flowState.getToken(),
             flowState.getVerifier());
@@ -62,7 +65,7 @@ public final class OAuth1CredentialProvider<A> extends BaseCredentialProvider {
         final OAuthToken accessToken = connectionFactory.getOAuthOperations().exchangeForAccessToken(requestToken,
             null);
 
-        return applicator.applyTo(connection, accessToken);
+        return new OAuth1CredentialFlowState.Builder().createFrom(flowState).accessToken(accessToken).build();
     }
 
     @Override
@@ -71,9 +74,9 @@ public final class OAuth1CredentialProvider<A> extends BaseCredentialProvider {
     }
 
     @Override
-    public CredentialFlowState prepare(final URI baseUrl, final URI returnUrl, final String connectionId) {
+    public CredentialFlowState prepare(final URI baseUrl, final URI returnUrl) {
         final OAuth1CredentialFlowState.Builder flowState = new OAuth1CredentialFlowState.Builder().returnUrl(returnUrl)
-            .connectionId(connectionId).providerId(id);
+            .providerId(id);
 
         final OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
         final OAuth1Parameters parameters = new OAuth1Parameters();
@@ -99,6 +102,14 @@ public final class OAuth1CredentialProvider<A> extends BaseCredentialProvider {
         flowState.redirectUrl(redirectUrl);
 
         return flowState.build();
+    }
+
+    private static OAuth1CredentialFlowState flowState(final CredentialFlowState givenFlowState) {
+        if (!(givenFlowState instanceof OAuth1CredentialFlowState)) {
+            throw new IllegalArgumentException("Expected flow state to be OAUTH1, given: " + givenFlowState);
+        }
+
+        return (OAuth1CredentialFlowState) givenFlowState;
     }
 
 }

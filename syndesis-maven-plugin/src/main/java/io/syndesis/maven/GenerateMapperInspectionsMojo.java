@@ -37,6 +37,7 @@ import org.eclipse.aether.repository.RemoteRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
             resource.setDirectory(outputDir.getCanonicalPath());
             project.addResource(resource);
 
-            HashSet<File> generated = new HashSet<>();
+            Set<File> generated = new HashSet<>();
 
             ReadApiClientData reader = new ReadApiClientData();
             List<ModelData<?>> modelList = reader.readDataFromFile("io/syndesis/dao/deployment.json");
@@ -91,7 +92,7 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
         }
     }
 
-    private void process(HashSet<File> generated, Connector connector, Action action, DataShape shape) throws MojoFailureException, MojoExecutionException {
+    private void process(Set<File> generated, Connector connector, Action action, DataShape shape) throws MojoFailureException, MojoExecutionException {
         if (shape == null) {
             return;
         }

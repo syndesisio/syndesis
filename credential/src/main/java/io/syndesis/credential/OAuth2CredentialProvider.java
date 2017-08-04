@@ -24,15 +24,15 @@ import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
 
-public final class OAuth2CredentialProvider<A> extends BaseCredentialProvider {
+public final class OAuth2CredentialProvider<S> extends BaseCredentialProvider {
 
     private final Applicator<AccessGrant> applicator;
 
-    private final OAuth2ConnectionFactory<A> connectionFactory;
+    private final OAuth2ConnectionFactory<S> connectionFactory;
 
     private final String id;
 
-    public OAuth2CredentialProvider(final String id, final OAuth2ConnectionFactory<A> connectionFactory,
+    public OAuth2CredentialProvider(final String id, final OAuth2ConnectionFactory<S> connectionFactory,
         final Applicator<AccessGrant> applicator) {
         this.id = id;
         this.connectionFactory = connectionFactory;
@@ -46,17 +46,20 @@ public final class OAuth2CredentialProvider<A> extends BaseCredentialProvider {
     }
 
     @Override
-    public Connection finish(final Connection connection, final CredentialFlowState givenFlowState, final URI baseUrl) {
-        if (!(givenFlowState instanceof OAuth2CredentialFlowState)) {
-            throw new IllegalArgumentException("Expected flow state to be OAUTH2, given: " + givenFlowState);
-        }
+    public Connection applyTo(final Connection connection, final CredentialFlowState givenFlowState) {
+        final OAuth2CredentialFlowState flowState = flowState(givenFlowState);
 
-        final OAuth2CredentialFlowState flowState = (OAuth2CredentialFlowState) givenFlowState;
+        return applicator.applyTo(connection, flowState.getAccessGrant());
+    }
+
+    @Override
+    public CredentialFlowState finish(final CredentialFlowState givenFlowState, final URI baseUrl) {
+        final OAuth2CredentialFlowState flowState = flowState(givenFlowState);
 
         final AccessGrant accessGrant = connectionFactory.getOAuthOperations().exchangeForAccess(flowState.getCode(),
             callbackUrlFor(baseUrl, EMPTY), null);
 
-        return applicator.applyTo(connection, accessGrant);
+        return new OAuth2CredentialFlowState.Builder().createFrom(flowState).accessGrant(accessGrant).build();
     }
 
     @Override
@@ -65,9 +68,9 @@ public final class OAuth2CredentialProvider<A> extends BaseCredentialProvider {
     }
 
     @Override
-    public CredentialFlowState prepare(final URI baseUrl, final URI returnUrl, final String connectionId) {
+    public CredentialFlowState prepare(final URI baseUrl, final URI returnUrl) {
         final OAuth2CredentialFlowState.Builder flowState = new OAuth2CredentialFlowState.Builder().returnUrl(returnUrl)
-            .connectionId(connectionId).providerId(id);
+            .providerId(id);
 
         final OAuth2Parameters parameters = new OAuth2Parameters();
 
@@ -87,6 +90,14 @@ public final class OAuth2CredentialProvider<A> extends BaseCredentialProvider {
         flowState.redirectUrl(redirectUrl);
 
         return flowState.build();
+    }
+
+    private static OAuth2CredentialFlowState flowState(final CredentialFlowState givenFlowState) {
+        if (!(givenFlowState instanceof OAuth2CredentialFlowState)) {
+            throw new IllegalArgumentException("Expected flow state to be OAUTH2, given: " + givenFlowState);
+        }
+
+        return (OAuth2CredentialFlowState) givenFlowState;
     }
 
 }

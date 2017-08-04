@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 @Produces(MediaType.APPLICATION_JSON)
 @Service
 public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public JacksonContextResolver() {
         this.objectMapper = Json.mapper();

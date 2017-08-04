@@ -444,7 +444,7 @@ or
     <priority>3</priority>
     <properties>
       <property name="maximumAsserts">
-        <value><![CDATA[1]]></value>
+        <value><![CDATA[3]]></value>
       </property>
       <property name="xpath">
         <value><![CDATA[
@@ -700,9 +700,6 @@ and count(PrimarySuffix) = 0)]
                   ]]></value>
       </property>
     </properties>
-  </rule>
-  <rule ref="rulesets/java/junit.xml/JUnitAssertionsShouldIncludeMessage">
-    <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/unnecessary.xml/UnnecessaryConversionTemporary">
     <priority>3</priority>
@@ -1802,6 +1799,11 @@ count(PrimarySuffix) = 1
   </rule>
   <rule ref="rulesets/java/design.xml/CloseResource">
     <priority>3</priority>
+    <properties>
+      <property name="types">
+        <value>java.sql.Connection,java.sql.Statement,java.sql.ResultSet,java.io.InputStream,java.io.ObjectInputStream,java.io.ObjectOutputStream,java.io.ObjectInput,java.io.Closeable,java.io.OutputStream,java.io.ObjectOutput</value>
+      </property>
+    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/OverrideBothEqualsAndHashcode">
     <priority>3</priority>
@@ -2766,9 +2768,6 @@ starts-with(@Image,'Runtime.getRuntime') and
   </rule>
   <rule ref="rulesets/java/unnecessary.xml/UselessOperationOnImmutable">
     <priority>3</priority>
-  </rule>
-  <rule ref="rulesets/java/optimizations.xml/AvoidInstantiatingObjectsInLoops">
-    <priority>5</priority>
   </rule>
   <rule ref="rulesets/java/strings.xml/StringInstantiation">
     <priority>3</priority>

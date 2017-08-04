@@ -43,7 +43,7 @@ public class DataManagerTest {
     @Before
     public void setup() {
         //Create Data Manager
-        dataManager = new DataManager(infinispan.getCaches(), new ArrayList<>(), "io/syndesis/dao/deployment.json");
+        dataManager = new DataManager(infinispan.getCaches(), new ArrayList<>(), null);
         dataManager.init();
         dataManager.resetDeploymentData();
     }

@@ -48,7 +48,7 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
 
     // the default HttpSessionManager tries to access HttpSession, when used with Infinispan spring-session support
     // the session is `null`, see AbstractApplicationPublisherBridge::emitSessionCreatedEvent
-    static class NopHttpSessionManager extends HttpSessionManager {
+    /* default */ static class NopHttpSessionManager extends HttpSessionManager {
 
         public static final HttpSessionManager INSTANCE = new NopHttpSessionManager();
 

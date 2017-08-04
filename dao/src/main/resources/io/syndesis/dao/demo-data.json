@@ -1,0 +1,1073 @@
+[
+  {
+    "kind": "connection",
+    "data": {
+      "id": 1,
+      "name": "Twitter Example",
+      "description": "Twitter Connection",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "icon": "fa-twitter",
+      "connectorId": "twitter",
+      "configuredProperties": {
+        "accessToken": "",
+        "accessTokenSecret": "",
+        "consumerKey": "",
+        "consumerSecret": ""
+      }
+    }
+  },
+  {
+    "kind": "connection",
+    "data": {
+      "id": 2,
+      "name": "Salesforce Example",
+      "description": "Salesforce Connection",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "tags":["example","test"],
+      "icon": "fa-globe",
+      "connectorId": "salesforce",
+      "configuredProperties": {
+        "loginUrl": "https://login.salesforce.com",
+        "clientId": "",
+        "clientSecret": "",
+        "refreshToken": ""
+      }
+    }
+  },
+  {
+    "kind": "connection",
+    "data": {
+      "id": 3,
+      "name": "HTTP Example",
+      "description": "HTTP Connection",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "tags":["example","test"],
+      "icon": "fa-globe",
+      "connectorId": "http",
+      "configuredProperties": {}
+    }
+  },
+  {
+    "kind": "connection",
+    "data": {
+      "id": 4,
+      "name": "Timer Example",
+      "description": "Timer Connection",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "tags":["example","test"],
+      "icon": "fa-globe",
+      "connectorId": "timer",
+      "configuredProperties": {}
+    }
+  },
+  {
+    "kind": "integration",
+    "data": {
+      "id": "1",
+      "name": "Twitter to Salesforce Example",
+      "description": "This is an example of a Twitter to Salesforce integration",
+      "configuration": "",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "tags":["example","test"],
+      "currentStatus": "Activated",
+      "desiredStatus": "Activated",
+      "steps": [
+        {
+          "id": "1",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 1,
+            "name": "Twitter Example",
+            "description": "Twitter Connection",
+            "icon": "fa-twitter",
+            "connectorId": "twitter",
+            "configuredProperties": {
+              "accessToken": "",
+              "accessTokenSecret": "",
+              "consumerKey": "",
+              "consumerSecret": ""
+            }
+          },
+          "action": {
+            "id": "1",
+            "connectorId": "io.syndesis:twitter-mention-connector:latest",
+            "description": "Connection from twitter when anyone mention you",
+            "inputDataShape": {
+                "kind" : "none"
+            },
+            "outputDataShape": {
+                "kind" : "java",
+                "type" : "twitter4j.Status"
+            },
+            "name": "Twitter Mention",
+            "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "twitter-mention",
+            "properties": {
+            }
+          },
+          "configuredProperties": {
+          }
+        },{
+          "id": "2",
+          "stepKind": "filter",
+          "configuredProperties": {
+            "filter": "in.body contains \"#RHSummit\""
+            }
+        },{
+          "id": "3",
+          "stepKind": "mapper",
+          "configuredProperties": {
+            "atlasmapping": "{ \"AtlasMapping\": { \"jsonType\": \"com.mediadriver.atlas.v2.AtlasMapping\", \"properties\": { \"property\": [] }, \"fieldMappings\": { \"fieldMapping\": [ { \"jsonType\": \"com.mediadriver.atlas.v2.SeparateFieldMapping\", \"inputField\": { \"jsonType\": \"com.mediadriver.atlas.v2.MappedField\", \"field\": { \"jsonType\": \"com.mediadriver.atlas.java.v2.JavaField\", \"name\": \"Name\", \"path\": \"User.name\", \"type\": \"STRING\", \"getMethod\": \"getName\" }, \"fieldActions\": { \"fieldAction\": [] } }, \"outputFields\": { \"mappedField\": [ { \"jsonType\": \"com.mediadriver.atlas.v2.MappedField\", \"field\": { \"jsonType\": \"com.mediadriver.atlas.java.v2.JavaField\", \"name\": \"FirstName\", \"path\": \"FirstName\", \"type\": \"STRING\", \"setMethod\": \"setFirstName\" }, \"fieldActions\": { \"fieldAction\": [ { \"jsonType\": \"com.mediadriver.atlas.v2.MapAction\", \"index\": 0 } ] } }, { \"jsonType\": \"com.mediadriver.atlas.v2.MappedField\", \"field\": { \"jsonType\": \"com.mediadriver.atlas.java.v2.JavaField\", \"name\": \"LastName\", \"path\": \"LastName\", \"type\": \"STRING\", \"setMethod\": \"setLastName\" }, \"fieldActions\": { \"fieldAction\": [ { \"jsonType\": \"com.mediadriver.atlas.v2.MapAction\", \"index\": 1 } ] } } ] } }, { \"jsonType\": \"com.mediadriver.atlas.v2.MapFieldMapping\", \"inputField\": { \"jsonType\": \"com.mediadriver.atlas.v2.MappedField\", \"field\": { \"jsonType\": \"com.mediadriver.atlas.java.v2.JavaField\", \"name\": \"Text\", \"path\": \"Text\", \"type\": \"STRING\", \"getMethod\": \"getText\" }, \"fieldActions\": { \"fieldAction\": [] } }, \"outputField\": { \"jsonType\": \"com.mediadriver.atlas.v2.MappedField\", \"field\": { \"jsonType\": \"com.mediadriver.atlas.java.v2.JavaField\", \"name\": \"Description\", \"path\": \"description\", \"type\": \"STRING\", \"setMethod\": \"setDescription\" }, \"fieldActions\": { \"fieldAction\": [] } } }, { \"jsonType\": \"com.mediadriver.atlas.v2.MapFieldMapping\", \"inputField\": { \"jsonType\": \"com.mediadriver.atlas.v2.MappedField\", \"field\": { \"jsonType\": \"com.mediadriver.atlas.java.v2.JavaField\", \"name\": \"ScreenName\", \"path\": \"User.screenName\", \"type\": \"STRING\", \"getMethod\": \"getScreenName\" }, \"fieldActions\": { \"fieldAction\": [] } }, \"outputField\": { \"jsonType\": \"com.mediadriver.atlas.v2.MappedField\", \"field\": { \"jsonType\": \"com.mediadriver.atlas.java.v2.JavaField\", \"name\": \"Title\", \"path\": \"Title\", \"type\": \"STRING\", \"setMethod\": \"setTitle\" }, \"fieldActions\": { \"fieldAction\": [] } } } ] }, \"name\": \"twitterStatusToSalesforceContact\", \"sourceUri\": \"atlas:java?className=twitter4j.Status\", \"targetUri\": \"atlas:java?className=io.syndesis.connector.salesforce.Contact\" } } "
+           }
+        },{
+          "id": "4",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 2,
+            "connectorId": "salesforce",
+            "description": "Salesforce Connection",
+            "icon": "fa-puzzle-piece",
+            "name": "Salesforce Example",
+            "configuredProperties": {
+              "loginUrl": "https://login.salesforce.com",
+              "clientId": "",
+              "clientSecret": "",
+              "refreshToken": ""
+            }
+          },
+          "action": {
+            "id": "2",
+            "name": "Salesforce Upsert Contact",
+            "description": "Connection to Create or Update Salesforce Contact SObject",
+            "inputDataShape": {
+               "kind" : "java",
+               "type" : "io.syndesis.connector.salesforce.Contact"
+            },
+            "outputDataShape": {
+               "kind" : "none"
+            },
+            "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "salesforce-upsert-contact",
+            "connectorId": "io.syndesis:salesforce-upsert-contact-connector:latest",
+            "properties": {
+            }
+          },
+          "configuredProperties": {
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "integration",
+    "data": {
+      "id": "2",
+      "name": "Timed Pull to Post Example",
+      "description": "This is an example of a Timed Pull to Post Integration",
+      "configuration": "",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "desiredStatus": "Activated",
+      "currentStatus": "Activated",
+      "statusMessage": "This integration failed. Please contact system admin for errors.",
+      "tags":["example","test"],
+      "steps": [
+        {
+          "id": "5",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 4,
+            "name": "Timer Example",
+            "description": "Timer Connection",
+            "icon": "fa-globe",
+            "connectorId": "timer",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis_timer-connector:latest",
+            "name": "PeriodicTimer",
+            "description": "Set a timer that fires at intervals that you specify",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "periodic-timer",
+            "properties": {
+              "period": {
+                "kind": "parameter",
+                "displayName": "Period",
+                "group": "consumer",
+                "required": false,
+                "type": "integer",
+                "javaType": "long",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "defaultValue": 10000,
+                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+              }
+            }
+          },
+          "configuredProperties": {
+            "period": "500"
+          }
+        },{
+          "id": "6",
+          "stepKind": "log",
+          "configuredProperties": {
+            "message": "Hello World! ${body}",
+            "loggingLevel": "INFO"
+          }
+        },
+        {
+          "id": "7",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-post-connector:latest",
+            "name": "HTTP POST",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-post",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/bye"
+          }
+        },{
+          "id": "8",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-get-connector:latest",
+            "name": "HTTP GET",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-get",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/hello"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "integration",
+    "data": {
+      "id": "3",
+      "name": "Breakaway Example",
+      "description": "This is an example in Active state",
+      "configuration": "",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "desiredStatus": "Activated",
+      "currentStatus": "Activated",
+      "tags":["example","test"],
+      "steps": [
+        {
+          "id": "5",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 4,
+            "name": "Timer Example",
+            "description": "Timer Connection",
+            "icon": "fa-globe",
+            "connectorId": "timer",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis_timer-connector:latest",
+            "name": "PeriodicTimer",
+            "description": "Set a timer that fires at intervals that you specify",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "periodic-timer",
+            "properties": {
+              "period": {
+                "kind": "parameter",
+                "displayName": "Period",
+                "group": "consumer",
+                "required": false,
+                "type": "integer",
+                "javaType": "long",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "defaultValue": 10000,
+                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+              }
+            }
+          },
+          "configuredProperties": {
+            "period": "500"
+          }
+        },{
+          "id": "6",
+          "stepKind": "log",
+          "configuredProperties": {
+            "message": "Hello World! ${body}",
+            "loggingLevel": "INFO"
+          }
+        },
+        {
+          "id": "7",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-post-connector:latest",
+            "name": "HTTP POST",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-post",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/bye"
+          }
+        },{
+          "id": "8",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-get-connector:latest",
+            "name": "HTTP GET",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-get",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/hello"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "integration",
+    "data": {
+      "id": "4",
+      "name": "Facebook Message to Twitter",
+      "description": "This is an example in Deactivated state",
+      "configuration": "",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "desiredStatus": "Deactivated",
+      "currentStatus": "Deactivated",
+      "tags":["example","test"],
+      "steps": [
+        {
+          "id": "5",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 4,
+            "name": "Timer Example",
+            "description": "Timer Connection",
+            "icon": "fa-globe",
+            "connectorId": "timer",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis_timer-connector:latest",
+            "name": "PeriodicTimer",
+            "description": "Set a timer that fires at intervals that you specify",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "periodic-timer",
+            "properties": {
+              "period": {
+                "kind": "parameter",
+                "displayName": "Period",
+                "group": "consumer",
+                "required": false,
+                "type": "integer",
+                "javaType": "long",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "defaultValue": 10000,
+                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+              }
+            }
+          },
+          "configuredProperties": {
+            "period": "500"
+          }
+        },{
+          "id": "6",
+          "stepKind": "log",
+          "configuredProperties": {
+            "message": "Hello World! ${body}",
+            "loggingLevel": "INFO"
+          }
+        },
+        {
+          "id": "7",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-post-connector:latest",
+            "name": "HTTP POST",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-post",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/bye"
+          }
+        },{
+          "id": "8",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-get-connector:latest",
+            "name": "HTTP GET",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-get",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/hello"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "integration",
+    "data": {
+      "id": "5",
+      "name": "Facebook Photo to Twitter",
+      "description": "This is an example in Pending state",
+      "configuration": "",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "desiredStatus": "Activated",
+      "currentStatus": "Pending",
+      "tags":["example","test"],
+      "steps": [
+        {
+          "id": "5",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 4,
+            "name": "Timer Example",
+            "description": "Timer Connection",
+            "icon": "fa-globe",
+            "connectorId": "timer",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis_timer-connector:latest",
+            "name": "PeriodicTimer",
+            "description": "Set a timer that fires at intervals that you specify",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "periodic-timer",
+            "properties": {
+              "period": {
+                "kind": "parameter",
+                "displayName": "Period",
+                "group": "consumer",
+                "required": false,
+                "type": "integer",
+                "javaType": "long",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "defaultValue": 10000,
+                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+              }
+            }
+          },
+          "configuredProperties": {
+            "period": "500"
+          }
+        },{
+          "id": "6",
+          "stepKind": "log",
+          "configuredProperties": {
+            "message": "Hello World! ${body}",
+            "loggingLevel": "INFO"
+          }
+        },
+        {
+          "id": "7",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-post-connector:latest",
+            "name": "HTTP POST",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-post",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/bye"
+          }
+        },{
+          "id": "8",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-get-connector:latest",
+            "name": "HTTP GET",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-get",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/hello"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "integration",
+    "data": {
+      "id": "6",
+      "name": "Update Client Service Example",
+      "description": "This is an example in Draft state",
+      "configuration": "",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "desiredStatus": "Draft",
+      "currentStatus": "Draft",
+      "tags":["example","test"],
+      "steps": [
+        {
+          "id": "5",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 4,
+            "name": "Timer Example",
+            "description": "Timer Connection",
+            "icon": "fa-globe",
+            "connectorId": "timer",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis_timer-connector:latest",
+            "name": "PeriodicTimer",
+            "description": "Set a timer that fires at intervals that you specify",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "periodic-timer",
+            "properties": {
+              "period": {
+                "kind": "parameter",
+                "displayName": "Period",
+                "group": "consumer",
+                "required": false,
+                "type": "integer",
+                "javaType": "long",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "defaultValue": 10000,
+                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+              }
+            }
+          },
+          "configuredProperties": {
+            "period": "500"
+          }
+        },{
+          "id": "6",
+          "stepKind": "log",
+          "configuredProperties": {
+            "message": "Hello World! ${body}",
+            "loggingLevel": "INFO"
+          }
+        },
+        {
+          "id": "7",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-post-connector:latest",
+            "name": "HTTP POST",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-post",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/bye"
+          }
+        },{
+          "id": "8",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-get-connector:latest",
+            "name": "HTTP GET",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-get",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/hello"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "integration",
+    "data": {
+      "id": "7",
+      "name": "Deleted Client Service Example",
+      "description": "This is an example in Deleted state",
+      "configuration": "",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "desiredStatus": "Deleted",
+      "currentStatus": "Deleted",
+      "tags":["example","test"],
+      "steps": [
+        {
+          "id": "5",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 4,
+            "name": "Timer Example",
+            "description": "Timer Connection",
+            "icon": "fa-globe",
+            "connectorId": "timer",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis_timer-connector:latest",
+            "name": "PeriodicTimer",
+            "description": "Set a timer that fires at intervals that you specify",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "periodic-timer",
+            "properties": {
+              "period": {
+                "kind": "parameter",
+                "displayName": "Period",
+                "group": "consumer",
+                "required": false,
+                "type": "integer",
+                "javaType": "long",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "defaultValue": 10000,
+                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+              }
+            }
+          },
+          "configuredProperties": {
+            "period": "500"
+          }
+        },{
+          "id": "6",
+          "stepKind": "log",
+          "configuredProperties": {
+            "message": "Hello World! ${body}",
+            "loggingLevel": "INFO"
+          }
+        },
+        {
+          "id": "7",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-post-connector:latest",
+            "name": "HTTP POST",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-post",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/bye"
+          }
+        },{
+          "id": "8",
+          "stepKind": "endpoint",
+          "connection": {
+            "id": 3,
+            "name": "HTTP Example",
+            "description": "HTTP Connection",
+            "icon": "fa-globe",
+            "connectorId": "http",
+            "configuredProperties": {}
+          },
+          "action": {
+            "id": "io.syndesis:http-get-connector:latest",
+            "name": "HTTP GET",
+            "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-get",
+            "properties": {
+              "httpUri": {
+                "kind": "path",
+                "displayName": "Http Uri",
+                "group": "producer",
+                "label": "producer",
+                "required": true,
+                "type": "string",
+                "javaType": "java.net.URI",
+                "tags":[],
+          "deprecated": false,
+                "secret": false,
+                "description": "The url of the HTTP endpoint to call."
+              }
+            }
+          },
+          "configuredProperties": {
+            "httpUri": "http://localhost:8080/hello"
+          }
+        }
+      ]
+    }
+  }
+]

@@ -95,7 +95,7 @@ public class OAuthAppToCredentialsBridge {
                         });
                     }
                 } catch (IOException e) {
-                    LOG.error("Error while processing change-event " + data, e);
+                    LOG.error("Error while processing change-event {}", data, e);
                 }
             }
         };

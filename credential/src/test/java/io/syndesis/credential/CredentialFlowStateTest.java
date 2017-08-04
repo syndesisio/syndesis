@@ -54,14 +54,10 @@ public class CredentialFlowStateTest {
 
     @Parameters(name = "{index}: {0}")
     public static Iterable<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-            {"OAUTH1",
-                new OAuth1CredentialFlowState.Builder().connectionId("connectionId").key("key").providerId("providerId")
-                    .redirectUrl("redirectUrl").returnUrl(URI.create("return")).token(new OAuthToken("value", "secret"))
-                    .verifier("verifier").build()},
-            {"OAUTH2",
-                new OAuth2CredentialFlowState.Builder().connectionId("connectionId").key("kedy")
-                    .providerId("providerId").redirectUrl("redirectUrl").returnUrl(URI.create("return")).code("code")
-                    .state("state").build()}});
+        return Arrays.asList(new Object[][] {{"OAUTH1",
+            new OAuth1CredentialFlowState.Builder().key("key").providerId("providerId").redirectUrl("redirectUrl")
+                .returnUrl(URI.create("return")).token(new OAuthToken("value", "secret")).verifier("verifier").build()},
+            {"OAUTH2", new OAuth2CredentialFlowState.Builder().key("key").providerId("providerId")
+                .redirectUrl("redirectUrl").returnUrl(URI.create("return")).code("code").state("state").build()}});
     }
 }

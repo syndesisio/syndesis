@@ -16,14 +16,33 @@
 
 package io.syndesis.rest.v1.handler.connection;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.annotation.Nonnull;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.Response;
 
 import io.swagger.annotations.Api;
+import io.syndesis.credential.AcquisitionFlow;
 import io.syndesis.credential.AcquisitionMethod;
+import io.syndesis.credential.AcquisitionRequest;
+import io.syndesis.credential.AcquisitionResponse;
+import io.syndesis.credential.AcquisitionResponse.State;
+import io.syndesis.credential.CredentialFlowState;
 import io.syndesis.credential.Credentials;
+import io.syndesis.rest.v1.state.ClientSideState;
+
+import static io.syndesis.rest.v1.util.Urls.apiBase;
 
 @Api(value = "credentials")
 public class ConnectorCredentialHandler {
@@ -32,15 +51,50 @@ public class ConnectorCredentialHandler {
 
     private final Credentials credentials;
 
-    public ConnectorCredentialHandler(@Nonnull final Credentials credentials, @Nonnull final String connectorId) {
+    private final ClientSideState state;
+
+    public ConnectorCredentialHandler(@Nonnull final Credentials credentials, final ClientSideState state,
+        @Nonnull final String connectorId) {
         this.credentials = credentials;
+        this.state = state;
         this.connectorId = connectorId;
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response create(@NotNull @Valid final AcquisitionRequest request,
+        @Context final HttpServletRequest httpRequest) {
+
+        final AcquisitionFlow acquisitionFlow = credentials.acquire(connectorId, apiBase(httpRequest),
+            absoluteTo(httpRequest, request.getReturnUrl()));
+
+        final CredentialFlowState flowState = acquisitionFlow.state().get();
+        final NewCookie cookie = state.persist(flowState.persistenceKey(), "/credentials/callback", flowState);
+
+        final AcquisitionResponse acquisitionResponse = AcquisitionResponse.Builder.from(acquisitionFlow)
+            .state(State.Builder.cookie(cookie.toString())).build();
+
+        return Response.accepted().entity(acquisitionResponse).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public AcquisitionMethod get() {
         return credentials.acquisitionMethodFor(connectorId);
+    }
+
+    protected static URI absoluteTo(final HttpServletRequest httpRequest, final URI url) {
+        final URI current = URI.create(httpRequest.getRequestURL().toString());
+
+        try {
+            return new URI(current.getScheme(), null, current.getHost(), current.getPort(), url.getPath(),
+                url.getQuery(), url.getFragment());
+        } catch (final URISyntaxException e) {
+            throw new IllegalArgumentException(
+                "Unable to generate URI based on the current (`" + current + "`) and the return (`" + url + "`) URLs",
+                e);
+        }
     }
 
 }
