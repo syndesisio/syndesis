@@ -13,6 +13,8 @@ import { UserService } from './user.service';
 import { FormFactoryService } from './forms.service';
 import { ConfigService } from '../config.service';
 import { NavigationService } from './navigation.service';
+import { ModalComponent } from './modal/modal.component';
+import { ModalService } from './modal/modal.service';
 
 @NgModule({
   imports: [
@@ -26,6 +28,7 @@ import { NavigationService } from './navigation.service';
     LoadingComponent,
     CapitalizePipe,
     TitleizePipe,
+    ModalComponent,
   ],
   exports: [
     ObjectPropertyFilterPipe,
@@ -35,10 +38,12 @@ import { NavigationService } from './navigation.service';
     LoadingComponent,
     CapitalizePipe,
     TitleizePipe,
+    ModalComponent,
   ],
   providers: [
     ConfigService,
     FormFactoryService,
+    ModalService,
   ],
 })
 export class SyndesisCommonModule {
