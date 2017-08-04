@@ -36,41 +36,11 @@ export class IntegrationsStepSelectComponent extends FlowPage
   }
 
   getName(step: StepKind) {
-    // TODO this should be the norm
-    if (step.name) {
-      return step.name;
-    }
-    // fallback
-    switch (step.stepKind) {
-      case 'log':
-        return 'Log';
-      case 'mapper':
-        return 'Data Mapper';
-      case 'rule-filter':
-        return 'Basic Filter';
-      default:
-        // TODO not ideal
-        return step.stepKind;
-    }
+    return this.stepStore.getStepName(step.stepKind);
   }
 
   getDescription(step: StepKind) {
-    if (step.description) {
-      return step.description;
-    }
-    switch (step.stepKind) {
-      case 'log':
-        return "Sends a message to the integration's log";
-      case 'mapper':
-        return 'Map fields from the input type to the output type';
-      case 'rule-filter':
-        return (
-          'Continue the integration only if criteria you specify in simple input fields are met. Suitable for most' +
-          ' integrations.'
-        );
-      case 'advanced-filter':
-        return 'Continue the integration only if criteria you define in scripting language expressions are met.';
-    }
+    return this.stepStore.getStepDescription(step.stepKind);
   }
 
   isSelected(step: Step) {
