@@ -17,4 +17,10 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
   credentials(id: string) {
     return this.restangularService.one(id).one('credentials').get();
   }
+
+  acquireCredentials(id: string) {
+    return this.restangularService.one(id).post('credentials', {
+      returnUrl: window.location.pathname,
+    });
+  }
 }

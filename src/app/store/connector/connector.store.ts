@@ -26,4 +26,8 @@ export class ConnectorStore extends AbstractStore<
   credentials(id: string) {
     return this.service.credentials(id);
   }
+
+  acquireCredentials(id: string) {
+    return this.service.acquireCredentials(id);
+  }
 }

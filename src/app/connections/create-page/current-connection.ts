@@ -71,6 +71,17 @@ export class CurrentConnectionService {
     });
   }
 
+  public acquireCredentials() {
+    if (!this._connection || !this._connection.connectorId) {
+      this._credentials = undefined;
+      return Observable.empty();
+    }
+    const connectorId = this._connection.connectorId;
+    this.connectorStore.acquireCredentials(connectorId).subscribe((resp: any) => {
+      log.infoc(() => 'Got back: ' + JSON.stringify(resp));
+    });
+  }
+
   private saveConnection(event: ConnectionEvent) {
     // poor man's clone
     const connection = <Connection>JSON.parse(
@@ -117,6 +128,7 @@ export class CurrentConnectionService {
   hasCredentials(): boolean {
     return this._credentials && this._credentials.type !== undefined;
   }
+
 
   get connection(): Connection {
     return this._connection;
