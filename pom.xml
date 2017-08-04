@@ -829,6 +829,7 @@
           <excludeRoots>
             <excludeRoot>target/generated-sources</excludeRoot>
           </excludeRoots>
+          <printFailingErrors>true</printFailingErrors>
         </configuration>
       </plugin>
 
