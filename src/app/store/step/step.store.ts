@@ -91,7 +91,7 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Advanced Filter',
-      description: 'Filter incoming data based on a set of criteria',
+      description: 'Continue the integration only if criteria you define in scripting language expressions are met.',
       stepKind: 'filter',
       properties: {
         filter: {
@@ -157,6 +157,22 @@ export class StepStore {
       configuredProperties: undefined,
     },
   ];
+
+  getStepName(kind: string): string {
+    const step = this.getStepConfig(kind);
+    if (step) {
+      return step.name;
+    }
+    return kind;
+  }
+
+  getStepDescription(kind: string): string {
+    const step = this.getStepConfig(kind);
+    if (step) {
+      return step.description;
+    }
+    return '';
+  }
 
   getStepConfig(kind: string) {
     return this.steps.find(step => step.stepKind === kind);

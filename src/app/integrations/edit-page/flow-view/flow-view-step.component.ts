@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
 
+import { StepStore } from '../../../store/step/step.store';
 import { ChildAwarePage } from '../child-aware-page';
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
@@ -37,6 +38,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
+    private stepStore: StepStore,
   ) {
     super(currentFlow, route, router);
   }
@@ -88,18 +90,6 @@ export class FlowViewStepComponent extends ChildAwarePage {
       return false;
     }
     return true;
-    /*
-    switch (this.step.stepKind) {
-      case 'endpoint':
-        return (
-          this.step.connection &&
-          this.step.action &&
-          this.step.configuredProperties
-        );
-      default:
-        return this.step.stepKind && this.step.configuredProperties;
-    }
-      */
   }
 
   deletePrompt() {
@@ -333,7 +323,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
           return this.step.name;
         }
         if (this.step.stepKind) {
-          return this.step.stepKind;
+          return this.stepStore.getStepName(this.step.stepKind);
         } else {
           return 'Set up this step';
         }
