@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value = "verifier.kind", havingValue = "service", matchIfMissing = true)
 public class ExternalVerifierService implements Verifier {
 
-    private VerificationConfigurationProperties config;
+    private final VerificationConfigurationProperties config;
 
     public ExternalVerifierService(VerificationConfigurationProperties config) {
         this.config = config;

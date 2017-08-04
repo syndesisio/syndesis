@@ -21,7 +21,7 @@ import io.syndesis.dao.manager.WithDataManager;
 
 public abstract class BaseHandler implements WithDataManager {
 
-    private DataManager dataMgr;
+    private final DataManager dataMgr;
 
     protected BaseHandler(DataManager dataMgr) {
         this.dataMgr = dataMgr;

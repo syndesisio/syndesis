@@ -45,9 +45,9 @@ public class ConnectionHandler extends BaseHandler
 
     private final Credentials credentials;
 
-    private ClientSideState state;
+    private final ClientSideState state;
 
-    public ConnectionHandler(final DataManager dataMgr, final Credentials credentials, ClientSideState state) {
+    public ConnectionHandler(final DataManager dataMgr, final Credentials credentials, final ClientSideState state) {
         super(dataMgr);
         this.credentials = credentials;
         this.state = state;

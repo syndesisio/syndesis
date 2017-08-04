@@ -67,7 +67,7 @@ public class TestSupportHandler {
     @POST
     @Path("/restore-db")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void restoreDB(ModelData<?>[] data) {
+    public void restoreDB(ModelData<?>... data) {
         LOG.warn("user {} is restoring db state", context.getRemoteUser());
         deleteAllDBEntities();
         for (ModelData<?> modelData : data) {
@@ -84,7 +84,7 @@ public class TestSupportHandler {
     @GET
     @Path("/snapshot-db")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<ModelData<?>> snapshotDB() {
+    public List<ModelData<?>> snapshotDB() {
         LOG.info("user {} is making snapshot", context.getRemoteUser());
         ArrayList<ModelData<?>> result = new ArrayList<>();
         for (DataAccessObject<?> dao : daos) {

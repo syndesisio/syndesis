@@ -52,9 +52,9 @@ public class DataMapperClassInspector implements ClassInspector {
 
     private static final String CACHE_NAME = ClassInspector.class.getName();
 
-    private CacheContainer caches;
-    private RestTemplate restTemplate;
-    private ClassInspectorConfigurationProperties config;
+    private final CacheContainer caches;
+    private final RestTemplate restTemplate;
+    private final ClassInspectorConfigurationProperties config;
 
 
     protected DataMapperClassInspector(CacheContainer caches, RestTemplate restTemplate, ClassInspectorConfigurationProperties config) {
@@ -85,7 +85,7 @@ public class DataMapperClassInspector implements ClassInspector {
         try {
             response = restTemplate.getForEntity(getClassInspectionUrl(config, fullyQualifiedName), String.class);
 
-        } catch (Exception e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             if (config.isStrict()) {
                 throw SyndesisServerException.launderThrowable(e);
             }
@@ -95,6 +95,7 @@ public class DataMapperClassInspector implements ClassInspector {
         return getPathsFromJavaClassJson(prefix, json, visited);
     }
 
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     protected List<String> getPathsFromJavaClassJson(String prefix, String json, List<String> visited) {
         List<String> paths = new ArrayList<>();
         try {
@@ -129,7 +130,7 @@ public class DataMapperClassInspector implements ClassInspector {
     }
 
     protected static String getClassName(String fullyQualifiedName) {
-        int index = fullyQualifiedName.lastIndexOf(".");
+        int index = fullyQualifiedName.lastIndexOf('.');
         if (index > 0) {
             return fullyQualifiedName.substring(index + 1);
         }

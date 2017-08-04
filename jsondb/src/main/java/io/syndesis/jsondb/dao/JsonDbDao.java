@@ -54,7 +54,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
                 return null;
             }
             return Json.mapper().readValue(json, getType());
-        } catch (RuntimeException|IOException e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
@@ -76,7 +76,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
             }
 
             return ListResult.of(Collections.<T>emptyList());
-        } catch (RuntimeException|IOException e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
@@ -97,7 +97,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
 
             return entity;
 
-        } catch (RuntimeException|IOException e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
@@ -115,7 +115,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
             }
             return previousValue;
 
-        } catch (RuntimeException|IOException e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
@@ -133,7 +133,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
             }
             String dbPath = getCollectionPath()+"/:"+id;
             return jsondb.delete(dbPath);
-        } catch (RuntimeException e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
@@ -143,7 +143,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
         try {
             String dbPath = getCollectionPath();
             jsondb.set(dbPath, "{}");
-        } catch (RuntimeException e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }

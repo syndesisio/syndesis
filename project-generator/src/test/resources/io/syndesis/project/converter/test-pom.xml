@@ -15,7 +15,7 @@
     <spring-boot.version>@spring-boot.version@</spring-boot.version>
     <camel.version>@camel.version@</camel.version>
     <syndesis-integration-runtime.version>@syndesis-integration-runtime.version@</syndesis-integration-runtime.version>
-    <atlasmap.version>@atlasmap.version@</atlasmap.version>
+    <camel-atlasmap.version>@camel-atlasmap.version@</camel-atlasmap.version>
   </properties>
 
   <dependencyManagement>
@@ -42,7 +42,7 @@
     <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>camel-atlasmap</artifactId>
-      <version>\${atlasmap.version}</version>
+      <version>\${camel-atlasmap.version}</version>
     </dependency>
 
     <!-- connectors used in this integration -->

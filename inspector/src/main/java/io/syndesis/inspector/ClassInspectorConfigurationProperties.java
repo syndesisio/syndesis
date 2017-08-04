@@ -32,6 +32,7 @@ public class ClassInspectorConfigurationProperties {
     private boolean strict = true;
 
     public ClassInspectorConfigurationProperties() {
+        // behave like a Java bean
     }
 
     public ClassInspectorConfigurationProperties(String host, int port, boolean strict) {

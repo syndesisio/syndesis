@@ -68,7 +68,7 @@ public final class Credentials {
         return flowState.getReturnUrl();
     }
 
-    protected CredentialProvider providerFor(final String providerId) {
+    /* default */ CredentialProvider providerFor(final String providerId) {
         return credentialProviderLocator.providerWithId(providerId);
     }
 

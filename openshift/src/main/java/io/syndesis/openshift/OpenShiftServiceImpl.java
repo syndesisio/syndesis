@@ -230,14 +230,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
 
-    static class DockerImage {
-        private String image;
+    /* default */ static class DockerImage {
+        private final String image;
 
         private String tag = "latest";
 
-        private String shortName;
+        private final String shortName;
 
-        DockerImage(String fullImage) {
+        /* default */ DockerImage(String fullImage) {
             image = fullImage;
 
             int colonIndex = fullImage.lastIndexOf(':');

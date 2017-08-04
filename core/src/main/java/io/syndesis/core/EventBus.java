@@ -23,7 +23,7 @@ public interface EventBus {
     /**
      * Callback interface clients implement to receive events.
      */
-    public interface Subscription {
+    interface Subscription {
 
         /**
          * This method must never block.

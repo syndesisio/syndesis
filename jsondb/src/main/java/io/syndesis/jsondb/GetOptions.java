@@ -54,11 +54,7 @@ public class GetOptions implements ToJson, Cloneable {
     }
 
     @Override
-    public GetOptions clone() {
-        try {
-            return (GetOptions) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new IllegalStateException(e);
-        }
+    public GetOptions clone() throws CloneNotSupportedException{
+        return (GetOptions) super.clone();
     }
 }

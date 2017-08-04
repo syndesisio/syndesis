@@ -44,6 +44,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 //@Component
 //@ConditionalOnProperty(value = "verifier.kind", havingValue = "forking")
+@SuppressWarnings("PMD") // Perhaps we should just delete this class and put it out of it's missery
 public class LocalProcessVerifier {
 
     private final ProjectGenerator projectGenerator;

@@ -140,6 +140,7 @@
     <sqlite-jdbc.version>3.16.1</sqlite-jdbc.version>
     <undertow.version>1.4.13.Final</undertow.version>
     <atlasmap.version>1.17.0</atlasmap.version>
+    <camel-atlasmap.version>1.10.0</camel-atlasmap.version>
 
     <!-- maven plugin version -->
     <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
@@ -167,10 +168,10 @@
     <module>openshift</module>
     <module>project-generator</module>
     <module>rest</module>
+    <module>syndesis-maven-plugin</module>
     <module>runtime</module>
     <module>verifier</module>
     <module>inspector</module>
-    <module>syndesis-maven-plugin</module>
   </modules>
 
   <dependencyManagement>
@@ -458,6 +459,12 @@
             <artifactId>spring-social-web</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson.version}</version>
       </dependency>
 
       <dependency>
@@ -809,6 +816,20 @@
           <propertyExpansion>
             checkstyle.suppression.file=checkstyle-suppressions.xml
           </propertyExpansion>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <rulesets>
+            <ruleset>../ruleset.xml</ruleset>
+          </rulesets>
+          <linkXRef>false</linkXRef>
+          <excludeRoots>
+            <excludeRoot>target/generated-sources</excludeRoot>
+          </excludeRoots>
+          <printFailingErrors>true</printFailingErrors>
         </configuration>
       </plugin>
 

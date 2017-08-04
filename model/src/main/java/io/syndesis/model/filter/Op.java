@@ -22,6 +22,7 @@ import java.io.Serializable;
 
 @Value.Immutable
 @JsonDeserialize(builder = Op.Builder.class)
+@SuppressWarnings("PMD.ShortClassName")
 public interface Op extends Serializable {
 
     Op EQUALS = new Op.Builder().label("equals").operator("==").build();
