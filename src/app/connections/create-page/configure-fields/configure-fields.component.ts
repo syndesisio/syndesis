@@ -1,10 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterStateSnapshot } from '@angular/router';
 
 import { CurrentConnectionService } from '../current-connection';
 import { Connection } from '../../../model';
 import { log } from '../../../logging';
 import { CanComponentDeactivate } from '../../../common/can-deactivate-guard.service';
+import { ModalService } from '../../../common/modal/modal.service';
 
 @Component({
   selector: 'syndesis-connections-configure-fields',
@@ -13,9 +14,7 @@ import { CanComponentDeactivate } from '../../../common/can-deactivate-guard.ser
 export class ConnectionsConfigureFieldsComponent implements OnInit, CanComponentDeactivate {
   constructor(
     private current: CurrentConnectionService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private detector: ChangeDetectorRef,
+    private modalService: ModalService,
   ) {}
 
   get connection(): Connection {
@@ -43,6 +42,6 @@ export class ConnectionsConfigureFieldsComponent implements OnInit, CanComponent
     return nextState.url === '/connections/create/cancel' ||
            nextState.url === '/connections/create/connection-basics' ||
            nextState.url === '/connections/create/review' ||
-           window.confirm('Discard changes?');
+           this.modalService.show();
   }
 }

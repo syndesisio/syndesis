@@ -6,13 +6,12 @@ import {
   ConnectionEvent,
 } from '../current-connection';
 import { Connection } from '../../../model';
-import { CanComponentDeactivate } from '../../../common/can-deactivate-guard.service';
 
 @Component({
   selector: 'syndesis-connections-connection-basics',
   templateUrl: 'connection-basics.component.html',
 })
-export class ConnectionsConnectionBasicsComponent implements OnInit, CanComponentDeactivate {
+export class ConnectionsConnectionBasicsComponent implements OnInit {
 
   constructor(
     private current: CurrentConnectionService,
@@ -43,9 +42,4 @@ export class ConnectionsConnectionBasicsComponent implements OnInit, CanComponen
     );
   }
 
-  canDeactivate(nextState: RouterStateSnapshot) {
-    return nextState.url === '/connections/create/cancel' ||
-           nextState.url === '/connections/create/configure-fields' ||
-           window.confirm('Discard changes?');
-  }
 }
