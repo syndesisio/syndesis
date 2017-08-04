@@ -78,7 +78,7 @@ export class CurrentConnectionService {
     }
     const connectorId = this._connection.connectorId;
     this.connectorStore.acquireCredentials(connectorId).subscribe((resp: any) => {
-      log.infoc(() => 'Got back: ' + JSON.stringify(resp));
+      log.infoc(() => 'Got response: ' + JSON.stringify(resp));
     });
   }
 
