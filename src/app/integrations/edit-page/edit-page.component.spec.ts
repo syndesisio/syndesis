@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ngx-restangular';
+import { ToolbarModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { NavigationService } from '../../common/navigation.service';
@@ -40,6 +41,7 @@ describe('IntegrationsEditComponent', () => {
           PopoverModule.forRoot(),
           CollapseModule.forRoot(),
           StoreModule,
+          ToolbarModule,
         ],
         declarations: [
           IntegrationsEditPage,

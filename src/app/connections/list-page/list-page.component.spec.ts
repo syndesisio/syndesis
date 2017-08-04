@@ -8,6 +8,7 @@ import { RestangularModule } from 'ngx-restangular';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NotificationModule } from 'patternfly-ng';
+import { ToolbarModule } from 'patternfly-ng';
 import { StoreModule } from '../../store/store.module';
 
 import { SyndesisCommonModule } from '../../common/common.module';
@@ -30,6 +31,7 @@ describe('ConnectionListPage', () => {
           ModalModule.forRoot(),
           BsDropdownModule.forRoot(),
           NotificationModule,
+          ToolbarModule,
         ],
         declarations: [
           ConnectionsListPage,

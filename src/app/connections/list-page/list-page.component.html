@@ -1,4 +1,7 @@
+<syndesis-connections-list-toolbar [items]="connections"
+                                   [filteredItems]="filteredConnections">
+</syndesis-connections-list-toolbar>
+
 <div class='connections list'>
-  <syndesis-connections-list-toolbar [(filter)]="filter" [(sort)]="sort"></syndesis-connections-list-toolbar>
-  <syndesis-connections-list [connections]="connections | async | objectPropertyFilter:filter | objectPropertySort:sort" [loading]="loading | async" (onSelected)="onSelected($event)"></syndesis-connections-list>
+  <syndesis-connections-list [connections]="filteredConnections | async" [loading]="loading | async" (onSelected)="onSelected($event)"></syndesis-connections-list>
 </div>

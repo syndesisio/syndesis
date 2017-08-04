@@ -7,6 +7,7 @@ import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TagInputModule } from 'ngx-chips';
+import { ToolbarModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../common/common.module';
 import { DynamicFormsPatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
@@ -36,6 +37,7 @@ import { CurrentConnectionService } from './create-page/current-connection';
     ModalModule,
     BsDropdownModule,
     TagInputModule,
+    ToolbarModule,
   ],
   declarations: [
     ConnectionsCreatePage,

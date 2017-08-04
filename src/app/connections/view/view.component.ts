@@ -10,6 +10,8 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
@@ -20,8 +22,6 @@ import {
 import { FormFactoryService } from '../../common/forms.service';
 import { ConnectorStore } from '../../store/connector/connector.store';
 import { Connection, Connectors, Connector, TypeFactory } from '../../model';
-import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
-import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
 import { log, getCategory } from '../../logging';
 
 const category = getCategory('Connections');
@@ -40,16 +40,9 @@ export class ConnectionViewComponent implements OnInit, OnChanges, OnDestroy {
   validating = false;
   validateError: string = undefined;
   validateSuccess = false;
-  connectors: Observable<Connectors>;
   loading: Observable<boolean>;
-  filter: ObjectPropertyFilterConfig = {
-    filter: '',
-    propertyName: 'name',
-  };
-  sort: ObjectPropertySortConfig = {
-    sortField: 'name',
-    descending: false,
-  };
+  connectors: Observable<Connectors>;
+  filteredConnectors: Subject<Connectors> = new BehaviorSubject(<Connectors>{});
   _formModel: DynamicFormControlModel[];
   _formGroup: FormGroup;
   formChangesSubscription: Subscription;

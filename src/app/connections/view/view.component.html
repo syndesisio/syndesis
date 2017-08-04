@@ -92,11 +92,11 @@
 
     <div *ngSwitchCase="'create1'">
       <div class="connector-list">
-        <syndesis-connections-list-toolbar [(filter)]="filter"
-                                           [(sort)]="sort"
+        <syndesis-connections-list-toolbar [items]="connectors"
+                                           [filteredItems]="filteredConnectors"
                                            [showCreate]="false"></syndesis-connections-list-toolbar>
 
-        <syndesis-connections-list [connections]="connectors | async | objectPropertyFilter:filter | objectPropertySort:sort"
+        <syndesis-connections-list [connections]="filteredConnectors | async"
                                    [loading]="loading | async"
                                    [showKebab]="false"
                                    (onSelected)="onSelected($event)"></syndesis-connections-list>
