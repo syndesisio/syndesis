@@ -85,7 +85,7 @@ public class CredentialsIntegrationTest {
 
         @Bean
         public DataManager dataManager() {
-            return new DataManager(null, null, (String) null);
+            return new DataManager(null, null, null);
         }
 
         @Bean
@@ -102,6 +102,7 @@ public class CredentialsIntegrationTest {
 
             // needed by DataManager
             properties.put("deployment.file", "");
+            properties.put("deployment.load-demo-data", "false");
 
             properties.put("spring.social." + PROVIDER + ".appId", "testClientId");
             properties.put("spring.social." + PROVIDER + ".appSecret", "testClientSecret");
