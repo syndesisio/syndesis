@@ -16,10 +16,6 @@
 package io.syndesis.git;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import sun.security.action.GetPropertyAction;
-
-import java.nio.file.Paths;
-import java.security.AccessController;
 
 
 /**
@@ -28,7 +24,7 @@ import java.security.AccessController;
 @ConfigurationProperties("git")
 public class GitProperties {
 
-    private String localGitRepoPath = Paths.get(AccessController.doPrivileged(new GetPropertyAction("java.io.tmpdir"))).toString();
+    private String localGitRepoPath = System.getProperty("java.io.tmpdir");
 
     public String getLocalGitRepoPath() {
         return localGitRepoPath;

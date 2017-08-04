@@ -21,6 +21,8 @@ import java.net.HttpURLConnection;
 
 import org.eclipse.egit.github.core.client.GitHubClient;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.AUTH_TOKEN;
+
 /**
  * GitHub client which sets a KeyCloak authentication token
  *
@@ -30,21 +32,20 @@ import org.eclipse.egit.github.core.client.GitHubClient;
  * @author roland
  * @since 09/03/2017
  */
-public class KeycloakTokenAwareGitHubClient extends GitHubClient {
+public class KeycloakProviderTokenAwareGitHubClient extends GitHubClient {
 
-    public KeycloakTokenAwareGitHubClient(String hostname) {
-        super(hostname);
+    public KeycloakProviderTokenAwareGitHubClient() {
+        super();
     }
 
-    @Override
-    protected String configureUri(final String uri) {
-        return uri;
+    public KeycloakProviderTokenAwareGitHubClient(String hostname) {
+        super(hostname);
     }
 
     @Override
     protected HttpURLConnection configureRequest(final HttpURLConnection request) {
         super.configureRequest(request);
-        request.setRequestProperty(HEADER_AUTHORIZATION, "Bearer " + Tokens.getAuthenticationToken());
+        request.setRequestProperty(HEADER_AUTHORIZATION, AUTH_TOKEN + ' ' + Tokens.getProviderToken("github"));
         return request;
     }
 }

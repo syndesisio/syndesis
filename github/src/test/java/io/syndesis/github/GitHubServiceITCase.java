@@ -15,29 +15,34 @@
  */
 package io.syndesis.github;
 
+import io.fabric8.mockwebserver.DefaultMockServer;
 import io.syndesis.git.GitProperties;
 import io.syndesis.git.GitWorkflow;
+import io.syndesis.github.backend.KeycloakProviderTokenAwareGitHubClient;
 import org.assertj.core.api.Assertions;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.keycloak.KeycloakPrincipal;
+import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
+import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class GitHubServiceITCase {
 
@@ -52,8 +57,9 @@ public class GitHubServiceITCase {
     private static String REPO_NAME = "syndesis-itcase";
 
     private GitHubClient client = null;
-    private GitHubService githubService = null;
+    private GitHubServiceImpl githubService = null;
     private GitWorkflow gitWorkflow = new GitWorkflow(new GitProperties());
+    private DefaultMockServer webserver;
 
     @Before
     public void before() throws IOException {
@@ -62,13 +68,44 @@ public class GitHubServiceITCase {
 
         Assertions.assertThat(authToken).isNotNull().isNotBlank();
 
-        // Setup credentials for GitHub client (Token should include "repo" and "delete_repo" scopes)
-        client = new GitHubClient();
-        client.setOAuth2Token(authToken);
+        client = new KeycloakProviderTokenAwareGitHubClient();
 
         // Now that we have a client we create one of our GitHubService
         githubService = new GitHubServiceImpl(new RepositoryService(client), new UserService(client), gitWorkflow);
 
+        webserver = new DefaultMockServer();
+        webserver.start(1234);
+
+        webserver.expect().get().withPath("/auth/realms/syndesis-it/broker/github/token").andReturn(
+            200,
+            "{\"access_token\":\"" + authToken + "\",\"expires_in\":2678400,\"scope\":\"user:info user:check-access role:edit:syndesis-staging:! role:system:build-strategy-source:syndesis-staging\",\"token_type\":\"Bearer\"}"
+        )
+            .withHeader("Content-Type", "application/json")
+            .always();
+
+        KeycloakAuthenticationToken keycloakAuthenticationToken = new KeycloakAuthenticationToken(
+            new SimpleKeycloakAccount(
+                new KeycloakPrincipal<RefreshableKeycloakSecurityContext>("testuser", null),
+                null,
+                new RefreshableKeycloakSecurityContext(
+                    null,
+                    null,
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6MTIzNC9hdXRoL3JlYWxtcy9zeW5kZXNpcy1pdCJ9.N0R7v55eiVXMzzhooYb1BStzyu_iP07wKNIO9z9dRMs",
+                    null,
+                    null,
+                    null,
+                    null
+                )
+            )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(keycloakAuthenticationToken);
+    }
+
+    @After
+    public void after() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+        webserver.shutdown();
     }
 
     @Test
@@ -82,16 +119,16 @@ public class GitHubServiceITCase {
     @Test
     public void testCreateNewRepository() throws IOException {
         String testRepo = REPO_NAME + "-create-new";
-        Repository repository = ((GitHubServiceImpl) githubService).getRepository(testRepo);
+        Repository repository = githubService.getRepository(testRepo);
         if (repository != null) {
             String apiUser = githubService.getApiUser();
             client.delete("/repos/" + apiUser + "/" + testRepo);
-            repository = ((GitHubServiceImpl) githubService).getRepository(testRepo);
+            repository = githubService.getRepository(testRepo);
         }
         Assert.assertNull(repository); // repository should not exist on GitHub
 
         // Create Repository
-        repository = ((GitHubServiceImpl) githubService).createRepo(testRepo);
+        repository = githubService.createRepo(testRepo);
         Assertions.assertThat(repository).isNotNull();
         Assertions.assertThat(repository.getName()).isEqualTo(testRepo);
         System.out.println("Successfully created repository " + repository.getName());
@@ -107,7 +144,7 @@ public class GitHubServiceITCase {
         URL url = this.getClass().getResource(PROJECT_DIR);
         System.out.println("Reading sample project from " + url);
         //Read from classpath sample-github-project into map
-        Map<String, byte[]> files = new HashMap<String, byte[]>();
+        Map<String, byte[]> files = new HashMap<>();
         Files.find(Paths.get(url.getPath()), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile())
             .forEach(filePath -> {
                 if (!filePath.startsWith(".git")) {
@@ -123,21 +160,8 @@ public class GitHubServiceITCase {
                 }
             });
 
-        Repository repository = ((GitHubServiceImpl) githubService).getRepository(REPO_NAME);
-        RevCommit commit = null;
-        if (repository == null) {
-            repository = ((GitHubServiceImpl) githubService).createRepo(REPO_NAME);
-            commit = gitWorkflow.createFiles(repository.getHtmlUrl(), repository.getName(), "my itcase initial message", files,
-                new UsernamePasswordCredentialsProvider(authToken, ""));
-
-        } else {
-            commit = gitWorkflow.updateFiles(repository.getHtmlUrl(), repository.getName(), "my itcase update message", files,
-                new UsernamePasswordCredentialsProvider(authToken, ""));
-        }
-        Path workingDir = Files.createTempDirectory(repository.getName());
-        Git git = Git.cloneRepository().setDirectory(workingDir.toFile()).setURI(repository.getHtmlUrl()).call();
-        RevCommit lastCommit = git.log().setMaxCount(1).call().iterator().next();
-        Assertions.assertThat(lastCommit.getId()).isEqualTo(commit.getId());
+        String cloneURL = githubService.createOrUpdateProjectFiles(REPO_NAME, "my itcase initial message" + UUID.randomUUID().toString(), files, null);
+        Assertions.assertThat(cloneURL).isNotNull().isNotBlank();
     }
 
 }

@@ -31,6 +31,7 @@ import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,7 +41,7 @@ import java.util.Map;
 @ConditionalOnProperty(value = "git.enabled", matchIfMissing = true, havingValue = "true")
 public class GitWorkflow {
 
-    private static final Logger log = LoggerFactory.getLogger(GitWorkflow.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GitWorkflow.class);
 
     private final GitProperties gitProperties;
 
@@ -65,8 +66,8 @@ public class GitWorkflow {
         try {
             // create temporary directory
             Path workingDir = Files.createTempDirectory(Paths.get(gitProperties.getLocalGitRepoPath()), repoName);
-            if (log.isDebugEnabled()) {
-                log.debug("Created temporary directory {}", workingDir.toString());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Created temporary directory {}", workingDir.toString());
             }
 
             // git init
@@ -82,7 +83,7 @@ public class GitWorkflow {
             removeWorkingDir(workingDir);
             return commit;
 
-        } catch (Exception e) {
+        } catch (IOException | GitAPIException | URISyntaxException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
@@ -100,11 +101,11 @@ public class GitWorkflow {
     public RevCommit updateFiles(String remoteGitRepoHttpUrl, String repoName, String message, Map<String, byte[]> files,
                                  UsernamePasswordCredentialsProvider credentials) {
 
+        // create temporary directory
         try {
-            // create temporary directory
             Path workingDir = Files.createTempDirectory(Paths.get(gitProperties.getLocalGitRepoPath()), repoName);
-            if (log.isDebugEnabled()) {
-                log.debug("Created temporary directory {}", workingDir.toString());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Created temporary directory {}", workingDir.toString());
             }
 
             // git clone
@@ -115,7 +116,7 @@ public class GitWorkflow {
             removeWorkingDir(workingDir);
 
             return commit;
-        } catch (Exception e) {
+        } catch (IOException | GitAPIException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
@@ -123,7 +124,7 @@ public class GitWorkflow {
     private void removeWorkingDir(Path workingDir) throws IOException {
         // cleanup tmp dir
         if (!FileSystemUtils.deleteRecursively(workingDir.toFile())) {
-            log.warn("Could not delete temporary directory {}", workingDir);
+            LOG.warn("Could not delete temporary directory {}", workingDir);
         }
     }
 
@@ -134,6 +135,7 @@ public class GitWorkflow {
      * @param files
      * @throws IOException
      */
+    @SuppressWarnings("unused")
     private void writeFiles(Path workingDir, Map<String, byte[]> files) throws IOException {
         for (Map.Entry<String, byte[]> entry : files.entrySet()) {
             File file = new File(workingDir.toString(), entry.getKey());
@@ -149,18 +151,18 @@ public class GitWorkflow {
 
         // git add .
         git.add().addFilepattern(".").call();
-        if (log.isDebugEnabled()) {
-            log.debug("git add all file");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("git add all file");
         }
 
         // git commit
         RevCommit commit = git.commit().setMessage(message).call();
-        log.info("git commit id {}", commit.getId());
+        LOG.info("git commit id {}", commit.getId());
 
         // git push -f, not merging but simply forcing the push (for now)
         Iterable<PushResult> pushResult = git.push().setCredentialsProvider(credentials).setForce(true).call();
         if (!pushResult.iterator().next().getMessages().equals("")) {
-            log.warn("git push messages: {}", pushResult.iterator().next().getMessages());
+            LOG.warn("git push messages: {}", pushResult.iterator().next().getMessages());
         }
 
         return commit;

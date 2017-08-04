@@ -15,6 +15,7 @@
  */
 package io.syndesis.github;
 
+import org.eclipse.egit.github.core.client.IGitHubConstants;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
@@ -24,7 +25,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("github")
 public class GitHubProperties {
 
-    private String service = "syndesis-github-proxy";
+    private String service = IGitHubConstants.HOST_API;
 
     public String getService() {
         return service;
