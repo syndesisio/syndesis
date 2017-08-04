@@ -1,6 +1,6 @@
 # Credential support
 
-* Issue: https://github.com/syndesisio/syndesis-rest/issues/386
+* Issue: https://github.com/syndesisio/syndesis-project/issues/29 https://github.com/syndesisio/syndesis-project/issues/30
 * Sprint: 13
 * Affected Repos:
   - syndesis-rest
@@ -55,7 +55,7 @@ To interact with the credentials API:
 | HTTP Verb | Path | Description |
 | --------- | ---- | ----------- |
 | GET | /api/{version}/connectors/{connector}/credentials | List all the ways a credential can be acquired for a {connector} |
-| POST | /api/{version}/connections/{id}/credentials | Acquire new credential for connection with identifier {id} |
+| POST | /api/{version}/connectors/{connector}/credentials | Acquire new credential for connection with identifier {id} |
 | \* | /api/{version}/credentials/callback | Handle interaction with 3rd party services during credential acquisition |
 
 ## Persisting state
@@ -126,7 +126,7 @@ Accept: application/json
 ```
  2. Citizen user chooses "Connect to Salesforce", this results in creation of new credential acquisition:
 ```http
-POST /api/v1/connections/__some_id__/credentials HTTP/1.1
+POST /api/v1/connectors/salesforce/credentials HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 ```
@@ -154,7 +154,7 @@ Host: login.salesforce.com
 HTTP/1.1 302 Moved Temporarily
 Location: https://{syndesis-rest}/api/v1/credentials/callback?code=...
 ```
-4. Credential provider for Salesforce processes the request, extracts the `code` and returns to the URL provided by the UI in 2. (`returnUrl`)
+4. Credential provider for Salesforce processes the request, extracts the `code` and returns to the URL provided by the UI in 2. (`returnUrl`) and sets a new HTTP cookie that holds tokens or other data needed for application when the connection is eventually created
 ```http
 GET /api/v1/connectors/salesforce/credentials/callback?code=... HTTP/1.1
 
@@ -162,6 +162,7 @@ Cookie: cred-o2-...=...
 ```
 ```http
 HTTP/1.1 302 Moved Temporarily
+Set-Cookie: cred-o2-...=...;Version=1;Path=/connections/;Secure;HttpOnly
 Location: https://{syndesis-ui}/ui#state
 ```
 5. Acquisition handler for Salesforce issues an out of bounds request to Salesforce that replies with the OAuth tokens
@@ -172,4 +173,5 @@ Host: login.salesforce.com
 ```http
 grant_type=authorization_code&client_id={client-id}&client_secret={client-secret}&redirect_uri=https://{syndesis-rest}/api/v1/connectors/salesforce/callback&code=...
 ```
-6. This results in credential being created for Salesforce connection
+6. This results in credential data being created for Salesforce connection
+7. Eventually the UI will POST to `/api/v1/connections` to create a new Connection at what point the HTTP cookie set in 4. will be used to update the connection with credential data
