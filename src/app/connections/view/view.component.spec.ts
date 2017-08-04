@@ -15,6 +15,8 @@ import { TagInputModule } from 'ngx-chips';
 
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 
+import { ToolbarModule } from 'patternfly-ng';
+
 import { ConnectionViewComponent } from './view.component';
 import { ConnectionsListComponent } from '../list/list.component';
 import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
@@ -41,6 +43,7 @@ describe('ConnectionViewComponent', () => {
           ModalModule,
           BrowserAnimationsModule,
           TagInputModule,
+          ToolbarModule,
         ],
         declarations: [
           ConnectionViewComponent,

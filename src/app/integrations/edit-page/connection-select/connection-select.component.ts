@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { log, getCategory } from '../../../logging';
@@ -8,8 +10,6 @@ import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { ConnectionStore } from '../../../store/connection/connection.store';
 import { Connections, Connection } from '../../../model';
 import { FlowPage } from '../flow-page';
-import { ObjectPropertyFilterConfig } from '../../../common/object-property-filter.pipe';
-import { ObjectPropertySortConfig } from '../../../common/object-property-sort.pipe';
 
 const category = getCategory('Integrations');
 
@@ -21,16 +21,9 @@ const category = getCategory('Integrations');
 })
 export class IntegrationsSelectConnectionComponent extends FlowPage
   implements OnInit, OnDestroy {
-  connections: Observable<Connections>;
   loading: Observable<boolean>;
-  filter: ObjectPropertyFilterConfig = {
-    filter: '',
-    propertyName: 'name',
-  };
-  sort: ObjectPropertySortConfig = {
-    sortField: 'name',
-    descending: false,
-  };
+  connections: Observable<Connections>;
+  filteredConnections: Subject<Connections> = new BehaviorSubject(<Connections>{});
   routeSubscription: Subscription;
   position: number;
 

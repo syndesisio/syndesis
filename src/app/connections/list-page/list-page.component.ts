@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { log, getCategory } from '../../logging';
-import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
-import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
 import { ConnectionStore } from '../../store/connection/connection.store';
 import { Connections, Connection } from '../../model';
 
@@ -16,19 +16,9 @@ const category = getCategory('Connections');
   styleUrls: ['./list-page.component.scss'],
 })
 export class ConnectionsListPage implements OnInit {
-  connections: Observable<Connections>;
-
   loading: Observable<boolean>;
-
-  filter: ObjectPropertyFilterConfig = {
-    filter: '',
-    propertyName: 'name',
-  };
-
-  sort: ObjectPropertySortConfig = {
-    sortField: 'name',
-    descending: false,
-  };
+  connections: Observable<Connections>;
+  filteredConnections: Subject<Connections> = new BehaviorSubject(<Connections>{});
 
   constructor(private store: ConnectionStore, private router: Router) {
     this.loading = store.loading;

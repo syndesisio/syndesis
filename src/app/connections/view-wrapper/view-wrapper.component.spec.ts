@@ -15,6 +15,8 @@ import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TagInputModule } from 'ngx-chips';
 
+import { ToolbarModule } from 'patternfly-ng';
+
 import { ConnectionViewWrapperComponent } from './view-wrapper.component';
 import { ConnectionViewToolbarComponent } from '../view-toolbar/view-toolbar.component';
 import { ConnectionsListComponent } from '../list/list.component';
@@ -45,6 +47,7 @@ describe('ConnectionViewWrapperComponent', () => {
           ModalModule,
           BrowserAnimationsModule,
           TagInputModule,
+          ToolbarModule,
         ],
         declarations: [
           ConnectionViewWrapperComponent,
