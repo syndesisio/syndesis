@@ -31,15 +31,12 @@ export class ConnectionsConfigureFieldsComponent implements OnInit, CanComponent
   }
 
   acquireCredentials() {
-    // TODO
-    window.alert('I don\'t work yet');
+    this.current.acquireCredentials();
   }
 
   ngOnInit() {
-    /*
     log.infoc(() => 'Credentials: ' + JSON.stringify(this.current.credentials));
     log.infoc(() => 'hasCredentials: ' + this.current.hasCredentials());
-    */
   }
 
   canDeactivate(nextState: RouterStateSnapshot) {
