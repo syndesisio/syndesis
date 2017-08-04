@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 
 import io.syndesis.model.ListResult;
@@ -120,9 +121,9 @@ public class ReflectiveSorter<T> implements Function<ListResult<T>, ListResult<T
         return superClass != null ? getGetMethodOfType(superClass, fieldName, types) : null;
     }
 
-    private Method extractMethod(Class<?> clazz, String fieldName, Class<?>[] types) {
+    private Method extractMethod(Class<?> clazz, String fieldName, Class<?>... types) {
         try {
-            Method method = clazz.getDeclaredMethod("get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1));
+            Method method = clazz.getDeclaredMethod("get" + fieldName.substring(0, 1).toUpperCase(Locale.US) + fieldName.substring(1));
             Class<?> returnType = method.getReturnType();
             for (Class<?> type : types) {
                 if (returnType.isAssignableFrom(type)) {

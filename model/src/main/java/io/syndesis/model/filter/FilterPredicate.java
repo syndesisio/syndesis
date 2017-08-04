@@ -36,7 +36,7 @@ public enum FilterPredicate {
         this.operator = operator;
     }
 
-    public String getOperator() {
-        return operator;
+    public CharSequence getExpressionDelimiter() {
+        return " " + operator + " ";
     }
 }

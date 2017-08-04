@@ -25,9 +25,6 @@ public interface StatusChangeHandlerProvider {
 
     List<StatusChangeHandler> getStatusChangeHandlers();
 
-    /**
-     *
-     */
     interface StatusChangeHandler {
 
         Set<Integration.Status> getTriggerStatuses();
@@ -54,7 +51,7 @@ public interface StatusChangeHandlerProvider {
             }
 
             public StatusUpdate(Integration.Status status, List<String> stepsPerformed) {
-                this(status, null, stepsPerformed != null && stepsPerformed.size() > 0 ? stepsPerformed : null);
+                this(status, null, stepsPerformed != null && !stepsPerformed.isEmpty() ? stepsPerformed : null);
             }
 
             public Integration.Status getStatus() {

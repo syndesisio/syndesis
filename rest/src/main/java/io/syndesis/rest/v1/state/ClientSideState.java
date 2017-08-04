@@ -71,9 +71,9 @@ public final class ClientSideState {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private final Edition edition;
-
     private final BiFunction<Class<?>, byte[], Object> deserialization;
+
+    private final Edition edition;
 
     private final Supplier<byte[]> ivSource;
 
@@ -105,12 +105,12 @@ public final class ClientSideState {
             ClientSideState::deserialize, timeout);
     }
 
-    protected ClientSideState(final Edition edition, final Supplier<Long> timeSource, long timeout) {
+    /* default */ ClientSideState(final Edition edition, final Supplier<Long> timeSource, final long timeout) {
         this(edition, timeSource, new RandomIvSource(), ClientSideState::serialize, ClientSideState::deserialize,
             timeout);
     }
 
-    protected ClientSideState(final Edition edition, final Supplier<Long> timeSource, final Supplier<byte[]> ivSource,
+    /* default */ ClientSideState(final Edition edition, final Supplier<Long> timeSource, final Supplier<byte[]> ivSource,
         final Function<Object, byte[]> serialization, final BiFunction<Class<?>, byte[], Object> deserialization,
         final long timeout) {
         this.edition = edition;
@@ -128,19 +128,9 @@ public final class ClientSideState {
     public <T> T restoreFrom(final Cookie cookie, final Class<T> type) {
         final String value = cookie.getValue();
 
-        final int lastSeparatorIdx = value.lastIndexOf('|');
-
-        KeySource keySource = edition.keySource();
-        final byte[] calculated = mac(edition.authenticationAlgorithm, value.substring(0, lastSeparatorIdx),
-            keySource.authenticationKey());
-
         final String[] parts = value.split("\\|", 5);
 
-        final byte[] encrypted = DECODER.decode(parts[0]);
         final byte[] atime = DECODER.decode(parts[1]);
-        final byte[] tid = DECODER.decode(parts[2]);
-        final byte[] iv = DECODER.decode(parts[3]);
-        final byte[] mac = DECODER.decode(parts[4]);
 
         final long atimeLong = atime(atime);
 
@@ -148,15 +138,23 @@ public final class ClientSideState {
             throw new IllegalArgumentException("Given value has timed out at: " + Instant.ofEpochSecond(atimeLong));
         }
 
+        final byte[] tid = DECODER.decode(parts[2]);
         if (!MessageDigest.isEqual(tid, edition.tid)) {
             throw new IllegalArgumentException(String.format("Given TID `%s`, mismatches current TID `%s`",
                 new BigInteger(tid).toString(16), new BigInteger(edition.tid).toString(16)));
         }
 
+        final KeySource keySource = edition.keySource();
+        final int lastSeparatorIdx = value.lastIndexOf('|');
+        final byte[] mac = DECODER.decode(parts[4]);
+        final byte[] calculated = mac(edition.authenticationAlgorithm, value.substring(0, lastSeparatorIdx),
+            keySource.authenticationKey());
         if (!MessageDigest.isEqual(mac, calculated)) {
             throw new IllegalArgumentException("Cookie value fails authenticity check");
         }
 
+        final byte[] iv = DECODER.decode(parts[3]);
+        final byte[] encrypted = DECODER.decode(parts[0]);
         final byte[] clear = decrypt(edition.encryptionAlgorithm, iv, encrypted, keySource.encryptionKey());
 
         @SuppressWarnings("unchecked")
@@ -165,59 +163,54 @@ public final class ClientSideState {
         return ret;
     }
 
-    protected byte[] atime() {
+    /* default */ byte[] atime() {
         final long nowInSec = timeSource.get();
         final String nowAsStr = Long.toString(nowInSec);
 
         return nowAsStr.getBytes(StandardCharsets.US_ASCII);
     }
 
-    protected byte[] iv() {
+    /* default */ byte[] iv() {
         return ivSource.get();
     }
 
-    protected String protect(final Object value) {
+    /* default */ String protect(final Object value) {
         final byte[] clear = serialization.apply(value);
 
         final byte[] iv = iv();
 
-        KeySource keySource = edition.keySource();
+        final KeySource keySource = edition.keySource();
         final SecretKey encryptionKey = keySource.encryptionKey();
         final byte[] cipher = encrypt(edition.encryptionAlgorithm, iv, clear, encryptionKey);
 
         final byte[] atime = atime();
 
-        final StringBuilder base = new StringBuilder();
-        base.append(ENCODER.encodeToString(cipher));
-        base.append('|');
+        final StringBuilder base = new StringBuilder().append(ENCODER.encodeToString(cipher)).append('|')
 
-        base.append(ENCODER.encodeToString(atime));
-        base.append('|');
+            .append(ENCODER.encodeToString(atime)).append('|')
 
-        base.append(ENCODER.encodeToString(edition.tid));
-        base.append('|');
+            .append(ENCODER.encodeToString(edition.tid)).append('|')
 
-        base.append(ENCODER.encodeToString(iv));
+            .append(ENCODER.encodeToString(iv));
 
         final byte[] mac = mac(edition.authenticationAlgorithm, base, keySource.authenticationKey());
 
-        base.append('|');
-        base.append(ENCODER.encodeToString(mac));
+        base.append('|').append(ENCODER.encodeToString(mac));
 
         return base.toString();
     }
 
-    protected static long atime(final byte[] atime) {
+    /* default */ static long atime(final byte[] atime) {
         final String timeAsStr = new String(atime, StandardCharsets.US_ASCII);
 
         return Long.parseLong(timeAsStr);
     }
 
-    protected static long currentTimestmpUtc() {
+    /* default */ static long currentTimestmpUtc() {
         return Instant.now().toEpochMilli() / 1000;
     }
 
-    protected static byte[] decrypt(final String encryptionAlgorithm, final byte[] iv, final byte[] encrypted,
+    /* default */ static byte[] decrypt(final String encryptionAlgorithm, final byte[] iv, final byte[] encrypted,
         final SecretKey encryptionKey) {
         try {
             final Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
@@ -230,7 +223,7 @@ public final class ClientSideState {
         }
     }
 
-    protected static Object deserialize(final Class<?> type, final byte[] pickle) {
+    /* default */ static Object deserialize(final Class<?> type, final byte[] pickle) {
         final ObjectReader reader = MAPPER.readerFor(type);
 
         try {
@@ -240,7 +233,7 @@ public final class ClientSideState {
         }
     }
 
-    protected static byte[] encrypt(final String encryptionAlgorithm, final byte[] iv, final byte[] clear,
+    /* default */ static byte[] encrypt(final String encryptionAlgorithm, final byte[] iv, final byte[] clear,
         final SecretKey encryptionKey) {
         try {
             final Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
@@ -253,7 +246,7 @@ public final class ClientSideState {
         }
     }
 
-    protected static byte[] mac(final String authenticationAlgorithm, final CharSequence base,
+    /* default */ static byte[] mac(final String authenticationAlgorithm, final CharSequence base,
         final SecretKey authenticationKey) {
         try {
             final String baseString = base.toString();
@@ -270,7 +263,7 @@ public final class ClientSideState {
         }
     }
 
-    protected static byte[] serialize(final Object value) {
+    /* default */ static byte[] serialize(final Object value) {
         final ObjectWriter writer = MAPPER.writerFor(value.getClass());
 
         try {

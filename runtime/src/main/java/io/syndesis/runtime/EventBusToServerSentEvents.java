@@ -26,6 +26,8 @@ import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.util.HeaderMap;
 import io.undertow.util.HttpString;
 import org.jboss.resteasy.spi.CorsHeaders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.undertow.UndertowDeploymentInfoCustomizer;
 import org.springframework.stereotype.Component;
@@ -36,6 +38,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EventBusToServerSentEvents implements UndertowDeploymentInfoCustomizer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(EventBusToServerSentEvents.class);
 
     public static final String DEFAULT_PATH = "/api/v1/event/streams";
     protected final SyndesisCorsConfiguration cors;
@@ -62,7 +66,7 @@ public class EventBusToServerSentEvents implements UndertowDeploymentInfoCustomi
                 connection.shutdown();
                 return;
             }
-            System.out.println("Principal is: "+reservation.getPrincipal());
+            LOG.debug("Principal is: {}", reservation.getPrincipal());
             connection.send("connected", "message", null, null);
             bus.subscribe(subscriptionId, (type, data)->{
                 if( connection.isOpen() ) {
@@ -82,6 +86,7 @@ public class EventBusToServerSentEvents implements UndertowDeploymentInfoCustomi
                     .addPrefixPath("/", handler)
                     .addPrefixPath(path, new ServerSentEventHandler(new EventBusHandler()){
                         @Override
+                        @SuppressWarnings("PMD.SignatureDeclareThrowsException")
                         public void handleRequest(HttpServerExchange exchange) throws Exception {
                             if( reservationCheck(exchange) ) {
                                 super.handleRequest(exchange);

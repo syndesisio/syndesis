@@ -29,9 +29,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class InfinispanCacheConfiguration {
 
-    @Value("${cache.cluster.name}")
-    private String clusterName;
-
     @Value("${cache.max.entries}")
     private int maxEntries;
 

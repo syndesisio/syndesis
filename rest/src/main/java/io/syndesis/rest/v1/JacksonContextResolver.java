@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
     private ObjectMapper objectMapper;
 
-    public JacksonContextResolver() throws Exception {
+    public JacksonContextResolver() {
         this.objectMapper = Json.mapper();
     }
 

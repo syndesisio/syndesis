@@ -28,7 +28,7 @@ public class StepVisitorFactoryRegistry {
   private final StepVisitorFactory FALLBACK_STEP_FACTORY = new GenericStepVisitor.Factory();
 
   public StepVisitorFactoryRegistry(List<StepVisitorFactory> factories) {
-    factories.stream().forEach(f -> register(f));
+    factories.forEach(this::register);
   }
 
   public void register(StepVisitorFactory factory) {

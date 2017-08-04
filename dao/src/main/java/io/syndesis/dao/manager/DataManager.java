@@ -15,6 +15,7 @@
  */
 package io.syndesis.dao.manager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +90,7 @@ public class DataManager implements DataAccessObjectRegistry {
                 for (ModelData<?> modelData : mdList) {
                     store(modelData);
                 }
-            } catch (Exception e) {
+            } catch (IOException e) {
                 throw new IllegalStateException("Cannot read dummy startup data due to: " + e.getMessage(), e);
             }
         }
@@ -100,16 +101,16 @@ public class DataManager implements DataAccessObjectRegistry {
         try {
             Kind kind = modelData.getKind();
 
-            LOGGER.debug(kind + ":" + modelData.getDataAsJson());
+            LOGGER.debug("{}:{}", kind, modelData.getDataAsJson());
             T entity = modelData.getData();
             Optional<String> id = entity.getId();
             if (!id.isPresent()) {
-                LOGGER.warn("Cannot load entity from file since it's missing an id: " + modelData.toJson());
+                LOGGER.warn("Cannot load entity from file since it's missing an id: {}", modelData.toJson());
             } else {
                 WithId<?> prev = null;
                 try {
                     prev = this.<T>fetch(kind.getModelClass(), id.get());
-                } catch (RuntimeException e) {
+                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException e) {
                     // Lets try to wipe out the previous record in case
                     // we are running into something like a schema change.
                     this.<T>delete(kind.getModelClass(), id.get());
@@ -120,8 +121,8 @@ public class DataManager implements DataAccessObjectRegistry {
                     update(entity);
                 }
             }
-        } catch (Exception e) {
-            LOGGER.warn("Cannot load entity from file: " + e);
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+            LOGGER.warn("Cannot load entity from file: ", e);
             throw SyndesisServerException.launderThrowable(e);
         }
     }
@@ -183,9 +184,6 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     public <T extends WithId<T>> void update(T entity) {
-        Kind kind = entity.getKind();
-        Map<String, T> cache = caches.getCache(kind.getModelName());
-
         Optional<String> id = entity.getId();
         if (!id.isPresent()) {
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
@@ -193,8 +191,10 @@ public class DataManager implements DataAccessObjectRegistry {
 
         String idVal = id.get();
 
+        Kind kind = entity.getKind();
         T previous = this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> d.update(entity));
 
+        Map<String, T> cache = caches.getCache(kind.getModelName());
         if (!cache.containsKey(idVal) && previous==null) {
             throw new EntityNotFoundException("Can not find " + kind + " with id " + idVal);
         }
@@ -207,11 +207,12 @@ public class DataManager implements DataAccessObjectRegistry {
 
 
     public <T extends WithId<T>> boolean delete(Class<T> model, String id) {
-        Kind kind = Kind.from(model);
-        Map<String, WithId<T>> cache = caches.getCache(kind.getModelName());
         if (id == null || id.equals("")) {
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
         }
+
+        Kind kind = Kind.from(model);
+        Map<String, WithId<T>> cache = caches.getCache(kind.getModelName());
 
         // Remove it out of the cache
         WithId<T> entity = cache.remove(id);

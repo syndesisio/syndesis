@@ -38,7 +38,7 @@ public final class Urls {
         }
     }
 
-    protected static String basePath(final String path) {
+    /* default */ static String basePath(final String path) {
         final String[] parts = path.split("/");
 
         return "/" + parts[1] + "/" + parts[2] + "/";

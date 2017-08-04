@@ -52,6 +52,21 @@
     </testResources>
 
     <plugins>
+
+      <plugin>
+        <groupId>io.syndesis</groupId>
+        <artifactId>syndesis-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <executions>
+          <execution>
+            <id>generate-mapper-inspections</id>
+            <goals>
+              <goal>generate-mapper-inspections</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -289,31 +304,31 @@
             <exception>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
-              <resolvedVersion>2.8.0</resolvedVersion>
+              <resolvedVersion>2.8.8</resolvedVersion>
               <expectedVersion>2.5.4</expectedVersion>
             </exception>
             <exception>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
-              <resolvedVersion>2.8.0</resolvedVersion>
+              <resolvedVersion>2.8.8</resolvedVersion>
               <expectedVersion>2.6.0</expectedVersion>
             </exception>
             <exception>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
-              <resolvedVersion>2.8.0</resolvedVersion>
+              <resolvedVersion>2.8.8</resolvedVersion>
               <expectedVersion>2.7.0</expectedVersion>
             </exception>
             <exception>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
-              <resolvedVersion>2.8.0</resolvedVersion>
+              <resolvedVersion>2.8.8</resolvedVersion>
               <expectedVersion>2.8.3</expectedVersion>
             </exception>
             <exception>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
-              <resolvedVersion>2.8.0</resolvedVersion>
+              <resolvedVersion>2.8.8</resolvedVersion>
               <expectedVersion>2.8.6</expectedVersion>
             </exception>
             <exception>

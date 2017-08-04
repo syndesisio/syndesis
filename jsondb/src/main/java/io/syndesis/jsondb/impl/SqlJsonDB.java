@@ -21,10 +21,10 @@ import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -51,6 +51,7 @@ import org.skife.jdbi.v2.util.IntegerColumnMapper;
  * Each value in the JSON tree is stored a simple record with the primary key being the
  * path to the value.
  */
+@SuppressWarnings({"PMD.GodClass", "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity"})
 public class SqlJsonDB implements JsonDB {
 
     enum DatabaseKind {
@@ -81,7 +82,7 @@ public class SqlJsonDB implements JsonDB {
                         databaseKind = DatabaseKind.CockroachDB;
                     }
                 }
-            } catch (Exception e) {
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
                 throw new IllegalStateException("Could not determine the database type", e);
             }
         });
@@ -90,13 +91,10 @@ public class SqlJsonDB implements JsonDB {
 
     public void createTables() {
         withTransaction(dbi -> {
-            switch (databaseKind) {
-                case PostgreSQL:
-                    dbi.update("CREATE TABLE jsondb (path VARCHAR COLLATE \"C\" PRIMARY KEY, value VARCHAR, kind INT)");
-                    break;
-                default:
-                    dbi.update("CREATE TABLE jsondb (path VARCHAR PRIMARY KEY, value VARCHAR, kind INT)");
-                    break;
+            if(databaseKind == DatabaseKind.PostgreSQL) {
+                dbi.update("CREATE TABLE jsondb (path VARCHAR COLLATE \"C\" PRIMARY KEY, value VARCHAR, kind INT)");
+            } else {
+                dbi.update("CREATE TABLE jsondb (path VARCHAR PRIMARY KEY, value VARCHAR, kind INT)");
             }
         });
     }
@@ -198,13 +196,13 @@ public class SqlJsonDB implements JsonDB {
         return key;
     }
 
-    private class BatchManager {
+    /* default */ class BatchManager {
 
-        private Handle dbi;
+        private final Handle dbi;
         private long batchSize;
         private PreparedBatch insertBatch;
 
-        private BatchManager(Handle dbi) {
+        /* default */ BatchManager(Handle dbi) {
             this.dbi = dbi;
         }
 
@@ -320,15 +318,15 @@ public class SqlJsonDB implements JsonDB {
 
         LinkedList<String> params = getAllParentPaths(baseDBPath);
 
-        String sql = "DELETE from jsondb where path LIKE ?";
+        StringBuilder sql = new StringBuilder("DELETE from jsondb where path LIKE ?");
         if( !params.isEmpty() ) {
-            sql += " OR path in ( ";
-            sql += params.stream().map(x->"?").collect(Collectors.joining(", "));
-            sql += " )";
+            sql.append(" OR path in ( ")
+               .append(String.join(", ", Collections.nCopies(params.size(), "?")))
+               .append(" )");
         }
 
         params.addFirst(like);
-        return dbi.update(sql, params.toArray());
+        return dbi.update(sql.toString(), params.toArray());
     }
 
     private static LinkedList<String> getAllParentPaths(String baseDBPath) {
@@ -366,7 +364,7 @@ public class SqlJsonDB implements JsonDB {
                 h.begin();
                 cb.accept(h);
                 h.commit();
-            } catch (RuntimeException e) {
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException")RuntimeException e) {
                 h.rollback();
                 throw e;
             }

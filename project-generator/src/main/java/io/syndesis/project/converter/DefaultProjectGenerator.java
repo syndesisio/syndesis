@@ -15,6 +15,17 @@
  */
 package io.syndesis.project.converter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -35,40 +46,29 @@ import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
     private static final ObjectMapper YAML_OBJECT_MAPPER = SyndesisHelpers.createObjectMapper();
 
-    private MustacheFactory mf = new DefaultMustacheFactory();
+    private final MustacheFactory mf = new DefaultMustacheFactory();
 
-    private Mustache readmeMustache = mf.compile(
+    private final Mustache readmeMustache = mf.compile(
         new InputStreamReader(getClass().getResourceAsStream("templates/README.md.mustache"), UTF_8),
         "README.md"
     );
-    private Mustache applicationJavaMustache = mf.compile(
+    private final Mustache applicationJavaMustache = mf.compile(
         new InputStreamReader(getClass().getResourceAsStream("templates/Application.java.mustache"), UTF_8),
         "Application.java"
     );
 
-    private Mustache applicationYmlMustache = mf.compile(
+    private final Mustache applicationYmlMustache = mf.compile(
         new InputStreamReader(getClass().getResourceAsStream("templates/application.properties.mustache"), UTF_8),
         "application.properties"
     );
 
-    private Mustache pomMustache = mf.compile(
+    private final Mustache pomMustache = mf.compile(
         new InputStreamReader(getClass().getResourceAsStream("templates/pom.xml.mustache"), UTF_8),
         "pom.xml"
     );
@@ -84,7 +84,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     private final ProjectGeneratorProperties generatorProperties;
     private final StepVisitorFactoryRegistry registry;
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultProjectGenerator.class);
 
     public DefaultProjectGenerator(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties, StepVisitorFactoryRegistry registry) {
         this.connectorCatalog = connectorCatalog;
@@ -96,7 +96,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     public Map<String, byte[]> generate(GenerateProjectRequest request) throws IOException {
         request.getIntegration().getSteps().ifPresent(steps -> {
             for (Step step : steps) {
-                log.info("Integration {} : Adding step {} ",
+                LOG.info("Integration {} : Adding step {} ",
                          request.getIntegration().getId().orElse("[none]"),
                          step.getId().orElse(""));
                 step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
@@ -113,6 +113,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return contents;
     }
 
+    @Override
     public byte[] generatePom(Integration integration) throws IOException {
         Set<MavenGav> connectors = new LinkedHashSet<>();
         integration.getSteps().ifPresent(steps -> {
@@ -130,24 +131,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return generateFromPomContext(new PomContext(integration.getId().orElse(""), integration.getName(), integration.getDescription().orElse(null), connectors), pomMustache);
     }
 
-
-    /*
-    Required for a local verifier, but does not work because the connector does not carry any GAV (but a
-    reference to a 'default' action. Or the mapping happens in the external syndesis-verifier service:
-
-    public byte[] generatePom(Connector connector) throws IOException {
-        Set<MavenGav> connectors = new LinkedHashSet<>();
-        String[] splitGav = connector.getCamelConnectorGAV().get().split(":");
-        if (splitGav.length == 3) {
-            connectors.add(new MavenGav(splitGav[0], splitGav[1], splitGav[2]));
-        }
-        return generate(
-            new IntegrationForPom(connector.getId().get(), connector.getName(), null, connectors),
-            connectorPomMustache
-        );
-    }
-    */
-
+    @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
     private byte[] generateFlowYaml(Map<String, byte[]> contents, GenerateProjectRequest request) throws JsonProcessingException {
         Flow flow = new Flow();
         request.getIntegration().getSteps().ifPresent(steps -> {
@@ -182,7 +166,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     private void visitStep(GeneratorContext generatorContext, StepVisitorContext stepContext) {
-        StepVisitorFactory factory = registry.get(stepContext.getStep().getStepKind());
+        StepVisitorFactory<?> factory = registry.get(stepContext.getStep().getStepKind());
 
         StepVisitor visitor = factory.create(generatorContext);
         generatorContext.getFlow().addStep(visitor.visit(stepContext));
@@ -207,14 +191,14 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
 
 
-    private static class MavenGav {
+    /* default */ static class MavenGav {
         private final String groupId;
 
         private final String artifactId;
 
         private final String version;
 
-        private MavenGav(String groupId, String artifactId, String version) {
+        /* default */ MavenGav(String groupId, String artifactId, String version) {
             this.groupId = groupId;
             this.artifactId = artifactId;
             this.version = version;
@@ -233,7 +217,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         }
     }
 
-    private static class PomContext {
+    /* default */ static class PomContext {
 
         private final String id;
 
@@ -243,7 +227,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
         private final Set<MavenGav> connectors;
 
-        private PomContext(String id, String name, String description, Set<MavenGav> connectors) {
+        /* default */ PomContext(String id, String name, String description, Set<MavenGav> connectors) {
             this.id = id;
             this.name = name;
             this.description = description;

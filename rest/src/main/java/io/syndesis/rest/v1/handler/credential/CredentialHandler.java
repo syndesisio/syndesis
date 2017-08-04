@@ -92,7 +92,7 @@ public class CredentialHandler {
                 return flowState;
             }
         } catch (final IllegalArgumentException e) {
-            LOG.debug("Unable to restore flow state from HTTP cookie: " + cookie, e);
+            LOG.debug("Unable to restore flow state from HTTP cookie: {}", cookie, e);
         }
 
         // remove cookies that can't be restored or have mismatched name/value
@@ -109,8 +109,8 @@ public class CredentialHandler {
             removeCookie(response, flowState.persistenceKey());
 
             return location;
-        } catch (final RuntimeException e) {
-            LOG.debug("Unable to perform OAuth callback on flow state: " + flowState, e);
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final RuntimeException e) {
+            LOG.debug("Unable to perform OAuth callback on flow state: {}", flowState, e);
 
             return null;
         }

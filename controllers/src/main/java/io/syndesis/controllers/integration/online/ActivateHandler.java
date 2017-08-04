@@ -57,7 +57,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
     private final GitHubService gitHubService;
     private final ProjectGenerator projectConverter;
 
-    private static final Logger log = LoggerFactory.getLogger(ActivateHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActivateHandler.class);
 
     ActivateHandler(DataManager dataManager, OpenShiftService openShiftService,
                     GitHubService gitHubService, ProjectGenerator projectConverter) {
@@ -67,6 +67,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         this.projectConverter = projectConverter;
     }
 
+    @Override
     public Set<Integration.Status> getTriggerStatuses() {
         return Collections.singleton(Integration.Status.Activated);
     }
@@ -79,7 +80,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
 
         if (isTokenExpired(integration)) {
-            log.info("{} : Token is expired", getLabel(integration));
+            LOG.info("{} : Token is expired", getLabel(integration));
             return new StatusUpdate(integration.getCurrentStatus().orElse(null), "Token is expired");
         }
         String token = storeToken(integration);
@@ -103,12 +104,12 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
             String gitCloneUrl = null;
             if (!stepsPerformed.contains(STEP_GITHUB)) {
                 String gitHubUser = getGitHubUser();
-                log.info("{} : Looked up GitHub user {}", getLabel(integration), gitHubUser);
+                LOG.info("{} : Looked up GitHub user {}", getLabel(integration), gitHubUser);
                 Map<String, byte[]> projectFiles = createProjectFiles(gitHubUser, integration);
-                log.info("{} : Created project files", getLabel(integration));
+                LOG.info("{} : Created project files", getLabel(integration));
 
                 gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
-                log.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
+                LOG.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
                 stepsPerformed.add(STEP_GITHUB);
             }
 
@@ -117,15 +118,15 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                     gitCloneUrl = getCloneURL(integration);
                 }
                 createOpenShiftResources(integration.getName(), gitCloneUrl, secret, applicationProperties);
-                log.info("{} : Created OpenShift resources", getLabel(integration));
+                LOG.info("{} : Created OpenShift resources", getLabel(integration));
                 stepsPerformed.add(STEP_OPENSHIFT);
             }
 
             if (openShiftService.isScaled(deployment)) {
                 return new StatusUpdate(Integration.Status.Activated, stepsPerformed);
             }
-        } catch (Exception e) {
-            log.info("{} : Failure", getLabel(integration), e);
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+            LOG.error("{} : Failure", getLabel(integration), e);
         }
         return new StatusUpdate(Integration.Status.Pending, stepsPerformed);
 
@@ -154,6 +155,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return openShiftService.getGitHubWebHookUrl(deployment, secret);
     }
 
+    @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
     private String ensureGitHubSetup(Integration integration, String webHookUrl, Map<String, byte[]> projectFiles) {
         try {
             // Do all github stuff at once

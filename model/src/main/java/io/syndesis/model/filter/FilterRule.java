@@ -27,8 +27,7 @@ public interface FilterRule {
 
     /**
      *  Path expression within the message on which to filter. Can be part of header, body, properties
-     * The path must match the syntax used by the datamapper
-     * @return
+     * The path must match the syntax used by the simple expression language as path
      */
     String getPath();
 
@@ -44,6 +43,13 @@ public interface FilterRule {
      */
     String getValue();
 
-    class Builder extends ImmutableFilterRule.Builder {
+    /**
+     * Get the simple filter expression for this rule
+     */
+    default String getFilterExpression() {
+        return "${" + getPath() + "} " + getOp() + " '" + getValue() + "'";
+
     }
+
+    class Builder extends ImmutableFilterRule.Builder { }
 }

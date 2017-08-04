@@ -102,6 +102,7 @@ public class GitHubServiceImpl implements GitHubService {
         return repositoryService.createRepository(repo);
     }
 
+    @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
     private void createOrUpdateFiles(Repository repo, String message, Map<String, byte[]> files) throws IOException {
         Repository repository = getRepository(repo.getName());
         if (repository == null) {

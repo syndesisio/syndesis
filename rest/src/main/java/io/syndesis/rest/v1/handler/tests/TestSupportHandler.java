@@ -67,7 +67,7 @@ public class TestSupportHandler {
     @POST
     @Path("/restore-db")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void restoreDB(ModelData<?>[] data) {
+    public void restoreDB(ModelData<?>... data) {
         LOG.warn("user {} is restoring db state", context.getRemoteUser());
         deleteAllDBEntities();
         for (ModelData<?> modelData : data) {

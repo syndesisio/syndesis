@@ -18,9 +18,7 @@ package io.syndesis.model.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import io.syndesis.model.filter.FilterPredicate;
-import io.syndesis.model.filter.FilterStep;
-import io.syndesis.model.filter.FilterType;
+import io.syndesis.model.filter.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -28,12 +26,30 @@ import static org.junit.Assert.*;
 public class StepDeserializerTest {
 
     @Test
-    public void shouldDeserializeFilterStep() throws Exception {
-        FilterStep filterStep = (FilterStep) new ObjectMapper().registerModule(new Jdk8Module()).readValue(this.getClass().getResourceAsStream("/filterstep1.json"), Step.class);
-        assertNotNull(filterStep);
-        assertEquals("1", filterStep.getId().get());
-        assertEquals(FilterType.RULE, filterStep.getType());
-        assertEquals(FilterPredicate.AND, filterStep.getPredicate());
+    public void shouldDeserializeRuleFilterStep() throws Exception {
+        RuleFilterStep step = readTestFilter("/rule-filter-step.json");
+        RuleFilterStep ruleFilterStep = (RuleFilterStep) step;
+        assertEquals("1", ruleFilterStep.getId().get());
+        assertEquals(FilterPredicate.AND, ruleFilterStep.getPredicate());
+        assertEquals("rule-filter", ruleFilterStep.getStepKind());
+        assertEquals(2, ruleFilterStep.getRules().size());
+        assertEquals("${body.text} == 'antman' && ${header.kind} =~ 'DC Comics'", ruleFilterStep.getFilterExpression());
+    }
+
+    @Test
+    public void shouldDeserializeExpressionFilterStep() throws Exception {
+        ExpressionFilterStep step = readTestFilter("/filter-step.json");
+        ExpressionFilterStep exprFilterStep = (ExpressionFilterStep) step;
+        String expr = "${in.body} contains '#RHSummit'";
+        assertEquals("2", exprFilterStep.getId().get());
+        assertEquals("filter", exprFilterStep.getStepKind());
+        assertEquals(expr, exprFilterStep.getFilterExpression());
+        assertEquals(1, exprFilterStep.getConfiguredProperties().get().size());
+        assertEquals(expr, exprFilterStep.getConfiguredProperties().get().get("filter"));
+    }
+
+    private <T extends Step> T readTestFilter(String resource) throws java.io.IOException {
+        return (T) new ObjectMapper().registerModule(new Jdk8Module()).readValue(this.getClass().getResourceAsStream(resource), Step.class);
     }
 
 }

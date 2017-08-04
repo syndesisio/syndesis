@@ -45,8 +45,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     Optional<String> getIntegrationTemplateId();
 
-    Optional<IntegrationTemplate> getIntegrationTemplate();
-
     Optional<String> getUserId();
 
     Optional<String> getToken();
@@ -55,7 +53,7 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     Optional<List<Connection>> getConnections();
 
-    Optional<List<Step>> getSteps();
+    Optional<List<? extends Step>> getSteps();
 
     Optional<String> getDescription();
 
