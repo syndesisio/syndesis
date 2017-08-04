@@ -43,11 +43,11 @@ public abstract class FilterStepVisitor implements StepVisitor {
             }
             filter.setSteps(steps);
             return filter;
-        } else {
-            StepVisitorFactory factory = generatorContext.getVisitorFactoryRegistry().get(stepContext.getStep().getStepKind());
-            StepVisitor visitor = factory.create(generatorContext);
-            return visitor.visit(stepContext);
         }
+
+        StepVisitorFactory<?> factory = generatorContext.getVisitorFactoryRegistry().get(stepContext.getStep().getStepKind());
+        StepVisitor visitor = factory.create(generatorContext);
+        return visitor.visit(stepContext);
     }
 
     private Filter createFilter(FilterStep s) {

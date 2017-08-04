@@ -30,6 +30,9 @@ import io.undertow.websockets.WebSocketProtocolHandshakeHandler;
 import io.undertow.websockets.core.WebSocketChannel;
 import io.undertow.websockets.core.WebSockets;
 import io.undertow.websockets.spi.WebSocketHttpExchange;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +42,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EventBusToWebSocket extends EventBusToServerSentEvents {
+
+    private static final Logger LOG = LoggerFactory.getLogger(EventBusToWebSocket.class);
 
     public static final String DEFAULT_PATH = "/api/v1/event/streams.ws";
 
@@ -56,6 +61,7 @@ public class EventBusToWebSocket extends EventBusToServerSentEvents {
                     .addPrefixPath("/", handler)
                     .addPrefixPath(path, new WebSocketProtocolHandshakeHandler(new WSHandler()) {
                         @Override
+                        @SuppressWarnings("PMD.SignatureDeclareThrowsException")
                         public void handleRequest(HttpServerExchange exchange) throws Exception {
                             if (reservationCheck(exchange)) {
                                 super.handleRequest(exchange);
@@ -78,7 +84,7 @@ public class EventBusToWebSocket extends EventBusToServerSentEvents {
                 connection.shutdown();
                 return;
             }
-            System.out.println("Principal is: " + reservation.getPrincipal());
+            LOG.debug("Principal is: {}", reservation.getPrincipal());
             connection.send("connected", "message", null, null);
             bus.subscribe(subscriptionId, (type, data) -> {
                 if (connection.isOpen()) {
@@ -104,7 +110,7 @@ public class EventBusToWebSocket extends EventBusToServerSentEvents {
                 safeClose(channel);
                 return;
             }
-            System.out.println("Principal is: " + reservation.getPrincipal());
+            LOG.debug("Principal is: {}", reservation.getPrincipal());
             send(channel, "message", "connected");
             bus.subscribe(subscriptionId, (type, data) -> {
                 if (channel.isOpen()) {
@@ -119,7 +125,7 @@ public class EventBusToWebSocket extends EventBusToServerSentEvents {
             try {
                 channel.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.debug("IO Error at channel close, ignoring", e);
             }
         }
 

@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -47,16 +49,17 @@ import static com.fasterxml.jackson.core.JsonToken.VALUE_NULL;
 /**
  * Helper methods for converting between JsonRecord lists and Json
  */
-public class JsonRecordSupport {
+@SuppressWarnings({"PMD.GodClass", "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity"})
+public final class JsonRecordSupport {
 
     public static final Pattern INTEGER_PATTERN = Pattern.compile("^\\d+$");
 
-    private static class PathPart {
+    /* default */ static class PathPart {
         private final String path;
 
         private int idx;
 
-        private PathPart(String path, boolean array) {
+        /* default */ PathPart(String path, boolean array) {
             this.path = path;
             this.idx = array ? 0 : -1;
         }
@@ -76,6 +79,10 @@ public class JsonRecordSupport {
         public void incrementIdx() {
             idx++;
         }
+    }
+
+    private JsonRecordSupport() {
+        // utility class
     }
 
     public static Consumer<JsonRecord> recordsToJsonStream(String dbPath, OutputStream output, GetOptions options) throws IOException {
@@ -186,7 +193,7 @@ public class JsonRecordSupport {
      * Based on:
      * http://www.zanopha.com/docs/elen.pdf
      */
-    protected static String toLexSortableString(int value, char marker) {
+    /* default */ static String toLexSortableString(int value, char marker) {
         ArrayList<String> seqs = new ArrayList<String>();
 
         String seq = Integer.toString(value);
@@ -206,9 +213,9 @@ public class JsonRecordSupport {
         return builder.toString();
     }
 
-    protected static int fromLexSortableStringToInt(String value, char marker) {
+    /* default */ static int fromLexSortableStringToInt(String value, char marker) {
         // Trim the initial markers.
-        String remaining = value.replaceFirst("^" + Pattern.quote("" + marker) + "+", "");
+        String remaining = value.replaceFirst("^" + Pattern.quote(String.valueOf(marker)) + "+", "");
 
         int rc = 1;
         while (!remaining.isEmpty()) {
@@ -220,19 +227,23 @@ public class JsonRecordSupport {
         return rc;
     }
 
-    private static class JsonRecordConsumer implements Consumer<JsonRecord> {
+    /* default */ static class JsonRecordConsumer implements Consumer<JsonRecord> {
 
         private final String base;
         private final JsonGenerator jg;
         private final OutputStream output;
         private final GetOptions options;
         private final LinkedList<PathPart> currentPath = new LinkedList<>();
-        private final LinkedHashSet<String> shallowObjects = new LinkedHashSet<>();
+        private final Set<String> shallowObjects = new LinkedHashSet<>();
 
-        private JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
+        /* default */ JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
             this.base = base;
             this.output = output;
-            this.options = options.clone();
+            try {
+                this.options = options.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new IOException(e);
+            }
 
             if( this.options.callback()!=null ) {
                 String backack = this.options.callback() + "(";
@@ -258,7 +269,7 @@ public class JsonRecordSupport {
 
                 // Lets see how much of the path we match compared to
                 // when we last got called.
-                ArrayList<String> newPath = new ArrayList<>(Arrays.asList(path.split("/")));
+                List<String> newPath = new ArrayList<>(Arrays.asList(path.split("/")));
                 if (newPath.size() == 1 && newPath.get(0).isEmpty()) {
                     newPath.clear();
                 }
@@ -296,7 +307,7 @@ public class JsonRecordSupport {
             }
         }
 
-        private void openUpStructs(ArrayList<String> newPath, int pathMatches) throws IOException {
+        private void openUpStructs(List<String> newPath, int pathMatches) throws IOException {
             int count;
 
             // we might need to open up objects...
@@ -350,7 +361,7 @@ public class JsonRecordSupport {
             }
         }
 
-        private int getPathMatches(ArrayList<String> newPath) {
+        private int getPathMatches(List<String> newPath) {
             int pathMatches = 0;
             for (int i = 0; i < currentPath.size() && i < newPath.size(); i++) {
                 PathPart lastPart = currentPath.get(i);

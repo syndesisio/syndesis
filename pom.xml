@@ -819,6 +819,19 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <rulesets>
+            <ruleset>../ruleset.xml</ruleset>
+          </rulesets>
+          <linkXRef>false</linkXRef>
+          <excludeRoots>
+            <excludeRoot>target/generated-sources</excludeRoot>
+          </excludeRoots>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 

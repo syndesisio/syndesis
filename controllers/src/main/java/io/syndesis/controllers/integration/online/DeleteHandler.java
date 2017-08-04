@@ -32,6 +32,7 @@ public class DeleteHandler implements StatusChangeHandlerProvider.StatusChangeHa
         this.openShiftService = openShiftService;
     }
 
+    @Override
     public Set<Integration.Status> getTriggerStatuses() {
         return Collections.singleton(Integration.Status.Deleted);
     }

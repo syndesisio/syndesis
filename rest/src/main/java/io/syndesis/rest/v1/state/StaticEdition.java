@@ -25,12 +25,12 @@ public class StaticEdition extends Edition {
 
     private final KeySource keySource;
 
-    private static final class StaticKeySource implements KeySource {
+    /* default */ static final class StaticKeySource implements KeySource {
         private final SecretKey authenticationKey;
 
         private final SecretKey encryptionKey;
 
-        private StaticKeySource(final ClientSideStateProperties properties) {
+        /* default */ StaticKeySource(final ClientSideStateProperties properties) {
             final Decoder decoder = Base64.getDecoder();
             final String encryptionKeyAlgorithm = properties.getEncryptionAlgorithm().replaceFirst("/.*", "");
 

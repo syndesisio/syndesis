@@ -47,7 +47,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class IntegrationController {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(IntegrationController.class);
 
     private final DataManager dataManager;
     private final EventBus eventBus;
@@ -95,7 +95,7 @@ public class IntegrationController {
                         });
                     }
                 } catch (IOException e) {
-                    log.error("Error while subscribing to change-event " + data, e);
+                    LOG.error("Error while subscribing to change-event {}", data, e);
                 }
             }
         };
@@ -124,7 +124,7 @@ public class IntegrationController {
     private void scanIntegrationsForWork() {
         executor.submit(() -> {
             dataManager.fetchAll(Integration.class).getItems().forEach(integration -> {
-                log.info("Checking integrations for their status.");
+                LOG.info("Checking integrations for their status.");
                 checkIntegrationStatus(integration);
             });
         });
@@ -141,7 +141,7 @@ public class IntegrationController {
                 integration.getId().ifPresent(integrationId -> {
                     StatusChangeHandlerProvider.StatusChangeHandler statusChangeHandler = handlers.get(desiredStatus);
                     if (statusChangeHandler != null) {
-                        log.info("Integration {} : Desired status \"{}\" != current status \"{}\" --> calling status change handler",
+                        LOG.info("Integration {} : Desired status \"{}\" != current status \"{}\" --> calling status change handler",
                                                integrationId, desiredStatus.toString(), current.map(Enum::toString).orElse("[none]"));
                         callStatusChangeHandler(statusChangeHandler, integrationId);
                     }
@@ -169,11 +169,11 @@ public class IntegrationController {
             }
 
             try {
-                log.info("Integration {} : Start processing integration with {}", integrationId, handler.getClass().getSimpleName());
+                LOG.info("Integration {} : Start processing integration with {}", integrationId, handler.getClass().getSimpleName());
                 StatusChangeHandlerProvider.StatusChangeHandler.StatusUpdate update = handler.execute(integration);
                 if (update!=null) {
 
-                    log.info("{} : Setting status to {}", getLabel(integration), update.getStatus());
+                    LOG.info("{} : Setting status to {}", getLabel(integration), update.getStatus());
 
                     // handler.execute might block for while so refresh our copy of the integration
                     // data before we update the current status
@@ -190,8 +190,8 @@ public class IntegrationController {
                             .build());
                 }
 
-            } catch (Exception e) {
-                log.error("Error while processing integration status for integration " + integrationId, e);
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+                LOG.error("Error while processing integration status for integration {}", integrationId, e);
                 // Something went wrong.. lets note it.
                 Integration current = dataManager.fetch(Integration.class, integrationId);
                 dataManager.update(new Integration.Builder()

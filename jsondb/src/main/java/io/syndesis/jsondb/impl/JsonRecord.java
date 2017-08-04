@@ -18,7 +18,7 @@ package io.syndesis.jsondb.impl;
 /**
  * JsonRecord is used to hold that data stored in a database record.
  */
-public class JsonRecord {
+public final class JsonRecord {
 
     private final String path;
     private final String value;

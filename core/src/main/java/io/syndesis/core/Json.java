@@ -24,7 +24,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 /**
  * JSON helper class.
  */
-public class Json {
+public final class Json {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
         .registerModule(new Jdk8Module())

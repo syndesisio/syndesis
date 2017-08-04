@@ -31,17 +31,17 @@ public class StoreConfiguration {
 
     @Bean
     public DBI dbiBean(@Autowired DataSource dataSource) {
-        DBI dbi = new DBI(dataSource);
-        return dbi;
+        return new DBI(dataSource);
     }
 
     @Bean
     @Autowired
+    @SuppressWarnings("PMD.EmptyCatchBlock")
     public SqlJsonDB realTimeDB(DBI dbi) {
         SqlJsonDB jsondb = new SqlJsonDB(dbi, null);
         try {
             jsondb.createTables();
-        } catch (Exception ignore) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ignore) {
         }
         return jsondb;
     }

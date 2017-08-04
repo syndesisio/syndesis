@@ -40,7 +40,7 @@ public class EventReservationsHandler {
         private final Principal principal;
         private final long createdAt = System.currentTimeMillis();
 
-        private Reservation(Principal principal) {
+        Reservation(Principal principal) {
             this.principal = principal;
         }
 

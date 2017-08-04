@@ -36,6 +36,7 @@ public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChan
         this.openShiftService = openShiftService;
     }
 
+    @Override
     public Set<Integration.Status> getTriggerStatuses() {
         return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             Integration.Status.Deactivated, Integration.Status.Draft)));
@@ -53,10 +54,6 @@ public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChan
             .token(token)
             .build();
 
-        Integration.Status currentStatus = openShiftService.isScaled(deployment)
-            ? Integration.Status.Deactivated
-            : Integration.Status.Pending;
-
         try {
             openShiftService.scale(deployment);
         } catch (KubernetesClientException e) {
@@ -66,6 +63,10 @@ public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChan
                 throw e;
             }
         }
+
+        Integration.Status currentStatus = openShiftService.isScaled(deployment)
+            ? Integration.Status.Deactivated
+                : Integration.Status.Pending;
 
         return new StatusUpdate(currentStatus);
     }

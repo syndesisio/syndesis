@@ -15,6 +15,8 @@
  */
 package io.syndesis.rest.v1.operations;
 
+import java.util.Locale;
+
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
@@ -34,7 +36,7 @@ public class SortOptionsFromQueryParams implements SortOptions {
         MultivaluedMap<String, String> queryParams = uri.getQueryParameters();
         sortField = queryParams.getFirst("sort");
         String dir = queryParams.getFirst("direction");
-        sortDirection = dir == null ?  SortOptions.SortDirection.ASC : SortOptions.SortDirection.valueOf(dir.toUpperCase());
+        sortDirection = dir == null ?  SortOptions.SortDirection.ASC : SortOptions.SortDirection.valueOf(dir.toUpperCase(Locale.US));
     }
 
     @Override

@@ -34,26 +34,27 @@ import org.keycloak.common.util.Base64;
  * (1) strictly increment from the generating node's point of view
  * (2) loosely increment based on relative machine time when viewed across nodes.
  */
-public class KeyGenerator {
+public final class KeyGenerator {
 
-    private static AtomicLong lastTimestamp = new AtomicLong(currentTimeMillis());
-    private static final byte randomnessByte;
-    private static AtomicLong randomnessLong;
+    private static final AtomicLong LAST_TIMESTAMP = new AtomicLong(currentTimeMillis());
+    private static final byte RANDOMNESS_BYTE;
+    private static final AtomicLong RANDOMNESS_LONG;
 
     static {
         final Random random = ThreadLocalRandom.current();
-        randomnessByte = (byte) random.nextInt();
-        randomnessLong = new AtomicLong(random.nextLong());
+        RANDOMNESS_BYTE = (byte) random.nextInt();
+        RANDOMNESS_LONG = new AtomicLong(random.nextLong());
     }
 
-    private KeyGenerator() {}
+    private KeyGenerator() {
+    }
 
     public static String createKey() {
         final long now = currentTimeMillis();
 
         final ByteBuffer buffer = ByteBuffer.wrap(new byte[8 + 1 + 8]);
         buffer.putLong(now);
-        buffer.put(randomnessByte);
+        buffer.put(RANDOMNESS_BYTE);
 
         buffer.putLong(getRandomPart(now));
 
@@ -64,13 +65,13 @@ public class KeyGenerator {
         }
     }
 
-    protected static long getRandomPart(final long timeStamp) {
-        return randomnessLong.updateAndGet(randomVal -> {
+    /* default */ static long getRandomPart(final long timeStamp) {
+        return RANDOMNESS_LONG.updateAndGet(randomVal -> {
             long current;
             do {
-                current = lastTimestamp.get();
+                current = LAST_TIMESTAMP.get();
                 randomVal++;
-            } while (!lastTimestamp.compareAndSet(current, timeStamp));
+            } while (!LAST_TIMESTAMP.compareAndSet(current, timeStamp));
 
             return randomVal;
         });
