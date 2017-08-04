@@ -25,6 +25,7 @@ import io.syndesis.model.filter.ExpressionFilterStep;
 import io.syndesis.model.filter.RuleFilterStep;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,11 +34,14 @@ public class StepDeserializer extends JsonDeserializer<Step> {
     private static final String STEP_KIND = "stepKind";
 
     private static final Class<SimpleStep> DEFAULT_STEP_TYPE = SimpleStep.class;
-    private static final Map<String, Class<? extends Step>> KIND_TO_STEP_MAPPING = new HashMap<>();
+    private static final Map<String, Class<? extends Step>> KIND_TO_STEP_MAPPING;
 
     static {
-        KIND_TO_STEP_MAPPING.put(ExpressionFilterStep.STEP_KIND, ExpressionFilterStep.class);
-        KIND_TO_STEP_MAPPING.put(RuleFilterStep.STEP_KIND, RuleFilterStep.class);
+        final Map<String, Class<? extends Step>> mapping = new HashMap<>();
+        mapping.put(ExpressionFilterStep.STEP_KIND, ExpressionFilterStep.class);
+        mapping.put(RuleFilterStep.STEP_KIND, RuleFilterStep.class);
+
+        KIND_TO_STEP_MAPPING = Collections.unmodifiableMap(mapping);
     }
 
     @Override

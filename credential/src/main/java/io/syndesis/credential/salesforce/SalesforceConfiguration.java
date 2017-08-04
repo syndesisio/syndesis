@@ -37,6 +37,7 @@ import org.springframework.social.salesforce.connect.SalesforceConnectionFactory
 @ConditionalOnClass(SalesforceConnectionFactory.class)
 @ConditionalOnProperty(prefix = "spring.social.salesforce", name = "app-id")
 @EnableConfigurationProperties(SalesforceProperties.class)
+@SuppressWarnings("PMD.UseUtilityClass")
 public class SalesforceConfiguration {
 
     protected static final class SalesforceApplicator extends OAuth2Applicator {

@@ -29,15 +29,16 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public class RestError {
 
     @JsonProperty("developerMsg")
-    String developerMsg;
+    /* default */ String developerMsg;
 
     @JsonProperty("userMsg")
-    String userMsg;
+    /* default */ String userMsg;
 
     @JsonProperty("errorCode")
-    Integer errorCode;
+    /* default */ Integer errorCode;
 
     public RestError() {
+        // makes it a Java bean
     }
 
     public RestError(String developerMsg, String userMsg, Integer errorCode) {

@@ -38,11 +38,11 @@ public class DemoHandlerProvider implements StatusChangeHandlerProvider {
                             );
     }
 
-    static class DemoHandler implements StatusChangeHandler {
+    /* default */ static class DemoHandler implements StatusChangeHandler {
         private final Integration.Status status;
         private final long waitMillis;
 
-        DemoHandler(Integration.Status status, long waitMillis) {
+        /* default */ DemoHandler(Integration.Status status, long waitMillis) {
             this.status = status;
             this.waitMillis = waitMillis;
         }

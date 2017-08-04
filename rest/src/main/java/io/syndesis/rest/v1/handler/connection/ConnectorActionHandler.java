@@ -36,7 +36,7 @@ import javax.ws.rs.core.UriInfo;
 @Api(value = "actions")
 public class ConnectorActionHandler extends BaseHandler implements Lister<Action>, Getter<Action> {
 
-    private String connectorId;
+    private final String connectorId;
 
     ConnectorActionHandler(DataManager dataMgr, String connectorId) {
         super(dataMgr);

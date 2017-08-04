@@ -66,14 +66,15 @@ public class Application extends SpringBootServletInitializer {
     @Bean
     public ClientSideState clientSideState(final ClientSideStateProperties properties) {
         if (!properties.areSet()) {
-            LOG.warn("\n*** Client side state persistence configuration is not defined, please set\n"
-                + "    CLIENT_STATE_AUTHENTICATION_ALGORITHM\n"//
-                + "    CLIENT_STATE_AUTHENTICATION_KEY\n"//
-                + "    CLIENT_STATE_ENCRYPTION_ALGORITHM\n"//
-                + "    CLIENT_STATE_ENCRYPTION_KEY\n"//
-                + "    CLIENT_STATE_TID\n"//
-                + " environment variables.\n"//
-                + "*** Using randomized values for missing properties, this will not work across restarts or when scaled!");
+            LOG.warn(new StringBuilder("\n*** Client side state persistence configuration is not defined, please set\n")
+                .append("    CLIENT_STATE_AUTHENTICATION_ALGORITHM\n")//
+                .append("    CLIENT_STATE_AUTHENTICATION_KEY\n")//
+                .append("    CLIENT_STATE_ENCRYPTION_ALGORITHM\n")//
+                .append("    CLIENT_STATE_ENCRYPTION_KEY\n")//
+                .append("    CLIENT_STATE_TID\n")//
+                .append(" environment variables.\n")//
+                .append("*** Using randomized values for missing properties, this will not work across restarts or when scaled!")//
+                .toString());
         }
 
         final StaticEdition edition = new StaticEdition(properties);
