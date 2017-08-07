@@ -138,17 +138,20 @@ export class DataMapperHostComponent extends FlowPage
     const kind = dataShape.kind;
     // avoid passing duplicates off to the data mapper
     if (isSource) {
-      if (this.sourceDocTypes.find((d) => d === type)) {
+      if (this.sourceDocTypes.find(d => d === type)) {
         return;
       }
       this.sourceDocTypes.push(type);
     } else {
-      if (this.targetDocTypes.find((d) => d === type)) {
+      if (this.targetDocTypes.find(d => d === type)) {
         return;
       }
       this.targetDocTypes.push(type);
     }
-    log.infoc(() => 'Adding document definition: ' + type + ' isSource: ' + isSource, category);
+    log.infoc(
+      () => 'Adding document definition: ' + type + ' isSource: ' + isSource,
+      category,
+    );
     // TODO: for xml/json docs, we need a document contents
     // reference for document contents: DocumentManagementService.generateMock* methods
     const documentContents: string = null;
@@ -161,18 +164,10 @@ export class DataMapperHostComponent extends FlowPage
         this.cfg.addJSONDocument(type, documentContents, isSource);
         break;
       case 'xml-instance':
-        this.cfg.addXMLInstanceDocument(
-          type,
-          documentContents,
-          isSource,
-        );
+        this.cfg.addXMLInstanceDocument(type, documentContents, isSource);
         break;
       case 'xml-schema':
-        this.cfg.addXMLSchemaDocument(
-          type,
-          documentContents,
-          isSource,
-        );
+        this.cfg.addXMLSchemaDocument(type, documentContents, isSource);
         break;
     }
   }
@@ -187,9 +182,17 @@ export class DataMapperHostComponent extends FlowPage
     this.cfg.mappings = new MappingDefinition();
 
     const connections = this.currentFlow.getPreviousConnections(this.position);
-    log.infoc(() => 'Connections before me: ' + JSON.stringify(connections.map((c) => c.connection.name)), category);
+    log.infoc(
+      () =>
+        'Connections before me: ' +
+        JSON.stringify(connections.map(c => c.connection.name)),
+      category,
+    );
     const next = this.currentFlow.getSubsequentConnection(this.position);
-    log.infoc(() => 'Connections after me: ' + JSON.stringify(next.connection.name), category);
+    log.infoc(
+      () => 'Connections after me: ' + JSON.stringify(next.connection.name),
+      category,
+    );
 
     // TODO we'll want to parse the dataType and maybe set the right config value
     connections.forEach(c => {
@@ -300,7 +303,17 @@ export class DataMapperHostComponent extends FlowPage
       },
       err => {
         // do our best I guess
-        log.warnc(() => 'failed to fetch pom: ' + JSON.parse(err['_body']), category);
+        try {
+          log.warnc(
+            () => 'failed to fetch pom: ' + JSON.parse(err['_body']),
+            category,
+          );
+        } catch (err) {
+          log.warnc(
+            () => 'failed to fetch pom: ' + err['_body'],
+            category,
+          );
+        }
         this.cfg.initCfg.classPath = '';
         this.initializationService.initialize();
       },
