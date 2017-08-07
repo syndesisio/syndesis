@@ -36,20 +36,58 @@ export class CurrentFlow {
     return this.integration.name && this.integration.name.length;
   }
 
-  getStartConnection(): Connection {
-    const step = this.getStep(this.getFirstPosition());
-    return step ? step.connection : undefined;
+  /**
+   * Returns the first step in the integration flow
+   *
+   * @returns {Step}
+   * @memberof CurrentFlow
+   */
+  getStartStep(): Step {
+    return this.getStep(this.getFirstPosition());
   }
 
-  getEndConnection(): Connection {
+  /**
+   * Returns the last step in the integration flow
+   *
+   * @returns {Step}
+   * @memberof CurrentFlow
+   */
+  getEndStep(): Step {
     const lastPosition = this.getLastPosition();
     if (lastPosition < 1) {
       return undefined;
     }
-    const step = this.getStep(this.getLastPosition());
+    return this.getStep(lastPosition);
+  }
+
+  /**
+   * Returns the connection object in the first step in the integration
+   *
+   * @returns {Connection}
+   * @memberof CurrentFlow
+   */
+  getStartConnection(): Connection {
+    const step = this.getStartStep();
     return step ? step.connection : undefined;
   }
 
+  /**
+   * Returns the connection object in the last step in the integration
+   *
+   * @returns {Connection}
+   * @memberof CurrentFlow
+   */
+  getEndConnection(): Connection {
+    const step = this.getEndStep();
+    return step ? step.connection : undefined;
+  }
+
+  /**
+   * Returns all steps in between the first and last step in the integration
+   *
+   * @returns {Array<Step>}
+   * @memberof CurrentFlow
+   */
   getMiddleSteps(): Array<Step> {
     if (this.getLastPosition() < 2) {
       return [];
@@ -87,7 +125,7 @@ export class CurrentFlow {
   getSubsequentConnections(position): Array<Step> {
     const answer = this.getSubsequentSteps(position);
     if (answer) {
-      return answer.filter((s) => s.stepKind === 'endpoint');
+      return answer.filter(s => s.stepKind === 'endpoint');
     }
     return null;
   }
@@ -149,6 +187,13 @@ export class CurrentFlow {
     return connections[0];
   }
 
+
+  /**
+   * Returns the initial index in the flow of steps in the integration
+   *
+   * @returns {number}
+   * @memberof CurrentFlow
+   */
   getFirstPosition(): number {
     if (!this.integration) {
       return undefined;
@@ -156,6 +201,12 @@ export class CurrentFlow {
     return 0;
   }
 
+  /**
+   * Returns the ending index in the flow of steps in the integration
+   *
+   * @returns {number}
+   * @memberof CurrentFlow
+   */
   getLastPosition(): number {
     if (!this.integration) {
       return undefined;
@@ -166,6 +217,12 @@ export class CurrentFlow {
     return this.steps.length - 1;
   }
 
+  /**
+   * Returns a position in the middle of the first and last step
+   *
+   * @returns {number}
+   * @memberof CurrentFlow
+   */
   getMiddlePosition(): number {
     const last = this.getLastPosition();
     if (last !== undefined) {
@@ -176,6 +233,14 @@ export class CurrentFlow {
     }
   }
 
+
+  /**
+   * Returns the step at the given position
+   *
+   * @param {number} position
+   * @returns {Step}
+   * @memberof CurrentFlow
+   */
   getStep(position: number): Step {
     if (!this.integration) {
       return undefined;
@@ -203,9 +268,34 @@ export class CurrentFlow {
     }
   }
 
+  private insertStepAfter(position: number) {
+    const target = position + 1;
+    const step = TypeFactory.createStep();
+    this.steps.splice(target, 0, step);
+  }
+
+  private insertConnectionAfter(position: number) {
+    const target = position + 1;
+    const step = TypeFactory.createStep();
+    step.stepKind = 'endpoint';
+    this.steps.splice(target, 0, step);
+  }
+
   handleEvent(event: FlowEvent): void {
     log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
     switch (event.kind) {
+      case 'integration-insert-step': {
+        const position = +event['position'];
+        this.insertStepAfter(position);
+        this.maybeDoAction(event['onSave']);
+        break;
+      }
+      case 'integration-insert-connection': {
+        const position = +event['position'];
+        this.insertConnectionAfter(position);
+        this.maybeDoAction(event['onSave']);
+        break;
+      }
       case 'integration-remove-step': {
         {
           const position = +event['position'];

@@ -26,17 +26,17 @@
           <div class="step-line"></div>
         <ng-template #firstPopTemplate>
           <div class="popover-body">
-            <div *ngIf="!selectedKind || selectedKind === 'step'">
+            <div *ngIf="showAddStep()">
               <a (click)="insertStepAfter(0)">Add a step</a>
             </div>
-            <div *ngIf="!selectedKind || selectedKind === 'connection'">
+            <div *ngIf="showAddConnection()">
               <a (click)="insertConnectionAfter(0)">Add a connection</a>
             </div>
           </div>
         </ng-template>
         <div class="col-md-2 square-icon" [popover]="firstPopTemplate"  placement="right" #pop1="bs-popover">
           <p>
-            <i class="fa fa-plus-square">{{ maybeShowPopover(pop1) }}</i>
+            <i class="fa fa-plus-square"></i>
           </p>
         </div>
         <div class="col-md-10">
@@ -59,17 +59,17 @@
         <!-- Middle Steps: Save or Add Step -->
         <div class="row step-insert" *ngIf="currentState === 'save-or-add-step'" (click)="pop.toggle()" (mouseover)="pop.show()" (mouseleave)="pop.hide()">
           <div class="step-line"></div>
-          <ng-template #firstPopTemplate>
+          <ng-template #subsequentPopTemplate>
             <div class="popover-body">
-              <div *ngIf="!selectedKind || selectedKind === 'step'">
+              <div *ngIf="showAddStep();">
                 <a (click)="insertStepAfter(position + 1)">Add a step</a>
               </div>
-              <div *ngIf="!selectedKind || selectedKind === 'connection'">
+              <div *ngIf="showAddConnection();">
                 <a (click)="insertConnectionAfter(position + 1)">Add a connection</a>
               </div>
             </div>
           </ng-template>
-          <div class="col-md-2 square-icon" [popover]="firstPopTemplate" placement="right" #pop="bs-popover">
+          <div class="col-md-2 square-icon" [popover]="subsequentPopTemplate" placement="right" #pop="bs-popover">
             <p>
               <i class="fa fa-plus-square"></i>
             </p>

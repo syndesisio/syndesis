@@ -31,11 +31,12 @@ export class FlowViewComponent extends ChildAwarePage
   flowSubscription: Subscription;
   childRouteSubscription: Subscription;
   urls: UrlSegment[];
-  selectedKind: string = undefined;
+  selectedKind: string | boolean = false;
   editingName = false;
 
   @ViewChildren(PopoverDirective) popovers: PopoverDirective[];
   @ViewChild('nameInput') nameInput: ElementRef;
+  @ViewChild('pop1') pop1: PopoverDirective;
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -68,6 +69,14 @@ export class FlowViewComponent extends ChildAwarePage
     }
   }
 
+  showAddStep() {
+    return !this.selectedKind || this.selectedKind === 'step';
+  }
+
+  showAddConnection(selectedKind: string | boolean) {
+    return !this.selectedKind || this.selectedKind === 'connection';
+  }
+
   startEditingName() {
     this.editingName = true;
     this.nameInput.nativeElement.select();
@@ -86,11 +95,11 @@ export class FlowViewComponent extends ChildAwarePage
   }
 
   startConnection() {
-    return this.currentFlow.getStep(this.firstPosition());
+    return this.currentFlow.getStartStep();
   }
 
   endConnection() {
-    return this.currentFlow.getStep(this.lastPosition());
+    return this.currentFlow.getEndStep();
   }
 
   firstPosition() {
@@ -102,8 +111,7 @@ export class FlowViewComponent extends ChildAwarePage
   }
 
   getMiddleSteps() {
-    const rc = this.currentFlow.getMiddleSteps();
-    return rc;
+    return this.currentFlow.getMiddleSteps();
   }
 
   insertStepAfter(position: number) {
@@ -111,23 +119,29 @@ export class FlowViewComponent extends ChildAwarePage
       popover.hide();
     });
     this.selectedKind = undefined;
-    const target = position + 1;
-    const step = TypeFactory.createStep();
-    this.currentFlow.steps.splice(target, 0, step);
-    this.router.navigate(['step-select', target], { relativeTo: this.route });
+    this.currentFlow.events.emit({
+      kind: 'integration-insert-step',
+      position: position,
+      onSave: () => {
+        this.router.navigate(['step-select', position + 1], {
+          relativeTo: this.route,
+        });
+      },
+    });
   }
 
   insertConnectionAfter(position: number) {
     this.popovers.forEach(popover => {
       popover.hide();
     });
-    this.selectedKind = undefined;
-    const target = position + 1;
-    const step = TypeFactory.createStep();
-    step.stepKind = 'endpoint';
-    this.currentFlow.steps.splice(target, 0, step);
-    this.router.navigate(['connection-select', target], {
-      relativeTo: this.route,
+    this.currentFlow.events.emit({
+      kind: 'integration-insert-connection',
+      position: position,
+      onSave: () => {
+        this.router.navigate(['connection-select', position + 1], {
+          relativeTo: this.route,
+        });
+      },
     });
   }
 
@@ -152,6 +166,7 @@ export class FlowViewComponent extends ChildAwarePage
     ) {
       setTimeout(() => {
         popover.show();
+        this.detector.detectChanges();
       }, 10);
     }
   }
@@ -160,6 +175,7 @@ export class FlowViewComponent extends ChildAwarePage
     switch (event.kind) {
       case 'integration-updated':
         this.i = event['integration'];
+        setTimeout(() => this.maybeShowPopover(this.pop1), 50);
         break;
       case 'integration-connection-select':
         break;
@@ -176,10 +192,8 @@ export class FlowViewComponent extends ChildAwarePage
         }
         break;
       case 'integration-show-popouts':
-        this.selectedKind = event['type'];
-        this.popovers.forEach(popover => {
-          popover.show();
-        });
+        this.selectedKind = event['type'] || false;
+        this.popovers.forEach(popover => popover.show());
         break;
     }
     this.detector.detectChanges();
