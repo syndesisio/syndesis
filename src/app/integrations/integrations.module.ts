@@ -12,7 +12,7 @@ import {
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from 'syndesis.data.mapper';
 
-import { DynamicFormsPatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
+import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 import { IntegrationActionsModule } from './actions/actions.module';
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
 import { IntegrationBasicsComponent } from './edit-page/integration-basics/integration-basics.component';
@@ -78,7 +78,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     DynamicFormsCoreModule,
-    DynamicFormsPatternflyUIModule,
+    PatternflyUIModule,
     RouterModule.forChild(routes),
     ConnectionsModule,
     TabsModule,

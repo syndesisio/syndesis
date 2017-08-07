@@ -3,11 +3,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ToolbarModule } from 'patternfly-ng';
 
-import { ConnectionsListToolbarComponent } from './list-toolbar.component';
+import { ListToolbarComponent } from './list-toolbar.component';
 
-describe('ConnectionsListToolbarComponent', () => {
-  let component: ConnectionsListToolbarComponent<any>;
-  let fixture: ComponentFixture<ConnectionsListToolbarComponent<any>>;
+describe('ListToolbarComponent', () => {
+  let component: ListToolbarComponent<any>;
+  let fixture: ComponentFixture<ListToolbarComponent<any>>;
 
   beforeEach(
     async(() => {
@@ -16,13 +16,13 @@ describe('ConnectionsListToolbarComponent', () => {
           RouterTestingModule.withRoutes([]),
           ToolbarModule,
         ],
-        declarations: [ConnectionsListToolbarComponent],
+        declarations: [ListToolbarComponent],
       }).compileComponents();
     }),
   );
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConnectionsListToolbarComponent);
+    fixture = TestBed.createComponent(ListToolbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

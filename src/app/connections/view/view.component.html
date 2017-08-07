@@ -92,9 +92,8 @@
 
     <div *ngSwitchCase="'create1'">
       <div class="connector-list">
-        <syndesis-connections-list-toolbar [items]="connectors"
-                                           [filteredItems]="filteredConnectors"
-                                           [showCreate]="false"></syndesis-connections-list-toolbar>
+        <syndesis-list-toolbar [items]="connectors"
+                               [filteredItems]="filteredConnectors"></syndesis-list-toolbar>
 
         <syndesis-connections-list [connections]="filteredConnectors | async"
                                    [loading]="loading | async"

@@ -20,12 +20,11 @@ import { ToolbarModule } from 'patternfly-ng';
 import { ConnectionViewWrapperComponent } from './view-wrapper.component';
 import { ConnectionViewToolbarComponent } from '../view-toolbar/view-toolbar.component';
 import { ConnectionsListComponent } from '../list/list.component';
-import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
 import { ConnectionViewComponent } from '../view/view.component';
 import { StoreModule } from '../../store/store.module';
 import { SyndesisCommonModule } from '../../common/common.module';
 import { CurrentConnectionService } from '../create-page/current-connection';
-import { DynamicFormsPatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
+import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
 
 describe('ConnectionViewWrapperComponent', () => {
   let component: ConnectionViewWrapperComponent;
@@ -39,7 +38,7 @@ describe('ConnectionViewWrapperComponent', () => {
           FormsModule,
           ReactiveFormsModule,
           DynamicFormsCoreModule.forRoot(),
-          DynamicFormsPatternflyUIModule,
+          PatternflyUIModule,
           SyndesisCommonModule,
           StoreModule,
           RouterTestingModule.withRoutes([]),
@@ -54,7 +53,6 @@ describe('ConnectionViewWrapperComponent', () => {
           ConnectionViewToolbarComponent,
           ConnectionViewComponent,
           ConnectionsListComponent,
-          ConnectionsListToolbarComponent,
         ],
         providers: [
           CurrentConnectionService,

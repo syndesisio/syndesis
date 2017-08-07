@@ -6,7 +6,7 @@ import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
 import { ModalModule } from 'ngx-bootstrap';
 import { ListModule, ToolbarModule } from 'patternfly-ng';
 import { SyndesisCommonModule } from '../common/common.module';
-import { DynamicFormsPatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
+import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 
 import { SettingsRootComponent } from './settings-root.component';
 import { OAuthAppsComponent } from './oauth-apps/oauth-apps.component';
@@ -36,7 +36,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     DynamicFormsCoreModule,
-    DynamicFormsPatternflyUIModule,
+    PatternflyUIModule,
     ListModule,
     ToolbarModule,
     ModalModule,

@@ -19,10 +19,9 @@ import { ToolbarModule } from 'patternfly-ng';
 
 import { ConnectionViewComponent } from './view.component';
 import { ConnectionsListComponent } from '../list/list.component';
-import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
 import { StoreModule } from '../../store/store.module';
 import { SyndesisCommonModule } from '../../common/common.module';
-import { DynamicFormsPatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
+import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
 
 describe('ConnectionViewComponent', () => {
   let component: ConnectionViewComponent;
@@ -36,7 +35,7 @@ describe('ConnectionViewComponent', () => {
           FormsModule,
           ReactiveFormsModule,
           DynamicFormsCoreModule.forRoot(),
-          DynamicFormsPatternflyUIModule,
+          PatternflyUIModule,
           SyndesisCommonModule,
           StoreModule,
           RouterTestingModule.withRoutes([]),
@@ -48,7 +47,6 @@ describe('ConnectionViewComponent', () => {
         declarations: [
           ConnectionViewComponent,
           ConnectionsListComponent,
-          ConnectionsListToolbarComponent,
         ],
         providers: [
           MockBackend,
