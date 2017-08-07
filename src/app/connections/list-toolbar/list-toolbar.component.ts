@@ -60,7 +60,24 @@ export class ConnectionsListToolbarComponent<T> implements OnInit, OnDestroy {
     } as ToolbarConfig;
 
     this.subscription = this.items
-      .do(connections => this._allItems = connections)
+      .do(items => this._allItems = items)
+      .do(items => {
+        if (items.find(item => item['tags'])) {
+          if (!filterConfig.fields.find(field => field.id === 'tag')) {
+            filterConfig.fields.push({
+              id          : 'tag',
+              title       : 'Tag',
+              placeholder : 'Filter by tag...',
+              type        : 'typeahead',
+            });
+          }
+        } else {
+          const index = filterConfig.fields.findIndex(field => field.id === 'tag');
+          if (index >= 0) {
+            filterConfig.fields.splice(index, 1);
+          }
+        }
+      })
       .do(_ => this.filter())
       .subscribe();
   }
@@ -70,11 +87,15 @@ export class ConnectionsListToolbarComponent<T> implements OnInit, OnDestroy {
   }
 
   filter(): void {
-     const result = this.toolbarConfig.filterConfig.appliedFilters
-      .reduce((items, filter) => this.propertyFilter.transform(items, {
-          filter       : filter.value,
-          propertyName : filter.field.id,
-        }), this._allItems);
+    const result = this.toolbarConfig.filterConfig.appliedFilters
+      .reduce((items, filter) => filter.field.id === 'tag'
+        ? items.filter(item => Array.isArray(item['tags'])
+          ? item['tags'].some(tag => tag === filter.query.value)
+          : false)
+        : this.propertyFilter.transform(items, {
+            filter       : filter.value,
+            propertyName : filter.field.id,
+          }), this._allItems);
     this.toolbarConfig.filterConfig.resultsCount = result.length;
     this._filteredItems = result;
     this.sort();
@@ -90,5 +111,16 @@ export class ConnectionsListToolbarComponent<T> implements OnInit, OnDestroy {
       descending : !this.isAscendingSort,
     });
     this.filteredItems.next(result);
+  }
+
+  filterFieldSelected($event: FilterEvent) {
+    const field = $event.field;
+    if (field.id === 'tag') {
+      field.queries = this._allItems
+        .map(item => item['tags'] || [])
+        .reduce((array, tags) => array.concat(tags), [])
+        .filter((tag, i, tags) => tags.indexOf(tag) === i)
+        .map(tag => ({ id: tag, value: tag }));
+    }
   }
 }
