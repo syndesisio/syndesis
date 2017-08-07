@@ -64,8 +64,8 @@ final class CredentialFlowStateHelper {
         try {
             final CredentialFlowState flowState = restore.apply(cookie, CredentialFlowState.class);
 
+            // prevent tampering
             if (cookie.getName().endsWith(flowState.getKey())) {
-                // prevent tampering
                 return flowState;
             }
         } catch (final IllegalArgumentException e) {
