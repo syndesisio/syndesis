@@ -1,12 +1,13 @@
 {
   "commment":"This config should for testing against a minishift using the syndesis-dev application templates.",
-  "apiEndpoint": "https://syndesis.192.168.64.2.xip.io/api/v1",
+  "apiBase": "https://syndesis.192.168.64.2.xip.io",
+  "apiEndpoint": "/api/v1",
   "title": "Syndesis",
   "datamapper": {
-    "baseJavaInspectionServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/java/",
-    "baseXMLInspectionServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/xml/",
-    "baseJSONInspectionServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/json/",
-    "baseMappingServiceUrl": "https://syndesis.192.168.64.2.xip.io/v2/atlas/",
+    "baseJavaInspectionServiceUrl": "/v2/atlas/java/",
+    "baseXMLInspectionServiceUrl": "/v2/atlas/xml/",
+    "baseJSONInspectionServiceUrl": "/v2/atlas/json/",
+    "baseMappingServiceUrl": "/v2/atlas/",
     "discardNonMockSources": false,
     "addMockJSONMappings": false,
     "addMockJavaSingleSource": false,
@@ -30,7 +31,7 @@
     "scopes": ["openid"],
     "oidc": true,
     "hybrid": true,
-    "issuer": "https://syndesis.192.168.64.2.xip.io/auth/realms/syndesis",
+    "issuer": "/auth/realms/syndesis",
     "auto-link-github": true
   }
 }
