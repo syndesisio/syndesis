@@ -83,28 +83,35 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
   }
 
   insertStepAfter(position: number) {
-    const target = position + 1;
-    const step = TypeFactory.createStep();
-    this.currentFlow.steps.splice(target, 0, step);
-    this.router.navigate(['step-select', target], { relativeTo: this.route });
+    this.currentFlow.events.emit({
+      kind: 'integration-insert-step',
+      position: position,
+      onSave: () => {
+        this.router.navigate(['step-select', position + 1], {
+          relativeTo: this.route,
+        });
+      },
+    });
   }
 
   insertConnectionAfter(position: number) {
-    const target = position + 1;
-    const step = TypeFactory.createStep();
-    step.stepKind = 'endpoint';
-    this.currentFlow.steps.splice(target, 0, step);
-    this.router.navigate(['connection-select', target], {
-      relativeTo: this.route,
+    this.currentFlow.events.emit({
+      kind: 'integration-insert-connection',
+      position: position,
+      onSave: () => {
+        this.router.navigate(['connection-select', position + 1], {
+          relativeTo: this.route,
+        });
+      },
     });
   }
 
   startConnection() {
-    return this.currentFlow.getStep(this.firstPosition());
+    return this.currentFlow.getStartStep();
   }
 
   endConnection() {
-    return this.currentFlow.getStep(this.lastPosition());
+    return this.currentFlow.getEndStep();
   }
 
   firstPosition() {
@@ -116,7 +123,6 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
   }
 
   getMiddleSteps() {
-    //log.debugc(() => 'this.currentFlow.getMiddleSteps().length: ' + this.currentFlow.getMiddleSteps().length);
     return this.currentFlow.getMiddleSteps();
   }
 
