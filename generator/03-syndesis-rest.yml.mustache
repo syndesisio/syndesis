@@ -206,7 +206,7 @@
 {{^Dev}}
         allowedOrigins: https://${ROUTE_HOSTNAME}
 {{/Dev}}{{#Dev}}
-        allowedOrigins: http://localhost:4200, https://${ROUTE_HOSTNAME}
+        allowedOrigins: http://localhost:4200, https://localhost:4200, https://${ROUTE_HOSTNAME}
 {{/Dev}}
       cache:
         cluster:
