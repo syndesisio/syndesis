@@ -137,7 +137,6 @@
     <spring-security.version>4.2.2.RELEASE</spring-security.version>
     <spring-social.version>1.1.4.RELEASE</spring-social.version>
     <swagger.version>1.5.12</swagger.version>
-    <sqlite-jdbc.version>3.16.1</sqlite-jdbc.version>
     <undertow.version>1.4.13.Final</undertow.version>
     <atlasmap.version>1.17.0</atlasmap.version>
     <camel-atlasmap.version>1.10.0</camel-atlasmap.version>
@@ -658,12 +657,6 @@
         <artifactId>postgresql</artifactId>
         <version>${postgresql.version}</version>
         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.xerial</groupId>
-        <artifactId>sqlite-jdbc</artifactId>
-        <version>${sqlite-jdbc.version}</version>
-        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.jdbi</groupId>
