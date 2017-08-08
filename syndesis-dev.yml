@@ -303,7 +303,7 @@ objects:
   data:
     application.yml: |-
       cors:
-        allowedOrigins: http://localhost:4200, https://${ROUTE_HOSTNAME}
+        allowedOrigins: http://localhost:4200, https://localhost:4200, https://${ROUTE_HOSTNAME}
 
       spring:
         zipkin:
@@ -1354,7 +1354,7 @@ objects:
           "surrogateAuthRequired": false,
           "enabled": true,
           "clientAuthenticatorType": "client-secret",
-          "redirectUris": [ "https://${ROUTE_HOSTNAME}/*", "http://localhost:4200/*"],
+          "redirectUris": [ "https://${ROUTE_HOSTNAME}/*", "http://localhost:4200/*", "https://localhost:4200/*"],
 
           "webOrigins": [ "+" ],
           "notBefore": 0,
@@ -2012,7 +2012,7 @@ objects:
             registration: property
             classes: io.syndesis.rest.v1.V1Application
       cors:
-        allowedOrigins: http://localhost:4200, https://${ROUTE_HOSTNAME}
+        allowedOrigins: http://localhost:4200, https://localhost:4200, https://${ROUTE_HOSTNAME}
 
       cache:
         cluster:
