@@ -13,13 +13,13 @@
         <div class="modal-dialog modal-md">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title pull-left">Confirm Delete</h4>
               <button type="button"
-                      class="close pull-right"
-                      aria-label="Close"
+                      class="close"
+                      aria-hidden="true"
                       (click)="hideModal()">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <span class="pficon pficon-close"></span>
+              </button>
+              <h4 class="modal-title">Confirm Delete</h4>
             </div>
             <div class="modal-body">
               <div>
@@ -33,16 +33,16 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button class="pull-right btn btn-primary"
-                      (click)="deleteAction(selectedForDelete)">Delete</button>
-              <button class="pull-right btn btn-cancel"
+              <button type="button"
+                      class="btn btn-default"
                       (click)="selectedForDelete = undefined; hideModal()">Cancel</button>
+              <button type="button"
+                      class="btn btn-primary"
+                      (click)="deleteAction(selectedForDelete)">Delete</button>
             </div>
           </div>
         </div>
       </div>
-
-
 
       <!-- Each Connection's Card Container -->
 
