@@ -161,6 +161,10 @@ public class DataManager implements DataAccessObjectRegistry {
         return value;
     }
 
+    public <T extends WithId<T>> boolean existsWithPropertyValue(Class<T> model, String property, String value) {
+        return doWithDataAccessObject(model, d -> d.existsWithPropertyValue(property, value));
+    }
+
     public <T extends WithId<T>> T create(final T entity) {
         Kind kind = entity.getKind();
         Cache<String, T> cache = caches.getCache(kind.getModelName());
@@ -276,4 +280,5 @@ public class DataManager implements DataAccessObjectRegistry {
             caches.getCache(kind.modelName).clear();
         }
     }
+
 }

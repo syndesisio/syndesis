@@ -82,6 +82,11 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
     }
 
     @Override
+    public boolean existsWithPropertyValue(final String property, final String propertyValue) {
+        return jsondb.existsPropertyValue(getCollectionPath(), property.replace('.', '/'), propertyValue);
+    }
+
+    @Override
     public T create(T entity) {
         try {
 

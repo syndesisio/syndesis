@@ -21,6 +21,8 @@ import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 
@@ -31,6 +33,7 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.validation.UniquenessRequired;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Creator;
 import io.syndesis.rest.v1.operations.Deleter;
@@ -79,7 +82,7 @@ public class ConnectionHandler extends BaseHandler
     }
 
     @Override
-    public Connection create(final Connection connection) {
+    public Connection create(@ConvertGroup(from = Default.class, to = UniquenessRequired.class) final Connection connection) {
         final Date rightNow = new Date();
         final Connection updatedConnection = new Connection.Builder().createFrom(connection).createdDate(rightNow)
             .lastUpdated(rightNow).build();

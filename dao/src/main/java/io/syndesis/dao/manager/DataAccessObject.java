@@ -40,6 +40,15 @@ public interface DataAccessObject<T extends WithId<T>> {
     T fetch(String id);
 
     /**
+     * Fetches entities by given property value.
+     *
+     * @param property the name of the property
+     * @param propertyValue the value of the property
+     * @return all entities having that property value
+     */
+    boolean existsWithPropertyValue(String property, String propertyValue);
+
+    /**
      * Fetches a {@link ListResult} containing all entities.
      * @return  The {@link ListResult}.
      */
