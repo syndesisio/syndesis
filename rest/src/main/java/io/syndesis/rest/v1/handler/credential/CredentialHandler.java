@@ -65,7 +65,7 @@ public class CredentialHandler {
         final URI returnUrl = flowState.getReturnUrl();
 
         return Response.temporaryRedirect(returnUrl)
-            .cookie(state.persist(flowState.persistenceKey(), "/connections/", flowState)).build();
+            .cookie(state.persist(flowState.persistenceKey(), "/", flowState)).build();
     }
 
     protected CredentialFlowState tryToFinishAcquisition(final HttpServletRequest request,

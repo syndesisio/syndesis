@@ -16,9 +16,6 @@
 
 package io.syndesis.rest.v1.handler.connection;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -42,6 +39,7 @@ import io.syndesis.credential.CredentialFlowState;
 import io.syndesis.credential.Credentials;
 import io.syndesis.rest.v1.state.ClientSideState;
 
+import static io.syndesis.rest.v1.util.Urls.absoluteTo;
 import static io.syndesis.rest.v1.util.Urls.apiBase;
 
 @Api(value = "credentials")
@@ -70,7 +68,8 @@ public class ConnectorCredentialHandler {
             absoluteTo(httpRequest, request.getReturnUrl()));
 
         final CredentialFlowState flowState = acquisitionFlow.state().get();
-        final NewCookie cookie = state.persist(flowState.persistenceKey(), "/credentials/callback", flowState);
+        final NewCookie conservativeCookie = state.persist(flowState.persistenceKey(), "/", flowState);
+        final NewCookie cookie = new NewCookie(conservativeCookie.getName(), conservativeCookie.getValue());
 
         final AcquisitionResponse acquisitionResponse = AcquisitionResponse.Builder.from(acquisitionFlow)
             .state(State.Builder.cookie(cookie.toString())).build();
@@ -82,19 +81,6 @@ public class ConnectorCredentialHandler {
     @Produces(MediaType.APPLICATION_JSON)
     public AcquisitionMethod get() {
         return credentials.acquisitionMethodFor(connectorId);
-    }
-
-    protected static URI absoluteTo(final HttpServletRequest httpRequest, final URI url) {
-        final URI current = URI.create(httpRequest.getRequestURL().toString());
-
-        try {
-            return new URI(current.getScheme(), null, current.getHost(), current.getPort(), url.getPath(),
-                url.getQuery(), url.getFragment());
-        } catch (final URISyntaxException e) {
-            throw new IllegalArgumentException(
-                "Unable to generate URI based on the current (`" + current + "`) and the return (`" + url + "`) URLs",
-                e);
-        }
     }
 
 }
