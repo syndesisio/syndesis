@@ -16,10 +16,8 @@
 package io.syndesis.credential.salesforce;
 
 import io.syndesis.credential.Applicator;
-import io.syndesis.credential.CredentialProvider;
 import io.syndesis.credential.CredentialProviderLocator;
 import io.syndesis.credential.OAuth2Applicator;
-import io.syndesis.credential.OAuth2CredentialProvider;
 import io.syndesis.model.connection.Connection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +27,15 @@ import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.social.oauth2.AccessGrant;
-import org.springframework.social.oauth2.OAuth2Template;
 import org.springframework.social.salesforce.api.Salesforce;
 import org.springframework.social.salesforce.connect.SalesforceConnectionFactory;
+
+import static io.syndesis.credential.salesforce.SalesforceCredentialProviderFactory.createCredentialProvider;
 
 @Configuration
 @ConditionalOnClass(SalesforceConnectionFactory.class)
 @ConditionalOnProperty(prefix = "spring.social.salesforce", name = "app-id")
 @EnableConfigurationProperties(SalesforceProperties.class)
-@SuppressWarnings("PMD.UseUtilityClass")
 public class SalesforceConfiguration {
 
     protected static final class SalesforceApplicator extends OAuth2Applicator {
@@ -70,27 +68,7 @@ public class SalesforceConfiguration {
     @Autowired
     public SalesforceConfiguration(final SalesforceProperties salesforceProperties,
         final CredentialProviderLocator locator) {
-        locator.addCredentialProvider(create(salesforceProperties));
-    }
-
-    public static CredentialProvider create(final SalesforceProperties salesforceProperties) {
-        final SalesforceConnectionFactory connectionFactory = createConnectionFactory(salesforceProperties);
-
-        return new OAuth2CredentialProvider<>("salesforce", connectionFactory,
-            new SalesforceApplicator(connectionFactory, salesforceProperties));
-    }
-
-    protected static SalesforceConnectionFactory
-        createConnectionFactory(final SalesforceProperties salesforceProperties) {
-        final SalesforceConnectionFactory salesforce = new SalesforceConnectionFactory(salesforceProperties.getAppId(),
-            salesforceProperties.getAppSecret());
-
-        final OAuth2Template oAuthOperations = (OAuth2Template) salesforce.getOAuthOperations();
-
-        // Salesforce requires OAuth client id and secret on the OAuth request
-        oAuthOperations.setUseParametersForClientAuthentication(true);
-
-        return salesforce;
+        locator.addCredentialProvider(createCredentialProvider(salesforceProperties));
     }
 
 }

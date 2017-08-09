@@ -15,26 +15,24 @@
  */
 package io.syndesis.rest.v1.handler.setup;
 
-import io.syndesis.core.EventBus;
-import io.syndesis.core.Json;
-import io.syndesis.credential.CredentialProviderLocator;
-import io.syndesis.credential.salesforce.SalesforceConfiguration;
-import io.syndesis.credential.salesforce.SalesforceProperties;
-import io.syndesis.credential.twitter.TwitterConfiguration;
-import io.syndesis.model.ChangeEvent;
-import io.syndesis.model.Kind;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.social.TwitterProperties;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.persistence.EntityNotFoundException;
+
+import io.syndesis.core.EventBus;
+import io.syndesis.core.Json;
+import io.syndesis.credential.Credentials;
+import io.syndesis.model.ChangeEvent;
+import io.syndesis.model.Kind;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * This component handles initializing and updating the CredentialProviderLocator
@@ -46,13 +44,13 @@ public class OAuthAppToCredentialsBridge {
     private static final Logger LOG = LoggerFactory.getLogger(OAuthAppToCredentialsBridge.class);
 
     private final OAuthAppHandler oAuthAppHandler;
-    private final CredentialProviderLocator locator;
+    private final Credentials credentials;
     private final Optional<EventBus> bus;
     private ExecutorService executor;
 
-    public OAuthAppToCredentialsBridge(OAuthAppHandler oAuthAppHandler, CredentialProviderLocator locator, Optional<EventBus> bus) {
+    public OAuthAppToCredentialsBridge(OAuthAppHandler oAuthAppHandler, Credentials credentials, Optional<EventBus> bus) {
         this.oAuthAppHandler = oAuthAppHandler;
-        this.locator = locator;
+        this.credentials = credentials;
         this.bus = bus;
     }
 
@@ -115,18 +113,7 @@ public class OAuthAppToCredentialsBridge {
     public void registerCredentialProvider(OAuthAppHandler.OAuthApp app) {
         // is the app configured?
         if( isSet(app.clientId) && isSet(app.clientSecret) ) {
-            if( "twitter".equals(app.id) ) {
-                TwitterProperties props = new TwitterProperties();
-                props.setAppId(app.clientId);
-                props.setAppSecret(app.clientSecret);
-                locator.addCredentialProvider(TwitterConfiguration.create(props));
-            }
-            if( "twitter".equals(app.id) ) {
-                SalesforceProperties props = new SalesforceProperties();
-                props.setAppId(app.clientId);
-                props.setAppSecret(app.clientSecret);
-                locator.addCredentialProvider(SalesforceConfiguration.create(props));
-            }
+            credentials.registerProvider(app.id, app);
         }
     }
 

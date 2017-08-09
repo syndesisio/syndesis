@@ -34,6 +34,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.core.SuppressFBWarnings;
@@ -41,6 +43,7 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 
+import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -62,12 +65,24 @@ public class OAuthAppHandler {
     @SuppressFBWarnings(
         value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD",
         justification = "All fields are encode by jackson and sent to the UI")
-    public static final class OAuthApp {
+    public static final class OAuthApp extends SocialProperties {
         public String id;
         public String name;
         public String icon;
         public String clientId;
         public String clientSecret;
+
+        @Override
+        @JsonIgnore
+        public String getAppId() {
+            return clientId;
+        }
+
+        @Override
+        @JsonIgnore
+        public String getAppSecret() {
+            return clientSecret;
+        }
     }
 
     @GET
