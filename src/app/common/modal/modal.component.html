@@ -1,12 +1,12 @@
 <ng-template #template>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">{{title}}</h4>
     <button type="button"
-            class="close pull-right"
-            aria-label="Close"
+            class="close"
+            aria-hidden="true"
             (click)="cancel()">
-      <span aria-hidden="true">&times;</span>
+      <span class="pficon pficon-close"></span>
     </button>
+    <h4 class="modal-title">{{title}}</h4>
   </div>
   <div class="modal-body">
     <p>{{message}}</p>
