@@ -16,17 +16,16 @@ export class IntegrationSupportService {
               public http: Http,
               public oauth: OAuthService) {
     this.service = restangular.service('integration-support');
-    this.filterService = restangular.service('/');
+    this.filterService = restangular.service('integrations');
   }
 
-  getFilterOptions(connectionId, actionId): Observable<any> {
-    // Should be /{connectorId}/actions/{actionId}/filters/options
-    const url = this.filterService.one(connectionId).one('actions', actionId).one('filters').one('options').getRestangularUrl();
+  getFilterOptions(integration: Integration): Observable<any> {
+    const url = this.filterService.one('filters').one('options').getRestangularUrl();
     const headers = new Headers({
       Authorization: 'Bearer ' + this.oauth.getAccessToken(),
     });
     const options = new RequestOptions({ headers: headers });
-    return this.http.get(url, options);
+    return this.http.post(url, integration, options);
   }
 
   requestPom(integration: Integration) {

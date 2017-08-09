@@ -59,8 +59,9 @@ export class BasicFilterComponent implements OnInit {
     this.basicFilterModel = createBasicFilterModel(this.configuredProperties);
     const prevStep = this.currentFlow.getPreviousConnection(this.position);
 
-    this.integrationSupport.getFilterOptions(prevStep.connection.id, prevStep.action.id).toPromise().then((resp: any) => {
-      //log.info('Filter option response: ' + JSON.stringify(resp));
+    this.integrationSupport.getFilterOptions(this.currentFlow.getIntegrationClone()).toPromise().then((resp: any) => {
+      console.dir(JSON.parse(resp['_body']));
+      log.info('Filter option response: ' + JSON.stringify(resp));
     });
 
     this.formGroup = this.formService.createFormGroup(this.basicFilterModel);
