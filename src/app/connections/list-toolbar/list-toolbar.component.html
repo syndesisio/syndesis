@@ -1,6 +1,7 @@
 <pfng-toolbar [config]="toolbarConfig"
               [actionTemplate]="actionTemplate"
               (onFilterChange)="filter()"
+              (onFilterFieldSelect)="filterFieldSelected($event)"
               (onSortChange)="sort($event)">
   <ng-template #actionTemplate>
     <button *ngIf="showCreate" type="button"
