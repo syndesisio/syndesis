@@ -37,6 +37,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -105,12 +106,11 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         Updater.super.update(id, updatedIntegration);
     }
 
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/{id}/filters/options")
-    public FilterOptions getFilterOptions(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
+    @Path(value = "/filters/options")
+    public FilterOptions getFilterOptions(Integration integration) {
         FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
-        Integration integration = Getter.super.get(id);
 
         integration.getSteps().orElse(Collections.emptyList()).forEach(s -> {
             s.getAction().ifPresent(a -> {
