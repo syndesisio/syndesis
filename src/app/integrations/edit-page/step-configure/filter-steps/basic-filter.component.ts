@@ -57,7 +57,6 @@ export class BasicFilterComponent implements OnInit {
 
   ngOnInit() {
     this.basicFilterModel = createBasicFilterModel(this.configuredProperties);
-    const prevStep = this.currentFlow.getPreviousConnection(this.position);
 
     this.integrationSupport.getFilterOptions(this.currentFlow.getIntegrationClone()).toPromise().then((resp: any) => {
       console.dir(JSON.parse(resp['_body']));
