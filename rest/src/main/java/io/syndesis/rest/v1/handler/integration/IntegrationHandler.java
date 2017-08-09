@@ -113,10 +113,12 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         integration.getSteps().orElse(Collections.emptyList()).forEach(s -> {
             s.getAction().ifPresent(a -> {
                 DataShape dataShape = a.getOutputDataShape();
-                String kind = dataShape.getKind();
-                if (kind.equals(DataShapeKinds.JAVA)) {
-                    String type = dataShape.getType();
-                    builder.addAllPaths(classInspector.getPaths(type));
+                if (dataShape != null) {
+                    String kind = dataShape.getKind();
+                    if (kind != null && kind.equals(DataShapeKinds.JAVA)) {
+                        String type = dataShape.getType();
+                        builder.addAllPaths(classInspector.getPaths(type));
+                    }
                 }
             });
         });

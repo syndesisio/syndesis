@@ -15,11 +15,15 @@
  */
 package io.syndesis.model.filter;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.core.Json;
 import org.immutables.value.Value;
 
 /**
@@ -28,31 +32,48 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @JsonDeserialize(builder = RuleFilterStep.Builder.class)
-@JsonIgnoreProperties({"stepKind", "kind", "configuredProperties"})
+@JsonIgnoreProperties({"stepKind", "kind"})
 public interface RuleFilterStep extends FilterStep {
 
     String STEP_KIND = "rule-filter";
 
     /**
-     *  Predicate can be either "AND" (every) or "OR" (any) and determines
-     *  or rules are combined together
-     */
-    FilterPredicate getPredicate();
-
-    /**
-     * List of rules to combine.
-     */
-    List<FilterRule> getRules();
-
-    /**
-     * Filter in the simple expression language. This is calculated by evaluating
-     * the rules and hence somewhat persisted redundantly. It's updated during storage
+     * Filter in the simple expression language.
      */
     default String getFilterExpression() {
-        return getRules()
-            .stream()
-            .map(FilterRule::getFilterExpression)
-            .collect(Collectors.joining(getPredicate().getExpressionDelimiter()));
+        if (getConfiguredProperties().isPresent()) {
+            Map<String, String> props = getConfiguredProperties().get();
+
+            FilterPredicate predicate = getPredicate(props.get("predicate"));
+            List<FilterRule> rules = extractRules(props.get("rules"));
+            if (rules != null && rules.size() > 0) {
+                return rules
+                    .stream()
+                    .map(FilterRule::getFilterExpression)
+                    .collect(Collectors.joining(predicate.getExpressionDelimiter()));
+            }
+            throw new IllegalStateException(String.format("No rules defined in step properties %s for rule filter step",props));
+        }
+        throw new IllegalStateException("No step properties defined for rule filter step");
+    }
+
+    default List<FilterRule> extractRules(String rulesString) {
+        try {
+            if (rulesString != null && rulesString.length() > 0) {
+                return null;
+            }
+            return Json.mapper().readValue(rulesString,new TypeReference<List<FilterRule>>(){});
+        } catch (IOException e) {
+            throw new IllegalStateException(String.format("Cannot deserialize %s: %s", rulesString, e.getMessage()),e);
+        }
+    }
+
+    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
+    default FilterPredicate getPredicate(String predicate) {
+        if (predicate != null) {
+            return FilterPredicate.valueOf(predicate.toUpperCase());
+        }
+        return FilterPredicate.OR;
     }
 
     class Builder extends ImmutableRuleFilterStep.Builder { }

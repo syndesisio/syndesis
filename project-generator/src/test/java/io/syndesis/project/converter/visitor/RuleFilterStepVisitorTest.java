@@ -16,8 +16,10 @@
 
 package io.syndesis.project.converter.visitor;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import io.syndesis.model.filter.FilterPredicate;
-import io.syndesis.model.filter.FilterRule;
 import io.syndesis.model.filter.RuleFilterStep;
 import org.junit.Test;
 
@@ -27,11 +29,13 @@ public class RuleFilterStepVisitorTest {
 
     @Test
     public void createExpression() throws Exception {
+        Map<String, String> props = new ConcurrentHashMap<>();
+        props.put("predicate", FilterPredicate.AND.toString());
+        props.put("rules","[ { \"path\": \"person.name\", \"op\": \"==\", \"value\": \"Ioannis\"}, " +
+                          "  { \"path\": \"person.favoriteDrinks\", \"op\": \"contains\", \"value\": \"Gin\" } ]");
         RuleFilterStep step = new RuleFilterStep.Builder()
             .id("1")
-            .predicate(FilterPredicate.AND)
-            .addRule(new FilterRule.Builder().path("person.name").op("==").value("Ioannis").build())
-            .addRule(new FilterRule.Builder().path("person.favoriteDrinks").op("contains").value("Gin").build())
+            .configuredProperties(props)
             .build();
 
         // Reading notes: Unit tests are like personal diaries. Feel honoured when you have the chance to be part of them ;-)
