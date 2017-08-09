@@ -16,21 +16,28 @@
 package io.syndesis.jsondb.impl;
 
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.syndesis.jsondb.GetOptions;
-import io.syndesis.jsondb.JsonDBException;
-import org.junit.Before;
-import org.junit.Test;
-import org.skife.jdbi.v2.DBI;
-import org.sqlite.SQLiteDataSource;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.syndesis.jsondb.GetOptions;
+import io.syndesis.jsondb.JsonDBException;
+
+import org.h2.jdbcx.JdbcDataSource;
+import org.junit.Before;
+import org.junit.Test;
+import org.skife.jdbi.v2.DBI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -48,8 +55,8 @@ public class JsonDBTest {
 
     @Before
     public void before() {
-        SQLiteDataSource ds = new SQLiteDataSource();
-        ds.setUrl("jdbc:sqlite:target/sqlite.db");
+        JdbcDataSource ds = new JdbcDataSource();
+        ds.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
         DBI dbi = new DBI(ds);
         this.jsondb = new SqlJsonDB(dbi, null);
 
