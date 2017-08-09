@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { NavigationService } from '../../common/navigation.service';
-import { CurrentConnectionService } from './current-connection';
+import { CurrentConnectionService, ConnectionEvent } from './current-connection';
 import { Connection, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
 import { CanComponentDeactivate } from '../../common/can-deactivate-guard.service';
@@ -150,12 +150,51 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() {
-    this.current.connection = TypeFactory.createConnection();
-    // we always want to start at the beginning of the wizard on a refresh
-    if (this.getCurrentPage() !== 'connection-basics') {
-      this.router.navigate(['connection-basics'], { relativeTo: this.route });
+  handleEvent(event: ConnectionEvent) {
+    switch (event.kind) {
+      case 'connection-set-connection':
+        log.infoc(
+          () => 'Credentials: ' + JSON.stringify(this.current.credentials),
+        );
+        log.infoc(() => 'hasCredentials: ' + this.current.hasCredentials());
+        if (
+          !this.current.connection.connector ||
+          !this.current.connection.connectorId
+        ) {
+          this.router.navigate(['connection-basics'], {
+            relativeTo: this.route,
+          });
+          return;
+        }
+        /*
+        TODO
+        if (document.cookie) {
+          const cookie = document.cookie;
+          if (cookie.indexOf('cred-') !== -1) {
+            this.router.navigate(['review'], { relativeTo: this.route });
+            return;
+          }
+        }
+        */
+        break;
     }
+
+  }
+
+  ngOnInit() {
+    this.current.events.subscribe(event => {
+      this.handleEvent(event);
+    });
+    this.route.queryParams.subscribe((params) => {
+      if (this.current.connection) {
+        // if the connection has started to be configured we don't want this sub to reset it
+        return;
+      }
+      const connection = TypeFactory.createConnection();
+      // detect if there's a selected connection ID already or not
+      connection.connectorId = params.connectorId;
+      this.current.connection = connection;
+    });
     this.nav.hide();
     this.routerEventsSubscription = this.router.events.subscribe(event => {
       this.detector.detectChanges();

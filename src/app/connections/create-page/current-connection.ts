@@ -32,8 +32,103 @@ export class CurrentConnectionService {
     );
   }
 
+
+  private checkCredentials() {
+    const connectorId = this._connection.connectorId;
+    if (!connectorId) {
+      return false;
+    }
+    if (!this._credentials || this._credentials.connectorId !== connectorId) {
+      // fetch any credentials for the connector
+      const sub = this.fetchCredentials().subscribe(
+        () => {
+          sub.unsubscribe();
+          this.events.emit({
+            kind: 'connection-set-connection',
+            connection: this._connection,
+          });
+        },
+        error => {
+          log.infoc(
+            () =>
+              'Failed to fetch connector credentials: ' + JSON.stringify(error),
+            category,
+          );
+          sub.unsubscribe();
+          this.events.emit({
+            kind: 'connection-set-connection',
+            connection: this._connection,
+          });
+        },
+      );
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
+  private fetchConnector(connectorId: string) {
+    if (connectorId && !this._connection.connector) {
+      const sub = this.connectorStore.load(connectorId).subscribe(
+        connector => {
+          if (!connector.id) {
+            return;
+          }
+          this._connection.connector = connector;
+          this._connection.icon = connector.icon;
+          this.events.emit({
+            kind: 'connection-check-credentials',
+            connection: this._connection,
+          });
+          sub.unsubscribe();
+        },
+        error => {
+          try {
+            log.infoc(
+              () =>
+                'Failed to fetch connector: ' +
+                JSON.stringify(error),
+              category,
+            );
+          } catch (err) {
+            log.infoc(
+              () => 'Failed to fetch connector: ' + error,
+              category,
+            );
+          }
+          this.events.emit({
+            kind: 'connection-check-credentials',
+            error: error,
+            connection: this._connection,
+          });
+          sub.unsubscribe();
+        },
+      );
+      return true;
+    }
+    return false;
+  }
+
   handleEvent(event: ConnectionEvent) {
+    log.infoc(() => 'connection event: ' + JSON.stringify(event), category);
     switch (event.kind) {
+      case 'connection-check-connector':
+        if (!this.fetchConnector(this._connection.connectorId)) {
+          this.events.emit({
+            kind: 'connection-check-credentials',
+            connectorId: this._connection.connectorId,
+          });
+        }
+        break;
+      case 'connection-check-credentials':
+        if (!this.checkCredentials()) {
+          this.events.emit({
+            kind: 'connection-set-connection',
+            connection: this._connection,
+          });
+        }
+        break;
       case 'connection-set-connection':
         break;
       // TODO not sure if these next 3 cases are needed really
@@ -60,14 +155,12 @@ export class CurrentConnectionService {
     }
     const connectorId = this._connection.connectorId;
     return Observable.create(observer => {
-      this.connectorStore
-        .credentials(connectorId)
-        .subscribe((resp: any) => {
-          // enrich the response with the connectorId
-          this._credentials = { ...resp, ...{ connectorId: connectorId } };
-          observer.next(this._credentials);
-          observer.complete();
-        });
+      this.connectorStore.credentials(connectorId).subscribe((resp: any) => {
+        // enrich the response with the connectorId
+        this._credentials = { ...resp, ...{ connectorId: connectorId } };
+        observer.next(this._credentials);
+        observer.complete();
+      });
     });
   }
 
@@ -77,9 +170,11 @@ export class CurrentConnectionService {
       return Observable.empty();
     }
     const connectorId = this._connection.connectorId;
-    this.connectorStore.acquireCredentials(connectorId).subscribe((resp: any) => {
-      log.infoc(() => 'Got response: ' + JSON.stringify(resp));
-    });
+    this.connectorStore
+      .acquireCredentials(connectorId)
+      .subscribe((resp: any) => {
+        log.infoc(() => 'Got response: ' + JSON.stringify(resp));
+      });
   }
 
   private saveConnection(event: ConnectionEvent) {
@@ -129,7 +224,6 @@ export class CurrentConnectionService {
     return this._credentials && this._credentials.type !== undefined;
   }
 
-
   get connection(): Connection {
     return this._connection;
   }
@@ -137,39 +231,9 @@ export class CurrentConnectionService {
   set connection(connection: Connection) {
     this._connection = connection;
     const connectorId = connection.connectorId;
-    // only query for credentials if the stored ones don't match the passed in connector
-    if (
-      !connection ||
-      !connectorId ||
-      (this._credentials && this._credentials.connectorId === connectorId)
-    ) {
-      this.events.emit({
-        kind: 'connection-set-connection',
-        connection: this._connection,
-      });
-      return;
-    }
-    // fetch any credentials for the connector
-    const sub = this.fetchCredentials().subscribe(
-      () => {
-        sub.unsubscribe();
-        this.events.emit({
-          kind: 'connection-set-connection',
-          connection: this._connection,
-        });
-      },
-      error => {
-        log.infoc(
-          () =>
-            'Failed to fetch connector credentials: ' + JSON.stringify(error),
-          category,
-        );
-        sub.unsubscribe();
-        this.events.emit({
-          kind: 'connection-set-connection',
-          connection: this._connection,
-        });
-      },
-    );
+    this.events.emit({
+      kind: 'connection-check-connector',
+      connection: this._connection,
+    });
   }
 }
