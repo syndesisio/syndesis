@@ -40,7 +40,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
   formGroup: FormGroup = undefined;
   formConfig: any;
   cfg: any = undefined;
-  filterProperties: any = undefined;
+  customProperties: any = undefined;
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -62,20 +62,23 @@ export class IntegrationsStepConfigureComponent extends FlowPage
   }
 
   continue(data: any) {
+    // Question: Why is data a parameter here ?
     const step = this.currentFlow.getStep(this.position);
-    switch (step.stepKind) {
-      case BASIC_FILTER:
-        data = this.filterProperties;
-        break;
-      case DATA_MAPPER:
-        this.router.navigate(['save-or-add-step'], {
-          queryParams: { validate: true },
-          relativeTo: this.route.parent,
-        });
-        return;
-      default:
+
+    if (step.stepKind === DATA_MAPPER) {
+      this.router.navigate(['save-or-add-step'], {
+        queryParams: { validate: true },
+        relativeTo: this.route.parent,
+      });
+      return;
+    }
+
+    if (this.stepStore.isCustomStep(step)) {
+        data = this.customProperties;
+    } else {
         data = this.formGroup ? this.formGroup.value : {};
     }
+
     // set a copy in the integration
     const properties = JSON.parse(JSON.stringify(data));
     this.currentFlow.events.emit({
@@ -133,13 +136,13 @@ export class IntegrationsStepConfigureComponent extends FlowPage
           return;
         }
         // Now check if we've a custom view for this step kind
-        switch (step.stepKind) {
-          case BASIC_FILTER:
-            this.filterProperties = this.getConfiguredProperties(
-              step.configuredProperties || {},
-            );
-            return;
-          case DATA_MAPPER:
+        if (this.stepStore.isCustomStep(step)) {
+          this.customProperties = this.getConfiguredProperties(
+            step.configuredProperties || {},
+          );
+          return;
+        }
+        if (step.stepKind === DATA_MAPPER) {
             log.info(
               'No form configuration, skipping the form building service..',
             );

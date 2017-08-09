@@ -192,4 +192,10 @@ export class StepStore {
   getSteps() {
     return this.steps;
   }
+
+  // Check if we need a custom form handling which stores the parsed
+  // properties in customProperties
+  isCustomStep(step: Step) : boolean {
+    return step.stepKind === BASIC_FILTER;
+  }
 }
