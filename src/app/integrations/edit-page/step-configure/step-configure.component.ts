@@ -142,12 +142,6 @@ export class IntegrationsStepConfigureComponent extends FlowPage
           );
           return;
         }
-        if (step.stepKind === DATA_MAPPER) {
-            log.info(
-              'No form configuration, skipping the form building service..',
-            );
-            return;
-        }
         this.formConfig = JSON.parse(JSON.stringify(stepDef.properties));
         const values: any = this.getConfiguredProperties(
           step.configuredProperties,
