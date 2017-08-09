@@ -27,7 +27,6 @@ import { DataMapperHostComponent } from './edit-page/step-configure/data-mapper/
 import { BasicFilterComponent } from './edit-page/step-configure/filter-steps/basic-filter.component';
 import { ListActionsComponent } from './edit-page/list-actions/list-actions.component';
 import { IntegrationsListPage } from './list-page/list-page.component';
-import { IntegrationsListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { IntegrationsFilterPipe } from './integrations-filter.pipe';
 import { IntegrationsListComponent } from './list/list.component';
 import { FlowViewComponent } from './edit-page/flow-view/flow-view.component';
@@ -103,7 +102,6 @@ const routes: Routes = [
     IntegrationsStepSelectComponent,
     IntegrationsStepConfigureComponent,
     IntegrationsListPage,
-    IntegrationsListToolbarComponent,
     IntegrationsSaveOrAddStepComponent,
     IntegrationsSelectActionComponent,
     IntegrationsSelectConnectionComponent,

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
@@ -12,24 +14,14 @@ import { Integrations } from '../../model';
   styleUrls: ['./list-page.component.scss'],
 })
 export class IntegrationsListPage implements OnInit {
-  integrations: Observable<Integrations>;
-
   loading: Observable<boolean>;
+  integrations: Observable<Integrations>;
+  filteredIntegrations: Subject<Integrations> = new BehaviorSubject(<Integrations>{});
 
   statusFilter: ObjectPropertyFilterConfig = {
     filter: '',
     propertyName: 'currentStatus',
     exact: true,
-  };
-
-  filter: ObjectPropertyFilterConfig = {
-    filter: '',
-    propertyName: 'name',
-  };
-
-  sort: ObjectPropertySortConfig = {
-    sortField: 'name',
-    descending: false,
   };
 
   constructor(private store: IntegrationStore) {
