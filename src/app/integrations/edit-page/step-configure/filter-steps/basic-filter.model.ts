@@ -108,10 +108,13 @@ export function createBasicFilterModel(configuredProperties: BasicFilter) {
     ];
   };
   let groups = undefined;
+  let rules = undefined;
   // build up the form array from the incoming values (if any)
   if (configuredProperties && configuredProperties.rules && configuredProperties.rules.length) {
+    // TODO hackity hack
+    rules = JSON.parse(<any>configuredProperties.rules);
     groups = [];
-    for (const rule of configuredProperties.rules) {
+    for (const rule of rules) {
       groups.push(new DynamicFormArrayGroupModel(undefined, groupFactory(rule)));
     }
   }
@@ -154,8 +157,8 @@ export function createBasicFilterModel(configuredProperties: BasicFilter) {
           {
             id: 'rulesFormArray',
             groups: groups,
-            initialCount: configuredProperties.rules
-              ? configuredProperties.rules.length
+            initialCount: rules
+              ? rules.length
               : 1,
             groupFactory: groupFactory,
           },
