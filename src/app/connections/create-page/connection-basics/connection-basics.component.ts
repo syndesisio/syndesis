@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 import {
   CurrentConnectionService,
@@ -11,7 +12,8 @@ import { Connection } from '../../../model';
   selector: 'syndesis-connections-connection-basics',
   templateUrl: 'connection-basics.component.html',
 })
-export class ConnectionsConnectionBasicsComponent implements OnInit {
+export class ConnectionsConnectionBasicsComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
 
   constructor(
     private current: CurrentConnectionService,
@@ -24,11 +26,14 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
   }
 
   set connection(connection: Connection) {
+    if (!connection.connectorId) {
+      return;
+    }
     this.current.connection = connection;
   }
 
   ngOnInit() {
-    const subscription = this.current.events.subscribe(
+    this.subscription = this.current.events.subscribe(
       (event: ConnectionEvent) => {
         switch (event.kind) {
           case 'connection-set-connection':
@@ -37,9 +42,11 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
             });
             return;
         }
-        subscription.unsubscribe();
       },
     );
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }

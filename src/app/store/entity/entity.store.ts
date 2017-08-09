@@ -116,7 +116,7 @@ export abstract class AbstractStore<
     this._loading.next(true);
   }
 
-  load(id: string, retries = 0) {
+  load(id: string, retries = 0): Observable<T> {
     this._loading.next(true);
     this.service.get(id).subscribe(
       entity => {
@@ -138,6 +138,7 @@ export abstract class AbstractStore<
         }
       },
     );
+    return this._current.asObservable();
   }
 
   private massageError(error: any) {
