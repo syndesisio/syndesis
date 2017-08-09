@@ -36,6 +36,25 @@ export class CurrentFlow {
     return this.integration.name && this.integration.name.length;
   }
 
+  private stringifyValues(_props: any) {
+    if (!_props) {
+      return _props;
+    }
+    // let's clone this to be on the safe side
+    const props = JSON.parse(JSON.stringify(_props));
+    for (const key of Object.keys(props)) {
+      const value = props[key];
+      switch (typeof value) {
+        case 'string':
+        case 'number':
+          continue;
+        default:
+          props[key] = JSON.stringify(value);
+      }
+    }
+    return props;
+  }
+
   /**
    * Returns the first step in the integration flow
    *
@@ -187,7 +206,6 @@ export class CurrentFlow {
     return connections[0];
   }
 
-
   /**
    * Returns the initial index in the flow of steps in the integration
    *
@@ -232,7 +250,6 @@ export class CurrentFlow {
       return undefined;
     }
   }
-
 
   /**
    * Returns the step at the given position
@@ -326,12 +343,12 @@ export class CurrentFlow {
         {
           const position = +event['position'];
           const action = event['action'];
-          const properties = event['properties'];
+          const properties = this.stringifyValues(event['properties']);
           const step = this.steps[position] || TypeFactory.createStep();
           step.configuredProperties = properties;
           this.steps[position] = step;
           this.maybeDoAction(event['onSave']);
-          log.debugc(() => 'Set properties at position: ' + position, category);
+          log.infoc(() => 'Set properties at position: ' + position + ' step: ' + JSON.stringify(step), category);
         }
         break;
       case 'integration-set-action':
@@ -367,6 +384,11 @@ export class CurrentFlow {
         }
         break;
       case 'integration-set-property':
+        const property = event['property'];
+        let value = event['value'];
+        if (property === 'configuredProperties') {
+          value = this.stringifyValues(value);
+        }
         this._integration[event['property']] = event['value'];
         this.maybeDoAction(event['onSave']);
         break;
