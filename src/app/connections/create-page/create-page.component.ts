@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 import { NavigationService } from '../../common/navigation.service';
 import { CurrentConnectionService } from './current-connection';
@@ -15,6 +16,9 @@ const category = getCategory('Connections');
   styleUrls: ['./create-page.component.scss'],
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
+
+  private routerEventsSubscription: Subscription;
+
   constructor(
     private current: CurrentConnectionService,
     private route: ActivatedRoute,
@@ -153,9 +157,13 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       this.router.navigate(['connection-basics'], { relativeTo: this.route });
     }
     this.nav.hide();
+    this.routerEventsSubscription = this.router.events.subscribe(event => {
+      this.detector.detectChanges();
+    });
   }
 
   ngOnDestroy() {
     this.nav.show();
+    this.routerEventsSubscription.unsubscribe();
   }
 }
