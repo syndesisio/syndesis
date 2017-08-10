@@ -453,6 +453,14 @@ export class CurrentFlow {
 
   set integration(i: Integration) {
     this._integration = <Integration>i;
+    if (i && i.steps && i.steps.length) {
+      i.steps.forEach((step) => {
+        if ('filterExpression' in step) {
+          step.stepKind = 'rule-filter';
+          step.name = 'Rule Filter';
+        }
+      });
+    }
     this.events.emit({
       kind: 'integration-updated',
       integration: this.integration,
