@@ -55,7 +55,11 @@ export class BasicFilterComponent implements OnChanges {
               private formService: DynamicFormService) {
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: any) {
+    if (!('position' in changes)) {
+      return;
+    }
+
     this.basicFilterModel = createBasicFilterModel(this.configuredProperties);
 
     this.integrationSupport.getFilterOptions(this.currentFlow.getIntegrationClone()).toPromise().then((resp: any) => {
