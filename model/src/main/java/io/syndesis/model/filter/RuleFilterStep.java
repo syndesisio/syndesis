@@ -46,7 +46,7 @@ public interface RuleFilterStep extends FilterStep {
 
             FilterPredicate predicate = getPredicate(props.get("predicate"));
             List<FilterRule> rules = extractRules(props.get("rules"));
-            if (rules != null && rules.size() > 0) {
+            if (rules != null && !rules.isEmpty()) {
                 return rules
                     .stream()
                     .map(FilterRule::getFilterExpression)
@@ -59,7 +59,7 @@ public interface RuleFilterStep extends FilterStep {
 
     default List<FilterRule> extractRules(String rulesString) {
         try {
-            if (rulesString == null || rulesString.length() == 0) {
+            if (rulesString == null || rulesString.isEmpty()) {
                 return null;
             }
             return Json.mapper().readValue(rulesString,new TypeReference<List<FilterRule>>(){});
