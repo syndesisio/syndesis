@@ -106,16 +106,22 @@ export function createBasicFilterModel(configuredProperties: BasicFilter) {
         },
       ),
     ];
-  };
+  }
   let groups = undefined;
   let rules = undefined;
   // build up the form array from the incoming values (if any)
-  if (configuredProperties && configuredProperties.rules && configuredProperties.rules.length) {
+  if (configuredProperties && configuredProperties.rules) {
     // TODO hackity hack
-    rules = JSON.parse(<any>configuredProperties.rules);
+    if (typeof configuredProperties.rules === 'string') {
+      rules = JSON.parse(<any>configuredProperties.rules);
+    } else {
+      rules = configuredProperties.rules;
+    }
     groups = [];
     for (const rule of rules) {
-      groups.push(new DynamicFormArrayGroupModel(undefined, groupFactory(rule)));
+      groups.push(
+        new DynamicFormArrayGroupModel(undefined, groupFactory(rule)),
+      );
     }
   }
   const answer = [
@@ -157,9 +163,7 @@ export function createBasicFilterModel(configuredProperties: BasicFilter) {
           {
             id: 'rulesFormArray',
             groups: groups,
-            initialCount: rules
-              ? rules.length
-              : 1,
+            initialCount: rules ? rules.length : 1,
             groupFactory: groupFactory,
           },
           {
