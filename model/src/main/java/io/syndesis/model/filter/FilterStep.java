@@ -24,4 +24,5 @@ import io.syndesis.model.integration.Step;
 public interface FilterStep extends Step {
 
     String getFilterExpression();
+
 }

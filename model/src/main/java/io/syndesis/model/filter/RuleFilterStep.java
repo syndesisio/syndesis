@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.core.Json;
+import io.syndesis.model.Kind;
 import org.immutables.value.Value;
 
 /**
@@ -32,7 +33,7 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @JsonDeserialize(builder = RuleFilterStep.Builder.class)
-@JsonIgnoreProperties({"stepKind", "kind"})
+@JsonIgnoreProperties({"filterExpression"})
 public interface RuleFilterStep extends FilterStep {
 
     String STEP_KIND = "rule-filter";
@@ -79,7 +80,13 @@ public interface RuleFilterStep extends FilterStep {
     class Builder extends ImmutableRuleFilterStep.Builder { }
 
     @Override
-    default String getStepKind() {
+    @Value.Default default String getStepKind() {
         return STEP_KIND;
     }
+
+    @Override
+    @Value.Default default Kind getKind() {
+        return Kind.Step;
+    }
+
 }

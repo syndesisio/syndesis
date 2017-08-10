@@ -1,5 +1,6 @@
 {
   "id": "2",
+  "kind": "Step",
   "stepKind": "filter",
   "configuredProperties": {
     "filter": "${in.body} contains '#RHSummit'"
