@@ -1,6 +1,6 @@
 {
   "id": "1",
-  "kind": "step",
+  "kind": "Step",
   "stepKind": "rule-filter",
   "configuredProperties": {
     "predicate": "and",

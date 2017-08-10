@@ -19,11 +19,12 @@ import java.util.Collections;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.model.Kind;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ExpressionFilterStep.Builder.class)
-@JsonIgnoreProperties({"stepKind", "filterExpression"})
+@JsonIgnoreProperties({"filterExpression"})
 public interface ExpressionFilterStep extends FilterStep {
 
     String STEP_KIND = "filter";
@@ -39,8 +40,13 @@ public interface ExpressionFilterStep extends FilterStep {
     class Builder extends ImmutableExpressionFilterStep.Builder { }
 
     @Override
-    default String getStepKind() {
+    @Value.Default default String getStepKind() {
         return STEP_KIND;
+    }
+
+    @Override
+    @Value.Default default Kind getKind() {
+        return Kind.Step;
     }
 
 }

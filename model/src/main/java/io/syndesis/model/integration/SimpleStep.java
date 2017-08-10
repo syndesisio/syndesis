@@ -29,7 +29,7 @@ import java.util.Optional;
 public interface SimpleStep extends Step {
 
     @Override
-    default Kind getKind() {
+    @Value.Default default Kind getKind() {
         return Kind.Step;
     }
 
