@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.syndesis.github.GitHubConfiguration
+  io.syndesis.github.GitHubConfiguration,\
+  io.syndesis.git.GitConfiguration

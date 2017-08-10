@@ -1,0 +1,12 @@
+---
+flows:
+- steps:
+  - kind: endpoint
+    uri: periodic-timer:every?period=5000
+  - kind: endpoint
+    uri: http-get?httpUri=http://localhost:8080/hello
+  - kind: log
+    message: Hello World! ${body}
+    loggingLevel: INFO
+  - kind: endpoint
+    uri: http-post?httpUri=http://localhost:8080/bye

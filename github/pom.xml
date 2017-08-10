@@ -45,6 +45,11 @@
 
     <dependency>
       <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
     </dependency>
 
@@ -68,6 +73,42 @@
       <artifactId>keycloak-spring-security-adapter</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.eclipse.jgit</groupId>
+      <artifactId>org.eclipse.jgit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-adapter-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
@@ -76,9 +117,19 @@
     </dependency>
 
     <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.glassfish</groupId>
       <artifactId>javax.el</artifactId>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>mockwebserver</artifactId>
     </dependency>
 
   </dependencies>
@@ -92,6 +143,8 @@
         <configuration>
           <ignoredUnusedDeclaredDependencies>
             <ignoredUnusedDeclaredDependency>org.keycloak:keycloak-spring-security-adapter</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.slf4j:jcl-over-slf4j</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.jboss.resteasy:resteasy-client</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>

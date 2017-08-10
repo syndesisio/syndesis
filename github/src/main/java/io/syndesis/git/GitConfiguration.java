@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.github;
+package io.syndesis.git;
 
-import org.eclipse.egit.github.core.client.IGitHubConstants;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 /**
- * Github specific properties, set it in application.yml with a prefix "github."
+ * Configured in spring.factories so that tis configuration is automatically picked
+ * up when included in the classpath.
  */
-@ConfigurationProperties("github")
-public class GitHubProperties {
+@Configuration
+@ComponentScan
+@EnableConfigurationProperties(GitProperties.class)
+public class GitConfiguration {
 
-    private String service = IGitHubConstants.HOST_API;
-
-    public String getService() {
-        return service;
-    }
-
-    public void setService(String service) {
-        this.service = service;
-    }
 }

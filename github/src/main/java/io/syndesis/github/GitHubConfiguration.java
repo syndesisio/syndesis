@@ -15,8 +15,7 @@
  */
 package io.syndesis.github;
 
-import io.syndesis.github.backend.ExtendedContentsService;
-import io.syndesis.github.backend.KeycloakTokenAwareGitHubClient;
+import io.syndesis.github.backend.KeycloakProviderTokenAwareGitHubClient;
 
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;
@@ -26,7 +25,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Configured in spring.factories so that tis configuration is automatically picked
+ * Configured in spring.factories so that this configuration is automatically picked
  * up when included in the classpath.
  *
  * Beans are created in request scope because tokens have to be set in the clients afresh for each request.
@@ -38,17 +37,12 @@ public class GitHubConfiguration {
 
     @Bean
     public RepositoryService repositoryService(GitHubProperties props) {
-        return new RepositoryService(new KeycloakTokenAwareGitHubClient(props.getService()));
-    }
-
-    @Bean
-    public ExtendedContentsService contentsService(GitHubProperties props) {
-        return new ExtendedContentsService(new KeycloakTokenAwareGitHubClient(props.getService()));
+        return new RepositoryService(new KeycloakProviderTokenAwareGitHubClient(props.getService()));
     }
 
     @Bean
     public UserService userService(GitHubProperties props) {
-        return new UserService(new KeycloakTokenAwareGitHubClient(props.getService()));
+        return new UserService(new KeycloakProviderTokenAwareGitHubClient(props.getService()));
     }
 
 }

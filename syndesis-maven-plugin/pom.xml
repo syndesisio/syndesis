@@ -201,6 +201,7 @@
             <ignoredClassPattern>org.infinispan.*</ignoredClassPattern>
             <ignoredClassPattern>org.springframework.security.crypto.*</ignoredClassPattern>
             <ignoredClassPattern>org.objectweb.asm.*</ignoredClassPattern>
+            <ignoredClassPattern>javax.ws.*</ignoredClassPattern>
           </ignoredClassPatterns>
           <ignoredResourcePatterns>
             <ignoredResourcePattern>about.html</ignoredResourcePattern>

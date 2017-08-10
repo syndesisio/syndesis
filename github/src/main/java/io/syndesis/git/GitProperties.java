@@ -13,8 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.github;
+package io.syndesis.git;
 
-public class GitHubServiceImplTest {
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+
+/**
+ * Git specific properties, set it in application.yml with a prefix "git."
+ */
+@ConfigurationProperties("git")
+public class GitProperties {
+
+    private String localGitRepoPath = System.getProperty("java.io.tmpdir");
+
+    public String getLocalGitRepoPath() {
+        return localGitRepoPath;
+    }
+
+    public void setLocalGitRepoPath(String localGitRepoPath) {
+        this.localGitRepoPath = localGitRepoPath;
+    }
 
 }
