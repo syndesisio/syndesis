@@ -59,7 +59,7 @@ public interface RuleFilterStep extends FilterStep {
 
     default List<FilterRule> extractRules(String rulesString) {
         try {
-            if (rulesString != null && rulesString.length() > 0) {
+            if (rulesString == null || rulesString.length() == 0) {
                 return null;
             }
             return Json.mapper().readValue(rulesString,new TypeReference<List<FilterRule>>(){});
