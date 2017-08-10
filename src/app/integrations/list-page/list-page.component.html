@@ -1,6 +1,16 @@
+<syndesis-list-toolbar [items]="integrations"
+                       [filteredItems]="filteredIntegrations"
+                       [actionTemplate]="actionTemplate">
+  <ng-template #actionTemplate>
+    <button type="button"
+            class="btn btn-primary toolbar-pf-action-right"
+            [routerLink]="['/integrations/create']">
+            Create Integration
+    </button>
+  </ng-template>
+</syndesis-list-toolbar>
+
 <div class="integrations list-page">
-  <syndesis-integrations-list-toolbar [(filter)]="filter"
-                                   [(sort)]="sort"></syndesis-integrations-list-toolbar>
   <p>&nbsp;</p>
   <tabset class="nav nav-tabs nav-tabs-pf">
     <tab heading="All" (select)="statusFilter.filter = ''"></tab>
@@ -9,7 +19,6 @@
     <tab heading="Draft" (select)="statusFilter.filter = 'Draft'"></tab>
   </tabset>
 
-  <syndesis-integrations-list [integrations]="integrations | async | objectPropertyFilter: statusFilter | objectPropertyFilter:filter | objectPropertySort:sort"
-
-                           [loading]="loading | async"></syndesis-integrations-list>
+  <syndesis-integrations-list [integrations]="filteredIntegrations | async | objectPropertyFilter: statusFilter"
+                              [loading]="loading | async"></syndesis-integrations-list>
 </div>

@@ -1,24 +1,28 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ToolbarModule } from 'patternfly-ng';
 
-import { IntegrationsListToolbarComponent } from './list-toolbar.component';
+import { ListToolbarComponent } from './list-toolbar.component';
 
-describe('IntegrationsListToolbarComponent', () => {
-  let component: IntegrationsListToolbarComponent;
-  let fixture: ComponentFixture<IntegrationsListToolbarComponent>;
+describe('ListToolbarComponent', () => {
+  let component: ListToolbarComponent<any>;
+  let fixture: ComponentFixture<ListToolbarComponent<any>>;
 
   beforeEach(
     async(() => {
       TestBed.configureTestingModule({
-        imports: [RouterTestingModule.withRoutes([])],
-        declarations: [IntegrationsListToolbarComponent],
+        imports: [
+          RouterTestingModule.withRoutes([]),
+          ToolbarModule,
+        ],
+        declarations: [ListToolbarComponent],
       }).compileComponents();
     }),
   );
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IntegrationsListToolbarComponent);
+    fixture = TestBed.createComponent(ListToolbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

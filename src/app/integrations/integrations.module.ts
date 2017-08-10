@@ -12,7 +12,7 @@ import {
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from 'syndesis.data.mapper';
 
-import { DynamicFormsPatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
+import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 import { IntegrationActionsModule } from './actions/actions.module';
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
 import { IntegrationBasicsComponent } from './edit-page/integration-basics/integration-basics.component';
@@ -27,7 +27,6 @@ import { DataMapperHostComponent } from './edit-page/step-configure/data-mapper/
 import { BasicFilterComponent } from './edit-page/step-configure/filter-steps/basic-filter.component';
 import { ListActionsComponent } from './edit-page/list-actions/list-actions.component';
 import { IntegrationsListPage } from './list-page/list-page.component';
-import { IntegrationsListToolbarComponent } from './list-toolbar/list-toolbar.component';
 import { IntegrationsFilterPipe } from './integrations-filter.pipe';
 import { IntegrationsListComponent } from './list/list.component';
 import { FlowViewComponent } from './edit-page/flow-view/flow-view.component';
@@ -78,7 +77,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     DynamicFormsCoreModule,
-    DynamicFormsPatternflyUIModule,
+    PatternflyUIModule,
     RouterModule.forChild(routes),
     ConnectionsModule,
     TabsModule,
@@ -103,7 +102,6 @@ const routes: Routes = [
     IntegrationsStepSelectComponent,
     IntegrationsStepConfigureComponent,
     IntegrationsListPage,
-    IntegrationsListToolbarComponent,
     IntegrationsSaveOrAddStepComponent,
     IntegrationsSelectActionComponent,
     IntegrationsSelectConnectionComponent,

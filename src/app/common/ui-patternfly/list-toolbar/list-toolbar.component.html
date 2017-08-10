@@ -3,11 +3,4 @@
               (onFilterChange)="filter()"
               (onFilterFieldSelect)="filterFieldSelected($event)"
               (onSortChange)="sort($event)">
-  <ng-template #actionTemplate>
-    <button *ngIf="showCreate" type="button"
-            class="btn btn-primary toolbar-pf-action-right"
-            [routerLink]="['/connections/create']">
-            Create Connection
-    </button>
-  </ng-template>
 </pfng-toolbar>

@@ -22,12 +22,11 @@ import { ConnectionViewPage } from './view-page.component';
 import { ConnectionViewWrapperComponent } from '../view-wrapper/view-wrapper.component';
 import { ConnectionViewToolbarComponent } from '../view-toolbar/view-toolbar.component';
 import { ConnectionsListComponent } from '../list/list.component';
-import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
 import { ConnectionViewComponent } from '../view/view.component';
 import { StoreModule } from '../../store/store.module';
 import { SyndesisCommonModule } from '../../common/common.module';
 import { CurrentConnectionService } from '../create-page/current-connection';
-import { DynamicFormsPatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
+import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
 
 describe('ConnectionViewPage', () => {
   let component: ConnectionViewPage;
@@ -41,7 +40,7 @@ describe('ConnectionViewPage', () => {
           FormsModule,
           ReactiveFormsModule,
           DynamicFormsCoreModule.forRoot(),
-          DynamicFormsPatternflyUIModule,
+          PatternflyUIModule,
           SyndesisCommonModule,
           StoreModule,
           RouterTestingModule.withRoutes([]),
@@ -49,7 +48,6 @@ describe('ConnectionViewPage', () => {
           ModalModule,
           BrowserAnimationsModule,
           TagInputModule,
-          ToolbarModule,
         ],
         declarations: [
           ConnectionViewPage,
@@ -57,7 +55,6 @@ describe('ConnectionViewPage', () => {
           ConnectionViewToolbarComponent,
           ConnectionViewComponent,
           ConnectionsListComponent,
-          ConnectionsListToolbarComponent,
         ],
         providers: [
           MockBackend,

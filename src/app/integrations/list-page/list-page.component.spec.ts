@@ -11,9 +11,9 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../../common/common.module';
+import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
 import { IntegrationsListPage } from './list-page.component';
 import { IntegrationsListComponent } from '../list/list.component';
-import { IntegrationsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
 import { StoreModule } from '../../store/store.module';
 import { IntegrationActionsModule } from '../actions/actions.module';
 
@@ -34,11 +34,11 @@ describe('IntegrationsListPage', () => {
           TabsModule.forRoot(),
           NotificationModule,
           IntegrationActionsModule,
+          PatternflyUIModule,
         ],
         declarations: [
           IntegrationsListPage,
           IntegrationsListComponent,
-          IntegrationsListToolbarComponent,
         ],
         providers: [
           MockBackend,

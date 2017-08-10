@@ -12,9 +12,9 @@ import { ToolbarModule } from 'patternfly-ng';
 import { StoreModule } from '../../store/store.module';
 
 import { SyndesisCommonModule } from '../../common/common.module';
+import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
 import { ConnectionsListPage } from './list-page.component';
 import { ConnectionsListComponent } from '../list/list.component';
-import { ConnectionsListToolbarComponent } from '../list-toolbar/list-toolbar.component';
 
 describe('ConnectionListPage', () => {
   let component: ConnectionsListPage;
@@ -31,12 +31,11 @@ describe('ConnectionListPage', () => {
           ModalModule.forRoot(),
           BsDropdownModule.forRoot(),
           NotificationModule,
-          ToolbarModule,
+          PatternflyUIModule,
         ],
         declarations: [
           ConnectionsListPage,
           ConnectionsListComponent,
-          ConnectionsListToolbarComponent,
         ],
         providers: [
           MockBackend,

@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+} from '@angular/core';
+
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -13,19 +22,19 @@ import {
   ToolbarConfig,
 } from 'patternfly-ng';
 
-import { ObjectPropertyFilterPipe } from '../../common/object-property-filter.pipe';
-import { ObjectPropertySortPipe } from '../../common/object-property-sort.pipe';
+import { ObjectPropertyFilterPipe } from '../../object-property-filter.pipe';
+import { ObjectPropertySortPipe } from '../../object-property-sort.pipe';
 
 @Component({
-  selector: 'syndesis-connections-list-toolbar',
+  selector: 'syndesis-list-toolbar',
   templateUrl: './list-toolbar.component.html',
   styleUrls: ['./list-toolbar.component.scss'],
 })
-export class ConnectionsListToolbarComponent<T> implements OnInit, OnDestroy {
+export class ListToolbarComponent<T> implements OnInit, OnDestroy {
 
-  @Input() showCreate = true;
   @Input() items: Observable<Array<T>> = Observable.empty();
   @Input() filteredItems: Subject<Array<T>>;
+  @Input() actionTemplate: TemplateRef<any>;
   toolbarConfig: ToolbarConfig;
   private _allItems: Array<T> = [];
   private _filteredItems: Array<T> = [];
