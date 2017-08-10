@@ -77,7 +77,7 @@ public final class Tokens {
         }
     }
 
-    public static String getProviderToken(String providerId) {
+    public static String fetchProviderTokenFromKeycloak(String providerId) {
         String keycloakTokenAsString = getAuthenticationToken();
 
         String issuer = getIssuer(keycloakTokenAsString);

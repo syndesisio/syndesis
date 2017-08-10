@@ -58,9 +58,8 @@ public class GitWorkflow {
      * @param message-              commit message
      * @param files-                map of file paths along with their content
      * @param credentials-          Git credentials, for example username/password, authToken, personal access token
-     * @return RevCommit, the commit info
      */
-    public RevCommit createFiles(String remoteGitRepoHttpUrl, String repoName, String message, Map<String, byte[]> files,
+    public void createFiles(String remoteGitRepoHttpUrl, String repoName, String message, Map<String, byte[]> files,
                                  UsernamePasswordCredentialsProvider credentials) {
 
         try {
@@ -79,10 +78,8 @@ public class GitWorkflow {
             remoteAddCommand.setUri(new URIish(remoteGitRepoHttpUrl));
             remoteAddCommand.call();
 
-            RevCommit commit = commitAndPush(git, message, credentials);
+            commitAndPush(git, message, credentials);
             removeWorkingDir(workingDir);
-            return commit;
-
         } catch (IOException | GitAPIException | URISyntaxException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
@@ -96,9 +93,8 @@ public class GitWorkflow {
      * @param message-              commit message
      * @param files-                map of file paths along with their content
      * @param credentials-          Git credentials, for example username/password, authToken, personal access token
-     * @return RevCommit, the commit info
      */
-    public RevCommit updateFiles(String remoteGitRepoHttpUrl, String repoName, String message, Map<String, byte[]> files,
+    public void updateFiles(String remoteGitRepoHttpUrl, String repoName, String message, Map<String, byte[]> files,
                                  UsernamePasswordCredentialsProvider credentials) {
 
         // create temporary directory
@@ -112,10 +108,8 @@ public class GitWorkflow {
             Git git = Git.cloneRepository().setDirectory(workingDir.toFile()).setURI(remoteGitRepoHttpUrl).call();
             writeFiles(workingDir, files);
 
-            RevCommit commit = commitAndPush(git, message, credentials);
+            commitAndPush(git, message, credentials);
             removeWorkingDir(workingDir);
-
-            return commit;
         } catch (IOException | GitAPIException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
@@ -146,7 +140,7 @@ public class GitWorkflow {
         }
     }
 
-    private RevCommit commitAndPush(Git git, String message, UsernamePasswordCredentialsProvider credentials)
+    private void commitAndPush(Git git, String message, UsernamePasswordCredentialsProvider credentials)
         throws GitAPIException {
 
         // git add .
@@ -164,8 +158,5 @@ public class GitWorkflow {
         if (!pushResult.iterator().next().getMessages().equals("")) {
             LOG.warn("git push messages: {}", pushResult.iterator().next().getMessages());
         }
-
-        return commit;
-
     }
 }

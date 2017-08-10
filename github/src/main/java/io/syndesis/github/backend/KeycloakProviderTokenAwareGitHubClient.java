@@ -45,7 +45,7 @@ public class KeycloakProviderTokenAwareGitHubClient extends GitHubClient {
     @Override
     protected HttpURLConnection configureRequest(final HttpURLConnection request) {
         super.configureRequest(request);
-        request.setRequestProperty(HEADER_AUTHORIZATION, AUTH_TOKEN + ' ' + Tokens.getProviderToken("github"));
+        request.setRequestProperty(HEADER_AUTHORIZATION, AUTH_TOKEN + ' ' + Tokens.fetchProviderTokenFromKeycloak("github"));
         return request;
     }
 }
