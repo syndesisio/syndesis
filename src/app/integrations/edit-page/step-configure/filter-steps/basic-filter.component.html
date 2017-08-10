@@ -9,31 +9,33 @@
 
     <div class="overflow-hidden content-margin basic-filter-form-container"
          *ngIf="formGroup">
+      <syndesis-loading [loading]="loading">
 
-      <form [formGroup]="formGroup"
-            class="basic-filter-form">
+        <form [formGroup]="formGroup"
+              class="basic-filter-form">
 
-        <syndesis-form-control *ngFor="let controlModel of basicFilterModel"
-                               [group]="formGroup"
-                               [model]="controlModel"
-                               (change)="onChange($event)">
+          <syndesis-form-control *ngFor="let controlModel of basicFilterModel"
+                                 [group]="formGroup"
+                                 [model]="controlModel"
+                                 (change)="onChange($event)">
 
-          <ng-template modelId="rulesFormArray"
-                       let-context="context"
-                       let-index="index">
+            <ng-template modelId="rulesFormArray"
+                         let-context="context"
+                         let-index="index">
 
-            <div class="pull-right rule-buttons">
-              <a *ngIf="index !== 0"
-                 class="fa fa-trash-o"
-                 (click)="remove(context, index)">
+              <div class="pull-right rule-buttons">
+                <a *ngIf="index !== 0"
+                   class="fa fa-trash-o"
+                   (click)="remove(context, index)">
               </a>
-            </div>
+              </div>
 
-          </ng-template>
+            </ng-template>
 
-        </syndesis-form-control>
+          </syndesis-form-control>
 
-      </form>
+        </form>
+      </syndesis-loading>
 
       <a (click)="add()"
          class="add-rule">+ Add another rule

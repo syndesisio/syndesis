@@ -7,7 +7,7 @@ import {
 } from '@ng2-dynamic-forms/core';
 import { Observable } from 'rxjs/Observable';
 
-import { BasicFilter, Rule } from './filter.interface';
+import { BasicFilter, Rule, Op, getDefaultOps, convertOps } from './filter.interface';
 
 export function findById(id: string, model: any): any {
   switch (typeof model) {
@@ -31,7 +31,14 @@ export function findById(id: string, model: any): any {
   return false;
 }
 
-export function createBasicFilterModel(configuredProperties: BasicFilter) {
+export function createBasicFilterModel(configuredProperties: BasicFilter, ops: Array<Op> = [], paths: Array<string> = []) {
+
+  if (!ops || !ops.length) {
+    ops = getDefaultOps();
+  } else {
+    ops = convertOps(ops);
+  }
+
   // inline this function since we use it in a couple places
   function groupFactory(rule?) {
     return [
@@ -39,8 +46,9 @@ export function createBasicFilterModel(configuredProperties: BasicFilter) {
         {
           id: 'path',
           maxLength: 51,
-          placeholder: 'Status.Text',
+          placeholder: paths.length ? paths[0] : 'Field Name',
           value: rule ? rule.path : undefined,
+          list: paths,
           //suffix: 'Browse...', // This is just a suffix; this whole field needs to change
         },
         {
@@ -56,32 +64,7 @@ export function createBasicFilterModel(configuredProperties: BasicFilter) {
         {
           id: 'op',
           value: rule ? rule.op : 'contains',
-          options: Observable.of([
-            {
-              label: 'Contains',
-              value: 'contains',
-            },
-            {
-              label: 'Does Not Contain',
-              value: 'not contains',
-            },
-            {
-              label: 'Matches Regex',
-              value: 'regex',
-            },
-            {
-              label: 'Does Not Match Regex',
-              value: 'not regex',
-            },
-            {
-              label: 'Starts With',
-              value: 'starts with',
-            },
-            {
-              label: 'Ends With',
-              value: 'ends with',
-            },
-          ]),
+          options: Observable.of(<any> ops),
         },
         {
           element: {
