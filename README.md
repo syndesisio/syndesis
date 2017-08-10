@@ -180,7 +180,7 @@ oc login -u system:admin
 # .....
 
 # Use the result of this command as callback URL for the GitHub registration:
-echo https://syndesis.$(minishift ip).xip.io
+echo https://syndesis.$(minishift ip).nip.io
 
 # Set your GitHub credentials
 GITHUB_CLIENT_ID=....
@@ -192,7 +192,7 @@ oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-tem
 # Create an App. Add the propert GitHub credentials. Use "syndesis-dev" or "syndesis" depending on the template
 # you have installed
 oc new-app syndesis-dev \
-    -p ROUTE_HOSTNAME=syndesis.$(minishift ip).xip.io \
+    -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
     -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} \
@@ -204,5 +204,5 @@ oc new-app syndesis-dev \
 watch oc get pods
 
 # Open browser pointing ot the app
-open https://syndesis.$(minishift ip).xip.io
+open https://syndesis.$(minishift ip).nip.io
 ```
