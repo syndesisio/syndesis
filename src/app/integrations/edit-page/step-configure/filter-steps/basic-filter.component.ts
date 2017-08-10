@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation, OnChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation,
+  OnChanges,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import {
   DynamicFormService,
@@ -18,71 +26,115 @@ import { BasicFilter } from './filter.interface';
   selector: 'syndesis-basic-filter',
   templateUrl: './basic-filter.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: [ './basic-filter.component.scss' ],
+  styleUrls: ['./basic-filter.component.scss'],
 })
-
 export class BasicFilterComponent implements OnChanges {
-
   basicFilterModel: DynamicFormControlModel[];
   formGroup: FormGroup;
   predicateControl: FormControl;
   predicateModel: DynamicInputModel;
   rulesArrayControl: FormArray;
   rulesArrayModel: DynamicFormArrayModel;
+  loading = true;
 
   @Input() position;
   @Input()
   configuredProperties: BasicFilter = {
-    'type': 'rule',
-    'predicate': 'AND',
-    'simple': '${body} contains \'antman\' || ${in.header.publisher} =~ \'DC Comics\'',
-    'rules': [
+    type: 'rule',
+    predicate: 'AND',
+    simple:
+      "${body} contains 'antman' || ${in.header.publisher} =~ 'DC Comics'",
+    rules: [
       {
-        'path': 'body.text',
-        'value': 'antman',
+        path: 'body.text',
+        value: 'antman',
       },
       {
-        'path': 'header.kind',
-        'op': '=~',
-        'value': 'DC Comics',
+        path: 'header.kind',
+        op: '=~',
+        value: 'DC Comics',
       },
     ],
   };
   @Output() configuredPropertiesChange = new EventEmitter<BasicFilter>();
 
-  constructor(public currentFlow: CurrentFlow,
-              public integrationSupport: IntegrationSupportService,
-              private formService: DynamicFormService) {
-  }
+  constructor(
+    public currentFlow: CurrentFlow,
+    public integrationSupport: IntegrationSupportService,
+    private formService: DynamicFormService,
+    private detector: ChangeDetectorRef,
+  ) {}
 
   ngOnChanges(changes: any) {
     if (!('position' in changes)) {
       return;
     }
+    this.loading = true;
+    const self = this;
 
-    this.basicFilterModel = createBasicFilterModel(this.configuredProperties);
+    // this can be valid even if we can't fetch the form data
+    function initializeForm(ops?, paths?) {
+      self.basicFilterModel = createBasicFilterModel(
+        self.configuredProperties,
+        ops,
+        paths,
+      );
+      self.formGroup = self.formService.createFormGroup(self.basicFilterModel);
+      self.predicateControl = self.formGroup
+        .get('filterSettingsGroup')
+        .get('predicate') as FormControl;
+      self.predicateModel = findById(
+        'predicate',
+        self.basicFilterModel,
+      ) as DynamicInputModel;
+      self.rulesArrayControl = self.formGroup
+        .get('rulesGroup')
+        .get('rulesFormArray') as FormArray;
+      self.rulesArrayModel = findById(
+        'rulesFormArray',
+        self.basicFilterModel,
+      ) as DynamicFormArrayModel;
+      self.loading = false;
+      self.detector.detectChanges();
+    }
 
-    this.integrationSupport.getFilterOptions(this.currentFlow.getIntegrationClone()).toPromise().then((resp: any) => {
-      console.dir(JSON.parse(resp['_body']));
-      log.info('Filter option response: ' + JSON.stringify(resp));
-    });
-
-    this.formGroup = this.formService.createFormGroup(this.basicFilterModel);
-
-    this.predicateControl = this.formGroup.get('filterSettingsGroup').get('predicate') as FormControl;
-    this.predicateModel = findById('predicate', this.basicFilterModel) as DynamicInputModel;
-
-    this.rulesArrayControl = this.formGroup.get('rulesGroup').get('rulesFormArray') as FormArray;
-    this.rulesArrayModel = findById('rulesFormArray', this.basicFilterModel) as DynamicFormArrayModel;
+    // Fetch our form data
+    this.integrationSupport
+      .getFilterOptions(this.currentFlow.getIntegrationClone())
+      .toPromise()
+      .then((resp: any) => {
+        const body = JSON.parse(resp['_body']);
+        const ops = body.ops;
+        const paths = body.paths;
+        initializeForm(ops, paths);
+      })
+      .catch(error => {
+        try {
+          log.infoc(
+            () => 'Failed to fetch filter form data: ' + JSON.parse(error),
+          );
+        } catch (err) {
+          log.infoc(() => 'Failed to fetch filter form data: ' + error);
+        }
+        // we can handle this for now using default values
+        initializeForm();
+      });
   }
 
   // Manage Individual Fields
   add() {
-    this.formService.addFormArrayGroup(this.rulesArrayControl, this.rulesArrayModel);
+    this.formService.addFormArrayGroup(
+      this.rulesArrayControl,
+      this.rulesArrayModel,
+    );
   }
 
   remove(context: DynamicFormArrayModel, index: number) {
-    this.formService.removeFormArrayGroup(index, this.rulesArrayControl, context);
+    this.formService.removeFormArrayGroup(
+      index,
+      this.rulesArrayControl,
+      context,
+    );
   }
 
   onChange($event) {
