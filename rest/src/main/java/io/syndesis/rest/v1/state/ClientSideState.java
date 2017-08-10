@@ -41,6 +41,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import io.syndesis.credential.CredentialModule;
+
 /**
  * Persists given state on the client with these properties:
  * <ul>
@@ -69,7 +71,7 @@ public final class ClientSideState {
 
     private static final int IV_LEN = 16;
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper().registerModule(new CredentialModule());
 
     private final BiFunction<Class<?>, byte[], Object> deserialization;
 
@@ -122,7 +124,7 @@ public final class ClientSideState {
     }
 
     public NewCookie persist(final String key, final String path, final Object value) {
-        return new NewCookie(key, protect(value), path, null, null, NewCookie.DEFAULT_MAX_AGE, true, true);
+        return new NewCookie(key, protect(value), path, null, null, NewCookie.DEFAULT_MAX_AGE, true, false);
     }
 
     public <T> T restoreFrom(final Cookie cookie, final Class<T> type) {
@@ -229,7 +231,7 @@ public final class ClientSideState {
         try {
             return reader.readValue(pickle);
         } catch (final IOException e) {
-            throw new IllegalArgumentException("Unable to serialize given pickle to value", e);
+            throw new IllegalArgumentException("Unable to deserialize given pickle to value", e);
         }
     }
 

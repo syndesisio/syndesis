@@ -37,6 +37,7 @@ final class CredentialFlowStateHelper {
 
     /* default */ static void removeCookie(final HttpServletResponse response, final String cookieName) {
         final Cookie removal = new Cookie(cookieName, "");
+        removal.setPath("/");
         removal.setMaxAge(0);
         removal.setHttpOnly(true);
         removal.setSecure(true);
@@ -72,7 +73,8 @@ final class CredentialFlowStateHelper {
             LOG.debug("Unable to restore flow state from HTTP cookie: {}", cookie, e);
         }
 
-        // remove cookies that can't be restored or have mismatched name/value
+        // remove cookies that can't be restored or have mismatched
+        // name/value
         removeCookie(response, cookie.getName());
 
         return null;

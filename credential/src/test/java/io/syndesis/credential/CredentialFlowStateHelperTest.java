@@ -154,6 +154,7 @@ public class CredentialFlowStateHelperTest {
 
     private Cookie removalOf(final String name) {
         final Cookie removal = new Cookie(name, "");
+        removal.setPath("/");
         removal.setMaxAge(0);
         removal.setHttpOnly(true);
         removal.setSecure(true);

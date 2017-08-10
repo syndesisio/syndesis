@@ -16,6 +16,7 @@
 package io.syndesis.rest.v1.handler.credential;
 
 import java.net.URI;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -57,15 +58,15 @@ public class CredentialHandler {
     public Response callback(@Context final HttpServletRequest request, @Context final HttpServletResponse response) {
         final Optional<CredentialFlowState> maybeUpdatedFlowState = CredentialFlowState.Builder
             .restoreFrom(state::restoreFrom, request, response).map(s -> s.updateFrom(request))
-            .map(s -> tryToFinishAcquisition(request, s)).findFirst();
+            .map(s -> tryToFinishAcquisition(request, s)).filter(Objects::nonNull).findFirst();
 
         final CredentialFlowState flowState = maybeUpdatedFlowState
             .orElseThrow(() -> new EntityNotFoundException("Unable to finish OAuth authorization via callback, "
                 + "cannot find the OAuth flow state this callback request relates to"));
         final URI returnUrl = flowState.getReturnUrl();
 
-        return Response.temporaryRedirect(returnUrl)
-            .cookie(state.persist(flowState.persistenceKey(), "/", flowState)).build();
+        return Response.temporaryRedirect(returnUrl).cookie(state.persist(flowState.persistenceKey(), "/", flowState))
+            .build();
     }
 
     protected CredentialFlowState tryToFinishAcquisition(final HttpServletRequest request,

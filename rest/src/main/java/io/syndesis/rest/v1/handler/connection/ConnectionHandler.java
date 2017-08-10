@@ -18,6 +18,7 @@ package io.syndesis.rest.v1.handler.connection;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
@@ -86,8 +87,15 @@ public class ConnectionHandler extends BaseHandler
         final Optional<CredentialFlowState> flowState = CredentialFlowState.Builder
             .restoreFrom(state::restoreFrom, request, response).findFirst();
 
-        final Connection connectionToCreate = flowState.map(s -> credentials.apply(updatedConnection, s))
-            .orElse(updatedConnection);
+        final Connection connectionToCreate = flowState.map(s -> {
+            final Cookie removal = new Cookie(s.persistenceKey(), "");
+            removal.setPath("/");
+            removal.setMaxAge(0);
+
+            response.addCookie(removal);
+
+            return credentials.apply(updatedConnection, s);
+        }).orElse(updatedConnection);
 
         return Creator.super.create(connectionToCreate);
     }
