@@ -16,6 +16,9 @@
 
 package io.syndesis.model.integration;
 
+import java.util.Locale;
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.syndesis.model.filter.*;
@@ -28,12 +31,13 @@ public class StepDeserializerTest {
     @Test
     public void shouldDeserializeRuleFilterStep() throws Exception {
         RuleFilterStep step = readTestFilter("/rule-filter-step.json");
-        RuleFilterStep ruleFilterStep = (RuleFilterStep) step;
-        assertEquals("1", ruleFilterStep.getId().get());
-        assertEquals(FilterPredicate.AND, ruleFilterStep.getPredicate());
-        assertEquals("rule-filter", ruleFilterStep.getStepKind());
-        assertEquals(2, ruleFilterStep.getRules().size());
-        assertEquals("${body.text} == 'antman' && ${header.kind} =~ 'DC Comics'", ruleFilterStep.getFilterExpression());
+        assertEquals("1", step.getId().get());
+        assertTrue(step.getConfiguredProperties().isPresent());
+        Map<String, String> props = step.getConfiguredProperties().get();
+        assertEquals(FilterPredicate.AND, FilterPredicate.valueOf(props.get("predicate").toUpperCase(Locale.US)));
+        assertNotNull(props.get("rules"));
+        assertEquals("rule-filter", step.getStepKind());
+        assertEquals("${body.text} == 'antman' && ${header.kind} =~ 'DC Comics'", step.getFilterExpression());
     }
 
     @Test
