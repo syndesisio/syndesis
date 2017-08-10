@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation, OnChanges } from '@angular/core';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import {
   DynamicFormService,
@@ -21,7 +21,7 @@ import { BasicFilter } from './filter.interface';
   styleUrls: [ './basic-filter.component.scss' ],
 })
 
-export class BasicFilterComponent implements OnInit {
+export class BasicFilterComponent implements OnChanges {
 
   basicFilterModel: DynamicFormControlModel[];
   formGroup: FormGroup;
@@ -55,7 +55,7 @@ export class BasicFilterComponent implements OnInit {
               private formService: DynamicFormService) {
   }
 
-  ngOnInit() {
+  ngOnChanges() {
     this.basicFilterModel = createBasicFilterModel(this.configuredProperties);
 
     this.integrationSupport.getFilterOptions(this.currentFlow.getIntegrationClone()).toPromise().then((resp: any) => {

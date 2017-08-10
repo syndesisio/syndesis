@@ -6,7 +6,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
@@ -113,10 +113,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.params
-      .pluck<Params, string>('position')
-      .map((position: string) => {
-        this.position = Number.parseInt(position);
+    this.routeSubscription = this.route.paramMap
+      .subscribe((paramMap: ParamMap) => {
+        this.position = +paramMap.get('position');
         const step = (this.step = <Step>this.currentFlow.getStep(
           this.position,
         ));
@@ -180,8 +179,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
           kind: 'integration-action-configure',
           position: this.position,
         });
-      })
-      .subscribe();
+      });
   }
 
   ngOnDestroy() {
