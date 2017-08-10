@@ -118,7 +118,7 @@ public class ClientSideStateTest {
         assertThat(cookie.getValue())
             .isEqualTo("pzSOjcNui9-HWS_Qk1Pwpg|MTM0NzI2NTk1NQ|dGlk|tL3lJPf2nUSFMN6dtVXJTw|uea1fgC67RmOxfpNz8gMbnPWfDA");
         assertThat(cookie.getPath()).isEqualTo("/path");
-        assertThat(cookie.isHttpOnly()).isTrue();
+        assertThat(cookie.isHttpOnly()).isFalse();
         assertThat(cookie.isSecure()).isTrue();
     }
 

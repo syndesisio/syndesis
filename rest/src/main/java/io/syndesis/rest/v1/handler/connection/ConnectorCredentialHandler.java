@@ -68,8 +68,7 @@ public class ConnectorCredentialHandler {
             absoluteTo(httpRequest, request.getReturnUrl()));
 
         final CredentialFlowState flowState = acquisitionFlow.state().get();
-        final NewCookie conservativeCookie = state.persist(flowState.persistenceKey(), "/", flowState);
-        final NewCookie cookie = new NewCookie(conservativeCookie.getName(), conservativeCookie.getValue());
+        final NewCookie cookie = state.persist(flowState.persistenceKey(), "/", flowState);
 
         final AcquisitionResponse acquisitionResponse = AcquisitionResponse.Builder.from(acquisitionFlow)
             .state(State.Builder.cookie(cookie.toString())).build();
