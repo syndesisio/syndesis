@@ -43,7 +43,7 @@ public class GitHubServiceImpl implements GitHubService {
 
     private final RepositoryService repositoryService;
     private final UserService userService;
-    private GitWorkflow gitWorkflow;
+    private final GitWorkflow gitWorkflow;
 
     public GitHubServiceImpl(RepositoryService repositoryService, UserService userService, GitWorkflow gitWorkflow) {
         this.repositoryService = repositoryService;
