@@ -48,6 +48,10 @@
       component: syndesis-db
     strategy:
       type: Recreate
+      resources:
+        limits:
+          cpu: "100m"
+          memory: "256Mi"
     template:
       metadata:
         labels:
