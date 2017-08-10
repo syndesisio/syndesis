@@ -231,8 +231,7 @@ public class CredentialITCase extends BaseITCase {
     }
 
     private HttpHeaders persistAsCookie(final OAuth2CredentialFlowState flowState) {
-        final NewCookie cookie = clientSideState.persist(flowState.persistenceKey(), "/api/v1/credentials/callback",
-            flowState);
+        final NewCookie cookie = clientSideState.persist(flowState.persistenceKey(), "/", flowState);
 
         final HttpHeaders cookies = new HttpHeaders();
         cookies.add(HttpHeaders.COOKIE, cookie.toString());
