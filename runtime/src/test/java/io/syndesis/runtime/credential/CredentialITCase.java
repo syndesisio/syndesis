@@ -137,6 +137,7 @@ public class CredentialITCase extends BaseITCase {
         assertThat(connectionResponse.hasBody()).as("Should contain created connection").isTrue();
 
         final Connection createdConnection = connectionResponse.getBody();
+        assertThat(createdConnection.isDerived()).isTrue();
         assertThat(createdConnection.getConfiguredProperties()).containsOnly(entry("accessToken", "token"),
             entry("clientId", "appId"), entry("clientSecret", "appSecret"));
     }

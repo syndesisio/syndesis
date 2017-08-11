@@ -18,6 +18,8 @@ package io.syndesis.credential;
 import java.net.URI;
 import java.util.Optional;
 
+import io.syndesis.model.connection.Connection;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +40,7 @@ import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.util.MultiValueMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
@@ -173,6 +176,30 @@ public class CredentialsTest {
     }
 
     @Test
+    public void shouldApplyReceivedCredentialsToConnections() {
+        final CredentialProvider credentialProvider = mock(CredentialProvider.class);
+
+        when(locator.providerWithId("providerId")).thenReturn(credentialProvider);
+
+        final CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder().providerId("providerId")
+            .returnUrl(URI.create("/ui#state")).code("code").state("state").build();
+
+        @SuppressWarnings("PMD.CloseResource")
+        final Connection connection = new Connection.Builder().build();
+        when(credentialProvider.applyTo(new Connection.Builder().createFrom(connection).isDerived(true).build(),
+            flowState))
+                .then(a -> new Connection.Builder().createFrom(a.getArgumentAt(0, Connection.class))
+                    .putConfiguredProperty("key", "value").build());
+
+        @SuppressWarnings("PMD.CloseResource")
+        final Connection finishedConnection = credentials.apply(connection, flowState);
+
+        assertThat(finishedConnection).isNotNull();
+        assertThat(finishedConnection.getConfiguredProperties()).contains(entry("key", "value"));
+        assertThat(finishedConnection.isDerived()).isTrue();
+    }
+
+    @Test
     public void shouldFinishOAuth1Acquisition() {
         final OAuthToken token = new OAuthToken("value", "secret");
 
@@ -239,5 +266,4 @@ public class CredentialsTest {
         assertThat(finalFlowState)
             .isEqualTo(new OAuth2CredentialFlowState.Builder().createFrom(flowState).accessGrant(accessGrant).build());
     }
-
 }

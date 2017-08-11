@@ -65,7 +65,11 @@ public final class Credentials {
     public Connection apply(final Connection updatedConnection, final CredentialFlowState flowState) {
         final CredentialProvider credentialProvider = providerFrom(flowState);
 
-        return credentialProvider.applyTo(updatedConnection, flowState);
+        @SuppressWarnings("PMD.CloseResource")
+        final Connection withDerivedFlag = new Connection.Builder().createFrom(updatedConnection).isDerived(true)
+            .build();
+
+        return credentialProvider.applyTo(withDerivedFlag, flowState);
     }
 
     public CredentialFlowState finishAcquisition(final CredentialFlowState flowState, final URI baseUrl) {
