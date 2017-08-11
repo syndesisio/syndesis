@@ -37,12 +37,21 @@ public class GitHubConfiguration {
 
     @Bean
     public RepositoryService repositoryService(GitHubProperties props) {
-        return new RepositoryService(new KeycloakProviderTokenAwareGitHubClient(props.getService()));
+        String service = props.getService();
+        return new RepositoryService(
+            service != null ?
+                new KeycloakProviderTokenAwareGitHubClient(service) :
+                new KeycloakProviderTokenAwareGitHubClient());
     }
 
     @Bean
     public UserService userService(GitHubProperties props) {
-        return new UserService(new KeycloakProviderTokenAwareGitHubClient(props.getService()));
+        String service = props.getService();
+        return new UserService(
+            service != null ?
+                new KeycloakProviderTokenAwareGitHubClient(service) :
+                new KeycloakProviderTokenAwareGitHubClient());
+
     }
 
 }

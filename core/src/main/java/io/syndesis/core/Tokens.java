@@ -15,13 +15,9 @@
  */
 package io.syndesis.core;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.keycloak.TokenVerifier;
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
-import org.keycloak.common.VerificationException;
-import org.keycloak.representations.AccessTokenResponse;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.function.UnaryOperator;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -30,9 +26,41 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import java.io.IOException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.keycloak.TokenVerifier;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.common.VerificationException;
+import org.keycloak.representations.AccessTokenResponse;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 
 public final class Tokens {
+
+    public enum TokenProvider implements UnaryOperator<String> {
+        OPENSHIFT {
+            @Override
+            public String apply(String s) {
+                ObjectMapper om = new ObjectMapper();
+                try {
+                    AccessTokenResponse accessToken = om.readValue(s, AccessTokenResponse.class);
+                    return accessToken.getToken();
+                } catch (IOException e) {
+                    throw SyndesisServerException.launderThrowable(e);
+                }
+            }
+        },
+
+        GITHUB {
+            @Override
+            public String apply(String s) {
+                MultiValueMap<String, String> params = UriComponentsBuilder.fromUriString("").query(s).build().getQueryParams();
+                return params.getFirst("access_token");
+            }
+        }
+    }
 
     private static final ThreadLocal<String> OAUTH_TOKEN = new InheritableThreadLocal<>();
 
@@ -77,10 +105,13 @@ public final class Tokens {
         }
     }
 
-    public static String fetchProviderTokenFromKeycloak(String providerId) {
+    public static String fetchProviderTokenFromKeycloak(TokenProvider provider) {
+        String providerId = provider.toString().toLowerCase(Locale.ENGLISH);
+
         String keycloakTokenAsString = getAuthenticationToken();
 
         String issuer = getIssuer(keycloakTokenAsString);
+
 
         String tokenEndpointUrl = issuer + "/broker/" + providerId + "/token";
         final String authHeader = "Bearer " + keycloakTokenAsString;
@@ -106,25 +137,7 @@ public final class Tokens {
             );
         }
 
-        String contentTypeHeader = response.getHeaderString("Content-Type");
-        if (!"application/json".equals(contentTypeHeader)) {
-            throw new IllegalStateException(
-                String.format(
-                    "Unable to retrieve token for provider %s from URL %s, expected Content-Type application/json, received %s",
-                    providerId,
-                    tokenEndpointUrl,
-                    contentTypeHeader
-                )
-            );
-        }
-
-        ObjectMapper om = new ObjectMapper();
-        try {
-            AccessTokenResponse accessToken = om.readValue(responseBody, AccessTokenResponse.class);
-            return accessToken.getToken();
-        } catch (IOException e) {
-            throw SyndesisServerException.launderThrowable(e);
-        }
+        return provider.apply(responseBody);
     }
 
     public static void setAuthenticationToken(String token) {
