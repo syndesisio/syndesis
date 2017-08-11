@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.validation.Validator;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -37,23 +40,30 @@ import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Integration.Status;
+import io.syndesis.model.validation.UniquenessRequired;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Creator;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.operations.Updater;
+import io.syndesis.rest.v1.operations.Validating;
+
 import org.springframework.stereotype.Component;
 
 @Path("/integrations")
 @Api(value = "integrations")
 @Component
-public class IntegrationHandler extends BaseHandler implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration> {
+public class IntegrationHandler extends BaseHandler
+    implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration>, Validating<Integration> {
 
     private final ClassInspector classInspector;
 
-    public IntegrationHandler(DataManager dataMgr, ClassInspector classInspector) {
+    private final Validator validator;
+
+    public IntegrationHandler(final DataManager dataMgr, final Validator validator, final ClassInspector classInspector) {
         super(dataMgr);
+        this.validator = validator;
         this.classInspector = classInspector;
     }
 
@@ -79,7 +89,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     }
 
     @Override
-    public Integration create(Integration integration) {
+    public Integration create(@ConvertGroup(from = Default.class, to = UniquenessRequired.class) final Integration integration) {
         Date rightNow = new Date();
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(integration)
@@ -143,5 +153,10 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         return desiredStatus == Integration.Status.Draft ?
             Integration.Status.Draft :
             Integration.Status.Pending;
+    }
+
+    @Override
+    public Validator getValidator() {
+        return validator;
     }
 }

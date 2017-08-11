@@ -22,6 +22,9 @@ import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.user.User;
+import io.syndesis.model.validation.UniqueProperty;
+import io.syndesis.model.validation.UniquenessRequired;
+
 import org.immutables.value.Value;
 
 import java.io.Serializable;
@@ -32,6 +35,7 @@ import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
+@UniqueProperty(value = "name", groups = UniquenessRequired.class)
 public interface Integration extends WithId<Integration>, WithTags, WithName, Serializable {
 
     enum Status { Draft, Pending, Activated, Deactivated, Deleted}
