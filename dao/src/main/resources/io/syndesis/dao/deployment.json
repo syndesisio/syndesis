@@ -194,6 +194,21 @@
           "defaultValue": "https://login.salesforce.com",
           "description": "URL of the Salesforce instance by default set to https://login.salesforce.com"
         },
+        "instanceUrl": {
+          "kind": "property",
+          "displayName": "Instance URL",
+          "group": "security",
+          "label": "common,security",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags":[],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "defaultValue": "https://xx.salesforce.com",
+          "description": "URL of the Salesforce instance"
+        },
         "clientId": {
           "kind": "property",
           "displayName": "Client Id",
