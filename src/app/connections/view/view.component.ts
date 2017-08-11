@@ -183,7 +183,9 @@ export class ConnectionViewComponent implements OnInit, OnChanges, OnDestroy {
       const props = JSON.parse(JSON.stringify(connection.connector.properties));
       if (connection.configuredProperties) {
         Object.keys(connection.configuredProperties).forEach(key => {
-          props[key].value = connection.configuredProperties[key];
+          if (props[key]) {
+            props[key].value = connection.configuredProperties[key];
+          }
         });
       } else {
         connection.configuredProperties = {};
