@@ -17,8 +17,13 @@ package io.syndesis.project.converter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -36,8 +41,10 @@ import io.syndesis.integration.model.Flow;
 import io.syndesis.integration.model.SyndesisHelpers;
 import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.model.steps.Endpoint;
+import io.syndesis.integration.support.Strings;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
+import io.syndesis.project.converter.ProjectGeneratorProperties.Templates;
 import io.syndesis.project.converter.visitor.GeneratorContext;
 import io.syndesis.project.converter.visitor.StepVisitor;
 import io.syndesis.project.converter.visitor.StepVisitorContext;
@@ -54,27 +61,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     private final MustacheFactory mf = new DefaultMustacheFactory();
 
-    private final Mustache readmeMustache = mf.compile(
-        new InputStreamReader(getClass().getResourceAsStream("templates/README.md.mustache"), UTF_8),
-        "README.md"
-    );
-    private final Mustache applicationJavaMustache = mf.compile(
-        new InputStreamReader(getClass().getResourceAsStream("templates/Application.java.mustache"), UTF_8),
-        "Application.java"
-    );
-
-    private final Mustache applicationYmlMustache = mf.compile(
-        new InputStreamReader(getClass().getResourceAsStream("templates/application.properties.mustache"), UTF_8),
-        "application.properties"
-    );
-
-    private final Mustache pomMustache = mf.compile(
-        new InputStreamReader(getClass().getResourceAsStream("templates/pom.xml.mustache"), UTF_8),
-        "pom.xml"
-    );
-
-    /**
-     * Not required for the moment, needed for local forking of a maven process
+    /*
+    Not required for the moment, needed for local forking of a maven process
     private Mustache connectorPomMustache = mf.compile(
         new InputStreamReader(getClass().getResourceAsStream("templates/connector/pom.xml.mustache")),
         "pom.xml"
@@ -83,13 +71,45 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     private final ConnectorCatalog connectorCatalog;
     private final ProjectGeneratorProperties generatorProperties;
     private final StepVisitorFactoryRegistry registry;
+    private final Mustache readmeMustache;
+    private final Mustache applicationJavaMustache;
+    private final Mustache applicationPropertiesMustache;
+    private final Mustache pomMustache;
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultProjectGenerator.class);
 
-    public DefaultProjectGenerator(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties, StepVisitorFactoryRegistry registry) {
+    public DefaultProjectGenerator(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties, StepVisitorFactoryRegistry registry) throws IOException {
         this.connectorCatalog = connectorCatalog;
         this.generatorProperties = generatorProperties;
         this.registry = registry;
+        this.readmeMustache = compile(generatorProperties, "README.md.mustache", "README.md");
+        this.applicationJavaMustache = compile(generatorProperties, "Application.java.mustache", "Application.java");
+        this.applicationPropertiesMustache = compile(generatorProperties, "application.properties.mustache", "application.properties");
+        this.pomMustache = compile(generatorProperties, "pom.xml.mustache", "pom.xml");
+    }
+
+    private Mustache compile(ProjectGeneratorProperties generatorProperties, String template, String name) throws IOException {
+        String overridePath = generatorProperties.getTemplates().getOverridePath();
+        URL resource = null;
+
+        if (!Strings.isEmpty(overridePath)) {
+            resource = getClass().getResource("templates/" + overridePath + "/" + template);
+        }
+        if (resource == null) {
+            resource = getClass().getResource("templates/" + template);
+        }
+        if (resource == null) {
+            throw new IllegalArgumentException(
+                String.format("Unable to find te required template (overridePath=%s, template=%s)"
+                    , overridePath
+                    , template
+                )
+            );
+        }
+
+        try (InputStream stream = resource.openStream()) {
+            return mf.compile(new InputStreamReader(stream, UTF_8), name);
+        }
     }
 
     @Override
@@ -104,9 +124,36 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         });
 
         Map<String, byte[]> contents = new HashMap<>();
+
+        for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
+            String overridePath = generatorProperties.getTemplates().getOverridePath();
+            URL resource = null;
+
+            if (!Strings.isEmpty(overridePath)) {
+                resource = getClass().getResource("templates/" + overridePath + "/" + additionalResource.getSource());
+            }
+            if (resource == null) {
+                resource = getClass().getResource("templates/" + additionalResource.getSource());
+            }
+            if (resource == null) {
+                throw new IllegalArgumentException(
+                    String.format("Unable to find te required additional resource (overridePath=%s, source=%s)"
+                        , overridePath
+                        , additionalResource.getSource()
+                    )
+                );
+            }
+
+            try {
+                contents.put(additionalResource.getDestination(), Files.readAllBytes(Paths.get(resource.toURI())));
+            } catch (URISyntaxException e) {
+                throw new IOException(e);
+            }
+        }
+
         contents.put("README.md", generateFromRequest(request, readmeMustache));
         contents.put("src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
-        contents.put("src/main/resources/application.properties", generateFromRequest(request, applicationYmlMustache));
+        contents.put("src/main/resources/application.properties", generateFromRequest(request, applicationPropertiesMustache));
         contents.put("src/main/resources/syndesis.yml", generateFlowYaml(contents, request));
         contents.put("pom.xml", generatePom(request.getIntegration()));
 
