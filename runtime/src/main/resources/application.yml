@@ -65,7 +65,6 @@ openshift:
 # GitHub service specific config
 github:
   enabled: true
-  service: syndesis-github-proxy
 
 verifier:
   kind: service

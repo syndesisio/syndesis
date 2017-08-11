@@ -15,6 +15,18 @@
  */
 package io.syndesis.core;
 
+import java.io.IOException;
+import java.util.Locale;
+import java.util.function.UnaryOperator;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.keycloak.TokenVerifier;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
@@ -25,21 +37,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import java.io.IOException;
-import java.util.Locale;
-import java.util.function.UnaryOperator;
-
 public final class Tokens {
 
     public enum TokenProvider implements UnaryOperator<String> {
-        GITHUB {
+        OPENSHIFT {
             @Override
             public String apply(String s) {
                 ObjectMapper om = new ObjectMapper();
@@ -52,7 +53,7 @@ public final class Tokens {
             }
         },
 
-        OPENSHIFT {
+        GITHUB {
             @Override
             public String apply(String s) {
                 MultiValueMap<String, String> params = UriComponentsBuilder.fromUriString("").query(s).build().getQueryParams();
@@ -134,10 +135,6 @@ public final class Tokens {
                     responseBody
                 )
             );
-        }
-
-        if (provider != TokenProvider.OPENSHIFT && provider != TokenProvider.GITHUB) {
-            throw new IllegalArgumentException("Unsupported provider type: " + provider);
         }
 
         return provider.apply(responseBody);
