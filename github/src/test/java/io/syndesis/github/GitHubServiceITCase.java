@@ -78,9 +78,8 @@ public class GitHubServiceITCase {
 
         webserver.expect().get().withPath("/auth/realms/syndesis-it/broker/github/token").andReturn(
             200,
-            "{\"access_token\":\"" + authToken + "\",\"expires_in\":2678400,\"scope\":\"user:info user:check-access role:edit:syndesis-staging:! role:system:build-strategy-source:syndesis-staging\",\"token_type\":\"Bearer\"}"
+            "access_token=" + authToken + "&scope=public_repo%2Cuser%3Aemail&token_type=bearer"
         )
-            .withHeader("Content-Type", "application/json")
             .always();
 
         KeycloakAuthenticationToken keycloakAuthenticationToken = new KeycloakAuthenticationToken(

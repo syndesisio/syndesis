@@ -16,6 +16,8 @@
 package io.syndesis.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.keycloak.TokenVerifier;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.common.VerificationException;
@@ -31,8 +33,16 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import java.util.Optional;
 
 public final class Tokens {
+
+    public enum TokenProvider {
+        GITHUB,
+        OPENSHIFT
+    }
 
     private static final ThreadLocal<String> OAUTH_TOKEN = new InheritableThreadLocal<>();
 
@@ -77,10 +87,13 @@ public final class Tokens {
         }
     }
 
-    public static String fetchProviderTokenFromKeycloak(String providerId) {
+    public static String fetchProviderTokenFromKeycloak(TokenProvider provider) {
+        String providerId = provider.toString().toLowerCase(Locale.ENGLISH);
+
         String keycloakTokenAsString = getAuthenticationToken();
 
         String issuer = getIssuer(keycloakTokenAsString);
+
 
         String tokenEndpointUrl = issuer + "/broker/" + providerId + "/token";
         final String authHeader = "Bearer " + keycloakTokenAsString;
@@ -106,25 +119,24 @@ public final class Tokens {
             );
         }
 
-        String contentTypeHeader = response.getHeaderString("Content-Type");
-        if (!"application/json".equals(contentTypeHeader)) {
-            throw new IllegalStateException(
-                String.format(
-                    "Unable to retrieve token for provider %s from URL %s, expected Content-Type application/json, received %s",
-                    providerId,
-                    tokenEndpointUrl,
-                    contentTypeHeader
-                )
-            );
+        switch (provider) {
+            case OPENSHIFT:
+                ObjectMapper om = new ObjectMapper();
+                try {
+                    AccessTokenResponse accessToken = om.readValue(responseBody, AccessTokenResponse.class);
+                    return accessToken.getToken();
+                } catch (IOException e) {
+                    throw SyndesisServerException.launderThrowable(e);
+                }
+            case GITHUB:
+                Optional<NameValuePair> accessToken = URLEncodedUtils.parse(responseBody, StandardCharsets.UTF_8)
+                    .stream()
+                    .filter((nameValuePair) -> nameValuePair.getName().equalsIgnoreCase("access_token")).findFirst();
+                return accessToken.orElseThrow(IllegalStateException::new).getValue();
+            default:
+                throw new IllegalArgumentException("Unknown provider type: " + provider);
         }
 
-        ObjectMapper om = new ObjectMapper();
-        try {
-            AccessTokenResponse accessToken = om.readValue(responseBody, AccessTokenResponse.class);
-            return accessToken.getToken();
-        } catch (IOException e) {
-            throw SyndesisServerException.launderThrowable(e);
-        }
     }
 
     public static void setAuthenticationToken(String token) {
