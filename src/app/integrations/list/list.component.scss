@@ -2,154 +2,67 @@
 
 .integrations.list {
   color: #656565;
-  /*
-  margin-top: 25px;
-  */
 
-  ////////////////////////////////////////////////////////////////////////////////
-  // INTEGRATION ROWS
-  // Each integration is displayed in a row.
-  ////////////////////////////////////////////////////////////////////////////////
+  .modal {
+    .modal-footer {
+      .btn {
+        border: 0;
+        margin: 5px 10px 5px 0;
 
-  .integration {
-    background: #ffffff;
-    cursor: pointer;
-    padding: 20px;
-
-    &:hover {
-      background: $pf-blue-50;
+        &.btn-cancel {
+          background: #dadada;
+        }
+      }
     }
+  }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // INTEGRATION ROW GROUPS
-    // Separate each integration row into groups within the 12-column grid
-    ////////////////////////////////////////////////////////////////////////////////
+  /deep/ .list-pf {
 
-    .group {
-      //----- Group 1: Icons ----------------->>
+    .list-pf-item {
+      background: #ffffff;
+      cursor: pointer;
 
-      &.icons {
-        overflow: visible;
-        margin: 0;
-        padding: 0;
-        text-align: center;
-        width: 13%;
-
-        .col-xs-12 {
-          padding: 0;
-
-          .image-icon {
-            img {
-              display: inline-block;
-
-              &.start {
-                padding-right: 10px;
-              }
-
-              &.end {
-                padding-left: 10px;
-              }
-            }
-          }
-        }
-
-        .fa {
-          margin-right: 15px;
-
-          &.fa-angle-right {
-            font-size: 18px;
-            margin: 0;
-            padding: 0 10px;
-          }
-        }
+      &:hover {
+        background: $pf-blue-50;
       }
+    }
+  }
 
-      //----- Group 2: Text (Name & Description) ----------------->>
+  .integration-icons {
+    display: inline-table;
 
-      &.text {
-        .description {
-          padding: 5px;
-        }
+    .fa-angle-right {
+      margin:0 10px 0 10px;
+      font-size: 18px;
+    }
+  }
 
-        .name {
-          font-weight: 700;
-          padding: 7px;
-        }
-      }
+  .integration-content {
+    .name {
+      font-weight: 700;
+    }
+  }
 
-      //----- Group 3: Metrics & Actions ----------------->>
+  .integration-status {
 
-      &.metrics-actions {
-        .actions {
-          padding: 5px;
+    .active-inactive {
+      text-align: center;
 
-          ul {
-            cursor: pointer;
-          }
-        }
+      .not-pending {
+        display: inline-block;
 
-        .active-inactive {
-          padding: 5px;
-          text-align: center;
-
-          // In Progress State
-
-          .in-progress {
-            margin: 0 auto;
-
-            h3 {
-              font-size: 12px;
-              margin: 0;
-            }
-          }
-
-          // Non-Pending States
-
-          .not-pending {
-            display: inline-block;
-            margin: 0 auto;
-            padding: 0 25px;
-
-            .label {
-              cursor: pointer;
-              padding: 6px;
-
-              &.label-custom {
-                background: $pf-black-300;
-                color: #000000;
-              }
-            }
-          }
-        }
-
-        .pass-fail {
-          i {
-            font-size: 16px;
-          }
-        }
-
-        .uses {
-          p {
-            margin: 0;
+        .label {
+          &.label-custom {
+            background: $pf-black-300;
+            color: #000000;
           }
         }
       }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // MODALS
-    ////////////////////////////////////////////////////////////////////////////////
-
-    .modal {
-      .modal-footer {
-        .btn {
-          border: 0;
-          margin: 5px 10px 5px 0;
-
-          &.btn-cancel {
-            background: #dadada;
-          }
-        }
+    .pass-fail {
+      i {
+        font-size: 16px;
       }
     }
   }

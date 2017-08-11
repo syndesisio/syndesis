@@ -12,10 +12,9 @@ import { NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
+import { IntegrationsListModule } from '../list/list.module';
 import { IntegrationsListPage } from './list-page.component';
-import { IntegrationsListComponent } from '../list/list.component';
 import { StoreModule } from '../../store/store.module';
-import { IntegrationActionsModule } from '../actions/actions.module';
 
 describe('IntegrationsListPage', () => {
   let component: IntegrationsListPage;
@@ -33,12 +32,11 @@ describe('IntegrationsListPage', () => {
           TooltipModule.forRoot(),
           TabsModule.forRoot(),
           NotificationModule,
-          IntegrationActionsModule,
           PatternflyUIModule,
+          IntegrationsListModule,
         ],
         declarations: [
           IntegrationsListPage,
-          IntegrationsListComponent,
         ],
         providers: [
           MockBackend,

@@ -1,8 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NotificationService, NotificationType } from 'patternfly-ng';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { log, getCategory } from '../logging';
 
@@ -18,14 +16,11 @@ const category = getCategory('Dashboard');
   styleUrls: ['./integrations.component.scss'],
 })
 export class DashboardIntegrationsComponent implements OnInit {
-  @ViewChild('childModal') public childModal: ModalDirective;
 
   connections: Observable<Connections>;
   @Input() integrations: Integrations;
   @Input() loading: boolean;
   selectedId = undefined;
-  selectedIntegration: Integration = undefined;
-  currentAction: string = undefined;
   truncateTrail = '…';
 
   public doughnutChartLabels: string[] = ['Active', 'Draft', 'Inactive'];
@@ -58,24 +53,8 @@ export class DashboardIntegrationsComponent implements OnInit {
     private integrationStore: IntegrationStore,
     public route: ActivatedRoute,
     private router: Router,
-    private notificationService: NotificationService,
   ) {
     this.connections = this.connectionStore.list;
-  }
-
-  //-----  Icons ------------------->>
-
-  getStartIcon(integration: Integration) {
-    const connection = integration.steps[0].connection;
-    const icon = 'fa fa-plane';
-
-    return (connection || {})['icon'] || 'fa-plane';
-  }
-
-  getFinishIcon(integration: Integration) {
-    const connection =
-      integration.steps[integration.steps.length - 1].connection;
-    return (connection || {})['icon'] || 'fa-plane';
   }
 
   //-----  Integration Board Chart ------------------->>
@@ -141,193 +120,6 @@ export class DashboardIntegrationsComponent implements OnInit {
     log.debugc(() => 'Hover event: ' + JSON.stringify(e));
   }
 
-  //-----  Modals ------------------->>
-
-  doAction(action: string, integration: Integration) {
-    switch (action) {
-      case 'activate':
-        return this.activateAction(integration);
-      case 'deactivate':
-        return this.deactivateAction(integration);
-      case 'delete':
-        return this.deleteAction(integration);
-    }
-  }
-
-  // TODO: Refactor into single method for both cases
-  // Open modal to confirm activation
-  requestActivate(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for activation: ' +
-        JSON.stringify(integration['id']),
-    );
-    this.selectedIntegration = integration;
-    this.showModal('activate');
-  }
-
-  // Open modal to confirm deactivation
-  requestDeactivate(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for deactivation: ' +
-        JSON.stringify(integration['id']),
-    );
-    this.selectedIntegration = integration;
-    this.showModal('deactivate');
-  }
-
-  // TODO: Refactor into single method for both cases
-  // Actual activate/deactivate action once the user confirms
-  activateAction(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for activation: ' +
-        JSON.stringify(integration['id']),
-    );
-    this.hideModal();
-    const i = JSON.parse(JSON.stringify(integration));
-    i.desiredStatus = 'Activated';
-    this.integrationStore.update(i).subscribe(
-      () => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.SUCCESS,
-            header    : 'Integration is activating',
-            message   : 'Please allow a moment for the integration to fully activate.',
-            showClose : true,
-          },
-        ), 1000);
-      },
-      (reason: any) => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.DANGER,
-            header    : 'Failed to activate integration',
-            message   : `Error activating integration: ${reason}`,
-            showClose : true,
-          },
-        ), 1000);
-      },
-    );
-  }
-
-  // Actual activate/deactivate action once the user confirms
-  deactivateAction(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for deactivation: ' +
-        JSON.stringify(integration['id']),
-    );
-    this.hideModal();
-    const i = JSON.parse(JSON.stringify(integration));
-    i.desiredStatus = 'Deactivated';
-    this.integrationStore.update(i).subscribe(
-      () => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.SUCCESS,
-            header    : 'Integration is deactivating',
-            message   : 'Please allow a moment for the integration to be deactivated.',
-            showClose : true,
-          },
-        ), 1000);
-      },
-      (reason: any) => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.DANGER,
-            header    : 'Failed to deactivate integration',
-            message   : `Error deactivating integration: ${reason}`,
-            showClose : true,
-          },
-        ), 1000);
-      },
-    );
-  }
-
-  //-----  Delete ------------------->>
-
-  // Actual delete action once the user confirms
-  deleteAction(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for delete: ' + JSON.stringify(integration['id']),
-    );
-    this.hideModal();
-    this.integrationStore.delete(integration).subscribe(
-      () => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.SUCCESS,
-            header    : 'Delete Successful',
-            message   : 'Integration successfully deleted.',
-            showClose : true,
-          },
-        ), 1000);
-      },
-      (reason: any) => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.DANGER,
-            header    : 'Failed to delete integration',
-            message   : `Error deleting integration: ${reason}`,
-            showClose : true,
-          },
-        ), 1000);
-      },
-    );
-  }
-
-  // Open modal to confirm delete
-  requestDelete(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for delete: ' + JSON.stringify(integration['id']),
-    );
-    this.selectedIntegration = integration;
-    this.showModal('delete');
-  }
-
-  public showModal(action: string): void {
-    this.currentAction = action;
-    this.childModal.show();
-  }
-
-  public hideModal(): void {
-    this.currentAction = undefined;
-    this.selectedIntegration = undefined;
-    this.childModal.hide();
-  }
-
-  //-----  Random Text Stuff --------->>
-
-  getActionTitle() {
-    switch (this.currentAction) {
-      case 'activate':
-        return 'Activation';
-      case 'deactivate':
-        return 'Deactivation';
-      default:
-        return 'Deletion';
-    }
-  }
-
-  getAction() {
-    return this.currentAction;
-  }
-
-  getActionButtonText() {
-    switch (this.currentAction) {
-      case 'activate':
-        return 'Activate';
-      case 'deactivate':
-        return 'Deactivate';
-      default:
-        return 'Delete';
-    }
-  }
-
   //-----  Recent Updates Section ------------------->>
 
   public getLabelClass(integration): string {
@@ -353,16 +145,6 @@ export class DashboardIntegrationsComponent implements OnInit {
         return 'Inactive';
     }
     return integration.currentStatus;
-  }
-
-  //-----  Icons ------------------->>
-
-  getStart(integration: Integration) {
-    return integration.steps[0];
-  }
-
-  getFinish(integration: Integration) {
-    return integration.steps.slice(-1)[0];
   }
 
   //-----  Selecting a Connection or Integration ------------------->>
@@ -402,19 +184,5 @@ export class DashboardIntegrationsComponent implements OnInit {
       category,
     );
     this.connectionStore.loadAll();
-  }
-
-  //-----  Toast ------------------->>
-
-  // Show toast notification
-  popNotification(notification) {
-    this.notificationService.message(
-      notification.type,
-      notification.header,
-      notification.message,
-      false,
-      null,
-      [],
-    );
   }
 }
