@@ -12,3 +12,4 @@ Access UX design resource and documentation for Syndesis.
 * ### [Salesforce Dynamic Objects](designs/salesforceobjects/salesforceobjects.md)
 
 ## Create a Connection
+* ### [OAuth FLow](designs/oauth/oauth.md)
