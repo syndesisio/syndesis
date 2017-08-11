@@ -16,14 +16,14 @@
 package io.syndesis.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.keycloak.TokenVerifier;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.common.VerificationException;
 import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -33,15 +33,32 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 public final class Tokens {
 
-    public enum TokenProvider {
-        GITHUB,
-        OPENSHIFT
+    public enum TokenProvider implements UnaryOperator<String> {
+        GITHUB {
+            @Override
+            public String apply(String s) {
+                ObjectMapper om = new ObjectMapper();
+                try {
+                    AccessTokenResponse accessToken = om.readValue(s, AccessTokenResponse.class);
+                    return accessToken.getToken();
+                } catch (IOException e) {
+                    throw SyndesisServerException.launderThrowable(e);
+                }
+            }
+        },
+
+        OPENSHIFT {
+            @Override
+            public String apply(String s) {
+                MultiValueMap<String, String> params = UriComponentsBuilder.fromUriString("").query(s).build().getQueryParams();
+                return params.getFirst("access_token");
+            }
+        }
     }
 
     private static final ThreadLocal<String> OAUTH_TOKEN = new InheritableThreadLocal<>();
@@ -119,24 +136,11 @@ public final class Tokens {
             );
         }
 
-        switch (provider) {
-            case OPENSHIFT:
-                ObjectMapper om = new ObjectMapper();
-                try {
-                    AccessTokenResponse accessToken = om.readValue(responseBody, AccessTokenResponse.class);
-                    return accessToken.getToken();
-                } catch (IOException e) {
-                    throw SyndesisServerException.launderThrowable(e);
-                }
-            case GITHUB:
-                Optional<NameValuePair> accessToken = URLEncodedUtils.parse(responseBody, StandardCharsets.UTF_8)
-                    .stream()
-                    .filter((nameValuePair) -> nameValuePair.getName().equalsIgnoreCase("access_token")).findFirst();
-                return accessToken.orElseThrow(IllegalStateException::new).getValue();
-            default:
-                throw new IllegalArgumentException("Unknown provider type: " + provider);
+        if (provider != TokenProvider.OPENSHIFT && provider != TokenProvider.GITHUB) {
+            throw new IllegalArgumentException("Unsupported provider type: " + provider);
         }
 
+        return provider.apply(responseBody);
     }
 
     public static void setAuthenticationToken(String token) {
