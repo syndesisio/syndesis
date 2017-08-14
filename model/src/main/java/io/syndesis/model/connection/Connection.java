@@ -67,6 +67,14 @@ public interface Connection extends WithId<Connection>, WithTags, WithName, Seri
 
     Optional<Date> getCreatedDate();
 
+    /**
+     * A flag denoting that the some of connection properties were derived.
+     * Ostensibly used to mark the {@link #getConfiguredProperties()} being
+     * set by the OAuth flow so that the UI can alternate between full edit
+     * and reconnect OAuth views.
+     */
+    boolean isDerived();
+
     @Override
     default Connection withId(String id) {
         return new Builder().createFrom(this).id(id).build();
