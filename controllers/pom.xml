@@ -101,6 +101,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.eclipse.mylyn.github</groupId>
+      <artifactId>org.eclipse.egit.github.core</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>

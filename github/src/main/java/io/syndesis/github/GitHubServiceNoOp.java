@@ -18,6 +18,7 @@ package io.syndesis.github;
 import java.io.IOException;
 import java.util.Map;
 
+import org.eclipse.egit.github.core.User;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -29,14 +30,14 @@ import org.springframework.stereotype.Service;
 public class GitHubServiceNoOp implements GitHubService {
 
     @Override
-    public String createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
+    public String createOrUpdateProjectFiles(String repoName, User author, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
         // Dummy value
         return "https://this.doesnt.exist/promise.git";
     }
 
     @Override
-    public String getApiUser() {
-        return "noob";
+    public User getApiUser() {
+        return new User().setLogin("noob").setName("Noob").setEmail("noob@noob");
     }
 
     @Override
