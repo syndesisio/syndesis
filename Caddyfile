@@ -1,8 +1,0 @@
-0.0.0.0
-log stdout
-gzip
-prometheus
-rewrite {
-  ext /
-  to {path} {path}/ /
-}
