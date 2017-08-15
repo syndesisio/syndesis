@@ -529,99 +529,6 @@ objects:
       type: ImageChange
     - type: ConfigChange
 - apiVersion: v1
-  kind: Service
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-github-proxy
-    annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: syndesis-github-proxy-tls
-    name: syndesis-github-proxy
-  spec:
-    ports:
-    - port: 443
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: syndesis
-      component: syndesis-github-proxy
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-github-proxy
-    name: syndesis-github-proxy
-  spec:
-    replicas: 1
-    selector:
-      app: syndesis
-      component: syndesis-github-proxy
-      deploymentconfig: syndesis-github-proxy
-    strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 600
-        updatePeriodSeconds: 1
-      resources:
-        limits:
-          cpu: "100m"
-          memory: "256Mi"
-      type: Rolling
-    template:
-      metadata:
-        labels:
-          app: syndesis
-          component: syndesis-github-proxy
-          deploymentconfig: syndesis-github-proxy
-      spec:
-        containers:
-        - name: syndesis-github-proxy
-          image: ' '
-
-          imagePullPolicy: IfNotPresent
-          args:
-          - -issuer-url=https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}
-          - -proxy-url=https://api.github.com
-          - -client-id=syndesis-ui
-          - -provider-alias=github
-          - -provider-type=github
-          - -tls-cert=/tls/tls.crt
-          - -tls-key=/tls/tls.key
-          - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-          - -ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-          - -insecure-skip-verify=${INSECURE_SKIP_VERIFY}
-          readinessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 10
-          livenessProbe:
-            initialDelaySeconds: 180
-            tcpSocket:
-              port: 8080
-          ports:
-          - containerPort: 8080
-          volumeMounts:
-          - mountPath: /tls
-            name: tls-volume
-        volumes:
-        - secret:
-            secretName: syndesis-github-proxy-tls
-          name: tls-volume
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - syndesis-github-proxy
-        from:
-          kind: ImageStreamTag
-          name: syndesis-token-rp:v0.6.2
-      type: ImageChange
-
-    - type: ConfigChange
-- apiVersion: v1
   kind: Secret
   metadata:
     labels:
@@ -2193,8 +2100,6 @@ objects:
           sensitive: false
         jsondb:
           enabled: true
-      github:
-        service: syndesis-github-proxy.${NAMESPACE}.svc
       openshift:
         openShiftHost: syndesis-openshift-proxy.${NAMESPACE}.svc
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1

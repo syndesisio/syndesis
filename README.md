@@ -120,7 +120,7 @@ OpenShift includes the ability for a service account to act as a limited OAuthCl
 for more details). Let's create the service account with the correct redirect URIs enabled:
 
 ```bash
-$ oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml
+$ oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.ymlgit dgit 
 ```
 
 #### Create the template to use
