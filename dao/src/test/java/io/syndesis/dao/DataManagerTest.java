@@ -17,8 +17,10 @@ package io.syndesis.dao;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import io.syndesis.core.Json;
+import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
@@ -32,6 +34,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DataManagerTest {
 
@@ -41,6 +45,7 @@ public class DataManagerTest {
     private DataManager dataManager = null;
 
     @Before
+    @SuppressWarnings("unchecked")
     public void setup() {
         //Create Data Manager
         dataManager = new DataManager(infinispan.getCaches(), new ArrayList<>(), null);
@@ -51,9 +56,8 @@ public class DataManagerTest {
     @Test
     public void getConnectors() {
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
-        for (Connector connector : connectors.getItems()) {
-            System.out.print(connector.getId().get() + ",");
-        }
+        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
+            .containsExactly("gmail", "github", "ftp", "facebook", "linkedin", "salesforce", "timer", "jms", "day-trade", "twitter", "servicenow", "http", "trade-insight");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertEquals(connectors.getTotalCount(), connectors.getItems().size());
@@ -62,9 +66,7 @@ public class DataManagerTest {
     @Test
     public void getConnections() {
         ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
-        for (Connection connection : connections.getItems()) {
-            System.out.print(connection.getId().get() + ",");
-        }
+        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsExactly("1", "2", "3", "4");
         Assert.assertEquals(4, connections.getTotalCount());
         Assert.assertEquals(4, connections.getItems().size());
         Assert.assertEquals(connections.getTotalCount(), connections.getItems().size());
@@ -76,9 +78,7 @@ public class DataManagerTest {
             Connector.class,
             resultList -> new ListResult.Builder<Connector>().createFrom(resultList).items(resultList.getItems().subList(0, 2)).build()
         );
-        for (Connector connector : connectors.getItems()) {
-            System.out.print(connector.getId().get() + ",");
-        }
+        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactly("gmail", "github");
         Assert.assertEquals(13, connectors.getTotalCount());
         Assert.assertEquals(2, connectors.getItems().size());
     }
@@ -86,7 +86,6 @@ public class DataManagerTest {
     @Test
     public void getTwitterConnector() {
         Connector connector = dataManager.fetch(Connector.class, "twitter");
-        System.out.println(connector.getName());
         Assert.assertEquals("First Connector in the deployment.json is Twitter", "Twitter", connector.getName());
         Assert.assertEquals(7, connector.getActions().size());
     }
@@ -94,7 +93,6 @@ public class DataManagerTest {
     @Test
     public void getSalesforceConnector() {
         Connector connector = dataManager.fetch(Connector.class, "salesforce");
-        System.out.println(connector.getName());
         Assert.assertEquals("Second Connector in the deployment.json is Salesforce", "Salesforce", connector.getName());
         Assert.assertEquals(7, connector.getActions().size());
     }
@@ -102,7 +100,6 @@ public class DataManagerTest {
     @Test
     public void getIntegration() throws IOException {
         Integration integration = dataManager.fetch(Integration.class, "1");
-        System.out.println(integration.getName());
         Assert.assertEquals("Example Integration", "Twitter to Salesforce Example", integration.getName());
         Assert.assertEquals(4, integration.getSteps().get().size());
         Assert.assertTrue(integration.getTags().get().contains("example"));
@@ -131,5 +128,19 @@ public class DataManagerTest {
 
         assertThat(got).isSameAs(connector);
         assertThat(infinispan.getCaches().getCache(Kind.Connector.modelName).get("custom-id")).isSameAs(connector);
+    }
+
+    @Test
+    public void shouldAscertainIfPropertyValuePairExists() {
+        @SuppressWarnings("unchecked")
+        final DataAccessObject<Connector> connectorDao = mock(DataAccessObject.class);
+        when(connectorDao.getType()).thenReturn(Connector.class);
+        dataManager.registerDataAccessObject(connectorDao);
+
+        when(connectorDao.existsWithPropertyValue("prop", "exists")).thenReturn(true);
+        when(connectorDao.existsWithPropertyValue("prop", "not")).thenReturn(false);
+
+        assertThat(dataManager.existsWithPropertyValue(Connector.class, "prop", "exists")).isTrue();
+        assertThat(dataManager.existsWithPropertyValue(Connector.class, "prop", "not")).isFalse();
     }
 }

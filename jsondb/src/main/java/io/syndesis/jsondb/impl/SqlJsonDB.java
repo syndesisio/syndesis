@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -86,7 +87,6 @@ public class SqlJsonDB implements JsonDB {
                 throw new IllegalStateException("Could not determine the database type", e);
             }
         });
-
     }
 
     public void createTables() {
@@ -187,6 +187,31 @@ public class SqlJsonDB implements JsonDB {
             rc[0] = countJsonRecords(dbi, like) > 0;
         });
         return rc[0];
+    }
+
+    @Override
+    public boolean existsPropertyValue(final String collectionPath, final String property, final String value) {
+        final String pathRegex = collectionPath + "/:[^/]+/" + property;
+
+        final AtomicBoolean ret = new AtomicBoolean(false);
+        withTransaction(dbi -> {
+            final String query;
+            if (databaseKind == DatabaseKind.PostgreSQL) {
+                query = "SELECT COUNT(*) from jsondb where path ~ ? and value = ?";
+            } else if (databaseKind == DatabaseKind.H2) {
+                query = "SELECT COUNT(*) from jsondb where path regexp ? and value = ?";
+            } else {
+                throw new UnsupportedOperationException(
+                    "Don't know how to use regex in a query with database: " + databaseKind);
+            }
+
+            final Integer result = dbi.createQuery(query).bind(0, pathRegex).bind(1, value)
+                .map(IntegerColumnMapper.PRIMITIVE).first();
+
+            ret.set(result.intValue() != 0);
+        });
+
+        return ret.get();
     }
 
     @Override
@@ -370,4 +395,5 @@ public class SqlJsonDB implements JsonDB {
             }
         }
     }
+
 }

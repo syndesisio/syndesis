@@ -42,6 +42,8 @@ public interface JsonDB {
      */
     boolean exists(String path);
 
+    boolean existsPropertyValue(String collectionPath, String property, String value);
+
     /**
      * Generates a sortable unique id as described at:
      * https://firebase.googleblog.com/2015/02/the-2120-ways-to-ensure-unique_68.html
@@ -176,7 +178,5 @@ public interface JsonDB {
     void update(String path, InputStream body);
 
     String push(String path, InputStream body);
-
-
 
 }

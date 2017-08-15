@@ -21,19 +21,24 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
 import io.syndesis.model.environment.Organization;
+import io.syndesis.model.validation.UniqueProperty;
+import io.syndesis.model.validation.UniquenessRequired;
+
 import org.immutables.value.Value;
 
 /**
- * A connection is basically a Camel endpoint configuration (parameters)
- * and some metadata describing which parameters are available to configure.
+ * A connection is basically a Camel endpoint configuration (parameters) and
+ * some metadata describing which parameters are available to configure.
  */
 @Value.Immutable
 @JsonDeserialize(builder = Connection.Builder.class)
+@UniqueProperty(value = "name", groups = UniquenessRequired.class)
 public interface Connection extends WithId<Connection>, WithTags, WithName, Serializable {
 
     @Override

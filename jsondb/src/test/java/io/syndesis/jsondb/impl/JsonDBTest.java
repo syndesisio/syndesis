@@ -356,6 +356,13 @@ public class JsonDBTest {
 
     }
 
+    @Test
+    public void shouldAscertainPropertyPairExistence() {
+        jsondb.set("/pair/:id", "{\"key\": \"value\"}");
+
+        assertThat(jsondb.existsPropertyValue("/pair", "key", "value")).isTrue();
+        assertThat(jsondb.existsPropertyValue("/pair", "key", "nope")).isFalse();
+    }
 
     private String load(String file) throws IOException {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(file)) {
