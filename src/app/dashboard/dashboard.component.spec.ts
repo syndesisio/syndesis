@@ -12,6 +12,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../common/common.module';
+import { IntegrationsListModule } from '../integrations/list/list.module';
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
 //import { PopularTemplatesComponent } from './populartemplates.component';
@@ -19,7 +20,6 @@ import { EmptyStateComponent } from './emptystate.component';
 import { DashboardConnectionsComponent } from './connections.component';
 import { DashboardIntegrationsComponent } from './integrations.component';
 import { StoreModule } from '../store/store.module';
-import { IntegrationActionsModule } from '../integrations/actions/actions.module';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -38,7 +38,7 @@ describe('DashboardComponent', () => {
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),
           NotificationModule,
-          IntegrationActionsModule,
+          IntegrationsListModule,
         ],
         declarations: [
           DashboardComponent,

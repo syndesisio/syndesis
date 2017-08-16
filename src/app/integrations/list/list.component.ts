@@ -2,7 +2,16 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs/Subscription';
-import { Notification, NotificationService, NotificationType } from 'patternfly-ng';
+
+import {
+  Action,
+  ActionConfig,
+  ListConfig,
+  ListEvent,
+  Notification,
+  NotificationService,
+  NotificationType,
+} from 'patternfly-ng';
 
 import { Integrations, Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
@@ -15,21 +24,93 @@ import { log, getCategory } from '../../logging';
   styleUrls: ['./list.component.scss'],
 })
 export class IntegrationsListComponent {
+  @Input() complete: boolean;
+  @Input() integrations: Integrations;
+  @ViewChild('childModal') public childModal: ModalDirective;
+  listConfig: ListConfig;
   currentAction: string = undefined;
   selectedIntegration: Integration = undefined;
-
-  @ViewChild('childModal') public childModal: ModalDirective;
-
-  @Input() integrations: Integrations;
-
-  @Input() loading: boolean;
 
   constructor(
     public store: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router,
     private notificationService: NotificationService,
-  ) {}
+  ) {
+    this.listConfig = {
+      dblClick           : false,
+      multiSelect        : false,
+      selectItems        : false,
+      selectionMatchProp : 'id',
+      showCheckbox       : false,
+      useExpandItems     : false,
+    };
+  }
+
+  handleClick($event: ListEvent) {
+    this.router.navigate(['integrations', 'edit', $event.item.id, 'save-or-add-step']);
+  }
+
+  getActionConfig(integration: Integration): ActionConfig {
+    const canEdit = (int) => int.currentStatus !== 'Deleted';
+    const canActivate = (int) => int.currentStatus === 'Deactivated';
+    const canDeactivate = (int) => int.currentStatus === 'Activated';
+    const canDelete = (int) => int.currentStatus !== 'Deleted';
+
+    const actionConfig = {
+      primaryActions: [],
+      moreActions: [
+        {
+          id      : 'edit',
+          title   : 'Edit',
+          tooltip : `Edit ${integration.name}`,
+          visible : canEdit(integration),
+        },
+        {
+          id      : 'activate',
+          title   : 'Activate',
+          tooltip : `Activate ${integration.name}`,
+          visible : canActivate(integration),
+        },
+        {
+          id      : 'deactivate',
+          title   : 'Deactivate',
+          tooltip : `Deactivate ${integration.name}`,
+          visible : canDeactivate(integration),
+        },
+        {
+          id      : 'delete',
+          title   : 'Delete',
+          tooltip : `Delete ${integration.name}`,
+          visible : canDelete(integration),
+        },
+      ],
+      moreActionsDisabled: false,
+      moreActionsVisible: true,
+    } as ActionConfig;
+
+    // Hide kebab
+    if (integration.currentStatus === 'Deleted') {
+      actionConfig.moreActionsVisible = false;
+    }
+
+    return actionConfig;
+  }
+
+  //----- Actions ------------------->>
+
+  handleAction($event: Action, integration: Integration) {
+    switch ($event.id ) {
+      case 'edit':
+        return this.router.navigate(['integrations', 'edit', integration.id, 'save-or-add-step']);
+      case 'activate':
+        return this.requestActivate(integration);
+      case 'deactivate':
+        return this.requestDeactivate(integration);
+      case 'delete':
+        return this.requestDelete(integration);
+    }
+  }
 
   doAction(action: string, integration: Integration) {
     switch (action) {
@@ -41,14 +122,6 @@ export class IntegrationsListComponent {
         return this.deleteAction(integration);
     }
   }
-
-  goto(integration: Integration) {
-    this.router.navigate(['edit', integration.id, 'save-or-add-step'], {
-      relativeTo: this.route,
-    });
-  }
-
-  //-----  Activate/Deactivate ------------------->>
 
   // TODO: Refactor into single method for both cases
   // Open modal to confirm activation
@@ -208,7 +281,18 @@ export class IntegrationsListComponent {
     }
   }
 
-  //-----  Random Text Stuff --------->>
+  //-----  Modal ------------------->>
+
+  public showModal(action: string): void {
+    this.currentAction = action;
+    this.childModal.show();
+  }
+
+  public hideModal(): void {
+    this.currentAction = undefined;
+    this.selectedIntegration = undefined;
+    this.childModal.hide();
+  }
 
   getActionTitle() {
     switch (this.currentAction) {
@@ -247,19 +331,6 @@ export class IntegrationsListComponent {
       default:
         return currentStatus;
     }
-  }
-
-  //-----  Modals ------------------->>
-
-  public showModal(action: string): void {
-    this.currentAction = action;
-    this.childModal.show();
-  }
-
-  public hideModal(): void {
-    this.currentAction = undefined;
-    this.selectedIntegration = undefined;
-    this.childModal.hide();
   }
 
   //-----  Toast ------------------->>

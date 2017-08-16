@@ -1,167 +1,104 @@
-<syndesis-loading [loading]="loading">
-  <div class="integrations list">
+<div class="integrations list">
 
-    <!-- Modal Container -->
+  <!-- Modal Container -->
 
-    <div bsModal
-         #childModal="bs-modal"
-         class="modal fade"
-         tabindex="-1"
-         role="dialog"
-         aria-labelledby="activateModal"
-         aria-hidden="true">
-      <div class="modal-dialog modal-md">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button"
-                    class="close"
-                    aria-hidden="true"
-                    (click)="hideModal()">
-              <span class="pficon pficon-close"></span>
-            </button>
-            <h4 class="modal-title">Confirm {{ getActionTitle() }}</h4>
+  <div bsModal
+       #childModal="bs-modal"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="activateModal"
+       aria-hidden="true">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button"
+                  class="close"
+                  aria-hidden="true"
+                  (click)="hideModal()">
+            <span class="pficon pficon-close"></span>
+          </button>
+          <h4 class="modal-title">Confirm {{ getActionTitle() }}</h4>
+        </div>
+        <div class="modal-body">
+          <div>
+            <p>Are you sure you would like to {{ getAction() }} the following integration?</p>
           </div>
-          <div class="modal-body">
-            <div>
-              <p>Are you sure you would like to {{ getAction() }} the following integration?</p>
-            </div>
-            <div style="text-align: center; font-weight: 700">
-              <p>{{ selectedIntegration?.name }}</p>
-            </div>
+          <div style="text-align: center; font-weight: 700">
+            <p>{{ selectedIntegration?.name }}</p>
           </div>
-          <div class="modal-footer">
-            <button type="button"
-                    class="btn btn-default"
-                    (click)="hideModal()">Cancel
-            </button>
-            <button type="button"
-                    class="btn btn-primary"
-                    (click)="doAction(currentAction, selectedIntegration)">
-              {{ getActionButtonText() }}
-            </button>
-          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button"
+                  class="btn btn-default"
+                  (click)="hideModal()">Cancel</button>
+          <button type="button"
+                  class="btn btn-primary"
+                  (click)="doAction(currentAction, selectedIntegration)">
+            {{ getActionButtonText() }}
+          </button>
         </div>
       </div>
-    </div>
-
-    <div class="integration vertical-align col-xs-12" title="{{integration.name}}"
-         *ngFor="let integration of integrations; let i=index">
-
-      <!-- Group 1: Icons -->
-
-      <div class="col-xs-1 group icons"
-           (click)="goto(integration)">
-        <div class="col-xs-12"
-             *ngIf="integration">
-          <span class="image-icon"
-                *ngIf="getStart(integration).connection">
-            <img src="../../../assets/icons/{{ getStart(integration).connection.connectorId }}.integration.png"
-                 class="start">
-          </span>
-          <span class="fa fa-angle-right"></span>
-          <span class="image-icon"
-                *ngIf="getFinish(integration).connection">
-            <img src="../../../assets/icons/{{ getFinish(integration).connection.connectorId }}.integration.png"
-                 class="end">
-          </span>
-        </div>
-      </div>
-
-      <!-- Group 2: Text -->
-
-      <div class="col-xs-7 group text"
-           (click)="goto(integration)">
-
-        <!-- Name -->
-        <div class="col-xs-5 name">
-          {{ integration.name }}
-        </div>
-
-        <!-- Description -->
-        <div class="col-xs-7 description">
-          <div class="list-group-item-text">
-            {{ integration.description }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Group 3: Metrics & Actions -->
-
-      <div class="col-xs-4 group metrics-actions">
-
-        <!-- Active/Inactive Labels -->
-
-        <div class="col-xs-6 active-inactive">
-          <!-- In Progress -->
-
-          <div class="in-progress"
-               *ngIf="integration.currentStatus === 'Pending'">
-            <h3>
-              <div class="spinner spinner-sm spinner-inline"></div>
-              In Progress
-            </h3>
-          </div>
-
-          <!-- Status -->
-
-          <div *ngIf="integration.currentStatus !== 'Pending'"
-               class="not-pending">
-            <span class="label label-{{ getLabelClass(integration.currentStatus) }}"
-                  disabled>{{ getStatusText(integration.currentStatus) }}</span>
-          </div>
-        </div>
-
-
-        <!-- Metrics & Actions -->
-
-        <div class="col-xs-6">
-
-          <!-- Uses -->
-
-          <!--
-          <div class="col-xs-7 uses"
-               (click)="goto(integration)">
-            <p>{{ integration.timesUsed || 0 }} uses</p>
-          </div>
-          -->
-
-
-          <!-- Pass/Fail -->
-
-          <div class="col-xs-10 pass-fail"
-               (click)="goto(integration)">
-
-            <!-- OK Status -->
-
-            <i *ngIf="!integration.statusMessage"
-               class="pficon pficon-ok"></i>
-
-            <!-- Not OK Status -->
-
-            <ng-template #statTemplate>{{integration.statusMessage}}</ng-template>
-            <i *ngIf="integration.statusMessage"
-               class="pficon pficon-error-circle-o"
-               [tooltip]="statTemplate"
-               placement="bottom"
-               container="body"></i>
-          </div>
-
-
-          <!-- Actions -->
-
-          <div class="col-xs-2">
-            <syndesis-integration-actions [integration]="integration"
-                                          (activate)="requestActivate($event)"
-                                          (deactivate)="requestDeactivate($event)"
-                                          (delete)="requestDelete($event)"
-                                          (edit)="goto($event)">
-            </syndesis-integration-actions>
-          </div>
-
-        </div>
-
-      </div>
-
     </div>
   </div>
-</syndesis-loading>
+
+  <!-- List Container -->
+
+  <pfng-list [items]="integrations"
+             [config]="listConfig"
+             [itemTemplate]="itemTemplate"
+             [actionTemplate]="actionTemplate"
+             (onClick)="handleClick($event)">
+    <ng-template #itemTemplate let-integration="item" let-index="index">
+      <div class="list-pf-left integration-icons">
+        <span *ngIf="getStart(integration).connection; let connection">
+          <img src="../../../assets/icons/{{ connection.connectorId }}.integration.png">
+        </span>
+        <span class="fa fa-angle-right"></span>
+        <span *ngIf="getFinish(integration).connection; let connection">
+          <img src="../../../assets/icons/{{ connection.connectorId }}.integration.png">
+        </span>
+      </div>
+      <div class="list-pf-content-wrapper">
+        <div class="list-pf-main-content integration-content">
+          <div *ngIf="complete" class="list-pf-title name">{{ integration.name }}</div>
+          <div class="list-pf-description description">
+            {{ complete ? integration.description : integration.name }}
+          </div>
+        </div>
+        <div class="list-pf-additional-content integration-status">
+          <div *ngIf="complete" class="active-inactive">
+            <!-- In Progress -->
+            <div *ngIf="integration.currentStatus === 'Pending'">
+              <div class="spinner spinner-sm spinner-inline"></div>
+              In Progress
+            </div>
+            <!-- Status -->
+            <div *ngIf="integration.currentStatus !== 'Pending'"
+                 class="not-pending">
+              <span class="label label-{{ getLabelClass(integration.currentStatus) }}"
+                    disabled>{{ getStatusText(integration.currentStatus) }}</span>
+            </div>
+          </div>
+          <div class="pass-fail">
+            <!-- OK Status -->
+            <i *ngIf="!integration.statusMessage"
+                class="pficon pficon-ok"></i>
+            <!-- Not OK Status -->
+            <ng-template #statTemplate>{{ integration.statusMessage }}</ng-template>
+            <i *ngIf="integration.statusMessage"
+                class="pficon pficon-error-circle-o"
+                [tooltip]="statTemplate"
+                placement="bottom"></i>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #actionTemplate let-integration="item" let-index="index">
+      <pfng-action class="list-pf-actions"
+                   [config]="getActionConfig(integration)"
+                   (onActionSelect)="handleAction($event, integration)">
+      </pfng-action>
+    </ng-template>
+  </pfng-list>
+</div>

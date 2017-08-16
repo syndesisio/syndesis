@@ -19,6 +19,8 @@
     <tab heading="Draft" (select)="statusFilter.filter = 'Draft'"></tab>
   </tabset>
 
-  <syndesis-integrations-list [integrations]="filteredIntegrations | async | objectPropertyFilter: statusFilter"
-                              [loading]="loading | async"></syndesis-integrations-list>
+  <syndesis-loading [loading]="loading | async">
+    <syndesis-integrations-list [complete]="true"
+                                [integrations]="filteredIntegrations | async | objectPropertyFilter: statusFilter"></syndesis-integrations-list>
+  </syndesis-loading>
 </div>
