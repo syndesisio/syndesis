@@ -1,6 +1,12 @@
 <div *ngIf="step"
      class="flow-view-step">
 
+  <ng-template #tooltipPopover>
+    <div *ngIf="step.stepKind === 'endpoint'">
+      Connection: <strong> {{ step.connection?.name }} </strong>
+    </div>
+  </ng-template>
+
   <!-- Delete Modal Container -->
 
   <div bsModal
@@ -50,6 +56,7 @@
        placement="right"
        (mouseover)="showTooltip()"
        (mouseleave)="hideTooltip()"
+       triggers=""
        container="body">
       <i [class]="getIconClass()"
          *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
@@ -57,11 +64,6 @@
            *ngIf="step.stepKind === 'endpoint' && step.connection"
            src="../../../assets/icons/{{ step.connection.connectorId }}.integration.png">
     </p>
-    <ng-template #tooltipPopover>
-      <div *ngIf="step.stepKind === 'endpoint'">
-        Connection: <strong> {{ step.connection.name }} </strong>
-      </div>
-    </ng-template>
   </div>
 
 
