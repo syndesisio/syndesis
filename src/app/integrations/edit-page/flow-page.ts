@@ -32,7 +32,7 @@ export abstract class FlowPage implements OnDestroy {
   }
 
   cancel() {
-    this.router.navigate(['integrations']);
+    this.router.navigate(['/integrations', this.currentFlow.integration.id]);
   }
 
   goBack(path: Array<string | number | boolean>) {
@@ -65,7 +65,7 @@ export abstract class FlowPage implements OnDestroy {
         this.saveInProgress = false;
         this.publishInProgress = false;
         */
-        router.navigate(['/integrations']);
+        router.navigate(['/integrations', this.currentFlow.integration.id]);
       },
       error: error => {
         setTimeout(() => {

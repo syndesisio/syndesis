@@ -1,0 +1,9 @@
+<syndesis-loading [loading]="loading | async">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>{{ i.name }}</h1>
+      <a class="btn btn-primary" [routerLink]="['edit']">Edit</a>
+      <a class="btn btn-default" [routerLink]="['..']">Done</a>
+    </div>
+  </div>
+</syndesis-loading>
