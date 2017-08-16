@@ -1,82 +1,98 @@
 <div class="flow-view">
+  <!-- Insert step popover -->
+  <ng-template #popTemplate>
+    <div class="popover-body">
+      <div *ngIf="showAddStep();">
+        <a (click)="insertStepAfter(position ? position + 1 : 0)">Add a step</a>
+      </div>
+      <div *ngIf="showAddConnection();">
+        <a (click)="insertConnectionAfter(position ? position + 1 : 0)">Add a connection</a>
+      </div>
+    </div>
+  </ng-template>
+  <!-- Insert step line -->
+  <ng-template #insertStepTemplate>
+    <div *ngIf="currentState === 'save-or-add-step'"
+         class="row step step-insert"
+         (click)="pop.toggle()"
+         (mouseover)="pop.show()"
+         (mouseleave)="pop.hide()">
+      <div class="step-line"></div>
+      <div class="col-md-2 square-icon"
+           [popover]="popTemplate"
+           placement="right"
+           #pop="bs-popover">
+        <p>
+          <i class="fa fa-plus-square"></i>
+        </p>
+      </div>
+      <div class="col-md-10">
+      </div>
+    </div>
+  </ng-template>
+
   <syndesis-loading [loading]="loaded()">
 
     <!-- Header -->
-    <div class="row name" *ngIf="currentStepKind !== 'mapper'">
+    <div class="row name"
+         *ngIf="currentStepKind !== 'mapper'">
       <div class="col-md-12">
         <div class="form-group">
-          <div class="clickable" (click)="startEditingName()">
-            <input type="text" #nameInput class="form-control integration-name" placeholder="Enter integration name..." [(ngModel)]="integrationName" [readonly]="!editingName" (blur)="stopEditingName()">
-            <span class="pficon pficon-edit pull-right" *ngIf="!editingName"></span>
+          <div class="clickable"
+               (click)="startEditingName()">
+            <input type="text"
+                   #nameInput
+                   class="form-control integration-name"
+                   placeholder="Enter integration name..."
+                   [(ngModel)]="integrationName"
+                   [readonly]="!editingName"
+                   (blur)="stopEditingName()">
+            <span class="pficon pficon-edit pull-right"
+                  *ngIf="!editingName"></span>
           </div>
         </div>
       </div>
     </div>
 
-    <div [class]="containerClass" *ngIf="i && i.steps">
+    <div [class]="containerClass"
+         *ngIf="i && i.steps">
 
       <!-- First Step -->
-      <div class="row steps start">
+      <div class="row step start">
         <div class="step-line"></div>
-        <syndesis-integrations-flow-view-step [step]="startConnection()" [position]="0" [currentPosition]="currentPosition" [currentState]="currentState"></syndesis-integrations-flow-view-step>
+        <syndesis-integrations-flow-view-step [step]="startConnection()"
+                                              [position]="0"
+                                              [currentPosition]="currentPosition"
+                                              [currentState]="currentState"></syndesis-integrations-flow-view-step>
       </div>
 
       <!-- First Step: Save or Add Step -->
-      <div *ngIf="currentState === 'save-or-add-step'" class="row step-insert" (click)="pop1.toggle()" (mouseover)="pop1.show()" (mouseleave)="pop1.hide()">
-          <div class="step-line"></div>
-        <ng-template #firstPopTemplate>
-          <div class="popover-body">
-            <div *ngIf="showAddStep()">
-              <a (click)="insertStepAfter(0)">Add a step</a>
-            </div>
-            <div *ngIf="showAddConnection()">
-              <a (click)="insertConnectionAfter(0)">Add a connection</a>
-            </div>
-          </div>
-        </ng-template>
-        <div class="col-md-2 square-icon" [popover]="firstPopTemplate"  placement="right" #pop1="bs-popover">
-          <p>
-            <i class="fa fa-plus-square"></i>
-          </p>
-        </div>
-        <div class="col-md-10">
-        </div>
-      </div>
+      <ng-container *ngTemplateOutlet="insertStepTemplate"></ng-container>
 
       <!-- Middle Steps -->
-      <ng-template ngFor let-step [ngForOf]="getMiddleSteps()" let-position="index">
-        <div class="row steps">
+      <ng-template ngFor
+                   let-step
+                   [ngForOf]="getMiddleSteps()"
+                   let-position="index">
+        <div class="row step">
           <div class="step-line"></div>
-          <syndesis-integrations-flow-view-step [step]="step" [position]="position + 1" [currentPosition]="currentPosition" [currentState]="currentState"></syndesis-integrations-flow-view-step>
+          <syndesis-integrations-flow-view-step [step]="step"
+                                                [position]="position + 1"
+                                                [currentPosition]="currentPosition"
+                                                [currentState]="currentState"></syndesis-integrations-flow-view-step>
         </div>
 
         <!-- Middle Steps: Save or Add Step -->
-        <div *ngIf="currentState === 'save-or-add-step'" class="row step-insert" (click)="pop.toggle()" (mouseover)="pop.show()" (mouseleave)="pop.hide()">
-          <div class="step-line"></div>
-          <ng-template #subsequentPopTemplate>
-            <div class="popover-body">
-              <div *ngIf="showAddStep();">
-                <a (click)="insertStepAfter(position + 1)">Add a step</a>
-              </div>
-              <div *ngIf="showAddConnection();">
-                <a (click)="insertConnectionAfter(position + 1)">Add a connection</a>
-              </div>
-            </div>
-          </ng-template>
-          <div class="col-md-2 square-icon" [popover]="subsequentPopTemplate" placement="right" #pop="bs-popover">
-            <p>
-              <i class="fa fa-plus-square"></i>
-            </p>
-          </div>
-          <div class="col-md-10">
-          </div>
-        </div>
+        <ng-container *ngTemplateOutlet="insertStepTemplate"></ng-container>
       </ng-template>
 
       <!-- Last Step -->
-      <div class="row steps finish">
+      <div class="row step finish">
         <div class="step-line"></div>
-        <syndesis-integrations-flow-view-step [step]="endConnection()" [position]="-1" [currentPosition]="currentPosition" [currentState]="currentState"></syndesis-integrations-flow-view-step>
+        <syndesis-integrations-flow-view-step [step]="endConnection()"
+                                              [position]="-1"
+                                              [currentPosition]="currentPosition"
+                                              [currentState]="currentState"></syndesis-integrations-flow-view-step>
       </div>
 
     </div>

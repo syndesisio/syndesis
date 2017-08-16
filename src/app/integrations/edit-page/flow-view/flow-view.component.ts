@@ -36,7 +36,6 @@ export class FlowViewComponent extends ChildAwarePage
 
   @ViewChildren(PopoverDirective) popovers: PopoverDirective[];
   @ViewChild('nameInput') nameInput: ElementRef;
-  @ViewChild('pop1') pop1: PopoverDirective;
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -175,7 +174,7 @@ export class FlowViewComponent extends ChildAwarePage
     switch (event.kind) {
       case 'integration-updated':
         this.i = event['integration'];
-        setTimeout(() => this.maybeShowPopover(this.pop1), 50);
+        setTimeout(() => this.maybeShowPopover(this.popovers[0]), 50);
         break;
       case 'integration-connection-select':
         break;
