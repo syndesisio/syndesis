@@ -15,7 +15,7 @@ LABEL name="nginxinc/nginx" \
       io.openshift.expose-services="http:8080" \
       io.openshift.tags="nginx,nginxinc"
 
-ADD nginx.repo /etc/yum.repos.d/nginx.repo
+ADD docker/nginx.repo /etc/yum.repos.d/nginx.repo
 
 RUN curl -sO http://nginx.org/keys/nginx_signing.key && \
     rpm --import ./nginx_signing.key && \
@@ -42,5 +42,5 @@ USER 998
 
 CMD ["nginx", "-g", "daemon off;"]
 
-COPY nginx-syndesis.conf /etc/nginx/conf.d
+COPY docker/nginx-syndesis.conf /etc/nginx/conf.d
 COPY dist /usr/share/nginx/html

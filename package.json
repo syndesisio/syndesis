@@ -18,7 +18,7 @@
     "e2e:syndesis-qe": "better-npm-run e2e:syndesis-qe",
     "e2e:xvfb": "docker run -e SYNDESIS_UI_URL=$SYNDESIS_UI_URL --rm -v `pwd`:/syndesis-ui:z -w /syndesis-ui -u `id -u` docker.io/syndesis/karma-xvfb ./e2e-xvfb.sh",
     "sw": "sw-precache --root=dist --config=sw-precache-config.js",
-    "docker:build": "yarn ng build -- --aot --prod && docker build -t syndesis/syndesis-ui:latest .",
+    "docker:build": "yarn ng build -- --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest .",
     "commit": "yarn git-cz"
   },
   "betterScripts": {
