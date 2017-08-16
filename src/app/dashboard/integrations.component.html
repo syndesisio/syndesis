@@ -103,7 +103,7 @@
                    *ngIf="i<5"
                    (click)="goto(integration)">
                 <div class="col-xs-5">
-                  <a [routerLink]=" ['/integrations/edit', integration.id, 'save-or-add-step'] ">
+                  <a [routerLink]=" ['/integrations', integration.id] ">
                   {{ integration.name }}
                 </a>
                 </div>

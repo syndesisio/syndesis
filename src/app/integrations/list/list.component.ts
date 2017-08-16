@@ -48,7 +48,7 @@ export class IntegrationsListComponent {
   }
 
   handleClick($event: ListEvent) {
-    this.router.navigate([$event.item.id], { relativeTo: this.route });
+    this.router.navigate(['/integrations', $event.item.id], { relativeTo: this.route });
   }
 
   getActionConfig(integration: Integration): ActionConfig {
@@ -101,8 +101,10 @@ export class IntegrationsListComponent {
 
   handleAction($event: Action, integration: Integration) {
     switch ($event.id ) {
+      case 'view':
+        return this.router.navigate(['/integrations', integration.id]);
       case 'edit':
-        return this.router.navigate(['integrations', integration.id]);
+        return this.router.navigate(['/integrations', integration.id, 'edit']);
       case 'activate':
         return this.requestActivate(integration);
       case 'deactivate':
