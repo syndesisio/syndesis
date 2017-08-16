@@ -15,7 +15,7 @@ export class IntegrationsDetailComponent implements OnInit, OnDestroy {
   integration: Observable<Integration>;
   integrationSubscription: Subscription;
   i: Integration;
-  private readonly loading: Observable<boolean>;
+  readonly loading: Observable<boolean>;
   routeSubscription: Subscription;
 
   constructor(
