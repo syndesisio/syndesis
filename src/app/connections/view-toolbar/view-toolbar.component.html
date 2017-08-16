@@ -15,7 +15,7 @@
       <div class="toolbar-pf-action-right"
            *ngIf="connection">
         <div class="form-group">
-          <button *ngIf="mode === 'view'"
+          <button *ngIf="mode === 'view' && !connection.isDerived"
                   class="btn btn-primary"
                   type="button"
                   (click)="doEdit()">
