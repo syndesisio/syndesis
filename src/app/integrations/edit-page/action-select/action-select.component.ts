@@ -79,10 +79,6 @@ export class IntegrationsSelectActionComponent extends FlowPage
     );
     this.connector.subscribe((connector: Connector) => {
       this.actions = connector.actions;
-      // TODO oh no, why is this needed...
-      setTimeout(() => {
-        this.detector.detectChanges();
-      }, 10);
     });
     this.routeSubscription = this.route.params
       .pluck<Params, string>('position')
