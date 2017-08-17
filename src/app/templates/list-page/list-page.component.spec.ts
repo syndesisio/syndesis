@@ -19,7 +19,7 @@ describe('TemplatesListPage', () => {
     async(() => {
       TestBed.configureTestingModule({
         imports: [
-          SyndesisCommonModule,
+          SyndesisCommonModule.forRoot(),
           StoreModule,
           RestangularModule.forRoot(),
           RouterTestingModule.withRoutes([]),

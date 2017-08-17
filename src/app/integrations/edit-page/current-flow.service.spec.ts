@@ -21,7 +21,10 @@ import { SyndesisCommonModule } from '../../common/common.module';
 describe('CurrentFlow', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RestangularModule.forRoot(), SyndesisCommonModule],
+      imports: [
+        RestangularModule.forRoot(),
+        SyndesisCommonModule.forRoot(),
+      ],
       providers: [
         CurrentFlow,
         IntegrationStore,

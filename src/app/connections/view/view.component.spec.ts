@@ -36,7 +36,7 @@ describe('ConnectionViewComponent', () => {
           ReactiveFormsModule,
           DynamicFormsCoreModule.forRoot(),
           PatternflyUIModule,
-          SyndesisCommonModule,
+          SyndesisCommonModule.forRoot(),
           StoreModule,
           RouterTestingModule.withRoutes([]),
           ModalModule,
