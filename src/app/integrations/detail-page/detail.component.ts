@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import { StepStore } from '../../store/step/step.store';
 import { Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 
@@ -17,14 +18,124 @@ export class IntegrationsDetailComponent implements OnInit, OnDestroy {
   i: Integration;
   readonly loading: Observable<boolean>;
   routeSubscription: Subscription;
+  history = undefined;
+  tableTestData = [
+    {
+      version: 'Draft',
+      startTime: new Date(),
+      runLength: '',
+      uses: undefined,
+      status: undefined,
+      actions: [
+        {
+          label: 'Edit Draft',
+        },
+      ],
+    },
+    {
+      version: 'V. 1.4',
+      startTime: new Date(),
+      runLength: 8,
+      uses: 10,
+      status: [
+        {
+          icon: 'pf-icon pficon-ok',
+          class: '',
+          label: 'Success',
+        },
+        {
+          icon: undefined,
+          class: 'label label-info pull-right',
+          label: 'Running',
+        },
+      ],
+      actions: [
+        {
+          label: 'Duplicate',
+        },
+      ],
+    },
+    {
+      version: 'V. 1.3',
+      startTime: new Date(),
+      runLength: 12,
+      uses: 23,
+      status: [
+        {
+          icon: 'pf-icon pficon-ok',
+          label: 'Success',
+        },
+      ],
+      actions: [
+        {
+          label: 'Deploy',
+        },
+        {
+          label: 'Duplicate',
+        },
+      ],
+    },
+    {
+      version: 'V. 1.2',
+      startTime: new Date(),
+      runLength: 5,
+      uses: 7,
+      status: [
+        {
+          icon: 'pf-icon pficon-ok',
+          label: 'Success',
+        },
+      ],
+      actions: [
+        {
+          label: 'Deploy',
+        },
+        {
+          label: 'Duplicate',
+        },
+      ],
+    },
+    {
+      version: 'V. 1.1',
+      startTime: new Date(),
+      runLength: 22,
+      uses: 3,
+      status: [
+        {
+          icon: 'pf-icon pficon-error-circle-o',
+          label: 'Failure',
+        },
+      ],
+      actions: [
+        {
+          label: 'Deploy',
+        },
+        {
+          label: 'Duplicate',
+        },
+      ],
+    },
+  ];
 
   constructor(
     public store: IntegrationStore,
+    public stepStore: StepStore,
     public route: ActivatedRoute,
     public router: Router,
+    public detector: ChangeDetectorRef,
   ) {
     this.integration = this.store.resource;
     this.loading = this.store.loading;
+  }
+
+  getStepLineClass(index: number) {
+    if (index === 0) {
+      return 'start';
+    }
+    if (index === this.i.steps.length - 1) {
+      return 'finish';
+    }
+    return '';
   }
 
   ngOnInit() {
@@ -37,6 +148,10 @@ export class IntegrationsDetailComponent implements OnInit, OnDestroy {
       .pluck<Params, string>('integrationId')
       .map((id: string) => this.store.load(id))
       .subscribe();
+    setTimeout(() => {
+      this.history = JSON.parse(JSON.stringify(this.tableTestData));
+      this.detector.detectChanges();
+    }, 1000);
   }
 
   ngOnDestroy() {
