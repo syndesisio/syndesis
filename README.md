@@ -150,6 +150,15 @@ for example: `yarn commit -am 'Blah blah blah''`.
 
 Don't forget to add your files to staging first with `git add -A`. This is a `git commit` tool, not a total `git` replacement.
 
+### Documentation
+
+We use [Compodoc](https://compodoc.github.io/website/) for documentation. Files get generated automatically in the 
+`/documentation` directory. Read the documentation [here](https://compodoc.github.io/website/guides/getting-started.html) to see how to properly document features. You can automatically generate and run docs using Yarn:
+
+`yarn compodoc`
+
+Or manually with `compodoc -s`, or `compodoc` if you want it to simply generate the files in the default `/documentation` directory and run it with an HTTP server.
+
 #### Production
 *Requires having `angular-cli` installed globally.*
 
