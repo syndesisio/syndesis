@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "Apache-2.0",
   "scripts": {
+    "compodoc": "./node_modules/.bin/compodoc -p src/tsconfig.json -s",
     "format": "yarn prettier -- --single-quote --trailing-comma all --write \"./src/**/*.{ts,css,scss,js,json}\"",
     "generate": "node ./scripts/generate-ts.js",
     "copy:assets": "yarn ncp node_modules/syndesis.data.mapper/src/assets/dm src/assets/dm",
@@ -75,6 +76,7 @@
   "devDependencies": {
     "@angular/cli": "1.0.3",
     "@angular/compiler-cli": "4.1.2",
+    "@compodoc/compodoc": "^1.0.0-beta.14",
     "@types/chai-as-promised": "^0.0.29",
     "@types/cucumber": "^0.0.37",
     "@types/file-saver": "0.0.0",
