@@ -2183,7 +2183,7 @@ objects:
           imagePullPolicy: IfNotPresent
 
           ports:
-          - containerPort: 2015
+          - containerPort: 8080
           volumeMounts:
           - mountPath: /srv/config.json
             name: config-volume
