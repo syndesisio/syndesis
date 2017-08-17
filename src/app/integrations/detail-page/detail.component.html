@@ -35,7 +35,7 @@
                          let-step
                          [ngForOf]="i.steps"
                          let-index="index">
-              <div class="step-block inline-block text-center">
+              <div *ngIf="step" class="step-block inline-block text-center">
                 <ng-container [ngSwitch]="step.stepKind">
                   <ng-container *ngSwitchCase="'endpoint'">
                     <div class="text-center connection"
