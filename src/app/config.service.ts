@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 
-import * as _ from 'lodash';
-
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
@@ -33,9 +31,7 @@ export class ConfigService {
           () => 'Received config: ' + JSON.stringify(config, undefined, 2),
           category,
         );
-        this.settingsRepository = Object.freeze(
-          _.merge({}, this.settingsRepository, config),
-        );
+        this.settingsRepository = Object.freeze({ ...this.settingsRepository, ...config });
         log.debugc(
           () =>
             'Using merged config: ' +
