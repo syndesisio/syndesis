@@ -12,7 +12,10 @@ describe('TemplatesListComponent', () => {
   beforeEach(
     async(() => {
       TestBed.configureTestingModule({
-        imports: [SyndesisCommonModule, RouterTestingModule.withRoutes([])],
+        imports: [
+          SyndesisCommonModule.forRoot(),
+          RouterTestingModule.withRoutes([]),
+        ],
         declarations: [TemplatesListComponent],
       }).compileComponents();
     }),

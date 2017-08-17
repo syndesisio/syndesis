@@ -24,7 +24,7 @@ describe('ConnectionListPage', () => {
     async(() => {
       TestBed.configureTestingModule({
         imports: [
-          SyndesisCommonModule,
+          SyndesisCommonModule.forRoot(),
           StoreModule,
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),

@@ -41,7 +41,6 @@ import { ModalService } from './modal/modal.service';
     ModalComponent,
   ],
   providers: [
-    ConfigService,
     FormFactoryService,
     ModalService,
   ],

@@ -29,7 +29,7 @@ describe('DashboardComponent', () => {
     async(() => {
       TestBed.configureTestingModule({
         imports: [
-          SyndesisCommonModule,
+          SyndesisCommonModule.forRoot(),
           ChartsModule,
           ModalModule.forRoot(),
           TooltipModule.forRoot(),

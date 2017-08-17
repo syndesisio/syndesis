@@ -22,7 +22,7 @@ describe('ConnectionViewToolbarComponent', () => {
         imports: [
           CommonModule,
           RouterTestingModule.withRoutes([]),
-          SyndesisCommonModule,
+          SyndesisCommonModule.forRoot(),
           StoreModule,
         ],
         declarations: [ConnectionViewToolbarComponent],

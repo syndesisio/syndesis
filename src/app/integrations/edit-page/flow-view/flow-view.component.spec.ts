@@ -37,7 +37,7 @@ describe('IntegrationsCreateComponent', () => {
           TabsModule.forRoot(),
           PopoverModule.forRoot(),
           CollapseModule.forRoot(),
-          SyndesisCommonModule,
+          SyndesisCommonModule.forRoot(),
           CollapseModule,
         ],
         declarations: [FlowViewComponent, FlowViewStepComponent],

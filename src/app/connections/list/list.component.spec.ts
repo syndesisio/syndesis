@@ -22,7 +22,7 @@ describe('ConnectionsListComponent', () => {
       TestBed.configureTestingModule({
         imports: [
           CommonModule,
-          SyndesisCommonModule,
+          SyndesisCommonModule.forRoot(),
           RouterTestingModule.withRoutes([]),
           ModalModule.forRoot(),
           BsDropdownModule.forRoot(),
