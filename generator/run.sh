@@ -1,6 +1,10 @@
 #!/bin/bash
+set -euo pipefail
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+targetdir=${1:-${dir}/..}
+
+mkdir -p ${targetdir}
 
 MESSAGE=$(cat <<'EOF'
 #
@@ -13,20 +17,20 @@ go get -u github.com/spf13/cobra github.com/spf13/pflag github.com/hoisie/mustac
 
 cd $dir
 
-echo "$MESSAGE" > ${dir}/../syndesis.yml
-go run syndesis-template.go --name=syndesis >> ${dir}/../syndesis.yml
+echo "$MESSAGE" > ${targetdir}/syndesis.yml
+go run syndesis-template.go --name=syndesis >> ${targetdir}/syndesis.yml
 
-echo "$MESSAGE" > ${dir}/../syndesis-dev.yml
-go run syndesis-template.go --name=syndesis-dev --dev >> ${dir}/../syndesis-dev.yml
+echo "$MESSAGE" > ${targetdir}/syndesis-dev.yml
+go run syndesis-template.go --name=syndesis-dev --dev >> ${targetdir}/syndesis-dev.yml
 
-echo "$MESSAGE" > ${dir}/../syndesis-restricted.yml
-go run syndesis-template.go --name=syndesis-restricted --restricted >> ${dir}/../syndesis-restricted.yml
+echo "$MESSAGE" > ${targetdir}/syndesis-restricted.yml
+go run syndesis-template.go --name=syndesis-restricted --restricted >> ${targetdir}/syndesis-restricted.yml
 
-echo "$MESSAGE" > ${dir}/../syndesis-ephemeral-restricted.yml
-go run syndesis-template.go --name=syndesis-ephemeral-restricted --ephemeral --restricted >> ${dir}/../syndesis-ephemeral-restricted.yml
+echo "$MESSAGE" > ${targetdir}/syndesis-ephemeral-restricted.yml
+go run syndesis-template.go --name=syndesis-ephemeral-restricted --ephemeral --restricted >> ${targetdir}/syndesis-ephemeral-restricted.yml
 
-echo "$MESSAGE" > ${dir}/../syndesis-dev-restricted.yml
-go run syndesis-template.go --name=syndesis-dev-restricted --restricted --dev >> ${dir}/../syndesis-dev-restricted.yml
+echo "$MESSAGE" > ${targetdir}/syndesis-dev-restricted.yml
+go run syndesis-template.go --name=syndesis-dev-restricted --restricted --dev >> ${targetdir}/syndesis-dev-restricted.yml
 
-echo "$MESSAGE" > ${dir}/../syndesis-ci.yml
-go run syndesis-template.go --name=syndesis-ci --probeless  >> ${dir}/../syndesis-ci.yml
+echo "$MESSAGE" > ${targetdir}/syndesis-ci.yml
+go run syndesis-template.go --name=syndesis-ci --probeless  >> ${targetdir}/syndesis-ci.yml
