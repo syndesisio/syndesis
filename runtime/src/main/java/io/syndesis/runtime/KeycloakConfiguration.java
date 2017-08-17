@@ -113,6 +113,7 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
             .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()).and().authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers("/api/v1/swagger.*").permitAll()
+            .antMatchers("/api/v1/index.html").permitAll()
             .antMatchers(HttpMethod.GET, "/api/v1/credentials/callback").permitAll()
             .antMatchers("/api/v1/**").authenticated()
             .anyRequest().permitAll();
