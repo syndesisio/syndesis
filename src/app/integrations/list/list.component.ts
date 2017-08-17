@@ -48,7 +48,7 @@ export class IntegrationsListComponent {
   }
 
   handleClick($event: ListEvent) {
-    this.router.navigate(['integrations', 'edit', $event.item.id, 'save-or-add-step']);
+    this.router.navigate(['/integrations', $event.item.id], { relativeTo: this.route });
   }
 
   getActionConfig(integration: Integration): ActionConfig {
@@ -101,8 +101,10 @@ export class IntegrationsListComponent {
 
   handleAction($event: Action, integration: Integration) {
     switch ($event.id ) {
+      case 'view':
+        return this.router.navigate(['/integrations', integration.id]);
       case 'edit':
-        return this.router.navigate(['integrations', 'edit', integration.id, 'save-or-add-step']);
+        return this.router.navigate(['/integrations', integration.id, 'edit']);
       case 'activate':
         return this.requestActivate(integration);
       case 'deactivate':
@@ -122,6 +124,8 @@ export class IntegrationsListComponent {
         return this.deleteAction(integration);
     }
   }
+
+  //-----  Activate/Deactivate ------------------->>
 
   // TODO: Refactor into single method for both cases
   // Open modal to confirm activation

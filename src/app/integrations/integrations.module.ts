@@ -14,6 +14,7 @@ import { DataMapperModule } from 'syndesis.data.mapper';
 
 import { IntegrationsListModule } from './list/list.module';
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
+import { IntegrationsDetailComponent } from './detail-page/detail.component';
 import { IntegrationsEditPage } from './edit-page/edit-page.component';
 import { IntegrationBasicsComponent } from './edit-page/integration-basics/integration-basics.component';
 import { IntegrationsSelectConnectionComponent } from './edit-page/connection-select/connection-select.component';
@@ -64,7 +65,11 @@ const routes: Routes = [
     children: editIntegrationChildRoutes,
   },
   {
-    path: 'edit/:integrationId',
+    path: ':integrationId',
+    component: IntegrationsDetailComponent,
+  },
+  {
+    path: ':integrationId/edit',
     component: IntegrationsEditPage,
     children: editIntegrationChildRoutes,
   },
@@ -94,6 +99,7 @@ const routes: Routes = [
     IntegrationsConfigureActionComponent,
     IntegrationsEditPage,
     IntegrationBasicsComponent,
+    IntegrationsDetailComponent,
     IntegrationsSelectConnectionComponent,
     IntegrationsSaveOrAddStepComponent,
     IntegrationsStepSelectComponent,
