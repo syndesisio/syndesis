@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "Apache-2.0",
   "scripts": {
-    "compodoc": "./node_modules/.bin/compodoc -p src/tsconfig.json -s",
+    "compodoc": "./node_modules/.bin/compodoc -s",
     "format": "yarn prettier -- --single-quote --trailing-comma all --write \"./src/**/*.{ts,css,scss,js,json}\"",
     "generate": "node ./scripts/generate-ts.js",
     "copy:assets": "yarn ncp node_modules/syndesis.data.mapper/src/assets/dm src/assets/dm",
