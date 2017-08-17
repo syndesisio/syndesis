@@ -94,7 +94,7 @@
           ports:
           - containerPort: 8080
           volumeMounts:
-          - mountPath: /srv/config.json
+          - mountPath: /usr/share/nginx/html/config.json
             name: config-volume
             subPath: config/config.json
         volumes:
