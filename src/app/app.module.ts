@@ -4,7 +4,6 @@ import { NgModule, NgZone, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import * as _ from 'lodash';
 
 import { RestangularModule } from 'ngx-restangular';
 import { OAuthService, OAuthModule } from 'angular-oauth2-oidc-hybrid';
@@ -143,7 +142,7 @@ export function appInitializer(
                         () => 'Failed to refresh token',
                         () => new Error(reason),
                       );
-                      if (!_.includes(notificationService.getNotifications(), notification)) {
+                      if (!notificationService.getNotifications().find(n => n === notification)) {
                         notificationService.getNotifications().push(notification);
                       }
                     });
