@@ -1,9 +1,152 @@
 <syndesis-loading [loading]="loading | async">
-  <div class="row">
+  <div class="row integration-detail">
     <div class="col-md-12">
+      <div class="toolbar">
+        <div class="row toolbar-pf">
+          <div class="col-sm-12">
+            <div class="inline-block">
+              <ol class="breadcrumb">
+                <li>
+                  <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Home</a>
+                </li>
+                <li>
+                  <a [routerLink]="['/integrations']">Integrations</a>
+                </li>
+                <li class="active">Integration Summary</li>
+              </ol>
+            </div>
+            <div class="toolbar-pf-action-right">
+              <a class="btn btn-primary"
+                 [routerLink]="['..']">Done</a>
+              <a class="btn btn-default"
+                 [routerLink]="['edit']">Edit Integration</a>
+            </div>
+          </div>
+        </div>
+      </div>
       <h1>{{ i.name }}</h1>
-      <a class="btn btn-primary" [routerLink]="['edit']">Edit</a>
-      <a class="btn btn-default" [routerLink]="['..']">Done</a>
+      <dl class="dl-horizontal">
+        <dt>
+          Description:
+        </dt>
+        <dd>
+          <p>
+            <ng-template ngFor
+                         let-step
+                         [ngForOf]="i.steps"
+                         let-index="index">
+              <div *ngIf="step" class="step-block inline-block text-center">
+                <ng-container [ngSwitch]="step.stepKind">
+                  <ng-container *ngSwitchCase="'endpoint'">
+                    <div class="text-center connection"
+                         title="{{ step.connection.name }}&nbsp;{{ step.action.name }}">
+                      <div [class]="'step-line ' + getStepLineClass(index)"></div>
+                      <div class="icon">
+                        <img class="connection-icon"
+                             src="../../../assets/icons/{{ step.connection.connectorId }}.integration.png">
+                      </div>
+                      <div>{{ step.connection.connectorId | capitalize }}</div>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    <div class="text-center step">
+                      <div class="step-line"></div>
+                      <div class="icon not-connection">
+                        <div class="icon-line"></div>
+                      </div>
+                      <div>{{ stepStore.getStepName(step.stepKind) }}</div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </ng-template>
+          </p>
+          <p *ngIf="i.description">
+            {{ i.description }} <a href=""><i class="fa fa-pencil"></i></a>
+          </p>
+          <p *ngIf="!i.description">
+            <i>No description set... <a href=""><i class="fa fa-pencil"></i></a>
+            </i>
+          </p>
+        </dd>
+      </dl>
+      <dl class="dl-horizontal">
+        <dt>
+          Status:
+        </dt>
+        <dd>
+          <p>
+            <span class="label label-info">Active</span>
+          </p>
+          <p>
+            <button class="btn btn-default">Stop Integration</button>
+            <button class="btn btn-default">Undeploy Integration</button>
+          </p>
+        </dd>
+      </dl>
+      <dl class="dl-horizontal">
+        <dt>
+          History:
+        </dt>
+        <dd>
+          <syndesis-loading [loading]="!history">
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>Version</th>
+                  <th>Start date/time</th>
+                  <th>Run Length</th>
+                  <th>Uses</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-template ngFor
+                             let-row
+                             [ngForOf]="history">
+                  <tr>
+                    <td>
+                      <ng-container *ngIf="row.version === 'Draft'">
+                        <i>Draft</i>
+                      </ng-container>
+                      <ng-container *ngIf="row.version !== 'Draft'">
+                        {{ row.version }}
+                      </ng-container>
+                    </td>
+                    <td>{{ row.startTime | date:"M/d/y H:m:s" }}</td>
+                    <td>
+                      <ng-container *ngIf="row.runLength || row.runLength === 0">
+                        {{ row.runLength }}s
+                      </ng-container>
+                    </td>
+                    <td>{{ row.uses }}</td>
+                    <td>
+                      <span *ngFor="let status of row.status"
+                            [class]="status.class">
+                          <i *ngIf="status.icon" [class]="status.icon"></i>
+                          {{ status.label }}
+                        </span>
+                    </td>
+                    <td>
+                      <button class="btn btn-default"
+                              *ngFor="let action of row.actions">{{action.label}}</button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </tbody>
+            </table>
+          </syndesis-loading>
+        </dd>
+      </dl>
+      <dl class="dl-horizontal">
+        <dt>
+        </dt>
+        <dd>
+          <button class="btn btn-default">Delete Integration</button>
+        </dd>
+      </dl>
+
     </div>
   </div>
 </syndesis-loading>
