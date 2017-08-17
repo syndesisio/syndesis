@@ -88,6 +88,8 @@
           resources:
             limits:
               memory: ${POSTGRESQL_MEMORY_LIMIT}
+            requests:
+              memory: ${POSTGRESQL_MEMORY_LIMIT}              
 {{^Ephemeral}}
           volumeMounts:
           - mountPath: /var/lib/pgsql/data

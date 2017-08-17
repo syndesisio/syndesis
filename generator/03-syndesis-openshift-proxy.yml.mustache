@@ -80,6 +80,13 @@
           volumeMounts:
           - mountPath: /tls
             name: tls-volume
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 255Mi
+            requests:
+              cpu: 200m
+              memory: 255Mi
         volumes:
         - secret:
             secretName: syndesis-openshift-proxy-tls

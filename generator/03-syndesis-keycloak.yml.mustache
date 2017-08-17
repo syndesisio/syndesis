@@ -186,6 +186,13 @@
               path: "/auth/"
               port: 8080
             initialDelaySeconds: 10{{/Probeless}}
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 768Mi
+            requests:
+              cpu: 200m
+              memory: 768Mi
           ports:
           - containerPort: 8080
           volumeMounts:

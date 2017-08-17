@@ -67,7 +67,7 @@ parameters:
 - description: Maximum amount of memory the PostgreSQL container can use.
   displayName: Memory Limit
   name: POSTGRESQL_MEMORY_LIMIT
-  value: 512Mi
+  value: 255Mi
 - description: The OpenShift Namespace where the PostgreSQL ImageStream resides.
   displayName: Namespace
   name: POSTGRESQL_IMAGE_STREAM_NAMESPACE
@@ -505,6 +505,8 @@ objects:
           resources:
             limits:
               memory: ${POSTGRESQL_MEMORY_LIMIT}
+            requests:
+              memory: ${POSTGRESQL_MEMORY_LIMIT}              
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: syndesis-db-data
@@ -708,6 +710,13 @@ objects:
               path: "/auth/"
               port: 8080
             initialDelaySeconds: 10
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 768Mi
+            requests:
+              cpu: 200m
+              memory: 768Mi
           ports:
           - containerPort: 8080
           volumeMounts:
@@ -1830,6 +1839,13 @@ objects:
           volumeMounts:
           - mountPath: /tls
             name: tls-volume
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 255Mi
+            requests:
+              cpu: 200m
+              memory: 255Mi
         volumes:
         - secret:
             secretName: syndesis-openshift-proxy-tls
@@ -2209,6 +2225,13 @@ objects:
           - mountPath: /usr/share/nginx/html/config.json
             name: config-volume
             subPath: config/config.json
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 255Mi
+            requests:
+              cpu: 200m
+              memory: 255Mi
         volumes:
         - configMap:
             items:
@@ -2370,10 +2393,10 @@ objects:
           resources:
             limits:
               cpu: 2000m
-              memory: 612Mi
+              memory: 512Mi
             requests:
               cpu: 200m
-              memory: 612Mi
+              memory: 512Mi
           # spring-boot automatically picks up application.yml from ./config
           workingDir: /deployments
           volumeMounts:

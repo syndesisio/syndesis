@@ -97,6 +97,13 @@
           - mountPath: /usr/share/nginx/html/config.json
             name: config-volume
             subPath: config/config.json
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 255Mi
+            requests:
+              cpu: 200m
+              memory: 255Mi
         volumes:
         - configMap:
             items:
