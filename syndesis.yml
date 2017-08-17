@@ -2137,9 +2137,9 @@ objects:
           {"name":"syndesis-db","kind":"Service"} ]
   spec:
     ports:
-    - port: 2015
+    - port: 8080
       protocol: TCP
-      targetPort: 2015
+      targetPort: 8080
     selector:
       app: syndesis
       component: syndesis-ui
@@ -2153,7 +2153,7 @@ objects:
   spec:
     host: ${ROUTE_HOSTNAME}
     port:
-      targetPort: 2015
+      targetPort: 8080
     tls:
       insecureEdgeTerminationPolicy: Redirect
       termination: edge
@@ -2200,12 +2200,12 @@ objects:
           livenessProbe:
             httpGet:
               path: "/"
-              port: 2015
+              port: 8080
             initialDelaySeconds: 3
           readinessProbe:
             httpGet:
               path: "/"
-              port: 2015
+              port: 8080
             initialDelaySeconds: 1
           ports:
           - containerPort: 2015
