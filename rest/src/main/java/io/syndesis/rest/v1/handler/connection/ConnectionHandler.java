@@ -34,7 +34,7 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.validation.UniquenessRequired;
+import io.syndesis.model.validation.AllValidations;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Creator;
 import io.syndesis.rest.v1.operations.Deleter;
@@ -87,7 +87,7 @@ public class ConnectionHandler extends BaseHandler
     }
 
     @Override
-    public Connection create(@ConvertGroup(from = Default.class, to = UniquenessRequired.class) final Connection connection) {
+    public Connection create(@ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
         final Date rightNow = new Date();
         final Connection updatedConnection = new Connection.Builder().createFrom(connection).createdDate(rightNow)
             .lastUpdated(rightNow).build();
@@ -109,7 +109,7 @@ public class ConnectionHandler extends BaseHandler
     }
 
     @Override
-    public void update(final String id, final Connection connection) {
+    public void update(final String id, @ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
         final Connection updatedConnection = new Connection.Builder().createFrom(connection).lastUpdated(new Date())
             .build();
         Updater.super.update(id, updatedConnection);

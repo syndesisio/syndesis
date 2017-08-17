@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model;
+package io.syndesis.core.immutable;
 
-import java.util.SortedSet;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import io.syndesis.core.immutable.SkipNulls;
-
-import org.immutables.value.Value;
-
-public interface WithTags {
-
-    @Value.NaturalOrder
-    @SkipNulls
-    SortedSet<String> getTags();
-
+/**
+ * Directs Immutables not to add {@code null} values to collections. When this
+ * annotation is added to a collection type parameter it will generate a builder
+ * that will ignore {@code null} values being added to a collection.
+ */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.SOURCE)
+@Documented
+public @interface SkipNulls {
+    // tag annotation
 }

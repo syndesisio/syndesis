@@ -15,7 +15,7 @@
           "description": "Timer Connection",
           "icon": "fa-globe",
           "name": "Timer Example",
-          "id": 4
+          "id": "4"
         },
         "action": {
           "connectorId": "http",
@@ -52,7 +52,7 @@
           "description": "HTTP Connection",
           "icon": "fa-globe",
           "name": "HTTP Example",
-          "id": 3
+          "id": "3"
         },
         "action": {
           "connectorId": "http",
@@ -97,7 +97,7 @@
           "description": "HTTP Connection",
           "icon": "fa-globe",
           "name": "HTTP Example",
-          "id": 3
+          "id": "3"
         },
         "action": {
           "connectorId": "http",

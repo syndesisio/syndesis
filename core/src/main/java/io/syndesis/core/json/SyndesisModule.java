@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model;
+package io.syndesis.core.json;
 
-import java.util.SortedSet;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import io.syndesis.core.immutable.SkipNulls;
+public final class SyndesisModule extends SimpleModule {
 
-import org.immutables.value.Value;
+    private static final long serialVersionUID = 1L;
 
-public interface WithTags {
-
-    @Value.NaturalOrder
-    @SkipNulls
-    SortedSet<String> getTags();
-
+    public SyndesisModule() {
+        final StringTrimmingJsonDeserializer stringDeserializer = new StringTrimmingJsonDeserializer();
+        addDeserializer(String.class, stringDeserializer);
+    }
 }

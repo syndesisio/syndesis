@@ -16,7 +16,6 @@
 package io.syndesis.rest.v1.handler.setup;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +149,7 @@ public class OAuthAppHandler {
 
     private static boolean isOauthConnector(Connector connector) {
         return connector.getProperties().values().stream().anyMatch(x -> {
-                return x.getTags().orElse(Collections.emptySortedSet()).contains("oauth-client-id");
+                return x.getTags().contains("oauth-client-id");
             }
         );
     }
@@ -160,7 +159,7 @@ public class OAuthAppHandler {
             return null;
         }
         for (Map.Entry<String,ConfigurationProperty> entry : connector.getProperties().entrySet()) {
-            if( entry.getValue().getTags().orElse(Collections.emptySortedSet()).contains(name) ) {
+            if( entry.getValue().getTags().contains(name) ) {
                 return connector.getConfiguredProperties().get(entry.getKey());
             }
         }
@@ -169,7 +168,7 @@ public class OAuthAppHandler {
 
     private static void setPropertyTaggedAs(Connector connector, Map<String, String> configuredProperties, String name, String value) {
         for (Map.Entry<String,ConfigurationProperty> entry : connector.getProperties().entrySet()) {
-            if( entry.getValue().getTags().orElse(Collections.emptySortedSet()).contains(name) ) {
+            if( entry.getValue().getTags().contains(name) ) {
                 configuredProperties.put(entry.getKey(), value);
                 return;
             }

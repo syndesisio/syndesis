@@ -21,16 +21,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
+import io.syndesis.core.json.SyndesisModule;
+
 /**
  * JSON helper class.
  */
 public final class Json {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-        .registerModule(new Jdk8Module())
+        .registerModules(new Jdk8Module(), new SyndesisModule())
         .setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
-        .configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true)
-        .configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
+        .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
+        .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
 
     private Json() {
     }

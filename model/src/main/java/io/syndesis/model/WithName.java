@@ -15,8 +15,15 @@
  */
 package io.syndesis.model;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import io.syndesis.model.validation.AllValidations;
+
 public interface WithName {
 
+    @NotNull(groups = AllValidations.class)
+    @Size(min = 1, groups = AllValidations.class)
     String getName();
 
 }
