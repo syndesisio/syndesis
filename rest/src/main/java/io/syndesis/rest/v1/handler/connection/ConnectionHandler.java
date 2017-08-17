@@ -21,6 +21,7 @@ import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Validator;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import javax.ws.rs.Path;
@@ -40,6 +41,7 @@ import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.operations.Updater;
+import io.syndesis.rest.v1.operations.Validating;
 import io.syndesis.rest.v1.state.ClientSideState;
 
 import org.springframework.stereotype.Component;
@@ -48,7 +50,7 @@ import org.springframework.stereotype.Component;
 @Api(value = "connections")
 @Component
 public class ConnectionHandler extends BaseHandler
-    implements Lister<Connection>, Getter<Connection>, Creator<Connection>, Deleter<Connection>, Updater<Connection> {
+    implements Lister<Connection>, Getter<Connection>, Creator<Connection>, Deleter<Connection>, Updater<Connection>, Validating<Connection> {
 
     private final Credentials credentials;
 
@@ -60,8 +62,11 @@ public class ConnectionHandler extends BaseHandler
     @Context
     private HttpServletResponse response;
 
-    public ConnectionHandler(final DataManager dataMgr, final Credentials credentials, final ClientSideState state) {
+    private final Validator validator;
+
+    public ConnectionHandler(final DataManager dataMgr, final Validator validator, final Credentials credentials, final ClientSideState state) {
         super(dataMgr);
+        this.validator = validator;
         this.credentials = credentials;
         this.state = state;
     }
@@ -110,4 +115,8 @@ public class ConnectionHandler extends BaseHandler
         Updater.super.update(id, updatedConnection);
     }
 
+    @Override
+    public Validator getValidator() {
+        return validator;
+    }
 }
