@@ -28,7 +28,6 @@ import { BasicFilterComponent } from './edit-page/step-configure/filter-steps/ba
 import { ListActionsComponent } from './edit-page/list-actions/list-actions.component';
 import { CancelAddStepComponent } from './edit-page/common/cancel-add-step.component';
 import { IntegrationsListPage } from './list-page/list-page.component';
-import { IntegrationsFilterPipe } from './integrations-filter.pipe';
 import { FlowViewComponent } from './edit-page/flow-view/flow-view.component';
 import { FlowViewStepComponent } from './edit-page/flow-view/flow-view-step.component';
 import { CurrentFlow } from './edit-page/current-flow.service';
@@ -95,7 +94,6 @@ const routes: Routes = [
     IntegrationsConfigureActionComponent,
     IntegrationsEditPage,
     IntegrationBasicsComponent,
-    IntegrationsFilterPipe,
     IntegrationsSelectConnectionComponent,
     IntegrationsSaveOrAddStepComponent,
     IntegrationsStepSelectComponent,
