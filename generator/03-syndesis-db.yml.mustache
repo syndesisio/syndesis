@@ -50,8 +50,9 @@
       type: Recreate
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
     template:
       metadata:
         labels:
@@ -85,6 +86,8 @@
               - -c
               - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
             initialDelaySeconds: 5
+          # DB QoS class is "Guaranteed" (requests == limits)
+          # Note: On OSO there is no Guaranteed class, its always burstable
           resources:
             limits:
               memory: ${POSTGRESQL_MEMORY_LIMIT}

@@ -66,8 +66,9 @@
         updatePeriodSeconds: 1
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
       type: Rolling
     template:
       metadata:
@@ -90,7 +91,15 @@
               "volumeMounts": [{
                 "name": "syndesis-atlasmap-tls",
                 "mountPath": "/tls-keystore"
-              }]
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": { 
+                  "memory": "20Mi"
+                }
+              }
             }]
       spec:
         initContainers:
@@ -109,6 +118,11 @@
           volumeMounts:
           - name: syndesis-atlasmap-tls
             mountPath: /tls-keystore
+          resources:
+            limits:
+              memory: 255Mi
+            requests:
+              memory: 20Mi
         serviceAccountName: syndesis-atlasmap
         containers:
         - name: atlasmap
@@ -159,7 +173,7 @@
               memory: 612Mi
             requests:
               cpu: 200m
-              memory: 612Mi
+              memory: 255Mi
         volumes:
         - name: syndesis-atlasmap-tls
           emptyDir: {}

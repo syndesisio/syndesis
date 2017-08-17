@@ -62,8 +62,9 @@
         updatePeriodSeconds: 1
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
       type: Rolling
     template:
       metadata:
@@ -97,13 +98,13 @@
           - mountPath: /usr/share/nginx/html/config.json
             name: config-volume
             subPath: config/config.json
+          # Set to burstable with a low memory footprint to start (50 Mi)
           resources:
             limits:
-              cpu: 2000m
               memory: 255Mi
             requests:
               cpu: 200m
-              memory: 255Mi
+              memory: 50Mi
         volumes:
         - configMap:
             items:

@@ -282,8 +282,9 @@ objects:
         updatePeriodSeconds: 1
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
       type: Rolling
     template:
       metadata:
@@ -306,7 +307,15 @@ objects:
               "volumeMounts": [{
                 "name": "syndesis-atlasmap-tls",
                 "mountPath": "/tls-keystore"
-              }]
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": { 
+                  "memory": "20Mi"
+                }
+              }
             }]
       spec:
         initContainers:
@@ -325,6 +334,11 @@ objects:
           volumeMounts:
           - name: syndesis-atlasmap-tls
             mountPath: /tls-keystore
+          resources:
+            limits:
+              memory: 255Mi
+            requests:
+              memory: 20Mi
         serviceAccountName: syndesis-atlasmap
         containers:
         - name: atlasmap
@@ -372,7 +386,7 @@ objects:
               memory: 612Mi
             requests:
               cpu: 200m
-              memory: 612Mi
+              memory: 255Mi
         volumes:
         - name: syndesis-atlasmap-tls
           emptyDir: {}
@@ -454,8 +468,9 @@ objects:
       type: Recreate
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
     template:
       metadata:
         labels:
@@ -489,6 +504,8 @@ objects:
               - -c
               - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
             initialDelaySeconds: 5
+          # DB QoS class is "Guaranteed" (requests == limits)
+          # Note: On OSO there is no Guaranteed class, its always burstable
           resources:
             limits:
               memory: ${POSTGRESQL_MEMORY_LIMIT}
@@ -615,8 +632,9 @@ objects:
         updatePeriodSeconds: 1
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
       type: Rolling
     template:
       metadata:
@@ -639,7 +657,15 @@ objects:
               "volumeMounts": [{
                 "name": "syndesis-keycloak-tls",
                 "mountPath": "/tls-keystore"
-              }]
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": { 
+                  "memory": "20Mi"
+                }
+              }
             }]
       spec:
         initContainers:
@@ -658,6 +684,11 @@ objects:
           volumeMounts:
           - name: syndesis-keycloak-tls
             mountPath: /tls-keystore
+          resources:
+            limits:
+              memory: 255Mi
+            requests:
+              memory: 20Mi
         containers:
         - args:
           - -b
@@ -690,13 +721,12 @@ objects:
               path: "/auth/"
               port: 8080
             initialDelaySeconds: 10
+          # (on OSO relation requests to limits is fixed)
           resources:
             limits:
-              cpu: 2000m
               memory: 768Mi
             requests:
-              cpu: 200m
-              memory: 768Mi
+              memory: 480Mi
           ports:
           - containerPort: 8080
           volumeMounts:
@@ -1780,8 +1810,9 @@ objects:
         updatePeriodSeconds: 1
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
       type: Rolling
     template:
       metadata:
@@ -1819,13 +1850,18 @@ objects:
           volumeMounts:
           - mountPath: /tls
             name: tls-volume
+          # QoS class "Burstable", as the we actually (a) dont expect the 
+          # the contaner to eat up that much of memory and (b) not essential
+          # for the core functionality (but only for openshift related operations for
+          # running integrations)
+          # Note: Does not work on OSO (theres a fixed ration between limits / requests)
           resources:
             limits:
-              cpu: 2000m
+              cpu: 1000m
               memory: 255Mi
             requests:
               cpu: 200m
-              memory: 255Mi
+              memory: 40Mi
         volumes:
         - secret:
             secretName: syndesis-openshift-proxy-tls
@@ -1932,8 +1968,9 @@ objects:
         updatePeriodSeconds: 1
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
       type: Rolling
     template:
       metadata:
@@ -1956,7 +1993,15 @@ objects:
               "volumeMounts": [{
                 "name": "syndesis-rest-tls",
                 "mountPath": "/tls-keystore"
-              }]
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": { 
+                  "memory": "20Mi"
+                }
+              }
             }]
       spec:
         initContainers:
@@ -1975,6 +2020,11 @@ objects:
           volumeMounts:
           - name: syndesis-rest-tls
             mountPath: /tls-keystore
+          resources:
+            limits:
+              memory: 255Mi
+            requests:
+              memory: 20Mi
         serviceAccountName: syndesis-rest
         containers:
         - name: syndesis-rest
@@ -2022,13 +2072,15 @@ objects:
             mountPath: /tls-keystore
           - name: config-volume
             mountPath: /deployments/config
+          # Set QoS class to "Guaranteed" (limits == requests)
+          # This doesn't work on OSO as there is a fixed ratio 
+          # from limit to resource (80% currently). 'requests' is ignored there
           resources:
             limits:
-              cpu: 2000m
               memory: 612Mi
             requests:
               cpu: 200m
-              memory: 612Mi
+              memory: 256Mi
         volumes:
         - name: syndesis-rest-tls
           emptyDir: {}
@@ -2046,7 +2098,6 @@ objects:
       type: ImageChange
 
     - type: ConfigChange
-
 
 - apiVersion: v1
   kind: ConfigMap
@@ -2174,8 +2225,9 @@ objects:
         updatePeriodSeconds: 1
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
       type: Rolling
     template:
       metadata:
@@ -2205,13 +2257,13 @@ objects:
           - mountPath: /usr/share/nginx/html/config.json
             name: config-volume
             subPath: config/config.json
+          # Set to burstable with a low memory footprint to start (50 Mi)
           resources:
             limits:
-              cpu: 2000m
               memory: 255Mi
             requests:
               cpu: 200m
-              memory: 255Mi
+              memory: 50Mi
         volumes:
         - configMap:
             items:
@@ -2294,8 +2346,9 @@ objects:
         updatePeriodSeconds: 1
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
       type: Rolling
     template:
       metadata:
@@ -2318,7 +2371,15 @@ objects:
               "volumeMounts": [{
                 "name": "syndesis-verifier-tls",
                 "mountPath": "/tls-keystore"
-              }]
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": { 
+                  "memory": "20Mi"
+                }
+              }
             }]
       spec:
         initContainers:
@@ -2337,6 +2398,11 @@ objects:
           volumeMounts:
           - name: syndesis-verifier-tls
             mountPath: /tls-keystore
+          resources:
+            limits:
+              memory: 255Mi
+            requests:
+              memory: 20Mi
         serviceAccountName: syndesis-rest
         containers:
         - name: syndesis-verifier
@@ -2376,7 +2442,7 @@ objects:
               memory: 512Mi
             requests:
               cpu: 200m
-              memory: 512Mi
+              memory: 280Mi
           # spring-boot automatically picks up application.yml from ./config
           workingDir: /deployments
           volumeMounts:

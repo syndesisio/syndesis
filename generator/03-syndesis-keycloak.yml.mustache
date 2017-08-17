@@ -107,8 +107,9 @@
         updatePeriodSeconds: 1
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
       type: Rolling
     template:
       metadata:
@@ -131,7 +132,15 @@
               "volumeMounts": [{
                 "name": "syndesis-keycloak-tls",
                 "mountPath": "/tls-keystore"
-              }]
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": { 
+                  "memory": "20Mi"
+                }
+              }
             }]
       spec:
         initContainers:
@@ -150,6 +159,11 @@
           volumeMounts:
           - name: syndesis-keycloak-tls
             mountPath: /tls-keystore
+          resources:
+            limits:
+              memory: 255Mi
+            requests:
+              memory: 20Mi
         containers:
         - args:
           - -b
@@ -186,13 +200,12 @@
               path: "/auth/"
               port: 8080
             initialDelaySeconds: 10{{/Probeless}}
+          # (on OSO relation requests to limits is fixed)
           resources:
             limits:
-              cpu: 2000m
               memory: 768Mi
             requests:
-              cpu: 200m
-              memory: 768Mi
+              memory: 480Mi
           ports:
           - containerPort: 8080
           volumeMounts:
