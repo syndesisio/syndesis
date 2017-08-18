@@ -191,6 +191,21 @@ export function restangularProviderConfigurer(
   });
 }
 
+/**
+ * The main module of this library. Example usage:
+ *
+ * ```typescript
+ * import { AppModule } from 'syndesis-ui';
+ *
+ * &commat;NgModule({
+ *   imports: [
+ *     AppModule.forRoot()
+ *   ]
+ * })
+ * class AppModule {}
+ * ```
+ *
+ */
 @NgModule({
   declarations: [AppComponent],
   imports: [
