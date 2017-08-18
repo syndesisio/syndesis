@@ -1,74 +1,76 @@
-<div class="action-select">
+<syndesis-loading [loading]='loading | async'>
+  <div class="action-select">
 
-  <!-- Toolbar -->
-  <div class="toolbar">
+    <!-- Toolbar -->
+    <div class="toolbar">
 
-    <!-- Toolbar: Breadcrumbs -->
-    <div class="row toolbar-pf">
-      <div class="col-sm-12">
-        <div class="toolbar-pf-actions">
-          <div class="inline-block">
-            <ol class="breadcrumb">
-              <li>
-                <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Home</a>
-              </li>
-              <li>
-                <a [routerLink]="['/integrations']">Integrations</a>
-              </li>
-              <li>
-                <a *ngIf="integrationName"
-                   [routerLink]="['/integrations', currentFlow.integration.id]">{{integrationName}}</a>
-                <ng-container *ngIf="!integrationName">New Integration</ng-container>
-              </li>
-              <li class="active">Choose Action</li>
-            </ol>
-          </div>
-          <div class="toolbar-pf-action-right">
-            <syndesis-cancel-add-step></syndesis-cancel-add-step>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="wizard-pf-body clearfix pre-content">
-    <div class="title">
-      <h1>Choose an Action</h1>
-    </div>
-
-    <!-- Actions -->
-
-    <div *ngIf="actions">
-      <p>Choose an action for the selected connection.</p>
-
-      <!-- Toolbar -->
+      <!-- Toolbar: Breadcrumbs -->
       <div class="row toolbar-pf">
         <div class="col-sm-12">
           <div class="toolbar-pf-actions">
-
-            <!-- Toolbar: Search -->
-
-            <div class="form-group toolbar-pf-filter search">
-              <label class="sr-only">Name</label>
-              <div class="input-group">
-                <input #filterInput
-                       (keyup)="filterInputChange(filterInput?.value)"
-                       type="text"
-                       class="form-control"
-                       placeholder="Filter by {{filter?.propertyName}}..."
-                       autocomplete="off"
-                       id="filterInput">
-              </div>
+            <div class="inline-block">
+              <ol class="breadcrumb">
+                <li>
+                  <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Home</a>
+                </li>
+                <li>
+                  <a [routerLink]="['/integrations']">Integrations</a>
+                </li>
+                <li>
+                  <a *ngIf="integrationName"
+                     [routerLink]="['/integrations', currentFlow.integration.id]">{{integrationName}}</a>
+                  <ng-container *ngIf="!integrationName">New Integration</ng-container>
+                </li>
+                <li class="active">Choose Action</li>
+              </ol>
+            </div>
+            <div class="toolbar-pf-action-right">
+              <syndesis-cancel-add-step></syndesis-cancel-add-step>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Action List -->
+    <div class="wizard-pf-body clearfix pre-content">
+      <div class="title">
+        <h1>Choose an Action</h1>
+      </div>
 
-      <syndesis-list-actions [actions]="actions | objectPropertyFilter:filter"
-                          [loading]="loading | async"
-                          (onSelected)="onSelected($event)"></syndesis-list-actions>
+      <!-- Actions -->
+
+      <div *ngIf="actions">
+        <p>Choose an action for the selected connection.</p>
+
+        <!-- Toolbar -->
+        <div class="row toolbar-pf">
+          <div class="col-sm-12">
+            <div class="toolbar-pf-actions">
+
+              <!-- Toolbar: Search -->
+
+              <div class="form-group toolbar-pf-filter search">
+                <label class="sr-only">Name</label>
+                <div class="input-group">
+                  <input #filterInput
+                         (keyup)="filterInputChange(filterInput?.value)"
+                         type="text"
+                         class="form-control"
+                         placeholder="Filter by {{filter?.propertyName}}..."
+                         autocomplete="off"
+                         id="filterInput">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action List -->
+
+        <syndesis-list-actions [actions]="actions | objectPropertyFilter:filter"
+                               [loading]="loading | async"
+                               (onSelected)="onSelected($event)"></syndesis-list-actions>
+      </div>
     </div>
   </div>
-</div>
+</syndesis-loading>
