@@ -60,12 +60,7 @@ export abstract class FlowPage implements OnDestroy {
     this.currentFlow.events.emit({
       kind: 'integration-save',
       action: (i: Integration) => {
-        /*
-        this.detector.detectChanges();
-        this.saveInProgress = false;
-        this.publishInProgress = false;
-        */
-        router.navigate(['/integrations', this.currentFlow.integration.id]);
+        router.navigate(['/integrations', i.id]);
       },
       error: error => {
         setTimeout(() => {
