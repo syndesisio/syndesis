@@ -11,6 +11,7 @@ import { ActionModule, ListModule, NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { IntegrationsListComponent } from './list.component';
+import { IntegrationStatusComponent } from '../components/status.component';
 import { StoreModule } from '../../store/store.module';
 
 describe('IntegrationsListComponent', () => {
@@ -33,7 +34,7 @@ describe('IntegrationsListComponent', () => {
           ListModule,
           NotificationModule,
         ],
-        declarations: [IntegrationsListComponent],
+        declarations: [IntegrationStatusComponent, IntegrationsListComponent],
       }).compileComponents();
     }),
   );
