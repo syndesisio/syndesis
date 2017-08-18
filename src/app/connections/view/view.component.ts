@@ -20,6 +20,7 @@ import {
 } from '@ng2-dynamic-forms/core';
 
 import { FormFactoryService } from '../../common/forms.service';
+import { ConnectionService } from '../../store/connection/connection.service';
 import { ConnectorStore } from '../../store/connector/connector.store';
 import { Connection, Connectors, Connector, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
@@ -47,8 +48,10 @@ export class ConnectionViewComponent implements OnInit, OnChanges, OnDestroy {
   _formGroup: FormGroup;
   formChangesSubscription: Subscription;
   configuredProperties: any;
+  nameTaken = false;
 
   constructor(
+    private connectionService: ConnectionService,
     private store: ConnectorStore,
     private formFactory: FormFactoryService,
     private formService: DynamicFormService,
@@ -110,6 +113,24 @@ export class ConnectionViewComponent implements OnInit, OnChanges, OnDestroy {
         }, 10);
       },
     );
+  }
+
+  clearNameTakenValidation() {
+    this.nameTaken = false;
+  }
+
+  validateNameTaken() {
+    this.connectionService.validate(this.connection)
+      .subscribe(
+        response => {
+          this.nameTaken = false;
+          this.detector.detectChanges();
+        },
+        errors => {
+          this.nameTaken = true;
+          this.detector.detectChanges();
+        },
+      );
   }
 
   get name(): string {
