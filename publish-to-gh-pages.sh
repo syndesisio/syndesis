@@ -18,7 +18,7 @@ echo "Removing existing files"
 rm -rf documentation/*
 
 echo "Generating documentation"
-./node_modules/.bin/compodoc
+./node_modules/.bin/compodoc -p src/tsconfig.json
 
 cd documentation
 if [[ -n "$(git status -s)" ]] ; then

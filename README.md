@@ -152,8 +152,7 @@ Don't forget to add your files to staging first with `git add -A`. This is a `gi
 
 ### Documentation
 
-We use [Compodoc](https://compodoc.github.io/website/) for documentation. Files get generated automatically in the 
-`/documentation` directory. Read the documentation [here](https://compodoc.github.io/website/guides/getting-started.html) to see how to properly document features. You can automatically generate and run docs using Yarn:
+We use [Compodoc](https://compodoc.github.io/website/) for documentation, or [here](https://compodoc.github.io/website/guides/comments.html) to see how to format comments. Files get generated automatically in the `/documentation` directory. Read the documentation [here](https://compodoc.github.io/website/guides/getting-started.html) to see how to properly document features. You can automatically generate and run docs using Yarn:
 
 `yarn compodoc`
 
