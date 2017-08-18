@@ -23,7 +23,6 @@ public class ConnectionTest {
 
     @Test
     public void byDefaultDerivedShouldBeFalse() {
-        @SuppressWarnings("PMD.CloseResource")
         Connection connection = new Connection.Builder().build();
 
         assertThat(connection.isDerived()).isFalse();

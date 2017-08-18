@@ -34,7 +34,6 @@ public class ConnectionsITCase extends BaseITCase {
 
     @Before
     public void preexistingConnection() {
-        @SuppressWarnings("PMD.CloseResource")
         final Connection connection = new Connection.Builder().name("Existing connection").build();
 
         dataManager.create(connection);
@@ -42,7 +41,6 @@ public class ConnectionsITCase extends BaseITCase {
 
     @Test
     public void shouldDetermineValidityForInvalidConnections() {
-        @SuppressWarnings("PMD.CloseResource")
         final Connection connection = new Connection.Builder().name("Existing connection").build();
 
         final ResponseEntity<List<Violation>> got = post("/api/v1/connections/validation", connection, RESPONSE_TYPE,
@@ -53,7 +51,6 @@ public class ConnectionsITCase extends BaseITCase {
 
     @Test
     public void shouldDetermineValidityForValidConnections() {
-        @SuppressWarnings("PMD.CloseResource")
         final Connection connection = new Connection.Builder().name("Test connection").build();
 
         final ResponseEntity<List<Violation>> got = post("/api/v1/connections/validation", connection, RESPONSE_TYPE,

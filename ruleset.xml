@@ -1,148 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?><ruleset name="PMD-Rules">
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="PMD-Rules" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+  <description>PMD Rules that govern static code analysis for Syndesis REST</description>
   <rule ref="rulesets/java/sunsecure.xml/ArrayIsStoredDirectly">
     <priority>1</priority>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/AvoidCatchingGenericException">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-      
-        //CatchStatement/FormalParameter/Type/ReferenceType/ClassOrInterfaceType[
-          @Image='NullPointerException' or
-          @Image='Exception' or
-          @Image='RuntimeException']
-      
-      ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/NonStaticInitializer">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//Initializer[@Static='false']
-
-                 ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/controversial.xml/OneDeclarationPerLine">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//LocalVariableDeclaration
-   [count(VariableDeclarator) > 1]
-   [$strictMode or count(distinct-values(VariableDeclarator/@BeginLine)) != count(VariableDeclarator)]
-                    
-                ]]></value>
-      </property>
-      <property name="strictMode">
-        <value><![CDATA[false]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/braces.xml/IfStmtsMustUseBraces">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                   
-//IfStatement[count(*) < 3][not(Statement/Block)]
-                   
-               ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/unnecessary.xml/UnnecessaryModifier">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/AvoidCatchingNPE">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-            
-//CatchStatement/FormalParameter/Type
- /ReferenceType/ClassOrInterfaceType[@Image='NullPointerException']
- 
-        ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/DoNotExtendJavaLangError">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/basic.xml/ForLoopShouldBeWhileLoop">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                
-//ForStatement
- [count(*) > 1]
- [not(LocalVariableDeclaration)]
- [not(ForInit)]
- [not(ForUpdate)]
- [not(Type and Expression and Statement)]
- 
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/naming.xml/ClassNamingConventions">
     <priority>4</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/LogicInversion">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-          
-//UnaryExpressionNotPlusMinus[@Image='!']/PrimaryExpression/PrimaryPrefix/Expression[EqualityExpression or RelationalExpression]
-          
-          ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/BrokenNullCheck">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/controversial.xml/UnnecessaryConstructor">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//ClassOrInterfaceBody[count(ClassOrInterfaceBodyDeclaration/ConstructorDeclaration)=1]
-/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration
-[@Public='true']
-[not(FormalParameters/*)]
-[not(BlockStatement)]
-[not(NameList)]
-[count(ExplicitConstructorInvocation/Arguments/ArgumentList/Expression)=0]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/DefaultLabelNotLastInSwitchStmt">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//SwitchStatement
- [not(SwitchLabel[position() = last()][@Default='true'])]
- [SwitchLabel[@Default='true']]
-
-                 ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/sunsecure.xml/MethodReturnsInternalArray">
     <priority>1</priority>
@@ -152,94 +52,24 @@
   </rule>
   <rule ref="rulesets/java/android.xml/DoNotHardCodeSDCard">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[//Literal[starts-with(@Image,'"/sdcard')]]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strings.xml/InsufficientStringBufferDeclaration">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/PositionLiteralsFirstInCaseInsensitiveComparisons">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-              
-//PrimaryExpression[
-        PrimaryPrefix[Name
-                [
-    (ends-with(@Image, '.equalsIgnoreCase'))
-                ]
-        ]
-        [
-                   (../PrimarySuffix/Arguments/ArgumentList/Expression/PrimaryExpression/PrimaryPrefix/Literal)
-    and
-    ( count(../PrimarySuffix/Arguments/ArgumentList/Expression) = 1 )
-        ]
-]
-[not(ancestor::Expression/ConditionalAndExpression//EqualityExpression[@Image='!=']//NullLiteral)]
-[not(ancestor::Expression/ConditionalOrExpression//EqualityExpression[@Image='==']//NullLiteral)]
-
-          
-          ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/logging-jakarta-commons.xml/UseCorrectExceptionLogging">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-//CatchStatement/Block/BlockStatement/Statement/StatementExpression
-/PrimaryExpression[PrimaryPrefix/Name[starts-with(@Image,
-concat(ancestor::ClassOrInterfaceDeclaration/ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/FieldDeclaration
-[Type//ClassOrInterfaceType[@Image='Log']]
-/VariableDeclarator/VariableDeclaratorId/@Image, '.'))]]
-[PrimarySuffix/Arguments[@ArgumentCount='1']]
-[PrimarySuffix/Arguments//Name/@Image = ancestor::CatchStatement/FormalParameter/VariableDeclaratorId/@Image]
-         ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/naming.xml/SuspiciousHashcodeMethodName">
     <priority>4</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/AvoidProtectedFieldInFinalClass">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//ClassOrInterfaceDeclaration[@Final='true']
-/ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration
-/FieldDeclaration[@Protected='true']
- 
-                 ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyStatementNotInLoop">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//EmptyStatement
- [not(
-       ../../../ForStatement
-       or ../../../WhileStatement
-       or ../../../BlockStatement/ClassOrInterfaceDeclaration
-       or ../../../../../../ForStatement/Statement[1]
-        /Block[1]/BlockStatement[1]/Statement/EmptyStatement
-       or ../../../../../../WhileStatement/Statement[1]
-        /Block[1]/BlockStatement[1]/Statement/EmptyStatement)
- ]
-
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/ExceptionAsFlowControl">
     <priority>3</priority>
@@ -249,43 +79,9 @@ concat(ancestor::ClassOrInterfaceDeclaration/ClassOrInterfaceBody/ClassOrInterfa
   </rule>
   <rule ref="rulesets/java/basic.xml/UnconditionalIfStatement">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
- 
-//IfStatement/Expression
- [count(PrimaryExpression)=1]
- /PrimaryExpression/PrimaryPrefix/Literal/BooleanLiteral
-
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/finalizers.xml/FinalizeDoesNotCallSuperFinalize">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-
-//MethodDeclaration[MethodDeclarator[@Image='finalize'][not(FormalParameters/*)]]
-   /Block
-      /BlockStatement[last()]
-      [not(Statement/StatementExpression/PrimaryExpression
-            [./PrimaryPrefix[@SuperModifier='true']]
-            [./PrimarySuffix[@Image='finalize']]
-          )
-      ]
-      [not(Statement/TryStatement/FinallyStatement
-       /Block/BlockStatement/Statement/StatementExpression/PrimaryExpression
-            [./PrimaryPrefix[@SuperModifier='true']]
-            [./PrimarySuffix[@Image='finalize']]
-          )
-      ]
-
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/SingletonClassReturningNewInstance">
     <priority>3</priority>
@@ -295,48 +91,12 @@ concat(ancestor::ClassOrInterfaceDeclaration/ClassOrInterfaceBody/ClassOrInterfa
   </rule>
   <rule ref="rulesets/java/strictexception.xml/AvoidThrowingRawExceptionTypes">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-            
-//ThrowStatement//AllocationExpression
- /ClassOrInterfaceType[
- (@Image='Throwable' and count(//ImportDeclaration/Name[ends-with(@Image,'Throwable')]) = 0)
-or
- (@Image='Exception' and count(//ImportDeclaration/Name[ends-with(@Image,'Exception')]) = 0)
-or
- (@Image='Error'  and count(//ImportDeclaration/Name[ends-with(@Image,'Error')]) = 0)
-or
-( @Image='RuntimeException'  and count(//ImportDeclaration/Name[ends-with(@Image,'RuntimeException')]) = 0)
-]
- 
-        ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/migrating.xml/AvoidAssertAsIdentifier">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                  
-//VariableDeclaratorId[@Image='assert']
-                  
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/controversial.xml/AvoidUsingNativeCode">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-                        //Name[starts-with(@Image,'System.loadLibrary')]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/optimizations.xml/UseArraysAsList">
     <priority>3</priority>
@@ -358,57 +118,17 @@ or
   </rule>
   <rule ref="rulesets/java/controversial.xml/UseConcurrentHashMap">
     <priority>5</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//Type[../VariableDeclarator/VariableInitializer//AllocationExpression/ClassOrInterfaceType[@Image != 'ConcurrentHashMap']]
-/ReferenceType/ClassOrInterfaceType[@Image = 'Map']
-
-        ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/comments.xml/CommentContent">
     <priority>4</priority>
   </rule>
   <rule ref="rulesets/java/migrating.xml/ReplaceVectorWithList">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//Type/ReferenceType/ClassOrInterfaceType[@Image='Vector']
- 
-    ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/codesize.xml/TooManyMethods">
     <priority>5</priority>
     <properties>
-      <property name="maxmethods">
-        <value><![CDATA[10]]></value>
-      </property>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-                    
- //ClassOrInterfaceDeclaration/ClassOrInterfaceBody
-     [
-      count(./ClassOrInterfaceBodyDeclaration/MethodDeclaration/MethodDeclarator[
-         not (
-                starts-with(@Image,'get')
-                or
-                starts-with(@Image,'set')
-                or
-                starts-with(@Image,'is')
-            )
-      ]) > $maxmethods
-   ]
-                    
-                ]]></value>
-      </property>
+      <property name="maxmethods" value="15" />
     </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/ConstructorCallsOverridableMethod">
@@ -416,43 +136,14 @@ or
   </rule>
   <rule ref="rulesets/java/migrating.xml/JUnit4SuitesShouldUseSuiteAnnotation">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//ClassOrInterfaceBodyDeclaration[MethodDeclaration/MethodDeclarator[@Image='suite']]
-[MethodDeclaration/ResultType/Type/ReferenceType/ClassOrInterfaceType[@Image='Test' or @Image = 'junit.framework.Test']]
-[not(MethodDeclaration/Block//ClassOrInterfaceType[@Image='JUnit4TestAdapter'])]
-
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/DoNotThrowExceptionInFinally">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-			    
-//FinallyStatement[descendant::ThrowStatement]
-			          
-			  ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/junit.xml/JUnitTestContainsTooManyAsserts">
     <priority>3</priority>
     <properties>
-      <property name="maximumAsserts">
-        <value><![CDATA[3]]></value>
-      </property>
-      <property name="xpath">
-        <value><![CDATA[
-
-//MethodDeclarator[(@Image[fn:matches(.,'^test')] or ../../Annotation/MarkerAnnotation/Name[@Image='Test']) and count(..//PrimaryPrefix/Name[@Image[fn:matches(.,'^assert')]]) > $maximumAsserts]
-
-				]]></value>
-      </property>
+      <property name="maximumAsserts" value="3" />
     </properties>
   </rule>
   <rule ref="rulesets/java/strings.xml/InefficientEmptyStringCheck">
@@ -460,60 +151,18 @@ or
   </rule>
   <rule ref="rulesets/java/design.xml/AvoidProtectedMethodInFinalClassNotExtending">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//ClassOrInterfaceDeclaration[@Final='true' and not(ExtendsList)]
-/ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration
-/MethodDeclaration[@Protected='true'][MethodDeclarator/@Image != 'finalize']
- 
-                 ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/SingleMethodSingleton">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/FinalFieldCouldBeStatic">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//FieldDeclaration
- [@Final='true' and @Static='false']
-   /VariableDeclarator/VariableInitializer/Expression
-    /PrimaryExpression[not(PrimarySuffix)]/PrimaryPrefix/Literal
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/coupling.xml/LooseCoupling">
     <priority>5</priority>
   </rule>
   <rule ref="rulesets/java/junit.xml/UnnecessaryBooleanAssertion">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//StatementExpression
-[
-PrimaryExpression/PrimaryPrefix/Name[@Image='assertTrue' or  @Image='assertFalse']
-and
-PrimaryExpression/PrimarySuffix/Arguments/ArgumentList/Expression
-[PrimaryExpression/PrimaryPrefix/Literal/BooleanLiteral
-or
-UnaryExpressionNotPlusMinus[@Image='!']
-/PrimaryExpression/PrimaryPrefix[Literal/BooleanLiteral or Name[count(../../*)=1]]]
-]
-[ancestor::ClassOrInterfaceDeclaration[//ClassOrInterfaceType[pmd-java:typeof(@Image, 'junit.framework.TestCase','TestCase')] or //MarkerAnnotation/Name[pmd-java:typeof(@Image, 'org.junit.Test', 'Test')]]]
-
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/SwitchDensity">
     <priority>3</priority>
@@ -529,70 +178,15 @@ UnaryExpressionNotPlusMinus[@Image='!']
   </rule>
   <rule ref="rulesets/java/design.xml/BadComparison">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                  
-//EqualityExpression[@Image='==']
- /PrimaryExpression/PrimaryPrefix
- /Name[@Image='Double.NaN' or @Image='Float.NaN']
-                  
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/braces.xml/IfElseStmtsMustUseBraces">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//Statement
- [parent::IfStatement[@Else='true']]
- [not(child::Block)]
- [not(child::IfStatement)]
- 
-                 ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/clone.xml/CloneThrowsCloneNotSupportedException">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                     
-//MethodDeclaration
-[
-MethodDeclarator/@Image = 'clone'
-and count(MethodDeclarator/FormalParameters/*) = 0
-and count(NameList/Name[contains
-(@Image,'CloneNotSupportedException')]) = 0
-]
-[
-../../../../ClassOrInterfaceDeclaration[@Final = 'false']
-]
-                     
-                 ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strings.xml/UseEqualsToCompareStrings">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//EqualityExpression/PrimaryExpression
-[(PrimaryPrefix/Literal
-   [starts-with(@Image, '"')]
-   [ends-with(@Image, '"')]
-and count(PrimarySuffix) = 0)]
-
-            ]]></value>
-        "')] [ends-with(@Image, '\"')] and count(PrimarySuffix) = 0)]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/naming.xml/MethodNamingConventions">
     <priority>4</priority>
@@ -602,80 +196,21 @@ and count(PrimarySuffix) = 0)]
   </rule>
   <rule ref="rulesets/java/j2ee.xml/UseProperClassLoader">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//PrimarySuffix[@Image='getClassLoader']
- 
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyWhileStmt">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//WhileStatement/Statement[./Block[count(*) = 0]  or ./EmptyStatement]
-
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/FieldDeclarationsShouldBeAtStartOfClass">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/EqualsNull">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//PrimaryExpression
-  [
-    PrimaryPrefix[Name[ends-with(@Image, 'equals')]]
-      [following-sibling::node()/Arguments/ArgumentList[count(Expression)=1]
-          /Expression/PrimaryExpression/PrimaryPrefix/Literal/NullLiteral]
-
-    or
-
-    PrimarySuffix[ends-with(@Image, 'equals')]
-      [following-sibling::node()/Arguments/ArgumentList[count(Expression)=1]
-          /Expression/PrimaryExpression/PrimaryPrefix/Literal/NullLiteral]
-
-  ]
-    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/ReturnFromFinallyBlock">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//FinallyStatement//ReturnStatement
-
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/DontUseFloatTypeForLoopIndices">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//ForStatement/ForInit/LocalVariableDeclaration
-/Type/PrimitiveType[@Image="float"]
-
-       ]]></value>
-        "float\"]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/logging-jakarta-commons.xml/GuardDebugLogging">
     <priority>4</priority>
@@ -691,185 +226,45 @@ and count(PrimarySuffix) = 0)]
   </rule>
   <rule ref="rulesets/java/naming.xml/PackageCase">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                      
-//PackageDeclaration/Name[lower-case(@Image)!=@Image]
-                      
-                  ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/unnecessary.xml/UnnecessaryConversionTemporary">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/j2ee.xml/LocalHomeNamingConvention">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//ClassOrInterfaceDeclaration
-[
-    (
-        (./ExtendsList/ClassOrInterfaceType[ends-with(@Image,'EJBLocalHome')])
-    )
-    and
-    not
-    (
-        ends-with(@Image,'LocalHome')
-    )
-]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/AbstractClassWithoutAbstractMethod">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-//ClassOrInterfaceDeclaration
- [@Abstract='true'
-  and count( .//MethodDeclaration[@Abstract='true'] )=0 ]
-  [count(ImplementsList)=0]
-  [count(.//ExtendsList)=0]
-              
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/unnecessary.xml/UnusedNullCheckInEquals">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-        
-(//PrimaryPrefix[ends-with(Name/@Image, '.equals') and Name/@Image != 'Arrays.equals'] | //PrimarySuffix[@Image='equals' and not(../PrimaryPrefix/Literal)])
- /following-sibling::PrimarySuffix/Arguments/ArgumentList/Expression
- /PrimaryExpression[count(PrimarySuffix)=0]/PrimaryPrefix
- /Name[@Image = ./../../../../../../../../../../Expression/ConditionalAndExpression
- /EqualityExpression[@Image="!=" and count(./preceding-sibling::*)=0 and
- ./PrimaryExpression/PrimaryPrefix/Literal/NullLiteral]
-  /PrimaryExpression/PrimaryPrefix/Name/@Image]
-        
-        ]]></value>
-        "!=\" and count(./preceding-sibling::*)=0 and ./PrimaryExpression/PrimaryPrefix/Literal/NullLiteral] /PrimaryExpression/PrimaryPrefix/Name/@Image]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/naming.xml/NoPackage">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                  
-//ClassOrInterfaceDeclaration[count(preceding::PackageDeclaration) = 0]
-                  
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/android.xml/CallSuperFirst">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-//MethodDeclaration[MethodDeclarator[
-  @Image='onCreate' or
-  @Image='onConfigurationChanged' or
-  @Image='onPostCreate' or
-  @Image='onPostResume' or
-  @Image='onRestart' or
-  @Image='onRestoreInstanceState' or
-  @Image='onResume' or
-  @Image='onStart'
-  ]]
-    /Block[not(
-      (BlockStatement[1]/Statement/StatementExpression/PrimaryExpression[./PrimaryPrefix[@SuperModifier='true']]/PrimarySuffix[@Image= ancestor::MethodDeclaration/MethodDeclarator/@Image]))]
-[ancestor::ClassOrInterfaceDeclaration[ExtendsList/ClassOrInterfaceType[
-  typeof(@Image, 'android.app.Activity', 'Activity') or
-  typeof(@Image, 'android.app.Application', 'Application') or
-  typeof(@Image, 'android.app.Service', 'Service')
-]]]
-
-        ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/MissingBreakInSwitch">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//SwitchStatement
-[(count(.//BreakStatement)
- + count(BlockStatement//Statement/ReturnStatement)
- + count(BlockStatement//Statement/ContinueStatement)
- + count(BlockStatement//Statement/ThrowStatement)
- + count(BlockStatement//Statement/IfStatement[@Else='true' and Statement[2][ReturnStatement|ContinueStatement|ThrowStatement]]/Statement[1][ReturnStatement|ContinueStatement|ThrowStatement])
- + count(SwitchLabel[name(following-sibling::node()) = 'SwitchLabel'])
- + count(SwitchLabel[count(following-sibling::node()) = 0])
-  < count (SwitchLabel))]
-    
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/codesize.xml/ModifiedCyclomaticComplexity">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/AbstractClassWithoutAnyMethod">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//ClassOrInterfaceDeclaration[
-	(@Abstract = 'true')
-	and
-	(count(//MethodDeclaration) + count(//ConstructorDeclaration) = 0)
-]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/codesize.xml/TooManyFields">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/controversial.xml/AvoidUsingVolatile">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-                        //FieldDeclaration[
-                                contains(@Volatile,'true')
-                        ]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/unnecessary.xml/UselessOverridingMethod">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/optimizations.xml/AddEmptyString">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                     
-//AdditiveExpression/PrimaryExpression/PrimaryPrefix/Literal[@Image='""']
-                
-                ]]></value>
-        "\"']
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strings.xml/UselessStringValueOf">
     <priority>3</priority>
@@ -879,569 +274,111 @@ and count(PrimarySuffix) = 0)]
   </rule>
   <rule ref="rulesets/java/finalizers.xml/FinalizeOverloaded">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//MethodDeclaration
- /MethodDeclarator[@Image='finalize'][FormalParameters[count(*)>0]]
-
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/javabeans.xml/MissingSerialVersionUID">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//ClassOrInterfaceDeclaration
- [
-  count(ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration
-   /FieldDeclaration/VariableDeclarator/VariableDeclaratorId[@Image='serialVersionUID']) = 0
-and
-  count(ImplementsList
-   [ClassOrInterfaceType/@Image='Serializable'
-   or ClassOrInterfaceType/@Image='java.io.Serializable']) =1
-and
-   @Abstract = 'false'
-]
-
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/DontCallThreadRun">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//StatementExpression/PrimaryExpression
-[
-    PrimaryPrefix
-    [
-        ./Name[ends-with(@Image, '.run') or @Image = 'run']
-        and substring-before(Name/@Image, '.') =//VariableDeclarator/VariableDeclaratorId/@Image
-        [../../../Type/ReferenceType[ClassOrInterfaceType/@Image = 'Thread']]
-        or (
-        ./AllocationExpression/ClassOrInterfaceType[@Image = 'Thread']
-        and ../PrimarySuffix[@Image = 'run'])
-    ]
-]
-
-         ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/naming.xml/BooleanGetMethodName">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//MethodDeclaration[
-MethodDeclarator[count(FormalParameters/FormalParameter) = 0 or $checkParameterizedMethods = 'true']
-                [starts-with(@Image, 'get')]
-and
-ResultType/Type/PrimitiveType[@Image = 'boolean']
-and not(../Annotation//Name[@Image = 'Override'])
-]
-
-                ]]></value>
-      </property>
-      <property name="checkParameterizedMethods">
-        <value><![CDATA[false]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/unnecessary.xml/UnnecessaryFinalModifier">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//ClassOrInterfaceDeclaration[@Final='true' and @Interface='false']
-    /ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration
-        [count(./Annotation/MarkerAnnotation/Name[@Image='SafeVarargs' or @Image='java.lang.SafeVarargs']) = 0]
-    /MethodDeclaration[@Final='true']
-    
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/junit.xml/UseAssertTrueInsteadOfAssertEquals">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//PrimaryExpression[PrimaryPrefix/Name[@Image = 'assertEquals']]
-[
-  PrimarySuffix/Arguments/ArgumentList/Expression/PrimaryExpression/PrimaryPrefix/Literal/BooleanLiteral
-  or
-  PrimarySuffix/Arguments/ArgumentList/Expression/PrimaryExpression/PrimaryPrefix
-  /Name[(@Image = 'Boolean.TRUE' or @Image = 'Boolean.FALSE')]
-]
-
-			]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/AvoidLosingExceptionInformation">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//CatchStatement/Block/BlockStatement/Statement/StatementExpression/PrimaryExpression/PrimaryPrefix/Name
-[
-   @Image = concat(../../../../../../../FormalParameter/VariableDeclaratorId/@Image, '.getMessage')
-   or
-   @Image = concat(../../../../../../../FormalParameter/VariableDeclaratorId/@Image, '.getLocalizedMessage')
-   or
-   @Image = concat(../../../../../../../FormalParameter/VariableDeclaratorId/@Image, '.getCause')
-   or
-   @Image = concat(../../../../../../../FormalParameter/VariableDeclaratorId/@Image, '.getStackTrace')
-   or
-   @Image = concat(../../../../../../../FormalParameter/VariableDeclaratorId/@Image, '.toString')
-]
-
-				]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/SimplifiedTernary">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-//ConditionalExpression[@Ternary='true'][not(PrimaryExpression/*/Literal) and (Expression/PrimaryExpression/*/Literal/BooleanLiteral)]
-|
-//ConditionalExpression[@Ternary='true'][not(Expression/PrimaryExpression/*/Literal) and (PrimaryExpression/*/Literal/BooleanLiteral)]
-
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/AvoidUsingHardCodedIP">
     <priority>3</priority>
-    <properties>
-      <property name="pattern">
-        <value><![CDATA[^"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"$]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/migrating.xml/JUnit4TestShouldUseBeforeAnnotation">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//CompilationUnit[not(ImportDeclaration/Name[starts-with(@Image, "org.testng")])]
-//ClassOrInterfaceBodyDeclaration[MethodDeclaration/MethodDeclarator[@Image='setUp']]
-[count(Annotation//Name[@Image='Before'])=0]
-
-              ]]></value>
-        "org.testng\")])] //ClassOrInterfaceBodyDeclaration[MethodDeclaration/MethodDeclarator[@Image='setUp']] [count(Annotation//Name[@Image='Before'])=0]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/logging-java.xml/AvoidPrintStackTrace">
     <priority>1</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//PrimaryExpression
- [PrimaryPrefix/Name[contains(@Image,'printStackTrace')]]
- [PrimarySuffix[not(boolean(Arguments/ArgumentList/Expression))]]
-
-             ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/TooFewBranchesForASwitchStatement">
     <priority>3</priority>
-    <properties>
-      <property name="minimumNumberCaseForASwitch">
-        <value><![CDATA[3]]></value>
-      </property>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//SwitchStatement[
-    (count(.//SwitchLabel) < $minimumNumberCaseForASwitch)
-]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/AvoidCatchingThrowable">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyIfStmt">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//IfStatement/Statement
- [EmptyStatement or Block[count(*) = 0]]
- 
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyStaticInitializer">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//Initializer[@Static='true']/Block[count(*)=0]
-
-                 ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/EmptyMethodInAbstractClassShouldBeAbstract">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                
-                    //ClassOrInterfaceDeclaration[@Abstract = 'true']
-                        /ClassOrInterfaceBody
-                        /ClassOrInterfaceBodyDeclaration
-                        /MethodDeclaration[@Abstract = 'false' and @Native = 'false']
-                        [
-                            ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal/NullLiteral) = 'true' )
-                            or
-                            ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal[@Image = '0']) = 'true' )
-                            or
-                            ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal[string-length(@Image) = 2]) = 'true' )
-                            or
-                            (./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/EmptyStatement)
-                            or
-                            ( count (./Block/*) = 0 )
-                        ]
-                
-             ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/UseNotifyAllInsteadOfNotify">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//StatementExpression/PrimaryExpression
-[PrimarySuffix/Arguments[@ArgumentCount = '0']]
-[
-PrimaryPrefix[./Name[@Image='notify' or ends-with(@Image,'.notify')]
-or ../PrimarySuffix/@Image='notify'
-or (./AllocationExpression and ../PrimarySuffix[@Image='notify'])
-]
-]
-    
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/UnsynchronizedStaticDateFormatter">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/AvoidRethrowingException">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                
-//CatchStatement[FormalParameter
- /VariableDeclaratorId/@Image = Block/BlockStatement/Statement
- /ThrowStatement/Expression/PrimaryExpression[count(PrimarySuffix)=0]/PrimaryPrefix/Name/@Image
- and count(Block/BlockStatement/Statement) =1]
- 
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/j2ee.xml/LocalInterfaceSessionNamingConvention">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//ClassOrInterfaceDeclaration
-[
-    (
-        (./ExtendsList/ClassOrInterfaceType[ends-with(@Image,'EJBLocalObject')])
-    )
-    and
-    not
-    (
-        ends-with(@Image,'Local')
-    )
-]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strings.xml/UseIndexOfChar">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/unnecessary.xml/UselessQualifiedThis">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-          
-//PrimaryExpression
-[PrimaryPrefix/Name[@Image]]
-[PrimarySuffix[@Arguments='false']]
-[not(PrimarySuffix/MemberSelector)]
-[ancestor::ClassOrInterfaceBodyDeclaration[1][@AnonymousInnerClass='false']]
-/PrimaryPrefix/Name[@Image = ancestor::ClassOrInterfaceDeclaration[1]/@Image]
-          
-          ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/ClassWithOnlyPrivateConstructorsShouldBeFinal">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-TypeDeclaration[count(../TypeDeclaration) = 1]/ClassOrInterfaceDeclaration
-[@Final = 'false']
-[count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration[@Private = 'true']) >= 1 ]
-[count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration[(@Public = 'true') or (@Protected = 'true') or (@PackagePrivate = 'true')]) = 0 ]
-[not(.//ClassOrInterfaceDeclaration)]
-             ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strings.xml/UnnecessaryCaseChange">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/migrating.xml/ReplaceEnumerationWithIterator">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//ImplementsList/ClassOrInterfaceType[@Image='Enumeration']
-     
-        ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/optimizations.xml/UseArrayListInsteadOfVector">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//CompilationUnit[count(ImportDeclaration) = 0 or count(ImportDeclaration/Name[@Image='java.util.Vector']) > 0]
-  //AllocationExpression/ClassOrInterfaceType
-    [@Image='Vector' or @Image='java.util.Vector']
-
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/migrating.xml/IntegerInstantiation">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                  
-//PrimaryPrefix
- /AllocationExpression
-  [not (ArrayDimsAndInits)
-   and (ClassOrInterfaceType/@Image='Integer'
-    or ClassOrInterfaceType/@Image='java.lang.Integer')]
-                  
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/j2ee.xml/DoNotUseThreads">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-                        //ClassOrInterfaceType[@Image = 'Thread' or @Image = 'Runnable']
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/clone.xml/CloneMethodMustImplementCloneable">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//ClassOrInterfaceDeclaration
-[not(./ExtendsList/ClassOrInterfaceType[@Image='Cloneable'])]
-[not(./ImplementsList/ClassOrInterfaceType[@Image='Cloneable'])]
-/ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration
-[MethodDeclaration
-[MethodDeclarator[@Image
-= 'clone' and count(FormalParameters/*) = 0]]
-[not((../MethodDeclaration[@Final = 'true'] or ancestor::ClassOrInterfaceDeclaration[1][@Final = 'true'])
-and Block[count(BlockStatement)=1]
-/BlockStatement/Statement/ThrowStatement/Expression
-/PrimaryExpression/PrimaryPrefix/AllocationExpression
-/ClassOrInterfaceType[@Image = 'CloneNotSupportedException'])]]
-
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyCatchBlock">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//CatchStatement
- [count(Block/BlockStatement) = 0 and ($allowCommentedBlocks != 'true' or Block/@containsComment = 'false')]
- [FormalParameter/Type/ReferenceType
-   /ClassOrInterfaceType[@Image != 'InterruptedException' and @Image != 'CloneNotSupportedException']
- ]
- 
-             ]]></value>
-      </property>
-      <property name="allowCommentedBlocks">
-        <value><![CDATA[false]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/AvoidThrowingNullPointerException">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-              
-//AllocationExpression/ClassOrInterfaceType[@Image='NullPointerException']
-   
-          ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/unnecessary.xml/UselessParentheses">
     <priority>5</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-          
-//Expression/PrimaryExpression/PrimaryPrefix/Expression
-[count(*)=1][count(./CastExpression)=0][count(./ConditionalExpression[@Ternary='true'])=0]
-[not(./AdditiveExpression[//Literal[@StringLiteral='true']])]
-|
-//Expression/ConditionalAndExpression/PrimaryExpression/PrimaryPrefix/Expression[
-    count(*)=1 and
-    count(./CastExpression)=0 and
-    count(./EqualityExpression/MultiplicativeExpression)=0 and
-    count(./ConditionalExpression[@Ternary='true'])=0 and
-    count(./ConditionalOrExpression)=0]
-|
-//Expression/ConditionalOrExpression/PrimaryExpression/PrimaryPrefix/Expression[
-    count(*)=1 and
-    count(./CastExpression)=0 and
-    count(./ConditionalExpression[@Ternary='true'])=0 and
-    count(./EqualityExpression/MultiplicativeExpression)=0]
-|
-//Expression/ConditionalExpression/PrimaryExpression/PrimaryPrefix/Expression[
-    count(*)=1 and
-    count(./CastExpression)=0 and
-    count(./EqualityExpression)=0]
-|
-//Expression/AdditiveExpression[not(./PrimaryExpression/PrimaryPrefix/Literal[@StringLiteral='true'])]/PrimaryExpression[1]/PrimaryPrefix/Expression[
-    count(*)=1 and
-    not(./CastExpression) and
-    not(./AdditiveExpression[@Image = '-']) and
-    not(./ShiftExpression) and
-    not(./RelationalExpression) and
-    not(./InstanceOfExpression) and
-    not(./EqualityExpression) and
-    not(./AndExpression) and
-    not(./ExclusiveOrExpression) and
-    not(./InclusiveOrExpression) and
-    not(./ConditionalAndExpression) and
-    not(./ConditionalOrExpression) and
-    not(./ConditionalExpression)]
-|
-//Expression/EqualityExpression/PrimaryExpression/PrimaryPrefix/Expression[
-    count(*)=1 and
-    count(./CastExpression)=0 and
-    count(./AndExpression)=0 and
-    count(./InclusiveOrExpression)=0 and
-    count(./ExclusiveOrExpression)=0 and
-    count(./ConditionalExpression)=0 and
-    count(./ConditionalAndExpression)=0 and
-    count(./ConditionalOrExpression)=0 and
-    count(./EqualityExpression)=0]
-          
-          ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/JumbledIncrementer">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
- 
-//ForStatement
- [
-  ForUpdate/StatementExpressionList/StatementExpression/PostfixExpression/PrimaryExpression/PrimaryPrefix/Name/@Image
-  =
-  ancestor::ForStatement/ForInit//VariableDeclaratorId/@Image
- ]
- 
-             ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/AvoidReassigningParameters">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/finalizers.xml/FinalizeShouldBeProtected">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//MethodDeclaration[@Protected="false"]
-  /MethodDeclarator[@Image="finalize"]
-  [not(FormalParameters/*)]
-                    
-                ]]></value>
-        "false\"] /MethodDeclarator[@Image=\"finalize\"] [not(FormalParameters/*)]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strings.xml/AvoidStringBufferField">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//FieldDeclaration/Type/ReferenceType/ClassOrInterfaceType[@Image = 'StringBuffer' or @Image = 'StringBuilder']
-
-			]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/unusedcode.xml/UnusedPrivateField">
     <priority>3</priority>
@@ -1452,87 +389,23 @@ and Block[count(BlockStatement)=1]
   <rule ref="rulesets/java/naming.xml/ShortClassName">
     <priority>5</priority>
     <properties>
-      <property name="minimum">
-        <value><![CDATA[3]]></value>
-      </property>
-      <property name="xpath">
-        <value><![CDATA[
-                      
-//ClassOrInterfaceDeclaration[string-length(@Image) < $minimum]
-                      
-                  ]]></value>
-      </property>
+      <property name="minimum" value="3" />
     </properties>
   </rule>
   <rule ref="rulesets/java/naming.xml/MisleadingVariableName">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//VariableDeclaratorId
-[starts-with(@Image, 'm_')]
-[not (../../../FieldDeclaration)]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyTryBlock">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//TryStatement/Block[1][count(*) = 0]
-
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/NonCaseLabelInSwitchStatement">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
- 
-//SwitchStatement//BlockStatement/Statement/LabeledStatement
- 
-                 ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/junit.xml/SimplifyBooleanAssertion">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//StatementExpression
-[
-.//Name[@Image='assertTrue' or  @Image='assertFalse']
-and
-PrimaryExpression/PrimarySuffix/Arguments/ArgumentList
- /Expression/UnaryExpressionNotPlusMinus[@Image='!']
-/PrimaryExpression/PrimaryPrefix
-]
-[ancestor::ClassOrInterfaceDeclaration[//ClassOrInterfaceType[pmd-java:typeof(@Image, 'junit.framework.TestCase','TestCase')] or //MarkerAnnotation/Name[pmd-java:typeof(@Image, 'org.junit.Test', 'Test')]]]
-
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyInitializer">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//Initializer/Block[count(*)=0]
-
-                 ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/CompareObjectsWithEquals">
     <priority>3</priority>
@@ -1548,37 +421,9 @@ PrimaryExpression/PrimarySuffix/Arguments/ArgumentList
   </rule>
   <rule ref="rulesets/java/design.xml/OptimizableToArrayCall">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                  
-//PrimaryExpression
-[PrimaryPrefix/Name[ends-with(@Image, 'toArray')]]
-[
-PrimarySuffix/Arguments/ArgumentList/Expression
- /PrimaryExpression/PrimaryPrefix/AllocationExpression
- /ArrayDimsAndInits/Expression/PrimaryExpression/PrimaryPrefix/Literal[@Image='0']
-]
-
-                  
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/migrating.xml/ByteInstantiation">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-          
-//PrimaryPrefix/AllocationExpression
-[not (ArrayDimsAndInits)
-and (ClassOrInterfaceType/@Image='Byte'
-or ClassOrInterfaceType/@Image='java.lang.Byte')]
-          
-          ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/codesize.xml/ExcessiveClassLength">
     <priority>3</priority>
@@ -1588,40 +433,9 @@ or ClassOrInterfaceType/@Image='java.lang.Byte')]
   </rule>
   <rule ref="rulesets/java/design.xml/ConstantsInInterface">
     <priority>3</priority>
-    <properties>
-      <property name="ignoreIfHasMethods">
-        <value><![CDATA[true]]></value>
-      </property>
-      <property name="xpath">
-        <value><![CDATA[
-
-//ClassOrInterfaceDeclaration[@Interface='true'][$ignoreIfHasMethods='false' or not(.//MethodDeclaration)]//FieldDeclaration
- 
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/optimizations.xml/SimplifyStartsWith">
     <priority>5</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//PrimaryExpression
- [PrimaryPrefix/Name
-  [ends-with(@Image, '.startsWith')] or PrimarySuffix[@Image='startsWith']]
- [PrimarySuffix/Arguments/ArgumentList
-  /Expression/PrimaryExpression/PrimaryPrefix
-  /Literal
-   [string-length(@Image)=3]
-   [starts-with(@Image, '"')]
-   [ends-with(@Image, '"')]
- ]
- 
-            ]]></value>
-        "')] [ends-with(@Image, '\"')] ]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/codesize.xml/NcssConstructorCount">
     <priority>3</priority>
@@ -1637,308 +451,63 @@ or ClassOrInterfaceType/@Image='java.lang.Byte')]
   </rule>
   <rule ref="rulesets/java/design.xml/SimpleDateFormatNeedsLocale">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//AllocationExpression
- [ClassOrInterfaceType[@Image='SimpleDateFormat']]
- [Arguments[@ArgumentCount=1]]
-
-                    ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/AvoidDecimalLiteralsInBigDecimalConstructor">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//AllocationExpression
-[ClassOrInterfaceType[@Image="BigDecimal"]]
-[Arguments/ArgumentList/Expression/PrimaryExpression/PrimaryPrefix
-    [
-        Literal[(not(ends-with(@Image,'"'))) and contains(@Image,".")]
-        or
-        Name[ancestor::Block/BlockStatement/LocalVariableDeclaration
-                [Type[PrimitiveType[@Image='double' or @Image='float']
-                      or ReferenceType/ClassOrInterfaceType[@Image='Double' or @Image='Float']]]
-                /VariableDeclarator/VariableDeclaratorId/@Image = @Image
-            ]
-        or
-        Name[ancestor::MethodDeclaration/MethodDeclarator/FormalParameters/FormalParameter
-                [Type[PrimitiveType[@Image='double' or @Image='float']
-                      or ReferenceType/ClassOrInterfaceType[@Image='Double' or @Image='Float']]]
-                /VariableDeclaratorId/@Image = @Image
-            ]
-    ]
-]
- 
-    ]]></value>
-        "BigDecimal\"]] [Arguments/ArgumentList/Expression/PrimaryExpression/PrimaryPrefix [ Literal[(not(ends-with(@Image,'\"'))) and contains(@Image,\".\")] or Name[ancestor::Block/BlockStatement/LocalVariableDeclaration [Type[PrimitiveType[@Image='double' or @Image='float'] or referenceType/ClassOrInterfaceType[@Image='Double' or @Image='Float']]] /VariableDeclarator/VariableDeclaratorId/@Image = @Image ] or Name[ancestor::MethodDeclaration/MethodDeclarator/FormalParameters/FormalParameter [Type[PrimitiveType[@Image='double' or @Image='float'] or referenceType/ClassOrInterfaceType[@Image='Double' or @Image='Float']]] /VariableDeclaratorId/@Image = @Image ] ] ]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/SwitchStmtsShouldHaveDefault">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                  
-//SwitchStatement[not(SwitchLabel[@Default='true'])]
-                  
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/ExtendsObject">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-          
-//ExtendsList/ClassOrInterfaceType[@Image='Object' or @Image='java.lang.Object']
-          
-          ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/ClassCastExceptionWithToArray">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//CastExpression[Type/ReferenceType/ClassOrInterfaceType[@Image !=
-"Object"]]/PrimaryExpression
-[
- PrimaryPrefix/Name[ends-with(@Image, '.toArray')]
- and
- PrimarySuffix/Arguments[count(*) = 0]
-and
-count(PrimarySuffix) = 1
-]
-
-    ]]></value>
-        "Object\"]]/PrimaryExpression [ PrimaryPrefix/Name[ends-with(@Image, '.toArray')] and PrimarySuffix/Arguments[count(*) = 0] and count(PrimarySuffix) = 1 ]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/logging-jakarta-commons.xml/ProperLogger">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-     
-//ClassOrInterfaceBodyDeclaration[FieldDeclaration//ClassOrInterfaceType[@Image='Log']
- and
- not(FieldDeclaration[@Final='true'][@Static='true'][@Private='true'][.//VariableDeclaratorId[@Image=$staticLoggerName]]
- //ArgumentList//ClassOrInterfaceType/@Image = ancestor::ClassOrInterfaceDeclaration/@Image)
- and
- not(FieldDeclaration[@Final='true'][@Private='true'][.//VariableDeclaratorId[@Image='log']]
- [count(.//VariableInitializer)=0]
- [ancestor::ClassOrInterfaceBody//StatementExpression[.//PrimaryExpression/descendant::*[@Image='log']][count(.//AllocationExpression)=0]]
- )]
-     
-                     ]]></value>
-      </property>
-      <property name="staticLoggerName">
-        <value><![CDATA[LOG]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/unusedcode.xml/UnusedFormalParameter">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/j2ee.xml/StaticEJBFieldShouldBeFinal">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-//ClassOrInterfaceDeclaration[
-    (
-    (./ImplementsList/ClassOrInterfaceType[ends-with(@Image,'SessionBean')])
-    or
-    (./ImplementsList/ClassOrInterfaceType[ends-with(@Image,'EJBHome')])
-    or
-    (./ImplementsList/ClassOrInterfaceType[ends-with(@Image,'EJBLocalObject')])
-    or
-    (./ImplementsList/ClassOrInterfaceType[ends-with(@Image,'EJBLocalHome')])
-    or
-    (./ExtendsList/ClassOrInterfaceType[ends-with(@Image,'EJBObject')])
-    )
-    and
-    (./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration[
-         (./FieldDeclaration[@Static = 'true'])
-         and
-         (./FieldDeclaration[@Final = 'false'])
-    ])
-]
-    		 ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/naming.xml/VariableNamingConventions">
     <priority>4</priority>
   </rule>
   <rule ref="rulesets/java/naming.xml/SuspiciousConstantFieldName">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//ClassOrInterfaceDeclaration[@Interface='false']
- /ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/FieldDeclaration
-  [@Final='false']
-  [VariableDeclarator/VariableDeclaratorId[upper-case(@Image)=@Image]]
- 
-                ]]></value>
-      </property>
-    </properties>
-  </rule>
-  <rule ref="rulesets/java/design.xml/CloseResource">
-    <priority>3</priority>
-    <properties>
-      <property name="types">
-        <value>java.sql.Connection,java.sql.Statement,java.sql.ResultSet,java.io.InputStream,java.io.ObjectInputStream,java.io.ObjectOutputStream,java.io.ObjectInput,java.io.Closeable,java.io.OutputStream,java.io.ObjectOutput</value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/OverrideBothEqualsAndHashcode">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/UncommentedEmptyConstructor">
     <priority>5</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//ConstructorDeclaration[@Private='false'][count(BlockStatement) = 0 and ($ignoreExplicitConstructorInvocation = 'true' or not(ExplicitConstructorInvocation)) and @containsComment = 'false']
- 
-             ]]></value>
-      </property>
-      <property name="ignoreExplicitConstructorInvocation">
-        <value><![CDATA[false]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/finalizers.xml/FinalizeOnlyCallsSuperFinalize">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//MethodDeclaration[MethodDeclarator[@Image="finalize"][not(FormalParameters/*)]]
-   /Block[count(BlockStatement)=1]
-     /BlockStatement[
-       Statement/StatementExpression/PrimaryExpression
-       [./PrimaryPrefix[@SuperModifier='true']]
-       [./PrimarySuffix[@Image='finalize']]
-     ]
-
-                ]]></value>
-        "finalize\"][not(FormalParameters/*)]] /Block[count(BlockStatement)=1] /BlockStatement[ Statement/StatementExpression/PrimaryExpression [./PrimaryPrefix[@SuperModifier='true']] [./PrimarySuffix[@Image='finalize']] ]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/codesize.xml/NPathComplexity">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/UseLocaleWithCaseConversions">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                
-//PrimaryExpression
-[
-PrimaryPrefix
-[Name[ends-with(@Image, 'toLowerCase') or ends-with(@Image, 'toUpperCase')]]
-[following-sibling::PrimarySuffix[position() = 1]/Arguments[@ArgumentCount=0]]
-
-or
-
-PrimarySuffix
-[ends-with(@Image, 'toLowerCase') or ends-with(@Image, 'toUpperCase')]
-[following-sibling::PrimarySuffix[position() = 1]/Arguments[@ArgumentCount=0]]
-]
-[not(PrimaryPrefix/Name[ends-with(@Image, 'toHexString')])]
-
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/optimizations.xml/RedundantFieldInitializer">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/migrating.xml/LongInstantiation">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//PrimaryPrefix
-/AllocationExpression
-[not (ArrayDimsAndInits)
-and (ClassOrInterfaceType/@Image='Long'
-or ClassOrInterfaceType/@Image='java.lang.Long')]
-
-    ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/clone.xml/CloneMethodMustBePublic">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//MethodDeclaration[@Public='false']
-[
-MethodDeclarator/@Image = 'clone'
-and MethodDeclarator/FormalParameters/@ParameterCount = 0
-]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/j2ee.xml/RemoteSessionInterfaceNamingConvention">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//ClassOrInterfaceDeclaration
-[
-    (
-        (./ExtendsList/ClassOrInterfaceType[ends-with(@Image,'EJBHome')])
-    )
-    and
-    not
-    (
-        ends-with(@Image,'Home')
-    )
-]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/controversial.xml/AvoidPrefixingMethodParameters">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//MethodDeclaration/MethodDeclarator/FormalParameters/FormalParameter/VariableDeclaratorId[
-        pmd:matches(@Image,'^in[A-Z].*','^out[A-Z].*','^in$','^out$')
-]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strings.xml/ConsecutiveLiteralAppends">
     <priority>3</priority>
@@ -1951,137 +520,24 @@ and MethodDeclarator/FormalParameters/@ParameterCount = 0
   </rule>
   <rule ref="rulesets/java/optimizations.xml/AvoidArrayLoops">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//Statement[(ForStatement or WhileStatement) and
-count(*//AssignmentOperator[@Image = '='])=1
-and
-*/Statement
-[
-./Block/BlockStatement/Statement/StatementExpression/PrimaryExpression
-/PrimaryPrefix/Name/../../PrimarySuffix/Expression
-[(PrimaryExpression or AdditiveExpression) and count
-(.//PrimaryPrefix/Name)=1]//PrimaryPrefix/Name/@Image
-and
-./Block/BlockStatement/Statement/StatementExpression/Expression/PrimaryExpression
-/PrimaryPrefix/Name/../../PrimarySuffix[count
-(..//PrimarySuffix)=1]/Expression[(PrimaryExpression
-or AdditiveExpression) and count(.//PrimaryPrefix/Name)=1]
-//PrimaryPrefix/Name/@Image
-]]
-    
-        ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/junit.xml/UseAssertSameInsteadOfAssertTrue">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                
-//PrimaryExpression[
-    PrimaryPrefix/Name
-     [@Image = 'assertTrue' or @Image = 'assertFalse']
-]
-[PrimarySuffix/Arguments
- /ArgumentList/Expression
- /EqualityExpression[count(.//NullLiteral) = 0]]
-[ancestor::ClassOrInterfaceDeclaration[//ClassOrInterfaceType[pmd-java:typeof(@Image, 'junit.framework.TestCase','TestCase')] or //MarkerAnnotation/Name[pmd-java:typeof(@Image, 'org.junit.Test', 'Test')]]]
- 
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/migrating.xml/JUnit4TestShouldUseAfterAnnotation">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//CompilationUnit[not(ImportDeclaration/Name[starts-with(@Image, "org.testng")])]
-//ClassOrInterfaceBodyDeclaration[MethodDeclaration/MethodDeclarator[@Image='tearDown']]
-[count(Annotation//Name[@Image='After'])=0]
-
-              ]]></value>
-        "org.testng\")])] //ClassOrInterfaceBodyDeclaration[MethodDeclaration/MethodDeclarator[@Image='tearDown']] [count(Annotation//Name[@Image='After'])=0]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/controversial.xml/AvoidAccessibilityAlteration">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                   
-                        //PrimaryExpression[
-                        (
-                        (PrimarySuffix[
-                                ends-with(@Image,'getDeclaredConstructors')
-                                        or
-                                ends-with(@Image,'getDeclaredConstructor')
-                                        or
-                                ends-with(@Image,'setAccessible')
-                                ])
-                        or
-                        (PrimaryPrefix/Name[
-                                ends-with(@Image,'getDeclaredConstructor')
-                                or
-                                ends-with(@Image,'getDeclaredConstructors')
-                                or
-                                starts-with(@Image,'AccessibleObject.setAccessible')
-                                ])
-                        )
-                        and
-                        (//ImportDeclaration/Name[
-                                contains(@Image,'java.security.PrivilegedAction')])
-                ]
-                
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/braces.xml/WhileLoopsMustUseBraces">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//WhileStatement[not(Statement/Block)]
-
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/unusedcode.xml/UnusedPrivateMethod">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/UseVarargs">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-//FormalParameters/FormalParameter
-    [position()=last()]
-    [@Array='true']
-    [@Varargs='false']
-    [not (./Type/ReferenceType[@Array='true'][PrimitiveType[@Image='byte']])]
-    [not (./Type/ReferenceType[ClassOrInterfaceType[@Image='Byte']])]
-    [not (./Type/PrimitiveType[@Image='byte'])]
-    [not (ancestor::MethodDeclaration/preceding-sibling::Annotation/*/Name[@Image='Override'])]
-    [not(
-        ancestor::MethodDeclaration
-            [@Public='true' and @Static='true']
-            [child::ResultType[@Void='true']] and
-        ancestor::MethodDeclarator[@Image='main'] and
-        ..[@ParameterCount='1'] and
-        ./Type/ReferenceType[ClassOrInterfaceType[@Image='String']]
-    )]
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/CheckSkipResult">
     <priority>3</priority>
@@ -2094,111 +550,30 @@ or AdditiveExpression) and count(.//PrimaryPrefix/Name)=1]
   </rule>
   <rule ref="rulesets/java/strings.xml/StringBufferInstantiationWithChar">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//AllocationExpression/ClassOrInterfaceType
-[@Image='StringBuffer' or @Image='StringBuilder']
-/../Arguments/ArgumentList/Expression/PrimaryExpression
-/PrimaryPrefix/
-Literal
-  [starts-with(@Image, "'")]
-  [ends-with(@Image, "'")]
-
-            ]]></value>
-        "'\")] [ends-with(@Image, \"'\")]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strings.xml/InefficientStringBuffering">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/migrating.xml/ReplaceHashtableWithMap">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//Type/ReferenceType/ClassOrInterfaceType[@Image='Hashtable']
-     
-        ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/AvoidThreadGroup">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//AllocationExpression/ClassOrInterfaceType[pmd-java:typeof(@Image, 'java.lang.ThreadGroup')]|
-//PrimarySuffix[contains(@Image, 'getThreadGroup')]
-
-        ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/DoubleCheckedLocking">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/PositionLiteralsFirstInComparisons">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-              
-//PrimaryExpression[
-        PrimaryPrefix[Name
-                [
-	(ends-with(@Image, '.equals'))
-                ]
-        ]
-        [
-                   (../PrimarySuffix/Arguments/ArgumentList/Expression/PrimaryExpression/PrimaryPrefix/Literal[@StringLiteral='true'])
-	and
-	( count(../PrimarySuffix/Arguments/ArgumentList/Expression) = 1 )
-        ]
-]
-[not(ancestor::Expression/ConditionalAndExpression//EqualityExpression[@Image='!=']//NullLiteral)]
-[not(ancestor::Expression/ConditionalOrExpression//EqualityExpression[@Image='==']//NullLiteral)]
-
-          
-          ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/PreserveStackTrace">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/finalizers.xml/EmptyFinalizer">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//MethodDeclaration[MethodDeclarator[@Image='finalize'][not(FormalParameters/*)]]
-  /Block[count(*)=0]
-
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/controversial.xml/UnnecessaryParentheses">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                  
-          //Expression
-           /PrimaryExpression
-            /PrimaryPrefix
-             /Expression[count(*)=1]
-              /PrimaryExpression
-              /PrimaryPrefix
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/codesize.xml/StdCyclomaticComplexity">
     <priority>3</priority>
@@ -2211,61 +586,12 @@ Literal
   </rule>
   <rule ref="rulesets/java/comments.xml/CommentDefaultAccessModifier">
     <priority>5</priority>
-    <properties>
-      <property name="regex">
-        <value><![CDATA[
-                
-\/\*\s+default\s+\*\/
-                
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/clone.xml/ProperCloneImplementation">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                 
-//MethodDeclarator
-[@Image = 'clone']
-[count(FormalParameters/*) = 0]
-[count(../Block//*[
-    (self::AllocationExpression) and
-    (./ClassOrInterfaceType/@Image = ancestor::
-ClassOrInterfaceDeclaration[1]/@Image)
-  ])> 0
-]
-                
-             ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/android.xml/CallSuperLast">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-          
-//MethodDeclaration[MethodDeclarator[
-  @Image='finish' or
-  @Image='onDestroy' or
-  @Image='onPause' or
-  @Image='onSaveInstanceState' or
-  @Image='onStop' or
-  @Image='onTerminate'
-  ]]
-   /Block/BlockStatement[last()]
-    [not(Statement/StatementExpression/PrimaryExpression[./PrimaryPrefix[@SuperModifier='true']]/PrimarySuffix[@Image= ancestor::MethodDeclaration/MethodDeclarator/@Image])]
-[ancestor::ClassOrInterfaceDeclaration[ExtendsList/ClassOrInterfaceType[
-  typeof(@Image, 'android.app.Activity', 'Activity') or
-  typeof(@Image, 'android.app.Application', 'Application') or
-  typeof(@Image, 'android.app.Service', 'Service')
-]]]
-
-        ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/SimplifyBooleanReturns">
     <priority>3</priority>
@@ -2275,124 +601,24 @@ ClassOrInterfaceDeclaration[1]/@Image)
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptySwitchStatements">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//SwitchStatement[count(*) = 1]
- 
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/AvoidThrowingNewInstanceOfSameException">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-        
-//CatchStatement[
-  count(Block/BlockStatement/Statement) = 1
-  and
-  FormalParameter/Type/ReferenceType/ClassOrInterfaceType/@Image = Block/BlockStatement/Statement/ThrowStatement/Expression/PrimaryExpression/PrimaryPrefix/AllocationExpression/ClassOrInterfaceType/@Image
-  and
-  count(Block/BlockStatement/Statement/ThrowStatement/Expression/PrimaryExpression/PrimaryPrefix/AllocationExpression/Arguments/ArgumentList/Expression) = 1
-  and
-  FormalParameter/VariableDeclaratorId = Block/BlockStatement/Statement/ThrowStatement/Expression/PrimaryExpression/PrimaryPrefix/AllocationExpression/Arguments/ArgumentList/Expression/PrimaryExpression/PrimaryPrefix/Name
-  ]
- 
-      ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/controversial.xml/UseObjectForClearerAPI">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//MethodDeclaration[@Public]/MethodDeclarator/FormalParameters[
-     count(FormalParameter/Type/ReferenceType/ClassOrInterfaceType[@Image = 'String']) > 3
-]
-
-        ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/braces.xml/ForLoopsMustUseBraces">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
- 
-//ForStatement[not(Statement/Block)]
- 
-                 ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/migrating.xml/AvoidEnumAsIdentifier">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                  
-//VariableDeclaratorId[@Image='enum']
-                  
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/SimplifyConditional">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                      
-//Expression
- [ConditionalOrExpression
- [EqualityExpression[@Image='==']
-  //NullLiteral
-  and
-  UnaryExpressionNotPlusMinus
-   [@Image='!']//InstanceOfExpression[PrimaryExpression
-     //Name/@Image = ancestor::ConditionalOrExpression/EqualityExpression
-      /PrimaryExpression/PrimaryPrefix/Name/@Image]
-  and
-  (count(UnaryExpressionNotPlusMinus) + 1 = count(*))
- ]
-or
-ConditionalAndExpression
- [EqualityExpression[@Image='!=']//NullLiteral
- and
-InstanceOfExpression
- [PrimaryExpression[count(PrimarySuffix[@ArrayDereference='true'])=0]
-  //Name[not(contains(@Image,'.'))]/@Image = ancestor::ConditionalAndExpression
-   /EqualityExpression/PrimaryExpression/PrimaryPrefix/Name/@Image]
- and
-(count(InstanceOfExpression) + 1 = count(*))
- ]
-]
- 
-                  ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/naming.xml/GenericsNaming">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//TypeDeclaration/ClassOrInterfaceDeclaration/TypeParameters/TypeParameter[
-  string-length(@Image) > 1 
-  or
-  string:upper-case(@Image) != @Image
-]
-
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/IdempotentOperations">
     <priority>3</priority>
@@ -2405,105 +631,21 @@ InstanceOfExpression
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyFinallyBlock">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//FinallyStatement[count(Block/BlockStatement) = 0]
- 
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/codesize.xml/NcssMethodCount">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/clone.xml/CloneMethodReturnTypeMustMatchClassName">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//MethodDeclaration
-[
-MethodDeclarator/@Image = 'clone'
-and MethodDeclarator/FormalParameters/@ParameterCount = 0
-and not (ResultType//ClassOrInterfaceType/@Image = ancestor::ClassOrInterfaceDeclaration[1]/@Image)
-]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/junit.xml/UseAssertNullInsteadOfAssertTrue">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                 
-//PrimaryExpression[
- PrimaryPrefix/Name[@Image = 'assertTrue' or @Image = 'assertFalse']
-][
- PrimarySuffix/Arguments/ArgumentList[
-  Expression/EqualityExpression/PrimaryExpression/PrimaryPrefix/Literal/NullLiteral
- ]
-]
-[ancestor::ClassOrInterfaceDeclaration[//ClassOrInterfaceType[pmd-java:typeof(@Image, 'junit.framework.TestCase','TestCase')] or //MarkerAnnotation/Name[pmd-java:typeof(@Image, 'org.junit.Test', 'Test')]]]
-  
-             ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/naming.xml/SuspiciousEqualsMethodName">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-//MethodDeclarator[@Image = 'equals']
-[   
-    (count(FormalParameters/*) = 1
-    and not (FormalParameters/FormalParameter/Type/ReferenceType/ClassOrInterfaceType
-        [@Image = 'Object' or @Image = 'java.lang.Object'])
-    or not (../ResultType/Type/PrimitiveType[@Image = 'boolean'])
-    )  or  (
-    count(FormalParameters/*) = 2
-    and ../ResultType/Type/PrimitiveType[@Image = 'boolean']
-    and FormalParameters//ClassOrInterfaceType[@Image = 'Object' or @Image = 'java.lang.Object']
-    and not(../../Annotation/MarkerAnnotation/Name[@Image='Override'])
-    )
-]
-| //MethodDeclarator[@Image = 'equal']
-[
-    count(FormalParameters/*) = 1
-    and FormalParameters/FormalParameter/Type/ReferenceType/ClassOrInterfaceType
-        [@Image = 'Object' or @Image = 'java.lang.Object']
-]           
-
-                    ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/j2ee.xml/MDBAndSessionBeanNamingConvention">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-//TypeDeclaration/ClassOrInterfaceDeclaration
-[
-    (
-        (./ImplementsList/ClassOrInterfaceType[ends-with(@Image,'SessionBean')])
-        or
-        (./ImplementsList/ClassOrInterfaceType[ends-with(@Image,'MessageDrivenBean')])
-    )
-    and
-    not
-    (
-        ends-with(@Image,'Bean')
-    )
-]
-             ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/controversial.xml/DontImportSun">
     <priority>3</priority>
@@ -2516,29 +658,9 @@ and not (ResultType//ClassOrInterfaceType/@Image = ancestor::ClassOrInterfaceDec
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyStatementBlock">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-          
-//BlockStatement/Statement/Block[count(*) = 0]
-          
-          ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/j2ee.xml/DoNotCallSystemExit">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-//Name[
-    starts-with(@Image,'System.exit')
-    or
-    (starts-with(@Image,'Runtime.getRuntime') and ../../PrimarySuffix[ends-with(@Image,'exit')])
-]
-    		]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/coupling.xml/ExcessiveImports">
     <priority>5</priority>
@@ -2557,82 +679,21 @@ and not (ResultType//ClassOrInterfaceType/@Image = ancestor::ClassOrInterfaceDec
   </rule>
   <rule ref="rulesets/java/design.xml/AvoidInstanceofChecksInCatchClause">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//CatchStatement/FormalParameter
- /following-sibling::Block//InstanceOfExpression/PrimaryExpression/PrimaryPrefix
-  /Name[
-   @Image = ./ancestor::Block/preceding-sibling::FormalParameter
-    /VariableDeclaratorId/@Image
-  ]
-    
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/junit.xml/JUnitStaticSuite">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                
-//MethodDeclaration[not(@Static='true') or not(@Public='true')]
-[MethodDeclarator/@Image='suite']
-[MethodDeclarator/FormalParameters/@ParameterCount=0]
-[ancestor::ClassOrInterfaceDeclaration[//ClassOrInterfaceType[pmd-java:typeof(@Image, 'junit.framework.TestCase','TestCase')] or //MarkerAnnotation/Name[pmd-java:typeof(@Image, 'org.junit.Test', 'Test')]]]
-                
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/logging-java.xml/SystemPrintln">
     <priority>1</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                 
-//Name[
-    starts-with(@Image, 'System.out.print')
-    or
-    starts-with(@Image, 'System.err.print')
-    ]
-                
-             ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/CollapsibleIfStatements">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                
-//IfStatement[@Else='false']/Statement
- /IfStatement[@Else='false']
- |
-//IfStatement[@Else='false']/Statement
- /Block[count(BlockStatement)=1]/BlockStatement
-  /Statement/IfStatement[@Else='false']
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/SingularField">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/controversial.xml/AvoidUsingShortType">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-            //PrimitiveType[@Image = 'short'][name(../..) != 'CastExpression']
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/strings.xml/AppendCharacterWithChar">
     <priority>3</priority>
@@ -2645,39 +706,12 @@ and not (ResultType//ClassOrInterfaceType/@Image = ancestor::ClassOrInterfaceDec
   </rule>
   <rule ref="rulesets/java/migrating.xml/JUnit4TestShouldUseTestAnnotation">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//ClassOrInterfaceBodyDeclaration[MethodDeclaration[@Public='true']/MethodDeclarator[starts-with(@Image,'test')]]
-[count(Annotation//Name[@Image='Test'])=0]
-
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/AvoidBranchingStatementAsLastInLoop">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/controversial.xml/DoNotCallGarbageCollectionExplicitly">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//Name[
-(starts-with(@Image, 'System.') and
-(starts-with(@Image, 'System.gc') or
-starts-with(@Image, 'System.runFinalization'))) or
-(
-starts-with(@Image,'Runtime.getRuntime') and
-../../PrimarySuffix[ends-with(@Image,'gc')]
-)
-]
-
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/optimizations.xml/UnnecessaryWrapperObjectCreation">
     <priority>3</priority>
@@ -2687,81 +721,18 @@ starts-with(@Image,'Runtime.getRuntime') and
   </rule>
   <rule ref="rulesets/java/logging-java.xml/LoggerIsNotStaticFinal">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                 
-//VariableDeclarator
- [parent::FieldDeclaration]
- [../Type/ReferenceType
-  /ClassOrInterfaceType[@Image='Logger']
-   and
-  (..[@Final='false'] or ..[@Static = 'false'] ) ]
-                
-             ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/AvoidSynchronizedAtMethodLevel">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//MethodDeclaration[@Synchronized='true']
-    
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/ImmutableField">
     <priority>5</priority>
   </rule>
   <rule ref="rulesets/java/basic.xml/MisplacedNullCheck">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//Expression
-    /*[self::ConditionalOrExpression or self::ConditionalAndExpression]
-    /descendant::PrimaryExpression/PrimaryPrefix
-    /Name[starts-with(@Image,
-        concat(ancestor::PrimaryExpression/following-sibling::EqualityExpression
-            [./PrimaryExpression/PrimaryPrefix/Literal/NullLiteral]
-            /PrimaryExpression/PrimaryPrefix
-            /Name[count(../../PrimarySuffix)=0]/@Image,".")
-        )
-     ]
-     [count(ancestor::ConditionalAndExpression/EqualityExpression
-            [@Image='!=']
-            [./PrimaryExpression/PrimaryPrefix/Literal/NullLiteral]
-            [starts-with(following-sibling::*/PrimaryExpression/PrimaryPrefix/Name/@Image,
-                concat(./PrimaryExpression/PrimaryPrefix/Name/@Image, '.'))]
-      ) = 0
-     ]
-    
-        ]]></value>
-        ".\") ) ] [count(ancestor::ConditionalAndExpression/EqualityExpression [@Image='!='] [./PrimaryExpression/PrimaryPrefix/Literal/NullLiteral] [starts-with(following-sibling::*/PrimaryExpression/PrimaryPrefix/Name/@Image, concat(./PrimaryExpression/PrimaryPrefix/Name/@Image, '.'))] ) = 0 ]
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/ReturnEmptyArrayRatherThanNull">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-                        //MethodDeclaration
-                        [
-                        (./ResultType/Type[@Array='true'])
-                        and
-                        (./Block/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal/NullLiteral)
-                        ]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/imports.xml/ImportFromSamePackage">
     <priority>4</priority>
@@ -2774,198 +745,35 @@ starts-with(@Image,'Runtime.getRuntime') and
   </rule>
   <rule ref="rulesets/java/junit.xml/UseAssertEqualsInsteadOfAssertTrue">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                
-//PrimaryExpression[
-    PrimaryPrefix/Name[@Image = 'assertTrue']
-][
-    PrimarySuffix/Arguments/ArgumentList/Expression/PrimaryExpression/PrimaryPrefix/Name
-    [ends-with(@Image, '.equals')]
-]
-[ancestor::ClassOrInterfaceDeclaration[//ClassOrInterfaceType[pmd-java:typeof(@Image, 'junit.framework.TestCase','TestCase')] or //MarkerAnnotation/Name[pmd-java:typeof(@Image, 'org.junit.Test', 'Test')]]]
- 
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/migrating.xml/ShortInstantiation">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//PrimaryPrefix
-/AllocationExpression
-[not (ArrayDimsAndInits)
-and (ClassOrInterfaceType/@Image='Short'
-or ClassOrInterfaceType/@Image='java.lang.Short')]
-
-          ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptySynchronizedBlock">
     <priority>4</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//SynchronizedStatement/Block[1][count(*) = 0]
-
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/j2ee.xml/RemoteInterfaceNamingConvention">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                    
-//ClassOrInterfaceDeclaration
-[
-    (
-        (./ExtendsList/ClassOrInterfaceType[ends-with(@Image,'EJBObject')])
-    )
-    and
-    (
-        ends-with(@Image,'Session')
-        or
-        ends-with(@Image,'EJB')
-        or
-        ends-with(@Image,'Bean')
-    )
-]
-                    
-                ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/InstantiationToGetClass">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-                
-//PrimarySuffix
- [@Image='getClass']
- [parent::PrimaryExpression
-  [PrimaryPrefix/AllocationExpression]
-  [count(PrimarySuffix) = 2]
- ]
-     
-            ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/MissingStaticMethodInNonInstantiatableClass">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//ClassOrInterfaceDeclaration[@Nested='false']
-[
-  (
-    count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration)>0
-    and
-    count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration) = count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration[@Private='true'])
-  )
-  and
-  count(.//MethodDeclaration[@Static='true'])=0
-  and
-  count(.//FieldDeclaration[@Private='false'][@Static='true'])=0
-  and
-  count(.//ClassOrInterfaceDeclaration[@Nested='true']
-           [@Public='true']
-           [@Static='true']
-           [count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration[@Public='true']) > 0]
-           [count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/MethodDeclaration
-                    [@Public='true']
-                    [./ResultType/Type/ReferenceType/ClassOrInterfaceType
-                        [@Image = //ClassOrInterfaceDeclaration[@Nested='false']/@Image]
-                    ]
-            ) > 0]
-        ) = 0
-  and
-  count(//ClassOrInterfaceDeclaration
-            [@Nested='true']
-            [@Static='true']
-            [@Public='true']
-            [.//MethodDeclaration
-              [@Public='true']
-              [.//ReturnStatement//AllocationExpression
-                [ClassOrInterfaceType
-                    [@Image = //ClassOrInterfaceDeclaration/@Image]
-                ]
-                [./Arguments//PrimaryPrefix/@ThisModifier='true']
-              ]
-            ]
-       ) = 0
-]
-    
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/SimplifyBooleanExpressions">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-
-//EqualityExpression/PrimaryExpression
- /PrimaryPrefix/Literal/BooleanLiteral
-
-              ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/imports.xml/TooManyStaticImports">
     <priority>5</priority>
-    <properties>
-      <property name="maximumStaticImports">
-        <value><![CDATA[4]]></value>
-      </property>
-      <property name="xpath">
-        <value><![CDATA[
-.[count(ImportDeclaration[@Static = 'true']) > $maximumStaticImports]
-	             ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/UncommentedEmptyMethodBody">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-    
-//MethodDeclaration/Block[count(BlockStatement) = 0 and @containsComment = 'false']
- 
-             ]]></value>
-      </property>
-    </properties>
   </rule>
   <rule ref="rulesets/java/unusedcode.xml/UnusedLocalVariable">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/junit.xml/JUnitSpelling">
     <priority>3</priority>
-    <properties>
-      <property name="xpath">
-        <value><![CDATA[
-              
-//MethodDeclarator[(not(@Image = 'setUp')
- and translate(@Image, 'SETuP', 'setUp') = 'setUp')
- or (not(@Image = 'tearDown')
- and translate(@Image, 'TEARdOWN', 'tearDown') = 'tearDown')]
- [FormalParameters[count(*) = 0]]
-[ancestor::ClassOrInterfaceDeclaration[//ClassOrInterfaceType[pmd-java:typeof(@Image, 'junit.framework.TestCase','TestCase')] or //MarkerAnnotation/Name[pmd-java:typeof(@Image, 'org.junit.Test', 'Test')]]]
-              
-          ]]></value>
-      </property>
-    </properties>
   </rule>
 </ruleset>

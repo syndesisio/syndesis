@@ -184,14 +184,12 @@ public class CredentialsTest {
         final CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder().providerId("providerId")
             .returnUrl(URI.create("/ui#state")).code("code").state("state").build();
 
-        @SuppressWarnings("PMD.CloseResource")
         final Connection connection = new Connection.Builder().build();
         when(credentialProvider.applyTo(new Connection.Builder().createFrom(connection).isDerived(true).build(),
             flowState))
                 .then(a -> new Connection.Builder().createFrom(a.getArgumentAt(0, Connection.class))
                     .putConfiguredProperty("key", "value").build());
 
-        @SuppressWarnings("PMD.CloseResource")
         final Connection finishedConnection = credentials.apply(connection, flowState);
 
         assertThat(finishedConnection).isNotNull();
