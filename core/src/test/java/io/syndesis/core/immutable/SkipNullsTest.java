@@ -13,18 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model;
+package io.syndesis.core.immutable;
 
-import java.util.SortedSet;
-
-import io.syndesis.core.immutable.SkipNulls;
+import java.util.Set;
 
 import org.immutables.value.Value;
+import org.junit.Test;
 
-public interface WithTags {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    @Value.NaturalOrder
-    @SkipNulls
-    SortedSet<String> getTags();
+public class SkipNullsTest {
 
+    @Value.Immutable
+    public interface TestValue {
+        @SkipNulls
+        Set<String> noNulls();
+    }
+
+    @Test
+    public void shouldNotHoldNullValues() {
+        final TestValue testValue = ImmutableTestValue.builder().addNoNulls(null, "value").build();
+
+        assertThat(testValue.noNulls()).containsExactly("value");
+    }
 }

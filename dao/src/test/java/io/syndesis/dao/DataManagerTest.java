@@ -102,7 +102,7 @@ public class DataManagerTest {
         Integration integration = dataManager.fetch(Integration.class, "1");
         Assert.assertEquals("Example Integration", "Twitter to Salesforce Example", integration.getName());
         Assert.assertEquals(4, integration.getSteps().get().size());
-        Assert.assertTrue(integration.getTags().get().contains("example"));
+        Assert.assertTrue(integration.getTags().contains("example"));
 
         //making sure we can deserialize Enums such as StatusType
         Integration int2 = new Integration.Builder().createFrom(integration).desiredStatus(Integration.Status.Activated).build();

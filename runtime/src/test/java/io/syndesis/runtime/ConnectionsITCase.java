@@ -27,10 +27,44 @@ import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("PMD.CloseResource")
 public class ConnectionsITCase extends BaseITCase {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private final static Class<List<Violation>> RESPONSE_TYPE = (Class) List.class;
+
+    @Test
+    public void emptyNamesShouldNotBeAllowed() {
+        final Connection connection = new Connection.Builder().name(" ").build();
+
+        final ResponseEntity<List<Violation>> got = post("/api/v1/connections/validation", connection, RESPONSE_TYPE,
+            tokenRule.validToken(), HttpStatus.BAD_REQUEST);
+
+        assertThat(got.getBody()).hasSize(1);
+    }
+
+    @Test
+    public void emptyTagsShouldBeIgnored() {
+        final Connection connection = new Connection.Builder().id("tags-connection-test").name("tags-connection-test")
+            .addTag("", " ", "taggy").build();
+
+        final ResponseEntity<Connection> got = post("/api/v1/connections", connection, Connection.class,
+            tokenRule.validToken(), HttpStatus.OK);
+
+        final Connection created = got.getBody();
+        assertThat(created).isNotNull();
+        assertThat(created.getTags()).containsExactly("taggy");
+    }
+
+    @Test
+    public void nullNamesShouldNotBeAllowed() {
+        final Connection connection = new Connection.Builder().build();
+
+        final ResponseEntity<List<Violation>> got = post("/api/v1/connections/validation", connection, RESPONSE_TYPE,
+            tokenRule.validToken(), HttpStatus.BAD_REQUEST);
+
+        assertThat(got.getBody()).hasSize(1);
+    }
 
     @Before
     public void preexistingConnection() {

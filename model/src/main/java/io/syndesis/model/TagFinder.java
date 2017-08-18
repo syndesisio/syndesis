@@ -30,10 +30,8 @@ public class TagFinder {
     public TagFinder add(ListResult<? extends WithTags> items) {
         if (items.getItems()!=null) {
             for (WithTags item : items.getItems()) {
-                if (item.getTags().isPresent()) {
-                    for (String tag: item.getTags().get()) {
-                        tags.add(tag);
-                    }
+                for (String tag: item.getTags()) {
+                    tags.add(tag);
                 }
             }
         }

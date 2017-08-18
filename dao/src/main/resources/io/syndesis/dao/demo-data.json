@@ -2,7 +2,7 @@
   {
     "kind": "connection",
     "data": {
-      "id": 1,
+      "id": "1",
       "name": "Twitter Example",
       "description": "Twitter Connection",
       "createdDate": 1492095344060,
@@ -10,17 +10,17 @@
       "icon": "fa-twitter",
       "connectorId": "twitter",
       "configuredProperties": {
-        "accessToken": "",
-        "accessTokenSecret": "",
-        "consumerKey": "",
-        "consumerSecret": ""
+        "accessToken": "twitter-access-token",
+        "accessTokenSecret": "twitter-access-token-secret",
+        "consumerKey": "twitter-consumer-key",
+        "consumerSecret": "twitter-consumer-secret"
       }
     }
   },
   {
     "kind": "connection",
     "data": {
-      "id": 2,
+      "id": "2",
       "name": "Salesforce Example",
       "description": "Salesforce Connection",
       "createdDate": 1492095344060,
@@ -30,16 +30,16 @@
       "connectorId": "salesforce",
       "configuredProperties": {
         "loginUrl": "https://login.salesforce.com",
-        "clientId": "",
-        "clientSecret": "",
-        "refreshToken": ""
+        "clientId": "salesforce-client-id",
+        "clientSecret": "salesforce-client-secret",
+        "refreshToken": "salesforce-refresh-token"
       }
     }
   },
   {
     "kind": "connection",
     "data": {
-      "id": 3,
+      "id": "3",
       "name": "HTTP Example",
       "description": "HTTP Connection",
       "createdDate": 1492095344060,
@@ -53,7 +53,7 @@
   {
     "kind": "connection",
     "data": {
-      "id": 4,
+      "id": "4",
       "name": "Timer Example",
       "description": "Timer Connection",
       "createdDate": 1492095344060,
@@ -81,16 +81,16 @@
           "id": "1",
           "stepKind": "endpoint",
           "connection": {
-            "id": 1,
+            "id": "1",
             "name": "Twitter Example",
             "description": "Twitter Connection",
             "icon": "fa-twitter",
             "connectorId": "twitter",
             "configuredProperties": {
-              "accessToken": "",
-              "accessTokenSecret": "",
-              "consumerKey": "",
-              "consumerSecret": ""
+              "accessToken": "twitter-access-token",
+              "accessTokenSecret": "twitter-access-token-secret",
+              "consumerKey": "twitter-consumer-key",
+              "consumerSecret": "twitter-consumer-secret"
             }
           },
           "action": {
@@ -128,16 +128,16 @@
           "id": "4",
           "stepKind": "endpoint",
           "connection": {
-            "id": 2,
+            "id": "2",
             "connectorId": "salesforce",
             "description": "Salesforce Connection",
             "icon": "fa-puzzle-piece",
             "name": "Salesforce Example",
             "configuredProperties": {
               "loginUrl": "https://login.salesforce.com",
-              "clientId": "",
-              "clientSecret": "",
-              "refreshToken": ""
+              "clientId": "salesforce-client-id",
+              "clientSecret": "salesforce-client-secret",
+              "refreshToken": "salesforce-refresh-token"
             }
           },
           "action": {
@@ -181,7 +181,7 @@
           "id": "5",
           "stepKind": "endpoint",
           "connection": {
-            "id": 4,
+            "id": "4",
             "name": "Timer Example",
             "description": "Timer Connection",
             "icon": "fa-globe",
@@ -231,7 +231,7 @@
           "id": "7",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
@@ -273,7 +273,7 @@
           "id": "8",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
@@ -332,7 +332,7 @@
           "id": "5",
           "stepKind": "endpoint",
           "connection": {
-            "id": 4,
+            "id": "4",
             "name": "Timer Example",
             "description": "Timer Connection",
             "icon": "fa-globe",
@@ -382,7 +382,7 @@
           "id": "7",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
@@ -424,7 +424,7 @@
           "id": "8",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
@@ -483,7 +483,7 @@
           "id": "5",
           "stepKind": "endpoint",
           "connection": {
-            "id": 4,
+            "id": "4",
             "name": "Timer Example",
             "description": "Timer Connection",
             "icon": "fa-globe",
@@ -533,7 +533,7 @@
           "id": "7",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
@@ -575,7 +575,7 @@
           "id": "8",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
@@ -634,7 +634,7 @@
           "id": "5",
           "stepKind": "endpoint",
           "connection": {
-            "id": 4,
+            "id": "4",
             "name": "Timer Example",
             "description": "Timer Connection",
             "icon": "fa-globe",
@@ -684,7 +684,7 @@
           "id": "7",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
@@ -726,7 +726,7 @@
           "id": "8",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
@@ -785,7 +785,7 @@
           "id": "5",
           "stepKind": "endpoint",
           "connection": {
-            "id": 4,
+            "id": "4",
             "name": "Timer Example",
             "description": "Timer Connection",
             "icon": "fa-globe",
@@ -835,7 +835,7 @@
           "id": "7",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
@@ -877,7 +877,7 @@
           "id": "8",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
@@ -936,7 +936,7 @@
           "id": "5",
           "stepKind": "endpoint",
           "connection": {
-            "id": 4,
+            "id": "4",
             "name": "Timer Example",
             "description": "Timer Connection",
             "icon": "fa-globe",
@@ -986,7 +986,7 @@
           "id": "7",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
@@ -1028,7 +1028,7 @@
           "id": "8",
           "stepKind": "endpoint",
           "connection": {
-            "id": 3,
+            "id": "3",
             "name": "HTTP Example",
             "description": "HTTP Connection",
             "icon": "fa-globe",
