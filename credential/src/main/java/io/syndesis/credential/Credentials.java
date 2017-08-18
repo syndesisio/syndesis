@@ -65,7 +65,6 @@ public final class Credentials {
     public Connection apply(final Connection updatedConnection, final CredentialFlowState flowState) {
         final CredentialProvider credentialProvider = providerFrom(flowState);
 
-        @SuppressWarnings("PMD.CloseResource")
         final Connection withDerivedFlag = new Connection.Builder().createFrom(updatedConnection).isDerived(true)
             .build();
 
