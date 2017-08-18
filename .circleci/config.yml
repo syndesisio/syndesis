@@ -87,3 +87,5 @@ jobs:
             oc project syndesis-staging
             oc import-image syndesis/syndesis-ui:${DOCKER_IMAGE_TAG}
           fi
+
+          ./publish-to-gh-pages.sh
