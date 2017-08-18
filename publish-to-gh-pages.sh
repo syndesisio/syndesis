@@ -12,7 +12,7 @@ git worktree prune
 rm -rf .git/worktrees/documentation/
 
 echo "Checking out gh-pages branch into documentation"
-git worktree add -B gh-pages public origin/gh-pages
+git worktree add -B gh-pages documentation origin/gh-pages
 
 echo "Removing existing files"
 rm -rf documentation/*

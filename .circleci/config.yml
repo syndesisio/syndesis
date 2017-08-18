@@ -86,6 +86,7 @@ jobs:
             oc login --server=${OPENSHIFT_APISERVER} --token=${OPENSHIFT_TOKEN}
             oc project syndesis-staging
             oc import-image syndesis/syndesis-ui:${DOCKER_IMAGE_TAG}
+            git config --global user.email "${GIT_EMAIL}"
+            git config --global user.name "${GIT_NAME}"
+            ./publish-to-gh-pages.sh
           fi
-
-          ./publish-to-gh-pages.sh
