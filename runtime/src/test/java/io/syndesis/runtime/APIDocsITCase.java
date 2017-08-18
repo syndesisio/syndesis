@@ -60,7 +60,7 @@ public class APIDocsITCase extends BaseITCase {
 
     @Test
     public void testSwaggerDocsIndex() {
-        ResponseEntity<String> response = restTemplate().getForEntity("/index.html", String.class);
+        ResponseEntity<String> response = restTemplate().getForEntity("/api/v1/index.html", String.class);
         assertThat(response.getStatusCode()).as("swagger docs index.html response code").isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().length()).as("swagger index.html length").isPositive();
         assertThat(response.getBody()).as("swagger index.html example path").contains("/connectors/{id}");
@@ -68,7 +68,7 @@ public class APIDocsITCase extends BaseITCase {
 
     @Test
     public void testSwaggerDocsIndexWithToken() {
-        ResponseEntity<String> response = get("/index.html", String.class);
+        ResponseEntity<String> response = get("/api/v1/index.html", String.class);
         assertThat(response.getStatusCode()).as("swagger docs index.html response code").isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().length()).as("swagger index.html length").isPositive();
         assertThat(response.getBody()).as("swagger index.html example path").contains("/connectors/{id}");

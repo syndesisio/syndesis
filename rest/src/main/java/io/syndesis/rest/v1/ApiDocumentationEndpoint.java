@@ -15,15 +15,27 @@
  */
 package io.syndesis.rest.v1;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import java.io.InputStream;
 
-/**
- * Configured in spring.factories so that this configuration is automatically picked
- * up when included in the classpath.
- */
-@Configuration
-@ComponentScan
-public class V1Configuration {
+import static java.util.concurrent.TimeUnit.HOURS;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+
+import io.swagger.annotations.ApiOperation;
+
+import org.springframework.stereotype.Component;
+
+@CacheFor(value = 1, unit = HOURS)
+@Path("/index.html")
+@Component
+public class ApiDocumentationEndpoint {
+
+    @GET
+    @Produces("text/html")
+    @ApiOperation(value = "Get the REST API documentation")
+    public InputStream doGet() {
+        return ApiDocumentationEndpoint.class.getResourceAsStream("/static/index.html");
+    }
 }
