@@ -15,19 +15,26 @@
  */
 package io.syndesis.runtime;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.JsonNode;
+
 import io.syndesis.model.integration.Integration;
 import io.syndesis.rest.v1.handler.exception.RestError;
+import io.syndesis.rest.v1.operations.Violation;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationsITCase extends BaseITCase {
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private final static Class<List<Violation>> RESPONSE_TYPE = (Class) List.class;
 
     @Override
     @Before
@@ -101,6 +108,28 @@ public class IntegrationsITCase extends BaseITCase {
         assertThat(list.getBody().getTotalCount()).as("total count").isEqualTo(1);
         assertThat(list.getBody().getItems()).as("items").hasSize(1);
 
+    }
+
+    @Test
+    public void shouldDetermineValidityForInvalidIntegrations() {
+        dataManager.create(new Integration.Builder().name("Existing integration").build());
+
+        final Integration integration = new Integration.Builder().name("Existing integration").build();
+
+        final ResponseEntity<List<Violation>> got = post("/api/v1/integrations/validation", integration, RESPONSE_TYPE,
+            tokenRule.validToken(), HttpStatus.BAD_REQUEST);
+
+        assertThat(got.getBody()).hasSize(1);
+    }
+
+    @Test
+    public void shouldDetermineValidityForValidIntegrations() {
+        final Integration integration = new Integration.Builder().name("Test integration").build();
+
+        final ResponseEntity<List<Violation>> got = post("/api/v1/integrations/validation", integration, RESPONSE_TYPE,
+            tokenRule.validToken(), HttpStatus.NO_CONTENT);
+
+        assertThat(got.getBody()).isNull();
     }
 
     public static class IntegrationListResult {
