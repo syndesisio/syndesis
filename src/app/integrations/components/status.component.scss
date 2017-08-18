@@ -1,0 +1,12 @@
+@import '../../../scss/colors';
+.syndesis-integration-status {
+    display: inline-block;
+    .not-pending {
+        .label {
+            &.label-inactive {
+                background: $pf-black-300;
+                color: #000000;
+            }
+        }
+    }
+}

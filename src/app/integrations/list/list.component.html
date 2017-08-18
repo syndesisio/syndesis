@@ -49,7 +49,9 @@
              [itemTemplate]="itemTemplate"
              [actionTemplate]="actionTemplate"
              (onClick)="handleClick($event)">
-    <ng-template #itemTemplate let-integration="item" let-index="index">
+    <ng-template #itemTemplate
+                 let-integration="item"
+                 let-index="index">
       <div class="list-pf-left integration-icons">
         <span *ngIf="getStart(integration).connection; let connection">
           <img src="../../../assets/icons/{{ connection.connectorId }}.integration.png">
@@ -61,40 +63,32 @@
       </div>
       <div class="list-pf-content-wrapper">
         <div class="list-pf-main-content integration-content">
-          <div *ngIf="complete" class="list-pf-title name">{{ integration.name }}</div>
+          <div *ngIf="complete"
+               class="list-pf-title name">{{ integration.name }}</div>
           <div class="list-pf-description description">
             {{ complete ? integration.description : integration.name }}
           </div>
         </div>
         <div class="list-pf-additional-content integration-status">
-          <div *ngIf="complete" class="active-inactive">
-            <!-- In Progress -->
-            <div *ngIf="integration.currentStatus === 'Pending'">
-              <div class="spinner spinner-sm spinner-inline"></div>
-              In Progress
-            </div>
-            <!-- Status -->
-            <div *ngIf="integration.currentStatus !== 'Pending'"
-                 class="not-pending">
-              <span class="label label-{{ getLabelClass(integration.currentStatus) }}"
-                    disabled>{{ getStatusText(integration.currentStatus) }}</span>
-            </div>
-          </div>
+          <syndesis-integration-status *ngIf="complete"
+                                       [integration]="integration"></syndesis-integration-status>
           <div class="pass-fail">
             <!-- OK Status -->
             <i *ngIf="!integration.statusMessage"
-                class="pficon pficon-ok"></i>
+               class="pficon pficon-ok"></i>
             <!-- Not OK Status -->
             <ng-template #statTemplate>{{ integration.statusMessage }}</ng-template>
             <i *ngIf="integration.statusMessage"
-                class="pficon pficon-error-circle-o"
-                [tooltip]="statTemplate"
-                placement="bottom"></i>
+               class="pficon pficon-error-circle-o"
+               [tooltip]="statTemplate"
+               placement="bottom"></i>
           </div>
         </div>
       </div>
     </ng-template>
-    <ng-template #actionTemplate let-integration="item" let-index="index">
+    <ng-template #actionTemplate
+                 let-integration="item"
+                 let-index="index">
       <pfng-action class="list-pf-actions"
                    [config]="getActionConfig(integration)"
                    (onActionSelect)="handleAction($event, integration)">

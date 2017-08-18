@@ -44,22 +44,6 @@
   }
 
   .integration-status {
-
-    .active-inactive {
-      text-align: center;
-
-      .not-pending {
-        display: inline-block;
-
-        .label {
-          &.label-custom {
-            background: $pf-black-300;
-            color: #000000;
-          }
-        }
-      }
-    }
-
     .pass-fail {
       i {
         font-size: 16px;

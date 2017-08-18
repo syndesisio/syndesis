@@ -4,6 +4,7 @@ import { ActionModule, ListModule } from 'patternfly-ng';
 import { ModalModule } from 'ngx-bootstrap';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
+import { IntegrationStatusComponent } from '../components/status.component';
 import { IntegrationsListComponent } from './list.component';
 
 @NgModule({
@@ -15,10 +16,12 @@ import { IntegrationsListComponent } from './list.component';
     TooltipModule,
   ],
   declarations: [
+    IntegrationStatusComponent,
     IntegrationsListComponent,
   ],
   exports: [
     IntegrationsListComponent,
+    IntegrationStatusComponent,
   ],
 })
 export class IntegrationsListModule {

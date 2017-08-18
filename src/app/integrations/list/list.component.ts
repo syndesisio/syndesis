@@ -38,51 +38,53 @@ export class IntegrationsListComponent {
     private notificationService: NotificationService,
   ) {
     this.listConfig = {
-      dblClick           : false,
-      multiSelect        : false,
-      selectItems        : false,
-      selectionMatchProp : 'id',
-      showCheckbox       : false,
-      useExpandItems     : false,
+      dblClick: false,
+      multiSelect: false,
+      selectItems: false,
+      selectionMatchProp: 'id',
+      showCheckbox: false,
+      useExpandItems: false,
     };
   }
 
   handleClick($event: ListEvent) {
-    this.router.navigate(['/integrations', $event.item.id], { relativeTo: this.route });
+    this.router.navigate(['/integrations', $event.item.id], {
+      relativeTo: this.route,
+    });
   }
 
   getActionConfig(integration: Integration): ActionConfig {
-    const canEdit = (int) => int.currentStatus !== 'Deleted';
-    const canActivate = (int) => int.currentStatus === 'Deactivated';
-    const canDeactivate = (int) => int.currentStatus === 'Activated';
-    const canDelete = (int) => int.currentStatus !== 'Deleted';
+    const canEdit = int => int.currentStatus !== 'Deleted';
+    const canActivate = int => int.currentStatus === 'Deactivated';
+    const canDeactivate = int => int.currentStatus === 'Activated';
+    const canDelete = int => int.currentStatus !== 'Deleted';
 
     const actionConfig = {
       primaryActions: [],
       moreActions: [
         {
-          id      : 'edit',
-          title   : 'Edit',
-          tooltip : `Edit ${integration.name}`,
-          visible : canEdit(integration),
+          id: 'edit',
+          title: 'Edit',
+          tooltip: `Edit ${integration.name}`,
+          visible: canEdit(integration),
         },
         {
-          id      : 'activate',
-          title   : 'Activate',
-          tooltip : `Activate ${integration.name}`,
-          visible : canActivate(integration),
+          id: 'activate',
+          title: 'Activate',
+          tooltip: `Activate ${integration.name}`,
+          visible: canActivate(integration),
         },
         {
-          id      : 'deactivate',
-          title   : 'Deactivate',
-          tooltip : `Deactivate ${integration.name}`,
-          visible : canDeactivate(integration),
+          id: 'deactivate',
+          title: 'Deactivate',
+          tooltip: `Deactivate ${integration.name}`,
+          visible: canDeactivate(integration),
         },
         {
-          id      : 'delete',
-          title   : 'Delete',
-          tooltip : `Delete ${integration.name}`,
-          visible : canDelete(integration),
+          id: 'delete',
+          title: 'Delete',
+          tooltip: `Delete ${integration.name}`,
+          visible: canDelete(integration),
         },
       ],
       moreActionsDisabled: false,
@@ -100,7 +102,7 @@ export class IntegrationsListComponent {
   //----- Actions ------------------->>
 
   handleAction($event: Action, integration: Integration) {
-    switch ($event.id ) {
+    switch ($event.id) {
       case 'view':
         return this.router.navigate(['/integrations', integration.id]);
       case 'edit':
@@ -159,28 +161,25 @@ export class IntegrationsListComponent {
         JSON.stringify(integration['id']),
     );
     this.hideModal();
-    const i = JSON.parse(JSON.stringify(integration));
-    i.desiredStatus = 'Activated';
-    this.store.update(i).subscribe(
+    const sub = this.store.activate(integration).subscribe(
       () => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.SUCCESS,
-            header    : 'Integration is activating',
-            message   : 'Please allow a moment for the integration to fully activate.',
-            showClose : true,
-          },
-        ), 1000);
+        this.popNotification({
+          type: NotificationType.SUCCESS,
+          header: 'Integration is activating',
+          message:
+            'Please allow a moment for the integration to fully activate.',
+          showClose: true,
+        });
+        sub.unsubscribe();
       },
       (reason: any) => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.DANGER,
-            header    : 'Failed to activate integration',
-            message   : `Error activating integration: ${reason}`,
-            showClose : true,
-          },
-        ), 1000);
+        this.popNotification({
+          type: NotificationType.DANGER,
+          header: 'Failed to activate integration',
+          message: `Error activating integration: ${reason}`,
+          showClose: true,
+        });
+        sub.unsubscribe();
       },
     );
   }
@@ -193,28 +192,23 @@ export class IntegrationsListComponent {
         JSON.stringify(integration['id']),
     );
     this.hideModal();
-    const i = JSON.parse(JSON.stringify(integration));
-    i.desiredStatus = 'Deactivated';
-    this.store.update(i).subscribe(
+    this.store.deactivate(integration).subscribe(
       () => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.SUCCESS,
-            header    : 'Integration is deactivating',
-            message   : 'Please allow a moment for the integration to be deactivated.',
-            showClose : true,
-          },
-        ), 1000);
+        this.popNotification({
+          type: NotificationType.SUCCESS,
+          header: 'Integration is deactivating',
+          message:
+            'Please allow a moment for the integration to be deactivated.',
+          showClose: true,
+        });
       },
       (reason: any) => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.DANGER,
-            header    : 'Failed to deactivate integration',
-            message   : `Error deactivating integration: ${reason}`,
-            showClose : true,
-          },
-        ), 1000);
+        this.popNotification({
+          type: NotificationType.DANGER,
+          header: 'Failed to deactivate integration',
+          message: `Error deactivating integration: ${reason}`,
+          showClose: true,
+        });
       },
     );
   }
@@ -228,24 +222,20 @@ export class IntegrationsListComponent {
     this.hideModal();
     this.store.delete(integration).subscribe(
       () => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.SUCCESS,
-            header    : 'Delete Successful',
-            message   : 'Integration successfully deleted.',
-            showClose : true,
-          },
-        ), 1000);
+        this.popNotification({
+          type: NotificationType.SUCCESS,
+          header: 'Delete Successful',
+          message: 'Integration successfully deleted.',
+          showClose: true,
+        });
       },
       (reason: any) => {
-        setTimeout(this.popNotification(
-          {
-            type      : NotificationType.DANGER,
-            header    : 'Failed to delete integration',
-            message   : `Error deleting integration: ${reason}`,
-            showClose : true,
-          },
-        ), 1000);
+        this.popNotification({
+          type: NotificationType.DANGER,
+          header: 'Failed to delete integration',
+          message: `Error deleting integration: ${reason}`,
+          showClose: true,
+        });
       },
     );
   }
@@ -270,23 +260,7 @@ export class IntegrationsListComponent {
     return integration.steps.slice(-1)[0];
   }
 
-  //-----  Get Status Icon Class ------------------->>
-
-  getLabelClass(currentStatus) {
-    switch (currentStatus) {
-      case 'Activated':
-        return 'primary';
-      case 'Deactivated':
-        return 'custom';
-      case 'Deleted':
-        return 'danger';
-      case 'Draft':
-        return 'warning';
-    }
-  }
-
   //-----  Modal ------------------->>
-
   public showModal(action: string): void {
     this.currentAction = action;
     this.childModal.show();
@@ -321,19 +295,6 @@ export class IntegrationsListComponent {
         return 'Deactivate';
       default:
         return 'Delete';
-    }
-  }
-
-  getStatusText(currentStatus) {
-    switch (currentStatus) {
-      case 'Activated':
-        return 'Active';
-      case 'Deactivated':
-        return 'Inactive';
-      case 'Pending':
-        return 'In Progress';
-      default:
-        return currentStatus;
     }
   }
 

@@ -22,6 +22,18 @@ export class IntegrationStore extends AbstractStore<
     return 'Integration';
   }
 
+  public activate(i: Integration) {
+    const _i = JSON.parse(JSON.stringify(i));
+    _i.desiredStatus = 'Activated';
+    return this.update(_i);
+  }
+
+  public deactivate(i: Integration) {
+    const _i = JSON.parse(JSON.stringify(i));
+    _i.desiredStatus = 'Deactivated';
+    return this.update(_i);
+  }
+
   newInstance(): Integration {
     const integration = TypeFactory.createIntegration();
     const start = TypeFactory.createStep();
