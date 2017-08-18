@@ -1,3 +1,43 @@
+<!-- Modal Container -->
+<div bsModal
+     #childModal="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="activateModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button"
+                class="close"
+                aria-hidden="true"
+                (click)="hideModal()">
+            <span class="pficon pficon-close"></span>
+          </button>
+        <h4 class="modal-title">Confirm {{ getActionTitle() }}</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          <p>Are you sure you would like to {{ getAction() }} the following integration?</p>
+        </div>
+        <div style="text-align: center; font-weight: 700">
+          <p>{{ selectedIntegration?.name }}</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button"
+                class="btn btn-default"
+                (click)="hideModal()">Cancel</button>
+        <button type="button"
+                class="btn btn-primary"
+                (click)="doAction(currentAction, selectedIntegration)">
+            {{ getActionButtonText() }}
+          </button>
+      </div>
+    </div>
+  </div>
+</div>
 <syndesis-loading [loading]="loading | async">
   <div class="row integration-detail">
     <div class="col-md-12">
@@ -35,7 +75,8 @@
                          let-step
                          [ngForOf]="i.steps"
                          let-index="index">
-              <div *ngIf="step" class="step-block inline-block text-center">
+              <div *ngIf="step"
+                   class="step-block inline-block text-center">
                 <ng-container [ngSwitch]="step.stepKind">
                   <ng-container *ngSwitchCase="'endpoint'">
                     <div class="text-center connection"
@@ -79,8 +120,15 @@
             <syndesis-integration-status [integration]=i></syndesis-integration-status>
           </p>
           <p>
-            <button class="btn btn-default">Stop Integration</button>
+            <button *ngIf="canDeactivate(i)"
+                    class="btn btn-default"
+                    (click)="requestDeactivate(i)">Stop Integration</button>
+            <button *ngIf="canActivate(i)"
+                    class="btn btn-default"
+                    (click)="requestActivate(i)">Start Integration</button>
+            <!--
             <button class="btn btn-default">Undeploy Integration</button>
+            -->
           </p>
         </dd>
       </dl>
@@ -143,7 +191,9 @@
         <dt>
         </dt>
         <dd>
-          <button class="btn btn-default">Delete Integration</button>
+          <button *ngIf="canDelete(i)"
+                  class="btn btn-default"
+                  (click)="requestDelete(i)">Delete Integration</button>
         </dd>
       </dl>
 

@@ -15,6 +15,7 @@ import {
 
 import { Integrations, Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
+import { IntegrationViewBase } from '../components/integrationViewBase.component';
 
 import { log, getCategory } from '../../logging';
 
@@ -23,20 +24,18 @@ import { log, getCategory } from '../../logging';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
 })
-export class IntegrationsListComponent {
+export class IntegrationsListComponent extends IntegrationViewBase {
   @Input() complete: boolean;
   @Input() integrations: Integrations;
-  @ViewChild('childModal') public childModal: ModalDirective;
   listConfig: ListConfig;
-  currentAction: string = undefined;
-  selectedIntegration: Integration = undefined;
 
   constructor(
     public store: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router,
-    private notificationService: NotificationService,
+    public notificationService: NotificationService,
   ) {
+    super(store, route, router, notificationService);
     this.listConfig = {
       dblClick: false,
       multiSelect: false,
@@ -63,28 +62,34 @@ export class IntegrationsListComponent {
       primaryActions: [],
       moreActions: [
         {
+          id: 'view',
+          title: 'View',
+          tooltip: 'View ${integration.name}',
+          visible: true,
+        },
+        {
           id: 'edit',
           title: 'Edit',
           tooltip: `Edit ${integration.name}`,
-          visible: canEdit(integration),
+          visible: this.canEdit(integration),
         },
         {
           id: 'activate',
           title: 'Activate',
           tooltip: `Activate ${integration.name}`,
-          visible: canActivate(integration),
+          visible: this.canActivate(integration),
         },
         {
           id: 'deactivate',
           title: 'Deactivate',
           tooltip: `Deactivate ${integration.name}`,
-          visible: canDeactivate(integration),
+          visible: this.canDeactivate(integration),
         },
         {
           id: 'delete',
           title: 'Delete',
           tooltip: `Delete ${integration.name}`,
-          visible: canDelete(integration),
+          visible: this.canDelete(integration),
         },
       ],
       moreActionsDisabled: false,
@@ -99,216 +104,4 @@ export class IntegrationsListComponent {
     return actionConfig;
   }
 
-  //----- Actions ------------------->>
-
-  handleAction($event: Action, integration: Integration) {
-    switch ($event.id) {
-      case 'view':
-        return this.router.navigate(['/integrations', integration.id]);
-      case 'edit':
-        return this.router.navigate(['/integrations', integration.id, 'edit']);
-      case 'activate':
-        return this.requestActivate(integration);
-      case 'deactivate':
-        return this.requestDeactivate(integration);
-      case 'delete':
-        return this.requestDelete(integration);
-    }
-  }
-
-  doAction(action: string, integration: Integration) {
-    switch (action) {
-      case 'activate':
-        return this.activateAction(integration);
-      case 'deactivate':
-        return this.deactivateAction(integration);
-      case 'delete':
-        return this.deleteAction(integration);
-    }
-  }
-
-  //-----  Activate/Deactivate ------------------->>
-
-  // TODO: Refactor into single method for both cases
-  // Open modal to confirm activation
-  requestActivate(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for activation: ' +
-        JSON.stringify(integration['id']),
-    );
-    this.selectedIntegration = integration;
-    this.showModal('activate');
-  }
-
-  // Open modal to confirm deactivation
-  requestDeactivate(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for deactivation: ' +
-        JSON.stringify(integration['id']),
-    );
-    this.selectedIntegration = integration;
-    this.showModal('deactivate');
-  }
-
-  // TODO: Refactor into single method for both cases
-  // Actual activate/deactivate action once the user confirms
-  activateAction(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for activation: ' +
-        JSON.stringify(integration['id']),
-    );
-    this.hideModal();
-    const sub = this.store.activate(integration).subscribe(
-      () => {
-        this.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Integration is activating',
-          message:
-            'Please allow a moment for the integration to fully activate.',
-          showClose: true,
-        });
-        sub.unsubscribe();
-      },
-      (reason: any) => {
-        this.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Failed to activate integration',
-          message: `Error activating integration: ${reason}`,
-          showClose: true,
-        });
-        sub.unsubscribe();
-      },
-    );
-  }
-
-  // Actual activate/deactivate action once the user confirms
-  deactivateAction(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for deactivation: ' +
-        JSON.stringify(integration['id']),
-    );
-    this.hideModal();
-    this.store.deactivate(integration).subscribe(
-      () => {
-        this.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Integration is deactivating',
-          message:
-            'Please allow a moment for the integration to be deactivated.',
-          showClose: true,
-        });
-      },
-      (reason: any) => {
-        this.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Failed to deactivate integration',
-          message: `Error deactivating integration: ${reason}`,
-          showClose: true,
-        });
-      },
-    );
-  }
-
-  // Actual delete action once the user confirms
-  deleteAction(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for delete: ' + JSON.stringify(integration['id']),
-    );
-    this.hideModal();
-    this.store.delete(integration).subscribe(
-      () => {
-        this.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Delete Successful',
-          message: 'Integration successfully deleted.',
-          showClose: true,
-        });
-      },
-      (reason: any) => {
-        this.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Failed to delete integration',
-          message: `Error deleting integration: ${reason}`,
-          showClose: true,
-        });
-      },
-    );
-  }
-
-  // Open modal to confirm delete
-  requestDelete(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for delete: ' + JSON.stringify(integration['id']),
-    );
-    this.selectedIntegration = integration;
-    this.showModal('delete');
-  }
-
-  //-----  Icons ------------------->>
-
-  getStart(integration: Integration) {
-    return integration.steps[0];
-  }
-
-  getFinish(integration: Integration) {
-    return integration.steps.slice(-1)[0];
-  }
-
-  //-----  Modal ------------------->>
-  public showModal(action: string): void {
-    this.currentAction = action;
-    this.childModal.show();
-  }
-
-  public hideModal(): void {
-    this.currentAction = undefined;
-    this.selectedIntegration = undefined;
-    this.childModal.hide();
-  }
-
-  getActionTitle() {
-    switch (this.currentAction) {
-      case 'activate':
-        return 'Activation';
-      case 'deactivate':
-        return 'Deactivation';
-      default:
-        return 'Deletion';
-    }
-  }
-
-  getAction() {
-    return this.currentAction;
-  }
-
-  getActionButtonText() {
-    switch (this.currentAction) {
-      case 'activate':
-        return 'Activate';
-      case 'deactivate':
-        return 'Deactivate';
-      default:
-        return 'Delete';
-    }
-  }
-
-  //-----  Toast ------------------->>
-
-  // Show toast notification
-  popNotification(notification) {
-    this.notificationService.message(
-      notification.type,
-      notification.header,
-      notification.message,
-      false,
-      null,
-      [],
-    );
-  }
 }

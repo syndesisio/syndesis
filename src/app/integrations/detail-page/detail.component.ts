@@ -6,13 +6,15 @@ import { Subscription } from 'rxjs/Subscription';
 import { StepStore } from '../../store/step/step.store';
 import { Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
+import { IntegrationViewBase } from '../components/integrationViewBase.component';
+import { NotificationService } from 'patternfly-ng';
 
 @Component({
   selector: 'syndesis-integration-detail-page',
   templateUrl: 'detail.component.html',
   styleUrls: ['detail.component.scss'],
 })
-export class IntegrationsDetailComponent implements OnInit, OnDestroy {
+export class IntegrationsDetailComponent extends IntegrationViewBase implements OnInit, OnDestroy {
   integration: Observable<Integration>;
   integrationSubscription: Subscription;
   i: Integration;
@@ -123,7 +125,9 @@ export class IntegrationsDetailComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public router: Router,
     public detector: ChangeDetectorRef,
+    public notificationService: NotificationService,
   ) {
+    super(store, route, router, notificationService);
     this.integration = this.store.resource;
     this.loading = this.store.loading;
   }
@@ -136,6 +140,12 @@ export class IntegrationsDetailComponent implements OnInit, OnDestroy {
       return 'finish';
     }
     return '';
+  }
+
+  deleteAction(i: Integration, success?: (i: Integration) => void, error?: (reason: any) => void ) {
+    super.deleteAction(i, (i: Integration) => {
+      this.router.navigate(['/integrations']);
+    }, error);
   }
 
   ngOnInit() {
