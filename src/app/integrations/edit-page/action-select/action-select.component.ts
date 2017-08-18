@@ -28,10 +28,11 @@ const category = getCategory('Integrations');
 })
 export class IntegrationsSelectActionComponent extends FlowPage
   implements OnInit, OnDestroy {
-  actions: Actions;
+  actions: Actions = [];
   connector: Observable<Connector>;
   loading: Observable<boolean>;
   routeSubscription: Subscription;
+  connectorSubscription: Subscription;
   position: number;
 
   @Input()
@@ -72,14 +73,15 @@ export class IntegrationsSelectActionComponent extends FlowPage
   }
 
   ngOnInit() {
-    this.flowSubscription = this.currentFlow.events.subscribe(
-      (event: FlowEvent) => {
-        this.handleFlowEvent(event);
+    this.connectorSubscription = this.connector.subscribe(
+      (connector: Connector) => {
+        this.actions = connector.actions;
+        this.currentFlow.events.emit({
+          kind: 'integration-action-select',
+          position: this.position,
+        });
       },
     );
-    this.connector.subscribe((connector: Connector) => {
-      this.actions = connector.actions;
-    });
     this.routeSubscription = this.route.params
       .pluck<Params, string>('position')
       .map((position: string) => {
@@ -93,16 +95,20 @@ export class IntegrationsSelectActionComponent extends FlowPage
           });
           return;
         }
-        this.currentFlow.events.emit({
-          kind: 'integration-action-select',
-          position: this.position,
-        });
       })
       .subscribe();
   }
 
   ngOnDestroy() {
-    this.routeSubscription.unsubscribe();
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
+    if (this.connectorSubscription) {
+      this.connectorSubscription.unsubscribe();
+    }
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
   }
 
   filterInputChange(value: string) {
