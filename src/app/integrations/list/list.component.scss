@@ -3,19 +3,6 @@
 .integrations.list {
   color: #656565;
 
-  .modal {
-    .modal-footer {
-      .btn {
-        border: 0;
-        margin: 5px 10px 5px 0;
-
-        &.btn-cancel {
-          background: #dadada;
-        }
-      }
-    }
-  }
-
   /deep/ .list-pf {
 
     .list-pf-item {

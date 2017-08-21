@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { ApplicationRef, Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs/Subscription';
@@ -16,7 +16,7 @@ import {
 import { Integrations, Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationViewBase } from '../components/integrationViewBase.component';
-
+import { ModalService } from '../../common/modal/modal.service';
 import { log, getCategory } from '../../logging';
 
 @Component({
@@ -34,8 +34,10 @@ export class IntegrationsListComponent extends IntegrationViewBase {
     public route: ActivatedRoute,
     public router: Router,
     public notificationService: NotificationService,
+    public modalService: ModalService,
+    public application: ApplicationRef,
   ) {
-    super(store, route, router, notificationService);
+    super(store, route, router, notificationService, modalService, application);
     this.listConfig = {
       dblClick: false,
       multiSelect: false,
@@ -53,11 +55,6 @@ export class IntegrationsListComponent extends IntegrationViewBase {
   }
 
   getActionConfig(integration: Integration): ActionConfig {
-    const canEdit = int => int.currentStatus !== 'Deleted';
-    const canActivate = int => int.currentStatus === 'Deactivated';
-    const canDeactivate = int => int.currentStatus === 'Activated';
-    const canDelete = int => int.currentStatus !== 'Deleted';
-
     const actionConfig = {
       primaryActions: [],
       moreActions: [
@@ -103,5 +100,4 @@ export class IntegrationsListComponent extends IntegrationViewBase {
 
     return actionConfig;
   }
-
 }

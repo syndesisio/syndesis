@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ApplicationRef, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -7,6 +7,7 @@ import { StepStore } from '../../store/step/step.store';
 import { Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationViewBase } from '../components/integrationViewBase.component';
+import { ModalService } from '../../common/modal/modal.service';
 import { NotificationService } from 'patternfly-ng';
 
 @Component({
@@ -126,8 +127,10 @@ export class IntegrationsDetailComponent extends IntegrationViewBase implements 
     public router: Router,
     public detector: ChangeDetectorRef,
     public notificationService: NotificationService,
+    public modalService: ModalService,
+    public application: ApplicationRef,
   ) {
-    super(store, route, router, notificationService);
+    super(store, route, router, notificationService, modalService, application);
     this.integration = this.store.resource;
     this.loading = this.store.loading;
   }
@@ -142,10 +145,9 @@ export class IntegrationsDetailComponent extends IntegrationViewBase implements 
     return '';
   }
 
-  deleteAction(integration: Integration, success?: (i: Integration) => void, error?: (reason: any) => void ) {
-    super.deleteAction(integration, (i: Integration) => {
-      this.router.navigate(['/integrations']);
-    }, error);
+  deleteAction(integration: Integration) {
+    return super.deleteAction(integration)
+      .then(_ => this.router.navigate(['/integrations']));
   }
 
   ngOnInit() {
