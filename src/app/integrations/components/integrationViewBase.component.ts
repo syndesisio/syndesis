@@ -36,24 +36,50 @@ export class IntegrationViewBase {
   ) {}
 
   //----- Actions ------------------->>
-  handleAction($event: Action, integration: Integration) {
-    let request;
-    switch ($event.id) {
+
+  requestAction(action: string, integration: Integration) {
+    let request, header, message, danger, reason;
+    switch (action) {
       case 'view':
         return this.router.navigate(['/integrations', integration.id]);
       case 'edit':
         return this.router.navigate(['/integrations', integration.id, 'edit']);
       case 'activate':
+        header = 'Integration is activating';
+        message = 'Please allow a moment for the integration to fully activate.';
+        danger = 'Failed to activate integration';
+        reason = 'Error activating integration';
         request = this.requestActivate(integration);
         break;
       case 'deactivate':
+        header = 'Integration is deactivating';
+        message = 'Please allow a moment for the integration to be deactivated.';
+        danger = 'Failed to deactivate integration';
+        reason = 'Error deactivating integration';
         request = this.requestDeactivate(integration);
         break;
       case 'delete':
+        header = 'Delete Successful';
+        message = 'Integration successfully deleted.';
+        danger = 'Failed to delete integration';
+        reason = 'Error deleting integration';
         request = this.requestDelete(integration);
         break;
     }
-    return request.then(result => result ? this.doAction($event.id, integration) : false);
+    return request.then(result => result
+      ? this.doAction(action, integration)
+          .then(_ => this.popNotification({
+            type: NotificationType.SUCCESS,
+            header,
+            message,
+          }))
+          .catch(error => this.popNotification({
+              type: NotificationType.DANGER,
+              header: danger,
+              message: `${reason}: ${error}`,
+            }))
+          .then(_ => this.application.tick())
+      : false);
   }
 
   doAction(action: string, integration: Integration) {
@@ -104,109 +130,32 @@ export class IntegrationViewBase {
 
   // TODO: Refactor into single method for both cases
   // Actual activate/deactivate action once the user confirms
-  activateAction(integration: Integration, success?: (i: Integration) => void, error?: (reason: any) => void) {
+  activateAction(integration: Integration): Promise<any> {
     log.debugc(
       () =>
         'Selected integration for activation: ' +
         JSON.stringify(integration['id']),
     );
-    const sub = this.store.activate(integration).subscribe(
-      (i) => {
-        this.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Integration is activating',
-          message:
-            'Please allow a moment for the integration to fully activate.',
-          showClose: true,
-        });
-        this.maybeCall(success, i);
-        sub.unsubscribe();
-        this.application.tick();
-      },
-      (reason: any) => {
-        this.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Failed to activate integration',
-          message: `Error activating integration: ${reason}`,
-          showClose: true,
-        });
-        this.maybeCall(error, reason);
-        sub.unsubscribe();
-        this.application.tick();
-      },
-    );
+    return this.store.activate(integration).take(1).toPromise();
   }
 
   // Actual activate/deactivate action once the user confirms
-  deactivateAction(integration: Integration, success?: (i: Integration) => void, error?: (reason: any) => void) {
+  deactivateAction(integration: Integration): Promise<any> {
     log.debugc(
       () =>
         'Selected integration for deactivation: ' +
         JSON.stringify(integration['id']),
     );
-    const sub = this.store.deactivate(integration).subscribe(
-      (i) => {
-        this.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Integration is deactivating',
-          message:
-            'Please allow a moment for the integration to be deactivated.',
-          showClose: true,
-        });
-        this.maybeCall(success, i);
-        sub.unsubscribe();
-        this.application.tick();
-      },
-      (reason: any) => {
-        this.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Failed to deactivate integration',
-          message: `Error deactivating integration: ${reason}`,
-          showClose: true,
-        });
-        this.maybeCall(error, reason);
-        sub.unsubscribe();
-        this.application.tick();
-      },
-    );
+    return this.store.deactivate(integration).take(1).toPromise();
   }
 
   // Actual delete action once the user confirms
-  deleteAction(integration: Integration, success?: (i: Integration) => void, error?: (reason: any) => void) {
+  deleteAction(integration: Integration): Promise<any> {
     log.debugc(
       () =>
         'Selected integration for delete: ' + JSON.stringify(integration['id']),
     );
-    const sub = this.store.delete(integration).subscribe(
-      (i) => {
-        this.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Delete Successful',
-          message: 'Integration successfully deleted.',
-          showClose: true,
-        });
-        this.maybeCall(success, i);
-        sub.unsubscribe();
-        this.application.tick();
-      },
-      (reason: any) => {
-        this.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Failed to delete integration',
-          message: `Error deleting integration: ${reason}`,
-          showClose: true,
-        });
-        this.maybeCall(error, reason);
-        sub.unsubscribe();
-        this.application.tick();
-      },
-    );
-  }
-
-  maybeCall(func: (arg: any) => void, thing: any) {
-    if (func && typeof func === 'function') {
-      func(thing);
-    }
+    return this.store.delete(integration).take(1).toPromise();
   }
 
   //-----  Icons ------------------->>

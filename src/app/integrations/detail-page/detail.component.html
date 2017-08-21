@@ -156,7 +156,7 @@
         <dd>
           <button *ngIf="canDelete(i)"
                   class="btn btn-default"
-                  (click)="requestDelete(i)">Delete Integration</button>
+                  (click)="requestAction('delete', i)">Delete Integration</button>
         </dd>
       </dl>
 

@@ -145,10 +145,9 @@ export class IntegrationsDetailComponent extends IntegrationViewBase implements 
     return '';
   }
 
-  deleteAction(integration: Integration, success?: (i: Integration) => void, error?: (reason: any) => void ) {
-    super.deleteAction(integration, (i: Integration) => {
-      this.router.navigate(['/integrations']);
-    }, error);
+  deleteAction(integration: Integration) {
+    return super.deleteAction(integration)
+      .then(_ => this.router.navigate(['/integrations']));
   }
 
   ngOnInit() {
