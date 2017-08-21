@@ -120,7 +120,7 @@ OpenShift includes the ability for a service account to act as a limited OAuthCl
 for more details). Let's create the service account with the correct redirect URIs enabled:
 
 ```bash
-$ oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.ymlgit dgit 
+$ oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml
 ```
 
 #### Create the template to use
@@ -160,7 +160,7 @@ With Minishift you can easily try out Syndesis. The only prerequisite is that yo
 
 The template to use in the installation instructions depend on your use case:
 
-* **Developer** : Use the template `syndesis-dev` which directly references Docker images without image streams. Then when before building you images e.g. with `mvn fabric8:build` set your `DOCKER_HOST` envvar to use the Minishift Docker daemon via `eval $(minishift docker-env)`. After you have created a new image you simply only need to kill the appropriate pod so that the new pod spinning up will use the freshly created image. 
+* **Developer** : Use the template `syndesis-dev` or `syndesis-dev-restricted` which directly references Docker images without image streams. The _restricted_ variant should be used when running in an OpenShift environment where you don't have or don't want to use admin access. Then when before building you images e.g. with `mvn fabric8:build` set your `DOCKER_HOST` envvar to use the Minishift Docker daemon via `eval $(minishift docker-env)`. After you have created a new image you simply only need to kill the appropriate pod so that the new pod spinning up will use the freshly created image. 
 
 * **Tester** / **User** : In case you only want to have the latest version of Syndesis on your local Minishift installation, use the template `syndesis` which uses image stream refering to the published Docker Hub images. Minishift will update its images and trigger a redeployment when the images at Docker Hub changes. Therefore it checks every 15 minutes for a change image. You do not have to do anything to get your application updated except for waiting on Minishift to pick up new images.
 
@@ -168,13 +168,12 @@ Depending on your role please use the appropriate template in the instructions b
 
 ### Install instructions
 
+Here are step-by-step the installation instructions for setting up a Minishift installation in an restricted OpenShift environment: 
+
 ```bash
 # Fire up minishift if not alread running. 
 # 4 MB of memories are recommended
 minishift start --memory 4192
-
-# Login as admin
-oc login -u system:admin
 
 # Register a GitHub application at https://github.com/settings/developers
 # .....
@@ -186,12 +185,15 @@ echo https://syndesis.$(minishift ip).nip.io
 GITHUB_CLIENT_ID=....
 GITHUB_CLIENT_SECRET=....
 
-# Install the OpenShift template (syndesis-dev.yml or syndesis.yml)
-oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev.yml
+# Add a serviceaccount as OAuth client to OpenShift
+oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml
+
+# Install the OpenShift template
+oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev-restricted.yml
 
 # Create an App. Add the propert GitHub credentials. Use "syndesis-dev" or "syndesis" depending on the template
 # you have installed
-oc new-app syndesis-dev \
+oc new-app syndesis-dev-restricted \
     -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
