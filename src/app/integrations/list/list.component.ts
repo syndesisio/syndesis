@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
+import { ApplicationRef, Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs/Subscription';
@@ -35,9 +35,9 @@ export class IntegrationsListComponent extends IntegrationViewBase {
     public router: Router,
     public notificationService: NotificationService,
     public modalService: ModalService,
-    public detector: ChangeDetectorRef,
+    public application: ApplicationRef,
   ) {
-    super(store, route, router, notificationService, modalService, detector);
+    super(store, route, router, notificationService, modalService, application);
     this.listConfig = {
       dblClick: false,
       multiSelect: false,

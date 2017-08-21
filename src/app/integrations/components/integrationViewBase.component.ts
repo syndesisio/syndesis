@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Input, ViewChild } from '@angular/core';
+import { ApplicationRef, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Integrations, Integration } from '../../model';
@@ -32,7 +32,7 @@ export class IntegrationViewBase {
     public router: Router,
     public notificationService: NotificationService,
     public modalService: ModalService,
-    public detector: ChangeDetectorRef,
+    public application: ApplicationRef,
   ) {}
 
   //----- Actions ------------------->>
@@ -121,7 +121,7 @@ export class IntegrationViewBase {
         });
         this.maybeCall(success, i);
         sub.unsubscribe();
-        this.detector.markForCheck();
+        this.application.tick();
       },
       (reason: any) => {
         this.popNotification({
@@ -132,7 +132,7 @@ export class IntegrationViewBase {
         });
         this.maybeCall(error, reason);
         sub.unsubscribe();
-        this.detector.markForCheck();
+        this.application.tick();
       },
     );
   }
@@ -155,7 +155,7 @@ export class IntegrationViewBase {
         });
         this.maybeCall(success, i);
         sub.unsubscribe();
-        this.detector.markForCheck();
+        this.application.tick();
       },
       (reason: any) => {
         this.popNotification({
@@ -166,7 +166,7 @@ export class IntegrationViewBase {
         });
         this.maybeCall(error, reason);
         sub.unsubscribe();
-        this.detector.markForCheck();
+        this.application.tick();
       },
     );
   }
@@ -187,7 +187,7 @@ export class IntegrationViewBase {
         });
         this.maybeCall(success, i);
         sub.unsubscribe();
-        this.detector.markForCheck();
+        this.application.tick();
       },
       (reason: any) => {
         this.popNotification({
@@ -198,7 +198,7 @@ export class IntegrationViewBase {
         });
         this.maybeCall(error, reason);
         sub.unsubscribe();
-        this.detector.markForCheck();
+        this.application.tick();
       },
     );
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ApplicationRef, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -128,8 +128,9 @@ export class IntegrationsDetailComponent extends IntegrationViewBase implements 
     public detector: ChangeDetectorRef,
     public notificationService: NotificationService,
     public modalService: ModalService,
+    public application: ApplicationRef,
   ) {
-    super(store, route, router, notificationService, modalService, detector);
+    super(store, route, router, notificationService, modalService, application);
     this.integration = this.store.resource;
     this.loading = this.store.loading;
   }
