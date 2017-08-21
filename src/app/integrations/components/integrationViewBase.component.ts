@@ -1,10 +1,9 @@
-import { Input, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs/Subscription';
 import { Integrations, Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
-
+import { ModalService } from '../../common/modal/modal.service';
 import { log, getCategory } from '../../logging';
 
 import {
@@ -19,7 +18,6 @@ import {
 
 export class IntegrationViewBase {
 
-  @ViewChild('childModal') public childModal: ModalDirective;
   currentAction: string = undefined;
   selectedIntegration: Integration = undefined;
 
@@ -28,28 +26,34 @@ export class IntegrationViewBase {
   canDeactivate = int => int.currentStatus === 'Activated';
   canDelete = int => int.currentStatus !== 'Deleted';
 
-
   constructor(
     public store: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router,
     public notificationService: NotificationService,
+    public modalService: ModalService,
+    public detector: ChangeDetectorRef,
   ) {}
 
   //----- Actions ------------------->>
   handleAction($event: Action, integration: Integration) {
+    let request;
     switch ($event.id) {
       case 'view':
         return this.router.navigate(['/integrations', integration.id]);
       case 'edit':
         return this.router.navigate(['/integrations', integration.id, 'edit']);
       case 'activate':
-        return this.requestActivate(integration);
+        request = this.requestActivate(integration);
+        break;
       case 'deactivate':
-        return this.requestDeactivate(integration);
+        request = this.requestDeactivate(integration);
+        break;
       case 'delete':
-        return this.requestDelete(integration);
+        request = this.requestDelete(integration);
+        break;
     }
+    return request.then(result => result ? this.doAction($event.id, integration) : false);
   }
 
   doAction(action: string, integration: Integration) {
@@ -74,7 +78,7 @@ export class IntegrationViewBase {
         JSON.stringify(integration['id']),
     );
     this.selectedIntegration = integration;
-    this.showModal('activate');
+    return this.showModal('activate');
   }
 
   // Open modal to confirm deactivation
@@ -85,7 +89,17 @@ export class IntegrationViewBase {
         JSON.stringify(integration['id']),
     );
     this.selectedIntegration = integration;
-    this.showModal('deactivate');
+    return this.showModal('deactivate');
+  }
+
+  // Open modal to confirm delete
+  requestDelete(integration: Integration) {
+    log.debugc(
+      () =>
+        'Selected integration for delete: ' + JSON.stringify(integration['id']),
+    );
+    this.selectedIntegration = integration;
+    return this.showModal('delete');
   }
 
   // TODO: Refactor into single method for both cases
@@ -96,7 +110,6 @@ export class IntegrationViewBase {
         'Selected integration for activation: ' +
         JSON.stringify(integration['id']),
     );
-    this.hideModal();
     const sub = this.store.activate(integration).subscribe(
       (i) => {
         this.popNotification({
@@ -108,6 +121,7 @@ export class IntegrationViewBase {
         });
         this.maybeCall(success, i);
         sub.unsubscribe();
+        this.detector.markForCheck();
       },
       (reason: any) => {
         this.popNotification({
@@ -118,6 +132,7 @@ export class IntegrationViewBase {
         });
         this.maybeCall(error, reason);
         sub.unsubscribe();
+        this.detector.markForCheck();
       },
     );
   }
@@ -129,7 +144,6 @@ export class IntegrationViewBase {
         'Selected integration for deactivation: ' +
         JSON.stringify(integration['id']),
     );
-    this.hideModal();
     const sub = this.store.deactivate(integration).subscribe(
       (i) => {
         this.popNotification({
@@ -141,6 +155,7 @@ export class IntegrationViewBase {
         });
         this.maybeCall(success, i);
         sub.unsubscribe();
+        this.detector.markForCheck();
       },
       (reason: any) => {
         this.popNotification({
@@ -151,14 +166,9 @@ export class IntegrationViewBase {
         });
         this.maybeCall(error, reason);
         sub.unsubscribe();
+        this.detector.markForCheck();
       },
     );
-  }
-
-  maybeCall(func: (arg: any) => void, thing: any) {
-    if (func && typeof func === 'function') {
-      func(thing);
-    }
   }
 
   // Actual delete action once the user confirms
@@ -167,7 +177,6 @@ export class IntegrationViewBase {
       () =>
         'Selected integration for delete: ' + JSON.stringify(integration['id']),
     );
-    this.hideModal();
     const sub = this.store.delete(integration).subscribe(
       (i) => {
         this.popNotification({
@@ -178,6 +187,7 @@ export class IntegrationViewBase {
         });
         this.maybeCall(success, i);
         sub.unsubscribe();
+        this.detector.markForCheck();
       },
       (reason: any) => {
         this.popNotification({
@@ -188,18 +198,15 @@ export class IntegrationViewBase {
         });
         this.maybeCall(error, reason);
         sub.unsubscribe();
+        this.detector.markForCheck();
       },
     );
   }
 
-  // Open modal to confirm delete
-  requestDelete(integration: Integration) {
-    log.debugc(
-      () =>
-        'Selected integration for delete: ' + JSON.stringify(integration['id']),
-    );
-    this.selectedIntegration = integration;
-    this.showModal('delete');
+  maybeCall(func: (arg: any) => void, thing: any) {
+    if (func && typeof func === 'function') {
+      func(thing);
+    }
   }
 
   //-----  Icons ------------------->>
@@ -213,15 +220,10 @@ export class IntegrationViewBase {
   }
 
   //-----  Modal ------------------->>
-  public showModal(action: string): void {
-    this.currentAction = action;
-    this.childModal.show();
-  }
 
-  public hideModal(): void {
-    this.currentAction = undefined;
-    this.selectedIntegration = undefined;
-    this.childModal.hide();
+  public showModal(action: string) {
+    this.currentAction = action;
+    return this.modalService.show();
   }
 
   getActionTitle() {
@@ -237,17 +239,6 @@ export class IntegrationViewBase {
 
   getAction() {
     return this.currentAction;
-  }
-
-  getActionButtonText() {
-    switch (this.currentAction) {
-      case 'activate':
-        return 'Activate';
-      case 'deactivate':
-        return 'Deactivate';
-      default:
-        return 'Delete';
-    }
   }
 
   //-----  Toast ------------------->>

@@ -7,6 +7,7 @@ import { StepStore } from '../../store/step/step.store';
 import { Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationViewBase } from '../components/integrationViewBase.component';
+import { ModalService } from '../../common/modal/modal.service';
 import { NotificationService } from 'patternfly-ng';
 
 @Component({
@@ -126,8 +127,9 @@ export class IntegrationsDetailComponent extends IntegrationViewBase implements 
     public router: Router,
     public detector: ChangeDetectorRef,
     public notificationService: NotificationService,
+    public modalService: ModalService,
   ) {
-    super(store, route, router, notificationService);
+    super(store, route, router, notificationService, modalService, detector);
     this.integration = this.store.resource;
     this.loading = this.store.loading;
   }
