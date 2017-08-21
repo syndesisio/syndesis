@@ -17,7 +17,6 @@ import { Integrations, Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationViewBase } from '../components/integrationViewBase.component';
 import { ModalService } from '../../common/modal/modal.service';
-
 import { log, getCategory } from '../../logging';
 
 @Component({
@@ -56,11 +55,6 @@ export class IntegrationsListComponent extends IntegrationViewBase {
   }
 
   getActionConfig(integration: Integration): ActionConfig {
-    const canEdit = int => int.currentStatus !== 'Deleted';
-    const canActivate = int => int.currentStatus === 'Deactivated';
-    const canDeactivate = int => int.currentStatus === 'Activated';
-    const canDelete = int => int.currentStatus !== 'Deleted';
-
     const actionConfig = {
       primaryActions: [],
       moreActions: [
@@ -106,5 +100,4 @@ export class IntegrationsListComponent extends IntegrationViewBase {
 
     return actionConfig;
   }
-
 }
