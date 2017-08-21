@@ -42,7 +42,6 @@ import { ModalService } from './modal/modal.service';
   ],
   providers: [
     FormFactoryService,
-    ModalService,
   ],
 })
 export class SyndesisCommonModule {
@@ -53,6 +52,7 @@ export class SyndesisCommonModule {
         UserService,
         FormFactoryService,
         ConfigService,
+        ModalService,
         NotificationService,
         NavigationService,
       ],
