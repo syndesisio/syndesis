@@ -1,8 +1,14 @@
 const config = require('./src/config.json');
 
+const defaultApiBase = "https://syndesis-staging.b6ff.rh-idev.openshiftapps.com";
+
+if (!config.apiBase) {
+  console.warn("Using default API base: ", defaultApiBase);
+}
+
 const proxyCfg = {
   '/api': {
-    'target': config.apiBase,
+    'target': config.apiBase || defaultApiBase,
     'secure': false,
     'changeOrigin': true,
     'ws': true,
@@ -11,7 +17,7 @@ const proxyCfg = {
     }
   },
   '/auth': {
-    'target': config.apiBase,
+    'target': config.apiBase || defaultApiBase,
     'secure': false,
     'changeOrigin': true
   }
