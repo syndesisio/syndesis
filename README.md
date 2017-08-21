@@ -175,9 +175,6 @@ Here are step-by-step the installation instructions for setting up a Minishift i
 # 4 MB of memories are recommended
 minishift start --memory 4192
 
-# Login as admin
-oc login -u developer -p developer
-
 # Register a GitHub application at https://github.com/settings/developers
 # .....
 
