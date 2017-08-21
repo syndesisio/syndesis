@@ -7,9 +7,10 @@ import {
   ViewChild,
   ChangeDetectorRef,
 } from '@angular/core';
-import { ModalDirective } from 'ngx-bootstrap/modal';
+
 import { NotificationService, NotificationType } from 'patternfly-ng';
 
+import { ModalService } from '../../common/modal/modal.service';
 import { ConnectionStore } from '../../store/connection/connection.store';
 import { log, getCategory } from '../../logging';
 import { Connections, Connection } from '../../model';
@@ -26,8 +27,6 @@ export class ConnectionsListComponent implements OnInit {
   selectedId = undefined;
   selectedForDelete: Connection = undefined;
 
-  @ViewChild('childModal') public childModal: ModalDirective;
-
   @Input() connections: Connections;
   @Input() loading: boolean;
   @Input() showKebab = true;
@@ -37,13 +36,13 @@ export class ConnectionsListComponent implements OnInit {
     public store: ConnectionStore,
     public detector: ChangeDetectorRef,
     private notificationService: NotificationService,
+    private modalService: ModalService,
   ) {}
 
   //-----  Delete ------------------->>
 
   // Actual delete action once the user confirms
   deleteAction(connection: Connection) {
-    this.hideModal();
     const sub = this.store.delete(connection).subscribe(
       () => {
         sub.unsubscribe();
@@ -78,17 +77,8 @@ export class ConnectionsListComponent implements OnInit {
   requestDelete(connection: Connection, $event) {
     log.debugc(() => 'Selected connection for delete: ' + connection.id);
     this.selectedForDelete = connection;
-    this.showModal();
-  }
-
-  //-----  Modals ------------------->>
-
-  public showModal(): void {
-    this.childModal.show();
-  }
-
-  public hideModal(): void {
-    this.childModal.hide();
+    this.modalService.show()
+      .then(result => result ? this.deleteAction(connection) : false);
   }
 
   //-----  Selecting a Connection ------------------->>
