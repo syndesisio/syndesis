@@ -1,5 +1,8 @@
 @import '../../../scss/colors';
 .integration-detail {
+    h1 /deep/ syndesis-editable .fa {
+        font-size: 14px;
+    }
     .step-block {
         white-space: nowrap;
         height: 100px;

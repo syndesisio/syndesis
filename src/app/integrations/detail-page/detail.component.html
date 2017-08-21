@@ -27,7 +27,9 @@
           </div>
         </div>
       </div>
-      <h1>{{ i.name }}</h1>
+      <h1>
+            <syndesis-editable [field]="i.name" (onSave)="onAttributeUpdated('name', $event)"></syndesis-editable>
+</h1>
       <dl class="dl-horizontal">
         <dt>
           Description:
@@ -65,12 +67,8 @@
               </div>
             </ng-template>
           </p>
-          <p *ngIf="i.description">
-            {{ i.description }} <a href=""><i class="fa fa-pencil"></i></a>
-          </p>
-          <p *ngIf="!i.description">
-            <i>No description set... <a href=""><i class="fa fa-pencil"></i></a>
-            </i>
+          <p>
+            <syndesis-editable [field]="i.description" useTextArea="true" placeholder="No description set..." (onSave)="onAttributeUpdated('description', $event)"></syndesis-editable>
           </p>
         </dd>
       </dl>
@@ -80,7 +78,7 @@
         </dt>
         <dd>
           <p>
-            <syndesis-integration-status [integration]=i></syndesis-integration-status>
+            <syndesis-integration-status [integration]="i"></syndesis-integration-status>
           </p>
           <p>
             <button *ngIf="canDeactivate(i)"
