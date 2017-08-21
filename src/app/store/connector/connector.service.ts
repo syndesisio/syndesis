@@ -53,10 +53,7 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
           this.restangularService
             .one(id)
             .post('credentials', {
-              returnUrl:
-                window.location.pathname +
-                '?state=create-connection&connectorId=' +
-                id,
+              returnUrl: window.location.pathname + '#' + id,
             })
             .subscribe((resp: AcquisitionResponse) => {
               document.cookie = resp.state.spec;

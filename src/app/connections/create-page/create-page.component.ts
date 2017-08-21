@@ -185,14 +185,14 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     this.current.events.subscribe(event => {
       this.handleEvent(event);
     });
-    this.route.queryParams.subscribe((params) => {
+    this.route.fragment.subscribe((connectorId) => {
       if (this.current.connection) {
         // if the connection has started to be configured we don't want this sub to reset it
         return;
       }
       const connection = TypeFactory.createConnection();
       // detect if there's a selected connection ID already or not
-      connection.connectorId = params.connectorId;
+      connection.connectorId = connectorId;
       this.current.connection = connection;
     });
     this.nav.hide();
