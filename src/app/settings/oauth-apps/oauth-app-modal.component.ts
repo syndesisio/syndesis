@@ -1,4 +1,6 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
+import { NotificationService, NotificationType } from 'patternfly-ng';
+
 import { OAuthAppListItem } from './oauth-apps.component';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '../../model';
@@ -16,6 +18,7 @@ export class OAuthAppModalComponent {
     public store: OAuthAppStore,
     public detector: ChangeDetectorRef,
     private modalService: ModalService,
+    private notificationService: NotificationService,
   ) {}
 
   show(item: OAuthAppListItem) {
@@ -23,9 +26,17 @@ export class OAuthAppModalComponent {
     this.modalService.show()
       .then(result => result
         ? this.removeCredentials()
-          // TODO toast notification
           .then(app => this.item.client = app)
-          .catch(error => {})
+          .then(_ => this.popNotification({
+              type: NotificationType.SUCCESS,
+              header: 'Delete Successful',
+              message: 'Settings successfully deleted.',
+            }))
+          .catch(error => this.popNotification({
+              type: NotificationType.DANGER,
+              header: 'Delete Failed',
+              message: `Failed to delete settings: ${error}`,
+            }))
           .then(_ => this.detector.markForCheck())
         : undefined);
   }
@@ -34,5 +45,16 @@ export class OAuthAppModalComponent {
   removeCredentials() {
     const app = { ...this.item.client, clientId: '', clientSecret: '' };
     return this.store.update(app).take(1).toPromise();
+  }
+
+  popNotification(notification) {
+    this.notificationService.message(
+      notification.type,
+      notification.header,
+      notification.message,
+      false,
+      null,
+      [],
+    );
   }
 }
