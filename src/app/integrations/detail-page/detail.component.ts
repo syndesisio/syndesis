@@ -1,4 +1,10 @@
-import { ApplicationRef, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import {
+  ApplicationRef,
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -8,14 +14,15 @@ import { Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationViewBase } from '../components/integrationViewBase.component';
 import { ModalService } from '../../common/modal/modal.service';
-import { NotificationService } from 'patternfly-ng';
+import { NotificationService, NotificationType } from 'patternfly-ng';
 
 @Component({
   selector: 'syndesis-integration-detail-page',
   templateUrl: 'detail.component.html',
   styleUrls: ['detail.component.scss'],
 })
-export class IntegrationsDetailComponent extends IntegrationViewBase implements OnInit, OnDestroy {
+export class IntegrationsDetailComponent extends IntegrationViewBase
+  implements OnInit, OnDestroy {
   integration: Observable<Integration>;
   integrationSubscription: Subscription;
   i: Integration;
@@ -146,8 +153,63 @@ export class IntegrationsDetailComponent extends IntegrationViewBase implements 
   }
 
   deleteAction(integration: Integration) {
-    return super.deleteAction(integration)
+    return super
+      .deleteAction(integration)
       .then(_ => this.router.navigate(['/integrations']));
+  }
+
+  onNameUpdated(name: string) {
+    this.i.name = name;
+    this.store
+      .update(this.i)
+      .toPromise()
+      .then((update: Integration) => {
+        this.notificationService.message(
+          NotificationType.SUCCESS,
+          'Update Successful',
+          'Updated description',
+          false,
+          undefined,
+          undefined,
+        );
+      })
+      .catch(reason => {
+        this.notificationService.message(
+          NotificationType.WARNING,
+          'Update Failed',
+          'Failed to update description: ' + reason,
+          false,
+          undefined,
+          undefined,
+        );
+      });
+  }
+
+  onAttributeUpdated(attr: string, value: string) {
+    this.i[attr] = value;
+    this.store
+      .update(this.i)
+      .toPromise()
+      .then((update: Integration) => {
+        this.notificationService.message(
+          NotificationType.SUCCESS,
+          'Update Successful',
+          'Updated '  + attr,
+          false,
+          undefined,
+          undefined,
+        );
+      })
+      .catch(reason => {
+        this.notificationService.message(
+          NotificationType.WARNING,
+          'Update Failed',
+          'Failed to update ' + attr + ': '  + reason,
+          false,
+          undefined,
+          undefined,
+        );
+      });
   }
 
   ngOnInit() {
