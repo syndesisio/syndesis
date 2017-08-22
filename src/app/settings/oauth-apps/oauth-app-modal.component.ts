@@ -1,64 +1,40 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { ModalDirective } from 'ngx-bootstrap';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { OAuthAppListItem } from './oauth-apps.component';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '../../model';
+import { ModalService } from '../../common/modal/modal.service';
+
 @Component({
   selector: 'syndesis-oauth-app-modal',
   templateUrl: './oauth-app-modal.component.html',
 })
-export class OAuthAppModalComponent implements OnInit {
-  // Modal
-  @ViewChild('childModal') public childModal: ModalDirective;
+export class OAuthAppModalComponent {
+
   // Holds the candidate for clearing credentials
   item: OAuthAppListItem;
   constructor(
     public store: OAuthAppStore,
     public detector: ChangeDetectorRef,
+    private modalService: ModalService,
   ) {}
 
   show(item: OAuthAppListItem) {
     this.item = item;
-    this.childModal.show();
+    this.modalService.show()
+      .then(result => result
+        ? this.removeCredentials()
+          // TODO toast notification
+          .then(app => this.item.client = app)
+          .catch(error => {})
+          .then(_ => this.detector.markForCheck())
+        : undefined);
   }
 
   // Clear the store credentials for the selected oauth app
   removeCredentials() {
-    if (!this.item) {
-      // Shouldn't happen, but recover in some way
-      this.hideModal();
-      return;
-    }
     const app = this.item.client;
-    if (!app) {
-      // Also shouldn't happen, but just in case
-      this.hideModal();
-      return;
-    }
     app['clientId'] = '';
     app['clientSecret'] = '';
-    this.hideModal();
-    const sub = this.store.update(app).subscribe(
-      resp => {
-        // TODO toast notification
-        sub.unsubscribe();
-        if (this.item) {
-          this.item.client = app;
-        }
-        this.detector.detectChanges();
-      },
-      error => {
-        // TODO toast notification
-        sub.unsubscribe();
-        this.detector.detectChanges();
-      },
-    );
+    return this.store.update(app).take(1).toPromise();
   }
-  // Hides the confirmation dialog
-  hideModal() {
-    this.item = undefined;
-    this.childModal.hide();
-  }
-
-  ngOnInit() {}
 }
