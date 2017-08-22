@@ -1,4 +1,9 @@
-def mavenVersion='3.5.0'
+def mavenVersion='3.3.9'
+
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
+])
+
 //We need a node so that we can have access to environemnt variables.
 //The allocated node will actually be the Jenkins master (which is expected to provide these variables) as long as it has available executors.
 node {
