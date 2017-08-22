@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '../../model';
 import { Observable } from 'rxjs/Observable';
@@ -18,8 +17,7 @@ export interface OAuthAppListItem {
   styleUrls: ['./oauth-apps.component.scss'],
 })
 export class OAuthAppsComponent implements OnInit {
-  // Modal
-  @ViewChild('childModal') public childModal: ModalDirective;
+
   // Holds the candidate for clearing credentials
   selectedItem: OAuthAppListItem;
   // Pipe configuration
