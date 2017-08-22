@@ -32,9 +32,7 @@ export class OAuthAppModalComponent {
 
   // Clear the store credentials for the selected oauth app
   removeCredentials() {
-    const app = this.item.client;
-    app['clientId'] = '';
-    app['clientSecret'] = '';
+    const app = { ...this.item.client, clientId: '', clientSecret: '' };
     return this.store.update(app).take(1).toPromise();
   }
 }
