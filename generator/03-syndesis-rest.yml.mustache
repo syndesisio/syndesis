@@ -89,8 +89,9 @@
         updatePeriodSeconds: 1
       resources:
         limits:
-          cpu: "100m"
           memory: "256Mi"
+        requests:
+          memory: "20Mi"
       type: Rolling
     template:
       metadata:
@@ -113,7 +114,15 @@
               "volumeMounts": [{
                 "name": "syndesis-rest-tls",
                 "mountPath": "/tls-keystore"
-              }]
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": { 
+                  "memory": "20Mi"
+                }
+              }
             }]
       spec:
         initContainers:
@@ -132,6 +141,11 @@
           volumeMounts:
           - name: syndesis-rest-tls
             mountPath: /tls-keystore
+          resources:
+            limits:
+              memory: 255Mi
+            requests:
+              memory: 20Mi
         serviceAccountName: syndesis-rest
         containers:
         - name: syndesis-rest
@@ -182,13 +196,15 @@
             mountPath: /tls-keystore
           - name: config-volume
             mountPath: /deployments/config
+          # Set QoS class to "Guaranteed" (limits == requests)
+          # This doesn't work on OSO as there is a fixed ratio 
+          # from limit to resource (80% currently). 'requests' is ignored there
           resources:
             limits:
-              cpu: 2000m
               memory: 612Mi
             requests:
               cpu: 200m
-              memory: 612Mi
+              memory: 256Mi
         volumes:
         - name: syndesis-rest-tls
           emptyDir: {}
@@ -207,7 +223,6 @@
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange
-
 
 - apiVersion: v1
   kind: ConfigMap
