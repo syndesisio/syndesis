@@ -9,14 +9,17 @@
         min-width: 120px;
         vertical-align: top;
         position: relative;
-        & > .text-center {
-          position: relative;
-          &.step {
-            padding-top: 12px;
-            .icon {
-              margin-bottom: 10px;
+        .connection {
+            cursor: pointer;
+        }
+        &>.text-center {
+            position: relative;
+            &.step {
+                padding-top: 12px;
+                .icon {
+                    margin-bottom: 10px;
+                }
             }
-          }
         }
         .step-line {
             position: absolute;
@@ -27,10 +30,10 @@
             right: -2px;
             background-color: $pf-black-600;
             &.start {
-              left: 50px;
+                left: 50px;
             }
             &.finish {
-              right: 50px;
+                right: 50px;
             }
         }
         .icon {
@@ -46,7 +49,7 @@
             margin-right: auto;
             background-color: $pf-white;
             &.not-connection {
-              position: relative;
+                position: relative;
                 border-width: 10px;
                 padding: 5px 0px;
                 border-radius: 100px;
@@ -54,14 +57,14 @@
                 margin-bottom: 10px;
                 width: 32px;
                 .icon-line {
-                  position: absolute;
-                  border: 1px solid $pf-white;
-                  height: 3px;
-                  background-color: $pf-white;
-                  top: 5px;
-                  left: -8px;
-                  right: -8px;
-                  border-radius: 1px;
+                    position: absolute;
+                    border: 1px solid $pf-white;
+                    height: 3px;
+                    background-color: $pf-white;
+                    top: 5px;
+                    left: -8px;
+                    right: -8px;
+                    border-radius: 1px;
                 }
             }
             .connection-icon {
@@ -81,8 +84,8 @@
         dt {
             text-align: left;
         }
-        dd table  td .label.pull-right {
-          margin-top: 4px;
+        dd table td .label.pull-right {
+            margin-top: 4px;
         }
     }
 }
