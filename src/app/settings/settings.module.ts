@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
-import { ModalModule } from 'ngx-bootstrap';
 import { ListModule, ToolbarModule } from 'patternfly-ng';
 import { SyndesisCommonModule } from '../common/common.module';
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
@@ -39,7 +38,6 @@ const routes: Routes = [
     PatternflyUIModule,
     ListModule,
     ToolbarModule,
-    ModalModule,
     RouterModule.forChild(routes),
     SyndesisCommonModule,
   ],
