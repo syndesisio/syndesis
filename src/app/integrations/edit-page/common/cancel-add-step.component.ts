@@ -12,7 +12,6 @@ import { CurrentFlow } from '../current-flow.service';
   `,
 })
 export class CancelAddStepComponent implements OnInit {
-
   private position: number;
 
   constructor(
@@ -22,21 +21,36 @@ export class CancelAddStepComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe(paramMap => this.position = +paramMap.get('position'));
+    this.route.paramMap.subscribe(
+      paramMap => (this.position = +paramMap.get('position')),
+    );
   }
 
   isIntermediateStep(): boolean {
-    return this.position !== 0 && this.position !== this.currentFlow.getLastPosition();
+    return (
+      this.position !== 0 &&
+      this.position !== this.currentFlow.getLastPosition()
+    );
   }
 
   onClick() {
-    this.currentFlow.events.emit({
-      kind: 'integration-remove-step',
-      position: this.position,
-      onSave: () => {
-        this.router.navigate(['save-or-add-step'], { relativeTo: this.route.parent });
-      },
-    });
-  };
-
+    const step = this.currentFlow.getStep(this.position);
+    // Currently a half-configured step doesn't have this, so we can
+    // remove it, otherwise we'll just discard any changes.
+    if (!step.configuredProperties) {
+      this.currentFlow.events.emit({
+        kind: 'integration-remove-step',
+        position: this.position,
+        onSave: () => {
+          this.router.navigate(['save-or-add-step'], {
+            relativeTo: this.route.parent,
+          });
+        },
+      });
+    } else {
+      this.router.navigate(['save-or-add-step'], {
+        relativeTo: this.route.parent,
+      });
+    }
+  }
 }
