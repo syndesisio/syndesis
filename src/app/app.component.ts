@@ -31,20 +31,26 @@ import { ModalDirective } from 'ngx-bootstrap';
 export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('importDBModal') public importDBModal: ModalDirective;
 
-  // White BG
+  /**
+   * Logo with white background.
+   */
   logoWhiteBg = 'assets/images/syndesis-logo-svg-white.svg';
-  iconWhiteBg = 'assets/images/glasses_logo.svg';
-
-  // Dark BG
-  logoDarkBg = 'assets/images/syndesis-logo-svg-white.svg';
-  iconDarkBg = 'assets/images/glasses_logo.svg';
 
   loggedIn = false;
+
+  /**
+   * @type {string}
+   * Title of application. Used in the browser title tag.
+   */
   title = 'Syndesis';
-  url = 'https://www.twitter.com/jboss';
   user: Observable<User>;
 
   notifications: Notification[];
+
+  /**
+   * Local var used to determine whether or not to display a close
+   * button on a PatternFly toast notification.
+   */
   showClose: boolean;
 
   constructor(
@@ -62,12 +68,18 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.showClose = true;
   }
 
+  /**
+   * Function that resets the database.
+   */
   resetDB() {
     this.testSupport.resetDB().subscribe((value: Response) => {
       log.debugc(() => 'DB has been reset');
     });
   }
 
+  /**
+   * Function that exports the database.
+   */
   exportDB() {
     this.testSupport.snapshotDB().subscribe((value: Response) => {
       const blob = new Blob([value.text()], {
@@ -77,14 +89,23 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Function that displays a modal for importing a database.
+   */
   showImportDB() {
     this.importDBModal.show();
   }
 
+  /**
+   * Function that hides an open modal for importing a database.
+   */
   hideModal() {
     this.importDBModal.hide();
   }
 
+  /**
+   * Function that imports a database.
+   */
   importDB(event) {
     const file = event.srcElement.files[0];
     const reader = new FileReader();
@@ -104,17 +125,20 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Function that handles closing a PatternFly notification.
+   */
   handleClose($event: NotificationEvent): void {
     this.notificationService.remove($event.notification);
   }
 
-  logout() {
-    // TODO
-  }
-
   ngAfterViewInit() {
     $(document).ready(function() {
-      // matchHeight the contents of each .card-pf and then the .card-pf itself
+      /**
+       * On document ready, invoke jQuery's matchHeight method to adjust card height across app based
+       * on contents of each .card-pf and then the .card-pf division itself.
+       * This is applicable for layouts that utilize PatternFly's card view.
+       */
       $(
         ".row-cards-pf > [class*='col'] > .card-pf .card-pf-title",
       ).matchHeight();
