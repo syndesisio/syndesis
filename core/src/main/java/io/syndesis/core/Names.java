@@ -39,13 +39,21 @@ public final class Names {
      */
     public static String sanitize(String name) {
         String trimmed = name.length() > MAXIMUM_NAME_LENGTH ? name.substring(0, MAXIMUM_NAME_LENGTH) : name;
+
         return trimmed
             .replaceAll(SPACE, DASH)
             .replaceAll(INVALID_CHARACTER_REGEX, BLANK)
             .toLowerCase(Locale.US)
             .chars()
             .filter(i -> !String.valueOf(i).matches(INVALID_CHARACTER_REGEX))
-            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .collect(StringBuilder::new,
+                (b, chr) -> {
+                    int lastChar = b.length() > 0 ? b.charAt(b.length() - 1) : -1;
+
+                    if (lastChar != '-' || chr != '-') {
+                        b.appendCodePoint(chr);
+                    }
+             }, StringBuilder::append)
             .toString();
     }
 }
