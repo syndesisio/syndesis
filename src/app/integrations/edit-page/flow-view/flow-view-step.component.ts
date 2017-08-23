@@ -1,6 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
@@ -10,6 +9,7 @@ import { ChildAwarePage } from '../child-aware-page';
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { Integration, Step } from '../../../model';
+import { ModalService } from '../../../common/modal/modal.service';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -31,7 +31,6 @@ export class FlowViewStepComponent extends ChildAwarePage {
   // the current state/page of the current step
   @Input() currentState: string;
 
-  @ViewChild('childModal') public deleteModal: ModalDirective;
   @ViewChild('pop') public pop: PopoverDirective;
 
   constructor(
@@ -39,6 +38,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
     public route: ActivatedRoute,
     public router: Router,
     private stepStore: StepStore,
+    private modalService: ModalService,
   ) {
     super(currentFlow, route, router);
   }
@@ -98,15 +98,11 @@ export class FlowViewStepComponent extends ChildAwarePage {
   }
 
   deletePrompt() {
-    this.deleteModal.show();
-  }
-
-  cancelDeletePrompt() {
-    this.deleteModal.hide();
+    this.modalService.show('delete-integration-step-' + this.position)
+      .then(result => result ? this.deleteStep() : false);
   }
 
   deleteStep() {
-    this.deleteModal.hide();
     const position = this.getPosition();
     const isFirst = position === this.currentFlow.getFirstPosition();
     const isLast = position === this.currentFlow.getLastPosition();

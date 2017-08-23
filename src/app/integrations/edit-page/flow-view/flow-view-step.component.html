@@ -9,43 +9,10 @@
 
   <!-- Delete Modal Container -->
 
-  <div bsModal
-       #childModal="bs-modal"
-       class="modal fade"
-       tabindex="-1"
-       role="dialog"
-       aria-labelledby="deleteModal"
-       aria-hidden="true">
-    <div class="modal-dialog modal-md">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button"
-                  class="close"
-                  aria-hidden="true"
-                  (click)="cancelDeletePrompt()">
-                <span class="pficon pficon-close"></span>
-              </button>
-          <h4 class="modal-title">Confirm Delete</h4>
-        </div>
-        <div class="modal-body">
-          <div>
-            <p>Are you sure you would like to delete this step?</p>
-          </div>
-          <div>
-            <p><b style="color: red;">NOTE:</b> This action <i>cannot</i> be undone.</p>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button"
-                  class="btn btn-default"
-                  (click)="cancelDeletePrompt()">Cancel</button>
-          <button type="button"
-                  class="btn btn-primary"
-                  (click)="deleteStep()">Delete</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <syndesis-modal [id]="'delete-integration-step-' + position"
+                  title="Confirm Delete?"
+                  message="Are you sure you would like to delete this step?">
+  </syndesis-modal>
 
   <!-- Icon Progress Line -->
 
