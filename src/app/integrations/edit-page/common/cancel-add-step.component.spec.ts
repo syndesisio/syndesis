@@ -7,7 +7,7 @@ describe('CancelAddStepComponent', () => {
   let component, currentFlow, route, router;
 
   beforeEach(() => {
-    currentFlow = jasmine.createSpyObj('currentFlow', ['getLastPosition']);
+    currentFlow = jasmine.createSpyObj('currentFlow', ['getLastPosition', 'getStep']);
     currentFlow.events = jasmine.createSpyObj('events', ['emit']);
     route = {
       paramMap: jasmine.createSpyObj('paramMap', ['subscribe']),
@@ -47,6 +47,8 @@ describe('CancelAddStepComponent', () => {
 
   describe('onClick', () => {
     it('should emit event', () => {
+      component.position = 1;
+      currentFlow.getStep.and.returnValue({});
       component.onClick();
       expect(currentFlow.events.emit).toHaveBeenCalled();
     });
