@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { StepStore } from '../../store/step/step.store';
-import { Integration } from '../../model';
+import { Integration, Step, Connection, Action } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationViewBase } from '../components/integrationViewBase.component';
 import { ModalService } from '../../common/modal/modal.service';
@@ -142,6 +142,12 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     this.loading = this.store.loading;
   }
 
+  viewDetails(step: Step) {
+    if (step && step.connection) {
+      this.router.navigate(['/connections/', step.connection.id]);
+    }
+  }
+
   getStepLineClass(index: number) {
     if (index === 0) {
       return 'start';
@@ -194,7 +200,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
         this.notificationService.message(
           NotificationType.SUCCESS,
           'Update Successful',
-          'Updated '  + attr,
+          'Updated ' + attr,
           false,
           undefined,
           undefined,
@@ -204,7 +210,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
         this.notificationService.message(
           NotificationType.WARNING,
           'Update Failed',
-          'Failed to update ' + attr + ': '  + reason,
+          'Failed to update ' + attr + ': ' + reason,
           false,
           undefined,
           undefined,

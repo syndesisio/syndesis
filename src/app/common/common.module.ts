@@ -10,6 +10,7 @@ import { TruncateCharactersPipe } from './truncate-characters.pipe';
 import { TruncateWordsPipe } from './truncate-words.pipe';
 import { CapitalizePipe } from './capitalize.pipe';
 import { TitleizePipe } from './titleize.pipe';
+import { ToIdPipe } from './to-id.pipe';
 import { LoadingComponent } from './loading/loading.component';
 import { UserService } from './user.service';
 import { FormFactoryService } from './forms.service';
@@ -31,6 +32,7 @@ import { ModalService } from './modal/modal.service';
     LoadingComponent,
     CapitalizePipe,
     TitleizePipe,
+    ToIdPipe,
     ModalComponent,
     EditableComponent,
   ],
@@ -42,6 +44,7 @@ import { ModalService } from './modal/modal.service';
     LoadingComponent,
     CapitalizePipe,
     TitleizePipe,
+    ToIdPipe,
     ModalComponent,
     EditableComponent,
   ],
