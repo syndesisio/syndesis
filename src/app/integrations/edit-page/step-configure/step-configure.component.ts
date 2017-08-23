@@ -108,7 +108,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     if (typeof props === 'string') {
       return JSON.parse(props);
     } else {
-      return props;
+      return JSON.parse(JSON.stringify(props));
     }
   }
 
