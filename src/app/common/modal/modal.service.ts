@@ -19,15 +19,11 @@ export class ModalService {
   }
 
   show(id: string = 'modal'): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      const modal = this.registeredModals.get(id);
-      modal.bsModalRef = this.bsModalService.show(modal.template);
-      const subscription = this.bsModalService.onHide.subscribe(event => {
-        subscription.unsubscribe();
-        const result = modal.result;
-        resolve(result);
-      });
-    });
+    const modal = this.registeredModals.get(id);
+    modal.bsModalRef = this.bsModalService.show(modal.template);
+    return this.bsModalService.onHide.take(1)
+      .toPromise()
+      .then(_ => modal.result);
   }
 
   hide(id: string, result: boolean): void {
@@ -35,5 +31,4 @@ export class ModalService {
     modal.result = result;
     modal.bsModalRef.hide();
   }
-
 }
