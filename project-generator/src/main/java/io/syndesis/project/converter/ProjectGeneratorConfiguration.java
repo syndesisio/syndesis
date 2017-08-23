@@ -15,6 +15,7 @@
  */
 package io.syndesis.project.converter;
 
+import java.io.IOException;
 import java.util.List;
 
 import io.syndesis.connector.catalog.ConnectorCatalog;
@@ -33,7 +34,7 @@ import org.springframework.context.annotation.Configuration;
 public class ProjectGeneratorConfiguration {
 
     @Bean
-    public ProjectGenerator projectConverter(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties properties, StepVisitorFactoryRegistry registry) {
+    public ProjectGenerator projectConverter(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties properties, StepVisitorFactoryRegistry registry) throws IOException {
         return new DefaultProjectGenerator(connectorCatalog, properties, registry);
     }
 
