@@ -59,7 +59,7 @@
     "jquery": "3.1.1",
     "merge": "^1.2.0",
     "ng2-charts": "1.6.0",
-    "ngx-bootstrap": "1.8.1",
+    "ngx-bootstrap": "1.9.1",
     "ngx-chips": "^1.4.5",
     "ngx-restangular": "1.0.9",
     "patternfly": "3.26.1",
