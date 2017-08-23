@@ -58,7 +58,7 @@ jobs:
 
     - deploy:
         command: |
-          if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
+          if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesis-ui" ]; then
             exit 0
           fi
 
