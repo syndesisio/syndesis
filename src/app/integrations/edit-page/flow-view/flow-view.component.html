@@ -1,17 +1,17 @@
 <div class="flow-view">
   <!-- Insert step popover -->
-  <ng-template #popTemplate>
+  <ng-template #popTemplate let-position='position'>
     <div class="popover-body">
       <div *ngIf="showAddStep();">
-        <a (click)="insertStepAfter(position ? position + 1 : 0)">Add a step</a>
+        <a (click)="insertStepAfter(position)">Add a step</a>
       </div>
       <div *ngIf="showAddConnection();">
-        <a (click)="insertConnectionAfter(position ? position + 1 : 0)">Add a connection</a>
+        <a (click)="insertConnectionAfter(position)">Add a connection</a>
       </div>
     </div>
   </ng-template>
   <!-- Insert step line -->
-  <ng-template #insertStepTemplate>
+  <ng-template #insertStepTemplate let-position='position'>
     <div *ngIf="currentState === 'save-or-add-step'"
          class="row step step-insert"
          (click)="pop.toggle()"
@@ -20,6 +20,7 @@
       <div class="step-line"></div>
       <div class="col-md-2 square-icon"
            [popover]="popTemplate"
+           [popoverContext]="{ position: position }"
            placement="right"
            #pop="bs-popover">
         <p>
@@ -67,7 +68,7 @@
       </div>
 
       <!-- First Step: Save or Add Step -->
-      <ng-container *ngTemplateOutlet="insertStepTemplate"></ng-container>
+      <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: 0 }"></ng-container>
 
       <!-- Middle Steps -->
       <ng-template ngFor
@@ -83,7 +84,7 @@
         </div>
 
         <!-- Middle Steps: Save or Add Step -->
-        <ng-container *ngTemplateOutlet="insertStepTemplate"></ng-container>
+        <ng-container *ngTemplateOutlet="insertStepTemplate; context: { position: (position + 1) }"></ng-container>
       </ng-template>
 
       <!-- Last Step -->
