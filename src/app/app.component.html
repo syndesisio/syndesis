@@ -135,43 +135,15 @@
     <router-outlet></router-outlet>
   </main>
 
-  <!-- Modal Container -->
-  <div bsModal
-       #importDBModal="bs-modal"
-       class="modal fade"
-       tabindex="-1"
-       role="dialog"
-       aria-labelledby="activateModal"
-       aria-hidden="true">
-    <div class="modal-dialog modal-md">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button"
-                  class="close"
-                  aria-hidden="true"
-                  (click)="hideModal()">
-            <span class="pficon pficon-close"></span>
-          </button>
-          <h4 class="modal-title">Import Selection</h4>
-        </div>
-        <div class="modal-body">
-          <div>
-            <div>
-              Please select the data file to import:
-              <input type="file"
-                     id="file-import"
-                     (change)="importDB($event)">
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button"
-                  class="btn btn-default"
-                  (click)="hideModal()">Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <syndesis-modal id="importDb"
+                  title="Import Selection"
+                  [body]="importDbModal">
+    <ng-template #importDbModal let-modal="modal">
+      Please select the data file to import:
+      <input type="file"
+             id="file-import"
+             (change)="importDB($event, modal)">
+    </ng-template>
+  </syndesis-modal>
 
 </div>

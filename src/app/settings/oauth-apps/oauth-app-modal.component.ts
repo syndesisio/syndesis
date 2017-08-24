@@ -24,7 +24,7 @@ export class OAuthAppModalComponent {
   show(item: OAuthAppListItem) {
     this.item = item;
     this.modalService.show()
-      .then(result => result
+      .then(modal => modal.result
         ? this.removeCredentials()
           .then(app => this.item.client = app)
           .then(_ => this.popNotification({

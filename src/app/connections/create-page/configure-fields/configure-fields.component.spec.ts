@@ -3,7 +3,7 @@ import { ConnectionsConfigureFieldsComponent } from './configure-fields.componen
 import { CurrentConnectionService } from '../current-connection';
 import { ModalService } from '../../../common/modal/modal.service';
 
-describe('ConnectionsReviewComponent', () => {
+describe('ConnectionsConfigureFieldsComponent', () => {
 
   let current, modalService, nextState, component;
 
@@ -33,19 +33,21 @@ describe('ConnectionsReviewComponent', () => {
       expect(canDeactivate).toBe(true);
     });
 
-    it('should return true when user confirms he wants to leave wizard', () => {
-      modalService.show.and.returnValue(Promise.resolve(true));
+    it('should return true when user confirms he wants to leave wizard', (done) => {
+      modalService.show.and.returnValue(Promise.resolve({ result: true }));
       component.canDeactivate(nextState)
         .then(canDeactivate => {
           expect(canDeactivate).toBe(true);
+          done();
         });
     });
 
-    it('should return false when user does not confirm he wants to leave wizard', () => {
-      modalService.show.and.returnValue(Promise.resolve(false));
+    it('should return false when user does not confirm he wants to leave wizard', (done) => {
+      modalService.show.and.returnValue(Promise.resolve({ result: false }));
       component.canDeactivate(nextState)
         .then(canDeactivate => {
           expect(canDeactivate).toBe(false);
+          done();
         });
     });
   });

@@ -10,6 +10,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() id = 'modal';
   @Input() title: string;
   @Input() message: string;
+  @Input() body: TemplateRef<any>;
   @ViewChild('template') public template: TemplateRef<any>;
 
   constructor(private modalService: ModalService) {}
@@ -29,5 +30,4 @@ export class ModalComponent implements OnInit, OnDestroy {
   cancel(): void {
     this.modalService.hide(this.id, false);
   }
-
 }
