@@ -15,7 +15,7 @@ import { Actions, Action } from '../../../model';
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { ConnectorStore } from '../../../store/connector/connector.store';
-import { Connector } from '../../../model';
+import { Step, Connector } from '../../../model';
 import { FlowPage } from '../flow-page';
 import { ObjectPropertyFilterConfig } from '../../../common/object-property-filter.pipe';
 
@@ -34,6 +34,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
   routeSubscription: Subscription;
   connectorSubscription: Subscription;
   position: number;
+  step: Step;
 
   @Input()
   filter: ObjectPropertyFilterConfig = {
@@ -86,7 +87,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
       .pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
-        const step = this.currentFlow.getStep(this.position);
+        const step = this.step = this.currentFlow.getStep(this.position);
         if (step && step.connection) {
           this.connectorStore.load(step.connection.connectorId);
         } else {
