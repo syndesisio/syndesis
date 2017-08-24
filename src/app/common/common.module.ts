@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NotificationModule, NotificationService } from 'patternfly-ng';
 
-import { EditableComponent } from './editable.component';
+import { EditableTagsComponent } from './editable/editable-tags.component';
+import { EditableTextComponent } from './editable/editable-text.component';
+import { EditableTextareaComponent } from './editable/editable-textarea.component';
 import { ObjectPropertyFilterPipe } from './object-property-filter.pipe';
 import { ObjectPropertySortPipe } from './object-property-sort.pipe';
 import { TruncateCharactersPipe } from './truncate-characters.pipe';
@@ -18,11 +20,13 @@ import { ConfigService } from '../config.service';
 import { NavigationService } from './navigation.service';
 import { ModalComponent } from './modal/modal.component';
 import { ModalService } from './modal/modal.service';
+import { TagInputModule } from 'ngx-chips';
 
 @NgModule({
   imports: [
     FormsModule,
     CommonModule,
+    TagInputModule,
   ],
   declarations: [
     ObjectPropertyFilterPipe,
@@ -34,7 +38,9 @@ import { ModalService } from './modal/modal.service';
     TitleizePipe,
     ToIdPipe,
     ModalComponent,
-    EditableComponent,
+    EditableTagsComponent,
+    EditableTextComponent,
+    EditableTextareaComponent,
   ],
   exports: [
     ObjectPropertyFilterPipe,
@@ -46,7 +52,9 @@ import { ModalService } from './modal/modal.service';
     TitleizePipe,
     ToIdPipe,
     ModalComponent,
-    EditableComponent,
+    EditableTagsComponent,
+    EditableTextComponent,
+    EditableTextareaComponent,
   ],
   providers: [
     FormFactoryService,

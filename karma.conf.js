@@ -37,7 +37,7 @@ module.exports = function (config) {
       ? ['mocha', 'coverage-istanbul', 'junit']
       : ['mocha'],
     mochaReporter: {
-      output: 'minimal'
+      output: 'full'
     },
     port: 9876,
     colors: true,

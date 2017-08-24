@@ -28,9 +28,9 @@
         </div>
       </div>
       <h1>
-        <syndesis-editable [field]="i.name"
-                           (onSave)="onAttributeUpdated('name', $event)"></syndesis-editable>
-      </h1>
+            <syndesis-editable-text [value]="i.name"
+                                    (onSave)="onAttributeUpdated('name', $event)"></syndesis-editable-text>
+</h1>
       <dl class="dl-horizontal">
         <dt>
           Description:
@@ -72,10 +72,9 @@
             </ng-template>
           </p>
           <p>
-            <syndesis-editable [field]="i.description"
-                               useTextArea="true"
-                               placeholder="No description set..."
-                               (onSave)="onAttributeUpdated('description', $event)"></syndesis-editable>
+            <syndesis-editable-textarea [value]="i.description"
+                                        placeholder="No description set..."
+                                        (onSave)="onAttributeUpdated('description', $event)"></syndesis-editable-textarea>
           </p>
         </dd>
       </dl>
