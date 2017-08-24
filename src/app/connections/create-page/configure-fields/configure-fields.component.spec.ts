@@ -3,7 +3,7 @@ import { ConnectionsConfigureFieldsComponent } from './configure-fields.componen
 import { CurrentConnectionService } from '../current-connection';
 import { ModalService } from '../../../common/modal/modal.service';
 
-describe('ConnectionsReviewComponent', () => {
+describe('ConnectionsConfigureFieldsComponent', () => {
 
   let current, modalService, nextState, component;
 
