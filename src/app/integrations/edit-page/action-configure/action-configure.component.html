@@ -40,7 +40,7 @@
   </div>
   <div class="wizard-pf-body clearfix">
     <div class="title">
-      <h1>{{ action?.name }}</h1>
+      <h1>{{ step?.connection?.name }} - {{ action?.name }}</h1>
     </div>
     <div *ngIf="formModel">
       <div *ngIf="!formModel.length">
