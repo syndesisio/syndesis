@@ -2426,10 +2426,8 @@ objects:
             protocol: TCP
           resources:
             limits:
-              cpu: 2000m
               memory: 512Mi
             requests:
-              cpu: 200m
               memory: 280Mi
           # spring-boot automatically picks up application.yml from ./config
           workingDir: /deployments
