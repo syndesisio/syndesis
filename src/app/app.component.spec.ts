@@ -10,6 +10,7 @@ import { NotificationModule } from 'patternfly-ng';
 
 import { CollapseModule, BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 
+import { SyndesisCommonModule } from './common/common.module';
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';
 import { UserService } from './common/user.service';
@@ -24,6 +25,7 @@ describe('AppComponent', () => {
       imports: [
         RestangularModule,
         StoreModule,
+        SyndesisCommonModule.forRoot(),
         ModalModule.forRoot(),
         RouterTestingModule.withRoutes([]),
         OAuthModule.forRoot(),

@@ -15,11 +15,11 @@ import { TestSupportService } from './store/test-support.service';
 
 import { log } from './logging';
 
+import { ModalService } from './common/modal/modal.service';
 import { NavigationService } from './common/navigation.service';
 import { UserService } from './common/user.service';
 import { User } from './model';
 import { saveAs } from 'file-saver';
-import { ModalDirective } from 'ngx-bootstrap';
 
 @Component({
   selector: 'syndesis-root',
@@ -29,7 +29,6 @@ import { ModalDirective } from 'ngx-bootstrap';
   providers: [Restangular, TestSupportService],
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  @ViewChild('importDBModal') public importDBModal: ModalDirective;
 
   /**
    * Logo with white background.
@@ -59,6 +58,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     public testSupport: TestSupportService,
     private notificationService: NotificationService,
     private nav: NavigationService,
+    private modalService: ModalService,
   ) {}
 
   ngOnInit() {
@@ -93,30 +93,25 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Function that displays a modal for importing a database.
    */
   showImportDB() {
-    this.importDBModal.show();
-  }
-
-  /**
-   * Function that hides an open modal for importing a database.
-   */
-  hideModal() {
-    this.importDBModal.hide();
+    this.modalService.show('importDb')
+      .then(modal => {
+        if (modal.result) {
+          return this.testSupport.restoreDB(modal['json'])
+            .take(1)
+            .toPromise()
+            .then(_ => log.debugc(() => 'DB has been imported'));
+        }
+      });
   }
 
   /**
    * Function that imports a database.
    */
-  importDB(event) {
+  importDB(event, modal) {
     const file = event.srcElement.files[0];
     const reader = new FileReader();
-    reader.onload = () => {
-      const json = JSON.parse(reader.result);
-      this.testSupport.restoreDB(json).subscribe((value: Response) => {
-        log.debugc(() => 'DB has been imported');
-      });
-    };
+    reader.onload = _ => modal['json'] = JSON.parse(reader.result);
     reader.readAsText(file, 'text/plain;charset=utf-8');
-    this.importDBModal.hide();
   }
 
   handleAction($event: NotificationEvent): void {
