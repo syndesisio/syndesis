@@ -18,12 +18,12 @@ export class ModalService {
     this.registeredModals.delete(id);
   }
 
-  show(id: string = 'modal'): Promise<boolean> {
+  show(id: string = 'modal'): Promise<Modal> {
     const modal = this.registeredModals.get(id);
     modal.bsModalRef = this.bsModalService.show(modal.template);
     return this.bsModalService.onHide.take(1)
       .toPromise()
-      .then(_ => modal.result);
+      .then(_ => modal);
   }
 
   hide(id: string, result: boolean): void {

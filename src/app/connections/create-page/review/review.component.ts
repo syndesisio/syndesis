@@ -53,6 +53,6 @@ export class ConnectionsReviewComponent implements OnInit, OnDestroy, CanCompone
            nextState.url === '/connections/create/connection-basics' ||
            nextState.url === '/connections/create/cancel' ||
            nextState.url === '/connections/create/configure-fields' ||
-           this.modalService.show();
+           this.modalService.show().then(modal => modal.result);
   }
 }

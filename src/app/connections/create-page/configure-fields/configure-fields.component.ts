@@ -47,7 +47,7 @@ export class ConnectionsConfigureFieldsComponent
       nextState.url === '/connections/create/cancel' ||
       nextState.url === '/connections/create/connection-basics' ||
       nextState.url === '/connections/create/review' ||
-      this.modalService.show()
+      this.modalService.show().then(modal => modal.result)
     );
   }
 }

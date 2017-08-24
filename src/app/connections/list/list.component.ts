@@ -78,7 +78,7 @@ export class ConnectionsListComponent implements OnInit {
     log.debugc(() => 'Selected connection for delete: ' + connection.id);
     this.selectedForDelete = connection;
     this.modalService.show()
-      .then(result => result ? this.deleteAction(connection) : false);
+      .then(modal => modal.result ? this.deleteAction(connection) : false);
   }
 
   //-----  Selecting a Connection ------------------->>

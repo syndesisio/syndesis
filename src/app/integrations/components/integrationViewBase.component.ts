@@ -66,7 +66,7 @@ export class IntegrationViewBase {
         request = this.requestDelete(integration);
         break;
     }
-    return request.then(result => result
+    return request.then(modal => modal.result
       ? this.doAction(action, integration)
           .then(_ => this.popNotification({
             type: NotificationType.SUCCESS,
