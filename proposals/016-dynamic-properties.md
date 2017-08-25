@@ -24,18 +24,18 @@ For example when using Salesforce's connector action _create or update_ I need t
 
 This proposal changes the action properties to contain additional metadata with a list of steps that group action properties that need to be presented piecemeal.
 
-`properties` map is replaced with `ActionMetadata`:
+`properties` map is replaced with `ActionDefinition`:
 ```java
 public interface Action extends WithId<Action>, WithName, Serializable {
   //...
-  ActionMetadata metadata();
+  ActionDefinition definition();
   //...
 }
 ```
 
-`ActionMetadata` is introduced to contain the `Step`s:
+`ActionDefinition` is introduced to contain the `Step`s:
 ```java
-public interface ActionMetadata {
+public interface ActionDefinition {
 
     interface Step extends WithName, WithProperties {
 
@@ -56,15 +56,15 @@ To interact with the dynamic parameter API:
 
 | HTTP Verb | Path | Description |
 | --------- | ---- | ----------- |
-| GET       | /api/{version}/connections/{connectionId}/actions/{actionId}/metadata        | Fetches the action metadata for given action id |
-| GET       | /api/{version}/connections/{connectionId}/actions/{actionId}/metadata/values | Provides value suggestions for chosen values    |
+| GET       | /api/{version}/connections/{connectionId}/actions/{actionId}/definition      | Fetches the action metadata for given action id |
+| GET       | /api/{version}/connections/{connectionId}/actions/{actionId}/properties      | Provides action property value suggestions for already chosen (if any) action property values |
 
 ### Salesforce create or update object action example
 
 Considering that the user has selected Salesforce connection and _create or update_ (`io.syndesis:salesforce-create-or-update:latest`) action, and now needs to specify the required parameters for that action: Salesforce object type (`sObjectName`) and Salesforce unique ID field (`sObjectIdName`). The UI needs to determine what screens need to be provided to the user.
 
 ```http
-GET /api/v1/connections/2/actions/io.syndesis:salesforce-create-or-update:latest/metadata
+GET /api/v1/connections/2/actions/io.syndesis:salesforce-create-or-update:latest/definition
 
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -114,7 +114,7 @@ Content-Type: application/json
 The UI proceeds with presenting the first step of action property configuration by displaying _Salesforce object type_ (`sObjectName`) parameter selection on _Salesforce object_ step. At this point there are no parameter values the user has specified, so the UI tries to determine parameter values suggestions requesting without any query parameters:
 
 ```http
-GET /api/v1/connections/2/actions/io.syndesis:salesforce-create-or-update:latest/metadata/values
+GET /api/v1/connections/2/actions/io.syndesis:salesforce-create-or-update:latest/properties
 
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -139,7 +139,7 @@ The backend by the specified action determines that the prerequisite for `sObjec
 The user picks the _Contact_ Salesforce object to create or update, and UI proceeds to present the _ID field_ (`sObjectIdName`) parameter selection on _Unique field_ step. To determine possible values for the Salesforce object unique ID field, the following request is issued:
 
 ```http
-GET /api/v1/connections/2/actions/io.syndesis:salesforce-create-or-update:latest/metadata/values?sObjectName=Contact
+GET /api/v1/connections/2/actions/io.syndesis:salesforce-create-or-update:latest/properties?sObjectName=Contact
 
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -164,10 +164,39 @@ The UI has passed the current property value pairs to the backend and the backen
 
 Considering that the user has selected SQL connection and _invoke stored procedure_ (`io.syndesis:sql-invoke-stored-procedure:latest`) action, and now needs to specify the single required parameter for that action: SQL stored procedure name (`storedProcedure`).
 
+```http
+GET /api/v1/connections/2/actions/io.syndesis:sql-invoke-stored-procedure:latest/definition
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+{
+  "propertyDefinitionSteps": [{
+    "name": "Stored procedure",
+    "description": "The name of the stored procedure to invoke",
+    "properties": {
+      "storedProcedure": {
+        "kind": "parameter",
+        "displayName": "Stored procedure name",
+        "group": "common",
+        "required": false,
+        "type": "string",
+        "javaType": "java.lang.String",
+        "tags":[],
+        "deprecated": false,
+        "secret": false,
+        "componentProperty": false,
+        "defaultValue": "",
+        "description": "The name of the stored procedure to invoke"
+      }
+    }    
+  }]
+}
+```
+
 At this point there are no parameter values the user has specified, so the UI tries to determine parameter values suggestions by without query parameters:
 
 ```http
-GET /api/v1/connections/2/actions/io.syndesis:sql-invoke-stored-procedure:latest/metadata/values
+GET /api/v1/connections/2/actions/io.syndesis:sql-invoke-stored-procedure:latest/properties
 
 HTTP/1.1 200 OK
 Content-Type: application/json
