@@ -1,1 +1,11 @@
+//  Fixed position list toolbar
+/deep/ syndesis-connections-list-page syndesis-list-toolbar .toolbar-pf {
+  position: fixed;
+  left: 221px;
+  right: 14px;
+  z-index: 1000;
+}
 
+/deep/ syndesis-connections-list-page syndesis-list-toolbar + * {
+  margin-top: 35px;
+}
