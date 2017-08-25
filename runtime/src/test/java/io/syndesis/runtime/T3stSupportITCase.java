@@ -45,7 +45,7 @@ public class T3stSupportITCase extends BaseITCase {
 
         // restoring to no data should.. leave us with no data.
         ModelData<?>[] NO_DATA = new ModelData[]{};
-        post("/api/v1/test-support/restore-db", NO_DATA, null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
+        post("/api/v1/test-support/restore-db", NO_DATA, (Class<?>) null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // Lets add an integration...
         Integration integration = new Integration.Builder()
@@ -68,7 +68,7 @@ public class T3stSupportITCase extends BaseITCase {
         assertThat(r3.getBody().length).isEqualTo(r1.getBody().length);
 
         // restoring 1 item of data
-        post("/api/v1/test-support/restore-db", r2.getBody(), null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
+        post("/api/v1/test-support/restore-db", r2.getBody(), (Class<?>) null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // Snapshot should only contain the integration entity..
         ResponseEntity<ModelData<?>[]> r4 = get("/api/v1/test-support/snapshot-db", type);

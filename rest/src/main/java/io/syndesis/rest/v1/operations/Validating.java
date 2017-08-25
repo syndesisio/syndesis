@@ -16,9 +16,9 @@
 package io.syndesis.rest.v1.operations;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -27,7 +27,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -54,10 +53,7 @@ public interface Validating<T extends WithId<T>> extends Resource {
             return Response.noContent().build();
         }
 
-        final Set<Violation> violations = constraintViolations.stream().map(Violation.Builder::fromConstraintViolation)
-            .collect(Collectors.toSet());
-
-        return Response.status(Status.BAD_REQUEST).entity(violations).build();
+        throw new ConstraintViolationException(constraintViolations);
     }
 
 }

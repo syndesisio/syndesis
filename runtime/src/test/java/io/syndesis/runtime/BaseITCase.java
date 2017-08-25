@@ -32,6 +32,7 @@ import org.junit.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -158,22 +159,44 @@ public abstract class BaseITCase {
         return http(HttpMethod.POST, url, body, responseClass, token, expectedStatus);
     }
 
+    protected <T> ResponseEntity<T> post(String url, Object body, ParameterizedTypeReference<T> responseClass, String token, HttpStatus expectedStatus) {
+        return http(HttpMethod.POST, url, body, responseClass, token, new HttpHeaders(), expectedStatus);
+    }
+
     protected <T> ResponseEntity<T> http(HttpMethod method, String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {
         return http(method, url, body, responseClass, token, new HttpHeaders(), expectedStatus);
     }
 
+    protected <T> ResponseEntity<T> http(HttpMethod method, String url, Object body, ParameterizedTypeReference<T> responseClass, String token, HttpHeaders headers, HttpStatus expectedStatus) {
+        prepareHeaders(body, headers, token);
+
+        ResponseEntity<T> response = restTemplate().exchange(url, method, new HttpEntity<>(body, headers), responseClass);
+
+        return processResponse(expectedStatus, response);
+    }
+
     protected <T> ResponseEntity<T> http(HttpMethod method, String url, Object body, Class<T> responseClass, String token, HttpHeaders headers, HttpStatus expectedStatus) {
+        prepareHeaders(body, headers, token);
+
+        ResponseEntity<T> response = restTemplate().exchange(url, method, new HttpEntity<>(body, headers), responseClass);
+
+        return processResponse(expectedStatus, response);
+    }
+
+    private <T> ResponseEntity<T> processResponse(HttpStatus expectedStatus, ResponseEntity<T> response) {
+        if( expectedStatus!=null ) {
+            assertThat(response.getStatusCode()).as("status code").isEqualTo(expectedStatus);
+        }
+        return response;
+    }
+
+    private void prepareHeaders(Object body, HttpHeaders headers, String token) {
         if( body!=null ) {
             headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
         }
         if (token != null) {
             headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         }
-        ResponseEntity<T> response = restTemplate().exchange(url, method, new HttpEntity<>(body, headers), responseClass);
-        if( expectedStatus!=null ) {
-            assertThat(response.getStatusCode()).as("status code").isEqualTo(expectedStatus);
-        }
-        return response;
     }
 
     final class YamlJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {

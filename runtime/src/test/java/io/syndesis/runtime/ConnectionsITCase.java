@@ -22,16 +22,17 @@ import io.syndesis.rest.v1.operations.Violation;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SuppressWarnings("PMD.CloseResource")
 public class ConnectionsITCase extends BaseITCase {
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private final static Class<List<Violation>> RESPONSE_TYPE = (Class) List.class;
+    private final static ParameterizedTypeReference<List<Violation>> RESPONSE_TYPE = new ParameterizedTypeReference<List<Violation>>() {
+        // defining type parameters
+    };
 
     @Test
     public void emptyNamesShouldNotBeAllowed() {
@@ -40,7 +41,8 @@ public class ConnectionsITCase extends BaseITCase {
         final ResponseEntity<List<Violation>> got = post("/api/v1/connections/validation", connection, RESPONSE_TYPE,
             tokenRule.validToken(), HttpStatus.BAD_REQUEST);
 
-        assertThat(got.getBody()).hasSize(1);
+        assertThat(got.getBody()).containsExactly(
+            new Violation.Builder().property("name").error("NotNull").message("Value is required").build());
     }
 
     @Test
@@ -63,7 +65,8 @@ public class ConnectionsITCase extends BaseITCase {
         final ResponseEntity<List<Violation>> got = post("/api/v1/connections/validation", connection, RESPONSE_TYPE,
             tokenRule.validToken(), HttpStatus.BAD_REQUEST);
 
-        assertThat(got.getBody()).hasSize(1);
+        assertThat(got.getBody()).containsExactly(
+            new Violation.Builder().property("name").error("NotNull").message("Value is required").build());
     }
 
     @Before
@@ -80,7 +83,8 @@ public class ConnectionsITCase extends BaseITCase {
         final ResponseEntity<List<Violation>> got = post("/api/v1/connections/validation", connection, RESPONSE_TYPE,
             tokenRule.validToken(), HttpStatus.BAD_REQUEST);
 
-        assertThat(got.getBody()).hasSize(1);
+        assertThat(got.getBody()).containsExactly(new Violation.Builder().property("name").error("UniqueProperty")
+            .message("Value 'Existing connection' is not unique").build());
     }
 
     @Test
@@ -91,6 +95,17 @@ public class ConnectionsITCase extends BaseITCase {
             tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         assertThat(got.getBody()).isNull();
+    }
+
+    @Test
+    public void violationsShouldBeGivenForInvalidConnectionCreation() {
+        final Connection connection = new Connection.Builder().name("Existing connection").build();
+
+        final ResponseEntity<List<Violation>> got = post("/api/v1/connections", connection, RESPONSE_TYPE,
+            tokenRule.validToken(), HttpStatus.BAD_REQUEST);
+
+        assertThat(got.getBody()).containsExactly(new Violation.Builder().property("create.obj.name")
+            .error("UniqueProperty").message("Value 'Existing connection' is not unique").build());
     }
 
 }

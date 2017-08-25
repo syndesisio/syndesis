@@ -22,6 +22,7 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.WithId;
 import io.syndesis.model.validation.UniqueProperty;
 
+import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,8 @@ public class UniquePropertyValidator implements ConstraintValidator<UniqueProper
 
         if (exists) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+            context.unwrap(HibernateConstraintValidatorContext.class).addExpressionVariable("nonUnique", propertyValue)
+                .buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
                 .addPropertyNode(property).addConstraintViolation();
         }
 

@@ -15,7 +15,10 @@
  */
 package io.syndesis.rest.v1.operations;
 
+import java.lang.annotation.Annotation;
+
 import javax.validation.ConstraintViolation;
+import javax.validation.metadata.ConstraintDescriptor;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -31,16 +34,21 @@ public interface Violation {
     @SuppressWarnings("PMD.UseUtilityClass")
     final class Builder extends ImmutableViolation.Builder {
 
-        /* default */ static Violation fromConstraintViolation(final ConstraintViolation<?> constraintViolation) {
+        public static Violation fromConstraintViolation(final ConstraintViolation<?> constraintViolation) {
             final String property = constraintViolation.getPropertyPath().toString();
+            final ConstraintDescriptor<?> constraintDescriptor = constraintViolation.getConstraintDescriptor();
+            final Annotation annotation = constraintDescriptor.getAnnotation();
+            final Class<? extends Annotation> annotationType = annotation.annotationType();
+            final String error = annotationType.getSimpleName();
             final String message = constraintViolation.getMessage();
 
-            return new Builder().property(property).message(message).build();
+            return new Builder().property(property).error(error).message(message).build();
         }
     }
+
+    String error();
 
     String message();
 
     String property();
-
 }
