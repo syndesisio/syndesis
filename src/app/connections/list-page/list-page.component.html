@@ -1,7 +1,7 @@
 <syndesis-list-toolbar [items]="connections"
                        [filteredItems]="filteredConnections"
-                       [actionTemplate]="actionTemplate">
-  <ng-template #actionTemplate>
+                       [viewTemplate]="viewTemplate">
+  <ng-template #viewTemplate>
     <button type="button"
             class="btn btn-primary toolbar-pf-action-right"
             [routerLink]="['/connections/create']">

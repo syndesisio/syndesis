@@ -35,6 +35,7 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
   @Input() items: Observable<Array<T>> = Observable.empty();
   @Input() filteredItems: Subject<Array<T>>;
   @Input() actionTemplate: TemplateRef<any>;
+  @Input() viewTemplate: TemplateRef<any>;
   toolbarConfig: ToolbarConfig;
   private _allItems: Array<T> = [];
   private _filteredItems: Array<T> = [];
