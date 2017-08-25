@@ -30,6 +30,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -70,11 +71,12 @@ public class GitHubServiceITCase {
     public TestName testName = new TestName();
 
     @Before
-    public void before() throws IOException {
+    public void before() {
 
         authToken = System.getProperties().getProperty("github.oauth.token");
 
-        Assertions.assertThat(authToken).isNotNull().isNotBlank();
+        Assume.assumeNotNull(authToken);
+        Assume.assumeFalse("GitHub OAuth token needs to be specified in Java system property `github.oauth.token`", authToken.isEmpty());
 
         client = new KeycloakProviderTokenAwareGitHubClient();
 
@@ -112,7 +114,10 @@ public class GitHubServiceITCase {
     @After
     public void after() {
         SecurityContextHolder.getContext().setAuthentication(null);
-        webserver.shutdown();
+
+        if (webserver != null) {
+            webserver.shutdown();
+        }
     }
 
     @Test

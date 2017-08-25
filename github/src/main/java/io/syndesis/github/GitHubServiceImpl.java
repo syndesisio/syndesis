@@ -16,6 +16,8 @@
 package io.syndesis.github;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +42,8 @@ import org.springframework.stereotype.Service;
 @Service
 @ConditionalOnProperty(value = "github.enabled", matchIfMissing = true, havingValue = "true")
 public class GitHubServiceImpl implements GitHubService {
+
+    private static final LocalDate GITHUB_NOREPLY_EMAIL_CUTOFF = LocalDate.of(2017, 7, 18);
 
     private final RepositoryService repositoryService;
     private final UserService userService;
@@ -79,7 +83,24 @@ public class GitHubServiceImpl implements GitHubService {
 
     @Override
     public User getApiUser() throws IOException {
-        return userService.getUser();
+        final User user = userService.getUser();
+        // if the user did not elect to publicly display his e-mail address, e-mail will be null
+        // https://developer.github.com/v3/users/#get-a-single-user
+        // let's put a dummy e-mail address then, as it is needed for the commit
+        if (user.getEmail() == null) {
+            // users before 2017-07-18 have their no-reply e-mail addresses in the form
+            // username@users.noreply.github.com, and after that date
+            // id+username@users.noreply.github.com
+            // https://help.github.com/articles/about-commit-email-addresses/
+            final LocalDate createdAt = user.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (createdAt.isAfter(GITHUB_NOREPLY_EMAIL_CUTOFF)) {
+                user.setEmail(user.getId() + "+" + user.getLogin() + "@users.noreply.github.com");
+            } else {
+                user.setEmail(user.getLogin() + "@users.noreply.github.com");
+            }
+        }
+
+        return user;
     }
 
     // =====================================================================================
