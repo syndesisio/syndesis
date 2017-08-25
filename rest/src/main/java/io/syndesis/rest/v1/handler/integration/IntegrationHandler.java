@@ -40,7 +40,7 @@ import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Integration.Status;
-import io.syndesis.model.validation.UniquenessRequired;
+import io.syndesis.model.validation.AllValidations;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Creator;
 import io.syndesis.rest.v1.operations.Deleter;
@@ -89,7 +89,7 @@ public class IntegrationHandler extends BaseHandler
     }
 
     @Override
-    public Integration create(@ConvertGroup(from = Default.class, to = UniquenessRequired.class) final Integration integration) {
+    public Integration create(@ConvertGroup(from = Default.class, to = AllValidations.class) final Integration integration) {
         Date rightNow = new Date();
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(integration)
@@ -103,7 +103,7 @@ public class IntegrationHandler extends BaseHandler
     }
 
     @Override
-    public void update(String id, Integration integration) {
+    public void update(String id, @ConvertGroup(from = Default.class, to = AllValidations.class) Integration integration) {
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(integration)
             .token(Tokens.getAuthenticationToken())

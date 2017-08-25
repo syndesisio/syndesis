@@ -15,7 +15,10 @@
  */
 package io.syndesis.runtime;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.validation.Validator;
 
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.rest.v1.state.ClientSideStateProperties;
@@ -34,7 +37,11 @@ import org.springframework.boot.context.embedded.undertow.UndertowDeploymentInfo
 import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(exclude = {TwitterAutoConfiguration.class, FacebookAutoConfiguration.class,
@@ -82,4 +89,14 @@ public class Application extends SpringBootServletInitializer {
         return new ClientSideState(edition);
     }
 
+    @Bean
+    public Validator localValidatorFactoryBean(final MessageSource messageSource, final ResourcePatternResolver resolver) throws IOException {
+        final LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+        localValidatorFactoryBean.setValidationMessageSource(messageSource);
+
+        final Resource[] mappings = resolver.getResources("classpath*:/META-INF/validation/*.xml");
+        localValidatorFactoryBean.setMappingLocations(mappings);
+
+        return localValidatorFactoryBean;
+    }
 }

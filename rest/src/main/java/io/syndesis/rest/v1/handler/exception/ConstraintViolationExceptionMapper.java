@@ -15,29 +15,29 @@
  */
 package io.syndesis.rest.v1.handler.exception;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+
+import io.syndesis.rest.v1.operations.Violation;
 
 import org.springframework.stereotype.Component;
 
 @Component
 @Provider
-public class ConstraintViolationExceptionMapper extends BaseExceptionMapper<ConstraintViolationException> {
-
-    public ConstraintViolationExceptionMapper() {
-        super(Response.Status.BAD_REQUEST, "Please make sure that you're sending the correct parameters");
-    }
+public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
 
     @Override
-    protected String developerMessage(final ConstraintViolationException exception) {
-        return exception.getConstraintViolations()
-            .stream().map(c -> " - value `" + c.getInvalidValue() + "` specified at `" + c.getPropertyPath()
-                + "` is invalid: " + c.getMessage())
-            .collect(Collectors.joining(", ", "Invalid values specified: ", ""));
+    public Response toResponse(ConstraintViolationException exception) {
+        final Set<Violation> violations = exception.getConstraintViolations().stream()
+            .map(Violation.Builder::fromConstraintViolation).collect(Collectors.toSet());
 
+        return Response.status(Status.BAD_REQUEST).entity(violations).build();
     }
 
 }

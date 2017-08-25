@@ -19,26 +19,36 @@ import java.util.Set;
 
 import javax.validation.BootstrapConfiguration;
 import javax.validation.Configuration;
+import javax.validation.MessageInterpolator;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import javax.validation.executable.ExecutableType;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
+import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
+import org.hibernate.validator.resourceloading.PlatformResourceBundleLocator;
+import org.hibernate.validator.spi.resourceloading.ResourceBundleLocator;
 import org.jboss.resteasy.plugins.validation.GeneralValidatorImpl;
 import org.jboss.resteasy.spi.validation.GeneralValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Provider
 public class ValidatorContextResolver implements ContextResolver<GeneralValidator> {
-    @Autowired
-    private ValidatorFactory validatorFactory;
+
+    private final ValidatorFactory validatorFactory;
+
+    public ValidatorContextResolver(final ValidatorFactory validatorFactory) {
+        this.validatorFactory = validatorFactory;
+    }
 
     @Override
     public GeneralValidator getContext(final Class<?> type) {
-        final Configuration<?> config = Validation.byDefaultProvider().configure();
+        final ResourceBundleLocator resourceBundleLocator = new PlatformResourceBundleLocator("messages");
+        final MessageInterpolator messageInterpolator = new ResourceBundleMessageInterpolator(resourceBundleLocator);
+        final Configuration<?> config = Validation.byDefaultProvider().configure()
+            .messageInterpolator(messageInterpolator);
         final BootstrapConfiguration bootstrapConfiguration = config.getBootstrapConfiguration();
         final boolean isExecutableValidationEnabled = bootstrapConfiguration.isExecutableValidationEnabled();
         final Set<ExecutableType> defaultValidatedExecutableTypes = bootstrapConfiguration
