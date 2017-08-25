@@ -15,29 +15,45 @@
  */
 package io.syndesis.core;
 
+import java.util.Arrays;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
+@RunWith(Parameterized.class)
 public class NamesTest {
+
+    @Parameter(1)
+    public String integrationName;
+
+    @Parameter(0)
+    public String projectName;
 
     @Test
     public void testGetSanitizedName() throws Exception {
-        String data[] = {
-            "bla", "bla",
+        assertEquals(projectName, Names.sanitize(integrationName));
+    }
 
-            "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789",
-            "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+    @Parameters
+    public static Iterable<Object[]> integrationToProjectNames() {
+        return Arrays.asList(pair("bla", "bla"),
+            pair("0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789",
+                "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"),
+            pair("how-are-you", "how are you?"), //
+            pair("yet-sth-with-spaces", "yet sth  with !#ä spaceS"),
+            pair("aaa-big-and-small-zzz", "AaA BIG and Small ZzZ"),
+            pair("twitter-mention-salesforce-upsert-contact", "Twitter Mention -> Salesforce upsert contact"),
+            pair("-twitter-mention-salesforce-upsert-contact-",
+                "??? Twitter Mention <-> Salesforce upsert contact !!!"),
+            pair("-s-p-a-c-e-the-final-frontier", "    s   p  a  c  e   , the final frontier"));
+    }
 
-            "how-are-you", "how are you?",
-
-            "yet-sth--with--spaces", "yet sth  with !#ä spaceS",
-
-            "aaa-big-and-small-zzz", "AaA BIG and Small ZzZ",
-        };
-
-        for (int i = 0; i < data.length; i +=2) {
-            assertEquals(data[i], Names.sanitize(data[i+1]));
-        }
+    private static Object[] pair(final String projectName, final String integrationName) {
+        return new Object[] {projectName, integrationName};
     }
 }
