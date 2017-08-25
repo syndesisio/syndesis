@@ -21,20 +21,26 @@ import io.syndesis.git.GitWorkflow;
 import io.syndesis.github.backend.KeycloakProviderTokenAwareGitHubClient;
 import org.assertj.core.api.Assertions;
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
 import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -60,6 +66,8 @@ public class GitHubServiceITCase {
     private GitHubServiceImpl githubService;
     private final GitWorkflow gitWorkflow = new GitWorkflow(new GitProperties());
     private DefaultMockServer webserver;
+    @Rule
+    public TestName testName = new TestName();
 
     @Before
     public void before() throws IOException {
@@ -110,8 +118,9 @@ public class GitHubServiceITCase {
     @Test
     public void testGetApiUser() throws IOException {
         // Test that the token is usable by getting the username
-        String apiUser = githubService.getApiUser();
-        Assertions.assertThat(apiUser).isNotNull().isNotBlank();
+        User apiUser = githubService.getApiUser();
+        Assertions.assertThat(apiUser).isNotNull();
+        Assertions.assertThat(apiUser.getLogin()).isNotNull().isNotBlank();
     }
 
     // Requires repo and delete_repo scope
@@ -120,8 +129,8 @@ public class GitHubServiceITCase {
         String testRepo = REPO_NAME + "-create-new";
         Repository repository = githubService.getRepository(testRepo);
         if (repository != null) {
-            String apiUser = githubService.getApiUser();
-            client.delete("/repos/" + apiUser + "/" + testRepo);
+            User apiUser = githubService.getApiUser();
+            client.delete("/repos/" + apiUser.getLogin() + "/" + testRepo);
             repository = githubService.getRepository(testRepo);
         }
         Assert.assertNull(repository); // repository should not exist on GitHub
@@ -132,8 +141,8 @@ public class GitHubServiceITCase {
         Assertions.assertThat(repository.getName()).isEqualTo(testRepo);
         System.out.println("Successfully created repository " + repository.getName());
 
-        String apiUser = githubService.getApiUser();
-        client.delete("/repos/" + apiUser + "/" + testRepo);
+        User apiUser = githubService.getApiUser();
+        client.delete("/repos/" + apiUser.getLogin() + "/" + testRepo);
     }
 
     // Requires repo scope
@@ -159,8 +168,16 @@ public class GitHubServiceITCase {
                 }
             });
 
-        String cloneURL = githubService.createOrUpdateProjectFiles(REPO_NAME, "my itcase initial message" + UUID.randomUUID().toString(), files, null);
+        User user = githubService.getApiUser();
+        String cloneURL = githubService.createOrUpdateProjectFiles(REPO_NAME, user,"my itcase initial message" + UUID.randomUUID().toString(), files, null);
         Assertions.assertThat(cloneURL).isNotNull().isNotBlank();
+
+        File tmpDir = Files.createTempDirectory(testName.getMethodName()).toFile();
+        tmpDir.deleteOnExit();
+        Git clone = Git.cloneRepository().setDirectory(tmpDir).setURI(cloneURL).call();
+        PersonIdent author = clone.log().call().iterator().next().getAuthorIdent();
+        Assertions.assertThat(author).isNotNull();
+        Assertions.assertThat(author.getName()).isNotNull().isNotBlank();
     }
 
 }

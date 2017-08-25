@@ -52,18 +52,18 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     @Override
-    public String createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
+    public String createOrUpdateProjectFiles(String repoName, User author, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException {
         Repository repository = getRepository(repoName);
         if (repository == null) {
             // New Repo
             repository = createRepo(repoName);
             // Add files
-            createOrUpdateFiles(repository, commitMessage, fileContents);
+            createOrUpdateFiles(repository, author, commitMessage, fileContents);
             // Set WebHook
             createWebHookAsBuildTrigger(repository, webHookUrl);
         } else {
             // Only create or update files
-            createOrUpdateFiles(repository, commitMessage, fileContents);
+            createOrUpdateFiles(repository, author, commitMessage, fileContents);
         }
         return repository.getCloneUrl();
     }
@@ -78,8 +78,8 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     @Override
-    public String getApiUser() throws IOException {
-        return userService.getUser().getLogin();
+    public User getApiUser() throws IOException {
+        return userService.getUser();
     }
 
     // =====================================================================================
@@ -103,13 +103,13 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
-    private void createOrUpdateFiles(Repository repo, String message, Map<String, byte[]> files) throws IOException {
+    private void createOrUpdateFiles(Repository repo, User author, String message, Map<String, byte[]> files) throws IOException {
         Repository repository = getRepository(repo.getName());
         if (repository == null) {
             createRepo(repo.getName());
-            gitWorkflow.createFiles(repo.getHtmlUrl(), repo.getName(), message, files, new UsernamePasswordCredentialsProvider(Tokens.fetchProviderTokenFromKeycloak(Tokens.TokenProvider.GITHUB), "") );
+            gitWorkflow.createFiles(repo.getHtmlUrl(), repo.getName(), author, message, files, new UsernamePasswordCredentialsProvider(Tokens.fetchProviderTokenFromKeycloak(Tokens.TokenProvider.GITHUB), "") );
         } else {
-            gitWorkflow.updateFiles(repo.getHtmlUrl(), repo.getName(), message, files, new UsernamePasswordCredentialsProvider(Tokens.fetchProviderTokenFromKeycloak(Tokens.TokenProvider.GITHUB), "") );
+            gitWorkflow.updateFiles(repo.getHtmlUrl(), repo.getName(), author, message, files, new UsernamePasswordCredentialsProvider(Tokens.fetchProviderTokenFromKeycloak(Tokens.TokenProvider.GITHUB), "") );
         }
     }
 

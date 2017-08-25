@@ -15,6 +15,8 @@
  */
 package io.syndesis.github;
 
+import org.eclipse.egit.github.core.User;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -26,20 +28,21 @@ public interface GitHubService {
      * still persists.
      *
      * @param repoName repo to either create if not existent or to update
+     * @param author author
      * @param commitMessage the message to use for committing files.
      * @param fileContents map of files to add or update. Key are pathes within the repo, values is the content to write
      * @param webHookUrl an optional Webhook URL. If non-null a webhook is created with this url as callback URL
      * @return the repositories clone URL
      * @throws IOException if interaction with GitHub fails.
      */
-    String createOrUpdateProjectFiles(String repoName, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException;
+    String createOrUpdateProjectFiles(String repoName, User author, String commitMessage, Map<String, byte[]> fileContents, String webHookUrl) throws IOException;
 
     /**
      * Get the current user connected with the GitHub API access
      *
-     * @return name of the current user
+     * @return the current user
      */
-    String getApiUser() throws IOException;
+    User getApiUser() throws IOException;
 
     /**
      * @param repoName repo to either create if not existent or to update

@@ -15,17 +15,6 @@
  */
 package io.syndesis.controllers.integration.online;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.core.Names;
 import io.syndesis.core.SyndesisServerException;
@@ -40,11 +29,21 @@ import io.syndesis.openshift.ImmutableOpenShiftDeployment;
 import io.syndesis.openshift.OpenShiftDeployment;
 import io.syndesis.openshift.OpenShiftService;
 import io.syndesis.project.converter.GenerateProjectRequest;
-import io.syndesis.project.converter.ImmutableGenerateProjectRequest;
 import io.syndesis.project.converter.ProjectGenerator;
-
+import org.eclipse.egit.github.core.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class ActivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
@@ -103,12 +102,13 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         try {
             String gitCloneUrl = null;
             if (!stepsPerformed.contains(STEP_GITHUB)) {
-                String gitHubUser = getGitHubUser();
-                LOG.info("{} : Looked up GitHub user {}", getLabel(integration), gitHubUser);
-                Map<String, byte[]> projectFiles = createProjectFiles(gitHubUser, integration);
+                User gitHubUser = getGitHubUser();
+                String username = gitHubUser.getLogin();
+                LOG.info("{} : Looked up GitHub user {}", getLabel(integration), username);
+                Map<String, byte[]> projectFiles = createProjectFiles(username, integration);
                 LOG.info("{} : Created project files", getLabel(integration));
 
-                gitCloneUrl = ensureGitHubSetup(integration, getWebHookUrl(deployment, secret), projectFiles);
+                gitCloneUrl = ensureGitHubSetup(integration, gitHubUser, getWebHookUrl(deployment, secret), projectFiles);
                 LOG.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
                 stepsPerformed.add(STEP_GITHUB);
             }
@@ -156,11 +156,11 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
-    private String ensureGitHubSetup(Integration integration, String webHookUrl, Map<String, byte[]> projectFiles) {
+    private String ensureGitHubSetup(Integration integration, User githubUser, String webHookUrl, Map<String, byte[]> projectFiles) {
         try {
             // Do all github stuff at once
             String gitHubRepoName = Names.sanitize(integration.getName());
-            String gitCloneUrl = gitHubService.createOrUpdateProjectFiles(gitHubRepoName, generateCommitMessage(), projectFiles, webHookUrl);
+            String gitCloneUrl = gitHubService.createOrUpdateProjectFiles(gitHubRepoName, githubUser, generateCommitMessage(), projectFiles, webHookUrl);
 
             // Update integration within DB. Maybe re-read it before updating the URL ? Best: Add a dedicated 'updateGitRepo()'
             // method to the backend
@@ -175,14 +175,13 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         }
     }
 
-    private Map<String, byte[]> createProjectFiles(String gitHubUser, Integration integration) {
+    private Map<String, byte[]> createProjectFiles(String username, Integration integration) {
         try {
-            GenerateProjectRequest request = ImmutableGenerateProjectRequest
-                .builder()
+            GenerateProjectRequest request = new GenerateProjectRequest.Builder()
                 .integration(integration)
                 .connectors(fetchConnectorsMap())
                 .gitHubRepoName(Names.sanitize(integration.getName()))
-                .gitHubUser(gitHubUser)
+                .gitHubUserLogin(username)
                 .build();
             return projectConverter.generate(request);
         } catch (IOException e) {
@@ -190,7 +189,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         }
     }
 
-    private String getGitHubUser() {
+    private User getGitHubUser() {
         try {
             return gitHubService.getApiUser();
         } catch (IOException e) {

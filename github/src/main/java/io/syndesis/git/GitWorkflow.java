@@ -16,6 +16,7 @@
 package io.syndesis.git;
 
 import io.syndesis.core.SyndesisServerException;
+import org.eclipse.egit.github.core.User;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -55,12 +56,13 @@ public class GitWorkflow {
      *
      * @param remoteGitRepoHttpUrl- the HTML (not ssh) url to a git repository
      * @param repoName              - the name of the git repository
+     * @param author                author
      * @param message-              commit message
      * @param files-                map of file paths along with their content
      * @param credentials-          Git credentials, for example username/password, authToken, personal access token
      */
-    public void createFiles(String remoteGitRepoHttpUrl, String repoName, String message, Map<String, byte[]> files,
-                                 UsernamePasswordCredentialsProvider credentials) {
+    public void createFiles(String remoteGitRepoHttpUrl, String repoName, User author, String message, Map<String, byte[]> files,
+                            UsernamePasswordCredentialsProvider credentials) {
 
         try {
             // create temporary directory
@@ -78,7 +80,7 @@ public class GitWorkflow {
             remoteAddCommand.setUri(new URIish(remoteGitRepoHttpUrl));
             remoteAddCommand.call();
 
-            commitAndPush(git, message, credentials);
+            commitAndPush(git, authorName(author), author.getEmail(), message, credentials);
             removeWorkingDir(workingDir);
         } catch (IOException | GitAPIException | URISyntaxException e) {
             throw SyndesisServerException.launderThrowable(e);
@@ -90,11 +92,12 @@ public class GitWorkflow {
      *
      * @param remoteGitRepoHttpUrl- the HTML (not ssh) url to a git repository
      * @param repoName              - the name of the git repository
+     * @param author                author
      * @param message-              commit message
      * @param files-                map of file paths along with their content
      * @param credentials-          Git credentials, for example username/password, authToken, personal access token
      */
-    public void updateFiles(String remoteGitRepoHttpUrl, String repoName, String message, Map<String, byte[]> files,
+    public void updateFiles(String remoteGitRepoHttpUrl, String repoName, User author, String message, Map<String, byte[]> files,
                                  UsernamePasswordCredentialsProvider credentials) {
 
         // create temporary directory
@@ -108,11 +111,18 @@ public class GitWorkflow {
             Git git = Git.cloneRepository().setDirectory(workingDir.toFile()).setURI(remoteGitRepoHttpUrl).call();
             writeFiles(workingDir, files);
 
-            commitAndPush(git, message, credentials);
+            commitAndPush(git, authorName(author), author.getEmail(), message, credentials);
             removeWorkingDir(workingDir);
         } catch (IOException | GitAPIException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
+    }
+
+    private String authorName(User author) {
+        if (author.getName() != null) {
+            return author.getName();
+        }
+        return author.getLogin();
     }
 
     private void removeWorkingDir(Path workingDir) throws IOException {
@@ -140,7 +150,7 @@ public class GitWorkflow {
         }
     }
 
-    private void commitAndPush(Git git, String message, UsernamePasswordCredentialsProvider credentials)
+    private void commitAndPush(Git git, String authorName, String authorEmail, String message, UsernamePasswordCredentialsProvider credentials)
         throws GitAPIException {
 
         // git add .
@@ -150,7 +160,7 @@ public class GitWorkflow {
         }
 
         // git commit
-        RevCommit commit = git.commit().setMessage(message).call();
+        RevCommit commit = git.commit().setAuthor(authorName, authorEmail).setMessage(message).call();
         LOG.info("git commit id {}", commit.getId());
 
         // git push -f, not merging but simply forcing the push (for now)
