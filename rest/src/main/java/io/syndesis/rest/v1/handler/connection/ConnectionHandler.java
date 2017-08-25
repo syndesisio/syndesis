@@ -18,13 +18,16 @@ package io.syndesis.rest.v1.handler.connection;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 
 import io.swagger.annotations.Api;
@@ -49,8 +52,8 @@ import org.springframework.stereotype.Component;
 @Path("/connections")
 @Api(value = "connections")
 @Component
-public class ConnectionHandler extends BaseHandler
-    implements Lister<Connection>, Getter<Connection>, Creator<Connection>, Deleter<Connection>, Updater<Connection>, Validating<Connection> {
+public class ConnectionHandler extends BaseHandler implements Lister<Connection>, Getter<Connection>,
+    Creator<Connection>, Deleter<Connection>, Updater<Connection>, Validating<Connection> {
 
     private final Credentials credentials;
 
@@ -64,7 +67,8 @@ public class ConnectionHandler extends BaseHandler
 
     private final Validator validator;
 
-    public ConnectionHandler(final DataManager dataMgr, final Validator validator, final Credentials credentials, final ClientSideState state) {
+    public ConnectionHandler(final DataManager dataMgr, final Validator validator, final Credentials credentials,
+        final ClientSideState state) {
         super(dataMgr);
         this.validator = validator;
         this.credentials = credentials;
@@ -87,7 +91,8 @@ public class ConnectionHandler extends BaseHandler
     }
 
     @Override
-    public Connection create(@ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
+    public Connection
+        create(@ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
         final Date rightNow = new Date();
         final Connection updatedConnection = new Connection.Builder().createFrom(connection).createdDate(rightNow)
             .lastUpdated(rightNow).build();
@@ -109,10 +114,21 @@ public class ConnectionHandler extends BaseHandler
     }
 
     @Override
-    public void update(final String id, @ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
+    public void update(final String id,
+        @ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
         final Connection updatedConnection = new Connection.Builder().createFrom(connection).lastUpdated(new Date())
             .build();
         Updater.super.update(id, updatedConnection);
+    }
+
+    @Path("/{id}/actions")
+    public ConnectionActionHandler credentials(@NotNull final @PathParam("id") String connectionId) {
+        final Connection connection = get(connectionId);
+        final Optional<Connector> maybeConnector = connection.getConnector();
+        final Connector connector = maybeConnector.orElseThrow(() -> new EntityNotFoundException(
+            "Connection with id `" + connectionId + "` does not have a Connector defined"));
+
+        return new ConnectionActionHandler(connector);
     }
 
     @Override
