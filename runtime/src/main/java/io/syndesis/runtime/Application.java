@@ -24,6 +24,7 @@ import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.rest.v1.state.ClientSideStateProperties;
 import io.syndesis.rest.v1.state.StaticEdition;
 
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,13 +91,16 @@ public class Application extends SpringBootServletInitializer {
     }
 
     @Bean
-    public Validator localValidatorFactoryBean(final MessageSource messageSource, final ResourcePatternResolver resolver) throws IOException {
+    public Validator localValidatorFactoryBean(final ResteasyProviderFactory factory, final MessageSource messageSource, final ResourcePatternResolver resolver) throws IOException {
         final LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
         localValidatorFactoryBean.setValidationMessageSource(messageSource);
 
         final Resource[] mappings = resolver.getResources("classpath*:/META-INF/validation/*.xml");
         localValidatorFactoryBean.setMappingLocations(mappings);
 
+        factory.register(new ValidatorContextResolver(localValidatorFactoryBean));
+
         return localValidatorFactoryBean;
     }
+
 }
