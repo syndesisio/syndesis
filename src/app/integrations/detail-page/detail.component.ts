@@ -218,6 +218,10 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
       });
   }
 
+  validateName(name: string) {
+    return name && name.length > 0 ? null : 'Name is required';
+  }
+
   ngOnInit() {
     this.integrationSubscription = this.integration.subscribe(
       (i: Integration) => {

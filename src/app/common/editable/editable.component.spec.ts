@@ -6,6 +6,7 @@ describe('EditableComponent', () => {
 
   const VALUE1 = 'value1';
   const VALUE2 = 'value2';
+  const ERROR = 'error';
   let component;
 
   beforeEach(() => {
@@ -13,50 +14,85 @@ describe('EditableComponent', () => {
     component.value = VALUE1;
   });
 
-  describe('startEditing', () => {
-    it('sets value in temporary variable', () => {
-      expect(component.tempValue).toBe(null);
-      component.startEditing();
-      expect(component.tempValue).toBe(component.value);
+  describe('submit', () => {
+    it('sets error message', (done) => {
+      spyOn(component, 'validate').and.returnValue(Promise.resolve(ERROR));
+      component.submit(VALUE2)
+        .then(() => {
+          expect(component.errorMessage).toBe(ERROR);
+          done();
+        });
+    });
+
+    it('saves value when valid', (done) => {
+      spyOn(component, 'validate').and.returnValue(Promise.resolve(null));
+      const spy = spyOn(component, 'save');
+      component.submit(VALUE2)
+        .then(() => {
+          expect(spy).toHaveBeenCalledWith(VALUE2);
+          done();
+        });
+    });
+
+    it('does not save value when invalid', (done) => {
+      spyOn(component, 'validate').and.returnValue(Promise.resolve(ERROR));
+      const spy = spyOn(component, 'save');
+      component.submit(VALUE2)
+        .then(() => {
+          expect(spy).not.toHaveBeenCalled();
+          done();
+        });
+    });
+  });
+
+  describe('validate', () => {
+    it('returns Promise that resolves to null when validation function is not set', (done) => {
+      component.validate(VALUE2)
+        .then((result) => {
+          expect(result).toBe(null);
+          done();
+        });
+    });
+
+    it('returns Promise that resolves to value returned by validation function', (done) => {
+      component.validationFn = value => ERROR;
+      component.validate(VALUE2)
+        .then((result) => {
+          expect(result).toBe(ERROR);
+          done();
+        });
     });
   });
 
   describe('save', () => {
-    it('sets temporary value in value variable', () => {
-      component.tempValue = VALUE2;
-      component.save();
+    it('sets value', () => {
+      component.save(VALUE2);
       expect(component.value).toBe(VALUE2);
-    });
-
-    it('resets temporary value', () => {
-      component.tempValue = VALUE2;
-      component.save();
-      expect(component.tempValue).toBe(null);
     });
 
     it('emits value', () => {
       spyOn(component.onSave, 'emit');
-      component.tempValue = VALUE2;
-      component.save();
+      component.save(VALUE2);
       expect(component.onSave.emit).toHaveBeenCalledWith(VALUE2);
+    });
+
+    it('turns editing mode off', () => {
+      component.editing = true;
+      component.save(VALUE2);
+      expect(component.editing).toBe(false);
     });
   });
 
   describe('cancel', () => {
-    it('resets temporary value', () => {
-      component.tempValue = VALUE2;
+    it('clears error message', () => {
+      component.errorMessage = 'error message';
       component.cancel();
-      expect(component.tempValue).toBe(null);
-    });
-  });
-
-  describe('editing', () => {
-    it('is true when temporary variable is set', () => {
-      component.tempValue = VALUE2;
-      expect(component.editing).toBe(true);
+      expect(component.errorMessage).toBe(null);
     });
 
-    it('is false when temporary variable is not set', () => {
+    it('turns editing mode off', () => {
+      component.editing = true;
+      component.cancel();
       expect(component.editing).toBe(false);
     });
   });

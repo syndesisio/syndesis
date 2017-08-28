@@ -29,6 +29,7 @@
       </div>
       <h1>
             <syndesis-editable-text [value]="i.name"
+                                    [validationFn]="validateName"
                                     (onSave)="onAttributeUpdated('name', $event)"></syndesis-editable-text>
 </h1>
       <dl class="dl-horizontal">
