@@ -105,6 +105,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage
   }
 
   getConfiguredProperties(props: any) {
+    if (props === undefined) {
+      return undefined;
+    }
     if (typeof props === 'string') {
       return JSON.parse(props);
     } else {
