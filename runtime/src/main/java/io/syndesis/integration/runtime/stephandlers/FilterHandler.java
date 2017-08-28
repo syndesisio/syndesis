@@ -24,15 +24,16 @@ import org.apache.camel.model.ProcessorDefinition;
 
 @AutoService(StepHandler.class)
 public class FilterHandler implements StepHandler<Filter> {
-  @Override
-  public boolean canHandle(Step step) {
-    return step.getClass().equals(Filter.class);
-  }
+    @Override
+    public boolean canHandle(Step step) {
+        return step.getClass().equals(Filter.class);
+    }
 
   @Override
   public ProcessorDefinition handle(Filter step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
-    Predicate predicate = routeBuilder.getMandatoryPredicate(step, step.getExpression());
+    Predicate predicate = routeBuilder.getMandatorySimplePredicate(step, step.getExpression());
     FilterDefinition filter = route.filter(predicate);
     return routeBuilder.addSteps(filter, step.getSteps());
   }
 }
+

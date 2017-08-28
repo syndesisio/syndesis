@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 
 /**
  */
@@ -32,7 +33,8 @@ public class ModelUnmarshalTest {
 
     @Test
     public void testUnarshal() throws Exception {
-        SyndesisModel config = SyndesisHelpers.findFromFolder(getTestResources());
+        SyndesisModel config = SyndesisHelpers.tryFindFromFolder(getTestResources());
+        assertNotNull(config);
         List<Flow> rules = config.getFlows();
         assertThat(rules).isNotEmpty();
 

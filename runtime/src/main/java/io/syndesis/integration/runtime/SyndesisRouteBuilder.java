@@ -23,6 +23,7 @@ import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.integration.model.steps.Function;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.runtime.designer.SingleMessageRoutePolicyFactory;
+import io.syndesis.integration.runtime.util.JsonSimplePredicate;
 import io.syndesis.integration.support.Strings;
 import org.apache.camel.Expression;
 import org.apache.camel.Predicate;
@@ -143,13 +144,7 @@ public class SyndesisRouteBuilder extends RouteBuilder {
                         uri += "?method=" + method;
                     }
                     route = fromOrTo(route, name, uri, message);
-
-                    message.append(functionName);
-                    if (method != null) {
-                        message.append("." + method + "()");
-                    } else {
-                        message.append(".main()");
-                    }
+                    message.append(functionName).append(".").append(method != null ? method : "main").append("()");
                 }
             } else if (item instanceof Endpoint) {
                 Endpoint invokeEndpoint = (Endpoint) item;
@@ -197,10 +192,9 @@ public class SyndesisRouteBuilder extends RouteBuilder {
         throw new IllegalStateException("Unknown step kind: " + item + " of class: " + item.getClass().getName());
     }
 
-    public Predicate getMandatoryPredicate(Step step, String expression) {
+    public Predicate getMandatorySimplePredicate(Step step, String expression) {
         Objects.requireNonNull(expression, "No expression specified for step " + step);
-        Language jsonpath = getLanguage();
-        Predicate answer = jsonpath.createPredicate(expression);
+        Predicate answer = new JsonSimplePredicate(expression, getContext());
         Objects.requireNonNull(answer, "No predicate created from: " + expression);
         return answer;
     }
@@ -228,17 +222,13 @@ public class SyndesisRouteBuilder extends RouteBuilder {
 
     protected RouteDefinition fromOrTo(RouteDefinition route, String name, String uri, StringBuilder message) {
         if (route == null) {
-            String trigger = uri;
-            if (Strings.isEmpty(trigger)) {
-                trigger = DEFAULT_TRIGGER_URL;
-            }
+            String trigger = !Strings.isEmpty(uri) ? uri : DEFAULT_TRIGGER_URL;
             message.append(name);
             message.append("() ");
 
             if (trigger.equals("http")) {
                 trigger = DEFAULT_HTTP_ENDPOINT_PREFIX;
-            } else if (trigger.startsWith("http:") || trigger.startsWith("https:") ||
-                    trigger.startsWith("http://") || trigger.startsWith("https://")) {
+            } else if (trigger.startsWith("http:") || trigger.startsWith("https:")) {
 
                 String host = getURIHost(trigger);
                 if (localHosts.contains(host)) {
@@ -248,17 +238,7 @@ public class SyndesisRouteBuilder extends RouteBuilder {
                     // lets add the HTTP endpoint prefix
 
                     // is there any context-path
-                    String path = trigger.startsWith("https:") ? trigger.substring(6) : null;
-                    if (path == null) {
-                        path = trigger.startsWith("http:") ? trigger.substring(5) : null;
-                    }
-                    if (path == null) {
-                        path = trigger.startsWith("https://") ? trigger.substring(8) : null;
-                    }
-                    if (path == null) {
-                        path = trigger.startsWith("http://") ? trigger.substring(7) : null;
-                    }
-
+                    String path = stripPrefix(trigger, "https://","http://","http:","https:");
                     if (path != null) {
                         // keep only context path
                         if (path.contains("/")) {
@@ -279,6 +259,15 @@ public class SyndesisRouteBuilder extends RouteBuilder {
             route.to(uri);
         }
         return route;
+    }
+
+    private String stripPrefix(String trigger, String ... prefixes) {
+        for (String prefix : prefixes) {
+            if (trigger.startsWith(prefix)) {
+                return trigger.substring(prefix.length());
+            }
+        }
+        return null;
     }
 
     public String convertEndpointURI(String uri) {

@@ -89,8 +89,8 @@ public class ChoiceTest extends SyndesisTestSupport {
     protected void addSyndesisFlows(SyndesisModel syndesis) {
         Flow flow = syndesis.createFlow().endpoint(START_URI);
         Choice choice = flow.choice();
-        choice.when("$.[?(@.name == 'James')]").endpoint(MATCHED_JAMES_URI);
-        choice.when("$.[?(@.name == 'Jimmi')]").endpoint(MATCHED_JIMMI_URI);
+        choice.when("${body[name]} == 'James'").endpoint(MATCHED_JAMES_URI);
+        choice.when("${body[name]} == 'Jimmi'").endpoint(MATCHED_JIMMI_URI);
         choice.otherwise().endpoint(OTHERWISE_URI);
         flow.endpoint(ALL_MESSAGES_URI);
     }
