@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -39,8 +39,13 @@ export class FlowViewStepComponent extends ChildAwarePage {
     public router: Router,
     private stepStore: StepStore,
     private modalService: ModalService,
+    private detector: ChangeDetectorRef,
   ) {
     super(currentFlow, route, router);
+  }
+
+  getDeleteModalId() {
+    return 'delete-integration-step-' + this.position;
   }
 
   showTooltip() {
@@ -98,8 +103,9 @@ export class FlowViewStepComponent extends ChildAwarePage {
   }
 
   deletePrompt() {
-    this.modalService.show('delete-integration-step-' + this.position)
-      .then(result => result ? this.deleteStep() : false);
+    this.modalService
+      .show('delete-integration-step-' + this.position)
+      .then(result => (result ? this.deleteStep() : false));
   }
 
   deleteStep() {
@@ -111,19 +117,26 @@ export class FlowViewStepComponent extends ChildAwarePage {
       kind: 'integration-remove-step',
       position: position,
       onSave: () => {
-        if (isFirst) {
-          this.router.navigate(['connection-select', position], {
-            relativeTo: this.route,
-          });
-        } else if (isLast) {
-          this.router.navigate(['connection-select', position], {
-            relativeTo: this.route,
-          });
-        } else {
-          this.router.navigate(['save-or-add-step'], {
-            relativeTo: this.route,
-          });
-        }
+        setTimeout(() => {
+          try {
+            this.detector.detectChanges();
+          } catch (err) {
+            // ignore
+          }
+          if (isFirst) {
+            this.router.navigate(['connection-select', position], {
+              relativeTo: this.route,
+            });
+          } else if (isLast) {
+            this.router.navigate(['connection-select', position], {
+              relativeTo: this.route,
+            });
+          } else {
+            this.router.navigate(['save-or-add-step'], {
+              relativeTo: this.route,
+            });
+          }
+        }, 10);
       },
     });
   }

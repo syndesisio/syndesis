@@ -122,9 +122,14 @@ export class FlowViewComponent extends ChildAwarePage
       kind: 'integration-insert-step',
       position: position,
       onSave: () => {
-        this.router.navigate(['step-select', position + 1], {
-          relativeTo: this.route,
-        });
+        setTimeout(() => {
+          try {
+            this.detector.detectChanges();
+          } catch (err) {}
+          this.router.navigate(['step-select', position + 1], {
+            relativeTo: this.route,
+          });
+        }, 10);
       },
     });
   }
@@ -137,9 +142,14 @@ export class FlowViewComponent extends ChildAwarePage
       kind: 'integration-insert-connection',
       position: position,
       onSave: () => {
-        this.router.navigate(['connection-select', position + 1], {
-          relativeTo: this.route,
-        });
+        setTimeout(() => {
+          try {
+            this.detector.detectChanges();
+          } catch (err) {}
+          this.router.navigate(['connection-select', position + 1], {
+            relativeTo: this.route,
+          });
+        }, 10);
       },
     });
   }
@@ -195,7 +205,9 @@ export class FlowViewComponent extends ChildAwarePage
         this.popovers.forEach(popover => popover.show());
         break;
     }
-    this.detector.detectChanges();
+    try {
+      this.detector.detectChanges();
+    } catch (err) {}
   }
 
   ngOnInit() {}

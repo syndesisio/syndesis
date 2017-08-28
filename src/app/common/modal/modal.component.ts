@@ -1,12 +1,20 @@
-import { Component, OnInit, OnDestroy, Input, Output, ViewChild, TemplateRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  OnChanges,
+  Input,
+  Output,
+  ViewChild,
+  TemplateRef,
+} from '@angular/core';
 import { ModalService } from './modal.service';
 
 @Component({
   selector: 'syndesis-modal',
   templateUrl: './modal.component.html',
 })
-export class ModalComponent implements OnInit, OnDestroy {
-
+export class ModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() id = 'modal';
   @Input() title: string;
   @Input() message: string;
@@ -21,6 +29,14 @@ export class ModalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.modalService.unregisterModal(this.id);
+  }
+
+  ngOnChanges(changes: any): void {
+    const idChange = changes['id'];
+    if (idChange && idChange.previousValue) {
+      this.modalService.unregisterModal(idChange.previousValue);
+      this.modalService.registerModal(idChange.currentValue, this.template);
+    }
   }
 
   ok(): void {
