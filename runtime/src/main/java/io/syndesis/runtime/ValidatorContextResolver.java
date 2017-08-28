@@ -24,18 +24,14 @@ import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import javax.validation.executable.ExecutableType;
 import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Provider;
 
 import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
 import org.hibernate.validator.resourceloading.PlatformResourceBundleLocator;
 import org.hibernate.validator.spi.resourceloading.ResourceBundleLocator;
 import org.jboss.resteasy.plugins.validation.GeneralValidatorImpl;
 import org.jboss.resteasy.spi.validation.GeneralValidator;
-import org.springframework.stereotype.Component;
 
-@Component
-@Provider
-public class ValidatorContextResolver implements ContextResolver<GeneralValidator> {
+class ValidatorContextResolver implements ContextResolver<GeneralValidator> {
 
     private final ValidatorFactory validatorFactory;
 
