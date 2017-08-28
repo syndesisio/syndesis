@@ -186,6 +186,10 @@ export abstract class AbstractStore<
     const updated = new Subject<T>();
     this.service.update(entity).subscribe(
       e => {
+        // PUT may not return a response, we'll massage it
+        if (Array.isArray(e)) {
+          e = entity;
+        }
         updated.next(this.plain(e));
       },
       error => {

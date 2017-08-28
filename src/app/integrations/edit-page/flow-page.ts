@@ -60,7 +60,13 @@ export abstract class FlowPage implements OnDestroy {
     this.currentFlow.events.emit({
       kind: 'integration-save',
       action: (i: Integration) => {
-        router.navigate(['/integrations', i.id]);
+        if (i.id) {
+          // Go to detail page
+          router.navigate(['/integrations', i.id]);
+        } else {
+          // Just in case safety net...
+          router.navigate(['/integrations']);
+        }
       },
       error: error => {
         setTimeout(() => {
