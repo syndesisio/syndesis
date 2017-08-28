@@ -44,6 +44,7 @@
       <!-- Delete Icon -->
       <i *ngIf="showDelete()"
          class="delete-icon fa fa-lg fa-trash"
+         title="Delete this connection"
          (click)="deletePrompt()"></i>
 
 
@@ -89,6 +90,7 @@
       <!-- Delete Icon -->
       <i *ngIf="showDelete()"
          class="delete-icon fa fa-lg fa-trash"
+         title="Delete this step"
          [class.add-step-or-connection]="step.stepKind !== 'endpoint'"
          (click)="deletePrompt()"></i>
 
