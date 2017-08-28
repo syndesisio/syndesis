@@ -399,7 +399,7 @@ export class CurrentFlow {
           const integration = this.getIntegrationClone();
           const sub = this.store.updateOrCreate(integration).subscribe(
             (i: Integration) => {
-              log.debugc(
+              log.infoc(
                 () => 'Saved integration: ' + JSON.stringify(i, undefined, 2),
                 category,
               );
@@ -410,7 +410,7 @@ export class CurrentFlow {
               sub.unsubscribe();
             },
             (reason: any) => {
-              log.debugc(
+              log.infoc(
                 () =>
                   'Error saving integration: ' +
                   JSON.stringify(reason, undefined, 2),
