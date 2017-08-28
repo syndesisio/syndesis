@@ -54,6 +54,10 @@ public class JsonSimplePredicate implements Predicate {
             // Therefor we set a map instead of the string
             Map jsonDocument = jsonStringAsMap((String) msgBody, exchange);
             if (jsonDocument != null) {
+                // Clone the exchange and set the JSON message converted to a Map / List as in message.
+                // The intention is that only this predicate acts on the converted value,
+                // but the original in-message still continues to carry the same format
+                // The predicated is supposed to be read only with respect to the incoming messaeg.
                 exchangeToCheck = ExchangeHelper.createCopy(exchange, true);
                 exchangeToCheck.getIn().setBody(jsonDocument);
             }

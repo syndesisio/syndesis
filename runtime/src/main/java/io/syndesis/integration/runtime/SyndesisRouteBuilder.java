@@ -53,6 +53,8 @@ import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import static java.util.Optional.ofNullable;
+
 /**
  * A Camel {@link RouteBuilder} which maps the SyndesisModel rules to Camel routes
  */
@@ -144,7 +146,7 @@ public class SyndesisRouteBuilder extends RouteBuilder {
                         uri += "?method=" + method;
                     }
                     route = fromOrTo(route, name, uri, message);
-                    message.append(functionName).append(".").append(method != null ? method : "main").append("()");
+                    message.append(functionName).append(".").append(ofNullable(method).orElse("main")).append("()");
                 }
             } else if (item instanceof Endpoint) {
                 Endpoint invokeEndpoint = (Endpoint) item;
@@ -238,7 +240,7 @@ public class SyndesisRouteBuilder extends RouteBuilder {
                     // lets add the HTTP endpoint prefix
 
                     // is there any context-path
-                    String path = stripPrefix(trigger, "https://","http://","http:","https:");
+                    String path = getWithoutPrefixIfItStartsWithPrefix(trigger, "https://", "http://", "http:", "https:");
                     if (path != null) {
                         // keep only context path
                         if (path.contains("/")) {
@@ -261,7 +263,7 @@ public class SyndesisRouteBuilder extends RouteBuilder {
         return route;
     }
 
-    private String stripPrefix(String trigger, String ... prefixes) {
+    private String getWithoutPrefixIfItStartsWithPrefix(String trigger, String ... prefixes) {
         for (String prefix : prefixes) {
             if (trigger.startsWith(prefix)) {
                 return trigger.substring(prefix.length());
