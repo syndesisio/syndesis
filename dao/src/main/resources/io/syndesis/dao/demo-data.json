@@ -106,9 +106,7 @@
             },
             "name": "Twitter Mention",
             "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "twitter-mention",
-            "properties": {
-            }
+            "camelConnectorPrefix": "twitter-mention"
           },
           "configuredProperties": {
           }
@@ -153,9 +151,7 @@
             },
             "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "salesforce-upsert-contact",
-            "connectorId": "io.syndesis:salesforce-upsert-contact-connector:latest",
-            "properties": {
-            }
+            "connectorId": "io.syndesis:salesforce-upsert-contact-connector:latest"
           },
           "configuredProperties": {
           }
@@ -199,22 +195,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "properties": {
-              "period": {
-                "kind": "parameter",
-                "displayName": "Period",
-                "group": "consumer",
-                "required": false,
-                "type": "integer",
-                "javaType": "long",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "defaultValue": 10000,
-                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
-              }
-            }
+            "camelConnectorPrefix": "periodic-timer"
           },
           "configuredProperties": {
             "period": "500"
@@ -249,22 +230,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-post"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -291,22 +257,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-get"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"
@@ -350,22 +301,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "properties": {
-              "period": {
-                "kind": "parameter",
-                "displayName": "Period",
-                "group": "consumer",
-                "required": false,
-                "type": "integer",
-                "javaType": "long",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "defaultValue": 10000,
-                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
-              }
-            }
+            "camelConnectorPrefix": "periodic-timer"
           },
           "configuredProperties": {
             "period": "500"
@@ -400,22 +336,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-post"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -442,22 +363,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-get"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"
@@ -501,22 +407,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "properties": {
-              "period": {
-                "kind": "parameter",
-                "displayName": "Period",
-                "group": "consumer",
-                "required": false,
-                "type": "integer",
-                "javaType": "long",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "defaultValue": 10000,
-                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
-              }
-            }
+            "camelConnectorPrefix": "periodic-timer"
           },
           "configuredProperties": {
             "period": "500"
@@ -551,22 +442,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-post"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -593,22 +469,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-get"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"
@@ -652,22 +513,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "properties": {
-              "period": {
-                "kind": "parameter",
-                "displayName": "Period",
-                "group": "consumer",
-                "required": false,
-                "type": "integer",
-                "javaType": "long",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "defaultValue": 10000,
-                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
-              }
-            }
+            "camelConnectorPrefix": "periodic-timer"
           },
           "configuredProperties": {
             "period": "500"
@@ -702,22 +548,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-post"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -744,22 +575,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-get"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"
@@ -803,22 +619,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "properties": {
-              "period": {
-                "kind": "parameter",
-                "displayName": "Period",
-                "group": "consumer",
-                "required": false,
-                "type": "integer",
-                "javaType": "long",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "defaultValue": 10000,
-                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
-              }
-            }
+            "camelConnectorPrefix": "periodic-timer"
           },
           "configuredProperties": {
             "period": "500"
@@ -853,22 +654,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-post"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -895,22 +681,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-get"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"
@@ -954,22 +725,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "properties": {
-              "period": {
-                "kind": "parameter",
-                "displayName": "Period",
-                "group": "consumer",
-                "required": false,
-                "type": "integer",
-                "javaType": "long",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "defaultValue": 10000,
-                "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
-              }
-            }
+            "camelConnectorPrefix": "periodic-timer"
           },
           "configuredProperties": {
             "period": "500"
@@ -1004,22 +760,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-post"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -1046,22 +787,7 @@
                "kind" : "any"
             },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "properties": {
-              "httpUri": {
-                "kind": "path",
-                "displayName": "Http Uri",
-                "group": "producer",
-                "label": "producer",
-                "required": true,
-                "type": "string",
-                "javaType": "java.net.URI",
-                "tags":[],
-          "deprecated": false,
-                "secret": false,
-                "description": "The url of the HTTP endpoint to call."
-              }
-            }
+            "camelConnectorPrefix": "http-get"
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"

@@ -15,19 +15,19 @@
  */
 package io.syndesis.model.connection;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
-import io.syndesis.model.WithProperties;
 
 import org.immutables.value.Value;
 
-import java.io.Serializable;
-
 @Value.Immutable
 @JsonDeserialize(builder = Action.Builder.class)
-public interface Action extends WithId<Action>, WithName, WithProperties, Serializable {
+public interface Action extends WithId<Action>, WithName, Serializable {
 
     @Override
     default Kind getKind() {
@@ -53,5 +53,7 @@ public interface Action extends WithId<Action>, WithName, WithProperties, Serial
 
     class Builder extends ImmutableAction.Builder {
     }
+
+    ActionDefinition definition();
 
 }

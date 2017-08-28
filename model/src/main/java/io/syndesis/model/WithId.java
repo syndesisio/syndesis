@@ -23,4 +23,12 @@ public interface WithId<T extends WithId<T>> extends WithKind {
 
     T withId(String id);
 
+    default boolean idEquals(final String another) {
+        final Optional<String> id = getId();
+        if (id.isPresent()) {
+            return id.get().equals(another);
+        }
+
+        return false;
+    }
 }

@@ -76,8 +76,6 @@
              "kind" : "java",
              "type" : "twitter4j.Status"
           },
-          "properties": {
-          },
           "id": "io.syndesis:twitter-mention-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-mention"
@@ -88,48 +86,54 @@
           "id": "io.syndesis:twitter-search-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-search-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-search",
-          "properties": {
-            "filterOld": {
-              "kind": "parameter",
-              "displayName": "Filter Old",
-              "group": "filter",
-              "label": "consumer,filter",
-              "required": false,
-              "type": "boolean",
-              "javaType": "boolean",
-              "tags":[],
-          "deprecated": false,
-              "secret": false,
-              "defaultValue": true,
-              "description": "Filter out old tweets that have previously been polled. This state is stored in memory only and is based on last tweet id."
-            },
-            "keywords": {
-              "kind": "parameter",
-              "displayName": "Keywords",
-              "group": "filter",
-              "label": "consumer,filter",
-              "required": false,
-              "type": "string",
-              "javaType": "java.lang.String",
-              "tags":[],
-          "deprecated": false,
-              "secret": false,
-              "description": "Multiple search values can be separated with comma"
-            },
-           "delay": {
-              "kind": "parameter",
-              "displayName": "Delay",
-              "group": "scheduler",
-              "label": "consumer,scheduler",
-              "required": false,
-              "type": "integer",
-              "javaType": "long",
-              "tags":[],
-          "deprecated": false,
-              "secret": false,
-              "defaultValue": 5000,
-              "description": "Milliseconds before the next poll."
-            }
+          "definition": {
+            "propertyDefinitionSteps": [{
+              "name": "Search criteria",
+              "description": "Specify criteria for search",
+              "properties": {
+                "filterOld": {
+                  "kind": "parameter",
+                  "displayName": "Filter Old",
+                  "group": "filter",
+                  "label": "consumer,filter",
+                  "required": false,
+                  "type": "boolean",
+                  "javaType": "boolean",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "defaultValue": true,
+                  "description": "Filter out old tweets that have previously been polled. This state is stored in memory only and is based on last tweet id."
+                },
+                "keywords": {
+                  "kind": "parameter",
+                  "displayName": "Keywords",
+                  "group": "filter",
+                  "label": "consumer,filter",
+                  "required": false,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "description": "Multiple search values can be separated with comma"
+                },
+                "delay": {
+                  "kind": "parameter",
+                  "displayName": "Delay",
+                  "group": "scheduler",
+                  "label": "consumer,scheduler",
+                  "required": false,
+                  "type": "integer",
+                  "javaType": "long",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "defaultValue": 5000,
+                  "description": "Milliseconds before the next poll."
+                }
+              }
+            }]
           }
         },
         {
@@ -292,24 +296,30 @@
           "outputDataShape": {
              "kind" : "none"
           },
-          "properties": {
-            "sObjectIdName": {
-              "kind": "parameter",
-              "displayName": "SObject Id Name",
-              "group": "common",
-              "required": false,
-              "type": "string",
-              "javaType": "java.lang.String",
-              "tags":[],
-          "deprecated": false,
-              "secret": false,
-              "componentProperty": false,
-              "defaultValue": "TwitterScreenName__c",
-              "description": "SObject external ID field name"
-            }
-          },
           "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-upsert-contact"
+          "camelConnectorPrefix": "salesforce-upsert-contact",
+          "definition": {
+            "propertyDefinitionSteps": [{
+              "name": "Unique field",
+              "description": "Specify field to hold the identifying value",
+              "properties": {
+                "sObjectIdName": {
+                  "kind": "parameter",
+                  "displayName": "SObject Id Name",
+                  "group": "common",
+                  "required": false,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "TwitterScreenName__c",
+                  "description": "SObject external ID field name"
+                }
+              }
+            }]
+          }
         },{
           "id": "io.syndesis:salesforce-create-opportunity-connector:latest",
           "description": "Create a new Salesforce opportunity based on the input message",
@@ -370,24 +380,30 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "properties": {
-            "httpUri": {
-              "kind": "path",
-              "displayName": "Http Uri",
-              "group": "producer",
-              "label": "producer",
-              "required": true,
-              "type": "string",
-              "javaType": "java.net.URI",
-              "tags":[],
-          "deprecated": false,
-              "secret": false,
-              "componentProperty": false,
-              "description": "The url of the HTTP endpoint to call."
-            }
-          },
           "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-get"
+          "camelConnectorPrefix": "http-get",
+          "definition": {
+            "propertyDefinitionSteps": [{
+              "name": "HTTP Endpoint",
+              "description": "Specify HTTP address to fetch the data from",
+              "properties": {
+                "httpUri": {
+                  "kind": "path",
+                  "displayName": "Http Uri",
+                  "group": "producer",
+                  "label": "producer",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.net.URI",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "description": "The url of the HTTP endpoint to call."
+                }
+              }
+            }]
+          }
         },
         {
           "id": "io.syndesis:http-post-connector:latest",
@@ -399,24 +415,30 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "properties": {
-            "httpUri": {
-              "kind": "path",
-              "displayName": "Http Uri",
-              "group": "producer",
-              "label": "producer",
-              "required": true,
-              "type": "string",
-              "javaType": "java.net.URI",
-              "tags":[],
-          "deprecated": false,
-              "secret": false,
-              "componentProperty": false,
-              "description": "The url of the HTTP endpoint to call."
-            }
-          },
           "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-post"
+          "camelConnectorPrefix": "http-post",
+          "definition": {
+            "propertyDefinitionSteps": [{
+              "name": "HTTP Endpoint",
+              "description": "Specify HTTP address to send the data to",
+              "properties": {
+                "httpUri": {
+                  "kind": "path",
+                  "displayName": "Http Uri",
+                  "group": "producer",
+                  "label": "producer",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.net.URI",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "description": "The url of the HTTP endpoint to call."
+                }
+              }
+            }]
+          }
         }
       ]
     }
@@ -441,24 +463,30 @@
           "outputDataShape": {
              "kind" : "any"
           },
-          "properties": {
-            "period": {
-              "kind": "parameter",
-              "displayName": "Period",
-              "group": "consumer",
-              "required": false,
-              "type": "integer",
-              "javaType": "long",
-              "tags":[],
-          "deprecated": false,
-              "secret": false,
-              "componentProperty": false,
-              "defaultValue": 10000,
-              "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
-            }
-          },
           "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "periodic-timer"
+          "camelConnectorPrefix": "periodic-timer",
+          "definition": {
+            "propertyDefinitionSteps": [{
+              "name": "Timer parameters",
+              "description": "Specify the period for the timer",
+              "properties": {
+                "period": {
+                  "kind": "parameter",
+                  "displayName": "Period",
+                  "group": "consumer",
+                  "required": false,
+                  "type": "integer",
+                  "javaType": "long",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": 10000,
+                  "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+                }
+              }
+            }]
+          }
         }
       ]
     }
@@ -512,8 +540,6 @@
             "kind": "java",
             "type": "io.syndesis.connector.tradeinsight.Suggestion"
           },
-          "properties": {
-          },
           "id": "io.syndesis:trade-insight-buy-connector:latest",
           "camelConnectorGAV": "io.syndesis:trade-insight-buy-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "trade-insight-buy"
@@ -528,8 +554,6 @@
             "kind": "java",
             "type": "io.syndesis.connector.tradeinsight.Suggestion"
           },
-          "properties": {
-          },
           "id": "io.syndesis:trade-insight-sell-connector:latest",
           "camelConnectorGAV": "io.syndesis:trade-insight-sell-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "trade-insight-sell"
@@ -543,8 +567,6 @@
           "outputDataShape": {
             "kind": "java",
             "type": "io.syndesis.connector.tradeinsight.Suggestion"
-          },
-          "properties": {
           },
           "id": "io.syndesis:trade-insight-top-connector:latest",
           "camelConnectorGAV": "io.syndesis:trade-insight-top-connector:@syndesis-connectors.version@",
@@ -602,8 +624,6 @@
           "outputDataShape": {
             "kind": "none"
           },
-          "properties": {
-          },
           "id": "io.syndesis:day-trade-place-connector:latest",
           "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "day-trade-place"
@@ -619,8 +639,6 @@
             "kind": "java",
             "type": "io.syndesis.connector.daytrade.Trade"
           },
-          "properties": {
-          },
           "id": "io.syndesis:day-trade-place-connector:latest",
           "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "day-trade-place"
@@ -634,8 +652,6 @@
           "outputDataShape": {
             "kind": "java",
             "type": "io.syndesis.connector.daytrade.Trade"
-          },
-          "properties": {
           },
           "id": "io.syndesis:day-trade-place-connector:latest",
           "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
