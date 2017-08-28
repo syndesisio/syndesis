@@ -8,14 +8,12 @@
   </ng-template>
 
   <!-- Delete Modal Container -->
-
-  <syndesis-modal [id]="'delete-integration-step-' + position"
+  <syndesis-modal [id]="getDeleteModalId()"
                   title="Confirm Delete?"
                   message="Are you sure you would like to delete this step?">
   </syndesis-modal>
 
   <!-- Icon Progress Line -->
-
   <div class="col-md-3 progress-line">
     <p [class]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
        [popover]="tooltipPopover"

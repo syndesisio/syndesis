@@ -281,7 +281,7 @@ export class CurrentFlow {
 
   private maybeDoAction(thing: any) {
     if (thing && typeof thing === 'function') {
-      thing();
+      thing.call(thing);
     }
   }
 
@@ -348,7 +348,14 @@ export class CurrentFlow {
           step.configuredProperties = properties;
           this.steps[position] = step;
           this.maybeDoAction(event['onSave']);
-          log.infoc(() => 'Set properties at position: ' + position + ' step: ' + JSON.stringify(step), category);
+          log.infoc(
+            () =>
+              'Set properties at position: ' +
+              position +
+              ' step: ' +
+              JSON.stringify(step),
+            category,
+          );
         }
         break;
       case 'integration-set-action':
@@ -454,8 +461,8 @@ export class CurrentFlow {
   set integration(i: Integration) {
     this._integration = <Integration>i;
     if (i && i.steps && i.steps.length) {
-      i.steps = i.steps.filter((step) => step !== null);
-      i.steps.forEach((step) => {
+      i.steps = i.steps.filter(step => step !== null);
+      i.steps.forEach(step => {
         if ('filterExpression' in step) {
           step.stepKind = 'rule-filter';
           step.name = 'Rule Filter';
