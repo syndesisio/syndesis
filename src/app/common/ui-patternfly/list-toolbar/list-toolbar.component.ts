@@ -16,6 +16,7 @@ import {
   ActionConfig,
   FilterConfig,
   FilterEvent,
+  FilterField,
   SortConfig,
   SortField,
   SortEvent,
@@ -36,6 +37,7 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
   @Input() filteredItems: Subject<Array<T>>;
   @Input() actionTemplate: TemplateRef<any>;
   @Input() viewTemplate: TemplateRef<any>;
+  @Input() filterFields: Array<FilterField> = [];
   toolbarConfig: ToolbarConfig;
   private _allItems: Array<T> = [];
   private _filteredItems: Array<T> = [];
@@ -54,7 +56,8 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
         type        : 'text',
       }],
       appliedFilters : [],
-    };
+    } as FilterConfig;
+    filterConfig.fields.push(...this.filterFields);
     const sortConfig = {
       fields : [{
         id       : 'name',
@@ -103,8 +106,9 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
           ? item['tags'].some(tag => tag === filter.query.value)
           : false)
         : this.propertyFilter.transform(items, {
-            filter       : filter.value,
-            propertyName : filter.field.id,
+            filter: filter.value,
+            propertyName: filter.field.id,
+            exact: filter.field.type !== 'text',
           }), this._allItems);
     this.toolbarConfig.filterConfig.resultsCount = result.length;
     this._filteredItems = result;
