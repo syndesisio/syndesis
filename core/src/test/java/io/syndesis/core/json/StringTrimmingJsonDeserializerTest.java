@@ -27,7 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class StringTrimmingJsonDeserializerTest {
 
