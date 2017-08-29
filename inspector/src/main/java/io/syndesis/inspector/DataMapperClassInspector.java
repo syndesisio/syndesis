@@ -17,6 +17,11 @@
 package io.syndesis.inspector;
 
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.core.Json;
 import io.syndesis.core.SyndesisServerException;
@@ -24,12 +29,8 @@ import org.infinispan.Cache;
 import org.infinispan.manager.CacheContainer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @Component
 public class DataMapperClassInspector implements ClassInspector {
@@ -69,7 +70,7 @@ public class DataMapperClassInspector implements ClassInspector {
         if (cache.containsKey(fullyQualifiedName)) {
             return cache.get(fullyQualifiedName);
         }
-        List<String> paths = getPathsForJavaClassName(getClassName(fullyQualifiedName), fullyQualifiedName, new ArrayList<>());
+        List<String> paths = getPathsForJavaClassName("", fullyQualifiedName, new ArrayList<>());
         cache.put(fullyQualifiedName, paths);
         return paths;
     }
@@ -112,11 +113,13 @@ public class DataMapperClassInspector implements ClassInspector {
                                 String fieldClassName = f.get(CLASSNAME).asText();
                                 Boolean isPrimitive = f.get(PRIMITIVE).asBoolean();
                                 if (isPrimitive || isTerminal(fieldClassName)) {
-                                    paths.add(prefix + DEFAULT_SEPARATOR + name);
+                                    paths.add(prependPrefix(prefix,name));
                                     continue;
                                 }
 
-                                paths.addAll(getPathsForJavaClassName(prefix + DEFAULT_SEPARATOR + name, fieldClassName, visited));
+                                paths.addAll(
+                                    getPathsForJavaClassName(
+                                        prependPrefix(prefix,name), fieldClassName, visited));
                             }
                         }
                     }
@@ -127,6 +130,10 @@ public class DataMapperClassInspector implements ClassInspector {
             throw SyndesisServerException.launderThrowable(e);
         }
         return paths;
+    }
+
+    private String prependPrefix(String prefix, String name) {
+        return StringUtils.hasLength(prefix) ? prefix + DEFAULT_SEPARATOR + name : name;
     }
 
     protected static String getClassName(String fullyQualifiedName) {
