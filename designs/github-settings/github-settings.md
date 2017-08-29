@@ -38,6 +38,14 @@
 
 ![Image of github settings page](img/github-settings-img-10.png)
 
+![Image of github settings page](img/github-settings-img-9-complete-setup.png)
+
+1. A button of Complete Setup would appear if all required information has been collected. User clicks on the button to proceed.
+
+![Image of github settings page](img/github-settings-img-9-loading.png)
+
+1. While syncing is being finalized, a progress indicator appears on screen.  
+
 ![Image of github settings page](img/github-settings-img-11.png)
 
 1. After about ~30 seconds of user making the selection for step 3, the Success Message will display and user can click Get Started to go to Syndesis Home page.
