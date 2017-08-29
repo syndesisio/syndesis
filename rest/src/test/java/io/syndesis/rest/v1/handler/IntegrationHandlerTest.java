@@ -25,6 +25,7 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.ClassInspector;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.DataShape;
+import io.syndesis.model.connection.DataShapeKinds;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.SimpleStep;
@@ -32,9 +33,7 @@ import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.syndesis.model.connection.DataShapeKinds.JAVA;
-import static io.syndesis.model.connection.DataShapeKinds.NONE;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,33 +46,31 @@ public class IntegrationHandlerTest {
 
     private IntegrationHandler handler;
     private ClassInspector inspector;
-    private Validator validator;
-    private DataManager manager;
 
     @Before
-    public void setup() {
-        manager = mock(DataManager.class);
-        validator = mock(Validator.class);
+    public void setUp() {
+        DataManager manager = mock(DataManager.class);
+        Validator validator = mock(Validator.class);
         inspector = mock(ClassInspector.class);
         handler = new IntegrationHandler(manager, validator, inspector);
     }
 
     @Test
-    public void filterOptions_simple() {
+    public void filterOptionsSimple() {
         when(inspector.getPaths("twitter4j.Status")).thenReturn(Arrays.asList("paramA", "paramB"));
         Integration integration =
-            createIntegrationFromDataShapes(dataShape(JAVA, "twitter4j.Status"),null,dataShape(NONE));
+            createIntegrationFromDataShapes(dataShape(DataShapeKinds.JAVA, "twitter4j.Status"), null, dataShape(DataShapeKinds.NONE));
 
         FilterOptions options = handler.getFilterOptions(integration, -1);
         assertThat(options.getPaths()).hasSize(2).contains("paramA","paramB");
     }
 
     @Test
-    public void filterOptions_multipleOutputShapes() {
+    public void filterOptionsMultipleOutputShapes() {
         when(inspector.getPaths("twitter4j.Status")).thenReturn(Arrays.asList("paramA", "paramB"));
         when(inspector.getPaths("blubber.bla")).thenReturn(Arrays.asList("paramY", "paramZ"));
         Integration integration =
-            createIntegrationFromDataShapes(dataShape(JAVA, "blubber.bla"),null, dataShape(JAVA, "twitter4j.Status"));
+            createIntegrationFromDataShapes(dataShape(DataShapeKinds.JAVA, "blubber.bla"),null, dataShape(DataShapeKinds.JAVA, "twitter4j.Status"));
 
         assertThat(handler.getFilterOptions(integration, -1).getPaths())
             .hasSize(2).contains("paramA", "paramB");
@@ -83,9 +80,9 @@ public class IntegrationHandlerTest {
     }
 
     @Test
-    public void filterOptions_noOutputShape() {
+    public void filterOptionsNoOutputShape() {
         Integration integration =
-            createIntegrationFromDataShapes(dataShape(NONE), null);
+            createIntegrationFromDataShapes(dataShape(DataShapeKinds.NONE), null);
 
         FilterOptions options = handler.getFilterOptions(integration, -1);
         assertThat(options.getPaths()).isEmpty();
