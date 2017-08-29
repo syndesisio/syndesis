@@ -15,6 +15,9 @@
  */
 package io.syndesis.model.filter;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
@@ -27,7 +30,7 @@ public interface FilterRule {
 
     /**
      *  Path expression within the message on which to filter. Can be part of header, body, properties
-     * The path must match the syntax used by the simple expression language as path
+     * The path is a simple dot notation to the property to filter.
      */
     String getPath();
 
@@ -47,8 +50,17 @@ public interface FilterRule {
      * Get the simple filter expression for this rule
      */
     default String getFilterExpression() {
-        return "${" + getPath() + "} " + getOp() + " '" + getValue() + "'";
+        return String.format("%s %s '%s'",
+                             convertPathToSimple(),
+                             getOp(),
+                             getValue());
+    }
 
+    default String convertPathToSimple() {
+        return String.format("${body%s}",
+                             Arrays.stream(getPath().split("\\."))
+                                   .map(s -> "[" + s + "]")
+                                   .collect(Collectors.joining()));
     }
 
     class Builder extends ImmutableFilterRule.Builder { }

@@ -39,7 +39,7 @@ public class RuleFilterStepVisitorTest {
             .build();
 
         // Reading notes: Unit tests are like personal diaries. Feel honoured when you have the chance to be part of them ;-)
-        assertEquals("${person.name} == 'Ioannis' && ${person.favoriteDrinks} contains 'Gin'", step.getFilterExpression());
+        assertEquals("${body[person][name]} == 'Ioannis' && ${body[person][favoriteDrinks]} contains 'Gin'", step.getFilterExpression());
     }
 
 }

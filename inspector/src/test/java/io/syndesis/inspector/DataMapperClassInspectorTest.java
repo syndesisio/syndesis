@@ -16,15 +16,15 @@
 
 package io.syndesis.inspector;
 
+import java.nio.charset.Charset;
+import java.util.List;
+
 import com.google.common.io.Resources;
 import io.fabric8.mockwebserver.DefaultMockServer;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
-
-import java.nio.charset.Charset;
-import java.util.List;
 
 public class DataMapperClassInspectorTest {
 
@@ -45,8 +45,8 @@ public class DataMapperClassInspectorTest {
         List<String> paths = dataMapperClassInspector.getPaths("twitter4j.StatusJSONImpl");
 
         Assert.assertNotNull(paths);
-        Assert.assertTrue(paths.contains("StatusJSONImpl.id"));
-        Assert.assertTrue(paths.contains("StatusJSONImpl.logger.infoEnabled"));
+        Assert.assertTrue(paths.contains("id"));
+        Assert.assertTrue(paths.contains("logger.infoEnabled"));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class DataMapperClassInspectorTest {
         List<String> paths = dataMapperClassInspector.getPaths("twitter4j.Status");
 
         Assert.assertNotNull(paths);
-        Assert.assertTrue(paths.contains("Status.id"));
+        Assert.assertTrue(paths.contains("id"));
     }
 
     @Test
