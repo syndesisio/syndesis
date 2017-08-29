@@ -139,10 +139,10 @@ public class IntegrationHandler extends BaseHandler
         List<? extends Step> steps = integration.getSteps().orElse(Collections.emptyList());
         Optional<DataShape> lastOutputShape = Optional.empty();
         for (int i = 0; i < steps.size(); i++) {
-            Step step = steps.get(i);
             if (position != -1 && position == i) {
                 return lastOutputShape;
             }
+            Step step = steps.get(i);
             if (step.getAction().isPresent()) {
                 DataShape shape = step.getAction().get().getOutputDataShape();
                 if (shape != null && DataShapeKinds.JAVA.equals(shape.getKind())) {

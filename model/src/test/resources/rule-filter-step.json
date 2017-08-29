@@ -4,6 +4,6 @@
   "stepKind": "rule-filter",
   "configuredProperties": {
     "predicate": "and",
-    "rules": "[{\"path\": \"body.text\",\"op\": \"==\",\"value\": \"antman\"},{\"path\": \"header.kind\",\"op\": \"=~\",\"value\": \"DC Comics\"}]"
+    "rules": "[{\"path\": \"text\",\"op\": \"==\",\"value\": \"antman\"},{\"path\": \"kind\",\"op\": \"=~\",\"value\": \"DC Comics\"}]"
   }
 }
