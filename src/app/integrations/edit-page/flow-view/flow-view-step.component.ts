@@ -105,7 +105,11 @@ export class FlowViewStepComponent extends ChildAwarePage {
   deletePrompt() {
     this.modalService
       .show('delete-integration-step-' + this.position)
-      .then(result => (result ? this.deleteStep() : false));
+      .then((modal) => {
+        if (modal.result) {
+          this.deleteStep();
+        }
+      });
   }
 
   deleteStep() {
