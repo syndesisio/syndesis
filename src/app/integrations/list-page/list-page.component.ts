@@ -3,8 +3,8 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
-import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
+import { FilterField } from 'patternfly-ng';
+
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integrations } from '../../model';
 
@@ -17,12 +17,17 @@ export class IntegrationsListPage implements OnInit {
   loading: Observable<boolean>;
   integrations: Observable<Integrations>;
   filteredIntegrations: Subject<Integrations> = new BehaviorSubject(<Integrations>{});
-
-  statusFilter: ObjectPropertyFilterConfig = {
-    filter: '',
-    propertyName: 'currentStatus',
-    exact: true,
-  };
+  filterFields: Array<FilterField> = [{
+    id: 'currentStatus',
+    title: 'State',
+    type: 'select',
+    placeholder: 'Filter by state...',
+    queries: [
+      { id: 'actived', value: 'Activated' },
+      { id: 'deactivated', value: 'Deactivated' },
+      { id: 'draft', value: 'Draft' },
+    ],
+  }];
 
   constructor(private store: IntegrationStore) {
     this.integrations = this.store.list;

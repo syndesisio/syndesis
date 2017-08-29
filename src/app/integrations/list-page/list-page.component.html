@@ -1,6 +1,7 @@
 <syndesis-list-toolbar [items]="integrations"
                        [filteredItems]="filteredIntegrations"
-                       [viewTemplate]="viewTemplate">
+                       [viewTemplate]="viewTemplate"
+                       [filterFields]="filterFields">
   <ng-template #viewTemplate>
     <button type="button"
             class="btn btn-primary toolbar-pf-action-right"
@@ -12,15 +13,8 @@
 
 <div class="integrations list-page">
   <p>&nbsp;</p>
-  <tabset class="nav nav-tabs nav-tabs-pf">
-    <tab heading="All" (select)="statusFilter.filter = ''"></tab>
-    <tab heading="Active" (select)="statusFilter.filter = 'Activated'"></tab>
-    <tab heading="Inactive" (select)="statusFilter.filter = 'Deactivated'"></tab>
-    <tab heading="Draft" (select)="statusFilter.filter = 'Draft'"></tab>
-  </tabset>
-
   <syndesis-loading [loading]="loading | async">
     <syndesis-integrations-list [complete]="true"
-                                [integrations]="filteredIntegrations | async | objectPropertyFilter: statusFilter"></syndesis-integrations-list>
+                                [integrations]="filteredIntegrations | async"></syndesis-integrations-list>
   </syndesis-loading>
 </div>

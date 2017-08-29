@@ -1,31 +1,3 @@
-@import '../../../scss/colors';
-.integrations.list-page {
-  /* TODO this can go away when ngx-bootstrap supports custom classes on tabset */
-  /deep/ .nav-tabs {
-    font-size: 12px;
-    border-bottom: 1px solid #ededed;
-  }
-  /deep/ .nav-tabs > li {
-    margin-bottom: 0;
-  }
-  /deep/ .nav-tabs > li > a {
-    border: 0;
-    line-height: 1;
-    margin-right: 0;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    border-bottom: 1px solid transparent;
-  }
-  /deep/ .nav-tabs > li.active > a,
-  /deep/ .nav-tabs > li.active > a:active,
-  /deep/ .nav-tabs > li.active > a:focus,
-  /deep/ .nav-tabs > li.active > a:hover {
-    background-color: transparent;
-    color: #0088ce;
-    border-bottom: 1px solid #0088ce !important;
-    border-bottom-color: #0088ce !important;
-  }
-}
 // Fixed position list toolbar
 /deep/ syndesis-integrations-list-page syndesis-list-toolbar .toolbar-pf {
   position: fixed;
@@ -37,4 +9,3 @@
 /deep/ syndesis-integrations-list-page syndesis-list-toolbar + * {
   margin-top: 35px;
 }
-
