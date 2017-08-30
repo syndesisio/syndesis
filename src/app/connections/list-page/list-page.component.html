@@ -10,6 +10,6 @@
   </ng-template>
 </syndesis-list-toolbar>
 
-<div class='connections list'>
-  <syndesis-connections-list [connections]="filteredConnections | async" [loading]="loading | async" (onSelected)="onSelected($event)"></syndesis-connections-list>
-</div>
+<syndesis-connections-list [connections]="filteredConnections | async"
+                           [loading]="loading | async"
+                           (onSelected)="onSelected($event)"></syndesis-connections-list>
