@@ -68,7 +68,10 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     this.routeSubscription = this.route.params
       .pluck<Params, string>('position')
       .map((position: string) => {
-        log.infoc(() => 'Rendering action configuration at position ' + position, category);
+        log.infoc(
+          () => 'Rendering action configuration at position ' + position,
+          category,
+        );
         this.position = Number.parseInt(position);
         const step = <Step>this.currentFlow.getStep(this.position);
         if (!step) {
@@ -80,7 +83,11 @@ export class IntegrationsConfigureActionComponent extends FlowPage
         this.action = step.action;
         this.step = step;
         if (this.action && this.action.definition) {
-          this.formConfig = JSON.parse(JSON.stringify(this.action.definition.propertyDefinitionSteps[0].properties));
+          this.formConfig = JSON.parse(
+            JSON.stringify(
+              this.action.definition.propertyDefinitionSteps[0].properties,
+            ),
+          );
           if (step.configuredProperties) {
             for (const key in <any>step.configuredProperties) {
               if (!step.configuredProperties.hasOwnProperty(key)) {
@@ -96,7 +103,9 @@ export class IntegrationsConfigureActionComponent extends FlowPage
           this.formModel = this.formFactory.createFormModel(this.formConfig);
           this.formGroup = this.formService.createFormGroup(this.formModel);
           setTimeout(() => {
-            this.detector.detectChanges();
+            try {
+              this.detector.detectChanges();
+            } catch (err) {}
           }, 30);
           this.currentFlow.events.emit({
             kind: 'integration-action-configure',

@@ -1,34 +1,35 @@
-<div class="step-configure row"
-     *ngIf="step">
-  <div class="col-md-12">
-    <!-- Toolbar -->
-    <div [class]="getToolbarClass()">
-      <!-- Toolbar: Breadcrumbs -->
-      <div class="row toolbar-pf">
-        <div class="col-sm-12">
-          <div class="toolbar-pf-actions">
-            <div class="inline-block">
-              <ol class="breadcrumb">
-                <li>
-                  <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Home</a>
-                </li>
-                <li>
-                  <a [routerLink]="['/integrations']">Integrations</a>
-                </li>
-                <li>
-                  <a *ngIf="integrationName"
-                     [routerLink]="['/integrations', currentFlow.integration.id]">{{integrationName}}</a>
-                  <ng-container *ngIf="!integrationName">New Integration</ng-container>
-                </li>
+<syndesis-loading [loading]="!currentFlow.loaded">
+  <div class="step-configure row"
+       *ngIf="step">
+    <div class="col-md-12">
+      <!-- Toolbar -->
+      <div [class]="getToolbarClass()">
+        <!-- Toolbar: Breadcrumbs -->
+        <div class="row toolbar-pf">
+          <div class="col-sm-12">
+            <div class="toolbar-pf-actions">
+              <div class="inline-block">
+                <ol class="breadcrumb">
+                  <li>
+                    <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Home</a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/integrations']">Integrations</a>
+                  </li>
+                  <li>
+                    <a *ngIf="integrationName"
+                       [routerLink]="['/integrations', currentFlow.integration.id]">{{integrationName}}</a>
+                    <ng-container *ngIf="!integrationName">New Integration</ng-container>
+                  </li>
 
-                <li class="active">Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</li>
-              </ol>
-            </div>
-            <div class="toolbar-pf-action-right">
-              <syndesis-cancel-add-step></syndesis-cancel-add-step>
-              <button type="button"
-                      class="btn btn-primary"
-                      (click)="continue()">
+                  <li class="active">Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</li>
+                </ol>
+              </div>
+              <div class="toolbar-pf-action-right">
+                <syndesis-cancel-add-step></syndesis-cancel-add-step>
+                <button type="button"
+                        class="btn btn-primary"
+                        (click)="continue()">
                 <ng-container *ngIf="step.configuredProperties">
                   Done
                 </ng-container>
@@ -36,43 +37,44 @@
                   Next <i class="fa fa-chevron-right"></i>
                 </ng-container>
               </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div [class]="step.stepKind !== 'mapper' ? 'wizard-pf-body clearfix' : ''">
-      <div [ngSwitch]="step.stepKind">
-        <div *ngSwitchCase="'mapper'">
-          <div class="row">
-            <div class="col-md-12">
-              <syndesis-data-mapper-host></syndesis-data-mapper-host>
+      <div [class]="step.stepKind !== 'mapper' ? 'wizard-pf-body clearfix' : ''">
+        <div [ngSwitch]="step.stepKind">
+          <div *ngSwitchCase="'mapper'">
+            <div class="row">
+              <div class="col-md-12">
+                <syndesis-data-mapper-host></syndesis-data-mapper-host>
+              </div>
             </div>
           </div>
-        </div>
-        <div *ngSwitchCase="'rule-filter'">
-          <div class="row">
-            <div class="col-md-12">
-              <syndesis-basic-filter [(configuredProperties)]="customProperties"
-                                     [position]="position"></syndesis-basic-filter>
+          <div *ngSwitchCase="'rule-filter'">
+            <div class="row">
+              <div class="col-md-12">
+                <syndesis-basic-filter [(configuredProperties)]="customProperties"
+                                       [position]="position"></syndesis-basic-filter>
+              </div>
             </div>
           </div>
-        </div>
-        <div *ngSwitchDefault>
-          <div class="title">
-            <h1>Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</h1>
-          </div>
-          <p>Fill out the fields associated with the selected step.</p>
-          <div *ngIf="formGroup">
-            <form class="form-horizontal"
-                  [formGroup]="formGroup">
-              <syndesis-form-control *ngFor="let controlModel of formModel"
-                                     [group]="formGroup"
-                                     [model]="controlModel"></syndesis-form-control>
-            </form>
+          <div *ngSwitchDefault>
+            <div class="title">
+              <h1>Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</h1>
+            </div>
+            <p>Fill out the fields associated with the selected step.</p>
+            <div *ngIf="formGroup">
+              <form class="form-horizontal"
+                    [formGroup]="formGroup">
+                <syndesis-form-control *ngFor="let controlModel of formModel"
+                                       [group]="formGroup"
+                                       [model]="controlModel"></syndesis-form-control>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</syndesis-loading>

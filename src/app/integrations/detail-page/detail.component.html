@@ -1,8 +1,8 @@
 <syndesis-modal [title]="'Confirm ' + getActionTitle()"
                 [message]="'Are you sure you would like to ' + getAction() + ' the \'' + selectedIntegration?.name + '\' integration?'">
 </syndesis-modal>
-<syndesis-loading [loading]="loading | async">
-  <div class="row integration-detail">
+<syndesis-loading [loading]="i && loading | async">
+  <div *ngIf="i" class="row integration-detail">
     <div class="col-md-12">
       <div class="toolbar">
         <div class="row toolbar-pf">

@@ -225,6 +225,9 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
   ngOnInit() {
     this.integrationSubscription = this.integration.subscribe(
       (i: Integration) => {
+        if (!i) {
+          return;
+        }
         this.i = i;
       },
     );

@@ -41,6 +41,7 @@ export class IntegrationsEditPage extends ChildAwarePage
     super(currentFlow, route, router);
     this.integration = this.store.resource;
     this.loading = this.store.loading;
+    this.store.clear();
     this.flowSubscription = this.currentFlow.events.subscribe(
       (event: FlowEvent) => {
         this.handleFlowEvent(event);
@@ -77,15 +78,18 @@ export class IntegrationsEditPage extends ChildAwarePage
 
   handleFlowEvent(event: FlowEvent) {
     const child = this.getCurrentChild();
+    let validate = false;
     // TODO we could probably tidy up the unused cases at some point
     switch (event.kind) {
       case 'integration-updated':
-        this.router.navigate(['save-or-add-step'], { relativeTo: this.route });
-        this.detector.detectChanges();
+        if (!child) {
+          validate = true;
+        }
         break;
       case 'integration-no-actions':
         break;
       case 'integration-no-connections':
+        validate = true;
         break;
       case 'integration-action-select':
       case 'integration-connection-select':
@@ -98,19 +102,32 @@ export class IntegrationsEditPage extends ChildAwarePage
       case 'integration-connection-configure':
         break;
     }
+    try {
+      this.detector.detectChanges();
+    } catch (err) {}
+    if (validate) {
+      this.router.navigate(['save-or-add-step'], {
+        queryParams: { validate: true },
+        relativeTo: this.route,
+      });
+    }
   }
 
   ngOnInit() {
-    this.integrationSubscription = this.integration.subscribe(
-      (i: Integration) => {
-        this.currentFlow.integration = i;
-      },
-    );
     this.routeSubscription = this.route.params
       .pluck<Params, string>('integrationId')
-      .map((integrationId: string) => this.store.loadOrCreate(integrationId))
+      .map((integrationId: string) => {
+        this.store.loadOrCreate(integrationId);
+      })
       .subscribe();
     this.nav.hide();
+    this.integrationSubscription = this.integration.subscribe(
+      (i: Integration) => {
+        if (i) {
+          this.currentFlow.integration = i;
+        }
+      },
+    );
   }
 
   ngOnDestroy() {

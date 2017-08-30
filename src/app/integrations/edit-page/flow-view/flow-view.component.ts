@@ -29,7 +29,7 @@ export class FlowViewComponent extends ChildAwarePage
   implements OnInit, OnDestroy {
   i: Integration;
   flowSubscription: Subscription;
-  childRouteSubscription: Subscription;
+  routeSubscription: Subscription;
   urls: UrlSegment[];
   selectedKind: string | boolean = false;
   editingName = false;
@@ -86,7 +86,7 @@ export class FlowViewComponent extends ChildAwarePage
   }
 
   loaded() {
-    return this.i === undefined;
+    return this.currentFlow._loaded;
   }
 
   get currentStep() {
@@ -210,9 +210,16 @@ export class FlowViewComponent extends ChildAwarePage
     } catch (err) {}
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.routeSubscription = this.router.events.subscribe(event => {
+      try {
+        this.detector.detectChanges();
+      } catch (err) {}
+    });
+  }
 
   ngOnDestroy() {
+    this.routeSubscription.unsubscribe();
     this.flowSubscription.unsubscribe();
   }
 }

@@ -53,6 +53,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
     super(currentFlow, route, router, detector);
     this.connector = connectorStore.resource;
     this.loading = connectorStore.loading;
+    connectorStore.clear();
   }
 
   onSelected(action: Action) {
@@ -73,9 +74,46 @@ export class IntegrationsSelectActionComponent extends FlowPage
     super.goBack(['connection-select', this.position]);
   }
 
+  loadActions() {
+    if (!this.currentFlow.loaded) {
+      return;
+    }
+    const step = (this.step = this.currentFlow.getStep(this.position));
+    if (!step) {
+      // safety net
+      this.router.navigate(['save-or-add-step'], {
+        relativeTo: this.route.parent,
+      });
+      return;
+    }
+    if (!step.connection) {
+      this.router.navigate(['connection-select', this.position], {
+        relativeTo: this.route.parent,
+      });
+      return;
+    }
+    if (step.action) {
+      this.router.navigate(['action-configure', this.position], {
+        relativeTo: this.route.parent,
+      });
+      return;
+    }
+    this.connectorStore.load(step.connection.connectorId);
+  }
+
+  handleFlowEvent(event: FlowEvent) {
+    switch (event.kind) {
+      case 'integration-updated':
+        this.loadActions();
+    }
+  }
+
   ngOnInit() {
     this.connectorSubscription = this.connector.subscribe(
       (connector: Connector) => {
+        if (!connector) {
+          return;
+        }
         this.actions = connector.actions;
         this.currentFlow.events.emit({
           kind: 'integration-action-select',
@@ -87,15 +125,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
       .pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
-        const step = this.step = this.currentFlow.getStep(this.position);
-        if (step && step.connection) {
-          this.connectorStore.load(step.connection.connectorId);
-        } else {
-          this.router.navigate(['connection-select', this.position], {
-            relativeTo: this.route.parent,
-          });
-          return;
-        }
+        this.loadActions();
       })
       .subscribe();
   }

@@ -23,7 +23,9 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
   implements OnInit, OnDestroy {
   loading: Observable<boolean>;
   connections: Observable<Connections>;
-  filteredConnections: Subject<Connections> = new BehaviorSubject(<Connections>{});
+  filteredConnections: Subject<Connections> = new BehaviorSubject(
+    <Connections>{},
+  );
   routeSubscription: Subscription;
   position: number;
 
@@ -69,31 +71,46 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
     return '';
   }
 
+  loadConnections() {
+    if (!this.currentFlow.loaded) {
+      return;
+    }
+    const step = this.currentFlow.getStep(this.position);
+    if (!step || step.stepKind !== 'endpoint') {
+      // safety net
+      this.router.navigate(['save-or-add-step'], {
+        relativeTo: this.route.parent,
+      });
+      return;
+    }
+    if (step.connection) {
+      this.router.navigate(['action-select', this.position], {
+        relativeTo: this.route.parent,
+      });
+      return;
+    }
+    this.store.loadAll();
+    this.currentFlow.events.emit({
+      kind: 'integration-connection-select',
+      position: this.position,
+    });
+  }
+
+  handleFlowEvent(event: FlowEvent) {
+    switch (event.kind) {
+      case 'integration-updated':
+        this.loadConnections();
+    }
+  }
+
   ngOnInit() {
     this.routeSubscription = this.route.params
       .pluck<Params, string>('position')
       .map((position: string) => {
         this.position = Number.parseInt(position);
-        this.currentFlow.events.emit({
-          kind: 'integration-connection-select',
-          position: this.position,
-        });
+        this.loadConnections();
       })
       .subscribe();
-    /*
-    this.connections.map((connections: Connections) => {
-      const config = this.currentFlow.getStep(this.position);
-      if (config) {
-        const id = config.id;
-        for (const connection of connections) {
-          if (connection.id === id) {
-            log.debugc(() => 'Found connection: ' + connection.name, category);
-          }
-        }
-      }
-    });
-    */
-    this.store.loadAll();
   }
 
   ngOnDestroy() {
