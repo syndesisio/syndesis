@@ -98,16 +98,16 @@ export class IntegrationsConfigureActionComponent extends FlowPage
           setTimeout(() => {
             this.detector.detectChanges();
           }, 30);
+          this.currentFlow.events.emit({
+            kind: 'integration-action-configure',
+            position: this.position,
+          });
         } else {
-          this.router.navigate(['action-select', this.position], {
+          this.router.navigate(['save-or-add-step'], {
+            queryParams: { validate: true },
             relativeTo: this.route.parent,
           });
-          return;
         }
-        this.currentFlow.events.emit({
-          kind: 'integration-action-configure',
-          position: this.position,
-        });
       })
       .subscribe();
   }
