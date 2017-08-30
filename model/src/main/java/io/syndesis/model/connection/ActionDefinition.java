@@ -15,6 +15,7 @@
  */
 package io.syndesis.model.connection;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -28,13 +29,15 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ActionDefinition.Builder.class)
-public interface ActionDefinition {
+public interface ActionDefinition extends Serializable {
 
     final class Builder extends ImmutableActionDefinition.Builder {
         // make ImmutableActionDefinition.Builder accessible
 
-        public Builder withActionDefinitionStep(final String name, final String description, final Consumer<ActionDefinitionStep.Builder> stepConfigurator) {
-            final ActionDefinitionStep.Builder stepBuilder = new ActionDefinitionStep.Builder().name(name).description(description);
+        public Builder withActionDefinitionStep(final String name, final String description,
+            final Consumer<ActionDefinitionStep.Builder> stepConfigurator) {
+            final ActionDefinitionStep.Builder stepBuilder = new ActionDefinitionStep.Builder().name(name)
+                .description(description);
 
             stepConfigurator.accept(stepBuilder);
 
@@ -47,16 +50,15 @@ public interface ActionDefinition {
     @Value.Immutable
     @JsonDeserialize(builder = ActionDefinitionStep.Builder.class)
     @ImmutablesStyle
-    interface ActionDefinitionStep extends WithName, WithProperties {
+    interface ActionDefinitionStep extends WithName, WithProperties, Serializable {
 
         final class Builder extends ImmutableActionDefinitionStep.Builder {
             // make ImmutableActionDefinitionStep.Builder accessible
         }
 
-        String description();
+        String getDescription();
     }
 
-    List<ActionDefinitionStep> propertyDefinitionSteps();
+    List<ActionDefinitionStep> getPropertyDefinitionSteps();
 
 }
-
