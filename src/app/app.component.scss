@@ -1,3 +1,7 @@
+:host, .app, main {
+  height: 100%;
+}
+
 .app {
   header {
     // Navigation Bar
@@ -59,10 +63,6 @@
         }
       }
     }
-  }
-
-  // Main body
-  main {
   }
 
   // <div> container when sidebar is collapsed
