@@ -37,29 +37,63 @@ public interface WithProperties {
     Map<String, String> getConfiguredProperties();
 
     @JsonIgnore
+    default boolean isEndpointProperty(Map.Entry<String, String> e) {
+        return this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && Boolean.FALSE.equals(this.getProperties().get(e.getKey()).getComponentProperty());
+    }
+
+    @JsonIgnore
     default Predicate<Map.Entry<String, String>> isEndpointProperty() {
-        return e -> this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && Boolean.FALSE.equals(this.getProperties().get(e.getKey()).getComponentProperty());
+        return e -> this.isEndpointProperty(e);
+    }
+
+    @JsonIgnore
+    default boolean isSecretEndpointProperty(Map.Entry<String, String> e) {
+        return this.isEndpointProperty(e) && this.isSecret(e);
     }
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isSecretEndpointProperty() {
-        return isEndpointProperty().and(isSecret());
+        return e -> isSecretEndpointProperty(e);
+    }
+
+    @JsonIgnore
+    default boolean isComponentProperty(Map.Entry<String, String> e) {
+        return this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && Boolean.TRUE.equals(this.getProperties().get(e.getKey()).getComponentProperty());
     }
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isComponentProperty() {
-        return e -> this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && Boolean.TRUE.equals(this.getProperties().get(e.getKey()).getComponentProperty());
+        return e -> this.isComponentProperty(e);
+    }
+
+    @JsonIgnore
+    default boolean isSecretComponentProperty(Map.Entry<String, String> e) {
+        return this.isComponentProperty(e) && this.isSecret(e);
     }
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isSecretComponentProperty() {
-        return isComponentProperty().and(isSecret());
+        return e -> this.isSecretComponentProperty(e);
+    }
+
+    @JsonIgnore
+    default boolean isSecret(Map.Entry<String, String> e) {
+        return this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && Boolean.TRUE.equals(this.getProperties().get(e.getKey()).getSecret());
     }
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isSecret() {
-        return e -> this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && Boolean.TRUE.equals(this.getProperties().get(e.getKey()).getSecret());
+        return e -> this.isSecret(e);
+    }
 
+    @JsonIgnore
+    default boolean isSecretOrComponentProperty(Map.Entry<String, String> e) {
+        return this.isComponentProperty(e) || this.isSecret(e);
+    }
+
+    @JsonIgnore
+    default Predicate<Map.Entry<String, String>> isSecretOrComponentProperty() {
+        return e -> isSecretOrComponentProperty(e);
     }
 
     /**
