@@ -54,7 +54,7 @@ public class ActionPropertiesEndpoint {
             throw null;
         }
 
-        final CamelContext camel = new DefaultCamelContext();
+        final CamelContext camel = camelContext();
         camel.start();
 
         try {
@@ -64,6 +64,10 @@ public class ActionPropertiesEndpoint {
         } finally {
             camel.stop();
         }
+    }
+
+    protected DefaultCamelContext camelContext() {
+        return new DefaultCamelContext();
     }
 
     static MetaData fetchMetadata(final CamelContext camel, final String connectorId,

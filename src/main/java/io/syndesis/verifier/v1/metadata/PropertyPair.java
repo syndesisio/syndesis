@@ -55,4 +55,9 @@ public final class PropertyPair {
     public int hashCode() {
         return 31 * Objects.hashCode(value) + 31 * Objects.hashCode(displayValue);
     }
+
+    @Override
+    public String toString() {
+        return value + "=" + displayValue;
+    }
 }
