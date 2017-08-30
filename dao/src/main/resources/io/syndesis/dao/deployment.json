@@ -78,7 +78,10 @@
           },
           "id": "io.syndesis:twitter-mention-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-mention"
+          "camelConnectorPrefix": "twitter-mention",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "name": "Search",
@@ -141,35 +144,50 @@
           "description": "Creates a new tweet",
           "id": "io.syndesis:twitter-tweet-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-tweet-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-tweet"
+          "camelConnectorPrefix": "twitter-tweet",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "description": "Direct message a specific user",
           "name": "Send a Direct Message",
           "id": "io.syndesis:twitter-directmessage-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-directmessage-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-directmessage"
+          "camelConnectorPrefix": "twitter-directmessage",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "description": "Retrieve tweets from my timeline",
           "name": "Get My Timeline",
           "id": "io.syndesis:twitter-mytimeline-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-mytimeline-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-mytimeline"
+          "camelConnectorPrefix": "twitter-mytimeline",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "description": "Retrieve tweets from another user's timeline",
           "name": "Get A Timeline",
           "id": "io.syndesis:twitter-usertimeline-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-usertimeline-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-usertimeline"
+          "camelConnectorPrefix": "twitter-usertimeline",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "description": "Retrieve tweets which retweet one of my tweets",
           "name": "Get Retweets",
           "id": "io.syndesis:twitter-retweets-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-retweets-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-retweets"
+          "camelConnectorPrefix": "twitter-retweets",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         }
       ]
     }
@@ -325,37 +343,55 @@
           "description": "Create a new Salesforce opportunity based on the input message",
           "name": "Create Opportunity",
           "camelConnectorGAV": "io.syndesis:salesforce-create-opportunity-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-create-opportunity"
+          "camelConnectorPrefix": "salesforce-create-opportunity",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },{
           "id": "io.syndesis:salesforce-create-lead-connector:latest",
           "description": "Create a new Salesforce lead based on the input message",
           "name": "Create Lead",
           "camelConnectorGAV": "io.syndesis:salesforce-create-lead-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-create-lead"
+          "camelConnectorPrefix": "salesforce-create-lead",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },{
           "id": "io.syndesis:salesforce-create-account-connector:latest",
           "description": "Create a new Salesforce account based on the input message",
           "name": "Create Account",
           "camelConnectorGAV": "io.syndesis:salesforce-create-account-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-create-account"
+          "camelConnectorPrefix": "salesforce-create-account",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },{
           "id": "io.syndesis:salesforce-create-case-connector:latest",
           "description": "Create a new Salesforce case based on the input message",
           "name": "Create Case",
           "camelConnectorGAV": "io.syndesis:salesforce-create-case-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-create-case"
+          "camelConnectorPrefix": "salesforce-create-case",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },{
           "id": "io.syndesis:salesforce-search-connector:latest",
           "description": "Execute a search in Salesforce using arbitrary SOQL",
           "name": "Search",
           "camelConnectorGAV": "io.syndesis:salesforce-search-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-search"
+          "camelConnectorPrefix": "salesforce-search",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },{
           "id": "io.syndesis:salesforce-notification-connector:latest",
           "description": "Trigger an integration when updates occur to a specific Salesforce object",
           "name": "Notification",
           "camelConnectorGAV": "io.syndesis:salesforce-notification-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-notification"
+          "camelConnectorPrefix": "salesforce-notification",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         }
       ]
     }
@@ -542,7 +578,10 @@
           },
           "id": "io.syndesis:trade-insight-buy-connector:latest",
           "camelConnectorGAV": "io.syndesis:trade-insight-buy-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "trade-insight-buy"
+          "camelConnectorPrefix": "trade-insight-buy",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "name": "Sell Recommendation",
@@ -556,7 +595,10 @@
           },
           "id": "io.syndesis:trade-insight-sell-connector:latest",
           "camelConnectorGAV": "io.syndesis:trade-insight-sell-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "trade-insight-sell"
+          "camelConnectorPrefix": "trade-insight-sell",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "name": "Top Recommendation",
@@ -570,7 +612,10 @@
           },
           "id": "io.syndesis:trade-insight-top-connector:latest",
           "camelConnectorGAV": "io.syndesis:trade-insight-top-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "trade-insight-top"
+          "camelConnectorPrefix": "trade-insight-top",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         }
       ]
     }
@@ -626,7 +671,10 @@
           },
           "id": "io.syndesis:day-trade-place-connector:latest",
           "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "day-trade-place"
+          "camelConnectorPrefix": "day-trade-place",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "name": "Retrieve Trade",
@@ -641,7 +689,10 @@
           },
           "id": "io.syndesis:day-trade-place-connector:latest",
           "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "day-trade-place"
+          "camelConnectorPrefix": "day-trade-place",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "name": "Get Latest Trade",
@@ -655,7 +706,10 @@
           },
           "id": "io.syndesis:day-trade-place-connector:latest",
           "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "day-trade-place"
+          "camelConnectorPrefix": "day-trade-place",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         }
       ]
     }
@@ -681,7 +735,10 @@
              "kind" : "any"
           },
           "camelConnectorGAV": "io.syndesis:linkedin-connections-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "linkedin-connections"
+          "camelConnectorPrefix": "linkedin-connections",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "id": "io.syndesis:linkedin-add-invite-connector:latest",
@@ -694,7 +751,10 @@
              "kind" : "none"
           },
           "camelConnectorGAV": "io.syndesis:linkedin-invite-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "linkedin-invite"
+          "camelConnectorPrefix": "linkedin-invite",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         }
       ]
     }
@@ -720,7 +780,10 @@
              "kind" : "any"
           },
           "camelConnectorGAV": "io.syndesis:servicenow-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "servicenow"
+          "camelConnectorPrefix": "servicenow",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         }
       ]
     }
@@ -772,7 +835,10 @@
              "kind" : "any"
           },
           "camelConnectorGAV": "io.syndesis:github-commit-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "github-commit"
+          "camelConnectorPrefix": "github-commit",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         }
       ]
     }
@@ -798,7 +864,10 @@
              "kind" : "any"
           },
           "camelConnectorGAV": "io.syndesis:gmail-send-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-send"
+          "camelConnectorPrefix": "gmail-send",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "id": "io.syndesis:gmail-list:latest",
@@ -811,7 +880,10 @@
              "kind" : "any"
           },
           "camelConnectorGAV": "io.syndesis:gmail-list-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-list"
+          "camelConnectorPrefix": "gmail-list",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "id": "io.syndesis:gmail-get:latest",
@@ -824,7 +896,10 @@
              "kind" : "any"
           },
           "camelConnectorGAV": "io.syndesis:gmail-get-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-get"
+          "camelConnectorPrefix": "gmail-get",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "id": "io.syndesis:gmail-delete:latest",
@@ -837,7 +912,10 @@
              "kind" : "any"
           },
           "camelConnectorGAV": "io.syndesis:gmail-delete-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-delete"
+          "camelConnectorPrefix": "gmail-delete",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         }
       ]
     }
@@ -863,7 +941,10 @@
              "kind" : "any"
           },
           "camelConnectorGAV": "io.syndesis:facebook-post-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "facebook-post"
+          "camelConnectorPrefix": "facebook-post",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         },
         {
           "id": "io.syndesis:facebook-like-connector:latest",
@@ -876,7 +957,10 @@
              "kind" : "any"
           },
           "camelConnectorGAV": "io.syndesis:facebook-like-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "facebook-like"
+          "camelConnectorPrefix": "facebook-like",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         }
       ]
     }
@@ -915,7 +999,10 @@
              "kind" : "any"
           },
           "camelConnectorGAV": "io.syndesis:jms-consumer-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "jms-consumer"
+          "camelConnectorPrefix": "jms-consumer",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         }
       ]
     }
@@ -941,7 +1028,10 @@
              "kind" : "any"
           },
           "camelConnectorGAV": "io.syndesis:ftp-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "ftp"
+          "camelConnectorPrefix": "ftp",
+          "definition": {
+            "propertyDefinitionSteps": []
+          }
         }
       ]
     }
