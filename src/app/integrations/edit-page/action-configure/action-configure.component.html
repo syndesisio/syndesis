@@ -1,31 +1,32 @@
-<div class="action-configure">
-  <!-- Toolbar -->
-  <div class="toolbar">
-    <!-- Toolbar: Breadcrumbs -->
-    <div class="row toolbar-pf">
-      <div class="col-sm-12">
-        <div class="toolbar-pf-actions">
-          <div class="inline-block">
-            <ol class="breadcrumb">
-              <li>
-                <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Home</a>
-              </li>
-              <li>
-                <a [routerLink]="['/integrations']">Integrations</a>
-              </li>
-              <li>
-                <a *ngIf="integrationName"
-                   [routerLink]="['/integrations', currentFlow.integration.id]">{{integrationName}}</a>
-                <ng-container *ngIf="!integrationName">New Integration</ng-container>
-              </li>
-              <li class="active">Configure {{ action?.name }}</li>
-            </ol>
-          </div>
-          <div class="toolbar-pf-action-right">
-            <syndesis-cancel-add-step></syndesis-cancel-add-step>
-            <button type="button"
-                    class="btn btn-primary"
-                    (click)="continue()">
+<syndesis-loading [loading]="!currentFlow.loaded">
+  <div class="action-configure">
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <!-- Toolbar: Breadcrumbs -->
+      <div class="row toolbar-pf">
+        <div class="col-sm-12">
+          <div class="toolbar-pf-actions">
+            <div class="inline-block">
+              <ol class="breadcrumb">
+                <li>
+                  <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Home</a>
+                </li>
+                <li>
+                  <a [routerLink]="['/integrations']">Integrations</a>
+                </li>
+                <li>
+                  <a *ngIf="integrationName"
+                     [routerLink]="['/integrations', currentFlow.integration.id]">{{integrationName}}</a>
+                  <ng-container *ngIf="!integrationName">New Integration</ng-container>
+                </li>
+                <li class="active">Configure {{ action?.name }}</li>
+              </ol>
+            </div>
+            <div class="toolbar-pf-action-right">
+              <syndesis-cancel-add-step></syndesis-cancel-add-step>
+              <button type="button"
+                      class="btn btn-primary"
+                      (click)="continue()">
               <ng-container *ngIf="step.configuredProperties">
                 Done
               </ng-container>
@@ -33,32 +34,33 @@
                 Next <i class="fa fa-chevron-right"></i>
               </ng-container>
             </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wizard-pf-body clearfix">
+      <div class="title">
+        <h1>{{ step?.connection?.name }} - {{ action?.name }}</h1>
+      </div>
+      <div *ngIf="formModel">
+        <div *ngIf="!formModel.length">
+          <h3>Configuration</h3>
+          <p>No configuration for this action is needed</p>
+        </div>
+        <div *ngIf="formModel.length">
+          <h3>Configuration</h3>
+          <p>Fill out the fields associated with the selected action.</p>
+          <div>
+            <form class="form-horizontal"
+                  [formGroup]="formGroup">
+              <syndesis-form-control *ngFor="let controlModel of formModel"
+                                     [group]="formGroup"
+                                     [model]="controlModel"></syndesis-form-control>
+            </form>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="wizard-pf-body clearfix">
-    <div class="title">
-      <h1>{{ step?.connection?.name }} - {{ action?.name }}</h1>
-    </div>
-    <div *ngIf="formModel">
-      <div *ngIf="!formModel.length">
-        <h3>Configuration</h3>
-        <p>No configuration for this action is needed</p>
-      </div>
-      <div *ngIf="formModel.length">
-        <h3>Configuration</h3>
-        <p>Fill out the fields associated with the selected action.</p>
-        <div>
-          <form class="form-horizontal"
-                [formGroup]="formGroup">
-            <syndesis-form-control *ngFor="let controlModel of formModel"
-                                   [group]="formGroup"
-                                   [model]="controlModel"></syndesis-form-control>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+</syndesis-loading>

@@ -8,7 +8,6 @@ import { FlowPage } from '../flow-page';
 import { Step, Steps, TypeFactory } from '../../../model';
 import { log, getCategory } from '../../../logging';
 
-
 @Component({
   selector: 'syndesis-integrations-step-select',
   templateUrl: './step-select.component.html',
@@ -47,6 +46,26 @@ export class IntegrationsStepSelectComponent extends FlowPage
     log.debugc(() => 'Step: ' + step);
     const _step = this.currentFlow.getStep(this.position);
     return _step && step.stepKind === _step.stepKind;
+  }
+
+  handleFlowEvent(event: FlowEvent) {
+    switch (event.kind) {
+      case 'integration-updated':
+        const step = this.currentFlow.getStep(this.position);
+        if (!step) {
+          // safety net
+          this.router.navigate(['save-or-add-step'], {
+            relativeTo: this.route.parent,
+          });
+          return;
+        }
+        if (step.configuredProperties) {
+          this.router.navigate(['step-configure', this.position], {
+            relativeTo: this.route.parent,
+          });
+          return;
+        }
+    }
   }
 
   onSelect(step: Step) {

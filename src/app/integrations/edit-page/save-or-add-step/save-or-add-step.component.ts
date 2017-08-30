@@ -127,6 +127,9 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
   }
 
   validateFlow() {
+    if (!this.currentFlow._loaded) {
+      return;
+    }
     if (this.currentFlow.getStartConnection() === undefined) {
       this.router.navigate(
         ['connection-select', this.currentFlow.getFirstPosition()],
@@ -149,6 +152,9 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
     );
     if (validate) {
       this.validateFlow();
+      try {
+        this.detector.detectChanges();
+      } catch (err) {}
     }
   }
 }

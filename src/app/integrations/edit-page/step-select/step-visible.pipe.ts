@@ -16,6 +16,9 @@ export class StepVisiblePipe {
     private currentFlow: CurrentFlow,
   ) {}
   transform(objects: Array<StepKind>, config: StepVisibleConfig) {
+    if (!this.currentFlow.loaded) {
+      return false;
+    }
     const position = config.position;
     const previous = this.currentFlow.getPreviousSteps(config.position);
     const subsequent = this.currentFlow.getSubsequentSteps(config.position);

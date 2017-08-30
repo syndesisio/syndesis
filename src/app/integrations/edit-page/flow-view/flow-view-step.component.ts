@@ -127,11 +127,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
           } catch (err) {
             // ignore
           }
-          if (isFirst) {
-            this.router.navigate(['connection-select', position], {
-              relativeTo: this.route,
-            });
-          } else if (isLast) {
+          if (isFirst || isLast) {
             this.router.navigate(['connection-select', position], {
               relativeTo: this.route,
             });

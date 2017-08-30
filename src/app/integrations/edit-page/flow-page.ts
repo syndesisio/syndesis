@@ -28,7 +28,7 @@ export abstract class FlowPage implements OnDestroy {
   }
 
   get integrationName() {
-    return this.currentFlow.integration.name;
+    return this.currentFlow.integration ? this.currentFlow.integration.name : undefined;
   }
 
   cancel() {

@@ -1,5 +1,5 @@
-<syndesis-loading [loading]="!(integration | async)">
-  <div class="integrations edit" *ngIf="integration | async">
+<syndesis-loading [loading]="loading | async">
+  <div class="integrations edit">
     <div [class]="getPageRow()">
 
       <!-- Sidebar -->

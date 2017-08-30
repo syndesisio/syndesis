@@ -21,6 +21,7 @@ export class FlowEvent {
 @Injectable()
 export class CurrentFlow {
   private _integration: Integration;
+  public _loaded = false;
   private subscription: Subscription;
 
   events = new EventEmitter<FlowEvent>();
@@ -299,8 +300,21 @@ export class CurrentFlow {
   }
 
   handleEvent(event: FlowEvent): void {
-    log.debugc(() => 'event: ' + JSON.stringify(event, undefined, 2), category);
+    // Uncomment for debugging
+    // console.log('Flow Event: ', event);
+
     switch (event.kind) {
+      case 'integration-updated': {
+        this._loaded = true;
+        setTimeout(() => {
+          if (this.isEmpty()) {
+            this.events.emit({
+              kind: 'integration-no-connections',
+            });
+          }
+        }, 10);
+        break;
+      }
       case 'integration-insert-step': {
         const position = +event['position'];
         this.insertStepAfter(position);
@@ -440,6 +454,10 @@ export class CurrentFlow {
     return JSON.parse(JSON.stringify(this.integration));
   }
 
+  get loaded(): boolean {
+    return this._loaded;
+  }
+
   get integration(): Integration {
     if (!this._integration) {
       return undefined;
@@ -459,25 +477,16 @@ export class CurrentFlow {
   }
 
   set integration(i: Integration) {
+    this._loaded = false;
     this._integration = <Integration>i;
     if (i && i.steps && i.steps.length) {
       i.steps = i.steps.filter(step => step !== null);
-      i.steps.forEach(step => {
-        if ('filterExpression' in step) {
-          step.stepKind = 'rule-filter';
-          step.name = 'Rule Filter';
-          delete step['filterExpression'];
-        }
-      });
     }
-    this.events.emit({
-      kind: 'integration-updated',
-      integration: this.integration,
-    });
-    if (!this.steps || !this.steps.length) {
+    setTimeout(() => {
       this.events.emit({
-        kind: 'integration-no-connections',
+        kind: 'integration-updated',
+        integration: this.integration,
       });
-    }
+    }, 10);
   }
 }
