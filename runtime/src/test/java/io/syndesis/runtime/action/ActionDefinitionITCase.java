@@ -60,7 +60,7 @@ public class ActionDefinitionITCase extends BaseITCase {
         final ActionDefinition definition = acquisitionResponse.getBody();
         assertThat(definition).isNotNull();
 
-        final List<ActionDefinitionStep> propertyDefinitionSteps = definition.propertyDefinitionSteps();
+        final List<ActionDefinitionStep> propertyDefinitionSteps = definition.getPropertyDefinitionSteps();
         assertThat(propertyDefinitionSteps).containsOnly(singleStep);
     }
 }
