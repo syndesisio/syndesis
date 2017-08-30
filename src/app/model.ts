@@ -39,6 +39,18 @@ export type Acquisitions = Array < Acquisition > ;
 export interface AcquisitionRequest extends BaseEntity {};
 export type AcquisitionRequests = Array < AcquisitionRequest > ;
 
+export interface PropertyDefinitionStep extends BaseEntity {
+  name: string;
+  description: string;
+  properties: {};
+};
+
+export type PropertyDefinitionSteps = Array < PropertyDefinitionStep > ;
+
+export interface ActionDefinition extends BaseEntity {
+  propertyDefinitionSteps: PropertyDefinitionSteps;
+};
+
 export interface Action extends BaseEntity {
     camelConnectorGAV: string;
     connectorId: string;
@@ -48,7 +60,7 @@ export interface Action extends BaseEntity {
     inputDataShape: DataShape;
     id: string;
     name: string;
-    properties: {};
+    definition: ActionDefinition;
 };
 export type Actions = Array < Action > ;
 
@@ -312,7 +324,7 @@ class TypeFactoryClass {
             inputDataShape: undefined,
             id: undefined,
             name: undefined,
-            properties: undefined,
+            definition: undefined,
         };
     };
 

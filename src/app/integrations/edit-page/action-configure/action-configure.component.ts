@@ -79,8 +79,8 @@ export class IntegrationsConfigureActionComponent extends FlowPage
         }
         this.action = step.action;
         this.step = step;
-        if (this.action && this.action.properties) {
-          this.formConfig = JSON.parse(JSON.stringify(this.action.properties));
+        if (this.action && this.action.definition) {
+          this.formConfig = JSON.parse(JSON.stringify(this.action.definition.propertyDefinitionSteps[0].properties));
           if (step.configuredProperties) {
             for (const key in <any>step.configuredProperties) {
               if (!step.configuredProperties.hasOwnProperty(key)) {
