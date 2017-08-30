@@ -3,7 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { NavigationService } from '../../common/navigation.service';
-import { CurrentConnectionService, ConnectionEvent } from './current-connection';
+import {
+  CurrentConnectionService,
+  ConnectionEvent,
+} from './current-connection';
 import { Connection, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
 import { CanComponentDeactivate } from '../../common/can-deactivate-guard.service';
@@ -16,7 +19,6 @@ const category = getCategory('Connections');
   styleUrls: ['./create-page.component.scss'],
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
-
   private routerEventsSubscription: Subscription;
 
   constructor(
@@ -102,7 +104,6 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     }
     if (target.length) {
       this.router.navigate(target, { relativeTo: this.route });
-
     }
   }
 
@@ -157,10 +158,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
           () => 'Credentials: ' + JSON.stringify(this.current.credentials),
         );
         log.infoc(() => 'hasCredentials: ' + this.current.hasCredentials());
-        if (
-          !this.current.connection.connector ||
-          !this.current.connection.connectorId
-        ) {
+        if (!this.current.connection.connectorId) {
           this.router.navigate(['connection-basics'], {
             relativeTo: this.route,
           });
@@ -178,16 +176,21 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
         */
         break;
     }
-
+    try {
+      this.detector.detectChanges();
+    } catch (err) {}
   }
 
   ngOnInit() {
     this.current.events.subscribe(event => {
       this.handleEvent(event);
     });
-    this.route.fragment.subscribe((connectorId) => {
-      const connection = TypeFactory.createConnection();
+    this.route.fragment.subscribe(connectorId => {
       // detect if there's a selected connection ID already or not
+      if (this.current.connection && this.current.connection.connectorId) {
+        return;
+      }
+      const connection = TypeFactory.createConnection();
       connection.connectorId = connectorId;
       this.current.connection = connection;
     });
