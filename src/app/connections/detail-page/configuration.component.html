@@ -1,0 +1,87 @@
+<ng-container *ngIf="formModel.length > 0">
+  <h3>{{ connection.connector?.name }} Configuration</h3>
+  <div *ngIf="connection.isDerived">
+    <p>This connection is configured using OAuth. Use the validate button to check if the connection is still authorized</p>
+    <ng-container *ngTemplateOutlet="validation"></ng-container>
+  </div>
+  <div *ngIf="!connection.isDerived">
+    <form class="form-horizontal"
+          [formGroup]="formGroup">
+      <syndesis-form-control *ngFor="let controlModel of formModel"
+                             [group]="formGroup"
+                             [model]="controlModel"></syndesis-form-control>
+      <ng-container *ngIf="mode === 'view'">
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <button type="button"
+                    class="btn btn-primary"
+                    (click)="edit()">
+              Edit
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="mode === 'edit'">
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <ng-container *ngTemplateOutlet="validation"></ng-container>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <button type="button"
+                    class="btn btn-default"
+                    [disabled]="saving"
+                    (click)="cancel()">
+              Cancel
+            </button>
+            <button type="button"
+                    class="btn btn-primary"
+                    [disabled]="saving"
+                    (click)="save()">
+              <span *ngIf="saving" class="spinner spinner-sm spinner-inline"></span> Save
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+  <ng-template #validation>
+    <div>
+      <!-- validate button -->
+      <button *ngIf="showValidateButton(connection?.connector?.id)"
+              [disabled]="!formGroup.valid || validating"
+              (click)="doValidate(connection.connector, formGroup)"
+              class="btn btn-default">Validate
+      </button>
+      <!-- validate progress -->
+      <span *ngIf="validating">Validating, please wait...
+        <span class="spinner spinner-xs spinner-inline"></span>
+      </span>
+    </div>
+    <div *ngIf="validateError">
+      <div class="alert alert-warning alert-dismissable">
+        <button type="button"
+                class="close"
+                (click)="validateError = undefined">
+                <span class="pficon pficon-close"></span>
+              </button>
+        <span class="pficon pficon-warning-triangle-o"></span>
+        <p>Validation error:</p>
+        <pre>{{ validateError }}</pre>
+      </div>
+    </div>
+    <div *ngIf="validateSuccess">
+      <div class="alert alert-success alert-dismissable">
+        <button type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-hidden="true">
+                <span class="pficon pficon-close"></span>
+              </button>
+        <span class="pficon pficon-ok"></span>
+        <strong>{{ connection.connector.name }}</strong> has been successfully validated
+      </div>
+    </div>
+  </ng-template>
+</ng-container>

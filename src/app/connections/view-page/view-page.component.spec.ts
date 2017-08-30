@@ -19,7 +19,6 @@ import { TagInputModule } from 'ngx-chips';
 import { ToolbarModule } from 'patternfly-ng';
 
 import { ConnectionViewPage } from './view-page.component';
-import { ConnectionViewWrapperComponent } from '../view-wrapper/view-wrapper.component';
 import { ConnectionViewToolbarComponent } from '../view-toolbar/view-toolbar.component';
 import { ConnectionsListComponent } from '../list/list.component';
 import { ConnectionViewComponent } from '../view/view.component';
@@ -51,7 +50,6 @@ describe('ConnectionViewPage', () => {
         ],
         declarations: [
           ConnectionViewPage,
-          ConnectionViewWrapperComponent,
           ConnectionViewToolbarComponent,
           ConnectionViewComponent,
           ConnectionsListComponent,

@@ -130,7 +130,7 @@
           <div class="row form">
             <form class="form-horizontal col-xs-6">
               <!-- replacing id with data-id to pass build errors -->
-              <div class="form-group required" [ngClass]="{'has-error': nameTaken}">
+              <div class="form-group required" [ngClass]="{'has-error': nameErrorMessage}">
                 <label class="col-sm-4 control-label">Connection Name&nbsp;
                   <span style="color: red">*</span>
                 </label>
@@ -142,10 +142,10 @@
                          placeholder="{{ name }}"
                          [(ngModel)]="name"
                          class="form-control"
-                         (focus)="clearNameTakenValidation()"
-                         (blur)="validateNameTaken(nameInput.value)">
-                  <span class="help-block" *ngIf="nameTaken">
-                    That name is taken. Try another.
+                         (focus)="nameErrorMessage = null"
+                         (blur)="validateName(nameInput.value)">
+                  <span class="help-block" *ngIf="nameErrorMessage">
+                    {{nameErrorMessage}}
                   </span>
                 </div>
               </div>
