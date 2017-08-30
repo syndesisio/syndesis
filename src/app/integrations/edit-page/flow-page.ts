@@ -32,7 +32,11 @@ export abstract class FlowPage implements OnDestroy {
   }
 
   cancel() {
-    this.router.navigate(['/integrations', this.currentFlow.integration.id]);
+    if (this.currentFlow.integration.id) {
+      this.router.navigate(['/integrations', this.currentFlow.integration.id]);
+    } else {
+      this.router.navigate(['/integrations']);
+    }
   }
 
   goBack(path: Array<string | number | boolean>) {
