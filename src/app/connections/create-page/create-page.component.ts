@@ -152,7 +152,6 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
   }
 
   handleEvent(event: ConnectionEvent) {
-    console.log('Connection event: ', event);
     switch (event.kind) {
       case 'connection-set-connection':
         log.infoc(
