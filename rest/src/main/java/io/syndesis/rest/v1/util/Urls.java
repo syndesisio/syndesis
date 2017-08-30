@@ -49,6 +49,17 @@ public final class Urls {
         }
     }
 
+    public static URI appHome(final HttpServletRequest httpRequest) {
+        final URI current = currentUri(httpRequest);
+
+        try {
+            return new URI(current.getScheme(), null, current.getHost(), current.getPort(), null, null, null);
+        } catch (final URISyntaxException e) {
+            throw new IllegalArgumentException(
+                "Unable to generate app home URI based on the current (`" + current + "`)", e);
+        }
+    }
+
     public static URI apiBase(final HttpServletRequest httpRequest) {
         final URI current = currentUri(httpRequest);
 
