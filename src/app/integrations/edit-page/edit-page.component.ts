@@ -20,7 +20,7 @@ const category = getCategory('IntegrationsEditPage');
 export class IntegrationsEditPage extends ChildAwarePage
   implements OnInit, OnDestroy {
   integration: Observable<Integration>;
-  private readonly loading: Observable<boolean>;
+  readonly loading: Observable<boolean>;
 
   integrationSubscription: Subscription;
   routeSubscription: Subscription;
