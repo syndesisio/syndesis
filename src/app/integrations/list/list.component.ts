@@ -26,7 +26,7 @@ import { log, getCategory } from '../../logging';
 })
 export class IntegrationsListComponent extends IntegrationViewBase {
   @Input() complete: boolean;
-  @Input() integrations: Integrations;
+  @Input() integrations: Integrations = [];
   listConfig: ListConfig;
 
   constructor(
@@ -42,9 +42,7 @@ export class IntegrationsListComponent extends IntegrationViewBase {
       dblClick: false,
       multiSelect: false,
       selectItems: false,
-      selectionMatchProp: 'id',
       showCheckbox: false,
-      useExpandItems: false,
     };
   }
 

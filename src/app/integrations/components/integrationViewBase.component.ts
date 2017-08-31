@@ -9,7 +9,6 @@ import { log, getCategory } from '../../logging';
 import {
   Action,
   ActionConfig,
-  ListConfig,
   ListEvent,
   Notification,
   NotificationService,
