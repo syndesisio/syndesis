@@ -218,7 +218,7 @@ public class CredentialITCase extends BaseITCase {
             .isEqualTo(HttpStatus.TEMPORARY_REDIRECT);
         assertThat(callbackResponse.hasBody()).as("Should not contain HTTP body").isFalse();
         assertThat(callbackResponse.getHeaders().getLocation().toString())
-            .matches("http.?://localhost:[0-9]*/api/v1/ui#state");
+            .matches("http.?://localhost:[0-9]*/api/v1/ui#%7B%22connectorId%22:%22test-provider%22,%22message%22:%22Successfully%20authorized%20Syndesis's%20access%22,%22status%22:%22SUCCESS%22%7D");
 
         final List<String> receivedCookies = callbackResponse.getHeaders().get("Set-Cookie");
         assertThat(receivedCookies).hasSize(1);

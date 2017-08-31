@@ -16,16 +16,22 @@
 package io.syndesis.rest.v1.handler.credential;
 
 import java.net.URI;
-import java.util.Objects;
+import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import io.swagger.annotations.Api;
 import io.syndesis.credential.CredentialFlowState;
@@ -37,12 +43,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import static io.syndesis.rest.v1.handler.credential.CallbackStatus.failure;
+import static io.syndesis.rest.v1.handler.credential.CallbackStatus.success;
+import static io.syndesis.rest.v1.util.Urls.appHome;
+
 @Path("/credentials")
 @Api(value = "credentials")
 @Component
 public class CredentialHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(CredentialHandler.class);
+
+    private static final ObjectWriter SERIALIZER = new ObjectMapper().writerFor(CallbackStatus.class);
 
     private final Credentials credentials;
 
@@ -56,28 +68,74 @@ public class CredentialHandler {
     @GET
     @Path("/callback")
     public Response callback(@Context final HttpServletRequest request, @Context final HttpServletResponse response) {
-        final Optional<CredentialFlowState> maybeUpdatedFlowState = CredentialFlowState.Builder
-            .restoreFrom(state::restoreFrom, request, response).map(s -> s.updateFrom(request))
-            .map(s -> tryToFinishAcquisition(request, s)).filter(Objects::nonNull).findFirst();
+        // user could have tried multiple times in parallel or encoutered an
+        // error, and that leads to multiple `cred-` cookies being present
+        final List<CredentialFlowState> allStatesFromRequest;
+        try {
+            allStatesFromRequest = CredentialFlowState.Builder.restoreFrom(state::restoreFrom, request, response)
+                .collect(Collectors.toList());
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final RuntimeException e) {
+            LOG.debug("Unable to restore credential flow state from request", e);
+            return fail(request, "Unable to restore the state of authorization");
+        }
 
-        final CredentialFlowState flowState = maybeUpdatedFlowState
-            .orElseThrow(() -> new EntityNotFoundException("Unable to finish OAuth authorization via callback, "
-                + "cannot find the OAuth flow state this callback request relates to"));
-        final URI returnUrl = flowState.getReturnUrl();
+        if (allStatesFromRequest.isEmpty()) {
+            return fail(request,
+                "Unable to recall the state of authorization, called callback without initiating OAuth autorization?");
+        }
 
-        return Response.temporaryRedirect(returnUrl).cookie(state.persist(flowState.persistenceKey(), "/", flowState))
-            .build();
+        final Stream<CredentialFlowState> updatedStatesFromRequest;
+        try {
+            updatedStatesFromRequest = allStatesFromRequest.stream().map(s -> s.updateFrom(request));
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final RuntimeException e) {
+            LOG.debug("Unable to update credential flow state from request", e);
+            return fail(request, "Unable to update the state of authorization");
+        }
+
+        // let's try to finish with any remaining flow states, as there might be
+        // many try with each one
+        final Optional<CredentialFlowState> maybeUpdatedFlowState = updatedStatesFromRequest
+            .flatMap(s -> tryToFinishAcquisition(request, s)).findFirst();
+
+        if (!maybeUpdatedFlowState.isPresent()) {
+            return fail(request, "Unable to finish authorization, OAuth authorization timed out?");
+        }
+
+        final CredentialFlowState flowState = maybeUpdatedFlowState.get();
+
+        final URI successfullReturnUrl = addFragmentTo(flowState.getReturnUrl(),
+            success(flowState.getProviderId(), "Successfully authorized Syndesis's access"));
+
+        return Response.temporaryRedirect(successfullReturnUrl)
+            .cookie(state.persist(flowState.persistenceKey(), "/", flowState)).build();
     }
 
-    protected CredentialFlowState tryToFinishAcquisition(final HttpServletRequest request,
+    protected Stream<CredentialFlowState> tryToFinishAcquisition(final HttpServletRequest request,
         final CredentialFlowState flowState) {
         try {
-            return credentials.finishAcquisition(flowState, Urls.apiBase(request));
+            return Stream.of(credentials.finishAcquisition(flowState, Urls.apiBase(request)));
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final RuntimeException e) {
             LOG.debug("Unable to perform OAuth callback on flow state: {}", flowState, e);
 
-            return null;
+            return Stream.empty();
         }
+    }
+
+    /* default */ static URI addFragmentTo(final URI uri, final CallbackStatus status) {
+        try {
+            final String fragment = SERIALIZER.writeValueAsString(status);
+
+            return new URI(uri.getScheme(), null, uri.getHost(), uri.getPort(), uri.getPath(), uri.getQuery(),
+                fragment);
+        } catch (JsonProcessingException | URISyntaxException e) {
+            throw new IllegalStateException("Unable to add fragment to URI: " + uri + ", for state: " + status, e);
+        }
+    }
+
+    /* default */ static Response fail(final HttpServletRequest request, final String message) {
+        final URI redirect = addFragmentTo(appHome(request), failure(null, message));
+
+        return Response.temporaryRedirect(redirect).build();
     }
 
 }
