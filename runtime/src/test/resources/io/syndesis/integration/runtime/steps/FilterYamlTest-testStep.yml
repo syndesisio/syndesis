@@ -18,7 +18,7 @@ flows:
   - kind: "endpoint"
     uri: "direct:start"
   - kind: "filter"
-    expression: "${body[name]} == 'James'"
+    expression: "${body.name} == 'James'"
     steps:
     - kind: "endpoint"
       uri: "mock:matched"

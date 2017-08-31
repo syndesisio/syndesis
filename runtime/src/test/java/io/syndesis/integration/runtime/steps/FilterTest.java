@@ -73,7 +73,7 @@ public class FilterTest extends SyndesisTestSupport {
     @Override
     protected void addSyndesisFlows(SyndesisModel syndesis) {
         Flow flow = syndesis.createFlow().endpoint(START_URI);
-        flow.filter("${body[name]} == 'James'").endpoint(MATCHED_URI);
+        flow.filter("${body.name} == 'James'").endpoint(MATCHED_URI);
         flow.endpoint(ALL_MESSAGES_URI);
     }
 }
