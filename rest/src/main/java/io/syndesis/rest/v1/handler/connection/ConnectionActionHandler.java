@@ -55,7 +55,7 @@ public class ConnectionActionHandler {
 
         final Optional<Action> action = actions.stream().filter(a -> a.idEquals(id)).findAny();
 
-        return action.map(Action::definition).orElseThrow(() -> new EntityNotFoundException("Action with id: " + id));
+        return action.map(Action::getDefinition).orElseThrow(() -> new EntityNotFoundException("Action with id: " + id));
     }
 
 }

@@ -16,7 +16,14 @@
 package io.syndesis.model.connection;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.model.Kind;
@@ -27,6 +34,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Action.Builder.class)
+@JsonIgnoreProperties(value = "properties", allowGetters = true)
 public interface Action extends WithId<Action>, WithName, Serializable {
 
     @Override
@@ -54,6 +62,15 @@ public interface Action extends WithId<Action>, WithName, Serializable {
     class Builder extends ImmutableAction.Builder {
     }
 
-    ActionDefinition definition();
+    ActionDefinition getDefinition();
 
+    @Deprecated
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    default Map<String, ConfigurationProperty> getProperties() {
+        return Optional.ofNullable(getDefinition())
+            .map(definition -> definition.getPropertyDefinitionSteps().stream()
+                .flatMap(step -> step.getProperties().entrySet().stream())
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue)))
+            .orElse(Collections.emptyMap());
+    }
 }
