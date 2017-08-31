@@ -37,14 +37,14 @@ public class StepDeserializerTest {
         assertEquals(FilterPredicate.AND, FilterPredicate.valueOf(props.get("predicate").toUpperCase(Locale.US)));
         assertNotNull(props.get("rules"));
         assertEquals("rule-filter", step.getStepKind());
-        assertEquals("${body[text]} == 'antman' && ${body[kind]} =~ 'DC Comics'", step.getFilterExpression());
+        assertEquals("${body.text} == 'antman' && ${body.kind} =~ 'DC Comics'", step.getFilterExpression());
     }
 
     @Test
     public void shouldDeserializeExpressionFilterStep() throws Exception {
         ExpressionFilterStep step = readTestFilter("/filter-step.json");
         ExpressionFilterStep exprFilterStep = (ExpressionFilterStep) step;
-        String expr = "${body[text]} contains '#RHSummit'";
+        String expr = "${body.text} contains '#RHSummit'";
         assertEquals("2", exprFilterStep.getId().get());
         assertEquals("filter", exprFilterStep.getStepKind());
         assertEquals(expr, exprFilterStep.getFilterExpression());

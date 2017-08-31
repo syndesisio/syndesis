@@ -283,7 +283,7 @@ public class DefaultProjectGeneratorTest {
 
         Step step3 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-post").camelConnectorGAV("io.syndesis:http-post-connector:0.4.5").build()).build();
 
-        Step step4 = new ExpressionFilterStep.Builder().configuredProperties(map("filter", "${body[germanSecondLeagueChampion]} equals 'FCN'")).build();
+        Step step4 = new ExpressionFilterStep.Builder().configuredProperties(map("filter", "${body.germanSecondLeagueChampion} equals 'FCN'")).build();
 
         GenerateProjectRequest request = new GenerateProjectRequest.Builder()
             .gitHubUserLogin("noob")
