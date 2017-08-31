@@ -20,12 +20,12 @@ flows:
   - kind: "choice"
     filters:
     - kind: "filter"
-      expression: "$.[?(@.name == 'James')]"
+      expression: "${body[name]} == 'James'"
       steps:
       - kind: "endpoint"
         uri: "mock:matchedJames"
     - kind: "filter"
-      expression: "$.[?(@.name == 'Jimmi')]"
+      expression: "${body[name]} == 'Jimmi'"
       steps:
       - kind: "endpoint"
         uri: "mock:matchedJimmi"

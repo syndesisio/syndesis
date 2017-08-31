@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ServiceLoader;
 
 public class SyndesisHelpers {
@@ -49,14 +50,19 @@ public class SyndesisHelpers {
      * Tries to load the configuration file from the current directory
      */
     public static SyndesisModel load() throws IOException {
-        return findFromFolder(new File("."));
+        Optional<SyndesisModel> model = tryFindFromFolder(new File("."));
+        if (model.isPresent()) {
+            return model.get();
+        }
+        return tryFindConfigOnClassPath()
+            .orElseThrow(() -> new IOException("syndesis.yml could not be found in current directory or parent directories and is not on the classpath"));
     }
 
 
     protected static SyndesisModel loadFromFile(File file) throws IOException {
         LOG.debug("Parsing syndesis configuration from: " + file.getName());
         try {
-            SyndesisModel config = SyndesisHelpers.parseSyndesisConfig(file);
+            SyndesisModel config = parseSyndesisConfig(file);
             return validateConfig(config, file);
         } catch (IOException e) {
             throw new IOException("Failed to parse syndesis config: " + file + ". " + e, e);
@@ -92,47 +98,38 @@ public class SyndesisHelpers {
     /**
      * Tries to find the configuration from the current directory or a parent folder.
      */
-    public static SyndesisModel findFromFolder(File folder) throws IOException {
+    public static Optional<SyndesisModel> tryFindFromFolder(File folder) throws IOException {
         if (folder.isDirectory()) {
-            File file = new File(folder, FILE_NAME);
-            if (file != null && file.exists() && file.isFile()) {
-                return loadFromFile(file);
+            for (File file : new File[] {
+                new File(folder, FILE_NAME),
+                new File(new File(folder, "config"), FILE_NAME)
+            }) {
+                if (file.exists() && file.isFile() && file.canRead()) {
+                    return Optional.of(loadFromFile(file));
+                }
             }
-            File configFolder = new File(folder, "config");
-            file = new File(configFolder, FILE_NAME);
-            if (file != null && file.exists() && file.isFile()) {
-                return loadFromFile(file);
-            }
+
             File parentFile = folder.getParentFile();
             if (parentFile != null) {
-                return findFromFolder(parentFile);
+                return tryFindFromFolder(parentFile);
             }
-            SyndesisModel answer = tryFindConfigOnClassPath();
-            if (answer != null) {
-                return answer;
-            }
-            throw new IOException("SyndesisModel configuration file does not exist: " + file.getPath());
         } else if (folder.isFile()) {
-            return loadFromFile(folder);
+            return Optional.of(loadFromFile(folder));
         }
-        SyndesisModel answer = tryFindConfigOnClassPath();
-        if (answer != null) {
-            return answer;
-        }
-        throw new IOException("SyndesisModel configuration folder does not exist: " + folder.getPath());
+        return Optional.empty();
     }
 
-    protected static SyndesisModel tryFindConfigOnClassPath() throws IOException {
+    protected static Optional<SyndesisModel> tryFindConfigOnClassPath() throws IOException {
         URL url = SyndesisHelpers.class.getClassLoader().getResource(FILE_NAME);
         if (url != null) {
             try {
                 SyndesisModel config = parseSyndesisConfig(url);
-                return validateConfig(config, url);
+                return Optional.of(validateConfig(config, url));
             } catch (IOException e) {
                 throw new IOException("Failed to parse syndesis config: " + url + ". " + e, e);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     /**

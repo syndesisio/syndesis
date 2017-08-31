@@ -20,6 +20,7 @@ import io.syndesis.integration.SyndesisTestSupport;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.integration.model.SyndesisModel;
 import org.apache.camel.EndpointInject;
+import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -72,7 +73,7 @@ public class FilterTest extends SyndesisTestSupport {
     @Override
     protected void addSyndesisFlows(SyndesisModel syndesis) {
         Flow flow = syndesis.createFlow().endpoint(START_URI);
-        flow.filter("$.[?(@.name == 'James')]").endpoint(MATCHED_URI);
+        flow.filter("${body[name]} == 'James'").endpoint(MATCHED_URI);
         flow.endpoint(ALL_MESSAGES_URI);
     }
 }

@@ -39,7 +39,7 @@ public class ChoiceHandler implements StepHandler<Choice> {
     ChoiceDefinition choice = route.choice();
     List<Filter> filters = notNullList(step.getFilters());
     for (Filter filter : filters) {
-      Predicate predicate = routeBuilder.getMandatoryPredicate(filter, filter.getExpression());
+      Predicate predicate = routeBuilder.getMandatorySimplePredicate(filter, filter.getExpression());
       ChoiceDefinition when = choice.when(predicate);
       route = routeBuilder.addSteps(when, filter.getSteps());
     }

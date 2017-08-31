@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Reuable base class for steps which contain nested steps
+ * Reusable base class for steps which contain nested steps
  */
 public abstract class ChildSteps<T extends ChildSteps> extends Step {
     protected List<Step> steps = new ArrayList<>();

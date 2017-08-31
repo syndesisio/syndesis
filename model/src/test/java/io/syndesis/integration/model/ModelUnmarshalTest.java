@@ -16,14 +16,16 @@
  */
 package io.syndesis.integration.model;
 
+import java.io.File;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  */
@@ -32,8 +34,9 @@ public class ModelUnmarshalTest {
 
     @Test
     public void testUnarshal() throws Exception {
-        SyndesisModel config = SyndesisHelpers.findFromFolder(getTestResources());
-        List<Flow> rules = config.getFlows();
+        Optional<SyndesisModel> config = SyndesisHelpers.tryFindFromFolder(getTestResources());
+        assertTrue(config.isPresent());
+        List<Flow> rules = config.get().getFlows();
         assertThat(rules).isNotEmpty();
 
         for (Flow rule : rules) {
@@ -41,8 +44,8 @@ public class ModelUnmarshalTest {
         }
 
 
-        Flow actualFlow1 = SyndesisAssertions.assertFlow(config, 0);
-        Flow actualFlow2 =  SyndesisAssertions.assertFlow(config, 1);
+        Flow actualFlow1 = SyndesisAssertions.assertFlow(config.get(), 0);
+        Flow actualFlow2 =  SyndesisAssertions.assertFlow(config.get(), 1);
 
 
         assertThat(actualFlow1.getName()).describedAs("name").isEqualTo("thingy");
