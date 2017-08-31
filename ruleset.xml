@@ -766,6 +766,9 @@
   </rule>
   <rule ref="rulesets/java/imports.xml/TooManyStaticImports">
     <priority>5</priority>
+    <properties>
+      <property name="maximumStaticImports" value="7" />
+    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/UncommentedEmptyMethodBody">
     <priority>3</priority>

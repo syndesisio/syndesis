@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -161,8 +162,8 @@ public class DataManager implements DataAccessObjectRegistry {
         return value;
     }
 
-    public <T extends WithId<T>> boolean existsWithPropertyValue(Class<T> model, String property, String value) {
-        return doWithDataAccessObject(model, d -> d.existsWithPropertyValue(property, value));
+    public <T extends WithId<T>> Set<String> fetchIdsByPropertyValue(Class<T> model, String property, String value) {
+        return doWithDataAccessObject(model, d -> d.fetchIdsByPropertyValue(property, value));
     }
 
     public <T extends WithId<T>> T create(final T entity) {

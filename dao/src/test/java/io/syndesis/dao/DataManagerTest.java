@@ -17,6 +17,7 @@ package io.syndesis.dao;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 import io.syndesis.core.Json;
@@ -131,16 +132,16 @@ public class DataManagerTest {
     }
 
     @Test
-    public void shouldAscertainIfPropertyValuePairExists() {
+    public void shouldFetchIdsByPropertyValuePairs() {
         @SuppressWarnings("unchecked")
         final DataAccessObject<Connector> connectorDao = mock(DataAccessObject.class);
         when(connectorDao.getType()).thenReturn(Connector.class);
         dataManager.registerDataAccessObject(connectorDao);
 
-        when(connectorDao.existsWithPropertyValue("prop", "exists")).thenReturn(true);
-        when(connectorDao.existsWithPropertyValue("prop", "not")).thenReturn(false);
+        when(connectorDao.fetchIdsByPropertyValue("prop", "exists")).thenReturn(Collections.singleton("id"));
+        when(connectorDao.fetchIdsByPropertyValue("prop", "not")).thenReturn(Collections.emptySet());
 
-        assertThat(dataManager.existsWithPropertyValue(Connector.class, "prop", "exists")).isTrue();
-        assertThat(dataManager.existsWithPropertyValue(Connector.class, "prop", "not")).isFalse();
+        assertThat(dataManager.fetchIdsByPropertyValue(Connector.class, "prop", "exists")).containsOnly("id");
+        assertThat(dataManager.fetchIdsByPropertyValue(Connector.class, "prop", "not")).isEmpty();
     }
 }

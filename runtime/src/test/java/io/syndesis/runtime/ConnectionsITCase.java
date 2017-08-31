@@ -16,6 +16,7 @@
 package io.syndesis.runtime;
 
 import java.util.List;
+import java.util.UUID;
 
 import io.syndesis.model.connection.Connection;
 import io.syndesis.rest.v1.operations.Violation;
@@ -33,6 +34,8 @@ public class ConnectionsITCase extends BaseITCase {
     private final static ParameterizedTypeReference<List<Violation>> RESPONSE_TYPE = new ParameterizedTypeReference<List<Violation>>() {
         // defining type parameters
     };
+
+    private final String id = UUID.randomUUID().toString();
 
     @Test
     public void emptyNamesShouldNotBeAllowed() {
@@ -71,9 +74,19 @@ public class ConnectionsITCase extends BaseITCase {
 
     @Before
     public void preexistingConnection() {
-        final Connection connection = new Connection.Builder().name("Existing connection").build();
+        final Connection connection = new Connection.Builder().name("Existing connection").id(id).build();
 
         dataManager.create(connection);
+    }
+
+    @Test
+    public void shouldAllowConnectionUpdateWithExistingName() {
+        final Connection connection = new Connection.Builder().name("Existing connection").id(id).build();
+
+        final ResponseEntity<Void> got = put("/api/v1/connections/" + id, connection, Void.class,
+            tokenRule.validToken(), HttpStatus.NO_CONTENT);
+
+        assertThat(got.getBody()).isNull();
     }
 
     @Test
@@ -107,5 +120,4 @@ public class ConnectionsITCase extends BaseITCase {
         assertThat(got.getBody()).containsExactly(new Violation.Builder().property("create.obj.name")
             .error("UniqueProperty").message("Value 'Existing connection' is not unique").build());
     }
-
 }
