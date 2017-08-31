@@ -152,28 +152,31 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
   }
 
   handleEvent(event: ConnectionEvent) {
+    const page = this.getCurrentPage();
     switch (event.kind) {
       case 'connection-set-connection':
         log.infoc(
           () => 'Credentials: ' + JSON.stringify(this.current.credentials),
         );
         log.infoc(() => 'hasCredentials: ' + this.current.hasCredentials());
-        if (!this.current.connection.connectorId) {
-          this.router.navigate(['connection-basics'], {
-            relativeTo: this.route,
-          });
+        if (!this.current.hasConnector() && page !== 'connection-basics') {
+          setTimeout(() => {
+            this.router.navigate(['connection-basics'], {
+              relativeTo: this.route,
+            });
+          }, 10);
+          return;
+        } else if (this.current.hasConnector() && page === 'connection-basics') {
+          this.goForward();
+        }
+        if (
+          this.current.oauthStatus &&
+          this.current.oauthStatus.status === 'SUCCESS' &&
+          page === 'configure-fields'
+        ) {
+          this.goForward();
           return;
         }
-        /*
-        TODO
-        if (document.cookie) {
-          const cookie = document.cookie;
-          if (cookie.indexOf('cred-') !== -1) {
-            this.router.navigate(['review'], { relativeTo: this.route });
-            return;
-          }
-        }
-        */
         break;
     }
     try {
@@ -185,13 +188,17 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     this.current.events.subscribe(event => {
       this.handleEvent(event);
     });
-    this.route.fragment.subscribe(connectorId => {
+    this.route.fragment.subscribe(fragment => {
       // detect if there's a selected connection ID already or not
       if (this.current.connection && this.current.connection.connectorId) {
         return;
       }
       const connection = TypeFactory.createConnection();
-      connection.connectorId = connectorId;
+      if (fragment) {
+        const status = JSON.parse(decodeURIComponent(fragment));
+        this.current.oauthStatus = status;
+        connection.connectorId = status.connectorId;
+      }
       this.current.connection = connection;
     });
     this.nav.hide();

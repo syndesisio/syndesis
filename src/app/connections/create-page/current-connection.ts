@@ -17,8 +17,10 @@ export class ConnectionEvent {
 
 @Injectable()
 export class CurrentConnectionService {
+  private _loaded: boolean;
   private _connection: Connection;
   private _credentials: any;
+  private _oauthStatus: any;
   private subscription: Subscription;
 
   events = new EventEmitter<ConnectionEvent>();
@@ -31,7 +33,6 @@ export class CurrentConnectionService {
       this.handleEvent(event),
     );
   }
-
 
   private checkCredentials() {
     const connectorId = this._connection.connectorId;
@@ -65,7 +66,6 @@ export class CurrentConnectionService {
     } else {
       return false;
     }
-
   }
 
   private fetchConnector(connectorId: string) {
@@ -86,16 +86,11 @@ export class CurrentConnectionService {
         error => {
           try {
             log.infoc(
-              () =>
-                'Failed to fetch connector: ' +
-                JSON.stringify(error),
+              () => 'Failed to fetch connector: ' + JSON.stringify(error),
               category,
             );
           } catch (err) {
-            log.infoc(
-              () => 'Failed to fetch connector: ' + error,
-              category,
-            );
+            log.infoc(() => 'Failed to fetch connector: ' + error, category);
           }
           this.events.emit({
             kind: 'connection-check-credentials',
@@ -130,6 +125,7 @@ export class CurrentConnectionService {
         }
         break;
       case 'connection-set-connection':
+        this._loaded = true;
         break;
       // TODO not sure if these next 3 cases are needed really
       case 'connection-set-name':
@@ -146,6 +142,10 @@ export class CurrentConnectionService {
         break;
       default:
     }
+  }
+
+  public hasConnector() {
+    return this.connection.connectorId !== undefined;
   }
 
   private fetchCredentials() {
@@ -216,6 +216,26 @@ export class CurrentConnectionService {
     );
   }
 
+  get oauthError(): boolean {
+    return this._oauthStatus && this._oauthStatus !== 'SUCCESS';
+  }
+
+  public clearOAuthError() {
+    this.oauthStatus = undefined;
+  }
+
+  set oauthStatus(oauthStatus: any) {
+    this._oauthStatus = oauthStatus;
+  }
+
+  get oauthStatus(): any {
+    return this._oauthStatus;
+  }
+
+  get loaded(): boolean {
+    return this._loaded;
+  }
+
   get credentials(): any {
     return this._credentials;
   }
@@ -229,11 +249,14 @@ export class CurrentConnectionService {
   }
 
   set connection(connection: Connection) {
+    this._loaded = false;
     this._connection = connection;
     const connectorId = connection.connectorId;
-    this.events.emit({
-      kind: 'connection-check-connector',
-      connection: this._connection,
-    });
+    setTimeout(() => {
+      this.events.emit({
+        kind: 'connection-check-connector',
+        connection: this._connection,
+      });
+    }, 10);
   }
 }
