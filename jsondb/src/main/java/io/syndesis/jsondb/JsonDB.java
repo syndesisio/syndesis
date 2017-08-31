@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -42,7 +43,11 @@ public interface JsonDB {
      */
     boolean exists(String path);
 
-    boolean existsPropertyValue(String collectionPath, String property, String value);
+    /**
+     * Fetches all paths that hold the property with the given value.
+     * The returned paths are in the form of {@code /<collection>/:<id>}.
+     */
+    Set<String> fetchIdsByPropertyValue(String collectionPath, String property, String value);
 
     /**
      * Generates a sortable unique id as described at:

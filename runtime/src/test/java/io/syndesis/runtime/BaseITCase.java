@@ -163,6 +163,10 @@ public abstract class BaseITCase {
         return http(HttpMethod.POST, url, body, responseClass, token, new HttpHeaders(), expectedStatus);
     }
 
+    protected <T> ResponseEntity<T> put(String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {
+        return http(HttpMethod.PUT, url, body, responseClass, token, new HttpHeaders(), expectedStatus);
+    }
+
     protected <T> ResponseEntity<T> http(HttpMethod method, String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {
         return http(method, url, body, responseClass, token, new HttpHeaders(), expectedStatus);
     }

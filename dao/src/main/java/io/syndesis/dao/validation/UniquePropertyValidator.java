@@ -15,6 +15,8 @@
  */
 package io.syndesis.dao.validation;
 
+import java.util.Set;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -30,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UniquePropertyValidator implements ConstraintValidator<UniqueProperty, WithId<?>> {
 
     @Autowired
-    private DataManager dataManager;
+    /* default */ DataManager dataManager;
 
     private String property;
 
@@ -53,16 +55,18 @@ public class UniquePropertyValidator implements ConstraintValidator<UniqueProper
         final Class<WithId> modelClass = (Class) value.getKind().modelClass;
 
         @SuppressWarnings("unchecked")
-        final boolean exists = dataManager.existsWithPropertyValue(modelClass, property, propertyValue);
+        final Set<String> ids = dataManager.fetchIdsByPropertyValue(modelClass, property, propertyValue);
 
-        if (exists) {
+        final boolean isUnique = ids.isEmpty() || value.getId().map(id -> ids.contains(id)).orElse(false);
+
+        if (!isUnique) {
             context.disableDefaultConstraintViolation();
             context.unwrap(HibernateConstraintValidatorContext.class).addExpressionVariable("nonUnique", propertyValue)
                 .buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
                 .addPropertyNode(property).addConstraintViolation();
         }
 
-        return !exists;
+        return isUnique;
     }
 
 }

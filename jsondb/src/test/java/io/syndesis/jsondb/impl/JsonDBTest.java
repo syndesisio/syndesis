@@ -360,8 +360,8 @@ public class JsonDBTest {
     public void shouldAscertainPropertyPairExistence() {
         jsondb.set("/pair/:id", "{\"key\": \"value\"}");
 
-        assertThat(jsondb.existsPropertyValue("/pair", "key", "value")).isTrue();
-        assertThat(jsondb.existsPropertyValue("/pair", "key", "nope")).isFalse();
+        assertThat(jsondb.fetchIdsByPropertyValue("/pair", "key", "value")).containsOnly("/pair/:id");
+        assertThat(jsondb.fetchIdsByPropertyValue("/pair", "key", "nope")).isEmpty();
     }
 
     private String load(String file) throws IOException {

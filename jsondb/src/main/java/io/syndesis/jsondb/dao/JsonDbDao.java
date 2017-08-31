@@ -18,6 +18,8 @@ package io.syndesis.jsondb.dao;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
@@ -82,8 +84,9 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
     }
 
     @Override
-    public boolean existsWithPropertyValue(final String property, final String propertyValue) {
-        return jsondb.existsPropertyValue(getCollectionPath(), property.replace('.', '/'), propertyValue);
+    public Set<String> fetchIdsByPropertyValue(final String property, final String propertyValue) {
+        return jsondb.fetchIdsByPropertyValue(getCollectionPath(), property.replace('.', '/'), propertyValue)
+            .stream().map(path -> path.substring(path.indexOf(':') + 1)).collect(Collectors.toSet());
     }
 
     @Override

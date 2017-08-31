@@ -22,8 +22,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -45,6 +48,7 @@ import org.skife.jdbi.v2.ResultIterator;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import org.skife.jdbi.v2.util.IntegerColumnMapper;
+import org.skife.jdbi.v2.util.StringColumnMapper;
 
 /**
  * Implements the JsonDB via DBI/JDBC
@@ -190,25 +194,25 @@ public class SqlJsonDB implements JsonDB {
     }
 
     @Override
-    public boolean existsPropertyValue(final String collectionPath, final String property, final String value) {
+    public Set<String> fetchIdsByPropertyValue(final String collectionPath, final String property, final String value) {
         final String pathRegex = collectionPath + "/:[^/]+/" + property;
 
-        final AtomicBoolean ret = new AtomicBoolean(false);
+        final AtomicReference<Set<String>> ret = new AtomicReference<>();
         withTransaction(dbi -> {
             final String query;
             if (databaseKind == DatabaseKind.PostgreSQL) {
-                query = "SELECT COUNT(*) from jsondb where path ~ ? and value = ?";
+                query = "SELECT regexp_replace(path, '(/.+/:[^/]+).*', '\\1') from jsondb where path ~ ? and value = ?";
             } else if (databaseKind == DatabaseKind.H2) {
-                query = "SELECT COUNT(*) from jsondb where path regexp ? and value = ?";
+                query = "SELECT regexp_replace(path, '(/.+/:[^/]+).*', '$1') from jsondb where path regexp ? and value = ?";
             } else {
                 throw new UnsupportedOperationException(
                     "Don't know how to use regex in a query with database: " + databaseKind);
             }
 
-            final Integer result = dbi.createQuery(query).bind(0, pathRegex).bind(1, value)
-                .map(IntegerColumnMapper.PRIMITIVE).first();
+            final List<String> paths = dbi.createQuery(query).bind(0, pathRegex).bind(1, value)
+                .map(StringColumnMapper.INSTANCE).list();
 
-            ret.set(result.intValue() != 0);
+            ret.set(new HashSet<>(paths));
         });
 
         return ret.get();
