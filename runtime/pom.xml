@@ -217,7 +217,14 @@
             <goals>
               <goal>reserve-network-port</goal>
             </goals>
-            <phase>pre-integration-test</phase>
+            <!--
+                phase used to be `pre-integration-test` which is a
+                proper phase for this, but it ended up being invoked
+                after process-exec-maven-plugin defined below, so the
+                reserved ports would not be defined, moving it to a
+                prior phase helped the issue
+            -->
+            <phase>process-test-resources</phase>
             <configuration>
               <portNames>
                 <portName>server.port</portName>
