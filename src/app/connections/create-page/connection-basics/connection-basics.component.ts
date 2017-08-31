@@ -11,12 +11,13 @@ import { Connection } from '../../../model';
 @Component({
   selector: 'syndesis-connections-connection-basics',
   templateUrl: 'connection-basics.component.html',
+  styleUrls: ['connection-basics.component.scss'],
 })
 export class ConnectionsConnectionBasicsComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
 
   constructor(
-    private current: CurrentConnectionService,
+    public current: CurrentConnectionService,
     public route: ActivatedRoute,
     public router: Router,
   ) {}
@@ -33,20 +34,9 @@ export class ConnectionsConnectionBasicsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.current.events.subscribe(
-      (event: ConnectionEvent) => {
-        switch (event.kind) {
-          case 'connection-set-connection':
-            this.router.navigate(['..', 'configure-fields'], {
-              relativeTo: this.route,
-            });
-            return;
-        }
-      },
-    );
+
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 }

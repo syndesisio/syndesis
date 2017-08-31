@@ -13,6 +13,9 @@ import { EventsService, ChangeEvent } from './events.service';
 
 const category = getCategory('AbstractStore');
 
+// Set to a number of seconds to simulate latency and do page styling for loading states
+const LOADING_TIME = 0;
+
 // prettier-ignore
 export abstract class AbstractStore<
   T extends BaseEntity,
@@ -66,8 +69,10 @@ export abstract class AbstractStore<
     this._loading.next(true);
     this.service.list().subscribe(
       list => {
-        this._list.next(list);
-        this._loading.next(false);
+        setTimeout(() => {
+          this._list.next(list);
+          this._loading.next(false);
+        }, LOADING_TIME);
       },
       error => {
         error = this.massageError(error);
@@ -120,8 +125,10 @@ export abstract class AbstractStore<
     this._loading.next(true);
     this.service.get(id).subscribe(
       entity => {
-        this._current.next(this.plain(entity));
-        this._loading.next(false);
+        setTimeout(() => {
+          this._current.next(this.plain(entity));
+          this._loading.next(false);
+        }, LOADING_TIME);
       },
       error => {
         error = this.massageError(error);
