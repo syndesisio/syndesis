@@ -15,9 +15,6 @@
  */
 package io.syndesis.model.filter;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
@@ -57,10 +54,7 @@ public interface FilterRule {
     }
 
     default String convertPathToSimple() {
-        return String.format("${body%s}",
-                             Arrays.stream(getPath().split("\\."))
-                                   .map(s -> "[" + s + "]")
-                                   .collect(Collectors.joining()));
+        return String.format("${body.%s}",getPath());
     }
 
     class Builder extends ImmutableFilterRule.Builder { }
