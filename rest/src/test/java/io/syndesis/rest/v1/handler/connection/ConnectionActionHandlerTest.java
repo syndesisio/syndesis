@@ -15,18 +15,40 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import java.util.Map;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
+
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.ActionDefinition;
+import io.syndesis.model.connection.ActionPropertySuggestions;
 import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.verifier.VerificationConfigurationProperties;
 
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ConnectionActionHandlerTest {
 
     private static final String SALESFORCE_CREATE_OR_UPDATE = "io.syndesis:salesforce-create-or-update:latest";
+
+    private final Client client = mock(Client.class);
 
     private final ActionDefinition createOrUpdateSalesforceObjectDefinition;
 
@@ -61,10 +83,45 @@ public class ConnectionActionHandlerTest {
                         .build()))
             .build();
 
-        final Connector connector = new Connector.Builder().addAction(new Action.Builder()
+        final Connector connector = new Connector.Builder().id("salesforce").addAction(new Action.Builder()
             .id(SALESFORCE_CREATE_OR_UPDATE).definition(createOrUpdateSalesforceObjectDefinition).build()).build();
 
-        handler = new ConnectionActionHandler(connector);
+        final Connection connection = new Connection.Builder().connector(connector)
+            .putConfiguredProperty("clientId", "some-clientId").build();
+
+        handler = new ConnectionActionHandler(connection, new VerificationConfigurationProperties()) {
+            @Override
+            /* default */ Client createClient() {
+                return client;
+            }
+        };
+    }
+
+    @Test
+    public void shouldElicitActionPropertySuggestions() {
+        final MultivaluedMap<String, String> parameters = new MultivaluedHashMap<>();
+        parameters.putSingle("sObjectName", "Contact");
+
+        final UriInfo uriInfo = mock(UriInfo.class);
+        when(uriInfo.getQueryParameters()).thenReturn(parameters);
+
+        final WebTarget target = mock(WebTarget.class);
+        when(client.target(anyString())).thenReturn(target);
+
+        final Builder invocationBuilder = mock(Builder.class);
+        when(target.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        final Class<Entity<Map<String, Object>>> entityType = (Class) Entity.class;
+        final ArgumentCaptor<Entity<Map<String, Object>>> entity = ArgumentCaptor.forClass(entityType);
+
+        final ActionPropertySuggestions suggestions = new ActionPropertySuggestions.Builder().build();
+        when(invocationBuilder.post(entity.capture(), eq(ActionPropertySuggestions.class))).thenReturn(suggestions);
+
+        assertThat(handler.properties(SALESFORCE_CREATE_OR_UPDATE, uriInfo)).isSameAs(suggestions);
+
+        assertThat(entity.getValue().getEntity()).contains(entry("clientId", "some-clientId"),
+            entry("sObjectIdName", null), entry("sObjectName", "Contact"));
     }
 
     @Test
@@ -73,5 +130,4 @@ public class ConnectionActionHandlerTest {
 
         assertThat(definition).isEqualTo(createOrUpdateSalesforceObjectDefinition);
     }
-
 }

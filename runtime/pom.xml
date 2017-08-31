@@ -431,6 +431,23 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredDependencies>
+            <!-- spring-cloud-starter BOM excludes all wiremock dependencies, so we bring in
+                 wiremock-standalone, which packages duplicate classes/resources already
+                 present in other dependencies. It's used only in tests so let's ignore it
+                 completely -->
+            <dependency>
+              <groupId>com.github.tomakehurst</groupId>
+              <artifactId>wiremock-standalone</artifactId>
+            </dependency>
+          </ignoredDependencies>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
@@ -717,6 +734,11 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.github.tomakehurst</groupId>
+        <artifactId>wiremock-standalone</artifactId>
     </dependency>
 
   </dependencies>

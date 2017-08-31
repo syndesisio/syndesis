@@ -66,4 +66,9 @@ public interface Connector extends WithId<Connector>, WithName, WithProperties, 
     class Builder extends ImmutableConnector.Builder {
     }
 
+
+    default Optional<Action> actionById(String id) {
+        return getActions().stream().filter(a -> a.idEquals(id)).findFirst();
+    }
+
 }

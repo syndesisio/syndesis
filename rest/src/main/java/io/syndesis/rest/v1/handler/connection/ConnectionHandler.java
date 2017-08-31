@@ -18,7 +18,6 @@ package io.syndesis.rest.v1.handler.connection;
 import java.util.Date;
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +30,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import io.syndesis.credential.CredentialFlowState;
 import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
@@ -46,6 +46,7 @@ import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.operations.Validating;
 import io.syndesis.rest.v1.state.ClientSideState;
+import io.syndesis.verifier.VerificationConfigurationProperties;
 
 import org.springframework.stereotype.Component;
 
@@ -67,12 +68,15 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
 
     private final Validator validator;
 
+    private final VerificationConfigurationProperties config;
+
     public ConnectionHandler(final DataManager dataMgr, final Validator validator, final Credentials credentials,
-        final ClientSideState state) {
+        final ClientSideState state, VerificationConfigurationProperties config) {
         super(dataMgr);
         this.validator = validator;
         this.credentials = credentials;
         this.state = state;
+        this.config = config;
     }
 
     @Override
@@ -122,13 +126,10 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
     }
 
     @Path("/{id}/actions")
-    public ConnectionActionHandler credentials(@NotNull final @PathParam("id") String connectionId) {
+    public ConnectionActionHandler credentials(@NotNull final @PathParam("id") @ApiParam(required = true, example = "my-connection") String connectionId) {
         final Connection connection = get(connectionId);
-        final Optional<Connector> maybeConnector = connection.getConnector();
-        final Connector connector = maybeConnector.orElseThrow(() -> new EntityNotFoundException(
-            "Connection with id `" + connectionId + "` does not have a Connector defined"));
 
-        return new ConnectionActionHandler(connector);
+        return new ConnectionActionHandler(connection, config);
     }
 
     @Override
