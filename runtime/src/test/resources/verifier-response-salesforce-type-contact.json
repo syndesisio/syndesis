@@ -1,0 +1,16 @@
+{
+  "sObjectIdName": [
+    {
+      "value": "Id",
+      "displayValue": "Identifier"
+    },
+    {
+      "value": "Email",
+      "displayValue": "E-mail address"
+    },
+    {
+      "value": "TwitterScreenName__c",
+      "displayValue": "Twitter Screen Name"
+    }
+  ]
+}

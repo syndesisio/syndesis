@@ -1,0 +1,22 @@
+{
+  "property1": [
+    {
+      "displayValue": "1displayValue1",
+      "value": "1value1"
+    },
+    {
+      "displayValue": "1displayValue2",
+      "value": "1value2"
+    }
+  ],
+  "property2": [
+    {
+      "displayValue": "2displayValue1",
+      "value": "2value1"
+    },
+    {
+      "displayValue": "2displayValue2",
+      "value": "2value2"
+    }
+  ]
+}

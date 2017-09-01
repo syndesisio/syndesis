@@ -217,7 +217,14 @@
             <goals>
               <goal>reserve-network-port</goal>
             </goals>
-            <phase>pre-integration-test</phase>
+            <!--
+                phase used to be `pre-integration-test` which is a
+                proper phase for this, but it ended up being invoked
+                after process-exec-maven-plugin defined below, so the
+                reserved ports would not be defined, moving it to a
+                prior phase helped the issue
+            -->
+            <phase>process-test-resources</phase>
             <configuration>
               <portNames>
                 <portName>server.port</portName>
@@ -429,6 +436,23 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredDependencies>
+            <!-- spring-cloud-starter BOM excludes all wiremock dependencies, so we bring in
+                 wiremock-standalone, which packages duplicate classes/resources already
+                 present in other dependencies. It's used only in tests so let's ignore it
+                 completely -->
+            <dependency>
+              <groupId>com.github.tomakehurst</groupId>
+              <artifactId>wiremock-standalone</artifactId>
+            </dependency>
+          </ignoredDependencies>
+        </configuration>
       </plugin>
 
     </plugins>
@@ -717,6 +741,11 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.github.tomakehurst</groupId>
+        <artifactId>wiremock-standalone</artifactId>
     </dependency>
 
   </dependencies>
