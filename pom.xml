@@ -139,7 +139,7 @@
     <swagger.version>1.5.12</swagger.version>
     <undertow.version>1.4.18.Final</undertow.version>
     <atlasmap.version>1.17.0</atlasmap.version>
-    <camel-atlasmap.version>1.20.0</camel-atlasmap.version>
+    <camel-atlasmap.version>1.20.1</camel-atlasmap.version>
 
     <!-- maven plugin version -->
     <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
