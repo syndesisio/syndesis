@@ -98,9 +98,13 @@ export class BasicFilterComponent implements OnChanges {
       self.detector.detectChanges();
     }
 
+    // Get the output data shape from the first previous connection
+    const prevConnection = this.currentFlow.getPreviousConnection(this.position);
+    const dataShape = prevConnection ? prevConnection.action.outputDataShape : {};
+
     // Fetch our form data
     this.integrationSupport
-      .getFilterOptions(this.currentFlow.getIntegrationClone())
+      .getFilterOptions(dataShape)
       .toPromise()
       .then((resp: any) => {
         const body = JSON.parse(resp['_body']);
