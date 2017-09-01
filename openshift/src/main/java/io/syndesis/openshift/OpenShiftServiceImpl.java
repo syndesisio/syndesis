@@ -21,15 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import io.syndesis.core.SyndesisServerException;
-import io.syndesis.core.Names;
-import io.syndesis.core.Tokens;
+import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
+import io.syndesis.core.Names;
+import io.syndesis.core.SyndesisServerException;
+import io.syndesis.core.Tokens;
 
 public class OpenShiftServiceImpl implements OpenShiftService {
 
@@ -194,6 +195,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewSourceStrategy()
             .withNewFrom().withKind("ImageStreamTag").withName(img.getShortName() + ":" + img.getTag()).endFrom()
             .withIncremental(true)
+              .withEnv(new EnvVar("MAVEN_OPTS","-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx500m", null))
             .endSourceStrategy()
             .endStrategy()
             .withNewOutput().withNewTo().withKind("ImageStreamTag").withName(projectName + ":latest").endTo().endOutput()
