@@ -114,7 +114,7 @@
           "id": "2",
           "stepKind": "filter",
           "configuredProperties": {
-            "filter": "in.body contains \"#RHSummit\""
+            "filter": "${body.text} contains \"#RHSummit\""
             }
         },{
           "id": "3",
