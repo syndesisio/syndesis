@@ -16,20 +16,54 @@
 package io.syndesis.credential;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.connection.Connector;
+
+import org.springframework.boot.autoconfigure.social.SocialProperties;
+import org.springframework.core.io.support.SpringFactoriesLoader;
+import org.springframework.util.ClassUtils;
 
 final class CredentialProviderRegistry implements CredentialProviderLocator {
 
-    private final Map<String, CredentialProvider> providers = new ConcurrentHashMap<>();
+    private final Map<String, CredentialProviderFactory> credentialProviderFactories;
 
-    @Override
-    public void addCredentialProvider(final CredentialProvider credentialProvider) {
-        providers.put(credentialProvider.id(), credentialProvider);
+    private final DataManager dataManager;
+
+    /* default */ static class ConnectorSettings extends SocialProperties {
+
+        public ConnectorSettings(final Connector connector) {
+            setAppId(requiredProperty(connector, Credentials.CLIENT_ID_TAG));
+            setAppSecret(requiredProperty(connector, Credentials.CLIENT_SECRET_TAG));
+        }
+
+        private static String requiredProperty(final Connector connector, final String tag) {
+            return connector.propertyTaggedWith(tag).orElseThrow(
+                () -> new IllegalArgumentException("No property tagged with `" + tag + "` on connector: " + connector));
+        }
+    }
+
+    public CredentialProviderRegistry(final DataManager dataManager) {
+        this.dataManager = dataManager;
+
+        credentialProviderFactories = SpringFactoriesLoader
+            .loadFactories(CredentialProviderFactory.class, ClassUtils.getDefaultClassLoader()).stream()
+            .collect(Collectors.toMap(CredentialProviderFactory::id, Function.identity()));
     }
 
     @Override
     public CredentialProvider providerWithId(final String providerId) {
-        final CredentialProvider providerWithId = providers.get(providerId);
+        final Connector connector = dataManager.fetch(Connector.class, providerId);
+
+        if (connector == null) {
+            throw new IllegalArgumentException("Unable to find connector with id: " + providerId);
+        }
+
+        final SocialProperties socialProperties = new ConnectorSettings(connector);
+
+        final CredentialProvider providerWithId = credentialProviderFactories.get(providerId).create(socialProperties);
 
         if (providerWithId == null) {
             throw new IllegalArgumentException("Unable to locate credential provider with id: " + providerId);

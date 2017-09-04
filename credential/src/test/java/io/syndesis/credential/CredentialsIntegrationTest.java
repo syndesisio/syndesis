@@ -15,15 +15,13 @@
  */
 package io.syndesis.credential;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import io.syndesis.core.EventBus;
 import io.syndesis.credential.CredentialsIntegrationTest.TestConfiguration;
-import io.syndesis.dao.ConnectionDao;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.connection.Connector;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -41,10 +39,6 @@ import org.springframework.boot.autoconfigure.social.TwitterAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.MapPropertySource;
-import org.springframework.core.io.support.EncodedResource;
-import org.springframework.core.io.support.PropertySourceFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
@@ -53,13 +47,13 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(Parameterized.class)
 @ContextConfiguration(classes = {CredentialConfiguration.class, TestConfiguration.class})
 @SpringBootTest
 @EnableAutoConfiguration(exclude = {TwitterAutoConfiguration.class, FacebookAutoConfiguration.class,
     LinkedInAutoConfiguration.class, SocialWebAutoConfiguration.class})
-@PropertySource(value = "dynamic", name = "dynamic", factory = CredentialsIntegrationTest.DynamicPropertySource.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Configuration
 public class CredentialsIntegrationTest {
@@ -78,36 +72,32 @@ public class CredentialsIntegrationTest {
 
     @Configuration
     public static class TestConfiguration {
-        @Bean
-        public ConnectionDao connectionDao() {
-            return mock(ConnectionDao.class);
-        }
 
         @Bean
         public DataManager dataManager() {
-            return new DataManager(null, null, null);
+            final DataManager dataManager = mock(DataManager.class);
+
+            final Connector salesforceConnector = mockConnector("salesforce");
+            when(dataManager.fetch(Connector.class, "salesforce")).thenReturn(salesforceConnector);
+
+            final Connector twitterConnector = mockConnector("twitter");
+            when(dataManager.fetch(Connector.class, "twitter")).thenReturn(twitterConnector);
+
+            return dataManager;
         }
 
         @Bean
         public EventBus eventBus() {
             return mock(EventBus.class);
         }
-    }
 
-    static class DynamicPropertySource implements PropertySourceFactory {
-        @Override
-        public org.springframework.core.env.PropertySource<?> createPropertySource(final String name,
-            final EncodedResource resource) throws IOException {
-            final Map<String, Object> properties = new HashMap<>();
-
-            // needed by DataManager
-            properties.put("deployment.file", "");
-            properties.put("deployment.load-demo-data", "false");
-
-            properties.put("spring.social." + PROVIDER + ".appId", "testClientId");
-            properties.put("spring.social." + PROVIDER + ".appSecret", "testClientSecret");
-
-            return new MapPropertySource(name, properties);
+        /* default */ static Connector mockConnector(final String id) {
+            return new Connector.Builder().id(id)
+                .putProperty("clientId", new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_ID_TAG).build())
+                .putProperty("clientSecret",
+                    new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_SECRET_TAG).build())
+                .putConfiguredProperty("clientId", "a-client-id")
+                .putConfiguredProperty("clientSecret", "a-client-secret").build();
         }
     }
 

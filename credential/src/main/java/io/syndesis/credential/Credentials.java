@@ -16,32 +16,24 @@
 package io.syndesis.credential;
 
 import java.net.URI;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import io.syndesis.model.connection.Connection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.social.SocialProperties;
-import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ClassUtils;
 
 @Component
 public final class Credentials {
 
-    private final Map<String, CredentialProviderFactory> credentialProviderFactories;
+    public static final String CLIENT_ID_TAG = "oauth-client-id";
+
+    public static final String CLIENT_SECRET_TAG = "oauth-client-secret";
 
     private final CredentialProviderLocator credentialProviderLocator;
 
     @Autowired
     public Credentials(final CredentialProviderLocator credentialProviderLocator) {
         this.credentialProviderLocator = credentialProviderLocator;
-
-        credentialProviderFactories = SpringFactoriesLoader
-            .loadFactories(CredentialProviderFactory.class, ClassUtils.getDefaultClassLoader()).stream()
-            .collect(Collectors.toMap(CredentialProviderFactory::id, Function.identity()));
     }
 
     public AcquisitionFlow acquire(final String providerId, final URI baseUrl, final URI returnUrl) {
@@ -75,14 +67,6 @@ public final class Credentials {
         final CredentialProvider credentialProvider = providerFrom(flowState);
 
         return credentialProvider.finish(flowState, baseUrl);
-    }
-
-    public void registerProvider(final String providerId, final SocialProperties properties) {
-        final CredentialProviderFactory credentialProviderFactory = credentialProviderFactories.get(providerId);
-
-        final CredentialProvider credentialProvider = credentialProviderFactory.create(properties);
-
-        credentialProviderLocator.addCredentialProvider(credentialProvider);
     }
 
     /* default */ CredentialProvider providerFor(final String providerId) {
