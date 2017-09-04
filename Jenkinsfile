@@ -27,7 +27,7 @@ node {
 
                     stage('Build') {
                         container(name: 'maven') {
-                            sh "mvn -U clean install fabric8:build -Pci -Duser.home=/home/jenkins"
+                            sh "mvn -B -U clean install fabric8:build -Pci -Duser.home=/home/jenkins"
                         }
                     }
 
