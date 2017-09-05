@@ -22,21 +22,31 @@ import { ConnectionDetailConfigurationService } from './configuration.service';
         </dd>
       </dl>
     </h1>
-    <div>
-      <syndesis-editable-tags [value]="connection.tags"
-                              placeholder="No tags set..."
-                              (onSave)="onAttributeUpdated('tags', $event)"></syndesis-editable-tags>
-    </div>
-    <p class="description">
-      <syndesis-editable-textarea [value]="connection.description"
-                                  placeholder="No description set..."
-                                  (onSave)="onAttributeUpdated('description', $event)"></syndesis-editable-textarea>
-    </p>
+    <dl class="dl-horizontal">
+      <dt>
+        Tags:
+      </dt>
+      <dd>
+        <syndesis-editable-tags [value]="connection.tags"
+                                placeholder="No tags set..."
+                                (onSave)="onAttributeUpdated('tags', $event)"></syndesis-editable-tags>
+      </dd>
+      <dt>
+        Description:
+      </dt>
+      <dd>
+        <syndesis-editable-textarea [value]="connection.description"
+                                    placeholder="No description set..."
+                                    (onSave)="onAttributeUpdated('description', $event)"></syndesis-editable-textarea>
+      </dd>
+    </dl>
   `,
   styles: [`
     h1 dt { width: 46px; }
     h1 dd { margin-left: 66px; }
-    .description { margin-top: 10px; }
+    dt { text-align: left; width: 120px; }
+    dd { margin-left: 140px; }
+    dt:not(:first-child), dd:not(:first-child) { margin-top: 10px; }
   `],
 })
 export class ConnectionDetailInfoComponent {

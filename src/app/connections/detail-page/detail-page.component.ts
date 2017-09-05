@@ -15,6 +15,7 @@ import { ConnectionStore } from '../../store/connection/connection.store';
         <syndesis-connection-detail-info [connection]="connection"
                                          (updated)="update($event)">
         </syndesis-connection-detail-info>
+        <br>
         <syndesis-connection-detail-configuration [connection]="connection"
                                                   (updated)="update($event)">
         </syndesis-connection-detail-configuration>
