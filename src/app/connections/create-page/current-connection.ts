@@ -29,9 +29,22 @@ export class CurrentConnectionService {
     private store: ConnectionStore,
     private connectorStore: ConnectorStore,
   ) {
+  }
+
+  public init() {
+    this._credentials = undefined;
+    this._oauthStatus = undefined;
+    this._connection = undefined;
+    this._loaded = false;
     this.subscription = this.events.subscribe((event: ConnectionEvent) =>
       this.handleEvent(event),
     );
+  }
+
+  public dispose() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   private checkCredentials() {
