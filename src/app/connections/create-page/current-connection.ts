@@ -265,11 +265,9 @@ export class CurrentConnectionService {
     this._loaded = false;
     this._connection = connection;
     const connectorId = connection.connectorId;
-    setTimeout(() => {
-      this.events.emit({
-        kind: 'connection-check-connector',
-        connection: this._connection,
-      });
-    }, 10);
+    this.events.emit({
+      kind: 'connection-check-connector',
+      connection: this._connection,
+    });
   }
 }
