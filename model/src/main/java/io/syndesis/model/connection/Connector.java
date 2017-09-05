@@ -51,6 +51,7 @@ public interface Connector extends WithId<Connector>, WithName, WithProperties, 
 
     List<Action> getActions();
 
+    @Override
     Map<String, String> getConfiguredProperties();
 
     @Override
@@ -62,13 +63,18 @@ public interface Connector extends WithId<Connector>, WithName, WithProperties, 
         return new Builder().createFrom(this);
     }
 
-
-    class Builder extends ImmutableConnector.Builder {
+    class Builder extends ImmutableConnector.Builder implements WithPropertiesBuilder<Builder> {
+        public Builder putOrRemoveConfiguredPropertyTaggedWith(final String tag, final String value) {
+            return putOrRemoveConfiguredPropertyTaggedWith(this, tag, value);
+        }
     }
-
 
     default Optional<Action> actionById(String id) {
         return getActions().stream().filter(a -> a.idEquals(id)).findFirst();
+    }
+
+    default Optional<String> propertyTaggedWith(final String tag) {
+        return propertyTaggedWith(getConfiguredProperties(), tag);
     }
 
 }

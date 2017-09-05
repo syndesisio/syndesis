@@ -15,21 +15,26 @@
  */
 package io.syndesis.model;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 public interface WithProperties {
 
     @SuppressFBWarnings("SE_BAD_FIELD")
     Map<String, ConfigurationProperty> getProperties();
+
+    Map<String, String> getConfiguredProperties();
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isEndpointProperty() {
@@ -108,4 +113,27 @@ public interface WithProperties {
             .filter(isSecret())
             .collect(Collectors.toMap(e -> e.getKey(), e -> valueConverter.apply(e)));
     }
+
+    /**
+     * Returns first property entry tagged with the given tag.
+     *
+     * @param tag               The looked after tag
+     * @return                  First property tagged with the supplied tag, if any
+     */
+    default Optional<Entry<String, ConfigurationProperty>> propertyEntryTaggedWith(final String tag) {
+        return getProperties().entrySet().stream().filter(entry -> entry.getValue().getTags().contains(tag))
+            .findFirst();
+    }
+
+    /**
+     * Returns first property tagged with the given tag.
+     *
+     * @param properties        The properties
+     * @param tag               The looked after tag
+     * @return                  First property tagged with the supplied tag, if any
+     */
+    default Optional<String> propertyTaggedWith(final Map<String, String> properties, final String tag) {
+        return propertyEntryTaggedWith(tag).map(entry -> properties.get(entry.getKey()));
+    }
+
 }
