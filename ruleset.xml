@@ -138,9 +138,9 @@
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/junit.xml/JUnitTestContainsTooManyAsserts">
-    <priority>3</priority>
+    <priority>5</priority>
     <properties>
-      <property name="maximumAsserts" value="3" />
+      <property name="maximumAsserts" value="5" />
     </properties>
   </rule>
   <rule ref="rulesets/java/strings.xml/InefficientEmptyStringCheck">
