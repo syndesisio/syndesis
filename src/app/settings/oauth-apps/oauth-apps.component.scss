@@ -1,4 +1,15 @@
 @import '../../../scss/colors';
+
+:host {
+  flex: 1 1 auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-bottom: 20px;
+  // Dock the scrollbar to the right
+  margin-right: -20px;
+  padding-right: 20px;
+}
+
 .oauth-apps {
   & /deep/ .toolbar-pf {
     background: inherit;
