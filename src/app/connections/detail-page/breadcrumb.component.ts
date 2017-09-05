@@ -19,9 +19,6 @@ import { Connection } from '../../model';
     </div>
   `,
   styles: [`
-    .toolbar-pf {
-      background: inherit;
-    }
     .toolbar-pf ol {
       display: inline-block;
       margin-bottom: 6px;
