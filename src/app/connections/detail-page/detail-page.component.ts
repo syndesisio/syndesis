@@ -9,9 +9,9 @@ import { ConnectionStore } from '../../store/connection/connection.store';
 @Component({
   selector: 'syndesis-connection-detail-page',
   template: `
+    <syndesis-connection-detail-breadcrumb></syndesis-connection-detail-breadcrumb>
     <syndesis-loading [loading]="loading | async">
       <ng-container *ngIf="connection">
-        <syndesis-connection-detail-breadcrumb></syndesis-connection-detail-breadcrumb>
         <syndesis-connection-detail-info [connection]="connection"
                                          (updated)="update($event)">
         </syndesis-connection-detail-info>
@@ -21,6 +21,28 @@ import { ConnectionStore } from '../../store/connection/connection.store';
       </ng-container>
     </syndesis-loading>
   `,
+  styles: [`
+  :host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: visible;
+  }
+
+  syndesis-connection-detail-breadcrumb {
+    flex: 0 0 auto;
+  }
+
+  syndesis-loading {
+    flex: 1 1 auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-right: -20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+  }
+
+`],
 })
 export class ConnectionDetailPageComponent implements OnInit, OnDestroy {
 
