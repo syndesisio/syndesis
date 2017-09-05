@@ -116,9 +116,6 @@
   <rule ref="rulesets/java/imports.xml/UnnecessaryFullyQualifiedName">
     <priority>4</priority>
   </rule>
-  <rule ref="rulesets/java/controversial.xml/UseConcurrentHashMap">
-    <priority>5</priority>
-  </rule>
   <rule ref="rulesets/java/comments.xml/CommentContent">
     <priority>4</priority>
   </rule>
