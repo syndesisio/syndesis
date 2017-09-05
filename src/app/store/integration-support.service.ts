@@ -19,13 +19,13 @@ export class IntegrationSupportService {
     this.filterService = restangular.service('integrations');
   }
 
-  getFilterOptions(integration: Integration): Observable<any> {
+  getFilterOptions(dataShape: any): Observable<any> {
     const url = this.filterService.one('filters').one('options').getRestangularUrl();
     const headers = new Headers({
       Authorization: 'Bearer ' + this.oauth.getAccessToken(),
     });
     const options = new RequestOptions({ headers: headers });
-    return this.http.post(url, integration, options);
+    return this.http.post(url, dataShape, options);
   }
 
   requestPom(integration: Integration) {
