@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ConnectionsModule } from './connections.module';
 import { ConnectionsListPage } from './list-page/list-page.component';
-import { ConnectionViewPage } from './view-page/view-page.component';
 import { ConnectionsCreatePage } from './create-page/create-page.component';
 import { ConnectionsConnectionBasicsComponent } from './create-page/connection-basics/connection-basics.component';
 import { ConnectionsConfigureFieldsComponent } from './create-page/configure-fields/configure-fields.component';
