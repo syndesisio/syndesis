@@ -10,6 +10,7 @@ import { ConnectionsConfigureFieldsComponent } from './create-page/configure-fie
 import { ConnectionsReviewComponent } from './create-page/review/review.component';
 import { ConnectionsCancelComponent } from './create-page/cancel.component';
 import { CanDeactivateGuard } from '../common/can-deactivate-guard.service';
+import { ConnectionDetailPageComponent } from './detail-page/detail-page.component';
 
 const routes: Routes = [
   { path: '', component: ConnectionsListPage, pathMatch: 'full' },
@@ -36,7 +37,7 @@ const routes: Routes = [
       { path: '**', redirectTo: 'connection-basics', pathMatch: 'full' },
     ],
   },
-  { path: ':id', component: ConnectionViewPage, pathMatch: 'full' },
+  { path: ':id', component: ConnectionDetailPageComponent, pathMatch: 'full' },
 ];
 
 @NgModule({

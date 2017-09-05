@@ -48,7 +48,7 @@ export class ConnectionViewComponent implements OnInit, OnChanges, OnDestroy {
   _formGroup: FormGroup;
   formChangesSubscription: Subscription;
   configuredProperties: any;
-  nameTaken = false;
+  nameErrorMessage: string = null;
 
   constructor(
     private connectionService: ConnectionService,
@@ -115,22 +115,19 @@ export class ConnectionViewComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  clearNameTakenValidation() {
-    this.nameTaken = false;
-  }
-
-  validateNameTaken() {
-    this.connectionService.validate(this.connection)
-      .subscribe(
-        response => {
-          this.nameTaken = false;
-          this.detector.detectChanges();
-        },
-        errors => {
-          this.nameTaken = true;
-          this.detector.detectChanges();
-        },
-      );
+  validateName() {
+    if (!this.connection.name || this.connection.name.trim() === '') {
+      this.nameErrorMessage = 'Name is required';
+    } else {
+      this.connectionService.validate(this.connection)
+      .toPromise()
+      .then(response => null)
+      .catch(response => {
+        const nameTaken = response.data.filter(item => item.error === 'UniqueProperty').length > 0;
+        this.nameErrorMessage = nameTaken ? 'That name is taken. Try another.' : null;
+        this.detector.detectChanges();
+      });
+    }
   }
 
   get name(): string {

@@ -1,1 +1,9 @@
-  <syndesis-connection-view-wrapper></syndesis-connection-view-wrapper>
+<div class='connections detail'>
+  <syndesis-connection-view-toolbar [connection]="connection | async"
+                                    [(mode)]="mode"></syndesis-connection-view-toolbar>
+  <syndesis-loading [loading]="loading | async">
+    <syndesis-connection-view [connection]="connection | async"
+                              [mode]="mode"
+                              [inView]="true"></syndesis-connection-view>
+  </syndesis-loading>
+</div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { EditableComponent } from './editable.component';
 
 @Component({
@@ -20,12 +20,12 @@ import { EditableComponent } from './editable.component';
         <input #textInput type="text" class="form-control" [ngModel]="value">
         <span class="help-block" *ngIf="errorMessage">{{errorMessage}}</span>
       </div>
-      <button class="btn btn-primary" (click)="submit(textInput.value)">Save</button>
-      <button class="btn btn-default" (click)="cancel()">Cancel</button>
+      <button type="button" class="btn btn-primary" (click)="submit(textInput.value.trim())">Save</button>
+      <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
     </ng-container>
   `,
   styles: [`
-    input {
+    .form-control {
       font-size: inherit;
       height: inherit;
       line-height: inherit;
@@ -33,4 +33,9 @@ import { EditableComponent } from './editable.component';
   `],
 })
 export class EditableTextComponent extends EditableComponent {
+
+  constructor(detector: ChangeDetectorRef) {
+    super(detector);
+  }
+
 }

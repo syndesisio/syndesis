@@ -2,3 +2,8 @@
   min-width: 200px;
   word-wrap: break-word;
 }
+:read-only {
+  color: inherit;
+  background-color: transparent;
+  border: none;
+}

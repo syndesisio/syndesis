@@ -1,16 +1,23 @@
+import { ChangeDetectorRef } from '@angular/core';
 import { EditableComponent } from './editable.component';
 
 describe('EditableComponent', () => {
 
-  class MyEditableComponent extends EditableComponent {}
+  class MyEditableComponent extends EditableComponent {
+    constructor(detector: ChangeDetectorRef) {
+      super(detector);
+    }
+  }
 
   const VALUE1 = 'value1';
   const VALUE2 = 'value2';
   const ERROR = 'error';
   let component;
+  let detector;
 
   beforeEach(() => {
-    component = new MyEditableComponent();
+    detector = jasmine.createSpyObj('detector', ['detectChanges']);
+    component = new MyEditableComponent(detector);
     component.value = VALUE1;
   });
 
@@ -40,6 +47,15 @@ describe('EditableComponent', () => {
       component.submit(VALUE2)
         .then(() => {
           expect(spy).not.toHaveBeenCalled();
+          done();
+        });
+    });
+
+    it('detects changes', (done) => {
+      spyOn(component, 'validate').and.returnValue(Promise.resolve(ERROR));
+      component.submit(VALUE2)
+        .then(() => {
+          expect(detector.detectChanges).toHaveBeenCalled();
           done();
         });
     });

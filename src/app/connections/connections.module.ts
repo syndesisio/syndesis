@@ -18,10 +18,14 @@ import { ConnectionsCancelComponent } from './create-page/cancel.component';
 import { ConnectionsListPage } from './list-page/list-page.component';
 import { ConnectionsListComponent } from './list/list.component';
 import { ConnectionViewPage } from './view-page/view-page.component';
-import { ConnectionViewWrapperComponent } from './view-wrapper/view-wrapper.component';
 import { ConnectionViewToolbarComponent } from './view-toolbar/view-toolbar.component';
 import { ConnectionViewComponent } from './view/view.component';
 import { CurrentConnectionService } from './create-page/current-connection';
+import { ConnectionDetailPageComponent } from './detail-page/detail-page.component';
+import { ConnectionDetailBreadcrumbComponent } from './detail-page/breadcrumb.component';
+import { ConnectionDetailInfoComponent } from './detail-page/info.component';
+import { ConnectionDetailConfigurationComponent } from './detail-page/configuration.component';
+import { ConnectionDetailConfigurationService } from './detail-page/configuration.service';
 
 @NgModule({
   imports: [
@@ -45,15 +49,21 @@ import { CurrentConnectionService } from './create-page/current-connection';
     ConnectionsListPage,
     ConnectionsListComponent,
     ConnectionViewPage,
-    ConnectionViewWrapperComponent,
     ConnectionViewToolbarComponent,
     ConnectionViewComponent,
+    ConnectionDetailPageComponent,
+    ConnectionDetailBreadcrumbComponent,
+    ConnectionDetailInfoComponent,
+    ConnectionDetailConfigurationComponent,
   ],
   exports: [
     ConnectionsListComponent,
     ConnectionViewToolbarComponent,
     ConnectionViewComponent,
   ],
-  providers: [CurrentConnectionService],
+  providers: [
+    CurrentConnectionService,
+    ConnectionDetailConfigurationService,
+  ],
 })
 export class ConnectionsModule {}
