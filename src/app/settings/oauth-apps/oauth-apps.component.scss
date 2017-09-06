@@ -1,4 +1,4 @@
-@import '../../../scss/colors';
+@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
 
 :host {
   flex: 1 1 auto;
@@ -18,7 +18,7 @@
   }
 
   & /deep/ .list-pf-item {
-    background: $pf-white;
+    background: $color-pf-white;
   }
 
   & /deep/ div.close {

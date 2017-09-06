@@ -1,4 +1,4 @@
-@import '../../scss/colors';
+@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
 
 .syndesis-dashboard-integrations {
   color: #656565;
@@ -7,7 +7,7 @@
 
   a,
   a:visited {
-    color: $pf-blue-400;
+    color: $color-pf-blue-400;
     cursor: pointer;
 
     &.btn {
@@ -119,15 +119,15 @@
             padding: 9px;
 
             &.active {
-              background: $pf-blue-400;
+              background: $color-pf-blue-400;
             }
 
             &.draft {
-              background: $pf-orange-400;
+              background: $color-pf-orange-400;
             }
 
             &.inactive {
-              background: $pf-black-300;
+              background: $color-pf-black-300;
             }
           }
 
@@ -142,7 +142,7 @@
 
     .recent-updates {
       .update {
-        border-bottom: 1px solid $pf-black-200;
+        border-bottom: 1px solid $color-pf-black-200;
         cursor: pointer;
         padding: 10px 0;
 

@@ -1,4 +1,4 @@
-@import '../../../scss/colors';
+@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
 
 .integrations.list {
   color: #656565;
@@ -10,7 +10,7 @@
       cursor: pointer;
 
       &:hover {
-        background: $pf-blue-50;
+        background: $color-pf-blue-50;
       }
     }
   }

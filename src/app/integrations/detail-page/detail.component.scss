@@ -1,4 +1,5 @@
-@import '../../../scss/colors';
+@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
+
 .integration-detail {
     h1 /deep/ syndesis-editable .fa {
         font-size: 14px;
@@ -28,7 +29,7 @@
             z-index: -5;
             left: -2px;
             right: -2px;
-            background-color: $pf-black-600;
+            background-color: $color-pf-black-600;
             &.start {
                 left: 50px;
             }
@@ -41,13 +42,13 @@
             border-radius: 100px;
             border-style: solid;
             border-width: 3px;
-            border-color: $pf-blue;
+            border-color: $color-pf-blue;
             padding: 11px;
             width: 55px;
             height: 55px;
             margin-left: auto;
             margin-right: auto;
-            background-color: $pf-white;
+            background-color: $color-pf-white;
             &.not-connection {
                 position: relative;
                 border-width: 10px;
@@ -58,9 +59,9 @@
                 width: 32px;
                 .icon-line {
                     position: absolute;
-                    border: 1px solid $pf-white;
+                    border: 1px solid $color-pf-white;
                     height: 3px;
-                    background-color: $pf-white;
+                    background-color: $color-pf-white;
                     top: 5px;
                     left: -8px;
                     right: -8px;
