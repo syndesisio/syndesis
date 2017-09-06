@@ -8,7 +8,7 @@ import { StepStore } from '../../../store/step/step.store';
 import { ChildAwarePage } from '../child-aware-page';
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Integration, Step } from '../../../model';
+import { Integration, Step, Action } from '../../../model';
 import { ModalService } from '../../../common/modal/modal.service';
 
 const category = getCategory('IntegrationsCreatePage');
@@ -181,6 +181,10 @@ export class FlowViewStepComponent extends ChildAwarePage {
     return false;
   }
 
+  getPropertyDefinitions(action: Action) {
+    return action.definition.propertyDefinitionSteps || [];
+  }
+
   getParentActiveClass() {
     let clazz = '';
     if (this.getPosition() === this.currentPosition) {
@@ -191,7 +195,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
     return clazz;
   }
 
-  getSubMenuActiveClass(state: string) {
+  getSubMenuActiveClass(state: string, page?: number) {
     if (!state) {
       if (this.thingIsEnabled(this.step)) {
         return 'active';
@@ -208,6 +212,14 @@ export class FlowViewStepComponent extends ChildAwarePage {
     }
     if (this.getTextClass(state) !== 'active') {
       answer = answer + ' inactive';
+    }
+    const currentIndex = this.getCurrentStepIndex();
+    if (page !== undefined && currentIndex > 0) {
+      if (page === currentIndex) {
+        answer = 'active';
+      } else {
+        answer = 'inactive';
+      }
     }
     return answer;
   }
@@ -238,7 +250,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
     return 'incomplete';
   }
 
-  getTextClass(state: string) {
+  getTextClass(state: string, page?: number) {
     switch (state) {
       case 'connection-select':
         if (this.step.connection) {
@@ -286,7 +298,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
     return true;
   }
 
-  goto(page: string) {
+  goto(page: string, index?: number) {
     if (!page) {
       if (!this.isCollapsed()) {
         // this means we're actually in this step, so don't change the view
@@ -308,7 +320,11 @@ export class FlowViewStepComponent extends ChildAwarePage {
     if (step && !this.stepIsComplete(step)) {
       return;
     }
-    this.router.navigate([page, this.getPosition()], {
+    const route  = [page, this.getPosition()];
+    if (index !== undefined) {
+      route.push(index);
+    }
+    this.router.navigate(route, {
       relativeTo: this.route,
     });
   }

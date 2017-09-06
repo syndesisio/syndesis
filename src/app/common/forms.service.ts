@@ -21,6 +21,7 @@ export class FormFactoryService {
       | Map<string, ConfigurationProperty>
       | Map<string, any>
       | {},
+    values: any = {},
   ): DynamicFormControlModel[] {
     const answer = <DynamicFormControlModel[]>[];
     for (const key in properties) {
@@ -55,7 +56,7 @@ export class FormFactoryService {
             id: key,
             label: value.displayName || key,
             hint: value.description,
-            value: value.value || value.defaultValue,
+            value: value.value || values[key] || value.defaultValue,
           },
           {
             element: {
@@ -72,7 +73,7 @@ export class FormFactoryService {
           {
             id: key,
             label: value.displayName || key,
-            value: value.value || value.defaultValue,
+            value: value.value || values[key] || value.defaultValue,
             hint: value.description,
             required: value.required,
             rows: value.rows,
@@ -97,7 +98,7 @@ export class FormFactoryService {
             id: key,
             label: type === 'hidden' ? null : value.displayName || key,
             inputType: type,
-            value: value.value || value.defaultValue,
+            value: value.value || values[key] || value.defaultValue,
             hint: value.description,
             required: value.required,
           },

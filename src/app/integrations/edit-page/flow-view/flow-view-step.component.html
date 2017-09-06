@@ -69,16 +69,17 @@
             (click)="goto('action-select')">
           <span [class]="getTextClass('action-select')">Choose an action</span>
         </li>
-        <li *ngIf="step.action && !step.configuredProperties"
-            [class]="getSubMenuActiveClass('action-configure')"
-            (click)="goto('action-configure')">
-          <span [class]="getTextClass('action-configure')">Configure the action</span>
-        </li>
-        <li *ngIf="step.configuredProperties"
-            [class]="getSubMenuActiveClass('action-configure')"
-            (click)="goto('action-configure')">
-          <span [class]="getTextClass('action-configure')">Configuration</span>
-        </li>
+        <ng-container *ngIf="step.action">
+          <ng-template ngFor
+                       let-definition
+                       [ngForOf]="getPropertyDefinitions(step.action)"
+                       let-page="index">
+            <li [class]="getSubMenuActiveClass('action-configure', page)"
+                (click)="goto('action-configure', page)">
+              <span [class]="getTextClass('action-configure', page)">{{ definition.name | capitalize }}</span>
+            </li>
+          </ng-template>
+        </ng-container>
       </ul>
 
     </div>

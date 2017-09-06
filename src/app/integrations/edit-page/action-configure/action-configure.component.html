@@ -41,16 +41,16 @@
     </div>
     <div class="wizard-pf-body clearfix">
       <div class="title">
-        <h1>{{ step?.connection?.name }} - {{ action?.name }}</h1>
+        <h1>{{ step?.connection?.name }}</h1>
       </div>
       <div *ngIf="formModel">
         <div *ngIf="!formModel.length">
-          <h3>Configuration</h3>
+          <h3>{{ action?.name }}</h3>
           <p>No configuration for this action is needed</p>
         </div>
         <div *ngIf="formModel.length">
-          <h3>Configuration</h3>
-          <p>Fill out the fields associated with the selected action.</p>
+          <h3>{{ action?.name }}</h3>
+          <p>{{ definition.description }}</p>
           <div>
             <form class="form-horizontal"
                   [formGroup]="formGroup">
