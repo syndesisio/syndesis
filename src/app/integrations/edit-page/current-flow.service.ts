@@ -418,6 +418,12 @@ export class CurrentFlow {
           log.debugc(() => 'Saving integration: ' + this.integration);
           // poor man's clone in case we need to munge the data
           const integration = this.getIntegrationClone();
+          const tags = integration.tags || [];
+          const connectorIds = this.getSubsequentConnections(0).map((step) => step.connection.connectorId);
+          connectorIds.forEach((id) => {
+            tags.indexOf(id) === -1 ? tags.push(id) : false;
+          });
+          integration.tags = tags;
           const sub = this.store.updateOrCreate(integration).subscribe(
             (i: Integration) => {
               log.infoc(
