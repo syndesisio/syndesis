@@ -1,5 +1,6 @@
 @import 'flow-view.component';
-@import '../../../../scss/colors';
+@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
+
 ////////////////////////////////////////////////////////////////////////////////
 // FLOW-VIEW-STEP
 //
@@ -41,7 +42,7 @@
         padding-top: 0;
         text-align: center;
         .fa {
-            color: $pf-black-300;
+            color: $color-pf-black-300;
             font-size: x-large;
         }
         .icon {
@@ -49,7 +50,7 @@
             border-radius: 100px;
             border-style: solid;
             border-width: 3px;
-            border-color: $pf-black-300;
+            border-color: $color-pf-black-300;
             padding: 11px;
             width: 55px;
             height: 55px;
@@ -69,14 +70,14 @@
                 margin-top: 1px;
             } //----- Sidebar: Progress Line: Active State ----------------->>
             &.active {
-                border-color: $pf-blue-400;
+                border-color: $color-pf-blue-400;
             } //----- Sidebar: Progress Line: Inactive State ----------------->>
             &.inactive {
                 border-color: #d0d0d0;
             } //----- Sidebar: Progress Line: Complete State ----------------->>
             &.complete {
                 .fa {
-                    color: $pf-black-900;
+                    color: $color-pf-black-900;
                 }
             } //----- Sidebar: Progress Line: Incomplete State ----------------->>
             &.incomplete {
@@ -110,7 +111,7 @@
             } //----- Sidebar: Menu: Parent Step ----------------->>
             .parent-step {
                 //background-color: #E7E7E7;
-                background-color: $pf-black-300;
+                background-color: $color-pf-black-300;
                 cursor: pointer;
                 &.disabled {
                     cursor: default;

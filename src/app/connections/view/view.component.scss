@@ -1,4 +1,4 @@
-@import '../../../scss/colors';
+@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
 
 .connections-view {
   ////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +37,7 @@
     }
 
     .form {
-      border-bottom: solid 1px $pf-black-200;
+      border-bottom: solid 1px $color-pf-black-200;
 
       .form-horizontal {
         float: left;

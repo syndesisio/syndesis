@@ -1,4 +1,5 @@
-    @import '../../../../scss/colors';
+    @import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
+
     $flow-view-container-min-height: 0;
     .collapsed {
         .steps {
@@ -114,9 +115,9 @@
                 /deep/ .popover {
                     margin-top: -2px;
                     margin-left: 28px !important;
-                    border-color: $pf-black-500;
+                    border-color: $color-pf-black-500;
                     &.right>.arrow {
-                        border-right-color: $pf-black-500;
+                        border-right-color: $color-pf-black-500;
                     }
                 }
                 min-height: 0;
