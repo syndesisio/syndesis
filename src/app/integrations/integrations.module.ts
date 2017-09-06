@@ -47,6 +47,10 @@ const editIntegrationChildRoutes = [
     component: IntegrationsSelectActionComponent,
   },
   {
+    path: 'action-configure/:position/:page',
+    component: IntegrationsConfigureActionComponent,
+  },
+  {
     path: 'action-configure/:position',
     component: IntegrationsConfigureActionComponent,
   },

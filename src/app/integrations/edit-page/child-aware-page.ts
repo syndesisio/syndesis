@@ -9,32 +9,42 @@ export abstract class ChildAwarePage {
     public router: Router,
   ) {}
 
-  getCurrentChild(route: ActivatedRoute = this.route): string {
+  getChildPath(route: ActivatedRoute = this.route) {
     const child = route.firstChild;
     if (child && child.snapshot) {
-      const path = child.snapshot.url;
-      // log.debugc(() => 'path from root: ' + path, category);
-      return path[0].path;
-    } else {
-      // log.debugc(() => 'no current child', category);
+      return child.snapshot.url;
+    }
+    return undefined;
+  }
+
+  getCurrentChild(route: ActivatedRoute = this.route): string {
+    const path = this.getChildPath(route);
+    if (!path) {
       return undefined;
     }
+    return path[0].path;
   }
 
   getCurrentPosition(route: ActivatedRoute = this.route): number {
-    const child = route.firstChild;
-    if (child && child.snapshot) {
-      const path = child.snapshot.url;
-      // log.debugc(() => 'path from root: ' + path, category);
-      try {
-        const position = path[1].path;
-        return +position;
-      } catch (error) {
-        return -1;
-      }
-    } else {
-      // log.debugc(() => 'no current child', category);
+    const path = this.getChildPath(route);
+    if (!path) {
       return undefined;
+    }
+    try {
+      const position = path[1].path;
+      return +position;
+    } catch (error) {
+      return -1;
+    }
+  }
+
+  getCurrentStepIndex(route: ActivatedRoute = this.route): number {
+    const path = this.getChildPath(route);
+    try {
+      const index = path[2].path;
+      return +index;
+    } catch (error) {
+      return -1;
     }
   }
 

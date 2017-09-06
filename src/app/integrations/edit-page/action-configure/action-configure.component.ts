@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
@@ -24,6 +24,8 @@ export class IntegrationsConfigureActionComponent extends FlowPage
   implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   position: number;
+  page: number;
+  definition: any;
   action: Action = <Action>{};
   step: Step = <Step>{};
   formModel: DynamicFormControlModel[];
@@ -51,6 +53,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     if (!data) {
       data = this.formGroup.value || {};
     }
+    // TODO - actually deal with multi-step forms
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
@@ -64,68 +67,71 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     });
   }
 
+  initialize(position: number, page: number) {
+    const step = <Step>this.currentFlow.getStep(this.position);
+    if (!step) {
+      this.router.navigate(['connection-select', this.position], {
+        relativeTo: this.route.parent,
+      });
+      return;
+    }
+    this.action = step.action;
+    this.step = step;
+    if (!this.action || !this.action.definition) {
+      this.router.navigate(['save-or-add-step'], {
+        queryParams: { validate: true },
+        relativeTo: this.route.parent,
+      });
+      return;
+    }
+    const definition = this.action.definition;
+    if (
+      definition &&
+      definition.propertyDefinitionSteps &&
+      page < definition.propertyDefinitionSteps.length
+    ) {
+      this.definition = JSON.parse(
+        JSON.stringify(definition.propertyDefinitionSteps[page]),
+      );
+      this.formConfig = this.definition.properties;
+    } else {
+      this.formConfig = {};
+    }
+    if (!Object.keys(this.formConfig).length) {
+      // No configuration, store an empty value and move along to the next page...
+      this.continue({});
+      return;
+    }
+    this.formModel = this.formFactory.createFormModel(
+      this.formConfig,
+      step.configuredProperties,
+    );
+    this.formGroup = this.formService.createFormGroup(this.formModel);
+    setTimeout(() => {
+      try {
+        this.currentFlow.events.emit({
+          kind: 'integration-action-configure',
+          position: this.position,
+        });
+        this.detector.detectChanges();
+      } catch (err) {}
+    }, 30);
+  }
+
   ngOnInit() {
-    this.routeSubscription = this.route.params
-      .pluck<Params, string>('position')
-      .map((position: string) => {
-        log.infoc(
-          () => 'Rendering action configuration at position ' + position,
-          category,
-        );
-        this.position = Number.parseInt(position);
-        const step = <Step>this.currentFlow.getStep(this.position);
-        if (!step) {
-          this.router.navigate(['connection-select', this.position], {
-            relativeTo: this.route.parent,
-          });
+    this.routeSubscription = this.route.paramMap.subscribe(
+      (params: ParamMap) => {
+        if (!params.has('page')) {
+          this.router.navigate(['0'], { relativeTo: this.route });
           return;
         }
-        this.action = step.action;
-        this.step = step;
-        if (this.action && this.action.definition) {
-          const definition = this.action.definition;
-          if (definition
-            && definition.propertyDefinitionSteps
-            && definition.propertyDefinitionSteps.length > 0) {
-            this.formConfig = JSON.parse(
-              JSON.stringify(
-                definition.propertyDefinitionSteps[0].properties,
-              ),
-            );
-          } else {
-            this.formConfig = {};
-          }
-          if (step.configuredProperties) {
-            for (const key in <any>step.configuredProperties) {
-              if (!step.configuredProperties.hasOwnProperty(key)) {
-                continue;
-              }
-              this.formConfig[key]['value'] = step.configuredProperties[key];
-            }
-          }
-          if (!Object.keys(this.formConfig).length) {
-            this.continue({});
-            return;
-          }
-          this.formModel = this.formFactory.createFormModel(this.formConfig);
-          this.formGroup = this.formService.createFormGroup(this.formModel);
-          setTimeout(() => {
-            try {
-              this.detector.detectChanges();
-            } catch (err) {}
-          }, 30);
-          this.currentFlow.events.emit({
-            kind: 'integration-action-configure',
-            position: this.position,
-          });
-        } else {
-          this.router.navigate(['save-or-add-step'], {
-            queryParams: { validate: true },
-            relativeTo: this.route.parent,
-          });
-        }
-      })
-      .subscribe();
+        const page = (this.page = Number.parseInt(params.get('page')));
+        const position = (this.position = Number.parseInt(
+          params.get('position'),
+        ));
+        this.initialize(position, page);
+      },
+    );
   }
 
   ngOnDestroy() {
