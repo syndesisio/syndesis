@@ -7,13 +7,13 @@ import { Integration } from '../../model';
   template: `
     <div class="syndesis-integration-status">
       <!-- In Progress -->
-      <div *ngIf="integration.currentStatus === 'Pending'">
+      <div class="status pending" *ngIf="integration.currentStatus === 'Pending'">
         <div class="spinner spinner-sm spinner-inline"></div>
         In Progress
       </div>
       <!-- Status -->
       <div *ngIf="integration.currentStatus !== 'Pending'"
-            class="not-pending">
+            class="status not-pending">
         <span class="label label-{{ getLabelClass(integration.currentStatus) }}">
           {{ getStatusText(integration.currentStatus) }}
         </span>
