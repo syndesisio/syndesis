@@ -15,6 +15,7 @@
  */
 package io.syndesis.verifier.v1;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -25,6 +26,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import io.syndesis.verifier.v1.metadata.MetadataAdapter;
+import io.syndesis.verifier.v1.metadata.PropertyPair;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
@@ -46,12 +48,12 @@ public class ActionPropertiesEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public Object properties(@PathParam("id") final String connectorId, final Map<String, Object> properties)
-        throws Exception {
+    public Map<String, List<PropertyPair>> properties(@PathParam("id") final String connectorId,
+        final Map<String, Object> properties) throws Exception {
         final MetadataAdapter adapter = adapters.get(connectorId + "-adapter");
 
         if (adapter == null) {
-            throw null;
+            throw new IllegalStateException("Unable to fild adapter for:" + connectorId);
         }
 
         final CamelContext camel = camelContext();
