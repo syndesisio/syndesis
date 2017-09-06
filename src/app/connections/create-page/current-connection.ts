@@ -202,6 +202,10 @@ export class CurrentConnectionService {
       }
       delete connection.connector.properties[prop]['value'];
     }
+    const tags = connection.tags || [];
+    const connectorTag = connection.connectorId || connection.connector.id;
+    tags.indexOf(connectorTag) === -1 ? tags.push(connectorTag) : false;
+    connection.tags = tags;
     const sub = this.store.updateOrCreate(connection).subscribe(
       (c: Connection) => {
         log.debugc(
