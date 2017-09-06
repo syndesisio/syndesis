@@ -2,6 +2,7 @@
 
 :host {
   flex: 1 1 auto;
+  height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
   padding-bottom: 20px;
@@ -11,6 +12,12 @@
 }
 
 .oauth-apps {
+  height: 100%;
+
+  .col-md-12 {
+    height: 100%;
+  }
+
   & /deep/ .toolbar-pf {
     background: inherit;
     box-shadow: none;

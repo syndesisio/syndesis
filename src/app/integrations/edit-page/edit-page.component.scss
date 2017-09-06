@@ -12,14 +12,15 @@
   }
 
   .wizard-pf-row {
-    bottom: 0;
     overflow: hidden;
     position: absolute;
-    top: 60px;
+    top: 0;
+    bottom: 0;
     width: 100%;
   }
 
   .wizard-pf-main {
+    position: relative;
     height: 100%;
     margin-left: 325px;
     margin-right: -15px;
