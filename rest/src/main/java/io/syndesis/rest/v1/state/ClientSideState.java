@@ -25,9 +25,16 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.LongSupplier;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -42,6 +49,9 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 import io.syndesis.credential.CredentialModule;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Persists given state on the client with these properties:
@@ -71,6 +81,8 @@ public final class ClientSideState {
 
     private static final int IV_LEN = 16;
 
+    private static final Logger LOG = LoggerFactory.getLogger(ClientSideState.class);
+
     private static final ObjectMapper MAPPER = new ObjectMapper().registerModule(new CredentialModule());
 
     private final BiFunction<Class<?>, byte[], Object> deserialization;
@@ -83,7 +95,45 @@ public final class ClientSideState {
 
     private final long timeout;
 
-    private final Supplier<Long> timeSource;
+    private final LongSupplier timeSource;
+
+    /* default */ static class TimestampedState<T> implements Comparable<TimestampedState<T>> {
+
+        private final T state;
+
+        private final long timestamp;
+
+        /* default */ TimestampedState(final T state, final long timestamp) {
+            this.state = Objects.requireNonNull(state, "state");
+            this.timestamp = timestamp;
+        }
+
+        @Override
+        public int compareTo(final TimestampedState<T> other) {
+            return Long.compare(other.timestamp, timestamp);
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            if (obj == this) {
+                return true;
+            }
+
+            if (!(obj instanceof TimestampedState)) {
+                return false;
+            }
+
+            @SuppressWarnings("unchecked")
+            final TimestampedState<T> other = (TimestampedState<T>) obj;
+
+            return timestamp == other.timestamp && Objects.equals(state, other.state);
+        }
+
+        @Override
+        public int hashCode() {
+            return (int) (31 * timestamp + 31 * Objects.hashCode(state));
+        }
+    }
 
     protected static final class RandomIvSource implements Supplier<byte[]> {
         private static final SecureRandom RANDOM = new SecureRandom();
@@ -107,12 +157,12 @@ public final class ClientSideState {
             ClientSideState::deserialize, timeout);
     }
 
-    /* default */ ClientSideState(final Edition edition, final Supplier<Long> timeSource, final long timeout) {
+    /* default */ ClientSideState(final Edition edition, final LongSupplier timeSource, final long timeout) {
         this(edition, timeSource, new RandomIvSource(), ClientSideState::serialize, ClientSideState::deserialize,
             timeout);
     }
 
-    /* default */ ClientSideState(final Edition edition, final Supplier<Long> timeSource, final Supplier<byte[]> ivSource,
+    /* default */ ClientSideState(final Edition edition, final LongSupplier timeSource, final Supplier<byte[]> ivSource,
         final Function<Object, byte[]> serialization, final BiFunction<Class<?>, byte[], Object> deserialization,
         final long timeout) {
         this.edition = edition;
@@ -127,46 +177,24 @@ public final class ClientSideState {
         return new NewCookie(key, protect(value), path, null, null, NewCookie.DEFAULT_MAX_AGE, true, false);
     }
 
+    public <T> Set<T> restoreFrom(final Collection<Cookie> cookies, final Class<T> type) {
+        return cookies.stream().flatMap(c -> {
+            try {
+                return Stream.of(restoreWithTimestamp(c, type));
+            } catch (final IllegalArgumentException e) {
+                LOG.warn("Unable to restore client side state from cookie: {}", c, e);
+
+                return Stream.empty();
+            }
+        }).sorted().map(t -> t.state).collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
     public <T> T restoreFrom(final Cookie cookie, final Class<T> type) {
-        final String value = cookie.getValue();
-
-        final String[] parts = value.split("\\|", 5);
-
-        final byte[] atime = DECODER.decode(parts[1]);
-
-        final long atimeLong = atime(atime);
-
-        if (atimeLong + timeout < timeSource.get()) {
-            throw new IllegalArgumentException("Given value has timed out at: " + Instant.ofEpochSecond(atimeLong));
-        }
-
-        final byte[] tid = DECODER.decode(parts[2]);
-        if (!MessageDigest.isEqual(tid, edition.tid)) {
-            throw new IllegalArgumentException(String.format("Given TID `%s`, mismatches current TID `%s`",
-                new BigInteger(tid).toString(16), new BigInteger(edition.tid).toString(16)));
-        }
-
-        final KeySource keySource = edition.keySource();
-        final int lastSeparatorIdx = value.lastIndexOf('|');
-        final byte[] mac = DECODER.decode(parts[4]);
-        final byte[] calculated = mac(edition.authenticationAlgorithm, value.substring(0, lastSeparatorIdx),
-            keySource.authenticationKey());
-        if (!MessageDigest.isEqual(mac, calculated)) {
-            throw new IllegalArgumentException("Cookie value fails authenticity check");
-        }
-
-        final byte[] iv = DECODER.decode(parts[3]);
-        final byte[] encrypted = DECODER.decode(parts[0]);
-        final byte[] clear = decrypt(edition.encryptionAlgorithm, iv, encrypted, keySource.encryptionKey());
-
-        @SuppressWarnings("unchecked")
-        final T ret = (T) deserialization.apply(type, clear);
-
-        return ret;
+        return restoreWithTimestamp(cookie, type).state;
     }
 
     /* default */ byte[] atime() {
-        final long nowInSec = timeSource.get();
+        final long nowInSec = timeSource.getAsLong();
         final String nowAsStr = Long.toString(nowInSec);
 
         return nowAsStr.getBytes(StandardCharsets.US_ASCII);
@@ -200,6 +228,44 @@ public final class ClientSideState {
         base.append('|').append(ENCODER.encodeToString(mac));
 
         return base.toString();
+    }
+
+    /* default */ <T> TimestampedState<T> restoreWithTimestamp(final Cookie cookie, final Class<T> type) {
+        final String value = cookie.getValue();
+
+        final String[] parts = value.split("\\|", 5);
+
+        final byte[] atime = DECODER.decode(parts[1]);
+
+        final long atimeLong = atime(atime);
+
+        if (atimeLong + timeout < timeSource.getAsLong()) {
+            throw new IllegalArgumentException("Given value has timed out at: " + Instant.ofEpochSecond(atimeLong));
+        }
+
+        final byte[] tid = DECODER.decode(parts[2]);
+        if (!MessageDigest.isEqual(tid, edition.tid)) {
+            throw new IllegalArgumentException(String.format("Given TID `%s`, mismatches current TID `%s`",
+                new BigInteger(tid).toString(16), new BigInteger(edition.tid).toString(16)));
+        }
+
+        final KeySource keySource = edition.keySource();
+        final int lastSeparatorIdx = value.lastIndexOf('|');
+        final byte[] mac = DECODER.decode(parts[4]);
+        final byte[] calculated = mac(edition.authenticationAlgorithm, value.substring(0, lastSeparatorIdx),
+            keySource.authenticationKey());
+        if (!MessageDigest.isEqual(mac, calculated)) {
+            throw new IllegalArgumentException("Cookie value fails authenticity check");
+        }
+
+        final byte[] iv = DECODER.decode(parts[3]);
+        final byte[] encrypted = DECODER.decode(parts[0]);
+        final byte[] clear = decrypt(edition.encryptionAlgorithm, iv, encrypted, keySource.encryptionKey());
+
+        @SuppressWarnings("unchecked")
+        final T ret = (T) deserialization.apply(type, clear);
+
+        return new TimestampedState<>(ret, atimeLong);
     }
 
     /* default */ static long atime(final byte[] atime) {

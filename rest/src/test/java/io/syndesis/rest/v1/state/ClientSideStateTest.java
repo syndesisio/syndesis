@@ -17,10 +17,14 @@ package io.syndesis.rest.v1.state;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
 import javax.crypto.SecretKey;
@@ -36,9 +40,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ClientSideStateTest {
 
-    private static final long RFC_TID = new BigInteger("tid".getBytes()).longValue();
-
-    private static final Edition RFC_EDITION = new Edition(RFC_TID, "AES/CBC/PKCS5Padding", "HmacSHA1") {
+    private static final Edition RFC_EDITION = new Edition(new BigInteger("tid".getBytes()).longValue(),
+        "AES/CBC/PKCS5Padding", "HmacSHA1") {
         private final SecretKeySpec authenticationKey = new SecretKeySpec(
             "12345678901234567890".getBytes(StandardCharsets.US_ASCII), "HmacSHA1");
 
@@ -67,7 +70,7 @@ public class ClientSideStateTest {
         (byte) 0xf7, (byte) 0xf6, (byte) 0x9d, 0x44, (byte) 0x85, 0x30, (byte) 0xde, (byte) 0x9d, (byte) 0xb5, 0x55,
         (byte) 0xc9, 0x4f};
 
-    private static final Supplier<Long> RFC_TIME = () -> 1347265955L;
+    private static final LongSupplier RFC_TIME = () -> 1347265955L;
 
     private static final BiFunction<Class<?>, byte[], Object> SIMPLE_DESERIALIZATION = (t, v) -> String.valueOf(v);
 
@@ -120,6 +123,23 @@ public class ClientSideStateTest {
         assertThat(cookie.getPath()).isEqualTo("/path");
         assertThat(cookie.isHttpOnly()).isFalse();
         assertThat(cookie.isSecure()).isTrue();
+    }
+
+    @Test
+    public void shouldRestoreMultipleAndOrderByTimestamp() {
+        final Iterator<Long> times = Arrays
+            .asList(946598400L, 1293753600L, 978220800L, 946598400L, 1293753600L, 978220800L).iterator();
+        final ClientSideState clientSideState = new ClientSideState(RFC_EDITION, () -> times.next(),
+            ClientSideState.DEFAULT_TIMEOUT);
+
+        final NewCookie cookie1999 = clientSideState.persist("key", "/path", "1");
+        final NewCookie cookie2010 = clientSideState.persist("key", "/path", "3");
+        final NewCookie cookie2000 = clientSideState.persist("key", "/path", "2");
+
+        final Set<String> restored = clientSideState.restoreFrom(Arrays.asList(cookie1999, cookie2010, cookie2000),
+            String.class);
+
+        assertThat(restored).containsExactly("3", "2", "1");
     }
 
     @Test

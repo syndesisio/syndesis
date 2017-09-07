@@ -16,7 +16,7 @@
 package io.syndesis.rest.v1.handler.connection;
 
 import java.util.Date;
-import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -101,10 +101,10 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
         final Connection updatedConnection = new Connection.Builder().createFrom(connection).createdDate(rightNow)
             .lastUpdated(rightNow).build();
 
-        final Optional<CredentialFlowState> flowState = CredentialFlowState.Builder
-            .restoreFrom(state::restoreFrom, request, response).findFirst();
+        final Set<CredentialFlowState> flowStates = CredentialFlowState.Builder.restoreFrom(state::restoreFrom,
+            request);
 
-        final Connection connectionToCreate = flowState.map(s -> {
+        final Connection connectionToCreate = flowStates.stream().map(s -> {
             final Cookie removal = new Cookie(s.persistenceKey(), "");
             removal.setPath("/");
             removal.setMaxAge(0);
@@ -112,7 +112,7 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
             response.addCookie(removal);
 
             return credentials.apply(updatedConnection, s);
-        }).orElse(updatedConnection);
+        }).findFirst().orElse(updatedConnection);
 
         return Creator.super.create(connectionToCreate);
     }
@@ -126,7 +126,8 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
     }
 
     @Path("/{id}/actions")
-    public ConnectionActionHandler credentials(@NotNull final @PathParam("id") @ApiParam(required = true, example = "my-connection") String connectionId) {
+    public ConnectionActionHandler credentials(
+        @NotNull final @PathParam("id") @ApiParam(required = true, example = "my-connection") String connectionId) {
         final Connection connection = get(connectionId);
 
         return new ConnectionActionHandler(connection, config);

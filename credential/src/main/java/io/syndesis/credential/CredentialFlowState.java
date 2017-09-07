@@ -16,11 +16,11 @@
 package io.syndesis.credential;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Set;
 import java.util.function.BiFunction;
-import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -39,6 +39,12 @@ public interface CredentialFlowState {
 
     interface Builder {
 
+        @FunctionalInterface
+        interface Restorer
+            extends BiFunction<List<javax.ws.rs.core.Cookie>, Class<CredentialFlowState>, Set<CredentialFlowState>> {
+            // inherits BiFunction::apply
+        }
+
         CredentialFlowState build();
 
         Builder key(String key);
@@ -51,10 +57,8 @@ public interface CredentialFlowState {
 
         Builder withAll(CredentialFlowState state);
 
-        static Stream<CredentialFlowState> restoreFrom(
-            final BiFunction<javax.ws.rs.core.Cookie, Class<CredentialFlowState>, CredentialFlowState> restore,
-            final HttpServletRequest request, final HttpServletResponse response) {
-            return CredentialFlowStateHelper.restoreFrom(restore, request, response);
+        static Set<CredentialFlowState> restoreFrom(final Restorer restorer, final HttpServletRequest request) {
+            return CredentialFlowStateHelper.restoreFrom(restorer, request);
         }
 
     }

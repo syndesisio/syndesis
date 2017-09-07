@@ -17,11 +17,12 @@ package io.syndesis.rest.v1.handler.credential;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -70,35 +71,42 @@ public class CredentialHandler {
     public Response callback(@Context final HttpServletRequest request, @Context final HttpServletResponse response) {
         // user could have tried multiple times in parallel or encoutered an
         // error, and that leads to multiple `cred-` cookies being present
-        final List<CredentialFlowState> allStatesFromRequest;
+        final Set<CredentialFlowState> allStatesFromRequest;
         try {
-            allStatesFromRequest = CredentialFlowState.Builder.restoreFrom(state::restoreFrom, request, response)
-                .collect(Collectors.toList());
+            allStatesFromRequest = CredentialFlowState.Builder.restoreFrom(state::restoreFrom, request);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final RuntimeException e) {
             LOG.debug("Unable to restore credential flow state from request", e);
-            return fail(request, "Unable to restore the state of authorization");
+            return fail(request, response, "Unable to restore the state of authorization");
         }
 
         if (allStatesFromRequest.isEmpty()) {
-            return fail(request,
+            return fail(request, response,
                 "Unable to recall the state of authorization, called callback without initiating OAuth autorization?");
         }
 
-        final Stream<CredentialFlowState> updatedStatesFromRequest;
+        // as a fallback pick the newest one
+        final CredentialFlowState newestState = allStatesFromRequest.iterator().next();
+        final String providerId = newestState.getProviderId();
+        final URI returnUrl = newestState.getReturnUrl();
+
+        final Optional<CredentialFlowState> maybeUpdatedFlowState;
         try {
-            updatedStatesFromRequest = allStatesFromRequest.stream().map(s -> s.updateFrom(request));
+            final Stream<CredentialFlowState> updatedStatesFromRequest = allStatesFromRequest.stream()
+                .map(s -> s.updateFrom(request));
+
+            // let's try to finish with any remaining flow states, as there
+            // might be
+            // many try with each one
+            maybeUpdatedFlowState = updatedStatesFromRequest.flatMap(s -> tryToFinishAcquisition(request, s))
+                .findFirst();
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final RuntimeException e) {
             LOG.debug("Unable to update credential flow state from request", e);
-            return fail(request, "Unable to update the state of authorization");
+            return fail(request, response, returnUrl, providerId, "Unable to update the state of authorization");
         }
 
-        // let's try to finish with any remaining flow states, as there might be
-        // many try with each one
-        final Optional<CredentialFlowState> maybeUpdatedFlowState = updatedStatesFromRequest
-            .flatMap(s -> tryToFinishAcquisition(request, s)).findFirst();
-
         if (!maybeUpdatedFlowState.isPresent()) {
-            return fail(request, "Unable to finish authorization, OAuth authorization timed out?");
+            return fail(request, response, returnUrl, providerId,
+                "Unable to finish authorization, OAuth authorization timed out?");
         }
 
         final CredentialFlowState flowState = maybeUpdatedFlowState.get();
@@ -132,10 +140,34 @@ public class CredentialHandler {
         }
     }
 
-    /* default */ static Response fail(final HttpServletRequest request, final String message) {
-        final URI redirect = addFragmentTo(appHome(request), failure(null, message));
+    /* default */ static Response fail(final HttpServletRequest request, final HttpServletResponse response,
+        final String message) {
+        final URI redirect = appHome(request);
 
-        return Response.temporaryRedirect(redirect).build();
+        return fail(request, response, redirect, null, message);
+    }
+
+    /* default */ static Response fail(final HttpServletRequest request, final HttpServletResponse response,
+        final URI redirect, final String providerId, final String message) {
+        removeCredentialCookies(request, response);
+
+        final URI redirectWithStatus = addFragmentTo(redirect, failure(providerId, message));
+
+        return Response.temporaryRedirect(redirectWithStatus).build();
+    }
+
+    /* default */ static void removeCredentialCookies(final HttpServletRequest request,
+        final HttpServletResponse response) {
+        Arrays.stream(request.getCookies()).filter(c -> c.getName().startsWith(CredentialFlowState.CREDENTIAL_PREFIX))
+            .forEach(c -> {
+                final Cookie removal = new Cookie(c.getName(), "");
+                removal.setPath("/");
+                removal.setMaxAge(0);
+                removal.setHttpOnly(true);
+                removal.setSecure(true);
+
+                response.addCookie(removal);
+            });
     }
 
 }

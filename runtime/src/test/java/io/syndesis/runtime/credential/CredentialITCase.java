@@ -58,6 +58,30 @@ public class CredentialITCase extends BaseITCase {
     @Autowired
     ClientSideState clientSideState;
 
+    @Test
+    public void callbackErrorsShouldBeHandeled() {
+        final String credentialKey = UUID.randomUUID().toString();
+        final OAuth2CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder().providerId("test-provider")
+            .key(credentialKey).returnUrl(URI.create("/ui#state")).build();
+
+        final HttpHeaders cookies = persistAsCookie(flowState);
+
+        final ResponseEntity<Void> callbackResponse = http(HttpMethod.GET,
+            "/api/v1/credentials/callback?denied=something", null, Void.class, null, cookies,
+            HttpStatus.TEMPORARY_REDIRECT);
+
+        assertThat(callbackResponse.getStatusCode()).as("Status should be temporarry redirect (307)")
+            .isEqualTo(HttpStatus.TEMPORARY_REDIRECT);
+        assertThat(callbackResponse.hasBody()).as("Should not contain HTTP body").isFalse();
+        assertThat(callbackResponse.getHeaders().getLocation().toString()).matches(
+            "http.?://localhost:[0-9]*/api/v1/ui#%7B%22connectorId%22:%22test-provider%22,%22message%22:%22Unable%20to%20update%20the%20state%20of%20authorization%22,%22status%22:%22FAILURE%22%7D");
+
+        final List<String> receivedCookies = callbackResponse.getHeaders().get("Set-Cookie");
+        assertThat(receivedCookies).hasSize(1);
+        assertThat(receivedCookies.get(0)).isEqualTo("cred-o2-" + credentialKey
+            + "=\"\"; path=/; secure; HttpOnly; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:00 GMT");
+    }
+
     @After
     public void cleanupDatabase() {
         dataManager.delete(Connector.class, "test-provider");
@@ -165,14 +189,14 @@ public class CredentialITCase extends BaseITCase {
         final HttpHeaders cookies = persistAsCookie(flowState);
 
         final ResponseEntity<Void> callbackResponse = http(HttpMethod.GET,
-            "/api/v1/credentials/callback?state=test-state", null, Void.class, null, cookies,
+            "/api/v1/credentials/callback?state=test-state&code=code", null, Void.class, null, cookies,
             HttpStatus.TEMPORARY_REDIRECT);
 
         assertThat(callbackResponse.getStatusCode()).as("Status should be temporarry redirect (307)")
             .isEqualTo(HttpStatus.TEMPORARY_REDIRECT);
         assertThat(callbackResponse.hasBody()).as("Should not contain HTTP body").isFalse();
-        assertThat(callbackResponse.getHeaders().getLocation().toString())
-            .matches("http.?://localhost:[0-9]*/api/v1/ui#%7B%22connectorId%22:%22test-provider%22,%22message%22:%22Successfully%20authorized%20Syndesis's%20access%22,%22status%22:%22SUCCESS%22%7D");
+        assertThat(callbackResponse.getHeaders().getLocation().toString()).matches(
+            "http.?://localhost:[0-9]*/api/v1/ui#%7B%22connectorId%22:%22test-provider%22,%22message%22:%22Successfully%20authorized%20Syndesis's%20access%22,%22status%22:%22SUCCESS%22%7D");
 
         final List<String> receivedCookies = callbackResponse.getHeaders().get("Set-Cookie");
         assertThat(receivedCookies).hasSize(1);
@@ -181,7 +205,8 @@ public class CredentialITCase extends BaseITCase {
             .restoreFrom(Cookie.valueOf(receivedCookies.get(0)), OAuth2CredentialFlowState.class);
 
         // AccessGrant does not implement equals/hashCode
-        assertThat(endingFlowState).isEqualToIgnoringGivenFields(flowState, "accessGrant");
+        assertThat(endingFlowState).isEqualToIgnoringGivenFields(
+            new OAuth2CredentialFlowState.Builder().createFrom(flowState).code("code").build(), "accessGrant");
         assertThat(endingFlowState.getAccessGrant()).isEqualToComparingFieldByField(new AccessGrant("token"));
     }
 
