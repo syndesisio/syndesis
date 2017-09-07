@@ -34,7 +34,6 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.ClassInspector;
 import io.syndesis.model.Kind;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.DataShape;
 import io.syndesis.model.connection.DataShapeKinds;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
@@ -101,14 +100,14 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             return builder.build();
         }
 
-        connector.getActions().stream().filter(a -> actionId.equals(a.getId().orElse(null))).findFirst()
-            .ifPresent(a -> {
-                DataShape dataShape = a.getOutputDataShape();
-                String kind = dataShape.getKind();
-                if (kind.equals(DataShapeKinds.JAVA)) {
-                    String type = dataShape.getType();
-                    builder.addAllPaths(classInspector.getPaths(type));
-                }
+        connector.actionById(actionId).ifPresent(a -> {
+                a.getOutputDataShape().ifPresent(dataShape -> {
+                    String kind = dataShape.getKind();
+                    if (kind.equals(DataShapeKinds.JAVA)) {
+                        String type = dataShape.getType();
+                        builder.addAllPaths(classInspector.getPaths(type));
+                    }
+                });
             });
         return builder.build();
     }
