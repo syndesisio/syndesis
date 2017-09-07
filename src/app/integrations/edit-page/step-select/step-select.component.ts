@@ -49,9 +49,12 @@ export class IntegrationsStepSelectComponent extends FlowPage
   }
 
   handleFlowEvent(event: FlowEvent) {
+    const step = this.currentFlow.getStep(this.position);
     switch (event.kind) {
+      case 'integration-step-select':
+        step.stepKind = undefined;
+        break;
       case 'integration-updated':
-        const step = this.currentFlow.getStep(this.position);
         if (!step) {
           // safety net
           this.router.navigate(['save-or-add-step'], {
@@ -65,6 +68,11 @@ export class IntegrationsStepSelectComponent extends FlowPage
           });
           return;
         }
+    }
+    try {
+      this.detector.detectChanges();
+    } catch (err) {
+      // ignore
     }
   }
 

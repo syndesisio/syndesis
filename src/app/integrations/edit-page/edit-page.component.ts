@@ -24,6 +24,7 @@ export class IntegrationsEditPage extends ChildAwarePage
 
   integrationSubscription: Subscription;
   routeSubscription: Subscription;
+  routerEventsSubscription: Subscription;
   childRouteSubscription: Subscription;
   flowSubscription: Subscription;
   urls: UrlSegment[];
@@ -114,13 +115,19 @@ export class IntegrationsEditPage extends ChildAwarePage
   }
 
   ngOnInit() {
+    this.routerEventsSubscription = this.router.events.subscribe(event => {
+      try {
+        this.detector.detectChanges();
+      } catch (err) {
+        // ignore;
+      }
+    });
     this.routeSubscription = this.route.params
       .pluck<Params, string>('integrationId')
       .map((integrationId: string) => {
         this.store.loadOrCreate(integrationId);
       })
       .subscribe();
-    this.nav.hide();
     this.integrationSubscription = this.integration.subscribe(
       (i: Integration) => {
         if (i) {
@@ -128,14 +135,16 @@ export class IntegrationsEditPage extends ChildAwarePage
         }
       },
     );
+    this.nav.hide();
   }
 
   ngOnDestroy() {
+    this.nav.show();
     this.integrationSubscription.unsubscribe();
     this.routeSubscription.unsubscribe();
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
     }
-    this.nav.show();
+    this.routerEventsSubscription.unsubscribe();
   }
 }
