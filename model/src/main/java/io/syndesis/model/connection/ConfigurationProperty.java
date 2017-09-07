@@ -15,8 +15,12 @@
  */
 package io.syndesis.model.connection;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import io.syndesis.model.WithTags;
+
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -24,19 +28,43 @@ import org.immutables.value.Value;
 public interface ConfigurationProperty extends WithTags {
 
     String getKind();
+
     String getDisplayName();
+
     String getGroup();
+
     String getLabel();
+
     Boolean getRequired();
+
     String getType();
+
     String getJavaType();
+
     Boolean getDeprecated();
+
     Boolean getSecret();
+
     Boolean getComponentProperty();
+
     String getDescription();
+
     String getDefaultValue();
+
+    List<PropertyValue> getEnum();
 
     class Builder extends ImmutableConfigurationProperty.Builder {
     }
 
+    @Value.Immutable
+    @JsonDeserialize(builder = PropertyValue.Builder.class)
+    interface PropertyValue {
+
+        String getValue();
+
+        String getLabel();
+
+        class Builder extends ImmutablePropertyValue.Builder {
+        }
+    }
 }
