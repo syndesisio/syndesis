@@ -24,13 +24,15 @@ For example when using Salesforce's connector action _create or update_ I need t
 
 This proposal changes the action properties to contain additional metadata with a list of steps that group action properties that need to be presented piecemeal.
 
-`properties` map is replaced with `ActionDefinition`:
+`properties` map is replaced with `ActionDefinition` and input/output data shapes are not mandatory to reflect that they are determined by the selection of action properties:
 ```diff
 public interface Action extends WithId<Action>, WithName, Serializable {
 
 -  DataShape getInputDataShape();
++  Optional<DataShape> getInputDataShape();
 
 -  DataShape getOutputDataShape();
++  Optional<DataShape> getOutputDataShape();
 
   //...
 +  ActionDefinition getDefinition();
