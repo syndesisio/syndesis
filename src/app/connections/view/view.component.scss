@@ -6,6 +6,10 @@
   // These classes apply to the 'Create', 'Edit', and 'View' states.
   ////////////////////////////////////////////////////////////////////////////////
 
+  div {
+    position: unset;
+  }
+
   .card-pf {
     .card-pf-body {
       .fa {

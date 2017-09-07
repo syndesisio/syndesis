@@ -11,7 +11,6 @@ import { Connection } from '../../../model';
 @Component({
   selector: 'syndesis-connections-connection-basics',
   templateUrl: 'connection-basics.component.html',
-  styleUrls: ['connection-basics.component.scss'],
 })
 export class ConnectionsConnectionBasicsComponent implements OnInit, OnDestroy {
   private subscription: Subscription;

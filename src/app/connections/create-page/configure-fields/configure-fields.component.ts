@@ -13,7 +13,6 @@ import { ModalService } from '../../../common/modal/modal.service';
 @Component({
   selector: 'syndesis-connections-configure-fields',
   templateUrl: 'configure-fields.component.html',
-  styleUrls: ['configure-fields.component.scss'],
 })
 export class ConnectionsConfigureFieldsComponent
   implements OnInit, CanComponentDeactivate {
