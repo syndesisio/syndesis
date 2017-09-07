@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.databind.util.Converter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.immutables.value.Value;
 import org.springframework.social.oauth1.OAuthToken;
 
@@ -85,6 +86,10 @@ public interface OAuth1CredentialFlowState extends CredentialFlowState {
     @Override
     default CredentialFlowState updateFrom(final HttpServletRequest request) {
         final String verifier = request.getParameter("oauth_verifier");
+
+        if (StringUtils.isEmpty(verifier)) {
+            throw new IllegalArgumentException("Did not receive OAuth oauth_verifier in request parameters");
+        }
 
         return new OAuth1CredentialFlowState.Builder().createFrom(this).verifier(verifier).build();
     }

@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.databind.util.Converter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.immutables.value.Value;
 import org.springframework.social.oauth1.OAuthToken;
 import org.springframework.social.oauth2.AccessGrant;
@@ -89,6 +90,10 @@ public interface OAuth2CredentialFlowState extends CredentialFlowState {
     @Override
     default CredentialFlowState updateFrom(final HttpServletRequest request) {
         final String code = request.getParameter("code");
+
+        if (StringUtils.isEmpty(code)) {
+            throw new IllegalArgumentException("Did not receive OAuth code in request parameters");
+        }
 
         return new OAuth2CredentialFlowState.Builder().createFrom(this).code(code).build();
     }

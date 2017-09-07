@@ -15,60 +15,49 @@
  */
 package io.syndesis.credential;
 
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CredentialFlowStateHelperTest {
 
-    private static final HttpServletResponse NOT_USED = null;
-
     @Test
-    public void ifCookieNameDoesNotMatchShouldReturnNullAndRemoveTheCookie() {
-        final javax.ws.rs.core.Cookie cookie = new javax.ws.rs.core.Cookie(
-            CredentialFlowState.CREDENTIAL_PREFIX + "notMatching", "anyValue");
+    public void ifCookieNameDoesNotMatchShouldReturnEmptySet() {
+        final Cookie cookie = new Cookie("notMatching", "anyValue");
 
-        final HttpServletResponse response = mock(HttpServletResponse.class);
-        final CredentialFlowState got = CredentialFlowStateHelper.restoreOrDrop((c, cls) -> {
-            assertThat(c.getValue()).isEqualTo("anyValue");
-            return new OAuth2CredentialFlowState.Builder().key("key").build();
-        }, response, cookie);
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getCookies()).thenReturn(new Cookie[] {cookie});
 
-        assertThat(got).isNull();
-        final ArgumentCaptor<Cookie> cookieArgument = ArgumentCaptor.forClass(Cookie.class);
-        verify(response).addCookie(cookieArgument.capture());
+        final Set<CredentialFlowState> got = CredentialFlowStateHelper.restoreFrom((cookies, cls) -> {
+            assertThat(cookies).isEmpty();
+            return Collections.emptySet();
+        }, request);
 
-        assertThat(cookieArgument.getValue())
-            .isEqualToComparingFieldByField(removalOf(CredentialFlowState.CREDENTIAL_PREFIX + "notMatching"));
+        assertThat(got).isEmpty();
     }
 
     @Test
-    public void ifRestoreFailsShouldReturnNullAndRemoveTheCookie() {
-        final javax.ws.rs.core.Cookie cookie = new javax.ws.rs.core.Cookie(
-            CredentialFlowState.CREDENTIAL_PREFIX + "key", "anyValue");
+    public void ifRestoreFailsShouldReturnEmptySet() {
+        final Cookie cookie = new Cookie(CredentialFlowState.CREDENTIAL_PREFIX + "key", "anyValue");
 
-        final HttpServletResponse response = mock(HttpServletResponse.class);
-        final CredentialFlowState got = CredentialFlowStateHelper.restoreOrDrop((c, cls) -> {
-            assertThat(c.getValue()).isEqualTo("anyValue");
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getCookies()).thenReturn(new Cookie[] {cookie});
+
+        final Set<CredentialFlowState> got = CredentialFlowStateHelper.restoreFrom((cookies, cls) -> {
+            assertThat(cookies.get(0).getValue()).isEqualTo("anyValue");
             throw new IllegalArgumentException();
-        }, response, cookie);
+        }, request);
 
-        assertThat(got).isNull();
-        final ArgumentCaptor<Cookie> cookieArgument = ArgumentCaptor.forClass(Cookie.class);
-        verify(response).addCookie(cookieArgument.capture());
-
-        assertThat(cookieArgument.getValue())
-            .isEqualToComparingFieldByField(removalOf(CredentialFlowState.CREDENTIAL_PREFIX + "key"));
+        assertThat(got).isEmpty();
     }
 
     @Test
@@ -87,20 +76,6 @@ public class CredentialFlowStateHelperTest {
     }
 
     @Test
-    public void shouldRemoveCookies() {
-        final HttpServletResponse response = mock(HttpServletResponse.class);
-        CredentialFlowStateHelper.removeCookie(response, "myCookie");
-
-        final Cookie expected = removalOf("myCookie");
-
-        final ArgumentCaptor<Cookie> cookieArgument = ArgumentCaptor.forClass(Cookie.class);
-        verify(response).addCookie(cookieArgument.capture());
-
-        // javax.servlet.http.Cookie has no equals/hashCode
-        assertThat(expected).isEqualToComparingFieldByField(cookieArgument.getValue());
-    }
-
-    @Test
     public void shouldRestoreCookiesToStreamOfState() {
         final CredentialFlowState expected1 = new OAuth2CredentialFlowState.Builder().key("key1").build();
         final CredentialFlowState expected2 = new OAuth2CredentialFlowState.Builder().key("key2").build();
@@ -109,56 +84,34 @@ public class CredentialFlowStateHelperTest {
         final Cookie cookie2 = new Cookie(CredentialFlowState.CREDENTIAL_PREFIX + "key2", "anyValue");
 
         final HttpServletRequest request = mock(HttpServletRequest.class);
-        final HttpServletResponse response = mock(HttpServletResponse.class);
+        when(request.getCookies()).thenReturn(new Cookie[] {cookie1, cookie2});
 
         when(request.getCookies()).thenReturn(new Cookie[] {cookie1, cookie2});
-        final Stream<CredentialFlowState> stream = CredentialFlowStateHelper.restoreFrom((c, cls) -> {
-            assertThat(c.getValue()).isEqualTo("anyValue");
-            return new OAuth2CredentialFlowState.Builder()
-                .key(c.getName().substring(CredentialFlowState.CREDENTIAL_PREFIX.length())).build();
-        }, request, response);
+        final Set<CredentialFlowState> states = CredentialFlowStateHelper.restoreFrom((cookies, cls) -> {
+            assertThat(cookies).allSatisfy(cookie -> assertThat(cookie.getValue()).isEqualTo("anyValue"));
 
-        assertThat(stream).contains(expected1, expected2);
-    }
+            return cookies.stream()
+                .map(cookie -> new OAuth2CredentialFlowState.Builder()
+                    .key(cookie.getName().substring(CredentialFlowState.CREDENTIAL_PREFIX.length())).build())
+                .collect(Collectors.toSet());
+        }, request);
 
-    @Test
-    public void shouldRestoreStateFromCookies() {
-        final CredentialFlowState expected = new OAuth2CredentialFlowState.Builder().key("key").build();
-
-        final javax.ws.rs.core.Cookie cookie = new javax.ws.rs.core.Cookie(
-            CredentialFlowState.CREDENTIAL_PREFIX + "key", "anyValue");
-
-        final CredentialFlowState got = CredentialFlowStateHelper.restoreOrDrop((c, cls) -> {
-            assertThat(c.getValue()).isEqualTo("anyValue");
-            return expected;
-        }, NOT_USED, cookie);
-
-        assertThat(got).isEqualTo(expected);
+        assertThat(states).containsOnly(expected1, expected2);
     }
 
     @Test
     public void shouldReturnEmptyStreamIfNoCookiesPresent() {
         final HttpServletRequest request = mock(HttpServletRequest.class);
 
-        final Stream<CredentialFlowState> streamFromNullCookies = CredentialFlowStateHelper
-            .restoreFrom((c, cls) -> null, request, NOT_USED);
+        final Set<CredentialFlowState> streamFromNullCookies = CredentialFlowStateHelper.restoreFrom((c, cls) -> null,
+            request);
 
         assertThat(streamFromNullCookies).isEmpty();
 
         when(request.getCookies()).thenReturn(new Cookie[0]);
-        final Stream<CredentialFlowState> streamFromEmptyCookies = CredentialFlowStateHelper
-            .restoreFrom((c, cls) -> null, request, NOT_USED);
+        final Set<CredentialFlowState> streamFromEmptyCookies = CredentialFlowStateHelper.restoreFrom((c, cls) -> null,
+            request);
 
         assertThat(streamFromEmptyCookies).isEmpty();
-    }
-
-    private Cookie removalOf(final String name) {
-        final Cookie removal = new Cookie(name, "");
-        removal.setPath("/");
-        removal.setMaxAge(0);
-        removal.setHttpOnly(true);
-        removal.setSecure(true);
-
-        return removal;
     }
 }

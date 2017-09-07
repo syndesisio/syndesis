@@ -16,68 +16,41 @@
 package io.syndesis.credential;
 
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.syndesis.credential.CredentialFlowState.Builder.Restorer;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 final class CredentialFlowStateHelper {
-
-    private static final Logger LOG = LoggerFactory.getLogger(CredentialFlowStateHelper.class);
 
     private CredentialFlowStateHelper() {
         // utility class
     }
 
-    /* default */ static void removeCookie(final HttpServletResponse response, final String cookieName) {
-        final Cookie removal = new Cookie(cookieName, "");
-        removal.setPath("/");
-        removal.setMaxAge(0);
-        removal.setHttpOnly(true);
-        removal.setSecure(true);
-
-        response.addCookie(removal);
-    }
-
-    /* default */ static Stream<CredentialFlowState> restoreFrom(
-        final BiFunction<javax.ws.rs.core.Cookie, Class<CredentialFlowState>, CredentialFlowState> restore,
-        final HttpServletRequest request, final HttpServletResponse response) {
+    /* default */ static Set<CredentialFlowState> restoreFrom(final Restorer restore,
+        final HttpServletRequest request) {
         final Cookie[] servletCookies = request.getCookies();
 
-        if (servletCookies == null || servletCookies.length == 0) {
-            return Stream.of();
+        if (ArrayUtils.isEmpty(servletCookies)) {
+            return Collections.emptySet();
         }
 
-        return Arrays.stream(servletCookies).filter(c -> c.getName().startsWith(CredentialFlowState.CREDENTIAL_PREFIX))
-            .map(CredentialFlowStateHelper::toJaxRsCookie).map(c -> restoreOrDrop(restore, response, c))
-            .filter(Objects::nonNull);
-    }
+        final List<javax.ws.rs.core.Cookie> credentialCookies = Arrays.stream(servletCookies)
+            .filter(c -> c.getName().startsWith(CredentialFlowState.CREDENTIAL_PREFIX))
+            .map(CredentialFlowStateHelper::toJaxRsCookie).collect(Collectors.toList());
 
-    /* default */ static CredentialFlowState restoreOrDrop(
-        final BiFunction<javax.ws.rs.core.Cookie, Class<CredentialFlowState>, CredentialFlowState> restore,
-        final HttpServletResponse response, final javax.ws.rs.core.Cookie cookie) {
         try {
-            final CredentialFlowState flowState = restore.apply(cookie, CredentialFlowState.class);
-
-            // prevent tampering
-            if (cookie.getName().endsWith(flowState.getKey())) {
-                return flowState;
-            }
+            return restore.apply(credentialCookies, CredentialFlowState.class);
         } catch (final IllegalArgumentException e) {
-            LOG.debug("Unable to restore flow state from HTTP cookie: {}", cookie, e);
+            return Collections.emptySet();
         }
-
-        // remove cookies that can't be restored or have mismatched
-        // name/value
-        removeCookie(response, cookie.getName());
-
-        return null;
     }
 
     /* default */ static javax.ws.rs.core.Cookie toJaxRsCookie(final Cookie cookie) {
