@@ -28,86 +28,35 @@ import io.syndesis.credential.AcquisitionMethod;
 import io.syndesis.credential.AcquisitionResponse;
 import io.syndesis.credential.AcquisitionResponse.State;
 import io.syndesis.credential.CredentialFlowState;
-import io.syndesis.credential.CredentialProvider;
-import io.syndesis.credential.CredentialProviderLocator;
-import io.syndesis.credential.OAuth2Applicator;
+import io.syndesis.credential.Credentials;
 import io.syndesis.credential.OAuth2CredentialFlowState;
-import io.syndesis.credential.OAuth2CredentialProvider;
 import io.syndesis.credential.Type;
+import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.rest.v1.state.ClientSideState;
-import io.syndesis.runtime.Application;
 import io.syndesis.runtime.BaseITCase;
-import io.syndesis.runtime.credential.CredentialITCase.TestConfiguration;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.social.SocialProperties;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
-import org.springframework.social.oauth2.OAuth2Operations;
-import org.springframework.social.oauth2.OAuth2Template;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 import static org.springframework.web.util.UriUtils.encode;
 
-@Import({Application.class, TestConfiguration.class})
 public class CredentialITCase extends BaseITCase {
 
     @Autowired
     ClientSideState clientSideState;
-
-    public static class TestConfiguration {
-
-        public TestConfiguration(final CredentialProviderLocator locator) {
-            locator.addCredentialProvider(provider());
-        }
-
-        public CredentialProvider provider() {
-            @SuppressWarnings("unchecked")
-            final OAuth2ConnectionFactory<Object> connectionFactory = mock(OAuth2ConnectionFactory.class);
-            when(connectionFactory.generateState()).thenReturn("test-state");
-
-            final SocialProperties properties = new SocialProperties() {
-            };
-            properties.setAppId("appId");
-            properties.setAppSecret("appSecret");
-
-            final OAuth2Applicator applicator = new OAuth2Applicator(properties);
-            applicator.setAccessTokenProperty("accessToken");
-            applicator.setClientIdProperty("clientId");
-            applicator.setClientSecretProperty("clientSecret");
-            applicator.setRefreshTokenProperty("refreshToken");
-
-            final CredentialProvider credentialProvider = new OAuth2CredentialProvider<>("test-provider",
-                connectionFactory, applicator);
-
-            final OAuth2Operations operations = spy(new OAuth2Template("testClientId", "testClientSecret",
-                "https://test/oauth2/authorize", "https://test/oauth2/token"));
-            doReturn(new AccessGrant("token")).when(operations).exchangeForAccess(Matchers.anyString(),
-                Matchers.anyString(), Matchers.any(MultiValueMap.class));
-
-            when(connectionFactory.getOAuthOperations()).thenReturn(operations);
-
-            return credentialProvider;
-        }
-    }
 
     @After
     public void cleanupDatabase() {
@@ -117,7 +66,12 @@ public class CredentialITCase extends BaseITCase {
 
     @Before
     public void prepopulateDatabase() {
-        final Connector provider = new Connector.Builder().id("test-provider").build();
+        final Connector provider = new Connector.Builder().id("test-provider")
+            .putProperty("clientId", new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_ID_TAG).build())
+            .putProperty("clientSecret",
+                new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_SECRET_TAG).build())
+            .putConfiguredProperty("clientId", "a-client-id").putConfiguredProperty("clientSecret", "a-client-secret")
+            .build();
         dataManager.create(provider);
 
         dataManager.create(new Connection.Builder().id("test-connection").connector(provider).build());

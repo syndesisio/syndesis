@@ -20,9 +20,12 @@ import java.util.List;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+import io.syndesis.credential.CredentialFlowState;
 import io.syndesis.credential.CredentialProvider;
 import io.syndesis.credential.CredentialProviderLocator;
+import io.syndesis.credential.OAuth1CredentialFlowState;
 import io.syndesis.credential.OAuth1CredentialProvider;
+import io.syndesis.model.connection.Connection;
 import io.syndesis.rest.v1.handler.setup.OAuthAppHandler;
 
 import org.junit.Test;
@@ -30,8 +33,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.social.oauth1.OAuthToken;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.awaitility.Awaitility.given;
 
 /**
@@ -60,11 +65,6 @@ public class SetupITCase extends BaseITCase {
 
     @Test
     public void updateOauthApp() {
-
-        // Lets register a null connection factory for twitter, in case one was previously registered.
-        OAuth1CredentialProvider<Void> initial = new OAuth1CredentialProvider<Void>("twitter", null, null);
-        locator.addCredentialProvider(initial);
-
         // Validate initial state assumptions.
         getOauthApps();
 
@@ -95,7 +95,17 @@ public class SetupITCase extends BaseITCase {
                 final CredentialProvider twitterCredentialProvider = locator.providerWithId("twitter");
 
                 // preparing is something we could not do with a `null` ConnectionFactory
-                assertThat(twitterCredentialProvider).isNotSameAs(initial);
+                assertThat(twitterCredentialProvider).isNotNull()
+                    .isInstanceOfSatisfying(OAuth1CredentialProvider.class, p -> {
+                        final Connection connection = new Connection.Builder().build();
+                        final CredentialFlowState flowState = new OAuth1CredentialFlowState.Builder()
+                            .accessToken(new OAuthToken("value", "secret")).build();
+                        final Connection appliedTo = p.applyTo(connection, flowState);
+
+                        // test that the updated values are used
+                        assertThat(appliedTo.getConfiguredProperties())
+                            .contains(entry("consumerKey", "test-id"), entry("consumerSecret", "test-secret"));
+                    }); 
 
                 return true;
             });

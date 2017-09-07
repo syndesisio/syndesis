@@ -18,13 +18,6 @@ package io.syndesis.credential;
 public interface CredentialProviderLocator {
 
     /**
-     * Adds or replaces a CredentialProvider in the locator.
-     *
-     * @param credentialProvider the provider to add
-     */
-    <A, T> void addCredentialProvider(CredentialProvider credentialProvider);
-
-    /**
      * Looks up a CredentialProvider by providerId.
      */
     CredentialProvider providerWithId(String providerId);

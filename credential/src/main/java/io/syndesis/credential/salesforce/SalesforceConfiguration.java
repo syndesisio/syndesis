@@ -16,26 +16,18 @@
 package io.syndesis.credential.salesforce;
 
 import io.syndesis.credential.Applicator;
-import io.syndesis.credential.CredentialProviderLocator;
 import io.syndesis.credential.OAuth2Applicator;
 import io.syndesis.model.connection.Connection;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.social.SocialProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.salesforce.api.Salesforce;
 import org.springframework.social.salesforce.connect.SalesforceConnectionFactory;
 
-import static io.syndesis.credential.salesforce.SalesforceCredentialProviderFactory.createCredentialProvider;
-
 @Configuration
 @ConditionalOnClass(SalesforceConnectionFactory.class)
-@ConditionalOnProperty(prefix = "spring.social.salesforce", name = "app-id")
-@EnableConfigurationProperties(SalesforceProperties.class)
 public class SalesforceConfiguration {
 
     protected static final class SalesforceApplicator extends OAuth2Applicator {
@@ -63,12 +55,6 @@ public class SalesforceConfiguration {
             final String instanceUrl = salesforceApi.getInstanceUrl();
             Applicator.applyProperty(mutableConnection, "instanceUrl", instanceUrl);
         }
-    }
-
-    @Autowired
-    public SalesforceConfiguration(final SalesforceProperties salesforceProperties,
-        final CredentialProviderLocator locator) {
-        locator.addCredentialProvider(createCredentialProvider(salesforceProperties));
     }
 
 }

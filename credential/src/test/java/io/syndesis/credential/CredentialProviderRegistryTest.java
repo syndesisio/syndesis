@@ -15,6 +15,11 @@
  */
 package io.syndesis.credential;
 
+import io.syndesis.credential.TestCredentialProviderFactory.TestCredentialProvider;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.connection.Connector;
+
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,22 +28,30 @@ import static org.mockito.Mockito.when;
 
 public class CredentialProviderRegistryTest {
 
-    @Test
-    public void shouldAllowProviderRegistration() {
-        final CredentialProviderRegistry registry = new CredentialProviderRegistry();
-
-        final CredentialProvider provider = mock(CredentialProvider.class);
-        when(provider.id()).thenReturn("a-provider");
-
-        registry.addCredentialProvider(provider);
-
-        assertThat(registry.providerWithId("a-provider")).isSameAs(provider);
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void shouldComplainAboutUnregisteredProviders() {
-        final CredentialProviderRegistry registry = new CredentialProviderRegistry();
+        final DataManager dataManager = mock(DataManager.class);
+        final CredentialProviderRegistry registry = new CredentialProviderRegistry(dataManager);
 
         registry.providerWithId("unregistered");
+    }
+
+    @Test
+    public void shouldFetchProvidersFromDataManager() {
+        final DataManager dataManager = mock(DataManager.class);
+        final CredentialProviderRegistry registry = new CredentialProviderRegistry(dataManager);
+
+        final Connector connector = new Connector.Builder().id("test-provider")
+            .putProperty("clientId", new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_ID_TAG).build())
+            .putProperty("clientSecret",
+                new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_SECRET_TAG).build())
+            .putConfiguredProperty("clientId", "a-client-id").putConfiguredProperty("clientSecret", "a-client-secret")
+            .build();
+        when(dataManager.fetch(Connector.class, "test-provider")).thenReturn(connector);
+
+        assertThat(registry.providerWithId("test-provider")).isInstanceOfSatisfying(TestCredentialProvider.class, p -> {
+            assertThat(p.getProperties().getAppId()).isEqualTo("a-client-id");
+            assertThat(p.getProperties().getAppSecret()).isEqualTo("a-client-secret");
+        });
     }
 }
