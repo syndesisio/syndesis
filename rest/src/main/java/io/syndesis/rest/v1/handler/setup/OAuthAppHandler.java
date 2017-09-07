@@ -16,9 +16,7 @@
 package io.syndesis.rest.v1.handler.setup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -39,7 +37,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.core.SuppressFBWarnings;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 
 import org.springframework.boot.autoconfigure.social.SocialProperties;
@@ -121,8 +118,8 @@ public class OAuthAppHandler {
         app.id = connector.getId().get();
         app.name = connector.getName();
         app.icon = connector.getIcon();
-        app.clientId = getPropertyTaggedAs(connector, "oauth-client-id");
-        app.clientSecret = getPropertyTaggedAs(connector, "oauth-client-secret");
+        app.clientId = connector.propertyTaggedWith("oauth-client-id").orElse(null);
+        app.clientSecret = connector.propertyTaggedWith("oauth-client-secret").orElse(null);
         return app;
     }
 
@@ -130,21 +127,17 @@ public class OAuthAppHandler {
     @Path(value = "/{id}")
     @Consumes("application/json")
     public void update(@NotNull @PathParam("id") String id, @NotNull @Valid OAuthApp app) {
-        Connector connector = dataMgr.fetch(Connector.class, id);
-        if( connector==null ) {
+        final Connector connector = dataMgr.fetch(Connector.class, id);
+        if (connector == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        Map<String, String> configuredProperties =  new HashMap<>(connector.getConfiguredProperties());
-        setPropertyTaggedAs(connector, configuredProperties, "oauth-client-id", app.clientId);
-        setPropertyTaggedAs(connector, configuredProperties,"oauth-client-secret", app.clientSecret);
+        final Connector updated = new Connector.Builder().createFrom(connector)
+            .putOrRemoveConfiguredPropertyTaggedWith("oauth-client-id", app.clientId)
+            .putOrRemoveConfiguredPropertyTaggedWith("oauth-client-secret", app.clientSecret)
+            .build();
 
-        // Updated the configuredProperties
-        Connector.Builder builder = connector.builder();
-        builder.configuredProperties(configuredProperties);
-        connector = builder.build();
-
-        dataMgr.update(connector);
+        dataMgr.update(updated);
     }
 
     private static boolean isOauthConnector(Connector connector) {
@@ -152,27 +145,6 @@ public class OAuthAppHandler {
                 return x.getTags().contains("oauth-client-id");
             }
         );
-    }
-
-    private static String getPropertyTaggedAs(Connector connector, String name) {
-        if( connector.getProperties() == null ) {
-            return null;
-        }
-        for (Map.Entry<String,ConfigurationProperty> entry : connector.getProperties().entrySet()) {
-            if( entry.getValue().getTags().contains(name) ) {
-                return connector.getConfiguredProperties().get(entry.getKey());
-            }
-        }
-        return null;
-    }
-
-    private static void setPropertyTaggedAs(Connector connector, Map<String, String> configuredProperties, String name, String value) {
-        for (Map.Entry<String,ConfigurationProperty> entry : connector.getProperties().entrySet()) {
-            if( entry.getValue().getTags().contains(name) ) {
-                configuredProperties.put(entry.getKey(), value);
-                return;
-            }
-        }
     }
 
 }
