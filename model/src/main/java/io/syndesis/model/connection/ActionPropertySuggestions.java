@@ -44,7 +44,7 @@ public interface ActionPropertySuggestions {
         @SuppressWarnings("PMD.UseUtilityClass")
         final class Builder extends ImmutableActionPropertySuggestion.Builder {
 
-            /* default */ static ActionPropertySuggestion of(final String value, final String displayValue) {
+            public static ActionPropertySuggestion of(final String value, final String displayValue) {
                 return new ActionPropertySuggestion.Builder().value(value).displayValue(displayValue).build();
             }
 

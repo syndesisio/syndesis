@@ -16,7 +16,9 @@
 package io.syndesis.model.connection;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -32,6 +34,18 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = ActionDefinition.Builder.class)
 public interface ActionDefinition extends Serializable {
 
+    @Value.Immutable
+    @JsonDeserialize(builder = ActionDefinitionStep.Builder.class)
+    @ImmutablesStyle
+    interface ActionDefinitionStep extends WithName, WithProperties, Serializable {
+
+        final class Builder extends ImmutableActionDefinitionStep.Builder {
+            // make ImmutableActionDefinitionStep.Builder accessible
+        }
+
+        String getDescription();
+    }
+
     final class Builder extends ImmutableActionDefinition.Builder {
         // make ImmutableActionDefinition.Builder accessible
 
@@ -46,23 +60,47 @@ public interface ActionDefinition extends Serializable {
 
             return this;
         }
-    }
 
-    @Value.Immutable
-    @JsonDeserialize(builder = ActionDefinitionStep.Builder.class)
-    @ImmutablesStyle
-    interface ActionDefinitionStep extends WithName, WithProperties, Serializable {
+        public Builder withConfigurationProperty(final String propertyName,
+            final Consumer<ConfigurationProperty.Builder> configurationPropertyConfigurator) {
+            final ActionDefinition definition = build();
+            final List<ActionDefinitionStep> steps = definition.getPropertyDefinitionSteps();
 
-        final class Builder extends ImmutableActionDefinitionStep.Builder {
-            // make ImmutableActionDefinitionStep.Builder accessible
+            int stepIdx;
+            ActionDefinitionStep step = null;
+            for (stepIdx = 0; stepIdx < steps.size(); stepIdx++) {
+                final ActionDefinitionStep potentialStep = steps.get(stepIdx);
+
+                final Map<String, ConfigurationProperty> properties = potentialStep.getProperties();
+                if (properties.containsKey(propertyName)) {
+                    step = potentialStep;
+                    break;
+                }
+            }
+
+            if (step == null) {
+                throw new IllegalArgumentException("Unknown property: " + propertyName);
+            }
+
+            final ConfigurationProperty configurationProperty = step.getProperties().get(propertyName);
+
+            final ConfigurationProperty.Builder configurationPropertyModifier = new ConfigurationProperty.Builder()
+                .createFrom(configurationProperty);
+            configurationPropertyConfigurator.accept(configurationPropertyModifier);
+
+            final ActionDefinitionStep.Builder stepModifier = new ActionDefinitionStep.Builder().createFrom(step)
+                .putProperty(propertyName, configurationPropertyModifier.build());
+
+            final List<ActionDefinitionStep> modifiedSteps = new ArrayList<>(steps);
+            modifiedSteps.set(stepIdx, stepModifier.build());
+
+            return propertyDefinitionSteps(modifiedSteps);
         }
-
-        String getDescription();
     }
-
-    List<ActionDefinitionStep> getPropertyDefinitionSteps();
 
     Optional<DataShape> getInputDataShape();
 
     Optional<DataShape> getOutputDataShape();
+
+    List<ActionDefinitionStep> getPropertyDefinitionSteps();
 }

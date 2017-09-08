@@ -15,6 +15,9 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.client.Client;
@@ -22,9 +25,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
 
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.ActionDefinition;
@@ -34,6 +34,7 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.verifier.VerificationConfigurationProperties;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -53,6 +54,8 @@ public class ConnectionActionHandlerTest {
     private final ActionDefinition createOrUpdateSalesforceObjectDefinition;
 
     private final ConnectionActionHandler handler;
+
+    private Builder invocationBuilder;
 
     public ConnectionActionHandlerTest() {
         createOrUpdateSalesforceObjectDefinition = new ActionDefinition.Builder()
@@ -97,28 +100,50 @@ public class ConnectionActionHandlerTest {
         };
     }
 
-    @Test
-    public void shouldElicitActionPropertySuggestions() {
-        final MultivaluedMap<String, String> parameters = new MultivaluedHashMap<>();
-        parameters.putSingle("sObjectName", "Contact");
-
-        final UriInfo uriInfo = mock(UriInfo.class);
-        when(uriInfo.getQueryParameters()).thenReturn(parameters);
-
+    @Before
+    public void setupMocks() {
         final WebTarget target = mock(WebTarget.class);
         when(client.target(anyString())).thenReturn(target);
 
-        final Builder invocationBuilder = mock(Builder.class);
+        invocationBuilder = mock(Builder.class);
         when(target.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+    }
 
+    @Test
+    public void shouldElicitActionPropertySuggestions() {
         @SuppressWarnings({"unchecked", "rawtypes"})
         final Class<Entity<Map<String, Object>>> entityType = (Class) Entity.class;
         final ArgumentCaptor<Entity<Map<String, Object>>> entity = ArgumentCaptor.forClass(entityType);
 
-        final ActionPropertySuggestions suggestions = new ActionPropertySuggestions.Builder().build();
+        final ActionPropertySuggestions suggestions = new ActionPropertySuggestions.Builder()
+            .putValue("sObjectName",
+                Collections
+                    .singletonList(ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
+            .putValue("sObjectIdName",
+                Arrays.asList(ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("ID", "Contact ID"),
+                    ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("Email", "Email"),
+                    ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("TwitterScreenName__c",
+                        "Twitter Screen Name")))
+            .build();
         when(invocationBuilder.post(entity.capture(), eq(ActionPropertySuggestions.class))).thenReturn(suggestions);
 
-        assertThat(handler.properties(SALESFORCE_CREATE_OR_UPDATE, uriInfo)).isSameAs(suggestions);
+        final ActionDefinition enrichedDefinitioin = new ActionDefinition.Builder()
+            .createFrom(createOrUpdateSalesforceObjectDefinition)
+            .withConfigurationProperty("sObjectName",
+                c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact")))
+            .withConfigurationProperty("sObjectIdName",
+                c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("ID", "Contact ID")))
+            .withConfigurationProperty("sObjectIdName",
+                c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Email", "Email")))
+            .withConfigurationProperty("sObjectIdName",
+                c -> c.addEnum(
+                    ConfigurationProperty.PropertyValue.Builder.of("TwitterScreenName__c", "Twitter Screen Name")))
+            .build();
+
+        final Map<String, String> parameters = new HashMap<>();
+        parameters.put("sObjectName", "Contact");
+
+        assertThat(handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters)).isEqualTo(enrichedDefinitioin);
 
         assertThat(entity.getValue().getEntity()).contains(entry("clientId", "some-clientId"),
             entry("sObjectIdName", null), entry("sObjectName", "Contact"));
@@ -126,8 +151,26 @@ public class ConnectionActionHandlerTest {
 
     @Test
     public void shouldProvideActionDefinition() {
-        final ActionDefinition definition = handler.definition(SALESFORCE_CREATE_OR_UPDATE);
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        final Class<Entity<Map<String, Object>>> entityType = (Class) Entity.class;
+        final ArgumentCaptor<Entity<Map<String, Object>>> entity = ArgumentCaptor.forClass(entityType);
 
-        assertThat(definition).isEqualTo(createOrUpdateSalesforceObjectDefinition);
+        final ActionPropertySuggestions suggestions = new ActionPropertySuggestions.Builder().putValue("sObjectName",
+            Arrays.asList(ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("Account", "Account"),
+                ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
+            .build();
+        when(invocationBuilder.post(entity.capture(), eq(ActionPropertySuggestions.class))).thenReturn(suggestions);
+
+        final ActionDefinition definition = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE,
+            Collections.emptyMap());
+
+        final ActionDefinition enrichedDefinitioin = new ActionDefinition.Builder()
+            .createFrom(createOrUpdateSalesforceObjectDefinition)
+            .withConfigurationProperty("sObjectName",
+                c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Account", "Account"),
+                    ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact")))
+            .build();
+
+        assertThat(definition).isEqualTo(enrichedDefinitioin);
     }
 }

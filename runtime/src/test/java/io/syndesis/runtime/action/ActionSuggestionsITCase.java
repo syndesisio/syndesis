@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -28,8 +27,6 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.ActionDefinition;
-import io.syndesis.model.connection.ActionPropertySuggestions;
-import io.syndesis.model.connection.ActionPropertySuggestions.ActionPropertySuggestion;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
@@ -43,6 +40,10 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -59,57 +60,62 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings({"PMD.TooManyStaticImports", "PMD.ExcessiveImports"})
 public class ActionSuggestionsITCase extends BaseITCase {
 
-    private static final String CREATE_OR_UPDATE_ACTION_ID = "io.syndesis:salesforce-create-or-update-connector:latest";
-
     @ClassRule
     public static final WireMockRule WIREMOCK = new WireMockRule(wireMockConfig().dynamicPort());
 
-    private static final Action CREATE_OR_UPDATE_ACTION = new Action.Builder().id(CREATE_OR_UPDATE_ACTION_ID)
+    private static final ConfigurationProperty _DEFAULT_SALESFORCE_IDENTIFIER = new ConfigurationProperty.Builder()//
+        .kind("parameter")//
+        .displayName("Identifier field name")//
+        .group("common")//
+        .required(Boolean.TRUE)//
+        .type("string")//
+        .javaType("java.lang.String")//
+        .componentProperty(Boolean.FALSE)//
+        .description("Unique field to hold the identifier value")//
+        .build();
+
+    private static final ConfigurationProperty _DEFAULT_SALESFORCE_OBJECT_NAME = new ConfigurationProperty.Builder()//
+        .kind("parameter")//
+        .displayName("Salesforce object type")//
+        .group("common")//
+        .required(Boolean.TRUE)//
+        .type("string")//
+        .javaType("java.lang.String")//
+        .componentProperty(Boolean.FALSE)//
+        .description("Salesforce object type to create")//
+        .build();
+
+    private static final String CREATE_OR_UPDATE_ACTION_ID = "io.syndesis:salesforce-create-or-update-connector:latest";
+
+    private static final Action DEFAULT_CREATE_OR_UPDATE_ACTION = new Action.Builder()
+        .id(ActionSuggestionsITCase.CREATE_OR_UPDATE_ACTION_ID)
         .definition(new ActionDefinition.Builder()
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
-                b -> b.putProperty("sObjectName",
-                    new ConfigurationProperty.Builder()//
-                        .kind("parameter")//
-                        .displayName("Salesforce object type")//
-                        .group("common")//
-                        .required(true)//
-                        .type("string")//
-                        .javaType("java.lang.String")//
-                        .componentProperty(false)//
-                        .description("Salesforce object type to create")//
-                        .build()))
+                b -> b.putProperty("sObjectName", _DEFAULT_SALESFORCE_OBJECT_NAME))
             .withActionDefinitionStep("Select Identifier property",
                 "Select Salesforce property that will hold the uniquely identifying value of this object",
-                b -> b.putProperty("sObjectIdName",
-                    new ConfigurationProperty.Builder()//
-                        .kind("parameter")//
-                        .displayName("Identifier field name")//
-                        .group("common")//
-                        .required(true)//
-                        .type("string")//
-                        .javaType("java.lang.String")//
-                        .componentProperty(false)//
-                        .description("Unique field to hold the identifier value")//
-                        .build()))
+                b -> b.putProperty("sObjectIdName", _DEFAULT_SALESFORCE_IDENTIFIER))
             .build())
         .build();
 
-    private final ActionPropertySuggestion account = new ActionPropertySuggestion.Builder().value("Account")
-        .displayValue("Accounts").build();
-
     private final String connectionId = UUID.randomUUID().toString();
 
-    private final ActionPropertySuggestion contact = new ActionPropertySuggestion.Builder().value("Contact")
-        .displayValue("Contacts").build();
+    private final ConfigurationProperty contactSalesforceObjectName = new ConfigurationProperty.Builder()
+        .createFrom(_DEFAULT_SALESFORCE_OBJECT_NAME)
+        .addEnum(ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contacts")).build();
 
-    private final ActionPropertySuggestion email = new ActionPropertySuggestion.Builder().value("Email")
-        .displayValue("E-mail address").build();
+    private final ConfigurationProperty suggestedSalesforceIdNames = new ConfigurationProperty.Builder()
+        .createFrom(_DEFAULT_SALESFORCE_IDENTIFIER)
+        .addEnum(ConfigurationProperty.PropertyValue.Builder.of("Id", "Identifier"),
+            ConfigurationProperty.PropertyValue.Builder.of("Email", "E-mail address"),
+            ConfigurationProperty.PropertyValue.Builder.of("TwitterScreenName__c", "Twitter Screen Name"))
+        .build();
 
-    private final ActionPropertySuggestion id = new ActionPropertySuggestion.Builder().value("Id")
-        .displayValue("Identifier").build();
-
-    private final ActionPropertySuggestion twitterScreenName = new ActionPropertySuggestion.Builder()
-        .value("TwitterScreenName__c").displayValue("Twitter Screen Name").build();
+    private final ConfigurationProperty suggestedSalesforceObjectNames = new ConfigurationProperty.Builder()
+        .createFrom(_DEFAULT_SALESFORCE_OBJECT_NAME)
+        .addEnum(ConfigurationProperty.PropertyValue.Builder.of("Account", "Accounts"),
+            ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contacts"))
+        .build();
 
     public static class TestConfigurationInitializer
         implements ApplicationContextInitializer<ConfigurableApplicationContext> {
@@ -131,7 +137,7 @@ public class ActionSuggestionsITCase extends BaseITCase {
         final Connector existingSalesforceConnector = dataManager.fetch(Connector.class, "salesforce");
 
         final Connector withCreateOrUpdateAction = new Connector.Builder().createFrom(existingSalesforceConnector)
-            .addAction(CREATE_OR_UPDATE_ACTION).build();
+            .addAction(DEFAULT_CREATE_OR_UPDATE_ACTION).build();
 
         dataManager.update(withCreateOrUpdateAction);
     }
@@ -158,21 +164,35 @@ public class ActionSuggestionsITCase extends BaseITCase {
 
     @Test
     public void shouldOfferDynamicActionPropertySuggestions() {
-        final ResponseEntity<ActionPropertySuggestions> firstResponse = get(
-            "/api/v1/connections/" + connectionId + "/actions/" + CREATE_OR_UPDATE_ACTION_ID + "/properties",
-            ActionPropertySuggestions.class);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        final ActionPropertySuggestions firstSuggestion = new ActionPropertySuggestions.Builder()
-            .putValue("sObjectName", Arrays.asList(account, contact)).build();
-        assertThat(firstResponse.getBody()).isEqualTo(firstSuggestion);
+        final ResponseEntity<ActionDefinition> firstResponse = http(HttpMethod.POST,
+            "/api/v1/connections/" + connectionId + "/actions/" + CREATE_OR_UPDATE_ACTION_ID, null,
+            ActionDefinition.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
-        final ResponseEntity<ActionPropertySuggestions> secondResponse = get("/api/v1/connections/" + connectionId
-            + "/actions/" + CREATE_OR_UPDATE_ACTION_ID + "/properties?sObjectName=Contact",
-            ActionPropertySuggestions.class);
+        final ActionDefinition firstEnrichment = new ActionDefinition.Builder()
+            .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
+                b -> b.putProperty("sObjectName", suggestedSalesforceObjectNames))
+            .withActionDefinitionStep("Select Identifier property",
+                "Select Salesforce property that will hold the uniquely identifying value of this object",
+                b -> b.putProperty("sObjectIdName", _DEFAULT_SALESFORCE_IDENTIFIER))
+            .build();
+        assertThat(firstResponse.getBody()).isEqualTo(firstEnrichment);
 
-        final ActionPropertySuggestions secondSuggestion = new ActionPropertySuggestions.Builder()
-            .putValue("sObjectIdName", Arrays.asList(id, email, twitterScreenName)).build();
-        assertThat(secondResponse.getBody()).isEqualTo(secondSuggestion);
+        final ResponseEntity<ActionDefinition> secondResponse = http(HttpMethod.POST,
+            "/api/v1/connections/" + connectionId + "/actions/" + CREATE_OR_UPDATE_ACTION_ID,
+            Collections.singletonMap("sObjectName", "Contact"), ActionDefinition.class, tokenRule.validToken(), headers,
+            HttpStatus.OK);
+
+        final ActionDefinition secondEnrichment = new ActionDefinition.Builder()
+            .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
+                b -> b.putProperty("sObjectName", contactSalesforceObjectName))
+            .withActionDefinitionStep("Select Identifier property",
+                "Select Salesforce property that will hold the uniquely identifying value of this object",
+                b -> b.putProperty("sObjectIdName", suggestedSalesforceIdNames))
+            .build();
+        assertThat(secondResponse.getBody()).isEqualTo(secondEnrichment);
     }
 
     private static String read(final String path) {

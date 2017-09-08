@@ -1,4 +1,10 @@
 {
+  "sObjectName": [
+    {
+      "value": "Contact",
+      "displayValue": "Contacts"
+    }
+  ],
   "sObjectIdName": [
     {
       "value": "Id",
