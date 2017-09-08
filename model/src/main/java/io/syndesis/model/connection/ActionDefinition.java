@@ -61,7 +61,7 @@ public interface ActionDefinition extends Serializable {
             return this;
         }
 
-        public Builder withConfigurationProperty(final String propertyName,
+        public Builder replaceConfigurationProperty(final String propertyName,
             final Consumer<ConfigurationProperty.Builder> configurationPropertyConfigurator) {
             final ActionDefinition definition = build();
             final List<ActionDefinitionStep> steps = definition.getPropertyDefinitionSteps();
@@ -79,7 +79,8 @@ public interface ActionDefinition extends Serializable {
             }
 
             if (step == null) {
-                throw new IllegalArgumentException("Unknown property: " + propertyName);
+                // found no property to replace, lets just ignore it
+                return this;
             }
 
             final ConfigurationProperty configurationProperty = step.getProperties().get(propertyName);

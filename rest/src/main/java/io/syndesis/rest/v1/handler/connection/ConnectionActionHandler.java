@@ -102,7 +102,7 @@ public class ConnectionActionHandler {
             .post(Entity.entity(parameters, MediaType.APPLICATION_JSON), ActionPropertySuggestions.class);
 
         final Map<String, List<ActionPropertySuggestion>> actionPropertySuggestions = suggestions.value();
-        actionPropertySuggestions.forEach((k, vals) -> enriched.withConfigurationProperty(k,
+        actionPropertySuggestions.forEach((k, vals) -> enriched.replaceConfigurationProperty(k,
             b -> b.addAllEnum(vals.stream().map(s -> PropertyValue.Builder.from(s))::iterator)));
 
         return enriched.build();
