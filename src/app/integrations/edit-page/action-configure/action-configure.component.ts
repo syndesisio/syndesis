@@ -7,6 +7,7 @@ import {
   DynamicFormService,
 } from '@ng2-dynamic-forms/core';
 
+import { IntegrationSupportService } from '../../../store/integration-support.service';
 import { Action, Step } from '../../../model';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { FlowPage } from '../flow-page';
@@ -39,6 +40,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public detector: ChangeDetectorRef,
+    public integrationSupport: IntegrationSupportService,
   ) {
     super(currentFlow, route, router, detector);
   }
@@ -77,6 +79,22 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     }
     this.action = step.action;
     this.step = step;
+
+    // TODO use this for the form data instead...
+    this.integrationSupport
+      .fetchMetadata(
+        this.step.connection,
+        this.step.action,
+        this.step.configuredProperties || {},
+      )
+      .toPromise()
+      .then(response => {
+        log.info('Response: ' + JSON.stringify(response, undefined, 2));
+      })
+      .catch(err => {
+        log.info('Error response: ' + JSON.stringify(err, undefined, 2));
+      });
+
     if (!this.action || !this.action.definition) {
       this.router.navigate(['save-or-add-step'], {
         queryParams: { validate: true },
