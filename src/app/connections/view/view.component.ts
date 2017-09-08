@@ -119,14 +119,19 @@ export class ConnectionViewComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.connection.name || this.connection.name.trim() === '') {
       this.nameErrorMessage = 'Name is required';
     } else {
-      this.connectionService.validate(this.connection)
-      .toPromise()
-      .then(response => null)
-      .catch(response => {
-        const nameTaken = response.data.filter(item => item.error === 'UniqueProperty').length > 0;
-        this.nameErrorMessage = nameTaken ? 'That name is taken. Try another.' : null;
-        this.detector.detectChanges();
-      });
+      this.connectionService
+        .validate(this.connection)
+        .toPromise()
+        .then(response => null)
+        .catch(response => {
+          const nameTaken =
+            response.data.filter(item => item.error === 'UniqueProperty')
+              .length > 0;
+          this.nameErrorMessage = nameTaken
+            ? 'That name is taken. Try another.'
+            : null;
+          this.detector.detectChanges();
+        });
     }
   }
 
@@ -175,42 +180,8 @@ export class ConnectionViewComponent implements OnInit, OnChanges, OnDestroy {
     this.connectionChange.emit(this.connection);
   }
 
-  getFormFields(connection: Connection) {
-    const answer = [];
-    const formFields = this.getFormConfig(this.connection);
-    if (formFields) {
-      for (const key in formFields) {
-        if (!formFields.hasOwnProperty(key)) {
-          continue;
-        }
-        const field = formFields[key];
-        field.value = this.connection.configuredProperties[key];
-        answer.push(field);
-      }
-    }
-    return answer;
-  }
-
   getPassword(value: any) {
     return Array(10).join('*');
-  }
-
-  getFormConfig(connection: Connection) {
-    // TODO this either shouldn't be null or we need to just fetch the connector in a separate call
-    if (connection.connector) {
-      const props = JSON.parse(JSON.stringify(connection.connector.properties));
-      if (connection.configuredProperties) {
-        Object.keys(connection.configuredProperties).forEach(key => {
-          if (props[key]) {
-            props[key].value = connection.configuredProperties[key];
-          }
-        });
-      } else {
-        connection.configuredProperties = {};
-      }
-      return props;
-    }
-    return {};
   }
 
   get formModel() {
@@ -220,12 +191,13 @@ export class ConnectionViewComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.connection) {
       return undefined;
     }
-    const config = this.getFormConfig(this.connection);
-    if (config) {
-      this._formModel = this.formFactory.createFormModel(config);
-      return this._formModel;
-    }
-    return undefined;
+    const connector = this.connection.connector || { properties: {} };
+    const values = this.connection.configuredProperties || {};
+    this._formModel = this.formFactory.createFormModel(
+      connector.properties,
+      values,
+    );
+    return this._formModel;
   }
 
   get formGroup() {

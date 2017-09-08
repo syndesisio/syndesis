@@ -156,32 +156,18 @@ export class IntegrationsStepConfigureComponent extends FlowPage
       return;
     }
     this.formConfig = JSON.parse(JSON.stringify(stepDef.properties));
-    const values: any = this.getConfiguredProperties(step.configuredProperties);
-    for (const key in values) {
-      if (!values.hasOwnProperty(key)) {
-        continue;
-      }
-      // TODO hack to handle an unconfigured step
-      const value = values[key];
-      if (typeof value === 'object') {
-        continue;
-      }
-      const item = this.formConfig[key];
-      if (item) {
-        item.value = value;
-      }
-    }
     if (!Object.keys(this.formConfig).length) {
       this.continue({});
       return;
     }
+    const values: any = this.getConfiguredProperties(step.configuredProperties);
     log.info(
       'Form config: ' + JSON.stringify(this.formConfig, undefined, 2),
       category,
     );
 
     // Call formService to build the form
-    this.formModel = this.formFactory.createFormModel(this.formConfig);
+    this.formModel = this.formFactory.createFormModel(this.formConfig, values);
     this.formGroup = this.formService.createFormGroup(this.formModel);
     this.postEvent();
 
