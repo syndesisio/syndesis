@@ -30,6 +30,8 @@ public interface DataShape extends Serializable {
 
     String getType();
 
+    String getSpecification();
+
     Optional<byte[]> getExemplar();
 
     class Builder extends ImmutableDataShape.Builder {

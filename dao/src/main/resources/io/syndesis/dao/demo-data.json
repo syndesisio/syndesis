@@ -97,16 +97,18 @@
             "id": "1",
             "connectorId": "io.syndesis:twitter-mention-connector:latest",
             "description": "Connection from twitter when anyone mention you",
-            "inputDataShape": {
-                "kind" : "none"
-            },
-            "outputDataShape": {
-                "kind" : "java",
-                "type" : "twitter4j.Status"
-            },
             "name": "Twitter Mention",
             "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "twitter-mention"
+            "camelConnectorPrefix": "twitter-mention",
+            "definition": {
+              "inputDataShape": {
+                  "kind" : "none"
+              },
+              "outputDataShape": {
+                  "kind" : "java",
+                  "type" : "twitter4j.Status"
+              }
+            }
           },
           "configuredProperties": {
           }
@@ -142,16 +144,18 @@
             "id": "2",
             "name": "Salesforce Upsert Contact",
             "description": "Connection to Create or Update Salesforce Contact SObject",
-            "inputDataShape": {
-               "kind" : "java",
-               "type" : "io.syndesis.connector.salesforce.Contact"
-            },
-            "outputDataShape": {
-               "kind" : "none"
-            },
             "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix": "salesforce-upsert-contact",
-            "connectorId": "io.syndesis:salesforce-upsert-contact-connector:latest"
+            "connectorId": "io.syndesis:salesforce-upsert-contact-connector:latest",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "java",
+                 "type" : "io.syndesis.connector.salesforce.Contact"
+              },
+              "outputDataShape": {
+                 "kind" : "none"
+              }
+            }
           },
           "configuredProperties": {
           }
@@ -188,14 +192,16 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer"
+            "camelConnectorPrefix": "periodic-timer",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "period": "500"
@@ -223,14 +229,16 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post"
+            "camelConnectorPrefix": "http-post",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "any"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -250,14 +258,16 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get"
+            "camelConnectorPrefix": "http-get",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"
@@ -294,14 +304,16 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer"
+            "camelConnectorPrefix": "periodic-timer",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "period": "500"
@@ -329,14 +341,16 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post"
+            "camelConnectorPrefix": "http-post",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "any"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -356,14 +370,16 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get"
+            "camelConnectorPrefix": "http-get",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"
@@ -400,14 +416,16 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer"
+            "camelConnectorPrefix": "periodic-timer",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "period": "500"
@@ -435,14 +453,16 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post"
+            "camelConnectorPrefix": "http-post",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "any"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -462,14 +482,16 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get"
+            "camelConnectorPrefix": "http-get",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"
@@ -506,14 +528,16 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer"
+            "camelConnectorPrefix": "periodic-timer",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "period": "500"
@@ -541,14 +565,16 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post"
+            "camelConnectorPrefix": "http-post",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "any"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -568,14 +594,16 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get"
+            "camelConnectorPrefix": "http-get",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"
@@ -612,14 +640,16 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer"
+            "camelConnectorPrefix": "periodic-timer",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "period": "500"
@@ -647,14 +677,16 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post"
+            "camelConnectorPrefix": "http-post",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "any"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -674,14 +706,16 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get"
+            "camelConnectorPrefix": "http-get",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"
@@ -718,14 +752,16 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer"
+            "camelConnectorPrefix": "periodic-timer",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "period": "500"
@@ -753,14 +789,16 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post"
+            "camelConnectorPrefix": "http-post",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "any"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/bye"
@@ -780,14 +818,16 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
             "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get"
+            "camelConnectorPrefix": "http-get",
+            "definition": {
+              "inputDataShape": {
+                 "kind" : "none"
+              },
+              "outputDataShape": {
+                 "kind" : "any"
+              }
+            }
           },
           "configuredProperties": {
             "httpUri": "http://localhost:8080/hello"

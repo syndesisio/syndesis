@@ -24,12 +24,14 @@ import javax.validation.Validator;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.ClassInspector;
 import io.syndesis.model.connection.Action;
+import io.syndesis.model.connection.ActionDefinition;
 import io.syndesis.model.connection.DataShape;
 import io.syndesis.model.connection.DataShapeKinds;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -95,7 +97,12 @@ public class IntegrationHandlerTest {
     private List<SimpleStep> steps(DataShape ... dataShapes) {
         List<SimpleStep> ret = new ArrayList<>();
         for (DataShape shape : dataShapes) {
-            Action action = new Action.Builder().outputDataShape(shape).build();
+            ActionDefinition.Builder definition = new ActionDefinition.Builder();
+            if (shape != null) {
+                definition.outputDataShape(shape);
+            }
+
+            Action action = new Action.Builder().definition(definition.build()).build();
             ret.add(new SimpleStep.Builder().action(action).build());
         }
         return ret;

@@ -34,7 +34,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Action.Builder.class)
-@JsonIgnoreProperties(value = "properties", allowGetters = true)
+@JsonIgnoreProperties(value = {"properties", "inputDataShape", "outputDataShape"}, allowGetters = true)
 public interface Action extends WithId<Action>, WithName, Serializable {
 
     @Override
@@ -50,9 +50,15 @@ public interface Action extends WithId<Action>, WithName, Serializable {
 
     String getCamelConnectorPrefix();
 
-    DataShape getInputDataShape();
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    default Optional<DataShape> getInputDataShape() {
+        return Optional.ofNullable(getDefinition()).flatMap(ActionDefinition::getInputDataShape);
+    }
 
-    DataShape getOutputDataShape();
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    default Optional<DataShape> getOutputDataShape() {
+        return Optional.ofNullable(getDefinition()).flatMap(ActionDefinition::getOutputDataShape);
+    }
 
     @Override
     default Action withId(String id) {

@@ -144,9 +144,9 @@ public class IntegrationHandler extends BaseHandler
             }
             Step step = steps.get(i);
             if (step.getAction().isPresent()) {
-                DataShape shape = step.getAction().get().getOutputDataShape();
-                if (shape != null && DataShapeKinds.JAVA.equals(shape.getKind())) {
-                    lastOutputShape = Optional.of(shape);
+                Optional<DataShape> maybeDataShape = step.getAction().get().getOutputDataShape();
+                if (maybeDataShape.isPresent() && DataShapeKinds.JAVA.equals(maybeDataShape.get().getKind())) {
+                    lastOutputShape = maybeDataShape;
                 }
             }
         }

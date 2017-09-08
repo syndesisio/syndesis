@@ -46,7 +46,6 @@ public class DataManagerTest {
     private DataManager dataManager = null;
 
     @Before
-    @SuppressWarnings("unchecked")
     public void setup() {
         //Create Data Manager
         dataManager = new DataManager(infinispan.getCaches(), new ArrayList<>(), null);
@@ -56,6 +55,7 @@ public class DataManagerTest {
 
     @Test
     public void getConnectors() {
+        @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
             .containsExactly("gmail", "github", "ftp", "facebook", "linkedin", "salesforce", "timer", "jms", "day-trade", "twitter", "servicenow", "http", "trade-insight");
@@ -66,6 +66,7 @@ public class DataManagerTest {
 
     @Test
     public void getConnections() {
+        @SuppressWarnings("unchecked")
         ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
         assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsExactly("1", "2", "3", "4");
         Assert.assertEquals(4, connections.getTotalCount());
@@ -75,6 +76,7 @@ public class DataManagerTest {
 
     @Test
     public void getConnectorsWithFilterFunction() {
+        @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(
             Connector.class,
             resultList -> new ListResult.Builder<Connector>().createFrom(resultList).items(resultList.getItems().subList(0, 2)).build()

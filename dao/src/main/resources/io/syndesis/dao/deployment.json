@@ -69,13 +69,6 @@
         {
           "name": "Mention",
           "description": "Search for tweets that mention you",
-          "inputDataShape": {
-             "kind" : "none"
-          },
-          "outputDataShape": {
-             "kind" : "java",
-             "type" : "twitter4j.Status"
-          },
           "id": "io.syndesis:twitter-mention-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-mention",
@@ -90,6 +83,13 @@
           "camelConnectorGAV": "io.syndesis:twitter-search-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-search",
           "definition": {
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "java",
+               "type" : "twitter4j.Status"
+            },
             "propertyDefinitionSteps": [{
               "name": "Search criteria",
               "description": "Specify criteria for search",
@@ -307,16 +307,16 @@
           "id": "io.syndesis:salesforce-upsert-contact-connector:latest",
           "name": "Create/Update Contact",
           "description": "Create or Update a Salesforce Contact",
-          "inputDataShape": {
-             "kind" : "java",
-             "type" : "io.syndesis.connector.salesforce.Contact"
-          },
-          "outputDataShape": {
-             "kind" : "none"
-          },
           "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-upsert-contact",
           "definition": {
+            "inputDataShape": {
+               "kind" : "java",
+               "type" : "io.syndesis.connector.salesforce.Contact"
+            },
+            "outputDataShape": {
+               "kind" : "none"
+            },
             "propertyDefinitionSteps": [{
               "name": "Unique field",
               "description": "Specify field to hold the identifying value",
@@ -410,15 +410,15 @@
           "id": "io.syndesis:http-get-connector:latest",
           "name": "HTTP GET",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-          "inputDataShape": {
-             "kind" : "none"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "http-get",
           "definition": {
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": [{
               "name": "HTTP Endpoint",
               "description": "Specify HTTP address to fetch the data from",
@@ -445,15 +445,15 @@
           "id": "io.syndesis:http-post-connector:latest",
           "name": "HTTP POST",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "http-post",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": [{
               "name": "HTTP Endpoint",
               "description": "Specify HTTP address to send the data to",
@@ -493,15 +493,15 @@
           "id": "io.syndesis_timer-connector:latest",
           "name": "Periodic Timer",
           "description": "Set a timer that fires at intervals that you specify",
-          "inputDataShape": {
-             "kind" : "none"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "periodic-timer",
           "definition": {
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": [{
               "name": "Timer parameters",
               "description": "Specify the period for the timer",
@@ -569,51 +569,51 @@
         {
           "name": "Buy Recommendation",
           "description": "Fetches buy recommendation from Trade Insight API server",
-          "inputDataShape": {
-            "kind": "none"
-          },
-          "outputDataShape": {
-            "kind": "java",
-            "type": "io.syndesis.connector.tradeinsight.Suggestion"
-          },
           "id": "io.syndesis:trade-insight-buy-connector:latest",
           "camelConnectorGAV": "io.syndesis:trade-insight-buy-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "trade-insight-buy",
           "definition": {
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "java",
+              "type": "io.syndesis.connector.tradeinsight.Suggestion"
+            },
             "propertyDefinitionSteps": []
           }
         },
         {
           "name": "Sell Recommendation",
           "description": "Fetches sell recommendation from Trade Insight API server",
-          "inputDataShape": {
-            "kind": "none"
-          },
-          "outputDataShape": {
-            "kind": "java",
-            "type": "io.syndesis.connector.tradeinsight.Suggestion"
-          },
           "id": "io.syndesis:trade-insight-sell-connector:latest",
           "camelConnectorGAV": "io.syndesis:trade-insight-sell-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "trade-insight-sell",
           "definition": {
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "java",
+              "type": "io.syndesis.connector.tradeinsight.Suggestion"
+            },
             "propertyDefinitionSteps": []
           }
         },
         {
           "name": "Top Recommendation",
           "description": "Fetches top recommendation from Trade Insight API server",
-          "inputDataShape": {
-            "kind": "none"
-          },
-          "outputDataShape": {
-            "kind": "java",
-            "type": "io.syndesis.connector.tradeinsight.Suggestion"
-          },
           "id": "io.syndesis:trade-insight-top-connector:latest",
           "camelConnectorGAV": "io.syndesis:trade-insight-top-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "trade-insight-top",
           "definition": {
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "java",
+              "type": "io.syndesis.connector.tradeinsight.Suggestion"
+            },
             "propertyDefinitionSteps": []
           }
         }
@@ -662,52 +662,52 @@
         {
           "name": "Place Trade",
           "description": "Place trade on Day Trade API server",
-          "inputDataShape": {
-            "kind": "java",
-            "type": "io.syndesis.connector.daytrade.Trade"
-          },
-          "outputDataShape": {
-            "kind": "none"
-          },
           "id": "io.syndesis:day-trade-place-connector:latest",
           "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "day-trade-place",
           "definition": {
+            "inputDataShape": {
+              "kind": "java",
+              "type": "io.syndesis.connector.daytrade.Trade"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
             "propertyDefinitionSteps": []
           }
         },
         {
           "name": "Retrieve Trade",
           "description": "Retrieve a trade on Day Trade API server",
-          "inputDataShape": {
-            "kind": "java",
-            "type": "io.syndesis.connector.daytrade.Trade"
-          },
-          "outputDataShape": {
-            "kind": "java",
-            "type": "io.syndesis.connector.daytrade.Trade"
-          },
           "id": "io.syndesis:day-trade-place-connector:latest",
           "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "day-trade-place",
           "definition": {
+            "inputDataShape": {
+              "kind": "java",
+              "type": "io.syndesis.connector.daytrade.Trade"
+            },
+            "outputDataShape": {
+              "kind": "java",
+              "type": "io.syndesis.connector.daytrade.Trade"
+            },
             "propertyDefinitionSteps": []
           }
         },
         {
           "name": "Get Latest Trade",
           "description": "Get the latest trade on Day Trade API server",
-          "inputDataShape": {
-            "kind": "none"
-          },
-          "outputDataShape": {
-            "kind": "java",
-            "type": "io.syndesis.connector.daytrade.Trade"
-          },
           "id": "io.syndesis:day-trade-place-connector:latest",
           "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "day-trade-place",
           "definition": {
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "java",
+              "type": "io.syndesis.connector.daytrade.Trade"
+            },
             "propertyDefinitionSteps": []
           }
         }
@@ -728,15 +728,15 @@
           "id": "io.syndesis:linkedin-get-connections-connector:latest",
           "name": "Get Connections",
           "description": "Get all LinkedIn connections",
-          "inputDataShape": {
-             "kind" : "none"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:linkedin-connections-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "linkedin-connections",
           "definition": {
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": []
           }
         },
@@ -744,15 +744,15 @@
           "id": "io.syndesis:linkedin-add-invite-connector:latest",
           "name": "Send Invite",
           "description": "Send out a LinkedIn Invite",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "none"
-          },
           "camelConnectorGAV": "io.syndesis:linkedin-invite-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "linkedin-invite",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "none"
+            },
             "propertyDefinitionSteps": []
           }
         }
@@ -773,15 +773,15 @@
           "id": "io.syndesis:servicenow-connector:latest",
           "name": "service-now",
           "description": "Provides access to all of ServiceNow REST API",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:servicenow-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "servicenow",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": []
           }
         }
@@ -802,41 +802,45 @@
           "id": "io.syndesis:github-pullrequest-connector:latest",
           "name": "github-pullrequest",
           "description": "Create a GitHub PullRequest",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:github-pullrequest-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "github-pullrequest"
+          "camelConnectorPrefix": "github-pullrequest",
+          "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            }
+          }
         },
         {
           "id": "io.syndesis:github-tag-connector:latest",
           "name": "github-tag",
           "description": "Create a GitHub Tag",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:github-tag-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "github-tag"
+          "camelConnectorPrefix": "github-tag",
+          "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            }
+          }
         },
         {
           "id": "io.syndesis:github-commit-connector:latest",
           "name": "github-commit",
           "description": "Performs a GitHub Commit",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:github-commit-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "github-commit",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": []
           }
         }
@@ -857,15 +861,15 @@
           "id": "io.syndesis:gmail-send:latest",
           "name": "GMail Send",
           "description": "Send an email",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:gmail-send-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "gmail-send",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": []
           }
         },
@@ -873,15 +877,15 @@
           "id": "io.syndesis:gmail-list:latest",
           "name": "GMail List",
           "description": "List incoming messages",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:gmail-list-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "gmail-list",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": []
           }
         },
@@ -889,15 +893,15 @@
           "id": "io.syndesis:gmail-get:latest",
           "name": "GMail Get",
           "description": "Get email message",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:gmail-get-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "gmail-get",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": []
           }
         },
@@ -905,15 +909,15 @@
           "id": "io.syndesis:gmail-delete:latest",
           "name": "GMail Delete",
           "description": "Delete email message",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:gmail-delete-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "gmail-delete",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": []
           }
         }
@@ -934,15 +938,15 @@
           "id": "io.syndesis:facebook-post-connector:latest",
           "name": "Post",
           "description": "Creates a post to Facebook",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:facebook-post-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "facebook-post",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": []
           }
         },
@@ -950,15 +954,15 @@
           "id": "io.syndesis:facebook-like-connector:latest",
           "name": "Like",
           "description": "Like something on Facebook",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:facebook-like-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "facebook-like",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": []
           }
         }
@@ -979,28 +983,30 @@
           "id": "io.syndesis:jms-producer-connector:latest",
           "name": "Message Producer",
           "description": "Drop a message on a Queue",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:jms-producer-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "jms-producer"
+          "camelConnectorPrefix": "jms-producer",
+          "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            }
+          }
         },
         {
           "id": "io.syndesis:jms-consumer-connector:latest",
           "name": "Message Consumer",
           "description": "Takes a message off a Queue",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:jms-consumer-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "jms-consumer",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": []
           }
         }
@@ -1021,15 +1027,15 @@
           "id": "io.syndesis:ftp-connector:latest",
           "name": "File Transport",
           "description": "FTP/SFTP/FPTS file transfer",
-          "inputDataShape": {
-             "kind" : "any"
-          },
-          "outputDataShape": {
-             "kind" : "any"
-          },
           "camelConnectorGAV": "io.syndesis:ftp-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "ftp",
           "definition": {
+            "inputDataShape": {
+               "kind" : "any"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
             "propertyDefinitionSteps": []
           }
         }
