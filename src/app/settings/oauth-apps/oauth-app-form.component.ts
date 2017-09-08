@@ -30,21 +30,6 @@ const OAUTH_APP_FORM_CONFIG = {
   },
 };
 
-/**
- * Returns a form configuration object for the supplied OAuth client settings object
- *
- * @export
- * @param {*} settings
- * @returns
- */
-export function getOAuthAppForm(settings: any) {
-  const answer = JSON.parse(JSON.stringify(OAUTH_APP_FORM_CONFIG));
-  for (const key of Object.keys(answer)) {
-    answer[key].value = settings[key];
-  }
-  return answer;
-}
-
 @Component({
   selector: 'syndesis-oauth-app-form',
   templateUrl: 'oauth-app-form.component.html',
@@ -91,8 +76,8 @@ export class OAuthAppFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    const formConfig = getOAuthAppForm(this.item.client);
-    this.formModel = this.formFactory.createFormModel(formConfig);
+    const formConfig = JSON.parse(JSON.stringify(OAUTH_APP_FORM_CONFIG));
+    this.formModel = this.formFactory.createFormModel(formConfig, this.item.client);
     this.formGroup = this.formService.createFormGroup(this.formModel);
   }
 }
