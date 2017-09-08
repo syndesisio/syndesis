@@ -4,32 +4,30 @@
 <syndesis-loading [loading]="i && loading | async">
   <div *ngIf="i"
        class="row integration-detail">
-    <div class="col-md-12">
-      <div class="toolbar">
-        <div class="row toolbar-pf">
-          <div class="col-sm-12">
-            <div class="inline-block">
-              <ol class="breadcrumb">
-                <li>
-                  <a [routerLink]="['/']">Home</a>
-                </li>
-                <li>
-                  <a [routerLink]="['/integrations']">Integrations</a>
-                </li>
-                <li class="active"><strong>Integration Summary</strong></li>
-              </ol>
-            </div>
-            <div class="toolbar-pf-action-right">
-              <button type="button"
-                      class="btn btn-primary"
-                      [routerLink]="['..']">Done</button>
-              <button type="button"
-                      class="btn btn-default"
-                      [routerLink]="['edit']">Edit Integration</button>
-            </div>
-          </div>
+    <div class=" toolbar-pf toolbar">
+      <div class="col-sm-12">
+        <div class="inline-block">
+          <ol class="breadcrumb">
+            <li>
+              <a [routerLink]="['/']">Home</a>
+            </li>
+            <li>
+              <a [routerLink]="['/integrations']">Integrations</a>
+            </li>
+            <li class="active"><strong>Integration Summary</strong></li>
+          </ol>
+        </div>
+        <div class="toolbar-pf-action-right">
+          <button type="button"
+                  class="btn btn-primary"
+                  [routerLink]="['..']">Done</button>
+          <button type="button"
+                  class="btn btn-default"
+                  [routerLink]="['edit']">Edit Integration</button>
         </div>
       </div>
+    </div>
+    <div class="col-md-12 details">
       <h1>
         <syndesis-editable-text [value]="i.name"
                                 [validationFn]="validateName"
