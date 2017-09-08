@@ -182,29 +182,7 @@
     <!-- Viewing the connection configuration -->
     <div *ngSwitchDefault
          class="view">
-      <div class="card-pf">
-        <h2 class="card-pf-title">Connection Fields</h2>
-        <div *ngIf="connection.isDerived"
-             class="card-pf-body">
-          <p>This connection is configured using OAuth.  Use the validate button to check if the connection is still authorized</p>
-          <ng-container *ngTemplateOutlet="validateStatus"></ng-container>
-          <ng-container *ngTemplateOutlet="validateButton"></ng-container>
-        </div>
-        <div *ngIf="!connection.isDerived"
-             class="card-pf-body">
-          <div *ngFor="let field of getFormFields(connection)">
-            <dl class="dl-horizontal">
-              <dt>
-                {{ field.displayName }}
-              </dt>
-              <dd>
-                <div *ngIf="field.secret">{{ getPassword(field.value) }}</div>
-                <div *ngIf="!field.secret">{{ field.value || "&lt;not set&gt;" }}</div>
-              </dd>
-            </dl>
-          </div>
-        </div>
-      </div>
+         <!-- TODO this can be taken out -->
     </div>
     <!-- end Viewing -->
   </div>
