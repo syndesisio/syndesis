@@ -15,15 +15,13 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -31,10 +29,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,6 +39,8 @@ import io.swagger.annotations.ApiResponses;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.ActionDefinition;
 import io.syndesis.model.connection.ActionPropertySuggestions;
+import io.syndesis.model.connection.ActionPropertySuggestions.ActionPropertySuggestion;
+import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.verifier.VerificationConfigurationProperties;
@@ -70,41 +67,27 @@ public class ConnectionActionHandler {
         actions = connector.getActions();
     }
 
-    @GET
+    @POST
+    @Path(value = "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path(value = "/{id}/definition")
-    @ApiOperation("Retrieves action definition")
-    @ApiResponses(@ApiResponse(code = 200, response = ActionDefinition.class, message = "Definition of the action."))
-    public ActionDefinition definition(@PathParam("id") @ApiParam(required = true,
-        example = "io.syndesis:salesforce-create-or-update:latest") final String id) {
-
-        final Optional<Action> action = actions.stream().filter(a -> a.idEquals(id)).findAny();
-
-        return action.map(Action::getDefinition).orElseThrow(() -> new EntityNotFoundException("Action with id: " + id));
-    }
-
-    @GET
-    @Path(value = "/{id}/properties")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation("Retrieves action property suggestions")
-    @ApiResponses(@ApiResponse(code = 200, response = ActionPropertySuggestions.class,
+    @ApiOperation("Retrieves enriched action definition, that is an action definition that has input/output data shapes and property enums defined with respect to the given action properties")
+    @ApiResponses(@ApiResponse(code = 200, response = ActionDefinition.class,
         message = "A map of zero or more action property suggestions keyed by the property name"))
-    public ActionPropertySuggestions properties(
+    public ActionDefinition enrichWithMetadata(
         @PathParam("id") @ApiParam(required = true,
             example = "io.syndesis:salesforce-create-or-update:latest") final String id,
-        @Context final UriInfo uriInfo) {
+        final Map<String, String> properties) {
+
+        final Action action = actions.stream().filter(a -> a.idEquals(id)).findAny()
+            .orElseThrow(() -> new EntityNotFoundException("Action with id: " + id));
+
+        final ActionDefinition defaultDefinition = action.getDefinition();
+
         final String connectorId = connector.getId().get();
-        final Action action = connector.actionById(id).orElseThrow(
-            () -> new EntityNotFoundException("No Action with id: " + id + ", found for connector: " + connectorId));
 
-        // put all specified parameters in query parameters
-        final MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
-        final Map<String, Object> parameters = queryParameters.entrySet().stream()
-            .collect(Collectors.toMap(Entry::getKey, e -> e.getValue().get(0)));
-
+        final Map<String, String> parameters = new HashMap<>(Optional.ofNullable(properties).orElseGet(HashMap::new));
         // put all action parameters with `null` values
-        action.getDefinition().getPropertyDefinitionSteps()
+        defaultDefinition.getPropertyDefinitionSteps()
             .forEach(step -> step.getProperties().forEach((k, v) -> parameters.putIfAbsent(k, null)));
 
         // lastly put all connection properties
@@ -114,8 +97,15 @@ public class ConnectionActionHandler {
         final WebTarget target = client
             .target(String.format("http://%s/api/v1/action/properties/%s", config.getService(), connectorId));
 
-        return target.request(MediaType.APPLICATION_JSON).post(Entity.entity(parameters, MediaType.APPLICATION_JSON),
-            ActionPropertySuggestions.class);
+        final ActionDefinition.Builder enriched = new ActionDefinition.Builder().createFrom(defaultDefinition);
+        final ActionPropertySuggestions suggestions = target.request(MediaType.APPLICATION_JSON)
+            .post(Entity.entity(parameters, MediaType.APPLICATION_JSON), ActionPropertySuggestions.class);
+
+        final Map<String, List<ActionPropertySuggestion>> actionPropertySuggestions = suggestions.value();
+        actionPropertySuggestions.forEach((k, vals) -> enriched.withConfigurationProperty(k,
+            b -> b.addAllEnum(vals.stream().map(s -> PropertyValue.Builder.from(s))::iterator)));
+
+        return enriched.build();
     }
 
     /* default */ Client createClient() {

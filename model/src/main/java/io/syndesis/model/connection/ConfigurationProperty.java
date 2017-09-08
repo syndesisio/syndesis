@@ -20,6 +20,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.model.WithTags;
+import io.syndesis.model.connection.ActionPropertySuggestions.ActionPropertySuggestion;
 
 import org.immutables.value.Value;
 
@@ -27,44 +28,53 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = ConfigurationProperty.Builder.class)
 public interface ConfigurationProperty extends WithTags {
 
-    String getKind();
-
-    String getDisplayName();
-
-    String getGroup();
-
-    String getLabel();
-
-    Boolean getRequired();
-
-    String getType();
-
-    String getJavaType();
-
-    Boolean getDeprecated();
-
-    Boolean getSecret();
-
-    Boolean getComponentProperty();
-
-    String getDescription();
-
-    String getDefaultValue();
-
-    List<PropertyValue> getEnum();
-
     class Builder extends ImmutableConfigurationProperty.Builder {
+        // make ImmutableConfigurationProperty.Builder accessible
     }
 
     @Value.Immutable
     @JsonDeserialize(builder = PropertyValue.Builder.class)
     interface PropertyValue {
 
-        String getValue();
+        @SuppressWarnings("PMD.UseUtilityClass")
+        class Builder extends ImmutablePropertyValue.Builder {
+            public static PropertyValue from(final ActionPropertySuggestion suggestion) {
+                return new Builder().label(suggestion.displayValue()).value(suggestion.value()).build();
+            }
+
+            public static PropertyValue of(final String value, final String label) {
+                return new Builder().label(label).value(value).build();
+            }
+        }
 
         String getLabel();
 
-        class Builder extends ImmutablePropertyValue.Builder {
-        }
+        String getValue();
     }
+
+    Boolean getComponentProperty();
+
+    String getDefaultValue();
+
+    Boolean getDeprecated();
+
+    String getDescription();
+
+    String getDisplayName();
+
+    List<PropertyValue> getEnum();
+
+    String getGroup();
+
+    String getJavaType();
+
+    String getKind();
+
+    String getLabel();
+
+    Boolean getRequired();
+
+    Boolean getSecret();
+
+    String getType();
 }
