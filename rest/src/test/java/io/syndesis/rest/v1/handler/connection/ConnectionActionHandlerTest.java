@@ -129,13 +129,13 @@ public class ConnectionActionHandlerTest {
 
         final ActionDefinition enrichedDefinitioin = new ActionDefinition.Builder()
             .createFrom(createOrUpdateSalesforceObjectDefinition)
-            .withConfigurationProperty("sObjectName",
+            .replaceConfigurationProperty("sObjectName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact")))
-            .withConfigurationProperty("sObjectIdName",
+            .replaceConfigurationProperty("sObjectIdName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("ID", "Contact ID")))
-            .withConfigurationProperty("sObjectIdName",
+            .replaceConfigurationProperty("sObjectIdName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Email", "Email")))
-            .withConfigurationProperty("sObjectIdName",
+            .replaceConfigurationProperty("sObjectIdName",
                 c -> c.addEnum(
                     ConfigurationProperty.PropertyValue.Builder.of("TwitterScreenName__c", "Twitter Screen Name")))
             .build();
@@ -166,7 +166,7 @@ public class ConnectionActionHandlerTest {
 
         final ActionDefinition enrichedDefinitioin = new ActionDefinition.Builder()
             .createFrom(createOrUpdateSalesforceObjectDefinition)
-            .withConfigurationProperty("sObjectName",
+            .replaceConfigurationProperty("sObjectName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Account", "Account"),
                     ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact")))
             .build();
