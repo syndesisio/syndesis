@@ -1,10 +1,9 @@
 <div class="app">
 
-  <pfng-toast-notification-list
-    [notifications]="notifications"
-    (onActionSelect)="handleAction($event)"
-    (onCloseSelect)="handleClose($event)"
-    [showClose]="showClose">
+  <pfng-toast-notification-list [notifications]="notifications"
+                                (onActionSelect)="handleAction($event)"
+                                (onCloseSelect)="handleClose($event)"
+                                [showClose]="showClose">
   </pfng-toast-notification-list>
 
   <header *ngIf="loggedIn">
@@ -14,7 +13,8 @@
          *ngIf="!loggedIn">
       <!-- Logo -->
       <a [routerLink]=" ['/'] ">
-        <img src="{{ logoWhiteBg }}">
+        <img *ngIf="logoWhiteBg"
+             [src]="logoWhiteBg">
       </a>
     </nav>
 
@@ -34,10 +34,12 @@
         <!-- Logo -->
         <a [routerLink]=" ['/'] "
            class="navbar-brand">
-          <img class="navbar-brand-icon"
+          <img *ngIf="iconDarkBg"
+               class="navbar-brand-icon"
                [src]="iconDarkBg"
                alt="" />
-          <img class="navbar-brand-name"
+          <img *ngIf="logoDarkBg"
+               class="navbar-brand-name"
                [src]="logoDarkBg"
                alt="Syndesis" />
         </a>
@@ -138,7 +140,8 @@
   <syndesis-modal id="importDb"
                   title="Import Selection"
                   [body]="importDbModal">
-    <ng-template #importDbModal let-modal="modal">
+    <ng-template #importDbModal
+                 let-modal="modal">
       Please select the data file to import:
       <input type="file"
              id="file-import"
