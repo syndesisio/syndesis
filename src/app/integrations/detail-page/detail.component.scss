@@ -1,6 +1,24 @@
 @import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
 
 .integration-detail {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: visible;
+
+    .toolbar {
+        flex: 0 0 auto;
+    }
+
+    .details {
+        flex: 1 1 auto;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        // Dock the scrollbar to the right
+        margin-right: -20px;
+        padding-right: 20px;
+    }
+
     h1 /deep/ syndesis-editable .fa {
         font-size: 14px;
     }
