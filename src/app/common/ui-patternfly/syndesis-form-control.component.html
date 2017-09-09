@@ -1,13 +1,14 @@
 <div [class.form-group]="asBootstrapFormGroup || model.cls.element.container.includes('form-group')"
-     [class.has-error]="hasErrorMessaging && !hasFocus && isInvalid"
+     [class.has-error]="showErrorMessages"
      [formGroup]="group"
      [ngClass]="[model.cls.element.container, model.cls.grid.container]">
 
     <label *ngIf="type !== 2 && model.label !== null"
            [attr.for]="model.id"
            [ngClass]="[model.cls.element.label, model.cls.grid.label]">
-      <span class="label-text"
-            [innerHTML]="model.label"></span>
+      <label [ngClass]="{'required-pf': model.required}">
+        {{model.label}}
+      </label>
       <div *ngIf="model.hint !== null"
            [tooltip]="model.hint"
            placement="right"
@@ -15,7 +16,6 @@
         <span class="glyphicon glyphicon-info-sign"></span>
       </div>
     </label>
-
 
     <ng-template *ngIf="type !== 1 && template?.align === 'START'"
                  [ngTemplateOutlet]="template.templateRef"
@@ -208,19 +208,9 @@
 
         </ng-container>
 
+        <span class="help-block" *ngIf="showErrorMessages">{{errorMessages[0]}}</span>
+
     </div>
-
-
-    <ul *ngIf="hasErrorMessaging" class="has-error"
-        [class.hidden]="!showErrorMessages"
-        [ngClass]="[model.cls.grid.errors]">
-
-        <li *ngFor="let message of errorMessages" class="help-block" [ngClass]="[model.cls.element.errors]">
-            {{message}}
-        </li>
-
-    </ul>
-
 
     <ng-template *ngIf="type !== 1 && template?.align === 'END'"
                  [ngTemplateOutlet]="template.templateRef"

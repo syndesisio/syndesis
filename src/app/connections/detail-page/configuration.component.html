@@ -2,7 +2,8 @@
   <h3>{{ connection.connector?.name }} Configuration</h3>
   <div *ngIf="connection.isDerived">
     <p>This connection is configured using OAuth. Use the validate button to check if the connection is still authorized</p>
-    <ng-container *ngTemplateOutlet="validation"></ng-container>
+    <syndesis-connection-configuration-validation [connection]="connection"
+                                                  [formGroup]="formGroup"></syndesis-connection-configuration-validation>
   </div>
   <div *ngIf="!connection.isDerived">
     <form class="form-horizontal"
@@ -24,7 +25,8 @@
       <ng-container *ngIf="mode === 'edit'">
         <div class="form-group">
           <div class="col-sm-offset-3 col-sm-9">
-            <ng-container *ngTemplateOutlet="validation"></ng-container>
+            <syndesis-connection-configuration-validation [connection]="connection"
+                                                          [formGroup]="formGroup"></syndesis-connection-configuration-validation>
           </div>
         </div>
         <div class="form-group">
@@ -46,42 +48,4 @@
       </ng-container>
     </form>
   </div>
-  <ng-template #validation>
-    <div>
-      <!-- validate button -->
-      <button *ngIf="showValidateButton(connection?.connector?.id)"
-              [disabled]="!formGroup.valid || validating"
-              (click)="doValidate(connection.connector, formGroup)"
-              class="btn btn-default">Validate
-      </button>
-      <!-- validate progress -->
-      <span *ngIf="validating">Validating, please wait...
-        <span class="spinner spinner-xs spinner-inline"></span>
-      </span>
-    </div>
-    <div *ngIf="validateError">
-      <div class="alert alert-warning alert-dismissable">
-        <button type="button"
-                class="close"
-                (click)="validateError = undefined">
-                <span class="pficon pficon-close"></span>
-              </button>
-        <span class="pficon pficon-warning-triangle-o"></span>
-        <p>Validation error:</p>
-        <pre>{{ validateError }}</pre>
-      </div>
-    </div>
-    <div *ngIf="validateSuccess">
-      <div class="alert alert-success alert-dismissable">
-        <button type="button"
-                class="close"
-                data-dismiss="alert"
-                aria-hidden="true">
-                <span class="pficon pficon-close"></span>
-              </button>
-        <span class="pficon pficon-ok"></span>
-        <strong>{{ connection.connector.name }}</strong> has been successfully validated
-      </div>
-    </div>
-  </ng-template>
 </ng-container>

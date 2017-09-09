@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { Connection } from '../../model';
 import { ConnectionService } from '../../store/connection/connection.service';
-import { ConnectionDetailConfigurationService } from './configuration.service';
+import { ConnectionConfigurationService } from '../common/configuration/configuration.service';
 
 @Component({
   selector: 'syndesis-connection-detail-info',
@@ -56,7 +56,7 @@ export class ConnectionDetailInfoComponent {
 
   constructor(
     private connectionService: ConnectionService,
-    private configurationService: ConnectionDetailConfigurationService,
+    private configurationService: ConnectionConfigurationService,
   ) {}
 
   onAttributeUpdated(attr: string, value) {

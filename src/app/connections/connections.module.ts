@@ -23,7 +23,8 @@ import { ConnectionDetailPageComponent } from './detail-page/detail-page.compone
 import { ConnectionDetailBreadcrumbComponent } from './detail-page/breadcrumb.component';
 import { ConnectionDetailInfoComponent } from './detail-page/info.component';
 import { ConnectionDetailConfigurationComponent } from './detail-page/configuration.component';
-import { ConnectionDetailConfigurationService } from './detail-page/configuration.service';
+import { ConnectionConfigurationService } from './common/configuration/configuration.service';
+import { ConnectionConfigurationValidationComponent } from './common/configuration/validation.component';
 
 @NgModule({
   imports: [
@@ -51,6 +52,7 @@ import { ConnectionDetailConfigurationService } from './detail-page/configuratio
     ConnectionDetailBreadcrumbComponent,
     ConnectionDetailInfoComponent,
     ConnectionDetailConfigurationComponent,
+    ConnectionConfigurationValidationComponent,
   ],
   exports: [
     ConnectionsListComponent,
@@ -58,7 +60,7 @@ import { ConnectionDetailConfigurationService } from './detail-page/configuratio
   ],
   providers: [
     CurrentConnectionService,
-    ConnectionDetailConfigurationService,
+    ConnectionConfigurationService,
   ],
 })
 export class ConnectionsModule {}
