@@ -55,7 +55,7 @@ export class IntegrationsEditPage extends ChildAwarePage
       case 'mapper':
         return 'row datamapper';
       default:
-        return 'wizard-pf-row';
+        return 'row';
     }
   }
 
@@ -64,7 +64,7 @@ export class IntegrationsEditPage extends ChildAwarePage
       case 'mapper':
         return 'col-md-1';
       default:
-        return 'wizard-pf-sidebar';
+        return 'wizard-sidebar';
     }
   }
 
@@ -73,7 +73,7 @@ export class IntegrationsEditPage extends ChildAwarePage
       case 'mapper':
         return 'col-md-11';
       default:
-        return 'wizard-pf-main';
+        return 'wizard-main';
     }
   }
 
