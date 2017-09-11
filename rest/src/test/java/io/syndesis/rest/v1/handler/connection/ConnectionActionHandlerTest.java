@@ -49,6 +49,8 @@ public class ConnectionActionHandlerTest {
 
     private static final String SALESFORCE_CREATE_OR_UPDATE = "io.syndesis:salesforce-create-or-update:latest";
 
+    private static final String SALESFORCE_LIMITS = "io.syndesis:limits:latest";
+
     private final Client client = mock(Client.class);
 
     private final ActionDefinition createOrUpdateSalesforceObjectDefinition;
@@ -86,8 +88,12 @@ public class ConnectionActionHandlerTest {
                         .build()))
             .build();
 
-        final Connector connector = new Connector.Builder().id("salesforce").addAction(new Action.Builder()
-            .id(SALESFORCE_CREATE_OR_UPDATE).definition(createOrUpdateSalesforceObjectDefinition).build()).build();
+        final Connector connector = new Connector.Builder().id("salesforce")
+            .addAction(new Action.Builder().id(SALESFORCE_CREATE_OR_UPDATE).addTag("dynamic")
+                .definition(createOrUpdateSalesforceObjectDefinition).build())
+            .addAction(
+                new Action.Builder().id(SALESFORCE_LIMITS).definition(new ActionDefinition.Builder().build()).build())
+            .build();
 
         final Connection connection = new Connection.Builder().connector(connector)
             .putConfiguredProperty("clientId", "some-clientId").build();
@@ -147,6 +153,12 @@ public class ConnectionActionHandlerTest {
 
         assertThat(entity.getValue().getEntity()).contains(entry("clientId", "some-clientId"),
             entry("sObjectIdName", null), entry("sObjectName", "Contact"));
+    }
+
+    @Test
+    public void shouldNotContactVerifierForNonDynamicActions() {
+        final ActionDefinition defaultDefinition = new ActionDefinition.Builder().build();
+        assertThat(handler.enrichWithMetadata(SALESFORCE_LIMITS, null)).isEqualTo(defaultDefinition);
     }
 
     @Test

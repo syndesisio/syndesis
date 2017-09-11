@@ -88,7 +88,8 @@ public class ActionSuggestionsITCase extends BaseITCase {
     private static final String CREATE_OR_UPDATE_ACTION_ID = "io.syndesis:salesforce-create-or-update-connector:latest";
 
     private static final Action DEFAULT_CREATE_OR_UPDATE_ACTION = new Action.Builder()
-        .id(ActionSuggestionsITCase.CREATE_OR_UPDATE_ACTION_ID)
+        .id(ActionSuggestionsITCase.CREATE_OR_UPDATE_ACTION_ID)//
+        .addTag("dynamic")//
         .definition(new ActionDefinition.Builder()
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
                 b -> b.putProperty("sObjectName", _DEFAULT_SALESFORCE_OBJECT_NAME))
