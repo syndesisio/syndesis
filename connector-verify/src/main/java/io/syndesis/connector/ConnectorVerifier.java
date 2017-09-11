@@ -15,19 +15,20 @@
  */
 package io.syndesis.connector;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.Component;
-import org.apache.camel.ComponentVerifier;
-import org.apache.camel.VerifiableComponent;
-import org.apache.camel.impl.DefaultCamelContext;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
+
+import org.apache.camel.CamelContext;
+import org.apache.camel.Component;
+import org.apache.camel.ComponentVerifier;
+import org.apache.camel.component.extension.ComponentVerifierExtension;
+import org.apache.camel.impl.DefaultCamelContext;
 
 /**
  * This CLI app expects:
@@ -52,7 +53,7 @@ public class ConnectorVerifier {
         System.setOut(System.err);
 
         Properties request = toProperties(System.in);
-        ComponentVerifier.Scope scope = ComponentVerifier.Scope.valueOf(args[0]);
+        ComponentVerifierExtension.Scope scope = ComponentVerifierExtension.Scope.valueOf(args[0]);
         String componentPrefix = args[1];
 
         Properties response = check.verify(scope, componentPrefix, request);
@@ -67,7 +68,7 @@ public class ConnectorVerifier {
         return result;
     }
 
-    public Properties verify(ComponentVerifier.Scope scope, String component, Properties request) throws Exception {
+    public Properties verify(ComponentVerifierExtension.Scope scope, String component, Properties request) throws Exception {
         Properties result = new Properties();
         CamelContext camel = null;
         try {
@@ -77,15 +78,12 @@ public class ConnectorVerifier {
 
             // get the connector to use
             Component get = camel.getComponent(component, true, false);
+            Optional<ComponentVerifierExtension> ext = get.getExtension(ComponentVerifierExtension.class);
 
-            // the connector must support ping check if its verifiable
-            if (get instanceof VerifiableComponent) {
-                VerifiableComponent vc = (VerifiableComponent) get;
-
-                ComponentVerifier verifier = vc.getVerifier();
-
+            if (ext.isPresent()) {
+                ComponentVerifierExtension verifier = ext.get();
                 Map<String, Object> parameters = toMap(request);
-                ComponentVerifier.Result verificationResult = verifier.verify(scope, parameters);
+                ComponentVerifierExtension.Result verificationResult = verifier.verify(scope, parameters);
 
                 switch (verificationResult.getStatus()) {
                     case OK:
@@ -110,11 +108,10 @@ public class ConnectorVerifier {
                         }
                         break;
                 }
-
-
             } else {
                 result.put("value", "unsupported");
             }
+
             camel.stop();
 
         } catch (Exception e) {

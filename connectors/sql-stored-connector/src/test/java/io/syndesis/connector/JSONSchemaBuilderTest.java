@@ -18,6 +18,7 @@ package io.syndesis.connector;
 
 import java.util.Properties;
 
+import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -54,7 +55,7 @@ public class JSONSchemaBuilderTest {
     }
 
     @Test
-    public void parsePropertiesFromJSONBeanTest() throws JsonProcessingException {
+    public void parsePropertiesFromJSONBeanTest() throws JsonProcessingException, JSONException {
         ObjectMapper mapper = new ObjectMapper();
         SimpleInputBean bean = new SimpleInputBean();
         bean.setA(20);

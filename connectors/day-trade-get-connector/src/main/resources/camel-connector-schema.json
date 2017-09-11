@@ -20,5 +20,7 @@
     "host": { "kind": "property", "displayName": "Host", "group": "producer", "label": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Host and port of HTTP service to use (override host in swagger schema)" }
   },
   "properties": {
+  },
+  "connectorProperties": {
   }
 }

@@ -19,12 +19,12 @@ import java.io.FileInputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Component;
-import org.apache.camel.ComponentVerifier;
-import org.apache.camel.VerifiableComponent;
+import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.apache.camel.impl.DefaultCamelContext;
 
 public class TwitterPingCheck {
@@ -32,19 +32,16 @@ public class TwitterPingCheck {
     public void ping() throws Exception {
         // need to create Camel
         CamelContext camel = new DefaultCamelContext();
-        camel.start();
 
         // get the connector to use
-        Component mention = camel.getComponent("twitter-mention");
+        Component mention = camel.getComponent("twitter-mention-connector");
+        Optional<ComponentVerifierExtension> ext = mention.getExtension(ComponentVerifierExtension.class);
 
         // the connector must support ping check if its verifiable
-        if (mention instanceof VerifiableComponent) {
-            VerifiableComponent vc = (VerifiableComponent) mention;
-
-            ComponentVerifier verifier = vc.getVerifier();
-
+        if (ext.isPresent()) {
+            ComponentVerifierExtension verifier = ext.get();
             Map<String, Object> parameters = loadParameters();
-            ComponentVerifier.Result result = verifier.verify(ComponentVerifier.Scope.CONNECTIVITY, parameters);
+            ComponentVerifierExtension.Result result = verifier.verify(ComponentVerifierExtension.Scope.CONNECTIVITY, parameters);
 
             System.out.println("=============================================");
             System.out.println("");
@@ -55,8 +52,6 @@ public class TwitterPingCheck {
         } else {
             System.out.println("Component does not support ping check");
         }
-
-        camel.stop();
     }
 
     /**
