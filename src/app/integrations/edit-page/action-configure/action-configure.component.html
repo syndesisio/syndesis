@@ -25,6 +25,13 @@
             <div class="toolbar-pf-action-right">
               <syndesis-cancel-add-step></syndesis-cancel-add-step>
               <button type="button"
+                      *ngIf="lastPage > 0 && page !== 0"
+                      class="btn btn-default"
+                      (click)="previous()">
+                      <i class="fa fa-chevron-left"></i>
+                      Previous
+            </button>
+              <button type="button"
                       class="btn btn-primary"
                       (click)="continue()">
               <ng-container *ngIf="page >= lastPage || !definition">

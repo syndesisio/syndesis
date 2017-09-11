@@ -54,11 +54,37 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     super.goBack(['action-select', this.position]);
   }
 
+  buildData(data: any) {
+    const formValue = this.formGroup ? this.formGroup.value : {};
+    return { ...this.step.configuredProperties, ...formValue, ...data};
+  }
+
+  previous(data: any = undefined) {
+    data = this.buildData(data);
+    this.currentFlow.events.emit({
+      kind: 'integration-set-properties',
+      position: this.position,
+      properties: data,
+      onSave: () => {
+        if (this.page === 0) {
+          // all done...
+          this.router.navigate(['save-or-add-step'], {
+            queryParams: { validate: true },
+            relativeTo: this.route.parent,
+          });
+        } else {
+          // go to the next page...
+          this.router.navigate(
+            ['action-configure', this.position, this.page - 1],
+            { relativeTo: this.route.parent },
+          );
+        }
+      },
+    });
+  }
+
   continue(data: any = undefined) {
-    if (!data) {
-      data = { ...this.step.configuredProperties, ...this.formGroup.value };
-    }
-    // TODO - actually deal with multi-step forms
+    data = this.buildData(data);
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
