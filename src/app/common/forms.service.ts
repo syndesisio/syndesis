@@ -30,6 +30,8 @@ export class FormFactoryService {
       }
       const value = <ConfiguredConfigurationProperty>properties[key];
       let formField: any;
+      const validators = value.required ? {'required': null} : {};
+      const errorMessages = value.required ? {'required': '{{label}} is required'} : {};
       let type = (value.type || '').toLowerCase();
       // first normalize the type
       switch (type) {
@@ -78,6 +80,8 @@ export class FormFactoryService {
             required: value.required,
             rows: value.rows,
             cols: value.cols,
+            validators: validators,
+            errorMessages: errorMessages,
           },
           {
             element: {
@@ -101,6 +105,8 @@ export class FormFactoryService {
             value: value.value || values[key] || value.defaultValue,
             hint: value.description,
             required: value.required,
+            validators: validators,
+            errorMessages: errorMessages,
           },
           {
             element: {

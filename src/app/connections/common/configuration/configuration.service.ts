@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { DynamicFormControlModel, DynamicInputModel } from '@ng2-dynamic-forms/core';
-import { FormFactoryService } from '../../common/forms.service';
-import { Connection } from '../../model';
+import { FormFactoryService } from '../../../common/forms.service';
+import { Connection } from '../../../model';
 
 @Injectable()
-export class ConnectionDetailConfigurationService {
+export class ConnectionConfigurationService {
 
   constructor(private formFactory: FormFactoryService) { }
 

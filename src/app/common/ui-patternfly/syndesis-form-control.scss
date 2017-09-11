@@ -2,8 +2,11 @@
   min-width: 200px;
   word-wrap: break-word;
 }
-:read-only {
+input:read-only, textarea:read-only {
   color: inherit;
   background-color: transparent;
   border: none;
+}
+.control-label > label {
+  margin-bottom: 0;
 }
