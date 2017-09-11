@@ -17,11 +17,12 @@ package io.syndesis.verifier.v1.metadata;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
@@ -29,51 +30,62 @@ import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.SimpleTypeSchema;
 
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
+import org.apache.camel.component.salesforce.SalesforceEndpointConfig;
+import org.apache.camel.component.salesforce.api.utils.JsonUtils;
 import org.springframework.stereotype.Component;
 
 @Component("salesforce-adapter")
-public final class SalesforceMetadataAdapter implements MetadataAdapter {
-
-    private static final String UNIQUE_PROPERTY = "sObjectIdName";
+public final class SalesforceMetadataAdapter implements MetadataAdapter<ObjectSchema> {
 
     @Override
-    public Map<String, List<PropertyPair>> apply(final Map<String, Object> properties, final MetaData metaData) {
-        final String scope = (String) metaData.getAttribute("scope");
+    public SyndesisMetadata<ObjectSchema> adapt(final Map<String, Object> properties, final MetaData metadata) {
 
-        if ("object".equals(scope)) {
-            return adaptForObjectRequest(properties, metaData);
-        } else if ("object_types".equals(scope)) {
-            return adaptForObjectTypeRequest(properties, metaData);
+        final ObjectSchema schema = schemaPayload(metadata);
+
+        Set<ObjectSchema> schemasToConsider;
+        if (isPresentAndNonNull(properties, SalesforceEndpointConfig.SOBJECT_NAME)) {
+            schemasToConsider = Collections.singleton(objectSchemaFrom(schema));
+        } else {
+            schemasToConsider = schema.getOneOf().stream().filter(SalesforceMetadataAdapter::isObjectSchema)
+                .map(ObjectSchema.class::cast).collect(Collectors.toSet());
         }
 
-        throw new IllegalStateException(
-            "Unknown or missing `scope` attribute in Salesforce MetaData, scope is: " + scope);
-    }
+        final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
+        enrichedProperties.put(SalesforceEndpointConfig.SOBJECT_NAME, schemasToConsider.stream()
+            .map(SalesforceMetadataAdapter::nameAndTitlePropertyPairOf).collect(Collectors.toList()));
 
-    static Map<String, List<PropertyPair>> adaptForObjectRequest(final Map<String, Object> properties,
-        final MetaData metaData) {
-        final Map<String, List<PropertyPair>> ret = new HashMap<>();
-
-        final ObjectSchema schema = objectSchemaFrom(metaData.getPayload(ObjectSchema.class));
-        if (properties.containsKey(UNIQUE_PROPERTY)) {
-            final List<PropertyPair> uniquePropertyPairs = schema.getProperties().entrySet().stream()
-                .filter(e -> isIdLookup(e.getValue()))
-                .map(SalesforceMetadataAdapter::createFieldPairPropertyFromSchemaEntry).collect(Collectors.toList());
-
-            ret.put(UNIQUE_PROPERTY, uniquePropertyPairs);
+        if (isPresent(properties, SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME)) {
+            enrichedProperties.put(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME, schemasToConsider.stream()
+                .flatMap(s -> s.getProperties().entrySet().stream()).filter(e -> isIdLookup(e.getValue()))
+                .map(SalesforceMetadataAdapter::createFieldPairPropertyFromSchemaEntry).collect(Collectors.toList()));
         }
 
-        return ret;
+        if (isPresent(properties, SalesforceEndpointConfig.SOBJECT_NAME)) {
+            final String objectName = (String) properties.get(SalesforceEndpointConfig.SOBJECT_NAME);
+            final ObjectSchema inputOutputSchema = inputOutputSchemaFor(schemasToConsider, objectName);
+
+            return new SyndesisMetadata<>(enrichedProperties, inputOutputSchema, inputOutputSchema);
+        }
+
+        return new SyndesisMetadata<>(enrichedProperties, null, null);
     }
 
-    static Map<String, List<PropertyPair>> adaptForObjectTypeRequest(final Map<String, Object> properties,
-        final MetaData metaData) {
-        final JsonNode payload = metaData.getPayload(JsonNode.class);
+    static ObjectSchema convertSalesforceGlobalObjectJsonToSchema(final JsonNode payload) {
+        final Set<Object> allSchemas = new HashSet<>();
 
-        final List<PropertyPair> objects = StreamSupport.stream(payload.spliterator(), false)
-            .map(SalesforceMetadataAdapter::createObjectPairPropertyFromNode).collect(Collectors.toList());
+        for (final JsonNode sobject : payload) {
+            // generate SObject schema from description
+            final ObjectSchema sobjectSchema = new ObjectSchema();
+            sobjectSchema.setId(JsonUtils.DEFAULT_ID_PREFIX + ":" + sobject.get("name").asText());
+            sobjectSchema.setTitle(sobject.get("label").asText());
 
-        return Collections.singletonMap("sObjectName", objects);
+            allSchemas.add(sobjectSchema);
+        }
+
+        final ObjectSchema schema = new ObjectSchema();
+        schema.setOneOf(allSchemas);
+
+        return schema;
     }
 
     static PropertyPair createFieldPairPropertyFromSchemaEntry(final Entry<String, JsonSchema> e) {
@@ -87,6 +99,16 @@ public final class SalesforceMetadataAdapter implements MetadataAdapter {
         return new PropertyPair(value, displayValue);
     }
 
+    static ObjectSchema inputOutputSchemaFor(final Set<ObjectSchema> schemasToConsider, final String objectName) {
+        for (final ObjectSchema schema : schemasToConsider) {
+            if (schema.getId().contains(":" + objectName)) {
+                return schema;
+            }
+        }
+
+        throw new IllegalArgumentException("Unable to find object schema for: " + objectName);
+    }
+
     static boolean isIdLookup(final JsonSchema property) {
         final String description = property.getDescription();
 
@@ -97,15 +119,50 @@ public final class SalesforceMetadataAdapter implements MetadataAdapter {
         return description.contains("idLookup");
     }
 
+    static boolean isObjectSchema(final Object obj) {
+        final ObjectSchema schema = (ObjectSchema) obj;
+        final String id = schema.getId();
+
+        return !id.contains(":QueryRecords");
+    }
+
+    static boolean isPresent(final Map<String, Object> properties, final String property) {
+        return properties != null && properties.containsKey(property);
+    }
+
+    static boolean isPresentAndNonNull(final Map<String, Object> properties, final String property) {
+        return isPresent(properties, property) && properties.get(property) != null;
+    }
+
+    static PropertyPair nameAndTitlePropertyPairOf(final ObjectSchema schema) {
+        final String id = schema.getId();
+        final String objectName = id.substring(id.lastIndexOf(':') + 1);
+        final String objectLabel = schema.getTitle();
+
+        return new PropertyPair(objectName, objectLabel);
+    }
+
     static ObjectSchema objectSchemaFrom(final ObjectSchema schema) {
         if (schema.getOneOf().isEmpty()) {
             return schema;
         }
 
         return (ObjectSchema) schema.getOneOf().stream().filter(ObjectSchema.class::isInstance)
-            .filter(s -> !((ObjectSchema) s).getId().contains(":QueryRecords")).findFirst()
-            .orElseThrow(() -> new IllegalStateException(
+            .filter(SalesforceMetadataAdapter::isObjectSchema).findFirst().orElseThrow(() -> new IllegalStateException(
                 "The resulting schema does not contain an non query records object schema in `oneOf`"));
     }
 
+    static ObjectSchema schemaPayload(final MetaData metadata) {
+        final Object payload = metadata.getPayload();
+
+        if (payload instanceof ObjectSchema) {
+            return (ObjectSchema) payload;
+        }
+
+        if (payload instanceof JsonNode) {
+            return convertSalesforceGlobalObjectJsonToSchema((JsonNode) payload);
+        }
+
+        throw new IllegalArgumentException("Unsupported metadata payload: " + payload);
+    }
 }

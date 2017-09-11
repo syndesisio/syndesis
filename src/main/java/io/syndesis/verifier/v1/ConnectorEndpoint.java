@@ -15,47 +15,30 @@
  */
 package io.syndesis.verifier.v1;
 
-import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import io.syndesis.verifier.v1.metadata.MetadataAdapter;
-import io.syndesis.verifier.v1.metadata.PropertyPair;
-import io.syndesis.verifier.v1.metadata.SyndesisMetadata;
 
 import org.springframework.stereotype.Component;
 
 @Component
-@Path("/action/properties")
-public class ActionPropertiesEndpoint {
+@Path("/connectors")
+public class ConnectorEndpoint {
 
     private final Map<String, MetadataAdapter<?>> adapters;
 
-    public ActionPropertiesEndpoint(final Map<String, MetadataAdapter<?>> adapters) {
+    public ConnectorEndpoint(final Map<String, MetadataAdapter<?>> adapters) {
         this.adapters = adapters;
     }
 
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{id}")
-    public Map<String, List<PropertyPair>> properties(@PathParam("id") final String connectorId,
-        final Map<String, Object> properties) throws Exception {
+    @Path("/{connectorId}/actions")
+    public ActionDefinitionEndpoint actions(@PathParam("connectorId") final String connectorId) throws Exception {
         final MetadataAdapter<?> adapter = MetadataEndpoint.adapterFor(adapters, connectorId);
 
-        final SyndesisMetadata<?> syndesisMetadata = metadataHelper(connectorId, adapter).fetchMetadata(properties);
-
-        return syndesisMetadata.properties;
-    }
-
-    MetadataEndpoint metadataHelper(final String connectorId, final MetadataAdapter<?> adapter) {
-        return new MetadataEndpoint(connectorId, adapter);
+        return new ActionDefinitionEndpoint(connectorId, adapter);
     }
 
 }
