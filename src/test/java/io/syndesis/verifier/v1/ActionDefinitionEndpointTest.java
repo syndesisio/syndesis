@@ -22,8 +22,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 
-import io.syndesis.verifier.v1.metadata.MetadataAdapter;
 import io.syndesis.verifier.v1.metadata.PropertyPair;
+import io.syndesis.verifier.v1.metadata.SyndesisMetadata;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -31,35 +31,34 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ActionPropertiesEndpointTest {
+public class ActionDefinitionEndpointTest {
+    private static final ObjectSchema INPUT = new ObjectSchema();
+
+    private static final ObjectSchema OUTPUT = new ObjectSchema();
 
     private static final Map<String, String> PAYLOAD = Collections.singletonMap("this", "is playload");
 
     private static final Map<String, List<PropertyPair>> PROPERTIES = Collections.singletonMap("property",
         Arrays.asList(new PropertyPair("value1", "First Value"), new PropertyPair("value2", "Second Value")));
 
-    private static final ObjectSchema UNUSED = null;
-
-    private final ActionPropertiesEndpoint endpoint = new ActionPropertiesEndpoint(
-        Collections.singletonMap("petstore-adapter", new PetstoreAdapter(PAYLOAD, PROPERTIES, UNUSED, UNUSED))) {
+    private final ActionDefinitionEndpoint endpoint = new ActionDefinitionEndpoint("petstore",
+        new PetstoreAdapter(PAYLOAD, PROPERTIES, INPUT, OUTPUT)) {
         @Override
-        MetadataEndpoint metadataHelper(final String connectorId, final MetadataAdapter<?> adapter) {
-            return new MetadataEndpoint(connectorId, adapter) {
-                @Override
-                protected CamelContext camelContext() {
-                    final DefaultCamelContext camelContext = new DefaultCamelContext();
-                    camelContext.addComponent("petstore", new PetstoreComponent(PAYLOAD));
+        protected CamelContext camelContext() {
+            final DefaultCamelContext camelContext = new DefaultCamelContext();
+            camelContext.addComponent("petstore", new PetstoreComponent(PAYLOAD));
 
-                    return camelContext;
-                }
-            };
+            return camelContext;
         }
+
     };
 
     @Test
-    public void shouldProvideActionPropertiesBasedOnMetadata() throws Exception {
-        final Map<String, List<PropertyPair>> properties = endpoint.properties("petstore", Collections.emptyMap());
+    public void shouldMetadata() throws Exception {
+        final SyndesisMetadata<?> metadata = endpoint.definition("dog-food", Collections.emptyMap());
 
-        assertThat(properties).isSameAs(PROPERTIES);
+        assertThat(metadata.properties).isSameAs(PROPERTIES);
+        assertThat(metadata.inputSchema).isSameAs(INPUT);
+        assertThat(metadata.outputSchema).isSameAs(OUTPUT);
     }
 }
