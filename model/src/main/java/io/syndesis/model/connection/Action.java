@@ -29,13 +29,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
+import io.syndesis.model.WithTags;
 
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Action.Builder.class)
 @JsonIgnoreProperties(value = {"properties", "inputDataShape", "outputDataShape"}, allowGetters = true)
-public interface Action extends WithId<Action>, WithName, Serializable {
+public interface Action extends WithId<Action>, WithName, WithTags, Serializable {
 
     @Override
     default Kind getKind() {

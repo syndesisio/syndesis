@@ -83,6 +83,10 @@ public class ConnectionActionHandler {
 
         final ActionDefinition defaultDefinition = action.getDefinition();
 
+        if (!action.getTags().contains("dynamic")) {
+            return defaultDefinition;
+        }
+
         final String connectorId = connector.getId().get();
 
         final Map<String, String> parameters = new HashMap<>(Optional.ofNullable(properties).orElseGet(HashMap::new));
