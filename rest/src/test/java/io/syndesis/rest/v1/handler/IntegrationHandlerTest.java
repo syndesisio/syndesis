@@ -60,52 +60,18 @@ public class IntegrationHandlerTest {
     @Test
     public void filterOptionsSimple() {
         when(inspector.getPaths("twitter4j.Status")).thenReturn(Arrays.asList("paramA", "paramB"));
-        Integration integration =
-            createIntegrationFromDataShapes(dataShape(DataShapeKinds.JAVA, "twitter4j.Status"), null, dataShape(DataShapeKinds.NONE));
+        DataShape dataShape = dataShape(DataShapeKinds.JAVA, "twitter4j.Status");
 
-        FilterOptions options = handler.getFilterOptions(integration, -1);
+        FilterOptions options = handler.getFilterOptions(dataShape);
         assertThat(options.getPaths()).hasSize(2).contains("paramA","paramB");
     }
 
     @Test
-    public void filterOptionsMultipleOutputShapes() {
-        when(inspector.getPaths("twitter4j.Status")).thenReturn(Arrays.asList("paramA", "paramB"));
-        when(inspector.getPaths("blubber.bla")).thenReturn(Arrays.asList("paramY", "paramZ"));
-        Integration integration =
-            createIntegrationFromDataShapes(dataShape(DataShapeKinds.JAVA, "blubber.bla"),null, dataShape(DataShapeKinds.JAVA, "twitter4j.Status"));
-
-        assertThat(handler.getFilterOptions(integration, -1).getPaths())
-            .hasSize(2).contains("paramA", "paramB");
-
-        assertThat(handler.getFilterOptions(integration, 1).getPaths())
-            .hasSize(2).contains("paramY","paramZ");
-    }
-
-    @Test
     public void filterOptionsNoOutputShape() {
-        Integration integration =
-            createIntegrationFromDataShapes(dataShape(DataShapeKinds.NONE), null);
+        DataShape dataShape = dataShape(DataShapeKinds.NONE);
 
-        FilterOptions options = handler.getFilterOptions(integration, -1);
+        FilterOptions options = handler.getFilterOptions(dataShape);
         assertThat(options.getPaths()).isEmpty();
-    }
-
-    private Integration createIntegrationFromDataShapes(DataShape... dataShapes) {
-        return new Integration.Builder().steps(steps(dataShapes)).build();
-    }
-
-    private List<SimpleStep> steps(DataShape ... dataShapes) {
-        List<SimpleStep> ret = new ArrayList<>();
-        for (DataShape shape : dataShapes) {
-            ActionDefinition.Builder definition = new ActionDefinition.Builder();
-            if (shape != null) {
-                definition.outputDataShape(shape);
-            }
-
-            Action action = new Action.Builder().definition(definition.build()).build();
-            ret.add(new SimpleStep.Builder().action(action).build());
-        }
-        return ret;
     }
 
     private DataShape dataShape(String kind) {
