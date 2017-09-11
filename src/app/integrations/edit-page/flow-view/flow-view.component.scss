@@ -38,7 +38,6 @@
     width: 320px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     &.collapsed {
       width: 66px;
       padding-left: 6px;
@@ -102,7 +101,8 @@
   .step {
     position: relative;
     flex-wrap: nowrap;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
+    min-height: 110px;
     .step-line {
       position: absolute; //height: 150px;
       height: 100%;
@@ -113,9 +113,11 @@
     }
     &.finish {
       flex: 0 0 auto;
+      min-height: 0px;
     }
     &.step-insert {
-      flex: 1 1 auto;
+      flex: 0 0 auto;
+      min-height: 80px;
       /deep/ .popover {
         margin-top: -2px;
         margin-left: 28px !important;
