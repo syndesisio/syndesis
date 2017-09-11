@@ -30,10 +30,16 @@ import { saveAs } from 'file-saver';
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
+  // TODO icon?
   /**
    * Logo with white background.
    */
   logoWhiteBg = 'assets/images/syndesis-logo-svg-white.svg';
+
+  /**
+   * Logo with dark background
+   */
+  logoDarkBg = 'assets/images/syndesis-logo-svg-white.svg';
 
   loggedIn = false;
 
