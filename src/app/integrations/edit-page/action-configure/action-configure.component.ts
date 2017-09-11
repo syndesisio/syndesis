@@ -26,12 +26,15 @@ export class IntegrationsConfigureActionComponent extends FlowPage
   routeSubscription: Subscription;
   position: number;
   page: number;
+  lastPage: number;
   definition: any;
   action: Action = <Action>{};
   step: Step = <Step>{};
   formModel: DynamicFormControlModel[];
   formGroup: FormGroup;
   formConfig: any;
+  loading: boolean;
+  error: any = undefined;
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -53,7 +56,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
 
   continue(data: any = undefined) {
     if (!data) {
-      data = this.formGroup.value || {};
+      data = { ...this.step.configuredProperties, ...this.formGroup.value };
     }
     // TODO - actually deal with multi-step forms
     this.currentFlow.events.emit({
@@ -61,15 +64,25 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       position: this.position,
       properties: data,
       onSave: () => {
-        this.router.navigate(['save-or-add-step'], {
-          queryParams: { validate: true },
-          relativeTo: this.route.parent,
-        });
+        if (!this.lastPage || this.page >= this.lastPage) {
+          // all done...
+          this.router.navigate(['save-or-add-step'], {
+            queryParams: { validate: true },
+            relativeTo: this.route.parent,
+          });
+        } else {
+          // go to the next page...
+          this.router.navigate(
+            ['action-configure', this.position, this.page + 1],
+            { relativeTo: this.route.parent },
+          );
+        }
       },
     });
   }
 
   initialize(position: number, page: number) {
+    this.error = undefined;
     const step = <Step>this.currentFlow.getStep(this.position);
     if (!step) {
       this.router.navigate(['connection-select', this.position], {
@@ -90,24 +103,40 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       .toPromise()
       .then(response => {
         log.info('Response: ' + JSON.stringify(response, undefined, 2));
+        const definition: any = response['_body']
+          ? JSON.parse(response['_body'])
+          : undefined;
+        this.initForm(position, page, definition);
       })
       .catch(err => {
         log.info('Error response: ' + JSON.stringify(err, undefined, 2));
+        this.initForm(position, page, undefined, err);
       });
+  }
 
-    if (!this.action || !this.action.definition) {
-      this.router.navigate(['save-or-add-step'], {
-        queryParams: { validate: true },
-        relativeTo: this.route.parent,
-      });
+  initForm(position: number, page: number, definition: any, error?: any) {
+    if (error) {
+      this.error = error;
+      this.error.class = 'alert alert-warning';
+      this.loading = false;
+      this.detector.detectChanges();
       return;
     }
-    const definition = this.action.definition;
-    if (
-      definition &&
-      definition.propertyDefinitionSteps &&
-      page < definition.propertyDefinitionSteps.length
-    ) {
+    if (!definition || definition === undefined) {
+      this.loading = false;
+      // TODO figure out how to get a link in here that works
+      this.error = {
+        class: 'alert alert-info',
+        message: 'There are no properties to configure for this action',
+      };
+      this.detector.detectChanges();
+      setTimeout(() => {
+        this.continue({});
+      }, 1500);
+      return;
+    }
+    const lastPage = this.lastPage = definition.propertyDefinitionSteps.length - 1;
+    if (definition.propertyDefinitionSteps && page <= lastPage) {
       this.definition = JSON.parse(
         JSON.stringify(definition.propertyDefinitionSteps[page]),
       );
@@ -122,7 +151,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     }
     this.formModel = this.formFactory.createFormModel(
       this.formConfig,
-      step.configuredProperties,
+      this.step.configuredProperties,
     );
     this.formGroup = this.formService.createFormGroup(this.formModel);
     setTimeout(() => {
@@ -131,6 +160,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
           kind: 'integration-action-configure',
           position: this.position,
         });
+        this.loading = false;
         this.detector.detectChanges();
       } catch (err) {}
     }, 30);
@@ -147,6 +177,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
         const position = (this.position = Number.parseInt(
           params.get('position'),
         ));
+        this.loading = true;
         this.initialize(position, page);
       },
     );
