@@ -18,47 +18,42 @@
 
 ![Image of github settings page](img/github-settings-img-5.png)
 
-1. The success message is displayed for ~10 secs than it would disappear to let user focus on the next step.  
+1. The success message is displayed for ~10 secs then it would disappear to let user focus on the next step.  
 2. For the second step, user will fill in client ID and client secret. User needs to get this from GitHub page.
 
 ![Image of github settings page](img/github-settings-img-6.png)
 
+1. Disable "Connect GitHub" button until both client ID and client secret have been filled in.
+2. Clicking on "Connect GitHub" will bring users to the OAuth flow a new tab where they can grant access for Syndesis.   
+
 ![Image of github settings page](img/github-settings-img-7.png)
 
-1. A success message is displayed once user entered client id and client secret. Step two turns gray.
+1. A success message is displayed once user has successfully connected to GitHub. Step two turns gray.
 
 ![Image of github settings page](img/github-settings-img-8.png)
 
 1. The success message is displayed for ~10 secs than it would disappear to let user focus on the next step.  
-2. User would be able to see a list of accounts when specifying where to store the integrations.
+2. Users would be able to see their personal account as the default connected account.
+3. Then the "You're almost there!" message would appear. Users can click on "Complete Setup" to confirm that they're ready to proceed.
 
 ![Image of github settings page](img/github-settings-img-9.png)
 
-1. A  green check mark is displayed when user successfully selected an active account.
-
 ![Image of github settings page](img/github-settings-img-10.png)
 
-![Image of github settings page](img/github-settings-img-9-complete-setup.png)
-
-1. A button of Complete Setup would appear if all required information has been collected. User clicks on the button to proceed.
-
-![Image of github settings page](img/github-settings-img-9-loading.png)
-
-1. While syncing is being finalized, a progress indicator appears on screen.  
+1. Users click on "Get Started" to complete the GitHub setup process.
 
 ![Image of github settings page](img/github-settings-img-11.png)
-
-1. After about ~30 seconds of user making the selection for step 3, the Success Message will display and user can click Get Started to go to Syndesis Home page.
-
-![Image of github settings page](img/github-settings-img-12.png)
 
 
 ## Global Settings > GitHub Settings
 
-![Image of github settings page](img/github-settings-img-13.png)
+![Image of github settings page](img/github-settings-img-12.png)
 
 1. GitHub Settings page for user to update client id and client secret, as well as changing connected account. User can only connect to one account at a time.
 
-![Image of github settings page](img/github-settings-img-14.png)
+![Image of github settings page](img/github-settings-img-13.png)
 
 1. User fills the form to update GitHub client id and client secret.
+2. Users click on "Save and Connect GitHub" to go through the OAuth flow for GitHub again. 
+
+![Image of github settings page](img/github-settings-img-14.png)
