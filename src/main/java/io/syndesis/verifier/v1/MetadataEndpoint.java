@@ -16,7 +16,9 @@
 package io.syndesis.verifier.v1;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.syndesis.verifier.v1.metadata.MetadataAdapter;
 import io.syndesis.verifier.v1.metadata.SyndesisMetadata;
@@ -51,7 +53,10 @@ class MetadataEndpoint {
                     .getExtension(MetaDataExtension.class).orElseThrow(() -> new IllegalArgumentException(
                         "No Metadata extension present for connector: " + connectorId));
 
-                final MetaData metaData = metadataExtension.meta(properties)
+                final Map<String, Object> propertiesForMetadataExtension = properties.entrySet().stream()
+                    .filter(e -> e.getValue() != null).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+
+                final MetaData metaData = metadataExtension.meta(propertiesForMetadataExtension)
                     .orElseThrow(() -> new IllegalArgumentException("No Metadata returned by the metadata extension"));
 
                 return adapter.adapt(properties, metaData);
