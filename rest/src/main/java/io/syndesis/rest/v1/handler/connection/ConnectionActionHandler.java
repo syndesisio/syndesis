@@ -31,6 +31,10 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -38,15 +42,17 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.ActionDefinition;
-import io.syndesis.model.connection.ActionPropertySuggestions;
-import io.syndesis.model.connection.ActionPropertySuggestions.ActionPropertySuggestion;
-import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
+import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.connection.DataShape;
+import io.syndesis.model.connection.DynamicActionMetadata;
 import io.syndesis.verifier.VerificationConfigurationProperties;
 
 @Api(value = "actions")
 public class ConnectionActionHandler {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final List<Action> actions;
 
@@ -99,21 +105,59 @@ public class ConnectionActionHandler {
 
         final Client client = createClient();
         final WebTarget target = client
-            .target(String.format("http://%s/api/v1/action/properties/%s", config.getService(), connectorId));
+            .target(String.format("http://%s/api/v1/connectors/%s/actions/%s", config.getService(), connectorId, id));
 
         final ActionDefinition.Builder enriched = new ActionDefinition.Builder().createFrom(defaultDefinition);
-        final ActionPropertySuggestions suggestions = target.request(MediaType.APPLICATION_JSON)
-            .post(Entity.entity(parameters, MediaType.APPLICATION_JSON), ActionPropertySuggestions.class);
+        final DynamicActionMetadata dynamicActionMetadata = target.request(MediaType.APPLICATION_JSON)
+            .post(Entity.entity(parameters, MediaType.APPLICATION_JSON), DynamicActionMetadata.class);
 
-        final Map<String, List<ActionPropertySuggestion>> actionPropertySuggestions = suggestions.value();
+        final Map<String, List<DynamicActionMetadata.ActionPropertySuggestion>> actionPropertySuggestions = dynamicActionMetadata
+            .properties();
         actionPropertySuggestions.forEach((k, vals) -> enriched.replaceConfigurationProperty(k,
-            b -> b.addAllEnum(vals.stream().map(s -> PropertyValue.Builder.from(s))::iterator)));
+            b -> b.addAllEnum(vals.stream().map(s -> ConfigurationProperty.PropertyValue.Builder.from(s))::iterator)));
+
+        final Object input = dynamicActionMetadata.inputSchema();
+        if (shouldEnrichDataShape(defaultDefinition.getInputDataShape(), input)) {
+            enriched.inputDataShape(new DataShape.Builder().type(typeFrom(input)).kind("json")
+                .specification(specificationFrom(input)).build());
+        }
+
+        final Object output = dynamicActionMetadata.outputSchema();
+        if (shouldEnrichDataShape(defaultDefinition.getOutputDataShape(), output)) {
+            enriched.outputDataShape(new DataShape.Builder().type(typeFrom(output)).kind("json")
+                .specification(specificationFrom(output)).build());
+        }
 
         return enriched.build();
     }
 
     /* default */ Client createClient() {
         return ClientBuilder.newClient();
+    }
+
+    /* default */ static boolean shouldEnrichDataShape(final Optional<DataShape> maybeExistingDataShape,
+        final Object received) {
+        if (maybeExistingDataShape.isPresent() && received != null) {
+            final DataShape existingDataShape = maybeExistingDataShape.get();
+
+            return "json".equals(existingDataShape.getKind()) && existingDataShape.getSpecification() == null;
+        }
+
+        return false;
+    }
+
+    /* default */ static String specificationFrom(final Object obj) {
+        try {
+            return MAPPER.writeValueAsString(obj);
+        } catch (final JsonProcessingException e) {
+            throw new IllegalArgumentException("Unable to serialize JSON", e);
+        }
+    }
+
+    /* default */ static String typeFrom(final Object obj) {
+        final JsonNode node = (JsonNode) obj;
+
+        return node.get("title").asText();
     }
 
 }

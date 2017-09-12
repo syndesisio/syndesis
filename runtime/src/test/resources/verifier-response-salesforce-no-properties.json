@@ -1,12 +1,14 @@
 {
-  "sObjectName": [
-    {
-      "value": "Account",
-      "displayValue": "Accounts"
-    },
-    {
-      "value": "Contact",
-      "displayValue": "Contacts"
-    }
-  ]
+  "properties": {
+    "sObjectName": [
+      {
+        "value": "Account",
+        "displayValue": "Accounts"
+      },
+      {
+        "value": "Contact",
+        "displayValue": "Contacts"
+      }
+    ]
+  }
 }

@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.ActionDefinition;
-import io.syndesis.model.connection.ActionPropertySuggestions;
+import io.syndesis.model.connection.DynamicActionMetadata;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
@@ -121,17 +121,17 @@ public class ConnectionActionHandlerTest {
         final Class<Entity<Map<String, Object>>> entityType = (Class) Entity.class;
         final ArgumentCaptor<Entity<Map<String, Object>>> entity = ArgumentCaptor.forClass(entityType);
 
-        final ActionPropertySuggestions suggestions = new ActionPropertySuggestions.Builder()
-            .putValue("sObjectName",
+        final DynamicActionMetadata suggestions = new DynamicActionMetadata.Builder()
+            .putProperty("sObjectName",
                 Collections
-                    .singletonList(ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
-            .putValue("sObjectIdName",
-                Arrays.asList(ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("ID", "Contact ID"),
-                    ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("Email", "Email"),
-                    ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("TwitterScreenName__c",
+                    .singletonList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
+            .putProperty("sObjectIdName",
+                Arrays.asList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("ID", "Contact ID"),
+                    DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Email", "Email"),
+                    DynamicActionMetadata.ActionPropertySuggestion.Builder.of("TwitterScreenName__c",
                         "Twitter Screen Name")))
             .build();
-        when(invocationBuilder.post(entity.capture(), eq(ActionPropertySuggestions.class))).thenReturn(suggestions);
+        when(invocationBuilder.post(entity.capture(), eq(DynamicActionMetadata.class))).thenReturn(suggestions);
 
         final ActionDefinition enrichedDefinitioin = new ActionDefinition.Builder()
             .createFrom(createOrUpdateSalesforceObjectDefinition)
@@ -167,11 +167,11 @@ public class ConnectionActionHandlerTest {
         final Class<Entity<Map<String, Object>>> entityType = (Class) Entity.class;
         final ArgumentCaptor<Entity<Map<String, Object>>> entity = ArgumentCaptor.forClass(entityType);
 
-        final ActionPropertySuggestions suggestions = new ActionPropertySuggestions.Builder().putValue("sObjectName",
-            Arrays.asList(ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("Account", "Account"),
-                ActionPropertySuggestions.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
+        final DynamicActionMetadata suggestions = new DynamicActionMetadata.Builder().putProperty("sObjectName",
+            Arrays.asList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Account", "Account"),
+                DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
             .build();
-        when(invocationBuilder.post(entity.capture(), eq(ActionPropertySuggestions.class))).thenReturn(suggestions);
+        when(invocationBuilder.post(entity.capture(), eq(DynamicActionMetadata.class))).thenReturn(suggestions);
 
         final ActionDefinition definition = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE,
             Collections.emptyMap());
