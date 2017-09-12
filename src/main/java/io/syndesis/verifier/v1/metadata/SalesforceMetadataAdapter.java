@@ -60,7 +60,7 @@ public final class SalesforceMetadataAdapter implements MetadataAdapter<ObjectSc
                 .map(SalesforceMetadataAdapter::createFieldPairPropertyFromSchemaEntry).collect(Collectors.toList()));
         }
 
-        if (isPresent(properties, SalesforceEndpointConfig.SOBJECT_NAME)) {
+        if (isPresentAndNonNull(properties, SalesforceEndpointConfig.SOBJECT_NAME)) {
             final String objectName = (String) properties.get(SalesforceEndpointConfig.SOBJECT_NAME);
             final ObjectSchema inputOutputSchema = inputOutputSchemaFor(schemasToConsider, objectName);
 
