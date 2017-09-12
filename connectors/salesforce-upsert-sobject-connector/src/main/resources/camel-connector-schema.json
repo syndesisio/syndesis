@@ -27,5 +27,7 @@
   "properties": {
     "sObjectIdName": { "kind": "parameter", "displayName": "SObject Id Name", "group": "common", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "defaultValue": "Id", "description": "SObject external ID field name" },
     "sObjectName": { "kind": "parameter", "displayName": "SObject Name", "group": "common", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "defaultValue": "Contact", "description": "SObject name if required or supported by API" }
+  },
+  "connectorProperties": {
   }
 }

@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.salesforce;
 
+import org.apache.camel.Message;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
 /**
@@ -24,6 +25,13 @@ public class SalesforceGetSObjectWithIdComponent extends DefaultConnectorCompone
 
     public SalesforceGetSObjectWithIdComponent() {
         super("salesforce-get-sobject-with-id", SalesforceGetSObjectWithIdComponent.class.getName());
+
+        // replace DTO with id for Salesforce component
+        setBeforeProducer( exchange -> {
+            final Message in = exchange.getIn();
+            ExternalIdToGet id = in.getBody(ExternalIdToGet.class);
+            in.setBody(id.getId());
+        });
     }
 
 }
