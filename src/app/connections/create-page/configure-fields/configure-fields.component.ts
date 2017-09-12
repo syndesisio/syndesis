@@ -76,8 +76,7 @@ export class ConnectionsConfigureFieldsComponent implements OnInit, OnDestroy, C
   // This will trigger validation
   private touchFormFields() {
     Object.keys(this.formGroup.controls).forEach(key => {
-      const control = this.formGroup.get(key);
-      control.markAsTouched();
+      this.formGroup.get(key).markAsTouched();
     });
   }
 

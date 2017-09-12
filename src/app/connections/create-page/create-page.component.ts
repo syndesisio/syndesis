@@ -125,24 +125,6 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       case 'configure-fields':
         target.push('review');
         break;
-      case 'review':
-        this.current.events.emit({
-          kind: 'connection-save-connection',
-          connection: this.current.connection,
-          action: (connection: Connection) => {
-            this.router.navigate(['..'], { relativeTo: this.route });
-          },
-          error: (reason: any) => {
-            log.debugc(
-              () =>
-                'Error creating connection: ' +
-                JSON.stringify(reason, undefined, 2),
-              category,
-            );
-          },
-        });
-        // TODO
-        break;
       default:
         break;
     }
