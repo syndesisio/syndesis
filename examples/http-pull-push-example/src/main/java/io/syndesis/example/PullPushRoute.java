@@ -25,9 +25,9 @@ public class PullPushRoute extends RouteBuilder {
     public void configure() throws Exception {
         from("periodic-timer")
             .log("Timer is triggered")
-            .to("http-get:hello")
+            .to("http-get-connector:hello")
             .log("GET: ${body}")
             .transform().constant("{ \"message\": \"Syndesis was here\" }")
-            .to("http-post:bye");
+            .to("http-post-connector:bye");
     }
 }

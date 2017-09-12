@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class TwitterSearchRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        from("tw-search")
+        from("tw-search:cameltest")
             .log("Got ${body}");
     }
 }

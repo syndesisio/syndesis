@@ -15,10 +15,11 @@
  */
 package io.syndesis.component;
 
-import java.util.Map;
+import java.util.Optional;
 
-import org.apache.camel.ComponentVerifier;
 import org.apache.camel.Endpoint;
+import org.apache.camel.component.extension.ComponentExtension;
+import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.apache.camel.spi.Metadata;
 import org.apache.camel.util.FileUtil;
 import org.apache.camel.util.StringHelper;
@@ -37,6 +38,10 @@ public class HttpComponent extends org.apache.camel.component.http4.HttpComponen
     @Metadata(label = "security", description = "Enable usage of global SSL context parameters")
     private boolean useGlobalSslContextParameters;
 
+    public HttpComponent() {
+
+    }
+
     @Override
     public void doStart() throws Exception {
         // required options
@@ -46,21 +51,35 @@ public class HttpComponent extends org.apache.camel.component.http4.HttpComponen
         super.doStart();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public ComponentVerifier getVerifier() {
-        final ComponentVerifier target = super.getVerifier();
-        return (scope, map) -> {
-            // build parameters into httpUri which is expected in the real
-            String s = map.getOrDefault("scheme", "http").toString();
-            String h = map.getOrDefault("hostname", "").toString();
-            String p = map.getOrDefault("port", "").toString();
-            String c = map.getOrDefault("path", "").toString();
+    public <T extends ComponentExtension> Optional<T> getExtension(Class<T> extensionType) {
+        Optional<T> extension = super.getExtension(extensionType);
 
-            String url = buildUrl(s, h, p, c, null);
-            map.put("httpUri", url);
+        if (extension.isPresent()) {
+            T ext =  extension.get();
 
-            return target.verify(scope, map);
-        };
+            if (ComponentVerifierExtension.class.isInstance(ext)) {
+                // hack to add custom parameters to the syndesis custom http
+                // component
+                final ComponentVerifierExtension verifier = (scope, map) -> {
+                    // build parameters into httpUri which is expected in the real
+                    String s = map.getOrDefault("scheme", "http").toString();
+                    String h = map.getOrDefault("hostname", "").toString();
+                    String p = map.getOrDefault("port", "").toString();
+                    String c = map.getOrDefault("path", "").toString();
+
+                    String url = buildUrl(s, h, p, c, null);
+                    map.put("httpUri", url);
+
+                    return ComponentVerifierExtension.class.cast(ext).verify(scope, map);
+                };
+
+                return Optional.of((T)verifier);
+            }
+        }
+
+        return extension;
     }
 
     @Override

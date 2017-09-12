@@ -30,12 +30,6 @@
   <name>Syndesis Connectors :: Twitter Search Connector</name>
   <description>Twitter Search Connector</description>
   <packaging>jar</packaging>
-  
-  <!-- temporarily overriding until camel release -->
-  <properties>
-  	<spring-boot-version>1.5.3.RELEASE</spring-boot-version>
-  	<maven-jar-plugin-version>3.0.2</maven-jar-plugin-version>
-  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -80,7 +74,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
-      <version>${spring-boot-version}</version>
+      <version>${spring-boot.version}</version>
     </dependency>
 
     <!-- testing -->
@@ -99,7 +93,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
-      <version>${spring-boot-version}</version>
+      <version>${spring-boot.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -157,7 +151,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>${maven-jar-plugin-version}</version>
+        <version>${maven-jar-plugin.version}</version>
         <executions>
           <execution>
             <id>default-jar</id>
@@ -177,6 +171,12 @@
             <goals>
               <goal>prepare-spring-boot-auto-configuration</goal>
             </goals>
+            <configuration>
+              <!-- we done want license headers -->
+              <includeLicenseHeader>false</includeLicenseHeader>
+              <!-- we dont camel.connector as prefix -->
+              <configurationPrefix>false</configurationPrefix>
+            </configuration>
           </execution>
           <execution>
             <id>connector</id>

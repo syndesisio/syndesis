@@ -1,9 +1,9 @@
 {
   "component": {
     "kind": "component",
-    "baseScheme": "twitter",
-    "scheme": "twitter-mention",
-    "syntax": "twitter-mention:kind",
+    "baseScheme": "twitter-timeline",
+    "scheme": "twitter-mention-connector",
+    "syntax": "twitter-mention-connector:timelineType",
     "title": "TwitterMention",
     "description": "Send a notification when a name you specify is mentioned on Twitter.",
     "label": "twitter",
@@ -23,7 +23,10 @@
     "consumerSecret": { "kind": "property", "displayName": "Consumer Secret", "group": "security", "label": "security", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": true, "description": "The consumer secret" }
   },
   "properties": {
+    "timelineType": { "kind": "path", "displayName": "Timeline Type", "group": "common", "required": true, "type": "object", "javaType": "org.apache.camel.component.twitter.data.TimelineType", "enum": [ "RETWEETSOFME", "PUBLIC", "UNKNOWN", "USER", "MENTIONS", "HOME" ], "deprecated": false, "secret": false, "defaultValue": "MENTIONS", "description": "The timeline type to produce/consume." },
     "sinceId": { "kind": "parameter", "displayName": "Since Id", "group": "filter", "label": "consumer,filter", "required": false, "type": "integer", "javaType": "long", "deprecated": false, "secret": false, "defaultValue": 1, "description": "The last tweet id which will be used for pulling the tweets. It is useful when the camel route is restarted after a long running." },
     "delay": { "kind": "parameter", "displayName": "Delay", "group": "scheduler", "label": "consumer,scheduler", "required": false, "type": "integer", "javaType": "long", "optionalPrefix": "consumer.", "deprecated": false, "secret": false, "defaultValue": 30000, "description": "Milliseconds before the next poll." }
+  },
+  "connectorProperties": {
   }
 }
