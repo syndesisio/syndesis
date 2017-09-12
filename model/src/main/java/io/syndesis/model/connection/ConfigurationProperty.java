@@ -20,7 +20,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.model.WithTags;
-import io.syndesis.model.connection.ActionPropertySuggestions.ActionPropertySuggestion;
+import io.syndesis.model.connection.DynamicActionMetadata.ActionPropertySuggestion;
 
 import org.immutables.value.Value;
 

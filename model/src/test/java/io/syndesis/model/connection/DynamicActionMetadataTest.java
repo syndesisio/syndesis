@@ -16,30 +16,36 @@
 package io.syndesis.model.connection;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Test;
 
-import static io.syndesis.model.connection.ActionPropertySuggestions.ActionPropertySuggestion.Builder.of;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ActionPropertySuggestionsTest {
+public class DynamicActionMetadataTest {
 
     private final static JsonNode JSON = parse("/action-property-suggestions.json");
 
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
-    private final static ActionPropertySuggestions SUGGESTIONS = new ActionPropertySuggestions.Builder()
-        .putValue("property1", of("1value1", "1displayValue1"), of("1value2", "1displayValue2"))
-        .putValue("property2", of("2value1", "2displayValue1"), of("2value2", "2displayValue2")).build();
+    private final static JsonNode INPUT_SCHEMA = JSON.get("inputSchema");
+
+    private final static JsonNode OUTPUT_SCHEMA = JSON.get("outputSchema");
+
+    private final static DynamicActionMetadata SUGGESTIONS = new DynamicActionMetadata.Builder()
+        .inputSchema(INPUT_SCHEMA).outputSchema(OUTPUT_SCHEMA)
+        .putProperty("sObjectIdName",
+            Arrays.asList(property("Contact ID", "Id"), property("Email", "Email"),
+                property("Twitter Screen Name", "TwitterScreenName__c")))
+        .putProperty("sObjectName", Arrays.asList(property("Contact", "Contact"))).build();
 
     @Test
     public void shouldDeserialize() throws IOException {
-        final ActionPropertySuggestions deserialized = MAPPER.readerFor(ActionPropertySuggestions.class)
-            .<ActionPropertySuggestions>readValue(JSON);
+        final DynamicActionMetadata deserialized = MAPPER.readerFor(DynamicActionMetadata.class)
+            .<DynamicActionMetadata>readValue(JSON);
         assertThat(deserialized).isEqualTo(SUGGESTIONS);
     }
 
@@ -51,10 +57,15 @@ public class ActionPropertySuggestionsTest {
 
     private static JsonNode parse(final String path) {
         try {
-            return new ObjectMapper().readTree(ActionPropertySuggestionsTest.class.getResourceAsStream(path));
+            return new ObjectMapper().readTree(DynamicActionMetadataTest.class.getResourceAsStream(path));
         } catch (final IOException e) {
             throw new ExceptionInInitializerError(e);
         }
+    }
+
+    private static ImmutableActionPropertySuggestion property(final String displayValue, final String value) {
+        return new DynamicActionMetadata.ActionPropertySuggestion.Builder().displayValue(displayValue).value(value)
+            .build();
     }
 
 }

@@ -30,8 +30,9 @@ import io.syndesis.model.connection.ActionDefinition;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.connection.DataShape;
 import io.syndesis.runtime.BaseITCase;
-import io.syndesis.runtime.action.ActionSuggestionsITCase.TestConfigurationInitializer;
+import io.syndesis.runtime.action.DynamicActionDefinitionITCase.TestConfigurationInitializer;
 
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -58,7 +59,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(initializers = TestConfigurationInitializer.class)
 @SuppressWarnings({"PMD.TooManyStaticImports", "PMD.ExcessiveImports"})
-public class ActionSuggestionsITCase extends BaseITCase {
+public class DynamicActionDefinitionITCase extends BaseITCase {
 
     @ClassRule
     public static final WireMockRule WIREMOCK = new WireMockRule(wireMockConfig().dynamicPort());
@@ -88,9 +89,12 @@ public class ActionSuggestionsITCase extends BaseITCase {
     private static final String CREATE_OR_UPDATE_ACTION_ID = "io.syndesis:salesforce-create-or-update-connector:latest";
 
     private static final Action DEFAULT_CREATE_OR_UPDATE_ACTION = new Action.Builder()
-        .id(ActionSuggestionsITCase.CREATE_OR_UPDATE_ACTION_ID)//
+        .id(DynamicActionDefinitionITCase.CREATE_OR_UPDATE_ACTION_ID)//
         .addTag("dynamic")//
-        .definition(new ActionDefinition.Builder()
+        .definition(new ActionDefinition.Builder()//
+            .inputDataShape(new DataShape.Builder().kind("json").build())
+            .outputDataShape(new DataShape.Builder().kind("java")
+                .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
                 b -> b.putProperty("sObjectName", _DEFAULT_SALESFORCE_OBJECT_NAME))
             .withActionDefinitionStep("Select Identifier property",
@@ -103,12 +107,12 @@ public class ActionSuggestionsITCase extends BaseITCase {
 
     private final ConfigurationProperty contactSalesforceObjectName = new ConfigurationProperty.Builder()
         .createFrom(_DEFAULT_SALESFORCE_OBJECT_NAME)
-        .addEnum(ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contacts")).build();
+        .addEnum(ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact")).build();
 
     private final ConfigurationProperty suggestedSalesforceIdNames = new ConfigurationProperty.Builder()
         .createFrom(_DEFAULT_SALESFORCE_IDENTIFIER)
-        .addEnum(ConfigurationProperty.PropertyValue.Builder.of("Id", "Identifier"),
-            ConfigurationProperty.PropertyValue.Builder.of("Email", "E-mail address"),
+        .addEnum(ConfigurationProperty.PropertyValue.Builder.of("Id", "Contact ID"),
+            ConfigurationProperty.PropertyValue.Builder.of("Email", "Email"),
             ConfigurationProperty.PropertyValue.Builder.of("TwitterScreenName__c", "Twitter Screen Name"))
         .build();
 
@@ -145,7 +149,9 @@ public class ActionSuggestionsITCase extends BaseITCase {
 
     @Before
     public void setupMocks() {
-        stubFor(WireMock.post(urlEqualTo("/api/v1/action/properties/salesforce"))//
+        stubFor(WireMock
+            .post(urlEqualTo(
+                "/api/v1/connectors/salesforce/actions/io.syndesis:salesforce-create-or-update-connector:latest"))//
             .withHeader("Accept", equalTo("application/json"))//
             .withRequestBody(equalToJson("{\"clientId\":\"a-client-id\",\"sObjectName\":null,\"sObjectIdName\":null}"))
             .willReturn(aResponse()//
@@ -153,7 +159,9 @@ public class ActionSuggestionsITCase extends BaseITCase {
                 .withHeader("Content-Type", "application/json")//
                 .withBody(read("/verifier-response-salesforce-no-properties.json"))));
 
-        stubFor(WireMock.post(urlEqualTo("/api/v1/action/properties/salesforce"))//
+        stubFor(WireMock
+            .post(urlEqualTo(
+                "/api/v1/connectors/salesforce/actions/io.syndesis:salesforce-create-or-update-connector:latest"))//
             .withHeader("Accept", equalTo("application/json"))//
             .withRequestBody(
                 equalToJson("{\"clientId\":\"a-client-id\",\"sObjectName\":\"Contact\",\"sObjectIdName\":null}"))
@@ -172,7 +180,10 @@ public class ActionSuggestionsITCase extends BaseITCase {
             "/api/v1/connections/" + connectionId + "/actions/" + CREATE_OR_UPDATE_ACTION_ID, null,
             ActionDefinition.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
-        final ActionDefinition firstEnrichment = new ActionDefinition.Builder()
+        final ActionDefinition firstEnrichment = new ActionDefinition.Builder()//
+            .inputDataShape(new DataShape.Builder().kind("json").build())
+            .outputDataShape(new DataShape.Builder().kind("java")
+                .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
                 b -> b.putProperty("sObjectName", suggestedSalesforceObjectNames))
             .withActionDefinitionStep("Select Identifier property",
@@ -186,20 +197,28 @@ public class ActionSuggestionsITCase extends BaseITCase {
             Collections.singletonMap("sObjectName", "Contact"), ActionDefinition.class, tokenRule.validToken(), headers,
             HttpStatus.OK);
 
-        final ActionDefinition secondEnrichment = new ActionDefinition.Builder()
+        final ActionDefinition secondEnrichment = new ActionDefinition.Builder()//
+            .outputDataShape(new DataShape.Builder().kind("java")
+                .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
                 b -> b.putProperty("sObjectName", contactSalesforceObjectName))
             .withActionDefinitionStep("Select Identifier property",
                 "Select Salesforce property that will hold the uniquely identifying value of this object",
                 b -> b.putProperty("sObjectIdName", suggestedSalesforceIdNames))
             .build();
-        assertThat(secondResponse.getBody()).isEqualTo(secondEnrichment);
+        final ActionDefinition secondResponseBody = secondResponse.getBody();
+        assertThat(secondResponseBody).isEqualToIgnoringGivenFields(secondEnrichment, "inputDataShape");
+        assertThat(secondResponseBody.getInputDataShape()).hasValueSatisfying(input -> {
+            assertThat(input.getKind()).isEqualTo("json");
+            assertThat(input.getType()).isEqualTo("Contact");
+            assertThat(input.getSpecification()).isNotEmpty();
+        });
     }
 
     private static String read(final String path) {
         try {
             return String.join("",
-                Files.readAllLines(Paths.get(ActionSuggestionsITCase.class.getResource(path).toURI())));
+                Files.readAllLines(Paths.get(DynamicActionDefinitionITCase.class.getResource(path).toURI())));
         } catch (IOException | URISyntaxException e) {
             throw new IllegalArgumentException("Unable to read from path: " + path, e);
         }
