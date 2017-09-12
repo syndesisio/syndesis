@@ -5,7 +5,7 @@
   "baseVersion" : "0.4-SNAPSHOT",
   "baseJavaType" : "io.syndesis.component.HttpComponent",
   "name" : "HttpGetComponent",
-  "scheme" : "http-get",
+  "scheme" : "http-get-connector",
   "javaType" : "io.syndesis.connector.http.HttpGetComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "http-get-connector",

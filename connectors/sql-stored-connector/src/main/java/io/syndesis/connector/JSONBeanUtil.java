@@ -19,6 +19,7 @@ package io.syndesis.connector;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -39,7 +40,7 @@ public class JSONBeanUtil {
      * as input Data for the SqlStoredConnector
      * @return Properties representation of the simple JSON bean
      */
-    public static Properties parsePropertiesFromJSONBean(String json) {
+    public static Properties parsePropertiesFromJSONBean(String json) throws JSONException {
         Properties properties = new Properties();
         JSONObject obj = new JSONObject(json);
         @SuppressWarnings("unchecked")

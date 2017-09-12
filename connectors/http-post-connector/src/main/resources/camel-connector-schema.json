@@ -2,8 +2,8 @@
   "component": {
     "kind": "component",
     "baseScheme": "syndesis-http",
-    "scheme": "http-post",
-    "syntax": "http-post:serviceName",
+    "scheme": "http-post-connector",
+    "syntax": "http-post-connector:serviceName",
     "title": "HttpPostComponent",
     "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL.",
     "label": "http",
@@ -24,5 +24,7 @@
   },
   "properties": {
     "serviceName": { "kind": "path", "displayName": "Service Name", "group": "producer", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "HTTP service to call" }
+  },
+  "connectorProperties": {
   }
 }

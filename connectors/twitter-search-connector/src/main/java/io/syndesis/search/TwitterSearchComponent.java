@@ -24,7 +24,7 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
 public class TwitterSearchComponent extends DefaultConnectorComponent {
     
     public TwitterSearchComponent() {
-        super("twitter-search", "io.syndesis.search.TwitterSearchComponent");
+        super("twitter-search-connector", "io.syndesis.search.TwitterSearchComponent");
     }
 
 }
