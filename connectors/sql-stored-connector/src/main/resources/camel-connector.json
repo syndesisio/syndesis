@@ -1,0 +1,21 @@
+{
+  "baseScheme" : "sql-stored",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-sql",
+  "baseVersion" : "2.20.0-SNAPSHOT",
+  "baseJavaType" : "org.apache.camel.component.sql.stored.SqlStoredComponent",
+  "name" : "SqlStoredConnector",
+  "scheme" : "sql-stored-connector",
+  "javaType" : "io.syndesis.connector.SqlStoredConnectorComponent",
+  "groupId" : "io.syndesis",
+  "artifactId" : "sql-stored-connector",
+  "version" : "0.4-SNAPSHOT",
+  "description" : "SQL Stored Procedure Connector to invoke a SQL Stored Procedure",
+  "labels" : [ "sql-stored" ],
+  "pattern" : "To",
+  "inputDataType" : "*",
+  "outputDataType" : "none",
+  "componentOptions" : [ "user", "password", "url", "schema", "catalog" ],
+  "endpointOptions" : [ "template", "batch", "noop" ],
+  "endpointValues" : {}
+}
