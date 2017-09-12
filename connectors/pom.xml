@@ -35,6 +35,13 @@
     <module>timer-connector</module>
     <module>twitter-mention-connector</module>
     <module>twitter-search-connector</module>
+    <module>salesforce-create-sobject-connector</module>
+    <module>salesforce-delete-sobject-connector</module>
+    <module>salesforce-delete-sobject-with-id-connector</module>
+    <module>salesforce-get-sobject-connector</module>
+    <module>salesforce-get-sobject-with-id-connector</module>
+    <module>salesforce-update-sobject-connector</module>
+    <module>salesforce-upsert-sobject-connector</module>
     <module>salesforce-upsert-contact-connector</module>
     <module>sql-stored-connector</module>
     <module>day-trade-get-connector</module>

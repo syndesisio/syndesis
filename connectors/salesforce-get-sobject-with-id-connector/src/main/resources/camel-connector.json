@@ -1,0 +1,27 @@
+{
+  "baseScheme" : "salesforce",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-salesforce",
+  "baseVersion" : "2.20.0.fuse-000091",
+  "baseJavaType" : "org.apache.camel.component.salesforce.SalesforceComponent",
+  "name" : "SalesforceGetSObjectWithId",
+  "scheme" : "salesforce-get-sobject-with-id",
+  "javaType" : "io.syndesis.connector.salesforce.SalesforceGetSObjectWithIdComponent",
+  "groupId" : "io.syndesis",
+  "artifactId" : "salesforce-get-sobject-with-id-connector",
+  "version" : "0.4-SNAPSHOT",
+  "description" : "Get Salesforce SObject With External ID",
+  "labels" : [ "salesforce" ],
+  "pattern" : "To",
+  "inputDataType" : "text",
+  "outputDataType" : "json",
+  "globalOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken", "userName", "password" ],
+  "componentOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken", "userName", "password" ],
+  "endpointValues" : {
+    "operationName" : "getSObjectWithId",
+    "sObjectName" : "Contact",
+    "sObjectIdName" : "Id",
+    "rawPayload" : "true"
+  },
+  "endpointOptions" : [ "sObjectName", "sObjectIdName" ]
+}
