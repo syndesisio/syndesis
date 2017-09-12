@@ -16,20 +16,16 @@
 package io.syndesis.rest.v1.handler.integration;
 
 import java.math.BigInteger;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Validator;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import io.swagger.annotations.Api;
@@ -43,7 +39,6 @@ import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Integration.Status;
-import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Creator;
@@ -120,37 +115,15 @@ public class IntegrationHandler extends BaseHandler
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/filters/options")
-    public FilterOptions getFilterOptions(Integration integration, @DefaultValue("-1") @QueryParam("position") int position) {
+    public FilterOptions getFilterOptions(DataShape dataShape) {
         FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
 
-        extractLastOutputDataShapeBeforePosition(integration, position).ifPresent(
-            dataShape -> {
-                String kind = dataShape.getKind();
-                if (kind != null && kind.equals(DataShapeKinds.JAVA)) {
-                    String type = dataShape.getType();
-                    builder.paths(classInspector.getPaths(type));
-                }
-            });
-        return builder.build();
-    }
-
-    // position == -1 --> last output datashape in the whole integration
-    private Optional<DataShape> extractLastOutputDataShapeBeforePosition(Integration integration, int position) {
-        List<? extends Step> steps = integration.getSteps().orElse(Collections.emptyList());
-        Optional<DataShape> lastOutputShape = Optional.empty();
-        for (int i = 0; i < steps.size(); i++) {
-            if (position != -1 && position == i) {
-                return lastOutputShape;
-            }
-            Step step = steps.get(i);
-            if (step.getAction().isPresent()) {
-                Optional<DataShape> maybeDataShape = step.getAction().get().getOutputDataShape();
-                if (maybeDataShape.isPresent() && DataShapeKinds.JAVA.equals(maybeDataShape.get().getKind())) {
-                    lastOutputShape = maybeDataShape;
-                }
-            }
+        String kind = dataShape.getKind();
+        if (kind != null && kind.equals(DataShapeKinds.JAVA)) {
+            String type = dataShape.getType();
+            builder.paths(classInspector.getPaths(type));
         }
-        return lastOutputShape;
+        return builder.build();
     }
 
     @GET
