@@ -56,7 +56,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
 
   buildData(data: any) {
     const formValue = this.formGroup ? this.formGroup.value : {};
-    return { ...this.step.configuredProperties, ...formValue, ...data};
+    return { ...this.step.configuredProperties, ...formValue, ...data };
   }
 
   previous(data: any = undefined) {
@@ -128,21 +128,30 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       )
       .toPromise()
       .then(response => {
-        log.info('Response: ' + JSON.stringify(response, undefined, 2));
+        log.debug('Response: ' + JSON.stringify(response, undefined, 2));
         const definition: any = response['_body']
           ? JSON.parse(response['_body'])
           : undefined;
         this.initForm(position, page, definition);
       })
-      .catch(err => {
-        log.info('Error response: ' + JSON.stringify(err, undefined, 2));
-        this.initForm(position, page, undefined, err);
+      .catch(response => {
+        log.debug('Error response: ' + JSON.stringify(response, undefined, 2));
+        try {
+          const error = JSON.parse(response['_body']);
+          this.initForm(position, page, undefined, error);
+        } catch (err) {
+          // bailout at this point...
+          this.initForm(position, page, undefined, {
+            message: response['_body'],
+          });
+        }
       });
   }
 
   initForm(position: number, page: number, definition: any, error?: any) {
     if (error) {
       this.error = error;
+      this.error.message = error.message || error.userMsg || error.developerMsg;
       this.error.class = 'alert alert-warning';
       this.loading = false;
       this.detector.detectChanges();
@@ -161,7 +170,8 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       }, 1500);
       return;
     }
-    const lastPage = this.lastPage = definition.propertyDefinitionSteps.length - 1;
+    const lastPage = (this.lastPage =
+      definition.propertyDefinitionSteps.length - 1);
     if (definition.propertyDefinitionSteps && page <= lastPage) {
       this.definition = JSON.parse(
         JSON.stringify(definition.propertyDefinitionSteps[page]),
