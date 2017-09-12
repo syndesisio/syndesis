@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.salesforce;
 
+import org.apache.camel.Message;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
 /**
@@ -24,6 +25,13 @@ public class SalesforceDeleteSObjectWithIdComponent extends DefaultConnectorComp
 
     public SalesforceDeleteSObjectWithIdComponent() {
         super("salesforce-delete-sobject-with-id", SalesforceDeleteSObjectWithIdComponent.class.getName());
+
+        // replace DTO with id for Salesforce component
+        setBeforeProducer( exchange -> {
+            final Message in = exchange.getIn();
+            ExternalIdToDelete id = in.getBody(ExternalIdToDelete.class);
+            in.setBody(id.getId());
+        });
     }
 
 }

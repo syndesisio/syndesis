@@ -26,5 +26,7 @@
   },
   "properties": {
     "sObjectName": { "kind": "parameter", "displayName": "SObject Name", "group": "common", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "defaultValue": "Contact", "description": "SObject name if required or supported by API" }
+  },
+  "connectorProperties": {
   }
 }
