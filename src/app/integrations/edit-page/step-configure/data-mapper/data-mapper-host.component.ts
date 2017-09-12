@@ -57,7 +57,6 @@ const MAPPING_KEY = 'atlasmapping';
   ],
   providers: [
     InitializationService,
-    ConfigService,
     MappingManagementService,
     ErrorHandlerService,
     DocumentManagementService,
