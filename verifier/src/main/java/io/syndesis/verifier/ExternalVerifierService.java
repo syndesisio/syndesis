@@ -22,9 +22,16 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+
+import org.jboss.resteasy.client.jaxrs.internal.LocalResteasyProviderFactory;
+import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -35,14 +42,24 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value = "verifier.kind", havingValue = "service", matchIfMissing = true)
 public class ExternalVerifierService implements Verifier {
 
+    private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module());
+
     private final VerificationConfigurationProperties config;
 
     public ExternalVerifierService(VerificationConfigurationProperties config) {
         this.config = config;
     }
 
+    @Override
     public List<Result> verify(String connectorId, Map<String, String> options) {
-        Client client = ClientBuilder.newClient();
+        final ResteasyJackson2Provider resteasyJacksonProvider = new ResteasyJackson2Provider();
+        resteasyJacksonProvider.setMapper(MAPPER);
+
+        final ResteasyProviderFactory providerFactory = ResteasyProviderFactory.newInstance();
+        providerFactory.register(resteasyJacksonProvider);
+        final Configuration configuration = new LocalResteasyProviderFactory(providerFactory);
+
+        Client client = ClientBuilder.newClient(configuration);
         WebTarget target = client.target(String.format("http://%s/api/v1/verifier/%s", config.getService(), connectorId));
         return target.request(MediaType.APPLICATION_JSON).post(Entity.entity(options, MediaType.APPLICATION_JSON),
                                                                new GenericType<List<Result>>(){});

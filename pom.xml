@@ -593,9 +593,15 @@
       </dependency>
 
       <dependency>
-          <groupId>org.jboss.resteasy</groupId>
-          <artifactId>resteasy-validator-provider-11</artifactId>
-          <version>${resteasy.version}</version>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-validator-provider-11</artifactId>
+        <version>${resteasy.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jackson2-provider</artifactId>
+        <version>${resteasy.version}</version>
       </dependency>
 
       <dependency>
