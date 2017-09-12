@@ -37,6 +37,7 @@
     <module>http-pingcheck-example</module>
     <module>salesforce-pingcheck-example</module>
     <module>twitter-pingcheck-example</module>
+    <module>sql-stored-example</module>
   </modules>
 
 </project>
