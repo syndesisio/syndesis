@@ -33,6 +33,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
@@ -51,7 +52,7 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
      * The items in this list should be versioned and are not meant to be mutated.
      * @return
      */
-    List<IntegrationRevision> getRevisions();
+    Set<IntegrationRevision> getRevisions();
 
     Optional<IntegrationRevision> getDraftRevision();
 

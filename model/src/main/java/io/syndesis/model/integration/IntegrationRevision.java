@@ -104,6 +104,27 @@ public interface IntegrationRevision {
             .parentVersion(this.getVersion().orElse(0));
     }
 
+    static IntegrationRevision fromIntegration(Integration integration) {
+        int version = integration.getRevisions()
+            .stream()
+            .map(i -> i.getVersion().orElse(0))
+            .reduce(Integer::max)
+            .orElse(0);
+
+        return new IntegrationRevision.Builder()
+            .version(version + 1)
+            .parentVersion(version)
+            .spec(new IntegrationRevisionSpec.Builder()
+                        .configuration(integration.getConfiguration())
+                        .connections(integration.getConnections())
+                        .steps(integration.getSteps())
+                        .build())
+            .currentState(IntegrationRevisionState.from(integration.getCurrentStatus().get()))
+            .currentMessage(integration.getStatusMessage())
+            .targetState(IntegrationRevisionState.from(integration.getDesiredStatus().get()))
+            .build();
+    }
+
     class Builder extends ImmutableIntegrationRevision.Builder {
     }
 

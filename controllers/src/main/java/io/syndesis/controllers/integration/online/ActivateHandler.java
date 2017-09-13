@@ -24,6 +24,7 @@ import io.syndesis.github.GitHubService;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationRevision;
 import io.syndesis.model.integration.Step;
 import io.syndesis.openshift.ImmutableOpenShiftDeployment;
 import io.syndesis.openshift.OpenShiftDeployment;
@@ -40,6 +41,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
@@ -77,6 +79,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
             return new StatusUpdate(integration.getCurrentStatus().orElse(null), "No token present");
         }
 
+        IntegrationRevision revision = IntegrationRevision.fromIntegration(integration);
 
         if (isTokenExpired(integration)) {
             LOG.info("{} : Token is expired", getLabel(integration));
@@ -89,6 +92,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         OpenShiftDeployment deployment = OpenShiftDeployment
             .builder()
             .name(integration.getName())
+            .revisionId(revision.getVersion().get())
             .replicas(1)
             .token(token)
             .applicationProperties(applicationProperties)
@@ -117,12 +121,20 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                 if (gitCloneUrl==null) {
                     gitCloneUrl = getCloneURL(integration);
                 }
-                createOpenShiftResources(integration.getName(), gitCloneUrl, secret, applicationProperties);
+                createOpenShiftResources(integration.getName(), revision.getVersion().orElse(1), gitCloneUrl, secret, applicationProperties);
                 LOG.info("{} : Created OpenShift resources", getLabel(integration));
                 stepsPerformed.add(STEP_OPENSHIFT);
             }
 
             if (openShiftService.isScaled(deployment)) {
+                //Once an IntegrationRevision is published and transfered to the state Active it becomes immutable and can not be changed afterwards (except for state related properties).
+                dataManager.update(new Integration.Builder().createFrom(integration)
+                    .deployedRevisionId(revision.getVersion())
+                    .draftRevision(Optional.empty())
+                    .addRevision(revision)
+                    .deployedRevisionId(revision.getVersion())
+                    .build());
+
                 return new StatusUpdate(Integration.Status.Activated, stepsPerformed);
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
@@ -210,10 +222,11 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return dataManager.fetchAll(Connector.class).getItems().stream().collect(Collectors.toMap(o -> o.getId().get(), o -> o));
     }
 
-    private void createOpenShiftResources(String integrationName, String gitCloneUrl, String webHookSecret, Properties applicationProperties) {
+    private void createOpenShiftResources(String integrationName, int revisionId, String gitCloneUrl, String webHookSecret, Properties applicationProperties) {
         openShiftService.create(
             ImmutableOpenShiftDeployment.builder()
                                         .name(integrationName)
+                                        .revisionId(revisionId)
                                         .gitRepository(gitCloneUrl)
                                         .webhookSecret(webHookSecret)
                                         .applicationProperties(applicationProperties)
