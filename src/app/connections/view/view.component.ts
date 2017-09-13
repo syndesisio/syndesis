@@ -118,19 +118,14 @@ export class ConnectionViewComponent implements OnInit, OnChanges, OnDestroy {
   validateName() {
     if (!this.connection.name || this.connection.name.trim() === '') {
       this.nameErrorMessage = 'Name is required';
-    } else {
-      this.connectionService
-        .validate(this.connection)
-        .toPromise()
-        .then(response => null)
-        .catch(response => {
-          const nameTaken =
-            response.data.filter(item => item.error === 'UniqueProperty')
-              .length > 0;
-          this.nameErrorMessage = nameTaken
-            ? 'That name is taken. Try another.'
-            : null;
-          this.detector.detectChanges();
+    } else if (name !== this.connection.name) {
+      return this.connectionService.validateName(name)
+        .then(validationErrors => {
+          if (validationErrors && validationErrors.UniqueProperty) {
+            return 'That name is taken. Try another.';
+          } else {
+            return validationErrors;
+          }
         });
     }
   }

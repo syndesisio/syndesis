@@ -67,15 +67,14 @@ export class ConnectionDetailInfoComponent {
   validateName = (name: string) => {
     if (name === '') {
       return 'Name is required';
-    } else {
-      const connection = this.configurationService.cloneObject(this.connection);
-      connection.name = name;
-      return this.connectionService.validate(connection)
-        .toPromise()
-        .then(response => null)
-        .catch(response => {
-          const nameTaken = response.data.filter(item => item.error === 'UniqueProperty').length > 0;
-          return nameTaken ? 'That name is taken. Try another.' : null;
+    } else if (name !== this.connection.name) {
+      return this.connectionService.validateName(name)
+        .then(validationErrors => {
+          if (validationErrors && validationErrors.UniqueProperty) {
+            return 'That name is taken. Try another.';
+          } else {
+            return validationErrors;
+          }
         });
     }
   }

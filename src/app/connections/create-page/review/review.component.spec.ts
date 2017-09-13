@@ -1,17 +1,35 @@
 import { RouterStateSnapshot } from '@angular/router';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ConnectionsReviewComponent } from './review.component';
 import { CurrentConnectionService } from '../current-connection';
 import { ModalService } from '../../../common/modal/modal.service';
 
 describe('ConnectionsReviewComponent', () => {
 
-  let current, modalService, nextState, component;
+  let current;
+  let modalService;
+  const connectionService = null;
+  const detector = null;
+  const route = null;
+  const router = null;
+  let nextState;
+  let component;
 
   beforeEach(() => {
     current = <CurrentConnectionService>{};
     modalService = jasmine.createSpyObj('modalService', ['show']);
     nextState = <RouterStateSnapshot>{};
-    component = new ConnectionsReviewComponent(current, modalService);
+    component = new ConnectionsReviewComponent(current, modalService, connectionService, detector, route, router);
+  });
+
+  describe('createReviewForm', () => {
+    it ('should return expected formGroup', () => {
+      const formGroup: FormGroup = component.createReviewForm();
+      expect(formGroup.get('name')).toBeDefined();
+      expect(formGroup.get('name').hasError('required')).toBe(true);
+      expect(formGroup.get('description')).toBeDefined();
+      expect(formGroup.get('tags')).toBeDefined();
+    });
   });
 
   describe('canDeactivate', () => {

@@ -20,14 +20,21 @@
         </button> &nbsp;
         <button class="btn btn-default"
                 *ngIf="showBack()"
-                (click)="goBack()"><i class="fa fa-chevron-left"></i> Back
+                (click)="goBack()">
+          <i class="fa fa-chevron-left"></i> Back
         </button>
         <button class="btn btn-primary"
-                *ngIf="showNext()"
+                *ngIf="getCurrentPage() === 'configure-fields'"
                 (click)="goForward()"
-                [disabled]="!canContinue()">{{ getCurrentPage() === 'review' ? 'Create' : 'Next' }}
-          <i *ngIf="getCurrentPage() !== 'review'"
-              class="fa fa-chevron-right"></i></button>
+                [disabled]="!canContinue()">
+          Next <i class="fa fa-chevron-right"></i>
+        </button>
+        <button type="submit"
+                class="btn btn-primary"
+                *ngIf="getCurrentPage() === 'review'"
+                form="reviewForm"
+                [disabled]="!canContinue()">Create
+        </button>
       </div>
     </div>
   </div>

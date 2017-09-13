@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Restangular } from 'ngx-restangular';
+import { ValidationErrors } from '@angular/forms';
 
 import { RESTService } from '../entity/rest.service';
-import { Connection, Connections } from '../../model';
+import { Connection, Connections, TypeFactory } from '../../model';
 
 @Injectable()
 export class ConnectionService extends RESTService<Connection, Connections> {
@@ -14,8 +15,17 @@ export class ConnectionService extends RESTService<Connection, Connections> {
     this.validationService = restangular.service('connections/validation');
   }
 
-  validate(connection: Connection) {
-    return this.validationService.post(connection);
+  validateName(name: string): Promise<ValidationErrors | null> {
+    const connection = TypeFactory.createConnection();
+    connection.name = name;
+    return this.validationService
+      .post(connection)
+      .toPromise()
+      .then(response => null)
+      .catch(response => response.data.reduce((errors, item) => {
+        errors[item.error] = true;
+        return errors;
+      }, {}));
   }
 
 }
