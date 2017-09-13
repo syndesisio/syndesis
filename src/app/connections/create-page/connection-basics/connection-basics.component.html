@@ -1,3 +1,13 @@
-<syndesis-connection-view [(connection)]="connection"
-                          [mode]="'create1'"
-                          [showName]="false"></syndesis-connection-view>
+<div class="row row-cards-pf">
+  <div class="col-md-12">
+    <div class="connector-list">
+      <syndesis-list-toolbar [items]="connectors"
+                             [filteredItems]="filteredConnectors"></syndesis-list-toolbar>
+
+      <syndesis-connections-list [connections]="filteredConnectors | async"
+                                 [loading]="loading | async"
+                                 [showKebab]="false"
+                                 (onSelected)="onSelected($event)"></syndesis-connections-list>
+      </div>
+  </div>
+</div>

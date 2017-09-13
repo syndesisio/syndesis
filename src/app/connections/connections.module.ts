@@ -17,7 +17,6 @@ import { ConnectionsReviewComponent } from './create-page/review/review.componen
 import { ConnectionsCancelComponent } from './create-page/cancel.component';
 import { ConnectionsListPage } from './list-page/list-page.component';
 import { ConnectionsListComponent } from './list/list.component';
-import { ConnectionViewComponent } from './view/view.component';
 import { CurrentConnectionService } from './create-page/current-connection';
 import { ConnectionDetailPageComponent } from './detail-page/detail-page.component';
 import { ConnectionDetailBreadcrumbComponent } from './detail-page/breadcrumb.component';
@@ -47,7 +46,6 @@ import { ConnectionConfigurationValidationComponent } from './common/configurati
     ConnectionsCancelComponent,
     ConnectionsListPage,
     ConnectionsListComponent,
-    ConnectionViewComponent,
     ConnectionDetailPageComponent,
     ConnectionDetailBreadcrumbComponent,
     ConnectionDetailInfoComponent,
@@ -56,7 +54,6 @@ import { ConnectionConfigurationValidationComponent } from './common/configurati
   ],
   exports: [
     ConnectionsListComponent,
-    ConnectionViewComponent,
   ],
   providers: [
     CurrentConnectionService,
