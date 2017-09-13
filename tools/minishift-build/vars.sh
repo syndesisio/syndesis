@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -e
 
-root_dir_file=$(dirname `realpath $0`)/root_dir
+root_dir_file="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/root_dir"
 if [ -f  $root_dir_file ]; then
   root=$(cat $root_dir_file)  
 else 
