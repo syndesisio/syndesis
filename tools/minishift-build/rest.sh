@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-. $(dirname `realpath $0`)/vars.sh
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/vars.sh"
 
 prepare_dir syndesis-rest
 ./mvnw clean install -Pflash,deploy -Dfabric8.mode=kubernetes

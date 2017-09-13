@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-. $(dirname `realpath $0`)/vars.sh
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/vars.sh"
 
 prepare_dir syndesis-verifier
 ./mvnw clean install fabric8:build -Dfabric8.mode=kubernetes -PskipTests
