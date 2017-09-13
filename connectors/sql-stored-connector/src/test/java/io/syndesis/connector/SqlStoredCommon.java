@@ -29,8 +29,6 @@ import java.util.Properties;
 
 public class SqlStoredCommon {
 
- 
-
     public Connection setupConnectionAndStoredProcedure(Connection connection, Properties properties) throws Exception {
         
         InputStream is = SqlStoredCommon.class.getClassLoader().getResourceAsStream("application.properties");

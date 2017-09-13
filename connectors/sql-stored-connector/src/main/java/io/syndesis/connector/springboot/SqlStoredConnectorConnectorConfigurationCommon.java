@@ -33,6 +33,10 @@ public class SqlStoredConnectorConnectorConfigurationCommon {
      */
     private DataSource dataSource;
     /**
+     * Sets the StoredProcedure name to perform
+     */
+    private String procedureName;
+    /**
      * Sets the StoredProcedure template to perform
      */
     private String template;
@@ -70,6 +74,14 @@ public class SqlStoredConnectorConnectorConfigurationCommon {
         this.dataSource = dataSource;
     }
 
+    public String getProcedureName() {
+        return procedureName;
+    }
+
+    public void setProcedureName(String procedureName) {
+        this.procedureName = procedureName;
+    }
+    
     public String getTemplate() {
         return template;
     }
