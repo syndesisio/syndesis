@@ -16,6 +16,6 @@
   "inputDataType" : "*",
   "outputDataType" : "none",
   "componentOptions" : [ "user", "password", "url", "schema", "catalog" ],
-  "endpointOptions" : [ "template", "batch", "noop" ],
+  "endpointOptions" : [ "procedureName", "template", "batch", "noop" ],
   "endpointValues" : {}
 }
