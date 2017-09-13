@@ -45,15 +45,15 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public void create(OpenShiftDeployment d) {
         String sanitizedName = Names.sanitize(d.getName());
-
+        Integer revisionId = d.getRevisionId();
         String token = d.getToken().orElse(Tokens.getAuthenticationToken());
         RequestConfig requestConfig = new RequestConfigBuilder().withOauthToken(token).build();
         openShiftClient.withRequestConfig(requestConfig).<Void>call(c -> {
             DockerImage img = new DockerImage(config.getBuilderImage());
-            ensureImageStreams(openShiftClient, sanitizedName, img);
-            ensureDeploymentConfig(openShiftClient, sanitizedName, config.getIntegrationServiceAccount());
-            ensureSecret(openShiftClient, sanitizedName, d.getApplicationProperties().orElseGet(Properties::new));
-            ensureBuildConfig(openShiftClient, sanitizedName,
+            ensureImageStreams(openShiftClient, sanitizedName, revisionId, img);
+            ensureDeploymentConfig(openShiftClient, sanitizedName, revisionId, config.getIntegrationServiceAccount());
+            ensureSecret(openShiftClient, sanitizedName, revisionId, d.getApplicationProperties().orElseGet(Properties::new));
+            ensureBuildConfig(openShiftClient, sanitizedName, revisionId,
                 d.getGitRepository().orElseThrow(()-> new IllegalStateException("Git repository is required")),
                 img,
                 d.getWebhookSecret().orElseThrow(() -> new IllegalStateException("Web hook secret is required")));
@@ -123,10 +123,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
 //==================================================================================================
 
-    private static void ensureImageStreams(OpenShiftClient client, String projectName, DockerImage img) {
+    private static void ensureImageStreams(OpenShiftClient client, String projectName, Integer revisionId, DockerImage img) {
         client.imageStreams().withName(img.getShortName()).createOrReplaceWithNew()
-                .withNewMetadata().withName(img.shortName).endMetadata()
-                .withNewSpec().addNewTag().withNewFrom().withKind("DockerImage").withName(img.getImage()).endFrom().withName(img.getTag()).endTag().endSpec()
+                .withNewMetadata()
+                    .withName(img.shortName)
+                    .addToAnnotations(REVISION_ID_ANNOTATION, String.valueOf(revisionId))
+                .endMetadata()
+                    .withNewSpec().addNewTag().withNewFrom().withKind("DockerImage").withName(img.getImage()).endFrom().withName(img.getTag()).endTag().endSpec()
                 .done();
 
         client.imageStreams().withName(projectName).createOrReplaceWithNew()
@@ -137,9 +140,12 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return client.imageStreams().withName(img.getShortName()).delete();
     }
 
-    private static void ensureDeploymentConfig(OpenShiftClient client, String projectName, String serviceAccount) {
+    private static void ensureDeploymentConfig(OpenShiftClient client, String projectName, Integer revisionId, String serviceAccount) {
         client.deploymentConfigs().withName(projectName).createOrReplaceWithNew()
-            .withNewMetadata().withName(projectName).endMetadata()
+            .withNewMetadata()
+                .withName(projectName)
+                .addToAnnotations(REVISION_ID_ANNOTATION, String.valueOf(revisionId))
+            .endMetadata()
             .withNewSpec()
             .withReplicas(1)
             .addToSelector("integration", projectName)
@@ -181,9 +187,12 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return client.deploymentConfigs().withName(projectName).delete();
     }
 
-    private static void ensureBuildConfig(OpenShiftClient client, String projectName, String gitRepo, DockerImage img, String webhookSecret) {
+    private static void ensureBuildConfig(OpenShiftClient client, String projectName, Integer revisionId, String gitRepo, DockerImage img, String webhookSecret) {
         client.buildConfigs().withName(projectName).createOrReplaceWithNew()
-            .withNewMetadata().withName(projectName).endMetadata()
+            .withNewMetadata()
+                .withName(projectName)
+                .addToAnnotations(REVISION_ID_ANNOTATION, String.valueOf(revisionId))
+            .endMetadata()
             .withNewSpec()
             .withRunPolicy("SerialLatestOnly")
             .addNewTrigger().withType("ConfigChange").endTrigger()
@@ -207,12 +216,15 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return client.buildConfigs().withName(projectName).delete();
     }
 
-    private static void ensureSecret(OpenShiftClient client, String projectName, Properties data) {
+    private static void ensureSecret(OpenShiftClient client, String projectName, Integer revisionId, Properties data) {
         Map<String, String> wrapped = new HashMap<>();
         wrapped.put("application.properties", toString(data));
 
         client.secrets().withName(projectName).createOrReplaceWithNew()
-            .withNewMetadata().withName(projectName).endMetadata()
+            .withNewMetadata()
+                .withName(projectName)
+                .addToAnnotations(REVISION_ID_ANNOTATION, String.valueOf(revisionId))
+            .endMetadata()
             .withStringData(wrapped)
             .done();
     }
