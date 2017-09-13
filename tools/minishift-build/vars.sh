@@ -35,5 +35,5 @@ function prepare_dir {
 }
 
 function pod {
-	oc get pod -o name | grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn} $1 | sed -e "s/^pod\///"
+    oc get pods -o jsonpath='{.items[*].metadata.name}' -l "component=syndesis-$1"
 }
