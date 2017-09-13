@@ -1,4 +1,25 @@
 <syndesis-loading [loading]="!currentFlow.loaded">
+  <!-- Navigation buttons -->
+  <ng-template #controlButtons>
+    <syndesis-cancel-add-step></syndesis-cancel-add-step>
+    <button type="button"
+            *ngIf="lastPage > 0 && page !== 0"
+            class="btn btn-default"
+            (click)="previous()">
+            <i class="fa fa-chevron-left"></i>
+            Previous
+    </button>
+    <button type="button"
+            class="btn btn-primary"
+            (click)="continue()">
+      <ng-container *ngIf="page >= lastPage || !definition">
+        Done
+      </ng-container>
+      <ng-container *ngIf="page < lastPage">
+        Next <i class="fa fa-chevron-right"></i>
+      </ng-container>
+    </button>
+  </ng-template>
   <div class="action-configure">
     <!-- Toolbar -->
     <div class="toolbar">
@@ -23,24 +44,6 @@
               </ol>
             </div>
             <div class="toolbar-pf-action-right">
-              <syndesis-cancel-add-step></syndesis-cancel-add-step>
-              <button type="button"
-                      *ngIf="lastPage > 0 && page !== 0"
-                      class="btn btn-default"
-                      (click)="previous()">
-                      <i class="fa fa-chevron-left"></i>
-                      Previous
-            </button>
-              <button type="button"
-                      class="btn btn-primary"
-                      (click)="continue()">
-              <ng-container *ngIf="page >= lastPage || !definition">
-                Done
-              </ng-container>
-              <ng-container *ngIf="page < lastPage">
-                Next <i class="fa fa-chevron-right"></i>
-              </ng-container>
-            </button>
             </div>
           </div>
         </div>
@@ -68,6 +71,9 @@
             </form>
           </div>
         </ng-container>
+        <div class="pull-right control-buttons">
+          <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+        </div>
       </syndesis-loading>
     </div>
   </div>
