@@ -14,7 +14,16 @@ fi
 
 function git_pull_upstream {
   git pull upstream master
+  set +e
   git rebase upstream/master
+  if [ $? != 0 ]; then
+    echo "Stashing before rebasing"
+    set -e
+    git stash
+    git rebase upstream/master
+    git stash pop
+  fi 
+  set -e
 }
 
 function prepare_dir {
