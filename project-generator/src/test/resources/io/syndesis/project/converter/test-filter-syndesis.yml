@@ -7,6 +7,6 @@ flows:
     expression: ${body.in.header.counter} > '10'
     steps:
     - kind: endpoint
-      uri: http-post?httpUri=http://localhost:8080/bye
+      uri: http-post-connector?httpUri=http://localhost:8080/bye
     - kind: filter
       expression: ${body.germanSecondLeagueChampion} equals 'FCN'

@@ -6,4 +6,4 @@ flows:
   - kind: endpoint
     uri: atlas:mapping-step-2.json
   - kind: endpoint
-    uri: http-post?httpUri=http://localhost:8080/bye
+    uri: http-post-connector?httpUri=http://localhost:8080/bye

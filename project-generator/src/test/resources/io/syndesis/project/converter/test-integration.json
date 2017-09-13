@@ -46,7 +46,7 @@
           "name": "HTTP GET",
           "id": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
           "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-get"
+          "camelConnectorPrefix": "http-get-connector"
         },
         "configuredProperties": {
           "httpUri": "http://localhost:8080/hello"
@@ -77,7 +77,7 @@
           "name": "HTTP POST",
           "id": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
           "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-post"
+          "camelConnectorPrefix": "http-post-connector"
         },
         "configuredProperties": {
           "httpUri": "http://localhost:8080/bye"

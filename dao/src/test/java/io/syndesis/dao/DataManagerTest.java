@@ -58,7 +58,7 @@ public class DataManagerTest {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
-            .containsExactly("gmail", "github", "ftp", "facebook", "linkedin", "salesforce", "timer", "jms", "day-trade", "twitter", "servicenow", "http", "trade-insight");
+            .containsExactly("gmail", "github", "ftp", "facebook", "linkedin", "salesforce", "timer", "jms", "day-trade", "twitter", "servicenow", "http", "sql-stored", "trade-insight");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertEquals(connectors.getTotalCount(), connectors.getItems().size());
@@ -82,7 +82,7 @@ public class DataManagerTest {
             resultList -> new ListResult.Builder<Connector>().createFrom(resultList).items(resultList.getItems().subList(0, 2)).build()
         );
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactly("gmail", "github");
-        Assert.assertEquals(13, connectors.getTotalCount());
+        Assert.assertEquals(14, connectors.getTotalCount());
         Assert.assertEquals(2, connectors.getItems().size());
     }
 
@@ -90,14 +90,14 @@ public class DataManagerTest {
     public void getTwitterConnector() {
         Connector connector = dataManager.fetch(Connector.class, "twitter");
         Assert.assertEquals("First Connector in the deployment.json is Twitter", "Twitter", connector.getName());
-        Assert.assertEquals(7, connector.getActions().size());
+        Assert.assertEquals(2, connector.getActions().size());
     }
 
     @Test
     public void getSalesforceConnector() {
         Connector connector = dataManager.fetch(Connector.class, "salesforce");
         Assert.assertEquals("Second Connector in the deployment.json is Salesforce", "Salesforce", connector.getName());
-        Assert.assertEquals(7, connector.getActions().size());
+        Assert.assertEquals(8, connector.getActions().size());
     }
 
     @Test
