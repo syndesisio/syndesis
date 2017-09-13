@@ -24,7 +24,7 @@
 ![Image of github settings page](img/github-settings-img-6.png)
 
 1. Disable "Connect GitHub" button until both client ID and client secret have been filled in.
-2. Clicking on "Connect GitHub" will bring users to the OAuth flow a new tab where they can grant access for Syndesis.   
+2. Clicking on "Connect GitHub" will bring users to the OAuth flow where they can grant access for Syndesis.   
 
 ![Image of github settings page](img/github-settings-img-7.png)
 
@@ -34,26 +34,18 @@
 
 1. The success message is displayed for ~10 secs than it would disappear to let user focus on the next step.  
 2. Users would be able to see their personal account as the default connected account.
-3. Then the "You're almost there!" message would appear. Users can click on "Complete Setup" to confirm that they're ready to proceed.
+
+## Global Settings > GitHub Settings
 
 ![Image of github settings page](img/github-settings-img-9.png)
 
 ![Image of github settings page](img/github-settings-img-10.png)
 
-1. Users click on "Get Started" to complete the GitHub setup process.
+1. GitHub Settings page for user to update client id and client secret, as well as changing connected account. User can only connect to one account at a time.
 
 ![Image of github settings page](img/github-settings-img-11.png)
 
-
-## Global Settings > GitHub Settings
+1. User fills the form to update GitHub client id and client secret.
+2. Users click on "Save and Connect GitHub" to go through the OAuth flow for GitHub again.
 
 ![Image of github settings page](img/github-settings-img-12.png)
-
-1. GitHub Settings page for user to update client id and client secret, as well as changing connected account. User can only connect to one account at a time.
-
-![Image of github settings page](img/github-settings-img-13.png)
-
-1. User fills the form to update GitHub client id and client secret.
-2. Users click on "Save and Connect GitHub" to go through the OAuth flow for GitHub again. 
-
-![Image of github settings page](img/github-settings-img-14.png)
