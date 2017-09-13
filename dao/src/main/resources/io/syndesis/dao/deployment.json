@@ -622,7 +622,7 @@
           "name": "HTTP GET",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-get",
+          "camelConnectorPrefix": "http-get-connector",
           "definition": {
             "inputDataShape": {
                "kind" : "none"
@@ -657,7 +657,7 @@
           "name": "HTTP POST",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-post",
+          "camelConnectorPrefix": "http-post-connector",
           "definition": {
             "inputDataShape": {
                "kind" : "any"
