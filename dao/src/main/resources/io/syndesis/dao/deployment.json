@@ -73,6 +73,13 @@
           "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-mention",
           "definition": {
+            "inputDataShape": {
+               "kind": "none"
+            },
+            "outputDataShape": {
+               "kind": "java",
+               "type": "twitter4j.Status"
+            },
             "propertyDefinitionSteps": []
           }
         },
@@ -138,56 +145,6 @@
               }
             }]
           }
-        },
-        {
-          "name": "Send a Tweet",
-          "description": "Creates a new tweet",
-          "id": "io.syndesis:twitter-tweet-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-tweet-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-tweet",
-          "definition": {
-            "propertyDefinitionSteps": []
-          }
-        },
-        {
-          "description": "Direct message a specific user",
-          "name": "Send a Direct Message",
-          "id": "io.syndesis:twitter-directmessage-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-directmessage-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-directmessage",
-          "definition": {
-            "propertyDefinitionSteps": []
-          }
-        },
-        {
-          "description": "Retrieve tweets from my timeline",
-          "name": "Get My Timeline",
-          "id": "io.syndesis:twitter-mytimeline-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-mytimeline-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-mytimeline",
-          "definition": {
-            "propertyDefinitionSteps": []
-          }
-        },
-        {
-          "description": "Retrieve tweets from another user's timeline",
-          "name": "Get A Timeline",
-          "id": "io.syndesis:twitter-usertimeline-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-usertimeline-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-usertimeline",
-          "definition": {
-            "propertyDefinitionSteps": []
-          }
-        },
-        {
-          "description": "Retrieve tweets which retweet one of my tweets",
-          "name": "Get Retweets",
-          "id": "io.syndesis:twitter-retweets-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-retweets-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-retweets",
-          "definition": {
-            "propertyDefinitionSteps": []
-          }
         }
       ]
     }
@@ -228,7 +185,7 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "defaultValue": "https://xx.salesforce.com",
+          "defaultValue": "",
           "description": "URL of the Salesforce instance"
         },
         "clientId": {
@@ -309,6 +266,7 @@
           "description": "Create or Update a Salesforce Contact",
           "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-upsert-contact",
+          "tags": [ "dynamic" ],
           "definition": {
             "inputDataShape": {
                "kind" : "java",
@@ -339,58 +297,311 @@
             }]
           }
         },{
-          "id": "io.syndesis:salesforce-create-opportunity-connector:latest",
-          "description": "Create a new Salesforce opportunity based on the input message",
-          "name": "Create Opportunity",
-          "camelConnectorGAV": "io.syndesis:salesforce-create-opportunity-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-create-opportunity",
+          "id": "io.syndesis:salesforce-create-sobject-connector:latest",
+          "name": "Create Salesforce object",
+          "description": "Create Salesforce Object",
+          "camelConnectorGAV": "io.syndesis:salesforce-create-sobject-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "salesforce-create-sobject",
+          "tags": [ "dynamic" ],
           "definition": {
-            "propertyDefinitionSteps": []
+            "inputDataShape": {
+               "kind": "json"
+            },
+            "outputDataShape": {
+               "kind": "java",
+               "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Object name",
+              "description": "Specify the Salesforce object name",
+              "properties": {
+                "sObjectName": {
+                  "kind": "parameter",
+                  "displayName": "Object name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "Contact",
+                  "description": "Name of the Salesforce object"
+                }
+              }
+            }]
           }
         },{
-          "id": "io.syndesis:salesforce-create-lead-connector:latest",
-          "description": "Create a new Salesforce lead based on the input message",
-          "name": "Create Lead",
-          "camelConnectorGAV": "io.syndesis:salesforce-create-lead-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-create-lead",
+          "id": "io.syndesis:salesforce-delete-sobject-connector:latest",
+          "name": "Delete Salesforce object",
+          "description": "Delete Salesforce Object",
+          "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "salesforce-delete-sobject",
+          "tags": [ "dynamic" ],
           "definition": {
-            "propertyDefinitionSteps": []
+            "inputDataShape": {
+               "kind": "java",
+               "type": "io.syndesis.connector.salesforce.IdToDelete"
+            },
+            "outputDataShape": {
+               "kind": "none"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Object name",
+              "description": "Specify the Salesforce object name",
+              "properties": {
+                "sObjectName": {
+                  "kind": "parameter",
+                  "displayName": "Object name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "Contact",
+                  "description": "Name of the Salesforce object"
+                }
+              }
+            }]
           }
         },{
-          "id": "io.syndesis:salesforce-create-account-connector:latest",
-          "description": "Create a new Salesforce account based on the input message",
-          "name": "Create Account",
-          "camelConnectorGAV": "io.syndesis:salesforce-create-account-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-create-account",
+          "id": "io.syndesis:salesforce-delete-sobject-with-id-connector:latest",
+          "name": "Delete Salesforce object by external ID",
+          "description": "Delete Salesforce Object by external ID",
+          "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-with-id-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "salesforce-delete-sobject-with-id",
+          "tags": [ "dynamic" ],
           "definition": {
-            "propertyDefinitionSteps": []
+            "inputDataShape": {
+               "kind": "java",
+               "type": "io.syndesis.connector.salesforce.ExternalIdToDelete"
+            },
+            "outputDataShape": {
+               "kind": "none"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Object name",
+              "description": "Specify the Salesforce object name",
+              "properties": {
+                "sObjectName": {
+                  "kind": "parameter",
+                  "displayName": "Object name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "Contact",
+                  "description": "Name of the Salesforce object"
+                }
+              }
+            },{
+              "name": "Unique field",
+              "description": "Specify field to hold the identifying value",
+              "properties": {
+                "sObjectIdName": {
+                  "kind": "parameter",
+                  "displayName": "SObject Id Name",
+                  "group": "common",
+                  "required": false,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "",
+                  "description": "SObject external ID field name"
+                }
+              }
+            }]
           }
         },{
-          "id": "io.syndesis:salesforce-create-case-connector:latest",
-          "description": "Create a new Salesforce case based on the input message",
-          "name": "Create Case",
-          "camelConnectorGAV": "io.syndesis:salesforce-create-case-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-create-case",
+          "id": "io.syndesis:salesforce-get-sobject-with-id-connector:latest",
+          "name": "Fetch Salesforce object by unique ID",
+          "description": "Fetch Salesforce object by unique ID",
+          "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-with-id-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "salesforce-get-sobject-with-id",
+          "tags": [ "dynamic" ],
           "definition": {
-            "propertyDefinitionSteps": []
+            "inputDataShape": {
+               "kind": "java",
+               "type": "io.syndesis.connector.salesforce.ExternalIdToGet"
+            },
+            "outputDataShape": {
+               "kind": "none"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Object name",
+              "description": "Specify the Salesforce object name",
+              "properties": {
+                "sObjectName": {
+                  "kind": "parameter",
+                  "displayName": "Object name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "Contact",
+                  "description": "Name of the Salesforce object"
+                }
+              }
+            },{
+              "name": "Unique field",
+              "description": "Specify field to hold the identifying value",
+              "properties": {
+                "sObjectIdName": {
+                  "kind": "parameter",
+                  "displayName": "SObject Id Name",
+                  "group": "common",
+                  "required": false,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "",
+                  "description": "SObject external ID field name"
+                }
+              }
+            }]
           }
         },{
-          "id": "io.syndesis:salesforce-search-connector:latest",
-          "description": "Execute a search in Salesforce using arbitrary SOQL",
-          "name": "Search",
-          "camelConnectorGAV": "io.syndesis:salesforce-search-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-search",
+          "id": "io.syndesis:salesforce-update-sobject-connector:latest",
+          "name": "Update Salesforce object",
+          "description": "Update Salesforce Object",
+          "camelConnectorGAV": "io.syndesis:salesforce-update-sobject-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "salesforce-update-sobject",
+          "tags": [ "dynamic" ],
           "definition": {
-            "propertyDefinitionSteps": []
+            "inputDataShape": {
+               "kind": "json"
+            },
+            "outputDataShape": {
+               "kind": "none"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Object name",
+              "description": "Specify the Salesforce object name",
+              "properties": {
+                "sObjectName": {
+                  "kind": "parameter",
+                  "displayName": "Object name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "Contact",
+                  "description": "Name of the Salesforce object"
+                }
+              }
+            }]
           }
         },{
-          "id": "io.syndesis:salesforce-notification-connector:latest",
-          "description": "Trigger an integration when updates occur to a specific Salesforce object",
-          "name": "Notification",
-          "camelConnectorGAV": "io.syndesis:salesforce-notification-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-notification",
+          "id": "io.syndesis:salesforce-update-sobject-connector:latest",
+          "name": "Update Salesforce object",
+          "description": "Update Salesforce Object",
+          "camelConnectorGAV": "io.syndesis:salesforce-update-sobject-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "salesforce-update-sobject",
+          "tags": [ "dynamic" ],
           "definition": {
-            "propertyDefinitionSteps": []
+            "inputDataShape": {
+               "kind": "json"
+            },
+            "outputDataShape": {
+               "kind": "none"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Object name",
+              "description": "Specify the Salesforce object name",
+              "properties": {
+                "sObjectName": {
+                  "kind": "parameter",
+                  "displayName": "Object name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "Contact",
+                  "description": "Name of the Salesforce object"
+                }
+              }
+            }]
+          }
+        },{
+          "id": "io.syndesis:salesforce-upsert-sobject-connector:latest",
+          "name": "Create/Update Salesforce object",
+          "description": "Create or Update a Salesforce Object",
+          "camelConnectorGAV": "io.syndesis:salesforce-upsert-sobject-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "salesforce-upsert-sobject",
+          "tags": [ "dynamic" ],
+          "definition": {
+            "inputDataShape": {
+               "kind": "json"
+            },
+            "outputDataShape": {
+               "kind": "java",
+               "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Object name",
+              "description": "Specify the Salesforce object name",
+              "properties": {
+                "sObjectName": {
+                  "kind": "parameter",
+                  "displayName": "Object name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "Contact",
+                  "description": "Name of the Salesforce object"
+                }
+              }
+            },{
+              "name": "Unique field",
+              "description": "Specify field to hold the identifying value",
+              "properties": {
+                "sObjectIdName": {
+                  "kind": "parameter",
+                  "displayName": "SObject Id Name",
+                  "group": "common",
+                  "required": false,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "",
+                  "description": "SObject external ID field name"
+                }
+              }
+            }]
           }
         }
       ]
@@ -1037,6 +1248,156 @@
                "kind" : "any"
             },
             "propertyDefinitionSteps": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "connector",
+    "data": {
+      "id": "sql-stored",
+      "name": "SQL stored procedure",
+      "description": "Get data out of SQL stored procedure",
+      "icon": "fa-database",
+      "configuredProperties": {},
+      "properties": {
+        "url": {
+          "kind": "property",
+          "displayName": "Connection URL",
+          "group": "security",
+          "label": "common,security",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags":[],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "defaultValue": "jdbc:postgresql:database",
+          "description": "JDBC URL of the database"
+        },
+        "user": {
+          "kind": "property",
+          "displayName": "Username",
+          "group": "security",
+          "label": "common,security",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags":[],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "defaultValue": "",
+          "description": "Username for the database connection"
+        },
+        "password": {
+          "kind": "property",
+          "displayName": "Password",
+          "group": "security",
+          "label": "common,security",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags":[],
+          "deprecated": false,
+          "secret": true,
+          "componentProperty": true,
+          "description": "Password for the database connection"
+        },
+        "schema": {
+          "kind": "property",
+          "displayName": "Schema",
+          "group": "producer",
+          "label": "common",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags":[],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "Database schema"
+        },
+        "catalog": {
+          "kind": "property",
+          "displayName": "Catalog",
+          "group": "producer",
+          "label": "common",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags":[],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "Database catalog"
+        }
+      },
+      "actions": [
+        {
+          "id": "io.syndesis:sql-stored-connector:latest",
+          "name": "Invoke SQL stored procedure",
+          "description": "Pass data to SQL stored procedure",
+          "camelConnectorGAV": "io.syndesis:sql-stored-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "sql-stored-connector",
+          "tags": [ "dynamic" ],
+          "definition": {
+            "inputDataShape": {
+               "kind" : "json"
+            },
+            "outputDataShape": {
+               "kind" : "none"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "SQL stored procedure parameters",
+              "description": "Specify SQL stored procedure parameters",
+              "properties": {
+                "template": {
+                  "kind": "parameter",
+                  "displayName": "Template",
+                  "group": "producer",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "",
+                  "description": "StoredProcedure template to perform"
+                },
+                "batch": {
+                  "kind": "parameter",
+                  "displayName": "Batch",
+                  "group": "producer",
+                  "required": false,
+                  "type": "boolean",
+                  "javaType": "boolean",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "false",
+                  "description": "Enables or disables batch mode"
+                },
+                "noop": {
+                  "kind": "parameter",
+                  "displayName": "Noop",
+                  "group": "producer",
+                  "required": false,
+                  "type": "boolean",
+                  "javaType": "boolean",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "false",
+                  "description": "If set will ignore the results of the template and use the existing IN message as the OUT message for the continuation of processing"
+                }
+              }
+            }]
           }
         }
       ]
