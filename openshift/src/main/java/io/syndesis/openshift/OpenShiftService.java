@@ -15,9 +15,16 @@
  */
 package io.syndesis.openshift;
 
+import io.fabric8.kubernetes.client.RequestConfig;
+import io.fabric8.openshift.api.model.DeploymentConfig;
+
+import java.util.List;
+import java.util.Map;
+
 public interface OpenShiftService {
 
     String REVISION_ID_ANNOTATION = "syndesis.io/revision-id";
+    String USERNAME_LABEL = "USERNAME";
 
     /**
      * Creates the deployment (Deployment and Build configurations, Image Streams etc)
@@ -51,6 +58,14 @@ public interface OpenShiftService {
      * @param d
      */
     boolean isScaled(OpenShiftDeployment d);
+
+    /**
+     * Returns the {@link DeploymentConfig}s that match the specified labels.
+     * @param requestConfig     The configuration of the request.
+     * @param labels            The specified labels.
+     * @return                  The list of {@link DeploymentConfig}s.
+     */
+    List<DeploymentConfig> getDeploymentsByLabel(RequestConfig requestConfig, Map<String, String> labels);
 
     /**
      * Create a Webhook URL which can be used in a github integration

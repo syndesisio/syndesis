@@ -28,6 +28,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.TokenVerifier;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.common.VerificationException;
@@ -74,6 +75,14 @@ public final class Tokens {
             return stringToken;
         }
 
+        return getKeycloakSecurityContext().getTokenString();
+    }
+
+    public static String getUsername() {
+       return getKeycloakSecurityContext().getToken().getPreferredUsername();
+    }
+
+    public static KeycloakSecurityContext getKeycloakSecurityContext() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             throw new IllegalStateException("Cannot set authorization header because there is no authenticated principal");
@@ -84,7 +93,7 @@ public final class Tokens {
         }
 
         KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) authentication;
-        return token.getAccount().getKeycloakSecurityContext().getTokenString();
+        return token.getAccount().getKeycloakSecurityContext();
     }
 
     public static boolean isTokenExpired(String token) {

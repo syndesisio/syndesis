@@ -92,6 +92,7 @@ public class TestSupportHandler {
             OpenShiftDeployment deployment = OpenShiftDeployment
                 .builder()
                 .name(i.getName())
+                .username("joe")
                 .revisionId(1)
                 .token(Tokens.getAuthenticationToken())
                 .build();

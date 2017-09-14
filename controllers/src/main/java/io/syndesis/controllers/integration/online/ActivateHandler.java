@@ -18,6 +18,7 @@ package io.syndesis.controllers.integration.online;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +29,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.fabric8.kubernetes.client.RequestConfig;
+import io.fabric8.kubernetes.client.RequestConfigBuilder;
+import io.syndesis.controllers.ControllersConfigurationProperties;
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.core.Names;
 import io.syndesis.core.SyndesisServerException;
@@ -58,15 +62,17 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
     private final OpenShiftService openShiftService;
     private final GitHubService gitHubService;
     private final ProjectGenerator projectConverter;
+    private final ControllersConfigurationProperties properties;
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivateHandler.class);
 
     /* default */ ActivateHandler(DataManager dataManager, OpenShiftService openShiftService,
-                    GitHubService gitHubService, ProjectGenerator projectConverter) {
+                                  GitHubService gitHubService, ProjectGenerator projectConverter, ControllersConfigurationProperties properties) {
         this.dataManager = dataManager;
         this.openShiftService = openShiftService;
         this.gitHubService = gitHubService;
         this.projectConverter = projectConverter;
+        this.properties = properties;
     }
 
     @Override
@@ -84,6 +90,21 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
             LOG.info("{} : Token is expired", getLabel(integration));
             return new StatusUpdate(integration.getCurrentStatus().orElse(null), "Token is expired");
         }
+
+        String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
+        int userIntegrations = countIntegrations(integration);
+        if (userIntegrations >= properties.getMaxIntegrationsPerUser()) {
+            //What the user sees.
+            return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userIntegrations + " integrations, while the maximum allowed number is " + properties.getMaxIntegrationsPerUser() + ".");
+        }
+
+        int userDeployments = countDeployments(integration);
+        if (userDeployments >= properties.getMaxDeploymentsPerUser()) {
+            //What we actually want to limit. So even though this should never happen, we still need to make sure.
+            return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userDeployments + " deploymnets, while the maximum allowed number is " + properties.getMaxDeploymentsPerUser() + ".");
+        }
+
+
         String token = storeToken(integration);
 
         Properties applicationProperties = extractApplicationPropertiesFrom(integration);
@@ -93,6 +114,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         OpenShiftDeployment deployment = OpenShiftDeployment
             .builder()
             .name(integration.getName())
+            .username(username)
             .revisionId(revision.getVersion().get())
             .replicas(1)
             .token(token)
@@ -108,9 +130,9 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
             String gitCloneUrl = null;
             if (!stepsPerformed.contains(STEP_GITHUB)) {
                 User gitHubUser = getGitHubUser();
-                String username = gitHubUser.getLogin();
-                LOG.info("{} : Looked up GitHub user {}", getLabel(integration), username);
-                Map<String, byte[]> projectFiles = createProjectFiles(username, integration);
+                String githubUsername = gitHubUser.getLogin();
+                LOG.info("{} : Looked up GitHub user {}", getLabel(integration), githubUsername);
+                Map<String, byte[]> projectFiles = createProjectFiles(githubUsername, integration);
                 LOG.info("{} : Created project files", getLabel(integration));
 
                 gitCloneUrl = ensureGitHubSetup(integration, gitHubUser, getWebHookUrl(deployment, secret), projectFiles);
@@ -122,7 +144,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                 if (gitCloneUrl==null) {
                     gitCloneUrl = getCloneURL(integration);
                 }
-                createOpenShiftResources(integration.getName(), revision.getVersion().orElse(1), gitCloneUrl, secret, applicationProperties);
+                createOpenShiftResources(integration.getName(), username, revision.getVersion().orElse(1), gitCloneUrl, secret, applicationProperties);
                 LOG.info("{} : Created OpenShift resources", getLabel(integration));
                 stepsPerformed.add(STEP_OPENSHIFT);
             }
@@ -166,6 +188,40 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
     private String getWebHookUrl(OpenShiftDeployment deployment, String secret) {
         return openShiftService.getGitHubWebHookUrl(deployment, secret);
+    }
+
+    /**
+     * Count the integrations (in DB) of the owner of the specified integration.
+     * @param integration   The specified integration.
+     * @return              The number of integrations (excluding the current).
+     */
+    private int countIntegrations(Integration integration) {
+        String id = integration.getId().orElse(null);
+        String userId = integration.getUserId().orElse(null);
+
+        return (int) dataManager.fetchIdsByPropertyValue(Integration.class, "userId", integration.getUserId().get())
+            .stream()
+            .filter(i -> !i.equals(id)) //The "current" integration will already be in the database.
+            .count();
+    }
+
+    /**
+     * Count the deployments of the owner of the specified integration.
+     * @param integration   The specified integration.
+     * @return              The number of deployed integrations (excluding the current).
+     */
+    private int countDeployments(Integration integration) {
+        String name = integration.getName();
+        String token = integration.getToken().orElse(null);
+        String userId = integration.getUserId().orElse(null);
+
+        Map<String, String> labels = new HashMap<>();
+        labels.put(OpenShiftService.USERNAME_LABEL, userId);
+
+        return (int) openShiftService.getDeploymentsByLabel(new RequestConfigBuilder().withOauthToken(token).build(), labels)
+            .stream()
+            .filter(d -> !Names.sanitize(name).equals(d.getMetadata().getName())) //this is also called on updates (so we need to exclude)
+            .count();
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
@@ -225,10 +281,11 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return dataManager.fetchAll(Connector.class).getItems().stream().collect(Collectors.toMap(o -> o.getId().get(), o -> o));
     }
 
-    private void createOpenShiftResources(String integrationName, int revisionId, String gitCloneUrl, String webHookSecret, Properties applicationProperties) {
+    private void createOpenShiftResources(String integrationName, String username, int revisionId, String gitCloneUrl, String webHookSecret, Properties applicationProperties) {
         openShiftService.create(
             ImmutableOpenShiftDeployment.builder()
                                         .name(integrationName)
+                                        .username(username)
                                         .revisionId(revisionId)
                                         .gitRepository(gitCloneUrl)
                                         .webhookSecret(webHookSecret)
