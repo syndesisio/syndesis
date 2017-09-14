@@ -12,9 +12,11 @@ parameters:
   required: true
 - name: GITHUB_OAUTH_CLIENT_ID
   description: GitHub OAuth client ID
+  value: dummy
   required: true
 - name: GITHUB_OAUTH_CLIENT_SECRET
   description: GitHub OAuth client secret
+  value: dummy
   required: true
 # Parameters with defaults:
 - name: KEYCLOAK_ROUTE_HOSTNAME
@@ -2426,8 +2428,10 @@ objects:
             protocol: TCP
           resources:
             limits:
+              cpu: 2000m
               memory: 512Mi
             requests:
+              cpu: 200m
               memory: 280Mi
           # spring-boot automatically picks up application.yml from ./config
           workingDir: /deployments
