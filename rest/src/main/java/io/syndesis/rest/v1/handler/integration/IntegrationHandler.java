@@ -17,6 +17,7 @@ package io.syndesis.rest.v1.handler.integration;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Validator;
@@ -31,10 +32,9 @@ import javax.ws.rs.core.MediaType;
 import io.swagger.annotations.Api;
 import io.syndesis.core.Tokens;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.inspector.ClassInspector;
+import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.Kind;
 import io.syndesis.model.connection.DataShape;
-import io.syndesis.model.connection.DataShapeKinds;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
@@ -48,6 +48,7 @@ import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.operations.Validating;
+
 import org.springframework.stereotype.Component;
 
 @Path("/integrations")
@@ -56,14 +57,14 @@ import org.springframework.stereotype.Component;
 public class IntegrationHandler extends BaseHandler
     implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration>, Validating<Integration> {
 
-    private final ClassInspector classInspector;
+    private final Inspectors inspectors;
 
     private final Validator validator;
 
-    public IntegrationHandler(final DataManager dataMgr, final Validator validator, final ClassInspector classInspector) {
+    public IntegrationHandler(final DataManager dataMgr, final Validator validator, final Inspectors inspectors) {
         super(dataMgr);
         this.validator = validator;
-        this.classInspector = classInspector;
+        this.inspectors = inspectors;
     }
 
     @Override
@@ -124,11 +125,8 @@ public class IntegrationHandler extends BaseHandler
     public FilterOptions getFilterOptions(DataShape dataShape) {
         FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
 
-        String kind = dataShape.getKind();
-        if (kind != null && kind.equals(DataShapeKinds.JAVA)) {
-            String type = dataShape.getType();
-            builder.paths(classInspector.getPaths(type));
-        }
+        final List<String> paths = inspectors.getPaths(dataShape.getKind(), dataShape.getType(), dataShape.getSpecification(), dataShape.getExemplar());
+        builder.paths(paths);
         return builder.build();
     }
 

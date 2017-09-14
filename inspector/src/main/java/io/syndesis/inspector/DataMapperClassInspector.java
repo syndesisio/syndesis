@@ -21,10 +21,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import io.syndesis.core.Json;
 import io.syndesis.core.SyndesisServerException;
+
 import org.infinispan.Cache;
 import org.infinispan.manager.CacheContainer;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +36,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class DataMapperClassInspector implements ClassInspector {
+public class DataMapperClassInspector implements Inspector {
 
     private static final String INSPECTOR_URL_FORMAT = "http://%s/%s?%s=%s";
 
@@ -51,7 +54,7 @@ public class DataMapperClassInspector implements ClassInspector {
     private static final String JAVA_LANG = "java.lang";
     private static final String JAVA_UTIL = "java.util";
 
-    private static final String CACHE_NAME = ClassInspector.class.getName();
+    private static final String CACHE_NAME = Inspector.class.getName();
 
     private final CacheContainer caches;
     private final RestTemplate restTemplate;
@@ -65,14 +68,19 @@ public class DataMapperClassInspector implements ClassInspector {
     }
 
     @Override
-    public List<String> getPaths(String fullyQualifiedName) {
+    public List<String> getPaths(String kind, String type, String specification, Optional<byte[]> exemplar) {
         Cache<String, List<String>> cache = caches.getCache(CACHE_NAME);
-        if (cache.containsKey(fullyQualifiedName)) {
-            return cache.get(fullyQualifiedName);
+        if (cache.containsKey(type)) {
+            return cache.get(type);
         }
-        List<String> paths = getPathsForJavaClassName("", fullyQualifiedName, new ArrayList<>());
-        cache.put(fullyQualifiedName, paths);
+        List<String> paths = getPathsForJavaClassName("", type, new ArrayList<>());
+        cache.put(type, paths);
         return paths;
+    }
+
+    @Override
+    public boolean supports(String kind, String type, String specification, Optional<byte[]> exemplar) {
+        return "java".equals(kind) && !StringUtils.isEmpty(type);
     }
 
     protected List<String> getPathsForJavaClassName(String prefix, String fullyQualifiedName, List<String> visited) {

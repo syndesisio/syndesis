@@ -42,7 +42,7 @@ public class DataMapperClassInspectorTest {
         mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.StatusJSONImpl").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.StatusJSONImpl.json"), Charset.defaultCharset())).always();
         mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.Logger").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.Logger.json"), Charset.defaultCharset())).always();
         mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.LoggerFactory").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.LoggerFactory.json"), Charset.defaultCharset())).always();
-        List<String> paths = dataMapperClassInspector.getPaths("twitter4j.StatusJSONImpl");
+        List<String> paths = dataMapperClassInspector.getPaths("java", "twitter4j.StatusJSONImpl", null, null);
 
         Assert.assertNotNull(paths);
         Assert.assertTrue(paths.contains("id"));
@@ -54,7 +54,7 @@ public class DataMapperClassInspectorTest {
         DataMapperClassInspector dataMapperClassInspector = new DataMapperClassInspector(infinispan.getCaches(), new RestTemplate(), config);
         mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.Status").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.Status.json"), Charset.defaultCharset())).always();
 
-        List<String> paths = dataMapperClassInspector.getPaths("twitter4j.Status");
+        List<String> paths = dataMapperClassInspector.getPaths("java", "twitter4j.Status", null, null);
 
         Assert.assertNotNull(paths);
         Assert.assertTrue(paths.contains("id"));

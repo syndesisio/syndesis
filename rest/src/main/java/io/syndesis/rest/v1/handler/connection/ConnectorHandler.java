@@ -31,10 +31,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.inspector.ClassInspector;
+import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.Kind;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.DataShapeKinds;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.rest.v1.handler.BaseHandler;
@@ -52,15 +51,15 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     private final Verifier verifier;
     private final Credentials credentials;
-    private final ClassInspector classInspector;
+    private final Inspectors inspectors;
     private final ClientSideState state;
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials,
-        final ClassInspector classInspector, final ClientSideState state) {
+        final Inspectors inspectors, final ClientSideState state) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
-        this.classInspector = classInspector;
+        this.inspectors = inspectors;
         this.state = state;
     }
 
@@ -101,14 +100,11 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         }
 
         connector.actionById(actionId).ifPresent(a -> {
-                a.getOutputDataShape().ifPresent(dataShape -> {
-                    String kind = dataShape.getKind();
-                    if (kind.equals(DataShapeKinds.JAVA)) {
-                        String type = dataShape.getType();
-                        builder.addAllPaths(classInspector.getPaths(type));
-                    }
-                });
+            a.getOutputDataShape().ifPresent(dataShape -> {
+                final List<String> paths = inspectors.getPaths(dataShape.getKind(), dataShape.getType(), dataShape.getSpecification(), dataShape.getExemplar());
+                builder.addAllPaths(paths);
             });
+        });
         return builder.build();
     }
 }
