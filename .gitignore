@@ -14,7 +14,7 @@ buildNumber.properties
 .project
 .settings/
 .classpath
-*/.factorypath
+.factorypath
 
 ### Java template
 *.class
@@ -83,3 +83,4 @@ crashlytics-build.properties
 .DS_Store
 
 
+/derby.log
