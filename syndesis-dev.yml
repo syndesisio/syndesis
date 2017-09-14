@@ -12,9 +12,11 @@ parameters:
   required: true
 - name: GITHUB_OAUTH_CLIENT_ID
   description: GitHub OAuth client ID
+  value: dummy
   required: true
 - name: GITHUB_OAUTH_CLIENT_SECRET
   description: GitHub OAuth client secret
+  value: dummy
   required: true
 # Parameters with defaults:
 - name: KEYCLOAK_ROUTE_HOSTNAME
