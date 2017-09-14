@@ -79,8 +79,6 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
             return new StatusUpdate(integration.getCurrentStatus().orElse(null), "No token present");
         }
 
-        IntegrationRevision revision = IntegrationRevision.fromIntegration(integration);
-
         if (isTokenExpired(integration)) {
             LOG.info("{} : Token is expired", getLabel(integration));
             return new StatusUpdate(integration.getCurrentStatus().orElse(null), "Token is expired");
@@ -88,6 +86,8 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         String token = storeToken(integration);
 
         Properties applicationProperties = extractApplicationPropertiesFrom(integration);
+
+        IntegrationRevision revision = IntegrationRevision.fromIntegration(integration);
 
         OpenShiftDeployment deployment = OpenShiftDeployment
             .builder()
