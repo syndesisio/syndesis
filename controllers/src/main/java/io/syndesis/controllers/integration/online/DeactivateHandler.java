@@ -50,6 +50,7 @@ public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChan
         OpenShiftDeployment deployment = OpenShiftDeployment
             .builder()
             .name(integration.getName())
+            .revisionId(integration.getDeployedRevisionId().orElse(1))
             .replicas(0)
             .token(token)
             .build();

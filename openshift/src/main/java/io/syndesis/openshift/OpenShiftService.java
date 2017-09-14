@@ -17,6 +17,8 @@ package io.syndesis.openshift;
 
 public interface OpenShiftService {
 
+    String REVISION_ID_ANNOTATION = "syndesis.io/revision-id";
+
     /**
      * Creates the deployment (Deployment and Build configurations, Image Streams etc)
      * @param d A description of the deployment to create.

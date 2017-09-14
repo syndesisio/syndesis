@@ -15,6 +15,7 @@
  */
 package io.syndesis.model.integration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
@@ -32,6 +33,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
@@ -43,6 +45,27 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     @Override
     default Kind getKind() {
         return Kind.Integration;
+    }
+
+    /**
+     * The list of versioned revisions.
+     * The items in this list should be versioned and are not meant to be mutated.
+     * @return
+     */
+    Set<IntegrationRevision> getRevisions();
+
+    Optional<IntegrationRevision> getDraftRevision();
+
+    Optional<Integer> getDeployedRevisionId();
+
+
+    @JsonIgnore
+    default Optional<IntegrationRevision> getDeployedRevision() {
+        return getDeployedRevisionId().map(i -> getRevisions()
+            .stream()
+            .filter(r -> r.getVersion().isPresent() && i.equals(r.getVersion().get()))
+            .findFirst()
+            .orElse(null));
     }
 
     Optional<String> getConfiguration();
@@ -76,6 +99,15 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     Optional<Date> getCreatedDate();
 
     Optional<BigInteger> getTimesUsed();
+
+    @JsonIgnore
+    default Optional<IntegrationStatus> getStatus() {
+        Optional<IntegrationRevision> deployedRevision = getDeployedRevision();
+
+        return Optional.of(new IntegrationStatus.Builder()
+            .currentState(deployedRevision.map(r -> r.getCurrentState()).orElse(IntegrationRevisionState.Pending))
+            .build());
+    }
 
     @Override
     default Integration withId(String id) {

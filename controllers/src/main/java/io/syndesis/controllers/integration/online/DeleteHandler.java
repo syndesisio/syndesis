@@ -45,6 +45,7 @@ public class DeleteHandler implements StatusChangeHandlerProvider.StatusChangeHa
         OpenShiftDeployment deployment = OpenShiftDeployment
             .builder()
             .name(integration.getName())
+            .revisionId(integration.getDeployedRevisionId().orElse(1))
             .token(token)
             .build();
 
