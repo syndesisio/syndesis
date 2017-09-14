@@ -229,16 +229,41 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
           return;
         }
         this.i = i;
+        if (i.revisions) {
+          this.history = i.revisions
+            .map((rev) => {
+              const row = {
+                version: rev.version,
+                // TODO fake data
+                uses: Math.floor(Math.random() * 10),
+                runLength: Math.floor(Math.random() * 300),
+                status: [
+                  {
+                    icon: 'pf-icon pficon-ok',
+                    class: '',
+                    label: 'Success',
+                  },
+                ],
+                actions: [],
+              };
+              return row;
+            })
+            .sort((a, b) => {
+              return b.version;
+            });
+        }
       },
     );
     this.routeSubscription = this.route.params
       .pluck<Params, string>('integrationId')
       .map((id: string) => this.store.load(id))
       .subscribe();
+    /*
     setTimeout(() => {
       this.history = JSON.parse(JSON.stringify(this.tableTestData));
       this.detector.detectChanges();
     }, 1000);
+    */
   }
 
   ngOnDestroy() {
