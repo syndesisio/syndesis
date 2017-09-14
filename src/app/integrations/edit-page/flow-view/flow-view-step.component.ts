@@ -216,7 +216,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
       answer = answer + ' inactive';
     }
     const currentIndex = this.getCurrentStepIndex();
-    if (page !== undefined && currentIndex > 0) {
+    if (page !== undefined && currentIndex >= 0) {
       if (page === currentIndex) {
         answer = 'active';
       } else {
