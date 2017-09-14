@@ -70,6 +70,12 @@ public final class SalesforceMetadataAdapter implements MetadataAdapter<ObjectSc
         return new SyndesisMetadata<>(enrichedProperties, null, null);
     }
 
+    static ObjectSchema adaptSchema(final ObjectSchema schema) {
+        schema.set$schema(JsonUtils.SCHEMA4);
+
+        return schema;
+    }
+
     static ObjectSchema convertSalesforceGlobalObjectJsonToSchema(final JsonNode payload) {
         final Set<Object> allSchemas = new HashSet<>();
 
@@ -102,7 +108,7 @@ public final class SalesforceMetadataAdapter implements MetadataAdapter<ObjectSc
     static ObjectSchema inputOutputSchemaFor(final Set<ObjectSchema> schemasToConsider, final String objectName) {
         for (final ObjectSchema schema : schemasToConsider) {
             if (schema.getId().contains(":" + objectName)) {
-                return schema;
+                return adaptSchema(schema);
             }
         }
 

@@ -99,6 +99,7 @@ public class SalesforceMetadataAdapterTest {
         assertThat(metadata.inputSchema).isSameAs(metadata.outputSchema);
         final Object oneOf = payload.getOneOf().iterator().next();
         assertThat(metadata.inputSchema).isSameAs(oneOf);
+        assertThat(metadata.inputSchema.get$schema()).isEqualTo(JsonUtils.SCHEMA4);
     }
 
     @Test
