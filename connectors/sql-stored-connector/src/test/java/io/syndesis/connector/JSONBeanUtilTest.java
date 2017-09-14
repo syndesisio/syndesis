@@ -24,35 +24,8 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 
-public class JSONSchemaBuilderTest {
-
-    @Test
-    public void schemaTest()  throws JsonProcessingException {
-
-        /* Create Schema using Jackson */
-        ObjectMapper mapper = new ObjectMapper();
-        JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(mapper);
-        JsonSchema schema = schemaGen.generateSchema(SimpleInputBean.class);
-        String desiredSchema = (mapper.writerWithDefaultPrettyPrinter().writeValueAsString(schema));
-        System.out.println(desiredSchema);
-        //Manually cleaned up version up of desiredSchema to more easily test equality
-        desiredSchema = "{\n" + 
-                "  \"$schema\": \"http://json-schema.org/schema#\",\n" + 
-                "  \"type\" : \"object\",\n" + 
-                "  \"properties\" : {\n" + 
-                "    \"a\" : {\"type\" : \"integer\"},\n" + 
-                "    \"b\" : {\"type\" : \"integer\"}\n" + 
-                "   } \n" + 
-                "}";
-        String schemaFromBuilder = new JSONBeanSchemaBuilder()
-                .addField("a", "integer")
-                .addField("b", "integer").build();
-        System.out.println(schemaFromBuilder);
-        Assert.assertEquals(desiredSchema, schemaFromBuilder);
-    }
+public class JSONBeanUtilTest {
 
     @Test
     public void parsePropertiesFromJSONBeanTest() throws JsonProcessingException, JSONException {
@@ -89,6 +62,7 @@ public class JSONSchemaBuilderTest {
         public void setB(int b) {
             this.b = b;
         }
+
     }
     
 }
