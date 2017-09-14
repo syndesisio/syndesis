@@ -20,6 +20,15 @@ const proxyCfg = {
     'target': config.apiBase || defaultApiBase,
     'secure': false,
     'changeOrigin': true
+  },
+  '/v2/atlas': {
+    'target': config.datamapper.baseMappingServiceUrl || defaultApiBase,
+    'secure': false,
+    'changeOrigin': true,
+    'ws': true,
+    'headers': {
+      'X-Forwarded-Origin': 'for=127.0.0.1;host=localhost:4200;proto=https'
+    }
   }
 };
 
