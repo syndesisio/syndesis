@@ -151,22 +151,23 @@ export class DataMapperHostComponent extends FlowPage
       () => 'Adding document definition: ' + type + ' isSource: ' + isSource,
       category,
     );
-    // TODO: for xml/json docs, we need a document contents
-    // reference for document contents: DocumentManagementService.generateMock* methods
-    const documentContents: string = null;
     // TODO not sure what to do for `none` or `any` here
     switch (kind) {
       case 'java':
         this.cfg.addJavaDocument(type, isSource);
         break;
       case 'json':
-        this.cfg.addJSONDocument(type, dataShape.specification, isSource);
+      case 'json-instance':
+        this.cfg.addJSONInstanceDocument(type, dataShape.specification, isSource);
+        break;
+      case 'json-schema':
+        this.cfg.addJSONSchemaDocument(type, dataShape.specification, isSource);
         break;
       case 'xml-instance':
-        this.cfg.addXMLInstanceDocument(type, documentContents, isSource);
+        this.cfg.addXMLInstanceDocument(type, dataShape.specification, isSource);
         break;
       case 'xml-schema':
-        this.cfg.addXMLSchemaDocument(type, documentContents, isSource);
+        this.cfg.addXMLSchemaDocument(type, dataShape.specification, isSource);
         break;
     }
   }
@@ -226,10 +227,14 @@ export class DataMapperHostComponent extends FlowPage
       'addMockXMLInstanceSources',
       'addMockXMLSchemaSources',
       'addMockJSONSources',
+      'addMockJSONInstanceSources',
+      'addMockJSONSchemaSources',
       'addMockJavaTarget',
       'addMockXMLInstanceTarget',
       'addMockXMLSchemaTarget',
       'addMockJSONTarget',
+      'addMockJSONInstanceTarget',
+      'addMockJSONSchemaTarget',
       'debugDocumentServiceCalls',
       'debugMappingServiceCalls',
       'debugClassPathServiceCalls',
