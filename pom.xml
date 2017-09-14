@@ -25,7 +25,7 @@
 
   <groupId>io.syndesis</groupId>
   <artifactId>integration-runtime</artifactId>
-  <version>0.2.0</version>
+  <version>0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Syndesis: Integration Runtime</name>
