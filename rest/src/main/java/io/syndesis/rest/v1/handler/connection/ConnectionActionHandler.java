@@ -118,13 +118,13 @@ public class ConnectionActionHandler {
 
         final Object input = dynamicActionMetadata.inputSchema();
         if (shouldEnrichDataShape(defaultDefinition.getInputDataShape(), input)) {
-            enriched.inputDataShape(new DataShape.Builder().type(typeFrom(input)).kind("json")
+            enriched.inputDataShape(new DataShape.Builder().type(typeFrom(input)).kind("json-schema")
                 .specification(specificationFrom(input)).build());
         }
 
         final Object output = dynamicActionMetadata.outputSchema();
         if (shouldEnrichDataShape(defaultDefinition.getOutputDataShape(), output)) {
-            enriched.outputDataShape(new DataShape.Builder().type(typeFrom(output)).kind("json")
+            enriched.outputDataShape(new DataShape.Builder().type(typeFrom(output)).kind("json-schema")
                 .specification(specificationFrom(output)).build());
         }
 
@@ -140,7 +140,7 @@ public class ConnectionActionHandler {
         if (maybeExistingDataShape.isPresent() && received != null) {
             final DataShape existingDataShape = maybeExistingDataShape.get();
 
-            return "json".equals(existingDataShape.getKind()) && existingDataShape.getSpecification() == null;
+            return "json-schema".equals(existingDataShape.getKind()) && existingDataShape.getSpecification() == null;
         }
 
         return false;

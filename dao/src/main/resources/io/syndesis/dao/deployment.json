@@ -305,7 +305,7 @@
           "tags": [ "dynamic" ],
           "definition": {
             "inputDataShape": {
-               "kind": "json"
+               "kind": "json-schema"
             },
             "outputDataShape": {
                "kind": "java",
@@ -487,7 +487,7 @@
           "tags": [ "dynamic" ],
           "definition": {
             "inputDataShape": {
-               "kind": "json"
+               "kind": "json-schema"
             },
             "outputDataShape": {
                "kind": "none"
@@ -522,7 +522,7 @@
           "tags": [ "dynamic" ],
           "definition": {
             "inputDataShape": {
-               "kind": "json"
+               "kind": "json-schema"
             },
             "outputDataShape": {
                "kind": "none"
@@ -557,7 +557,7 @@
           "tags": [ "dynamic" ],
           "definition": {
             "inputDataShape": {
-               "kind": "json"
+               "kind": "json-schema"
             },
             "outputDataShape": {
                "kind": "java",
@@ -1345,7 +1345,7 @@
           "tags": [ "dynamic" ],
           "definition": {
             "inputDataShape": {
-               "kind" : "json"
+               "kind" : "json-schema"
             },
             "outputDataShape": {
                "kind" : "none"

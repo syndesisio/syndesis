@@ -92,7 +92,7 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
         .id(DynamicActionDefinitionITCase.CREATE_OR_UPDATE_ACTION_ID)//
         .addTag("dynamic")//
         .definition(new ActionDefinition.Builder()//
-            .inputDataShape(new DataShape.Builder().kind("json").build())
+            .inputDataShape(new DataShape.Builder().kind("json-schema").build())
             .outputDataShape(new DataShape.Builder().kind("java")
                 .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
@@ -181,7 +181,7 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
             ActionDefinition.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
         final ActionDefinition firstEnrichment = new ActionDefinition.Builder()//
-            .inputDataShape(new DataShape.Builder().kind("json").build())
+            .inputDataShape(new DataShape.Builder().kind("json-schema").build())
             .outputDataShape(new DataShape.Builder().kind("java")
                 .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
@@ -209,7 +209,7 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
         final ActionDefinition secondResponseBody = secondResponse.getBody();
         assertThat(secondResponseBody).isEqualToIgnoringGivenFields(secondEnrichment, "inputDataShape");
         assertThat(secondResponseBody.getInputDataShape()).hasValueSatisfying(input -> {
-            assertThat(input.getKind()).isEqualTo("json");
+            assertThat(input.getKind()).isEqualTo("json-schema");
             assertThat(input.getType()).isEqualTo("Contact");
             assertThat(input.getSpecification()).isNotEmpty();
         });
