@@ -15,6 +15,19 @@
  */
 package io.syndesis.controllers.integration.online;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.core.Names;
 import io.syndesis.core.SyndesisServerException;
@@ -34,18 +47,6 @@ import io.syndesis.project.converter.ProjectGenerator;
 import org.eclipse.egit.github.core.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class ActivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
@@ -102,7 +103,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
         // TODO: Verify Token and refresh if expired ....
 
-        List<String> stepsPerformed = integration.getStepsDone().orElse(new ArrayList<>());
+        List<String> stepsPerformed = integration.getStepsDone().orElseGet(ArrayList::new);
         try {
             String gitCloneUrl = null;
             if (!stepsPerformed.contains(STEP_GITHUB)) {
@@ -189,9 +190,11 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
     private Map<String, byte[]> createProjectFiles(String username, Integration integration) {
         try {
+            Map<String, Connector> connectorMap = fetchConnectorsMap();
+
             GenerateProjectRequest request = new GenerateProjectRequest.Builder()
                 .integration(integration)
-                .connectors(fetchConnectorsMap())
+                .connectors(connectorMap)
                 .gitHubRepoName(Names.sanitize(integration.getName()))
                 .gitHubUserLogin(username)
                 .build();
@@ -250,37 +253,87 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                 if (step.getStepKind().equals(Endpoint.KIND)) {
                     step.getAction().ifPresent(action -> {
                         step.getConnection().ifPresent(connection -> {
-                            String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
+                            String connectorId = connection.getConnectorId().orElseGet(action::getConnectorId);
                             if (!connectorMap.containsKey(connectorId)) {
                                 throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
                             }
-                            String prefix = action.getCamelConnectorPrefix();
-                            Connector connector = connectorMap.get(connectorId);
 
-                            //Handle component data
-                            secrets.putAll(connector.filterProperties(connection.getConfiguredProperties(),
-                                connector.isComponentProperty(),
-                                e -> prefix + "." + e.getKey(),
-                                e -> e.getValue()));
+                            final String connectorPrefix = action.getCamelConnectorPrefix();
+                            final Connector connector = connectorMap.get(connectorId);
+                            final Map<String, String> properties = aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties().orElseGet(Collections::emptyMap));
+                            final boolean hasComponentOptions = properties.entrySet().stream().anyMatch(connector::isComponentProperty);
 
-                            secrets.putAll(connector.filterProperties(step.getConfiguredProperties().orElse(new HashMap<String,String>()),
-                                connector.isComponentProperty(),
-                                e -> prefix + "." + e.getKey(),
-                                e -> e.getValue()));
+                            final Function<Map.Entry<String, String>, String> componentKeyConverter;
+                            final Function<Map.Entry<String, String>, String> secretKeyConverter;
 
-                            //Handle sensitive data
-                            secrets.putAll(connector.filterProperties(connection.getConfiguredProperties(),
-                                connector.isSecret(),
-                                e -> prefix + "." + e.getKey(),
-                                e -> e.getValue()));
+                            // Enable configuration aliases only if the connector
+                            // has component options otherwise it does not get
+                            // configured by camel.
+                            if (hasComponentOptions) {
+                                // The connector id is marked as optional thus if the
+                                // id is not provided it is also not possible to create
+                                // a connector configuration alias.
+                                //
+                                // if th id is set this generate something like:
+                                //
+                                //     twitter-search.configurations.twitter-search-1.propertyName
+                                //
+                                // otherwise it fallback to
+                                //
+                                //     twitter-search.propertyName
+                                //
+                                // NOTE: model should be more clear about what fields
+                                //       should be there and what are effectively
+                                //       optional so it maybe useful to leverage
+                                //       annotation such as @NotNull, @Nullable.
+                                componentKeyConverter = e -> connection.getId().map(
+                                    id -> String.join(".", connectorPrefix, "configurations", connectorPrefix + "-" + id, e.getKey()).toString()
+                                ).orElseGet(
+                                    () -> String.join(".", connectorPrefix, e.getKey()).toString()
+                                );
+                            } else {
+                                componentKeyConverter = e -> String.join(".", connectorPrefix, e.getKey()).toString();
+                            }
 
-                            secrets.putAll(connector.filterProperties(step.getConfiguredProperties().orElse(new HashMap<String,String>()),
-                                connector.isSecret(),
-                                e -> prefix + "." + e.getKey(),
-                                e -> e.getValue()));
+                            // Secrets does not follow the component convention so
+                            // the property is always flattered at connector level
+                            //
+                            // if th id is set this generate something like:
+                            //
+                            //     twitter-search-1.propertyName
+                            //
+                            // otherwise it fallback to
+                            //
+                            //     twitter-search.propertyName
+                            //
+                            secretKeyConverter = e -> connection.getId().map(
+                                id -> String.join(".", connectorPrefix + "-" + id, e.getKey()).toString()
+                            ).orElseGet(
+                                () -> String.join(".", connectorPrefix, e.getKey()).toString()
+                            );
+
+                            // Merge properties set on connection and step and
+                            // create secrets for component options or for sensitive
+                            // information.
+                            //
+                            // NOTE: if an option is both a component option and
+                            //       a sensitive information it is then only added
+                            //       to the component configuration to avoid dups
+                            //       and possible error at runtime.
+                            properties.entrySet().stream()
+                                .filter(connector::isSecretOrComponentProperty)
+                                .distinct()
+                                .forEach(
+                                    e -> {
+                                        if (connector.isComponentProperty(e)) {
+                                            secrets.put(componentKeyConverter.apply(e), e.getValue());
+                                        } else if (connector.isSecret(e)) {
+                                            secrets.put(secretKeyConverter.apply(e), e.getValue());
+                                        }
+                                    }
+                                );
                         });
                     });
-                    continue;
                 }
             }
         });
@@ -291,4 +344,9 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return "Integration " + integration.getId().orElse("[none]");
     }
 
+    private static <K, V> Map<K, V> aggregate(Map<K, V> ... maps) {
+        return Stream.of(maps)
+            .flatMap(map -> map.entrySet().stream())
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue));
+    }
 }

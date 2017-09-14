@@ -89,6 +89,18 @@
       <url>https://jitpack.io</url>
     </repository>
 
+    <!-- required for camel -->
+    <repository>
+      <id>jboss-ea</id>
+      <name>JBoss Early-access repository</name>
+      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -99,6 +111,19 @@
       <id>jcenter-releases</id>
       <name>jcenter</name>
       <url>https://jcenter.bintray.com</url>
+    </pluginRepository>
+
+    <!-- required for camel -->
+    <pluginRepository>
+      <id>jboss-ea</id>
+      <name>JBoss Early-access repository</name>
+      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </pluginRepository>
   </pluginRepositories>
 
@@ -115,7 +140,7 @@
 
     <assertj-core.version>3.6.2</assertj-core.version>
     <caffeine.version>2.4.0</caffeine.version>
-    <camel.version>2.19.0</camel.version>
+    <camel.version>2.20.0.fuse-000093</camel.version>
     <jdbi.version>2.78</jdbi.version>
     <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
     <immutables.version>2.5.1</immutables.version>
@@ -276,6 +301,12 @@
         <groupId>io.syndesis</groupId>
         <artifactId>connector-catalog</artifactId>
         <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -535,7 +566,7 @@
       <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy</artifactId>
-        <version>2.4.11</version>
+        <version>2.4.12</version>
       </dependency>
 
       <dependency>
