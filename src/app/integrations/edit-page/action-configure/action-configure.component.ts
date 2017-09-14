@@ -133,6 +133,8 @@ export class IntegrationsConfigureActionComponent extends FlowPage
           ? JSON.parse(response['_body'])
           : undefined;
         this.initForm(position, page, definition);
+        this.step.action.inputDataShape = definition.inputDataShape;
+        this.step.action.outputDataShape = definition.outputDataShape;
       })
       .catch(response => {
         log.debug('Error response: ' + JSON.stringify(response, undefined, 2));
