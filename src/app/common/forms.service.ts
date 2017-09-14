@@ -104,6 +104,12 @@ export class FormFactoryService {
             inputType: type,
             value: value.value || values[key] || value.defaultValue,
             hint: value.description,
+            list: value.enum ? (<Array<any>>value.enum).map((val) => {
+              if (typeof val === 'string') {
+                return val;
+              }
+              return val['value'];
+            }) : undefined,
             required: value.required,
             validators: validators,
             errorMessages: errorMessages,
