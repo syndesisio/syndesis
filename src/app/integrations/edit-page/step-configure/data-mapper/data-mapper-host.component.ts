@@ -160,7 +160,7 @@ export class DataMapperHostComponent extends FlowPage
         this.cfg.addJavaDocument(type, isSource);
         break;
       case 'json':
-        this.cfg.addJSONDocument(type, documentContents, isSource);
+        this.cfg.addJSONDocument(type, dataShape.specification, isSource);
         break;
       case 'xml-instance':
         this.cfg.addXMLInstanceDocument(type, documentContents, isSource);
