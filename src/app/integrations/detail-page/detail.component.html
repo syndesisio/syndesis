@@ -156,7 +156,7 @@
                     </td>
                     <td>
                       <button class="btn btn-default"
-                              *ngFor="let action of row.actions">{{action.label}}</button>
+                              *ngFor="let action of row.actions" (click)="onRevisionAction(action, row.revision)">{{action.label}}</button>
                     </td>
                   </tr>
                 </ng-template>
