@@ -141,7 +141,7 @@ public class GitHubServiceITCase {
         Assert.assertNull(repository); // repository should not exist on GitHub
 
         // Create Repository
-        repository = githubService.createRepo(testRepo);
+        repository = githubService.createRepository(testRepo);
         Assertions.assertThat(repository).isNotNull();
         Assertions.assertThat(repository.getName()).isEqualTo(testRepo);
         System.out.println("Successfully created repository " + repository.getName());
@@ -174,7 +174,13 @@ public class GitHubServiceITCase {
             });
 
         User user = githubService.getApiUser();
-        String cloneURL = githubService.createOrUpdateProjectFiles(REPO_NAME, user,"my itcase initial message" + UUID.randomUUID().toString(), files, null);
+        GithubRequest githubRequest = new GithubRequest.Builder()
+            .repoName(REPO_NAME)
+            .author(user)
+            .commitMessage("my itcase initial message" + UUID.randomUUID().toString())
+            .fileContents(files)
+            .build();
+        String cloneURL = githubService.createOrUpdateProjectFiles(githubRequest);
         Assertions.assertThat(cloneURL).isNotNull().isNotBlank();
 
         File tmpDir = Files.createTempDirectory(testName.getMethodName()).toFile();

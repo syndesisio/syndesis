@@ -15,9 +15,32 @@
  */
 package io.syndesis.controllers.integration.online;
 
+import io.fabric8.kubernetes.client.RequestConfigBuilder;
+import io.syndesis.controllers.ControllersConfigurationProperties;
+import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
+import io.syndesis.core.Names;
+import io.syndesis.core.SyndesisServerException;
+import io.syndesis.core.Tokens;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.github.GitHubService;
+import io.syndesis.github.GithubRequest;
+import io.syndesis.integration.model.steps.Endpoint;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationRevision;
+import io.syndesis.model.integration.Step;
+import io.syndesis.openshift.OpenShiftDeployment;
+import io.syndesis.openshift.OpenShiftService;
+import io.syndesis.project.converter.GenerateProjectRequest;
+import io.syndesis.project.converter.ProjectGenerator;
+import org.eclipse.egit.github.core.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,26 +50,6 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
-import io.syndesis.core.Names;
-import io.syndesis.core.SyndesisServerException;
-import io.syndesis.core.Tokens;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.github.GitHubService;
-import io.syndesis.integration.model.steps.Endpoint;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationRevision;
-import io.syndesis.model.integration.Step;
-import io.syndesis.openshift.ImmutableOpenShiftDeployment;
-import io.syndesis.openshift.OpenShiftDeployment;
-import io.syndesis.openshift.OpenShiftService;
-import io.syndesis.project.converter.GenerateProjectRequest;
-import io.syndesis.project.converter.ProjectGenerator;
-import org.eclipse.egit.github.core.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ActivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
@@ -58,15 +61,17 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
     private final OpenShiftService openShiftService;
     private final GitHubService gitHubService;
     private final ProjectGenerator projectConverter;
+    private final ControllersConfigurationProperties properties;
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivateHandler.class);
 
     /* default */ ActivateHandler(DataManager dataManager, OpenShiftService openShiftService,
-                    GitHubService gitHubService, ProjectGenerator projectConverter) {
+                                  GitHubService gitHubService, ProjectGenerator projectConverter, ControllersConfigurationProperties properties) {
         this.dataManager = dataManager;
         this.openShiftService = openShiftService;
         this.gitHubService = gitHubService;
         this.projectConverter = projectConverter;
+        this.properties = properties;
     }
 
     @Override
@@ -84,45 +89,58 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
             LOG.info("{} : Token is expired", getLabel(integration));
             return new StatusUpdate(integration.getCurrentStatus().orElse(null), "Token is expired");
         }
+
+        int userIntegrations = countIntegrations(integration);
+        if (userIntegrations >= properties.getMaxIntegrationsPerUser()) {
+            //What the user sees.
+            return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userIntegrations + " integrations, while the maximum allowed number is " + properties.getMaxIntegrationsPerUser() + ".");
+        }
+
+        int userDeployments = countDeployments(integration);
+        if (userDeployments >= properties.getMaxDeploymentsPerUser()) {
+            //What we actually want to limit. So even though this should never happen, we still need to make sure.
+            return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userDeployments + " deploymnets, while the maximum allowed number is " + properties.getMaxDeploymentsPerUser() + ".");
+        }
+
+
         String token = storeToken(integration);
-
         Properties applicationProperties = extractApplicationPropertiesFrom(integration);
-
         IntegrationRevision revision = IntegrationRevision.fromIntegration(integration);
+        String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
+        String secret = createSecret();
+        String gitCloneUrl = getCloneURL(integration);
 
         OpenShiftDeployment deployment = OpenShiftDeployment
             .builder()
             .name(integration.getName())
+            .username(username)
             .revisionId(revision.getVersion().get())
             .replicas(1)
             .token(token)
+            .gitRepository(gitCloneUrl)
+            .webhookSecret(secret)
             .applicationProperties(applicationProperties)
             .build();
-
-        String secret = createSecret();
 
         // TODO: Verify Token and refresh if expired ....
 
         List<String> stepsPerformed = integration.getStepsDone().orElseGet(ArrayList::new);
         try {
-            String gitCloneUrl = null;
             if (!stepsPerformed.contains(STEP_GITHUB)) {
                 User gitHubUser = getGitHubUser();
-                String username = gitHubUser.getLogin();
-                LOG.info("{} : Looked up GitHub user {}", getLabel(integration), username);
-                Map<String, byte[]> projectFiles = createProjectFiles(username, integration);
+                String githubUsername = gitHubUser.getLogin();
+                LOG.info("{} : Looked up GitHub user {}", getLabel(integration), githubUsername);
+                Map<String, byte[]> projectFiles = createProjectFiles(githubUsername, integration);
                 LOG.info("{} : Created project files", getLabel(integration));
 
-                gitCloneUrl = ensureGitHubSetup(integration, gitHubUser, getWebHookUrl(deployment, secret), projectFiles);
+                ensureGitHubSetup(integration, gitHubUser, getWebHookUrl(deployment, secret), projectFiles);
                 LOG.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
                 stepsPerformed.add(STEP_GITHUB);
             }
 
             if (!stepsPerformed.contains(STEP_OPENSHIFT)) {
-                if (gitCloneUrl==null) {
-                    gitCloneUrl = getCloneURL(integration);
-                }
-                createOpenShiftResources(integration.getName(), revision.getVersion().orElse(1), gitCloneUrl, secret, applicationProperties);
+                openShiftService.create(deployment);
+
                 LOG.info("{} : Created OpenShift resources", getLabel(integration));
                 stepsPerformed.add(STEP_OPENSHIFT);
             }
@@ -168,24 +186,62 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return openShiftService.getGitHubWebHookUrl(deployment, secret);
     }
 
+    /**
+     * Count the integrations (in DB) of the owner of the specified integration.
+     * @param integration   The specified integration.
+     * @return              The number of integrations (excluding the current).
+     */
+    private int countIntegrations(Integration integration) {
+        String id = integration.getId().orElse(null);
+        String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
+
+        return (int) dataManager.fetchIdsByPropertyValue(Integration.class, "userId", username)
+            .stream()
+            .filter(i -> !i.equals(id)) //The "current" integration will already be in the database.
+            .count();
+    }
+
+    /**
+     * Count the deployments of the owner of the specified integration.
+     * @param integration   The specified integration.
+     * @return              The number of deployed integrations (excluding the current).
+     */
+    private int countDeployments(Integration integration) {
+        String name = integration.getName();
+        String token = integration.getToken().orElse(null);
+        String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
+
+        Map<String, String> labels = new HashMap<>();
+        labels.put(OpenShiftService.USERNAME_LABEL, username);
+
+        return (int) openShiftService.getDeploymentsByLabel(new RequestConfigBuilder().withOauthToken(token).build(), labels)
+            .stream()
+            .filter(d -> !Names.sanitize(name).equals(d.getMetadata().getName())) //this is also called on updates (so we need to exclude)
+            .count();
+    }
+
     @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
     private String ensureGitHubSetup(Integration integration, User githubUser, String webHookUrl, Map<String, byte[]> projectFiles) {
-        try {
-            // Do all github stuff at once
-            String gitHubRepoName = Names.sanitize(integration.getName());
-            String gitCloneUrl = gitHubService.createOrUpdateProjectFiles(gitHubRepoName, githubUser, generateCommitMessage(), projectFiles, webHookUrl);
+        // Do all github stuff at once
+        String gitHubRepoName = Names.sanitize(integration.getName());
+        GithubRequest request = new GithubRequest.Builder()
+            .repoName(gitHubRepoName)
+            .author(githubUser)
+            .commitMessage(generateCommitMessage())
+            .fileContents(projectFiles)
+            .webHookUrl(webHookUrl)
+            .build();
 
-            // Update integration within DB. Maybe re-read it before updating the URL ? Best: Add a dedicated 'updateGitRepo()'
-            // method to the backend
-            Integration updatedIntegration = new Integration.Builder()
-                .createFrom(integration)
-                .gitRepo(gitCloneUrl)
-                .build();
-            dataManager.update(updatedIntegration);
-            return gitCloneUrl;
-        } catch (IOException e) {
-            throw SyndesisServerException.launderThrowable(e);
-        }
+        String gitCloneUrl = gitHubService.createOrUpdateProjectFiles(request);
+
+        // Update integration within DB. Maybe re-read it before updating the URL ? Best: Add a dedicated 'updateGitRepo()'
+        // method to the backend
+        Integration updatedIntegration = new Integration.Builder()
+            .createFrom(integration)
+            .gitRepo(gitCloneUrl)
+            .build();
+        dataManager.update(updatedIntegration);
+        return gitCloneUrl;
     }
 
     private Map<String, byte[]> createProjectFiles(String username, Integration integration) {
@@ -223,17 +279,6 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
     private Map<String, Connector> fetchConnectorsMap() {
         return dataManager.fetchAll(Connector.class).getItems().stream().collect(Collectors.toMap(o -> o.getId().get(), o -> o));
-    }
-
-    private void createOpenShiftResources(String integrationName, int revisionId, String gitCloneUrl, String webHookSecret, Properties applicationProperties) {
-        openShiftService.create(
-            ImmutableOpenShiftDeployment.builder()
-                                        .name(integrationName)
-                                        .revisionId(revisionId)
-                                        .gitRepository(gitCloneUrl)
-                                        .webhookSecret(webHookSecret)
-                                        .applicationProperties(applicationProperties)
-                                        .build());
     }
 
     /**

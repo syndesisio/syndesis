@@ -15,6 +15,13 @@
  */
 package io.syndesis.openshift;
 
+import io.fabric8.kubernetes.client.RequestConfig;
+import io.fabric8.openshift.api.model.DeploymentConfig;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 public class OpenShiftServiceNoOp implements OpenShiftService {
 
     @Override
@@ -40,6 +47,11 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     @Override
     public boolean isScaled(OpenShiftDeployment d) {
         return false;
+    }
+
+    @Override
+    public List<DeploymentConfig> getDeploymentsByLabel(RequestConfig requestConfig, Map<String, String> labels) {
+        return Collections.emptyList();
     }
 
     @Override

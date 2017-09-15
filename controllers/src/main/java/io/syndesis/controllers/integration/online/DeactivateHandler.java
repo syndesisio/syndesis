@@ -44,12 +44,15 @@ public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChan
 
     @Override
     public StatusUpdate execute(Integration integration) {
+        String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
+
         String token = integration.getToken().get();
         Tokens.setAuthenticationToken(token);
 
         OpenShiftDeployment deployment = OpenShiftDeployment
             .builder()
             .name(integration.getName())
+            .username(username)
             .revisionId(integration.getDeployedRevisionId().orElse(1))
             .replicas(0)
             .token(token)
