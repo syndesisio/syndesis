@@ -44,6 +44,10 @@ export abstract class AbstractStore<
       return x.kind === this.service.kind;
     });
     this.currentSub = this._current.asObservable().subscribe((current) => {
+      if (!current) {
+        this.currentId = undefined;
+        return;
+      }
       this.currentId = current.id;
     });
   }
@@ -201,7 +205,10 @@ export abstract class AbstractStore<
     return created.share();
   }
 
-  update(entity: T): Observable<T> {
+  update(entity: T, reload: boolean = false): Observable<T> {
+    if (reload) {
+      this._loading.next(true);
+    }
     const updated = new Subject<T>();
     this.service.update(entity).subscribe(
       e => {
@@ -210,6 +217,7 @@ export abstract class AbstractStore<
           e = entity;
         }
         updated.next(this.plain(e));
+        this._loading.next(false);
       },
       error => {
         error = this.massageError(error);
@@ -225,6 +233,7 @@ export abstract class AbstractStore<
           category,
         );
         updated.error(error);
+        this._loading.next(false);
       },
     );
     return updated.share();

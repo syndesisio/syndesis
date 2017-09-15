@@ -218,6 +218,82 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
       });
   }
 
+  duplicateRevision(revision) {
+    const integration = JSON.parse(JSON.stringify(this.i));
+    delete integration.id;
+    // update these fields
+    integration.name = integration.name + ' (copy)';
+    integration.steps = revision.spec.steps;
+    // initialize these fields
+    integration.desiredStatus = 'Draft';
+    integration.currentStatus = undefined;
+    integration.createdDate = undefined;
+    integration.lastUpdated = undefined;
+    integration.revisions = [];
+    this.popNotification({
+      type: NotificationType.INFO,
+      header: 'Duplicating revision',
+      message: 'Duplicating revision ' + revision.version,
+    });
+    const sub = this.store.create(integration).subscribe(
+      created => {
+        this.router.navigate(['/integrations', created.id]);
+        sub.unsubscribe();
+      },
+      resp => {
+        this.popNotification({
+          type: NotificationType.DANGER,
+          header: 'Failed to duplicate revision',
+          message:
+            resp.length !== undefined
+              ? resp.data[0].message
+              : resp.data.message,
+        });
+        sub.unsubscribe();
+      },
+    );
+  }
+
+  deployRevision(revision) {
+    const integration = JSON.parse(JSON.stringify(this.i));
+    integration.steps = revision.spec.steps;
+    this.popNotification({
+      type: NotificationType.INFO,
+      header: 'Deploying revision',
+      message: 'Deploying revision ' + revision.version,
+    });
+    const sub = this.store.update(integration).subscribe(
+      updated => {
+        this.popNotification({
+          type: NotificationType.SUCCESS,
+          header: 'Deployment successful',
+          message: 'Deployed revision ' + revision.version,
+        });
+        sub.unsubscribe();
+      },
+      resp => {
+        this.popNotification({
+          type: NotificationType.DANGER,
+          header: 'Failed to deploy revision',
+          message:
+            resp.length !== undefined
+              ? resp.data[0].message
+              : resp.data.message,
+        });
+        sub.unsubscribe();
+      },
+    );
+  }
+
+  onRevisionAction(action: any, revision) {
+    switch (action.action) {
+      case 'duplicate':
+        return this.duplicateRevision(revision);
+      case 'deploy':
+        return this.deployRevision(revision);
+    }
+  }
+
   validateName(name: string) {
     return name && name.length > 0 ? null : 'Name is required';
   }
@@ -225,12 +301,16 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
   ngOnInit() {
     this.integrationSubscription = this.integration.subscribe(
       (i: Integration) => {
-        if (!i) {
+        if (!i || !i.id) {
           return;
         }
         this.i = i;
+        this.history = [];
         if (i.revisions) {
           this.history = i.revisions
+            .sort((a, b) => {
+              return b.version - a.version;
+            })
             .map(rev => {
               const status = {
                 icon: undefined,
@@ -254,14 +334,26 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
                   break;
               }
               const row = {
+                revision: rev,
                 version: rev.version,
                 // TODO this is totally fake data
                 startTime: Date.parse(rev['startTime'] || '2017/9/15'),
                 uses: rev['uses'] || Math.floor(Math.random() * 10),
                 runLength: rev['runLength'] || Math.floor(Math.random() * 300),
                 status: [status],
-                actions: [],
+                actions: [
+                  {
+                    label: 'Duplicate',
+                    action: 'duplicate',
+                  },
+                ],
               };
+              if (rev.spec && rev.spec.steps) {
+                row.actions.push({
+                  label: 'Deploy',
+                  action: 'deploy',
+                });
+              }
               if (row.version === i.deployedRevisionId) {
                 const state = {
                   icon: undefined,
@@ -285,12 +377,15 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
                 row.status.push(state);
               }
               return row;
-            })
-            .sort((a, b) => {
-              return b.version;
             });
         }
-        this.detector.detectChanges();
+        setTimeout(() => {
+          try {
+            this.detector.detectChanges();
+          } catch (err) {
+            // ignore
+          }
+        }, 50);
       },
     );
     this.routeSubscription = this.route.params
