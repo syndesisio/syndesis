@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.syndesis.inspector;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface ClassInspector {
+public interface Inspectors {
 
-    /**
-     * Collects recursively all possible 'path' of the class.
-     * Each item in the path corresponds to fields, fields of fields and so on.
-     *
-     * @param className The target class name.
-     * @return
-     */
-    List<String> getPaths(String className);
+    List<String> getPaths(String kind, String type, String specification, Optional<byte[]> optional);
+
 }

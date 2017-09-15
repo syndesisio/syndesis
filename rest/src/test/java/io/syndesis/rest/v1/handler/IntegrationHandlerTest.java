@@ -15,21 +15,16 @@
  */
 package io.syndesis.rest.v1.handler;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Validator;
 
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.inspector.ClassInspector;
-import io.syndesis.model.connection.Action;
-import io.syndesis.model.connection.ActionDefinition;
+import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.connection.DataShape;
 import io.syndesis.model.connection.DataShapeKinds;
 import io.syndesis.model.filter.FilterOptions;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
 
 import org.junit.Before;
@@ -47,19 +42,19 @@ public class IntegrationHandlerTest {
 
 
     private IntegrationHandler handler;
-    private ClassInspector inspector;
+    private Inspectors inspectors;
 
     @Before
     public void setUp() {
         DataManager manager = mock(DataManager.class);
         Validator validator = mock(Validator.class);
-        inspector = mock(ClassInspector.class);
-        handler = new IntegrationHandler(manager, validator, inspector);
+        inspectors = mock(Inspectors.class);
+        handler = new IntegrationHandler(manager, validator, inspectors);
     }
 
     @Test
     public void filterOptionsSimple() {
-        when(inspector.getPaths("twitter4j.Status")).thenReturn(Arrays.asList("paramA", "paramB"));
+        when(inspectors.getPaths(DataShapeKinds.JAVA, "twitter4j.Status", null, Optional.empty())).thenReturn(Arrays.asList("paramA", "paramB"));
         DataShape dataShape = dataShape(DataShapeKinds.JAVA, "twitter4j.Status");
 
         FilterOptions options = handler.getFilterOptions(dataShape);

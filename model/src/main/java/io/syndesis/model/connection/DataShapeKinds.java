@@ -20,5 +20,6 @@ package io.syndesis.model.connection;
 public class DataShapeKinds {
     public static final String ANY = "any";
     public static final String JAVA = "java";
+    public static final String JSON_SCHEMA = "json-schema";
     public static final String NONE = "none";
 }
