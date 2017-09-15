@@ -2,6 +2,7 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { plural } from 'pluralize';
 
@@ -24,6 +25,8 @@ export abstract class AbstractStore<
   private _list: BehaviorSubject<L>;
 
   private _current: BehaviorSubject<T>;
+  private currentSub: Subscription;
+  private currentId: string;
 
   private _loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
@@ -37,9 +40,11 @@ export abstract class AbstractStore<
   ) {
     this._list = new BehaviorSubject<L>(initialList);
     this._current = new BehaviorSubject<T>(initialCurrent);
-
     this.changeEvents = this.eventService.changeEvents.filter(x => {
       return x.kind === this.service.kind;
+    });
+    this.currentSub = this._current.asObservable().subscribe((current) => {
+      this.currentId = current.id;
     });
   }
 
@@ -58,7 +63,14 @@ export abstract class AbstractStore<
   }
 
   get resource() {
-    return this._current.asObservable();
+    return Observable.merge(
+      this._current,
+      this.changeEvents.filter(event => {
+        return event.id === this.currentId;
+      }).flatMap(event => {
+        return this.service.get(event.id);
+      }),
+    );
   }
 
   get loading() {
