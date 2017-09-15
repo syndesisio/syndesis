@@ -28,6 +28,7 @@ public class ControllersConfigurationProperties {
     private int maxDeploymentsPerUser = DEFAULT_MAX_DEPLOYMENTS_PER_USER;
 
     public ControllersConfigurationProperties() {
+        // behave like a Java bean
     }
 
     public ControllersConfigurationProperties(int maxIntegrationsPerUser, int maxDeploymentsPerUser) {

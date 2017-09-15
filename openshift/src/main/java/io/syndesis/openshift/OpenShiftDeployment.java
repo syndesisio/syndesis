@@ -16,6 +16,7 @@
 package io.syndesis.openshift;
 
 
+import io.syndesis.core.Names;
 import org.immutables.value.Value;
 
 import java.util.Optional;
@@ -29,14 +30,20 @@ public interface OpenShiftDeployment {
     String getName();
     String getUsername();
     Integer getRevisionId();
+    String getToken();
+
+    //These only need to be specified for create, but not for delete or deactivate.
     Optional<Integer> getReplicas();
-    Optional<String> getToken();
     Optional<String> getGitRepository();
     Optional<String> getWebhookSecret();
     Optional<Properties> getApplicationProperties();
 
+    default String getSanitizedName() {
+            return Names.sanitize(getName());
+    }
+
     default RequestConfig getRequestConfig() {
-        return new RequestConfigBuilder().withOauthToken(getToken().orElse(null)).build();
+        return new RequestConfigBuilder().withOauthToken(getToken()).build();
     }
 
     static ImmutableOpenShiftDeployment.Builder builder() {
