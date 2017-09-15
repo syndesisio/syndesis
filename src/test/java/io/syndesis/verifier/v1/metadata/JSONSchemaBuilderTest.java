@@ -39,18 +39,29 @@ public class JSONSchemaBuilderTest {
         System.out.println(desiredSchema);
         //Manually cleaned up version up of desiredSchema to more easily test equality
         desiredSchema = "{\n" + 
-                "  \"$schema\": \"http://json-schema.org/schema#\",\n" + 
                 "  \"type\" : \"object\",\n" + 
+                "  \"$schema\" : \"http://json-schema.org/schema#\",\n" + 
                 "  \"properties\" : {\n" + 
-                "    \"a\" : {\"type\" : \"integer\"},\n" + 
-                "    \"b\" : {\"type\" : \"integer\"}\n" + 
-                "   } \n" + 
+                "    \"a\" : {\n" + 
+                "      \"type\" : \"integer\"\n" + 
+                "    },\n" + 
+                "    \"b\" : {\n" + 
+                "      \"type\" : \"integer\"\n" + 
+                "    }\n" + 
+                "  }\n" + 
                 "}";
-        String schemaFromBuilder = new JSONBeanSchemaBuilder()
+        JsonSchema schemaFromBuilder = new JSONBeanSchemaBuilder()
                 .addField("a", JDBCType.INTEGER)
                 .addField("b", JDBCType.INTEGER).build();
-        System.out.println(schemaFromBuilder);
-        Assert.assertEquals(desiredSchema, schemaFromBuilder);
+        String actualSchema = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(schemaFromBuilder);
+        System.out.println(actualSchema);
+        Assert.assertEquals(desiredSchema, actualSchema);
+    }
+
+    @Test
+    public void testNoSchema() {
+        JsonSchema noSchema = new JSONBeanSchemaBuilder().build();
+        Assert.assertNull(noSchema);
     }
 
     class SimpleInputBean {

@@ -2,7 +2,6 @@ package io.syndesis.verifier.v1.metadata;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -15,13 +14,13 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 
 import io.syndesis.connector.DatabaseProduct;
 import io.syndesis.connector.SampleStoredProcedures;
@@ -88,7 +87,7 @@ public class SqlStoredMetadataAdapterTest {
         Optional<MetaData> metadata = ext.meta(parameters);
         
         SqlStoredMetadataAdapter adapter = new SqlStoredMetadataAdapter();
-        SyndesisMetadata<String> syndesisMetaData = adapter.adapt(parameters, metadata.get());
+        SyndesisMetadata<JsonSchema> syndesisMetaData = adapter.adapt(parameters, metadata.get());
         
         ObjectMapper mapper = new ObjectMapper();
         String expectedListOfProcedures = IOUtils.toString((this.getClass().getResource("/sql/stored_procedure_list.json")));
@@ -98,24 +97,11 @@ public class SqlStoredMetadataAdapterTest {
         assertEquals(expectedListOfProcedures, actualListOfProcedures);
         
         parameters.put("procedureName", "DEMO_ADD");
-        SyndesisMetadata<String> syndesisMetaData2 = adapter.adapt(parameters, metadata.get());
-        String expectedProperties = IOUtils.toString((this.getClass().getResource("/sql/demo_add_properties.json")));
-        String actualProperties = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2.properties);
-        assertEquals(expectedProperties, actualProperties);
-        System.out.println("----------- DEMO_ADD properties ------------");
-        System.out.println(actualProperties);
-        
-        String expectedDatashapeIn = IOUtils.toString((this.getClass().getResource("/sql/demo_add_datashape_in.json")));
-        String actualDatashapeIn = syndesisMetaData2.inputSchema;
-        assertEquals(expectedDatashapeIn, actualDatashapeIn);
-        System.out.println("----------- inputSchema ------------");
-        System.out.println(syndesisMetaData2.inputSchema);
-        
-        String expectedDatashapeOut = IOUtils.toString((this.getClass().getResource("/sql/demo_add_datashape_out.json")));
-        String actualDatashapeOut = syndesisMetaData2.outputSchema;
-        assertEquals(expectedDatashapeOut, actualDatashapeOut);
-        System.out.println("----------- outputSchema ------------");
-        System.out.println(actualDatashapeOut);
+        SyndesisMetadata<JsonSchema> syndesisMetaData2 = adapter.adapt(parameters, metadata.get());
+        String expectedMetadata = IOUtils.toString((this.getClass().getResource("/sql/demo_add_metadata.json")));
+        String actualMetadata = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
+        assertEquals(expectedMetadata, actualMetadata);
+        System.out.println("----------- DEMO_ADD Metadata ------------");
+        System.out.println(actualMetadata);
     }
-
 }

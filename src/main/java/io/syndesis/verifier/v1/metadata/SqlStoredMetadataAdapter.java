@@ -23,18 +23,20 @@ import java.util.Map;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+
 import io.syndesis.connector.ColumnMode;
 import io.syndesis.connector.StoredProcedureColumn;
 import io.syndesis.connector.StoredProcedureMetadata;
 
 @Component("sql-stored-connector-adapter")
-public final class SqlStoredMetadataAdapter implements MetadataAdapter<String> {
+public final class SqlStoredMetadataAdapter implements MetadataAdapter<JsonSchema> {
 
     final static String PROCEDURE_NAME     = "procedureName";
     final static String PROCEDURE_TEMPLATE = "template";
 
     @Override
-    public SyndesisMetadata<String> adapt(final Map<String, Object> properties, final MetaData metadata) {
+    public SyndesisMetadata<JsonSchema> adapt(final Map<String, Object> properties, final MetaData metadata) {
         
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
         
@@ -49,23 +51,19 @@ public final class SqlStoredMetadataAdapter implements MetadataAdapter<String> {
             enrichedProperties.put(PROCEDURE_NAME,ppList);
 
             // build the input and output schemas
-            String inputSchema = "none";
-            String outputSchema = "none";
+            JSONBeanSchemaBuilder builderIn = new JSONBeanSchemaBuilder();
+            JSONBeanSchemaBuilder builderOut = new JSONBeanSchemaBuilder();
             if (storedProcedure.getColumnList()!=null && !storedProcedure.getColumnList().isEmpty()) {
-                JSONBeanSchemaBuilder builderIn = new JSONBeanSchemaBuilder();
-                JSONBeanSchemaBuilder builderOut = new JSONBeanSchemaBuilder();
                 for (StoredProcedureColumn column : storedProcedure.getColumnList()) {
                       if (column.getMode().equals(ColumnMode.IN) || column.getMode().equals(ColumnMode.INOUT)) {
                           builderIn.addField(column.getName(), column.getJdbcType());
-                          inputSchema = builderIn.build();
                       }
                       if (column.getMode().equals(ColumnMode.OUT) || column.getMode().equals(ColumnMode.INOUT)) {
                           builderOut.addField(column.getName(), column.getJdbcType());
-                          outputSchema = builderOut.build();
                       }
                 }
             }
-            return new SyndesisMetadata<>(enrichedProperties, inputSchema, outputSchema);
+            return new SyndesisMetadata<>(enrichedProperties, builderIn.build(), builderOut.build());
         } else {
             // return list of all stored procedures in the database
             List<PropertyPair> ppList = new ArrayList<>();

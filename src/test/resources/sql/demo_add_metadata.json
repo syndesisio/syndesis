@@ -1,0 +1,30 @@
+{
+  "inputSchema" : {
+    "$schema" : "http://json-schema.org/schema#",
+    "properties" : {
+      "A" : {
+        "type" : "integer"
+      },
+      "B" : {
+        "type" : "integer"
+      }
+    }
+  },
+  "outputSchema" : {
+    "$schema" : "http://json-schema.org/schema#",
+    "properties" : {
+      "C" : {
+        "type" : "integer"
+      }
+    }
+  },
+  "properties" : {
+    "procedureName" : [ {
+      "displayValue" : "procedureName",
+      "value" : "DEMO_ADD"
+    }, {
+      "displayValue" : "template",
+      "value" : "DEMO_ADD( IN INTEGER ${body[A],  IN INTEGER ${body[B],  OUT INTEGER ${body[C])"
+    } ]
+  }
+}
