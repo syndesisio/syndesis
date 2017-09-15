@@ -231,7 +231,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
         this.i = i;
         if (i.revisions) {
           this.history = i.revisions
-            .map((rev) => {
+            .map(rev => {
               const status = {
                 icon: undefined,
                 class: '',
@@ -239,19 +239,19 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
               };
               // TODO this is kinda fake data
               switch (rev.currentState) {
-                  case 'Draft':
-                  case 'Pending':
-                  case 'Inactive':
-                  case 'Undeployed':
-                    break;
-                  case 'Active':
-                    status.icon = 'pf-icon pficon-ok',
-                    status.label = 'Success';
-                    break;
-                  case 'Error':
-                    status.icon = 'pf-icon pficon-error-circle-o';
-                    status.label = 'Failure';
-                    break;
+                case 'Draft':
+                case 'Pending':
+                case 'Inactive':
+                case 'Undeployed':
+                  break;
+                case 'Active':
+                  (status.icon = 'pf-icon pficon-ok'), (status.label =
+                    'Success');
+                  break;
+                case 'Error':
+                  status.icon = 'pf-icon pficon-error-circle-o';
+                  status.label = 'Failure';
+                  break;
               }
               const row = {
                 version: rev.version,
@@ -259,9 +259,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
                 startTime: Date.parse(rev['startTime'] || '2017/9/15'),
                 uses: rev['uses'] || Math.floor(Math.random() * 10),
                 runLength: rev['runLength'] || Math.floor(Math.random() * 300),
-                status: [
-                  status,
-                ],
+                status: [status],
                 actions: [],
               };
               if (row.version === i.deployedRevisionId) {
@@ -292,6 +290,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
               return b.version;
             });
         }
+        this.detector.detectChanges();
       },
     );
     this.routeSubscription = this.route.params
