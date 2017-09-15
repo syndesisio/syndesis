@@ -33,7 +33,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-
 import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.connector.catalog.ConnectorCatalogProperties;
 import io.syndesis.integration.support.Strings;
@@ -52,7 +51,6 @@ import io.syndesis.project.converter.visitor.EndpointStepVisitor;
 import io.syndesis.project.converter.visitor.ExpressionFilterStepVisitor;
 import io.syndesis.project.converter.visitor.RuleFilterStepVisitor;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -127,10 +125,49 @@ public class DefaultProjectGeneratorTest {
 
     @Test
     public void testConvert() throws Exception {
-        Step step1 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("io.syndesis:timer-connector:0.5.0").build()).build();
-        Step step2 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("httpUri", "http://localhost:8080/hello")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-get-connector").camelConnectorGAV("io.syndesis:http-get-connector:0.5.0").build()).build();
-        Step step3 = new SimpleStep.Builder().stepKind("log").configuredProperties(map("message", "Hello World! ${body}")).build();
-        Step step4 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-post-connector").camelConnectorGAV("io.syndesis:http-post-connector:0.5.0").build()).build();
+        Step step1 = new SimpleStep.Builder()
+            .stepKind("endpoint").
+                connection(new Connection.Builder()
+                    .configuredProperties(map())
+                    .build())
+            .configuredProperties(map("period",5000))
+            .action(new Action.Builder()
+                .connectorId("timer")
+                .camelConnectorPrefix("periodic-timer")
+                .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
+                .build())
+            .build();
+
+        Step step2 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .configuredProperties(map())
+                .build())
+            .configuredProperties(map("httpUri", "http://localhost:8080/hello"))
+            .action(new Action.Builder()
+                .connectorId("http")
+                .camelConnectorPrefix("http-get-connector")
+                .camelConnectorGAV("io.syndesis:http-get-connector:0.5.0")
+                .build())
+            .build();
+
+        Step step3 = new SimpleStep.Builder()
+            .stepKind("log")
+            .configuredProperties(map("message", "Hello World! ${body}"))
+            .build();
+
+        Step step4 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .configuredProperties(Collections.emptyMap())
+                .build())
+            .configuredProperties(map("httpUri", "http://localhost:8080/bye"))
+            .action(new Action.Builder()
+                .connectorId("http")
+                .camelConnectorPrefix("http-post-connector")
+                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.0")
+                .build())
+            .build();
 
         GenerateProjectRequest request = new GenerateProjectRequest.Builder()
             .gitHubUserLogin("noob")
@@ -164,15 +201,40 @@ public class DefaultProjectGeneratorTest {
 
     @Test
     public void testConverterWithPasswordMasking() throws Exception {
-        Step step1 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("io.syndesis:timer-connector:0.5.0").build()).build();
-        Step step2 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("httpUri", "http://localhost:8080/hello", "username", "admin", "password", "admin", "token", "mytoken")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-get-connector").camelConnectorGAV("io.syndesis:http-get-connector:0.5.0").build()).build();
+        Step step1 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id("1")
+                .configuredProperties(map())
+                .build())
+            .configuredProperties(map("period",5000))
+                .action(new Action.Builder()
+                    .connectorId("timer")
+                    .camelConnectorPrefix("periodic-timer")
+                    .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
+                    .build())
+            .build();
+
+        Step step2 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id("2")
+                .configuredProperties(map())
+                .build())
+            .configuredProperties(map("httpUri", "http://localhost:8080/hello", "username", "admin", "password", "admin", "token", "mytoken"))
+            .action(new Action.Builder()
+                .connectorId("http")
+                .camelConnectorPrefix("http-get-connector")
+                .camelConnectorGAV("io.syndesis:http-get-connector:0.5.0")
+                .build())
+            .build();
 
         GenerateProjectRequest request = new GenerateProjectRequest.Builder()
             .integration(new Integration.Builder()
                 .id("test-integration")
                 .name("Test Integration")
                 .description("This is a test integration!")
-                .steps( Arrays.asList(step1, step2))
+                .steps(Arrays.asList(step1, step2))
                 .build())
             .connectors(connectors)
             .gitHubUserLogin("noob")
@@ -186,7 +248,6 @@ public class DefaultProjectGeneratorTest {
 
         Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
 
-
         assertFileContents(generatorProperties, files.get("src/main/resources/application.properties"), "test-application.properties");
         assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-syndesis-with-secrets.yml");
     }
@@ -194,7 +255,6 @@ public class DefaultProjectGeneratorTest {
 
     @Test
     public void testConvertFromJson() throws Exception {
-
         JsonNode json = new ObjectMapper().readTree(this.getClass().getResourceAsStream("test-integration.json"));
 
         GenerateProjectRequest request = new GenerateProjectRequest.Builder()
@@ -218,8 +278,120 @@ public class DefaultProjectGeneratorTest {
         assertFileContents(generatorProperties, files.get("pom.xml"), "test-pull-push-pom.xml");
     }
 
+    @Test
+    public void testMapper() throws Exception {
+        Step step1 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .configuredProperties(map())
+                .build())
+            .configuredProperties(map("period", 5000))
+            .action(new Action.Builder()
+                .connectorId("timer")
+                .camelConnectorPrefix("periodic-timer")
+                .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
+                .build())
+            .build();
 
-    private static void assertFileContents(ProjectGeneratorProperties generatorProperties, byte[] actualContents, String expectedFileName) throws URISyntaxException, IOException {
+        Step step2 = new SimpleStep.Builder()
+            .stepKind("mapper")
+            .configuredProperties(map("atlasmapping", "{}"))
+            .build();
+
+        Step step3 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .configuredProperties(Collections.emptyMap())
+                .build())
+            .configuredProperties(map("httpUri", "http://localhost:8080/bye"))
+            .action(new Action.Builder()
+                .connectorId("http")
+                .camelConnectorPrefix("http-post-connector")
+                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.0")
+                .build())
+            .build();
+
+        GenerateProjectRequest request = new GenerateProjectRequest.Builder()
+            .gitHubUserLogin("noob")
+            .gitHubRepoName("test")
+            .integration(new Integration.Builder()
+                .id("test-integration")
+                .name("Test Integration")
+                .steps( Arrays.asList(step1, step2, step3))
+                .build())
+            .connectors(connectors)
+            .build();
+
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
+        generatorProperties.getTemplates().setOverridePath(this.basePath);
+        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
+
+        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-mapper-syndesis.yml");
+        assertThat(new String(files.get("src/main/resources/mapping-step-2.json"))).isEqualTo("{}");
+    }
+
+    @Test
+    public void testWithFilter() throws Exception {
+        Step step1 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .configuredProperties(map())
+                .build())
+            .configuredProperties(map("period", 5000))
+            .action(new Action.Builder()
+                .connectorId("timer")
+                .camelConnectorPrefix("periodic-timer")
+                .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
+                .build())
+            .build();
+
+        Step step2 = new RuleFilterStep.Builder()
+            .configuredProperties(map(
+                "predicate", FilterPredicate.AND.toString(),
+                "rules", "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]"
+            ))
+            .build();
+
+        Step step3 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .configuredProperties(Collections.emptyMap())
+                .build())
+            .configuredProperties(map("httpUri", "http://localhost:8080/bye"))
+            .action(new Action.Builder()
+                .connectorId("http")
+                .camelConnectorPrefix("http-post-connector")
+                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.0")
+                .build())
+            .build();
+
+        Step step4 = new ExpressionFilterStep.Builder()
+            .configuredProperties(map("filter", "${body.germanSecondLeagueChampion} equals 'FCN'"))
+            .build();
+
+        GenerateProjectRequest request = new GenerateProjectRequest.Builder()
+            .gitHubUserLogin("noob")
+            .gitHubRepoName("test")
+            .integration(new Integration.Builder()
+                .id("test-integration")
+                .name("Test Integration")
+                .steps( Arrays.asList(step1, step2, step3, step4))
+                .build())
+            .connectors(connectors)
+            .build();
+
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
+        generatorProperties.getTemplates().setOverridePath(this.basePath);
+        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
+
+        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-filter-syndesis.yml");
+    }
+
+    private void assertFileContents(ProjectGeneratorProperties generatorProperties, byte[] actualContents, String expectedFileName) throws URISyntaxException, IOException {
         String overridePath = generatorProperties.getTemplates().getOverridePath();
         URL resource = null;
 
@@ -239,76 +411,11 @@ public class DefaultProjectGeneratorTest {
     }
 
     // Helper method to help constuct maps with concise syntax
-    private static HashMap<String, String> map(Object... values) {
-        HashMap<String, String> rc = new HashMap<String, String>();
+    private Map<String, String> map(Object... values) {
+        HashMap<String, String> rc = new HashMap<>();
         for (int i = 0; i + 1 < values.length; i += 2) {
             rc.put(values[i].toString(), values[i + 1].toString());
         }
         return rc;
-    }
-
-    @Test
-    public void testMapper() throws Exception {
-        Step step1 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("io.syndesis:timer-connector:0.5.0").build()).build();
-        Map<String, String> props = new HashMap<>();
-        props.put("atlasmapping", "{}");
-        Step step2 = new SimpleStep.Builder().stepKind("mapper").configuredProperties(props).build();
-        Step step3 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-post-connector").camelConnectorGAV("io.syndesis:http-post-connector:0.5.0").build()).build();
-
-        GenerateProjectRequest request = new GenerateProjectRequest.Builder()
-            .gitHubUserLogin("noob")
-            .gitHubRepoName("test")
-            .integration(new Integration.Builder()
-                .id("test-integration")
-                .name("Test Integration")
-                .steps( Arrays.asList(step1, step2, step3))
-                .build())
-            .connectors(connectors)
-            .build();
-
-
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
-        generatorProperties.getTemplates().setOverridePath(this.basePath);
-        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
-
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
-
-        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-mapper-syndesis.yml");
-        assertThat(new String(files.get("src/main/resources/mapping-step-2.json"))).isEqualTo("{}");
-    }
-
-
-    @Test
-    public void testWithFilter() throws Exception {
-        Step step1 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).configuredProperties(map("period",5000)).action(new Action.Builder().connectorId("timer").camelConnectorPrefix("periodic-timer").camelConnectorGAV("io.syndesis:timer-connector:0.5.0").build()).build();
-        //Step step1 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(map()).build()).action(new Action.Builder().connectorId("twitter").camelConnectorPrefix("twitter-mention").camelConnectorGAV("io.syndesis:twitter-mention-connector:0.5.0").build()).build();
-        Map<String, String> props = new HashMap<>();
-        props.put("predicate", FilterPredicate.AND.toString());
-        props.put("rules", "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]");
-        Step step2 = new RuleFilterStep.Builder().configuredProperties(props).build();
-
-        Step step3 = new SimpleStep.Builder().stepKind("endpoint").connection(new Connection.Builder().configuredProperties(Collections.emptyMap()).build()).configuredProperties(map("httpUri", "http://localhost:8080/bye")).action(new Action.Builder().connectorId("http").camelConnectorPrefix("http-post-connector").camelConnectorGAV("io.syndesis:http-post-connector:0.5.0").build()).build();
-
-        Step step4 = new ExpressionFilterStep.Builder().configuredProperties(map("filter", "${body.germanSecondLeagueChampion} equals 'FCN'")).build();
-
-        GenerateProjectRequest request = new GenerateProjectRequest.Builder()
-            .gitHubUserLogin("noob")
-            .gitHubRepoName("test")
-            .integration(new Integration.Builder()
-                .id("test-integration")
-                .name("Test Integration")
-                .steps( Arrays.asList(step1, step2, step3, step4))
-                .build())
-            .connectors(connectors)
-            .build();
-
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
-        generatorProperties.getTemplates().setOverridePath(this.basePath);
-        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
-
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
-
-
-        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-filter-syndesis.yml");
     }
 }

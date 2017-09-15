@@ -15,28 +15,6 @@
  */
 package io.syndesis.controllers.integration.online;
 
-import io.fabric8.kubernetes.client.RequestConfigBuilder;
-import io.syndesis.controllers.ControllersConfigurationProperties;
-import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
-import io.syndesis.core.Names;
-import io.syndesis.core.SyndesisServerException;
-import io.syndesis.core.Tokens;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.github.GitHubService;
-import io.syndesis.github.GithubRequest;
-import io.syndesis.integration.model.steps.Endpoint;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationRevision;
-import io.syndesis.model.integration.Step;
-import io.syndesis.openshift.OpenShiftDeployment;
-import io.syndesis.openshift.OpenShiftService;
-import io.syndesis.project.converter.GenerateProjectRequest;
-import io.syndesis.project.converter.ProjectGenerator;
-import org.eclipse.egit.github.core.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,8 +26,32 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import io.fabric8.kubernetes.client.RequestConfigBuilder;
+import io.syndesis.controllers.ControllersConfigurationProperties;
+import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
+import io.syndesis.core.Names;
+import io.syndesis.core.SyndesisServerException;
+import io.syndesis.core.Tokens;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.github.GitHubService;
+import io.syndesis.github.GithubRequest;
+import io.syndesis.integration.model.steps.Endpoint;
+import io.syndesis.model.WithConfigurationProperties;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationRevision;
+import io.syndesis.model.integration.Step;
+import io.syndesis.openshift.OpenShiftDeployment;
+import io.syndesis.openshift.OpenShiftService;
+import io.syndesis.project.converter.GenerateProjectRequest;
+import io.syndesis.project.converter.ProjectGenerator;
+import org.eclipse.egit.github.core.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ActivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
@@ -306,7 +308,6 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                             final String connectorPrefix = action.getCamelConnectorPrefix();
                             final Connector connector = connectorMap.get(connectorId);
                             final Map<String, String> properties = aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties().orElseGet(Collections::emptyMap));
-                            final boolean hasComponentOptions = properties.entrySet().stream().anyMatch(connector::isComponentProperty);
 
                             final Function<Map.Entry<String, String>, String> componentKeyConverter;
                             final Function<Map.Entry<String, String>, String> secretKeyConverter;
@@ -314,7 +315,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                             // Enable configuration aliases only if the connector
                             // has component options otherwise it does not get
                             // configured by camel.
-                            if (hasComponentOptions) {
+                            if (hasComponentProperties(properties, connector, action)) {
                                 // The connector id is marked as optional thus if the
                                 // id is not provided it is also not possible to create
                                 // a connector configuration alias.
@@ -366,13 +367,13 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                             //       to the component configuration to avoid dups
                             //       and possible error at runtime.
                             properties.entrySet().stream()
-                                .filter(connector::isSecretOrComponentProperty)
+                                .filter(or(connector::isSecretOrComponentProperty, action::isSecretOrComponentProperty))
                                 .distinct()
                                 .forEach(
                                     e -> {
-                                        if (connector.isComponentProperty(e)) {
+                                        if (connector.isComponentProperty(e) || action.isComponentProperty(e)) {
                                             secrets.put(componentKeyConverter.apply(e), e.getValue());
-                                        } else if (connector.isSecret(e)) {
+                                        } else if (connector.isSecret(e) || action.isSecret(e)) {
                                             secrets.put(secretKeyConverter.apply(e), e.getValue());
                                         }
                                     }
@@ -393,5 +394,25 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return Stream.of(maps)
             .flatMap(map -> map.entrySet().stream())
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue));
+    }
+
+    private static <T> Predicate<T> or(Predicate<T>... predicates) {
+        Predicate<T> predicate = predicates[0];
+
+        for (int i = 1; i < predicates.length; i++) {
+            predicate = predicate.or(predicates[i]);
+        }
+
+        return predicate;
+    }
+
+    private static boolean hasComponentProperties(Map<String, String> properties, WithConfigurationProperties... withConfigurationProperties) {
+        for (WithConfigurationProperties wcp : withConfigurationProperties) {
+            if (properties.entrySet().stream().anyMatch(wcp::isComponentProperty)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

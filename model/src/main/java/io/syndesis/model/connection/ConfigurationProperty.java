@@ -17,6 +17,7 @@ package io.syndesis.model.connection;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.model.WithTags;
@@ -77,4 +78,24 @@ public interface ConfigurationProperty extends WithTags {
     Boolean getSecret();
 
     String getType();
+
+    @JsonIgnore
+    default boolean isComponentProperty() {
+        Boolean value = getComponentProperty();
+        if (value != null) {
+            return Boolean.TRUE.equals(value);
+        }
+
+        return false;
+    }
+
+    @JsonIgnore
+    default boolean isSecret() {
+        Boolean value = getSecret();
+        if (value != null) {
+            return Boolean.TRUE.equals(value);
+        }
+
+        return false;
+    }
 }
