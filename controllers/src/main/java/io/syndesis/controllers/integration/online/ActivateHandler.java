@@ -197,9 +197,12 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         String id = integration.getId().orElse(null);
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
-        return (int) dataManager.fetchIdsByPropertyValue(Integration.class, "userId", username)
+        return (int) dataManager.fetchAll(Integration.class).getItems()
             .stream()
-            .filter(i -> !i.equals(id)) //The "current" integration will already be in the database.
+            .filter(i -> i.getId().isPresent() && !i.getId().get().equals(id)) //The "current" integration will already be in the database.
+            .filter(i -> username.equals(i.getUserId().get()))
+            .filter(i -> i.getStatus().isPresent() && (Integration.Status.Activated.equals(i.getCurrentStatus().get())) ||
+                                                       Integration.Status.Activated.equals(i.getCurrentStatus().get()))
             .count();
     }
 
@@ -219,6 +222,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return (int) openShiftService.getDeploymentsByLabel(new RequestConfigBuilder().withOauthToken(token).build(), labels)
             .stream()
             .filter(d -> !Names.sanitize(name).equals(d.getMetadata().getName())) //this is also called on updates (so we need to exclude)
+            .filter(d -> d.getSpec().getReplicas() > 0)
             .count();
     }
 
