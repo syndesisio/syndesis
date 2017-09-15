@@ -6,7 +6,7 @@
                                 [showClose]="showClose">
   </pfng-toast-notification-list>
 
-  <header *ngIf="loggedIn">
+  <header *ngIf="loggedIn && !firstTime">
 
     <!-- Navbar: Logged Out -->
     <nav class="navbar navbar-fixed-top navbar-light loggedOut"
