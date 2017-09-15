@@ -25,18 +25,17 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import io.syndesis.model.Kind;
+import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
-
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Action.Builder.class)
 @JsonIgnoreProperties(value = {"properties", "inputDataShape", "outputDataShape"}, allowGetters = true)
-public interface Action extends WithId<Action>, WithName, WithTags, Serializable {
+public interface Action extends WithId<Action>, WithName, WithTags, WithConfigurationProperties, Serializable {
 
     @Override
     default Kind getKind() {
@@ -50,6 +49,8 @@ public interface Action extends WithId<Action>, WithName, WithTags, Serializable
     String getCamelConnectorGAV();
 
     String getCamelConnectorPrefix();
+
+    ActionDefinition getDefinition();
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     default Optional<DataShape> getInputDataShape() {
@@ -66,18 +67,17 @@ public interface Action extends WithId<Action>, WithName, WithTags, Serializable
         return new Builder().createFrom(this).id(id).build();
     }
 
-    class Builder extends ImmutableAction.Builder {
-    }
-
-    ActionDefinition getDefinition();
-
-    @Deprecated
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     default Map<String, ConfigurationProperty> getProperties() {
-        return Optional.ofNullable(getDefinition())
-            .map(definition -> definition.getPropertyDefinitionSteps().stream()
+        ActionDefinition definition = getDefinition();
+
+        return definition != null
+            ? definition.getPropertyDefinitionSteps().stream()
                 .flatMap(step -> step.getProperties().entrySet().stream())
-                .collect(Collectors.toMap(Entry::getKey, Entry::getValue)))
-            .orElse(Collections.emptyMap());
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue))
+            : Collections.emptyMap();
+    }
+
+    class Builder extends ImmutableAction.Builder {
     }
 }

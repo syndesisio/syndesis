@@ -20,11 +20,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.integration.model.steps.Endpoint;
+import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
@@ -58,33 +60,29 @@ public class EndpointStepVisitor implements StepVisitor {
             return null;
         }
 
-        Action action = step.getAction().orElseThrow(() -> new IllegalStateException("Action is not present"));
-        Connection connection = step.getConnection().orElseThrow(() -> new IllegalStateException("Action is not present"));
-
-        GenerateProjectRequest request = generatorContext.getRequest();
         try {
-            String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
-            if (!request.getConnectors().containsKey(connectorId)) {
-                throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
-            }
-
-            return createEndpointStep(
-                connection,
-                request.getConnectors().get(connectorId),
-                action.getCamelConnectorPrefix(),
-                connection.getConfiguredProperties(),
-                step.getConfiguredProperties().orElseGet(Collections::emptyMap));
+            return createEndpoint(
+                generatorContext.getRequest(),
+                step,
+                step.getConnection().orElseThrow(() -> new IllegalStateException("Action is not present")),
+                step.getAction().orElseThrow(() -> new IllegalStateException("Action is not present"))
+            );
         } catch (IOException | URISyntaxException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
 
-    private io.syndesis.integration.model.steps.Step createEndpointStep(
-            Connection connection, Connector connector, String camelConnectorPrefix, Map<String, String> connectionConfiguredProperties, Map<String, String> stepConfiguredProperties) throws IOException, URISyntaxException {
+    private Endpoint createEndpoint(GenerateProjectRequest request, Step step, Connection connection, Action action) throws URISyntaxException, IOException {
+        String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
+        if (!request.getConnectors().containsKey(connectorId)) {
+            throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
+        }
 
-        final Map<String, String> aggregates = aggregate(connectionConfiguredProperties, stepConfiguredProperties);
-        final Map<String, String> properties = connector.filterProperties(aggregates, connector::isEndpointProperty);
-        final boolean hasComponentOptions = aggregates.entrySet().stream().anyMatch(connector::isComponentProperty);
+        final String camelConnectorPrefix = action.getCamelConnectorPrefix();
+        final Connector connector = request.getConnectors().get(connectorId);
+        final Map<String, String> configuredProperties = aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties().orElseGet(Collections::emptyMap));
+        final Map<String, String> properties = aggregate(connector.filterProperties(configuredProperties, connector::isEndpointProperty), action.filterProperties(configuredProperties, action::isEndpointProperty));
+        final boolean hasComponentOptions = hasComponentProperties(configuredProperties, connector, action);
 
         // connector prefix is suffixed with the connection id if present and in
         // such case the prefix is something like:
@@ -110,24 +108,21 @@ public class EndpointStepVisitor implements StepVisitor {
         //
         final String connectorScheme = hasComponentOptions ? connection.getId().map(id -> camelConnectorPrefix + "-" + id).orElse(camelConnectorPrefix) : camelConnectorPrefix;
 
-        Map<String, String> secrets = connector.filterProperties(
-            properties,
-            connector.isSecret(),
-            e -> e.getKey(),
-            e -> String.format("{{%s.%s}}", connectorPrefix, e.getKey()));
+        // if the option is marked as secret use property placeholder as the
+        // value is added to the integration secret.
+        if (generatorContext.getGeneratorProperties().isSecretMaskingEnabled()) {
+            properties.entrySet()
+                .stream()
+                .filter(or(connector::isSecret, action::isSecret))
+                .forEach(e -> e.setValue(String.format("{{%s.%s}}", connectorPrefix, e.getKey())));
+        }
 
         // TODO Remove this hack... when we can read endpointValues from connector schema then we should use those as initial properties.
         if ("periodic-timer".equals(camelConnectorPrefix)) {
             properties.put("timerName", "every");
         }
 
-        return createEndpoint(
-            camelConnectorPrefix,
-            connectorScheme,
-            generatorContext.getGeneratorProperties().isSecretMaskingEnabled()
-                ? aggregate(properties, secrets)
-                : properties
-        );
+        return createEndpoint(camelConnectorPrefix, connectorScheme, properties);
     }
 
     private Endpoint createEndpoint(String camelConnectorPrefix, String connectorScheme, Map<String, String> endpointOptions) throws URISyntaxException {
@@ -148,5 +143,25 @@ public class EndpointStepVisitor implements StepVisitor {
 
     private static Map<String, String> aggregate(Map<String, String> ... maps) throws IOException {
         return Stream.of(maps).flatMap(map -> map.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue));
+    }
+
+    private static <T> Predicate<T> or(Predicate<T>... predicates) {
+        Predicate<T> predicate = predicates[0];
+
+        for (int i = 1; i < predicates.length; i++) {
+            predicate = predicate.or(predicates[i]);
+        }
+
+        return predicate;
+    }
+
+    private static boolean hasComponentProperties(Map<String, String> properties, WithConfigurationProperties... withConfigurationProperties) {
+        for (WithConfigurationProperties wcp : withConfigurationProperties) {
+            if (properties.entrySet().stream().anyMatch(wcp::isComponentProperty)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
