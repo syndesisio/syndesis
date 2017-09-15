@@ -55,7 +55,7 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     }
 
     @Override
-    public String getGitHubWebHookUrl(OpenShiftDeployment d, String secret) {
+    public String getGitHubWebHookUrl(String projectName, String secret) {
         return "";
     }
 }

@@ -46,6 +46,7 @@ import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Integration.Status;
 import io.syndesis.model.integration.IntegrationRevision;
+import io.syndesis.model.integration.IntegrationRevisionState;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.rest.util.PaginationFilter;
 import io.syndesis.rest.util.ReflectiveSorter;
@@ -119,8 +120,15 @@ public class IntegrationHandler extends BaseHandler
     @Override
     public Integration create(@ConvertGroup(from = Default.class, to = AllValidations.class) final Integration integration) {
         Date rightNow = new Date();
+
+        IntegrationRevision revision = IntegrationRevision
+            .createNewRevision(integration)
+            .withCurrentState(IntegrationRevisionState.Draft);
+
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(integration)
+            .deployedRevisionId(revision.getVersion())
+            .addRevision(revision)
             .token(Tokens.getAuthenticationToken())
             .userId(Tokens.getUsername())
             .statusMessage(Optional.empty())
@@ -128,6 +136,7 @@ public class IntegrationHandler extends BaseHandler
             .createdDate(rightNow)
             .currentStatus(determineCurrentStatus(integration))
             .build();
+
         return Creator.super.create(updatedIntegration);
     }
 
@@ -135,15 +144,19 @@ public class IntegrationHandler extends BaseHandler
     public void update(String id, @ConvertGroup(from = Default.class, to = AllValidations.class) Integration integration) {
         Integration existing = Getter.super.get(id);
 
+        Status currentStatus = determineCurrentStatus(integration);
+        IntegrationRevision currentRevision = IntegrationRevision.deployedRevision(existing)
+            .withCurrentState(IntegrationRevisionState.from(currentStatus))
+            .withTargetState(IntegrationRevisionState.from(integration.getDesiredStatus().orElse(Status.Pending)));
+
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(integration)
             .deployedRevisionId(existing.getDeployedRevisionId())
             .userId(Tokens.getUsername())
             .token(Tokens.getAuthenticationToken())
             .lastUpdated(new Date())
-            .currentStatus(determineCurrentStatus(integration))
-            .addRevision(IntegrationRevision.fromIntegration(existing))
-            .addRevision(existing.getRevisions().toArray(new IntegrationRevision[existing.getRevisions().size()]))
+            .currentStatus(currentStatus)
+            .addRevision(currentRevision)
             .build();
 
         Updater.super.update(id, updatedIntegration);
@@ -154,14 +167,18 @@ public class IntegrationHandler extends BaseHandler
     public void delete(String id) {
          Integration existing = Getter.super.get(id);
 
+        Status currentStatus = determineCurrentStatus(existing);
+        IntegrationRevision currentRevision = IntegrationRevision.deployedRevision(existing)
+            .withCurrentState(IntegrationRevisionState.from(currentStatus))
+            .withTargetState(IntegrationRevisionState.from(Status.Deleted));
+
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(existing)
             .deployedRevisionId(existing.getDeployedRevisionId())
             .token(Tokens.getAuthenticationToken())
             .lastUpdated(new Date())
-            .addRevision(IntegrationRevision.fromIntegration(existing))
-            .addRevision(existing.getRevisions().toArray(new IntegrationRevision[existing.getRevisions().size()]))
             .desiredStatus(Status.Deleted)
+            .addRevision(currentRevision)
             .build();
 
         Updater.super.update(id, updatedIntegration);

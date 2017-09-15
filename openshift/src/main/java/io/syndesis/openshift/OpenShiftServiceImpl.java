@@ -15,13 +15,6 @@
  */
 package io.syndesis.openshift;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.openshift.api.model.DeploymentConfig;
@@ -30,6 +23,13 @@ import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.core.Names;
 import io.syndesis.core.SyndesisServerException;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 public class OpenShiftServiceImpl implements OpenShiftService {
 
@@ -107,9 +107,9 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public String getGitHubWebHookUrl(OpenShiftDeployment d, String secret) {
+    public String getGitHubWebHookUrl(String projectName, String secret) {
         return String.format("%s/namespaces/%s/buildconfigs/%s/webhooks/%s/github",
-                             config.getApiBaseUrl(), config.getNamespace(), Names.sanitize(d.getName()), secret);
+                             config.getApiBaseUrl(), config.getNamespace(), projectName, secret);
     }
 
     private int nullSafe(Integer nr) {

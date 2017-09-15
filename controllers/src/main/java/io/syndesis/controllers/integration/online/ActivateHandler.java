@@ -101,29 +101,17 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         int userDeployments = countDeployments(integration);
         if (userDeployments >= properties.getMaxDeploymentsPerUser()) {
             //What we actually want to limit. So even though this should never happen, we still need to make sure.
-            return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userDeployments + " deploymnets, while the maximum allowed number is " + properties.getMaxDeploymentsPerUser() + ".");
+            return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userDeployments + " deployments, while the maximum allowed number is " + properties.getMaxDeploymentsPerUser() + ".");
         }
 
 
+        String projectName = Names.sanitize(integration.getName());
         String token = storeToken(integration);
         Properties applicationProperties = extractApplicationPropertiesFrom(integration);
-        IntegrationRevision revision = IntegrationRevision.fromIntegration(integration);
+        IntegrationRevision revision = IntegrationRevision.createNewRevision(integration);
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
         String secret = createSecret();
         String gitCloneUrl = getCloneURL(integration);
-
-        OpenShiftDeployment deployment = OpenShiftDeployment
-            .builder()
-            .name(integration.getName())
-            .username(username)
-            .revisionId(revision.getVersion().get())
-            .replicas(1)
-            .token(token)
-            .gitRepository(gitCloneUrl)
-            .webhookSecret(secret)
-            .applicationProperties(applicationProperties)
-            .build();
-
         // TODO: Verify Token and refresh if expired ....
 
         List<String> stepsPerformed = integration.getStepsDone().orElseGet(ArrayList::new);
@@ -135,10 +123,22 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                 Map<String, byte[]> projectFiles = createProjectFiles(githubUsername, integration);
                 LOG.info("{} : Created project files", getLabel(integration));
 
-                ensureGitHubSetup(integration, gitHubUser, getWebHookUrl(deployment, secret), projectFiles);
+                gitCloneUrl = ensureGitHubSetup(integration, gitHubUser, openShiftService.getGitHubWebHookUrl(projectName, secret), projectFiles);
                 LOG.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
                 stepsPerformed.add(STEP_GITHUB);
             }
+
+             OpenShiftDeployment deployment = OpenShiftDeployment
+                    .builder()
+                    .name(integration.getName())
+                    .username(username)
+                    .revisionId(revision.getVersion().get())
+                    .replicas(1)
+                    .token(token)
+                    .gitRepository(Optional.ofNullable(gitCloneUrl))
+                    .webhookSecret(secret)
+                    .applicationProperties(applicationProperties)
+                    .build();
 
             if (!stepsPerformed.contains(STEP_OPENSHIFT)) {
                 openShiftService.create(deployment);
@@ -148,21 +148,12 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
             }
 
             if (openShiftService.isScaled(deployment)) {
-                //Once an IntegrationRevision is published and transfered to the state Active it becomes immutable and can not be changed afterwards (except for state related properties).
-                dataManager.update(new Integration.Builder().createFrom(integration)
-                    .deployedRevisionId(revision.getVersion())
-                    .draftRevision(Optional.empty())
-                    .addRevision(revision)
-                    .deployedRevisionId(revision.getVersion())
-                    .build());
-
                 return new StatusUpdate(Integration.Status.Activated, stepsPerformed);
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             LOG.error("{} : Failure", getLabel(integration), e);
         }
         return new StatusUpdate(Integration.Status.Pending, stepsPerformed);
-
     }
 
     protected String getCloneURL(Integration integration)  {
@@ -184,9 +175,6 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return token;
     }
 
-    private String getWebHookUrl(OpenShiftDeployment deployment, String secret) {
-        return openShiftService.getGitHubWebHookUrl(deployment, secret);
-    }
 
     /**
      * Count the integrations (in DB) of the owner of the specified integration.
@@ -200,9 +188,9 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return (int) dataManager.fetchAll(Integration.class).getItems()
             .stream()
             .filter(i -> i.getId().isPresent() && !i.getId().get().equals(id)) //The "current" integration will already be in the database.
-            .filter(i -> username.equals(i.getUserId().get()))
-            .filter(i -> i.getStatus().isPresent() && (Integration.Status.Activated.equals(i.getCurrentStatus().get())) ||
-                                                       Integration.Status.Activated.equals(i.getCurrentStatus().get()))
+            .filter(i -> username.equals(i.getUserId().orElse(null)))
+            .filter(i -> i.getStatus().isPresent() && (Integration.Status.Activated.equals(i.getCurrentStatus().orElse(null))) ||
+                                                       Integration.Status.Activated.equals(i.getCurrentStatus().orElse(null)))
             .count();
     }
 
