@@ -41,7 +41,18 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   logoDarkBg = 'assets/images/syndesis-logo-svg-white.svg';
 
+  /**
+   * @type {boolean}
+   * Flag used to determine whether or not the user is logged in.
+   */
   loggedIn = false;
+
+
+  /**
+   * @type {boolean}
+   * Flag used to determine whether or not the user is a first time user.
+   */
+  firstTime = false;
 
   /**
    * @type {string}

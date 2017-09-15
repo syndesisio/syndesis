@@ -32,6 +32,12 @@ const routes: Routes = [
       '../settings/settings.module#SettingsModule',
     canActivate: [AuthGuard],
   },
+  {
+    path: 'setup',
+    loadChildren:
+      '../setup/setup.module#SetupModule',
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({
