@@ -232,20 +232,60 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
         if (i.revisions) {
           this.history = i.revisions
             .map((rev) => {
+              const status = {
+                icon: undefined,
+                class: '',
+                label: '',
+              };
+              // TODO this is kinda fake data
+              switch (rev.currentState) {
+                  case 'Draft':
+                  case 'Pending':
+                  case 'Inactive':
+                  case 'Undeployed':
+                    break;
+                  case 'Active':
+                    status.icon = 'pf-icon pficon-ok',
+                    status.label = 'Success';
+                    break;
+                  case 'Error':
+                    status.icon = 'pf-icon pficon-error-circle-o';
+                    status.label = 'Failure';
+                    break;
+              }
               const row = {
                 version: rev.version,
-                // TODO fake data
-                uses: Math.floor(Math.random() * 10),
-                runLength: Math.floor(Math.random() * 300),
+                // TODO this is totally fake data
+                startTime: Date.parse(rev['startTime'] || '2017/9/15'),
+                uses: rev['uses'] || Math.floor(Math.random() * 10),
+                runLength: rev['runLength'] || Math.floor(Math.random() * 300),
                 status: [
-                  {
-                    icon: 'pf-icon pficon-ok',
-                    class: '',
-                    label: 'Success',
-                  },
+                  status,
                 ],
                 actions: [],
               };
+              if (row.version === i.deployedRevisionId) {
+                const state = {
+                  icon: undefined,
+                  class: '',
+                  label: rev.currentState,
+                };
+                switch (rev.currentState) {
+                  case 'Draft':
+                  case 'Pending':
+                  case 'Inactive':
+                  case 'Undeployed':
+                    state.class = 'label label-info pull-right';
+                    break;
+                  case 'Active':
+                    state.class = 'label label-success pull-right';
+                    break;
+                  case 'Error':
+                    state.class = 'label label-warning pull-right';
+                    break;
+                }
+                row.status.push(state);
+              }
               return row;
             })
             .sort((a, b) => {
@@ -258,12 +298,6 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
       .pluck<Params, string>('integrationId')
       .map((id: string) => this.store.load(id))
       .subscribe();
-    /*
-    setTimeout(() => {
-      this.history = JSON.parse(JSON.stringify(this.tableTestData));
-      this.detector.detectChanges();
-    }, 1000);
-    */
   }
 
   ngOnDestroy() {
