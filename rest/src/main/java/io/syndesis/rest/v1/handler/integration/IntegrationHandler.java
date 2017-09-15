@@ -17,8 +17,12 @@ package io.syndesis.rest.v1.handler.integration;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
@@ -27,12 +31,14 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 import io.swagger.annotations.Api;
 import io.syndesis.core.Tokens;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.ClassInspector;
 import io.syndesis.model.Kind;
+import io.syndesis.model.ListResult;
 import io.syndesis.model.connection.DataShape;
 import io.syndesis.model.connection.DataShapeKinds;
 import io.syndesis.model.filter.FilterOptions;
@@ -41,11 +47,15 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Integration.Status;
 import io.syndesis.model.integration.IntegrationRevision;
 import io.syndesis.model.validation.AllValidations;
+import io.syndesis.rest.util.PaginationFilter;
+import io.syndesis.rest.util.ReflectiveSorter;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Creator;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
+import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
+import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.operations.Validating;
 import org.springframework.stereotype.Component;
@@ -75,6 +85,14 @@ public class IntegrationHandler extends BaseHandler
     public Integration get(String id) {
         Integration integration = Getter.super.get(id);
 
+        if (Status.Deleted.equals(integration.getCurrentStatus().get()) ||
+            Status.Deleted.equals(integration.getDesiredStatus().get())) {
+            //Not sure if we need to do that for both current and desired status,
+            //but If we don't do include the desired state, IntegrationITCase is not going to pass anytime soon. Why?
+            //Cause that test, is using NoopHandlerProvider, so that means no controllers.
+            throw new EntityNotFoundException();
+        }
+
         //fudging the timesUsed for now
         Optional<Status> currentStatus = integration.getCurrentStatus();
         if (currentStatus.isPresent() && currentStatus.get() == Integration.Status.Activated) {
@@ -85,6 +103,17 @@ public class IntegrationHandler extends BaseHandler
         }
 
         return integration;
+    }
+
+    @Override
+    public ListResult<Integration> list(UriInfo uriInfo) {
+        Class<Integration> clazz = resourceKind().getModelClass();
+        return getDataManager().fetchAll(
+            Integration.class,
+            new DeletedFilter(),
+            new ReflectiveSorter<>(clazz, new SortOptionsFromQueryParams(uriInfo)),
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
+        );
     }
 
     @Override
@@ -115,6 +144,24 @@ public class IntegrationHandler extends BaseHandler
             .currentStatus(determineCurrentStatus(integration))
             .addRevision(IntegrationRevision.fromIntegration(existing))
             .addRevision(existing.getRevisions().toArray(new IntegrationRevision[existing.getRevisions().size()]))
+            .build();
+
+        Updater.super.update(id, updatedIntegration);
+    }
+
+
+    @Override
+    public void delete(String id) {
+         Integration existing = Getter.super.get(id);
+
+        Integration updatedIntegration = new Integration.Builder()
+            .createFrom(existing)
+            .deployedRevisionId(existing.getDeployedRevisionId())
+            .token(Tokens.getAuthenticationToken())
+            .lastUpdated(new Date())
+            .addRevision(IntegrationRevision.fromIntegration(existing))
+            .addRevision(existing.getRevisions().toArray(new IntegrationRevision[existing.getRevisions().size()]))
+            .desiredStatus(Status.Deleted)
             .build();
 
         Updater.super.update(id, updatedIntegration);
@@ -157,5 +204,20 @@ public class IntegrationHandler extends BaseHandler
     @Override
     public Validator getValidator() {
         return validator;
+    }
+
+
+    private static class DeletedFilter implements Function<ListResult<Integration>, ListResult<Integration>> {
+        @Override
+        public ListResult<Integration> apply(ListResult<Integration> list) {
+            List<Integration> filtered = list.getItems().stream()
+                    .filter(i -> !Status.Deleted.equals(i.getCurrentStatus().get()))
+                    .filter(i -> !Status.Deleted.equals(i.getDesiredStatus().get()))
+                    .collect(Collectors.toList());
+
+            return new ListResult.Builder<Integration>()
+                .totalCount(filtered.size())
+                .addAllItems(filtered).build();
+        }
     }
 }
