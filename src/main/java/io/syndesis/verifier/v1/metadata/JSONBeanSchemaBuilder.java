@@ -20,6 +20,9 @@ import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+
 /**
  * JSON Schema builder for the simple schema's the SQL Stored Connector uses.
  * 
@@ -47,24 +50,35 @@ public class JSONBeanSchemaBuilder {
             "  \"$schema\": \"http://json-schema.org/schema#\",\n" +
             "  \"type\" : \"object\",\n" + 
             "  \"properties\" : {\n%s\n   } \n}";
-    List<String> fields = new ArrayList<String>();
-    
+    List<String> properties = new ArrayList<>();
+
     public JSONBeanSchemaBuilder addField(String name, JDBCType jdbcType) {
-        String type = toJSONType(jdbcType);
-        fields.add(String.format("    \"%s\" : {\"type\" : %s}", name, type));
+        properties.add(String.format("    \"%s\" : {\"type\" : %s}", name, toJSONType(jdbcType)));
         return this;
     }
-    
-    public String build() {
-       String fieldString = "";
-       int count = 0;
-       for (String field : fields) {
-           fieldString += field;
-           if ( fields.size()!=++count ) fieldString += ",\n";
-       }
-       return String.format(SCHEMA, fieldString);
+
+    public boolean hasProperties() {
+        return !properties.isEmpty();
     }
-    
+
+    public JsonSchema build()  {
+        try {
+            if (hasProperties()) {
+                String propertiesString = "";
+                int count = 0;
+                for (String property : properties) {
+                    propertiesString += property;
+                    if ( properties.size()!=++count ) propertiesString += ",\n";
+                }
+                return new ObjectMapper().readValue(String.format(SCHEMA, propertiesString), JsonSchema.class);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /** convert JDBC Datatype to JSON Datatype **/
     protected String toJSONType(JDBCType jdbcType) {
 
