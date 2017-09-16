@@ -91,7 +91,7 @@ public class SqlStoredMetadataAdapterTest {
         
         ObjectMapper mapper = new ObjectMapper();
         String expectedListOfProcedures = IOUtils.toString((this.getClass().getResource("/sql/stored_procedure_list.json")));
-        String actualListOfProcedures = (mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData.properties));
+        String actualListOfProcedures = (mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData));
         System.out.println("----------- list of procedures ------------");
         System.out.println(actualListOfProcedures);
         assertEquals(expectedListOfProcedures, actualListOfProcedures);
