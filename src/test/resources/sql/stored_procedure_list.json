@@ -1,9 +1,13 @@
 {
-  "procedureName" : [ {
-    "displayValue" : "DEMO_ADD2",
-    "value" : "DEMO_ADD2"
-  }, {
-    "displayValue" : "DEMO_ADD",
-    "value" : "DEMO_ADD"
-  } ]
+  "inputSchema" : null,
+  "outputSchema" : null,
+  "properties" : {
+    "procedureName" : [ {
+      "displayValue" : "DEMO_ADD2",
+      "value" : "DEMO_ADD2"
+    }, {
+      "displayValue" : "DEMO_ADD",
+      "value" : "DEMO_ADD"
+    } ]
+  }
 }
