@@ -1257,8 +1257,8 @@
     "kind": "connector",
     "data": {
       "id": "sql-stored",
-      "name": "SQL stored procedure",
-      "description": "Get data out of SQL stored procedure",
+      "name": "SQL Stored Procedure",
+      "description": "Relational Database SQL Stored procedure invocation",
       "icon": "fa-database",
       "configuredProperties": {},
       "properties": {
@@ -1339,7 +1339,7 @@
         {
           "id": "io.syndesis:sql-stored-connector:latest",
           "name": "Invoke SQL stored procedure",
-          "description": "Pass data to SQL stored procedure",
+          "description": "Invoke SQL stored procedure to get data in and/or out",
           "camelConnectorGAV": "io.syndesis:sql-stored-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "sql-stored-connector",
           "tags": [ "dynamic" ],
@@ -1348,9 +1348,27 @@
                "kind" : "json-schema"
             },
             "outputDataShape": {
-               "kind" : "none"
+               "kind" : "json-schema"
             },
             "propertyDefinitionSteps": [{
+              "name": "Procedure Name",
+              "description": "Select the Stored Procedure",
+              "properties": {
+                "procedureName": {
+                  "kind": "parameter",
+                  "displayName": "Procedure Name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "description": "Name of the Store Procedure"
+                }
+              }
+            },{
               "name": "SQL stored procedure parameters",
               "description": "Specify SQL stored procedure parameters",
               "properties": {
@@ -1358,7 +1376,7 @@
                   "kind": "parameter",
                   "displayName": "Template",
                   "group": "producer",
-                  "required": true,
+                  "required": false,
                   "type": "string",
                   "javaType": "java.lang.String",
                   "tags":[],

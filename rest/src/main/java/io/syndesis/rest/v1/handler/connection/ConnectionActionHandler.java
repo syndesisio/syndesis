@@ -18,6 +18,7 @@ package io.syndesis.rest.v1.handler.connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -47,6 +48,7 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.DataShape;
 import io.syndesis.model.connection.DynamicActionMetadata;
+import io.syndesis.model.connection.DynamicActionMetadata.ActionPropertySuggestion;
 import io.syndesis.verifier.VerificationConfigurationProperties;
 
 @Api(value = "actions")
@@ -115,6 +117,15 @@ public class ConnectionActionHandler {
             .properties();
         actionPropertySuggestions.forEach((k, vals) -> enriched.replaceConfigurationProperty(k,
             b -> b.addAllEnum(vals.stream().map(s -> ConfigurationProperty.PropertyValue.Builder.from(s))::iterator)));
+
+        //Setting the defaultValue as suggested by the metadata
+        for (Entry<String, List<ActionPropertySuggestion>> suggestions: actionPropertySuggestions.entrySet()) {
+            if (suggestions.getValue().size() == 1) {
+                for (DynamicActionMetadata.ActionPropertySuggestion suggestion : suggestions.getValue()) {
+                    enriched.replaceConfigurationProperty(suggestion.displayValue(), v -> v.defaultValue(suggestion.value()));
+                }
+            }
+        }
 
         final Object input = dynamicActionMetadata.inputSchema();
         if (shouldEnrichDataShape(defaultDefinition.getInputDataShape(), input)) {

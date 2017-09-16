@@ -1,0 +1,29 @@
+{
+  "inputSchema" : {
+    "$schema" : "http://json-schema.org/schema#",
+    "title": "StoredProcedureInputArguments",
+    "properties" : {
+      "A" : {
+        "type" : "integer"
+      },
+      "B" : {
+        "type" : "integer"
+      }
+    }
+  },
+  "outputSchema" : {
+    "$schema" : "http://json-schema.org/schema#",
+    "title": "StoredProcedureOutputArguments",
+    "properties" : {
+      "C" : {
+        "type" : "integer"
+      }
+    }
+  },
+  "properties" : {
+    "template" : [ {
+      "displayValue" : "template",
+      "value" : "DEMO_ADD( IN INTEGER ${body[A],  IN INTEGER ${body[B],  OUT INTEGER ${body[C])"
+    } ]
+  }
+}
