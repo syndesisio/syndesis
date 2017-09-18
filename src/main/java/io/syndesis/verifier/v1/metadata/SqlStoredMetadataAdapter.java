@@ -46,9 +46,8 @@ public final class SqlStoredMetadataAdapter implements MetadataAdapter<JsonSchem
             @SuppressWarnings("unchecked")
             Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata.getPayload();
             StoredProcedureMetadata storedProcedure = procedureMap.get(properties.get(PROCEDURE_NAME));
-            ppList.add(new PropertyPair(storedProcedure.getName(), PROCEDURE_NAME));
             ppList.add(new PropertyPair(storedProcedure.getTemplate(), PROCEDURE_TEMPLATE));
-            enrichedProperties.put(PROCEDURE_NAME,ppList);
+            enrichedProperties.put(PROCEDURE_TEMPLATE,ppList);
 
             // build the input and output schemas
             JSONBeanSchemaBuilder builderIn = new JSONBeanSchemaBuilder();
