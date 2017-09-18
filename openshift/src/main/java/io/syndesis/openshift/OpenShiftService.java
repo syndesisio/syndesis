@@ -69,8 +69,8 @@ public interface OpenShiftService {
 
     /**
      * Create a Webhook URL which can be used in a github integration
-     * @param d delployment from which to get the webhool
+     * @param projectName   The name of the project.
      * @param secret
      */
-    String getGitHubWebHookUrl(OpenShiftDeployment d, String secret);
+    String getGitHubWebHookUrl(String projectName, String secret);
 }

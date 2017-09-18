@@ -20,52 +20,62 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationRevision.Builder.class)
-public interface IntegrationRevision {
+public abstract class IntegrationRevision {
 
     /**
      * The revision number. This is unique per {@link Integration}.
      * Once an {@IntegrationRevision} gets a version, it should not be mutated anymore.
      * @return
      */
-    Optional<Integer> getVersion();
+    public abstract Optional<Integer> getVersion();
 
     /**
      * The version of the integration revision which was the origin of this revision.
      * @return 0 if this is the first revision of an integration, the parent version otherwise.
      */
-    Integer getParentVersion();
+    public abstract Integer getParentVersion();
 
 
-    IntegrationRevisionSpec getSpec();
+    public abstract IntegrationRevisionSpec getSpec();
 
     /**
      * The desired state of the revision.
      * @return
      */
-    IntegrationRevisionState getTargetState();
+     public abstract IntegrationRevisionState getTargetState();
 
     /**
      * The current state of the revision.
      * @return
      */
-    IntegrationRevisionState getCurrentState();
+     public abstract IntegrationRevisionState getCurrentState();
 
     /**
      * Message describing the currentState further (e.g. error message)
      * @return
      */
-    Optional<String> getCurrentMessage();
+    public abstract Optional<String> getCurrentMessage();
+
 
 
     /**
      * Message which should become the currentMessage after reconciliation
      * @return
      */
-    Optional<String> getTargetMessage();
+    public abstract Optional<String> getTargetMessage();
+
+
+    public abstract Optional<BigInteger> getTimesUsed();
+
+    public abstract Optional<Date> getLastUpdated();
+
+    public abstract Optional<Date> getCreatedDate();
 
     /**
      * Returns that {@link IntegrationRevisionState}.
@@ -73,43 +83,57 @@ public interface IntegrationRevision {
      * @return true, if current state is matching with target, false otherwise.
      */
     @JsonIgnore
-    default boolean isPending() {
+    public boolean isPending() {
         return getTargetState() != getCurrentState();
     }
 
-    default IntegrationRevision withVersion(Integer version) {
+    public IntegrationRevision withVersion(Integer version) {
         return new IntegrationRevision.Builder().createFrom(this).version(version).build();
     }
 
-    default IntegrationRevision withCurrentState(IntegrationRevisionState state) {
+    public IntegrationRevision withCurrentState(IntegrationRevisionState state) {
         return new IntegrationRevision.Builder().createFrom(this).currentState(state).build();
     }
 
-    default IntegrationRevision withCurrentState(IntegrationRevisionState state, String message) {
+    public IntegrationRevision withCurrentState(IntegrationRevisionState state, String message) {
         return new IntegrationRevision.Builder().createFrom(this)
             .currentState(state)
             .currentMessage(message)
             .build();
     }
 
-    default IntegrationRevision withTargetState(IntegrationRevisionState state) {
+    public IntegrationRevision withTargetState(IntegrationRevisionState state) {
         return new IntegrationRevision.Builder().createFrom(this).targetState(state).build();
     }
 
-    default IntegrationRevision.Builder newIntegrationRevisionBuilder() {
-        return new IntegrationRevision.Builder()
-            .currentState(IntegrationRevisionState.Draft)
-            .targetState(IntegrationRevisionState.Draft)
-            .createFrom(this).version(Optional.empty())
-            .parentVersion(this.getVersion().orElse(0));
+    @Override
+    public int hashCode() {
+        return getVersion().orElse(1).hashCode();
     }
 
-    static IntegrationRevision fromIntegration(Integration integration) {
+    @Override
+    public boolean equals(Object other) {
+       if (!(other instanceof IntegrationRevision)) {
+           return false;
+       }
+       IntegrationRevision revision = (IntegrationRevision) other;
+       return  getVersion().orElse(1).equals(revision.getVersion().orElse(1));
+    }
+
+    public static IntegrationRevision createNewRevision(Integration integration) {
         int version = integration.getRevisions()
             .stream()
             .map(i -> i.getVersion().orElse(0))
             .reduce(Integer::max)
             .orElse(0);
+
+        BigInteger totalTimesUsed = integration.getTimesUsed().orElse(BigInteger.ZERO);
+        BigInteger parentUses =  integration.getRevisions()
+            .stream()
+            .map(i -> i.getTimesUsed().orElse(BigInteger.ZERO))
+            .reduce( (n1,n2) -> n1.add(n2))
+            .orElse(BigInteger.ZERO);
+
 
         return new IntegrationRevision.Builder()
             .version(version + 1)
@@ -119,13 +143,36 @@ public interface IntegrationRevision {
                         .connections(integration.getConnections())
                         .steps(integration.getSteps())
                         .build())
-            .currentState(IntegrationRevisionState.from(integration.getCurrentStatus().get()))
+            .currentState(IntegrationRevisionState.from(integration.getCurrentStatus().orElse(Integration.Status.Draft)))
             .currentMessage(integration.getStatusMessage())
-            .targetState(IntegrationRevisionState.from(integration.getDesiredStatus().get()))
+            .targetState(IntegrationRevisionState.from(integration.getDesiredStatus().orElse(Integration.Status.Draft)))
+            .timesUsed(Optional.of(totalTimesUsed.subtract(parentUses)))
+            //We retain the information found on the integration and we override when needed, why?
+            //Because this is not called just when we want to create a new revision,
+            //but can be used when editing the current one.
+            .createdDate(integration.getCreatedDate())
+            .lastUpdated(integration.getLastUpdated())
             .build();
     }
 
-    class Builder extends ImmutableIntegrationRevision.Builder {
+    public static IntegrationRevision deployedRevision(Integration integration) {
+        BigInteger totalTimesUsed = integration.getTimesUsed().orElse(BigInteger.ZERO);
+        BigInteger parentUses =  integration.getRevisions()
+            .stream()
+            .map(i -> i.getTimesUsed().orElse(BigInteger.ZERO))
+            .reduce( (n1,n2) -> n1.add(n2))
+            .orElse(BigInteger.ZERO);
+
+
+        return new IntegrationRevision.Builder()
+            .createFrom(integration.getDeployedRevision().orElseGet(() -> IntegrationRevision.createNewRevision(integration)))
+            .timesUsed(Optional.of(totalTimesUsed.subtract(parentUses)))
+            .lastUpdated(new Date())
+            .build();
+
+    }
+
+    public static class Builder extends ImmutableIntegrationRevision.Builder {
     }
 
 }

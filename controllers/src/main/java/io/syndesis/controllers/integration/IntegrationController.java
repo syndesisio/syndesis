@@ -36,6 +36,8 @@ import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Kind;
 import io.syndesis.model.integration.Integration;
 
+import io.syndesis.model.integration.IntegrationRevision;
+import io.syndesis.model.integration.IntegrationRevisionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -179,15 +181,30 @@ public class IntegrationController {
                     // data before we update the current status
 
                     // TODO: do this in a single TX.
+                    Date now = new Date();
                     Integration current = dataManager.fetch(Integration.class, integrationId);
-                    dataManager.update(
-                        new Integration.Builder()
-                            .createFrom(current)
-                            .currentStatus(update.getStatus()) // Status must not be null
-                            .statusMessage(Optional.ofNullable(update.getStatusMessage()))
-                            .stepsDone(Optional.ofNullable(update.getStepsPerformed()))
-                            .lastUpdated(new Date())
-                            .build());
+                    Integration updated = new Integration.Builder()
+                        .createFrom(current)
+                        .currentStatus(update.getStatus()) // Status must not be null
+                        .statusMessage(Optional.ofNullable(update.getStatusMessage()))
+                        .stepsDone(Optional.ofNullable(update.getStepsPerformed()))
+                        .createdDate(Integration.Status.Activated.equals(update.getStatus()) ? now : integration.getCreatedDate().get())
+                        .lastUpdated(new Date())
+                        .build();
+
+                    Set<IntegrationRevision> revisions = new HashSet<>(integration.getRevisions());
+                    IntegrationRevision revision = IntegrationRevision.deployedRevision(integration)
+                        .withCurrentState(IntegrationRevisionState.from(update.getStatus()));
+
+                    //replace revision
+                    revisions.remove(revision);
+                    revisions.add(revision);
+
+
+                    dataManager.update(new Integration.Builder()
+                        .createFrom(updated)
+                        .revisions(revisions)
+                        .build());
                 }
 
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
