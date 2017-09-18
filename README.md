@@ -10,7 +10,7 @@ For the middle tier API that this client communicates with, please see the [synd
 
 **Make sure you have installed [node](https://nodejs.org/en/download/) version >= 6.x.x and [Yarn](https://yarnpkg.com/en/docs/install) version >= 0.18.1**
 
-First get a developer deployment of Syndesis running in a minishift enviorment as described in the
+First get a developer deployment of Syndesis running in a minishift environment as described in the
 [Syndesis Quickstart](https://syndesis.io/quickstart/).  Then do the following to get a local developer UI with hot reloading running against the Syndesis backend running in minishift:
 
 ```bash
