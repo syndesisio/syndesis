@@ -9,12 +9,12 @@
       <label [ngClass]="{'required-pf': model.required}">
         {{model.label}}
       </label>
-      <div *ngIf="model.hint !== null"
-           [tooltip]="model.hint"
-           placement="right"
-           class="hint-icon">
+    <div *ngIf="model.hint !== null"
+         [tooltip]="model.hint"
+         placement="right"
+         class="hint-icon">
         <span class="glyphicon glyphicon-info-sign"></span>
-      </div>
+    </div>
     </label>
 
     <ng-template *ngIf="type !== 1 && template?.align === 'START'"
@@ -22,9 +22,11 @@
                  [ngTemplateOutletContext]="model"></ng-template>
 
 
-    <div *ngIf="type === 2" [ngClass]="model.cls.grid.control">
+    <div *ngIf="type === 2"
+         [ngClass]="model.cls.grid.control">
 
-        <div [class.disabled]="model.disabled" [ngClass]="model.cls.element.control || 'checkbox'">
+        <div [class.disabled]="model.disabled"
+             [ngClass]="model.cls.element.control || 'checkbox'">
 
             <label>
 
@@ -39,14 +41,24 @@
                        [value]="model.value"
                        (blur)="onFocusChange($event)"
                        (change)="onValueChange($event)"
-                       (focus)="onFocusChange($event)"/><span [innerHTML]="model.label"
-                                                              [ngClass]="[model.cls.element.label, model.cls.grid.label]"></span></label>
+                       (focus)="onFocusChange($event)"/>
+                       <span [innerHTML]="model.label"
+                                                              [ngClass]="[model.cls.element.label, model.cls.grid.label]">
+                        </span>
+                        <div *ngIf="model.hint !== null"
+                            [tooltip]="model.hint"
+                            placement="right"
+                            class="inline-block hint-icon">
+                            &nbsp;<span class="glyphicon glyphicon-info-sign"></span>
+                        </div>
+            </label>
         </div>
 
     </div>
 
 
-    <div *ngIf="type !== 2" [ngClass]="model.cls.grid.control">
+    <div *ngIf="type !== 2"
+         [ngClass]="model.cls.grid.control">
 
         <ng-container [ngSwitch]="type">
 
@@ -55,20 +67,22 @@
                  [formArrayName]="model.id"
                  [ngClass]="model.cls.element.control">
 
-                <div *ngFor="let groupModel of model.groups; let idx = index" role="group"
-                     [formGroupName]="idx" [ngClass]="[model.cls.element.group, model.cls.grid.group]">
+                <div *ngFor="let groupModel of model.groups; let idx = index"
+                     role="group"
+                     [formGroupName]="idx"
+                     [ngClass]="[model.cls.element.group, model.cls.grid.group]">
 
                     <syndesis-form-control *ngFor="let item of groupModel.group"
-                                                    [bindId]="false"
-                                                    [context]="groupModel"
-                                                    [group]="control.at(idx)"
-                                                    [hasErrorMessaging]="item.hasErrorMessages"
-                                                    [model]="item"
-                                                    [nestedTemplates]="templates"
-                                                    [ngClass]="[item.cls.element.host, item.cls.grid.host]"
-                                                    (blur)="onFocusChange($event)"
-                                                    (change)="onValueChange($event)"
-                                                    (focus)="onFocusChange($event)"></syndesis-form-control>
+                                           [bindId]="false"
+                                           [context]="groupModel"
+                                           [group]="control.at(idx)"
+                                           [hasErrorMessaging]="item.hasErrorMessages"
+                                           [model]="item"
+                                           [nestedTemplates]="templates"
+                                           [ngClass]="[item.cls.element.host, item.cls.grid.host]"
+                                           (blur)="onFocusChange($event)"
+                                           (change)="onValueChange($event)"
+                                           (focus)="onFocusChange($event)"></syndesis-form-control>
 
                     <ng-container *ngTemplateOutlet="template?.templateRef; context: groupModel"></ng-container>
 
@@ -83,24 +97,28 @@
                       [name]="model.name"
                       [ngClass]="model.cls.element.control">
 
-                <legend *ngIf="model.legend" [innerHTML]="model.legend"></legend>
+                <legend *ngIf="model.legend"
+                        [innerHTML]="model.legend"></legend>
 
                 <syndesis-form-control *ngFor="let controlModel of model.group"
-                                                [asBootstrapFormGroup]="false"
-                                                [group]="control"
-                                                [hasErrorMessaging]="controlModel.hasErrorMessages"
-                                                [model]="controlModel"
-                                                [nestedTemplates]="templates"
-                                                [ngClass]="[controlModel.cls.element.host, controlModel.cls.grid.host]"
-                                                (blur)="onFocusChange($event)"
-                                                (change)="onValueChange($event)"
-                                                (focus)="onFocusChange($event)"></syndesis-form-control>
+                                       [asBootstrapFormGroup]="false"
+                                       [group]="control"
+                                       [hasErrorMessaging]="controlModel.hasErrorMessages"
+                                       [model]="controlModel"
+                                       [nestedTemplates]="templates"
+                                       [ngClass]="[controlModel.cls.element.host, controlModel.cls.grid.host]"
+                                       (blur)="onFocusChange($event)"
+                                       (change)="onValueChange($event)"
+                                       (focus)="onFocusChange($event)"></syndesis-form-control>
             </fieldset>
 
 
-            <div *ngSwitchCase="4" [class.input-group]="model.prefix || model.suffix">
+            <div *ngSwitchCase="4"
+                 [class.input-group]="model.prefix || model.suffix">
 
-                <div *ngIf="model.prefix" class="input-group-addon" [innerHTML]="model.prefix"></div>
+                <div *ngIf="model.prefix"
+                     class="input-group-addon"
+                     [innerHTML]="model.prefix"></div>
 
                 <input class="form-control"
                        [attr.accept]="model.accept"
@@ -127,28 +145,35 @@
                        [type]="model.inputType"
                        (blur)="onFocusChange($event)"
                        (change)="onValueChange($event)"
-                       (focus)="onFocusChange($event)"/>
+                       (focus)="onFocusChange($event)" />
 
-                <div *ngIf="model.suffix" class="input-group-addon" [innerHTML]="model.suffix"></div>
+                <div *ngIf="model.suffix"
+                     class="input-group-addon"
+                     [innerHTML]="model.suffix"></div>
 
-                <datalist *ngIf="model.list" [id]="model.listId">
+                <datalist *ngIf="model.list"
+                          [id]="model.listId">
 
-                    <option *ngFor="let option of model.list" [value]="option">
+                    <option *ngFor="let option of model.list"
+                            [value]="option">
 
                 </datalist>
 
             </div>
 
 
-            <fieldset *ngSwitchCase="5" role="radiogroup"
+            <fieldset *ngSwitchCase="5"
+                      role="radiogroup"
                       [attr.tabindex]="model.tabIndex"
                       [dynamicId]="bindId && model.id"
                       [name]="model.name"
                       (change)="onValueChange($event)">
 
-                <legend *ngIf="model.legend" [innerHTML]="model.legend"></legend>
+                <legend *ngIf="model.legend"
+                        [innerHTML]="model.legend"></legend>
 
-                <div *ngFor="let option of model.options$ | async" [ngClass]="model.cls.element.control || 'radio'">
+                <div *ngFor="let option of model.options$ | async"
+                     [ngClass]="model.cls.element.control || 'radio'">
 
                     <label>
 
@@ -163,7 +188,8 @@
             </fieldset>
 
 
-            <select *ngSwitchCase="6" class="form-control"
+            <select *ngSwitchCase="6"
+                    class="form-control"
                     [attr.tabindex]="model.tabIndex"
                     [dynamicId]="bindId && model.id"
                     [formControlName]="model.id"
@@ -182,7 +208,8 @@
             </select>
 
 
-            <textarea *ngSwitchCase="7" class="form-control"
+            <textarea *ngSwitchCase="7"
+                      class="form-control"
                       [attr.tabindex]="model.tabIndex"
                       [dynamicId]="bindId && model.id"
                       [cols]="model.cols"
@@ -203,12 +230,13 @@
 
 
             <!--<span *ngIf="model.hint" class="help-block"-->
-                  <!--[innerHTML]="model.hint"-->
-                  <!--[ngClass]="model.cls.element.hint"></span>-->
+            <!--[innerHTML]="model.hint"-->
+            <!--[ngClass]="model.cls.element.hint"></span>-->
 
         </ng-container>
 
-        <span class="help-block" *ngIf="showErrorMessages">{{errorMessages[0]}}</span>
+        <span class="help-block"
+              *ngIf="showErrorMessages">{{errorMessages[0]}}</span>
 
     </div>
 
