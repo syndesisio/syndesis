@@ -130,13 +130,19 @@ public class GitHubServiceITCase {
 
     // Requires repo and delete_repo scope
     @Test
-    public void testCreateNewRepository() throws IOException {
+    public void testCreateNewRepository() throws IOException, InterruptedException {
         String testRepo = REPO_NAME + "-create-new";
         Repository repository = githubService.getRepository(testRepo);
-        if (repository != null) {
+        int retryCount = 0;
+        while (repository != null) {
             User apiUser = githubService.getApiUser();
             client.delete("/repos/" + apiUser.getLogin() + "/" + testRepo);
+            this.wait(100l);
             repository = githubService.getRepository(testRepo);
+            retryCount++;
+            if (retryCount > 50) {
+                break; //fail if the repo is still there after 5 seconds
+            }
         }
         Assert.assertNull(repository); // repository should not exist on GitHub
 
