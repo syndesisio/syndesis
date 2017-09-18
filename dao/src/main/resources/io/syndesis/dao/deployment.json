@@ -120,7 +120,7 @@
                   "displayName": "Keywords",
                   "group": "filter",
                   "label": "consumer,filter",
-                  "required": false,
+                  "required": true,
                   "type": "string",
                   "javaType": "java.lang.String",
                   "tags":[],
