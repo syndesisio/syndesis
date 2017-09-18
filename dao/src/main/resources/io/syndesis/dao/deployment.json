@@ -103,7 +103,7 @@
               "properties": {
                 "filterOld": {
                   "kind": "parameter",
-                  "displayName": "Filter Old",
+                  "displayName": "Filter already polled tweets",
                   "group": "filter",
                   "label": "consumer,filter",
                   "required": false,
@@ -113,7 +113,7 @@
                   "deprecated": false,
                   "secret": false,
                   "defaultValue": true,
-                  "description": "Filter out old tweets that have previously been polled. This state is stored in memory only and is based on last tweet id."
+                  "description": "Filter out old tweets that have previously been polled"
                 },
                 "keywords": {
                   "kind": "parameter",
@@ -140,7 +140,7 @@
                   "deprecated": false,
                   "secret": false,
                   "defaultValue": 5000,
-                  "description": "Milliseconds before the next poll."
+                  "description": "Milliseconds before the next poll"
                 }
               }
             }]
