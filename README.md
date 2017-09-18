@@ -3,6 +3,10 @@
 
 Access UX design resource and documentation for Syndesis.
 
+## Navigation
+* ### [Integration Breadcrumb](designs/navigation/navigation_breadcrumb_integration.md)
+
+
 ## First Time User Experience (FTUE)
 * ### [GitHub Settings](designs/github-settings/github-settings.md)
 
