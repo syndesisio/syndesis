@@ -49,7 +49,7 @@ public class SqlStoredConnectorMetaDataExtension extends AbstractMetaDataExtensi
 
     protected Map<String, StoredProcedureMetadata> getStoredProcedures(Map<String, Object> parameters) {
 
-        Map<String, StoredProcedureMetadata> storedProcedures = new HashMap<String, StoredProcedureMetadata>();
+        Map<String, StoredProcedureMetadata> storedProcedures = new HashMap<>();
         ResultSet procedureSet = null;
 
         try (Connection connection = DriverManager.getConnection(
@@ -126,7 +126,7 @@ public class SqlStoredConnectorMetaDataExtension extends AbstractMetaDataExtensi
                 columnSet = meta.getProcedureColumns(catalog, schema, procedureName, null);
             }
 
-            List<StoredProcedureColumn> columnList = new ArrayList<StoredProcedureColumn>();
+            List<StoredProcedureColumn> columnList = new ArrayList<>();
             String template = procedureName + "(";
             while (columnSet.next()) {
                 StoredProcedureColumn column = new StoredProcedureColumn();
