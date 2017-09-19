@@ -21,9 +21,9 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
  * Camel periodic timer connector
  */
 public class PeriodicTimerComponent extends DefaultConnectorComponent {
-    
+
     public PeriodicTimerComponent() {
-        super("periodic-timer", PeriodicTimerComponent.class.getName());
+        super("periodic-timer-connector", PeriodicTimerComponent.class.getName());
     }
 
 }

@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.salesforce.SalesforceGetSObjectWithIdComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "salesforce-get-sobject-with-id-connector",
-  "version" : "0.4-SNAPSHOT",
+  "version" : "0.5-SNAPSHOT",
   "description" : "Get Salesforce SObject With External ID",
   "labels" : [ "salesforce" ],
   "pattern" : "To",

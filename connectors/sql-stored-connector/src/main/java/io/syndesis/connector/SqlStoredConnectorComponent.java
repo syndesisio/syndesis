@@ -26,11 +26,11 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
  * Camel SqlStoredConnector connector
  */
 public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
-    
-    
-    
+
+
+
     public SqlStoredConnectorComponent() {
-        super("sqlStoredConnector", "io.syndesis.connector.SqlStoredConnectorComponent");
+        super("sql-stored-connector", "io.syndesis.connector.SqlStoredConnectorComponent");
         registerExtension(SqlStoredConnectorVerifierExtension::new);
         registerExtension(SqlStoredConnectorMetaDataExtension::new);
     }

@@ -15,23 +15,20 @@
  */
 package io.syndesis.connector.salesforce;
 
-import org.apache.camel.Message;
-import org.apache.camel.component.connector.DefaultConnectorComponent;
+import org.apache.camel.component.salesforce.api.dto.AbstractDTOBase;
 
 /**
- * Camel salesforce-get-sobject connector
+ * Camel Input DTO for salesforce-get-sobject-id connector
  */
-public class SalesforceGetSObjectComponent extends DefaultConnectorComponent {
+public class ExternalIdToGet extends AbstractDTOBase {
 
-    public SalesforceGetSObjectComponent() {
-        super("salesforce-get-sobject", SalesforceGetSObjectComponent.class.getName());
+    private String id;
 
-        // replace DTO with id for Salesforce component
-        setBeforeProducer( exchange -> {
-            final Message in = exchange.getIn();
-            ExternalIdToGet id = in.getBody(ExternalIdToGet.class);
-            in.setBody(id.getId());
-        });
+    public String getId() {
+        return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 }
