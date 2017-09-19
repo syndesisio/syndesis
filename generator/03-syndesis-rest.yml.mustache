@@ -81,18 +81,12 @@
       component: syndesis-rest
       deploymentconfig: syndesis-rest
     strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 10800
-        updatePeriodSeconds: 1
       resources:
         limits:
           memory: "256Mi"
         requests:
           memory: "20Mi"
-      type: Rolling
+      type: Recreate
     template:
       metadata:
         labels:
