@@ -17,12 +17,11 @@
     "version": "0.4-SNAPSHOT"
   },
   "componentProperties": {
-    "url": { "kind": "path", "displayName": "Connection URL", "group": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Sets the database URL" },
-    "user": { "kind": "path", "displayName": "User", "group": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Sets database user" },
-    "password": { "kind": "path", "displayName": "Password", "group": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": true, "description": "Sets the database password" },
-    "schema": { "kind": "path", "displayName": "Schema", "group": "producer", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Sets database schema" },
-    "catalog": { "kind": "path", "displayName": "Catalog", "group": "producer", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Sets database catalog" }
-
+    "url": { "kind": "property", "displayName": "Connection URL", "group": "producer", "label": "common", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "defaultValue": "jdbc:postgresql:database", "description": "JDBC URL of the database" },
+    "user": { "kind": "property", "displayName": "Username", "group": "security", "label": "common,security", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "defaultValue": "", "description": "Username for the database connection" },
+    "password": { "kind": "property", "displayName": "Password", "group": "security", "label": "common,security", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": true, "description": "Password for the database connection" },
+    "schema": { "kind": "property", "displayName": "Schema", "group": "producer", "label": "common", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Database schema" },
+    "catalog": { "kind": "property", "displayName": "Catalog", "group": "producer", "label": "common", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Database catalog" }
   },
   "properties": {
     "procedureName": { "kind": "path", "displayName": "Template", "group": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Sets the StoredProcedure name to perform" },

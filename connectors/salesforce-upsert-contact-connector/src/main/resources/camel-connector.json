@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.salesforce.SalesforceUpsertContactComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "salesforce-upsert-contact-connector",
-  "version" : "0.4-SNAPSHOT",
+  "version" : "0.5-SNAPSHOT",
   "description" : "Create or update Salesforce contact",
   "labels" : [ "salesforce" ],
   "pattern" : "To",

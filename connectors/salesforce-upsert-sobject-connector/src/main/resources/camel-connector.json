@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.salesforce.SalesforceUpsertSObjectComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "salesforce-upsert-sobject-connector",
-  "version" : "0.4-SNAPSHOT",
+  "version" : "0.5-SNAPSHOT",
   "description" : "Upsert Salesforce SObject",
   "labels" : [ "salesforce" ],
   "pattern" : "To",

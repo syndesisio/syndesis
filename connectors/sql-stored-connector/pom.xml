@@ -49,7 +49,7 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-connector</artifactId>
     </dependency>
-    
+
     <!-- camel and spring boot compiler plugins -->
     <dependency>
       <groupId>org.apache.camel</groupId>
@@ -60,12 +60,12 @@
       <artifactId>spring-boot-configuration-processor</artifactId>
       <version>${spring-boot.version}</version>
     </dependency>
-    
+
      <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
     </dependency>
-    
+
     <!--  supported drivers -->
     <dependency>
       <groupId>org.apache.derby</groupId>
@@ -86,7 +86,7 @@
       <systemPath>ojdbc8.jar</systemPath>
     </dependency>
      -->
-    
+
     <!-- logging -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
@@ -125,8 +125,15 @@
   <build>
     <defaultGoal>install</defaultGoal>
 
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
     <plugins>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -136,7 +143,7 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -146,9 +153,28 @@
         </configuration>
       </plugin>
 
-      <!-- generate components meta-data and validate component includes documentation etc 
+      <plugin>
+        <groupId>com.coderplus.maven.plugins</groupId>
+        <artifactId>copy-rename-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <executions>
+          <execution>
+            <id>copy-camel-schema</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <sourceFile>${basedir}/src/main/resources/camel-connector-schema.json</sourceFile>
+              <destinationFile>${project.build.directory}/classes/io/syndesis/connector/sql-stored-connector.json</destinationFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- generate components meta-data and validate component includes documentation etc
       Disabled until the plugin supports adding parameters at the connector level. At the moment
-     they are added manually. 
+     they are added manually.
       <plugin>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-package-maven-plugin</artifactId>
@@ -172,7 +198,7 @@
       </plugin>
       -->
 
-      <!-- generate connector 
+      <!-- generate connector
       <plugin>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-connector-maven-plugin</artifactId>
@@ -184,9 +210,9 @@
               <goal>prepare-spring-boot-auto-configuration</goal>
             </goals>
             <configuration>
-              
+
               <includeLicenseHeader>false</includeLicenseHeader>
-              
+
               <configurationPrefix>false</configurationPrefix>
             </configuration>
           </execution>
@@ -202,7 +228,7 @@
 
     </plugins>
   </build>
-  
+
   <repositories>
     <repository>
       <id>jboss-ea</id>
@@ -216,6 +242,6 @@
       </snapshots>
     </repository>
   </repositories>
-  
+
 
 </project>

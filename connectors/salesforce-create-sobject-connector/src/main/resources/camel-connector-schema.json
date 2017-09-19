@@ -14,7 +14,7 @@
     "javaType": "io.syndesis.connector.salesforce.SalesforceCreateSObjectComponent",
     "groupId": "io.syndesis",
     "artifactId": "salesforce-create-sobject-connector",
-    "version": "0.4-SNAPSHOT"
+    "version": "0.5-SNAPSHOT"
   },
   "componentProperties": {
     "loginUrl": { "kind": "property", "displayName": "Login Url", "group": "security", "label": "common,security", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "defaultValue": "https://login.salesforce.com", "description": "URL of the Salesforce instance used for authentication by default set to https://login.salesforce.com" },

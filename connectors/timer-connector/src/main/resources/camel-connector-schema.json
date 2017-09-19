@@ -2,8 +2,8 @@
   "component": {
     "kind": "component",
     "baseScheme": "timer",
-    "scheme": "periodic-timer",
-    "syntax": "periodic-timer:timerName",
+    "scheme": "periodic-timer-connector",
+    "syntax": "periodic-timer-connector:timerName",
     "title": "Timer",
     "description": "Set a timer that fires at intervals that you specify. This can cause some action such as querying your Salesforce data.",
     "label": "timer",
@@ -14,7 +14,7 @@
     "javaType": "io.syndesis.connector.timer.PeriodicTimerComponent",
     "groupId": "io.syndesis",
     "artifactId": "timer-connector",
-    "version": "0.4-SNAPSHOT"
+    "version": "0.5-SNAPSHOT"
   },
   "componentProperties": {
   },
