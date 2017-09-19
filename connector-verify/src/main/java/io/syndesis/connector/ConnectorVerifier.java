@@ -26,7 +26,6 @@ import java.util.Properties;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Component;
-import org.apache.camel.ComponentVerifier;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.apache.camel.impl.DefaultCamelContext;
 
@@ -97,7 +96,7 @@ public class ConnectorVerifier {
                         result.put("value", "error");
                         StringBuilder message = new StringBuilder();
                         int i = 0;
-                        for (ComponentVerifier.VerificationError error : verificationResult.getErrors()) {
+                        for (ComponentVerifierExtension.VerificationError error : verificationResult.getErrors()) {
                             if (error.getCode() != null) {
                                 result.put("error." + i + ".code", error.getCode());
                             }

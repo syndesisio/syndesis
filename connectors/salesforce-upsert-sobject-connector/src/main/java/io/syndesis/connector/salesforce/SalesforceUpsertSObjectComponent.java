@@ -41,7 +41,7 @@ public class SalesforceUpsertSObjectComponent extends DefaultConnectorComponent 
             ObjectMapper mapper = JsonUtils.createObjectMapper();
             ObjectNode node = (ObjectNode) mapper.readTree(exchange.getIn().getBody(String.class));
 
-            JsonNode sObjectExternalId = node.remove(String.valueOf(getComponentOptions().get(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME)));
+            JsonNode sObjectExternalId = node.remove(String.valueOf(getOptions().get(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME)));
             if (sObjectExternalId == null) {
                 exchange.setException(new SalesforceException("Missing option " + SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME, 404));
             } else {
