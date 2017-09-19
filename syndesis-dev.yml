@@ -190,18 +190,12 @@ objects:
       component: syndesis-atlasmap
       deploymentconfig: syndesis-atlasmap
     strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 10800
-        updatePeriodSeconds: 1
       resources:
         limits:
           memory: "256Mi"
         requests:
           memory: "20Mi"
-      type: Rolling
+      type: Recreate
     template:
       metadata:
         labels:
@@ -552,18 +546,12 @@ objects:
       component: syndesis-keycloak
       deploymentconfig: syndesis-keycloak
     strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 600
-        updatePeriodSeconds: 1
       resources:
         limits:
           memory: "256Mi"
         requests:
           memory: "20Mi"
-      type: Rolling
+      type: Recreate
     template:
       metadata:
         labels:
@@ -1872,18 +1860,12 @@ objects:
       component: syndesis-rest
       deploymentconfig: syndesis-rest
     strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 10800
-        updatePeriodSeconds: 1
       resources:
         limits:
           memory: "256Mi"
         requests:
           memory: "20Mi"
-      type: Rolling
+      type: Recreate
     template:
       metadata:
         labels:
@@ -2234,18 +2216,12 @@ objects:
       component: syndesis-verifier
       deploymentconfig: syndesis-verifier
     strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 10800
-        updatePeriodSeconds: 1
       resources:
         limits:
           memory: "256Mi"
         requests:
           memory: "20Mi"
-      type: Rolling
+      type: Recreate
     template:
       metadata:
         labels:
