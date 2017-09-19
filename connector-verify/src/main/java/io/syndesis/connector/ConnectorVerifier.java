@@ -124,7 +124,7 @@ public class ConnectorVerifier {
 
     private Map<String, Object> toMap(Properties props) throws Exception {
         Map<String, Object> answer = new HashMap<>();
-        Enumeration en = props.propertyNames();
+        Enumeration<?> en = props.propertyNames();
         while (en.hasMoreElements()) {
             String key = (String) en.nextElement();
             Object value = props.getProperty(key);
