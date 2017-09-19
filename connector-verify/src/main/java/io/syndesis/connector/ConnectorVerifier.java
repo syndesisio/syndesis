@@ -94,7 +94,6 @@ public class ConnectorVerifier {
                     case ERROR:
                         // TODO: think about how to encode the error messages better.
                         result.put("value", "error");
-                        StringBuilder message = new StringBuilder();
                         int i = 0;
                         for (ComponentVerifierExtension.VerificationError error : verificationResult.getErrors()) {
                             if (error.getCode() != null) {
