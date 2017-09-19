@@ -61,9 +61,9 @@ public class HttpComponentAutoConfiguration {
             Object value = entry.getValue();
             Class<?> paramClass = value.getClass();
             if (paramClass.getName().endsWith("NestedConfiguration")) {
-                Class nestedClass = null;
+                Class<?> nestedClass = null;
                 try {
-                    nestedClass = (Class) paramClass.getDeclaredField(
+                    nestedClass = (Class<?>) paramClass.getDeclaredField(
                         "CAMEL_NESTED_CLASS").get(null);
                     HashMap<String, Object> nestedParameters = new HashMap<>();
                     IntrospectionSupport.getProperties(value, nestedParameters,

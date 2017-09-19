@@ -63,7 +63,7 @@ public class HttpPingCheck {
         prop.load(new FileInputStream("src/main/resources/application.properties"));
 
         Map<String, Object> answer = new HashMap<>();
-        Enumeration en = prop.propertyNames();
+        Enumeration<?> en = prop.propertyNames();
         while (en.hasMoreElements()) {
             String key = (String) en.nextElement();
             Object value = prop.getProperty(key);
