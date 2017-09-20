@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2017 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.syndesis.verifier.impl;
 
 import java.util.*;
@@ -42,6 +57,7 @@ public abstract class BaseVerifier implements Verifier {
         camel.stop();
     }
 
+    // The concrete action call
     protected abstract String getConnectorAction();
 
     // ========================================================
@@ -54,21 +70,26 @@ public abstract class BaseVerifier implements Verifier {
         customize(params);
 
         // the connector must support ping check if its verifiable
-        List<VerifierResponse> resp = new ArrayList<VerifierResponse>();
+        List<VerifierResponse> resp = new ArrayList<>();
         for (Verifier.Scope scope :  Verifier.Scope.values()) {
-            ComponentVerifier.Result result = verifier.verify(toComponentScope(scope), params);
-            resp.add(toVerifierResponse(result));
-            log.info("PING: {} === {}",
-                     getConnectorAction(), result.getStatus());
-            if (result.getStatus() == ComponentVerifier.Result.Status.ERROR) {
-                log.error("{} --> ", getConnectorAction());
-                for (ComponentVerifier.VerificationError error : result.getErrors()) {
-                    log.error("   {} : {}", error.getCode(), error.getDescription());
+            try {
+                ComponentVerifier.Result result = verifier.verify(toComponentScope(scope), params);
+                resp.add(toVerifierResponse(result));
+                log.info("PING: {} === {}",
+                         getConnectorAction(), result.getStatus());
+                if (result.getStatus() == ComponentVerifier.Result.Status.ERROR) {
+                    log.error("{} --> ", getConnectorAction());
+                    for (ComponentVerifier.VerificationError error : result.getErrors()) {
+                        log.error("   {} : {}", error.getCode(), error.getDescription());
+                    }
                 }
-            }
-            if (result.getStatus() == ComponentVerifier.Result.Status.ERROR ||
-                result.getStatus() == ComponentVerifier.Result.Status.UNSUPPORTED) {
-                break;
+                if (result.getStatus() == ComponentVerifier.Result.Status.ERROR ||
+                    result.getStatus() == ComponentVerifier.Result.Status.UNSUPPORTED) {
+                    break;
+                }
+            } catch (Exception exp) {
+                resp.add(toExceptionResponse(exp, scope, params.keySet()));
+                log.error("Exception during verify with params {} and scope {} : {}", params, scope, exp.getMessage(), exp);
             }
         }
         return resp;
@@ -119,4 +140,25 @@ public abstract class BaseVerifier implements Verifier {
         }
         return builder.build();
     }
+
+    private VerifierResponse toExceptionResponse(Exception exp, Scope scope, Set<String> params) {
+        VerifierResponse.Builder builder = new VerifierResponse.Builder(Status.ERROR, scope);
+
+        return builder
+            .withError(ComponentVerifier.VerificationError.StandardCode.EXCEPTION.name())
+              .description(exp.getMessage())
+              .parameters(params)
+              .attributes(extractExceptionDetails(exp))
+            .endError()
+            .build();
+    }
+
+    private Map<String, Object> extractExceptionDetails(Exception exp) {
+        Map<String, Object> details = new HashMap<>();
+        details.put(ComponentVerifier.VerificationError.ExceptionAttribute.EXCEPTION_CLASS.name(),
+                    exp.getClass().getName());
+        details.put(ComponentVerifier.VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE.name(), exp);
+        return details;
+    }
+
 }
