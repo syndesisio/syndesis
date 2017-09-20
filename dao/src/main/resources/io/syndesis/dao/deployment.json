@@ -291,7 +291,7 @@
           "definition": {
             "inputDataShape": {
                "kind": "java",
-               "type": "io.syndesis.connector.salesforce.IdToDelete"
+               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "outputDataShape": {
                "kind": "none"
@@ -327,7 +327,7 @@
           "definition": {
             "inputDataShape": {
                "kind": "java",
-               "type": "io.syndesis.connector.salesforce.ExternalIdToDelete"
+               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "outputDataShape": {
                "kind": "none"
@@ -382,10 +382,10 @@
           "definition": {
             "inputDataShape": {
                "kind": "java",
-               "type": "io.syndesis.connector.salesforce.ExternalIdToGet"
+               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "outputDataShape": {
-               "kind": "none"
+               "kind": "json-schema"
             },
             "propertyDefinitionSteps": [{
               "name": "Object name",
@@ -418,10 +418,10 @@
           "definition": {
             "inputDataShape": {
                "kind": "java",
-               "type": "io.syndesis.connector.salesforce.ExternalIdToGet"
+               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "outputDataShape": {
-               "kind": "none"
+               "kind": "json-schema"
             },
             "propertyDefinitionSteps": [{
               "name": "Object name",
@@ -566,7 +566,7 @@
             },
             "outputDataShape": {
                "kind": "java",
-               "type": "io.syndesis.connector.salesforce.AnyObject"
+               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "propertyDefinitionSteps": [{
               "name": "Object name",
@@ -602,7 +602,7 @@
             },
             "outputDataShape": {
                "kind": "java",
-               "type": "io.syndesis.connector.salesforce.AnyObject"
+               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "propertyDefinitionSteps": [{
               "name": "Object name",
@@ -638,7 +638,7 @@
             },
             "outputDataShape": {
                "kind": "java",
-               "type": "io.syndesis.connector.salesforce.AnyObject"
+               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "propertyDefinitionSteps": [{
               "name": "Object name",
