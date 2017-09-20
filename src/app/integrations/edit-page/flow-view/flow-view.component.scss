@@ -30,7 +30,6 @@
   .flow-view-container {
     flex: 1 1 auto;
     overflow-y: scroll;
-    overflow-x: hidden;
     padding-top: 20px;
     padding-bottom: 20px;
     margin-right: -20px;
@@ -103,6 +102,7 @@
     flex-wrap: nowrap;
     flex: 0 0 auto;
     min-height: 110px;
+    width: calc(100% + 20px);
     .step-line {
       position: absolute; //height: 150px;
       height: 100%;
