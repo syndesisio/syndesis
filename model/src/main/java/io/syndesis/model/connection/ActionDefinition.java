@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import io.syndesis.model.ImmutablesStyle;
+import io.syndesis.core.immutable.ImmutablesStyle;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithProperties;
 

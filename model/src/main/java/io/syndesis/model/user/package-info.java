@@ -16,4 +16,4 @@
 @ImmutablesStyle
 package io.syndesis.model.user;
 
-import io.syndesis.model.ImmutablesStyle;
+import io.syndesis.core.immutable.ImmutablesStyle;

@@ -15,3 +15,5 @@
  */
 @ImmutablesStyle
 package io.syndesis.model;
+
+import io.syndesis.core.immutable.ImmutablesStyle;
