@@ -17,6 +17,7 @@ import {
 
 import { CurrentFlow, FlowEvent } from '../../current-flow.service';
 import { IntegrationSupportService } from '../../../../store/integration-support.service';
+import { DATA_MAPPER } from '../../../../store/step/step.store';
 
 import { createBasicFilterModel, findById } from './basic-filter.model';
 import { log, getCategory } from '../../../../logging';
@@ -98,10 +99,23 @@ export class BasicFilterComponent implements OnChanges {
       self.detector.detectChanges();
     }
 
-    // Get the output data shape from the first previous connection
-    const prevConnection = this.currentFlow.getPreviousConnection(this.position);
-    const dataShape = prevConnection ? prevConnection.action.outputDataShape : {};
-
+    // check if there's a data mapper in the previous steps
+    const prevSteps = this.currentFlow.getPreviousSteps(this.position);
+    const hasDataMapper =
+      prevSteps.find(step => step.stepKind === DATA_MAPPER) !== undefined;
+    let dataShape = undefined;
+    if (hasDataMapper) {
+      const nextConnection = this.currentFlow.getSubsequentConnection(this.position);
+      dataShape = nextConnection ? nextConnection.action.inputDataShape : {};
+    } else {
+      // Get the output data shape from the first previous connection
+      const prevConnection = this.currentFlow.getPreviousConnection(
+        this.position,
+      );
+      dataShape = prevConnection
+        ? prevConnection.action.outputDataShape
+        : {};
+    }
     // Fetch our form data
     this.integrationSupport
       .getFilterOptions(dataShape)

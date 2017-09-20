@@ -42,8 +42,7 @@ export class StepStore {
         const prev = previous.filter(s => {
           return (
             s.action &&
-            s.action.outputDataShape &&
-            s.action.outputDataShape.type
+            s.action.outputDataShape
           );
         });
         if (!prev.length) {
@@ -51,7 +50,7 @@ export class StepStore {
         }
         const subs = subsequent.filter(s => {
           return (
-            s.action && s.action.inputDataShape && s.action.inputDataShape.type
+            s.action && s.action.inputDataShape
           );
         });
         if (!subs.length) {
