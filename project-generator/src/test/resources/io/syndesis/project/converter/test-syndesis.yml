@@ -2,7 +2,7 @@
 flows:
 - steps:
   - kind: endpoint
-    uri: periodic-timer:every?period=5000
+    uri: periodic-timer-connector?period=5000
   - kind: endpoint
     uri: http-get-connector?httpUri=http://localhost:8080/hello
   - kind: log

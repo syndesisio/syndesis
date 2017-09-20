@@ -246,6 +246,17 @@
         <scope>import</scope>
       </dependency>
 
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-catalog-maven</artifactId>
+        <version>${camel.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
 
       <!-- Internal Dependencies -->
 

@@ -58,7 +58,7 @@ public class DataManagerTest {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
-            .containsExactly("gmail", "github", "ftp", "facebook", "linkedin", "salesforce", "timer", "jms", "day-trade", "twitter", "servicenow", "http", "sql-stored", "trade-insight");
+            .containsExactly("gmail", "github", "ftp", "facebook", "linkedin", "salesforce", "timer", "jms", "twitter", "day-trade", "servicenow", "http", "sql-stored", "trade-insight");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertEquals(connectors.getTotalCount(), connectors.getItems().size());
@@ -97,7 +97,7 @@ public class DataManagerTest {
     public void getSalesforceConnector() {
         Connector connector = dataManager.fetch(Connector.class, "salesforce");
         Assert.assertEquals("Second Connector in the deployment.json is Salesforce", "Salesforce", connector.getName());
-        Assert.assertEquals(8, connector.getActions().size());
+        Assert.assertEquals(7, connector.getActions().size());
     }
 
     @Test

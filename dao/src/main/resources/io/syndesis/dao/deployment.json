@@ -71,7 +71,7 @@
           "description": "Search for tweets that mention you",
           "id": "io.syndesis:twitter-mention-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-mention",
+          "camelConnectorPrefix": "twitter-mention-connector",
           "definition": {
             "inputDataShape": {
                "kind": "none"
@@ -103,29 +103,29 @@
               "properties": {
                 "filterOld": {
                   "kind": "parameter",
-                  "displayName": "Filter already polled tweets",
+                  "displayName": "Ignore tweets previously found",
                   "group": "filter",
                   "label": "consumer,filter",
-                  "required": false,
                   "type": "boolean",
                   "javaType": "boolean",
                   "tags":[],
                   "deprecated": false,
                   "secret": false,
                   "defaultValue": true,
+                  "componentProperty": false,
                   "description": "Filter out old tweets that have previously been polled"
                 },
                 "keywords": {
-                  "kind": "parameter",
+                  "kind": "path",
                   "displayName": "Keywords",
-                  "group": "filter",
-                  "label": "consumer,filter",
+                  "group": "common",
                   "required": true,
                   "type": "string",
                   "javaType": "java.lang.String",
                   "tags":[],
                   "deprecated": false,
                   "secret": false,
+                  "componentProperty": false,
                   "description": "Multiple search values can be separated with comma"
                 },
                 "delay": {
@@ -133,13 +133,13 @@
                   "displayName": "Delay",
                   "group": "scheduler",
                   "label": "consumer,scheduler",
-                  "required": false,
                   "type": "integer",
                   "javaType": "long",
                   "tags":[],
                   "deprecated": false,
                   "secret": false,
                   "defaultValue": 5000,
+                  "componentProperty": false,
                   "description": "Milliseconds before the next poll"
                 }
               }
@@ -171,22 +171,7 @@
           "secret": false,
           "componentProperty": true,
           "defaultValue": "https://login.salesforce.com",
-          "description": "URL of the Salesforce instance by default set to https://login.salesforce.com"
-        },
-        "instanceUrl": {
-          "kind": "property",
-          "displayName": "Instance URL",
-          "group": "security",
-          "label": "common,security",
-          "required": false,
-          "type": "string",
-          "javaType": "java.lang.String",
-          "tags":[],
-          "deprecated": false,
-          "secret": false,
-          "componentProperty": true,
-          "defaultValue": "",
-          "description": "URL of the Salesforce instance"
+          "description": "URL of the Salesforce instance used for authentication by default set to https://login.salesforce.com"
         },
         "clientId": {
           "kind": "property",
@@ -198,7 +183,7 @@
           "javaType": "java.lang.String",
           "tags":["oauth-client-id"],
           "deprecated": false,
-          "secret": true,
+          "secret": false,
           "componentProperty": true,
           "description": "OAuth Consumer Key of the connected app configured in the Salesforce instance setup. Typically a connected app needs to be configured but one can be provided by installing a package."
         },
@@ -240,7 +225,7 @@
           "javaType": "java.lang.String",
           "tags":[],
           "deprecated": false,
-          "secret": true,
+          "secret": false,
           "componentProperty": true,
           "description": "Username used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows."
         },
@@ -261,42 +246,6 @@
       },
       "actions": [
         {
-          "id": "io.syndesis:salesforce-upsert-contact-connector:latest",
-          "name": "Create/Update Contact",
-          "description": "Create or Update a Salesforce Contact",
-          "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-upsert-contact",
-          "tags": [ "dynamic" ],
-          "definition": {
-            "inputDataShape": {
-               "kind" : "java",
-               "type" : "io.syndesis.connector.salesforce.Contact"
-            },
-            "outputDataShape": {
-               "kind" : "none"
-            },
-            "propertyDefinitionSteps": [{
-              "name": "Unique field",
-              "description": "Specify field to hold the identifying value",
-              "properties": {
-                "sObjectIdName": {
-                  "kind": "parameter",
-                  "displayName": "SObject Id Name",
-                  "group": "common",
-                  "required": false,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "TwitterScreenName__c",
-                  "description": "SObject external ID field name"
-                }
-              }
-            }]
-          }
-        },{
           "id": "io.syndesis:salesforce-create-sobject-connector:latest",
           "name": "Create Salesforce object",
           "description": "Create Salesforce Object",
@@ -424,6 +373,42 @@
             }]
           }
         },{
+          "id": "io.syndesis:salesforce-get-sobject-connector:latest",
+          "name": "Fetch Salesforce object by ID",
+          "description": "Fetch Salesforce object by its ID",
+          "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "salesforce-get-sobject",
+          "tags": [ "dynamic" ],
+          "definition": {
+            "inputDataShape": {
+               "kind": "java",
+               "type": "io.syndesis.connector.salesforce.ExternalIdToGet"
+            },
+            "outputDataShape": {
+               "kind": "none"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Object name",
+              "description": "Specify the Salesforce object name",
+              "properties": {
+                "sObjectName": {
+                  "kind": "parameter",
+                  "displayName": "Object name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "Contact",
+                  "description": "Name of the Salesforce object"
+                }
+              }
+            }]
+          }
+        },{
           "id": "io.syndesis:salesforce-get-sobject-with-id-connector:latest",
           "name": "Fetch Salesforce object by unique ID",
           "description": "Fetch Salesforce object by unique ID",
@@ -474,41 +459,6 @@
                   "componentProperty": false,
                   "defaultValue": "",
                   "description": "SObject external ID field name"
-                }
-              }
-            }]
-          }
-        },{
-          "id": "io.syndesis:salesforce-update-sobject-connector:latest",
-          "name": "Update Salesforce object",
-          "description": "Update Salesforce Object",
-          "camelConnectorGAV": "io.syndesis:salesforce-update-sobject-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-update-sobject",
-          "tags": [ "dynamic" ],
-          "definition": {
-            "inputDataShape": {
-               "kind": "json-schema"
-            },
-            "outputDataShape": {
-               "kind": "none"
-            },
-            "propertyDefinitionSteps": [{
-              "name": "Object name",
-              "description": "Specify the Salesforce object name",
-              "properties": {
-                "sObjectName": {
-                  "kind": "parameter",
-                  "displayName": "Object name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "Contact",
-                  "description": "Name of the Salesforce object"
                 }
               }
             }]
@@ -610,89 +560,6 @@
   {
     "kind": "connector",
     "data": {
-      "id": "http",
-      "name": "HTTP",
-      "description": "Interact with APIs and plain HTTP endpoints",
-      "icon": "fa-globe",
-      "configuredProperties": {},
-      "properties": {},
-      "actions": [
-        {
-          "id": "io.syndesis:http-get-connector:latest",
-          "name": "HTTP GET",
-          "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-          "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-get-connector",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": [{
-              "name": "HTTP Endpoint",
-              "description": "Specify HTTP address to fetch the data from",
-              "properties": {
-                "httpUri": {
-                  "kind": "path",
-                  "displayName": "Http Uri",
-                  "group": "producer",
-                  "label": "producer",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.net.URI",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "description": "The url of the HTTP endpoint to call."
-                }
-              }
-            }]
-          }
-        },
-        {
-          "id": "io.syndesis:http-post-connector:latest",
-          "name": "HTTP POST",
-          "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-          "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-post-connector",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": [{
-              "name": "HTTP Endpoint",
-              "description": "Specify HTTP address to send the data to",
-              "properties": {
-                "httpUri": {
-                  "kind": "path",
-                  "displayName": "Http Uri",
-                  "group": "producer",
-                  "label": "producer",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.net.URI",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "description": "The url of the HTTP endpoint to call."
-                }
-              }
-            }]
-          }
-        }
-      ]
-    }
-  },
-  {
-    "kind": "connector",
-    "data": {
       "id": "timer",
       "name": "Timer",
       "description": "Timer Connector",
@@ -705,7 +572,7 @@
           "name": "Periodic Timer",
           "description": "Set a timer that fires at intervals that you specify",
           "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "periodic-timer",
+          "camelConnectorPrefix": "periodic-timer-connector",
           "definition": {
             "inputDataShape": {
                "kind" : "none"
@@ -758,22 +625,8 @@
           "tags":[],
           "deprecated": false,
           "secret": false,
-          "componentProperty": false,
+          "componentProperty": true,
           "description": "Host and port of HTTP service to use (override host in swagger schema)"
-        },
-        "api_key": {
-          "kind": "property",
-          "displayName": "API Key",
-          "group": "producer",
-          "label": "producer",
-          "required": true,
-          "type": "string",
-          "javaType": "java.lang.String",
-          "tags":[],
-          "deprecated": false,
-          "secret": true,
-          "componentProperty": false,
-          "description": "The API Key used to access the service"
         }
       },
       "actions": [
@@ -834,428 +687,6 @@
   {
     "kind": "connector",
     "data": {
-      "id": "day-trade",
-      "name": "Day Trade",
-      "description": "Day Trade API connector",
-      "icon": "fa-usd",
-      "configuredProperties": {},
-      "properties": {
-        "host": {
-          "kind": "property",
-          "displayName": "Host",
-          "group": "producer",
-          "label": "producer",
-          "required": true,
-          "type": "string",
-          "javaType": "java.lang.String",
-          "tags":[],
-          "deprecated": false,
-          "secret": false,
-          "componentProperty": false,
-          "description": "Host and port of HTTP service to use (override host in swagger schema)"
-        },
-        "api_key": {
-          "kind": "property",
-          "displayName": "API Key",
-          "group": "producer",
-          "label": "producer",
-          "required": true,
-          "type": "string",
-          "javaType": "java.lang.String",
-          "tags":[],
-          "deprecated": false,
-          "secret": true,
-          "componentProperty": false,
-          "description": "The API Key used to access the service"
-        }
-      },
-      "actions": [
-        {
-          "name": "Place Trade",
-          "description": "Place trade on Day Trade API server",
-          "id": "io.syndesis:day-trade-place-connector:latest",
-          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "day-trade-place",
-          "definition": {
-            "inputDataShape": {
-              "kind": "java",
-              "type": "io.syndesis.connector.daytrade.Trade"
-            },
-            "outputDataShape": {
-              "kind": "none"
-            },
-            "propertyDefinitionSteps": []
-          }
-        },
-        {
-          "name": "Retrieve Trade",
-          "description": "Retrieve a trade on Day Trade API server",
-          "id": "io.syndesis:day-trade-place-connector:latest",
-          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "day-trade-place",
-          "definition": {
-            "inputDataShape": {
-              "kind": "java",
-              "type": "io.syndesis.connector.daytrade.Trade"
-            },
-            "outputDataShape": {
-              "kind": "java",
-              "type": "io.syndesis.connector.daytrade.Trade"
-            },
-            "propertyDefinitionSteps": []
-          }
-        },
-        {
-          "name": "Get Latest Trade",
-          "description": "Get the latest trade on Day Trade API server",
-          "id": "io.syndesis:day-trade-place-connector:latest",
-          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "day-trade-place",
-          "definition": {
-            "inputDataShape": {
-              "kind": "none"
-            },
-            "outputDataShape": {
-              "kind": "java",
-              "type": "io.syndesis.connector.daytrade.Trade"
-            },
-            "propertyDefinitionSteps": []
-          }
-        }
-      ]
-    }
-  },
-  {
-    "kind": "connector",
-    "data": {
-      "id": "linkedin",
-      "name": "LinkedIn",
-      "description": "Connect and interact with your professional social network",
-      "icon": "fa-puzzle-piece",
-      "configuredProperties": {},
-      "properties": {},
-      "actions": [
-        {
-          "id": "io.syndesis:linkedin-get-connections-connector:latest",
-          "name": "Get Connections",
-          "description": "Get all LinkedIn connections",
-          "camelConnectorGAV": "io.syndesis:linkedin-connections-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "linkedin-connections",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "none"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": []
-          }
-        },
-        {
-          "id": "io.syndesis:linkedin-add-invite-connector:latest",
-          "name": "Send Invite",
-          "description": "Send out a LinkedIn Invite",
-          "camelConnectorGAV": "io.syndesis:linkedin-invite-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "linkedin-invite",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "none"
-            },
-            "propertyDefinitionSteps": []
-          }
-        }
-      ]
-    }
-  },
-  {
-    "kind": "connector",
-    "data": {
-      "id": "servicenow",
-      "name": "ServiceNow",
-      "description": "Cloud-based IT Service Management",
-      "icon": "fa-puzzle-piece",
-      "configuredProperties": {},
-      "properties": {},
-      "actions": [
-        {
-          "id": "io.syndesis:servicenow-connector:latest",
-          "name": "service-now",
-          "description": "Provides access to all of ServiceNow REST API",
-          "camelConnectorGAV": "io.syndesis:servicenow-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "servicenow",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": []
-          }
-        }
-      ]
-    }
-  },
-  {
-    "kind": "connector",
-    "data": {
-      "id": "github",
-      "name": "GitHub",
-      "description": "Manage code on GitHub through commits, pull requests, tags, and more",
-      "icon": "fa-puzzle-piece",
-      "configuredProperties": {},
-      "properties": {},
-      "actions": [
-        {
-          "id": "io.syndesis:github-pullrequest-connector:latest",
-          "name": "github-pullrequest",
-          "description": "Create a GitHub PullRequest",
-          "camelConnectorGAV": "io.syndesis:github-pullrequest-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "github-pullrequest",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            }
-          }
-        },
-        {
-          "id": "io.syndesis:github-tag-connector:latest",
-          "name": "github-tag",
-          "description": "Create a GitHub Tag",
-          "camelConnectorGAV": "io.syndesis:github-tag-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "github-tag",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            }
-          }
-        },
-        {
-          "id": "io.syndesis:github-commit-connector:latest",
-          "name": "github-commit",
-          "description": "Performs a GitHub Commit",
-          "camelConnectorGAV": "io.syndesis:github-commit-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "github-commit",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": []
-          }
-        }
-      ]
-    }
-  },
-  {
-    "kind": "connector",
-    "data": {
-      "id": "gmail",
-      "name": "GMail",
-      "description": "Send and receive email using Google's Gmail service",
-      "icon": "fa-puzzle-piece",
-      "configuredProperties": {},
-      "properties": {},
-      "actions": [
-        {
-          "id": "io.syndesis:gmail-send:latest",
-          "name": "GMail Send",
-          "description": "Send an email",
-          "camelConnectorGAV": "io.syndesis:gmail-send-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-send",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": []
-          }
-        },
-        {
-          "id": "io.syndesis:gmail-list:latest",
-          "name": "GMail List",
-          "description": "List incoming messages",
-          "camelConnectorGAV": "io.syndesis:gmail-list-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-list",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": []
-          }
-        },
-        {
-          "id": "io.syndesis:gmail-get:latest",
-          "name": "GMail Get",
-          "description": "Get email message",
-          "camelConnectorGAV": "io.syndesis:gmail-get-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-get",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": []
-          }
-        },
-        {
-          "id": "io.syndesis:gmail-delete:latest",
-          "name": "GMail Delete",
-          "description": "Delete email message",
-          "camelConnectorGAV": "io.syndesis:gmail-delete-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-delete",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": []
-          }
-        }
-      ]
-    }
-  },
-  {
-    "kind": "connector",
-    "data": {
-      "id": "facebook",
-      "name": "Facebook",
-      "description": "Access Facebook social network features such as posts, users, checkins, etc",
-      "icon": "fa-puzzle-piece",
-      "configuredProperties": {},
-      "properties": {},
-      "actions": [
-        {
-          "id": "io.syndesis:facebook-post-connector:latest",
-          "name": "Post",
-          "description": "Creates a post to Facebook",
-          "camelConnectorGAV": "io.syndesis:facebook-post-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "facebook-post",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": []
-          }
-        },
-        {
-          "id": "io.syndesis:facebook-like-connector:latest",
-          "name": "Like",
-          "description": "Like something on Facebook",
-          "camelConnectorGAV": "io.syndesis:facebook-like-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "facebook-like",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": []
-          }
-        }
-      ]
-    }
-  },
-  {
-    "kind": "connector",
-    "data": {
-      "id": "jms",
-      "name": "Messaging",
-      "description": "Produce and consume messages for event-driven interaction",
-      "icon": "fa-puzzle-piece",
-      "configuredProperties": {},
-      "properties": {},
-      "actions": [
-        {
-          "id": "io.syndesis:jms-producer-connector:latest",
-          "name": "Message Producer",
-          "description": "Drop a message on a Queue",
-          "camelConnectorGAV": "io.syndesis:jms-producer-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "jms-producer",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            }
-          }
-        },
-        {
-          "id": "io.syndesis:jms-consumer-connector:latest",
-          "name": "Message Consumer",
-          "description": "Takes a message off a Queue",
-          "camelConnectorGAV": "io.syndesis:jms-consumer-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "jms-consumer",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": []
-          }
-        }
-      ]
-    }
-  },
-  {
-    "kind": "connector",
-    "data": {
-      "id": "ftp",
-      "name": "File Transfer",
-      "description": "Remote, secure file transfer",
-      "icon": "fa-puzzle-piece",
-      "configuredProperties": {},
-      "properties": {},
-      "actions": [
-        {
-          "id": "io.syndesis:ftp-connector:latest",
-          "name": "File Transport",
-          "description": "FTP/SFTP/FPTS file transfer",
-          "camelConnectorGAV": "io.syndesis:ftp-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "ftp",
-          "definition": {
-            "inputDataShape": {
-               "kind" : "any"
-            },
-            "outputDataShape": {
-               "kind" : "any"
-            },
-            "propertyDefinitionSteps": []
-          }
-        }
-      ]
-    }
-  },
-  {
-    "kind": "connector",
-    "data": {
       "id": "sql-stored",
       "name": "SQL Stored Procedure",
       "description": "Relational Database SQL Stored procedure invocation",
@@ -1265,8 +696,8 @@
         "url": {
           "kind": "property",
           "displayName": "Connection URL",
-          "group": "security",
-          "label": "common,security",
+          "group": "producer",
+          "label": "common",
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
@@ -1355,9 +786,9 @@
               "description": "Select the Stored Procedure",
               "properties": {
                 "procedureName": {
-                  "kind": "parameter",
+                  "kind": "path",
                   "displayName": "Procedure Name",
-                  "group": "common",
+                  "group": "producer",
                   "required": true,
                   "type": "string",
                   "javaType": "java.lang.String",
@@ -1373,7 +804,7 @@
               "description": "Specify SQL stored procedure parameters",
               "properties": {
                 "template": {
-                  "kind": "parameter",
+                  "kind": "path",
                   "displayName": "Template",
                   "group": "producer",
                   "required": false,

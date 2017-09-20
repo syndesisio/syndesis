@@ -133,7 +133,7 @@ public class DefaultProjectGeneratorTest {
             .configuredProperties(map("period",5000))
             .action(new Action.Builder()
                 .connectorId("timer")
-                .camelConnectorPrefix("periodic-timer")
+                .camelConnectorPrefix("periodic-timer-connector")
                 .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
                 .build())
             .build();
@@ -210,7 +210,7 @@ public class DefaultProjectGeneratorTest {
             .configuredProperties(map("period",5000))
                 .action(new Action.Builder()
                     .connectorId("timer")
-                    .camelConnectorPrefix("periodic-timer")
+                    .camelConnectorPrefix("periodic-timer-connector")
                     .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
                     .build())
             .build();
@@ -288,7 +288,7 @@ public class DefaultProjectGeneratorTest {
             .configuredProperties(map("period", 5000))
             .action(new Action.Builder()
                 .connectorId("timer")
-                .camelConnectorPrefix("periodic-timer")
+                .camelConnectorPrefix("periodic-timer-connector")
                 .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
                 .build())
             .build();
@@ -342,7 +342,7 @@ public class DefaultProjectGeneratorTest {
             .configuredProperties(map("period", 5000))
             .action(new Action.Builder()
                 .connectorId("timer")
-                .camelConnectorPrefix("periodic-timer")
+                .camelConnectorPrefix("periodic-timer-connector")
                 .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
                 .build())
             .build();
