@@ -100,10 +100,10 @@
           <p>
             <button *ngIf="canDeactivate(i)"
                     class="btn btn-default"
-                    (click)="requestDeactivate(i)">Stop Integration</button>
+                    (click)="requestAction('deactivate', i)">Stop Integration</button>
             <button *ngIf="canActivate(i)"
                     class="btn btn-default"
-                    (click)="requestActivate(i)">Start Integration</button>
+                    (click)="requestAction('activate', i)">Start Integration</button>
             <!--
             <button class="btn btn-default">Undeploy Integration</button>
             -->
@@ -120,11 +120,13 @@
               <thead>
                 <tr>
                   <th>Version</th>
+                  <!--
                   <th>Start date/time</th>
                   <th>Run Length</th>
                   <th>Uses</th>
+                  -->
                   <th>Status</th>
-                  <th>Actions</th>
+                  <th width="10%">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -140,6 +142,7 @@
                         {{ row.version }}
                       </ng-container>
                     </td>
+                    <!--
                     <td>{{ row.startTime | date:"M/d/y H:m:s" }}</td>
                     <td>
                       <ng-container *ngIf="row.runLength || row.runLength === 0">
@@ -147,6 +150,7 @@
                       </ng-container>
                     </td>
                     <td>{{ row.uses }}</td>
+                    -->
                     <td>
                       <span *ngFor="let status of row.status"
                             [class]="status.class">
