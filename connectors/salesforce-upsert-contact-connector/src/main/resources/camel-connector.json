@@ -21,5 +21,10 @@
     "operationName" : "upsertSObject",
     "sObjectIdName" : "TwitterScreenName__c"
   },
-  "endpointOptions" : [ "sObjectIdName" ]
+  "endpointOptions" : [ "sObjectIdName" ],
+  "endpointOverrides" : {
+    "sObjectIdName" : {
+      "required" : "true"
+    }
+  }
 }

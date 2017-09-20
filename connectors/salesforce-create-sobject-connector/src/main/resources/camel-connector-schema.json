@@ -25,7 +25,7 @@
     "password": { "kind": "property", "displayName": "Password", "group": "security", "label": "common,security", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": true, "description": "Password used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows. Make sure that you append security token to the end of the password if using one." }
   },
   "properties": {
-    "sObjectName": { "kind": "parameter", "displayName": "SObject Name", "group": "common", "required": false, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "defaultValue": "Contact", "description": "SObject name if required or supported by API" }
+    "sObjectName": { "kind": "parameter", "displayName": "SObject Name", "group": "common", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "defaultValue": "Contact", "description": "SObject name if required or supported by API" }
   },
   "connectorProperties": {
   }

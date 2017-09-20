@@ -23,5 +23,13 @@
     "sObjectIdName" : "Id",
     "rawPayload" : "true"
   },
-  "endpointOptions" : [ "sObjectName", "sObjectIdName" ]
+  "endpointOptions" : [ "sObjectName", "sObjectIdName" ],
+  "endpointOverrides" : {
+    "sObjectName" : {
+      "required" : "true"
+    },
+    "sObjectIdName" : {
+      "required" : "true"
+    }
+  }
 }
