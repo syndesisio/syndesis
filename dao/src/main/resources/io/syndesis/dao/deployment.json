@@ -359,7 +359,7 @@
                   "kind": "parameter",
                   "displayName": "SObject Id Name",
                   "group": "common",
-                  "required": false,
+                  "required": true,
                   "type": "string",
                   "javaType": "java.lang.String",
                   "tags":[],
@@ -450,7 +450,7 @@
                   "kind": "parameter",
                   "displayName": "SObject Id Name",
                   "group": "common",
-                  "required": false,
+                  "required": true,
                   "type": "string",
                   "javaType": "java.lang.String",
                   "tags":[],
@@ -540,7 +540,7 @@
                   "kind": "parameter",
                   "displayName": "SObject Id Name",
                   "group": "common",
-                  "required": false,
+                  "required": true,
                   "type": "string",
                   "javaType": "java.lang.String",
                   "tags":[],
@@ -549,6 +549,114 @@
                   "componentProperty": false,
                   "defaultValue": "",
                   "description": "SObject external ID field name"
+                }
+              }
+            }]
+          }
+        },{
+          "id": "io.syndesis:salesforce-on-create-connector:latest",
+          "name": "On create",
+          "description": "Get notified when an Salesforce record is created",
+          "camelConnectorGAV": "io.syndesis:salesforce-on-create-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "salesforce-on-create",
+          "tags": [ "dynamic" ],
+          "definition": {
+            "inputDataShape": {
+               "kind": "none"
+            },
+            "outputDataShape": {
+               "kind": "java",
+               "type": "io.syndesis.connector.salesforce.AnyObject"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Object name",
+              "description": "Specify the Salesforce object name",
+              "properties": {
+                "sObjectName": {
+                  "kind": "parameter",
+                  "displayName": "Object name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "Contact",
+                  "description": "Name of the Salesforce object"
+                }
+              }
+            }]
+          }
+        },{
+          "id": "io.syndesis:salesforce-on-update-connector:latest",
+          "name": "On update",
+          "description": "Get notified when an Salesforce record is updated",
+          "camelConnectorGAV": "io.syndesis:salesforce-on-update-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "salesforce-on-update",
+          "tags": [ "dynamic" ],
+          "definition": {
+            "inputDataShape": {
+               "kind": "none"
+            },
+            "outputDataShape": {
+               "kind": "java",
+               "type": "io.syndesis.connector.salesforce.AnyObject"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Object name",
+              "description": "Specify the Salesforce object name",
+              "properties": {
+                "sObjectName": {
+                  "kind": "parameter",
+                  "displayName": "Object name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "Contact",
+                  "description": "Name of the Salesforce object"
+                }
+              }
+            }]
+          }
+        },{
+          "id": "io.syndesis:salesforce-on-delete-connector:latest",
+          "name": "On delete",
+          "description": "Get notified when an Salesforce record is deleted",
+          "camelConnectorGAV": "io.syndesis:salesforce-on-delete-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "salesforce-on-delete",
+          "tags": [ "dynamic" ],
+          "definition": {
+            "inputDataShape": {
+               "kind": "none"
+            },
+            "outputDataShape": {
+               "kind": "java",
+               "type": "io.syndesis.connector.salesforce.AnyObject"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Object name",
+              "description": "Specify the Salesforce object name",
+              "properties": {
+                "sObjectName": {
+                  "kind": "parameter",
+                  "displayName": "Object name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "Contact",
+                  "description": "Name of the Salesforce object"
                 }
               }
             }]
@@ -807,7 +915,7 @@
                   "kind": "path",
                   "displayName": "Template",
                   "group": "producer",
-                  "required": false,
+                  "required": true,
                   "type": "string",
                   "javaType": "java.lang.String",
                   "tags":[],

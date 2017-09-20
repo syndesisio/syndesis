@@ -134,7 +134,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("timer")
                 .camelConnectorPrefix("periodic-timer-connector")
-                .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
+                .camelConnectorGAV("io.syndesis:timer-connector:0.5.2")
                 .build())
             .build();
 
@@ -147,7 +147,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-get-connector")
-                .camelConnectorGAV("io.syndesis:http-get-connector:0.5.0")
+                .camelConnectorGAV("io.syndesis:http-get-connector:0.5.2")
                 .build())
             .build();
 
@@ -165,7 +165,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-post-connector")
-                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.0")
+                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.2")
                 .build())
             .build();
 
@@ -211,7 +211,7 @@ public class DefaultProjectGeneratorTest {
                 .action(new Action.Builder()
                     .connectorId("timer")
                     .camelConnectorPrefix("periodic-timer-connector")
-                    .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
+                    .camelConnectorGAV("io.syndesis:timer-connector:0.5.2")
                     .build())
             .build();
 
@@ -225,7 +225,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-get-connector")
-                .camelConnectorGAV("io.syndesis:http-get-connector:0.5.0")
+                .camelConnectorGAV("io.syndesis:http-get-connector:0.5.2")
                 .build())
             .build();
 
@@ -289,7 +289,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("timer")
                 .camelConnectorPrefix("periodic-timer-connector")
-                .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
+                .camelConnectorGAV("io.syndesis:timer-connector:0.5.2")
                 .build())
             .build();
 
@@ -307,7 +307,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-post-connector")
-                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.0")
+                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.2")
                 .build())
             .build();
 
@@ -343,7 +343,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("timer")
                 .camelConnectorPrefix("periodic-timer-connector")
-                .camelConnectorGAV("io.syndesis:timer-connector:0.5.0")
+                .camelConnectorGAV("io.syndesis:timer-connector:0.5.2")
                 .build())
             .build();
 
@@ -363,7 +363,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-post-connector")
-                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.0")
+                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.2")
                 .build())
             .build();
 

@@ -97,7 +97,7 @@ public class DataManagerTest {
     public void getSalesforceConnector() {
         Connector connector = dataManager.fetch(Connector.class, "salesforce");
         Assert.assertEquals("Second Connector in the deployment.json is Salesforce", "Salesforce", connector.getName());
-        Assert.assertEquals(7, connector.getActions().size());
+        Assert.assertEquals(10, connector.getActions().size());
     }
 
     @Test
