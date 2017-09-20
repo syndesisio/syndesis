@@ -14,27 +14,9 @@
     "test": "yarn ng test",
     "test:cc": "yarn ng test -- --watch=false --cc",
     "test:xvfb": "docker run --rm -v `pwd`:/syndesis-ui:z -w /syndesis-ui -u `id -u` docker.io/syndesis/karma-xvfb ./karma-xvfb.sh",
-    "pree2e": "webdriver-manager update",
-    "e2e": "better-npm-run e2e:local",
-    "e2e:syndesis-qe": "better-npm-run e2e:syndesis-qe",
-    "e2e:xvfb": "docker run -e SYNDESIS_UI_URL=$SYNDESIS_UI_URL --rm -v `pwd`:/syndesis-ui:z -w /syndesis-ui -u `id -u` docker.io/syndesis/karma-xvfb ./e2e-xvfb.sh",
     "sw": "sw-precache --root=dist --config=sw-precache-config.js",
     "docker:build": "yarn ng build -- --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest .",
     "commit": "yarn git-cz"
-  },
-  "betterScripts": {
-    "e2e:local": {
-      "command": "protractor",
-      "env": {
-        "TEST_ENV": "local"
-      }
-    },
-    "e2e:syndesis-qe": {
-      "command": "protractor",
-      "env": {
-        "TEST_ENV": "syndesis-qe"
-      }
-    }
   },
   "private": true,
   "dependencies": {
@@ -104,8 +86,6 @@
     "ncp": "^2.0.0",
     "patternfly-sass": "3.23.2",
     "prettier": "^1.5.2",
-    "protractor": "5.1.1",
-    "protractor-cucumber-framework": "^0.6.0",
     "sass-lint": "1.10.2",
     "sw-precache": "5.0.0",
     "swagger-js-codegen": "1.7.12",

@@ -54,7 +54,7 @@ Included in this stack are the following technologies:
 * Framework: [Angular 2](https://angular.io/)
 * Module Bundler: [Angular CLI](https://cli.angular.io)
 * Design Patterns: [PatternFly](https://www.patternfly.org/)
-* Testing: [Cucumber.js](https://cucumber.io/) (BDD Unit Test Framework), [Karma](https://karma-runner.github.io/1.0/index.html) (Unit Test Runner), [Protractor](http://www.protractortest.org/#/) (E2E Framework), [Istanbul](https://github.com/gotwarlost/istanbul) (Code Coverage)
+* Testing: [Cucumber.js](https://cucumber.io/) (BDD Unit Test Framework), [Karma](https://karma-runner.github.io/1.0/index.html) (Unit Test Runner), [Istanbul](https://github.com/gotwarlost/istanbul) (Code Coverage)
 * Linting: [TsLint](https://github.com/palantir/tslint) (Linting for TypeScript)
 * Logging: [typescript-logging](https://github.com/mreuvers/typescript-logging) (TypeScript Logging)
 * Code Analysis: [Codelyzer](https://github.com/mgechev/codelyzer) (TsLint rules for static code analysis of Angular 2 TypeScript projects)
@@ -62,7 +62,7 @@ Included in this stack are the following technologies:
 
 ### File Structure
 
-We use the component approach in our starter. This is the new standard for developing Angular apps and a great way to ensure maintainable code by encapsulation of our behavior logic. A component is basically a self contained app, usually in a single file or a folder with each concern as a file: style, template, specs, e2e, and component class.
+We use the component approach in our starter. This is the new standard for developing Angular apps and a great way to ensure maintainable code by encapsulation of our behavior logic. A component is basically a self contained app, usually in a single file or a folder with each concern as a file: style, template, specs, and component class.
 
 ```plain
 syndesis-ui/
@@ -81,12 +81,10 @@ syndesis-ui/
  │   │   │
  │   │   ├──user/                 * an example 'user' component, based on an entity/model. can be nested further.
  │   │   │   ├──user.component.ts * the primary Angular component file; essentially a controller + directive combined
- │   │   │   ├──user.e2e.ts       * our e2e test for the user component
  │   │   │   ├──user.html         * our HTML user template for the user component
  │   │   │   └──user.spec.ts      * our unit test for the user component
  │   │   │
  │   │   ├──app.component.ts      * a simple version of our App component components
- │   │   ├──app.e2e.ts            * a simple end-to-end test for /
  │   │   └──app.spec.ts           * a simple test of components in app.ts
  │   │
  │   ├──assets/                   * static assets are served here
@@ -101,7 +99,6 @@ syndesis-ui/
  ├──LICENSE                       * Syndesis is available for use under the Apache 2.0 license
  ├──npm-shrinkwrap.json           * npm's way of allowing us to control exact versions of dependencies
  ├──package.json                  * what npm uses to manage it's dependencies
- ├──protractor.conf.js            * protractor, our e2e testing framework, config file
  ├──README.md                     * this exact file :)
  ├──tsconfig.json                 * typescript compiler config
  ├──tslint.json                   * typescript lint config
@@ -176,9 +173,6 @@ For a list of common commands, see [here](/docs/commands.md).
 `ng test --watch=false`
 
 For a list of common commands, see [here](/docs/commands.md).
-
-### E2E Tests
-See [e2e/Readme.md](e2e/Readme.md).
 
 ### Linting
 
