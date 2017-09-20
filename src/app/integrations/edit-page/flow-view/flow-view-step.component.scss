@@ -27,8 +27,8 @@
   }
   .delete-icon {
     position: absolute;
-    top: 22px;
-    right: 30px;
+    top: 18px;
+    right: 10px;
     cursor: pointer;
     opacity: 0.75;
     transition: opacity 0.5s ease-in-out;
@@ -117,7 +117,7 @@
         &.disabled {
           cursor: default;
         }
-        padding: 8px 8px 8px 8px;
+        padding: 8px 18px 8px 8px;
         text-transform: uppercase;
         white-space: nowrap; //----- Sidebar: Menu: Parent Step: Active State ----------------->>
         &.active {
