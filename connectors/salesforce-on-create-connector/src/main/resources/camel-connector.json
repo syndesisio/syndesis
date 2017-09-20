@@ -19,12 +19,17 @@
   "componentOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken", "userName", "password" ],
   "endpointValues" : {
     "updateTopic" : "true",
-    "notifyForFields": "ALL",
-    "notifyForOperationCreate": "true",
-    "notifyForOperationUpdate": "false",
-    "notifyForOperationDelete": "false",
-    "notifyForOperationUndelete": "false",
-    "sObjectClass": "io.syndesis.connector.salesforce.AnyObject"
+    "notifyForFields" : "ALL",
+    "notifyForOperationCreate" : "true",
+    "notifyForOperationUpdate" : "false",
+    "notifyForOperationDelete" : "false",
+    "notifyForOperationUndelete" : "false",
+    "sObjectClass" : "io.syndesis.connector.salesforce.AnyObject"
   },
-  "endpointOptions" : [ "sObjectName" ]
+  "endpointOptions" : [ "sObjectName" ],
+  "endpointOverrides" : {
+    "sObjectName" : {
+      "required" : "true"
+    }
+  }
 }

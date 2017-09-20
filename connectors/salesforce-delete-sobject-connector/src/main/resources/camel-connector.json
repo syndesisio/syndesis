@@ -22,5 +22,10 @@
     "sObjectName" : "Contact",
     "rawPayload" : "true"
   },
-  "endpointOptions" : [ "sObjectName" ]
+  "endpointOptions" : [ "sObjectName" ],
+  "endpointOverrides" : {
+    "sObjectName" : {
+      "required" : "true"
+    }
+  }
 }
