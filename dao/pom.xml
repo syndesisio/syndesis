@@ -83,8 +83,8 @@
     </dependency>
 
     <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
     </dependency>
 
     <dependency>
@@ -95,8 +95,8 @@
     <dependency>
       <!-- For @javax.annotation.Nullable in DataManager to declare optional constructor arg -->
       <!-- That gut feeling,  that there should be a better solution -->
-        <groupId>com.google.code.findbugs</groupId>
-        <artifactId>jsr305</artifactId>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
     </dependency>
 
     <!-- === Test ============================================================================ -->
@@ -125,6 +125,24 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-catalog</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-catalog-maven</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-catalog-connector</artifactId>
       <scope>test</scope>
     </dependency>
 

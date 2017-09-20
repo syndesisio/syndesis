@@ -23,7 +23,7 @@
           "name": "PeriodicTimer",
           "id": "io.syndesis_timer-connector_@syndesis-connectors.version@",
           "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "periodic-timer"
+          "camelConnectorPrefix": "periodic-timer-connector"
         },
         "configuredProperties": {
           "period": "5000"
