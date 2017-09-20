@@ -132,28 +132,34 @@ public class GitHubServiceITCase {
     @Test
     public void testCreateNewRepository() throws IOException, InterruptedException {
         String testRepo = REPO_NAME + "-create-new";
-        Repository repository = githubService.getRepository(testRepo);
-        int retryCount = 0;
-        while (repository != null) {
-            User apiUser = githubService.getApiUser();
-            client.delete("/repos/" + apiUser.getLogin() + "/" + testRepo);
-            this.wait(100l);
-            repository = githubService.getRepository(testRepo);
-            retryCount++;
-            if (retryCount > 50) {
-                break; //fail if the repo is still there after 5 seconds
-            }
-        }
-        Assert.assertNull(repository); // repository should not exist on GitHub
-
-        // Create Repository
-        repository = githubService.createRepository(testRepo);
-        Assertions.assertThat(repository).isNotNull();
-        Assertions.assertThat(repository.getName()).isEqualTo(testRepo);
-        System.out.println("Successfully created repository " + repository.getName());
-
         User apiUser = githubService.getApiUser();
-        client.delete("/repos/" + apiUser.getLogin() + "/" + testRepo);
+        try {
+            Repository repository = githubService.getRepository(testRepo);
+            int retryCount = 0;
+            if (repository != null) {
+                client.delete("/repos/" + apiUser.getLogin() + "/" + testRepo);
+                while (repository != null) {
+                    this.wait(100l);
+                    repository = githubService.getRepository(testRepo);
+                    retryCount++;
+                    if (retryCount > 5) {
+                        break; //fail if the repo is still there after 5 seconds
+                    }
+                }
+            }
+
+            // Create Repository
+            repository = githubService.createRepository(testRepo);
+            Assertions.assertThat(repository).isNotNull();
+            Assertions.assertThat(repository.getName()).isEqualTo(testRepo);
+            System.out.println("Successfully created repository " + repository.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+            throw e;
+        } finally {
+            client.delete("/repos/" + apiUser.getLogin() + "/" + testRepo);
+        }
     }
 
     // Requires repo scope
