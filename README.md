@@ -67,7 +67,7 @@ to broker multiple identity providers and this allows Syndesis to be independent
 
 ## Getting an access token locally
 
-If you want to try out the REST API manually, try the following steps (note that this requires installation of the amazing [`jq`]()):
+If you want to try out the REST API manually, try the following steps (note that this requires installation of the amazing [`jq`](https://stedolan.github.io/jq/)):
 
 ```bash
 $ ./start-with-keycloak.sh
