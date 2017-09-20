@@ -51,7 +51,15 @@
       <nav>
         <ul class="nav navbar-nav navbar-right navbar-iconic">
 
+          <!-- User w/ no dropdown -->
+          <li class="nav-item-iconic">
+            <span title="Username"
+                  class="fa pficon-user"></span>
+            <span class="username">{{( user | async)?.name}}</span>
+          </li>
+
           <!-- User Dropdown -->
+          <!--
           <li dropdown
               class="dropdown user">
             <a dropdownToggle
@@ -78,6 +86,7 @@
               </li>
             </ul>
           </li>
+        -->
         </ul>
       </nav>
     </nav>
