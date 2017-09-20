@@ -35,6 +35,7 @@
     <module>timer-connector</module>
     <module>twitter-mention-connector</module>
     <module>twitter-search-connector</module>
+    <module>salesforce-model</module>
     <module>salesforce-create-sobject-connector</module>
     <module>salesforce-delete-sobject-connector</module>
     <module>salesforce-delete-sobject-with-id-connector</module>

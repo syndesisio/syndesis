@@ -35,17 +35,20 @@ public class SalesforceUpsertSObjectComponent extends DefaultConnectorComponent 
         super("salesforce-upsert-sobject", SalesforceUpsertSObjectComponent.class.getName());
 
         // set sObjectId header
-        setBeforeProducer( exchange -> {
+        setBeforeProducer(exchange -> {
 
             // parse input json and extract Id field
-            ObjectMapper mapper = JsonUtils.createObjectMapper();
-            ObjectNode node = (ObjectNode) mapper.readTree(exchange.getIn().getBody(String.class));
+            final ObjectMapper mapper = JsonUtils.createObjectMapper();
+            final ObjectNode node = (ObjectNode) mapper.readTree(exchange.getIn().getBody(String.class));
 
-            JsonNode sObjectExternalId = node.remove(String.valueOf(getOptions().get(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME)));
+            final JsonNode sObjectExternalId = node
+                .remove(String.valueOf(getOptions().get(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME)));
             if (sObjectExternalId == null) {
-                exchange.setException(new SalesforceException("Missing option " + SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME, 404));
+                exchange.setException(
+                    new SalesforceException("Missing option " + SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME, 404));
             } else {
-                exchange.getIn().setHeader(SalesforceEndpointConfig.SOBJECT_EXT_ID_VALUE, sObjectExternalId.textValue());
+                exchange.getIn().setHeader(SalesforceEndpointConfig.SOBJECT_EXT_ID_VALUE,
+                    sObjectExternalId.textValue());
 
                 // base fields are not allowed to be updated
                 clearBaseFields(node);
@@ -55,21 +58,20 @@ public class SalesforceUpsertSObjectComponent extends DefaultConnectorComponent 
             }
         });
 
-
-        setAfterProducer( exchange -> {
+        setAfterProducer(exchange -> {
 
             // map json response back to CreateSObjectResult POJO
-            ObjectMapper mapper = JsonUtils.createObjectMapper();
+            final ObjectMapper mapper = JsonUtils.createObjectMapper();
             if (!exchange.isFailed()) {
-                Message out = exchange.getOut();
-                CreateSObjectResult result = mapper.readValue(out.getBody(String.class),
-                        CreateSObjectResult.class);
+                final Message out = exchange.getOut();
+                final CreateSObjectResult result = mapper.readValue(out.getBody(String.class),
+                    CreateSObjectResult.class);
                 out.setBody(result);
             }
         });
     }
 
-    private void clearBaseFields(ObjectNode node) {
+    private static void clearBaseFields(final ObjectNode node) {
         node.remove("attributes");
         node.remove("Id");
         node.remove("IsDeleted");

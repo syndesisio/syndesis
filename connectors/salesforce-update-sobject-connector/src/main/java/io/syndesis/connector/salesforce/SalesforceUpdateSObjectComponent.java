@@ -29,7 +29,6 @@ import org.apache.camel.component.salesforce.api.utils.JsonUtils;
  */
 public class SalesforceUpdateSObjectComponent extends DefaultConnectorComponent {
 
-
     public SalesforceUpdateSObjectComponent() {
         super("salesforce-update-sobject", SalesforceUpdateSObjectComponent.class.getName());
 
@@ -37,10 +36,10 @@ public class SalesforceUpdateSObjectComponent extends DefaultConnectorComponent 
         setBeforeProducer(exchange -> {
 
             // parse input json and extract Id field
-            ObjectMapper mapper = JsonUtils.createObjectMapper();
-            JsonNode node = mapper.readTree(exchange.getIn().getBody(String.class));
+            final ObjectMapper mapper = JsonUtils.createObjectMapper();
+            final JsonNode node = mapper.readTree(exchange.getIn().getBody(String.class));
 
-            JsonNode sObjectId = node.get("Id");
+            final JsonNode sObjectId = node.get("Id");
             if (sObjectId == null) {
                 exchange.setException(new SalesforceException("Missing field Id", 404));
             } else {
@@ -54,8 +53,7 @@ public class SalesforceUpdateSObjectComponent extends DefaultConnectorComponent 
         });
     }
 
-
-    private void clearBaseFields(ObjectNode node) {
+    private static void clearBaseFields(final ObjectNode node) {
         node.remove("attributes");
         node.remove("Id");
         node.remove("IsDeleted");

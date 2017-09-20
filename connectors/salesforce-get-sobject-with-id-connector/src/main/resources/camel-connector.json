@@ -13,7 +13,7 @@
   "description" : "Get Salesforce SObject With External ID",
   "labels" : [ "salesforce" ],
   "pattern" : "To",
-  "inputDataType" : "java:io.syndesis.connector.salesforce.ExternalIdToGet",
+  "inputDataType" : "java:io.syndesis.connector.salesforce.SalesforceIdentifier",
   "outputDataType" : "json",
   "globalOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken", "userName", "password" ],
   "componentOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken", "userName", "password" ],
