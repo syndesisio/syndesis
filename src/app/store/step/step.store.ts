@@ -65,28 +65,6 @@ export class StepStore {
       id: undefined,
       connection: undefined,
       action: undefined,
-      name: 'Log',
-      stepKind: LOG,
-      description: "Sends a message to the integration's log",
-      configuredProperties: undefined,
-      properties: {
-        message: {
-          type: 'string',
-          displayName: 'Log Message',
-          required: true,
-        },
-        loggingLevel: {
-          type: 'hidden',
-          displayName: 'Level',
-          defaultValue: 'INFO',
-          required: true,
-        },
-      },
-    },
-    {
-      id: undefined,
-      connection: undefined,
-      action: undefined,
       name: 'Basic Filter',
       description:
         'Continue the integration only if criteria you specify in simple input fields are met. Suitable for' +
@@ -112,6 +90,29 @@ export class StepStore {
         },
       },
       configuredProperties: undefined,
+    },
+    /*
+    {
+      id: undefined,
+      connection: undefined,
+      action: undefined,
+      name: 'Log',
+      stepKind: LOG,
+      description: "Sends a message to the integration's log",
+      configuredProperties: undefined,
+      properties: {
+        message: {
+          type: 'string',
+          displayName: 'Log Message',
+          required: true,
+        },
+        loggingLevel: {
+          type: 'hidden',
+          displayName: 'Level',
+          defaultValue: 'INFO',
+          required: true,
+        },
+      },
     },
     {
       id: undefined,
@@ -166,6 +167,7 @@ export class StepStore {
       properties: {},
       configuredProperties: undefined,
     },
+    */
   ];
 
   getStepName(kind: string): string {
