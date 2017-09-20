@@ -2118,11 +2118,6 @@ objects:
     application.yml: |-
       deployment:
         load-demo-data: ${DEMO_DATA_ENABLED}
-      resteasy:
-        jaxrs:
-          app:
-            registration: property
-            classes: io.syndesis.rest.v1.V1Application
       cors:
         allowedOrigins: https://${ROUTE_HOSTNAME}
 
