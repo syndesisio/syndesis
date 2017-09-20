@@ -27,9 +27,9 @@ public class SalesforceGetSObjectComponent extends DefaultConnectorComponent {
         super("salesforce-get-sobject", SalesforceGetSObjectComponent.class.getName());
 
         // replace DTO with id for Salesforce component
-        setBeforeProducer( exchange -> {
+        setBeforeProducer(exchange -> {
             final Message in = exchange.getIn();
-            ExternalIdToGet id = in.getBody(ExternalIdToGet.class);
+            final SalesforceIdentifier id = in.getBody(SalesforceIdentifier.class);
             in.setBody(id.getId());
         });
     }

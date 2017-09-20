@@ -29,7 +29,7 @@ public class SalesforceDeleteSObjectComponent extends DefaultConnectorComponent 
         // replace DTO with id for Salesforce component
         setBeforeProducer(exchange -> {
             final Message in = exchange.getIn();
-            IdToDelete id = in.getBody(IdToDelete.class);
+            final SalesforceIdentifier id = in.getBody(SalesforceIdentifier.class);
             in.setBody(id.getId());
         });
     }
