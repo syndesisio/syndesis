@@ -103,7 +103,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: syndesis/syndesis-verifier:latest
+          image: {{Registry}}/syndesis/syndesis-verifier:{{Tag}}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
@@ -157,7 +157,7 @@
         - syndesis-verifier
         from:
           kind: ImageStreamTag
-          name: syndesis-verifier:latest
+          name: syndesis-verifier:{{Tag}}
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange

@@ -60,7 +60,7 @@ parameters:
   required: true
 - name: PEMTOKEYSTORE_IMAGE
   description: PEM to keystore init container image
-  value: jimmidyson/pemtokeystore:v0.2.0
+  value: docker.io/jimmidyson/pemtokeystore:v0.2.0
   required: true
 - name: GITHUB_OAUTH_DEFAULT_SCOPES
   description: GitHub OAuth default scopes
@@ -267,7 +267,7 @@ objects:
             value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-          image: atlasmap/atlasmap:latest
+          image: docker.io/atlasmap/atlasmap:latest
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -1953,7 +1953,7 @@ objects:
             value: ${TEST_SUPPORT_ENABLED}
           - name: CONTROLLERS_INTEGRATION_ENABLED
             value: ${CONTROLLERS_INTEGRATION_ENABLED}
-          image: syndesis/syndesis-rest:latest
+          image: docker.io/syndesis/syndesis-rest:latest
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -2138,7 +2138,7 @@ objects:
       spec:
         containers:
         - name: syndesis-ui
-          image: syndesis/syndesis-ui:latest
+          image: docker.io/syndesis/syndesis-ui:latest
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -2303,7 +2303,7 @@ objects:
             value: /deployments
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-          image: syndesis/syndesis-verifier:latest
+          image: docker.io/syndesis/syndesis-verifier:latest
 
           imagePullPolicy: IfNotPresent
           readinessProbe:

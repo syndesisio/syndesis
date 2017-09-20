@@ -142,7 +142,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: atlasmap/atlasmap:latest
+          image: {{Registry}}/atlasmap/atlasmap:{{Tag}}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -189,7 +189,7 @@
         - atlasmap
         from:
           kind: ImageStreamTag
-          name: syndesis-atlasmap:latest
+          name: syndesis-atlasmap:{{Tag}}
       type: ImageChange
 {{/Dev}}
 

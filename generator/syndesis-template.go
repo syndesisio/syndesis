@@ -40,16 +40,21 @@ type Context struct {
 	Ephemeral  bool
 	Restricted bool
 	Probeless  bool
+	Tag        string
+	Registry   string
 }
 
 var context = Context{}
 
 func init() {
-	installCommand.PersistentFlags().StringVar(&context.Name, "name", "syndesis", "Name of the template")
-	installCommand.PersistentFlags().BoolVar(&context.Dev, "dev", false, "Developer mode?")
-	installCommand.PersistentFlags().BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
-	installCommand.PersistentFlags().BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
-	installCommand.PersistentFlags().BoolVar(&context.Probeless, "probeless", false, "Without probes")
+	flags := installCommand.PersistentFlags()
+	flags.StringVar(&context.Name, "name", "syndesis", "Name of the template")
+	flags.BoolVar(&context.Dev, "dev", false, "Developer mode?")
+	flags.BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
+	flags.BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
+	flags.BoolVar(&context.Probeless, "probeless", false, "Without probes")
+	flags.StringVar(&context.Tag,"tag", "latest", "Image tag to use")
+	flags.StringVar(&context.Registry,"registry", "docker.io", "Registry to use for imagestreams")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 }
 

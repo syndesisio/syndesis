@@ -64,7 +64,7 @@ parameters:
   required: true
 - name: PEMTOKEYSTORE_IMAGE
   description: PEM to keystore init container image
-  value: jimmidyson/pemtokeystore:v0.2.0
+  value: docker.io/jimmidyson/pemtokeystore:v0.2.0
   required: true
 - name: GITHUB_OAUTH_DEFAULT_SCOPES
   description: GitHub OAuth default scopes

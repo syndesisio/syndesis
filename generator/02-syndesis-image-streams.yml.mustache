@@ -10,10 +10,10 @@
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/syndesis/syndesis-rest:latest
+        name: {{Registry}}/syndesis/syndesis-rest:{{Tag}}
       importPolicy:
         scheduled: true
-      name: latest
+      name: {{Tag}}
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -25,7 +25,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/jimmidyson/keycloak-openshift:2.5.4.Final
+        name: {{Registry}}/jimmidyson/keycloak-openshift:2.5.4.Final
       importPolicy:
         scheduled: true
       name: 2.5.4.Final
@@ -40,10 +40,10 @@
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/syndesis/syndesis-ui:latest
+        name: {{Registry}}/syndesis/syndesis-ui:{{Tag}}
       importPolicy:
         scheduled: true
-      name: latest
+      name: {{Tag}}
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -55,7 +55,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/syndesis/token-rp:v0.6.2
+        name: {{Registry}}/syndesis/token-rp:v0.6.2
       importPolicy:
         scheduled: true
       name: v0.6.2
@@ -70,10 +70,10 @@
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/atlasmap/atlasmap:latest
+        name: {{Registry}}/atlasmap/atlasmap:{{Tag}}
       importPolicy:
         scheduled: true
-      name: latest
+      name: {{Tag}}
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -85,8 +85,8 @@
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/syndesis/syndesis-verifier:latest
+        name: {{Registry}}/syndesis/syndesis-verifier:{{Tag}}
       importPolicy:
         scheduled: true
-      name: latest
+      name: {{Tag}}
 {{/Dev}}

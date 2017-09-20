@@ -169,7 +169,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: syndesis/syndesis-rest:latest
+          image: {{Registry}}/syndesis/syndesis-rest:{{Tag}}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -219,7 +219,7 @@
         - syndesis-rest
         from:
           kind: ImageStreamTag
-          name: syndesis-rest:latest
+          name: syndesis-rest:{{Tag}}
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange
