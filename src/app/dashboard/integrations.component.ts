@@ -17,9 +17,10 @@ const category = getCategory('Dashboard');
 })
 export class DashboardIntegrationsComponent implements OnInit {
 
-  connections: Observable<Connections>;
   @Input() integrations: Integrations;
-  @Input() loading: boolean;
+  @Input() connections: Connections;
+  @Input() integrationsLoading: boolean;
+  @Input() connectionsLoading: boolean;
   selectedId = undefined;
   truncateTrail = '…';
 
@@ -49,12 +50,10 @@ export class DashboardIntegrationsComponent implements OnInit {
   };
 
   constructor(
-    private connectionStore: ConnectionStore,
-    private integrationStore: IntegrationStore,
     public route: ActivatedRoute,
     private router: Router,
   ) {
-    this.connections = this.connectionStore.list;
+
   }
 
   //-----  Integration Board Chart ------------------->>
@@ -178,11 +177,6 @@ export class DashboardIntegrationsComponent implements OnInit {
   //-----  Initialization ------------------->>
 
   ngOnInit() {
-    log.debugc(
-      () =>
-        'Got integrations: ' + JSON.stringify(this.integrations, undefined, 2),
-      category,
-    );
-    this.connectionStore.loadAll();
+
   }
 }

@@ -6,6 +6,7 @@
 
       <syndesis-connections-list [connections]="filteredConnectors | async"
                                  [loading]="loading | async"
+                                 isConnectors="true"
                                  [showKebab]="false"
                                  (onSelected)="onSelected($event)"></syndesis-connections-list>
       </div>

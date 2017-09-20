@@ -30,6 +30,7 @@ export class ConnectionsListComponent implements OnInit {
   @Input() connections: Connections;
   @Input() loading: boolean;
   @Input() showKebab = true;
+  @Input() isConnectors = false;
   @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
 
   constructor(
