@@ -16,7 +16,8 @@ const category = getCategory('Dashboard');
 export class DashboardComponent implements OnInit {
   connections: Observable<Connections>;
   integrations: Observable<Integrations>;
-  loading: Observable<boolean>;
+  connectionsLoading: Observable<boolean>;
+  integrationsLoading: Observable<boolean>;
   selectedId = undefined;
   truncateLimit = 80;
   truncateTrail = '…';
@@ -27,7 +28,8 @@ export class DashboardComponent implements OnInit {
   ) {
     this.connections = this.connectionStore.list;
     this.integrations = this.integrationStore.list;
-    this.loading = this.connectionStore.loading;
+    this.connectionsLoading = this.connectionStore.loading;
+    this.integrationsLoading = this.integrationStore.loading;
   }
 
   ngOnInit() {

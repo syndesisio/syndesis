@@ -17,6 +17,9 @@ const category = getCategory('AbstractStore');
 // Set to a number of seconds to simulate latency and do page styling for loading states
 const LOADING_TIME = 0;
 
+// Set to true to simulate empty state
+const EMPTY_STATE = false;
+
 // prettier-ignore
 export abstract class AbstractStore<
   T extends BaseEntity,
@@ -61,7 +64,12 @@ export abstract class AbstractStore<
       this._list,
       this.changeEvents.flatMap(event => {
         // We could probably get fancy one day an only fetch the entry that matches event.id
-        return this.service.list();
+        // simulate no data
+        if (EMPTY_STATE) {
+          return Observable.of([]);
+        } else {
+          return this.service.list();
+        }
       }),
     ).share();
   }
@@ -86,7 +94,12 @@ export abstract class AbstractStore<
     this.service.list().subscribe(
       list => {
         setTimeout(() => {
-          this._list.next(list);
+          // simulate no elements
+          if (EMPTY_STATE) {
+            this._list.next(<L>[]);
+          } else {
+            this._list.next(list);
+          }
           this._loading.next(false);
         }, LOADING_TIME);
       },

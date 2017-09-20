@@ -1,11 +1,8 @@
 <div class="syndesis-dashboard">
 
-  <!-- At Least One Integration -->
-
   <syndesis-dashboard-integrations [integrations]="integrations | async"
-                                   [loading]="loading | async"></syndesis-dashboard-integrations>
+                                   [integrationsLoading]="integrationsLoading | async"
+                                   [connections]="connections | async"
+                                   [connectionsLoading]="connectionsLoading | async"></syndesis-dashboard-integrations>
 
-  <!-- No Integrations -->
-
-  <syndesis-dashboard-empty-state [loading]="loading | async" [integrations]="integrations | async"></syndesis-dashboard-empty-state>
 </div>

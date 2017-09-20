@@ -8,6 +8,7 @@ import {
   ActionConfig,
   ListConfig,
   ListEvent,
+  EmptyStateConfig,
   Notification,
   NotificationService,
   NotificationType,
@@ -43,7 +44,27 @@ export class IntegrationsListComponent extends IntegrationViewBase {
       multiSelect: false,
       selectItems: false,
       showCheckbox: false,
+      emptyStateConfig: {
+        iconStyleClass: 'pficon pficon-add-circle-o',
+        title: 'Create an integration',
+        info: 'There are currently no integrations available.  Please click on the button below to create one',
+        helpLink: {},
+        actions: {
+          primaryActions: [{
+            id: 'createIntegration',
+            title: 'Create Integration',
+            tooltip: 'create an integration',
+          }],
+          moreActions: [],
+        } as ActionConfig,
+      } as EmptyStateConfig,
     };
+  }
+
+  handleAction($event: Action, item: any) {
+    if ($event.id === 'createIntegration') {
+      this.router.navigate(['/integrations/create']);
+    }
   }
 
   handleClick($event: ListEvent) {

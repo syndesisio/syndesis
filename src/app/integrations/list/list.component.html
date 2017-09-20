@@ -5,11 +5,11 @@
   </syndesis-modal>
 
   <!-- List Container -->
-
   <pfng-list [items]="integrations"
              [config]="listConfig"
              [itemTemplate]="itemTemplate"
              [actionTemplate]="actionTemplate"
+             (onActionSelect)="handleAction($event, undefined)"
              (onClick)="handleClick($event)">
     <ng-template #itemTemplate
                  let-integration="item"
