@@ -49,12 +49,12 @@
 
 
       <!-- Connection Title -->
-      <span [class]="getParentClass()"
+      <div [class]="getParentClass()"
             (click)="goto('action-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
-      </span>
+      </div>
 
       <!-- Connection Sub Pages -->
       <ul [collapse]="isCollapsed()"
@@ -96,12 +96,12 @@
          (click)="deletePrompt()"></i>
 
       <!-- Step Heading -->
-      <span [class]="getParentClass()"
+      <div [class]="getParentClass()"
             (click)="goto('step-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
         {{ getStepText() }}
-      </span>
+      </div>
 
       <!-- Step Sub Pages -->
       <ul [collapse]="isCollapsed()"

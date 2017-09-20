@@ -27,8 +27,8 @@
   }
   .delete-icon {
     position: absolute;
-    top: 22px;
-    right: 30px;
+    top: 18px;
+    right: 10px;
     cursor: pointer;
     opacity: 0.75;
     transition: opacity 0.5s ease-in-out;
@@ -96,7 +96,7 @@
     position: relative;
     padding-left: 0;
     padding-right: 0;
-    padding-top: 19px; //----- Sidebar: Menu & Parent Step Container ----------------->>
+    padding-top: 8px; //----- Sidebar: Menu & Parent Step Container ----------------->>
     .step-container {
       .fa.fa-chevron-down,
       .fa.fa-chevron-right {
@@ -110,14 +110,14 @@
         }
       } //----- Sidebar: Menu: Parent Step ----------------->>
       .parent-step {
-        //background-color: #E7E7E7;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
         background-color: $color-pf-black-300;
         cursor: pointer;
         &.disabled {
           cursor: default;
         }
-        display: inline;
-        padding: 8px 100% 8px 8px;
+        padding: 8px 18px 8px 8px;
         text-transform: uppercase;
         white-space: nowrap; //----- Sidebar: Menu: Parent Step: Active State ----------------->>
         &.active {
