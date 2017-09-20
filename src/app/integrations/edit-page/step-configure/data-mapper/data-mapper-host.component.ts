@@ -129,28 +129,13 @@ export class DataMapperHostComponent extends FlowPage
   }
 
   createDocumentDefinition(dataShape: DataShape, isSource: boolean = false) {
-    if (!dataShape || !dataShape.type || !dataShape.kind) {
+    if (!dataShape || !dataShape.kind) {
       // skip
       return;
     }
     const type = dataShape.type;
     const kind = dataShape.kind;
-    // avoid passing duplicates off to the data mapper
-    if (isSource) {
-      if (this.sourceDocTypes.find(d => d === type)) {
-        return;
-      }
-      this.sourceDocTypes.push(type);
-    } else {
-      if (this.targetDocTypes.find(d => d === type)) {
-        return;
-      }
-      this.targetDocTypes.push(type);
-    }
-    log.infoc(
-      () => 'Adding document definition: ' + type + ' isSource: ' + isSource,
-      category,
-    );
+    const specification = dataShape.specification || '';
     // TODO not sure what to do for `none` or `any` here
     switch (kind) {
       case 'java':
@@ -158,16 +143,16 @@ export class DataMapperHostComponent extends FlowPage
         break;
       case 'json':
       case 'json-instance':
-        this.cfg.addJSONInstanceDocument(type, dataShape.specification, isSource);
+        this.cfg.addJSONInstanceDocument(type, specification, isSource);
         break;
       case 'json-schema':
-        this.cfg.addJSONSchemaDocument(type, dataShape.specification, isSource);
+        this.cfg.addJSONSchemaDocument(type, specification, isSource);
         break;
       case 'xml-instance':
-        this.cfg.addXMLInstanceDocument(type, dataShape.specification, isSource);
+        this.cfg.addXMLInstanceDocument(type, specification, isSource);
         break;
       case 'xml-schema':
-        this.cfg.addXMLSchemaDocument(type, dataShape.specification, isSource);
+        this.cfg.addXMLSchemaDocument(type, specification, isSource);
         break;
     }
   }
