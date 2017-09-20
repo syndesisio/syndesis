@@ -13,8 +13,8 @@
   "description" : "SQL Stored Procedure Connector to invoke a SQL Stored Procedure",
   "labels" : [ "sql-stored" ],
   "pattern" : "To",
-  "inputDataType" : "*",
-  "outputDataType" : "none",
+  "inputDataType" : "json",
+  "outputDataType" : "json",
   "componentOptions" : [ "user", "password", "url", "schema", "catalog" ],
   "endpointOptions" : [ "procedureName", "template", "batch", "noop" ],
   "endpointValues" : {}
