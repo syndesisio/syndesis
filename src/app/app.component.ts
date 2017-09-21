@@ -9,12 +9,17 @@ import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 import { Response } from '@angular/http';
-import { Notification, NotificationEvent, NotificationService } from 'patternfly-ng';
+import {
+  Notification,
+  NotificationEvent,
+  NotificationService,
+} from 'patternfly-ng';
 
 import { TestSupportService } from './store/test-support.service';
 
 import { log } from './logging';
 
+import { ConfigService } from './config.service';
 import { ModalService } from './common/modal/modal.service';
 import { NavigationService } from './common/navigation.service';
 import { UserService } from './common/user.service';
@@ -29,24 +34,24 @@ import { saveAs } from 'file-saver';
   providers: [Restangular, TestSupportService],
 })
 export class AppComponent implements OnInit, AfterViewInit {
-
   // TODO icon?
   /**
    * Logo with white background.
    */
   logoWhiteBg = 'assets/images/syndesis-logo-svg-white.svg';
+  iconWhiteBg = 'assets/images/glasses_logo_square.png';
 
   /**
    * Logo with dark background
    */
   logoDarkBg = 'assets/images/syndesis-logo-svg-white.svg';
+  iconDarkBg = 'assets/images/glasses_logo_square.png';
 
   /**
    * @type {boolean}
    * Flag used to determine whether or not the user is logged in.
    */
   loggedIn = false;
-
 
   /**
    * @type {boolean}
@@ -70,6 +75,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   showClose: boolean;
 
   constructor(
+    private config: ConfigService,
     private oauthService: OAuthService,
     private userService: UserService,
     public testSupport: TestSupportService,
@@ -79,6 +85,46 @@ export class AppComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
+    this.logoWhiteBg = this.config.getSettings(
+      'branding',
+      'logoWhiteBg',
+      'assets/images/syndesis-logo-svg-white.svg',
+    );
+    this.logoDarkBg = this.config.getSettings(
+      'branding',
+      'logoDarkBg',
+      'assets/images/syndesis-logo-svg-white.svg',
+    );
+    this.iconDarkBg = this.config.getSettings(
+      'branding',
+      'iconDarkBg',
+      'assets/images/glasses_logo_square.png',
+    );
+    this.iconWhiteBg = this.config.getSettings(
+      'branding',
+      'iconWhiteBg',
+      'assets/images/glasses_logo_square.png',
+    );
+    const title = (this.title = this.config.getSettings(
+      'branding',
+      'appName',
+      'Syndesis',
+    ));
+    document.title = title;
+    const favicon32 = this.config.getSettings(
+      'branding',
+      'favicon32',
+      '/favicon-32x32.png',
+    );
+    const favicon16 = this.config.getSettings(
+      'branding',
+      'favicon16',
+      '/favicon-16x16.png',
+    );
+    document.getElementById('favicon32').setAttribute('href', favicon32);
+    document.getElementById('favicon16').setAttribute('href', favicon16);
+    document.getElementById('appName').setAttribute('content', title);
+    document.getElementById('appTitle').setAttribute('content', title);
     this.loggedIn = this.oauthService.hasValidAccessToken();
     this.user = this.userService.user;
     this.notifications = this.notificationService.getNotifications();
@@ -110,15 +156,15 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Function that displays a modal for importing a database.
    */
   showImportDB() {
-    this.modalService.show('importDb')
-      .then(modal => {
-        if (modal.result) {
-          return this.testSupport.restoreDB(modal['json'])
-            .take(1)
-            .toPromise()
-            .then(_ => log.debugc(() => 'DB has been imported'));
-        }
-      });
+    this.modalService.show('importDb').then(modal => {
+      if (modal.result) {
+        return this.testSupport
+          .restoreDB(modal['json'])
+          .take(1)
+          .toPromise()
+          .then(_ => log.debugc(() => 'DB has been imported'));
+      }
+    });
   }
 
   /**
@@ -127,7 +173,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   importDB(event, modal) {
     const file = event.srcElement.files[0];
     const reader = new FileReader();
-    reader.onload = _ => modal['json'] = JSON.parse(reader.result);
+    reader.onload = _ => (modal['json'] = JSON.parse(reader.result));
     reader.readAsText(file, 'text/plain;charset=utf-8');
   }
 

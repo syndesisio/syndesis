@@ -50,12 +50,15 @@ export class ConfigService {
       });
   }
 
-  getSettings(group?: string, key?: string): any {
+  getSettings(group?: string, key?: string, def?: any): any {
     if (!group) {
       return this.settingsRepository;
     }
 
     if (!this.settingsRepository[group]) {
+      if (def) {
+        return def;
+      }
       throw new Error(
         `Error: No setting found with the specified group [${group}]!`,
       );
@@ -66,6 +69,9 @@ export class ConfigService {
     }
 
     if (this.settingsRepository[group][key] === undefined) {
+      if (def) {
+        return def;
+      }
       throw new Error(
         `Error: No setting found with the specified group/key [${group}/${key}]!`,
       );
