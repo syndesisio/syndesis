@@ -3,7 +3,7 @@
   <div class="integrations list-actions">
 
     <div class="action col-xs-12" title="{{action.name}}"
-         *ngFor="let action of actions"
+         *ngFor="let action of actions | derp"
          (click)="onSelect(action)"
          [class.active]="isSelected(action)">
 
