@@ -6,6 +6,7 @@ import { NotificationModule, NotificationService } from 'patternfly-ng';
 import { EditableTagsComponent } from './editable/editable-tags.component';
 import { EditableTextComponent } from './editable/editable-text.component';
 import { EditableTextareaComponent } from './editable/editable-textarea.component';
+import { DerpPipe } from './derp.pipe';
 import { ObjectPropertyFilterPipe } from './object-property-filter.pipe';
 import { ObjectPropertySortPipe } from './object-property-sort.pipe';
 import { TruncateCharactersPipe } from './truncate-characters.pipe';
@@ -29,6 +30,7 @@ import { TagInputModule } from 'ngx-chips';
     TagInputModule,
   ],
   declarations: [
+    DerpPipe,
     ObjectPropertyFilterPipe,
     ObjectPropertySortPipe,
     TruncateCharactersPipe,
@@ -43,6 +45,7 @@ import { TagInputModule } from 'ngx-chips';
     EditableTextareaComponent,
   ],
   exports: [
+    DerpPipe,
     ObjectPropertyFilterPipe,
     ObjectPropertySortPipe,
     TruncateCharactersPipe,

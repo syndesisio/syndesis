@@ -3,8 +3,6 @@ import { Observable } from 'rxjs/Observable';
 
 import { Actions, Action } from '../../../model';
 import { log, getCategory } from '../../../logging';
-import { ObjectPropertyFilterConfig } from '../../../common/object-property-filter.pipe';
-import { ObjectPropertySortConfig } from '../../../common/object-property-sort.pipe';
 
 const category = getCategory('Actions');
 
@@ -17,18 +15,9 @@ export class ListActionsComponent implements OnInit {
   truncateLimit = 80;
   truncateTrail = '…';
   selectedId = undefined;
-  @Input() actions: Actions;
+  @Input() actions: Actions = [];
   @Input() loading: boolean;
   @Output() onSelected: EventEmitter<Action> = new EventEmitter();
-  filter: ObjectPropertyFilterConfig = {
-    filter: '',
-    propertyName: 'name',
-  };
-
-  sort: ObjectPropertySortConfig = {
-    sortField: 'name',
-    descending: false,
-  };
 
   onSelect(action: Action) {
     log.debugc(() => 'Selected action (list): ' + action.name, category);

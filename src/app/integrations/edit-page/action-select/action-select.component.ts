@@ -1,13 +1,12 @@
 import {
   Component,
-  EventEmitter,
-  Input,
   OnInit,
   OnDestroy,
-  Output,
   ChangeDetectorRef,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
@@ -17,7 +16,6 @@ import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { ConnectorStore } from '../../../store/connector/connector.store';
 import { Step, Connector } from '../../../model';
 import { FlowPage } from '../flow-page';
-import { ObjectPropertyFilterConfig } from '../../../common/object-property-filter.pipe';
 
 const category = getCategory('Integrations');
 
@@ -28,20 +26,14 @@ const category = getCategory('Integrations');
 })
 export class IntegrationsSelectActionComponent extends FlowPage
   implements OnInit, OnDestroy {
-  actions: Actions = [];
+  actions: Observable<Actions> = Observable.empty();
+  filteredActions: Subject<Actions> = new BehaviorSubject(<Actions>{});
   connector: Observable<Connector>;
   loading: Observable<boolean>;
   routeSubscription: Subscription;
-  connectorSubscription: Subscription;
+  actionsSubscription: Subscription;
   position: number;
   step: Step;
-
-  @Input()
-  filter: ObjectPropertyFilterConfig = {
-    filter: '',
-    propertyName: 'name',
-  };
-  @Output() filterChange = new EventEmitter<ObjectPropertyFilterConfig>();
 
   constructor(
     public connectorStore: ConnectorStore,
@@ -109,17 +101,14 @@ export class IntegrationsSelectActionComponent extends FlowPage
   }
 
   ngOnInit() {
-    this.connectorSubscription = this.connector.subscribe(
-      (connector: Connector) => {
-        if (!connector) {
-          return;
-        }
-        this.actions = connector.actions;
-        this.currentFlow.events.emit({
-          kind: 'integration-action-select',
-          position: this.position,
-        });
-      },
+    this.actions = this.connector
+      .filter(connector => connector !== undefined)
+      .map(connector => connector.actions);
+    this.actionsSubscription = this.actions.subscribe(_ => this.currentFlow.events
+      .emit({
+        kind: 'integration-action-select',
+        position: this.position,
+      }),
     );
     this.routeSubscription = this.route.params
       .pluck<Params, string>('position')
@@ -134,16 +123,11 @@ export class IntegrationsSelectActionComponent extends FlowPage
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
     }
-    if (this.connectorSubscription) {
-      this.connectorSubscription.unsubscribe();
+    if (this.actionsSubscription) {
+      this.actionsSubscription.unsubscribe();
     }
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }
-  }
-
-  filterInputChange(value: string) {
-    this.filter.filter = value;
-    this.filterChange.emit(this.filter);
   }
 }
