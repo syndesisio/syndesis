@@ -5,21 +5,34 @@
                                 (onCloseSelect)="handleClose($event)"
                                 [showClose]="showClose">
   </pfng-toast-notification-list>
+  <ng-template #brandTemplate>
+    <a [routerLink]=" ['/'] "
+       class="navbar-brand">
+          <img *ngIf="iconDarkBg && iconDarkBg !== ''"
+               class="navbar-brand-icon"
+               [src]="loggedIn ? iconDarkBg : iconWhiteBg"
+               alt="" />
+          <img *ngIf="logoDarkBg"
+               class="navbar-brand-name"
+               [src]="loggedIn ? logoDarkBg : logoWhiteBg"
+               alt="{{title}}" />
+          <span *ngIf="logoDarkBg === '' && logoWhiteBg === ''"
+               class="navbar-brand-name">{{title}}</span>
+        </a>
+  </ng-template>
 
-  <header *ngIf="loggedIn && !firstTime">
+  <header *ngIf="!firstTime">
 
     <!-- Navbar: Logged Out -->
     <nav class="navbar navbar-fixed-top navbar-light loggedOut"
          *ngIf="!loggedIn">
       <!-- Logo -->
-      <a [routerLink]=" ['/'] ">
-        <img *ngIf="logoWhiteBg"
-             [src]="logoWhiteBg">
-      </a>
+      <ng-container *ngTemplateOutlet="brandTemplate"></ng-container>
     </nav>
 
     <!-- Navbar: Logged In -->
-    <nav class="navbar navbar-pf-vertical">
+    <nav *ngIf="loggedIn"
+         class="navbar navbar-pf-vertical">
       <div class="navbar-header">
 
         <!-- Toggle Sidebar-->
@@ -32,18 +45,7 @@
         </button>
 
         <!-- Logo -->
-
-        <a [routerLink]=" ['/'] "
-           class="navbar-brand">
-          <img *ngIf="iconDarkBg"
-               class="navbar-brand-icon"
-               [src]="iconDarkBg"
-               alt="" />
-          <img *ngIf="logoDarkBg"
-               class="navbar-brand-name"
-               [src]="logoDarkBg"
-               alt="Syndesis" />
-        </a>
+        <ng-container *ngTemplateOutlet="brandTemplate"></ng-container>
       </div>
 
       <!-- Top Navbar -->
@@ -67,11 +69,12 @@
             <ul class="dropdown-menu"
                 aria-labelledby="horizontalDropdownMenu1">
               <li><a href="https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/fuse_ignite_sample_integration_tutorial/"
-                     rel="nofollow"
-                     target="_blank">Documentation</a></li>
+
+                   rel="nofollow"
+                   target="_blank">Documentation</a></li>
               <li><a href="mailto:fuse-ignite-tech-preview@redhat.com"
-                     rel="nofollow"
-                     target="_blank">Contact Us</a></li>
+                   rel="nofollow"
+                   target="_blank">Contact Us</a></li>
               <li><a>About</a></li>
             </ul>
           </li>
