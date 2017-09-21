@@ -49,7 +49,7 @@
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "${PEMTOKEYSTORE_IMAGE}",
+              "image": "{{ Images.PemToKeystore }}",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -73,7 +73,7 @@
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: ${PEMTOKEYSTORE_IMAGE}
+          image: {{ Images.PemToKeystore }}
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -103,7 +103,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: {{Registry}}/syndesis/syndesis-verifier:{{Tag}}
+          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:{{ Tags.Syndesis }}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
@@ -157,7 +157,7 @@
         - syndesis-verifier
         from:
           kind: ImageStreamTag
-          name: syndesis-verifier:{{Tag}}
+          name: syndesis-verifier:{{ Tags.Syndesis }}
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange

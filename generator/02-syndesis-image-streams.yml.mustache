@@ -10,10 +10,10 @@
     tags:
     - from:
         kind: DockerImage
-        name: {{Registry}}/syndesis/syndesis-rest:{{Tag}}
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
-      name: {{Tag}}
+      name: {{ Tags.Syndesis }}
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -25,10 +25,10 @@
     tags:
     - from:
         kind: DockerImage
-        name: {{Registry}}/jimmidyson/keycloak-openshift:2.5.4.Final
+        name: ${SYNDESIS_REGISTRY}/{{ Images.Keycloak }}
       importPolicy:
         scheduled: true
-      name: 2.5.4.Final
+      name: {{ Tags.Keycloak }}
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -40,10 +40,10 @@
     tags:
     - from:
         kind: DockerImage
-        name: {{Registry}}/syndesis/syndesis-ui:{{Tag}}
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
-      name: {{Tag}}
+      name: {{ Tags.Syndesis }}
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -55,10 +55,10 @@
     tags:
     - from:
         kind: DockerImage
-        name: {{Registry}}/syndesis/token-rp:v0.6.2
+        name: ${SYNDESIS_REGISTRY}/{{ Images.TokenRp }}
       importPolicy:
         scheduled: true
-      name: v0.6.2
+      name: {{ Tags.TokenRp }}
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -70,10 +70,10 @@
     tags:
     - from:
         kind: DockerImage
-        name: {{Registry}}/atlasmap/atlasmap:{{Tag}}
+        name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
-      name: {{Tag}}
+      name: {{ Tags.Syndesis }}
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -85,8 +85,8 @@
     tags:
     - from:
         kind: DockerImage
-        name: {{Registry}}/syndesis/syndesis-verifier:{{Tag}}
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
-      name: {{Tag}}
+      name: {{ Tags.Syndesis }}
 {{/Dev}}

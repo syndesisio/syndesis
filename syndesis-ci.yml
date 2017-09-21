@@ -62,10 +62,6 @@ parameters:
   description: OpenShift OAuth default scopes
   value: "user:full"
   required: true
-- name: PEMTOKEYSTORE_IMAGE
-  description: PEM to keystore init container image
-  value: docker.io/jimmidyson/pemtokeystore:v0.2.0
-  required: true
 - name: GITHUB_OAUTH_DEFAULT_SCOPES
   description: GitHub OAuth default scopes
   value: "user:email public_repo"
@@ -112,6 +108,11 @@ parameters:
   displayName: Insecure skip verify
   name: INSECURE_SKIP_VERIFY
   value: 'false'
+- description: Registry from where to fetch Syndesis images
+  displayName: Syndesis Image Registry
+  name: SYNDESIS_REGISTRY
+  required: true
+  value: 'docker.io'
 - description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
@@ -140,7 +141,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/syndesis/syndesis-rest:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
       importPolicy:
         scheduled: true
       name: latest
@@ -155,7 +156,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/jimmidyson/keycloak-openshift:2.5.4.Final
+        name: ${SYNDESIS_REGISTRY}/jimmidyson/keycloak-openshift:2.5.4.Final
       importPolicy:
         scheduled: true
       name: 2.5.4.Final
@@ -170,7 +171,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/syndesis/syndesis-ui:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
       importPolicy:
         scheduled: true
       name: latest
@@ -185,7 +186,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/syndesis/token-rp:v0.6.2
+        name: ${SYNDESIS_REGISTRY}/syndesis/token-rp:v0.6.2
       importPolicy:
         scheduled: true
       name: v0.6.2
@@ -200,7 +201,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/atlasmap/atlasmap:latest
+        name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
       importPolicy:
         scheduled: true
       name: latest
@@ -215,7 +216,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: docker.io/syndesis/syndesis-verifier:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
       importPolicy:
         scheduled: true
       name: latest
@@ -302,7 +303,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "${PEMTOKEYSTORE_IMAGE}",
+              "image": "syndesis/pemtokeystore:v0.2.1",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -326,7 +327,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: ${PEMTOKEYSTORE_IMAGE}
+          image: syndesis/pemtokeystore:v0.2.1
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -672,7 +673,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "${PEMTOKEYSTORE_IMAGE}",
+              "image": "syndesis/pemtokeystore:v0.2.1",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -696,7 +697,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: ${PEMTOKEYSTORE_IMAGE}
+          image: syndesis/pemtokeystore:v0.2.1
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -1992,7 +1993,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "${PEMTOKEYSTORE_IMAGE}",
+              "image": "syndesis/pemtokeystore:v0.2.1",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -2016,7 +2017,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: ${PEMTOKEYSTORE_IMAGE}
+          image: syndesis/pemtokeystore:v0.2.1
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -2361,7 +2362,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "${PEMTOKEYSTORE_IMAGE}",
+              "image": "syndesis/pemtokeystore:v0.2.1",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -2385,7 +2386,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: ${PEMTOKEYSTORE_IMAGE}
+          image: syndesis/pemtokeystore:v0.2.1
           imagePullPolicy: IfNotPresent
           args:
           - -keystore

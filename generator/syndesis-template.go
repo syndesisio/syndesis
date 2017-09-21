@@ -34,6 +34,19 @@ var installCommand = &cobra.Command{
 	Run:   install,
 }
 
+type images struct {
+	PemToKeystore string
+	TokenRp string
+	Keycloak string
+	Postgresql string
+}
+
+type tags struct {
+	Keycloak string
+	TokenRp string
+	Syndesis string
+}
+
 type Context struct {
 	Name       string
 	Dev        bool
@@ -42,9 +55,23 @@ type Context struct {
 	Probeless  bool
 	Tag        string
 	Registry   string
+	Images     images
+	Tags       tags
 }
 
-var context = Context{}
+// TODO: Could be added from a local configuration file
+var context = Context{
+	Images: images{
+	  PemToKeystore: "syndesis/pemtokeystore:v0.2.1",
+	  TokenRp: "syndesis/token-rp:v0.6.2",
+		Keycloak: "jimmidyson/keycloak-openshift:2.5.4.Final",
+		Postgresql: "postgresql:9.5",
+  },
+	Tags: tags{
+		Keycloak: "2.5.4.Final",
+		TokenRp: "v0.6.2",
+	},
+}
 
 func init() {
 	flags := installCommand.PersistentFlags()
@@ -53,7 +80,7 @@ func init() {
 	flags.BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
 	flags.BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
 	flags.BoolVar(&context.Probeless, "probeless", false, "Without probes")
-	flags.StringVar(&context.Tag,"tag", "latest", "Image tag to use")
+	flags.StringVar(&context.Tags.Syndesis,"tag", "latest", "Image tag to use")
 	flags.StringVar(&context.Registry,"registry", "docker.io", "Registry to use for imagestreams")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 }
