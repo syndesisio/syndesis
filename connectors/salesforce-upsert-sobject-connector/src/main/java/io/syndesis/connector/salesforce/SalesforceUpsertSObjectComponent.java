@@ -15,10 +15,13 @@
  */
 package io.syndesis.connector.salesforce;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.apache.camel.Endpoint;
 import org.apache.camel.Message;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 import org.apache.camel.component.salesforce.SalesforceEndpointConfig;
@@ -69,6 +72,13 @@ public class SalesforceUpsertSObjectComponent extends DefaultConnectorComponent 
                 out.setBody(result);
             }
         });
+    }
+
+    @Override
+    protected Endpoint createEndpoint(final String uri, final String remaining, final Map<String, Object> parameters)
+        throws Exception {
+        parameters.forEach(this::addOption);
+        return super.createEndpoint(uri, remaining, parameters);
     }
 
     private static void clearBaseFields(final ObjectNode node) {
