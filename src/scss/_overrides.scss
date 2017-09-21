@@ -27,7 +27,7 @@ body.cards-pf {
   margin-left: 0;
 }
 
-.navbar-pf-vertical {
+.navbar {
   a {
     color: #ffffff;
   }
@@ -35,7 +35,14 @@ body.cards-pf {
   .navbar-brand {
     margin: 6px 0 0 25px;
     .navbar-brand-icon {
-      max-width: 28px;
+      max-height: 28px;
+      vertical-align: middle;
+    }
+    .navbar-brand-name {
+      max-height: 28px;
+      font-size: 20px;
+      display: inline-block;
+      vertical-align: middle;
     }
   }
 }
