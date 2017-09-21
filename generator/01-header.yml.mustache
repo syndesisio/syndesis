@@ -66,10 +66,6 @@ parameters:
   description: OpenShift OAuth default scopes
   value: "user:full"
   required: true{{/Restricted}}
-- name: PEMTOKEYSTORE_IMAGE
-  description: PEM to keystore init container image
-  value: jimmidyson/pemtokeystore:v0.2.0
-  required: true
 - name: GITHUB_OAUTH_DEFAULT_SCOPES
   description: GitHub OAuth default scopes
   value: "user:email public_repo"
@@ -116,6 +112,11 @@ parameters:
   displayName: Insecure skip verify
   name: INSECURE_SKIP_VERIFY
   value: 'false'
+- description: Registry from where to fetch Syndesis images
+  displayName: Syndesis Image Registry
+  name: SYNDESIS_REGISTRY
+  required: true
+  value: 'docker.io'
 - description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED

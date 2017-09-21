@@ -68,7 +68,6 @@ Once all pods are started up, you should be able to access the Syndesis at `http
 | **OPENSHIFT_OAUTH_CLIENT_ID** | OpenShift OAuth client ID | syndesis |
 | **OPENSHIFT_OAUTH_CLIENT_SECRET** | OpenShift OAuth client secret | _(generated)_ |
 | **OPENSHIFT_OAUTH_DEFAULT_SCOPES** | OpenShift OAuth default scopes | user:full |
-| **PEMTOKEYSTORE_IMAGE** | PEM to keystore init container image | jimmidyson/pemtokeystore:v0.2.0 |
 | **GITHUB_OAUTH_DEFAULT_SCOPES** | GitHub OAuth default scopes | user:email public_repo |
 | **POSTGRESQL_MEMORY_LIMIT** | Maximum amount of memory the PostgreSQL container can use | 512Mi |
 | **POSTGRESQL_IMAGE_STREAM_NAMESPACE** | The OpenShift Namespace where the PostgreSQL ImageStream resides | openshift |
@@ -79,6 +78,10 @@ Once all pods are started up, you should be able to access the Syndesis at `http
 | **INSECURE_SKIP_VERIFY** | Whether to skip the verification of SSL certificates for internal services | false |
 | **TEST_SUPPORT_ENABLED** | Whether test support for e2e test is enabled | false |
 | **DEMO_DATA_ENABLED** | Whether demo data is automatically imported on startup | true |
+| **SYNDESIS_REGISTRY** | Registry from where to fetch Syndesis images | docker.io |
+| **CONTROLLERS_INTEGRATION_ENABLED**  | Should deployment of integrations be enabled? | true |
+| **ACCESS_TOKEN_LIFESPAN** | How many seconds should an access token be valid? | 300 |
+| **SESSION_LIFESPAN** | How long are idle SSO Sesions allow to exist (in ms) ? | 36000 |
 
 ## Running as a Cluster Admin
 

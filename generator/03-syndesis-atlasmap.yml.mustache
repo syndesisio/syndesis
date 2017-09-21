@@ -74,7 +74,7 @@
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "${PEMTOKEYSTORE_IMAGE}",
+              "image": "{{ Images.PemToKeystore }}",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -98,7 +98,7 @@
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: ${PEMTOKEYSTORE_IMAGE}
+          image: {{ Images.PemToKeystore }}
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -136,7 +136,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: atlasmap/atlasmap:latest
+          image: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:{{ Tags.Syndesis }}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -183,7 +183,7 @@
         - atlasmap
         from:
           kind: ImageStreamTag
-          name: syndesis-atlasmap:latest
+          name: syndesis-atlasmap:{{ Tags.Syndesis }}
       type: ImageChange
 {{/Dev}}
 

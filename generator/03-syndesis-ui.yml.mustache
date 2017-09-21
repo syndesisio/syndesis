@@ -78,7 +78,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: syndesis/syndesis-ui:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:{{ Tags.Syndesis }}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
@@ -120,7 +120,7 @@
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: syndesis-ui:latest
+          name: syndesis-ui:{{ Tags.Syndesis }}
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange
