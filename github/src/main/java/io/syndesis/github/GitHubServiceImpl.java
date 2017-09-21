@@ -65,8 +65,7 @@ public class GitHubServiceImpl implements GitHubService {
                 repository = createRepository(request.getRepoName());
                 // Please note, that the repository must created and checked only once. The reason is
                 // that github seems to be async in the repo generation, which might lead to some race conditions
-                // if queried for the repo existance to fast after each other.
-                
+                // if queried for the repo existence to fast after each other.
                 // Add files
                 doCreateOrUpdateFiles(repository, request);
                 // Set WebHook
