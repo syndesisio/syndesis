@@ -247,8 +247,8 @@
       "actions": [
         {
           "id": "io.syndesis:salesforce-create-sobject-connector:latest",
-          "name": "Create Salesforce object",
-          "description": "Create Salesforce Object",
+          "name": "New record",
+          "description": "Create a new record like Account, Contact or Order on Salesforce.",
           "camelConnectorGAV": "io.syndesis:salesforce-create-sobject-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-create-sobject",
           "tags": [ "dynamic" ],
@@ -261,8 +261,8 @@
                "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
             },
             "propertyDefinitionSteps": [{
-              "name": "Object name",
-              "description": "Specify the Salesforce object name",
+              "name": "Name of the object",
+              "description": "Specify the Salesforce object name of the record to create",
               "properties": {
                 "sObjectName": {
                   "kind": "parameter",
@@ -283,8 +283,8 @@
           }
         },{
           "id": "io.syndesis:salesforce-delete-sobject-connector:latest",
-          "name": "Delete Salesforce object",
-          "description": "Delete Salesforce Object",
+          "name": "Delete record",
+          "description": "Delete a record from Salesforce.",
           "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-delete-sobject",
           "tags": [ "dynamic" ],
@@ -297,8 +297,8 @@
                "kind": "none"
             },
             "propertyDefinitionSteps": [{
-              "name": "Object name",
-              "description": "Specify the Salesforce object name",
+              "name": "Name of the object",
+              "description": "Specify the Salesforce object name of the record to delete",
               "properties": {
                 "sObjectName": {
                   "kind": "parameter",
@@ -319,8 +319,8 @@
           }
         },{
           "id": "io.syndesis:salesforce-delete-sobject-with-id-connector:latest",
-          "name": "Delete Salesforce object by external ID",
-          "description": "Delete Salesforce Object by external ID",
+          "name": "Delete record by external identifier",
+          "description": "Delete a record from Salesforce based on the value of an external identifier.",
           "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-with-id-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-delete-sobject-with-id",
           "tags": [ "dynamic" ],
@@ -333,8 +333,8 @@
                "kind": "none"
             },
             "propertyDefinitionSteps": [{
-              "name": "Object name",
-              "description": "Specify the Salesforce object name",
+              "name": "Name of the object",
+              "description": "Specify the Salesforce object name of the record to delete",
               "properties": {
                 "sObjectName": {
                   "kind": "parameter",
@@ -352,12 +352,12 @@
                 }
               }
             },{
-              "name": "Unique field",
-              "description": "Specify field to hold the identifying value",
+              "name": "External identifier field name",
+              "description": "Specify the field name of the external identifier",
               "properties": {
                 "sObjectIdName": {
                   "kind": "parameter",
-                  "displayName": "SObject Id Name",
+                  "displayName": "External identifier field",
                   "group": "common",
                   "required": true,
                   "type": "string",
@@ -367,15 +367,15 @@
                   "secret": false,
                   "componentProperty": false,
                   "defaultValue": "",
-                  "description": "SObject external ID field name"
+                  "description": "Field name of the external identifier"
                 }
               }
             }]
           }
         },{
           "id": "io.syndesis:salesforce-get-sobject-connector:latest",
-          "name": "Fetch Salesforce object by ID",
-          "description": "Fetch Salesforce object by its ID",
+          "name": "Fetch record",
+          "description": "Fetches a record from Salesforce by it's identifier value.",
           "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-get-sobject",
           "tags": [ "dynamic" ],
@@ -388,8 +388,8 @@
                "kind": "json-schema"
             },
             "propertyDefinitionSteps": [{
-              "name": "Object name",
-              "description": "Specify the Salesforce object name",
+              "name": "Name of the object",
+              "description": "Specify the Salesforce object name of the record to fetch",
               "properties": {
                 "sObjectName": {
                   "kind": "parameter",
@@ -410,8 +410,8 @@
           }
         },{
           "id": "io.syndesis:salesforce-get-sobject-with-id-connector:latest",
-          "name": "Fetch Salesforce object by unique ID",
-          "description": "Fetch Salesforce object by unique ID",
+          "name": "Fetch record by external identifier",
+          "description": "Fetches a record from Salesforce by the value of an external identifier.",
           "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-with-id-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-get-sobject-with-id",
           "tags": [ "dynamic" ],
@@ -424,8 +424,8 @@
                "kind": "json-schema"
             },
             "propertyDefinitionSteps": [{
-              "name": "Object name",
-              "description": "Specify the Salesforce object name",
+              "name": "Name of the object",
+              "description": "Specify the Salesforce object name of the record to fetch",
               "properties": {
                 "sObjectName": {
                   "kind": "parameter",
@@ -443,12 +443,12 @@
                 }
               }
             },{
-              "name": "Unique field",
-              "description": "Specify field to hold the identifying value",
+              "name": "External identifier field name",
+              "description": "Specify the field name of the external identifier",
               "properties": {
                 "sObjectIdName": {
                   "kind": "parameter",
-                  "displayName": "SObject Id Name",
+                  "displayName": "External identifier field",
                   "group": "common",
                   "required": true,
                   "type": "string",
@@ -458,15 +458,15 @@
                   "secret": false,
                   "componentProperty": false,
                   "defaultValue": "",
-                  "description": "SObject external ID field name"
+                  "description": "Field name of the external identifier"
                 }
               }
             }]
           }
         },{
           "id": "io.syndesis:salesforce-update-sobject-connector:latest",
-          "name": "Update Salesforce object",
-          "description": "Update Salesforce Object",
+          "name": "Update record",
+          "description": "Update a record on Salesforce.",
           "camelConnectorGAV": "io.syndesis:salesforce-update-sobject-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-update-sobject",
           "tags": [ "dynamic" ],
@@ -478,8 +478,8 @@
                "kind": "none"
             },
             "propertyDefinitionSteps": [{
-              "name": "Object name",
-              "description": "Specify the Salesforce object name",
+              "name": "Name of the object",
+              "description": "Specify the Salesforce object name of the record to update",
               "properties": {
                 "sObjectName": {
                   "kind": "parameter",
@@ -500,8 +500,8 @@
           }
         },{
           "id": "io.syndesis:salesforce-upsert-sobject-connector:latest",
-          "name": "Create/Update Salesforce object",
-          "description": "Create or Update a Salesforce Object",
+          "name": "Create or update record",
+          "description": "Create or update a record on Salesforce.",
           "camelConnectorGAV": "io.syndesis:salesforce-upsert-sobject-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-upsert-sobject",
           "tags": [ "dynamic" ],
@@ -514,8 +514,8 @@
                "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
             },
             "propertyDefinitionSteps": [{
-              "name": "Object name",
-              "description": "Specify the Salesforce object name",
+              "name": "Name of the object",
+              "description": "Specify the Salesforce object name of the record to create or update",
               "properties": {
                 "sObjectName": {
                   "kind": "parameter",
@@ -533,12 +533,12 @@
                 }
               }
             },{
-              "name": "Unique field",
-              "description": "Specify field to hold the identifying value",
+              "name": "Identifier field name",
+              "description": "Specify the field name that holds the identifying value",
               "properties": {
                 "sObjectIdName": {
                   "kind": "parameter",
-                  "displayName": "SObject Id Name",
+                  "displayName": "Identifier field",
                   "group": "common",
                   "required": true,
                   "type": "string",
@@ -548,7 +548,7 @@
                   "secret": false,
                   "componentProperty": false,
                   "defaultValue": "",
-                  "description": "SObject external ID field name"
+                  "description": "Field name of the identifier"
                 }
               }
             }]
@@ -556,7 +556,7 @@
         },{
           "id": "io.syndesis:salesforce-on-create-connector:latest",
           "name": "On create",
-          "description": "Get notified when an Salesforce record is created",
+          "description": "Get notified when an Salesforce record is created.",
           "camelConnectorGAV": "io.syndesis:salesforce-on-create-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-on-create",
           "tags": [ "dynamic" ],
@@ -569,8 +569,8 @@
                "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "propertyDefinitionSteps": [{
-              "name": "Object name",
-              "description": "Specify the Salesforce object name",
+              "name": "Name of the object",
+              "description": "Specify the Salesforce object name for which to receive notification when records are created",
               "properties": {
                 "sObjectName": {
                   "kind": "parameter",
@@ -592,7 +592,7 @@
         },{
           "id": "io.syndesis:salesforce-on-update-connector:latest",
           "name": "On update",
-          "description": "Get notified when an Salesforce record is updated",
+          "description": "Get notified when an Salesforce record is updated.",
           "camelConnectorGAV": "io.syndesis:salesforce-on-update-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-on-update",
           "tags": [ "dynamic" ],
@@ -605,8 +605,8 @@
                "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "propertyDefinitionSteps": [{
-              "name": "Object name",
-              "description": "Specify the Salesforce object name",
+              "name": "Name of the object",
+              "description": "Specify the Salesforce object name for which to receive notification when records are updated",
               "properties": {
                 "sObjectName": {
                   "kind": "parameter",
@@ -628,7 +628,7 @@
         },{
           "id": "io.syndesis:salesforce-on-delete-connector:latest",
           "name": "On delete",
-          "description": "Get notified when an Salesforce record is deleted",
+          "description": "Get notified when an Salesforce record is deleted.",
           "camelConnectorGAV": "io.syndesis:salesforce-on-delete-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-on-delete",
           "tags": [ "dynamic" ],
@@ -641,8 +641,8 @@
                "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "propertyDefinitionSteps": [{
-              "name": "Object name",
-              "description": "Specify the Salesforce object name",
+              "name": "Name of the object",
+              "description": "Specify the Salesforce object name for which to receive notification when records are deleted",
               "properties": {
                 "sObjectName": {
                   "kind": "parameter",
