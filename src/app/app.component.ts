@@ -121,10 +121,16 @@ export class AppComponent implements OnInit, AfterViewInit {
       'favicon16',
       '/favicon-16x16.png',
     );
+    const touchIcon = this.config.getSettings(
+      'branding',
+      'touchIcon',
+      '/apple-touch-icon.png',
+    );
     document.getElementById('favicon32').setAttribute('href', favicon32);
     document.getElementById('favicon16').setAttribute('href', favicon16);
     document.getElementById('appName').setAttribute('content', title);
     document.getElementById('appTitle').setAttribute('content', title);
+    document.getElementById('touchIcon').setAttribute('href', touchIcon);
     this.loggedIn = this.oauthService.hasValidAccessToken();
     this.user = this.userService.user;
     this.notifications = this.notificationService.getNotifications();
