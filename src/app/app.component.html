@@ -32,6 +32,7 @@
         </button>
 
         <!-- Logo -->
+
         <a [routerLink]=" ['/'] "
            class="navbar-brand">
            <!--
@@ -48,10 +49,33 @@
       </div>
 
       <!-- Top Navbar -->
+
       <nav>
         <ul class="nav navbar-nav navbar-right navbar-iconic">
 
-          <!-- User w/ no dropdown -->
+          <!-- Help Navbar -->
+
+          <li dropdown
+              class="dropdown help">
+            <a dropdownToggle
+               class="dropdown-toggle nav-item-iconic"
+               id="dropdownHelp"
+               aria-haspopup="true"
+               aria-expanded="true">
+              <span title="Help"
+                    class="fa pficon-help"></span>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu"
+                aria-labelledby="horizontalDropdownMenu1">
+              <li><a href="https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/fuse_ignite_sample_integration_tutorial/"
+                     rel="nofollow"
+                     target="_blank">Documentation</a></li>
+            </ul>
+          </li>
+
+          <!-- User w/ No Dropdown -->
+
           <li class="nav-item-iconic">
             <span title="Username"
                   class="fa pficon-user"></span>
@@ -59,7 +83,9 @@
           </li>
 
           <!-- User Dropdown -->
+
           <!--
+
           <li dropdown
               class="dropdown user">
             <a dropdownToggle
