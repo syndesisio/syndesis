@@ -27,7 +27,8 @@ import { EditableComponent } from './editable.component';
                    [editable]="true"
                    [modelAsStrings]="true"
                    [ripple]="false"
-                   [inputId]="tagsInput"></tag-input>
+                   [separatorKeyCodes]="[188]"
+                   [addOnBlur]="true"></tag-input>
       </div>
       <button type="button" class="btn btn-primary" (click)="submit(tagInput.items)">Save</button>
       <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
