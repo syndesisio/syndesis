@@ -1,15 +1,23 @@
 {
   "apiEndpoint": "http://localhost:8080/api/v1",
-  "title": "Syndesis",
+  "branding": {
+    "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
+    "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
+    "iconWhiteBg": "assets/images/glasses_logo_square.png",
+    "iconDarkBg": "assets/images/glasses_logo_square.png",
+    "appName": "Biscuits",
+    "favicon32": "/favicon-32x32.png",
+    "favicon16": "/favicon-16x16.png"
+  },
   "datamapper": {
     "baseJavaInspectionServiceUrl": "http://localhost:8585/v2/atlas/java/",
     "baseXMLInspectionServiceUrl": "http://localhost:8585/v2/atlas/xml/",
     "baseJSONInspectionServiceUrl": "http://localhost:8585/v2/atlas/json/",
-    "baseMappingServiceUrl": "http://localhost:8585/v2/atlas/", 
-    "discardNonMockSources": false,   
+    "baseMappingServiceUrl": "http://localhost:8585/v2/atlas/",
+    "discardNonMockSources": false,
     "addMockJSONMappings": false,
     "addMockJavaSources": false,
-    "addMockJavaSingleSource": false,    
+    "addMockJavaSingleSource": false,
     "addMockXMLInstanceSources": false,
     "addMockXMLSchemaSources": false,
     "addMockJSONSources": false,
