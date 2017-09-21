@@ -98,6 +98,12 @@ parameters:
   name: POSTGRESQL_VOLUME_CAPACITY
   required: true
   value: 1Gi
+- description: Password for the PostgreSQL sampledb user.
+  displayName: PostgreSQL SampleDB Connection Password
+  from: '[a-zA-Z0-9]{16}'
+  generate: expression
+  name: POSTGRESQL_SAMPLEDB_PASSWORD
+  required: true
 - description: Enables test-support endpoint on backend API
   displayName: Test Support Enabled
   name: TEST_SUPPORT_ENABLED

@@ -94,6 +94,12 @@ parameters:
   name: POSTGRESQL_VOLUME_CAPACITY
   required: true
   value: 1Gi
+- description: Password for the PostgreSQL sampledb user.
+  displayName: PostgreSQL SampleDB Connection Password
+  from: '[a-zA-Z0-9]{16}'
+  generate: expression
+  name: POSTGRESQL_SAMPLEDB_PASSWORD
+  required: true
 - description: Enables test-support endpoint on backend API
   displayName: Test Support Enabled
   name: TEST_SUPPORT_ENABLED
@@ -432,6 +438,55 @@ objects:
         health:
           sensitive: false
 - apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: syndesis
+      component: syndesis-db
+    name: syndesis-sampledb-config
+  data:
+    add-sample-db.sh: |
+      #!/bin/bash
+      until bash -c "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"; do
+        echo "Waiting for Postgres server..."
+        sleep 1
+      done
+      echo "----- creating sampledb"
+      psql -f /var/lib/pgsql/sampledb/add-sample-db.sql -v user=sampledb -v password=$POSTGRESQL_SAMPLEDB_PASSWORD
+      echo "----- sampledb created"
+    add-sample-db.sql: |
+      CREATE USER :user WITH PASSWORD ':password';
+      CREATE DATABASE :user;
+      GRANT ALL PRIVILEGES ON DATABASE :user to :user;
+
+      \c :user
+      CREATE SCHEMA AUTHORIZATION :user;
+      ALTER DEFAULT PRIVILEGES IN SCHEMA :user GRANT ALL ON TABLES TO :user;
+      CREATE TABLE IF NOT EXISTS :user.LOG(a INTEGER, b INTEGER, c INTEGER, date timestamp);
+
+      CREATE OR REPLACE FUNCTION :user.demo_add(
+        a numeric,
+        b numeric,
+        OUT c numeric)
+        RETURNS numeric
+        LANGUAGE 'plpgsql'
+
+      AS $BODY$
+      BEGIN
+        c := a + b;
+        insert into log(a,b,c,date) VALUES (a,b,c,now());
+        return;
+      END;
+      $BODY$;
+
+      ALTER FUNCTION :user.demo_add(numeric, numeric)
+        OWNER TO :user;
+      \q
+    postStart.sh: |
+      #!/bin/bash
+      /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1
+
+- apiVersion: v1
   kind: Service
   metadata:
     name: syndesis-db
@@ -500,8 +555,17 @@ objects:
             value: ${POSTGRESQL_PASSWORD}
           - name: POSTGRESQL_DATABASE
             value: ${POSTGRESQL_DATABASE}
+          - name: POSTGRESQL_SAMPLEDB_PASSWORD
+            value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
           image: ' '
           imagePullPolicy: IfNotPresent
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - /var/lib/pgsql/sampledb/postStart.sh
           livenessProbe:
             initialDelaySeconds: 60
             tcpSocket:
@@ -528,10 +592,23 @@ objects:
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: syndesis-db-data
+          - mountPath: /var/lib/pgsql/sampledb/add-sample-db.sql
+            name: syndesis-sampledb-config
+            subPath: add-sample-db.sql
+          - mountPath: /var/lib/pgsql/sampledb/add-sample-db.sh
+            name: syndesis-sampledb-config
+            subPath: add-sample-db.sh
+          - mountPath: /var/lib/pgsql/sampledb/postStart.sh
+            name: syndesis-sampledb-config
+            subPath: postStart.sh
         volumes:
         - name: syndesis-db-data
           persistentVolumeClaim:
             claimName: syndesis-db
+        - configMap:
+            defaultMode: 511
+            name: syndesis-sampledb-config
+          name: syndesis-sampledb-config
 
     triggers:
     - imageChangeParams:
