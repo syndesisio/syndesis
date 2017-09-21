@@ -22,7 +22,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import io.syndesis.model.ImmutablesStyle;
+import io.syndesis.core.immutable.ImmutablesStyle;
 
 import org.immutables.value.Value;
 

@@ -165,6 +165,7 @@
     <undertow.version>1.4.18.Final</undertow.version>
     <atlasmap.version>1.17.0</atlasmap.version>
     <camel-atlasmap.version>1.20.1</camel-atlasmap.version>
+    <apache-mime4j.version>0.6</apache-mime4j.version>
 
     <!-- maven plugin version -->
     <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
@@ -196,6 +197,7 @@
     <module>runtime</module>
     <module>verifier</module>
     <module>inspector</module>
+    <module>setup</module>
   </modules>
 
   <dependencyManagement>
@@ -347,6 +349,12 @@
       <dependency>
         <groupId>io.syndesis</groupId>
         <artifactId>credential</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>setup</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -754,6 +762,32 @@
         <scope>test</scope>
       </dependency>
 
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-admin-client</artifactId>
+        <version>${keycloak.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-multipart-provider</artifactId>
+        <version>${resteasy.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+
+      <!-- Only here to exclude commons-logging transitive dependency - not direct dependency-->
+      <dependency>
+        <groupId>org.apache.james</groupId>
+        <artifactId>apache-mime4j</artifactId>
+        <version>${apache-mime4j.version}</version>
+        <scope>runtime</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -912,6 +946,11 @@
                     <requireReleaseDeps>
                       <message>No Snapshots Allowed!</message>
                     </requireReleaseDeps>
+                    <bannedDependencies>
+                      <excludes>
+                        <exclude>commons-logging</exclude>
+                      </excludes>
+                    </bannedDependencies>
                   </rules>
                   <fail>false</fail>
                 </configuration>

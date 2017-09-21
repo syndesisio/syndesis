@@ -13,5 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-@io.syndesis.model.ImmutablesStyle
+@ImmutablesStyle
 package io.syndesis.credential;
+
+import io.syndesis.core.immutable.ImmutablesStyle;

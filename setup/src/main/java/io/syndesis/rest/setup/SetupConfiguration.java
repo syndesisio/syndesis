@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@ImmutablesStyle
-package io.syndesis.project.converter;
+package io.syndesis.rest.setup;
 
-import io.syndesis.core.immutable.ImmutablesStyle;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * Configured in spring.factories so that this configuration is automatically picked
+ * up when included in the classpath.
+ */
+@Configuration
+@ComponentScan
+public class SetupConfiguration {
+
+}
