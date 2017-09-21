@@ -116,6 +116,7 @@ public class KeycloakConfiguration extends KeycloakWebSecurityConfigurerAdapter 
             .antMatchers("/api/v1/index.html").permitAll()
             .antMatchers(HttpMethod.GET, "/api/v1/credentials/callback").permitAll()
             .antMatchers("/api/v1/**").authenticated()
+            .antMatchers("/api/setup").authenticated()
             .anyRequest().permitAll();
 
         http.csrf().disable();
