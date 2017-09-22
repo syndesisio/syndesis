@@ -29,7 +29,7 @@ import io.syndesis.connector.ColumnMode;
 import io.syndesis.connector.StoredProcedureColumn;
 import io.syndesis.connector.StoredProcedureMetadata;
 
-@Component("sql-stored-adapter")
+@Component("sql-stored-connector-adapter")
 public final class SqlStoredMetadataAdapter implements MetadataAdapter<JsonSchema> {
 
     final static String PROCEDURE_NAME     = "procedureName";
@@ -37,9 +37,9 @@ public final class SqlStoredMetadataAdapter implements MetadataAdapter<JsonSchem
 
     @Override
     public SyndesisMetadata<JsonSchema> adapt(final Map<String, Object> properties, final MetaData metadata) {
-
+        
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
-
+        
         if (isPresentAndNonNull(properties, PROCEDURE_NAME)) {
             // fetch metadata for the named procedure
             List<PropertyPair> ppList = new ArrayList<>();
