@@ -15,6 +15,12 @@
  */
 package io.syndesis.github;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.HashMap;
+import java.util.Map;
+
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.Tokens;
 import io.syndesis.git.GitWorkflow;
@@ -28,12 +34,6 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author roland
@@ -63,13 +63,16 @@ public class GitHubServiceImpl implements GitHubService {
             if (repository == null) {
                 // New Repo
                 repository = createRepository(request.getRepoName());
+                // Please note, that the repository must created and checked only once. The reason is
+                // that github seems to be async in the repo generation, which might lead to some race conditions
+                // if queried for the repo existence to fast after each other.
                 // Add files
-                doCreateOrUpdateFiles(request);
+                doCreateOrUpdateFiles(repository, request);
                 // Set WebHook
                 createWebHookAsBuildTrigger(repository, request.getWebHookUrl().orElseThrow(() -> new IllegalStateException("WebHook Url is required for setting up a new repository!")));
             } else {
                 // Only create or update files
-                doCreateOrUpdateFiles(request);
+                doCreateOrUpdateFiles(repository, request);
             }
             return repository.getCloneUrl();
         } catch (Exception e) {
@@ -128,17 +131,8 @@ public class GitHubServiceImpl implements GitHubService {
         return repositoryService.createRepository(repo);
     }
 
-    protected Repository getOrCreateRepository(String name) throws IOException {
-        Repository repository = getRepository(name);
-        if (repository != null) {
-            return repository;
-        }
-        return createRepository(name);
-    }
-
     @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
-    private void doCreateOrUpdateFiles(GithubRequest request) throws IOException {
-        Repository repo = getOrCreateRepository(request.getRepoName());
+    private void doCreateOrUpdateFiles(Repository repo, GithubRequest request) throws IOException {
         gitWorkflow.createFiles(repo.getHtmlUrl(), repo.getName(),
             request.getAuthor(),
             request.getCommitMessage(),
