@@ -73,9 +73,11 @@ public class SalesforceUpsertSObjectComponent extends DefaultConnectorComponent 
             final ObjectMapper mapper = JsonUtils.createObjectMapper();
             if (!exchange.isFailed()) {
                 final Message out = exchange.getOut();
-                final CreateSObjectResult result = mapper.readValue(out.getBody(String.class),
-                    CreateSObjectResult.class);
-                out.setBody(result);
+                final String body = out.getBody(String.class);
+                if (body != null) {
+                    final CreateSObjectResult result = mapper.readValue(body, CreateSObjectResult.class);
+                    out.setBody(result);
+                }
             }
         });
     }
