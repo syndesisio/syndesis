@@ -48,18 +48,18 @@ import static org.assertj.core.api.Assertions.fail;
  */
 public class DeploymentDescriptorTest {
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
     private final CamelCatalog camelCatalog = new DefaultCamelCatalog(true);
 
     private final CamelConnectorCatalog connectorCatalog = new DefaultCamelConnectorCatalog();
 
     private final JsonNode deployment;
 
-    private final ObjectMapper mapper = new ObjectMapper();
-
     private final MavenArtifactProvider mavenArtifactProvider = createArtifactProvider();
 
     public DeploymentDescriptorTest() throws IOException {
-        deployment = mapper
+        deployment = MAPPER
             .readTree(DeploymentDescriptorTest.class.getResourceAsStream("/io/syndesis/dao/deployment.json"));
     }
 
@@ -98,7 +98,7 @@ public class DeploymentDescriptorTest {
                     final String componentJsonSchemaFromCatalog = camelCatalog.componentJSonSchema(scheme);
                     final JsonNode catalogedJsonSchema;
                     try {
-                        catalogedJsonSchema = mapper.readTree(componentJsonSchemaFromCatalog);
+                        catalogedJsonSchema = MAPPER.readTree(componentJsonSchemaFromCatalog);
                     } catch (final IOException e) {
                         fail("Unable to parse Camel component JSON schema", e);
                         return;// never happens
@@ -109,6 +109,8 @@ public class DeploymentDescriptorTest {
                     assertConnectorProperties(connectorId, connectorPropertiesJson, componentPropertiesFromCatalog);
 
                     assertActionProperties(connectorId, action, actionName, catalogedJsonSchema);
+
+                    assertActionDataShapes(connectorCatalog, action, actionName, coordinates);
                 });
             }
         }
@@ -141,6 +143,83 @@ public class DeploymentDescriptorTest {
             .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
         assertThat(multipleNames).as("Expected unique action names").isEmpty();
+    }
+
+    private static void assertActionDataShapes(final CamelConnectorCatalog connectorCatalog, final JsonNode action,
+        final String actionName, final String... coordinates) {
+
+        final String connectorJSon = connectorCatalog.connectorJSon(coordinates[0], coordinates[1], coordinates[2]);
+        JsonNode connectorJson;
+        try {
+            connectorJson = MAPPER.readTree(connectorJSon);
+        } catch (final IOException e) {
+            fail("Unable to parse connector JSON descriptor", e);
+            return; // never happens
+        }
+
+        final String connectorInputDataType = connectorJson.get("inputDataType").asText();
+        final String connectorOutputDataType = connectorJson.get("outputDataType").asText();
+
+        final JsonNode actionDefinition = action.get("definition");
+        final JsonNode inputDataShape = actionDefinition.get("inputDataShape");
+        if ("json".equals(connectorInputDataType)) {
+            assertThat(inputDataShape.get("kind").asText())
+                .as("Connector defines input data shape for action %s as JSON, deployment descriptor does not",
+                    actionName)
+                .isEqualTo("json-schema");
+            assertThat(inputDataShape.get("type"))
+                .as("shapes of kind `json-schema` should not define type, input data shape of %s does", actionName)
+                .isNull();
+        }
+
+        final JsonNode outputDataShape = actionDefinition.get("outputDataShape");
+        if ("json".equals(connectorOutputDataType)) {
+            assertThat(outputDataShape.get("kind").asText())
+                .as("Connector defines output data shape for action %s as JSON, deployment descriptor does not",
+                    actionName)
+                .isEqualTo("json-schema");
+            assertThat(outputDataShape.get("type"))
+                .as("shapes of kind `json-schema` should not define type, output data shape of %s does", actionName)
+                .isNull();
+        }
+
+        if (connectorInputDataType.startsWith("java:")) {
+            assertThat(inputDataShape.get("kind").asText())
+                .as("Connector defines input data shape for action %s as java, deployment descriptor does not",
+                    actionName)
+                .isEqualTo("java");
+            assertThat(inputDataShape.get("type").asText())
+                .as("Connector input data shape for action %s differs in class name from deployment", actionName)
+                .isEqualTo(connectorInputDataType.substring(5));
+        }
+
+        if (connectorOutputDataType.startsWith("java:")) {
+            assertThat(outputDataShape.get("kind").asText())
+                .as("Connector defines output data shape for action %s as java, deployment descriptor does not",
+                    actionName)
+                .isEqualTo("java");
+            assertThat(outputDataShape.get("type").asText())
+                .as("Connector output data shape for action %s differs in class name from deployment", actionName)
+                .isEqualTo(connectorOutputDataType.substring(5));
+        }
+
+        if ("none".equals(connectorInputDataType)) {
+            assertThat(inputDataShape.get("kind").asText())
+                .as("Connector defines input data shape for action %s as none, deployment descriptor does not",
+                    actionName)
+                .isEqualTo("none");
+            assertThat(inputDataShape.get("type"))
+                .as("shapes of kind `none` should not define type, input data shape of %s does", actionName).isNull();
+        }
+
+        if ("none".equals(connectorOutputDataType)) {
+            assertThat(outputDataShape.get("kind").asText())
+                .as("Connector defines output data shape for action %s as none, deployment descriptor does not",
+                    actionName)
+                .isEqualTo("none");
+            assertThat(outputDataShape.get("type"))
+                .as("shapes of kind `none` should not define type, output data shape of %s does", actionName).isNull();
+        }
     }
 
     private static void assertActionProperties(final String connectorId, final JsonNode action, final String actionName,

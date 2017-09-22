@@ -1340,5 +1340,133 @@
         }
       ]
     }
+  },
+  
+  {
+    "kind": "connector",
+    "data": {
+      "id": "timer",
+      "name": "Timer",
+      "description": "Timer Connector",
+      "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
+      "properties": {},
+      "actions": [
+        {
+          "id": "io.syndesis_timer-connector:latest",
+          "name": "Periodic Timer",
+          "description": "Set a timer that fires at intervals that you specify",
+          "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "periodic-timer-connector",
+          "definition": {
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "any"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Timer parameters",
+              "description": "Specify the period for the timer",
+              "properties": {
+                "period": {
+                  "kind": "parameter",
+                  "displayName": "Period",
+                  "group": "consumer",
+                  "required": false,
+                  "type": "integer",
+                  "javaType": "long",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": 10000,
+                  "description": "Period in milli seconds when the timer runs. By default the timer runs every 10000 (10 second)."
+                }
+              }
+            }]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "connector",
+    "data": {
+      "id": "trade-insight",
+      "name": "Trade Insight",
+      "description": "Trade Insight API connector",
+      "icon": "fa-usd",
+      "configuredProperties": {},
+      "properties": {
+        "host": {
+          "kind": "property",
+          "displayName": "Host",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags":[],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "Host and port of HTTP service to use (override host in swagger schema)"
+        }
+      },
+      "actions": [
+        {
+          "name": "Buy Recommendation",
+          "description": "Fetches buy recommendation from Trade Insight API server",
+          "id": "io.syndesis:trade-insight-buy-connector:latest",
+          "camelConnectorGAV": "io.syndesis:trade-insight-buy-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "trade-insight-buy",
+          "definition": {
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "java",
+              "type": "io.syndesis.connector.tradeinsight.Suggestion"
+            },
+            "propertyDefinitionSteps": []
+          }
+        },
+        {
+          "name": "Sell Recommendation",
+          "description": "Fetches sell recommendation from Trade Insight API server",
+          "id": "io.syndesis:trade-insight-sell-connector:latest",
+          "camelConnectorGAV": "io.syndesis:trade-insight-sell-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "trade-insight-sell",
+          "definition": {
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "java",
+              "type": "io.syndesis.connector.tradeinsight.Suggestion"
+            },
+            "propertyDefinitionSteps": []
+          }
+        },
+        {
+          "name": "Top Recommendation",
+          "description": "Fetches top recommendation from Trade Insight API server",
+          "id": "io.syndesis:trade-insight-top-connector:latest",
+          "camelConnectorGAV": "io.syndesis:trade-insight-top-connector:@syndesis-connectors.version@",
+          "camelConnectorPrefix": "trade-insight-top",
+          "definition": {
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "java",
+              "type": "io.syndesis.connector.tradeinsight.Suggestion"
+            },
+            "propertyDefinitionSteps": []
+          }
+        }
+      ]
+    }
   }
 ]
