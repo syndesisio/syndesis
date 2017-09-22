@@ -47,8 +47,7 @@ export class IntegrationsListComponent extends IntegrationViewBase {
       emptyStateConfig: {
         iconStyleClass: 'pficon pficon-add-circle-o',
         title: 'Create an integration',
-        info: 'There are currently no integrations available.  Please click on the button below to create one',
-        helpLink: {},
+        info: 'There are currently no integrations available. Please click on the button below to create one.',
         actions: {
           primaryActions: [{
             id: 'createIntegration',
