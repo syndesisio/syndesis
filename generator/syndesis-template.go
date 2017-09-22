@@ -59,6 +59,7 @@ type tags struct {
 	Keycloak      string
 	TokenRp       string
 	Syndesis      string
+	Atlasmap      string
 	Postgresql    string
 	PemToKeystore string
 }
@@ -135,7 +136,8 @@ func init() {
 	flags.BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
 	flags.BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
 	flags.BoolVar(&context.Probeless, "probeless", false, "Without probes")
-	flags.StringVar(&context.Tags.Syndesis, "tag", "latest", "Image tag to use")
+	flags.StringVar(&context.Tags.Syndesis, "syndesis", "latest", "Syndesis Image tag to use")
+	flags.StringVar(&context.Tags.Atlasmap, "atlasmap", "latest", "Atlasmap image to use")
 	flags.BoolVar(&isProduct, "product", false, "Generate product templates?")
 	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)

@@ -136,7 +136,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Atlasmap }}:{{ Tags.Syndesis }}
+          image: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Atlasmap }}:{{ Tags.Atlasmap }}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -183,7 +183,7 @@
         - atlasmap
         from:
           kind: ImageStreamTag
-          name: syndesis-atlasmap:{{ Tags.Syndesis }}
+          name: syndesis-atlasmap:{{ Tags.Atlasmap }}
       type: ImageChange
 {{/Dev}}
 
