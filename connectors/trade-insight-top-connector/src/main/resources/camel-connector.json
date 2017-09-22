@@ -2,7 +2,7 @@
   "baseScheme" : "rest",
   "baseGroupId" : "org.apache.camel",
   "baseArtifactId" : "camel-core",
-  "baseVersion" : "2.20.0.fuse-000093",
+  "baseVersion" : "2.20.0.fuse-000101",
   "baseJavaType" : "org.apache.camel.component.rest.RestComponent",
   "name" : "TradeInsightTop",
   "scheme" : "trade-insight-top",
