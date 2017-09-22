@@ -62,7 +62,7 @@ export class IntegrationsEditPage extends ChildAwarePage
   getSidebarClass() {
     switch (this.currentStepKind) {
       case 'mapper':
-        return 'col-md-1';
+        return 'mapper-sidebar';
       default:
         return 'wizard-sidebar';
     }
@@ -71,7 +71,7 @@ export class IntegrationsEditPage extends ChildAwarePage
   getPageContainer() {
     switch (this.currentStepKind) {
       case 'mapper':
-        return 'col-md-11';
+        return 'mapper-main';
       default:
         return 'wizard-main';
     }

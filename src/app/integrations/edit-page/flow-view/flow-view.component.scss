@@ -38,9 +38,9 @@
     display: flex;
     flex-direction: column;
     &.collapsed {
-      width: 66px;
-      padding-left: 6px;
-      padding-right: 6px;
+      width: 150px;
+      align-items: center;
+      margin-right: 0;
     }
     .start,
     .finish {
@@ -102,12 +102,11 @@
     flex-wrap: nowrap;
     flex: 0 0 auto;
     min-height: 110px;
-    width: calc(100% + 20px);
     .step-line {
-      position: absolute; //height: 150px;
+      position: absolute;
       height: 100%;
       top: 0;
-      left: 46px;
+      left: 26px;
       width: 2px;
       background-color: #d4d4d4;
     }
@@ -136,6 +135,7 @@
         }
       }
       .square-icon {
+        padding-left: 0;
         .fa.fa-plus-square {
           color: #158acc;
           background-color: white;
