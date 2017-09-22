@@ -109,7 +109,7 @@
         - postgresql
         from:
           kind: ImageStreamTag
-          name: {{ Images.Postgresql }}
+          name: {{ Images.Support.Postgresql }}:{{ Tags.Postgresql }}
           namespace: ${POSTGRESQL_IMAGE_STREAM_NAMESPACE}
       type: ImageChange
     - type: ConfigChange

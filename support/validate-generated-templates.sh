@@ -21,7 +21,7 @@ function cleanup() {
 # register the cleanup function to be called on the EXIT signal
 trap cleanup EXIT
 
-${DIR}/generator/run.sh $WORK_DIR
+TARGET_DIR=$WORK_DIR ${DIR}/generator/run.sh
 
 DIFF_FILES=$(diff -q $WORK_DIR $DIR | grep -oE '( |/)syndesis-?[^\n]*\.yml' | grep -oE '[^ /]+' | sort | uniq)
 
