@@ -1889,7 +1889,7 @@ objects:
                 "limits": {
                   "memory": "255Mi"
                 },
-                "requests": { 
+                "requests": {
                   "memory": "20Mi"
                 }
               }
@@ -1936,6 +1936,16 @@ objects:
             value: ${TEST_SUPPORT_ENABLED}
           - name: CONTROLLERS_INTEGRATION_ENABLED
             value: ${CONTROLLERS_INTEGRATION_ENABLED}
+          - name: KEYCLOAK_ADMIN_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-keycloak-admin
+                key: username
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-keycloak-admin
+                key: password
           image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
 
           imagePullPolicy: IfNotPresent
@@ -1964,7 +1974,7 @@ objects:
           - name: config-volume
             mountPath: /deployments/config
           # Set QoS class to "Guaranteed" (limits == requests)
-          # This doesn't work on OSO as there is a fixed ratio 
+          # This doesn't work on OSO as there is a fixed ratio
           # from limit to resource (80% currently). 'requests' is ignored there
           resources:
             limits:
@@ -2028,6 +2038,7 @@ objects:
       keycloak:
         enabled: true
         configurationFile: file:config/syndesis-client.json
+        adminPassword: ${KEYCLOAK_ADMIN_PASSWORD}
       dao:
         kind: jsondb
     syndesis-client.json: |-
