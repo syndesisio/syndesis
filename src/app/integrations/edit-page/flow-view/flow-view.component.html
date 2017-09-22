@@ -13,7 +13,7 @@
   <!-- Insert step line -->
   <ng-template #insertStepTemplate let-position='position'>
     <div *ngIf="currentState === 'save-or-add-step'"
-         class="row step step-insert"
+         class="step step-insert"
          (click)="pop.toggle()"
          (mouseover)="pop.show()"
          (mouseleave)="pop.hide()">
@@ -59,7 +59,7 @@
          *ngIf="i && i.steps">
 
       <!-- First Step -->
-      <div class="row step start">
+      <div class="step start">
         <div class="step-line"></div>
         <syndesis-integrations-flow-view-step [step]="startConnection()"
                                               [position]="0"
@@ -75,7 +75,7 @@
                    let-step
                    [ngForOf]="getMiddleSteps()"
                    let-position="index">
-        <div class="row step">
+        <div class="step">
           <div class="step-line"></div>
           <syndesis-integrations-flow-view-step [step]="step"
                                                 [position]="position + 1"
@@ -88,7 +88,7 @@
       </ng-template>
 
       <!-- Last Step -->
-      <div class="row step finish">
+      <div class="step finish">
         <syndesis-integrations-flow-view-step [step]="endConnection()"
                                               [position]="-1"
                                               [currentPosition]="currentPosition"
