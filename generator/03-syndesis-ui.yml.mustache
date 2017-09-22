@@ -78,7 +78,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:{{ Tags.Syndesis }}
+          image: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
@@ -149,5 +149,26 @@
           "hybrid": true,
           "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}",
           "auto-link-github": ${CONTROLLERS_INTEGRATION_ENABLED}
-        }
+        },
+{{#Productized}}
+        "branding": {
+          "logoWhiteBg": "",
+          "logoDarkBg": "",
+          "iconWhiteBg": "assets/images/product-logo.svg",
+          "iconDarkBg": "assets/images/product-logo.svg",
+          "appName": "Fuse Ignite",
+          "favicon32": "/favicon-32x32.png",
+          "favicon16": "/favicon-16x16.png",
+          "touchIcon": "/apple-touch-icon.png"
+       }{{/Productized}}{{^Productized}}
+        "branding": {
+          "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
+          "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
+          "iconWhiteBg": "assets/images/glasses_logo_square.png",
+          "iconDarkBg": "assets/images/glasses_logo_square.png",
+          "appName": "Syndesis",
+          "favicon32": "/favicon-32x32.png",
+          "favicon16": "/favicon-16x16.png",
+          "touchIcon": "/apple-touch-icon.png"
+       }{{/Productized}}
       }

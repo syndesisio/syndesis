@@ -10,7 +10,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:{{ Tags.Syndesis }}
+        name: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: {{ Tags.Syndesis }}
@@ -25,7 +25,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.Keycloak }}
+        name: ${SYNDESIS_REGISTRY}/{{ Images.Support.Keycloak }}:{{ Tags.Keycloak }}
       importPolicy:
         scheduled: true
       name: {{ Tags.Keycloak }}
@@ -40,7 +40,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:{{ Tags.Syndesis }}
+        name: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: {{ Tags.Syndesis }}
@@ -55,7 +55,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.TokenRp }}
+        name: ${SYNDESIS_REGISTRY}/{{ Images.Support.TokenRp }}:{{ Tags.TokenRp }}
       importPolicy:
         scheduled: true
       name: {{ Tags.TokenRp }}
@@ -70,7 +70,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:{{ Tags.Syndesis }}
+        name: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Atlasmap }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: {{ Tags.Syndesis }}
@@ -85,7 +85,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:{{ Tags.Syndesis }}
+        name: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: {{ Tags.Syndesis }}

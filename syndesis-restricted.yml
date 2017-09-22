@@ -2307,7 +2307,17 @@ objects:
           "hybrid": true,
           "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}",
           "auto-link-github": ${CONTROLLERS_INTEGRATION_ENABLED}
-        }
+        },
+        "branding": {
+          "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
+          "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
+          "iconWhiteBg": "assets/images/glasses_logo_square.png",
+          "iconDarkBg": "assets/images/glasses_logo_square.png",
+          "appName": "Syndesis",
+          "favicon32": "/favicon-32x32.png",
+          "favicon16": "/favicon-16x16.png",
+          "touchIcon": "/apple-touch-icon.png"
+       }
       }
 - apiVersion: v1
   kind: Service

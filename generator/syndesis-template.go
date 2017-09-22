@@ -14,10 +14,12 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"sort"
 	"strings"
 
 	"github.com/hoisie/mustache"
+	"github.com/imdario/mergo"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -34,58 +36,118 @@ var installCommand = &cobra.Command{
 	Run:   install,
 }
 
-type images struct {
+type supportImages struct {
 	PemToKeystore string
-	TokenRp string
-	Keycloak string
-	Postgresql string
+	TokenRp       string
+	Keycloak      string
+	Postgresql    string
+}
+
+type syndesisImages struct {
+	Rest     string
+	Ui       string
+	Verifier string
+	Atlasmap string
+}
+
+type images struct {
+	Support  supportImages
+	Syndesis syndesisImages
 }
 
 type tags struct {
-	Keycloak string
-	TokenRp string
-	Syndesis string
+	Keycloak      string
+	TokenRp       string
+	Syndesis      string
+	Postgresql    string
+	PemToKeystore string
 }
 
 type Context struct {
-	Name       string
-	Dev        bool
-	Ephemeral  bool
-	Restricted bool
-	Probeless  bool
-	Tag        string
-	Registry   string
-	Images     images
-	Tags       tags
+	Name        string
+	Dev         bool
+	Ephemeral   bool
+	Restricted  bool
+	Probeless   bool
+	Productized bool
+	Tag         string
+	Registry    string
+	Images      images
+	Tags        tags
 }
 
 // TODO: Could be added from a local configuration file
-var context = Context{
+var syndesisContext = Context{
 	Images: images{
-	  PemToKeystore: "syndesis/pemtokeystore:v0.2.1",
-	  TokenRp: "syndesis/token-rp:v0.6.2",
-		Keycloak: "jimmidyson/keycloak-openshift:2.5.4.Final",
-		Postgresql: "postgresql:9.5",
-  },
+		Support: supportImages{
+			PemToKeystore: "syndesis/pemtokeystore",
+			TokenRp:       "syndesis/token-rp",
+			Keycloak:      "jimmidyson/keycloak-openshift",
+			Postgresql:    "postgresql",
+		},
+		Syndesis: syndesisImages{
+			Rest:     "syndesis/syndesis-rest",
+			Ui:       "syndesis/syndesis-ui",
+			Verifier: "syndesis/syndesis-verifier",
+			Atlasmap: "atlasmap/atlasmap",
+		},
+	},
 	Tags: tags{
-		Keycloak: "2.5.4.Final",
-		TokenRp: "v0.6.2",
+		Postgresql:    "9.5",
+		PemToKeystore: "v0.2.1",
+		Keycloak:      "2.5.4.Final",
+		TokenRp:       "v0.6.2",
 	},
 }
 
+// TODO: Update with product image references here
+var productContext = Context{
+	Images: images{
+		Support: supportImages{
+			PemToKeystore: "syndesis/pemtokeystore",
+			TokenRp:       "syndesis/token-rp",
+			Keycloak:      "jimmidyson/keycloak-openshift",
+			Postgresql:    "postgresql",
+		},
+		Syndesis: syndesisImages{
+			Rest:     "syndesis/syndesis-rest",
+			Ui:       "syndesis/syndesis-ui",
+			Verifier: "syndesis/syndesis-verifier",
+			Atlasmap: "atlasmap/atlasmap",
+		},
+	},
+	Tags: tags{
+		Postgresql:    "9.5",
+		PemToKeystore: "v0.2.1",
+		Keycloak:      "2.5.4.Final",
+		TokenRp:       "v0.6.2",
+	},
+}
+
+var context = syndesisContext
+var isProduct bool
+
 func init() {
 	flags := installCommand.PersistentFlags()
+
 	flags.StringVar(&context.Name, "name", "syndesis", "Name of the template")
 	flags.BoolVar(&context.Dev, "dev", false, "Developer mode?")
 	flags.BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
 	flags.BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
 	flags.BoolVar(&context.Probeless, "probeless", false, "Without probes")
-	flags.StringVar(&context.Tags.Syndesis,"tag", "latest", "Image tag to use")
-	flags.StringVar(&context.Registry,"registry", "docker.io", "Registry to use for imagestreams")
+	flags.StringVar(&context.Tags.Syndesis, "tag", "latest", "Image tag to use")
+	flags.BoolVar(&isProduct, "product", false, "Generate product templates?")
+	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 }
 
 func install(cmd *cobra.Command, args []string) {
+
+	if isProduct {
+		if err := mergo.MergeWithOverwrite(&context, productContext); err != nil {
+			log.Fatal("Cannot merge in product image names")
+		}
+	}
 
 	files, err := ioutil.ReadDir("./")
 	check(err)

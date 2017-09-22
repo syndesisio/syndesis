@@ -53,7 +53,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: {{ Images.TokenRp }}
+          image: {{ Images.Support.TokenRp }}:{{ Tags.TokenRp }}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           args:
