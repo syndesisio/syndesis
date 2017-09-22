@@ -23,7 +23,7 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>connectors</artifactId>
-    <version>0.5.4</version>
+    <version>0.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>salesforce-model</artifactId>

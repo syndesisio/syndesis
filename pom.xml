@@ -26,7 +26,7 @@
 
   <groupId>io.syndesis</groupId>
   <artifactId>syndesis-connectors-project</artifactId>
-  <version>0.5.4</version>
+  <version>0.5-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Syndesis Connectors :: Project</name>
 
@@ -63,7 +63,7 @@
     <developerConnection>scm:git:git@github.com:syndesisio/connectors.git
     </developerConnection>
     <url>https://github.com/syndesisio/connectors/</url>
-    <tag>0.5.4</tag>
+    <tag>0.5.5</tag>
   </scm>
 
   <distributionManagement>
