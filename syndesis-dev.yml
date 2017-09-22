@@ -494,15 +494,8 @@ objects:
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: syndesis-db-data
-          - mountPath: /var/lib/pgsql/sampledb/add-sample-db.sql
+          - mountPath: /var/lib/pgsql/sampledb
             name: syndesis-sampledb-config
-            subPath: add-sample-db.sql
-          - mountPath: /var/lib/pgsql/sampledb/add-sample-db.sh
-            name: syndesis-sampledb-config
-            subPath: add-sample-db.sh
-          - mountPath: /var/lib/pgsql/sampledb/postStart.sh
-            name: syndesis-sampledb-config
-            subPath: postStart.sh
         volumes:
         - name: syndesis-db-data
           persistentVolumeClaim:
