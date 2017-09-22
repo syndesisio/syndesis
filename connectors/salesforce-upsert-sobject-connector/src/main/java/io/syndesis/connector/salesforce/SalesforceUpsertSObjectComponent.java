@@ -15,14 +15,16 @@
  */
 package io.syndesis.connector.salesforce;
 
+import java.net.URI;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.apache.camel.Endpoint;
+import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.catalog.URISupport;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 import org.apache.camel.component.salesforce.SalesforceEndpointConfig;
 import org.apache.camel.component.salesforce.api.SalesforceException;
@@ -39,13 +41,17 @@ public class SalesforceUpsertSObjectComponent extends DefaultConnectorComponent 
 
         // set sObjectId header
         setBeforeProducer(exchange -> {
-
             // parse input json and extract Id field
             final ObjectMapper mapper = JsonUtils.createObjectMapper();
             final ObjectNode node = (ObjectNode) mapper.readTree(exchange.getIn().getBody(String.class));
 
-            final JsonNode sObjectExternalId = node
-                .remove(String.valueOf(getOptions().get(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME)));
+            final URI toEndpointUri = exchange.getProperty(Exchange.TO_ENDPOINT, URI.class);
+            final Map<String, Object> parameters = URISupport.parseParameters(toEndpointUri);
+            final String externalIdPropertyName = String
+                .valueOf(parameters.getOrDefault(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME,
+                    getOptions().get(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME)));
+
+            final JsonNode sObjectExternalId = node.remove(externalIdPropertyName);
             if (sObjectExternalId == null) {
                 exchange.setException(
                     new SalesforceException("Missing option " + SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME, 404));
@@ -72,13 +78,6 @@ public class SalesforceUpsertSObjectComponent extends DefaultConnectorComponent 
                 out.setBody(result);
             }
         });
-    }
-
-    @Override
-    protected Endpoint createEndpoint(final String uri, final String remaining, final Map<String, Object> parameters)
-        throws Exception {
-        parameters.forEach(this::addOption);
-        return super.createEndpoint(uri, remaining, parameters);
     }
 
     private static void clearBaseFields(final ObjectNode node) {
