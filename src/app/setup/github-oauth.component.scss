@@ -16,8 +16,37 @@
     padding-right: 20px;
   }
 
+  .circle {
+    border: 0.1em solid grey;
+    border-radius: 100%;
+    height: 3em;
+    width: 3em;
+    text-align: center;
+  }
+
+  .circle p {
+    margin-top: 0.10em;
+    font-size: 1.5em;
+    font-weight: bold;
+    font-family: sans-serif;
+    color: grey;
+  }
 
   .col-md-12 {
     height: 100%;
+  }
+
+  .step-one {
+    a {
+      &:hover {text-decoration: none}
+
+      margin: auto 15px;
+    }
+  }
+
+  .step-two {
+    a {
+      &:hover {text-decoration: none}
+    }
   }
 }

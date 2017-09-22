@@ -1,14 +1,9 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 
-/**
- * The GitHub account model
- */
-//import { GitHubAccount } from '../model';
 import { Observable } from 'rxjs/Observable';
 
 export interface OAuthAppListItem {
   expanded: boolean;
-  //account: GitHubAccount;
 }
 
 @Component({
@@ -19,9 +14,10 @@ export interface OAuthAppListItem {
 export class GitHubOAuthSetupComponent implements OnInit {
 
   loading: Observable<boolean>;
-  isLoading = true;
 
   constructor(public detector: ChangeDetectorRef) {}
+
+  connectGitHub() {}
 
   /**
    * Returns whether or not this item has stored credentials
