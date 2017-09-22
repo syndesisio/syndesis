@@ -716,7 +716,7 @@
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
-          "description": "Password for the database connection (for the sampledb it can obtained using 'oc get dc syndesis-db -o yaml | grep -A 1 POSTGRESQL_SAMPLEDB_PASSWORD')"
+          "description": "Password for the database connection"
         },
         "schema": {
           "kind": "property",
