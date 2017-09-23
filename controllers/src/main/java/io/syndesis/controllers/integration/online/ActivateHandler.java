@@ -205,7 +205,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         Map<String, String> labels = new HashMap<>();
-        labels.put(OpenShiftService.USERNAME_LABEL, username);
+        labels.put(OpenShiftService.USERNAME_LABEL, Names.sanitize(username));
 
         return (int) openShiftService.getDeploymentsByLabel(new RequestConfigBuilder().withOauthToken(token).build(), labels)
             .stream()
