@@ -686,7 +686,7 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "defaultValue": "jdbc:postgresql:database",
+          "defaultValue": "jdbc:postgresql://syndesis-db:5432/sampledb",
           "description": "JDBC URL of the database"
         },
         "user": {
@@ -701,7 +701,7 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "defaultValue": "",
+          "defaultValue": "sampledb",
           "description": "Username for the database connection"
         },
         "password": {
@@ -730,6 +730,7 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
+          "defaultValue": "sampledb",
           "description": "Database schema"
         },
         "catalog": {
@@ -789,7 +790,7 @@
                   "displayName": "Template",
                   "group": "producer",
                   "required": true,
-                  "type": "string",
+                  "type": "hidden",
                   "javaType": "java.lang.String",
                   "tags":[],
                   "deprecated": false,
