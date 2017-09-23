@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -60,6 +61,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 public class DefaultProjectGeneratorTest {
+    private static final String CONNECTORS_VERSION = ResourceBundle.getBundle("test").getString("connectors.version");
     private static final ConnectorCatalogProperties CATALOG_PROPERTIES = new ConnectorCatalogProperties();
     private static Properties properties = new Properties();
     private static final ObjectMapper OBJECT_MAPPER;
@@ -134,7 +136,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("timer")
                 .camelConnectorPrefix("periodic-timer-connector")
-                .camelConnectorGAV("io.syndesis:timer-connector:0.5.5")
+                .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
                 .build())
             .build();
 
@@ -147,7 +149,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-get-connector")
-                .camelConnectorGAV("io.syndesis:http-get-connector:0.5.5")
+                .camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTORS_VERSION)
                 .build())
             .build();
 
@@ -165,7 +167,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-post-connector")
-                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.5")
+                .camelConnectorGAV("io.syndesis:http-post-connector:" + CONNECTORS_VERSION)
                 .build())
             .build();
 
@@ -211,7 +213,7 @@ public class DefaultProjectGeneratorTest {
                 .action(new Action.Builder()
                     .connectorId("timer")
                     .camelConnectorPrefix("periodic-timer-connector")
-                    .camelConnectorGAV("io.syndesis:timer-connector:0.5.5")
+                    .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
                     .build())
             .build();
 
@@ -225,7 +227,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-get-connector")
-                .camelConnectorGAV("io.syndesis:http-get-connector:0.5.5")
+                .camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTORS_VERSION)
                 .build())
             .build();
 
@@ -289,7 +291,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("timer")
                 .camelConnectorPrefix("periodic-timer-connector")
-                .camelConnectorGAV("io.syndesis:timer-connector:0.5.5")
+                .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
                 .build())
             .build();
 
@@ -307,7 +309,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-post-connector")
-                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.5")
+                .camelConnectorGAV("io.syndesis:http-post-connector:" + CONNECTORS_VERSION)
                 .build())
             .build();
 
@@ -343,7 +345,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("timer")
                 .camelConnectorPrefix("periodic-timer-connector")
-                .camelConnectorGAV("io.syndesis:timer-connector:0.5.5")
+                .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
                 .build())
             .build();
 
@@ -363,7 +365,7 @@ public class DefaultProjectGeneratorTest {
             .action(new Action.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-post-connector")
-                .camelConnectorGAV("io.syndesis:http-post-connector:0.5.5")
+                .camelConnectorGAV("io.syndesis:http-post-connector:" + CONNECTORS_VERSION)
                 .build())
             .build();
 
