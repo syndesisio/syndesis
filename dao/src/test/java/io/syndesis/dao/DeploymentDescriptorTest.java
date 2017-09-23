@@ -322,7 +322,7 @@ public class DeploymentDescriptorTest {
 
     private static void removeCustomizedProperties(final JsonNode... nodes) {
         for (final JsonNode node : nodes) {
-            ((ObjectNode) node).remove(Arrays.asList("displayName", "description", "defaultValue", "optionalPrefix"));
+            ((ObjectNode) node).remove(Arrays.asList("displayName", "type", "description", "defaultValue", "optionalPrefix"));
         }
     }
 }
