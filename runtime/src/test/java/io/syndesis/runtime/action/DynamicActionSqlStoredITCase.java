@@ -77,7 +77,7 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
 
     @Before
     public void setupConnection() {
-        dataManager.create(new Connection.Builder().id(connectionId).connectorId("sql-stored")
+        dataManager.create(new Connection.Builder().id(connectionId).connectorId("sql-stored-connector")
             .putConfiguredProperty("user", "sa").build());
     }
 
@@ -85,7 +85,7 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
     public void setupMocks() {
         stubFor(WireMock
             .post(urlEqualTo(
-                "/api/v1/connectors/sql-stored/actions/io.syndesis:sql-stored-connector:latest"))//
+                "/api/v1/connectors/sql-stored-connector/actions/io.syndesis:sql-stored-connector:latest"))//
             .withHeader("Accept", containing("application/json"))//
             .withRequestBody(
                     equalToJson("{\"template\":null,\"noop\":null,\"procedureName\":null,\"batch\":null,\"user\":\"sa\"}"))
@@ -96,7 +96,7 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
 
         stubFor(WireMock
             .post(urlEqualTo(
-                "/api/v1/connectors/sql-stored/actions/io.syndesis:sql-stored-connector:latest"))//
+                "/api/v1/connectors/sql-stored-connector/actions/io.syndesis:sql-stored-connector:latest"))//
             .withHeader("Accept", equalTo("application/json"))//
             .withRequestBody(
                     equalToJson("{\"template\":null,\"batch\":null,\"noop\":null,\"user\":\"sa\",\"procedureName\":\"DEMO_ADD\"}"))
@@ -121,12 +121,12 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
         ConfigurationProperty procedureNames = firstResponse.getBody().getPropertyDefinitionSteps().iterator().next().getProperties().get("procedureName");
         assertThat(procedureNames.getEnum().size() == 2);
         assertThat(procedureNames.getEnum().iterator().next().getLabel().startsWith("DEMO_ADD"));
-        
+
         final ResponseEntity<ActionDefinition> secondResponse = http(HttpMethod.POST,
-                "/api/v1/connections/" + connectionId + "/actions/io.syndesis:sql-stored-connector:latest", 
+                "/api/v1/connections/" + connectionId + "/actions/io.syndesis:sql-stored-connector:latest",
                 Collections.singletonMap("procedureName", "DEMO_ADD"),
                 ActionDefinition.class, tokenRule.validToken(), headers, HttpStatus.OK);
-        
+
         //System.out.println("secondResponse:" + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(secondResponse));
         //System.out.println("inputSchema: " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(secondResponse.getBody().getInputDataShape().get()));
         boolean isValid = false;
