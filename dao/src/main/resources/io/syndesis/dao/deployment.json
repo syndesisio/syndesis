@@ -668,7 +668,7 @@
   {
     "kind": "connector",
     "data": {
-      "id": "sql-stored",
+      "id": "sql-stored-connector",
       "name": "SQL Stored Procedure",
       "description": "Relational Database SQL Stored procedure invocation",
       "icon": "fa-database",
