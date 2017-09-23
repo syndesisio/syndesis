@@ -897,6 +897,7 @@
             <ignoredResourcePattern>features.xml</ignoredResourcePattern>
             <ignoredResourcePattern>org/infinispan/.*</ignoredResourcePattern>
             <ignoredResourcePattern>ValidationMessages.properties</ignoredResourcePattern>
+            <ignoredResourcePattern>about.html</ignoredResourcePattern>
           </ignoredResourcePatterns>
         </configuration>
       </plugin>
