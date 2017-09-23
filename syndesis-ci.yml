@@ -19,10 +19,6 @@ parameters:
   value: dummy
   required: true
 # Parameters with defaults:
-- name: KEYCLOAK_ROUTE_HOSTNAME
-  description: The external hostname to access Syndesis Keycloak directly
-  value: syndesis-keycloak.127.0.0.1.xip.io
-  required: true
 - name: KEYCLOAK_ADMIN_USERNAME
   description: The Keycloak admin username
   value: admin
@@ -682,24 +678,6 @@ objects:
       kind: Service
       name: syndesis-keycloak
       weight: 100
-- apiVersion: v1
-  kind: Route
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-keycloak
-    name: syndesis-keycloak-external
-  spec:
-    host: ${KEYCLOAK_ROUTE_HOSTNAME}
-    port:
-      targetPort: 8080
-    tls:
-      insecureEdgeTerminationPolicy: Redirect
-      termination: edge
-    to:
-      kind: Service
-      name: syndesis-keycloak
-      weight: 100
 
 - apiVersion: v1
   kind: DeploymentConfig
@@ -747,7 +725,7 @@ objects:
                 "limits": {
                   "memory": "255Mi"
                 },
-                "requests": { 
+                "requests": {
                   "memory": "20Mi"
                 }
               }

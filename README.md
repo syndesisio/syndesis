@@ -58,7 +58,6 @@ Once all pods are started up, you should be able to access the Syndesis at `http
 
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
-| **KEYCLOAK_ROUTE_HOSTNAME** | The external hostname to access the Syndesis Keycloak | syndesis-keycloak.127.0.0.1.xip.io |
 | **KEYCLOAK_ADMIN_USERNAME** |  The Keycloak admin username | admin |
 | **KEYCLOAK_ADMIN_PASSWORD** | The Keycloak admin password | _(generated)_ |
 | **KEYCLOAK_SYNDESIS_REALM_NAME** | Syndesis Keycloak realm name | syndesis |
@@ -163,7 +162,7 @@ With Minishift you can easily try out Syndesis. The only prerequisite is that yo
 
 The template to use in the installation instructions depend on your use case:
 
-* **Developer** : Use the template `syndesis-dev` or `syndesis-dev-restricted` which directly references Docker images without image streams. The _restricted_ variant should be used when running in an OpenShift environment where you don't have or don't want to use admin access. Then when before building you images e.g. with `mvn fabric8:build` set your `DOCKER_HOST` envvar to use the Minishift Docker daemon via `eval $(minishift docker-env)`. After you have created a new image you simply only need to kill the appropriate pod so that the new pod spinning up will use the freshly created image. 
+* **Developer** : Use the template `syndesis-dev` or `syndesis-dev-restricted` which directly references Docker images without image streams. The _restricted_ variant should be used when running in an OpenShift environment where you don't have or don't want to use admin access. Then when before building you images e.g. with `mvn fabric8:build` set your `DOCKER_HOST` envvar to use the Minishift Docker daemon via `eval $(minishift docker-env)`. After you have created a new image you simply only need to kill the appropriate pod so that the new pod spinning up will use the freshly created image.
 
 * **Tester** / **User** : In case you only want to have the latest version of Syndesis on your local Minishift installation, use the template `syndesis` which uses image stream refering to the published Docker Hub images. Minishift will update its images and trigger a redeployment when the images at Docker Hub changes. Therefore it checks every 15 minutes for a change image. You do not have to do anything to get your application updated except for waiting on Minishift to pick up new images.
 
@@ -171,10 +170,10 @@ Depending on your role please use the appropriate template in the instructions b
 
 ### Install instructions
 
-Here are step-by-step the installation instructions for setting up a Minishift installation in an restricted OpenShift environment: 
+Here are step-by-step the installation instructions for setting up a Minishift installation in an restricted OpenShift environment:
 
 ```bash
-# Fire up minishift if not alread running. 
+# Fire up minishift if not alread running.
 # 4 MB of memories are recommended
 minishift start --memory 4192
 

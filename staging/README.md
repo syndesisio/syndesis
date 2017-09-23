@@ -19,14 +19,13 @@ oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-tem
 # Instantiate application
 oc new-app syndesis-restricted \
     -p ROUTE_HOSTNAME=syndesis-staging.b6ff.rh-idev.openshiftapps.com \
-    -p KEYCLOAK_ROUTE_HOSTNAME=syndesis-staging-keycloack.b6ff.rh-idev.openshiftapps.com \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p OPENSHIFT_PROJECT=$(oc project -q) \
     -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
     -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
     -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} \
     -p INSECURE_SKIP_VERIFY=true
-    
+
 # Wait until everything's up ....
 
 # Create deployer SA and get the deploy token
@@ -35,7 +34,7 @@ oc sa get-token syndesis-deployer
 oc adm policy add-role-to-user edit system:serviceaccount:syndesis-staging:syndesis-deployer -n syndesis-staging
 
 # Take this token and insert it to the following circle-builds
-# as environment variable OPENSHIFT_TOKEN 
+# as environment variable OPENSHIFT_TOKEN
 # - https://circleci.com/gh/syndesisio/syndesis-ui/edit#env-vars
 # Also check that there is an OPENSHIFT_APISERVER env var (pointing to the staging installation)
 
