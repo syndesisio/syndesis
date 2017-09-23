@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Function;
@@ -84,8 +85,11 @@ public class DeploymentDescriptorTest {
 
                     final String[] coordinates = gav.split(":");
 
-                    mavenArtifactProvider.addArtifactToCatalog(camelCatalog, connectorCatalog, coordinates[0],
-                        coordinates[1], coordinates[2]);
+                    final Set<String> names = mavenArtifactProvider.addArtifactToCatalog(camelCatalog, connectorCatalog,
+                        coordinates[0], coordinates[1], coordinates[2]);
+                    assertThat(names)
+                        .as("Could not resolve artifact for Camel catalog with GAV: %s:%s:%s", (Object[]) coordinates)
+                        .isNotEmpty();
 
                     final String scheme = action.get("camelConnectorPrefix").asText();
 
@@ -300,7 +304,8 @@ public class DeploymentDescriptorTest {
     }
 
     private static MavenArtifactProvider createArtifactProvider() {
-        final MavenArtifactProvider mavenArtifactProvider = new DefaultMavenArtifactProvider();
+        final DefaultMavenArtifactProvider mavenArtifactProvider = new DefaultMavenArtifactProvider();
+        mavenArtifactProvider.setLog(true);
 
         mavenArtifactProvider.addMavenRepository("maven.central", "https://repo1.maven.org/maven2");
         mavenArtifactProvider.addMavenRepository("redhat.ga", "https://maven.repository.redhat.com/ga");
