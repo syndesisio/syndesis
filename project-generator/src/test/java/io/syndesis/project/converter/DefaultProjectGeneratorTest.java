@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -60,7 +61,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 public class DefaultProjectGeneratorTest {
-    private static final String CONNECTORS_VERSION = "0.5.6";
+    private static final String CONNECTORS_VERSION = ResourceBundle.getBundle("test").getString("connectors.version");
     private static final ConnectorCatalogProperties CATALOG_PROPERTIES = new ConnectorCatalogProperties();
     private static Properties properties = new Properties();
     private static final ObjectMapper OBJECT_MAPPER;
