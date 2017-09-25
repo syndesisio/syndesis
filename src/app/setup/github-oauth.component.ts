@@ -1,14 +1,9 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 
-/**
- * The GitHub account model
- */
-//import { GitHubAccount } from '../model';
 import { Observable } from 'rxjs/Observable';
 
 export interface OAuthAppListItem {
   expanded: boolean;
-  //account: GitHubAccount;
 }
 
 @Component({
@@ -18,10 +13,34 @@ export interface OAuthAppListItem {
 })
 export class GitHubOAuthSetupComponent implements OnInit {
 
+  hidden = true;
+  stepOneComplete = false;
+  stepTwoComplete = false;
+  stepThreeComplete = false;
   loading: Observable<boolean>;
-  isLoading = true;
+  noAccountConnected = true;
 
   constructor(public detector: ChangeDetectorRef) {}
+
+  /**
+   * Connects an account to GitHub via OAuth.
+   */
+  connectGitHub() {}
+
+  /**
+   * Disconnects a previously connected GitHub account
+   */
+  disconnectGitHub() {}
+
+  /**
+   * Registers Syndesis as an OAuth application on GitHub
+   */
+  registerSyndesis() {}
+
+  /**
+   * User has selected an account
+   */
+  selectedAccount() {}
 
   /**
    * Returns whether or not this item has stored credentials
@@ -38,5 +57,9 @@ export class GitHubOAuthSetupComponent implements OnInit {
   /**
    * View initialization
     */
-  ngOnInit() {}
+  ngOnInit(): void {
+    /**
+     * Loads the possible GitHub accounts
+     */
+  }
 }
