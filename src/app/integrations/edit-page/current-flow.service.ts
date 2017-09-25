@@ -362,7 +362,7 @@ export class CurrentFlow {
           step.configuredProperties = properties;
           this.steps[position] = step;
           this.maybeDoAction(event['onSave']);
-          log.infoc(
+          log.debugc(
             () =>
               'Set properties at position: ' +
               position +
