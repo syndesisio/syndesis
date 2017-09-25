@@ -34,7 +34,7 @@ jobs:
 
       - run:
           name: Maven
-          command: ./mvnw --batch-mode -Pfabric8 install
+          command: ./mvnw --batch-mode -U -Pfabric8 install
 
       - save_cache:
           key: syndesis-rest-m2
