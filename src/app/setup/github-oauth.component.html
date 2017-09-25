@@ -1,5 +1,5 @@
 <div class="row github-oauth">
-  <div class="col-md-12">
+  <div class="col-xs-12">
     <h1>Getting Started in Syndesis</h1>
     <p>Welcome to Syndesis! To get started you will need to register and authorize Syndesis on GitHub and select a
       location for storing integrations.</p>
@@ -13,33 +13,26 @@
           <div>
             <h2>Register Syndesis</h2>
             <div>
-              <p>To start using Syndesis with GitHub, register Syndesis as an OAuth application in GitHub.</p>
-            </div>
-            <div>
-              <button class="btn btn-primary">Register Syndesis on GitHub</button>&nbsp;<a
-                href="https://developer.github.com/apps/building-integrations/setting-up-and-registering-oauth-apps/registering-oauth-apps/"
-                rel="nofollow"
-                target="_blank">Learn how
-              to register an OAuth app on GitHub.
-              <span class="pficon pficon-info"></span>
-            </a>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group">
-                <pfng-inline-notification
-                    [header]="header"
-                    [message]="message"
-                    [dismissable]="dismissable"
-                    [type]="type"
-                    [hidden]="hidden">
-                </pfng-inline-notification>
+              <div *ngIf="!stepOneComplete">
+                <p>To start using Syndesis with GitHub, register Syndesis as an OAuth application in GitHub.</p>
+              </div>
+              <div>
+                <button class="btn btn-primary">Register Syndesis on GitHub</button>&nbsp;<a
+                  href="https://developer.github.com/apps/building-integrations/setting-up-and-registering-oauth-apps/registering-oauth-apps/"
+                  rel="nofollow"
+                  target="_blank">Learn how
+                to register an OAuth app on GitHub.
+                <span class="pficon pficon-info"></span>
+              </a>
               </div>
             </div>
           </div>
-          <div>
-            <p><b>Sucess!</b> Future changes can be made in <a>Syndesis Global Settings / GitHub Settings</a>.</p>
+          <div class="alert alert-success"
+               *ngIf="stepOneComplete && !hidden">
+            <span class="pficon pficon-ok"></span>
+            <b>Sucess!</b> Future changes can be made in
+            <a>Syndesis Global Settings / GitHub Settings</a>
+            .
           </div>
         </div>
       </div>
@@ -52,47 +45,48 @@
         </div>
         <div class="col-xs-11">
           <h2>GitHub Authorization</h2>
-          <div>
-            <p>The Client ID and Client Secret generated in the first step will be used here to grant authorization for
-              Syndesis to act on your behalf.</p>
-          </div>
-          <div class="pull-right">
-            <a href="https://auth0.com/docs/connections/social/github"
-               rel="nofollow"
-               target="_blank">Learn how to get client ID and client secret on GitHub.
-              <span class="pficon pficon-info"></span>
-            </a>
-          </div>
-          <div>
-            <form class="form-horizontal"
-                  role="form">
-              <p class="fields-status-pf">All fields are optional.</p>
-              <div class="form-group">
-                <label for="ghClientId"
-                       class="col-sm-2 control-label">Client ID</label>
-                <div class="col-sm-10">
-                  <input type="text"
-                         class="form-control"
-                         id="ghClientId">
+          <div *ngIf="!stepTwoComplete">
+            <div>
+              <p>The Client ID and Client Secret generated in the first step will be used here to grant authorization for
+                Syndesis to act on your behalf.</p>
+            </div>
+            <div class="pull-right">
+              <a href="https://auth0.com/docs/connections/social/github"
+                 rel="nofollow"
+                 target="_blank">Learn how to get client ID and client secret on GitHub.
+                <span class="pficon pficon-info"></span>
+              </a>
+            </div>
+            <div class="col-xs-12">
+              <form class="form-horizontal"
+                    role="form">
+                <div class="form-group">
+                  <label for="ghClientId"
+                         class="col-xs-2 control-label">Client ID</label>
+                  <div class="col-xs-10">
+                    <input type="text"
+                           class="form-control"
+                           id="ghClientId">
+                  </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label for="ghClientSecret"
-                       class="col-sm-2 control-label">Client Secret</label>
-                <div class="col-sm-10">
-                  <input type="password"
-                         class="form-control"
-                         id="ghClientSecret">
+                <div class="form-group">
+                  <label for="ghClientSecret"
+                         class="col-xs-2 control-label">Client Secret</label>
+                  <div class="col-xs-10">
+                    <input type="password"
+                           class="form-control"
+                           id="ghClientSecret">
+                  </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                  <button type="submit"
-                          class="btn btn-primary">Connect GitHub
-                  </button>
+                <div class="form-group">
+                  <div class="col-xs-offset-2 col-xs-10">
+                    <button type="submit"
+                            class="btn btn-primary">Connect GitHub
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -103,24 +97,28 @@
             <div class="circle pull-right"><p>3</p></div>
           </div>
           <div class="col-xs-11">
-            <h2>Configure Integration Location</h2></div>
-          <div>Specify where to store the integration.</div>
-          <div>
-            <form class="form-horizontal"
-                  role="form">
-              <p class="fields-status-pf">All fields are optional.</p>
-              <div class="form-group">
-                <label for="ghClientId"
-                       class="col-sm-2 control-label">Client ID</label>
-                <div class="col-sm-10">
-                  <input type="text"
-                         class="form-control"
-                         id="connectedAccount">
+            <h2>Configure Integration Location</h2>
+            <div>Specify where to store the integration.</div>
+            <div *ngIf="!stepThreeComplete">
+              <form class="form-horizontal"
+                    role="form">
+                <div class="form-group">
+                  <label for="connectedAccount"
+                         class="col-xs-4 control-label">Connected Account</label>
+                  <div class="col-xs-8">
+                    <select id="connectedAccount"
+                            class="form-control"
+                            *ngIf="noAccountConnected">
+                      <option value="">Choose...</option>
+                      <option value="">Option 1</option>
+                      <option value="">Option 2</option>
+                      <option value="">Option 3</option>
+                    </select>
+                    <i *ngIf="!noAccountConnected">No account connected.</i>
+                  </div>
                 </div>
-              </div>
-            </form>
-            <p>Connected Account</p>
-            <p>No connected account</p>
+              </form>
+            </div>
           </div>
         </div>
       </div>
