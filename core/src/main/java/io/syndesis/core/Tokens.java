@@ -115,9 +115,13 @@ public final class Tokens {
     }
 
     public static String fetchProviderTokenFromKeycloak(TokenProvider provider) {
-        String providerId = provider.toString().toLowerCase(Locale.ENGLISH);
-
         String keycloakTokenAsString = getAuthenticationToken();
+
+        return fetchProviderTokenFromKeycloak(provider, keycloakTokenAsString);
+    }
+
+    public static String fetchProviderTokenFromKeycloak(TokenProvider provider, String keycloakTokenAsString) {
+        String providerId = provider.toString().toLowerCase(Locale.ENGLISH);
 
         String issuer = getIssuer(keycloakTokenAsString);
 

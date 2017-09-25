@@ -17,6 +17,7 @@ package io.syndesis.openshift;
 
 
 import io.syndesis.core.Names;
+import io.syndesis.core.Tokens;
 import org.immutables.value.Value;
 
 import java.util.Optional;
@@ -24,6 +25,8 @@ import java.util.Properties;
 
 import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
+
+import static io.syndesis.core.Tokens.TokenProvider.OPENSHIFT;
 
 @Value.Immutable
 public interface OpenShiftDeployment {
@@ -43,7 +46,7 @@ public interface OpenShiftDeployment {
     }
 
     default RequestConfig getRequestConfig() {
-        return new RequestConfigBuilder().withOauthToken(getToken()).build();
+        return new RequestConfigBuilder().withOauthToken(Tokens.fetchProviderTokenFromKeycloak(OPENSHIFT, getToken())).build();
     }
 
     static ImmutableOpenShiftDeployment.Builder builder() {
