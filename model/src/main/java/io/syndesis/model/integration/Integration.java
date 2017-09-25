@@ -30,6 +30,7 @@ import org.immutables.value.Value;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -112,6 +113,10 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     @Override
     default Integration withId(String id) {
         return new Builder().createFrom(this).id(id).build();
+    }
+
+    default IntegrationRevision lastRevision() {
+        return getRevisions().stream().max(Comparator.comparingInt(r -> r.getVersion().orElse(0))).get();
     }
 
     class Builder extends ImmutableIntegration.Builder {
