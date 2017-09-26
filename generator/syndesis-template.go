@@ -126,7 +126,6 @@ var productContext = Context{
 }
 
 var context = syndesisContext
-var isProduct bool
 
 func init() {
 	flags := installCommand.PersistentFlags()
@@ -138,14 +137,14 @@ func init() {
 	flags.BoolVar(&context.Probeless, "probeless", false, "Without probes")
 	flags.StringVar(&context.Tags.Syndesis, "syndesis", "latest", "Syndesis Image tag to use")
 	flags.StringVar(&context.Tags.Atlasmap, "atlasmap", "latest", "Atlasmap image to use")
-	flags.BoolVar(&isProduct, "product", false, "Generate product templates?")
+	flags.BoolVar(&context.Productized, "product", false, "Generate product templates?")
 	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 }
 
 func install(cmd *cobra.Command, args []string) {
 
-	if isProduct {
+	if context.Productized {
 		if err := mergo.MergeWithOverwrite(&context, productContext); err != nil {
 			log.Fatal("Cannot merge in product image names")
 		}
