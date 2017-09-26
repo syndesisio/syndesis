@@ -30,7 +30,7 @@ public class OpenShiftConfigurationProperties {
 
     private boolean enabled;
 
-    private String openShiftHost = "https://syndesis-openshift-proxy." + new OpenShiftConfigBuilder().build().getNamespace() + ".svc";
+    private String openShiftHost = "https://openshift.default.svc";
 
     private final OpenShiftConfig openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(openShiftHost).withCaCertFile(SERVICE_CA_CERT_FILE).build();
 
