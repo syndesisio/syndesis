@@ -833,5 +833,22 @@
         }
       ]
     }
+  },
+  {
+    "kind": "connection",
+    "data": {
+      "id": "5",
+      "name": "PostgresDB",
+      "description": "Sample Database Connection for Stored Procedure Invocation",
+      "tags":["sampledb"],
+      "icon": "fa-globe",
+      "connectorId": "sql-stored",
+      "configuredProperties": {
+        "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
+        "user": "sampledb",
+        "password": "@POSTGRESQL_SAMPLEDB_PASSWORD@",
+        "schema": "sampledb"
+      }
+    }
   }
 ]
