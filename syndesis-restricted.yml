@@ -220,6 +220,163 @@ objects:
       name: latest
 
 - apiVersion: v1
+  kind: Service
+  metadata:
+    name: syndesis-ui
+    labels:
+      app: syndesis
+      component: syndesis-ui
+    annotations:
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-ui-tls
+      service.alpha.openshift.io/dependencies: |
+        [ {"name":"syndesis-keycloak","kind":"Service"},
+          {"name":"syndesis-rest","kind":"Service"},
+          {"name":"syndesis-verifier","kind":"Service"},
+          {"name":"syndesis-atlasmap","kind":"Service"},
+          {"name":"syndesis-github-proxy","kind":"Service"},
+          {"name":"syndesis-openshift-proxy","kind":"Service"},
+          {"name":"syndesis-db","kind":"Service"} ]
+  spec:
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: syndesis
+      component: syndesis-ui
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: syndesis
+      component: syndesis-ui
+    name: syndesis-ui
+  spec:
+    host: ${ROUTE_HOSTNAME}
+    port:
+      targetPort: 8080
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: syndesis-ui
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: syndesis
+      component: syndesis-ui
+    name: syndesis-ui
+  spec:
+    replicas: 1
+    selector:
+      app: syndesis
+      component: syndesis-ui
+      deploymentconfig: syndesis-ui
+    strategy:
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      resources:
+        limits:
+          memory: "256Mi"
+        requests:
+          memory: "20Mi"
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: syndesis
+          component: syndesis-ui
+          deploymentconfig: syndesis-ui
+      spec:
+        containers:
+        - name: syndesis-ui
+          image: ' '
+
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+            initialDelaySeconds: 30
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+            initialDelaySeconds: 1
+          ports:
+          - containerPort: 8080
+          volumeMounts:
+          - mountPath: /usr/share/nginx/html/config.json
+            name: config-volume
+            subPath: config/config.json
+          # Set to burstable with a low memory footprint to start (50 Mi)
+          resources:
+            limits:
+              memory: 255Mi
+            requests:
+              memory: 50Mi
+        volumes:
+        - configMap:
+            items:
+            - key: config.json
+              path: config/config.json
+            name: syndesis-ui-config
+          name: config-volume
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-ui
+        from:
+          kind: ImageStreamTag
+          name: syndesis-ui:latest
+      type: ImageChange
+
+    - type: ConfigChange
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: syndesis-ui-config
+    labels:
+      app: syndesis
+      component: syndesis-ui
+  data:
+    config.json: |
+      {
+        "apiEndpoint": "https://${ROUTE_HOSTNAME}/api/v1",
+        "title": "Syndesis",
+        "datamapper": {
+          "baseJavaInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/java/",
+          "baseXMLInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/xml/",
+          "baseJSONInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/json/",
+          "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/"
+        },
+        "oauth": {
+          "clientId": "syndesis-ui",
+          "scopes": ["openid"],
+          "oidc": true,
+          "hybrid": true,
+          "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}",
+          "auto-link-github": ${CONTROLLERS_INTEGRATION_ENABLED}
+        },
+        "branding": {
+          "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
+          "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
+          "iconWhiteBg": "assets/images/glasses_logo_square.png",
+          "iconDarkBg": "assets/images/glasses_logo_square.png",
+          "appName": "Syndesis",
+          "favicon32": "/favicon-32x32.png",
+          "favicon16": "/favicon-16x16.png",
+          "touchIcon": "/apple-touch-icon.png"
+       }
+      }
+- apiVersion: v1
   kind: ServiceAccount
   metadata:
     name: syndesis-atlasmap
@@ -2109,163 +2266,6 @@ objects:
         "ssl-required": "external",
         "resource": "syndesis-rest",
         "allow-any-hostname" : ${KEYCLOAK_ALLOW_ANY_HOSTNAME}
-      }
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: syndesis-ui
-    labels:
-      app: syndesis
-      component: syndesis-ui
-    annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: syndesis-ui-tls
-      service.alpha.openshift.io/dependencies: |
-        [ {"name":"syndesis-keycloak","kind":"Service"},
-          {"name":"syndesis-rest","kind":"Service"},
-          {"name":"syndesis-verifier","kind":"Service"},
-          {"name":"syndesis-atlasmap","kind":"Service"},
-          {"name":"syndesis-github-proxy","kind":"Service"},
-          {"name":"syndesis-openshift-proxy","kind":"Service"},
-          {"name":"syndesis-db","kind":"Service"} ]
-  spec:
-    ports:
-    - port: 8080
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: syndesis
-      component: syndesis-ui
-- apiVersion: v1
-  kind: Route
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-ui
-    name: syndesis-ui
-  spec:
-    host: ${ROUTE_HOSTNAME}
-    port:
-      targetPort: 8080
-    tls:
-      insecureEdgeTerminationPolicy: Redirect
-      termination: edge
-    to:
-      kind: Service
-      name: syndesis-ui
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-ui
-    name: syndesis-ui
-  spec:
-    replicas: 1
-    selector:
-      app: syndesis
-      component: syndesis-ui
-      deploymentconfig: syndesis-ui
-    strategy:
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 600
-        updatePeriodSeconds: 1
-      resources:
-        limits:
-          memory: "256Mi"
-        requests:
-          memory: "20Mi"
-      type: Rolling
-    template:
-      metadata:
-        labels:
-          app: syndesis
-          component: syndesis-ui
-          deploymentconfig: syndesis-ui
-      spec:
-        containers:
-        - name: syndesis-ui
-          image: ' '
-
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            httpGet:
-              path: "/"
-              port: 8080
-            initialDelaySeconds: 30
-          readinessProbe:
-            httpGet:
-              path: "/"
-              port: 8080
-            initialDelaySeconds: 1
-          ports:
-          - containerPort: 8080
-          volumeMounts:
-          - mountPath: /usr/share/nginx/html/config.json
-            name: config-volume
-            subPath: config/config.json
-          # Set to burstable with a low memory footprint to start (50 Mi)
-          resources:
-            limits:
-              memory: 255Mi
-            requests:
-              memory: 50Mi
-        volumes:
-        - configMap:
-            items:
-            - key: config.json
-              path: config/config.json
-            name: syndesis-ui-config
-          name: config-volume
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - syndesis-ui
-        from:
-          kind: ImageStreamTag
-          name: syndesis-ui:latest
-      type: ImageChange
-
-    - type: ConfigChange
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    name: syndesis-ui-config
-    labels:
-      app: syndesis
-      component: syndesis-ui
-  data:
-    config.json: |
-      {
-        "apiEndpoint": "https://${ROUTE_HOSTNAME}/api/v1",
-        "title": "Syndesis",
-        "datamapper": {
-          "baseJavaInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/java/",
-          "baseXMLInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/xml/",
-          "baseJSONInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/json/",
-          "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/"
-        },
-        "oauth": {
-          "clientId": "syndesis-ui",
-          "scopes": ["openid"],
-          "oidc": true,
-          "hybrid": true,
-          "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}",
-          "auto-link-github": ${CONTROLLERS_INTEGRATION_ENABLED}
-        },
-        "branding": {
-          "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
-          "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
-          "iconWhiteBg": "assets/images/glasses_logo_square.png",
-          "iconDarkBg": "assets/images/glasses_logo_square.png",
-          "appName": "Syndesis",
-          "favicon32": "/favicon-32x32.png",
-          "favicon16": "/favicon-16x16.png",
-          "touchIcon": "/apple-touch-icon.png"
-       }
       }
 - apiVersion: v1
   kind: Service
