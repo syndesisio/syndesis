@@ -45,17 +45,30 @@ public abstract class BaseVerifier implements Verifier {
     private Logger log = LoggerFactory.getLogger(this.getClass());
     private CamelContext camel;
     private ComponentVerifierExtension verifier;
+    private Class<? extends ComponentVerifierExtension> verifierExtensionClass;
+
+    protected BaseVerifier() {
+        this(ComponentVerifierExtension.class);
+    }
+
+    protected BaseVerifier(Class<? extends ComponentVerifierExtension> verifierExtensionClass) {
+        this.verifierExtensionClass = verifierExtensionClass;
+    }
 
     @PostConstruct
     public void start() throws Exception {
         camel = new DefaultCamelContext();
         camel.start();
 
-        Component verifierComponent = camel.getComponent(getConnectorAction(), true, false);
-        if (verifierComponent instanceof ComponentVerifierExtension) {
-            verifier = (ComponentVerifierExtension) verifierComponent;
+        final Component component = camel.getComponent(getConnectorAction(), true, false);
+        if (component == null) {
+            log.error("Component {} does not exist", getConnectorAction());
         } else {
-            verifier = null;
+            verifier = component.getExtension(verifierExtensionClass).orElse(null);
+            if (verifier == null) {
+                log.warn("Component {} does not support verifier extension", getConnectorAction());
+            }
+
         }
     }
 

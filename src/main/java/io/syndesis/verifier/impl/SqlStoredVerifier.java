@@ -1,5 +1,7 @@
 package io.syndesis.verifier.impl;
 
+import io.syndesis.connector.SqlStoredConnectorVerifierExtension;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,6 +11,11 @@ import org.springframework.stereotype.Component;
 @Component("sql-stored-connector")
 public class SqlStoredVerifier extends BaseVerifier {
 
+    public SqlStoredVerifier() {
+        super(SqlStoredConnectorVerifierExtension.class);
+    }
+
+    @Override
     protected String getConnectorAction() {
         return "sql-stored-connector";
     }
