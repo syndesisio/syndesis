@@ -24,7 +24,8 @@ import org.springframework.stereotype.Component;
 @Component("twitter")
 public class TwitterVerifier extends BaseVerifier {
 
+    @Override
     protected String getConnectorAction() {
-        return "twitter-mention";
+        return "twitter-mention-connector";
     }
 }

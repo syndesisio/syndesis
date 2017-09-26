@@ -23,7 +23,8 @@ import org.springframework.stereotype.Component;
  */
 @Component("http")
 public class HttpVerifier extends BaseVerifier {
+    @Override
     protected String getConnectorAction() {
-        return "http-get";
+        return "http-get-connector";
     }
 }
