@@ -191,7 +191,13 @@ export class EventsService {
         }
         setTimeout(() => {
           log.info('ws.onclose: attempting to reconnect');
-          this.webSocket = setupWebSocket(new WebSocket(url));
+          try {
+            this.webSocket = setupWebSocket(new WebSocket(url), retries + 1);
+          } catch (err) {
+            log.info('ws connect failed, getting new registration');
+            this.webSocket = undefined;
+            this.startConnection();
+          }
         }, RECONNECT_TIME);
       };
       ws.onmessage = onMessage;
