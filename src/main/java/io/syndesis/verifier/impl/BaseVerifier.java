@@ -15,7 +15,12 @@
  */
 package io.syndesis.verifier.impl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +28,10 @@ import javax.annotation.PreDestroy;
 
 import io.syndesis.verifier.Verifier;
 import io.syndesis.verifier.VerifierResponse;
-import org.apache.camel.*;
+
+import org.apache.camel.CamelContext;
+import org.apache.camel.Component;
+import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +44,7 @@ public abstract class BaseVerifier implements Verifier {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
     private CamelContext camel;
-    private ComponentVerifier verifier;
+    private ComponentVerifierExtension verifier;
 
     @PostConstruct
     public void start() throws Exception {
@@ -44,9 +52,8 @@ public abstract class BaseVerifier implements Verifier {
         camel.start();
 
         Component verifierComponent = camel.getComponent(getConnectorAction(), true, false);
-        if (verifierComponent instanceof VerifiableComponent) {
-            VerifiableComponent vc = (VerifiableComponent) verifierComponent;
-            verifier = vc.getVerifier();
+        if (verifierComponent instanceof ComponentVerifierExtension) {
+            verifier = (ComponentVerifierExtension) verifierComponent;
         } else {
             verifier = null;
         }
@@ -62,6 +69,7 @@ public abstract class BaseVerifier implements Verifier {
 
     // ========================================================
 
+    @Override
     public List<VerifierResponse> verify(Map<String, Object> params) {
         if (verifier == null) {
             return Collections.singletonList(createUnsupportedResponse());
@@ -73,18 +81,18 @@ public abstract class BaseVerifier implements Verifier {
         List<VerifierResponse> resp = new ArrayList<>();
         for (Verifier.Scope scope :  Verifier.Scope.values()) {
             try {
-                ComponentVerifier.Result result = verifier.verify(toComponentScope(scope), params);
+                ComponentVerifierExtension.Result result = verifier.verify(toComponentScope(scope), params);
                 resp.add(toVerifierResponse(result));
                 log.info("PING: {} === {}",
                          getConnectorAction(), result.getStatus());
-                if (result.getStatus() == ComponentVerifier.Result.Status.ERROR) {
+                if (result.getStatus() == ComponentVerifierExtension.Result.Status.ERROR) {
                     log.error("{} --> ", getConnectorAction());
-                    for (ComponentVerifier.VerificationError error : result.getErrors()) {
+                    for (ComponentVerifierExtension.VerificationError error : result.getErrors()) {
                         log.error("   {} : {}", error.getCode(), error.getDescription());
                     }
                 }
-                if (result.getStatus() == ComponentVerifier.Result.Status.ERROR ||
-                    result.getStatus() == ComponentVerifier.Result.Status.UNSUPPORTED) {
+                if (result.getStatus() == ComponentVerifierExtension.Result.Status.ERROR ||
+                    result.getStatus() == ComponentVerifierExtension.Result.Status.UNSUPPORTED) {
                     break;
                 }
             } catch (Exception exp) {
@@ -95,17 +103,16 @@ public abstract class BaseVerifier implements Verifier {
         return resp;
     }
 
-    // Hook for customizing params
     protected void customize(Map<String, Object> params) {
-
+        // Hook for customizing params
     }
 
-    private ComponentVerifier.Scope toComponentScope(Scope scope) {
+    private ComponentVerifierExtension.Scope toComponentScope(Scope scope) {
         switch (scope) {
             case CONNECTIVITY:
-                return ComponentVerifier.Scope.CONNECTIVITY;
+                return ComponentVerifierExtension.Scope.CONNECTIVITY;
             case PARAMETERS:
-                return ComponentVerifier.Scope.PARAMETERS;
+                return ComponentVerifierExtension.Scope.PARAMETERS;
             default:
                 throw new IllegalArgumentException("Unknown scope value " + scope);
         }
@@ -118,12 +125,12 @@ public abstract class BaseVerifier implements Verifier {
             .build();
     }
 
-    private VerifierResponse toVerifierResponse(ComponentVerifier.Result result) {
+    private VerifierResponse toVerifierResponse(ComponentVerifierExtension.Result result) {
         VerifierResponse.Builder builder =
             new VerifierResponse.Builder(result.getStatus().name(),
                                          result.getScope().name());
         if (result.getErrors() != null) {
-            for (ComponentVerifier.VerificationError error : result.getErrors()) {
+            for (ComponentVerifierExtension.VerificationError error : result.getErrors()) {
                 builder.withError(error.getCode().getName())
                          .description(error.getDescription())
                          .parameters(error.getParameterKeys())
@@ -145,7 +152,7 @@ public abstract class BaseVerifier implements Verifier {
         VerifierResponse.Builder builder = new VerifierResponse.Builder(Status.ERROR, scope);
 
         return builder
-            .withError(ComponentVerifier.VerificationError.StandardCode.EXCEPTION.name())
+            .withError(ComponentVerifierExtension.VerificationError.StandardCode.EXCEPTION.name())
               .description(exp.getMessage())
               .parameters(params)
               .attributes(extractExceptionDetails(exp))
@@ -155,9 +162,9 @@ public abstract class BaseVerifier implements Verifier {
 
     private Map<String, Object> extractExceptionDetails(Exception exp) {
         Map<String, Object> details = new HashMap<>();
-        details.put(ComponentVerifier.VerificationError.ExceptionAttribute.EXCEPTION_CLASS.name(),
+        details.put(ComponentVerifierExtension.VerificationError.ExceptionAttribute.EXCEPTION_CLASS.name(),
                     exp.getClass().getName());
-        details.put(ComponentVerifier.VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE.name(), exp);
+        details.put(ComponentVerifierExtension.VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE.name(), exp);
         return details;
     }
 
