@@ -10,7 +10,9 @@ jobs:
 
     steps:
     - clean_yarn_cache
+        name: clean yarn cache
         command: yarn cache clean
+
     - run:
         name: Install Chromium and Xvfb
         command: apt-get update -qq && apt-get install -qq -y chromium Xvfb > /dev/null
