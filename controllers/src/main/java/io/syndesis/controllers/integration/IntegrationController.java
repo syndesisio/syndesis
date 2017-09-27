@@ -197,7 +197,7 @@ public class IntegrationController {
                         .withCurrentState(IntegrationRevisionState.from(update.getStatus()));
 
                     //replace revision
-                    integration.getDeployedRevision().map(revisions::remove);
+                    revisions.remove(revision);
 
                     final IntegrationRevision last = integration.lastRevision();
                     if (IntegrationRevisionState.from(update.getStatus()).equals(last.getCurrentState())) {
