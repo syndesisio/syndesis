@@ -52,7 +52,7 @@
       </div>
     </div>
     <!-- Page body -->
-    <div [class]="step.stepKind !== 'mapper' ? 'wizard-pf-body clearfix body' : 'body'">
+    <div [class]="step.stepKind !== 'mapper' ? 'wizard-pf-body clearfix body' : 'body mapper'">
       <div [ngSwitch]="step.stepKind">
         <div *ngSwitchCase="'mapper'">
           <div class="row">
