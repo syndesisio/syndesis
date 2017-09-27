@@ -53,6 +53,8 @@ import org.eclipse.egit.github.core.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.syndesis.core.Tokens.TokenProvider.OPENSHIFT;
+
 public class ActivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
     // Step used which should be performed only once per integration
@@ -207,7 +209,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         Map<String, String> labels = new HashMap<>();
         labels.put(OpenShiftService.USERNAME_LABEL, Names.sanitize(username));
 
-        return (int) openShiftService.getDeploymentsByLabel(new RequestConfigBuilder().withOauthToken(token).build(), labels)
+        return (int) openShiftService.getDeploymentsByLabel(new RequestConfigBuilder().withOauthToken(Tokens.fetchProviderTokenFromKeycloak(OPENSHIFT, token)).build(), labels)
             .stream()
             .filter(d -> !Names.sanitize(name).equals(d.getMetadata().getName())) //this is also called on updates (so we need to exclude)
             .filter(d -> d.getSpec().getReplicas() > 0)
