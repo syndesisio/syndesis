@@ -9,6 +9,8 @@ jobs:
       DOCKER_VERSION: 17.04.0-ce
 
     steps:
+    - clean_yarn_cache
+        command: yarn cache clean
     - run:
         name: Install Chromium and Xvfb
         command: apt-get update -qq && apt-get install -qq -y chromium Xvfb > /dev/null
