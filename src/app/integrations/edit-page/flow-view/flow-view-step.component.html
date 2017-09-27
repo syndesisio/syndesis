@@ -2,9 +2,9 @@
      class="flow-view-step">
 
   <ng-template #tooltipPopover>
-    <div *ngIf="step.stepKind === 'endpoint'">
-      Connection: <strong> {{ step.connection?.name }} </strong>
-    </div>
+    <span>
+      <strong> {{ getStepText() }} </strong>
+    </span>
   </ng-template>
 
   <!-- Delete Modal Container -->
