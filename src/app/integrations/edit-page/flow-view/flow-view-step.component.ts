@@ -49,19 +49,9 @@ export class FlowViewStepComponent extends ChildAwarePage {
   }
 
   showTooltip() {
-    if (!this.step.stepKind) {
-      return;
+    if (this.currentStepKind === 'mapper') {
+      this.pop.show();
     }
-    if (this.step.stepKind === 'endpoint') {
-      return;
-    }
-    if (!this.step.connection) {
-      return;
-    }
-    if (!this.step.connection.name) {
-      return;
-    }
-    this.pop.show();
   }
 
   hideTooltip() {
