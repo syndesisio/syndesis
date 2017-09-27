@@ -9,9 +9,6 @@ jobs:
       DOCKER_VERSION: 17.04.0-ce
 
     steps:
-    - clean_yarn_cache
-        name: clean yarn cache
-        command: yarn cache clean
 
     - run:
         name: Install Chromium and Xvfb
@@ -26,7 +23,7 @@ jobs:
 
     - run:
         name: Install Dependencies
-        command: yarn install --no-progress
+        command: yarn cache clean && yarn install --no-progress
 
     - save_cache:
         key: syndesis-ui-{{ checksum "package.json" }}
