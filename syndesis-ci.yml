@@ -180,21 +180,6 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: syndesis-token-rp
-    labels:
-      app: syndesis
-      component: syndesis-token-rp
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/token-rp:v0.6.2
-      importPolicy:
-        scheduled: true
-      name: v0.6.2
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
     name: syndesis-atlasmap
     labels:
       app: syndesis
