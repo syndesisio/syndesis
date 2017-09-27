@@ -25,6 +25,12 @@ jobs:
         name: Install Dependencies
         command: yarn install --no-progress
 
+    - save_cache:
+        key: syndesis-ui-{{ checksum "package.json" }}
+        paths:
+        - ~/.yarn
+        - ~/.cache/yarn
+
     - run:
         name: Run AOT compile
         command: |
