@@ -20,14 +20,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SqlStoredConnectorVerifierExtension extends DefaultComponentVerifierExtension {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SqlStoredConnectorVerifierExtension.class);
 
     public SqlStoredConnectorVerifierExtension() {
         super("sql-stored-connector");
@@ -44,28 +49,62 @@ public class SqlStoredConnectorVerifierExtension extends DefaultComponentVerifie
     @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
-            .error(ResultErrorHelper.requiresOption("url", parameters));
+            .error(ResultErrorHelper.requiresOption("url", parameters))
+            .error(ResultErrorHelper.requiresOption("user", parameters))
+            .error(ResultErrorHelper.requiresOption("password", parameters));
 
-        
         if (builder.build().getErrors().isEmpty()) {
             try (Connection connection = 
                 DriverManager.getConnection(
                         parameters.get("url").toString(), 
                         String.valueOf(parameters.get("user")), 
                         String.valueOf(parameters.get("password")))) {
+                // just try to get the connection
             } catch (SQLException e) {
-                String supportedDatabases = String.join(",", 
-                        Arrays.stream(DatabaseProduct.values())
-                        .map(Enum::name)
-                        .toArray(String[]::new));
-                String msg = "Supported Databases are [" + supportedDatabases + "]";
-                builder.error(ResultErrorBuilder.withCodeAndDescription(
-                        VerificationError.StandardCode.UNSUPPORTED, 
-                            msg).build()).build();
+                final Map<String, Object> redacted = new HashMap<>(parameters);
+                redacted.replace("password", "********");
+                LOG.warn("Unable to connecto to database with parameters {}, SQLSTATE: {}, error code: {}",
+                    redacted, e.getSQLState(), e.getErrorCode(), e);
+
+                final String sqlState = e.getSQLState();
+                if (sqlState == null || sqlState.length() < 2) {
+                    unsupportedDatabase(builder);
+                } else {
+                    switch (sqlState.substring(0, 2)) {
+                    case "28":
+                        builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, e.getMessage())
+                            .parameterKey("user")
+                            .parameterKey("password")
+                            .build());
+                        break;
+                    case "08":
+                    case "3D":
+                        builder.error(ResultErrorBuilder.withCodeAndDescription(
+                            VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, e.getMessage())
+                            .parameterKey("url")
+                            .build());
+                        break;
+                    default:
+                        builder.error(ResultErrorBuilder.withCodeAndDescription(
+                            VerificationError.StandardCode.GENERIC, e.getMessage())
+                            .build());
+                        break;
+                    }
+                }
             }
         }
         return builder.build();
-       
+    }
+
+    private static void unsupportedDatabase(ResultBuilder builder) {
+        String supportedDatabases = String.join(",", 
+                Arrays.stream(DatabaseProduct.values())
+                .map(Enum::name)
+                .toArray(String[]::new));
+        String msg = "Supported Databases are [" + supportedDatabases + "]";
+        builder.error(ResultErrorBuilder.withCodeAndDescription(
+                VerificationError.StandardCode.UNSUPPORTED, 
+                    msg).build()).build();
     }
 
     // *********************************
