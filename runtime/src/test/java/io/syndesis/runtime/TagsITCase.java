@@ -30,8 +30,8 @@ public class TagsITCase extends BaseITCase {
         // Check the we can list the integrations.
         ResponseEntity<TagListResult> list = get("/api/v1/tags", TagListResult.class);
 
-        assertThat(list.getBody().getTotalCount()).as("total count").isEqualTo(2);
-        assertThat(list.getBody().getItems()).as("items").hasSize(2);
+        assertThat(list.getBody().getTotalCount()).as("total count").isEqualTo(3);
+        assertThat(list.getBody().getItems()).as("items").hasSize(3);
         assertThat(list.getBody().getItems().get(0).equals("example"));
 
     }

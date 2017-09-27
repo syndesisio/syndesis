@@ -68,9 +68,9 @@ public class DataManagerTest {
     public void getConnections() {
         @SuppressWarnings("unchecked")
         ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
-        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsExactly("1", "2", "3", "4");
-        Assert.assertEquals(4, connections.getTotalCount());
-        Assert.assertEquals(4, connections.getItems().size());
+        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsExactly("1", "2", "3", "4", "5");
+        Assert.assertEquals(5, connections.getTotalCount());
+        Assert.assertEquals(5, connections.getItems().size());
         Assert.assertEquals(connections.getTotalCount(), connections.getItems().size());
     }
 

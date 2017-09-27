@@ -19,6 +19,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -29,7 +34,7 @@ import io.syndesis.core.Json;
 public class ReadApiClientData {
 
     private static final TypeReference<List<ModelData<?>>> MODEL_DATA_TYPE = new TypeReference<List<ModelData<?>>>(){};
-
+    private static final Pattern PATTERN = Pattern.compile("\\@(.*?)\\@");
     /**
      *
      * @param fileName
@@ -43,8 +48,43 @@ public class ReadApiClientData {
             if (is==null) {
                 throw new FileNotFoundException("Cannot find file " + fileName + " on classpath");
             }
-            return Json.mapper().readValue(is, MODEL_DATA_TYPE);
+            String jsonText = findAndReplaceTokens(from(is),System.getenv());
+            return Json.mapper().readValue(jsonText, MODEL_DATA_TYPE);
         }
+    }
+    public List<ModelData<?>> readDataFromString(String jsonText) throws JsonParseException, JsonMappingException, IOException {
+        String json = findAndReplaceTokens(jsonText,System.getenv());
+        return Json.mapper().readValue(json, MODEL_DATA_TYPE);
+    }
+    /**
+     * Reads the InputStream and returns a String containing all content from the InputStream.
+     * @param is - InputStream that will be read.
+     * @return String containing all content from the InputStream
+     */
+    public String from(InputStream is) {
+        try (Scanner scanner = new Scanner(is, "UTF-8") ) {
+            return scanner.useDelimiter("\\A").next();
+        }
+    }
+    /**
+     * Finds tokens surrounded by "@" signs (for example @POSTGRESQL_SAMPLEDB_PASSWORD@) and replaces them
+     * with values from System.env if a value is set in the environment.
+     *
+     * @param jsonText - String containing tokens
+     * @param env - containing tokens
+     * @return String with tokens resolved from env
+     */
+    public String findAndReplaceTokens(String jsonText, Map<String,String> env) {
+        Matcher m = PATTERN.matcher(jsonText);
+        String json = jsonText;
+        while(m.find()) {
+            String token = m.group(1).toUpperCase(Locale.US);
+            String value = env.get(token);
+            if (value!=null) {
+                json = jsonText.replaceAll("@" + token + "@", value);
+            }
+        }
+        return json;
     }
 
 }

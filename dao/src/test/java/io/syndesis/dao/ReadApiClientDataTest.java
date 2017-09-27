@@ -16,10 +16,13 @@
 package io.syndesis.dao;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +30,7 @@ import io.syndesis.core.Json;
 import io.syndesis.dao.init.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.model.Kind;
+import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.integration.Integration;
@@ -79,4 +83,27 @@ public class ReadApiClientDataTest {
         Assert.assertTrue("We should find some Connectors", 0 < connectorList.size());
     }
 
+    @Test
+    public void tokenReplacementDataTest() throws IOException {
+        final String fileName = "io/syndesis/dao/test-data.json";
+        final Map<String,String> env = new HashMap<>();
+        env.put("POSTGRESQL_SAMPLEDB_PASSWORD", "password123");
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
+            ReadApiClientData readApiClientData =  new ReadApiClientData();
+            String jsonText = readApiClientData.from(is);
+            jsonText = readApiClientData.findAndReplaceTokens(jsonText, env);
+            Assert.assertTrue(jsonText.contains("@SECRET_NOT_IN_ENV@"));
+            Assert.assertFalse(jsonText.contains("@POSTGRESQL_SAMPLEDB_PASSWORD@"));
+
+            //passing in the updated String with replaced tokens
+            List<ModelData<?>> modelDataList = readApiClientData.readDataFromString(jsonText);
+            System.out.println("Found " + modelDataList.size() + " entities.");
+            Assert.assertTrue("We should find some ModelData", 0 < modelDataList.size());
+
+            //the second item is the sampledb-connection
+            Connection connection = (Connection) modelDataList.get(1).getData();
+            String pw = connection.getConfiguredProperties().get("password");
+            Assert.assertEquals("password123", pw);
+        }
+    }
 }
