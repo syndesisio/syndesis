@@ -35,6 +35,10 @@
         padding-right: 20px;
         margin-bottom: -20px;
         padding-bottom: 20px;
+        &.mapper {
+          margin-left: 0px;
+          margin-right: 0px;
+        }
     }
     /deep/ .control-buttons {
         margin-right: 15px;
