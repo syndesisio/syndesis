@@ -38,7 +38,6 @@ var installCommand = &cobra.Command{
 
 type supportImages struct {
 	PemToKeystore string
-	TokenRp       string
 	Keycloak      string
 	Postgresql    string
 }
@@ -57,7 +56,6 @@ type images struct {
 
 type tags struct {
 	Keycloak      string
-	TokenRp       string
 	Syndesis      string
 	Atlasmap      string
 	Postgresql    string
@@ -82,7 +80,6 @@ var syndesisContext = Context{
 	Images: images{
 		Support: supportImages{
 			PemToKeystore: "syndesis/pemtokeystore",
-			TokenRp:       "syndesis/token-rp",
 			Keycloak:      "jimmidyson/keycloak-openshift",
 			Postgresql:    "postgresql",
 		},
@@ -97,7 +94,6 @@ var syndesisContext = Context{
 		Postgresql:    "9.5",
 		PemToKeystore: "v0.2.1",
 		Keycloak:      "2.5.4.Final",
-		TokenRp:       "v0.6.2",
 	},
 }
 
@@ -106,7 +102,6 @@ var productContext = Context{
 	Images: images{
 		Support: supportImages{
 			PemToKeystore: "syndesis/pemtokeystore",
-			TokenRp:       "syndesis/token-rp",
 			Keycloak:      "jimmidyson/keycloak-openshift",
 			Postgresql:    "postgresql",
 		},
@@ -121,7 +116,6 @@ var productContext = Context{
 		Postgresql:    "9.5",
 		PemToKeystore: "v0.2.1",
 		Keycloak:      "2.5.4.Final",
-		TokenRp:       "v0.6.2",
 	},
 }
 
