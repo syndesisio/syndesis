@@ -23,7 +23,7 @@ jobs:
 
     - run:
         name: Install Dependencies
-        command: yarn cache clean && yarn install --no-progress
+        command: yarn install --no-progress
 
     - save_cache:
         key: syndesis-ui-{{ checksum "package.json" }}
