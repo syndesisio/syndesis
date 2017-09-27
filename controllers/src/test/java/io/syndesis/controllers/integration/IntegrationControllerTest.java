@@ -43,6 +43,7 @@ public class IntegrationControllerTest {
     private static final String INTEGRATION_ID = "test-integration";
 
     @Test
+    @SuppressWarnings("PMD.DoNotUseThreads")
     public void shouldReplaceIntegrationRevisions() {
         final DataManager dataManager = mock(DataManager.class);
         final EventBus eventBus = mock(EventBus.class);
