@@ -375,7 +375,7 @@
         },{
           "id": "io.syndesis:salesforce-get-sobject-connector:latest",
           "name": "Fetch record",
-          "description": "Fetches a record from Salesforce by it's identifier value.",
+          "description": "Fetches a record from Salesforce by its identifier value.",
           "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-get-sobject",
           "tags": [ "dynamic" ],
