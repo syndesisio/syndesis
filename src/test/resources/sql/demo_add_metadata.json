@@ -1,20 +1,25 @@
 {
   "inputSchema" : {
     "$schema" : "http://json-schema.org/schema#",
+    "title" : "DEMO_ADD_IN",
     "properties" : {
       "A" : {
-        "type" : "integer"
+        "type" : "integer",
+        "required" : true
       },
       "B" : {
-        "type" : "integer"
+        "type" : "integer",
+        "required" : true
       }
     }
   },
   "outputSchema" : {
     "$schema" : "http://json-schema.org/schema#",
+    "title" : "DEMO_ADD_OUT",
     "properties" : {
       "C" : {
-        "type" : "integer"
+        "type" : "integer",
+        "required" : true
       }
     }
   },

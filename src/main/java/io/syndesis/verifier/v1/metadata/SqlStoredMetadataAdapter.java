@@ -15,66 +15,81 @@
  */
 package io.syndesis.verifier.v1.metadata;
 
+import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.camel.component.extension.MetaDataExtension.MetaData;
-import org.springframework.stereotype.Component;
-
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
+import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
+import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
+import com.fasterxml.jackson.module.jsonSchema.types.StringSchema;
 
 import io.syndesis.connector.ColumnMode;
 import io.syndesis.connector.StoredProcedureColumn;
 import io.syndesis.connector.StoredProcedureMetadata;
 
+import org.apache.camel.component.extension.MetaDataExtension.MetaData;
+import org.springframework.stereotype.Component;
+
 @Component("sql-stored-connector-adapter")
 public final class SqlStoredMetadataAdapter implements MetadataAdapter<JsonSchema> {
 
-    final static String PROCEDURE_NAME     = "procedureName";
+    final static String PROCEDURE_NAME = "procedureName";
     final static String PROCEDURE_TEMPLATE = "template";
 
     @Override
     public SyndesisMetadata<JsonSchema> adapt(final Map<String, Object> properties, final MetaData metadata) {
-        
+
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
-        
+
         if (isPresentAndNonNull(properties, PROCEDURE_NAME)) {
             // fetch metadata for the named procedure
-            List<PropertyPair> ppList = new ArrayList<>();
+            final List<PropertyPair> ppList = new ArrayList<>();
             @SuppressWarnings("unchecked")
-            Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata.getPayload();
-            StoredProcedureMetadata storedProcedure = procedureMap.get(properties.get(PROCEDURE_NAME));
+            final Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata
+                .getPayload();
+            final String procedureName = (String) properties.get(PROCEDURE_NAME);
+            final StoredProcedureMetadata storedProcedure = procedureMap.get(procedureName);
             ppList.add(new PropertyPair(storedProcedure.getTemplate(), PROCEDURE_TEMPLATE));
-            enrichedProperties.put(PROCEDURE_TEMPLATE,ppList);
+            enrichedProperties.put(PROCEDURE_TEMPLATE, ppList);
 
             // build the input and output schemas
-            JSONBeanSchemaBuilder builderIn = new JSONBeanSchemaBuilder();
-            JSONBeanSchemaBuilder builderOut = new JSONBeanSchemaBuilder();
-            if (storedProcedure.getColumnList()!=null && !storedProcedure.getColumnList().isEmpty()) {
-                for (StoredProcedureColumn column : storedProcedure.getColumnList()) {
-                      if (column.getMode().equals(ColumnMode.IN) || column.getMode().equals(ColumnMode.INOUT)) {
-                          builderIn.addField(column.getName(), column.getJdbcType());
-                      }
-                      if (column.getMode().equals(ColumnMode.OUT) || column.getMode().equals(ColumnMode.INOUT)) {
-                          builderOut.addField(column.getName(), column.getJdbcType());
-                      }
+            final ObjectSchema builderIn = new ObjectSchema();
+            builderIn.set$schema("http://json-schema.org/schema#");
+            builderIn.setTitle(procedureName + "_IN");
+
+            final ObjectSchema builderOut = new ObjectSchema();
+            builderOut.setTitle(procedureName + "_OUT");
+            builderOut.set$schema("http://json-schema.org/schema#");
+
+            if (storedProcedure.getColumnList() != null && !storedProcedure.getColumnList().isEmpty()) {
+                for (final StoredProcedureColumn column : storedProcedure.getColumnList()) {
+                    if (column.getMode().equals(ColumnMode.IN) || column.getMode().equals(ColumnMode.INOUT)) {
+                        builderIn.putProperty(column.getName(), schemaFor(column.getJdbcType()));
+                    }
+                    if (column.getMode().equals(ColumnMode.OUT) || column.getMode().equals(ColumnMode.INOUT)) {
+                        builderOut.putProperty(column.getName(), schemaFor(column.getJdbcType()));
+                    }
                 }
             }
-            return new SyndesisMetadata<>(enrichedProperties, builderIn.build(), builderOut.build());
-        } else {
-            // return list of all stored procedures in the database
-            List<PropertyPair> ppList = new ArrayList<>();
-            @SuppressWarnings("unchecked")
-            Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata.getPayload();
-            for (String storedProcedureName : procedureMap.keySet()) {
-                PropertyPair pp = new PropertyPair(storedProcedureName, storedProcedureName);
-                ppList.add(pp);
-            }
-            enrichedProperties.put(PROCEDURE_NAME,ppList);
-            return new SyndesisMetadata<>(enrichedProperties, null, null);
+            return new SyndesisMetadata<>(enrichedProperties, builderIn, builderOut);
         }
+
+        // return list of all stored procedures in the database
+        final List<PropertyPair> ppList = new ArrayList<>();
+        @SuppressWarnings("unchecked")
+        final Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata
+            .getPayload();
+        for (final String storedProcedureName : procedureMap.keySet()) {
+            final PropertyPair pp = new PropertyPair(storedProcedureName, storedProcedureName);
+            ppList.add(pp);
+        }
+        enrichedProperties.put(PROCEDURE_NAME, ppList);
+        return new SyndesisMetadata<>(enrichedProperties, null, null);
     }
 
     static boolean isPresent(final Map<String, Object> properties, final String property) {
@@ -83,6 +98,65 @@ public final class SqlStoredMetadataAdapter implements MetadataAdapter<JsonSchem
 
     static boolean isPresentAndNonNull(final Map<String, Object> properties, final String property) {
         return isPresent(properties, property) && properties.get(property) != null;
+    }
+
+    /* default */ static JsonSchema schemaFor(final JDBCType jdbcType) {
+        final JsonSchemaFactory factory = new JsonSchemaFactory();
+        switch (jdbcType) {
+        case ARRAY:
+            return factory.arraySchema();
+        case BINARY:
+        case BLOB:
+        case LONGVARBINARY:
+        case VARBINARY:
+            final ArraySchema binary = factory.arraySchema();
+            binary.setItemsSchema(factory.integerSchema());
+            return binary;
+        case BIT:
+        case BOOLEAN:
+            return factory.booleanSchema();
+        case CHAR:
+        case CLOB:
+        case DATALINK:
+        case LONGNVARCHAR:
+        case LONGVARCHAR:
+        case NCHAR:
+        case NCLOB:
+        case NVARCHAR:
+        case ROWID:
+        case SQLXML:
+        case VARCHAR:
+            return factory.stringSchema();
+        case DATE:
+        case TIME:
+        case TIMESTAMP:
+        case TIMESTAMP_WITH_TIMEZONE:
+        case TIME_WITH_TIMEZONE:
+            final StringSchema date = factory.stringSchema();
+            date.setFormat(JsonValueFormat.DATE_TIME);
+            return date;
+        case DECIMAL:
+        case DOUBLE:
+        case FLOAT:
+        case NUMERIC:
+        case REAL:
+            return factory.numberSchema();
+        case INTEGER:
+        case BIGINT:
+        case SMALLINT:
+        case TINYINT:
+            return factory.integerSchema();
+        case NULL:
+            return factory.nullSchema();
+        case DISTINCT:
+        case JAVA_OBJECT:
+        case OTHER:
+        case REF:
+        case REF_CURSOR:
+        case STRUCT:
+        default:
+            return factory.anySchema();
+        }
     }
 
 }
