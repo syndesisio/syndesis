@@ -63,8 +63,8 @@ export class GitHubOAuthSetupComponent implements OnInit {
    * Registers Syndesis as an OAuth application on GitHub
    */
   registerSyndesis() {
-    window.open('https://github.com/settings/applications/new', '_blank');
     this.stepOneComplete = true;
+    window.open('https://github.com/settings/applications/new', '_blank');
   }
 
   /**

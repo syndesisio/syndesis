@@ -16,20 +16,16 @@
         <div class="col-xs-11">
           <div>
             <h2>Register Syndesis</h2>
-            <div>
-              <div *ngIf="stepOneComplete === false">
-                <p>To start using Syndesis with GitHub, register Syndesis as an OAuth application in GitHub.</p>
-              </div>
-              <div>
-                <button class="btn btn-primary"
-                        (click)="registerSyndesis($event)">Register Syndesis on GitHub
-                </button>&nbsp;<a
-                  href="https://developer.github.com/apps/building-integrations/setting-up-and-registering-oauth-apps/registering-oauth-apps/"
-                  rel="nofollow"
-                  target="_blank">Learn how to register an OAuth app on GitHub.
+            <div *ngIf="stepOneComplete === false">
+              <p>To start using Syndesis with GitHub, register Syndesis as an OAuth application in GitHub.</p>
+              <button class="btn btn-primary"
+                      (click)="registerSyndesis($event)">Register Syndesis on GitHub
+              </button>&nbsp;
+              <a href="https://developer.github.com/apps/building-integrations/setting-up-and-registering-oauth-apps/registering-oauth-apps/"
+                 rel="nofollow"
+                 target="_blank">Learn how to register an OAuth app on GitHub.
                 <span class="pficon pficon-info"></span>
               </a>
-              </div>
             </div>
           </div>
           <div class="alert alert-success"
