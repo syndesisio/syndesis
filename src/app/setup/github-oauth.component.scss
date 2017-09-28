@@ -42,13 +42,16 @@
     height: 100%;
   }
 
-  .step-complete {}
+  .step-complete {
+    .alert {
+      margin-top: 25px;
+      background-color: rgba(0, 0, 0, 0);
+    }
+  }
 
   .step-one {
     a {
       &:hover {text-decoration: none}
-
-      margin: auto 15px;
     }
   }
 

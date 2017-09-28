@@ -23,16 +23,16 @@
               </button>&nbsp;
               <a href="https://developer.github.com/apps/building-integrations/setting-up-and-registering-oauth-apps/registering-oauth-apps/"
                  rel="nofollow"
+                 style="margin: auto 15px;"
                  target="_blank">Learn how to register an OAuth app on GitHub.
                 <span class="pficon pficon-info"></span>
               </a>
             </div>
           </div>
           <div class="alert alert-success"
-               *ngIf="stepOneComplete && !hidden">
+               *ngIf="stepOneComplete === true">
             <span class="pficon pficon-ok"></span>
-            <b>Success!</b> Future changes can be made in
-            <a>Syndesis Global Settings / GitHub Settings</a>.
+            <b>Success!</b> Future changes can be made in <a>Syndesis Global Settings / GitHub Settings</a>.
           </div>
         </div>
       </div>
