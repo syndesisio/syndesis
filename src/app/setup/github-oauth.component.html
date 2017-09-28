@@ -82,9 +82,10 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <!-- TO DO: Validation of credentials, disable/enable button -->
                   <div class="col-xs-offset-2 col-xs-10">
                     <button type="submit"
+                            [disabled]="!validCredentials"
+                            (keyup)="checkCredentials($event)"
                             (click)="connectGitHub($event)"
                             class="btn btn-primary">Connect GitHub
                     </button>

@@ -13,13 +13,12 @@ export interface OAuthAppListItem {
 })
 export class GitHubOAuthSetupComponent implements OnInit {
 
-  accounts = [];
-  hidden = true;
   stepOneComplete = false;
   stepTwoComplete = false;
   stepThreeComplete = false;
   loading: Observable<boolean>;
   noAccountConnected = true;
+  validCredentials: true;
 
   /**
    * @param {ChangeDetectorRef} detector
@@ -29,11 +28,20 @@ export class GitHubOAuthSetupComponent implements OnInit {
 
   /**
    * Step Two
+   * Validation - Checks if provided credentials are valid.
+   */
+  checkCredentials($event) {
+    if($event) {
+      console.log('$event: ' + JSON.stringify($event));
+      this.stepTwoComplete = true;
+    }
+  }
+
+  /**
+   * Step Two
    * Connects an account to GitHub via OAuth.
    */
-  connectGitHub() {
-    this.stepTwoComplete = true;
-  }
+  connectGitHub($event) {}
 
   /**
    * Disconnects a previously connected GitHub account
