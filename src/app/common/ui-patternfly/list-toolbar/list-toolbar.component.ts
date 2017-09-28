@@ -38,6 +38,7 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
   @Input() actionTemplate: TemplateRef<any>;
   @Input() viewTemplate: TemplateRef<any>;
   @Input() filterFields: Array<FilterField> = [];
+  @Input() filterTags: true;
   toolbarConfig: ToolbarConfig;
   private _allItems: Array<T> = [];
   private _filteredItems: Array<T> = [];
@@ -75,6 +76,9 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
     this.subscription = this.items
       .do(items => this._allItems = items)
       .do(items => {
+        if (!this.filterTags) {
+          return;
+        }
         if (items.find(item => item['tags'])) {
           if (!filterConfig.fields.find(field => field.id === 'tag')) {
             filterConfig.fields.push({
