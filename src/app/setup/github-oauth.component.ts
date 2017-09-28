@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
-
+import { HttpModule } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 export interface OAuthAppListItem {
@@ -13,6 +13,7 @@ export interface OAuthAppListItem {
 })
 export class GitHubOAuthSetupComponent implements OnInit {
 
+  accounts = [];
   hidden = true;
   stepOneComplete = false;
   stepTwoComplete = false;
@@ -20,12 +21,19 @@ export class GitHubOAuthSetupComponent implements OnInit {
   loading: Observable<boolean>;
   noAccountConnected = true;
 
-  constructor(public detector: ChangeDetectorRef) {}
+  /**
+   * @param {ChangeDetectorRef} detector
+   * Use Http instead of Restangular, at least for now.
+   */
+  constructor(public detector: ChangeDetectorRef/*, http: Http*/) {}
 
   /**
+   * Step Two
    * Connects an account to GitHub via OAuth.
    */
-  connectGitHub() {}
+  connectGitHub() {
+    this.stepTwoComplete = true;
+  }
 
   /**
    * Disconnects a previously connected GitHub account
@@ -33,14 +41,38 @@ export class GitHubOAuthSetupComponent implements OnInit {
   disconnectGitHub() {}
 
   /**
-   * Registers Syndesis as an OAuth application on GitHub
+   * Fetch possible GitHub accounts
    */
-  registerSyndesis() {}
+  fetchAccounts(): void {
+    /**
+     * Load the possible GitHub accounts
+     */
+    /*
+    // Replace with GH API endpoint
+    http.get('gh-api-accounts-url').map(res => res.json()).subscribe(accounts => this.accounts = accounts);
+    */
+  }
 
   /**
+   * All steps have been completed
+   */
+  getStarted() {}
+
+  /**
+   * Step One
+   * Registers Syndesis as an OAuth application on GitHub
+   */
+  registerSyndesis() {
+    this.stepOneComplete = true;
+  }
+
+  /**
+   * Step Three
    * User has selected an account
    */
-  selectedAccount() {}
+  selectedAccount() {
+    this.stepThreeComplete = true;
+  }
 
   /**
    * Returns whether or not this item has stored credentials
@@ -57,9 +89,5 @@ export class GitHubOAuthSetupComponent implements OnInit {
   /**
    * View initialization
     */
-  ngOnInit(): void {
-    /**
-     * Loads the possible GitHub accounts
-     */
-  }
+  ngOnInit(): void {}
 }

@@ -1,10 +1,14 @@
 <div class="row github-oauth">
+
   <div class="col-xs-12">
     <h1>Getting Started in Syndesis</h1>
     <p>Welcome to Syndesis! To get started you will need to register and authorize Syndesis on GitHub and select a
       location for storing integrations.</p>
 
-    <div class="step-one">
+    <!-- Step One -->
+
+    <div class="step-one"
+         [ngClass]="{'step-complete' : stepOneComplete === true}">
       <div class="col-xs-12">
         <div class="col-xs-1">
           <div class="circle pull-right"><p>1</p></div>
@@ -13,15 +17,16 @@
           <div>
             <h2>Register Syndesis</h2>
             <div>
-              <div *ngIf="!stepOneComplete">
+              <div *ngIf="stepOneComplete === false">
                 <p>To start using Syndesis with GitHub, register Syndesis as an OAuth application in GitHub.</p>
               </div>
               <div>
-                <button class="btn btn-primary">Register Syndesis on GitHub</button>&nbsp;<a
+                <button class="btn btn-primary"
+                        (click)="registerSyndesis($event)">Register Syndesis on GitHub
+                </button>&nbsp;<a
                   href="https://developer.github.com/apps/building-integrations/setting-up-and-registering-oauth-apps/registering-oauth-apps/"
                   rel="nofollow"
-                  target="_blank">Learn how
-                to register an OAuth app on GitHub.
+                  target="_blank">Learn how to register an OAuth app on GitHub.
                 <span class="pficon pficon-info"></span>
               </a>
               </div>
@@ -30,22 +35,24 @@
           <div class="alert alert-success"
                *ngIf="stepOneComplete && !hidden">
             <span class="pficon pficon-ok"></span>
-            <b>Sucess!</b> Future changes can be made in
-            <a>Syndesis Global Settings / GitHub Settings</a>
-            .
+            <b>Success!</b> Future changes can be made in
+            <a>Syndesis Global Settings / GitHub Settings</a>.
           </div>
         </div>
       </div>
     </div>
 
-    <div class="step-two">
+    <!-- Step Two -->
+
+    <div class="step-two"
+         [ngClass]="{'step-complete' : stepTwoComplete === true}">
       <div class="col-xs-12">
         <div class="col-xs-1">
           <div class="circle pull-right"><p>2</p></div>
         </div>
         <div class="col-xs-11">
           <h2>GitHub Authorization</h2>
-          <div *ngIf="!stepTwoComplete">
+          <div *ngIf="stepTwoComplete === false">
             <div>
               <p>The Client ID and Client Secret generated in the first step will be used here to grant authorization for
                 Syndesis to act on your behalf.</p>
@@ -79,8 +86,10 @@
                   </div>
                 </div>
                 <div class="form-group">
+                  <!-- TO DO: Validation of credentials, disable/enable button -->
                   <div class="col-xs-offset-2 col-xs-10">
                     <button type="submit"
+                            (click)="connectGitHub($event)"
                             class="btn btn-primary">Connect GitHub
                     </button>
                   </div>
@@ -90,40 +99,47 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="step-three">
-        <div class="col-xs-12">
-          <div class="col-xs-1">
-            <div class="circle pull-right"><p>3</p></div>
-          </div>
-          <div class="col-xs-11">
-            <h2>Configure Integration Location</h2>
-            <div>Specify where to store the integration.</div>
-            <div *ngIf="!stepThreeComplete">
-              <form class="form-horizontal"
-                    role="form">
-                <div class="form-group">
-                  <label for="connectedAccount"
-                         class="col-xs-4 control-label">Connected Account</label>
-                  <div class="col-xs-8">
-                    <select id="connectedAccount"
-                            class="form-control"
-                            *ngIf="noAccountConnected">
-                      <option value="">Choose...</option>
-                      <option value="">Option 1</option>
-                      <option value="">Option 2</option>
-                      <option value="">Option 3</option>
-                    </select>
-                    <i *ngIf="!noAccountConnected">No account connected.</i>
-                  </div>
+    <!-- Step Three -->
+
+    <div class="step-three"
+         [ngClass]="{'step-complete' : stepThreeComplete === true}">
+      <div class="col-xs-12">
+        <div class="col-xs-1">
+          <div class="circle pull-right"><p>3</p></div>
+        </div>
+        <div class="col-xs-11">
+          <h2>Configure Integration Location</h2>
+          <div>Specify where to store the integration.</div>
+          <div *ngIf="stepThreeComplete === false">
+            <form class="form-horizontal"
+                  role="form">
+              <div class="form-group">
+                <label for="connectedAccount"
+                       class="col-xs-4 control-label">Connected Account</label>
+                <div class="col-xs-6">
+                  <select id="connectedAccount"
+                          class="form-control"
+                          *ngIf="noAccountConnected">
+                    <option value="">Account</option>
+                  </select>
+                  <i *ngIf="!noAccountConnected">No account connected.</i>
                 </div>
-              </form>
-            </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-
     </div>
-
   </div>
+
+
+  <div class="col-xs-12" *ngIf="stepOneComplete && stepTwoComplete && stepThreeComplete">
+    <h2>Success! You're ready to start in Syndesis.</h2>
+    <p>Go to Syndesis home page to start using our awesome services! As always, you can go back and change the settings
+      later on the GitHub Settings page.</p>
+    <button (click)="getStarted()">Get Started</button>
+  </div>
+
 </div>
