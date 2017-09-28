@@ -13,12 +13,12 @@ jobs:
     - run:
         name: update yarn
         command: |
-        # remove default yarn
-        sudo rm -rf $(dirname $(which yarn))/yarn*
-        # download latest
-        rm -rf ~/.yarn
-        curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.28.4
-        echo 'export PATH="${PATH}:${HOME}/.yarn/bin"' >> $BASH_ENV
+          # remove default yarn
+          sudo rm -rf $(dirname $(which yarn))/yarn*
+          # download latest
+          rm -rf ~/.yarn
+          curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.28.4
+          echo 'export PATH="${PATH}:${HOME}/.yarn/bin"' >> $BASH_ENV
 
     - run:
         name: Install Chromium and Xvfb
