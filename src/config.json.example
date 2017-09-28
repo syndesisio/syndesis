@@ -7,7 +7,7 @@
     "iconDarkBg": "assets/images/glasses_logo_square.png",
     "appName": "Syndesis",
     "favicon32": "/favicon-32x32.png",
-    "favicon16": "/favicon-16x16.png"
+    "favicon16": "/favicon-16x16.png",
     "touchIcon": "/apple-touch-icon.png"
   },
   "datamapper": {
