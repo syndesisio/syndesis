@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, RequestOptionsArgs, Headers } from '@angular/http';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 import { ConfigService } from '../config.service';
-import { GitHubOAuthConfiguration } from '../model';
+import { Setup } from '../model';
 
 @Injectable()
 export class GitHubOAuthService {
@@ -20,8 +20,8 @@ export class GitHubOAuthService {
     };
   }
 
-  update(configuration: GitHubOAuthConfiguration) {
-    return this.http.put(this.url, JSON.stringify(configuration), this.args);
+  update(setup: Setup) {
+    return this.http.put(this.url, JSON.stringify(setup), this.args);
   }
 
 }

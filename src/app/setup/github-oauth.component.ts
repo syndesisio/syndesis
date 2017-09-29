@@ -40,21 +40,21 @@ export class GitHubOAuthSetupComponent implements OnInit {
   connectGitHub() {
     this.updateGitHubOauthConfiguration().subscribe(
       config => {
-        console.log('success', config);
       },
       error => {
-        console.error(error);
       },
     );
   }
 
   private updateGitHubOauthConfiguration(): Observable<any> {
     const formModel = this.githubOauthForm.value;
-    const configuration = {
-      clientId: formModel.clientId,
-      clientSecret: formModel.clientSecret,
+    const setup = {
+      gitHubOAuthConfiguration: {
+        clientId: formModel.clientId,
+        clientSecret: formModel.clientSecret,
+      },
     };
-    return this.gitHubOAuthService.update(configuration);
+    return this.gitHubOAuthService.update(setup);
   }
 
   /**
