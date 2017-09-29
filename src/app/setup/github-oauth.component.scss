@@ -51,12 +51,49 @@
   .step-one {
     a {
       &:hover {text-decoration: none}
+
+      &.info {
+        margin: auto 15px;
+      }
     }
   }
 
   .step-two {
+    padding-top: 150px;
+
     a {
       &:hover {text-decoration: none}
+
+      &.info {
+        margin: auto 130px;
+      }
+    }
+
+    .form-container {
+      margin: 20px auto;
+    }
+  }
+
+  .step-three {
+    padding-top: 150px;
+
+    .integration-location {
+      padding-top: 35px;
+
+      [class^="col-"] {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .account-label p {
+        font-weight: 600;
+      }
+
+      .connected {}
+
+      .not-connected {
+        font-style: italic;
+      }
     }
   }
 }
