@@ -77,7 +77,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private config: ConfigService,
     private oauthService: OAuthService,
-    private userService: UserService,
+    public userService: UserService,
     public testSupport: TestSupportService,
     private notificationService: NotificationService,
     private nav: NavigationService,
