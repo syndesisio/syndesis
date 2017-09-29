@@ -72,6 +72,10 @@
         margin: auto 15px;
       }
     }
+
+    button {
+      padding: 2px 25px;
+    }
   }
 
   .step-two {
@@ -98,6 +102,7 @@
     padding-top: 150px;
 
     .integration-location {
+      padding-bottom: 100px;
       padding-top: 35px;
 
       [class^="col-"] {
@@ -112,6 +117,7 @@
       .connected {}
 
       .not-connected {
+        color: $color-pf-black-400;
         font-style: italic;
       }
     }
