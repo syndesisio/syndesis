@@ -255,6 +255,7 @@
               <systemProperties>
                 <keycloak.http.port>${keycloak.http.port}</keycloak.http.port>
               </systemProperties>
+              <reuseForks>true</reuseForks>
             </configuration>
           </execution>
         </executions>

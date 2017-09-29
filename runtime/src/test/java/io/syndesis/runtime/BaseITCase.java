@@ -16,11 +16,13 @@
 package io.syndesis.runtime;
 
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataManager;
@@ -32,7 +34,11 @@ import org.junit.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MapPropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -42,18 +48,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = {"client.state.authenticationAlgorithm=HmacSHA1",
-        "client.state.authenticationKey=oNXU5SBpNnU1UI/4ZkUAA2Gzikc=",
-        "client.state.encryptionAlgorithm=AES/CBC/PKCS5Padding", "client.state.encryptionKey=IIAyKXfJTrIvjS6G9dHJLA==",
-        "client.state.tid=1"})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@ContextConfiguration(classes = { 
+		Application.class,
+        InfinispanCacheConfiguration.class,
+        KeycloakConfiguration.class,
+        StoreConfiguration.class, 
+        SyndesisCorsConfiguration.class
+})
 public abstract class BaseITCase {
+
+    public static WireMockRule wireMock;
 
     @Autowired
     protected SqlJsonDB jsondb;
@@ -104,6 +116,15 @@ public abstract class BaseITCase {
 
     public TestRestTemplate restTemplate() {
         return restTemplate;
+    }
+
+    public static class TestConfigurationInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+        @Override
+        public void initialize(final ConfigurableApplicationContext applicationContext) {
+            final ConfigurableEnvironment environment = applicationContext.getEnvironment();
+            environment.getPropertySources().addFirst(new MapPropertySource("test-source",
+                    Collections.singletonMap("verifier.service", "localhost:" + wireMock.port())));
+        }
     }
 
     @Autowired
