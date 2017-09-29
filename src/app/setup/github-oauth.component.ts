@@ -73,14 +73,6 @@ export class GitHubOAuthSetupComponent implements OnInit {
   }
 
   /**
-   * Step Three
-   * User has selected an account
-   */
-  selectedAccount() {
-    this.stepThreeComplete = true;
-  }
-
-  /**
    * Returns whether or not this item has stored credentials
    */
   isConfigured(item) {

@@ -2,8 +2,10 @@
 
   <div class="col-xs-12">
     <h1>Getting Started in Syndesis</h1>
+
     <p>Welcome to Syndesis! To get started you will need to register and authorize Syndesis on GitHub and select a
       location for storing integrations.</p>
+
 
     <!-- Step One -->
 
@@ -37,6 +39,7 @@
         </div>
       </div>
     </div>
+
 
     <!-- Step Two -->
 
@@ -100,6 +103,7 @@
       </div>
     </div>
 
+
     <!-- Step Three -->
 
     <div class="step-three"
@@ -127,7 +131,7 @@
             <!-- Account is Not Connected -->
             <div class="col-xs-4 not-connected"
                  *ngIf="noAccountConnected === true">
-              <i >No connected account.</i>
+              <i>No connected account.</i>
             </div>
           </div>
         </div>
@@ -136,10 +140,15 @@
   </div>
 
 
-  <div class="col-xs-12" *ngIf="stepOneComplete && stepTwoComplete && stepThreeComplete">
+  <!-- All Steps Completed -->
+
+  <div class="col-xs-12"
+       *ngIf="stepOneComplete && stepTwoComplete && stepThreeComplete">
     <h2>Success! You're ready to start in Syndesis.</h2>
+
     <p>Go to Syndesis home page to start using our awesome services! As always, you can go back and change the settings
       later on the GitHub Settings page.</p>
+
     <button (click)="getStarted()">Get Started</button>
   </div>
 
