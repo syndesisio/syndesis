@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Http } from '@angular/http';
+import { Notification, NotificationModule, NotificationService, NotificationType } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
-import { GitHubOAuthService } from './github-oauth.service';
-import { GitHubOAuthConfiguration } from '../model';
+import { SetupService } from './setup.service';
 
 export interface OAuthAppListItem {
   expanded: boolean;
@@ -30,7 +29,8 @@ export class GitHubOAuthSetupComponent implements OnInit {
    * @param {ChangeDetectorRef} detector
    */
   constructor(
-    private gitHubOAuthService: GitHubOAuthService,
+    private setupService: SetupService,
+    private notificationService: NotificationService,
     public detector: ChangeDetectorRef,
   ) {}
 
@@ -38,15 +38,10 @@ export class GitHubOAuthSetupComponent implements OnInit {
    * Step Two
    */
   connectGitHub() {
-    this.updateGitHubOauthConfiguration().subscribe(
-      config => {
-      },
-      error => {
-      },
-    );
+    this.updateGitHubOauthConfiguration();
   }
 
-  private updateGitHubOauthConfiguration(): Observable<any> {
+  private updateGitHubOauthConfiguration(): Promise<any> {
     const formModel = this.githubOauthForm.value;
     const setup = {
       gitHubOAuthConfiguration: {
@@ -54,7 +49,17 @@ export class GitHubOAuthSetupComponent implements OnInit {
         clientSecret: formModel.clientSecret,
       },
     };
-    return this.gitHubOAuthService.update(setup);
+    return this.setupService.update(setup)
+      .catch(message => {
+        const notification: Notification = {
+          type          : NotificationType.WARNING,
+          header        : 'Error',
+          message       : message,
+          showClose     : true,
+        };
+        this.notificationService.getNotifications().push(notification);
+      },
+    );
   }
 
   /**
@@ -91,5 +96,7 @@ export class GitHubOAuthSetupComponent implements OnInit {
   /**
    * View initialization
     */
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
+
 }
