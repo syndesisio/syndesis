@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 export interface OAuthAppListItem {
@@ -22,9 +22,8 @@ export class GitHubOAuthSetupComponent implements OnInit {
 
   /**
    * @param {ChangeDetectorRef} detector
-   * Use Http instead of Restangular, at least for now.
    */
-  constructor(public detector: ChangeDetectorRef/*, http: Http*/) {}
+  constructor(public detector: ChangeDetectorRef) {}
 
   /**
    * Step Two
@@ -39,24 +38,15 @@ export class GitHubOAuthSetupComponent implements OnInit {
 
   /**
    * Step Two
-   * Connects an account to GitHub via OAuth.
    */
-  connectGitHub($event) {}
+  connectGitHub(http: Http) {
+    //http.get('https://api.github.com').map(res => res.json()).subscribe(accounts => this.accounts = accounts);
+  }
 
   /**
    * Disconnects a previously connected GitHub account
    */
   disconnectGitHub() {}
-
-  /**
-   * Fetch possible GitHub accounts
-   */
-  fetchAccounts(): void {
-    /*
-    // Replace with GH API endpoint
-    http.get('gh-api-accounts-url').map(res => res.json()).subscribe(accounts => this.accounts = accounts);
-    */
-  }
 
   /**
    * All steps have been completed
