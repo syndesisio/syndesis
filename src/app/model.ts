@@ -304,6 +304,11 @@ export interface OAuthApp extends BaseEntity {
 };
 export type OAuthApps = Array < OAuthApp > ;
 
+export interface GitHubOAuthConfiguration {
+  clientId: string;
+  clientSecret: string;
+}
+
 export interface ListResultString extends BaseEntity {
     items: Array < string >
     ;

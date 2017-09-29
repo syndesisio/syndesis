@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { GitHubOAuthService } from './github-oauth.service';
+import { GitHubOAuthConfiguration } from '../model';
 
 export interface OAuthAppListItem {
   expanded: boolean;
@@ -18,29 +21,40 @@ export class GitHubOAuthSetupComponent implements OnInit {
   stepThreeComplete = false;
   loading: Observable<boolean>;
   noAccountConnected = true;
-  validCredentials: true;
+  githubOauthForm = new FormGroup({
+    clientId: new FormControl('', Validators.required),
+    clientSecret: new FormControl('', Validators.required),
+  });
 
   /**
    * @param {ChangeDetectorRef} detector
    */
-  constructor(public detector: ChangeDetectorRef) {}
+  constructor(
+    private gitHubOAuthService: GitHubOAuthService,
+    public detector: ChangeDetectorRef,
+  ) {}
 
   /**
    * Step Two
-   * Validation - Checks if provided credentials are valid.
    */
-  checkCredentials($event) {
-    if($event) {
-      console.log('$event: ' + JSON.stringify($event));
-      this.stepTwoComplete = true;
-    }
+  connectGitHub() {
+    this.updateGitHubOauthConfiguration().subscribe(
+      config => {
+        console.log('success', config);
+      },
+      error => {
+        console.error(error);
+      },
+    );
   }
 
-  /**
-   * Step Two
-   */
-  connectGitHub(http: Http) {
-    //http.get('https://api.github.com').map(res => res.json()).subscribe(accounts => this.accounts = accounts);
+  private updateGitHubOauthConfiguration(): Observable<any> {
+    const formModel = this.githubOauthForm.value;
+    const configuration = {
+      clientId: formModel.clientId,
+      clientSecret: formModel.clientSecret,
+    };
+    return this.gitHubOAuthService.update(configuration);
   }
 
   /**

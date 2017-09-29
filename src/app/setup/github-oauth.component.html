@@ -67,14 +67,18 @@
               </div>
               <div class="clearfix"></div>
               <form class="form-horizontal"
-                    role="form">
+                    role="form"
+                    [formGroup]="githubOauthForm"
+                    (ngSubmit)="connectGitHub()"
+                    novalidate>
                 <div class="form-group">
                   <label for="ghClientId"
                          class="col-xs-2 control-label">Client ID</label>
                   <div class="col-xs-8">
                     <input type="text"
                            class="form-control"
-                           id="ghClientId">
+                           id="ghClientId"
+                           formControlName="clientId">
                   </div>
                 </div>
                 <div class="form-group">
@@ -83,16 +87,16 @@
                   <div class="col-xs-8">
                     <input type="password"
                            class="form-control"
-                           id="ghClientSecret">
+                           id="ghClientSecret"
+                           formControlName="clientSecret">
                   </div>
                 </div>
                 <div class="form-group">
                   <div class="col-xs-offset-2 col-xs-10">
                     <button type="submit"
-                            [disabled]="!validCredentials"
-                            (keyup)="checkCredentials($event)"
-                            (click)="connectGitHub($event)"
-                            class="btn btn-primary">Connect GitHub
+                            class="btn btn-primary"
+                            [disabled]="githubOauthForm.invalid"
+                            >Connect GitHub
                     </button>
                   </div>
                 </div>
