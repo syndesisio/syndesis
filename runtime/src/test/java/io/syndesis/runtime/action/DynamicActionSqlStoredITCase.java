@@ -56,7 +56,7 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
     private final String connectionId = UUID.randomUUID().toString();
 
     @BeforeClass
-    public static void setUp() {
+    public static void startMockIfNeeded() {
         if (wireMock==null || !wireMock.isRunning()) {
             wireMock = new WireMockRule(wireMockConfig().dynamicPort());
             wireMock.start();

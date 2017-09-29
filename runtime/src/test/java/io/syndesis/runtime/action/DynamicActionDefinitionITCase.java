@@ -57,7 +57,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DynamicActionDefinitionITCase extends BaseITCase {
 
     @BeforeClass
-    public static void setUp() {
+    public static void startMockIfNeeded() {
         if (wireMock==null || !wireMock.isRunning()) {
             wireMock = new WireMockRule(wireMockConfig().dynamicPort());
             wireMock.start();
