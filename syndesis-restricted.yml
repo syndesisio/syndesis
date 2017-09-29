@@ -123,6 +123,10 @@ parameters:
   displayName: Idle Session Lifespan
   name: SESSION_LIFESPAN
   value: '36000'
+- description: Namespace containing image streams
+  displayName: Image Stream Namespace
+  name: IMAGE_STREAM_NAMESPACE
+  value: ''
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 
@@ -146,7 +150,7 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: syndesis-keycloak
+    name: keycloak-openshift
     labels:
       app: syndesis
       component: syndesis-keycloak
@@ -154,7 +158,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/jimmidyson/keycloak-openshift:2.5.4.Final
+        name: ${SYNDESIS_REGISTRY}/syndesis/keycloak-openshift:2.5.4.Final
       importPolicy:
         scheduled: true
       name: 2.5.4.Final
@@ -176,7 +180,7 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: syndesis-atlasmap
+    name: atlasmap
     labels:
       app: syndesis
       component: syndesis-atlasmap
@@ -203,6 +207,22 @@ objects:
       importPolicy:
         scheduled: true
       name: latest
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: pemtokeystore
+    labels:
+      app: syndesis
+      component: syndesis-pemtokeystore
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
+      importPolicy:
+        scheduled: true
+      name: v0.2.1
+
 
 - apiVersion: v1
   kind: Service
@@ -321,6 +341,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: syndesis-ui:latest
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
     - type: ConfigChange
@@ -433,35 +454,10 @@ objects:
           app: syndesis
           component: syndesis-atlasmap
           deploymentconfig: syndesis-atlasmap
-        annotations:
-          pod.beta.kubernetes.io/init-containers: |-
-            [{
-              "name": "openshift-ca-pemtokeystore",
-              "image": "syndesis/pemtokeystore:v0.2.1",
-              "imagePullPolicy": "IfNotPresent",
-              "args": [
-                "-keystore", "/tls-keystore/openshift-truststore.jks",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
-                "-ca-dir", "/usr/share/ca-certificates/mozilla"
-              ],
-              "volumeMounts": [{
-                "name": "syndesis-atlasmap-tls",
-                "mountPath": "/tls-keystore"
-              }],
-              "resources": {
-                "limits": {
-                  "memory": "255Mi"
-                },
-                "requests": { 
-                  "memory": "20Mi"
-                }
-              }
-            }]
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: syndesis/pemtokeystore:v0.2.1
+          image: ' '
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -540,7 +536,17 @@ objects:
         - atlasmap
         from:
           kind: ImageStreamTag
-          name: syndesis-atlasmap:latest
+          name: atlasmap:latest
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - openshift-ca-pemtokeystore
+        from:
+          kind: ImageStreamTag
+          name: pemtokeystore:v0.2.1
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
 
@@ -841,35 +847,10 @@ objects:
           app: syndesis
           component: syndesis-keycloak
           deploymentconfig: syndesis-keycloak
-        annotations:
-          pod.beta.kubernetes.io/init-containers: |-
-            [{
-              "name": "openshift-ca-pemtokeystore",
-              "image": "syndesis/pemtokeystore:v0.2.1",
-              "imagePullPolicy": "IfNotPresent",
-              "args": [
-                "-keystore", "/tls-keystore/openshift-truststore.jks",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
-                "-ca-dir", "/usr/share/ca-certificates/mozilla"
-              ],
-              "volumeMounts": [{
-                "name": "syndesis-keycloak-tls",
-                "mountPath": "/tls-keystore"
-              }],
-              "resources": {
-                "limits": {
-                  "memory": "255Mi"
-                },
-                "requests": {
-                  "memory": "20Mi"
-                }
-              }
-            }]
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: syndesis/pemtokeystore:v0.2.1
+          image: ' '
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -955,7 +936,17 @@ objects:
         - syndesis-keycloak
         from:
           kind: ImageStreamTag
-          name: syndesis-keycloak:2.5.4.Final
+          name: keycloak-openshift:2.5.4.Final
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - openshift-ca-pemtokeystore
+        from:
+          kind: ImageStreamTag
+          name: pemtokeystore:v0.2.1
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
     - type: ConfigChange
@@ -2065,35 +2056,10 @@ objects:
           app: syndesis
           component: syndesis-rest
           deploymentconfig: syndesis-rest
-        annotations:
-          pod.beta.kubernetes.io/init-containers: |-
-            [{
-              "name": "openshift-ca-pemtokeystore",
-              "image": "syndesis/pemtokeystore:v0.2.1",
-              "imagePullPolicy": "IfNotPresent",
-              "args": [
-                "-keystore", "/tls-keystore/openshift-truststore.jks",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
-                "-ca-dir", "/usr/share/ca-certificates/mozilla"
-              ],
-              "volumeMounts": [{
-                "name": "syndesis-rest-tls",
-                "mountPath": "/tls-keystore"
-              }],
-              "resources": {
-                "limits": {
-                  "memory": "255Mi"
-                },
-                "requests": {
-                  "memory": "20Mi"
-                }
-              }
-            }]
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: syndesis/pemtokeystore:v0.2.1
+          image: ' '
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -2193,6 +2159,16 @@ objects:
         from:
           kind: ImageStreamTag
           name: syndesis-rest:latest
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - openshift-ca-pemtokeystore
+        from:
+          kind: ImageStreamTag
+          name: pemtokeystore:v0.2.1
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
     - type: ConfigChange
@@ -2295,35 +2271,10 @@ objects:
           app: syndesis
           component: syndesis-verifier
           deploymentconfig: syndesis-verifier
-        annotations:
-          pod.beta.kubernetes.io/init-containers: |-
-            [{
-              "name": "openshift-ca-pemtokeystore",
-              "image": "syndesis/pemtokeystore:v0.2.1",
-              "imagePullPolicy": "IfNotPresent",
-              "args": [
-                "-keystore", "/tls-keystore/openshift-truststore.jks",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
-                "-ca-dir", "/usr/share/ca-certificates/mozilla"
-              ],
-              "volumeMounts": [{
-                "name": "syndesis-verifier-tls",
-                "mountPath": "/tls-keystore"
-              }],
-              "resources": {
-                "limits": {
-                  "memory": "255Mi"
-                },
-                "requests": { 
-                  "memory": "20Mi"
-                }
-              }
-            }]
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: syndesis/pemtokeystore:v0.2.1
+          image: ' '
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -2401,6 +2352,16 @@ objects:
         from:
           kind: ImageStreamTag
           name: syndesis-verifier:latest
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - openshift-ca-pemtokeystore
+        from:
+          kind: ImageStreamTag
+          name: pemtokeystore:v0.2.1
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
     - type: ConfigChange

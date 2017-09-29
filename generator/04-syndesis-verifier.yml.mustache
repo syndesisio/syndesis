@@ -39,35 +39,10 @@
           app: syndesis
           component: syndesis-verifier
           deploymentconfig: syndesis-verifier
-        annotations:
-          pod.beta.kubernetes.io/init-containers: |-
-            [{
-              "name": "openshift-ca-pemtokeystore",
-              "image": "{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}",
-              "imagePullPolicy": "IfNotPresent",
-              "args": [
-                "-keystore", "/tls-keystore/openshift-truststore.jks",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
-                "-ca-dir", "/usr/share/ca-certificates/mozilla"
-              ],
-              "volumeMounts": [{
-                "name": "syndesis-verifier-tls",
-                "mountPath": "/tls-keystore"
-              }],
-              "resources": {
-                "limits": {
-                  "memory": "255Mi"
-                },
-                "requests": { 
-                  "memory": "20Mi"
-                }
-              }
-            }]
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: {{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
+          image: {{^Dev}}' '{{/Dev}}{{#Dev}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/Dev}}
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -97,7 +72,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
+          image: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
@@ -149,7 +124,17 @@
         - syndesis-verifier
         from:
           kind: ImageStreamTag
-          name: syndesis-verifier:{{ Tags.Syndesis }}
+          name: {{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - openshift-ca-pemtokeystore
+        from:
+          kind: ImageStreamTag
+          name: {{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange

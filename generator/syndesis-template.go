@@ -50,8 +50,11 @@ type syndesisImages struct {
 }
 
 type images struct {
-	Support  supportImages
-	Syndesis syndesisImages
+	Support              supportImages
+	Syndesis             syndesisImages
+	ImageStreamNamespace string
+	SyndesisImagesPrefix string
+	AtlasMapImagesPrefix string
 }
 
 type tags struct {
@@ -78,16 +81,18 @@ type Context struct {
 // TODO: Could be added from a local configuration file
 var syndesisContext = Context{
 	Images: images{
+		SyndesisImagesPrefix: "syndesis",
+		AtlasMapImagesPrefix: "atlasmap",
 		Support: supportImages{
-			PemToKeystore: "syndesis/pemtokeystore",
-			Keycloak:      "jimmidyson/keycloak-openshift",
+			PemToKeystore: "pemtokeystore",
+			Keycloak:      "keycloak-openshift",
 			Postgresql:    "postgresql",
 		},
 		Syndesis: syndesisImages{
-			Rest:     "syndesis/syndesis-rest",
-			Ui:       "syndesis/syndesis-ui",
-			Verifier: "syndesis/syndesis-verifier",
-			Atlasmap: "atlasmap/atlasmap",
+			Rest:     "syndesis-rest",
+			Ui:       "syndesis-ui",
+			Verifier: "syndesis-verifier",
+			Atlasmap: "atlasmap",
 		},
 	},
 	Tags: tags{
@@ -100,23 +105,29 @@ var syndesisContext = Context{
 // TODO: Update with product image references here
 var productContext = Context{
 	Images: images{
+		ImageStreamNamespace: "fuse-ignite",
+		SyndesisImagesPrefix: "syndesis",
+		AtlasMapImagesPrefix: "atlasmap",
 		Support: supportImages{
-			PemToKeystore: "syndesis/pemtokeystore",
-			Keycloak:      "jimmidyson/keycloak-openshift",
+			PemToKeystore: "fuse-ignite-pemtokeystore",
+			Keycloak:      "fuse-ignite-keycloak-openshift",
 			Postgresql:    "postgresql",
 		},
 		Syndesis: syndesisImages{
-			Rest:     "syndesis/syndesis-rest",
-			Ui:       "syndesis/syndesis-ui",
-			Verifier: "syndesis/syndesis-verifier",
-			Atlasmap: "atlasmap/atlasmap",
+			Rest:     "fuse-ignite-rest",
+			Ui:       "fuse-ignite-ui",
+			Verifier: "fuse-ignite-verifier",
+			Atlasmap: "fuse-ignite-mapper",
 		},
 	},
 	Tags: tags{
 		Postgresql:    "9.5",
-		PemToKeystore: "v0.2.1",
-		Keycloak:      "2.5.4.Final",
+		PemToKeystore: "1.0",
+		Keycloak:      "1.0",
+		Syndesis:      "1.0",
+		Atlasmap:      "1.0",
 	},
+	Registry: "registry.fuse-ignite.openshift.com",
 }
 
 var context = syndesisContext
@@ -129,8 +140,8 @@ func init() {
 	flags.BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
 	flags.BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
 	flags.BoolVar(&context.Probeless, "probeless", false, "Without probes")
-	flags.StringVar(&context.Tags.Syndesis, "syndesis", "latest", "Syndesis Image tag to use")
-	flags.StringVar(&context.Tags.Atlasmap, "atlasmap", "latest", "Atlasmap image to use")
+	flags.StringVar(&context.Tags.Syndesis, "syndesis-tag", "latest", "Syndesis Image tag to use")
+	flags.StringVar(&context.Tags.Atlasmap, "atlasmap-tag", "latest", "Atlasmap image to use")
 	flags.BoolVar(&context.Productized, "product", false, "Generate product templates?")
 	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
