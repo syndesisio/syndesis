@@ -52,9 +52,6 @@ export class GitHubOAuthSetupComponent implements OnInit {
    * Fetch possible GitHub accounts
    */
   fetchAccounts(): void {
-    /**
-     * Load the possible GitHub accounts
-     */
     /*
     // Replace with GH API endpoint
     http.get('gh-api-accounts-url').map(res => res.json()).subscribe(accounts => this.accounts = accounts);

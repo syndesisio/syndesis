@@ -1,3 +1,5 @@
+@import '../../../node_modules/patternfly-sass/assets/stylesheets/patternfly/color-variables';
+
 .github-oauth {
   background-color: #FFFFFF;
   height: 100%;
@@ -20,7 +22,7 @@
   }
 
   .circle {
-    border: 0.1em solid grey;
+    border: 1px solid $color-pf-blue-300;
     border-radius: 100%;
     height: 3em;
     margin-top: 20px;
@@ -42,13 +44,27 @@
   }
 
   .step-complete {
+    h2 {
+      color: $color-pf-black-400;
+    }
+
     .alert {
       margin-top: 25px;
       background-color: rgba(0, 0, 0, 0);
     }
+
+    .circle {
+      border: 1px solid $color-pf-black-400;
+    }
+
+    .circle p {
+      color: $color-pf-black-400;
+    }
   }
 
   .step-one {
+    padding-top: 20px;
+
     a {
       &:hover {text-decoration: none}
 
