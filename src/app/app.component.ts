@@ -60,7 +60,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    * @type {boolean}
    * Flag used to determine whether or not the user is a first time user.
    */
-  firstTime = false;
+  firstTime = true;
 
   /**
    * @type {string}
@@ -152,9 +152,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     .then(setupPending => {
       if (setupPending) {
         this.router.navigate(['setup']);
+      } else {
+        this.firstTime = false;
       }
     })
     .catch(message => {
+      this.firstTime = false;
       this.notificationService.message(
         NotificationType.DANGER,
         'Error',

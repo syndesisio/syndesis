@@ -35,7 +35,7 @@
       </a>
     </ng-template>
 
-    <header *ngIf="!firstTime">
+    <header>
 
 
       <!-- Navbar: Logged Out -->
@@ -151,7 +151,7 @@
     <!-- Sidebar -->
 
     <div class="nav-pf-vertical hidden-icons-pf"
-         *ngIf="loggedIn">
+         *ngIf="loggedIn && !firstTime">
       <ul class="list-group">
         <li class="list-group-item"
             routerLinkActive="active">
@@ -199,7 +199,8 @@
         </li>
       </ul>
     </div>
-    <main class="container-fluid container-pf-nav-pf-vertical"
+    <main class="container-fluid"
+          [ngClass]="{'container-pf-nav-pf-vertical': !firstTime}"
           *ngIf="loggedIn">
       <router-outlet></router-outlet>
     </main>
