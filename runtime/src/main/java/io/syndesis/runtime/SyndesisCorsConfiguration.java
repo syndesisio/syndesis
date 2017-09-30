@@ -43,7 +43,10 @@ public class SyndesisCorsConfiguration {
     @Bean
     public CorsFilter corsFilter() {
         return new CorsFilter(request -> {
-            if (request.getPathInfo().endsWith("/swagger.json") || request.getPathInfo().endsWith("/swagger.yaml")) {
+            String pathInfo = request.getPathInfo();
+            if (pathInfo != null &&
+                (pathInfo.endsWith("/swagger.json") ||
+                 pathInfo.endsWith("/swagger.yaml"))) {
                 return new CorsConfiguration().applyPermitDefaultValues();
             }
 
