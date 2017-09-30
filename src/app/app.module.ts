@@ -34,6 +34,7 @@ import { CanDeactivateGuard } from './common/can-deactivate-guard.service';
 import { log } from './logging';
 
 import { DataMapperModule } from 'syndesis.data.mapper';
+import { SetupModule } from './setup/setup.module';
 
 export function appInitializer(
   configService: ConfigService,
@@ -234,6 +235,7 @@ export function restangularProviderConfigurer(
     OAuthModule.forRoot(),
     DataMapperModule,
     NotificationModule,
+    SetupModule,
   ],
   providers: [
     {

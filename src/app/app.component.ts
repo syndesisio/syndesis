@@ -9,9 +9,11 @@ import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 import { Response } from '@angular/http';
+import { Router } from '@angular/router';
 import {
   Notification,
   NotificationEvent,
+  NotificationType,
   NotificationService,
 } from 'patternfly-ng';
 
@@ -25,6 +27,7 @@ import { NavigationService } from './common/navigation.service';
 import { UserService } from './common/user.service';
 import { User } from './model';
 import { saveAs } from 'file-saver';
+import { SetupService } from './setup/setup.service';
 
 @Component({
   selector: 'syndesis-root',
@@ -82,9 +85,16 @@ export class AppComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private nav: NavigationService,
     private modalService: ModalService,
+    private setupService: SetupService,
+    private router: Router,
   ) {}
 
   ngOnInit() {
+    this.initView();
+    this.redirectToSetupIfRequired();
+  }
+
+  private initView() {
     this.logoWhiteBg = this.config.getSettings(
       'branding',
       'logoWhiteBg',
@@ -135,6 +145,25 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.user = this.userService.user;
     this.notifications = this.notificationService.getNotifications();
     this.showClose = true;
+  }
+
+  private redirectToSetupIfRequired() {
+    this.setupService.isSetupPending()
+    .then(setupPending => {
+      if (setupPending) {
+        this.router.navigate(['setup']);
+      }
+    })
+    .catch(message => {
+      this.notificationService.message(
+        NotificationType.DANGER,
+        'Error',
+        message,
+        false,
+        undefined,
+        undefined,
+      );
+    });
   }
 
   /**

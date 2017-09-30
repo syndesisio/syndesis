@@ -49,15 +49,9 @@ export class GitHubOAuthSetupComponent implements OnInit {
         clientSecret: formModel.clientSecret,
       },
     };
-    return this.setupService.update(setup)
+    return this.setupService.updateSetup(setup)
       .catch(message => {
-        const notification: Notification = {
-          type          : NotificationType.WARNING,
-          header        : 'Error',
-          message       : message,
-          showClose     : true,
-        };
-        this.notificationService.getNotifications().push(notification);
+      this.notificationService.message(NotificationType.DANGER, 'Error', message, false, null, []);
       },
     );
   }
