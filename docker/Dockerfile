@@ -38,6 +38,9 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
 
 EXPOSE 8080 8443
 
+# Add symbolic link to config.json to avoid mounting issues
+RUN ln -sf /usr/share/nginx/html/config/config.json /usr/share/nginx/html/config.json
+
 USER 998
 
 CMD ["nginx", "-g", "daemon off;"]
@@ -45,5 +48,3 @@ CMD ["nginx", "-g", "daemon off;"]
 COPY docker/nginx-syndesis.conf /etc/nginx/conf.d
 COPY dist /usr/share/nginx/html
 
-# Add symbolic link to config.json to avoid mounting issues
-RUN ln -sf /usr/share/nginx/html/config/config.json /usr/share/nginx/html/config.json
