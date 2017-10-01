@@ -101,7 +101,7 @@ parameters:
   displayName: Demo Data Enabled
   name: DEMO_DATA_ENABLED
   required: true
-  value: "true"
+  value: "false"
 - description: Ignore SSL errors in proxy containers
   displayName: Insecure skip verify
   name: INSECURE_SKIP_VERIFY
