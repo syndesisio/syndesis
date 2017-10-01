@@ -454,6 +454,31 @@ objects:
           app: syndesis
           component: syndesis-atlasmap
           deploymentconfig: syndesis-atlasmap
+        annotations:
+          pod.beta.kubernetes.io/init-containers: |-
+            [{
+              "name": "openshift-ca-pemtokeystore",
+              "image": "' '",
+              "imagePullPolicy": "IfNotPresent",
+              "args": [
+                "-keystore", "/tls-keystore/openshift-truststore.jks",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
+                "-ca-dir", "/usr/share/ca-certificates/mozilla"
+              ],
+              "volumeMounts": [{
+                "name": "syndesis-atlasmap-tls",
+                "mountPath": "/tls-keystore"
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": { 
+                  "memory": "20Mi"
+                }
+              }
+            }]
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
@@ -847,6 +872,31 @@ objects:
           app: syndesis
           component: syndesis-keycloak
           deploymentconfig: syndesis-keycloak
+        annotations:
+          pod.beta.kubernetes.io/init-containers: |-
+            [{
+              "name": "openshift-ca-pemtokeystore",
+              "image": "' '",
+              "imagePullPolicy": "IfNotPresent",
+              "args": [
+                "-keystore", "/tls-keystore/openshift-truststore.jks",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
+                "-ca-dir", "/usr/share/ca-certificates/mozilla"
+              ],
+              "volumeMounts": [{
+                "name": "syndesis-keycloak-tls",
+                "mountPath": "/tls-keystore"
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": {
+                  "memory": "20Mi"
+                }
+              }
+            }]
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
@@ -2001,7 +2051,7 @@ objects:
     name: syndesis-rest
   spec:
     host: ${ROUTE_HOSTNAME}
-    path: /api/v1
+    path: /api
     port:
       targetPort: 8080
     tls:
@@ -2056,6 +2106,31 @@ objects:
           app: syndesis
           component: syndesis-rest
           deploymentconfig: syndesis-rest
+        annotations:
+          pod.beta.kubernetes.io/init-containers: |-
+            [{
+              "name": "openshift-ca-pemtokeystore",
+              "image": "' '",
+              "imagePullPolicy": "IfNotPresent",
+              "args": [
+                "-keystore", "/tls-keystore/openshift-truststore.jks",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
+                "-ca-dir", "/usr/share/ca-certificates/mozilla"
+              ],
+              "volumeMounts": [{
+                "name": "syndesis-rest-tls",
+                "mountPath": "/tls-keystore"
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": {
+                  "memory": "20Mi"
+                }
+              }
+            }]
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
@@ -2271,6 +2346,31 @@ objects:
           app: syndesis
           component: syndesis-verifier
           deploymentconfig: syndesis-verifier
+        annotations:
+          pod.beta.kubernetes.io/init-containers: |-
+            [{
+              "name": "openshift-ca-pemtokeystore",
+              "image": "' '",
+              "imagePullPolicy": "IfNotPresent",
+              "args": [
+                "-keystore", "/tls-keystore/openshift-truststore.jks",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
+                "-ca-dir", "/usr/share/ca-certificates/mozilla"
+              ],
+              "volumeMounts": [{
+                "name": "syndesis-verifier-tls",
+                "mountPath": "/tls-keystore"
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": { 
+                  "memory": "20Mi"
+                }
+              }
+            }]
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
