@@ -44,3 +44,6 @@ CMD ["nginx", "-g", "daemon off;"]
 
 COPY docker/nginx-syndesis.conf /etc/nginx/conf.d
 COPY dist /usr/share/nginx/html
+
+# Add symbolic link to config.json to avoid mounting issues
+RUN ln -sf /usr/share/nginx/html/config/config.json /usr/share/nginx/html/config.json
