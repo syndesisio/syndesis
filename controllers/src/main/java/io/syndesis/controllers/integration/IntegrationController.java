@@ -55,8 +55,8 @@ public class IntegrationController {
     private final EventBus eventBus;
     private final ConcurrentHashMap<Integration.Status, StatusChangeHandlerProvider.StatusChangeHandler> handlers = new ConcurrentHashMap<>();
     private final Set<String> scheduledChecks = new HashSet<>();
-    private ExecutorService executor;
-    private ScheduledExecutorService scheduler;
+    /* default */ ExecutorService executor;
+    /* default */ ScheduledExecutorService scheduler;
 
     private static final long SCHEDULE_INTERVAL_IN_SECONDS = 60;
 
@@ -159,7 +159,7 @@ public class IntegrationController {
         return "Integration " + integration.getId().orElse("[none]");
     }
 
-    private void callStatusChangeHandler(StatusChangeHandlerProvider.StatusChangeHandler handler, String integrationId) {
+    /* default */ void callStatusChangeHandler(StatusChangeHandlerProvider.StatusChangeHandler handler, String integrationId) {
         executor.submit(() -> {
             Integration integration = dataManager.fetch(Integration.class, integrationId);
             String checkKey = getIntegrationMarkerKey(integration);
@@ -198,8 +198,15 @@ public class IntegrationController {
 
                     //replace revision
                     revisions.remove(revision);
-                    revisions.add(revision);
 
+                    final IntegrationRevision last = integration.lastRevision();
+                    if (IntegrationRevisionState.from(update.getStatus()).equals(last.getCurrentState())) {
+                        revision = new IntegrationRevision.Builder().createFrom(revision)
+                            .version(last.getVersion())
+                            .parentVersion(last.getParentVersion())
+                            .build();
+                    }
+                    revisions.add(revision);
 
                     dataManager.update(new Integration.Builder()
                         .createFrom(updated)
