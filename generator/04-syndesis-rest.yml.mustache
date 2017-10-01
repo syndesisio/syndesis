@@ -38,7 +38,7 @@
     name: syndesis-rest
   spec:
     host: ${ROUTE_HOSTNAME}
-    path: /api/v1
+    path: /api
     port:
       targetPort: 8080
     tls:
@@ -97,7 +97,7 @@
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}",
+              "image": "{{^Dev}}' '{{/Dev}}{{#Dev}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/Dev}}",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -121,7 +121,7 @@
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: {{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
+          image: {{^Dev}}' '{{/Dev}}{{#Dev}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/Dev}}
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -175,7 +175,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
+          image: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -224,7 +224,17 @@
         - syndesis-rest
         from:
           kind: ImageStreamTag
-          name: syndesis-rest:{{ Tags.Syndesis }}
+          name: {{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - openshift-ca-pemtokeystore
+        from:
+          kind: ImageStreamTag
+          name: {{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange

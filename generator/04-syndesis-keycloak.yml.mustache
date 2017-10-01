@@ -97,7 +97,7 @@
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}",
+              "image": "{{^Dev}}' '{{/Dev}}{{#Dev}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/Dev}}",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -121,7 +121,7 @@
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: {{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
+          image: {{^Dev}}' '{{/Dev}}{{#Dev}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/Dev}}
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -161,7 +161,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: {{ Images.Support.Keycloak }}:{{ Tags.Keycloak }}
+          image: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Support.Keycloak }}:{{ Tags.Keycloak }}
 {{/Dev}}
           name: syndesis-keycloak
           imagePullPolicy: IfNotPresent
@@ -212,7 +212,17 @@
         - syndesis-keycloak
         from:
           kind: ImageStreamTag
-          name: syndesis-keycloak:{{ Tags.Keycloak }}
+          name: {{ Images.Support.Keycloak }}:{{ Tags.Keycloak }}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - openshift-ca-pemtokeystore
+        from:
+          kind: ImageStreamTag
+          name: {{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 {{/Dev}}
     - type: ConfigChange

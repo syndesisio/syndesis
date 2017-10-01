@@ -127,11 +127,16 @@ parameters:
   displayName: Idle Session Lifespan
   name: SESSION_LIFESPAN
   value: '36000'
+- description: Namespace containing image streams
+  displayName: Image Stream Namespace
+  name: IMAGE_STREAM_NAMESPACE
+  value: ''
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 
     FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
 objects:
+
 
 - apiVersion: v1
   kind: Service
@@ -358,7 +363,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "syndesis/pemtokeystore:v0.2.1",
+              "image": "${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -382,7 +387,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: syndesis/pemtokeystore:v0.2.1
+          image: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -758,7 +763,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "syndesis/pemtokeystore:v0.2.1",
+              "image": "${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -782,7 +787,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: syndesis/pemtokeystore:v0.2.1
+          image: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -819,7 +824,7 @@ objects:
               secretKeyRef:
                 key: password
                 name: syndesis-keycloak-admin
-          image: jimmidyson/keycloak-openshift:2.5.4.Final
+          image: ${SYNDESIS_REGISTRY}/syndesis/keycloak-openshift:2.5.4.Final
 
           name: syndesis-keycloak
           imagePullPolicy: IfNotPresent
@@ -1915,7 +1920,7 @@ objects:
     name: syndesis-rest
   spec:
     host: ${ROUTE_HOSTNAME}
-    path: /api/v1
+    path: /api
     port:
       targetPort: 8080
     tls:
@@ -1974,7 +1979,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "syndesis/pemtokeystore:v0.2.1",
+              "image": "${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -1998,7 +2003,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: syndesis/pemtokeystore:v0.2.1
+          image: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -2196,7 +2201,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "syndesis/pemtokeystore:v0.2.1",
+              "image": "${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -2220,7 +2225,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: syndesis/pemtokeystore:v0.2.1
+          image: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
           imagePullPolicy: IfNotPresent
           args:
           - -keystore

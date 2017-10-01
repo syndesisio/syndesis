@@ -1,8 +1,9 @@
+{{^Productized}}
 {{^Dev}}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: syndesis-rest
+    name: {{ Images.Syndesis.Rest }}
     labels:
       app: syndesis
       component: syndesis-rest
@@ -10,14 +11,14 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
+        name: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: {{ Tags.Syndesis }}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: syndesis-keycloak
+    name: {{ Images.Support.Keycloak }}
     labels:
       app: syndesis
       component: syndesis-keycloak
@@ -25,14 +26,14 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.Support.Keycloak }}:{{ Tags.Keycloak }}
+        name: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Support.Keycloak }}:{{ Tags.Keycloak }}
       importPolicy:
         scheduled: true
       name: {{ Tags.Keycloak }}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: syndesis-ui
+    name: {{ Images.Syndesis.Ui }}
     labels:
       app: syndesis
       component: syndesis-ui
@@ -40,14 +41,14 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
+        name: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: {{ Tags.Syndesis }}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: syndesis-atlasmap
+    name: {{ Images.Syndesis.Atlasmap }}
     labels:
       app: syndesis
       component: syndesis-atlasmap
@@ -55,14 +56,14 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Atlasmap }}:{{ Tags.Atlasmap }}
+        name: ${SYNDESIS_REGISTRY}/{{Images.AtlasMapImagesPrefix}}/{{ Images.Syndesis.Atlasmap }}:{{ Tags.Atlasmap }}
       importPolicy:
         scheduled: true
       name: {{ Tags.Syndesis }}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: syndesis-verifier
+    name: {{ Images.Syndesis.Verifier }}
     labels:
       app: syndesis
       component: syndesis-verifier
@@ -70,8 +71,24 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
+        name: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: {{ Tags.Syndesis }}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: {{ Images.Support.PemToKeystore }}
+    labels:
+      app: syndesis
+      component: syndesis-pemtokeystore
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
+      importPolicy:
+        scheduled: true
+      name: {{ Tags.PemToKeystore }}
 {{/Dev}}
+{{/Productized}}
