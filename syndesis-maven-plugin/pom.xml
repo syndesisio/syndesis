@@ -38,11 +38,75 @@
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>model</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-web</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-spring-security-adapter</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-common</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-adapter-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.ws.rs</groupId>
+          <artifactId>javax.ws.rs-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>dao</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-beans</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-commons</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.hibernate.javax.persistence</groupId>
+          <artifactId>hibernate-jpa-2.1-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -103,6 +167,35 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>${maven.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-artifact-transfer</artifactId>
+      <version>0.9.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
       <version>3.5</version>
@@ -120,6 +213,100 @@
       <groupId>io.syndesis</groupId>
       <artifactId>rest</artifactId>
       <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-web</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-spring-security-adapter</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-beans</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jboss.spec.javax.annotation</groupId>
+          <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-autoconfigure</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-test</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework.social</groupId>
+          <artifactId>spring-social-twitter</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework.social</groupId>
+          <artifactId>spring-social-config</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework.social</groupId>
+          <artifactId>spring-social-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-test</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-crypto</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.github.mikegirard</groupId>
+          <artifactId>spring-social-salesforce</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.hibernate.javax.persistence</groupId>
+          <artifactId>hibernate-jpa-2.1-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>io.fabric8</groupId>
+          <artifactId>kubernetes-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>io.fabric8</groupId>
+          <artifactId>kubernetes-model</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-adapter-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>io.swagger</groupId>
+          <artifactId>swagger-jaxrs</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -158,16 +345,21 @@
       </plugin>
 
       <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredClassPatterns>
+            <ignoredClassPattern>org.eclipse.aether.util.artifact.*</ignoredClassPattern>
+            <ignoredClassPattern>org.eclipse.aether.util.filter.*</ignoredClassPattern>
+          </ignoredClassPatterns>
+        </configuration>
+      </plugin>
+
+      <plugin>
         <groupId>com.ning.maven.plugins</groupId>
         <artifactId>maven-dependency-versions-check-plugin</artifactId>
         <configuration>
           <exceptions>
-            <exception>
-              <groupId>com.fasterxml.jackson.core</groupId>
-              <artifactId>jackson-annotations</artifactId>
-              <resolvedVersion>2.8.8</resolvedVersion>
-              <expectedVersion>2.8.4</expectedVersion>
-            </exception>
             <exception>
               <groupId>com.google.guava</groupId>
               <artifactId>guava</artifactId>
@@ -191,22 +383,12 @@
       </plugin>
 
       <plugin>
-        <groupId>org.basepom.maven</groupId>
-        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>dependency-management-maven-plugin</artifactId>
         <configuration>
-          <ignoredClassPatterns>
-            <ignoredClassPattern>org.aopalliance.*</ignoredClassPattern>
-            <ignoredClassPattern>javax.annotation.*</ignoredClassPattern>
-            <ignoredClassPattern>io.fabric8.kubernetes.client.*</ignoredClassPattern>
-            <ignoredClassPattern>org.infinispan.*</ignoredClassPattern>
-            <ignoredClassPattern>org.springframework.security.crypto.*</ignoredClassPattern>
-            <ignoredClassPattern>org.objectweb.asm.*</ignoredClassPattern>
-            <ignoredClassPattern>javax.ws.*</ignoredClassPattern>
-          </ignoredClassPatterns>
-          <ignoredResourcePatterns>
-            <ignoredResourcePattern>about.html</ignoredResourcePattern>
-            <ignoredResourcePattern>features.xml</ignoredResourcePattern>
-          </ignoredResourcePatterns>
+          <requireManagement>
+            <allowExclusions>true</allowExclusions>
+          </requireManagement>
         </configuration>
       </plugin>
 
