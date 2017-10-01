@@ -32,15 +32,10 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.DataShape;
 import io.syndesis.runtime.BaseITCase;
-import io.syndesis.runtime.action.DynamicActionDefinitionITCase.TestConfigurationInitializer;
 
 import org.junit.Before;
-import org.junit.ClassRule;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.MapPropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -57,12 +52,17 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ContextConfiguration(initializers = TestConfigurationInitializer.class)
+@ContextConfiguration(initializers = BaseITCase.TestConfigurationInitializer.class)
 @SuppressWarnings({"PMD.TooManyStaticImports", "PMD.ExcessiveImports"})
 public class DynamicActionDefinitionITCase extends BaseITCase {
 
-    @ClassRule
-    public static final WireMockRule WIREMOCK = new WireMockRule(wireMockConfig().dynamicPort());
+    @BeforeClass
+    public static void startMockIfNeeded() {
+        if (wireMock==null || !wireMock.isRunning()) {
+            wireMock = new WireMockRule(wireMockConfig().dynamicPort());
+            wireMock.start();
+        }
+    }
 
     private static final ConfigurationProperty _DEFAULT_SALESFORCE_IDENTIFIER = new ConfigurationProperty.Builder()//
         .kind("parameter")//
@@ -122,18 +122,6 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
             ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contacts"))
         .build();
 
-    public static class TestConfigurationInitializer
-        implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-        @Override
-        public void initialize(final ConfigurableApplicationContext applicationContext) {
-            final ConfigurableEnvironment environment = applicationContext.getEnvironment();
-            environment.getPropertySources().addFirst(new MapPropertySource("test-source",
-                Collections.singletonMap("verifier.service", "localhost:" + WIREMOCK.port())));
-        }
-
-    }
-
     @Before
     public void setupConnection() {
         dataManager.create(new Connection.Builder().id(connectionId).connectorId("salesforce")
@@ -149,7 +137,9 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
 
     @Before
     public void setupMocks() {
+        WireMock.configureFor(wireMock.port());
         stubFor(WireMock
+            
             .post(urlEqualTo(
                 "/api/v1/connectors/salesforce/actions/io.syndesis:salesforce-create-or-update-connector:latest"))//
             .withHeader("Accept", equalTo("application/json"))//

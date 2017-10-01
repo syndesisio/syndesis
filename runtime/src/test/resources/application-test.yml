@@ -34,8 +34,24 @@ spring:
 github:
   enabled: false
 
+management:
+  port: -1
+  health:
+    db:
+      enabled: false
+  security:
+    enabled: true
+
 openshift:
   enabled: false
 
 verifier:
   kind: always-ok
+
+client:
+  state:
+    authenticationAlgorithm: HmacSHA1
+    authenticationKey: oNXU5SBpNnU1UI/4ZkUAA2Gzikc=
+    encryptionAlgorithm: AES/CBC/PKCS5Padding
+    encryptionKey: IIAyKXfJTrIvjS6G9dHJLA==
+    tid: 1

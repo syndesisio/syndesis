@@ -32,12 +32,8 @@ import java.util.Collections;
 import java.util.UUID;
 
 import org.junit.Before;
-import org.junit.ClassRule;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.MapPropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -52,27 +48,19 @@ import io.syndesis.model.connection.ActionDefinition;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.runtime.BaseITCase;
-import io.syndesis.runtime.action.DynamicActionSqlStoredITCase.TestConfigurationInitializer;
 
-@ContextConfiguration(initializers = TestConfigurationInitializer.class)
+@ContextConfiguration(initializers = BaseITCase.TestConfigurationInitializer.class)
 @SuppressWarnings({"PMD.TooManyStaticImports", "PMD.ExcessiveImports"})
 public class DynamicActionSqlStoredITCase extends BaseITCase {
 
-    @ClassRule
-    public static final WireMockRule WIREMOCK = new WireMockRule(wireMockConfig().dynamicPort());
-
     private final String connectionId = UUID.randomUUID().toString();
 
-    public static class TestConfigurationInitializer
-        implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-        @Override
-        public void initialize(final ConfigurableApplicationContext applicationContext) {
-            final ConfigurableEnvironment environment = applicationContext.getEnvironment();
-            environment.getPropertySources().addFirst(new MapPropertySource("test-source",
-                Collections.singletonMap("verifier.service", "localhost:" + WIREMOCK.port())));
+    @BeforeClass
+    public static void startMockIfNeeded() {
+        if (wireMock==null || !wireMock.isRunning()) {
+            wireMock = new WireMockRule(wireMockConfig().dynamicPort());
+            wireMock.start();
         }
-
     }
 
     @Before
@@ -83,6 +71,7 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
 
     @Before
     public void setupMocks() {
+        WireMock.configureFor(wireMock.port());
         stubFor(WireMock
             .post(urlEqualTo(
                 "/api/v1/connectors/sql-stored-connector/actions/io.syndesis:sql-stored-connector:latest"))//
