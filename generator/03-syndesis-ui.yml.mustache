@@ -78,7 +78,7 @@
 {{^Dev}}
           image: ' '
 {{/Dev}}{{#Dev}}
-          image: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
+          image: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
 {{/Dev}}
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
@@ -95,9 +95,8 @@
           ports:
           - containerPort: 8080
           volumeMounts:
-          - mountPath: /usr/share/nginx/html/config.json
+          - mountPath: /usr/share/nginx/html/config
             name: config-volume
-            subPath: config/config.json
           # Set to burstable with a low memory footprint to start (50 Mi)
           resources:
             limits:
@@ -106,9 +105,6 @@
               memory: 50Mi
         volumes:
         - configMap:
-            items:
-            - key: config.json
-              path: config/config.json
             name: syndesis-ui-config
           name: config-volume
     triggers:

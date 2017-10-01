@@ -321,9 +321,8 @@ objects:
           ports:
           - containerPort: 8080
           volumeMounts:
-          - mountPath: /usr/share/nginx/html/config.json
+          - mountPath: /usr/share/nginx/html/config
             name: config-volume
-            subPath: config/config.json
           # Set to burstable with a low memory footprint to start (50 Mi)
           resources:
             limits:
@@ -332,9 +331,6 @@ objects:
               memory: 50Mi
         volumes:
         - configMap:
-            items:
-            - key: config.json
-              path: config/config.json
             name: syndesis-ui-config
           name: config-volume
     triggers:
@@ -900,6 +896,32 @@ objects:
                   "memory": "20Mi"
                 }
               }
+            },{
+              "name": "copy-config",
+              "image": "' '",
+              "imagePullPolicy": "IfNotPresent",
+              "command": [
+                "sh",
+                "-c"
+              ],
+              "args": [
+                "cp /opt/jboss/keycloak/standalone/configuration/* /config/ && cp /custom-config/* /config/"
+              ],
+              "volumeMounts": [{
+                "name": "syndesis-keycloak-full-config",
+                "mountPath": "/config"
+              },{
+                "name": "syndesis-keycloak-config",
+                "mountPath": "/custom-config"   
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": {
+                  "memory": "20Mi"
+                }
+              }
             }]
       spec:
         initContainers:
@@ -923,6 +945,24 @@ objects:
               memory: 255Mi
             requests:
               memory: 20Mi
+        - name: copy-config
+          image: ' '
+          imagePullPolicy: IfNotPresent
+          command:
+          - sh
+          - -c
+          args:
+          - "cp -f /opt/jboss/keycloak/standalone/configuration/* /config/ && cp /custom-config/* /config/"
+          volumeMounts:
+          - name: syndesis-keycloak-full-config
+            mountPath: /config
+          - name: syndesis-keycloak-config
+            mountPath: /custom-config         
+          resources:
+            limits:
+              memory: 255Mi
+            requests:
+              memory: 20Mi        
         containers:
         - args:
           - -b
@@ -964,24 +1004,17 @@ objects:
           ports:
           - containerPort: 8080
           volumeMounts:
-          - name: syndesis-keycloak-config
-            mountPath: /opt/jboss/keycloak/standalone/configuration/standalone.xml
-            subPath: config/standalone.xml
-          - name: syndesis-keycloak-config
-            mountPath: /opt/jboss/keycloak/standalone/configuration/syndesis-realm.json
-            subPath: config/syndesis-realm.json
+          - name: syndesis-keycloak-full-config
+            mountPath: /opt/jboss/keycloak/standalone/configuration
           - name: syndesis-keycloak-tls
             mountPath: /opt/jboss/keycloak/standalone/configuration/tls
         volumes:
         - name: syndesis-keycloak-config
           configMap:
             name: syndesis-keycloak-config
-            items:
-            - key: standalone.xml
-              path: config/standalone.xml
-            - key: syndesis-realm.json
-              path: config/syndesis-realm.json
         - name: syndesis-keycloak-tls
+          emptyDir: {}
+        - name: syndesis-keycloak-full-config
           emptyDir: {}
     triggers:
     - imageChangeParams:
@@ -1000,6 +1033,15 @@ objects:
         from:
           kind: ImageStreamTag
           name: pemtokeystore:v0.2.1
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - copy-config
+        from:
+          kind: ImageStreamTag
+          name: keycloak-openshift:2.5.4.Final
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 

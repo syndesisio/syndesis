@@ -117,6 +117,32 @@
                   "memory": "20Mi"
                 }
               }
+            },{
+              "name": "copy-config",
+              "image": "{{^Dev}}' '{{/Dev}}{{#Dev}}${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Support.Keycloak }}:{{ Tags.Keycloak }}{{/Dev}}",
+              "imagePullPolicy": "IfNotPresent",
+              "command": [
+                "sh",
+                "-c"
+              ],
+              "args": [
+                "cp /opt/jboss/keycloak/standalone/configuration/* /config/ && cp /custom-config/* /config/"
+              ],
+              "volumeMounts": [{
+                "name": "syndesis-keycloak-full-config",
+                "mountPath": "/config"
+              },{
+                "name": "syndesis-keycloak-config",
+                "mountPath": "/custom-config"   
+              }],
+              "resources": {
+                "limits": {
+                  "memory": "255Mi"
+                },
+                "requests": {
+                  "memory": "20Mi"
+                }
+              }
             }]
       spec:
         initContainers:
@@ -140,6 +166,24 @@
               memory: 255Mi
             requests:
               memory: 20Mi
+        - name: copy-config
+          image: {{^Dev}}' '{{/Dev}}{{#Dev}}${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Support.Keycloak }}:{{ Tags.Keycloak }}{{/Dev}}
+          imagePullPolicy: IfNotPresent
+          command:
+          - sh
+          - -c
+          args:
+          - "cp -f /opt/jboss/keycloak/standalone/configuration/* /config/ && cp /custom-config/* /config/"
+          volumeMounts:
+          - name: syndesis-keycloak-full-config
+            mountPath: /config
+          - name: syndesis-keycloak-config
+            mountPath: /custom-config         
+          resources:
+            limits:
+              memory: 255Mi
+            requests:
+              memory: 20Mi        
         containers:
         - args:
           - -b
@@ -185,24 +229,17 @@
           ports:
           - containerPort: 8080
           volumeMounts:
-          - name: syndesis-keycloak-config
-            mountPath: /opt/jboss/keycloak/standalone/configuration/standalone.xml
-            subPath: config/standalone.xml
-          - name: syndesis-keycloak-config
-            mountPath: /opt/jboss/keycloak/standalone/configuration/syndesis-realm.json
-            subPath: config/syndesis-realm.json
+          - name: syndesis-keycloak-full-config
+            mountPath: /opt/jboss/keycloak/standalone/configuration
           - name: syndesis-keycloak-tls
             mountPath: /opt/jboss/keycloak/standalone/configuration/tls
         volumes:
         - name: syndesis-keycloak-config
           configMap:
             name: syndesis-keycloak-config
-            items:
-            - key: standalone.xml
-              path: config/standalone.xml
-            - key: syndesis-realm.json
-              path: config/syndesis-realm.json
         - name: syndesis-keycloak-tls
+          emptyDir: {}
+        - name: syndesis-keycloak-full-config
           emptyDir: {}
     triggers:
 {{^Dev}}
@@ -222,6 +259,15 @@
         from:
           kind: ImageStreamTag
           name: {{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - copy-config
+        from:
+          kind: ImageStreamTag
+          name: {{ Images.Support.Keycloak }}:{{ Tags.Keycloak }}
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 {{/Dev}}
