@@ -193,14 +193,13 @@ oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-tem
 # Install the OpenShift template
 oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev-restricted.yml
 
-# Create an App. Add the propert GitHub credentials. Use "syndesis-dev" or "syndesis" depending on the template
+# Create an App. Add the proper GitHub credentials. Use "syndesis-dev" or "syndesis" depending on the template
 # you have installed
 oc new-app syndesis-dev-restricted \
     -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
-    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} \
-    -p INSECURE_SKIP_VERIFY=true
+    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
 
 # Wait until all pods are running. Some pods are crashing at first, but are restarted
 # so that the system will eventually converts to a stable state ;-). Especially the proxies
