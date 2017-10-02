@@ -1,0 +1,24 @@
+[submodule "rest"]
+	path = rest
+	url = https://github.com/syndesisio/syndesis-rest.git
+[submodule "ui"]
+	path = ui
+	url = https://github.com/syndesisio/syndesis-ui.git
+[submodule "project"]
+	path = project
+	url = https://github.com/syndesisio/syndesis-project.git
+[submodule "integration-runtime"]
+	path = integration-runtime
+	url = https://github.com/syndesisio/syndesis-integration-runtime.git
+[submodule "syndesis-verifier"]
+	path = syndesis-verifier
+	url = https://github.com/syndesisio/syndesis-verifier.git
+[submodule "ux"]
+	path = ux
+	url = https://github.com/syndesisio/syndesis-ux.git
+[submodule "system-tests"]
+	path = system-tests
+	url = https://github.com/syndesisio/syndesis-system-tests.git
+[submodule "connectors"]
+	path = connectors
+	url = https://github.com/syndesisio/connectors.git
