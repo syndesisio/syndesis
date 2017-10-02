@@ -16,8 +16,10 @@
  */
 package io.syndesis.connector;
 
+import java.util.Map;
 import java.util.Properties;
 
+import org.apache.camel.Endpoint;
 import org.apache.camel.Processor;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
@@ -41,6 +43,19 @@ public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
             exchange.getIn().setBody(properties);
         };
         return processor;
+    }
+
+    @Override
+    protected Endpoint createEndpoint(final String uri, final String remaining, final Map<String, Object> parameters)
+        throws Exception {
+        parameters.remove("catalog");
+        parameters.remove("databaseName");
+        parameters.remove("procedureName");
+        parameters.remove("password");
+        parameters.remove("username");
+        parameters.remove("schema");
+
+        return super.createEndpoint(uri, remaining, parameters);
     }
 
 }
