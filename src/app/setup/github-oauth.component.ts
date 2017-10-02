@@ -26,7 +26,9 @@ export class GitHubOAuthSetupComponent implements OnInit {
   });
 
   /**
+   * @param {GitHubOAuthService} gitHubOAuthService
    * @param {ChangeDetectorRef} detector
+   * @param {NotificationService} notificationService
    */
   constructor(
     private setupService: SetupService,
@@ -64,7 +66,9 @@ export class GitHubOAuthSetupComponent implements OnInit {
   /**
    * All steps have been completed
    */
-  getStarted() {}
+  getStarted() {
+    window.open('/dashboard');
+  }
 
   /**
    * Step One
@@ -84,6 +88,21 @@ export class GitHubOAuthSetupComponent implements OnInit {
       client.clientId &&
       client.clientId !== '' &&
       (client.clientSecret && client.clientSecret !== '')
+    );
+  }
+
+  /**
+   * Toast notification
+   * @param notification
+   */
+  popNotification(notification) {
+    this.notificationService.message(
+      notification.type,
+      notification.header,
+      notification.message,
+      false,
+      null,
+      [],
     );
   }
 
