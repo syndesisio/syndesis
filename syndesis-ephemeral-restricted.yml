@@ -102,10 +102,6 @@ parameters:
   name: DEMO_DATA_ENABLED
   required: true
   value: "false"
-- description: Ignore SSL errors in proxy containers
-  displayName: Insecure skip verify
-  name: INSECURE_SKIP_VERIFY
-  value: 'false'
 - description: Registry from where to fetch Syndesis images
   displayName: Syndesis Image Registry
   name: SYNDESIS_REGISTRY
