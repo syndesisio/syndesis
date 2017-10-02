@@ -52,6 +52,18 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-salesforce</artifactId>
+      <version>${camel.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-connector</artifactId>
+      <version>${camel.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
     </dependency>

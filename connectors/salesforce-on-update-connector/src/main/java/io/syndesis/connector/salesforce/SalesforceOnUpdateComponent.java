@@ -15,33 +15,10 @@
  */
 package io.syndesis.connector.salesforce;
 
-import java.net.URISyntaxException;
-import java.util.Map;
-
-import org.apache.camel.component.connector.DefaultConnectorComponent;
-import org.apache.camel.component.salesforce.SalesforceEndpointConfig;
-
-public class SalesforceOnUpdateComponent extends DefaultConnectorComponent {
+public class SalesforceOnUpdateComponent extends AbstractSalesforceStreamingConnector {
 
     public SalesforceOnUpdateComponent() {
-        super("salesforce-on-update", SalesforceOnUpdateComponent.class.getName());
+        super("salesforce-on-update", SalesforceOnUpdateComponent.class.getName(), "syndesis_", "_update");
     }
 
-    @Override
-    public String createEndpointUri(final String scheme, final Map<String, String> options) throws URISyntaxException {
-        final String sObjectName = options.get(SalesforceEndpointConfig.SOBJECT_NAME);
-
-        final String query = "SELECT Id FROM " + sObjectName;
-        options.put("topicName", topicNameFor(options));
-        options.put(SalesforceEndpointConfig.SOBJECT_QUERY, query);
-        options.remove(SalesforceEndpointConfig.SOBJECT_NAME);
-
-        return super.createEndpointUri(scheme, options);
-    }
-
-    private static String topicNameFor(final Map<String, String> options) {
-        final String sObjectName = options.get(SalesforceEndpointConfig.SOBJECT_NAME);
-
-        return "syndesis_" + sObjectName + "_update";
-    }
 }
