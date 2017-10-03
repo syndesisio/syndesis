@@ -14,7 +14,7 @@
   "labels" : [ "salesforce" ],
   "pattern" : "From",
   "inputDataType" : "none",
-  "outputDataType" : "java:io.syndesis.connector.salesforce.SalesforceIdentifier",
+  "outputDataType" : "json",
   "globalOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken", "userName", "password" ],
   "componentOptions" : [ "loginUrl", "clientId", "clientSecret", "refreshToken", "userName", "password" ],
   "endpointValues" : {
