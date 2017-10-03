@@ -40,6 +40,9 @@ export class SetupService {
 
   /**
    * Function that checks if GitHub account setup is required or has already been completed.
+   * Simultaneously sets the firstTime flag.
+   * 204 status from API = GitHub setup required
+   * 410 status from API = GitHub setup NOT required
    * @returns {Promise<boolean>}
    */
   isSetupPending(): Promise<boolean> {
@@ -47,6 +50,16 @@ export class SetupService {
       .toPromise()
       .then(response => {
         console.log('Response: ' + JSON.stringify(response));
+        switch(response.status) {
+          case 204:
+          default:
+            this.firstTime = true;
+            break;
+          case 410:
+            this.firstTime = false;
+            break;
+        }
+
         // 204 (No Content) if not configured
         return response.status === 204 ? true : this.handleError('Failed to check GitHub credentials', response);
       })

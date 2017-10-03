@@ -9,11 +9,9 @@ import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 import { Response } from '@angular/http';
-import { Router } from '@angular/router';
 import {
   Notification,
   NotificationEvent,
-  NotificationType,
   NotificationService,
 } from 'patternfly-ng';
 
@@ -57,12 +55,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   loggedIn = false;
 
   /**
-   * @type {boolean}
-   * Flag used to determine whether or not the user is a first time user.
-   */
-  firstTime = true;
-
-  /**
    * @type {string}
    * Title of application. Used in the browser title tag.
    */
@@ -85,27 +77,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private nav: NavigationService,
     private modalService: ModalService,
-    private setupService: SetupService,
-    private router: Router,
+    public setupService: SetupService,
   ) {}
 
   ngOnInit() {
     this.initView();
-    this.firstTimeUser();
-  }
-
-  /**
-   * Checks to see if this is a first time user to set the firstTime flag.
-   */
-  private firstTimeUser() {
-    this.setupService.isSetupPending()
-      .then(function(result) {
-        console.log('isSetupPending() result from app.component.ts: ' + JSON.stringify(result));
-        this.firstTime = result;
-      })
-      .catch(function (err) {
-        console.log('Error fetching setup status from app.component.ts: ' + JSON.stringify(err));
-      });
   }
 
   private initView() {

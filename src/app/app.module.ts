@@ -4,6 +4,7 @@ import { NgModule, NgZone, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { Router } from '@angular/router';
 
 import { RestangularModule } from 'ngx-restangular';
 import { OAuthService, OAuthModule } from 'angular-oauth2-oidc-hybrid';
@@ -44,6 +45,7 @@ export function appInitializer(
   ngZone: NgZone,
   notificationService: NotificationService,
   setupService: SetupService,
+  router: Router,
 ) {
   return () => {
     return configService
