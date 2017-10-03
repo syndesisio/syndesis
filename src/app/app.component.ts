@@ -9,11 +9,9 @@ import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 import { Response } from '@angular/http';
-import { Router } from '@angular/router';
 import {
   Notification,
   NotificationEvent,
-  NotificationType,
   NotificationService,
 } from 'patternfly-ng';
 
@@ -56,11 +54,6 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   loggedIn = false;
 
-  /**
-   * @type {boolean}
-   * Flag used to determine whether or not the user is a first time user.
-   */
-  firstTime = true;
 
   /**
    * @type {string}
@@ -85,13 +78,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private nav: NavigationService,
     private modalService: ModalService,
-    private setupService: SetupService,
-    private router: Router,
+    public setupService: SetupService,
   ) {}
 
   ngOnInit() {
     this.initView();
-    this.redirectToSetupIfRequired();
+    this.setupService.redirectToSetupIfRequired();
   }
 
   private initView() {
@@ -145,28 +137,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.user = this.userService.user;
     this.notifications = this.notificationService.getNotifications();
     this.showClose = true;
-  }
-
-  private redirectToSetupIfRequired() {
-    this.setupService.isSetupPending()
-    .then(setupPending => {
-      if (setupPending) {
-        this.router.navigate(['setup']);
-      } else {
-        this.firstTime = false;
-      }
-    })
-    .catch(message => {
-      this.firstTime = false;
-      this.notificationService.message(
-        NotificationType.DANGER,
-        'Error',
-        message,
-        false,
-        undefined,
-        undefined,
-      );
-    });
   }
 
   /**

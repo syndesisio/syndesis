@@ -1,6 +1,6 @@
-<div class="app" [ngSwitch]="userService.checkToken()">
+<div class="app" [ngSwitch]="setupService.isSetupPending()">
 
-  <!-- Does Not Have Valid Token -->
+  <!-- Requires GitHub OAuth Setup -->
 
   <ng-container *ngSwitchDefault>
     <main class="container-fluid"
@@ -9,7 +9,7 @@
     </main>
   </ng-container>
 
-  <!-- Has Valid Token -->
+  <!-- Does NOT Require GitHub OAuth Setup -->
 
   <ng-container *ngSwitchCase="true">
 
@@ -151,7 +151,7 @@
     <!-- Sidebar -->
 
     <div class="nav-pf-vertical hidden-icons-pf"
-         *ngIf="loggedIn && !firstTime">
+         *ngIf="loggedIn">
       <ul class="list-group">
         <li class="list-group-item"
             routerLinkActive="active">
@@ -199,8 +199,7 @@
         </li>
       </ul>
     </div>
-    <main class="container-fluid"
-          [ngClass]="{'container-pf-nav-pf-vertical': !firstTime}"
+    <main class="container-fluid container-pf-nav-pf-vertical"
           *ngIf="loggedIn">
       <router-outlet></router-outlet>
     </main>
