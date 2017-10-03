@@ -41,7 +41,15 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
     this.connections = store.list;
   }
 
+  gotoCreateConnection() {
+    this.router.navigate(['/connections/create']);
+  }
+
   onSelected(connection: Connection) {
+    if (connection === undefined) {
+      this.gotoCreateConnection();
+      return;
+    }
     log.debugc(() => 'Selected connection: ' + connection.name, category);
     this.currentFlow.events.emit({
       kind: 'integration-set-connection',

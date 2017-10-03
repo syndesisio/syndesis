@@ -31,6 +31,7 @@ export class ConnectionsListComponent implements OnInit {
   @Input() loading: boolean;
   @Input() showKebab = true;
   @Input() isConnectors = false;
+  @Input() showNewConnection = false;
   @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
 
   constructor(
@@ -48,27 +49,23 @@ export class ConnectionsListComponent implements OnInit {
       () => {
         sub.unsubscribe();
         setTimeout(() => {
-          this.popNotification(
-            {
-              type      : NotificationType.SUCCESS,
-              header    : 'Delete Successful',
-              message   : 'Connection successfully deleted.',
-              showClose : true,
-            },
-          );
+          this.popNotification({
+            type: NotificationType.SUCCESS,
+            header: 'Delete Successful',
+            message: 'Connection successfully deleted.',
+            showClose: true,
+          });
         }, 10);
       },
       (err: any) => {
         sub.unsubscribe();
         setTimeout(() => {
-          this.popNotification(
-            {
-              type      : NotificationType.DANGER,
-              header    : 'Delete Failed',
-              message   : `Failed to delete connection: ${err}`,
-              showClose : true,
-            },
-          );
+          this.popNotification({
+            type: NotificationType.DANGER,
+            header: 'Delete Failed',
+            message: `Failed to delete connection: ${err}`,
+            showClose: true,
+          });
         }, 10);
       },
     );
@@ -78,17 +75,20 @@ export class ConnectionsListComponent implements OnInit {
   requestDelete(connection: Connection, $event) {
     log.debugc(() => 'Selected connection for delete: ' + connection.id);
     this.selectedForDelete = connection;
-    this.modalService.show()
-      .then(modal => modal.result ? this.deleteAction(connection) : false);
+    this.modalService
+      .show()
+      .then(modal => (modal.result ? this.deleteAction(connection) : false));
   }
 
   //-----  Selecting a Connection ------------------->>
   onSelect(connection: Connection) {
-    log.debugc(
-      () => 'Selected connection (list): ' + connection.name,
-      category,
-    );
-    this.selectedId = connection.id;
+    if (connection) {
+      log.debugc(
+        () => 'Selected connection (list): ' + connection.name,
+        category,
+      );
+      this.selectedId = connection.id;
+    }
     this.onSelected.emit(connection);
   }
 

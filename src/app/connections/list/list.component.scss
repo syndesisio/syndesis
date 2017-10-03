@@ -1,6 +1,18 @@
+@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
+
 .connections-list {
   .cards {
     .card {
+
+      &.new-connection {
+        .card-pf-view {
+          background: inherit;
+          box-shadow: none;
+        }
+        .card-pf-icon-large {
+          color: $color-pf-blue-300;
+        }
+      }
       width: 25%;
 
       //----- Same as .card-pf-icon-circle except without the blue circle ----------------->>
