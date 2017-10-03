@@ -19,9 +19,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
-import io.syndesis.core.Tokens;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.openshift.OpenShiftDeployment;
 import io.syndesis.openshift.OpenShiftService;
 
 public class DeleteHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
@@ -39,21 +37,8 @@ public class DeleteHandler implements StatusChangeHandlerProvider.StatusChangeHa
 
     @Override
     public StatusUpdate execute(Integration integration) {
-        String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
-
-        String token = integration.getToken().get();
-        Tokens.setAuthenticationToken(token);
-
-        OpenShiftDeployment deployment = OpenShiftDeployment
-            .builder()
-            .name(integration.getName())
-            .username(username)
-            .revisionId(integration.getDeployedRevisionId().orElse(1))
-            .token(token)
-            .build();
-
-        Integration.Status currentStatus = !openShiftService.exists(deployment)
-            || openShiftService.delete(deployment)
+        Integration.Status currentStatus = !openShiftService.exists(integration.getName())
+            || openShiftService.delete(integration.getName())
             ? Integration.Status.Deleted
             : Integration.Status.Pending;
 

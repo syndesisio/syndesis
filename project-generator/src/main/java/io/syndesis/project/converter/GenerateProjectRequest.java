@@ -15,20 +15,15 @@
  */
 package io.syndesis.project.converter;
 
+import java.util.Map;
+
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
-
 import org.immutables.value.Value;
-
-import java.util.Map;
 
 @Value.Immutable
 public interface GenerateProjectRequest {
 
-    String getGitHubUserLogin();
-    String getGitHubUserName();
-    String getGitHubUserEmail();
-    String getGitHubRepoName();
     Integration getIntegration();
     Map<String, Connector> getConnectors();
 

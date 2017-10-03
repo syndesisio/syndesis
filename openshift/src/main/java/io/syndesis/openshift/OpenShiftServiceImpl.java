@@ -15,21 +15,23 @@
  */
 package io.syndesis.openshift;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+
 import io.fabric8.kubernetes.api.model.EnvVar;
-import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
-import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.core.Names;
-import io.syndesis.core.SyndesisServerException;
-
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 
 public class OpenShiftServiceImpl implements OpenShiftService {
 
@@ -42,51 +44,83 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public void create(OpenShiftDeployment d) {
-        openShiftClient.withRequestConfig(d.getRequestConfig()).<Void>call(c -> {
-            DockerImage img = new DockerImage(config.getBuilderImage());
-            ensureImageStreams(openShiftClient, d, img);
-            ensureDeploymentConfig(openShiftClient, d, config.getIntegrationServiceAccount());
-            ensureSecret(openShiftClient, d);
-            ensureBuildConfig(openShiftClient, d, img);
-            return null;
-        });
+    public void create(String name, DeploymentData deploymentData) {
+        String sName = Names.sanitize(name);
+        DockerImage builderImage = new DockerImage(this.config.getBuilderImage());
+        ensureImageStreams(sName, deploymentData, builderImage);
+        ensureDeploymentConfig(sName, deploymentData, this.config.getIntegrationServiceAccount());
+        ensureSecret(sName, deploymentData);
+        ensureBuildConfig(sName, deploymentData, builderImage);
     }
 
     @Override
-    public boolean delete(OpenShiftDeployment d) {
-        String sanitizedName = Names.sanitize(d.getName());
-        return openShiftClient.withRequestConfig(d.getRequestConfig()).call(c ->
-            removeImageStreams(openShiftClient, new DockerImage(config.getBuilderImage())) &&
-                removeDeploymentConfig(openShiftClient, sanitizedName) &&
-                removeSecret(openShiftClient, sanitizedName) &&
-                removeBuildConfig(openShiftClient, sanitizedName)
-        );
+    public void build(String name, Path runtimeDir) throws IOException {
+        String sName = Names.sanitize(name);
+        openShiftClient.buildConfigs().withName(sName)
+                       .instantiateBinary()
+                       .fromInputStream(createTarInputStream(runtimeDir));
     }
 
-    @Override
-    public boolean exists(OpenShiftDeployment d) {
-        return openShiftClient.withRequestConfig(d.getRequestConfig()).call(c ->
-            openShiftClient.deploymentConfigs().withName(Names.sanitize(d.getName())).get() != null
-        );
-    }
-
-    @Override
-    public void scale(OpenShiftDeployment d) {
-        openShiftClient.withRequestConfig(d.getRequestConfig()).call(c ->
-            openShiftClient.deploymentConfigs().withName(Names.sanitize(Names.sanitize(d.getName()))).edit()
-                .editSpec()
-                .withReplicas(d.getReplicas().orElse(1))
-                .endSpec()
-                .done());
+    private InputStream createTarInputStream(Path runtimeDir) throws IOException {
+        PipedInputStream is = new PipedInputStream();
+        PipedOutputStream os = new PipedOutputStream(is);
+        TarArchiveOutputStream tos = new TarArchiveOutputStream(os);
+        tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
+        addFileToTar(tos, runtimeDir.toFile(), "");
+        return is;
     }
 
 
+    private void addFileToTar(TarArchiveOutputStream tos, File toAdd, String base) throws IOException {
+        String entryName = base + toAdd.getName();
+        TarArchiveEntry tarEntry = new TarArchiveEntry(toAdd, entryName);
+        tos.putArchiveEntry(tarEntry);
+
+        if (toAdd.isFile()) {
+            Files.copy(toAdd.toPath(), tos);
+            tos.closeArchiveEntry();
+        } else {
+            tos.closeArchiveEntry();
+            File[] entries = toAdd.listFiles();
+            if (entries != null) {
+                for (File child : entries) {
+                    addFileToTar(tos, child, entryName + "/");
+                }
+            }
+        }
+    }
+
     @Override
-    public boolean isScaled(OpenShiftDeployment d) {
-        DeploymentConfig dc = openShiftClient.withRequestConfig(d.getRequestConfig()).call(c ->
-            openShiftClient.deploymentConfigs().withName(Names.sanitize(d.getName())).get()
-        );
+    public boolean delete(String name) {
+        String sName = Names.sanitize(name);
+        return
+            removeImageStreams(new DockerImage(config.getBuilderImage())) &&
+            removeDeploymentConfig(sName) &&
+            removeSecret(sName) &&
+            removeBuildConfig(sName);
+    }
+
+    @Override
+    public boolean exists(String name) {
+        String sName = Names.sanitize(name);
+        return openShiftClient.deploymentConfigs().withName(sName).get() != null;
+    }
+
+    @Override
+    public void scale(String name, int desiredReplicas) {
+        String sName = Names.sanitize(name);
+        openShiftClient.deploymentConfigs().withName(sName).edit()
+                       .editSpec()
+                       .withReplicas(desiredReplicas)
+                       .endSpec()
+                       .done();
+    }
+
+
+    @Override
+    public boolean isScaled(String name, int desiredReplicas) {
+        String sName = Names.sanitize(name);
+        DeploymentConfig dc = openShiftClient.deploymentConfigs().withName(sName).get();
 
         int allReplicas = 0;
         int readyReplicas = 0;
@@ -95,22 +129,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             allReplicas = nullSafe(status.getReplicas());
             readyReplicas = nullSafe(status.getReadyReplicas());
         }
-        int desiredReplicas = d.getReplicas().orElse(1);
         return desiredReplicas == allReplicas && desiredReplicas == readyReplicas;
     }
 
     @Override
-    public List<DeploymentConfig> getDeploymentsByLabel(RequestConfig requestConfig, Map<String, String> labels) {
-        return openShiftClient.withRequestConfig(requestConfig).call(c ->
-            c.deploymentConfigs().withLabels(labels).list().getItems()
-        );
-    }
-
-    @Override
-    public String getGitHubWebHookUrl(String projectName, String secret) {
-        return String.format("%s/namespaces/%s/buildconfigs/%s/webhooks/%s/github",
-                             config.getApiBaseUrl(), config.getNamespace(), projectName, secret);
-    }
+    public List<DeploymentConfig> getDeploymentsByLabel(Map<String, String> labels) {
+        return openShiftClient.deploymentConfigs().withLabels(labels).list().getItems();
+    };
 
     private int nullSafe(Integer nr) {
         return nr != null ? nr : 0;
@@ -118,42 +143,41 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
 //==================================================================================================
 
-    private static void ensureImageStreams(OpenShiftClient client, OpenShiftDeployment deployment, DockerImage img) {
-        client.imageStreams().withName(img.getShortName()).createOrReplaceWithNew()
+    private void ensureImageStreams(String name, DeploymentData deploymentData, DockerImage img) {
+        openShiftClient.imageStreams().withName(img.getShortName()).createOrReplaceWithNew()
                 .withNewMetadata()
                     .withName(img.shortName)
-                    .addToAnnotations(REVISION_ID_ANNOTATION, String.valueOf(deployment.getRevisionId()))
-                    .addToLabels(OpenShiftService.USERNAME_LABEL, Names.sanitize(Names.sanitize(deployment.getUsername())))
+                    .addToAnnotations(deploymentData.getAnnotations())
+                    .addToLabels(deploymentData.getLabels())
                 .endMetadata()
                     .withNewSpec().addNewTag().withNewFrom().withKind("DockerImage").withName(img.getImage()).endFrom().withName(img.getTag()).endTag().endSpec()
                 .done();
 
-        client.imageStreams().withName(deployment.getName()).createOrReplaceWithNew()
-            .withNewMetadata().withName(deployment.getName()).endMetadata().done();
+        openShiftClient.imageStreams().withName(name).createOrReplaceWithNew()
+            .withNewMetadata().withName(name).endMetadata().done();
     }
 
-    private static boolean removeImageStreams(OpenShiftClient client, DockerImage img) {
-        return client.imageStreams().withName(img.getShortName()).delete();
+    private boolean removeImageStreams(DockerImage img) {
+        return openShiftClient.imageStreams().withName(img.getShortName()).delete();
     }
 
-    private static void ensureDeploymentConfig(OpenShiftClient client, OpenShiftDeployment deployment, String serviceAccount) {
-        String projectName = deployment.getSanitizedName();
-        client.deploymentConfigs().withName(projectName).createOrReplaceWithNew()
+    private void ensureDeploymentConfig(String name, DeploymentData deploymentData, String serviceAccount) {
+        openShiftClient.deploymentConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
-                .withName(projectName)
-                .addToAnnotations(REVISION_ID_ANNOTATION, String.valueOf(deployment.getRevisionId()))
-                .addToLabels(OpenShiftService.USERNAME_LABEL, Names.sanitize(deployment.getUsername()))
+            .withName(name)
+            .addToAnnotations(deploymentData.getAnnotations())
+            .addToLabels(deploymentData.getLabels())
             .endMetadata()
             .withNewSpec()
             .withReplicas(1)
-            .addToSelector("integration", projectName)
+            .addToSelector("integration", name)
             .withNewTemplate()
-            .withNewMetadata().addToLabels("integration", projectName).endMetadata()
+            .withNewMetadata().addToLabels("integration", name).endMetadata()
             .withNewSpec()
             .withServiceAccount(serviceAccount)
             .withServiceAccountName(serviceAccount)
             .addNewContainer()
-            .withImage(" ").withImagePullPolicy("Always").withName(projectName)
+            .withImage(" ").withImagePullPolicy("Always").withName(name)
             .addNewPort().withName("jolokia").withContainerPort(8778).endPort()
             .addNewVolumeMount()
                 .withName("secret-volume")
@@ -164,7 +188,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .addNewVolume()
                 .withName("secret-volume")
                 .withNewSecret()
-                    .withSecretName(projectName)
+                    .withSecretName(name)
                 .endSecret()
             .endVolume()
             .endSpec()
@@ -172,8 +196,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .addNewTrigger().withType("ConfigChange").endTrigger()
             .addNewTrigger().withType("ImageChange")
             .withNewImageChangeParams()
-            .withAutomatic(true).addToContainerNames(projectName)
-            .withNewFrom().withKind("ImageStreamTag").withName(projectName + ":latest").endFrom()
+            .withAutomatic(true).addToContainerNames(name)
+            .withNewFrom().withKind("ImageStreamTag").withName(name + ":latest").endFrom()
             .endImageChangeParams()
             .endTrigger()
             .endSpec()
@@ -181,80 +205,51 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
 
-    private static boolean removeDeploymentConfig(OpenShiftClient client, String projectName) {
-        return client.deploymentConfigs().withName(projectName).delete();
+    private boolean removeDeploymentConfig(String projectName) {
+        return openShiftClient.deploymentConfigs().withName(projectName).delete();
     }
 
-    private static void ensureBuildConfig(OpenShiftClient client,
-                                          OpenShiftDeployment deployment,
-                                          DockerImage img) {
-        String projectName = deployment.getSanitizedName();
-        client.buildConfigs().withName(projectName).createOrReplaceWithNew()
+    private void ensureBuildConfig(String name, DeploymentData deploymentData, DockerImage builderImage) {
+        openShiftClient.buildConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
-                .withName(projectName)
-                .addToAnnotations(REVISION_ID_ANNOTATION, String.valueOf(deployment.getRevisionId()))
-                .addToLabels(OpenShiftService.USERNAME_LABEL, Names.sanitize(deployment.getUsername()))
+                .withName(name)
+                .addToAnnotations(deploymentData.getAnnotations())
+                .addToLabels(deploymentData.getLabels())
             .endMetadata()
             .withNewSpec()
             .withRunPolicy("SerialLatestOnly")
-            .addNewTrigger().withType("ConfigChange").endTrigger()
-            .addNewTrigger().withType("ImageChange").endTrigger()
-            .addNewTrigger().withType("GitHub")
-                .withNewGithub()
-                    .withSecret(deployment.getWebhookSecret().orElseThrow(()-> new IllegalStateException("Webhook secret is required!")))
-                .endGithub()
-            .endTrigger()
-            .withNewSource()
-                .withType("git")
-                    .withNewGit()
-                        .withUri(deployment.getGitRepository().orElseThrow(() -> new IllegalStateException("Git repository is required!")))
-                .endGit()
-            .endSource()
+            .withNewSource().withType("Binary").endSource()
             .withNewStrategy()
-            .withType("Source")
-            .withNewSourceStrategy()
-            .withNewFrom().withKind("ImageStreamTag").withName(img.getShortName() + ":" + img.getTag()).endFrom()
-            .withIncremental(true)
-              .withEnv(new EnvVar("MAVEN_OPTS","-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx500m", null))
-            .endSourceStrategy()
+              .withType("Source")
+              .withNewSourceStrategy()
+                .withNewFrom().withKind("ImageStreamTag").withName(builderImage.getShortName() + ":" + builderImage.getTag()).endFrom()
+                .withIncremental(true)
+                .withEnv(new EnvVar("MAVEN_OPTS","-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx500m", null))
+              .endSourceStrategy()
             .endStrategy()
-            .withNewOutput().withNewTo().withKind("ImageStreamTag").withName(projectName + ":latest").endTo().endOutput()
+            .withNewOutput().withNewTo().withKind("ImageStreamTag").withName(name + ":latest").endTo().endOutput()
             .endSpec()
             .done();
     }
 
-    private static boolean removeBuildConfig(OpenShiftClient client, String projectName) {
-        return client.buildConfigs().withName(projectName).delete();
+    private boolean removeBuildConfig(String projectName) {
+        return openShiftClient.buildConfigs().withName(projectName).delete();
     }
 
-    private static void ensureSecret(OpenShiftClient client, OpenShiftDeployment deployment) {
-        String projectName = deployment.getSanitizedName();
-        Map<String, String> wrapped = new HashMap<>();
-        wrapped.put("application.properties", toString(deployment.getApplicationProperties().orElseGet(Properties::new)));
-
-
-        client.secrets().withName(projectName).createOrReplaceWithNew()
+    private void ensureSecret(String name, DeploymentData deploymentData) {
+        openShiftClient.secrets().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
-                .withName(projectName)
-                .addToAnnotations(REVISION_ID_ANNOTATION, String.valueOf(deployment.getRevisionId()))
-                .addToLabels(OpenShiftService.USERNAME_LABEL, Names.sanitize(deployment.getUsername()))
+                .withName(name)
+                .addToAnnotations(deploymentData.getAnnotations())
+                .addToLabels(deploymentData.getLabels())
             .endMetadata()
-            .withStringData(wrapped)
+            .withStringData(deploymentData.getSecret())
             .done();
     }
 
-    private static String toString(Properties data) {
-        try {
-            StringWriter w = new StringWriter();
-            data.store(w, "");
-            return w.toString();
-        } catch (IOException e) {
-            throw SyndesisServerException.launderThrowable(e);
-        }
-    }
 
-    private static boolean removeSecret(OpenShiftClient client, String projectName) {
-       return client.secrets().withName(projectName).delete();
+    private boolean removeSecret(String projectName) {
+       return openShiftClient.secrets().withName(projectName).delete();
     }
 
 

@@ -28,15 +28,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import io.syndesis.core.Tokens;
 import io.syndesis.dao.init.ModelData;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.WithId;
-
 import io.syndesis.model.integration.Integration;
-import io.syndesis.openshift.OpenShiftDeployment;
 import io.syndesis.openshift.OpenShiftService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,16 +86,8 @@ public class TestSupportHandler {
         LOG.warn("user {} is deleting all integration deploymets", context.getRemoteUser());
         List<Integration> integrations = dataMgr.fetchAll(Integration.class).getItems();
         for (Integration i : integrations) {
-            OpenShiftDeployment deployment = OpenShiftDeployment
-                .builder()
-                .name(i.getName())
-                .username("joe")
-                .revisionId(1)
-                .token(Tokens.getAuthenticationToken())
-                .build();
-
-            if (openShiftService.exists(deployment)) {
-                openShiftService.delete(deployment);
+            if (openShiftService.exists(i.getName())) {
+                openShiftService.delete(i.getName());
                 LOG.debug("Deleting integration \"{}\"", i.getName());
             } else {
                 LOG.debug("Skipping integration named \"{}\". No such deployment found.", i.getName());

@@ -16,64 +16,56 @@
 package io.syndesis.controllers.integration.online;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.fabric8.kubernetes.client.RequestConfigBuilder;
 import io.syndesis.controllers.ControllersConfigurationProperties;
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.core.Names;
+import io.syndesis.core.PathUtils;
 import io.syndesis.core.SyndesisServerException;
-import io.syndesis.core.Tokens;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.github.GitHubService;
-import io.syndesis.github.GithubRequest;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationRevision;
 import io.syndesis.model.integration.Step;
-import io.syndesis.openshift.OpenShiftDeployment;
+import io.syndesis.openshift.DeploymentData;
 import io.syndesis.openshift.OpenShiftService;
 import io.syndesis.project.converter.GenerateProjectRequest;
 import io.syndesis.project.converter.ProjectGenerator;
-import org.eclipse.egit.github.core.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static io.syndesis.core.Tokens.TokenProvider.OPENSHIFT;
 
 public class ActivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
     // Step used which should be performed only once per integration
-    /* default */ static final String STEP_GITHUB = "github-setup";
-    /* default */ static final String STEP_OPENSHIFT = "openshift-setup";
+    private static final String STEP_OPENSHIFT_BUILD  = "openshift-build";
+    private static final String STEP_OPENSHIFT_RESOURCES = "openshift-setup";
 
     private final DataManager dataManager;
     private final OpenShiftService openShiftService;
-    private final GitHubService gitHubService;
     private final ProjectGenerator projectConverter;
     private final ControllersConfigurationProperties properties;
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivateHandler.class);
 
     /* default */ ActivateHandler(DataManager dataManager, OpenShiftService openShiftService,
-                                  GitHubService gitHubService, ProjectGenerator projectConverter, ControllersConfigurationProperties properties) {
+                                  ProjectGenerator projectConverter, ControllersConfigurationProperties properties) {
         this.dataManager = dataManager;
         this.openShiftService = openShiftService;
-        this.gitHubService = gitHubService;
         this.projectConverter = projectConverter;
         this.properties = properties;
     }
@@ -85,14 +77,6 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
     @Override
     public StatusUpdate execute(Integration integration) {
-        if (!integration.getToken().isPresent()) {
-            return new StatusUpdate(integration.getCurrentStatus().orElse(null), "No token present");
-        }
-
-        if (isTokenExpired(integration)) {
-            LOG.info("{} : Token is expired", getLabel(integration));
-            return new StatusUpdate(integration.getCurrentStatus().orElse(null), "Token is expired");
-        }
 
         int userIntegrations = countIntegrations(integration);
         if (userIntegrations >= properties.getMaxIntegrationsPerUser()) {
@@ -107,49 +91,41 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         }
 
 
-        String projectName = Names.sanitize(integration.getName());
-        String token = storeToken(integration);
         Properties applicationProperties = extractApplicationPropertiesFrom(integration);
         IntegrationRevision revision = IntegrationRevision.createNewRevision(integration);
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
-        String secret = createSecret();
-        String gitCloneUrl = getCloneURL(integration);
-        // TODO: Verify Token and refresh if expired ....
 
         List<String> stepsPerformed = integration.getStepsDone().orElseGet(ArrayList::new);
         try {
-            if (!stepsPerformed.contains(STEP_GITHUB)) {
-                User gitHubUser = getGitHubUser();
-                String githubUsername = gitHubUser.getLogin();
-                LOG.info("{} : Looked up GitHub user {}", getLabel(integration), githubUsername);
-                Map<String, byte[]> projectFiles = createProjectFiles(githubUsername, integration);
-                LOG.info("{} : Created project files", getLabel(integration));
 
-                gitCloneUrl = ensureGitHubSetup(integration, gitHubUser, openShiftService.getGitHubWebHookUrl(projectName, secret), projectFiles);
-                LOG.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
-                stepsPerformed.add(STEP_GITHUB);
-            }
+            DeploymentData deploymentData = DeploymentData.builder()
+                .addLabel(OpenShiftService.REVISION_ID_ANNOTATION, revision.getVersion().orElse(0).toString())
+                .addAnnotation(OpenShiftService.USERNAME_LABEL, username)
+                .addSecretEntry("application.properties", propsToString(applicationProperties))
+                .build();
 
-             OpenShiftDeployment deployment = OpenShiftDeployment
-                    .builder()
-                    .name(integration.getName())
-                    .username(username)
-                    .revisionId(revision.getVersion().get())
-                    .replicas(1)
-                    .token(token)
-                    .gitRepository(Optional.ofNullable(gitCloneUrl))
-                    .webhookSecret(secret)
-                    .applicationProperties(applicationProperties)
-                    .build();
+            String name = integration.getName();
 
-            if (!stepsPerformed.contains(STEP_OPENSHIFT)) {
-                openShiftService.create(deployment);
+            if (!stepsPerformed.contains(STEP_OPENSHIFT_RESOURCES)) {
+                openShiftService.create(name, deploymentData);
 
                 LOG.info("{} : Created OpenShift resources", getLabel(integration));
-                stepsPerformed.add(STEP_OPENSHIFT);
+                stepsPerformed.add(STEP_OPENSHIFT_RESOURCES);
             }
 
-            if (openShiftService.isScaled(deployment)) {
+            if (!stepsPerformed.contains(STEP_OPENSHIFT_BUILD)) {
+                Path runtimeDir = createProjectFiles(integration);
+                try {
+                    LOG.info("{} : Created project files and starting build", getLabel(integration));
+                    openShiftService.build(name, runtimeDir);
+                } finally {
+                    PathUtils.deletePathRecursively(runtimeDir);
+                }
+
+                stepsPerformed.add(STEP_OPENSHIFT_RESOURCES);
+            }
+
+            if (openShiftService.isScaled(name,1)) {
                 return new StatusUpdate(Integration.Status.Activated, stepsPerformed);
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
@@ -158,25 +134,19 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return new StatusUpdate(Integration.Status.Pending, stepsPerformed);
     }
 
-    protected String getCloneURL(Integration integration)  {
+
+    private static String propsToString(Properties data) {
+        if (data == null) {
+            return "";
+        }
         try {
-            return gitHubService.getCloneURL(Names.sanitize(integration.getName()));
+            StringWriter w = new StringWriter();
+            data.store(w, "");
+            return w.toString();
         } catch (IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
-
-    private boolean isTokenExpired(Integration integration) {
-        return integration.getToken().isPresent() &&
-               Tokens.isTokenExpired(integration.getToken().get());
-    }
-
-    private String storeToken(Integration integration) {
-        String token = integration.getToken().orElse(null);
-        Tokens.setAuthenticationToken(token);
-        return token;
-    }
-
 
     /**
      * Count the integrations (in DB) of the owner of the specified integration.
@@ -203,74 +173,29 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
      */
     private int countDeployments(Integration integration) {
         String name = integration.getName();
-        String token = integration.getToken().orElse(null);
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         Map<String, String> labels = new HashMap<>();
         labels.put(OpenShiftService.USERNAME_LABEL, Names.sanitize(username));
 
-        return (int) openShiftService.getDeploymentsByLabel(new RequestConfigBuilder().withOauthToken(Tokens.fetchProviderTokenFromKeycloak(OPENSHIFT, token)).build(), labels)
+        return (int) openShiftService.getDeploymentsByLabel(labels)
             .stream()
             .filter(d -> !Names.sanitize(name).equals(d.getMetadata().getName())) //this is also called on updates (so we need to exclude)
             .filter(d -> d.getSpec().getReplicas() > 0)
             .count();
     }
 
-    @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
-    private String ensureGitHubSetup(Integration integration, User githubUser, String webHookUrl, Map<String, byte[]> projectFiles) {
-        // Do all github stuff at once
-        String gitHubRepoName = Names.sanitize(integration.getName());
-        GithubRequest request = new GithubRequest.Builder()
-            .repoName(gitHubRepoName)
-            .author(githubUser)
-            .commitMessage(generateCommitMessage())
-            .fileContents(projectFiles)
-            .webHookUrl(webHookUrl)
-            .build();
-
-        String gitCloneUrl = gitHubService.createOrUpdateProjectFiles(request);
-
-        // Update integration within DB. Maybe re-read it before updating the URL ? Best: Add a dedicated 'updateGitRepo()'
-        // method to the backend
-        Integration updatedIntegration = new Integration.Builder()
-            .createFrom(integration)
-            .gitRepo(gitCloneUrl)
-            .build();
-        dataManager.update(updatedIntegration);
-        return gitCloneUrl;
-    }
-
-    private Map<String, byte[]> createProjectFiles(String username, Integration integration) {
+    private Path createProjectFiles(Integration integration) {
         try {
-            Map<String, Connector> connectorMap = fetchConnectorsMap();
 
             GenerateProjectRequest request = new GenerateProjectRequest.Builder()
                 .integration(integration)
-                .connectors(connectorMap)
-                .gitHubRepoName(Names.sanitize(integration.getName()))
-                .gitHubUserLogin(username)
+                .connectors(fetchConnectorsMap())
                 .build();
             return projectConverter.generate(request);
         } catch (IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
-    }
-
-    private User getGitHubUser() {
-        try {
-            return gitHubService.getApiUser();
-        } catch (IOException e) {
-            throw SyndesisServerException.launderThrowable(e);
-        }
-    }
-
-    private String generateCommitMessage() {
-        // TODO Let's generate some nice message...
-        return "Updated";
-    }
-
-    private String createSecret() {
-        return UUID.randomUUID().toString();
     }
 
     private Map<String, Connector> fetchConnectorsMap() {

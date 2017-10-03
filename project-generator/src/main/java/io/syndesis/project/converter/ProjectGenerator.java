@@ -16,15 +16,15 @@
 package io.syndesis.project.converter;
 
 
-import io.syndesis.model.integration.Integration;
-
 import java.io.IOException;
-import java.util.Map;
+import java.nio.file.Path;
+
+import io.syndesis.model.integration.Integration;
 
 
 public interface ProjectGenerator {
 
-    Map<String, byte[]> generate(GenerateProjectRequest request) throws IOException;
+    Path generate(GenerateProjectRequest request) throws IOException;
 
     byte[] generatePom(Integration integration) throws IOException;
 }

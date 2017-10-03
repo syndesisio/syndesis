@@ -16,107 +16,32 @@
 
 package io.syndesis.project.converter.visitor;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.project.converter.GenerateProjectRequest;
 import io.syndesis.project.converter.ProjectGeneratorProperties;
+import org.immutables.value.Value;
 
-import java.util.Map;
-
-
-/**
- * We want this class to be mutable.
- * In particular we want to add stuff to `contents`. That's why we don't generate it using Immutables.
- */
+@Value.Immutable
 @JsonDeserialize(builder = GeneratorContext.Builder.class)
-public class GeneratorContext {
+public interface GeneratorContext {
 
-    private final GenerateProjectRequest request;
-    private final Flow flow;
-    private final Map<String, byte[]> contents;
-    private final ConnectorCatalog connectorCatalog;
-    private final ProjectGeneratorProperties generatorProperties;
-    private final StepVisitorFactoryRegistry visitorFactoryRegistry;
+    GenerateProjectRequest getRequest();
+    Flow getFlow();
+    ConnectorCatalog getConnectorCatalog();
+    ProjectGeneratorProperties getGeneratorProperties();
+    StepVisitorFactoryRegistry getVisitorFactoryRegistry();
+    Path getRuntimeDir();
 
-    public static class Builder {
-
-        private GenerateProjectRequest request;
-        private Flow flow;
-        private Map<String, byte[]> contents;
-        private ConnectorCatalog connectorCatalog;
-        private ProjectGeneratorProperties generatorProperties;
-        private StepVisitorFactoryRegistry visitorFactoryRegistry;
-
-        public Builder request(GenerateProjectRequest request) {
-            this.request = request;
-            return this;
-        }
-
-        public Builder flow(Flow flow) {
-            this.flow = flow;
-            return this;
-        }
-
-        public Builder contents(Map<String, byte[]> contents) {
-            this.contents = contents;
-            return this;
-        }
-
-        public Builder connectorCatalog(ConnectorCatalog connectorCatalog) {
-            this.connectorCatalog = connectorCatalog;
-            return this;
-        }
-
-        public Builder generatorProperties(ProjectGeneratorProperties projectGeneratorProperties) {
-            this.generatorProperties = projectGeneratorProperties;
-            return this;
-        }
-
-        public Builder visitorFactoryRegistry(StepVisitorFactoryRegistry visitorFactoryRegistry) {
-            this.visitorFactoryRegistry = visitorFactoryRegistry;
-            return this;
-        }
-
-        public GeneratorContext build() {
-            return new GeneratorContext(request, flow, contents, connectorCatalog, generatorProperties, visitorFactoryRegistry);
-        }
+    default void writeFile(String filePath, byte[] data) throws IOException {
+        Files.write(getRuntimeDir().resolve(filePath),data);
     }
 
-    public static GeneratorContext.Builder newBuilder() {
-        return new GeneratorContext.Builder();
-    }
-
-    GeneratorContext(GenerateProjectRequest request, Flow flow, Map<String, byte[]> contents, ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties, StepVisitorFactoryRegistry visitorFactoryRegistry) {
-        this.request = request;
-        this.flow = flow;
-        this.contents = contents;
-        this.connectorCatalog = connectorCatalog;
-        this.generatorProperties = generatorProperties;
-        this.visitorFactoryRegistry = visitorFactoryRegistry;
-    }
-
-    public GenerateProjectRequest getRequest() {
-        return request;
-    }
-
-    public Flow getFlow() {
-        return flow;
-    }
-
-    public Map<String, byte[]> getContents() {
-        return contents;
-    }
-
-    public ConnectorCatalog getConnectorCatalog() {
-        return connectorCatalog;
-    }
-
-    public ProjectGeneratorProperties getGeneratorProperties() {
-        return generatorProperties;
-    }
-
-    public StepVisitorFactoryRegistry getVisitorFactoryRegistry() {
-        return visitorFactoryRegistry;
+    class Builder extends ImmutableGeneratorContext.Builder {
     }
 }

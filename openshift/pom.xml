@@ -79,6 +79,11 @@
       <artifactId>value</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-compress</artifactId>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>

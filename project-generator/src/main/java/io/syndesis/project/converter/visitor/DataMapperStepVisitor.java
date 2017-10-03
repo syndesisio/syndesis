@@ -17,11 +17,12 @@
 package io.syndesis.project.converter.visitor;
 
 
-import io.syndesis.integration.model.steps.Endpoint;
-import io.syndesis.integration.model.steps.Step;
-
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
+
+import io.syndesis.integration.model.steps.Endpoint;
+import io.syndesis.integration.model.steps.Step;
 
 public class DataMapperStepVisitor implements StepVisitor {
 
@@ -51,9 +52,13 @@ public class DataMapperStepVisitor implements StepVisitor {
         Map<String, String> configuredProperties = stepContext.getStep().getConfiguredProperties().get();
 
         String resourceName = "mapping-step-" + stepContext.getIndex() + ".json";
-        byte[] resourceData = utf8(configuredProperties.get("atlasmapping"));
-        generatorContext.getContents().put("src/main/resources/" + resourceName, resourceData);
-        return new Endpoint("atlas:" + resourceName);
+        try {
+            byte[] resourceData = utf8(configuredProperties.get("atlasmapping"));
+            generatorContext.writeFile("src/main/resources/" + resourceName, resourceData);
+            return new Endpoint("atlas:" + resourceName);
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot write " + resourceName + ":" + e,e);
+        }
     }
 
     private static byte[] utf8(String value) {

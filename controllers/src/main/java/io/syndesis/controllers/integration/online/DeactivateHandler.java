@@ -22,9 +22,7 @@ import java.util.Set;
 
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
-import io.syndesis.core.Tokens;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.openshift.OpenShiftDeployment;
 import io.syndesis.openshift.OpenShiftService;
 
 public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
@@ -44,22 +42,8 @@ public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChan
 
     @Override
     public StatusUpdate execute(Integration integration) {
-        String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
-
-        String token = integration.getToken().get();
-        Tokens.setAuthenticationToken(token);
-
-        OpenShiftDeployment deployment = OpenShiftDeployment
-            .builder()
-            .name(integration.getName())
-            .username(username)
-            .revisionId(integration.getDeployedRevisionId().orElse(1))
-            .replicas(0)
-            .token(token)
-            .build();
-
         try {
-            openShiftService.scale(deployment);
+            openShiftService.scale(integration.getName(), 0);
         } catch (KubernetesClientException e) {
             // Ignore 404 errors, means the deployment does not exist for us
             // to scale down
@@ -68,7 +52,7 @@ public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChan
             }
         }
 
-        Integration.Status currentStatus = openShiftService.isScaled(deployment)
+        Integration.Status currentStatus = openShiftService.isScaled(integration.getName(), 0)
             ? Integration.Status.Deactivated
                 : Integration.Status.Pending;
 

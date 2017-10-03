@@ -186,7 +186,6 @@
     <module>core</module>
     <module>credential</module>
     <module>dao</module>
-    <module>github</module>
     <module>jsondb</module>
     <module>model</module>
     <module>model2</module>
@@ -294,12 +293,6 @@
 
       <dependency>
         <groupId>io.syndesis</groupId>
-        <artifactId>github</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
         <artifactId>runtime</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -358,7 +351,6 @@
         <version>${project.version}</version>
       </dependency>
 
-      <!-- Funktion -->
       <dependency>
         <groupId>io.syndesis.integration-runtime</groupId>
         <artifactId>model</artifactId>
@@ -606,6 +598,12 @@
         <version>3.2.1</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>1.14</version>
+      </dependency>
+
       <!-- Testing Dependencies -->
       <dependency>
         <groupId>junit</groupId>
@@ -725,16 +723,13 @@
         <artifactId>jdbi</artifactId>
         <version>${jdbi.version}</version>
       </dependency>
+
       <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>1.4.193</version>
       </dependency>
-      <dependency>
-        <groupId>org.eclipse.mylyn.github</groupId>
-        <artifactId>org.eclipse.egit.github.core</artifactId>
-        <version>2.1.5</version>
-      </dependency>
+
       <dependency>
         <groupId>com.github.spullara.mustache.java</groupId>
         <artifactId>compiler</artifactId>

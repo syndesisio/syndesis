@@ -16,6 +16,7 @@
 package io.syndesis.project.converter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,11 +24,10 @@ import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
@@ -71,7 +71,6 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     private final ConnectorCatalog connectorCatalog;
     private final ProjectGeneratorProperties generatorProperties;
     private final StepVisitorFactoryRegistry registry;
-    private final Mustache readmeMustache;
     private final Mustache applicationJavaMustache;
     private final Mustache applicationPropertiesMustache;
     private final Mustache pomMustache;
@@ -82,7 +81,6 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         this.connectorCatalog = connectorCatalog;
         this.generatorProperties = generatorProperties;
         this.registry = registry;
-        this.readmeMustache = compile(generatorProperties, "README.md.mustache", "README.md");
         this.applicationJavaMustache = compile(generatorProperties, "Application.java.mustache", "Application.java");
         this.applicationPropertiesMustache = compile(generatorProperties, "application.properties.mustache", "application.properties");
         this.pomMustache = compile(generatorProperties, "pom.xml.mustache", "pom.xml");
@@ -113,17 +111,22 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     @Override
-    public Map<String, byte[]> generate(GenerateProjectRequest request) throws IOException {
-        request.getIntegration().getSteps().ifPresent(steps -> {
+    public Path generate(GenerateProjectRequest request) throws IOException {
+        Path workingDir = Files.createTempDirectory("integration-runtime");
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Created temporary directory {}", workingDir.toString());
+        }
+
+        Integration integration = request.getIntegration();
+        integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
                 LOG.info("Integration {} : Adding step {} ",
-                         request.getIntegration().getId().orElse("[none]"),
+                         integration.getId().orElse("[none]"),
                          step.getId().orElse(""));
                 step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
             }
         });
-
-        Map<String, byte[]> contents = new HashMap<>();
 
         for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
             String overridePath = generatorProperties.getTemplates().getOverridePath();
@@ -145,19 +148,26 @@ public class DefaultProjectGenerator implements ProjectGenerator {
             }
 
             try {
-                contents.put(additionalResource.getDestination(), Files.readAllBytes(Paths.get(resource.toURI())));
+                writeFile(workingDir, additionalResource.getDestination(), Files.readAllBytes(Paths.get(resource.toURI())));
             } catch (URISyntaxException e) {
                 throw new IOException(e);
             }
         }
 
-        contents.put("README.md", generateFromRequest(request, readmeMustache));
-        contents.put("src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
-        contents.put("src/main/resources/application.properties", generateFromRequest(request, applicationPropertiesMustache));
-        contents.put("src/main/resources/syndesis.yml", generateFlowYaml(contents, request));
-        contents.put("pom.xml", generatePom(request.getIntegration()));
+        writeFile(workingDir, "src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
+        writeFile(workingDir, "src/main/resources/application.properties", generateFromRequest(request, applicationPropertiesMustache));
+        writeFile(workingDir, "src/main/resources/syndesis.yml", generateFlowYaml(workingDir, request));
+        writeFile(workingDir, "pom.xml", generatePom(request.getIntegration()));
 
-        return contents;
+        return workingDir;
+    }
+
+    private void writeFile(Path workingDir, String path, byte[] content) throws IOException {
+        File file = new File(workingDir.toString(), path);
+        if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
+            throw new IOException("Cannot create directory " + file.getParentFile());
+        }
+        Files.write(file.toPath(), content);
     }
 
     @Override
@@ -179,7 +189,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
-    private byte[] generateFlowYaml(Map<String, byte[]> contents, GenerateProjectRequest request) throws JsonProcessingException {
+    private byte[] generateFlowYaml(Path runtimeDir, GenerateProjectRequest request) throws JsonProcessingException {
         Flow flow = new Flow();
         request.getIntegration().getSteps().ifPresent(steps -> {
             if (steps.isEmpty()) {
@@ -193,7 +203,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                     .connectorCatalog(connectorCatalog)
                     .generatorProperties(generatorProperties)
                     .request(request)
-                    .contents(contents)
+                    .runtimeDir(runtimeDir)
                     .flow(flow)
                     .visitorFactoryRegistry(registry)
                     .build();
@@ -230,9 +240,9 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return generate(integration, template);
     }
 
-    private byte[] generate(Object obj, Mustache template) throws IOException {
+    private byte[] generate(Object scope, Mustache template) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        template.execute(new OutputStreamWriter(bos, UTF_8), obj).flush();
+        template.execute(new OutputStreamWriter(bos, UTF_8), scope).flush();
         return bos.toByteArray();
     }
 

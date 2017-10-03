@@ -21,7 +21,6 @@ import java.util.List;
 import io.syndesis.controllers.ControllersConfigurationProperties;
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.github.GitHubService;
 import io.syndesis.openshift.OpenShiftService;
 import io.syndesis.project.converter.ProjectGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -33,15 +32,13 @@ public class OnlineHandlerProvider implements StatusChangeHandlerProvider {
 
     private final DataManager dataManager;
     private final OpenShiftService openShiftService;
-    private final GitHubService gitHubService;
     private final ProjectGenerator projectConverter;
     private final ControllersConfigurationProperties properties;
 
     public OnlineHandlerProvider(DataManager dataManager, OpenShiftService openShiftService,
-                                 GitHubService gitHubService, ProjectGenerator projectConverter, ControllersConfigurationProperties properties) {
+                                 ProjectGenerator projectConverter, ControllersConfigurationProperties properties) {
         this.dataManager = dataManager;
         this.openShiftService = openShiftService;
-        this.gitHubService = gitHubService;
         this.projectConverter = projectConverter;
         this.properties = properties;
     }
@@ -49,7 +46,7 @@ public class OnlineHandlerProvider implements StatusChangeHandlerProvider {
     @Override
     public List<StatusChangeHandler> getStatusChangeHandlers() {
         return Arrays.asList(
-            new ActivateHandler(dataManager, openShiftService, gitHubService, projectConverter, properties),
+            new ActivateHandler(dataManager, openShiftService, projectConverter, properties),
             new DeactivateHandler(openShiftService),
             new DeleteHandler(openShiftService));
     }
