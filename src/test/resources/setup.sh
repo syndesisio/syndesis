@@ -60,15 +60,6 @@ fi
 echo "Installing Syndesis in ${KUBERNETES_NAMESPACE} from: ${SYNDESIS_TEMPLATE_URL}"
 oc project ${KUBERNETES_NAMESPACE}
 
-# If env variable `SYNDESIS_RELEASED_IMAGES` IS provided by template will be used
-if [ -n "${SYNDESIS_RELEASED_IMAGES}" ]; then
-  echo "ImageStreams specified by template will be used"
-  # no op required
-else
-  # Move image streams (one by one) inside the test namespace
-  echo "ImageStreams from CI namespace will be used"
-  for i in `oc get istag -n syndesis-ci | cut -f1 -d " " | grep -v NAME`;do oc tag syndesis-ci/$i ${KUBERNETES_NAMESPACE}/$i; done
-fi
 
 oc create -f ${SYNDESIS_TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}  || oc replace -f ${SYNDESIS_TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}
 
@@ -80,3 +71,13 @@ oc new-app ${SYNDESIS_TEMPLATE_TYPE}  \
     -p OPENSHIFT_OAUTH_CLIENT_ID=$(oc project -q) \
     -p TEST_SUPPORT_ENABLED=true \
     -n ${KUBERNETES_NAMESPACE}
+
+# If env variable `SYNDESIS_RELEASED_IMAGES` IS provided by template will be used
+if [ -n "${SYNDESIS_RELEASED_IMAGES}" ]; then
+    echo "ImageStreams specified by template will be used"
+    # no op required
+else
+    # Move image streams (one by one) inside the test namespace
+    echo "ImageStreams from CI namespace will be used"
+    for i in `oc get istag -n syndesis-ci | cut -f1 -d " " | grep -v NAME`;do oc tag syndesis-ci/$i ${KUBERNETES_NAMESPACE}/$i; done
+fi
