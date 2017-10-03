@@ -9,9 +9,11 @@ import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 import { Response } from '@angular/http';
+import { Router } from '@angular/router';
 import {
   Notification,
   NotificationEvent,
+  NotificationType,
   NotificationService,
 } from 'patternfly-ng';
 
@@ -54,6 +56,11 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   loggedIn = false;
 
+  /**
+   * @type {boolean}
+   * Flag used to determine whether or not the user is a first time user.
+   */
+  firstTime = true;
 
   /**
    * @type {string}
@@ -78,12 +85,19 @@ export class AppComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private nav: NavigationService,
     private modalService: ModalService,
-    public setupService: SetupService,
+    private setupService: SetupService,
+    private router: Router,
   ) {}
 
   ngOnInit() {
     this.initView();
-    this.setupService.redirectToSetupIfRequired();
+    this.setupService.isSetupPending()
+      .then(function(result) {
+        this.firstTime = result;
+      })
+      .catch(function(err) {
+        console.log('Error fetching setup status: ' + JSON.stringify(err));
+      });
   }
 
   private initView() {
