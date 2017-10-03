@@ -75,11 +75,11 @@
       spec:
         containers:
         - name: syndesis-ui
-{{^Dev}}
+{{^WithDockerImages}}
           image: ' '
-{{/Dev}}{{#Dev}}
+{{/WithDockerImages}}{{#WithDockerImages}}
           image: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
-{{/Dev}}
+{{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
           livenessProbe:
@@ -108,7 +108,7 @@
             name: syndesis-ui-config
           name: config-volume
     triggers:
-{{^Dev}}
+{{^WithDockerImages}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -118,7 +118,7 @@
           name: {{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
-{{/Dev}}
+{{/WithDockerImages}}
     - type: ConfigChange
 - apiVersion: v1
   kind: ConfigMap

@@ -43,7 +43,7 @@
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "{{^Dev}}' '{{/Dev}}{{#Dev}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/Dev}}",
+              "image": "{{^WithInitContainerDockerImages}}' '{{/WithInitContainerDockerImages}}{{#WithInitContainerDockerImages}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/WithInitContainerDockerImages}}",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -59,7 +59,7 @@
                 "limits": {
                   "memory": "255Mi"
                 },
-                "requests": { 
+                "requests": {
                   "memory": "20Mi"
                 }
               }
@@ -67,7 +67,7 @@
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: {{^Dev}}' '{{/Dev}}{{#Dev}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/Dev}}
+          image: {{^WithInitContainerDockerImages}}' '{{/WithInitContainerDockerImages}}{{#WithInitContainerDockerImages}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/WithInitContainerDockerImages}}
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -94,11 +94,11 @@
             value: /deployments
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-{{^Dev}}
+{{^WithDockerImages}}
           image: ' '
-{{/Dev}}{{#Dev}}
+{{/WithDockerImages}}{{#WithDockerImages}}
           image: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
-{{/Dev}}
+{{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
           readinessProbe:
@@ -142,7 +142,7 @@
           configMap:
             name: syndesis-verifier-config
     triggers:
-{{^Dev}}
+{{^WithDockerImages}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -152,6 +152,8 @@
           name: {{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
+{{/WithDockerImages}}
+{{^WithInitContainerDockerImages}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -161,7 +163,7 @@
           name: {{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
-{{/Dev}}
+{{/WithInitContainerDockerImages}}
     - type: ConfigChange
 
 - apiVersion: v1
