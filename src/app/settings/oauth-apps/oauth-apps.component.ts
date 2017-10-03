@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '../../model';
 import { Observable } from 'rxjs/Observable';
+import { ConfigService } from '../../config.service';
 
 import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
@@ -17,7 +18,6 @@ export interface OAuthAppListItem {
   styleUrls: ['./oauth-apps.component.scss'],
 })
 export class OAuthAppsComponent implements OnInit {
-
   // Holds the candidate for clearing credentials
   selectedItem: OAuthAppListItem;
   // Pipe configuration
@@ -65,7 +65,11 @@ export class OAuthAppsComponent implements OnInit {
 
   items: Array<OAuthAppListItem> = [];
 
-  constructor(public store: OAuthAppStore, public detector: ChangeDetectorRef) {
+  constructor(
+    public store: OAuthAppStore,
+    public detector: ChangeDetectorRef,
+    public config: ConfigService,
+  ) {
     this.loading = store.loading;
     this.list = store.list;
   }
