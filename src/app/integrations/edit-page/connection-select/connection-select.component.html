@@ -39,12 +39,22 @@
 
       <p>First choose a connection.</p>
       <syndesis-list-toolbar [items]="connections"
-                             [filteredItems]="filteredConnections"></syndesis-list-toolbar>
+                             [filteredItems]="filteredConnections"
+                             [viewTemplate]="viewTemplate">
+        <ng-template #viewTemplate>
+          <button type="button"
+                  class="btn btn-default toolbar-pf-action-right"
+                  [routerLink]="['/connections/create']">
+            Create Connection
+          </button>
+        </ng-template>
+      </syndesis-list-toolbar>
 
       <syndesis-connections-list [connections]="filteredConnections | async"
                                  [loading]="loading | async"
                                  (onSelected)="onSelected($event)"
-                                 [showKebab]="false"></syndesis-connections-list>
+                                 [showKebab]="false"
+                                 [showNewConnection]="true"></syndesis-connections-list>
     </div>
   </div>
 </syndesis-loading>
