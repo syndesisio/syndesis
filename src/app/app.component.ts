@@ -91,12 +91,20 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.initView();
+    this.firstTimeUser();
+  }
+
+  /**
+   * Checks to see if this is a first time user to set the firstTime flag.
+   */
+  private firstTimeUser() {
     this.setupService.isSetupPending()
       .then(function(result) {
+        console.log('isSetupPending() result from app.component.ts: ' + JSON.stringify(result));
         this.firstTime = result;
       })
-      .catch(function(err) {
-        console.log('Error fetching setup status: ' + JSON.stringify(err));
+      .catch(function (err) {
+        console.log('Error fetching setup status from app.component.ts: ' + JSON.stringify(err));
       });
   }
 

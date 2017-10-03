@@ -16,6 +16,12 @@ export class SetupService {
   private url: string;
   private args: RequestOptionsArgs;
 
+  /**
+   * @type {boolean}
+   * Flag used to determine whether or not the user is a first time user.
+   */
+  firstTime = true;
+
   constructor(
     private http: Http,
     configService: ConfigService,
@@ -40,38 +46,14 @@ export class SetupService {
     return this.http.get(this.url, this.args)
       .toPromise()
       .then(response => {
+        console.log('Response: ' + JSON.stringify(response));
         // 204 (No Content) if not configured
         return response.status === 204 ? true : this.handleError('Failed to check GitHub credentials', response);
       })
       .catch((response: Response) => {
         // 410 (Gone) if already configured
+        console.log('Response: ' + JSON.stringify(response));
         return response.status === 410 ? false : this.handleError('Failed to check GitHub credentials', response);
-      });
-  }
-
-  /**
-   * Function that causes redirect to setup page if GitHub account setup is required.
-   * The assumption in this case is that this is likely a first time user.
-   */
-  public redirectToSetupIfRequired() {
-    this.isSetupPending()
-      .then(setupPending => {
-        if (setupPending) {
-          this.router.navigate(['setup']);
-        } else {
-          return false;
-        }
-      })
-      .catch(message => {
-        this.notificationService.message(
-          NotificationType.DANGER,
-          'Error',
-          message,
-          false,
-          undefined,
-          undefined,
-        );
-        return false;
       });
   }
 

@@ -3,7 +3,7 @@
   <!-- Requires GitHub OAuth Setup -->
 
   <ng-container *ngSwitchDefault>
-    <main class="container-fluid"
+    <main class="container-fluid setup-required"
           *ngIf="!loggedIn">
       <router-outlet></router-outlet>
     </main>
@@ -98,7 +98,9 @@
                 <li><a href="mailto:fuse-ignite-tech-preview@redhat.com"
                        rel="nofollow"
                        target="_blank">Contact Us</a></li>
+                <!--
                 <li><a>About</a></li>
+                -->
               </ul>
             </li>
 
@@ -199,7 +201,8 @@
         </li>
       </ul>
     </div>
-    <main class="container-fluid container-pf-nav-pf-vertical"
+
+    <main class="container-fluid container-pf-nav-pf-vertical setup-not-required"
           *ngIf="loggedIn">
       <router-outlet></router-outlet>
     </main>

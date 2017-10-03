@@ -29,6 +29,7 @@ import { SyndesisCommonModule } from './common/common.module';
 
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';
+import { SetupService } from './setup/setup.service';
 import { UserService } from './common/user.service';
 import { CanDeactivateGuard } from './common/can-deactivate-guard.service';
 import { log } from './logging';
@@ -42,6 +43,7 @@ export function appInitializer(
   userService: UserService,
   ngZone: NgZone,
   notificationService: NotificationService,
+  setupService: SetupService,
 ) {
   return () => {
     return configService
@@ -92,6 +94,22 @@ export function appInitializer(
 
           // Set this back so that second flow through we do the proper code flow to get a refresh token.
           sessionStorage.setItem('syndesis-first-idp', 'false');
+
+          /**
+           * Redirects user to setup page if GitHub setup is still pending
+           */
+          this.setupService.isSetupPending()
+            .then(function(result) {
+              console.log('Result from app.module.ts: ' + JSON.stringify(result));
+              if(result === true) {
+                this.router.navigate(['setup']);
+              }
+            })
+            .catch(function (err) {
+              console.log('Error fetching setup status from app.module.ts: ' + JSON.stringify(err));
+            });
+
+
           oauthService.hybrid = originalHybrid;
 
           let autoLinkGithHub = configService.getSettings('oauth')[
