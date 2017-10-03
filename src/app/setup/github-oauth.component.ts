@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Notification, NotificationModule, NotificationService, NotificationType } from 'patternfly-ng';
+import { NotificationService, NotificationType } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
 import { SetupService } from './setup.service';
 
@@ -26,7 +26,7 @@ export class GitHubOAuthSetupComponent implements OnInit {
   });
 
   /**
-   * @param {GitHubOAuthService} gitHubOAuthService
+   * @param {SetupService} setupService
    * @param {ChangeDetectorRef} detector
    * @param {NotificationService} notificationService
    */
@@ -88,21 +88,6 @@ export class GitHubOAuthSetupComponent implements OnInit {
       client.clientId &&
       client.clientId !== '' &&
       (client.clientSecret && client.clientSecret !== '')
-    );
-  }
-
-  /**
-   * Toast notification
-   * @param notification
-   */
-  popNotification(notification) {
-    this.notificationService.message(
-      notification.type,
-      notification.header,
-      notification.message,
-      false,
-      null,
-      [],
     );
   }
 
