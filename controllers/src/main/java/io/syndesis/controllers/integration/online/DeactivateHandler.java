@@ -27,13 +27,9 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.openshift.OpenShiftDeployment;
 import io.syndesis.openshift.OpenShiftService;
 
-public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
-
-
-    private final OpenShiftService openShiftService;
-
+public class DeactivateHandler extends BaseHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
     DeactivateHandler(OpenShiftService openShiftService) {
-        this.openShiftService = openShiftService;
+        super(openShiftService);
     }
 
     @Override
@@ -59,7 +55,7 @@ public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChan
             .build();
 
         try {
-            openShiftService.scale(deployment);
+            openShiftService().scale(deployment);
         } catch (KubernetesClientException e) {
             // Ignore 404 errors, means the deployment does not exist for us
             // to scale down
@@ -68,7 +64,7 @@ public class DeactivateHandler implements StatusChangeHandlerProvider.StatusChan
             }
         }
 
-        Integration.Status currentStatus = openShiftService.isScaled(deployment)
+        Integration.Status currentStatus = openShiftService().isScaled(deployment)
             ? Integration.Status.Deactivated
                 : Integration.Status.Pending;
 

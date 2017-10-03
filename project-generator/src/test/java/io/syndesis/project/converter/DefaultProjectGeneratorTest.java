@@ -200,7 +200,6 @@ public class DefaultProjectGeneratorTest {
         }
     }
 
-
     @Test
     public void testConverterWithPasswordMasking() throws Exception {
         Step step1 = new SimpleStep.Builder()
@@ -252,6 +251,73 @@ public class DefaultProjectGeneratorTest {
 
         assertFileContents(generatorProperties, files.get("src/main/resources/application.properties"), "test-application.properties");
         assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-syndesis-with-secrets.yml");
+    }
+
+    @Test
+    public void testConverterWithPasswordMaskingAndMultipleConnectorOfSameType() throws Exception {
+        Step step1 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id("1")
+                .configuredProperties(map())
+                .build())
+            .configuredProperties(map("period",5000))
+            .action(new Action.Builder()
+                .connectorId("timer")
+                .camelConnectorPrefix("periodic-timer-connector")
+                .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
+                .build())
+            .build();
+
+        Step step2 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id("2")
+                .configuredProperties(map())
+                .build())
+            .configuredProperties(map("httpUri", "http://localhost:8080/hello", "username", "admin", "password", "admin", "token", "mytoken"))
+            .action(new Action.Builder()
+                .connectorId("http")
+                .camelConnectorPrefix("http-get-connector")
+                .camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTORS_VERSION)
+                .build())
+            .build();
+
+        Step step3 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id("3")
+                .configuredProperties(map())
+                .build())
+            .configuredProperties(map("httpUri", "http://localhost:8080/bye", "username", "admin", "password", "admin", "token", "mytoken"))
+            .action(new Action.Builder()
+                .connectorId("http")
+                .camelConnectorPrefix("http-get-connector")
+                .camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTORS_VERSION)
+                .build())
+            .build();
+
+        GenerateProjectRequest request = new GenerateProjectRequest.Builder()
+            .integration(new Integration.Builder()
+                .id("test-integration")
+                .name("Test Integration")
+                .description("This is a test integration!")
+                .steps(Arrays.asList(step1, step2, step3))
+                .build())
+            .connectors(connectors)
+            .gitHubUserLogin("noob")
+            .gitHubRepoName("test")
+            .build();
+
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
+        generatorProperties.getTemplates().setOverridePath(this.basePath);
+        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+        generatorProperties.setSecretMaskingEnabled(true);
+
+        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
+
+        assertFileContents(generatorProperties, files.get("src/main/resources/application.properties"), "test-application.properties");
+        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-syndesis-with-secrets-and-multiple-connector-of-same-type.yml");
     }
 
 
