@@ -68,6 +68,7 @@ oc new-app ${SYNDESIS_TEMPLATE_TYPE}  \
     -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_OAUTH_CLIENT_ID} \
     -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_OAUTH_CLIENT_SECRET} \
     -p OPENSHIFT_OAUTH_CLIENT_ID=$(oc project -q) \
+    -p TEST_SUPPORT_ENABLED=true \
     -n ${KUBERNETES_NAMESPACE}
 
 # If env variable `SYNDESIS_RELEASED_IMAGES` IS provided by template will be used
