@@ -157,7 +157,7 @@ objects:
         name: fabric8/s2i-java:2.0
       importPolicy:
         scheduled: true
-      name: 2.0
+      name: "2.0"
 
 - apiVersion: v1
   kind: Service
