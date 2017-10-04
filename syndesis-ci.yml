@@ -608,10 +608,10 @@ objects:
         sleep 1
       done
       echo "----- creating sampledb"
-      psql -f /var/lib/pgsql/sampledb/add-sample-db.sql -v user=sampledb -v password=$POSTGRESQL_SAMPLEDB_PASSWORD
+      psql -c "CREATE USER sampledb WITH PASSWORD '$POSTGRESQL_SAMPLEDB_PASSWORD';"
+      psql -f /var/lib/pgsql/sampledb/add-sample-db.sql -v user=sampledb
       echo "----- sampledb created"
     add-sample-db.sql: |
-      CREATE USER :user WITH PASSWORD ':password';
       CREATE DATABASE :user;
       GRANT ALL PRIVILEGES ON DATABASE :user to :user;
 
