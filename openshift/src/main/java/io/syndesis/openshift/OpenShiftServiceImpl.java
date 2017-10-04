@@ -152,7 +152,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .endMetadata()
                     .withNewSpec().addNewTag().withNewFrom().withKind("DockerImage").withName(img.getImage()).endFrom().withName(img.getTag()).endTag().endSpec()
                 .done();
-
         openShiftClient.imageStreams().withName(name).createOrReplaceWithNew()
             .withNewMetadata().withName(name).endMetadata().done();
     }
