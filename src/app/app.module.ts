@@ -4,7 +4,6 @@ import { NgModule, NgZone, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { Router } from '@angular/router';
 
 import { RestangularModule } from 'ngx-restangular';
 import { OAuthService, OAuthModule } from 'angular-oauth2-oidc-hybrid';
@@ -45,7 +44,6 @@ export function appInitializer(
   ngZone: NgZone,
   notificationService: NotificationService,
   setupService: SetupService,
-  router: Router,
 ) {
   return () => {
     return configService
@@ -100,36 +98,36 @@ export function appInitializer(
           /**
            * Redirects user to setup page if GitHub setup is still pending
            */
-          this.setupService.isSetupPending()
-            .then(function(result) {
-              console.log('Result from app.module.ts: ' + JSON.stringify(result));
-              if(result === true) {
-                this.router.navigate(['setup']);
+          setupService.setApiEndpoint(configService.getSettings().apiEndpoint);
+          setupService.setAccessToken(oauthService.getAccessToken());
+          setupService.isSetupPending()
+            .then(function (setupPending) {
+              if (setupPending) {
+                window.location.assign('/setup');
+              } else {
+                oauthService.hybrid = originalHybrid;
+
+                let autoLinkGithHub = configService.getSettings('oauth')[
+                  'auto-link-github'
+                ];
+                if (autoLinkGithHub === undefined) {
+                  autoLinkGithHub = true;
+                }
+
+                // If this wasn't the autolink flow then rekick off flow with state set to autolink.
+                if (autoLinkGithHub && oauthService.state !== 'autolink') {
+                  // Client suggested IDP works great with Keycloak.
+                  oauthService.loginUrl += '?kc_idp_hint=github';
+                  // Clear session storage before trying again.
+                  oauthService.logOut(true);
+                  // And kick off the login flow again.
+                  return oauthService.initImplicitFlow('autolink');
+                }
               }
             })
-            .catch(function (err) {
-              console.log('Error fetching setup status from app.module.ts: ' + JSON.stringify(err));
+            .catch(function (error) {
+              console.error('Error fetching setup status' + error);
             });
-
-
-          oauthService.hybrid = originalHybrid;
-
-          let autoLinkGithHub = configService.getSettings('oauth')[
-            'auto-link-github'
-          ];
-          if (autoLinkGithHub === undefined) {
-            autoLinkGithHub = true;
-          }
-
-          // If this wasn't the autolink flow then rekick off flow with state set to autolink.
-          if (autoLinkGithHub && oauthService.state !== 'autolink') {
-            // Client suggested IDP works great with Keycloak.
-            oauthService.loginUrl += '?kc_idp_hint=github';
-            // Clear session storage before trying again.
-            oauthService.logOut(true);
-            // And kick off the login flow again.
-            return oauthService.initImplicitFlow('autolink');
-          }
         }
 
         // Remove this marker from session storage as it has served it's purpose.
@@ -261,7 +259,7 @@ export function restangularProviderConfigurer(
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
-      deps: [ConfigService, OAuthService, UserService, NgZone, NotificationService],
+      deps: [ConfigService, OAuthService, UserService, NgZone, NotificationService, SetupService],
       multi: true,
     },
     ConfigService,

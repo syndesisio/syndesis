@@ -3,6 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService, NotificationType } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
 import { SetupService } from './setup.service';
+import { ConfigService } from '../config.service';
+import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 
 export interface OAuthAppListItem {
   expanded: boolean;
@@ -31,6 +33,8 @@ export class GitHubOAuthSetupComponent implements OnInit {
    * @param {NotificationService} notificationService
    */
   constructor(
+    private configService: ConfigService,
+    private oauthService: OAuthService,
     private setupService: SetupService,
     private notificationService: NotificationService,
     public detector: ChangeDetectorRef,
@@ -51,6 +55,8 @@ export class GitHubOAuthSetupComponent implements OnInit {
         clientSecret: formModel.clientSecret,
       },
     };
+    this.setupService.setApiEndpoint(this.configService.getSettings().apiEndpoint);
+    this.setupService.setAccessToken(this.oauthService.getAccessToken());
     return this.setupService.updateSetup(setup)
       .catch(message => {
       this.notificationService.message(NotificationType.DANGER, 'Error', message, false, null, []);

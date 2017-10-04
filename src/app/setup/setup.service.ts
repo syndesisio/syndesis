@@ -2,13 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http, RequestOptionsArgs, Headers, Response } from '@angular/http';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 import { ConfigService } from '../config.service';
-import { Router } from '@angular/router';
 import { Setup } from '../model';
 import { log } from '../logging';
-import {
-  NotificationType,
-  NotificationService,
-} from 'patternfly-ng';
 
 @Injectable()
 export class SetupService {
@@ -22,18 +17,17 @@ export class SetupService {
    */
   firstTime = true;
 
-  constructor(
-    private http: Http,
-    configService: ConfigService,
-    private notificationService: NotificationService,
-    oauthService: OAuthService,
-    private router: Router,
-  ) {
-    const apiEndpoint: string = configService.getSettings().apiEndpoint;
+  constructor(private http: Http) {
+  }
+
+  setApiEndpoint(apiEndpoint: string) {
     this.url = apiEndpoint.substring(0, apiEndpoint.lastIndexOf('/')) + '/setup';
+  }
+
+  setAccessToken(accessToken: string) {
     this.args = {
       headers: new Headers({
-        'Authorization': `Bearer ${oauthService.getAccessToken()}`,
+        'Authorization': `Bearer ${accessToken}`,
       }),
     };
   }
@@ -49,24 +43,20 @@ export class SetupService {
     return this.http.get(this.url, this.args)
       .toPromise()
       .then(response => {
-        console.log('Response: ' + JSON.stringify(response));
-        switch(response.status) {
-          case 204:
-          default:
-            this.firstTime = true;
-            break;
-          case 410:
-            this.firstTime = false;
-            break;
+        if (response.status === 204) {
+          this.firstTime = true;
+          return true;
+        } else {
+          return this.handleError('Failed to check GitHub credentials', response);
         }
-
-        // 204 (No Content) if not configured
-        return response.status === 204 ? true : this.handleError('Failed to check GitHub credentials', response);
       })
       .catch((response: Response) => {
-        // 410 (Gone) if already configured
-        console.log('Response: ' + JSON.stringify(response));
-        return response.status === 410 ? false : this.handleError('Failed to check GitHub credentials', response);
+        if (response.status === 410) {
+          this.firstTime = false;
+          return false;
+        } else {
+          return this.handleError('Failed to check GitHub credentials', response);
+        }
       });
   }
 
