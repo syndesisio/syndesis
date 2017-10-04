@@ -66,16 +66,18 @@ type tags struct {
 }
 
 type Context struct {
-	Name        string
-	Dev         bool
-	Ephemeral   bool
-	Restricted  bool
-	Probeless   bool
-	Productized bool
-	Tag         string
-	Registry    string
-	Images      images
-	Tags        tags
+	Name                          string
+	AllowLocalHost                bool
+	WithDockerImages              bool
+	WithInitContainerDockerImages bool
+	Ephemeral                     bool
+	Restricted                    bool
+	Probeless                     bool
+	Productized                   bool
+	Tag                           string
+	Registry                      string
+	Images                        images
+	Tags                          tags
 }
 
 // TODO: Could be added from a local configuration file
@@ -136,7 +138,9 @@ func init() {
 	flags := installCommand.PersistentFlags()
 
 	flags.StringVar(&context.Name, "name", "syndesis", "Name of the template")
-	flags.BoolVar(&context.Dev, "dev", false, "Developer mode?")
+	flags.BoolVar(&context.AllowLocalHost, "allow-localhost", false, "Allow localhost")
+	flags.BoolVar(&context.WithDockerImages, "with-docker-images", false, "With docker images")
+	flags.BoolVar(&context.WithInitContainerDockerImages, "with-init-container-docker-images", false, "With init container docker images")
 	flags.BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
 	flags.BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
 	flags.BoolVar(&context.Probeless, "probeless", false, "Without probes")

@@ -97,7 +97,7 @@
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "{{^Dev}}' '{{/Dev}}{{#Dev}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/Dev}}",
+              "image": "{{^WithInitContainerDockerImages}}' '{{/WithInitContainerDockerImages}}{{#WithInitContainerDockerImages}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/WithInitContainerDockerImages}}",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -121,7 +121,7 @@
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: {{^Dev}}' '{{/Dev}}{{#Dev}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/Dev}}
+          image: {{^WithInitContainerDockerImages}}' '{{/WithInitContainerDockerImages}}{{#WithInitContainerDockerImages}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/WithInitContainerDockerImages}}
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -172,11 +172,11 @@
               secretKeyRef:
                 name: syndesis-keycloak-admin
                 key: password
-{{^Dev}}
+{{^WithDockerImages}}
           image: ' '
-{{/Dev}}{{#Dev}}
+{{/WithDockerImages}}{{#WithDockerImages}}
           image: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
-{{/Dev}}
+{{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -217,7 +217,7 @@
           configMap:
             name: syndesis-rest-config
     triggers:
-{{^Dev}}
+{{^WithDockerImages}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -227,6 +227,8 @@
           name: {{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
+{{/WithDockerImages}}
+{{^WithInitContainerDockerImages}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -236,7 +238,7 @@
           name: {{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
-{{/Dev}}
+{{/WithInitContainerDockerImages}}
     - type: ConfigChange
 
 - apiVersion: v1
@@ -251,11 +253,11 @@
       deployment:
         load-demo-data: ${DEMO_DATA_ENABLED}
       cors:
-{{^Dev}}
+{{^AllowLocalHost}}
         allowedOrigins: https://${ROUTE_HOSTNAME}
-{{/Dev}}{{#Dev}}
+{{/AllowLocalHost}}{{#AllowLocalHost}}
         allowedOrigins: http://localhost:4200, https://localhost:4200, https://${ROUTE_HOSTNAME}
-{{/Dev}}
+{{/AllowLocalHost}}
       cache:
         cluster:
           name: SyndesisCluster

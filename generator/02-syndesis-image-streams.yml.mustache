@@ -1,5 +1,5 @@
 {{^Productized}}
-{{^Dev}}
+{{^WithDockerImages}}
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -90,5 +90,5 @@
       importPolicy:
         scheduled: true
       name: {{ Tags.PemToKeystore }}
-{{/Dev}}
+{{/WithDockerImages}}
 {{/Productized}}
