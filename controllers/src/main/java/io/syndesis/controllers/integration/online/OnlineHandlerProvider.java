@@ -29,18 +29,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "true", matchIfMissing = true)
-public class OnlineHandlerProvider implements StatusChangeHandlerProvider {
+public class OnlineHandlerProvider extends BaseHandler implements StatusChangeHandlerProvider {
 
     private final DataManager dataManager;
-    private final OpenShiftService openShiftService;
     private final GitHubService gitHubService;
     private final ProjectGenerator projectConverter;
     private final ControllersConfigurationProperties properties;
 
     public OnlineHandlerProvider(DataManager dataManager, OpenShiftService openShiftService,
                                  GitHubService gitHubService, ProjectGenerator projectConverter, ControllersConfigurationProperties properties) {
+        super(openShiftService);
+
         this.dataManager = dataManager;
-        this.openShiftService = openShiftService;
         this.gitHubService = gitHubService;
         this.projectConverter = projectConverter;
         this.properties = properties;
@@ -49,8 +49,9 @@ public class OnlineHandlerProvider implements StatusChangeHandlerProvider {
     @Override
     public List<StatusChangeHandler> getStatusChangeHandlers() {
         return Arrays.asList(
-            new ActivateHandler(dataManager, openShiftService, gitHubService, projectConverter, properties),
-            new DeactivateHandler(openShiftService),
-            new DeleteHandler(openShiftService));
+            new ActivateHandler(dataManager, openShiftService(), gitHubService, projectConverter, properties),
+            new DeactivateHandler(openShiftService()),
+            new DeleteHandler(openShiftService())
+        );
     }
 }

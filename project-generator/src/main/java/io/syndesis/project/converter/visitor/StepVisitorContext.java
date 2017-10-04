@@ -16,13 +16,14 @@
 
 package io.syndesis.project.converter.visitor;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.function.Function;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.integration.Step;
 import org.immutables.value.Value;
-
-import java.util.Iterator;
-import java.util.Queue;
 
 @Value.Immutable
 @JsonDeserialize(builder = StepVisitorContext.Builder.class)
@@ -34,16 +35,20 @@ public interface StepVisitorContext extends Iterator<StepVisitorContext> {
 
     Queue<Step> getRemaining();
 
+    Function<Step, Optional<String>> getConnectorIdSupplier();
+
     default boolean hasNext() {
         return !getRemaining().isEmpty();
     }
 
     default StepVisitorContext next() {
-        Queue<Step> remaining = getRemaining();
-        Step next = remaining.remove();
+        final int index = getIndex();
+        final Queue<Step> remaining = getRemaining();
+        final Step next = remaining.remove();
 
         return new StepVisitorContext.Builder()
-            .index(getIndex()+1)
+            .createFrom(this)
+            .index(index + 1)
             .step(next)
             .remaining(remaining)
             .build();

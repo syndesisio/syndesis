@@ -41,6 +41,8 @@ import io.syndesis.github.GitHubService;
 import io.syndesis.github.GithubRequest;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.WithConfigurationProperties;
+import io.syndesis.model.connection.Action;
+import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationRevision;
@@ -55,14 +57,13 @@ import org.slf4j.LoggerFactory;
 
 import static io.syndesis.core.Tokens.TokenProvider.OPENSHIFT;
 
-public class ActivateHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
+public class ActivateHandler extends BaseHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
     // Step used which should be performed only once per integration
     /* default */ static final String STEP_GITHUB = "github-setup";
     /* default */ static final String STEP_OPENSHIFT = "openshift-setup";
 
     private final DataManager dataManager;
-    private final OpenShiftService openShiftService;
     private final GitHubService gitHubService;
     private final ProjectGenerator projectConverter;
     private final ControllersConfigurationProperties properties;
@@ -71,8 +72,10 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
     /* default */ ActivateHandler(DataManager dataManager, OpenShiftService openShiftService,
                                   GitHubService gitHubService, ProjectGenerator projectConverter, ControllersConfigurationProperties properties) {
+
+        super(openShiftService);
+
         this.dataManager = dataManager;
-        this.openShiftService = openShiftService;
         this.gitHubService = gitHubService;
         this.projectConverter = projectConverter;
         this.properties = properties;
@@ -125,7 +128,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                 Map<String, byte[]> projectFiles = createProjectFiles(githubUsername, integration);
                 LOG.info("{} : Created project files", getLabel(integration));
 
-                gitCloneUrl = ensureGitHubSetup(integration, gitHubUser, openShiftService.getGitHubWebHookUrl(projectName, secret), projectFiles);
+                gitCloneUrl = ensureGitHubSetup(integration, gitHubUser, openShiftService().getGitHubWebHookUrl(projectName, secret), projectFiles);
                 LOG.info("{} : Updated GitHub repo {}", getLabel(integration), gitCloneUrl);
                 stepsPerformed.add(STEP_GITHUB);
             }
@@ -143,13 +146,13 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
                     .build();
 
             if (!stepsPerformed.contains(STEP_OPENSHIFT)) {
-                openShiftService.create(deployment);
+                openShiftService().create(deployment);
 
                 LOG.info("{} : Created OpenShift resources", getLabel(integration));
                 stepsPerformed.add(STEP_OPENSHIFT);
             }
 
-            if (openShiftService.isScaled(deployment)) {
+            if (openShiftService().isScaled(deployment)) {
                 return new StatusUpdate(Integration.Status.Activated, stepsPerformed);
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
@@ -209,7 +212,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         Map<String, String> labels = new HashMap<>();
         labels.put(OpenShiftService.USERNAME_LABEL, Names.sanitize(username));
 
-        return (int) openShiftService.getDeploymentsByLabel(new RequestConfigBuilder().withOauthToken(Tokens.fetchProviderTokenFromKeycloak(OPENSHIFT, token)).build(), labels)
+        return (int) openShiftService().getDeploymentsByLabel(new RequestConfigBuilder().withOauthToken(Tokens.fetchProviderTokenFromKeycloak(OPENSHIFT, token)).build(), labels)
             .stream()
             .filter(d -> !Names.sanitize(name).equals(d.getMetadata().getName())) //this is also called on updates (so we need to exclude)
             .filter(d -> d.getSpec().getReplicas() > 0)
@@ -242,7 +245,7 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
 
     private Map<String, byte[]> createProjectFiles(String username, Integration integration) {
         try {
-            Map<String, Connector> connectorMap = fetchConnectorsMap();
+            Map<String, Connector> connectorMap = fetchConnectorsMap(dataManager);
 
             GenerateProjectRequest request = new GenerateProjectRequest.Builder()
                 .integration(integration)
@@ -273,10 +276,6 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
         return UUID.randomUUID().toString();
     }
 
-    private Map<String, Connector> fetchConnectorsMap() {
-        return dataManager.fetchAll(Connector.class).getItems().stream().collect(Collectors.toMap(o -> o.getId().get(), o -> o));
-    }
-
     /**
      * Creates a {@link Map} that contains all the configuration that corresponds to application.properties.
      * The configuration should include:
@@ -286,97 +285,96 @@ public class ActivateHandler implements StatusChangeHandlerProvider.StatusChange
      * @return
      */
     private Properties extractApplicationPropertiesFrom(Integration integration) {
-        Properties secrets = new Properties();
-        Map<String, Connector> connectorMap = fetchConnectorsMap();
+        final Properties secrets = new Properties();
+        final Map<String, Connector> connectorMap = fetchConnectorsMap(dataManager);
+        final Map<Step, String> connectorIdMap = buildConnectorSuffixMap(integration);
 
         integration.getSteps().ifPresent(steps -> {
-            for (Step step : steps) {
-                if (step.getStepKind().equals(Endpoint.KIND)) {
-                    step.getAction().ifPresent(action -> {
-                        step.getConnection().ifPresent(connection -> {
-                            String connectorId = connection.getConnectorId().orElseGet(action::getConnectorId);
-                            if (!connectorMap.containsKey(connectorId)) {
-                                throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
+            steps.stream()
+                .filter(step -> step.getStepKind().equals(Endpoint.KIND))
+                .filter(step -> step.getAction().isPresent())
+                .filter(step -> step.getConnection().isPresent())
+                .forEach(step -> {
+                    final Action action = step.getAction().get();
+                    final Connection connection = step.getConnection().get();
+                    final String connectorId = connection.getConnectorId().orElseGet(action::getConnectorId);
+
+                    if (!connectorMap.containsKey(connectorId)) {
+                        throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
+                    }
+
+                    final String connectorPrefix = action.getCamelConnectorPrefix();
+                    final Connector connector = connectorMap.get(connectorId);
+                    final Map<String, String> properties = aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties().orElseGet(Collections::emptyMap));
+
+                    final Function<Map.Entry<String, String>, String> componentKeyConverter;
+                    final Function<Map.Entry<String, String>, String> secretKeyConverter;
+
+                    // Enable configuration aliases only if the connector
+                    // has component options otherwise it does not get
+                    // configured by camel.
+                    //
+                    // The real connector id is calculated from the
+                    // number of instances a connector should be
+                    // instantiated.
+                    //
+                    // Example:
+                    //
+                    // if the twitter-search-connector is used twice,
+                    // secrets will be in the form
+                    //
+                    //     twitter-search-connector.configurations.twitter-search-connector-1.propertyName
+                    //
+                    // otherwise it fallback to
+                    //
+                    //     twitter-search-connector.propertyName
+                    if (hasComponentProperties(properties, connector, action) && connectorIdMap.containsKey(step)) {
+                        componentKeyConverter = e -> String.join(".", connectorPrefix, "configurations", connectorPrefix + "-" + connectorIdMap.get(step), e.getKey()).toString();
+                    } else {
+                        componentKeyConverter = e -> String.join(".", connectorPrefix, e.getKey()).toString();
+                    }
+
+                    // Secrets does not follow the component convention so
+                    // the property is always flattered at connector level
+                    //
+                    // Example:
+                    //
+                    //     twitter-search-connector-1.propertyName
+                    //
+                    // otherwise it fallback to
+                    //
+                    //     witter-search-connector.propertyName
+                    //
+                    if (connectorIdMap.containsKey(step)) {
+                        secretKeyConverter = e -> String.join(".", connectorPrefix + "-" + connectorIdMap.get(step), e.getKey()).toString();
+                    } else {
+                        secretKeyConverter = e -> String.join(".", connectorPrefix, e.getKey()).toString();
+                    }
+
+                    // Merge properties set on connection and step and
+                    // create secrets for component options or for sensitive
+                    // information.
+                    //
+                    // NOTE: if an option is both a component option and
+                    //       a sensitive information it is then only added
+                    //       to the component configuration to avoid dups
+                    //       and possible error at runtime.
+                    properties.entrySet().stream()
+                        .filter(or(connector::isSecretOrComponentProperty, action::isSecretOrComponentProperty))
+                        .distinct()
+                        .forEach(
+                            e -> {
+                                if (connector.isComponentProperty(e) || action.isComponentProperty(e)) {
+                                    secrets.put(componentKeyConverter.apply(e), e.getValue());
+                                } else if (connector.isSecret(e) || action.isSecret(e)) {
+                                    secrets.put(secretKeyConverter.apply(e), e.getValue());
+                                }
                             }
-
-                            final String connectorPrefix = action.getCamelConnectorPrefix();
-                            final Connector connector = connectorMap.get(connectorId);
-                            final Map<String, String> properties = aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties().orElseGet(Collections::emptyMap));
-
-                            final Function<Map.Entry<String, String>, String> componentKeyConverter;
-                            final Function<Map.Entry<String, String>, String> secretKeyConverter;
-
-                            // Enable configuration aliases only if the connector
-                            // has component options otherwise it does not get
-                            // configured by camel.
-                            if (hasComponentProperties(properties, connector, action)) {
-                                // The connector id is marked as optional thus if the
-                                // id is not provided it is also not possible to create
-                                // a connector configuration alias.
-                                //
-                                // if th id is set this generate something like:
-                                //
-                                //     twitter-search.configurations.twitter-search-1.propertyName
-                                //
-                                // otherwise it fallback to
-                                //
-                                //     twitter-search.propertyName
-                                //
-                                // NOTE: model should be more clear about what fields
-                                //       should be there and what are effectively
-                                //       optional so it maybe useful to leverage
-                                //       annotation such as @NotNull, @Nullable.
-                                componentKeyConverter = e -> connection.getId().map(
-                                    id -> String.join(".", connectorPrefix, "configurations", connectorPrefix + "-" + id, e.getKey()).toString()
-                                ).orElseGet(
-                                    () -> String.join(".", connectorPrefix, e.getKey()).toString()
-                                );
-                            } else {
-                                componentKeyConverter = e -> String.join(".", connectorPrefix, e.getKey()).toString();
-                            }
-
-                            // Secrets does not follow the component convention so
-                            // the property is always flattered at connector level
-                            //
-                            // if th id is set this generate something like:
-                            //
-                            //     twitter-search-1.propertyName
-                            //
-                            // otherwise it fallback to
-                            //
-                            //     twitter-search.propertyName
-                            //
-                            secretKeyConverter = e -> connection.getId().map(
-                                id -> String.join(".", connectorPrefix + "-" + id, e.getKey()).toString()
-                            ).orElseGet(
-                                () -> String.join(".", connectorPrefix, e.getKey()).toString()
-                            );
-
-                            // Merge properties set on connection and step and
-                            // create secrets for component options or for sensitive
-                            // information.
-                            //
-                            // NOTE: if an option is both a component option and
-                            //       a sensitive information it is then only added
-                            //       to the component configuration to avoid dups
-                            //       and possible error at runtime.
-                            properties.entrySet().stream()
-                                .filter(or(connector::isSecretOrComponentProperty, action::isSecretOrComponentProperty))
-                                .distinct()
-                                .forEach(
-                                    e -> {
-                                        if (connector.isComponentProperty(e) || action.isComponentProperty(e)) {
-                                            secrets.put(componentKeyConverter.apply(e), e.getValue());
-                                        } else if (connector.isSecret(e) || action.isSecret(e)) {
-                                            secrets.put(secretKeyConverter.apply(e), e.getValue());
-                                        }
-                                    }
-                                );
-                        });
-                    });
-                }
+                        );
+                });
             }
-        });
+        );
+
         return secrets;
     }
 
