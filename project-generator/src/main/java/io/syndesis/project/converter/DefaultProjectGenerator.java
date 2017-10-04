@@ -15,27 +15,6 @@
  */
 package io.syndesis.project.converter;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -57,6 +36,28 @@ import io.syndesis.project.converter.visitor.StepVisitorFactory;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
@@ -193,6 +194,27 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
     private byte[] generateFlowYaml(Path runtimeDir, GenerateProjectRequest request) throws JsonProcessingException {
+        final Map<Step, String> connectorIdMap = new HashMap<>();
+
+        // Determine connector prefix
+        request.getIntegration().getSteps().ifPresent(steps -> {
+                steps.stream()
+                    .filter(s -> s.getStepKind().equals(Endpoint.KIND))
+                    .filter(s -> s.getAction().isPresent())
+                    .filter(s -> s.getConnection().isPresent())
+                    .collect(Collectors.groupingBy(s -> s.getAction().get().getCamelConnectorPrefix()))
+                    .forEach(
+                        (prefix, stepList) -> {
+                            if (stepList.size() > 1) {
+                                for (int i = 0; i < stepList.size(); i++) {
+                                    connectorIdMap.put(stepList.get(i), Integer.toString(i + 1));
+                                }
+                            }
+                        }
+                    );
+            }
+        );
+
         Flow flow = new Flow();
         request.getIntegration().getSteps().ifPresent(steps -> {
             if (steps.isEmpty()) {

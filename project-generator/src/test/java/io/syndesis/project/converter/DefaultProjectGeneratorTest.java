@@ -312,8 +312,6 @@ public class DefaultProjectGeneratorTest {
                 .steps(Arrays.asList(step1, step2, step3))
                 .build())
             .connectors(connectors)
-            .gitHubUserLogin("noob")
-            .gitHubRepoName("test")
             .build();
 
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
@@ -321,12 +319,10 @@ public class DefaultProjectGeneratorTest {
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         generatorProperties.setSecretMaskingEnabled(true);
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
+        Path runtimeDir = generate(request, generatorProperties);
 
-        assertFileContents(generatorProperties, files.get("src/main/resources/application.properties"), "test-application.properties");
-        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-syndesis-with-secrets-and-multiple-connector-of-same-type.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-filter-syndesis.yml");
     }
-
 
     @Test
     public void testConvertFromJson() throws Exception {
