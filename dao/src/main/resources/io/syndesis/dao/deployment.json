@@ -88,7 +88,7 @@
           "description": "Search tweets based one or more keywords",
           "id": "io.syndesis:twitter-search-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-search-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-search",
+          "camelConnectorPrefix": "twitter-search-connector",
           "definition": {
             "inputDataShape": {
                "kind" : "none"
@@ -106,6 +106,7 @@
                   "displayName": "Ignore tweets previously found",
                   "group": "filter",
                   "label": "consumer,filter",
+                  "required": false,
                   "type": "boolean",
                   "javaType": "boolean",
                   "tags":[],
@@ -133,6 +134,7 @@
                   "displayName": "Delay",
                   "group": "scheduler",
                   "label": "consumer,scheduler",
+                  "required": false,
                   "type": "integer",
                   "javaType": "long",
                   "tags":[],
