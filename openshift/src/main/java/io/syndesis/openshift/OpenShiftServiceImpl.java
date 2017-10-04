@@ -24,6 +24,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.openshift.api.model.DeploymentConfig;
@@ -32,8 +34,12 @@ import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.core.Names;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpenShiftServiceImpl implements OpenShiftService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OpenShiftServiceImpl.class);
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
@@ -64,12 +70,27 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     private InputStream createTarInputStream(Path runtimeDir) throws IOException {
         PipedInputStream is = new PipedInputStream();
         PipedOutputStream os = new PipedOutputStream(is);
-        TarArchiveOutputStream tos = new TarArchiveOutputStream(os);
-        tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
-        addFileToTar(tos, runtimeDir.toFile(), "");
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+            try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
+                tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
+                addDirToTar(tos, runtimeDir.toFile(), "");
+            } catch (IOException e) {
+                LOG.error("Exception while creating build tar from " + runtimeDir + " : " + e, e);
+            }
+        });
         return is;
     }
 
+    private void addDirToTar(TarArchiveOutputStream tos, File dir, String base) throws IOException {
+        File[] entries = dir.listFiles();
+        if (entries != null) {
+            for (File child : entries) {
+                addFileToTar(tos, child, base + "/");
+            }
+        }
+    }
 
     private void addFileToTar(TarArchiveOutputStream tos, File toAdd, String base) throws IOException {
         String entryName = base + toAdd.getName();
@@ -81,12 +102,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             tos.closeArchiveEntry();
         } else {
             tos.closeArchiveEntry();
-            File[] entries = toAdd.listFiles();
-            if (entries != null) {
-                for (File child : entries) {
-                    addFileToTar(tos, child, entryName + "/");
-                }
-            }
+            addDirToTar(tos, toAdd, entryName);
         }
     }
 
