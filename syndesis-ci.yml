@@ -17,6 +17,8 @@ metadata:
 # Syndesis Tag: latest
 # Restricted environment: false
 #
+  labels:
+    app: syndesis
 parameters:
 # Parameters with no defaults (has to be be provided when template is applied):
 - name: ROUTE_HOSTNAME
