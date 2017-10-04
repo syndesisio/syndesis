@@ -15,6 +15,13 @@
  */
 package io.syndesis.openshift;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.client.RequestConfig;
 import io.fabric8.openshift.api.model.DeploymentConfig;
@@ -23,13 +30,6 @@ import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.core.Names;
 import io.syndesis.core.SyndesisServerException;
-
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 public class OpenShiftServiceImpl implements OpenShiftService {
 
@@ -215,7 +215,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewSourceStrategy()
             .withNewFrom().withKind("ImageStreamTag").withName(img.getShortName() + ":" + img.getTag()).endFrom()
             .withIncremental(true)
-              .withEnv(new EnvVar("MAVEN_OPTS","-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx500m", null))
+              .withEnv(new EnvVar("MAVEN_OPTS","-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx300m", null))
             .endSourceStrategy()
             .endStrategy()
             .withNewOutput().withNewTo().withKind("ImageStreamTag").withName(projectName + ":latest").endTo().endOutput()
