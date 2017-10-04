@@ -8,28 +8,7 @@ import { log } from '../logging';
 @Injectable()
 export class SetupService {
 
-  private url: string;
-  private args: RequestOptionsArgs;
-
-  /**
-   * @type {boolean}
-   * Flag used to determine whether or not the user is a first time user.
-   */
-  firstTime = true;
-
   constructor(private http: Http) {
-  }
-
-  setApiEndpoint(apiEndpoint: string) {
-    this.url = apiEndpoint.substring(0, apiEndpoint.lastIndexOf('/')) + '/setup';
-  }
-
-  setAccessToken(accessToken: string) {
-    this.args = {
-      headers: new Headers({
-        'Authorization': `Bearer ${accessToken}`,
-      }),
-    };
   }
 
   /**
@@ -39,25 +18,29 @@ export class SetupService {
    * 410 status from API = GitHub setup NOT required
    * @returns {Promise<boolean>}
    */
-  isSetupPending(): Promise<boolean> {
-    return this.http.get(this.url, this.args)
-      .toPromise()
-      .then(response => {
-        if (response.status === 204) {
-          this.firstTime = true;
-          return true;
-        } else {
-          return this.handleError('Failed to check GitHub credentials', response);
-        }
-      })
-      .catch((response: Response) => {
-        if (response.status === 410) {
-          this.firstTime = false;
-          return false;
-        } else {
-          return this.handleError('Failed to check GitHub credentials', response);
-        }
-      });
+  isSetupPending(apiEndpoint: string, accessToken: string): Promise<boolean> {
+    if (apiEndpoint && accessToken) {
+      const url = this.createHttpUrl(apiEndpoint);
+      const args = this.createHttpArgs(accessToken);
+      return this.http.get(url, args)
+        .toPromise()
+        .then(response => {
+          if (response.status === 204) {
+            return true;
+          } else {
+            return this.handleError('Failed to check GitHub credentials', response);
+          }
+        })
+        .catch((response: Response) => {
+          if (response.status === 410) {
+            return false;
+          } else {
+            return this.handleError('Failed to check GitHub credentials', response);
+          }
+        });
+    } else {
+      return Promise.resolve(false);
+    }
   }
 
   /**
@@ -65,14 +48,30 @@ export class SetupService {
    * @param {Setup} setup
    * @returns {Promise<any>}
    */
-  updateSetup(setup: Setup): Promise<any> {
-    return this.http.put(this.url, JSON.stringify(setup), this.args)
+  updateSetup(setup: Setup, apiEndpoint: string, accessToken: string): Promise<any> {
+    const url = this.createHttpUrl(apiEndpoint);
+    const args = this.createHttpArgs(accessToken);
+    const body = JSON.stringify(setup);
+    return this.http.put(url, body, args)
       .toPromise()
       .then(response => null)
       .catch((response: Response) => {
         // 410 (Gone) if already configured
         return response.status === 410 ? null : this.handleError('Failed to save GitHub credentials', response);
       });
+  }
+
+  private createHttpUrl(apiEndpoint: string): string {
+    return apiEndpoint.substring(0, apiEndpoint.lastIndexOf('/')) + '/setup';
+  }
+
+  private createHttpArgs(accessToken: string): RequestOptionsArgs {
+    return {
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      }),
+    };
   }
 
   /**

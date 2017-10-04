@@ -98,9 +98,9 @@ export function appInitializer(
           /**
            * Redirects user to setup page if GitHub setup is still pending
            */
-          setupService.setApiEndpoint(configService.getSettings().apiEndpoint);
-          setupService.setAccessToken(oauthService.getAccessToken());
-          setupService.isSetupPending()
+          const apiEndpoint = configService.getSettings().apiEndpoint;
+          const accessToken = oauthService.getAccessToken();
+          setupService.isSetupPending(apiEndpoint, accessToken)
             .then(function (setupPending) {
               if (setupPending) {
                 window.location.assign('/setup');
@@ -123,55 +123,64 @@ export function appInitializer(
                   // And kick off the login flow again.
                   return oauthService.initImplicitFlow('autolink');
                 }
+
+                init2(oauthService, userService, ngZone, notificationService);
               }
             })
             .catch(function (error) {
               console.error('Error fetching setup status' + error);
             });
+        } else {
+          init2(oauthService, userService, ngZone, notificationService);
         }
-
-        // Remove this marker from session storage as it has served it's purpose.
-        sessionStorage.removeItem('syndesis-first-idp');
-
-        // Use the token to load our user details and set up the refresh token flow.
-        oauthService.loadUserProfile().then(() => {
-          userService.setUser(oauthService.getIdentityClaims());
-
-          // Only do refreshes if we're doing a hybrid oauth flow.
-          if (oauthService.hybrid) {
-            ngZone.runOutsideAngular(() => {
-
-              const notification: Notification = {
-                type          : NotificationType.WARNING,
-                header        : 'Session expired!',
-                message       : 'Please refresh this page by clicking this link or your browser reload button',
-                primaryAction : { id: 'reload', title: 'Reload this page' },
-                moreActions   : [],
-                showClose     : false,
-              };
-
-              // see https://christianliebel.com/2016/11/angular-2-protractor-timeout-heres-fix/
-              // registered observable / timeout makes protractor wait forever
-              Observable.interval(1000 * 60).subscribe(() => {
-                ngZone.run(() => {
-                  oauthService
-                    .refreshToken()
-                    .catch(reason => {
-                      log.errorc(
-                        () => 'Failed to refresh token',
-                        () => new Error(reason),
-                      );
-                      if (!notificationService.getNotifications().find(n => n === notification)) {
-                        notificationService.getNotifications().push(notification);
-                      }
-                    });
-                });
-              });
-            });
-          }
-        });
       });
   };
+}
+
+function init2(oauthService: OAuthService,
+               userService: UserService,
+               ngZone: NgZone,
+               notificationService: NotificationService) {
+  // Remove this marker from session storage as it has served it's purpose.
+  sessionStorage.removeItem('syndesis-first-idp');
+
+  // Use the token to load our user details and set up the refresh token flow.
+  oauthService.loadUserProfile().then(() => {
+    userService.setUser(oauthService.getIdentityClaims());
+
+    // Only do refreshes if we're doing a hybrid oauth flow.
+    if (oauthService.hybrid) {
+      ngZone.runOutsideAngular(() => {
+
+        const notification: Notification = {
+          type: NotificationType.WARNING,
+          header: 'Session expired!',
+          message: 'Please refresh this page by clicking this link or your browser reload button',
+          primaryAction: { id: 'reload', title: 'Reload this page' },
+          moreActions: [],
+          showClose: false,
+        };
+
+        // see https://christianliebel.com/2016/11/angular-2-protractor-timeout-heres-fix/
+        // registered observable / timeout makes protractor wait forever
+        Observable.interval(1000 * 60).subscribe(() => {
+          ngZone.run(() => {
+            oauthService
+              .refreshToken()
+              .catch(reason => {
+                log.errorc(
+                  () => 'Failed to refresh token',
+                  () => new Error(reason),
+                );
+                if (!notificationService.getNotifications().find(n => n === notification)) {
+                  notificationService.getNotifications().push(notification);
+                }
+              });
+          });
+        });
+      });
+    }
+  });
 }
 
 export function restangularProviderConfigurer(
@@ -269,4 +278,4 @@ export function restangularProviderConfigurer(
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

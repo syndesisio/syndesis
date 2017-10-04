@@ -63,6 +63,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   notifications: Notification[];
 
+  firstTime = true;
+
   /**
    * Local var used to determine whether or not to display a close
    * button on a PatternFly toast notification.
@@ -81,10 +83,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.initView();
-  }
-
-  private initView() {
     this.logoWhiteBg = this.config.getSettings(
       'branding',
       'logoWhiteBg',
@@ -135,6 +133,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.user = this.userService.user;
     this.notifications = this.notificationService.getNotifications();
     this.showClose = true;
+
+    const apiEndpoint = this.config.getSettings().apiEndpoint;
+    const accessToken = this.oauthService.getAccessToken();
+    this.setupService.isSetupPending(apiEndpoint, accessToken)
+      .then(setupPending => {
+        this.firstTime = setupPending;
+      });
   }
 
   /**

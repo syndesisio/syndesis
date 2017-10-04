@@ -55,9 +55,9 @@ export class GitHubOAuthSetupComponent implements OnInit {
         clientSecret: formModel.clientSecret,
       },
     };
-    this.setupService.setApiEndpoint(this.configService.getSettings().apiEndpoint);
-    this.setupService.setAccessToken(this.oauthService.getAccessToken());
-    return this.setupService.updateSetup(setup)
+    const apiEndpoint = this.configService.getSettings().apiEndpoint;
+    const accessToken = this.oauthService.getAccessToken();
+    return this.setupService.updateSetup(setup, apiEndpoint, accessToken)
       .catch(message => {
       this.notificationService.message(NotificationType.DANGER, 'Error', message, false, null, []);
       },
