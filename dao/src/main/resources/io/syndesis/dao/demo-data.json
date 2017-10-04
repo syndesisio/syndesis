@@ -1645,8 +1645,8 @@
       "name": "PostgresDB",
       "description": "Sample Database Connection for Stored Procedure Invocation",
       "tags":["sampledb"],
-      "icon": "fa-globe",
-      "connectorId": "sql-stored",
+      "icon": "fa-database",
+      "connectorId": "sql-stored-connector",
       "configuredProperties": {
         "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
         "user": "sampledb",
