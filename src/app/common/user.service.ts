@@ -18,6 +18,7 @@ export class UserService {
    * Checks to see if user has a token or not
    */
   checkToken() {
+    console.log('user.service.ts this.oauthService.hasValidAccessToken(): ' + JSON.stringify(this.oauthService.hasValidAccessToken()));
     return this.oauthService.hasValidAccessToken();
   }
 
