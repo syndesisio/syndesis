@@ -22,12 +22,9 @@ import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.openshift.OpenShiftService;
 
-public class DeleteHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
-
-    private final OpenShiftService openShiftService;
-
+public class DeleteHandler extends BaseHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
     DeleteHandler(OpenShiftService openShiftService) {
-        this.openShiftService = openShiftService;
+        super(openShiftService);
     }
 
     @Override
@@ -37,8 +34,8 @@ public class DeleteHandler implements StatusChangeHandlerProvider.StatusChangeHa
 
     @Override
     public StatusUpdate execute(Integration integration) {
-        Integration.Status currentStatus = !openShiftService.exists(integration.getName())
-            || openShiftService.delete(integration.getName())
+        Integration.Status currentStatus = !openShiftService().exists(integration.getName())
+            || openShiftService().delete(integration.getName())
             ? Integration.Status.Deleted
             : Integration.Status.Pending;
 

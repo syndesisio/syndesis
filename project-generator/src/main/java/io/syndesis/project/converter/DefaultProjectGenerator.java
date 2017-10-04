@@ -28,8 +28,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,8 +57,6 @@ import io.syndesis.project.converter.visitor.StepVisitorFactory;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
@@ -212,6 +215,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                     .index(1)
                     .step(first)
                     .remaining(remaining)
+                    .connectorIdSupplier(step -> Optional.ofNullable(connectorIdMap.get(step)))
                     .build();
 
                 visitStep(generatorContext, stepContext);

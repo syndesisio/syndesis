@@ -62,6 +62,7 @@ public class EndpointStepVisitor implements StepVisitor {
 
         try {
             return createEndpoint(
+                visitorContext,
                 generatorContext.getRequest(),
                 step,
                 step.getConnection().orElseThrow(() -> new IllegalStateException("Action is not present")),
@@ -72,7 +73,7 @@ public class EndpointStepVisitor implements StepVisitor {
         }
     }
 
-    private Endpoint createEndpoint(GenerateProjectRequest request, Step step, Connection connection, Action action) throws URISyntaxException, IOException {
+    private Endpoint createEndpoint(StepVisitorContext visitorContext, GenerateProjectRequest request, Step step, Connection connection, Action action) throws URISyntaxException, IOException {
         String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
         if (!request.getConnectors().containsKey(connectorId)) {
             throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
@@ -84,29 +85,31 @@ public class EndpointStepVisitor implements StepVisitor {
         final Map<String, String> properties = aggregate(connector.filterProperties(configuredProperties, connector::isEndpointProperty), action.filterProperties(configuredProperties, action::isEndpointProperty));
         final boolean hasComponentOptions = hasComponentProperties(configuredProperties, connector, action);
 
-        // connector prefix is suffixed with the connection id if present and in
-        // such case the prefix is something like:
+        // connector prefix is suffixed with the computed id if needed (i.e. if
+        // multiple instances of the same connector are defined). In such case
+        // the prefix is something like:
         //
-        //     twitter-search-1
+        //     twitter-search-connector-1
         //
         // otherwise it fallback to
         //
-        //     twitter-search
+        //     twitter-search-connector
         //
-        final String connectorPrefix = connection.getId().map(id -> camelConnectorPrefix + "-" + id).orElse(camelConnectorPrefix);
+        final String connectorPrefix = visitorContext.getConnectorIdSupplier().apply(step).map(id -> camelConnectorPrefix + "-" + id).orElse(camelConnectorPrefix);
 
-        // connector scheme is suffixed with the connection id if present and if
-        // the connector has component options to match the code in ActivateHandler
+        // connector prefix is suffixed with the computed id if needed (i.e. if
+        // multiple instances of the same connector are defined) and if the
+        // connector has component options to match the code in ActivateHandler
         // (see ActivateHandler#extractApplicationProperties) and in such case
         // the scheme generated scheme is something like:
         //
-        //     twitter-search-1
+        //      twitter-search-connector-1
         //
         // otherwise it fallback to
         //
-        //     twitter-search
+        //     twitter-search-connector
         //
-        final String connectorScheme = hasComponentOptions ? connection.getId().map(id -> camelConnectorPrefix + "-" + id).orElse(camelConnectorPrefix) : camelConnectorPrefix;
+        final String connectorScheme = hasComponentOptions ? visitorContext.getConnectorIdSupplier().apply(step).map(id -> camelConnectorPrefix + "-" + id).orElse(camelConnectorPrefix) : camelConnectorPrefix;
 
         // if the option is marked as secret use property placeholder as the
         // value is added to the integration secret.
