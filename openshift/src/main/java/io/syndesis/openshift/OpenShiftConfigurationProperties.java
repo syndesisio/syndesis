@@ -34,7 +34,7 @@ public class OpenShiftConfigurationProperties {
 
     private final OpenShiftConfig openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(openShiftHost).withCaCertFile(SERVICE_CA_CERT_FILE).build();
 
-    private String builderImage = "fabric8/s2i-java:2.0.0";
+    private String builderImageStreamTag = "s2i-java:2.0";
 
     private String apiBaseUrl;
 
@@ -62,12 +62,12 @@ public class OpenShiftConfigurationProperties {
         return openShiftClientConfig;
     }
 
-    public String getBuilderImage() {
-        return builderImage;
+    public String getBuilderImageStreamTag() {
+        return builderImageStreamTag;
     }
 
-    public void setBuilderImage(String builderImage) {
-        this.builderImage = builderImage;
+    public void setBuilderImageStreamTag(String builderImageStreamTag) {
+        this.builderImageStreamTag = builderImageStreamTag;
     }
 
     public String getApiBaseUrl() {
