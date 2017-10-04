@@ -91,4 +91,19 @@
         scheduled: true
       name: {{ Tags.PemToKeystore }}
 {{/WithDockerImages}}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: {{ Images.S2i.ImageStream }}
+    labels:
+      app: syndesis
+      component: s2i-java
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: {{ Images.S2i.DockerImage }}:{{ Images.S2i.Tag }}
+      importPolicy:
+        scheduled: true
+      name: {{ Images.S2i.Tag }}
 {{/Productized}}

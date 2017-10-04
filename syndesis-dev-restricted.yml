@@ -143,6 +143,21 @@ message: |-
     FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
 objects:
 
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: s2i-java
+    labels:
+      app: syndesis
+      component: s2i-java
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: fabric8/s2i-java:2.0
+      importPolicy:
+        scheduled: true
+      name: 2.0
 
 - apiVersion: v1
   kind: Service
@@ -2183,6 +2198,7 @@ objects:
       openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
+        builderImageStreamTag: s2i-java:2.0
       keycloak:
         enabled: true
         configurationFile: file:config/syndesis-client.json
