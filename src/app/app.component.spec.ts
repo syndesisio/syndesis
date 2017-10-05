@@ -16,8 +16,8 @@ import { ConfigService } from './config.service';
 import { UserService } from './common/user.service';
 import { NavigationService } from './common/navigation.service';
 import { StoreModule } from './store/store.module';
+
 import { TestSupportService } from './store/test-support.service';
-import { SetupModule } from './setup/setup.module';
 
 describe('AppComponent', () => {
   beforeEach(() => {
@@ -32,7 +32,6 @@ describe('AppComponent', () => {
         CollapseModule.forRoot(),
         BsDropdownModule.forRoot(),
         NotificationModule,
-        SetupModule,
       ],
       providers: [
         ConfigService,
