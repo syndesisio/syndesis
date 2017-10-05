@@ -20,8 +20,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.HEAD;
-
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
