@@ -111,6 +111,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             LOG.error("{} : Failure", getLabel(integration), e);
+            return new StatusUpdate(Integration.Status.Pending);
         }
         return new StatusUpdate(Integration.Status.Pending);
     }

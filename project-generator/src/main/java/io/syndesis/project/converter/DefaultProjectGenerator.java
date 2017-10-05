@@ -27,6 +27,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -168,6 +169,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(generateAddProjectTarEntries(request, os));
+
         return is;
     }
 
@@ -183,7 +185,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
 
                 addAdditionalResources(tos);
-
+                LOG.info("Integration {} : Project files written to output stream" + request.getIntegration().getName());
             } catch (IOException e) {
                 LOG.error("Exception while creating runtime build tar for integration " + request.getIntegration().getName() + " : " + e, e);
             }
@@ -202,13 +204,18 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     @Override
     public byte[] generatePom(Integration integration) throws IOException {
         Set<MavenGav> connectors = new LinkedHashSet<>();
+        Set<String> gavsSeen = new HashSet<>();
         integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
                 if (step.getStepKind().equals(Endpoint.KIND)) {
                     step.getAction().ifPresent(action -> {
-                        String[] splitGav = action.getCamelConnectorGAV().split(":");
-                        if (splitGav.length == 3) {
-                            connectors.add(new MavenGav(splitGav[0], splitGav[1], splitGav[2]));
+                        String gav = action.getCamelConnectorGAV();
+                        if (!gavsSeen.contains(gav)) {
+                            String[] splitGav = gav.split(":");
+                            if (splitGav.length == 3) {
+                                connectors.add(new MavenGav(splitGav[0], splitGav[1], splitGav[2]));
+                            }
+                            gavsSeen.add(gav);
                         }
                     });
                 }

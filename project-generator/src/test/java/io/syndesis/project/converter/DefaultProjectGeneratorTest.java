@@ -436,10 +436,11 @@ public class DefaultProjectGeneratorTest {
                         destPath.createNewFile();
                         byte[] btoRead = new byte[8129];
                         BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath));
-                        int len;
-                        while ((len = tis.read(btoRead)) != -1) {
+                        int len = tis.read(btoRead);
+                        while (len != -1) {
                             bout.write(btoRead, 0, len);
-                        }
+                            len = tis.read(btoRead);
+                        };
                         bout.close();
                     }
                     tarEntry = tis.getNextTarEntry();

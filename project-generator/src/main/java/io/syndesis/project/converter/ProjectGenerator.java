@@ -24,6 +24,14 @@ import io.syndesis.model.integration.Integration;
 
 public interface ProjectGenerator {
 
+    /**
+     * Generate the project files in form of tar input stream
+     * @param request the parameters to create the project files
+     * @return an {@link InputStream} which holds a tar archive and which can be directly used for
+     * an S2I build
+     *
+     * @throws IOException if generating fails
+     */
     InputStream generate(GenerateProjectRequest request) throws IOException;
 
     byte[] generatePom(Integration integration) throws IOException;
