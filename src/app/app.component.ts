@@ -68,7 +68,6 @@ export class AppComponent implements OnInit, AfterViewInit {
    * @type {any}
    */
   firstTime = this.firstTimeUser();
-  //firstTime = true;
 
   /**
    * Local var used to determine whether or not to display a close
