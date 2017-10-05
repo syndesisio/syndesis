@@ -622,36 +622,26 @@ objects:
         sleep 1
       done
       echo "----- creating sampledb"
-      psql -c "CREATE USER sampledb WITH PASSWORD '$POSTGRESQL_SAMPLEDB_PASSWORD';"
-      psql -f /var/lib/pgsql/sampledb/add-sample-db.sql -v user=sampledb
+      psql <<EOF 
+        CREATE DATABASE sampledb;
+        CREATE USER sampledb WITH PASSWORD '$POSTGRESQL_SAMPLEDB_PASSWORD';
+        GRANT ALL PRIVILEGES ON DATABASE sampledb to sampledb;
+      EOF
+      psql -d sampledb -U sampledb <<'EOF'
+        CREATE TABLE IF NOT EXISTS todo (id SERIAL PRIMARY KEY, task VARCHAR, completed INTEGER);
+        CREATE OR REPLACE FUNCTION add_todo(
+          task varchar)
+          RETURNS void
+          LANGUAGE 'plpgsql'
+
+        AS $BODY$
+        BEGIN
+          insert into todo(task,completed) VALUES (task,0);
+        END;
+        $BODY$;
+      EOF
+
       echo "----- sampledb created"
-    add-sample-db.sql: |
-      CREATE DATABASE :user;
-      GRANT ALL PRIVILEGES ON DATABASE :user to :user;
-
-      \c :user
-      CREATE SCHEMA AUTHORIZATION :user;
-      ALTER DEFAULT PRIVILEGES IN SCHEMA :user GRANT ALL ON TABLES TO :user;
-      CREATE TABLE IF NOT EXISTS :user.TODO (id SERIAL PRIMARY KEY, task VARCHAR, completed INTEGER);
-      ALTER TABLE :user.todo OWNER TO :user;
-      ALTER SEQUENCE :user.todo_id_seq OWNER TO :user;
-
-      CREATE OR REPLACE FUNCTION :user.add_todo(
-        task varchar)
-        RETURNS void
-        LANGUAGE 'plpgsql'
-
-      AS $BODY$
-      BEGIN
-        insert into todo(task,completed) VALUES (task,0);
-      END;
-      $BODY$;
-
-      ALTER FUNCTION :user.add_todo(varchar)
-        OWNER TO :user;
-
-
-      \q
     postStart.sh: |
       #!/bin/bash
       /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1
