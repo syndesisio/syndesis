@@ -69,50 +69,13 @@ export function appInitializer(
           }
           oauthService.redirectUri = currentLocation;
 
-          // If this is the first flow, authenticating against OpenShift, then we shouldn't
-          // do the hybrid flow. Let's store whether this is the first IDP in session storage
-          // so it survives the multiple required redirects.
-          let firstIDP = sessionStorage.getItem('syndesis-first-idp');
-          if (!firstIDP) {
-            firstIDP = 'true';
-            sessionStorage.setItem('syndesis-first-idp', firstIDP);
-          }
-
-          // Store whether the oidc client was configured as hybrid so we can enable token refreshes.
-          const originalHybrid = oauthService.hybrid;
-          oauthService.hybrid = oauthService.hybrid && firstIDP !== 'true';
-
           // Before we kick off the implicit flow, we should check that this isn't a redirect back from the auth server
           // and the token isn't present in the location hash - tryLogin does that.
           if (!oauthService.tryLogin()) {
             // There is no token stored or in location hash so kick off implicit flow.
             return oauthService.initImplicitFlow();
           }
-
-          // Set this back so that second flow through we do the proper code flow to get a refresh token.
-          sessionStorage.setItem('syndesis-first-idp', 'false');
-          oauthService.hybrid = originalHybrid;
-
-          let autoLinkGithHub = configService.getSettings('oauth')[
-            'auto-link-github'
-          ];
-          if (autoLinkGithHub === undefined) {
-            autoLinkGithHub = true;
-          }
-
-          // If this wasn't the autolink flow then rekick off flow with state set to autolink.
-          if (autoLinkGithHub && oauthService.state !== 'autolink') {
-            // Client suggested IDP works great with Keycloak.
-            oauthService.loginUrl += '?kc_idp_hint=github';
-            // Clear session storage before trying again.
-            oauthService.logOut(true);
-            // And kick off the login flow again.
-            return oauthService.initImplicitFlow('autolink');
-          }
         }
-
-        // Remove this marker from session storage as it has served it's purpose.
-        sessionStorage.removeItem('syndesis-first-idp');
 
         // Use the token to load our user details and set up the refresh token flow.
         oauthService.loadUserProfile().then(() => {
