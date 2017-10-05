@@ -35,7 +35,7 @@
     "no-arg": true,
     "no-bitwise": true,
     "no-console": [
-      false,
+      true,
       "debug",
       "info",
       "time",
