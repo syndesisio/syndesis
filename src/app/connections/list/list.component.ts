@@ -41,10 +41,9 @@ export class ConnectionsListComponent implements OnInit {
     private modalService: ModalService,
   ) {}
 
-  /**
-   * Actual delete action once the user confirms
-   * @param {Connection} connection
-   */
+  //-----  Delete ------------------->>
+
+  // Actual delete action once the user confirms
   deleteAction(connection: Connection) {
     const sub = this.store.delete(connection).subscribe(
       () => {
@@ -72,11 +71,7 @@ export class ConnectionsListComponent implements OnInit {
     );
   }
 
-  /**
-   * Open modal to confirm delete
-   * @param {Connection} connection
-   * @param $event
-   */
+  // Open modal to confirm delete
   requestDelete(connection: Connection, $event) {
     log.debugc(() => 'Selected connection for delete: ' + connection.id);
     this.selectedForDelete = connection;
@@ -85,10 +80,7 @@ export class ConnectionsListComponent implements OnInit {
       .then(modal => (modal.result ? this.deleteAction(connection) : false));
   }
 
-  /**
-   * Selecting a Connection
-   * @param {Connection} connection
-   */
+  //-----  Selecting a Connection ------------------->>
   onSelect(connection: Connection) {
     if (connection) {
       log.debugc(
@@ -104,9 +96,8 @@ export class ConnectionsListComponent implements OnInit {
     return connection.id === this.selectedId;
   }
 
-  /**
-   * Initialization
-   */
+  //----- Initialization ------------------->>
+
   ngOnInit() {
     log.debugc(
       () =>
@@ -115,10 +106,8 @@ export class ConnectionsListComponent implements OnInit {
     );
   }
 
-  /**
-   * Toast notification
-   * @param notification
-   */
+  //-----  Toast ------------------->>
+
   popNotification(notification) {
     this.notificationService.message(
       notification.type,

@@ -1,9 +1,9 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   OnInit,
   AfterViewInit,
+  ViewChild,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
@@ -25,7 +25,6 @@ import { NavigationService } from './common/navigation.service';
 import { UserService } from './common/user.service';
 import { User } from './model';
 import { saveAs } from 'file-saver';
-import { SetupService } from './setup/setup.service';
 
 @Component({
   selector: 'syndesis-root',
@@ -55,6 +54,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   loggedIn = false;
 
   /**
+   * @type {boolean}
+   * Flag used to determine whether or not the user is a first time user.
+   */
+  firstTime = false;
+
+  /**
    * @type {string}
    * Title of application. Used in the browser title tag.
    */
@@ -62,12 +67,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   user: Observable<User>;
 
   notifications: Notification[];
-
-  /**
-   * Flag used to determine if this is a first time user.
-   * @type {any}
-   */
-  firstTime = true;
 
   /**
    * Local var used to determine whether or not to display a close
@@ -78,13 +77,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private config: ConfigService,
     private oauthService: OAuthService,
-    public userService: UserService,
+    private userService: UserService,
     public testSupport: TestSupportService,
     private notificationService: NotificationService,
     private nav: NavigationService,
     private modalService: ModalService,
-    public setupService: SetupService,
-    private changeDetector: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -138,26 +135,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.user = this.userService.user;
     this.notifications = this.notificationService.getNotifications();
     this.showClose = true;
-
-    this.setFirstTimeUserFlag();
-  }
-
-  /**
-   * Function that determines whether or not this is a first time user
-   * and sets a flag accordingly.
-   */
-  setFirstTimeUserFlag() {
-    const apiEndpoint = this.config.getSettings().apiEndpoint;
-    const accessToken = this.oauthService.getAccessToken();
-
-    this.setupService.isSetupPending(apiEndpoint, accessToken)
-      .then(setupPending => {
-        this.firstTime = setupPending;
-        this.changeDetector.detectChanges();
-      })
-      .catch(err => {
-        log.debug('Error getting setup status: ' + JSON.stringify(err));
-      });
   }
 
   /**
@@ -206,9 +183,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     reader.readAsText(file, 'text/plain;charset=utf-8');
   }
 
-  /**
-   * @param {NotificationEvent} $event
-   */
   handleAction($event: NotificationEvent): void {
     if ($event.action.id === 'reload') {
       location.reload();

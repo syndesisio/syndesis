@@ -29,13 +29,11 @@ import { SyndesisCommonModule } from './common/common.module';
 
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';
-import { SetupService } from './setup/setup.service';
 import { UserService } from './common/user.service';
 import { CanDeactivateGuard } from './common/can-deactivate-guard.service';
 import { log } from './logging';
 
 import { DataMapperModule } from 'syndesis.data.mapper';
-import { SetupModule } from './setup/setup.module';
 
 export function appInitializer(
   configService: ConfigService,
@@ -43,7 +41,6 @@ export function appInitializer(
   userService: UserService,
   ngZone: NgZone,
   notificationService: NotificationService,
-  setupService: SetupService,
 ) {
   return () => {
     return configService
@@ -94,94 +91,68 @@ export function appInitializer(
 
           // Set this back so that second flow through we do the proper code flow to get a refresh token.
           sessionStorage.setItem('syndesis-first-idp', 'false');
+          oauthService.hybrid = originalHybrid;
 
-          /**
-           * Redirects user to setup page if GitHub setup is still pending
-           */
-          const apiEndpoint = configService.getSettings().apiEndpoint;
-          const accessToken = oauthService.getAccessToken();
-          setupService.isSetupPending(apiEndpoint, accessToken)
-            .then(function (setupPending) {
-              log.debug('setupPending app.module.ts: ' + JSON.stringify(setupPending));
-              if (setupPending === true) {
-                window.location.assign('/setup');
-              } else {
-                oauthService.hybrid = originalHybrid;
+          let autoLinkGithHub = configService.getSettings('oauth')[
+            'auto-link-github'
+          ];
+          if (autoLinkGithHub === undefined) {
+            autoLinkGithHub = true;
+          }
 
-                let autoLinkGithHub = configService.getSettings('oauth')[
-                  'auto-link-github'
-                ];
-                if (autoLinkGithHub === undefined) {
-                  autoLinkGithHub = true;
-                }
-
-                // If this wasn't the autolink flow then rekick off flow with state set to autolink.
-                if (autoLinkGithHub && oauthService.state !== 'autolink') {
-                  // Client suggested IDP works great with Keycloak.
-                  oauthService.loginUrl += '?kc_idp_hint=github';
-                  // Clear session storage before trying again.
-                  oauthService.logOut(true);
-                  // And kick off the login flow again.
-                  return oauthService.initImplicitFlow('autolink');
-                }
-
-                init2(oauthService, userService, ngZone, notificationService);
-              }
-            })
-            .catch(function (error) {
-              log.debug('Error fetching setup status' + error);
-            });
-        } else {
-          init2(oauthService, userService, ngZone, notificationService);
+          // If this wasn't the autolink flow then rekick off flow with state set to autolink.
+          if (autoLinkGithHub && oauthService.state !== 'autolink') {
+            // Client suggested IDP works great with Keycloak.
+            oauthService.loginUrl += '?kc_idp_hint=github';
+            // Clear session storage before trying again.
+            oauthService.logOut(true);
+            // And kick off the login flow again.
+            return oauthService.initImplicitFlow('autolink');
+          }
         }
-      });
-  };
-}
 
-function init2(oauthService: OAuthService,
-               userService: UserService,
-               ngZone: NgZone,
-               notificationService: NotificationService) {
-  // Remove this marker from session storage as it has served it's purpose.
-  sessionStorage.removeItem('syndesis-first-idp');
+        // Remove this marker from session storage as it has served it's purpose.
+        sessionStorage.removeItem('syndesis-first-idp');
 
-  // Use the token to load our user details and set up the refresh token flow.
-  oauthService.loadUserProfile().then(() => {
-    userService.setUser(oauthService.getIdentityClaims());
+        // Use the token to load our user details and set up the refresh token flow.
+        oauthService.loadUserProfile().then(() => {
+          userService.setUser(oauthService.getIdentityClaims());
 
-    // Only do refreshes if we're doing a hybrid oauth flow.
-    if (oauthService.hybrid) {
-      ngZone.runOutsideAngular(() => {
+          // Only do refreshes if we're doing a hybrid oauth flow.
+          if (oauthService.hybrid) {
+            ngZone.runOutsideAngular(() => {
 
-        const notification: Notification = {
-          type: NotificationType.WARNING,
-          header: 'Session expired!',
-          message: 'Please refresh this page by clicking this link or your browser reload button',
-          primaryAction: { id: 'reload', title: 'Reload this page' },
-          moreActions: [],
-          showClose: false,
-        };
+              const notification: Notification = {
+                type          : NotificationType.WARNING,
+                header        : 'Session expired!',
+                message       : 'Please refresh this page by clicking this link or your browser reload button',
+                primaryAction : { id: 'reload', title: 'Reload this page' },
+                moreActions   : [],
+                showClose     : false,
+              };
 
-        // see https://christianliebel.com/2016/11/angular-2-protractor-timeout-heres-fix/
-        // registered observable / timeout makes protractor wait forever
-        Observable.interval(1000 * 60).subscribe(() => {
-          ngZone.run(() => {
-            oauthService
-              .refreshToken()
-              .catch(reason => {
-                log.errorc(
-                  () => 'Failed to refresh token',
-                  () => new Error(reason),
-                );
-                if (!notificationService.getNotifications().find(n => n === notification)) {
-                  notificationService.getNotifications().push(notification);
-                }
+              // see https://christianliebel.com/2016/11/angular-2-protractor-timeout-heres-fix/
+              // registered observable / timeout makes protractor wait forever
+              Observable.interval(1000 * 60).subscribe(() => {
+                ngZone.run(() => {
+                  oauthService
+                    .refreshToken()
+                    .catch(reason => {
+                      log.errorc(
+                        () => 'Failed to refresh token',
+                        () => new Error(reason),
+                      );
+                      if (!notificationService.getNotifications().find(n => n === notification)) {
+                        notificationService.getNotifications().push(notification);
+                      }
+                    });
+                });
               });
-          });
+            });
+          }
         });
       });
-    }
-  });
+  };
 }
 
 export function restangularProviderConfigurer(
@@ -263,13 +234,12 @@ export function restangularProviderConfigurer(
     OAuthModule.forRoot(),
     DataMapperModule,
     NotificationModule,
-    SetupModule,
   ],
   providers: [
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
-      deps: [ConfigService, OAuthService, UserService, NgZone, NotificationService, SetupService],
+      deps: [ConfigService, OAuthService, UserService, NgZone, NotificationService],
       multi: true,
     },
     ConfigService,
@@ -279,4 +249,4 @@ export function restangularProviderConfigurer(
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
