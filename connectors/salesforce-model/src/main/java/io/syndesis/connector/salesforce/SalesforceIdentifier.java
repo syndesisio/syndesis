@@ -35,4 +35,9 @@ public class SalesforceIdentifier {
     public void setId(final String id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return id;
+    }
 }
