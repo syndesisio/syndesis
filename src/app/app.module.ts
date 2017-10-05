@@ -103,9 +103,7 @@ export function appInitializer(
           setupService.isSetupPending(apiEndpoint, accessToken)
             .then(function (setupPending) {
               log.debug('setupPending app.module.ts: ' + JSON.stringify(setupPending));
-              console.log('setupPending app.module.ts: ' + JSON.stringify(setupPending));
               if (setupPending === true) {
-                console.log('Setup is still pending.. redirecting to setup.');
                 window.location.assign('/setup');
               } else {
                 oauthService.hybrid = originalHybrid;
