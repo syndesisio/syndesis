@@ -175,7 +175,7 @@ public class IntegrationController {
                 StatusChangeHandlerProvider.StatusChangeHandler.StatusUpdate update = handler.execute(integration);
                 if (update!=null) {
 
-                    LOG.info("{} : Setting status to {}", getLabel(integration), update.getStatus());
+                    LOG.info("{} : Setting status to {}{}", getLabel(integration), update.getStatus(), update.getStatusMessage() != null ? " (" + update.getStatusMessage() + ")" : "");
 
                     // handler.execute might block for while so refresh our copy of the integration
                     // data before we update the current status

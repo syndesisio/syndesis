@@ -84,6 +84,11 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
             return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userDeployments + " deployments, while the maximum allowed number is " + properties.getMaxDeploymentsPerUser() + ".");
         }
 
+        // Don't restart if already pending
+        if (integration.getCurrentStatus().isPresent() &&
+            integration.getCurrentStatus().get() == Integration.Status.Pending) {
+            return null;
+        }
 
         Properties applicationProperties = extractApplicationPropertiesFrom(integration);
         IntegrationRevision revision = IntegrationRevision.createNewRevision(integration);

@@ -165,17 +165,16 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     private InputStream createTarInputStream(GenerateProjectRequest request) throws IOException {
         PipedInputStream is = new PipedInputStream();
-        PipedOutputStream os = new PipedOutputStream(is);
-
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(generateAddProjectTarEntries(request, os));
+        executor.submit(generateAddProjectTarEntries(request, is));
 
         return is;
     }
 
-    private Runnable generateAddProjectTarEntries(GenerateProjectRequest request, PipedOutputStream os) {
+    private Runnable generateAddProjectTarEntries(GenerateProjectRequest request, PipedInputStream is) {
         return () -> {
-            try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
+            try (PipedOutputStream os = new PipedOutputStream(is);
+                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
                 addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
