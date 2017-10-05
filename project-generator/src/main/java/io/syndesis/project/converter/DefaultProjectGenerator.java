@@ -166,14 +166,15 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     private InputStream createTarInputStream(GenerateProjectRequest request) throws IOException {
         PipedInputStream is = new PipedInputStream();
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(generateAddProjectTarEntries(request, is));
+        PipedOutputStream os = new PipedOutputStream(is);
+        executor.submit(generateAddProjectTarEntries(request, os));
 
         return is;
     }
 
-    private Runnable generateAddProjectTarEntries(GenerateProjectRequest request, PipedInputStream is) {
+    private Runnable generateAddProjectTarEntries(GenerateProjectRequest request, PipedOutputStream os) {
         return () -> {
-            try (PipedOutputStream os = new PipedOutputStream(is);
+            try (
                  TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
@@ -184,9 +185,12 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
 
                 addAdditionalResources(tos);
-                LOG.info("Integration {} : Project files written to output stream" + request.getIntegration().getName());
+                LOG.info("Integration {} : Project files written to output stream {}",request.getIntegration().getName());
             } catch (IOException e) {
-                LOG.error("Exception while creating runtime build tar for integration " + request.getIntegration().getName() + " : " + e, e);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error(String.format("Exception while creating runtime build tar for integration %s : %s",
+                                            request.getIntegration().getName(), e.toString()), e);
+                }
             }
         };
     }
@@ -206,18 +210,20 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         Set<String> gavsSeen = new HashSet<>();
         integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
-                if (step.getStepKind().equals(Endpoint.KIND)) {
-                    step.getAction().ifPresent(action -> {
-                        String gav = action.getCamelConnectorGAV();
-                        if (!gavsSeen.contains(gav)) {
-                            String[] splitGav = gav.split(":");
-                            if (splitGav.length == 3) {
-                                connectors.add(new MavenGav(splitGav[0], splitGav[1], splitGav[2]));
-                            }
-                            gavsSeen.add(gav);
-                        }
-                    });
+                if (!step.getStepKind().equals(Endpoint.KIND)) {
+                    continue;
                 }
+                step.getAction().ifPresent(action -> {
+                    String gav = action.getCamelConnectorGAV();
+                    if (gavsSeen.contains(gav)) {
+                        return;
+                    }
+                    String[] splitGav = gav.split(":");
+                    if (splitGav.length == 3) {
+                        connectors.add(new MavenGav(splitGav[0], splitGav[1], splitGav[2]));
+                    }
+                    gavsSeen.add(gav);
+                });
             }
         });
         return generateFromPomContext(new PomContext(integration.getId().orElse(""), integration.getName(), integration.getDescription().orElse(null), connectors), pomMustache);

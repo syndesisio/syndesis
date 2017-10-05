@@ -440,7 +440,7 @@ public class DefaultProjectGeneratorTest {
                         while (len != -1) {
                             bout.write(btoRead, 0, len);
                             len = tis.read(btoRead);
-                        };
+                        }
                         bout.close();
                     }
                     tarEntry = tis.getNextTarEntry();

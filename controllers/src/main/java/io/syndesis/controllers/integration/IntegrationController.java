@@ -174,8 +174,9 @@ public class IntegrationController {
                 LOG.info("Integration {} : Start processing integration with {}", integrationId, handler.getClass().getSimpleName());
                 StatusChangeHandlerProvider.StatusChangeHandler.StatusUpdate update = handler.execute(integration);
                 if (update!=null) {
-
-                    LOG.info("{} : Setting status to {}{}", getLabel(integration), update.getStatus(), (update.getStatusMessage() != null ? " (" + update.getStatusMessage() + ")" : ""));
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("{} : Setting status to {}{}", getLabel(integration), update.getStatus(), (update.getStatusMessage() != null ? " (" + update.getStatusMessage() + ")" : ""));
+                    }
 
                     // handler.execute might block for while so refresh our copy of the integration
                     // data before we update the current status
