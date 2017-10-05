@@ -65,9 +65,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * Flag used to determine if this is a first time user.
-   * @type {boolean}
+   * @type {any}
    */
-  firstTime = true;
+  firstTime = this.firstTimeUser();
+  //firstTime = true;
 
   /**
    * Local var used to determine whether or not to display a close
@@ -138,11 +139,23 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.notifications = this.notificationService.getNotifications();
     this.showClose = true;
 
+    this.firstTimeUser();
+  }
+
+  /**
+   * Function that determines whether or not this is a first time user
+   * and sets a flag accordingly.
+   */
+  firstTimeUser() {
     const apiEndpoint = this.config.getSettings().apiEndpoint;
     const accessToken = this.oauthService.getAccessToken();
-    this.setupService.isSetupPending(apiEndpoint, accessToken)
-      .then(setupPending => {
-        this.firstTime = setupPending;
+
+    this.setupService.isSetupPending(apiEndpoint, accessToken).then(setupPending => {
+        return setupPending;
+      })
+      .catch(function(err) {
+        log.debug('Error getting setup status: ' + JSON.stringify(err));
+        return true;
       });
   }
 
