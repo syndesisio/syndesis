@@ -21,6 +21,7 @@
             <h2>Register Syndesis</h2>
             <div *ngIf="stepOneComplete === false">
               <p>To start using Syndesis with GitHub, register Syndesis as an OAuth application in GitHub.</p>
+              <p><b>Callback URL: </b> {{callbackUrl}}</p>
               <button class="btn btn-primary"
                       (click)="registerSyndesis($event)">Register Syndesis on GitHub
               </button>&nbsp;

@@ -17,6 +17,7 @@ export interface OAuthAppListItem {
 })
 export class GitHubOAuthSetupComponent implements OnInit {
 
+  callbackUrl = this.getCallbackUrl();
   stepOneComplete = false;
   stepTwoComplete = false;
   //stepThreeComplete = false;
@@ -56,6 +57,16 @@ export class GitHubOAuthSetupComponent implements OnInit {
     }).catch(function(message) {
       this.notificationService.message(NotificationType.DANGER, 'Error', message, false, null, []);
     });
+  }
+
+  /**
+   * Retrieves the callback URL based on the window location HREF.
+   */
+  getCallbackUrl() {
+    const pathArray = location.href.split( '/' );
+    const protocol = pathArray[0];
+    const host = pathArray[2];
+    return protocol + '//' + host;
   }
 
   /**
