@@ -6,8 +6,6 @@ import { SetupService } from './setup.service';
 import { ConfigService } from '../config.service';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 
-import { log } from '../logging';
-
 export interface OAuthAppListItem {
   expanded: boolean;
 }
@@ -46,17 +44,22 @@ export class GitHubOAuthSetupComponent implements OnInit {
 
   /**
    * Step Two
+   * Log user out if everything is okay. Kick off the login flow again.
    */
   connectGitHub() {
-    this.updateGitHubOauthConfiguration().then(function(result) {
-      log.debug('Result: ' + JSON.stringify(result));
-      log.debug('stepTwoComplete A - before: ' + JSON.stringify(this.stepTwoComplete));
+    this.updateGitHubOauthConfiguration().then(function() {
       this.stepTwoComplete = true;
-      log.debug('stepTwoComplete A - after: ' + JSON.stringify(this.stepTwoComplete));
-
+      this.oauthService.logOut(true);
+      return this.oauthService.initImplicitFlow('autolink');
+    }).catch(function(message) {
+      this.notificationService.message(NotificationType.DANGER, 'Error', message, false, null, []);
     });
   }
 
+  /**
+   * Updates GitHub OAuth configuration
+   * @returns {Promise<any>}
+   */
   private updateGitHubOauthConfiguration(): Promise<any> {
     const formModel = this.githubOauthForm.value;
     const setup = {
@@ -67,17 +70,7 @@ export class GitHubOAuthSetupComponent implements OnInit {
     };
     const apiEndpoint = this.configService.getSettings().apiEndpoint;
     const accessToken = this.oauthService.getAccessToken();
-    return this.setupService.updateSetup(setup, apiEndpoint, accessToken)
-      .then(function(result) {
-        log.debug('Result: ' + JSON.stringify(result));
-        log.debug('stepTwoComplete B - before: ' + JSON.stringify(this.stepTwoComplete));
-        this.stepTwoComplete = true;
-        log.debug('stepTwoComplete B - after: ' + JSON.stringify(this.stepTwoComplete));
-      })
-      .catch(message => {
-      this.notificationService.message(NotificationType.DANGER, 'Error', message, false, null, []);
-      },
-    );
+    return this.setupService.updateSetup(setup, apiEndpoint, accessToken);
   }
 
   /**
