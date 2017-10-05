@@ -20,20 +20,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,8 +57,12 @@ import io.syndesis.project.converter.visitor.StepVisitor;
 import io.syndesis.project.converter.visitor.StepVisitorContext;
 import io.syndesis.project.converter.visitor.StepVisitorFactory;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
@@ -73,7 +80,6 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     private final ConnectorCatalog connectorCatalog;
     private final ProjectGeneratorProperties generatorProperties;
     private final StepVisitorFactoryRegistry registry;
-    private final Mustache readmeMustache;
     private final Mustache applicationJavaMustache;
     private final Mustache applicationPropertiesMustache;
     private final Mustache pomMustache;
@@ -84,7 +90,6 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         this.connectorCatalog = connectorCatalog;
         this.generatorProperties = generatorProperties;
         this.registry = registry;
-        this.readmeMustache = compile(generatorProperties, "README.md.mustache", "README.md");
         this.applicationJavaMustache = compile(generatorProperties, "Application.java.mustache", "Application.java");
         this.applicationPropertiesMustache = compile(generatorProperties, "application.properties.mustache", "application.properties");
         this.pomMustache = compile(generatorProperties, "pom.xml.mustache", "pom.xml");
@@ -115,18 +120,21 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     @Override
-    public Map<String, byte[]> generate(GenerateProjectRequest request) throws IOException {
-        request.getIntegration().getSteps().ifPresent(steps -> {
+    public InputStream generate(GenerateProjectRequest request) throws IOException {
+        Integration integration = request.getIntegration();
+        integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
                 LOG.info("Integration {} : Adding step {} ",
-                         request.getIntegration().getId().orElse("[none]"),
+                         integration.getId().orElse("[none]"),
                          step.getId().orElse(""));
                 step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
             }
         });
 
-        Map<String, byte[]> contents = new HashMap<>();
+        return createTarInputStream(request);
+    }
 
+    private void addAdditionalResources(TarArchiveOutputStream tos) throws IOException {
         for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
             String overridePath = generatorProperties.getTemplates().getOverridePath();
             URL resource = null;
@@ -147,41 +155,82 @@ public class DefaultProjectGenerator implements ProjectGenerator {
             }
 
             try {
-                contents.put(additionalResource.getDestination(), Files.readAllBytes(Paths.get(resource.toURI())));
+                addTarEntry(tos, additionalResource.getDestination(), Files.readAllBytes(Paths.get(resource.toURI())));
             } catch (URISyntaxException e) {
                 throw new IOException(e);
             }
         }
+    }
 
-        contents.put("README.md", generateFromRequest(request, readmeMustache));
-        contents.put("src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
-        contents.put("src/main/resources/application.properties", generateFromRequest(request, applicationPropertiesMustache));
-        contents.put("src/main/resources/syndesis.yml", generateFlowYaml(contents, request));
-        contents.put("pom.xml", generatePom(request.getIntegration()));
 
-        return contents;
+    private InputStream createTarInputStream(GenerateProjectRequest request) throws IOException {
+        PipedInputStream is = new PipedInputStream();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        PipedOutputStream os = new PipedOutputStream(is);
+        executor.submit(generateAddProjectTarEntries(request, os));
+
+        return is;
+    }
+
+    private Runnable generateAddProjectTarEntries(GenerateProjectRequest request, PipedOutputStream os) {
+        return () -> {
+            try (
+                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
+                tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
+
+                addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
+                addTarEntry(tos, "src/main/resources/application.properties", generateFromRequest(request, applicationPropertiesMustache));
+                addTarEntry(tos, "src/main/resources/syndesis.yml", generateFlowYaml(tos, request));
+                addTarEntry(tos, "pom.xml", generatePom(request.getIntegration()));
+
+
+                addAdditionalResources(tos);
+                LOG.info("Integration {} : Project files written to output stream",request.getIntegration().getName());
+            } catch (IOException e) {
+                if (LOG.isErrorEnabled()) {
+                    LOG.error(String.format("Exception while creating runtime build tar for integration %s : %s",
+                                            request.getIntegration().getName(), e.toString()), e);
+                }
+            }
+        };
+    }
+
+    private void addTarEntry(TarArchiveOutputStream tos, String path, byte[] content) throws IOException {
+
+        TarArchiveEntry entry = new TarArchiveEntry(path);
+        entry.setSize(content.length);
+        tos.putArchiveEntry(entry);
+        tos.write(content);
+        tos.closeArchiveEntry();
     }
 
     @Override
     public byte[] generatePom(Integration integration) throws IOException {
         Set<MavenGav> connectors = new LinkedHashSet<>();
+        Set<String> gavsSeen = new HashSet<>();
         integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
-                if (step.getStepKind().equals(Endpoint.KIND)) {
-                    step.getAction().ifPresent(action -> {
-                        String[] splitGav = action.getCamelConnectorGAV().split(":");
-                        if (splitGav.length == 3) {
-                            connectors.add(new MavenGav(splitGav[0], splitGav[1], splitGav[2]));
-                        }
-                    });
+                if (!step.getStepKind().equals(Endpoint.KIND)) {
+                    continue;
                 }
+                step.getAction().ifPresent(action -> {
+                    String gav = action.getCamelConnectorGAV();
+                    if (gavsSeen.contains(gav)) {
+                        return;
+                    }
+                    String[] splitGav = gav.split(":");
+                    if (splitGav.length == 3) {
+                        connectors.add(new MavenGav(splitGav[0], splitGav[1], splitGav[2]));
+                    }
+                    gavsSeen.add(gav);
+                });
             }
         });
         return generateFromPomContext(new PomContext(integration.getId().orElse(""), integration.getName(), integration.getDescription().orElse(null), connectors), pomMustache);
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
-    private byte[] generateFlowYaml(Map<String, byte[]> contents, GenerateProjectRequest request) throws JsonProcessingException {
+    private byte[] generateFlowYaml(TarArchiveOutputStream tos, GenerateProjectRequest request) throws JsonProcessingException {
         final Map<Step, String> connectorIdMap = new HashMap<>();
 
         // Determine connector prefix
@@ -216,7 +265,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                     .connectorCatalog(connectorCatalog)
                     .generatorProperties(generatorProperties)
                     .request(request)
-                    .contents(contents)
+                    .tarArchiveOutputStream(tos)
                     .flow(flow)
                     .visitorFactoryRegistry(registry)
                     .build();
@@ -254,9 +303,9 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return generate(integration, template);
     }
 
-    private byte[] generate(Object obj, Mustache template) throws IOException {
+    private byte[] generate(Object scope, Mustache template) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        template.execute(new OutputStreamWriter(bos, UTF_8), obj).flush();
+        template.execute(new OutputStreamWriter(bos, UTF_8), scope).flush();
         return bos.toByteArray();
     }
 

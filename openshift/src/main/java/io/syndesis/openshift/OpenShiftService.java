@@ -15,11 +15,12 @@
  */
 package io.syndesis.openshift;
 
-import io.fabric8.kubernetes.client.RequestConfig;
-import io.fabric8.openshift.api.model.DeploymentConfig;
-
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+
+import io.fabric8.openshift.api.model.DeploymentConfig;
 
 public interface OpenShiftService {
 
@@ -27,50 +28,56 @@ public interface OpenShiftService {
     String USERNAME_LABEL = "USERNAME";
 
     /**
-     * Creates the deployment (Deployment and Build configurations, Image Streams etc)
-     * @param d A description of the deployment to create.
+     * Creates the deployment (Deployment and Build configurations, Image Streams etc) if
+     * not existing and updates a current one if existing. A call to this method is idempotent
+     * and called be many times
+     *
+     * @param name name of the build
+     * @param data the deployment data to use
      */
-    void create(OpenShiftDeployment d);
+    void ensureSetup(String name, DeploymentData data);
+
+    /**
+     * Start a previously created build with the data from the given directory
+     *
+     * @param name name of the build
+     * @param tarInputStream input stream representing a tar file containing the project files
+     */
+    void build(String name, InputStream tarInputStream) throws IOException;
 
     /**
      * Deletes the deployment (Deployment and Build configurations, Image Streams etc)
-     * @param d A description of the deployment to delete.
+     * @param name of the deployment to delete
      * @return          Returns True if all resources were deleted, False otherwise.
      */
-    boolean delete(OpenShiftDeployment d);
+    boolean delete(String name);
 
     /**
      * Checks if the deployment (Deployment and Build configurations, Image Streams etc) exists
-     * @param d         A description of the deployment to check.
+     * @param name of the deployment to delete
      * @return          Returns True if all resources were deleted, False otherwise.
      */
-    boolean exists(OpenShiftDeployment d);
+    boolean exists(String name);
 
     /**
      * Scale the deployment (Deployment and Build configurations, Image Streams etc)
-     * @param d A description of the deployment to scale.
+     * @param name of the deployment to delete
+     * @param desiredReplicas how many replicas to scale to
      */
-    void scale(OpenShiftDeployment d);
+    void scale(String name, int desiredReplicas);
 
     /**
      * Checks if the deployment (Deployment and Build configurations, Image Streams etc) is scaled.
-     * @param d A description of the deployment to scale.
-     * @param d
+     * @param name of the deployment to delete
+     * @param desiredReplicas how many replicas should be running for this method to return true
      */
-    boolean isScaled(OpenShiftDeployment d);
+    boolean isScaled(String name, int desiredReplicas);
 
     /**
      * Returns the {@link DeploymentConfig}s that match the specified labels.
-     * @param requestConfig     The configuration of the request.
      * @param labels            The specified labels.
      * @return                  The list of {@link DeploymentConfig}s.
      */
-    List<DeploymentConfig> getDeploymentsByLabel(RequestConfig requestConfig, Map<String, String> labels);
+    List<DeploymentConfig> getDeploymentsByLabel(Map<String, String> labels);
 
-    /**
-     * Create a Webhook URL which can be used in a github integration
-     * @param projectName   The name of the project.
-     * @param secret
-     */
-    String getGitHubWebHookUrl(String projectName, String secret);
 }

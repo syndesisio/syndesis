@@ -152,9 +152,4 @@ public final class Tokens {
 
         return provider.apply(responseBody);
     }
-
-    public static void setAuthenticationToken(String token) {
-        OAUTH_TOKEN.set(token);
-    }
-
 }

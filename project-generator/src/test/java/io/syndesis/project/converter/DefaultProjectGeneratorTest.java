@@ -15,12 +15,20 @@
  */
 package io.syndesis.project.converter;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +60,9 @@ import io.syndesis.project.converter.visitor.EndpointStepVisitor;
 import io.syndesis.project.converter.visitor.ExpressionFilterStepVisitor;
 import io.syndesis.project.converter.visitor.RuleFilterStepVisitor;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,6 +101,27 @@ public class DefaultProjectGeneratorTest {
             repositories.put("redhat.ga", "https://maven.repository.redhat.com/ga");
             repositories.put("jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea");
             CATALOG_PROPERTIES.setMavenRepos(repositories);
+    }
+
+    private Path runtimeDir;
+
+    @After
+    public void tearDown() throws Exception {
+        if (runtimeDir != null) {
+            Files.walkFileTree(runtimeDir, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
     }
 
     @Parameterized.Parameters
@@ -172,8 +204,6 @@ public class DefaultProjectGeneratorTest {
             .build();
 
         GenerateProjectRequest request = new GenerateProjectRequest.Builder()
-            .gitHubUserLogin("noob")
-            .gitHubRepoName("test")
             .integration(new Integration.Builder()
                 .id("test-integration")
                 .name("Test Integration")
@@ -187,16 +217,15 @@ public class DefaultProjectGeneratorTest {
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
+        runtimeDir = generate(request, generatorProperties);
 
-        assertFileContents(generatorProperties, files.get("README.md"), "test-README.md");
-        assertFileContents(generatorProperties, files.get("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
-        assertFileContents(generatorProperties, files.get("src/main/resources/application.properties"), "test-application.properties");
-        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-syndesis.yml");
-        assertFileContents(generatorProperties, files.get("pom.xml"), "test-pom.xml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-syndesis.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-pom.xml");
 
         for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
-            assertFileContents(generatorProperties, files.get(additionalResource.getDestination()), "test-" + additionalResource.getSource());
+            assertFileContents(generatorProperties, runtimeDir.resolve(additionalResource.getDestination()), "test-" + additionalResource.getSource());
         }
     }
 
@@ -238,8 +267,6 @@ public class DefaultProjectGeneratorTest {
                 .steps(Arrays.asList(step1, step2))
                 .build())
             .connectors(connectors)
-            .gitHubUserLogin("noob")
-            .gitHubRepoName("test")
             .build();
 
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
@@ -247,10 +274,10 @@ public class DefaultProjectGeneratorTest {
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         generatorProperties.setSecretMaskingEnabled(true);
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
+        Path runtimeDir = generate(request, generatorProperties);
 
-        assertFileContents(generatorProperties, files.get("src/main/resources/application.properties"), "test-application.properties");
-        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-syndesis-with-secrets.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-syndesis-with-secrets.yml");
     }
 
     @Test
@@ -305,8 +332,6 @@ public class DefaultProjectGeneratorTest {
                 .steps(Arrays.asList(step1, step2, step3))
                 .build())
             .connectors(connectors)
-            .gitHubUserLogin("noob")
-            .gitHubRepoName("test")
             .build();
 
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
@@ -314,20 +339,17 @@ public class DefaultProjectGeneratorTest {
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         generatorProperties.setSecretMaskingEnabled(true);
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
+        Path runtimeDir = generate(request, generatorProperties);
 
-        assertFileContents(generatorProperties, files.get("src/main/resources/application.properties"), "test-application.properties");
-        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-syndesis-with-secrets-and-multiple-connector-of-same-type.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-syndesis-with-secrets-and-multiple-connector-of-same-type.yml");
     }
-
 
     @Test
     public void testConvertFromJson() throws Exception {
         JsonNode json = new ObjectMapper().readTree(this.getClass().getResourceAsStream("test-integration.json"));
 
         GenerateProjectRequest request = new GenerateProjectRequest.Builder()
-            .gitHubUserLogin("noob")
-            .gitHubRepoName("test")
             .integration(new ObjectMapper().registerModule(new Jdk8Module()).readValue(json.get("data").toString(), Integration.class))
             .connectors(connectors)
             .build();
@@ -337,13 +359,12 @@ public class DefaultProjectGeneratorTest {
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
+        Path runtimePath = generate(request, generatorProperties);
 
-        assertFileContents(generatorProperties, files.get("README.md"), "test-pull-push-README.md");
-        assertFileContents(generatorProperties, files.get("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
-        assertFileContents(generatorProperties, files.get("src/main/resources/application.properties"), "test-pull-push-application.properties");
-        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-pull-push-syndesis.yml");
-        assertFileContents(generatorProperties, files.get("pom.xml"), "test-pull-push-pom.xml");
+        assertFileContents(generatorProperties, runtimePath.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
+        assertFileContents(generatorProperties, runtimePath.resolve("src/main/resources/application.properties"), "test-pull-push-application.properties");
+        assertFileContents(generatorProperties, runtimePath.resolve("src/main/resources/syndesis.yml"), "test-pull-push-syndesis.yml");
+        assertFileContents(generatorProperties, runtimePath.resolve("pom.xml"), "test-pull-push-pom.xml");
     }
 
     @Test
@@ -380,8 +401,6 @@ public class DefaultProjectGeneratorTest {
             .build();
 
         GenerateProjectRequest request = new GenerateProjectRequest.Builder()
-            .gitHubUserLogin("noob")
-            .gitHubRepoName("test")
             .integration(new Integration.Builder()
                 .id("test-integration")
                 .name("Test Integration")
@@ -394,10 +413,41 @@ public class DefaultProjectGeneratorTest {
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
+        Path runtimePath = generate(request, generatorProperties);
+        runtimePath.toFile().deleteOnExit();
 
-        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-mapper-syndesis.yml");
-        assertThat(new String(files.get("src/main/resources/mapping-step-2.json"))).isEqualTo("{}");
+        assertFileContents(generatorProperties, runtimePath.resolve("src/main/resources/syndesis.yml"), "test-mapper-syndesis.yml");
+        assertThat(new String(Files.readAllBytes(runtimePath.resolve("src/main/resources/mapping-step-2.json")))).isEqualTo("{}");
+    }
+
+    private Path generate(GenerateProjectRequest request, ProjectGeneratorProperties generatorProperties) throws IOException {
+        try (InputStream is = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request)) {
+            Path ret = Files.createTempDirectory("integration-runtime");
+            try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
+
+                TarArchiveEntry tarEntry = tis.getNextTarEntry();
+                // tarIn is a TarArchiveInputStream
+                while (tarEntry != null) {// create a file with the same name as the tarEntry
+                    File destPath = new File(ret.toFile(), tarEntry.getName());
+                    if (tarEntry.isDirectory()) {
+                        destPath.mkdirs();
+                    } else {
+                        destPath.getParentFile().mkdirs();
+                        destPath.createNewFile();
+                        byte[] btoRead = new byte[8129];
+                        BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath));
+                        int len = tis.read(btoRead);
+                        while (len != -1) {
+                            bout.write(btoRead, 0, len);
+                            len = tis.read(btoRead);
+                        }
+                        bout.close();
+                    }
+                    tarEntry = tis.getNextTarEntry();
+                }
+            }
+            return ret;
+        }
     }
 
     @Test
@@ -440,8 +490,6 @@ public class DefaultProjectGeneratorTest {
             .build();
 
         GenerateProjectRequest request = new GenerateProjectRequest.Builder()
-            .gitHubUserLogin("noob")
-            .gitHubRepoName("test")
             .integration(new Integration.Builder()
                 .id("test-integration")
                 .name("Test Integration")
@@ -454,12 +502,12 @@ public class DefaultProjectGeneratorTest {
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
-        Map<String, byte[]> files = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
+        Path runtimeDir = generate(request, generatorProperties);
 
-        assertFileContents(generatorProperties, files.get("src/main/resources/syndesis.yml"), "test-filter-syndesis.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-filter-syndesis.yml");
     }
 
-    private void assertFileContents(ProjectGeneratorProperties generatorProperties, byte[] actualContents, String expectedFileName) throws URISyntaxException, IOException {
+    private void assertFileContents(ProjectGeneratorProperties generatorProperties, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException {
         String overridePath = generatorProperties.getTemplates().getOverridePath();
         URL resource = null;
 
@@ -473,9 +521,9 @@ public class DefaultProjectGeneratorTest {
             throw new IllegalArgumentException("Unable to find te required resource (" + expectedFileName + ")");
         }
 
-        assertThat(new String(actualContents)).isEqualTo(
+        assertThat(new String(Files.readAllBytes(actualFilePath))).isEqualTo(
             new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8)
-        );
+                                                        );
     }
 
     // Helper method to help constuct maps with concise syntax

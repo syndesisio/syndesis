@@ -15,6 +15,14 @@
  */
 package io.syndesis.model.integration;
 
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
@@ -25,16 +33,7 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.user.User;
 import io.syndesis.model.validation.UniqueProperty;
 import io.syndesis.model.validation.UniquenessRequired;
-
 import org.immutables.value.Value;
-
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
@@ -75,8 +74,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     Optional<String> getUserId();
 
-    Optional<String> getToken();
-
     List<User> getUsers();
 
     Optional<List<Connection>> getConnections();
@@ -85,13 +82,9 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     Optional<String> getDescription();
 
-    Optional<String> getGitRepo();
-
     Optional<Status> getDesiredStatus();
 
     Optional<Status> getCurrentStatus();
-
-    Optional<List<String>> getStepsDone();
 
     Optional<String> getStatusMessage();
 

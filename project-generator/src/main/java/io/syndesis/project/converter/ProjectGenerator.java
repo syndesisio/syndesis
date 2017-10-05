@@ -16,15 +16,23 @@
 package io.syndesis.project.converter;
 
 
-import io.syndesis.model.integration.Integration;
-
 import java.io.IOException;
-import java.util.Map;
+import java.io.InputStream;
+
+import io.syndesis.model.integration.Integration;
 
 
 public interface ProjectGenerator {
 
-    Map<String, byte[]> generate(GenerateProjectRequest request) throws IOException;
+    /**
+     * Generate the project files in form of tar input stream
+     * @param request the parameters to create the project files
+     * @return an {@link InputStream} which holds a tar archive and which can be directly used for
+     * an S2I build
+     *
+     * @throws IOException if generating fails
+     */
+    InputStream generate(GenerateProjectRequest request) throws IOException;
 
     byte[] generatePom(Integration integration) throws IOException;
 }

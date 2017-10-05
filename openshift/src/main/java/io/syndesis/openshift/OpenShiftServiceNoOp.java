@@ -15,47 +15,47 @@
  */
 package io.syndesis.openshift;
 
-import io.fabric8.kubernetes.client.RequestConfig;
-import io.fabric8.openshift.api.model.DeploymentConfig;
-
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import io.fabric8.openshift.api.model.DeploymentConfig;
+
 public class OpenShiftServiceNoOp implements OpenShiftService {
 
     @Override
-    public void create(OpenShiftDeployment d) {
+    public void ensureSetup(String name, DeploymentData d) {
         // Empty no-op just for testing
     }
 
     @Override
-    public boolean delete(OpenShiftDeployment d) {
-        return false;
-    }
-
-    @Override
-    public boolean exists(OpenShiftDeployment d) {
-        return false;
-    }
-
-    @Override
-    public void scale(OpenShiftDeployment d) {
+    public void build(String name, InputStream tarInputStream) {
         // Empty no-op just for testing
     }
 
     @Override
-    public boolean isScaled(OpenShiftDeployment d) {
+    public boolean delete(String name) {
         return false;
     }
 
     @Override
-    public List<DeploymentConfig> getDeploymentsByLabel(RequestConfig requestConfig, Map<String, String> labels) {
+    public boolean exists(String name) {
+        return false;
+    }
+
+    @Override
+    public void scale(String name, int nrReplicas) {
+        // Empty no-op just for testing
+    }
+
+    @Override
+    public boolean isScaled(String name, int nrReplicas) {
+        return false;
+    }
+
+    @Override
+    public List<DeploymentConfig> getDeploymentsByLabel(Map<String, String> labels) {
         return Collections.emptyList();
-    }
-
-    @Override
-    public String getGitHubWebHookUrl(String projectName, String secret) {
-        return "";
     }
 }

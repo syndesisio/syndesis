@@ -174,8 +174,9 @@ public class IntegrationController {
                 LOG.info("Integration {} : Start processing integration with {}", integrationId, handler.getClass().getSimpleName());
                 StatusChangeHandlerProvider.StatusChangeHandler.StatusUpdate update = handler.execute(integration);
                 if (update!=null) {
-
-                    LOG.info("{} : Setting status to {}", getLabel(integration), update.getStatus());
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("{} : Setting status to {}{}", getLabel(integration), update.getStatus(), (update.getStatusMessage() != null ? " (" + update.getStatusMessage() + ")" : ""));
+                    }
 
                     // handler.execute might block for while so refresh our copy of the integration
                     // data before we update the current status
@@ -187,7 +188,6 @@ public class IntegrationController {
                         .createFrom(current)
                         .currentStatus(update.getStatus()) // Status must not be null
                         .statusMessage(Optional.ofNullable(update.getStatusMessage()))
-                        .stepsDone(Optional.ofNullable(update.getStepsPerformed()))
                         .createdDate(Integration.Status.Activated.equals(update.getStatus()) ? now : integration.getCreatedDate().get())
                         .lastUpdated(new Date())
                         .build();
