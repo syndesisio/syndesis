@@ -1,7 +1,7 @@
 @import '../../../node_modules/patternfly-sass/assets/stylesheets/patternfly/color-variables';
 
 .github-oauth {
-  background-color: #FFFFFF;
+  background-color: $color-pf-white;
   height: 100%;
 
   :host {
