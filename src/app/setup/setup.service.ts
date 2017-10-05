@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptionsArgs, Headers, Response } from '@angular/http';
-import { Setup } from '../model';
+import { Setup } from './setup';
 import { log } from '../logging';
 
 @Injectable()
