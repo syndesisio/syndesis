@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.HEAD;
+
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
@@ -39,11 +41,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public void ensureSetup(String name, DeploymentData deploymentData) {
         String sName = Names.sanitize(name);
-        DockerImage builderImage = new DockerImage(this.config.getBuilderImage());
-        ensureImageStreams(sName, deploymentData, builderImage);
+        ensureImageStreams(sName);
         ensureDeploymentConfig(sName, deploymentData, this.config.getIntegrationServiceAccount());
         ensureSecret(sName, deploymentData);
-        ensureBuildConfig(sName, deploymentData, builderImage);
+        ensureBuildConfig(sName, deploymentData, this.config.getBuilderImageStreamTag());
     }
 
     @Override
@@ -58,7 +59,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     public boolean delete(String name) {
         String sName = Names.sanitize(name);
         return
-            removeImageStreams(new DockerImage(config.getBuilderImage())) &&
+            removeImageStreams(sName) &&
             removeDeploymentConfig(sName) &&
             removeSecret(sName) &&
             removeBuildConfig(sName);
@@ -107,21 +108,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
 //==================================================================================================
 
-    private void ensureImageStreams(String name, DeploymentData deploymentData, DockerImage img) {
-        openShiftClient.imageStreams().withName(img.getShortName()).createOrReplaceWithNew()
-                .withNewMetadata()
-                    .withName(img.shortName)
-                    .addToAnnotations(deploymentData.getAnnotations())
-                    .addToLabels(deploymentData.getLabels())
-                .endMetadata()
-                    .withNewSpec().addNewTag().withNewFrom().withKind("DockerImage").withName(img.getImage()).endFrom().withName(img.getTag()).endTag().endSpec()
-                .done();
+    private void ensureImageStreams(String name) {
         openShiftClient.imageStreams().withName(name).createOrReplaceWithNew()
-            .withNewMetadata().withName(name).endMetadata().done();
+                       .withNewMetadata().withName(name).endMetadata().done();
     }
 
-    private boolean removeImageStreams(DockerImage img) {
-        return openShiftClient.imageStreams().withName(img.getShortName()).delete();
+    private boolean removeImageStreams(String name) {
+        return openShiftClient.imageStreams().withName(name).delete();
     }
 
     private void ensureDeploymentConfig(String name, DeploymentData deploymentData, String serviceAccount) {
@@ -172,7 +165,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return openShiftClient.deploymentConfigs().withName(projectName).delete();
     }
 
-    private void ensureBuildConfig(String name, DeploymentData deploymentData, DockerImage builderImage) {
+    private void ensureBuildConfig(String name, DeploymentData deploymentData, String builderStreamTag) {
         openShiftClient.buildConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
                 .withName(name)
@@ -185,7 +178,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewStrategy()
               .withType("Source")
               .withNewSourceStrategy()
-                .withNewFrom().withKind("ImageStreamTag").withName(builderImage.getShortName() + ":" + builderImage.getTag()).endFrom()
+                .withNewFrom().withKind("ImageStreamTag").withName(builderStreamTag).endFrom()
                 .withIncremental(true)
                 .withEnv(new EnvVar("MAVEN_OPTS","-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx500m", null))
               .endSourceStrategy()
@@ -213,40 +206,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     private boolean removeSecret(String projectName) {
        return openShiftClient.secrets().withName(projectName).delete();
-    }
-
-
-    /* default */ static class DockerImage {
-        private final String image;
-
-        private String tag = "latest";
-
-        private final String shortName;
-
-        /* default */ DockerImage(String fullImage) {
-            image = fullImage;
-
-            int colonIndex = fullImage.lastIndexOf(':');
-
-            String builderImageStreamName = fullImage;
-            if (colonIndex > -1) {
-                builderImageStreamName = fullImage.substring(0, colonIndex);
-                tag = fullImage.substring(colonIndex + 1);
-            }
-            shortName = builderImageStreamName.substring(builderImageStreamName.lastIndexOf('/') + 1);
-        }
-
-        public String getImage() {
-            return image;
-        }
-
-        public String getTag() {
-            return tag;
-        }
-
-        public String getShortName() {
-            return shortName;
-        }
     }
 
 }

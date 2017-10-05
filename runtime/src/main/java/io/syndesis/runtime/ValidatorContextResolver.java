@@ -35,7 +35,7 @@ class ValidatorContextResolver implements ContextResolver<GeneralValidator> {
 
     private final ValidatorFactory validatorFactory;
 
-    public ValidatorContextResolver(final ValidatorFactory validatorFactory) {
+    ValidatorContextResolver(final ValidatorFactory validatorFactory) {
         this.validatorFactory = validatorFactory;
     }
 

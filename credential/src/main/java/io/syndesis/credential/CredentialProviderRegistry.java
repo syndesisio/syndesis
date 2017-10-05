@@ -34,7 +34,7 @@ final class CredentialProviderRegistry implements CredentialProviderLocator {
 
     /* default */ static class ConnectorSettings extends SocialProperties {
 
-        public ConnectorSettings(final Connector connector) {
+        ConnectorSettings(final Connector connector) {
             setAppId(requiredProperty(connector, Credentials.CLIENT_ID_TAG));
             setAppSecret(requiredProperty(connector, Credentials.CLIENT_SECRET_TAG));
         }
@@ -45,7 +45,7 @@ final class CredentialProviderRegistry implements CredentialProviderLocator {
         }
     }
 
-    public CredentialProviderRegistry(final DataManager dataManager) {
+    CredentialProviderRegistry(final DataManager dataManager) {
         this.dataManager = dataManager;
 
         credentialProviderFactories = SpringFactoriesLoader

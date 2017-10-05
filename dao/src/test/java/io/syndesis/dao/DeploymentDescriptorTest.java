@@ -108,6 +108,14 @@ public class DeploymentDescriptorTest {
                         return;// never happens
                     }
 
+                    final JsonNode component = catalogedJsonSchema.get("component");
+                    final String groupId = component.get("groupId").asText();
+                    final String artifactId = component.get("artifactId").asText();
+                    final String version = component.get("version").asText();
+
+                    assertThat(new String[] {groupId, artifactId, version})
+                        .as("The scheme `%s` was resolved from a unexpected artifact", scheme).isEqualTo(coordinates);
+
                     final JsonNode componentPropertiesFromCatalog = catalogedJsonSchema.get("componentProperties");
 
                     assertConnectorProperties(connectorId, connectorPropertiesJson, componentPropertiesFromCatalog);
@@ -322,7 +330,8 @@ public class DeploymentDescriptorTest {
 
     private static void removeCustomizedProperties(final JsonNode... nodes) {
         for (final JsonNode node : nodes) {
-            ((ObjectNode) node).remove(Arrays.asList("displayName", "type", "description", "defaultValue", "optionalPrefix"));
+            ((ObjectNode) node)
+                .remove(Arrays.asList("displayName", "type", "description", "defaultValue", "optionalPrefix"));
         }
     }
 }
