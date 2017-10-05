@@ -188,6 +188,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     reader.readAsText(file, 'text/plain;charset=utf-8');
   }
 
+  /**
+   * @param {NotificationEvent} $event
+   */
   handleAction($event: NotificationEvent): void {
     if ($event.action.id === 'reload') {
       location.reload();
