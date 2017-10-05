@@ -54,13 +54,7 @@ export class SetupService {
     const body = JSON.stringify(setup);
     return this.http.put(url, body, args)
       .toPromise()
-      .then(function(response) {
-        // Clear session storage before trying again.
-        this.oauthService.logOut(true);
-        log.debug('Result: ' + JSON.stringify(response));
-        // And kick off the login flow again.
-        return this.oauthService.initImplicitFlow('autolink');
-      })
+      .then()
       .catch((response: Response) => {
         // 410 (Gone) if already configured
         return response.status === 410 ? null : this.handleError('Failed to save GitHub credentials', response);
