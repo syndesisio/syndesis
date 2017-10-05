@@ -23,7 +23,11 @@ export class SetupService {
       return this.http.get(url, args)
         .toPromise()
         .then(response => {
-          return (response.status === 204);
+          if (response.status === 204) {
+            return true;
+          } else {
+            return this.handleError('Failed to check GitHub credentials', response);
+          }
         })
         .catch((response: Response) => {
           if (response.status === 410) {

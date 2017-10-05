@@ -63,6 +63,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   notifications: Notification[];
 
+  /**
+   * Flag used to determine if this is a first time user.
+   * @type {boolean}
+   */
   firstTime = true;
 
   /**
