@@ -49,8 +49,10 @@ export class GitHubOAuthSetupComponent implements OnInit {
   connectGitHub() {
     this.updateGitHubOauthConfiguration().then(function() {
       this.stepTwoComplete = true;
-      this.oauthService.logOut(true);
-      return this.oauthService.initImplicitFlow('autolink');
+      setTimeout(function() {
+        this.oauthService.logOut(true);
+        return this.oauthService.initImplicitFlow('autolink');
+      }, 10000);
     }).catch(function(message) {
       this.notificationService.message(NotificationType.DANGER, 'Error', message, false, null, []);
     });
