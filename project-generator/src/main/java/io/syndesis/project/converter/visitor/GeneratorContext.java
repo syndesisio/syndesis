@@ -17,14 +17,14 @@
 package io.syndesis.project.converter.visitor;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.project.converter.GenerateProjectRequest;
 import io.syndesis.project.converter.ProjectGeneratorProperties;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -36,10 +36,15 @@ public interface GeneratorContext {
     ConnectorCatalog getConnectorCatalog();
     ProjectGeneratorProperties getGeneratorProperties();
     StepVisitorFactoryRegistry getVisitorFactoryRegistry();
-    Path getRuntimeDir();
+    TarArchiveOutputStream getTarArchiveOutputStream();
 
-    default void writeFile(String filePath, byte[] data) throws IOException {
-        Files.write(getRuntimeDir().resolve(filePath),data);
+    default void addTarEntry(String path, byte[] content) throws IOException {
+        TarArchiveOutputStream tos = getTarArchiveOutputStream();
+        TarArchiveEntry entry = new TarArchiveEntry(path);
+        entry.setSize(content.length);
+        tos.putArchiveEntry(entry);
+        tos.write(content);
+        tos.closeArchiveEntry();
     }
 
     class Builder extends ImmutableGeneratorContext.Builder {

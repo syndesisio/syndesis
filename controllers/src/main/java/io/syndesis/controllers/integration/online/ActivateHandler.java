@@ -16,12 +16,10 @@
 package io.syndesis.controllers.integration.online;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -33,7 +31,6 @@ import java.util.stream.Stream;
 import io.syndesis.controllers.ControllersConfigurationProperties;
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.core.Names;
-import io.syndesis.core.PathUtils;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.integration.model.steps.Endpoint;
@@ -52,9 +49,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ActivateHandler extends BaseHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
-    // Step used which should be performed only once per integration
-    private static final String STEP_OPENSHIFT_BUILD  = "openshift-build";
-    private static final String STEP_OPENSHIFT_RESOURCES = "openshift-setup";
 
     private final DataManager dataManager;
     private final ProjectGenerator projectConverter;
@@ -95,7 +89,6 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
         IntegrationRevision revision = IntegrationRevision.createNewRevision(integration);
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
-        List<String> stepsPerformed = integration.getStepsDone().orElseGet(ArrayList::new);
         try {
 
             DeploymentData deploymentData = DeploymentData.builder()
@@ -106,31 +99,20 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
 
             String name = integration.getName();
 
-            if (!stepsPerformed.contains(STEP_OPENSHIFT_RESOURCES)) {
-                openShiftService().create(name, deploymentData);
-                LOG.info("{} : Created OpenShift resources", getLabel(integration));
-                stepsPerformed.add(STEP_OPENSHIFT_RESOURCES);
-            }
+            openShiftService().ensureSetup(name, deploymentData);
+            LOG.info("{} : Ensured OpenShift resources", getLabel(integration));
 
-            if (!stepsPerformed.contains(STEP_OPENSHIFT_BUILD)) {
-                Path runtimeDir = createProjectFiles(integration);
-                try {
-                    LOG.info("{} : Created project files and starting build", getLabel(integration));
-                    openShiftService().build(name, runtimeDir);
-                } finally {
-                    PathUtils.deletePathRecursively(runtimeDir);
-                }
-
-                stepsPerformed.add(STEP_OPENSHIFT_RESOURCES);
-            }
+            InputStream tarInputStream = createProjectFiles(integration);
+            LOG.info("{} : Created project files and starting build", getLabel(integration));
+            openShiftService().build(name, tarInputStream);
 
             if (openShiftService().isScaled(name,1)) {
-                return new StatusUpdate(Integration.Status.Activated, stepsPerformed);
+                return new StatusUpdate(Integration.Status.Activated);
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             LOG.error("{} : Failure", getLabel(integration), e);
         }
-        return new StatusUpdate(Integration.Status.Pending, stepsPerformed);
+        return new StatusUpdate(Integration.Status.Pending);
     }
 
     private static String propsToString(Properties data) {
@@ -183,7 +165,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
             .count();
     }
 
-    private Path createProjectFiles(Integration integration) {
+    private InputStream createProjectFiles(Integration integration) {
         try {
             GenerateProjectRequest request = new GenerateProjectRequest.Builder()
                 .integration(integration)

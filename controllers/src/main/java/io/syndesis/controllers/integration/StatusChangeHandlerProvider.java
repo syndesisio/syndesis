@@ -34,24 +34,14 @@ public interface StatusChangeHandlerProvider {
         class StatusUpdate {
             private Integration.Status status;
             private String statusMessage;
-            private List<String> stepsPerformed;
-
-            public StatusUpdate(Integration.Status status, String statusMessage, List<String> stepsPerformed) {
-                this.status = status;
-                this.statusMessage = statusMessage;
-                this.stepsPerformed = stepsPerformed;
-            }
 
             public StatusUpdate(Integration.Status status, String statusMessage) {
-                this(status, statusMessage, null);
+                this.status = status;
+                this.statusMessage = statusMessage;
             }
 
             public StatusUpdate(Integration.Status status) {
-                this(status, null, null);
-            }
-
-            public StatusUpdate(Integration.Status status, List<String> stepsPerformed) {
-                this(status, null, stepsPerformed != null && !stepsPerformed.isEmpty() ? stepsPerformed : null);
+                this(status, null);
             }
 
             public Integration.Status getStatus() {
@@ -60,10 +50,6 @@ public interface StatusChangeHandlerProvider {
 
             public String getStatusMessage() {
                 return statusMessage;
-            }
-
-            public List<String> getStepsPerformed() {
-                return stepsPerformed;
             }
         }
     }

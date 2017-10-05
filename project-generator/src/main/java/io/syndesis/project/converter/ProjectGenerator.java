@@ -17,14 +17,14 @@ package io.syndesis.project.converter;
 
 
 import java.io.IOException;
-import java.nio.file.Path;
+import java.io.InputStream;
 
 import io.syndesis.model.integration.Integration;
 
 
 public interface ProjectGenerator {
 
-    Path generate(GenerateProjectRequest request) throws IOException;
+    InputStream generate(GenerateProjectRequest request) throws IOException;
 
     byte[] generatePom(Integration integration) throws IOException;
 }

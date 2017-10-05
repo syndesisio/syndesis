@@ -16,7 +16,7 @@
 package io.syndesis.openshift;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -28,19 +28,22 @@ public interface OpenShiftService {
     String USERNAME_LABEL = "USERNAME";
 
     /**
-     * Creates the deployment (Deployment and Build configurations, Image Streams etc)
+     * Creates the deployment (Deployment and Build configurations, Image Streams etc) if
+     * not existing and updates a current one if existing. A call to this method is idempotent
+     * and called be many times
+     *
      * @param name name of the build
      * @param data the deployment data to use
      */
-    void create(String name, DeploymentData data);
+    void ensureSetup(String name, DeploymentData data);
 
     /**
      * Start a previously created build with the data from the given directory
      *
      * @param name name of the build
-     * @param runtimeDir directory containing project files
+     * @param tarInputStream input stream representing a tar file containing the project files
      */
-    void build(String name, Path runtimeDir) throws IOException;
+    void build(String name, InputStream tarInputStream) throws IOException;
 
     /**
      * Deletes the deployment (Deployment and Build configurations, Image Streams etc)

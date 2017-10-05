@@ -15,7 +15,7 @@
  */
 package io.syndesis.openshift;
 
-import java.nio.file.Path;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +25,12 @@ import io.fabric8.openshift.api.model.DeploymentConfig;
 public class OpenShiftServiceNoOp implements OpenShiftService {
 
     @Override
-    public void create(String name, DeploymentData d) {
+    public void ensureSetup(String name, DeploymentData d) {
         // Empty no-op just for testing
     }
 
     @Override
-    public void build(String name, Path runtimeDir) {
+    public void build(String name, InputStream tarInputStream) {
         // Empty no-op just for testing
     }
 

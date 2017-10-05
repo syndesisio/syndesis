@@ -15,13 +15,20 @@
  */
 package io.syndesis.project.converter;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,7 +44,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.connector.catalog.ConnectorCatalogProperties;
-import io.syndesis.core.PathUtils;
 import io.syndesis.integration.support.Strings;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.Connection;
@@ -54,6 +60,8 @@ import io.syndesis.project.converter.visitor.EndpointStepVisitor;
 import io.syndesis.project.converter.visitor.ExpressionFilterStepVisitor;
 import io.syndesis.project.converter.visitor.RuleFilterStepVisitor;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -100,7 +108,19 @@ public class DefaultProjectGeneratorTest {
     @After
     public void tearDown() throws Exception {
         if (runtimeDir != null) {
-            PathUtils.deletePathRecursively(runtimeDir);
+            Files.walkFileTree(runtimeDir, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
         }
     }
 
@@ -401,7 +421,32 @@ public class DefaultProjectGeneratorTest {
     }
 
     private Path generate(GenerateProjectRequest request, ProjectGeneratorProperties generatorProperties) throws IOException {
-        return new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request);
+        try (InputStream is = new DefaultProjectGenerator(new ConnectorCatalog(CATALOG_PROPERTIES), generatorProperties, registry).generate(request)) {
+            Path ret = Files.createTempDirectory("integration-runtime");
+            try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
+
+                TarArchiveEntry tarEntry = tis.getNextTarEntry();
+                // tarIn is a TarArchiveInputStream
+                while (tarEntry != null) {// create a file with the same name as the tarEntry
+                    File destPath = new File(ret.toFile(), tarEntry.getName());
+                    if (tarEntry.isDirectory()) {
+                        destPath.mkdirs();
+                    } else {
+                        destPath.getParentFile().mkdirs();
+                        destPath.createNewFile();
+                        byte[] btoRead = new byte[8129];
+                        BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath));
+                        int len;
+                        while ((len = tis.read(btoRead)) != -1) {
+                            bout.write(btoRead, 0, len);
+                        }
+                        bout.close();
+                    }
+                    tarEntry = tis.getNextTarEntry();
+                }
+            }
+            return ret;
+        }
     }
 
     @Test

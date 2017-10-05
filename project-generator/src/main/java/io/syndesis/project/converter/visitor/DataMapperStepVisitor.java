@@ -54,7 +54,8 @@ public class DataMapperStepVisitor implements StepVisitor {
         String resourceName = "mapping-step-" + stepContext.getIndex() + ".json";
         try {
             byte[] resourceData = utf8(configuredProperties.get("atlasmapping"));
-            generatorContext.writeFile("src/main/resources/" + resourceName, resourceData);
+
+            generatorContext.addTarEntry("src/main/resources/" + resourceName, resourceData);
             return new Endpoint("atlas:" + resourceName);
         } catch (IOException e) {
             throw new IllegalStateException("Cannot write " + resourceName + ":" + e,e);

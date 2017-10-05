@@ -15,6 +15,28 @@
  */
 package io.syndesis.project.converter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -34,28 +56,10 @@ import io.syndesis.project.converter.visitor.StepVisitor;
 import io.syndesis.project.converter.visitor.StepVisitorContext;
 import io.syndesis.project.converter.visitor.StepVisitorFactory;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -115,13 +119,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     @Override
-    public Path generate(GenerateProjectRequest request) throws IOException {
-        Path workingDir = Files.createTempDirectory("integration-runtime");
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Created temporary directory {}", workingDir.toString());
-        }
-
+    public InputStream generate(GenerateProjectRequest request) throws IOException {
         Integration integration = request.getIntegration();
         integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
@@ -132,6 +130,10 @@ public class DefaultProjectGenerator implements ProjectGenerator {
             }
         });
 
+        return createTarInputStream(request);
+    }
+
+    private void addAdditionalResources(TarArchiveOutputStream tos) throws IOException {
         for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
             String overridePath = generatorProperties.getTemplates().getOverridePath();
             URL resource = null;
@@ -152,26 +154,49 @@ public class DefaultProjectGenerator implements ProjectGenerator {
             }
 
             try {
-                writeFile(workingDir, additionalResource.getDestination(), Files.readAllBytes(Paths.get(resource.toURI())));
+                addTarEntry(tos, additionalResource.getDestination(), Files.readAllBytes(Paths.get(resource.toURI())));
             } catch (URISyntaxException e) {
                 throw new IOException(e);
             }
         }
-
-        writeFile(workingDir, "src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
-        writeFile(workingDir, "src/main/resources/application.properties", generateFromRequest(request, applicationPropertiesMustache));
-        writeFile(workingDir, "src/main/resources/syndesis.yml", generateFlowYaml(workingDir, request));
-        writeFile(workingDir, "pom.xml", generatePom(request.getIntegration()));
-
-        return workingDir;
     }
 
-    private void writeFile(Path workingDir, String path, byte[] content) throws IOException {
-        File file = new File(workingDir.toString(), path);
-        if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
-            throw new IOException("Cannot create directory " + file.getParentFile());
-        }
-        Files.write(file.toPath(), content);
+
+    private InputStream createTarInputStream(GenerateProjectRequest request) throws IOException {
+        PipedInputStream is = new PipedInputStream();
+        PipedOutputStream os = new PipedOutputStream(is);
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(generateAddProjectTarEntries(request, os));
+        return is;
+    }
+
+    private Runnable generateAddProjectTarEntries(GenerateProjectRequest request, PipedOutputStream os) {
+        return () -> {
+            try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
+                tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
+
+                addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
+                addTarEntry(tos, "src/main/resources/application.properties", generateFromRequest(request, applicationPropertiesMustache));
+                addTarEntry(tos, "src/main/resources/syndesis.yml", generateFlowYaml(tos, request));
+                addTarEntry(tos, "pom.xml", generatePom(request.getIntegration()));
+
+
+                addAdditionalResources(tos);
+
+            } catch (IOException e) {
+                LOG.error("Exception while creating runtime build tar for integration " + request.getIntegration().getName() + " : " + e, e);
+            }
+        };
+    }
+
+    private void addTarEntry(TarArchiveOutputStream tos, String path, byte[] content) throws IOException {
+
+        TarArchiveEntry entry = new TarArchiveEntry(path);
+        entry.setSize(content.length);
+        tos.putArchiveEntry(entry);
+        tos.write(content);
+        tos.closeArchiveEntry();
     }
 
     @Override
@@ -193,7 +218,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
-    private byte[] generateFlowYaml(Path runtimeDir, GenerateProjectRequest request) throws JsonProcessingException {
+    private byte[] generateFlowYaml(TarArchiveOutputStream tos, GenerateProjectRequest request) throws JsonProcessingException {
         final Map<Step, String> connectorIdMap = new HashMap<>();
 
         // Determine connector prefix
@@ -228,7 +253,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                     .connectorCatalog(connectorCatalog)
                     .generatorProperties(generatorProperties)
                     .request(request)
-                    .runtimeDir(runtimeDir)
+                    .tarArchiveOutputStream(tos)
                     .flow(flow)
                     .visitorFactoryRegistry(registry)
                     .build();

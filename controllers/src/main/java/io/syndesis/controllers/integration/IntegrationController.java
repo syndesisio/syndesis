@@ -187,7 +187,6 @@ public class IntegrationController {
                         .createFrom(current)
                         .currentStatus(update.getStatus()) // Status must not be null
                         .statusMessage(Optional.ofNullable(update.getStatusMessage()))
-                        .stepsDone(Optional.ofNullable(update.getStepsPerformed()))
                         .createdDate(Integration.Status.Activated.equals(update.getStatus()) ? now : integration.getCreatedDate().get())
                         .lastUpdated(new Date())
                         .build();
