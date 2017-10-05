@@ -185,7 +185,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
 
                 addAdditionalResources(tos);
-                LOG.info("Integration {} : Project files written to output stream {}",request.getIntegration().getName());
+                LOG.info("Integration {} : Project files written to output stream",request.getIntegration().getName());
             } catch (IOException e) {
                 if (LOG.isErrorEnabled()) {
                     LOG.error(String.format("Exception while creating runtime build tar for integration %s : %s",
