@@ -1,4 +1,5 @@
-<div class="row github-oauth">
+<div class="row github-oauth"
+     *ngIf="!loading">
 
   <div class="col-xs-12">
     <h1>Getting Started in Syndesis</h1>
@@ -147,7 +148,7 @@
   <!-- All Steps Completed -->
 
   <div class="col-xs-12"
-       *ngIf="stepOneComplete && stepTwoComplete && stepThreeComplete">
+       *ngIf="stepOneComplete && stepTwoComplete">
     <h2>Success! You're ready to start in Syndesis.</h2>
 
     <p>Go to Syndesis home page to start using our awesome services! As always, you can go back and change the settings

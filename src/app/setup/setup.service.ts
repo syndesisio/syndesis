@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptionsArgs, Headers, Response } from '@angular/http';
-import { OAuthService } from 'angular-oauth2-oidc-hybrid';
-import { ConfigService } from '../config.service';
 import { Setup } from '../model';
 import { log } from '../logging';
 
@@ -25,11 +23,7 @@ export class SetupService {
       return this.http.get(url, args)
         .toPromise()
         .then(response => {
-          if (response.status === 204) {
-            return true;
-          } else {
-            return this.handleError('Failed to check GitHub credentials', response);
-          }
+          return (response.status === 204);
         })
         .catch((response: Response) => {
           if (response.status === 410) {
@@ -61,10 +55,20 @@ export class SetupService {
       });
   }
 
+  /**
+   * Creates HTTP URL for setup page
+   * @param {string} apiEndpoint
+   * @returns {string}
+   */
   private createHttpUrl(apiEndpoint: string): string {
     return apiEndpoint.substring(0, apiEndpoint.lastIndexOf('/')) + '/setup';
   }
 
+  /**
+   * Creates HTTP arguments
+   * @param {string} accessToken
+   * @returns {RequestOptionsArgs}
+   */
   private createHttpArgs(accessToken: string): RequestOptionsArgs {
     return {
       headers: new Headers({

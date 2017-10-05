@@ -102,7 +102,10 @@ export function appInitializer(
           const accessToken = oauthService.getAccessToken();
           setupService.isSetupPending(apiEndpoint, accessToken)
             .then(function (setupPending) {
-              if (setupPending) {
+              log.debug('setupPending app.module.ts: ' + JSON.stringify(setupPending));
+              console.log('setupPending app.module.ts: ' + JSON.stringify(setupPending));
+              if (setupPending === true) {
+                console.log('Setup is still pending.. redirecting to setup.');
                 window.location.assign('/setup');
               } else {
                 oauthService.hybrid = originalHybrid;
@@ -128,7 +131,7 @@ export function appInitializer(
               }
             })
             .catch(function (error) {
-              console.error('Error fetching setup status' + error);
+              log.debug('Error fetching setup status' + error);
             });
         } else {
           init2(oauthService, userService, ngZone, notificationService);

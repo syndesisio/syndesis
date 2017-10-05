@@ -6,6 +6,8 @@ import { SetupService } from './setup.service';
 import { ConfigService } from '../config.service';
 import { OAuthService } from 'angular-oauth2-oidc-hybrid';
 
+import { log } from '../logging';
+
 export interface OAuthAppListItem {
   expanded: boolean;
 }
@@ -19,9 +21,9 @@ export class GitHubOAuthSetupComponent implements OnInit {
 
   stepOneComplete = false;
   stepTwoComplete = false;
-  stepThreeComplete = false;
+  //stepThreeComplete = false;
   loading: Observable<boolean>;
-  noAccountConnected = true;
+  //noAccountConnected = true;
   githubOauthForm = new FormGroup({
     clientId: new FormControl('', Validators.required),
     clientSecret: new FormControl('', Validators.required),
@@ -46,7 +48,13 @@ export class GitHubOAuthSetupComponent implements OnInit {
    * Step Two
    */
   connectGitHub() {
-    this.updateGitHubOauthConfiguration();
+    this.updateGitHubOauthConfiguration().then(function(result) {
+      log.debug('Result: ' + JSON.stringify(result));
+      log.debug('stepTwoComplete A - before: ' + JSON.stringify(this.stepTwoComplete));
+      this.stepTwoComplete = true;
+      log.debug('stepTwoComplete A - after: ' + JSON.stringify(this.stepTwoComplete));
+
+    });
   }
 
   private updateGitHubOauthConfiguration(): Promise<any> {
@@ -60,6 +68,12 @@ export class GitHubOAuthSetupComponent implements OnInit {
     const apiEndpoint = this.configService.getSettings().apiEndpoint;
     const accessToken = this.oauthService.getAccessToken();
     return this.setupService.updateSetup(setup, apiEndpoint, accessToken)
+      .then(function(result) {
+        log.debug('Result: ' + JSON.stringify(result));
+        log.debug('stepTwoComplete B - before: ' + JSON.stringify(this.stepTwoComplete));
+        this.stepTwoComplete = true;
+        log.debug('stepTwoComplete B - after: ' + JSON.stringify(this.stepTwoComplete));
+      })
       .catch(message => {
       this.notificationService.message(NotificationType.DANGER, 'Error', message, false, null, []);
       },
