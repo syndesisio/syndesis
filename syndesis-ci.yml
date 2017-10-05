@@ -160,7 +160,7 @@ objects:
         name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
       importPolicy:
         scheduled: true
-      name: latest
+      name: "latest"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -175,7 +175,7 @@ objects:
         name: ${SYNDESIS_REGISTRY}/syndesis/keycloak-openshift:2.5.4.Final
       importPolicy:
         scheduled: true
-      name: 2.5.4.Final
+      name: "2.5.4.Final"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -190,7 +190,7 @@ objects:
         name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
       importPolicy:
         scheduled: true
-      name: latest
+      name: "latest"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -205,7 +205,7 @@ objects:
         name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
       importPolicy:
         scheduled: true
-      name: latest
+      name: "latest"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -220,7 +220,7 @@ objects:
         name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
       importPolicy:
         scheduled: true
-      name: latest
+      name: "latest"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -235,8 +235,23 @@ objects:
         name: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
       importPolicy:
         scheduled: true
-      name: v0.2.1
+      name: "v0.2.1"
 
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: s2i-java
+    labels:
+      app: syndesis
+      component: s2i-java
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: fabric8/s2i-java:2.0
+      importPolicy:
+        scheduled: true
+      name: "2.0"
 
 - apiVersion: v1
   kind: Service
@@ -2285,6 +2300,7 @@ objects:
       openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
+        builderImageStreamTag: s2i-java:2.0
       keycloak:
         enabled: true
         configurationFile: file:config/syndesis-client.json

@@ -14,7 +14,7 @@
         name: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
-      name: {{ Tags.Syndesis }}
+      name: "{{ Tags.Syndesis }}"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -29,7 +29,7 @@
         name: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Support.Keycloak }}:{{ Tags.Keycloak }}
       importPolicy:
         scheduled: true
-      name: {{ Tags.Keycloak }}
+      name: "{{ Tags.Keycloak }}"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -44,7 +44,7 @@
         name: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
-      name: {{ Tags.Syndesis }}
+      name: "{{ Tags.Syndesis }}"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -59,7 +59,7 @@
         name: ${SYNDESIS_REGISTRY}/{{Images.AtlasMapImagesPrefix}}/{{ Images.Syndesis.Atlasmap }}:{{ Tags.Atlasmap }}
       importPolicy:
         scheduled: true
-      name: {{ Tags.Syndesis }}
+      name: "{{ Tags.Syndesis }}"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -74,7 +74,7 @@
         name: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
-      name: {{ Tags.Syndesis }}
+      name: "{{ Tags.Syndesis }}"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -89,6 +89,21 @@
         name: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
       importPolicy:
         scheduled: true
-      name: {{ Tags.PemToKeystore }}
+      name: "{{ Tags.PemToKeystore }}"
 {{/WithDockerImages}}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: {{ Images.S2i.ImageStream }}
+    labels:
+      app: syndesis
+      component: s2i-java
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: {{ Images.S2i.DockerImage }}:{{ Images.S2i.Tag }}
+      importPolicy:
+        scheduled: true
+      name: "{{ Images.S2i.Tag }}"
 {{/Productized}}
