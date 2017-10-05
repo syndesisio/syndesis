@@ -1,5 +1,4 @@
-<div class="row github-oauth"
-     *ngIf="!loading">
+<div class="row github-oauth">
 
   <div class="col-xs-12">
     <h1>Getting Started in Syndesis</h1>
@@ -11,7 +10,7 @@
     <!-- Step One -->
 
     <div class="step-one"
-         [ngClass]="{'step-complete' : stepOneComplete === true}">
+         [ngClass]="{'step-complete' : stepOneComplete}">
       <div class="col-xs-10">
         <div class="col-xs-1">
           <div class="circle pull-right"><p>1</p></div>
@@ -34,7 +33,7 @@
             </div>
           </div>
           <div class="alert alert-success"
-               *ngIf="stepOneComplete === true">
+               *ngIf="stepOneComplete && !stepTwoComplete">
             <span class="pficon pficon-ok"></span>
             <b>Success!</b> Future changes can be made in <a>Syndesis Global Settings / GitHub Settings</a>.
           </div>
@@ -46,7 +45,7 @@
     <!-- Step Two -->
 
     <div class="step-two"
-         [ngClass]="{'step-complete' : stepTwoComplete === true}">
+         [ngClass]="{'step-complete' : stepTwoComplete}">
       <div class="col-xs-10">
         <div class="col-xs-1">
           <div class="circle pull-right"><p>2</p></div>
@@ -147,15 +146,15 @@
 
 
   <!-- All Steps Completed -->
-
   <div class="col-xs-12"
        *ngIf="stepOneComplete && stepTwoComplete">
+    <hr>
     <h2>Success! You're ready to start in Syndesis.</h2>
 
     <p>Go to Syndesis home page to start using our awesome services! As always, you can go back and change the settings
       later on the GitHub Settings page.</p>
 
-    <button (click)="getStarted()">Get Started</button>
+    <button type="button" class="btn btn-primary" (click)="getStarted()">Get Started</button>
   </div>
 
 </div>

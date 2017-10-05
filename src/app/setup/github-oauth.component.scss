@@ -79,8 +79,6 @@
   }
 
   .step-two {
-    padding-top: 150px;
-
     a {
       &:hover {text-decoration: none}
 
@@ -113,8 +111,6 @@
       .account-label p {
         font-weight: 600;
       }
-
-      .connected {}
 
       .not-connected {
         color: $color-pf-black-400;

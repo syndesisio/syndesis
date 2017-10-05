@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NotificationService, NotificationType } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
 import { SetupService } from './setup.service';
@@ -15,14 +16,11 @@ export interface OAuthAppListItem {
   templateUrl: 'github-oauth.component.html',
   styleUrls: ['./github-oauth.component.scss'],
 })
-export class GitHubOAuthSetupComponent implements OnInit {
+export class GitHubOAuthSetupComponent {
 
   callbackUrl = this.getCallbackUrl();
   stepOneComplete = false;
   stepTwoComplete = false;
-  //stepThreeComplete = false;
-  loading: Observable<boolean>;
-  //noAccountConnected = true;
   githubOauthForm = new FormGroup({
     clientId: new FormControl('', Validators.required),
     clientSecret: new FormControl('', Validators.required),
@@ -40,7 +38,8 @@ export class GitHubOAuthSetupComponent implements OnInit {
     private oauthService: OAuthService,
     private setupService: SetupService,
     private notificationService: NotificationService,
-    public detector: ChangeDetectorRef,
+    private detector: ChangeDetectorRef,
+    private router: Router,
   ) {}
 
   /**
@@ -48,15 +47,13 @@ export class GitHubOAuthSetupComponent implements OnInit {
    * Log user out if everything is okay. Kick off the login flow again.
    */
   connectGitHub() {
-    this.updateGitHubOauthConfiguration().then(function() {
-      this.stepTwoComplete = true;
-      setTimeout(function() {
-        this.oauthService.logOut(true);
-        return this.oauthService.initImplicitFlow('autolink');
-      }, 10000);
-    }).catch(function(message) {
-      this.notificationService.message(NotificationType.DANGER, 'Error', message, false, null, []);
-    });
+    this.updateGitHubOauthConfiguration()
+      .then(() => {
+        this.stepTwoComplete = true;
+        this.detector.detectChanges();
+      }).catch(message => {
+        this.notificationService.message(NotificationType.DANGER, 'Error', message, false, null, []);
+      });
   }
 
   /**
@@ -87,15 +84,10 @@ export class GitHubOAuthSetupComponent implements OnInit {
   }
 
   /**
-   * Disconnects a previously connected GitHub account
-   */
-  disconnectGitHub() {}
-
-  /**
    * All steps have been completed
    */
   getStarted() {
-    window.open('/dashboard');
+    window.location.assign('/');
   }
 
   /**
@@ -105,24 +97,6 @@ export class GitHubOAuthSetupComponent implements OnInit {
   registerSyndesis() {
     this.stepOneComplete = true;
     window.open('https://github.com/settings/applications/new', '_blank');
-  }
-
-  /**
-   * Returns whether or not this item has stored credentials
-   */
-  isConfigured(item) {
-    const client = item.client || {};
-    return (
-      client.clientId &&
-      client.clientId !== '' &&
-      (client.clientSecret && client.clientSecret !== '')
-    );
-  }
-
-  /**
-   * View initialization
-    */
-  ngOnInit(): void {
   }
 
 }

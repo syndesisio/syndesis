@@ -1,9 +1,9 @@
 import {
   Component,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   OnInit,
   AfterViewInit,
-  ViewChild,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
@@ -67,7 +67,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Flag used to determine if this is a first time user.
    * @type {any}
    */
-  firstTime = this.firstTimeUser();
+  firstTime = true;
 
   /**
    * Local var used to determine whether or not to display a close
@@ -84,6 +84,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private nav: NavigationService,
     private modalService: ModalService,
     public setupService: SetupService,
+    private changeDetector: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -138,23 +139,24 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.notifications = this.notificationService.getNotifications();
     this.showClose = true;
 
-    this.firstTimeUser();
+    this.setFirstTimeUserFlag();
   }
 
   /**
    * Function that determines whether or not this is a first time user
    * and sets a flag accordingly.
    */
-  firstTimeUser() {
+  setFirstTimeUserFlag() {
     const apiEndpoint = this.config.getSettings().apiEndpoint;
     const accessToken = this.oauthService.getAccessToken();
 
-    this.setupService.isSetupPending(apiEndpoint, accessToken).then(setupPending => {
-        return setupPending;
+    this.setupService.isSetupPending(apiEndpoint, accessToken)
+      .then(setupPending => {
+        this.firstTime = setupPending;
+        this.changeDetector.detectChanges();
       })
-      .catch(function(err) {
+      .catch(err => {
         log.debug('Error getting setup status: ' + JSON.stringify(err));
-        return true;
       });
   }
 

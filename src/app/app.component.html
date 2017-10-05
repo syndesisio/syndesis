@@ -1,46 +1,41 @@
-<div class="app" [ngSwitch]="userService.checkToken()">
-
-  <!-- Does Not Have Valid Token -->
-
-  <ng-container *ngSwitchDefault>
-    <main class="container-fluid">
-      <router-outlet></router-outlet>
-    </main>
-  </ng-container>
-
-  <!-- Has Valid Token -->
-
-  <ng-container *ngSwitchCase="true">
+<div class="app">
 
     <pfng-toast-notification-list [notifications]="notifications"
                                   (onActionSelect)="handleAction($event)"
                                   (onCloseSelect)="handleClose($event)"
                                   [showClose]="showClose">
     </pfng-toast-notification-list>
-
     <ng-template #brandTemplate>
       <a [routerLink]=" ['/'] "
          class="navbar-brand">
-        <img *ngIf="iconDarkBg && iconDarkBg !== ''"
-             class="navbar-brand-icon"
-             [src]="loggedIn ? iconDarkBg : iconWhiteBg"
-             alt="" />
-        <img *ngIf="logoDarkBg"
-             class="navbar-brand-name"
-             [src]="loggedIn ? logoDarkBg : logoWhiteBg"
-             alt="{{title}}" />
-        <span *ngIf="logoDarkBg === '' && logoWhiteBg === ''"
-              class="navbar-brand-name">{{title}}</span>
-      </a>
+            <img *ngIf="iconDarkBg && iconDarkBg !== ''"
+                 class="navbar-brand-icon"
+                 [src]="loggedIn ? iconDarkBg : iconWhiteBg"
+                 alt="" />
+            <img *ngIf="logoDarkBg"
+                 class="navbar-brand-name"
+                 [src]="loggedIn ? logoDarkBg : logoWhiteBg"
+                 alt="{{title}}" />
+            <span *ngIf="logoDarkBg === '' && logoWhiteBg === ''"
+                 class="navbar-brand-name">{{title}}</span>
+          </a>
     </ng-template>
 
     <header>
 
-      <nav class="navbar navbar-pf-vertical">
+      <!-- Navbar: Logged Out -->
+      <nav class="navbar navbar-fixed-top navbar-light loggedOut"
+           *ngIf="!loggedIn">
+        <!-- Logo -->
+        <ng-container *ngTemplateOutlet="brandTemplate"></ng-container>
+      </nav>
+
+      <!-- Navbar: Logged In -->
+      <nav *ngIf="loggedIn"
+           class="navbar navbar-pf-vertical">
         <div class="navbar-header">
 
           <!-- Toggle Sidebar-->
-
           <button type="button"
                   class="navbar-toggle"
                   *ngIf="!firstTime">
@@ -50,12 +45,9 @@
             <span class="icon-bar"></span>
           </button>
 
-
           <!-- Logo -->
-
           <ng-container *ngTemplateOutlet="brandTemplate"></ng-container>
         </div>
-
 
         <!-- Top Navbar -->
 
@@ -79,11 +71,12 @@
                   aria-labelledby="horizontalDropdownMenu1">
                 <li><a href="https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/fuse_ignite_sample_integration_tutorial/"
 
-                       rel="nofollow"
-                       target="_blank">Documentation</a></li>
+                     rel="nofollow"
+                     target="_blank">Documentation</a></li>
                 <li><a href="mailto:fuse-ignite-tech-preview@redhat.com"
-                       rel="nofollow"
-                       target="_blank">Contact Us</a></li>
+                     rel="nofollow"
+                     target="_blank">Contact Us</a></li>
+                <li><a>About</a></li>
               </ul>
             </li>
 
@@ -132,11 +125,9 @@
       <!--/.navbar-->
     </header>
 
-
     <!-- Sidebar -->
-
     <div class="nav-pf-vertical hidden-icons-pf"
-         *ngIf="!firstTime">
+         *ngIf="loggedIn && !firstTime">
       <ul class="list-group">
         <li class="list-group-item"
             routerLinkActive="active">
@@ -185,7 +176,8 @@
       </ul>
     </div>
     <main class="container-fluid"
-          [ngClass]="{'container-pf-nav-pf-vertical': !firstTime}">
+          [ngClass]="{'container-pf-nav-pf-vertical': !firstTime}"
+          *ngIf="loggedIn">
       <router-outlet></router-outlet>
     </main>
 
@@ -201,6 +193,4 @@
       </ng-template>
     </syndesis-modal>
 
-  </ng-container>
-
-</div>
+  </div>

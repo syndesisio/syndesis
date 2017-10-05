@@ -48,13 +48,13 @@ export class SetupService {
    * @param {string} accessToken
    * @returns {Promise<any>}
    */
-  updateSetup(setup: Setup, apiEndpoint: string, accessToken: string): Promise<any> {
+  updateSetup(setup: Setup, apiEndpoint: string, accessToken: string): Promise<null> {
     const url = this.createHttpUrl(apiEndpoint);
     const args = this.createHttpArgs(accessToken);
     const body = JSON.stringify(setup);
     return this.http.put(url, body, args)
       .toPromise()
-      .then()
+      .then(response => null)
       .catch((response: Response) => {
         // 410 (Gone) if already configured
         return response.status === 410 ? null : this.handleError('Failed to save GitHub credentials', response);
