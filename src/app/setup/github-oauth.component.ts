@@ -28,6 +28,8 @@ export class GitHubOAuthSetupComponent implements OnInit {
   });
 
   /**
+   * @param {ConfigService} configService
+   * @param {OAuthService} oauthService
    * @param {SetupService} setupService
    * @param {ChangeDetectorRef} detector
    * @param {NotificationService} notificationService
