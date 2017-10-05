@@ -44,11 +44,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public void create(OpenShiftDeployment d) {
         openShiftClient.withRequestConfig(d.getRequestConfig()).<Void>call(c -> {
-            DockerImage img = new DockerImage(config.getBuilderImage());
-            ensureImageStreams(openShiftClient, d, img);
+            ensureImageStreams(openShiftClient, d);
             ensureDeploymentConfig(openShiftClient, d, config.getIntegrationServiceAccount());
             ensureSecret(openShiftClient, d);
-            ensureBuildConfig(openShiftClient, d, img);
+            ensureBuildConfig(openShiftClient, d, config.getBuilderImageStreamTag());
             return null;
         });
     }
@@ -57,10 +56,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     public boolean delete(OpenShiftDeployment d) {
         String sanitizedName = d.getSanitizedName();
         return openShiftClient.withRequestConfig(d.getRequestConfig()).call(c ->
-            removeImageStreams(openShiftClient, new DockerImage(config.getBuilderImage())) &&
-                removeDeploymentConfig(openShiftClient, sanitizedName) &&
-                removeSecret(openShiftClient, sanitizedName) &&
-                removeBuildConfig(openShiftClient, sanitizedName)
+                                                                                removeImageStreams(openShiftClient, new DockerImage(config.getBuilderImageStreamTag())) &&
+                                                                                removeDeploymentConfig(openShiftClient, sanitizedName) &&
+                                                                                removeSecret(openShiftClient, sanitizedName) &&
+                                                                                removeBuildConfig(openShiftClient, sanitizedName)
         );
     }
 
@@ -118,16 +117,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
 //==================================================================================================
 
-    private static void ensureImageStreams(OpenShiftClient client, OpenShiftDeployment deployment, DockerImage img) {
+    private static void ensureImageStreams(OpenShiftClient client, OpenShiftDeployment deployment) {
         final String sanitizedName = deployment.getSanitizedName();
-        client.imageStreams().withName(img.getShortName()).createOrReplaceWithNew()
-                .withNewMetadata()
-                    .withName(img.shortName)
-                    .addToAnnotations(REVISION_ID_ANNOTATION, String.valueOf(deployment.getRevisionId()))
-                    .addToLabels(OpenShiftService.USERNAME_LABEL, Names.sanitize(Names.sanitize(deployment.getUsername())))
-                .endMetadata()
-                    .withNewSpec().addNewTag().withNewFrom().withKind("DockerImage").withName(img.getImage()).endFrom().withName(img.getTag()).endTag().endSpec()
-                .done();
         client.imageStreams().withName(sanitizedName).createOrReplaceWithNew()
             .withNewMetadata().withName(sanitizedName).endMetadata().done();
     }
@@ -187,7 +178,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     private static void ensureBuildConfig(OpenShiftClient client,
                                           OpenShiftDeployment deployment,
-                                          DockerImage img) {
+                                          String builderStreamTag) {
         String sanitizedName = deployment.getSanitizedName();
         client.buildConfigs().withName(sanitizedName).createOrReplaceWithNew()
             .withNewMetadata()
@@ -213,7 +204,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewStrategy()
             .withType("Source")
             .withNewSourceStrategy()
-            .withNewFrom().withKind("ImageStreamTag").withName(img.getShortName() + ":" + img.getTag()).endFrom()
+            .withNewFrom().withKind("ImageStreamTag").withName(builderStreamTag).endFrom()
             .withIncremental(true)
               .withEnv(new EnvVar("MAVEN_OPTS","-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx300m", null))
             .endSourceStrategy()
