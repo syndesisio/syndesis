@@ -7,6 +7,7 @@ import { SyndesisCommonModule } from '../common/common.module';
 
 import { SetupRootComponent } from './setup-root.component';
 import { GitHubOAuthSetupComponent } from './github-oauth.component';
+import { SetupService } from './setup.service';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       },
       {
         path: '',
+        pathMatch: 'full',
         redirectTo: 'github-account',
       },
     ],
@@ -39,6 +41,8 @@ const routes: Routes = [
     SetupRootComponent,
     GitHubOAuthSetupComponent,
   ],
-  providers: [],
+  providers: [
+    SetupService,
+  ],
 })
 export class SetupModule {}
