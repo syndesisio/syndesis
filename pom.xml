@@ -878,6 +878,7 @@
             <exclude>**/*.mustache</exclude>
             <exclude>**/test/resources/**</exclude>
             <exclude>**/spring.factories</exclude>
+            <exclude>**/*.adoc</exclude>
           </excludes>
         </configuration>
       </plugin>
