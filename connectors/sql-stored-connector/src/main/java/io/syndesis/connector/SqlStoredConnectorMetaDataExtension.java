@@ -133,8 +133,14 @@ public class SqlStoredConnectorMetaDataExtension extends AbstractMetaDataExtensi
                 column.setName(columnSet.getString("COLUMN_NAME"));
                 column.setMode(ColumnMode.valueOf(columnSet.getInt("COLUMN_TYPE")));
                 column.setJdbcType(JDBCType.valueOf(columnSet.getInt("DATA_TYPE")));
-                template += " " + column.getMode().name() + " " + column.getJdbcType() + " ${body[" + column.getName() + "], ";
-                columnList.add(column);
+                if (ColumnMode.IN.equals(column.getMode())){
+                    template += " " + column.getJdbcType() + " ${body[" + column.getName() + "], ";
+                    columnList.add(column);
+                }
+                if (ColumnMode.OUT.equals(column.getMode())){
+                    template += " " + column.getMode().name() + " " + column.getJdbcType() + " ${body[" + column.getName() + "], ";
+                    columnList.add(column);
+                }
             }
             template = template.substring(0, template.length() - 2) + ")";
             storedProcedureMetadata.setTemplate(template);
