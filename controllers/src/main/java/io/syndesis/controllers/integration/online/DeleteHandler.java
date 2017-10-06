@@ -38,6 +38,7 @@ public class DeleteHandler extends BaseHandler implements StatusChangeHandlerPro
             || openShiftService().delete(integration.getName())
             ? Integration.Status.Deleted
             : Integration.Status.Pending;
+        logInfo(integration,"Deleted");
 
         return new StatusUpdate(currentStatus);
     }

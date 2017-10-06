@@ -40,6 +40,7 @@ public class DeactivateHandler extends BaseHandler implements StatusChangeHandle
     public StatusUpdate execute(Integration integration) {
         try {
             openShiftService().scale(integration.getName(), 0);
+            logInfo(integration,"Deactivated");
         } catch (KubernetesClientException e) {
             // Ignore 404 errors, means the deployment does not exist for us
             // to scale down

@@ -27,9 +27,14 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.openshift.OpenShiftService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BaseHandler {
     private final OpenShiftService openShiftService;
+
+    private static final Logger LOG = LoggerFactory.getLogger(BaseHandler.class);
+
 
     protected BaseHandler(OpenShiftService openShiftService) {
         this.openShiftService = openShiftService;
@@ -39,6 +44,21 @@ public class BaseHandler {
         return openShiftService;
     }
 
+    protected void logInfo(Integration integration, String format, Object ... args) {
+        if (LOG.isInfoEnabled()) {
+            LOG.info(getLabel(integration) + ": " + format, args);
+        }
+    }
+
+    protected void logError(Integration integration, String format, Object ... args) {
+        if (LOG.isErrorEnabled()) {
+            LOG.error(getLabel(integration) + ": " + format, args);
+        }
+    }
+
+    private String getLabel(Integration integration) {
+        return "Integration " + integration.getId().orElse("[none]");
+    }
 
     /**
      * Fetch the Connectors

@@ -24,8 +24,6 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class OpenShiftConfigurationProperties {
 
-    private static final String DEFAULT_INTEGRATION_SA = "syndesis-integration";
-
     public static final String SERVICE_CA_CERT_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt";
 
     private boolean enabled;
@@ -39,8 +37,6 @@ public class OpenShiftConfigurationProperties {
     private String apiBaseUrl;
 
     private String namespace;
-
-    private String integrationServiceAccount = DEFAULT_INTEGRATION_SA;
 
     public boolean isEnabled() {
         return enabled;
@@ -86,11 +82,4 @@ public class OpenShiftConfigurationProperties {
         this.namespace = namespace;
     }
 
-    public String getIntegrationServiceAccount() {
-        return integrationServiceAccount;
-    }
-
-    public void setIntegrationServiceAccount(String integrationServiceAccount) {
-        this.integrationServiceAccount = integrationServiceAccount;
-    }
 }

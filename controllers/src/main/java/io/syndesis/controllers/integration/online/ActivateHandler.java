@@ -18,8 +18,10 @@ package io.syndesis.controllers.integration.online;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -45,16 +47,12 @@ import io.syndesis.openshift.DeploymentData;
 import io.syndesis.openshift.OpenShiftService;
 import io.syndesis.project.converter.GenerateProjectRequest;
 import io.syndesis.project.converter.ProjectGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ActivateHandler extends BaseHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
 
     private final DataManager dataManager;
     private final ProjectGenerator projectConverter;
     private final ControllersConfigurationProperties properties;
-
-    private static final Logger LOG = LoggerFactory.getLogger(ActivateHandler.class);
 
     /* default */ ActivateHandler(DataManager dataManager, OpenShiftService openShiftService,
                                   ProjectGenerator projectConverter, ControllersConfigurationProperties properties) {
@@ -84,42 +82,79 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
             return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userDeployments + " deployments, while the maximum allowed number is " + properties.getMaxDeploymentsPerUser() + ".");
         }
 
-        // Don't restart if already pending
-        if (integration.getCurrentStatus().isPresent() &&
-            integration.getCurrentStatus().get() == Integration.Status.Pending) {
-            return null;
+        logInfo(integration,"Build started: {}, isRunning: {}, Deployment ready: {}",
+                isBuildStarted(integration), isRunning(integration), isReady(integration));
+        BuildStepPerformer stepPerformer = new BuildStepPerformer(integration);
+        logInfo(integration, "Steps performed so far: " + stepPerformer.getStepsPerformed());
+        try {
+            stepPerformer.perform("setup", this::setup);
+            stepPerformer.perform("build", this::build);
+            stepPerformer.perform("deploy", this::deploy);
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+            logError(integration,"[ERROR] Activation failure");
+            // Setting a message to update means implictely thats in an error state (for the UI)
+            return new StatusUpdate(Integration.Status.Pending, e.getMessage());
         }
 
+        // Set status to activate if finally running. Also clears the previous step which has been performed
+        if (isRunning(integration)) {
+            logInfo(integration, "[ACTIVATED] bc. integration is running with 1 pod");
+            return new StatusUpdate(Integration.Status.Activated);
+        }
+
+        logInfo(integration,"Build started: {}, isRunning: {}, Deployment ready: {}",
+                isBuildStarted(integration), isRunning(integration), isReady(integration));
+        logInfo(integration, "[PENDING] [" + stepPerformer.getStepsPerformed() + "]");
+        return new StatusUpdate(Integration.Status.Pending, stepPerformer.getStepsPerformed());
+    }
+
+
+    // =============================================================================
+    // Various steps to perform:
+
+    private void setup(Integration integration) throws IOException {
         Properties applicationProperties = extractApplicationPropertiesFrom(integration);
         IntegrationRevision revision = IntegrationRevision.createNewRevision(integration);
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
+        String name = integration.getName();
 
-        try {
+        DeploymentData deploymentData = DeploymentData.builder()
+                                                      .addLabel(OpenShiftService.REVISION_ID_ANNOTATION, revision.getVersion().orElse(0).toString())
+                                                      .addAnnotation(OpenShiftService.USERNAME_LABEL, username)
+                                                      .addSecretEntry("application.properties", propsToString(applicationProperties))
+                                                      .build();
 
-            DeploymentData deploymentData = DeploymentData.builder()
-                .addLabel(OpenShiftService.REVISION_ID_ANNOTATION, revision.getVersion().orElse(0).toString())
-                .addAnnotation(OpenShiftService.USERNAME_LABEL, username)
-                .addSecretEntry("application.properties", propsToString(applicationProperties))
-                .build();
-
-            String name = integration.getName();
-
-            openShiftService().ensureSetup(name, deploymentData);
-            LOG.info("{} : Ensured OpenShift resources", getLabel(integration));
-
-            InputStream tarInputStream = createProjectFiles(integration);
-            LOG.info("{} : Created project files and starting build", getLabel(integration));
-            openShiftService().build(name, tarInputStream);
-
-            if (openShiftService().isScaled(name,1)) {
-                return new StatusUpdate(Integration.Status.Activated);
-            }
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            LOG.error("{} : Failure", getLabel(integration), e);
-            return new StatusUpdate(Integration.Status.Pending);
-        }
-        return new StatusUpdate(Integration.Status.Pending);
+        openShiftService().setup(name, deploymentData);
+        logInfo(integration, "Ensured OpenShift resources");
     }
+
+    private void build(Integration integration) throws IOException {
+        InputStream tarInputStream = createProjectFiles(integration);
+        logInfo(integration, "Created project files and starting build");
+        openShiftService().build(integration.getName(), tarInputStream);
+    }
+
+    private void deploy(Integration integration) throws IOException {
+        logInfo(integration, "Starting deployment");
+        openShiftService().deploy(integration.getName());
+        logInfo(integration, "Deployment done");
+    }
+
+
+    // =================================================================================
+
+    private boolean isBuildStarted(Integration integration) {
+        return openShiftService().isBuildStarted(integration.getName());
+    }
+
+    private boolean isReady(Integration integration) {
+        return openShiftService().isReady(integration.getName());
+    }
+
+    public boolean isRunning(Integration integration) {
+        return openShiftService().isScaled(integration.getName(),1);
+    }
+
 
     private static String propsToString(Properties data) {
         if (data == null) {
@@ -289,9 +324,6 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
         return secrets;
     }
 
-    private String getLabel(Integration integration) {
-        return "Integration " + integration.getId().orElse("[none]");
-    }
 
     private static <K, V> Map<K, V> aggregate(Map<K, V> ... maps) {
         return Stream.of(maps)
@@ -318,4 +350,36 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
 
         return false;
     }
+
+    // ===============================================================================
+    // Some helper method to conditional execute certain steps
+    @FunctionalInterface
+    public interface IoCheckedFunction<T> {
+         void apply(T t) throws IOException;
+    }
+
+    private class BuildStepPerformer {
+        private final List<String> stepsPerformed;
+        private Integration integration;
+
+        BuildStepPerformer(Integration integration) {
+            this.integration = integration;
+            this.stepsPerformed = integration.getStepsDone().orElseGet(ArrayList::new);
+        }
+
+        void perform(String step, IoCheckedFunction<Integration> callable) throws IOException {
+            if (!stepsPerformed.contains(step)) {
+                callable.apply(integration);
+                stepsPerformed.add(step);
+            } else {
+                logInfo(integration, "Skipped step {} because already performed", step);
+            }
+        }
+
+        public List<String> getStepsPerformed() {
+            return stepsPerformed;
+        }
+    }
+
+
 }

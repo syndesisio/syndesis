@@ -124,7 +124,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         Integration integration = request.getIntegration();
         integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
-                LOG.info("Integration {} : Adding step {} ",
+                LOG.debug("Integration {} : Adding step {} ",
                          integration.getId().orElse("[none]"),
                          step.getId().orElse(""));
                 step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));

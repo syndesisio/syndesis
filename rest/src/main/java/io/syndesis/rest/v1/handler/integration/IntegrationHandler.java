@@ -91,7 +91,7 @@ public class IntegrationHandler extends BaseHandler
             //Not sure if we need to do that for both current and desired status,
             //but If we don't do include the desired state, IntegrationITCase is not going to pass anytime soon. Why?
             //Cause that test, is using NoopHandlerProvider, so that means no controllers.
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException(String.format("Integration %s has been deleted", integration.getId()));
         }
 
         //fudging the timesUsed for now
