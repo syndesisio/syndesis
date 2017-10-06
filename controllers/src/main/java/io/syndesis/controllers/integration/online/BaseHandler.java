@@ -21,15 +21,21 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.syndesis.core.Names;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.openshift.OpenShiftService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BaseHandler {
     private final OpenShiftService openShiftService;
+
+    private static final Logger LOG = LoggerFactory.getLogger(BaseHandler.class);
+
 
     protected BaseHandler(OpenShiftService openShiftService) {
         this.openShiftService = openShiftService;
@@ -39,6 +45,21 @@ public class BaseHandler {
         return openShiftService;
     }
 
+    protected void logInfo(Integration integration, String format, Object ... args) {
+        if (LOG.isInfoEnabled()) {
+            LOG.info(getLabel(integration) + ": " + format, args);
+        }
+    }
+
+    protected void logError(Integration integration, String format, Object ... args) {
+        if (LOG.isErrorEnabled()) {
+            LOG.error(getLabel(integration) + ": " + format, args);
+        }
+    }
+
+    private String getLabel(Integration integration) {
+        return String.format("Integration [%s]",Names.sanitize(integration.getName()));
+    }
 
     /**
      * Fetch the Connectors

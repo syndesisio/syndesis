@@ -40,7 +40,7 @@ import org.immutables.value.Value;
 @UniqueProperty(value = "name", groups = UniquenessRequired.class)
 public interface Integration extends WithId<Integration>, WithTags, WithName, Serializable {
 
-    enum Status { Draft, Pending, Activated, Deactivated, Deleted}
+    enum Status { Draft, Pending, Activated, Deactivated, Deleted }
 
     @Override
     default Kind getKind() {
@@ -85,6 +85,8 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     Optional<Status> getDesiredStatus();
 
     Optional<Status> getCurrentStatus();
+
+    Optional<List<String>> getStepsDone();
 
     Optional<String> getStatusMessage();
 

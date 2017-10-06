@@ -32,8 +32,14 @@ public interface StatusChangeHandlerProvider {
         StatusUpdate execute(Integration model);
 
         class StatusUpdate {
-            private Integration.Status status;
+            private final Integration.Status status;
             private String statusMessage;
+            private List<String> stepsPerformed;
+
+            public StatusUpdate(Integration.Status status, List<String> stepsPerformed) {
+                this.status = status;
+                this.stepsPerformed = stepsPerformed;
+            }
 
             public StatusUpdate(Integration.Status status, String statusMessage) {
                 this.status = status;
@@ -41,7 +47,7 @@ public interface StatusChangeHandlerProvider {
             }
 
             public StatusUpdate(Integration.Status status) {
-                this(status, null);
+                this.status = status;
             }
 
             public Integration.Status getStatus() {
@@ -50,6 +56,10 @@ public interface StatusChangeHandlerProvider {
 
             public String getStatusMessage() {
                 return statusMessage;
+            }
+
+             public List<String> getStepsPerformed() {
+                return stepsPerformed;
             }
         }
     }

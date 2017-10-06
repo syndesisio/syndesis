@@ -44,6 +44,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import io.syndesis.connector.catalog.ConnectorCatalog;
+import io.syndesis.core.Names;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.integration.model.SyndesisHelpers;
 import io.syndesis.integration.model.SyndesisModel;
@@ -124,8 +125,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         Integration integration = request.getIntegration();
         integration.getSteps().ifPresent(steps -> {
             for (Step step : steps) {
-                LOG.info("Integration {} : Adding step {} ",
-                         integration.getId().orElse("[none]"),
+                LOG.debug("Integration [{}]: Adding step {} ",
+                          Names.sanitize(integration.getName()),
                          step.getId().orElse(""));
                 step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
             }
@@ -185,7 +186,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
 
                 addAdditionalResources(tos);
-                LOG.info("Integration {} : Project files written to output stream",request.getIntegration().getName());
+                LOG.info("Integration [{}]: Project files written to output stream",Names.sanitize(request.getIntegration().getName()));
             } catch (IOException e) {
                 if (LOG.isErrorEnabled()) {
                     LOG.error(String.format("Exception while creating runtime build tar for integration %s : %s",

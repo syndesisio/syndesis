@@ -35,7 +35,7 @@ public interface OpenShiftService {
      * @param name name of the build
      * @param data the deployment data to use
      */
-    void ensureSetup(String name, DeploymentData data);
+    void setup(String name, DeploymentData data);
 
     /**
      * Start a previously created build with the data from the given directory
@@ -44,6 +44,16 @@ public interface OpenShiftService {
      * @param tarInputStream input stream representing a tar file containing the project files
      */
     void build(String name, InputStream tarInputStream) throws IOException;
+
+    /**
+     * Perform a deployment
+     *
+     * @param name name of the deployment to trigger
+     *
+     */
+    void deploy(String name);
+
+    boolean isReady(String name);
 
     /**
      * Deletes the deployment (Deployment and Build configurations, Image Streams etc)
@@ -80,4 +90,5 @@ public interface OpenShiftService {
      */
     List<DeploymentConfig> getDeploymentsByLabel(Map<String, String> labels);
 
+    boolean isBuildStarted(String buildName);
 }

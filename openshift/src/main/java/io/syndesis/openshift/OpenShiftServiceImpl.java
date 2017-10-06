@@ -37,10 +37,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public void ensureSetup(String name, DeploymentData deploymentData) {
+    public void setup(String name, DeploymentData deploymentData) {
         String sName = Names.sanitize(name);
         ensureImageStreams(sName);
-        ensureDeploymentConfig(sName, deploymentData, this.config.getIntegrationServiceAccount());
+        ensureDeploymentConfig(sName, deploymentData);
         ensureSecret(sName, deploymentData);
         ensureBuildConfig(sName, deploymentData, this.config.getBuilderImageStreamTag());
     }
@@ -51,6 +51,18 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         openShiftClient.buildConfigs().withName(sName)
                        .instantiateBinary()
                        .fromInputStream(tarInputStream);
+    }
+
+    @Override
+    public void deploy(String name) {
+        String sName = Names.sanitize(name);
+        openShiftClient.deploymentConfigs().withName(sName).deployLatest();
+    }
+
+    @Override
+    public boolean isReady(String name) {
+        String sName = Names.sanitize(name);
+        return openShiftClient.deploymentConfigs().withName(sName).isReady();
     }
 
     @Override
@@ -96,6 +108,16 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
+    public boolean isBuildStarted(String name) {
+        String sName = Names.sanitize(name);
+        return !openShiftClient.builds()
+                               .withLabel("openshift.io/build-config.name", sName)
+                               .withField("status", "Running")
+                               .list().getItems().isEmpty();
+    }
+
+
+    @Override
     public List<DeploymentConfig> getDeploymentsByLabel(Map<String, String> labels) {
         return openShiftClient.deploymentConfigs().withLabels(labels).list().getItems();
     };
@@ -115,7 +137,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return openShiftClient.imageStreams().withName(name).delete();
     }
 
-    private void ensureDeploymentConfig(String name, DeploymentData deploymentData, String serviceAccount) {
+    private void ensureDeploymentConfig(String name, DeploymentData deploymentData) {
         openShiftClient.deploymentConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
             .withName(name)
@@ -128,8 +150,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewTemplate()
             .withNewMetadata().addToLabels("integration", name).endMetadata()
             .withNewSpec()
-            .withServiceAccount(serviceAccount)
-            .withServiceAccountName(serviceAccount)
             .addNewContainer()
             .withImage(" ").withImagePullPolicy("Always").withName(name)
             .addNewPort().withName("jolokia").withContainerPort(8778).endPort()
@@ -150,6 +170,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .addNewTrigger().withType("ConfigChange").endTrigger()
             .addNewTrigger().withType("ImageChange")
             .withNewImageChangeParams()
+            // set automatic to 'true' when not performing the deployments on our own
             .withAutomatic(true).addToContainerNames(name)
             .withNewFrom().withKind("ImageStreamTag").withName(name + ":latest").endFrom()
             .endImageChangeParams()
@@ -157,6 +178,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .endSpec()
             .done();
     }
+
 
 
     private boolean removeDeploymentConfig(String projectName) {
@@ -178,7 +200,9 @@ public class OpenShiftServiceImpl implements OpenShiftService {
               .withNewSourceStrategy()
                 .withNewFrom().withKind("ImageStreamTag").withName(builderStreamTag).endFrom()
                 .withIncremental(true)
-                .withEnv(new EnvVar("MAVEN_OPTS","-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx500m", null))
+                // TODO: This environment setup needs to be externalized into application.properties
+                // https://github.com/syndesisio/syndesis-rest/issues/682
+                .withEnv(new EnvVar("MAVEN_OPTS","-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx300m", null))
               .endSourceStrategy()
             .endStrategy()
             .withNewOutput().withNewTo().withKind("ImageStreamTag").withName(name + ":latest").endTo().endOutput()
