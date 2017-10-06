@@ -23,6 +23,7 @@ import java.util.Map;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
+import io.fabric8.openshift.api.model.ImageStream;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.core.Names;
 
@@ -56,7 +57,34 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public void deploy(String name) {
         String sName = Names.sanitize(name);
+        updateImageName(sName);
+
         openShiftClient.deploymentConfigs().withName(sName).deployLatest();
+    }
+
+    // Only required temporarily while image triggers do not work
+    // We are updating the image name with the latest image reference before increasing
+    // the latestVersion number
+    private void updateImageName(String sName) {
+        ImageStream is = openShiftClient.imageStreams().withName(sName).get();
+        if (is != null) {
+            is.getStatus().getTags()
+              .stream()
+              .filter(t -> "latest".equals(t.getTag()))
+              .findFirst().ifPresent(t -> {
+                String image = t.getItems().get(0).getDockerImageReference();
+                updateImageNameInDeployment(sName, image);
+            });
+        }
+    }
+
+    private void updateImageNameInDeployment(String name, String image) {
+        openShiftClient.deploymentConfigs()
+                       .withName(name)
+                       .edit().editOrNewSpec().editOrNewTemplate().editOrNewSpec().editFirstContainer()
+                       .withImage(image)
+                       .endContainer().endSpec().endTemplate().endSpec()
+                       .done();
     }
 
     @Override
@@ -168,13 +196,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .endSpec()
             .endTemplate()
             .addNewTrigger().withType("ConfigChange").endTrigger()
-            .addNewTrigger().withType("ImageChange")
-            .withNewImageChangeParams()
-            // set automatic to 'true' when not performing the deployments on our own
-            .withAutomatic(true).addToContainerNames(name)
-            .withNewFrom().withKind("ImageStreamTag").withName(name + ":latest").endFrom()
-            .endImageChangeParams()
-            .endTrigger()
+// Disabled for now
+//            .addNewTrigger().withType("ImageChange")
+//            .withNewImageChangeParams()
+//            // set automatic to 'true' when not performing the deployments on our own
+//            .withAutomatic(false).addToContainerNames(name)
+//            .withNewFrom().withKind("ImageStreamTag").withName(name + ":latest").endFrom()
+//            .endImageChangeParams()
+//            .endTrigger()
             .endSpec()
             .done();
     }

@@ -89,10 +89,11 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
         try {
             stepPerformer.perform("setup", this::setup);
             stepPerformer.perform("build", this::build);
+            Thread.sleep(2000);
             stepPerformer.perform("deploy", this::deploy);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             logError(integration,"[ERROR] Activation failure");
-            // Setting a message to update means implictely thats in an error state (for the UI)
+            // Setting a message to update means implicitly thats in an error state (for the UI)
             return new StatusUpdate(Integration.Status.Pending, e.getMessage());
         }
 
