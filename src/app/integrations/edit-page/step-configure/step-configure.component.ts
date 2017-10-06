@@ -22,6 +22,7 @@ import {
 import { FormFactoryService } from '../../../common/forms.service';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { Action, Step } from '../../../model';
+import { IntegrationSupportService } from '../../../store/integration-support.service';
 import { log, getCategory } from '../../../logging';
 
 const category = getCategory('IntegrationsCreatePage');
@@ -50,6 +51,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     public formService: DynamicFormService,
     public detector: ChangeDetectorRef,
     public stepStore: StepStore,
+    public integrationSupport: IntegrationSupportService,
   ) {
     super(currentFlow, route, router, detector);
   }
@@ -126,6 +128,24 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     });
   }
 
+  fetchDataShapesFor(step: Step) {
+    return this.integrationSupport.fetchMetadata(
+      step.connection,
+      step.action,
+      step.configuredProperties || {},
+    )
+    .toPromise()
+    .then(response => {
+      log.debug('Response: ' + JSON.stringify(response, undefined, 2));
+      const definition: any = response['_body'] ? JSON.parse(response['_body']) : undefined;
+      step.action.inputDataShape = definition.inputDataShape;
+      step.action.outputDataShape = definition.outputDataShape;
+    })
+    .catch(response => {
+      // TODO error handling
+    });
+  }
+
   loadForm() {
     if (!this.currentFlow.loaded) {
       return;
@@ -139,6 +159,17 @@ export class IntegrationsStepConfigureComponent extends FlowPage
       return;
     }
 
+    if (this.step.stepKind === DATA_MAPPER) {
+      // TODO fetch shapes in parallel?
+      this.fetchDataShapesFor(this.currentFlow.getStartStep())
+      .then(() => this.fetchDataShapesFor(this.currentFlow.getEndStep()))
+      .then(() => this.loadFormSetup(step));
+    } else {
+      this.loadFormSetup(step);
+    }
+  }
+
+  loadFormSetup(step: Step) {
     // Step exists, get its configuration
     const stepDef = this.stepStore.getStepConfig(step.stepKind);
     log.info('stepConfig: ' + JSON.stringify(stepDef));
