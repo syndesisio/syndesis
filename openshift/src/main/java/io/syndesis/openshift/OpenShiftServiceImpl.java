@@ -200,6 +200,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
               .withNewSourceStrategy()
                 .withNewFrom().withKind("ImageStreamTag").withName(builderStreamTag).endFrom()
                 .withIncremental(true)
+                // TODO: This environment setup needs to be externalized into application.properties
+                // https://github.com/syndesisio/syndesis-rest/issues/682
                 .withEnv(new EnvVar("MAVEN_OPTS","-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx300m", null))
               .endSourceStrategy()
             .endStrategy()

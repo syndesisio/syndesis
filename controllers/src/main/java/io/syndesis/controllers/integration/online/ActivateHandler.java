@@ -360,11 +360,12 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
 
     private class BuildStepPerformer {
         private final List<String> stepsPerformed;
-        private Integration integration;
+        private final Integration integration;
 
         BuildStepPerformer(Integration integration) {
             this.integration = integration;
-            this.stepsPerformed = integration.getStepsDone().orElseGet(ArrayList::new);
+            this.stepsPerformed = integration.getStepsDone().isPresent() ?
+                new ArrayList<>(integration.getStepsDone().get()) : new ArrayList<>();
         }
 
         /* default */ void perform(String step, IoCheckedFunction<Integration> callable) throws IOException {
