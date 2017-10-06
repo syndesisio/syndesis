@@ -348,13 +348,9 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
                   },
                 ],
               };
-              if (rev.spec && rev.spec.steps) {
-                row.actions.push({
-                  label: 'Deploy',
-                  action: 'deploy',
-                });
-              }
+              let isDeployed = false;
               if (row.version === i.deployedRevisionId) {
+                isDeployed = true;
                 const state = {
                   icon: undefined,
                   class: '',
@@ -375,6 +371,12 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
                     break;
                 }
                 row.status.push(state);
+              }
+              if (!isDeployed && rev.spec && rev.spec.steps) {
+                row.actions.push({
+                  label: 'Deploy',
+                  action: 'deploy',
+                });
               }
               return row;
             });
