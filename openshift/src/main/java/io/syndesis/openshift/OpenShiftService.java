@@ -53,7 +53,20 @@ public interface OpenShiftService {
      */
     void deploy(String name);
 
-    boolean isReady(String name);
+    /**
+     * Check whether a deployment is ready
+     *
+     * @param name name of the deployment to check
+     * @return true if deployment is ready, false otherwise
+     */
+    boolean isDeploymentReady(String name);
+
+    /**
+     * Check whether a given build is started
+     * @param name name of the build to check
+     * @return true if the build is started and running
+     */
+    boolean isBuildStarted(String name);
 
     /**
      * Deletes the deployment (Deployment and Build configurations, Image Streams etc)
@@ -90,5 +103,4 @@ public interface OpenShiftService {
      */
     List<DeploymentConfig> getDeploymentsByLabel(Map<String, String> labels);
 
-    boolean isBuildStarted(String buildName);
 }

@@ -148,7 +148,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
     }
 
     private boolean isReady(Integration integration) {
-        return openShiftService().isReady(integration.getName());
+        return openShiftService().isDeploymentReady(integration.getName());
     }
 
     public boolean isRunning(Integration integration) {

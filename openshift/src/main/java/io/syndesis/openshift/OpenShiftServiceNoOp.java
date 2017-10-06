@@ -40,7 +40,7 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     }
 
     @Override
-    public boolean isReady(String name) {
+    public boolean isDeploymentReady(String name) {
         return true;
     }
 
@@ -70,7 +70,7 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     }
 
     @Override
-    public boolean isBuildStarted(String buildName) {
+    public boolean isBuildStarted(String name) {
         return false;
     }
 }

@@ -60,7 +60,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public boolean isReady(String name) {
+    public boolean isDeploymentReady(String name) {
         String sName = Names.sanitize(name);
         return openShiftClient.deploymentConfigs().withName(sName).isReady();
     }
