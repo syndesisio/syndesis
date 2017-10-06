@@ -32,7 +32,7 @@ public interface StatusChangeHandlerProvider {
         StatusUpdate execute(Integration model);
 
         class StatusUpdate {
-            final private Integration.Status status;
+            private final Integration.Status status;
             private String statusMessage;
             private List<String> stepsPerformed;
 
