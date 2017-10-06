@@ -426,7 +426,7 @@ export class CurrentFlow {
           integration.tags = tags;
           const sub = this.store.updateOrCreate(integration).subscribe(
             (i: Integration) => {
-              log.infoc(
+              log.debugc(
                 () => 'Saved integration: ' + JSON.stringify(i, undefined, 2),
                 category,
               );
