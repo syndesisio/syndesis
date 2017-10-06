@@ -367,7 +367,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
             this.stepsPerformed = integration.getStepsDone().orElseGet(ArrayList::new);
         }
 
-        void perform(String step, IoCheckedFunction<Integration> callable) throws IOException {
+        /* default */ void perform(String step, IoCheckedFunction<Integration> callable) throws IOException {
             if (!stepsPerformed.contains(step)) {
                 callable.apply(integration);
                 stepsPerformed.add(step);
@@ -376,7 +376,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
             }
         }
 
-        public List<String> getStepsPerformed() {
+        /* default */ List<String> getStepsPerformed() {
             return stepsPerformed;
         }
     }

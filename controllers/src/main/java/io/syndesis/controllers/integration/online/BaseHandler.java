@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.syndesis.core.Names;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.connection.Connector;
@@ -57,7 +58,7 @@ public class BaseHandler {
     }
 
     private String getLabel(Integration integration) {
-        return "Integration " + integration.getId().orElse("[none]");
+        return String.format("Integration [%s]",Names.sanitize(integration.getName()));
     }
 
     /**
