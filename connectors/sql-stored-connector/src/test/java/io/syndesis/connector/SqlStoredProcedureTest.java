@@ -70,7 +70,7 @@ public class SqlStoredProcedureTest {
         
         //Inspect demo_add
         StoredProcedureMetadata metaData = storedProcedures.get("DEMO_ADD");
-        Assert.assertEquals("DEMO_ADD( IN INTEGER ${body[A],  IN INTEGER ${body[B],  OUT INTEGER ${body[C])",metaData.getTemplate());
+        Assert.assertEquals("DEMO_ADD( INTEGER ${body[A], INTEGER ${body[B], OUT INTEGER ${body[C])",metaData.getTemplate());
     }
 
     @Test

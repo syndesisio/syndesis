@@ -134,7 +134,7 @@ public class SqlStoredConnectorMetaDataExtension extends AbstractMetaDataExtensi
                 column.setMode(ColumnMode.valueOf(columnSet.getInt("COLUMN_TYPE")));
                 column.setJdbcType(JDBCType.valueOf(columnSet.getInt("DATA_TYPE")));
                 if (ColumnMode.IN.equals(column.getMode())){
-                    template += " " + column.getJdbcType() + " ${body[" + column.getName() + "], ";
+                    template += " " + column.getJdbcType() + " ${body[" + column.getName() + "],";
                     columnList.add(column);
                 }
                 if (ColumnMode.OUT.equals(column.getMode())){
