@@ -89,7 +89,6 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
         try {
             stepPerformer.perform("setup", this::setup);
             stepPerformer.perform("build", this::build);
-            Thread.sleep(2000);
             stepPerformer.perform("deploy", this::deploy);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             logError(integration,"[ERROR] Activation failure");
