@@ -28,7 +28,7 @@
   <groupId>io.syndesis</groupId>
   <artifactId>syndesis-verifier</artifactId>
   <name>Syndesis Verifier</name>
-  <version>1.0.0</version>
+  <version>1.0-SNAPSHOT</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
