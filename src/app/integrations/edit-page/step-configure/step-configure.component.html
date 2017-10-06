@@ -52,44 +52,58 @@
       </div>
     </div>
     <!-- Page body -->
-    <div [class]="step.stepKind !== 'mapper' ? 'wizard-pf-body clearfix body' : 'body mapper'">
-      <div [ngSwitch]="step.stepKind">
-        <div *ngSwitchCase="'mapper'">
-          <div class="row">
-            <div class="col-md-12">
-              <syndesis-data-mapper-host></syndesis-data-mapper-host>
+    <syndesis-loading [loading]="loading">
+      <ng-container *ngIf="error">
+        <div [class]="error.class"
+             [innerHtml]="error.message">
+        </div>
+      </ng-container>
+      <div [class]="step.stepKind !== 'mapper' ? 'wizard-pf-body clearfix body' : 'body mapper'">
+        <div [ngSwitch]="step.stepKind">
+          <div *ngSwitchCase="'mapper'">
+            <div class="row">
+              <div class="col-md-12"
+                   *ngIf="step && inputDataShape && outputDataShape">
+                <syndesis-data-mapper-host [inputDataShape]="inputDataShape"
+                                           [outputDataShape]="outputDataShape"
+                                           [step]="step"
+                                           [position]="position"></syndesis-data-mapper-host>
+              </div>
             </div>
           </div>
-        </div>
-        <div *ngSwitchCase="'rule-filter'">
-          <div class="row">
-            <div class="col-md-12">
-              <syndesis-basic-filter [(configuredProperties)]="customProperties"
-                                     [position]="position"></syndesis-basic-filter>
+          <div *ngSwitchCase="'rule-filter'">
+            <div class="row">
+              <div class="col-md-12"
+                   *ngIf="step && inputDataShape && outputDataShape">
+                <syndesis-basic-filter [(configuredProperties)]="customProperties"
+                                       [inputDataShape]="inputDataShape"
+                                       [outputDataShape]="outputDataShape"
+                                       [position]="position"></syndesis-basic-filter>
+                <div class="pull-right control-buttons">
+                  <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngSwitchDefault>
+            <div class="title">
+              <h1>Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</h1>
+            </div>
+            <p>Fill out the fields associated with the selected step.</p>
+            <div *ngIf="formGroup">
+              <form class="form-horizontal"
+                    [formGroup]="formGroup">
+                <syndesis-form-control *ngFor="let controlModel of formModel"
+                                       [group]="formGroup"
+                                       [model]="controlModel"></syndesis-form-control>
+              </form>
               <div class="pull-right control-buttons">
                 <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
               </div>
             </div>
           </div>
         </div>
-        <div *ngSwitchDefault>
-          <div class="title">
-            <h1>Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</h1>
-          </div>
-          <p>Fill out the fields associated with the selected step.</p>
-          <div *ngIf="formGroup">
-            <form class="form-horizontal"
-                  [formGroup]="formGroup">
-              <syndesis-form-control *ngFor="let controlModel of formModel"
-                                     [group]="formGroup"
-                                     [model]="controlModel"></syndesis-form-control>
-            </form>
-            <div class="pull-right control-buttons">
-              <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
+    </syndesis-loading>
   </div>
 </syndesis-loading>

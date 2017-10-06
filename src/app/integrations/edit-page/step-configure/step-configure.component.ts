@@ -21,7 +21,8 @@ import {
 } from '../../../store/step/step.store';
 import { FormFactoryService } from '../../../common/forms.service';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Action, Step } from '../../../model';
+import { Action, Step, DataShape } from '../../../model';
+import { IntegrationSupportService } from '../../../store/integration-support.service';
 import { log, getCategory } from '../../../logging';
 
 const category = getCategory('IntegrationsCreatePage');
@@ -41,6 +42,12 @@ export class IntegrationsStepConfigureComponent extends FlowPage
   formConfig: any;
   cfg: any = undefined;
   customProperties: any = undefined;
+  // this is the output of the previous step
+  outputDataShape: DataShape = undefined;
+  // This is the input of the next step
+  inputDataShape: DataShape = undefined;
+  loading = false;
+  error: any = undefined;
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -50,6 +57,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     public formService: DynamicFormService,
     public detector: ChangeDetectorRef,
     public stepStore: StepStore,
+    public integrationSupport: IntegrationSupportService,
   ) {
     super(currentFlow, route, router, detector);
   }
@@ -117,6 +125,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
   }
 
   postEvent() {
+    this.loading = false;
     try {
       this.detector.detectChanges();
     } catch (err) {}
@@ -126,10 +135,47 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     });
   }
 
+  fetchDataShapesFor(step: Step, output = true) {
+    return this.integrationSupport
+      .fetchMetadata(
+        step.connection,
+        step.action,
+        step.configuredProperties || {},
+      )
+      .toPromise()
+      .then(response => {
+        log.debug('Response: ' + JSON.stringify(response, undefined, 2));
+        const definition: any = response['_body']
+          ? JSON.parse(response['_body'])
+          : undefined;
+        if (output) {
+          this.outputDataShape = definition.outputDataShape;
+        } else {
+          this.inputDataShape = definition.inputDataShape;
+        }
+      })
+      .catch(response => {
+        this.loading = false;
+        const error = JSON.parse(response['_body']);
+        this.error = {
+          class: 'alert alert-warning',
+          message: error.message || error.userMsg || error.developerMsg,
+        };
+        log.info(
+          'Error fetching data shape for ' +
+            JSON.stringify(step) +
+            ' : ' +
+            JSON.stringify(response),
+        );
+        this.detector.detectChanges();
+      });
+  }
+
   loadForm() {
     if (!this.currentFlow.loaded) {
       return;
     }
+    this.loading = true;
     const step = (this.step = <Step>this.currentFlow.getStep(this.position));
     // If no Step exists, redirect to the Select Step view
     if (!step) {
@@ -139,6 +185,21 @@ export class IntegrationsStepConfigureComponent extends FlowPage
       return;
     }
 
+    // we want the output shape of the previous connection
+    const prevConnection = this.currentFlow.getPreviousConnection(
+      this.position,
+    );
+    // we want the input shape of the next connection
+    const nextConnection = this.currentFlow.getSubsequentConnection(
+      this.position,
+    );
+
+    this.fetchDataShapesFor(prevConnection, true)
+      .then(() => this.fetchDataShapesFor(nextConnection, false))
+      .then(() => this.loadFormSetup(step));
+  }
+
+  loadFormSetup(step: Step) {
     // Step exists, get its configuration
     const stepDef = this.stepStore.getStepConfig(step.stepKind);
     log.info('stepConfig: ' + JSON.stringify(stepDef));
@@ -170,7 +231,6 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     this.formModel = this.formFactory.createFormModel(this.formConfig, values);
     this.formGroup = this.formService.createFormGroup(this.formModel);
     this.postEvent();
-
   }
 
   handleFlowEvent(event: FlowEvent) {
