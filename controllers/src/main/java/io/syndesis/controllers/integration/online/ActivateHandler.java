@@ -92,7 +92,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
             stepPerformer.perform("deploy", this::deploy);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             logError(integration,"[ERROR] Activation failure");
-            // Setting a message to update means implictely thats in an error state (for the UI)
+            // Setting a message to update means implicitly thats in an error state (for the UI)
             return new StatusUpdate(Integration.Status.Pending, e.getMessage());
         }
 
@@ -148,7 +148,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
     }
 
     private boolean isReady(Integration integration) {
-        return openShiftService().isReady(integration.getName());
+        return openShiftService().isDeploymentReady(integration.getName());
     }
 
     public boolean isRunning(Integration integration) {
