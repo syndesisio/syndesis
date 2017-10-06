@@ -4,6 +4,7 @@ import {
   ViewChild,
   OnInit,
   OnDestroy,
+  Input,
 } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
@@ -65,10 +66,14 @@ const MAPPING_KEY = 'atlasmapping';
 export class DataMapperHostComponent extends FlowPage
   implements OnInit, OnDestroy {
   routeSubscription: Subscription;
-  position: number;
   initialized = false;
   sourceDocTypes = [];
   targetDocTypes = [];
+
+  @Input() position: number;
+  @Input() step: Step;
+  @Input() inputDataShape: DataShape;
+  @Input() outputDataShape: DataShape;
 
   @ViewChild('dataMapperComponent')
   public dataMapperComponent: DataMapperAppComponent;
@@ -159,31 +164,15 @@ export class DataMapperHostComponent extends FlowPage
 
   initialize() {
     this.resetConfig();
-    const step = this.currentFlow.getStep(this.position);
+    const step = this.step;
     let mappings = undefined;
     if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
       mappings = <string>step.configuredProperties[MAPPING_KEY];
     }
     this.cfg.mappings = new MappingDefinition();
 
-    const connections = this.currentFlow.getPreviousConnections(this.position);
-    log.infoc(
-      () =>
-        'Connections before me: ' +
-        JSON.stringify(connections.map(c => c.connection.name)),
-      category,
-    );
-    const next = this.currentFlow.getSubsequentConnection(this.position);
-    log.infoc(
-      () => 'Connections after me: ' + JSON.stringify(next.connection.name),
-      category,
-    );
-
-    // TODO we'll want to parse the dataType and maybe set the right config value
-    connections.forEach(c => {
-      this.createDocumentDefinition(c.action.outputDataShape, true);
-    });
-    this.createDocumentDefinition(next.action.inputDataShape, false);
+    this.createDocumentDefinition(this.outputDataShape, true);
+    this.createDocumentDefinition(this.inputDataShape, false);
 
     // TODO for now set a really long timeout
     this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;
@@ -289,6 +278,7 @@ export class DataMapperHostComponent extends FlowPage
         this.cfg.initCfg.classPath = null;
         this.cfg.initCfg.pomPayload = pom;
         this.initializationService.initialize();
+        this.detector.detectChanges();
       },
       err => {
         // do our best I guess
@@ -298,30 +288,18 @@ export class DataMapperHostComponent extends FlowPage
             category,
           );
         } catch (err) {
-          log.warnc(
-            () => 'failed to fetch pom: ' + err['_body'],
-            category,
-          );
+          log.warnc(() => 'failed to fetch pom: ' + err['_body'], category);
         }
         this.cfg.initCfg.classPath = '';
         this.initializationService.initialize();
+        this.detector.detectChanges();
       },
     );
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.params
-      .pluck<Params, string>('position')
-      .map((position: string) => {
-        this.position = Number.parseInt(position);
-        setTimeout(() => {
-          this.initialize();
-        }, 10);
-      })
-      .subscribe();
+    this.initialize();
   }
 
-  ngOnDestroy() {
-    this.routeSubscription.unsubscribe();
-  }
+  ngOnDestroy() {}
 }

@@ -18,7 +18,7 @@ import {
 import { CurrentFlow, FlowEvent } from '../../current-flow.service';
 import { IntegrationSupportService } from '../../../../store/integration-support.service';
 import { DATA_MAPPER } from '../../../../store/step/step.store';
-
+import { DataShape } from '../../../../model';
 import { createBasicFilterModel, findById } from './basic-filter.model';
 import { log, getCategory } from '../../../../logging';
 import { BasicFilter } from './filter.interface';
@@ -38,6 +38,8 @@ export class BasicFilterComponent implements OnChanges {
   rulesArrayModel: DynamicFormArrayModel;
   loading = true;
 
+  @Input() inputDataShape: DataShape;
+  @Input() outputDataShape: DataShape;
   @Input() position;
   @Input()
   configuredProperties: BasicFilter = {
@@ -76,7 +78,7 @@ export class BasicFilterComponent implements OnChanges {
     // this can be valid even if we can't fetch the form data
     function initializeForm(ops?, paths?) {
       self.basicFilterModel = createBasicFilterModel(
-        self.configuredProperties,
+        self.configuredProperties || <any>{},
         ops,
         paths,
       );
@@ -105,16 +107,9 @@ export class BasicFilterComponent implements OnChanges {
       prevSteps.find(step => step.stepKind === DATA_MAPPER) !== undefined;
     let dataShape = undefined;
     if (hasDataMapper) {
-      const nextConnection = this.currentFlow.getSubsequentConnection(this.position);
-      dataShape = nextConnection ? nextConnection.action.inputDataShape : {};
+      dataShape = this.inputDataShape;
     } else {
-      // Get the output data shape from the first previous connection
-      const prevConnection = this.currentFlow.getPreviousConnection(
-        this.position,
-      );
-      dataShape = prevConnection
-        ? prevConnection.action.outputDataShape
-        : {};
+      dataShape = this.outputDataShape;
     }
     // Fetch our form data
     this.integrationSupport
