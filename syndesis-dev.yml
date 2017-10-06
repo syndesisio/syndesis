@@ -2537,13 +2537,12 @@ objects:
 - apiVersion: v1
   kind: RoleBinding
   metadata:
-    name: syndesis:viewers
+    name: syndesis:editors
     labels:
       app: syndesis
   roleRef:
-    name: view
+    name: edit
   subjects:
   - kind: ServiceAccount
     name: syndesis-rest
-  - kind: ServiceAccount
-    name: syndesis-integration
+    
