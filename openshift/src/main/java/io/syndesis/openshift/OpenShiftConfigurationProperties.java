@@ -37,6 +37,7 @@ public class OpenShiftConfigurationProperties {
     private String apiBaseUrl;
 
     private String namespace;
+    private String imageStreamNamespace;
 
     public boolean isEnabled() {
         return enabled;
@@ -82,4 +83,11 @@ public class OpenShiftConfigurationProperties {
         this.namespace = namespace;
     }
 
+    public String getImageStreamNamespace() {
+        return imageStreamNamespace;
+    }
+
+    public void setImageStreamNamespace(String imageStreamNamespace) {
+        this.imageStreamNamespace = imageStreamNamespace;
+    }
 }

@@ -24,18 +24,14 @@ import io.fabric8.openshift.api.model.DeploymentConfig;
 
 public class OpenShiftServiceNoOp implements OpenShiftService {
 
+
     @Override
-    public void setup(String name, DeploymentData d) {
+    public void build(String name, DeploymentData data, InputStream tarInputStream) {
         // Empty no-op just for testing
     }
 
     @Override
-    public void build(String name, InputStream tarInputStream) {
-        // Empty no-op just for testing
-    }
-
-    @Override
-    public void deploy(String name) {
+    public void deploy(String name, DeploymentData data) {
         // Empty no-op just for testing
     }
 

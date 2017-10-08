@@ -28,30 +28,22 @@ public interface OpenShiftService {
     String USERNAME_LABEL = "USERNAME";
 
     /**
-     * Creates the deployment (Deployment and Build configurations, Image Streams etc) if
-     * not existing and updates a current one if existing. A call to this method is idempotent
-     * and called be many times
-     *
-     * @param name name of the build
-     * @param data the deployment data to use
-     */
-    void setup(String name, DeploymentData data);
-
-    /**
      * Start a previously created build with the data from the given directory
      *
      * @param name name of the build
+     * @param data the deployment data to use
      * @param tarInputStream input stream representing a tar file containing the project files
      */
-    void build(String name, InputStream tarInputStream) throws IOException;
+    void build(String name, DeploymentData data, InputStream tarInputStream) throws IOException;
 
     /**
      * Perform a deployment
      *
+     * @param data the deployment data to use
      * @param name name of the deployment to trigger
      *
      */
-    void deploy(String name);
+    void deploy(String name, DeploymentData data);
 
     /**
      * Check whether a deployment is ready

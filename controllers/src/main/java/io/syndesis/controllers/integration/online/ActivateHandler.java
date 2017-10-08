@@ -87,9 +87,10 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
         BuildStepPerformer stepPerformer = new BuildStepPerformer(integration);
         logInfo(integration, "Steps performed so far: " + stepPerformer.getStepsPerformed());
         try {
-            stepPerformer.perform("setup", this::setup);
-            stepPerformer.perform("build", this::build);
-            stepPerformer.perform("deploy", this::deploy);
+
+            DeploymentData deploymentData = createDeploymentData(integration);
+            stepPerformer.perform("build", this::build, deploymentData);
+            stepPerformer.perform("deploy", this::deploy, deploymentData);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             logError(integration,"[ERROR] Activation failure");
             // Setting a message to update means implicitly thats in an error state (for the UI)
@@ -108,35 +109,30 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
         return new StatusUpdate(Integration.Status.Pending, stepPerformer.getStepsPerformed());
     }
 
-
-    // =============================================================================
-    // Various steps to perform:
-
-    private void setup(Integration integration) throws IOException {
+    private DeploymentData createDeploymentData(Integration integration) {
         Properties applicationProperties = extractApplicationPropertiesFrom(integration);
         IntegrationRevision revision = IntegrationRevision.createNewRevision(integration);
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
-        String name = integration.getName();
-
-        DeploymentData deploymentData = DeploymentData.builder()
+        return DeploymentData.builder()
                                                       .addLabel(OpenShiftService.REVISION_ID_ANNOTATION, revision.getVersion().orElse(0).toString())
                                                       .addAnnotation(OpenShiftService.USERNAME_LABEL, username)
                                                       .addSecretEntry("application.properties", propsToString(applicationProperties))
                                                       .build();
-
-        openShiftService().setup(name, deploymentData);
-        logInfo(integration, "Ensured OpenShift resources");
     }
 
-    private void build(Integration integration) throws IOException {
+
+    // =============================================================================
+    // Various steps to perform:
+
+    private void build(Integration integration, DeploymentData data) throws IOException {
         InputStream tarInputStream = createProjectFiles(integration);
         logInfo(integration, "Created project files and starting build");
-        openShiftService().build(integration.getName(), tarInputStream);
+        openShiftService().build(integration.getName(), data, tarInputStream);
     }
 
-    private void deploy(Integration integration) throws IOException {
+    private void deploy(Integration integration, DeploymentData data) throws IOException {
         logInfo(integration, "Starting deployment");
-        openShiftService().deploy(integration.getName());
+        openShiftService().deploy(integration.getName(), data);
         logInfo(integration, "Deployment done");
     }
 
@@ -355,7 +351,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
     // Some helper method to conditional execute certain steps
     @FunctionalInterface
     public interface IoCheckedFunction<T> {
-         void apply(T t) throws IOException;
+         void apply(T t, DeploymentData data) throws IOException;
     }
 
     private class BuildStepPerformer {
@@ -368,9 +364,9 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
                 new ArrayList<>(integration.getStepsDone().get()) : new ArrayList<>();
         }
 
-        /* default */ void perform(String step, IoCheckedFunction<Integration> callable) throws IOException {
+        /* default */ void perform(String step, IoCheckedFunction<Integration> callable, DeploymentData data) throws IOException {
             if (!stepsPerformed.contains(step)) {
-                callable.apply(integration);
+                callable.apply(integration, data);
                 stepsPerformed.add(step);
             } else {
                 logInfo(integration, "Skipped step {} because already performed", step);

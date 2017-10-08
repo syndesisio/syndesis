@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -173,17 +174,16 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return is;
     }
 
-    private Runnable generateAddProjectTarEntries(GenerateProjectRequest request, PipedOutputStream os) {
+    private Runnable generateAddProjectTarEntries(GenerateProjectRequest request, OutputStream os) {
         return () -> {
             try (
-                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
+                TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
                 addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
                 addTarEntry(tos, "src/main/resources/application.properties", generateFromRequest(request, applicationPropertiesMustache));
                 addTarEntry(tos, "src/main/resources/syndesis.yml", generateFlowYaml(tos, request));
                 addTarEntry(tos, "pom.xml", generatePom(request.getIntegration()));
-
 
                 addAdditionalResources(tos);
                 LOG.info("Integration [{}]: Project files written to output stream",Names.sanitize(request.getIntegration().getName()));

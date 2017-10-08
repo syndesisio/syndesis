@@ -64,6 +64,8 @@ openshift:
   apiBaseUrl: "http://openshift/oapi1/v1"
   # The namespace in which the build configs are created
   namespace: "myproject"
+  # Namespace where the image stream for the builder image can be found
+  imageStreamNamespace: ""
 
 # GitHub service specific config
 github:
