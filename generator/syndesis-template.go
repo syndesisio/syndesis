@@ -144,7 +144,7 @@ var productContext = Context{
 		PemToKeystore: "1.0",
 		Keycloak:      "1.0",
 		Syndesis:      "1.0",
-		Atlasmap:      "1.0",
+		Atlasmap:      "1.30",
 	},
 	Registry: "registry.fuse-ignite.openshift.com",
 }

@@ -286,6 +286,7 @@
       openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
+        imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
         builderImageStreamTag: {{ Images.S2i.ImageStream }}:{{ Images.S2i.Tag }}
       keycloak:
         enabled: true

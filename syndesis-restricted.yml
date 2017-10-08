@@ -2350,6 +2350,7 @@ objects:
       openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
+        imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
         builderImageStreamTag: s2i-java:2.0
       keycloak:
         enabled: true
