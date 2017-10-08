@@ -13,8 +13,8 @@ metadata:
 # Use docker images for init containers: false
 # Ephemeral: false
 # Without Probes: false
-# Atlasmap Tag: latest
-# Syndesis Tag: latest
+# Atlasmap Tag: 1.30
+# Syndesis Tag: 1.0
 # Restricted environment: false
 #
   labels:
@@ -124,7 +124,7 @@ parameters:
   displayName: Syndesis Image Registry
   name: SYNDESIS_REGISTRY
   required: true
-  value: 'docker.io'
+  value: 'registry.fuse-ignite.openshift.com'
 - description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
@@ -140,118 +140,12 @@ parameters:
 - description: Namespace containing image streams
   displayName: Image Stream Namespace
   name: IMAGE_STREAM_NAMESPACE
-  value: ''
+  value: 'fuse-ignite'
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 
     FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
 objects:
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: syndesis-rest
-    labels:
-      app: syndesis
-      component: syndesis-rest
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
-      importPolicy:
-        scheduled: true
-      name: "latest"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: keycloak-openshift
-    labels:
-      app: syndesis
-      component: syndesis-keycloak
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/keycloak-openshift:2.5.4.Final
-      importPolicy:
-        scheduled: true
-      name: "2.5.4.Final"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: syndesis-ui
-    labels:
-      app: syndesis
-      component: syndesis-ui
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
-      importPolicy:
-        scheduled: true
-      name: "latest"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: atlasmap
-    labels:
-      app: syndesis
-      component: syndesis-atlasmap
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
-      importPolicy:
-        scheduled: true
-      name: "latest"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: syndesis-verifier
-    labels:
-      app: syndesis
-      component: syndesis-verifier
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
-      importPolicy:
-        scheduled: true
-      name: "latest"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: pemtokeystore
-    labels:
-      app: syndesis
-      component: syndesis-pemtokeystore
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
-      importPolicy:
-        scheduled: true
-      name: "v0.2.1"
-
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: s2i-java
-    labels:
-      app: syndesis
-      component: s2i-java
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: fabric8/s2i-java:2.0
-      importPolicy:
-        scheduled: true
-      name: "2.0"
 
 - apiVersion: v1
   kind: Service
@@ -365,7 +259,7 @@ objects:
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: syndesis-ui:latest
+          name: fuse-ignite-ui:1.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -397,11 +291,11 @@ objects:
           "auto-link-github": ${CONTROLLERS_INTEGRATION_ENABLED}
         },
         "branding": {
-          "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
-          "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
-          "iconWhiteBg": "assets/images/glasses_logo_square.png",
-          "iconDarkBg": "assets/images/glasses_logo_square.png",
-          "appName": "Syndesis",
+          "logoWhiteBg": "",
+          "logoDarkBg": "",
+          "iconWhiteBg": "assets/images/FuseIgniteLogo_Black.svg",
+          "iconDarkBg": "assets/images/FuseIgniteLogo_White.svg",
+          "appName": "Fuse Ignite",
           "favicon32": "/favicon-32x32.png",
           "favicon16": "/favicon-16x16.png",
           "touchIcon": "/apple-touch-icon.png"
@@ -586,7 +480,7 @@ objects:
         - atlasmap
         from:
           kind: ImageStreamTag
-          name: atlasmap:latest
+          name: fuse-ignite-mapper:1.30
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -596,7 +490,7 @@ objects:
         - openshift-ca-pemtokeystore
         from:
           kind: ImageStreamTag
-          name: pemtokeystore:v0.2.1
+          name: fuse-ignite-pemtokeystore:1.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1039,7 +933,7 @@ objects:
         - syndesis-keycloak
         from:
           kind: ImageStreamTag
-          name: keycloak-openshift:2.5.4.Final
+          name: fuse-ignite-keycloak-openshift:1.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1049,7 +943,7 @@ objects:
         - openshift-ca-pemtokeystore
         from:
           kind: ImageStreamTag
-          name: pemtokeystore:v0.2.1
+          name: fuse-ignite-pemtokeystore:1.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
     - imageChangeParams:
@@ -1058,7 +952,7 @@ objects:
         - copy-config
         from:
           kind: ImageStreamTag
-          name: keycloak-openshift:2.5.4.Final
+          name: fuse-ignite-keycloak-openshift:1.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -2296,7 +2190,7 @@ objects:
         - syndesis-rest
         from:
           kind: ImageStreamTag
-          name: syndesis-rest:latest
+          name: fuse-ignite-rest:1.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -2306,7 +2200,7 @@ objects:
         - openshift-ca-pemtokeystore
         from:
           kind: ImageStreamTag
-          name: pemtokeystore:v0.2.1
+          name: fuse-ignite-pemtokeystore:1.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -2355,7 +2249,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: s2i-java:2.0
+        builderImageStreamTag: fuse-ignite-java-openshift:1.0
       keycloak:
         enabled: true
         configurationFile: file:config/syndesis-client.json
@@ -2517,7 +2411,7 @@ objects:
         - syndesis-verifier
         from:
           kind: ImageStreamTag
-          name: syndesis-verifier:latest
+          name: fuse-ignite-verifier:1.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -2527,7 +2421,7 @@ objects:
         - openshift-ca-pemtokeystore
         from:
           kind: ImageStreamTag
-          name: pemtokeystore:v0.2.1
+          name: fuse-ignite-pemtokeystore:1.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 

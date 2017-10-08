@@ -13,8 +13,8 @@ metadata:
 # Use docker images for init containers: true
 # Ephemeral: false
 # Without Probes: false
-# Atlasmap Tag: latest
-# Syndesis Tag: latest
+# Atlasmap Tag: 1.30
+# Syndesis Tag: 1.0
 # Restricted environment: false
 #
   labels:
@@ -124,7 +124,7 @@ parameters:
   displayName: Syndesis Image Registry
   name: SYNDESIS_REGISTRY
   required: true
-  value: 'docker.io'
+  value: 'registry.fuse-ignite.openshift.com'
 - description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
@@ -140,28 +140,12 @@ parameters:
 - description: Namespace containing image streams
   displayName: Image Stream Namespace
   name: IMAGE_STREAM_NAMESPACE
-  value: ''
+  value: 'fuse-ignite'
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 
     FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
 objects:
-
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: s2i-java
-    labels:
-      app: syndesis
-      component: s2i-java
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: fabric8/s2i-java:2.0
-      importPolicy:
-        scheduled: true
-      name: "2.0"
 
 - apiVersion: v1
   kind: Service
@@ -240,7 +224,7 @@ objects:
       spec:
         containers:
         - name: syndesis-ui
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-ui:1.0
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -298,11 +282,11 @@ objects:
           "auto-link-github": ${CONTROLLERS_INTEGRATION_ENABLED}
         },
         "branding": {
-          "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
-          "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
-          "iconWhiteBg": "assets/images/glasses_logo_square.png",
-          "iconDarkBg": "assets/images/glasses_logo_square.png",
-          "appName": "Syndesis",
+          "logoWhiteBg": "",
+          "logoDarkBg": "",
+          "iconWhiteBg": "assets/images/FuseIgniteLogo_Black.svg",
+          "iconDarkBg": "assets/images/FuseIgniteLogo_White.svg",
+          "appName": "Fuse Ignite",
           "favicon32": "/favicon-32x32.png",
           "favicon16": "/favicon-16x16.png",
           "touchIcon": "/apple-touch-icon.png"
@@ -384,7 +368,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1",
+              "image": "${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-pemtokeystore:1.0",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -408,7 +392,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-pemtokeystore:1.0
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -443,7 +427,7 @@ objects:
             value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-          image: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
+          image: ${SYNDESIS_REGISTRY}/atlasmap/fuse-ignite-mapper:1.30
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -775,7 +759,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1",
+              "image": "${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-pemtokeystore:1.0",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -797,7 +781,7 @@ objects:
               }
             },{
               "name": "copy-config",
-              "image": "${SYNDESIS_REGISTRY}/syndesis/keycloak-openshift:2.5.4.Final",
+              "image": "${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-keycloak-openshift:1.0",
               "imagePullPolicy": "IfNotPresent",
               "command": [
                 "sh",
@@ -825,7 +809,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-pemtokeystore:1.0
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -845,7 +829,7 @@ objects:
             requests:
               memory: 20Mi
         - name: copy-config
-          image: ${SYNDESIS_REGISTRY}/syndesis/keycloak-openshift:2.5.4.Final
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-keycloak-openshift:1.0
           imagePullPolicy: IfNotPresent
           command:
           - sh
@@ -880,7 +864,7 @@ objects:
               secretKeyRef:
                 key: password
                 name: syndesis-keycloak-admin
-          image: ${SYNDESIS_REGISTRY}/syndesis/keycloak-openshift:2.5.4.Final
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-keycloak-openshift:1.0
 
           name: syndesis-keycloak
           imagePullPolicy: IfNotPresent
@@ -2029,7 +2013,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1",
+              "image": "${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-pemtokeystore:1.0",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -2053,7 +2037,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-pemtokeystore:1.0
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -2104,7 +2088,7 @@ objects:
               secretKeyRef:
                 name: syndesis-keycloak-admin
                 key: password
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-rest:1.0
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -2193,7 +2177,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: s2i-java:2.0
+        builderImageStreamTag: fuse-ignite-java-openshift:1.0
       keycloak:
         enabled: true
         configurationFile: file:config/syndesis-client.json
@@ -2254,7 +2238,7 @@ objects:
           pod.beta.kubernetes.io/init-containers: |-
             [{
               "name": "openshift-ca-pemtokeystore",
-              "image": "${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1",
+              "image": "${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-pemtokeystore:1.0",
               "imagePullPolicy": "IfNotPresent",
               "args": [
                 "-keystore", "/tls-keystore/openshift-truststore.jks",
@@ -2278,7 +2262,7 @@ objects:
       spec:
         initContainers:
         - name: openshift-ca-pemtokeystore
-          image: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-pemtokeystore:1.0
           imagePullPolicy: IfNotPresent
           args:
           - -keystore
@@ -2305,7 +2289,7 @@ objects:
             value: /deployments
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-verifier:1.0
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
