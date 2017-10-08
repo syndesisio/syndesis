@@ -38,26 +38,21 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public void setup(String name, DeploymentData deploymentData) {
+    public void build(String name, DeploymentData deploymentData, InputStream tarInputStream) throws IOException {
         String sName = Names.sanitize(name);
         ensureImageStreams(sName);
-        ensureDeploymentConfig(sName, deploymentData);
-        ensureSecret(sName, deploymentData);
-        ensureBuildConfig(sName, deploymentData, this.config.getBuilderImageStreamTag());
-    }
-
-    @Override
-    public void build(String name, InputStream tarInputStream) throws IOException {
-        String sName = Names.sanitize(name);
+        ensureBuildConfig(sName, deploymentData, this.config.getBuilderImageStreamTag(), this.config.getImageStreamNamespace());
         openShiftClient.buildConfigs().withName(sName)
                        .instantiateBinary()
                        .fromInputStream(tarInputStream);
     }
 
     @Override
-    public void deploy(String name) {
+    public void deploy(String name, DeploymentData deploymentData) {
         String sName = Names.sanitize(name);
+        ensureDeploymentConfig(sName, deploymentData);
         updateImageName(sName);
+        ensureSecret(sName, deploymentData);
 
         openShiftClient.deploymentConfigs().withName(sName).deployLatest();
     }
@@ -214,7 +209,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return openShiftClient.deploymentConfigs().withName(projectName).delete();
     }
 
-    private void ensureBuildConfig(String name, DeploymentData deploymentData, String builderStreamTag) {
+    private void ensureBuildConfig(String name, DeploymentData deploymentData, String builderStreamTag, String imageStreamNamespace) {
         openShiftClient.buildConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
                 .withName(name)
@@ -227,7 +222,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewStrategy()
               .withType("Source")
               .withNewSourceStrategy()
-                .withNewFrom().withKind("ImageStreamTag").withName(builderStreamTag).endFrom()
+                .withNewFrom().withKind("ImageStreamTag").withName(builderStreamTag).withNamespace(imageStreamNamespace).endFrom()
                 .withIncremental(true)
                 // TODO: This environment setup needs to be externalized into application.properties
                 // https://github.com/syndesisio/syndesis-rest/issues/682
