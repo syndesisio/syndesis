@@ -23,31 +23,31 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Utility to help with parsing the data from the simple
- * serialized java bean. The resulting property map can 
- * then be used by the SqlStoredComponentConnector.
- * 
+ * Utility to help with parsing the data from the simple serialized java bean.
+ * The resulting property map can then be used by the
+ * SqlStoredComponentConnector.
+ *
  * @author kstam
  *
  */
 public class JSONBeanUtil {
 
-    /** 
+    /**
      * Convenience method to parse the properties from a simple BeanJSON.
      * Properties can be read by Camel.
-     * 
-     * @param json simple JSON represenation of a Java Bean used
-     * as input Data for the SqlStoredConnector
+     *
+     * @param json simple JSON represenation of a Java Bean used as input Data
+     *            for the SqlStoredConnector
      * @return Properties representation of the simple JSON bean
      */
-    public static Properties parsePropertiesFromJSONBean(String json) throws JSONException {
-        Properties properties = new Properties();
-        JSONObject obj = new JSONObject(json);
+    public static Properties parsePropertiesFromJSONBean(final String json) throws JSONException {
+        final Properties properties = new Properties();
+        final JSONObject obj = new JSONObject(json);
         @SuppressWarnings("unchecked")
-        Iterator<String> iterator = obj.keys();
+        final Iterator<String> iterator = obj.keys();
         while (iterator.hasNext()) {
-            String key = iterator.next();
-            String value = String.valueOf(obj.get(key));
+            final String key = iterator.next();
+            final String value = String.valueOf(obj.get(key));
             properties.setProperty(key, value);
         }
         return properties;

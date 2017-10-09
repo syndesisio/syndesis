@@ -40,13 +40,13 @@ public class SqlStoredConnectorComponentTest {
     private static Connection connection;
     private static Properties properties = new Properties();
     private static SqlStoredCommon sqlStoredCommon;
-    
+
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         sqlStoredCommon = new SqlStoredCommon();
         connection = sqlStoredCommon.setupConnectionAndStoredProcedure(connection, properties);
     }
-    
+
     @AfterClass
     public static void afterClass() throws SQLException {
         sqlStoredCommon.closeConnection(connection);
@@ -77,6 +77,7 @@ public class SqlStoredConnectorComponentTest {
                     .setBody().constant(jsonBody)
                     .to("sql-stored-connector:DEMO_ADD( INTEGER ${body[a]}, INTEGER ${body[b]}, OUT INTEGER c)")
                     .process(new Processor() {
+                        @Override
                         public void process(Exchange exchange)
                                 throws Exception {
                             System.out.println(exchange.getIn()

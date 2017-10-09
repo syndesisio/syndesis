@@ -24,36 +24,45 @@ public class StoredProcedureMetadata {
     private String remark;
     private List<StoredProcedureColumn> columnList;
     private String template;
-    
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public String getType() {
         return type;
     }
+
     public void setType(String type) {
         this.type = type;
     }
+
     public String getRemark() {
         return remark;
     }
+
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
     public List<StoredProcedureColumn> getColumnList() {
         return columnList;
     }
+
     public void setColumnList(List<StoredProcedureColumn> columnList) {
         this.columnList = columnList;
     }
+
     public String getTemplate() {
         return template;
     }
+
     public void setTemplate(String template) {
         this.template = template;
     }
-    
+
 }

@@ -18,7 +18,6 @@ package io.syndesis.connector;
 
 import java.util.Properties;
 
-import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
@@ -26,8 +25,6 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
  * Camel SqlStoredConnector connector
  */
 public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
-
-
 
     public SqlStoredConnectorComponent() {
         super("sql-stored-connector", "io.syndesis.connector.SqlStoredConnectorComponent");
@@ -38,18 +35,12 @@ public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
     @Override
     public Processor getBeforeProducer() {
 
-        Processor processor = new Processor() {
-            public void process(Exchange exchange)
-                    throws Exception {
-                System.out.println(exchange.getIn()
-                        .getBody().getClass());
-                String body = (String) exchange.getIn().getBody();
-                Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
-                exchange.getIn().setBody(properties);
-            }
+        final Processor processor = exchange -> {
+            final String body = (String) exchange.getIn().getBody();
+            final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
+            exchange.getIn().setBody(properties);
         };
         return processor;
     }
-
 
 }
