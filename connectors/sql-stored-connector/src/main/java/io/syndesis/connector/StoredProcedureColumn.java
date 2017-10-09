@@ -19,34 +19,51 @@ package io.syndesis.connector;
 import java.sql.JDBCType;
 
 public class StoredProcedureColumn {
-    
-    private int ordinal;
-    private String name;
-    private ColumnMode mode;
+
     private JDBCType jdbcType;
-    
-    public int getOrdinal() {
-        return ordinal;
-    }
-    public void setOrdinal(int ordinal) {
-        this.ordinal = ordinal;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public ColumnMode getMode() {
-        return mode;
-    }
-    public void setMode(ColumnMode mode) {
-        this.mode = mode;
-    }
+    private ColumnMode mode;
+    private String name;
+    private int ordinal;
+
     public JDBCType getJdbcType() {
         return jdbcType;
     }
-    public void setJdbcType(JDBCType jdbcType) {
+
+    public ColumnMode getMode() {
+        return mode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getOrdinal() {
+        return ordinal;
+    }
+
+    public void setJdbcType(final JDBCType jdbcType) {
         this.jdbcType = jdbcType;
+    }
+
+    public void setMode(final ColumnMode mode) {
+        this.mode = mode;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public void setOrdinal(final int ordinal) {
+        this.ordinal = ordinal;
+    }
+
+    public String toProcedureParameterString() {
+        if (mode == ColumnMode.IN) {
+            return jdbcType + " ${body[" + name + "]}";
+        } else if (mode == ColumnMode.OUT) {
+            return mode.name() + " " + jdbcType + " ${body[" + name + "]}";
+        } else {
+            return null;
+        }
     }
 }

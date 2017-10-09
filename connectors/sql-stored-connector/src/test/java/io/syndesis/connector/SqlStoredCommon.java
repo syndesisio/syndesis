@@ -30,13 +30,13 @@ import java.util.Properties;
 public class SqlStoredCommon {
 
     public Connection setupConnectionAndStoredProcedure(Connection connection, Properties properties) throws Exception {
-        
+
         InputStream is = SqlStoredCommon.class.getClassLoader().getResourceAsStream("application.properties");
         properties.load(is);
         String user     = String.valueOf(properties.get("sql-stored-connector.user"));
         String password = String.valueOf(properties.get("sql-stored-connector.password"));
         String url      = String.valueOf(properties.get("sql-stored-connector.url"));
-        
+
         System.out.println("Connecting to the database for unit tests");
         try {
             connection = DriverManager.getConnection(url,user,password);
@@ -47,7 +47,7 @@ public class SqlStoredCommon {
                 parameters.put(name.substring(name.indexOf(".")+1), properties.getProperty(name));
             }
             Map<String,StoredProcedureMetadata> storedProcedures = ext.getStoredProcedures(parameters);
-            
+
             if (!storedProcedures.keySet().contains("DEMO_ADD") 
                     && databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {
                 try (Statement stmt = connection.createStatement()) {
@@ -64,7 +64,7 @@ public class SqlStoredCommon {
         }
         return connection;
     }
-    
+
     public void closeConnection(Connection connection) throws SQLException {
         if (connection!=null && !connection.isClosed()) {
             connection.close();

@@ -17,22 +17,20 @@
 package io.syndesis.connector;
 
 /**
- * Enumeration of Database products we have tested, and
- * for which we ship drivers for. One caviat is the
- * Oracle Driver which cannot be shipped due to
+ * Enumeration of Database products we have tested, and for which we ship
+ * drivers for. One caviat is the Oracle Driver which cannot be shipped due to
  * restrictions on its license.
- * 
+ *
  * @since 09/11/17
  * @author kstam
  *
  */
 public enum DatabaseProduct {
     APACHE_DERBY, ORACLE, POSTGRESQL;
-    
-    /** 
-     * Can be used to convert '_' to ' ' in the enum
-     * name. 
-     * 
+
+    /**
+     * Can be used to convert '_' to ' ' in the enum name.
+     *
      * @return name of the enum.
      */
     public String nameWithSpaces() {

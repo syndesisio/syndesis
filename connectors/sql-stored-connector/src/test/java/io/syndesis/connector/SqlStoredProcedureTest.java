@@ -38,13 +38,13 @@ public class SqlStoredProcedureTest {
     private static Connection connection;
     private static Properties properties = new Properties();
     private static SqlStoredCommon sqlStoredCommon;
-    
+
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         sqlStoredCommon = new SqlStoredCommon();
         connection = sqlStoredCommon.setupConnectionAndStoredProcedure(connection, properties);
     }
-    
+
     @AfterClass
     public static void afterClass() throws SQLException {
         sqlStoredCommon.closeConnection(connection);
@@ -52,37 +52,38 @@ public class SqlStoredProcedureTest {
 
     @Test
     public void listAllStoredProcedures() {
-        
+
         SqlStoredConnectorMetaDataExtension ext = new SqlStoredConnectorMetaDataExtension();
-        Map<String,Object> parameters = new HashMap<String,Object>();
-        for (final String name: properties.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf(".")+1), properties.getProperty(name));
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        for (final String name : properties.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf(".") + 1), properties.getProperty(name));
         }
-        Map<String,StoredProcedureMetadata> storedProcedures = ext.getStoredProcedures(parameters);
+        Map<String, StoredProcedureMetadata> storedProcedures = ext.getStoredProcedures(parameters);
         assertTrue(storedProcedures.size() > 0);
-        //Find 'demo_add'
+        // Find 'demo_add'
         assertTrue(storedProcedures.keySet().contains("DEMO_ADD"));
-        
+
         for (String storedProcedureName : storedProcedures.keySet()) {
             StoredProcedureMetadata md = storedProcedures.get(storedProcedureName);
             System.out.println(storedProcedureName + " : " + md.getTemplate());
         }
-        
-        //Inspect demo_add
+
+        // Inspect demo_add
         StoredProcedureMetadata metaData = storedProcedures.get("DEMO_ADD");
-        Assert.assertEquals("DEMO_ADD( INTEGER ${body[A], INTEGER ${body[B], OUT INTEGER ${body[C])",metaData.getTemplate());
+        Assert.assertEquals("DEMO_ADD(INTEGER ${body[A]}, INTEGER ${body[B]}, OUT INTEGER ${body[C]})",
+            metaData.getTemplate());
     }
 
     @Test
     public void listSchemasTest() throws SQLException {
-        
+
         DatabaseMetaData meta = connection.getMetaData();
         String catalog = null;
         String schemaPattern = null;
-        
+
         System.out.println("Querying for all Schemas...");
         ResultSet schema = meta.getSchemas(catalog, schemaPattern);
-        int schemaCount=0;
+        int schemaCount = 0;
         while (schema.next()) {
             String catalogName = schema.getString("TABLE_CATALOG");
             String schemaName = schema.getString("TABLE_SCHEM");
@@ -102,7 +103,7 @@ public class SqlStoredProcedureTest {
             cStmt.setInt(2, 2);
             cStmt.registerOutParameter(3, Types.NUMERIC);
             cStmt.execute();
-    
+
             c = cStmt.getBigDecimal(3).toPlainString();
             System.out.println("OUTPUT " + c);
             Assert.assertEquals("3", c);
@@ -111,6 +112,5 @@ public class SqlStoredProcedureTest {
             Assert.fail();
         }
     }
-    
 
 }

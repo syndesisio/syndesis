@@ -16,7 +16,7 @@
 package io.syndesis.connector;
 
 public class SampleStoredProcedures {
-    
+
     /**
      * SQL to create the DEMO_ADD procedure in Apache Derby
      */
