@@ -55,4 +55,22 @@
     <module>trade-insight-top-connector</module>
   </modules>
 
+  <dependencyManagement>
+    <dependencies>
+      <!-- Declare camel-salesforce here to remove validation-api from all
+      connectors -->
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-salesforce</artifactId>
+        <version>${camel.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
 </project>
