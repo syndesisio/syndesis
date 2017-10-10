@@ -25,8 +25,6 @@
   },
   "properties": {
     "procedureName": { "kind": "path", "displayName": "Template", "group": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Sets the StoredProcedure name to perform" },
-    "template": { "kind": "path", "displayName": "Template", "group": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Sets the StoredProcedure template to perform" },
-    "batch": { "kind": "parameter", "displayName": "Batch", "group": "producer", "required": false, "type": "boolean", "javaType": "boolean", "deprecated": false, "secret": false, "defaultValue": false, "description": "Enables or disables batch mode" },
-    "noop": { "kind": "parameter", "displayName": "Noop", "group": "producer", "required": false, "type": "boolean", "javaType": "boolean", "deprecated": false, "secret": false, "defaultValue": false, "description": "If set will ignore the results of the template and use the existing IN message as the OUT message for the continuation of processing" }
+    "template": { "kind": "path", "displayName": "Template", "group": "producer", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "description": "Sets the StoredProcedure template to perform" }
   }
 }
