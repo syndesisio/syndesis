@@ -197,6 +197,7 @@
     <module>verifier</module>
     <module>inspector</module>
     <module>setup</module>
+    <module>syndesis-builder-image-generator</module>
   </modules>
 
   <dependencyManagement>
