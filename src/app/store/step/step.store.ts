@@ -35,29 +35,9 @@ export class StepStore {
       stepKind: DATA_MAPPER,
       visible: (
         position: number,
-        previous: Array<Step>,
-        subsequent: Array<Step>,
-      ): boolean => {
-        // previous and subsequent steps need to have input and output data shapes respectively
-        const prev = previous.filter(s => {
-          return (
-            s.action &&
-            s.action.outputDataShape
-          );
-        });
-        if (!prev.length) {
-          return false;
-        }
-        const subs = subsequent.filter(s => {
-          return (
-            s.action && s.action.inputDataShape
-          );
-        });
-        if (!subs.length) {
-          return false;
-        }
-        return true;
-      },
+        previousSteps: Array<Step>,
+        subsequentSteps: Array<Step>,
+      ) => this.stepsHaveOutputDataShape(previousSteps) && this.stepsHaveInputDataShape(subsequentSteps),
       properties: {},
       configuredProperties: undefined,
     },
@@ -169,6 +149,18 @@ export class StepStore {
     },
     */
   ];
+
+  private stepsHaveOutputDataShape(steps: Array<Step>): boolean {
+    return steps
+      .filter(s => s.action && s.action.outputDataShape && s.action.outputDataShape.kind !== 'none')
+      .length > 0;
+  }
+
+  private stepsHaveInputDataShape(steps: Array<Step>): boolean {
+    return steps
+      .filter(s => s.action && s.action.inputDataShape && s.action.inputDataShape.kind !== 'none')
+      .length > 0;
+  }
 
   getStepName(kind: string): string {
     const step = this.getStepConfig(kind);
