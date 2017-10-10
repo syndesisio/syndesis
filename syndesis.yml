@@ -649,12 +649,12 @@ objects:
       psql -d sampledb -U sampledb <<'EOF'
         CREATE TABLE IF NOT EXISTS todo (id SERIAL PRIMARY KEY, task VARCHAR, completed INTEGER);
         CREATE OR REPLACE FUNCTION add_lead(
-          firstlastname varchar,
+          first_and_last_name varchar,
           company varchar,
           phone varchar,
           email varchar, 
-          leadsource varchar,
-          leadstatus varchar,
+          lead_source varchar,
+          lead_status varchar,
           rating varchar)
 
           RETURNS void
@@ -664,7 +664,7 @@ objects:
         DECLARE
           task varchar;
         BEGIN
-          task := leadstatus || ' Lead: Please contact ' || firstlastname || ' from ' || company || ' at ' || phone || ' or ' || email || '. Lead is from ' || leadsource || '. Rating: ' || rating || '.';
+          task := lead_status || ' Lead: Please contact ' || first_and_last_name || ' from ' || company || ' at ' || phone || ' or ' || email || '. Lead is from ' || lead_source || '. Rating: ' || rating || '.';
           insert into todo(task,completed) VALUES (task,0);
         END;
         $BODY$;
