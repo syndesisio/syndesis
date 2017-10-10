@@ -2,7 +2,7 @@
   "baseScheme" : "salesforce",
   "baseGroupId" : "org.apache.camel",
   "baseArtifactId" : "camel-salesforce",
-  "baseVersion" : "2.20.0.fuse-000101",
+  "baseVersion" : "2.20.0.fuse-000106",
   "baseJavaType" : "org.apache.camel.component.salesforce.SalesforceComponent",
   "name" : "SalesforceOnUpdate",
   "scheme" : "salesforce-on-update",

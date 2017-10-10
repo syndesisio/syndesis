@@ -2,7 +2,7 @@
   "baseScheme" : "twitter-timeline",
   "baseGroupId" : "org.apache.camel",
   "baseArtifactId" : "camel-twitter",
-  "baseVersion" : "2.20.0.fuse-000101",
+  "baseVersion" : "2.20.0.fuse-000106",
   "baseJavaType" : "org.apache.camel.component.twitter.timeline.TwitterTimelineComponent",
   "name" : "TwitterMention",
   "scheme" : "twitter-mention-connector",
