@@ -91,6 +91,34 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       properties: data,
       onSave: () => {
         if (!this.lastPage || this.page >= this.lastPage) {
+          // if there are action properties that depend on having other action
+          // properties defined in previous steps we need to fetch metadata one
+          // more time and apply those action property values that we get
+          if (Object.keys(this.step.configuredProperties).length > 0) {
+            this.integrationSupport.fetchMetadata(
+              this.step.connection,
+              this.step.action,
+              data,
+            )
+            .toPromise()
+            .then(response => {
+              log.debug('Response: ' + JSON.stringify(response, undefined, 2));
+              const definition: any = response['_body'] ? JSON.parse(response['_body']) : undefined;
+              for (const actionProperty of Object.keys(data)) {
+                if (data[actionProperty] == null) {
+                  this.step.configuredProperties[actionProperty] = definition.propertyDefinitionSteps.map(actionDefinitionStep => {
+                    return actionDefinitionStep.properties[actionProperty].defaultValue;
+                  })[0];
+                }
+              }
+            })
+            .catch(response => {
+              this.error = {
+                message: response.message || response.userMsg || response.developerMsg,
+              };
+            });
+          }
+
           // all done...
           this.router.navigate(['save-or-add-step'], {
             queryParams: { validate: true },
