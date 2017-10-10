@@ -17,6 +17,7 @@ package io.syndesis.image;
 
 import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.connector.catalog.ConnectorCatalogProperties;
+import io.syndesis.core.SuppressFBWarnings;
 import io.syndesis.dao.init.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.dao.manager.DaoConfiguration;
@@ -60,18 +61,19 @@ public class Application implements ApplicationRunner {
     }
 
     @Override
+    @SuppressFBWarnings("DM_EXIT")
     public void run(ApplicationArguments args) {
         try {
-            System.out.println("To: "+to);
+            System.out.println("To: "+to); //NOPMD
             generateIntegrationProject(new File(to));
-            System.exit(0);
         } catch (IOException e) {
-            System.exit(1);
+            e.printStackTrace(); //NOPMD
+            System.exit(1); //NOPMD
         }
     }
 
 
-    static private void generateIntegrationProject(File project) throws IOException {
+    private static void generateIntegrationProject(File project) throws IOException {
         ArrayList<Step> steps = new ArrayList<>();
         HashMap<String, Connector> connectors = new HashMap<String, Connector>();
 
@@ -115,7 +117,8 @@ public class Application implements ApplicationRunner {
         generate(request, project);
     }
 
-    static private void generate(GenerateProjectRequest request, File targetDir) throws IOException {
+    @SuppressWarnings("PMD.UseProperClassLoader")
+    private static void generate(GenerateProjectRequest request, File targetDir) throws IOException {
 
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
         ConnectorCatalogProperties catalogProperties = new ConnectorCatalogProperties();
@@ -140,8 +143,9 @@ public class Application implements ApplicationRunner {
     public static byte[] readAllBytes(InputStream is) throws IOException {
         try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[1024 * 4];
-            for (int len; (len = is.read(buffer)) != -1; )
+            for (int len; (len = is.read(buffer)) != -1; ) { //NOPMD
                 os.write(buffer, 0, len);
+            }
             os.flush();
             return os.toByteArray();
         }
@@ -149,7 +153,7 @@ public class Application implements ApplicationRunner {
 
 
     // Helper method to help construct maps with concise syntax
-    static private Map<String, String> map(Object... values) {
+    private static Map<String, String> map(Object... values) {
         HashMap<String, String> rc = new HashMap<>();
         for (int i = 0; i + 1 < values.length; i += 2) {
             rc.put(values[i].toString(), values[i + 1].toString());

@@ -73,12 +73,12 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>model</artifactId>
+      <artifactId>core</artifactId>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>model</artifactId>
     </dependency>
 
     <dependency>
@@ -92,6 +92,11 @@
     </dependency>
 
     <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>connector-catalog</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
     </dependency>
@@ -102,14 +107,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging-api</artifactId>
-      <version>1.1</version>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
     </dependency>
 
   </dependencies>
