@@ -28,16 +28,6 @@
               -e POSTGRES_DB=syndesis \
               postgres
 
-# Run in development mode
-
-Linux:
-
-    ./start-with-keycloak.sh
-
-Windows:
-
-    start-with-keycloak
-
 # Deploying to Kubernetes
 
     oc login <KUBERNETES_MASTER>
@@ -61,31 +51,6 @@ include a valid access token in the `Authorization` header of the request (there
 The header should look like:
 
     Authorization: Bearer MDQyODExLCJpc3MiOi...
-
-The current implementation uses [Keycloak](http://keycloak.org/) as an OAuth Authorization Server. Keycloak provides the capability
-to broker multiple identity providers and this allows Syndesis to be independent of identity providers.
-
-## Getting an access token locally
-
-If you want to try out the REST API manually, try the following steps (note that this requires installation of the amazing [`jq`](https://stedolan.github.io/jq/)):
-
-```bash
-$ ./start-with-keycloak.sh
-
-# In another terminal... get a token from keycloak authenticating with `user`/`password`
-$ TOKEN=$(curl \
-    -d "client_id=admin-cli" \
-    -d "username=user" \
-    -d "password=password" \
-    -d "grant_type=password" \
-    "http://localhost:8282/auth/realms/syndesis-test/protocol/openid-connect/token" | jq -r .access_token)
-
-$ curl http://localhost:8080/api/v1/components -H "Authorization: Bearer $TOKEN"
-
-# Validate the REST API requires the valid token - should return a 401
-$ curl http://localhost:8080/api/v1/components
-```
-
 
 ## Roland's random notes
 

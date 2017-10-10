@@ -43,13 +43,9 @@ public class IntegrationsITCase extends BaseITCase {
     }
 
     @Test
-    public void integrationsListWithoutToken() {
-        get("/api/v1/integrations", JsonNode.class, null, HttpStatus.UNAUTHORIZED);
-    }
-
-    @Test
-    public void integrationsListWithExpiredToken() {
-        get("/api/v1/integrations", JsonNode.class, tokenRule.expiredToken(), HttpStatus.UNAUTHORIZED);
+    public void integrationsListForbidden() {
+        ResponseEntity<JsonNode> response = restTemplate().getForEntity("/api/v1/integrations", JsonNode.class);
+        assertThat(response.getStatusCode()).as("integrations list status code").isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test

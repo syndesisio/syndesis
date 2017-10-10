@@ -14,10 +14,6 @@
 # limitations under the License.
 #
 
-keycloak:
-  enabled: true
-  configurationFile: classpath:/syndesis-test-client.json
-
 endpoints:
   test_support:
     enabled: true

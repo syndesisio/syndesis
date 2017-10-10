@@ -56,11 +56,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@ContextConfiguration(classes = { 
+@ContextConfiguration(classes = {
 		Application.class,
         InfinispanCacheConfiguration.class,
-        KeycloakConfiguration.class,
-        StoreConfiguration.class, 
+        StoreConfiguration.class,
         SyndesisCorsConfiguration.class
 })
 public abstract class BaseITCase {
@@ -75,12 +74,6 @@ public abstract class BaseITCase {
 
     @BeforeClass
     public static void envSetup() {
-        // If the keycloak.http.port is not configured.. configure it now so that
-        // our test cases work in an IDE without having to do additional config.
-        if( System.getProperty("keycloak.http.port")==null ) {
-            System.setProperty("keycloak.http.port", "8282");
-        }
-
         // On some systems (like running a build in a k8s pod), you don't get home dir.
         if( System.getProperty("user.home")==null ) {
             // But ivy/grape fails if it does not know where the user home dir is located..
@@ -222,6 +215,8 @@ public abstract class BaseITCase {
         if (token != null) {
             headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         }
+        headers.set("X-Forwarded-User", "someone_important");
+        headers.set("X-Forwarded-Access-Token", token);
     }
 
     final class YamlJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {

@@ -34,7 +34,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 import io.swagger.annotations.Api;
-import io.syndesis.core.Tokens;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.Kind;
@@ -59,6 +58,7 @@ import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.operations.Validating;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Path("/integrations")
@@ -129,7 +129,7 @@ public class IntegrationHandler extends BaseHandler
             .createFrom(integration)
             .deployedRevisionId(revision.getVersion())
             .addRevision(revision)
-            .userId(Tokens.getUsername())
+            .userId(SecurityContextHolder.getContext().getAuthentication().getName())
             .statusMessage(Optional.empty())
             .lastUpdated(rightNow)
             .createdDate(rightNow)
@@ -151,7 +151,6 @@ public class IntegrationHandler extends BaseHandler
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(integration)
             .deployedRevisionId(existing.getDeployedRevisionId())
-            .userId(Tokens.getUsername())
             .lastUpdated(new Date())
             .currentStatus(currentStatus)
             .addRevision(currentRevision)

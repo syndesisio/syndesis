@@ -38,14 +38,9 @@ public class ConnectorsITCase extends BaseITCase {
     private Verifier verifier;
 
     @Test
-    public void connectorsListWithoutToken() {
+    public void connectorsListForbidden() {
         ResponseEntity<JsonNode> response = restTemplate().getForEntity("/api/v1/connectors", JsonNode.class);
-        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
-
-    @Test
-    public void connectorListWithExpiredToken() {
-        get("/api/v1/connectors", JsonNode.class, tokenRule.expiredToken(), HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test

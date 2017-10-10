@@ -120,7 +120,7 @@ public class EventsITCase extends BaseITCase {
         // {"timestamp":1490099424012,"status":401,"error":"Unauthorized","message":"Unauthorized","path":"/api/v1/event/reservations"}
 
         ResponseEntity<JsonNode> response = restTemplate().postForEntity("/api/v1/event/reservations", null, JsonNode.class);
-        assertThat(response.getStatusCode()).as("reservations post status code").isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).as("reservations post status code").isEqualTo(HttpStatus.FORBIDDEN);
 
         // lets setup an event handler that we can inspect events on..
         EventHandler handler = recorder(mock(EventHandler.class), EventHandler.class);
