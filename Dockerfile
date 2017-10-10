@@ -1,4 +1,4 @@
-FROM fabric8/s2i-java:latesxx
+FROM fabric8/s2i-java:2.0.2
 
 ADD project /tmp/project
 RUN \
