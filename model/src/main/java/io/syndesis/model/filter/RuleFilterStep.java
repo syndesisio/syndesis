@@ -42,9 +42,9 @@ public interface RuleFilterStep extends FilterStep {
      * Filter in the simple expression language.
      */
     default String getFilterExpression() {
-        if (getConfiguredProperties().isPresent()) {
-            Map<String, String> props = getConfiguredProperties().get();
+        final Map<String, String> props = getConfiguredProperties();
 
+        if (!props.isEmpty()) {
             FilterPredicate predicate = getPredicate(props.get("predicate"));
             List<FilterRule> rules = extractRules(props.get("rules"));
             if (rules != null && !rules.isEmpty()) {

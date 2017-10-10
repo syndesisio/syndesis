@@ -15,8 +15,6 @@
  */
 package io.syndesis.model.filter;
 
-import java.util.Collections;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
@@ -34,7 +32,7 @@ public interface ExpressionFilterStep extends FilterStep {
      * by default from the configured properties.
      */
     default String getFilterExpression() {
-        return getConfiguredProperties().orElseGet(Collections::emptyMap).get("filter");
+        return getConfiguredProperties().get("filter");
     }
 
     class Builder extends ImmutableExpressionFilterStep.Builder { }

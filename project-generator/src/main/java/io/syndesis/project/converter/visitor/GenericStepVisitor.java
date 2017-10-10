@@ -18,9 +18,9 @@ package io.syndesis.project.converter.visitor;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.integration.model.SyndesisHelpers;
 import io.syndesis.model.integration.Step;
@@ -48,7 +48,7 @@ public class GenericStepVisitor implements StepVisitor {
     public io.syndesis.integration.model.steps.Step visit(StepVisitorContext stepContext) {
         try {
             Step step = stepContext.getStep();
-            HashMap<String, Object> stepMap = new HashMap<>(step.getConfiguredProperties().orElse(new HashMap<>()));
+            Map<String, Object> stepMap = new HashMap<>(step.getConfiguredProperties());
             stepMap.put("kind", step.getStepKind());
             String json = OBJECT_MAPPER.writeValueAsString(stepMap);
             return OBJECT_MAPPER.readValue(json, io.syndesis.integration.model.steps.Step.class);

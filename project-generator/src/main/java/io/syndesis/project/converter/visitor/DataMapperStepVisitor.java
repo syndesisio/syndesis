@@ -49,7 +49,7 @@ public class DataMapperStepVisitor implements StepVisitor {
 
     @Override
     public Step visit(StepVisitorContext stepContext) {
-        Map<String, String> configuredProperties = stepContext.getStep().getConfiguredProperties().get();
+        Map<String, String> configuredProperties = stepContext.getStep().getConfiguredProperties();
 
         String resourceName = "mapping-step-" + stepContext.getIndex() + ".json";
         try {

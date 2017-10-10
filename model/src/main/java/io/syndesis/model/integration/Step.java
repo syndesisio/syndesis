@@ -15,15 +15,17 @@
  */
 package io.syndesis.model.integration;
 
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.Connection;
-
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Optional;
+import org.immutables.value.Value;
 
 @JsonDeserialize(using = StepDeserializer.class)
 public interface Step extends WithId<Step>, Serializable {
@@ -39,7 +41,10 @@ public interface Step extends WithId<Step>, Serializable {
 
     String getStepKind();
 
-    Optional<Map<String, String>> getConfiguredProperties();
+    @Value.Default
+    default Map<String, String> getConfiguredProperties() {
+        return Collections.emptyMap();
+    }
 
     String getName();
 

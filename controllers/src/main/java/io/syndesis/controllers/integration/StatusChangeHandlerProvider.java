@@ -16,7 +16,9 @@
 
 package io.syndesis.controllers.integration;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import io.syndesis.model.integration.Integration;
@@ -38,16 +40,18 @@ public interface StatusChangeHandlerProvider {
 
             public StatusUpdate(Integration.Status status, List<String> stepsPerformed) {
                 this.status = status;
-                this.stepsPerformed = stepsPerformed;
+                this.stepsPerformed = Optional.ofNullable(stepsPerformed).orElseGet(Collections::emptyList);
             }
 
             public StatusUpdate(Integration.Status status, String statusMessage) {
                 this.status = status;
                 this.statusMessage = statusMessage;
+                this.stepsPerformed = Collections.emptyList();
             }
 
             public StatusUpdate(Integration.Status status) {
                 this.status = status;
+                this.stepsPerformed = Collections.emptyList();
             }
 
             public Integration.Status getStatus() {
