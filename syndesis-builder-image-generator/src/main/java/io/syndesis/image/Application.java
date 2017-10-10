@@ -30,18 +30,24 @@ import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.DefaultProjectGenerator;
 import io.syndesis.project.converter.GenerateProjectRequest;
 import io.syndesis.project.converter.ProjectGeneratorProperties;
-import io.syndesis.project.converter.visitor.*;
+import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @SpringBootApplication(exclude = {DaoConfiguration.class})
 public class Application implements ApplicationRunner {
