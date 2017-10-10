@@ -14,7 +14,7 @@
     "javaType": "io.syndesis.connector.SqlStoredConnectorComponent",
     "groupId": "io.syndesis",
     "artifactId": "sql-stored-connector",
-    "version": "0.4-SNAPSHOT"
+    "version": "${project.version}"
   },
   "componentProperties": {
     "url": { "kind": "property", "displayName": "Connection URL", "group": "producer", "label": "common", "required": true, "type": "string", "javaType": "java.lang.String", "deprecated": false, "secret": false, "defaultValue": "jdbc:postgresql:database", "description": "JDBC URL of the database" },
