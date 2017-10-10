@@ -20,13 +20,23 @@
       EOF
       psql -d sampledb -U sampledb <<'EOF'
         CREATE TABLE IF NOT EXISTS todo (id SERIAL PRIMARY KEY, task VARCHAR, completed INTEGER);
-        CREATE OR REPLACE FUNCTION add_todo(
-          task varchar)
+        CREATE OR REPLACE FUNCTION add_lead(
+          first_and_last_name varchar,
+          company varchar,
+          phone varchar,
+          email varchar, 
+          lead_source varchar,
+          lead_status varchar,
+          rating varchar)
+
           RETURNS void
           LANGUAGE 'plpgsql'
 
         AS $BODY$
+        DECLARE
+          task varchar;
         BEGIN
+          task := lead_status || ' Lead: Please contact ' || first_and_last_name || ' from ' || company || ' at ' || phone || ' or ' || email || '. Lead is from ' || lead_source || '. Rating: ' || rating || '.';
           insert into todo(task,completed) VALUES (task,0);
         END;
         $BODY$;
