@@ -140,7 +140,7 @@
 
     <assertj-core.version>3.6.2</assertj-core.version>
     <caffeine.version>2.4.0</caffeine.version>
-    <camel.version>2.20.0.fuse-000101</camel.version>
+    <camel.version>2.20.0.fuse-000106</camel.version>
     <jdbi.version>2.78</jdbi.version>
     <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
     <immutables.version>2.5.1</immutables.version>
