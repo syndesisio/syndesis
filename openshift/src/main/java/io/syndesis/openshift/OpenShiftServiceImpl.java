@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
+import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.api.model.ImageStream;
@@ -170,6 +171,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewSpec()
             .withReplicas(1)
             .addToSelector("integration", name)
+            .withNewStrategy()
+                .withType("Recreate")
+                .withNewResources()
+                   // TODO: Make the limits configurable
+                   .addToLimits("memory", new Quantity(config.getDeploymentMemoryLimitMi(), "Mi"))
+                   .addToRequests("memory", new Quantity(config.getDeploymentMemoryRequestMi(), "Mi"))
+                .endResources()
+            .endStrategy()
             .withNewTemplate()
             .withNewMetadata().addToLabels("integration", name).endMetadata()
             .withNewSpec()
@@ -191,7 +200,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .endSpec()
             .endTemplate()
             .addNewTrigger().withType("ConfigChange").endTrigger()
-// Disabled for now
+// Disabled for now since we trigger the deployment directly
 //            .addNewTrigger().withType("ImageChange")
 //            .withNewImageChangeParams()
 //            // set automatic to 'true' when not performing the deployments on our own
@@ -226,7 +235,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .withIncremental(true)
                 // TODO: This environment setup needs to be externalized into application.properties
                 // https://github.com/syndesisio/syndesis-rest/issues/682
-                .withEnv(new EnvVar("MAVEN_OPTS","-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx300m", null))
+                .withEnv(new EnvVar("MAVEN_OPTS", config.getMavenOptions(), null))
               .endSourceStrategy()
             .endStrategy()
             .withNewOutput().withNewTo().withKind("ImageStreamTag").withName(name + ":latest").endTo().endOutput()
