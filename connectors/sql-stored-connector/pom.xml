@@ -168,12 +168,12 @@
         <executions>
           <execution>
             <id>copy-camel-schema</id>
-            <phase>generate-resources</phase>
+            <phase>process-classes</phase>
             <goals>
               <goal>copy</goal>
             </goals>
             <configuration>
-              <sourceFile>${basedir}/src/main/resources/camel-connector-schema.json</sourceFile>
+              <sourceFile>${project.build.directory}/classes/camel-connector-schema.json</sourceFile>
               <destinationFile>${project.build.directory}/classes/io/syndesis/connector/sql-stored-connector.json</destinationFile>
             </configuration>
           </execution>
