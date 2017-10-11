@@ -37,7 +37,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
-    <camel.version>2.20.0.fuse-000101</camel.version>
+    <camel.version>2.20.0.fuse-000106</camel.version>
     <swagger.version>1.5.12</swagger.version>
     <resteasy-spring-boot-starter.version>2.3.0-RELEASE</resteasy-spring-boot-starter.version>
     <jackson.version>2.8.7</jackson.version>
