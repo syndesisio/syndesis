@@ -16,12 +16,13 @@
 
 package io.syndesis.model.integration;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.connection.Connection;
 import org.immutables.value.Value;
-
-import java.util.List;
-import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationRevisionSpec.Builder.class)
@@ -29,9 +30,15 @@ public interface IntegrationRevisionSpec {
 
     Optional<String> getConfiguration();
 
-    Optional<List<Connection>> getConnections();
+    @Value.Default
+    default List<Connection> getConnections() {
+        return Collections.emptyList();
+    }
 
-    Optional<List<? extends Step>> getSteps();
+    @Value.Default
+    default List<? extends Step> getSteps() {
+        return Collections.emptyList();
+    }
 
     class Builder extends ImmutableIntegrationRevisionSpec.Builder {
     }

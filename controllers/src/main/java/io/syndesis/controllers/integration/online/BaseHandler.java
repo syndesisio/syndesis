@@ -15,18 +15,14 @@
  */
 package io.syndesis.controllers.integration.online;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.syndesis.core.Names;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.Step;
 import io.syndesis.openshift.OpenShiftService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,32 +64,5 @@ public class BaseHandler {
         return dataManager.fetchAll(Connector.class).getItems()
             .stream()
             .collect(Collectors.toMap(o -> o.getId().get(), Function.identity()));
-    }
-
-    /**
-     * Build Connector Suffix map.
-     */
-    protected static Map<Step, String> buildConnectorSuffixMap(Integration integration) {
-        final Map<Step, String> connectorIdMap = new HashMap<>();
-
-        integration.getSteps().ifPresent(steps -> {
-            steps.stream()
-                .filter(s -> s.getStepKind().equals(Endpoint.KIND))
-                .filter(s -> s.getAction().isPresent())
-                .filter(s -> s.getConnection().isPresent())
-                .collect(Collectors.groupingBy(s -> s.getAction().get().getCamelConnectorPrefix()))
-                .forEach(
-                    (prefix, stepList) -> {
-                        if (stepList.size() > 1) {
-                            for (int i = 0; i < stepList.size(); i++) {
-                                connectorIdMap.put(stepList.get(i), Integer.toString(i + 1));
-                            }
-                        }
-                    }
-                );
-            })
-        ;
-
-        return Collections.unmodifiableMap(connectorIdMap);
     }
 }

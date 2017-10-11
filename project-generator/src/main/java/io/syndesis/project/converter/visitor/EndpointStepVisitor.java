@@ -18,7 +18,6 @@ package io.syndesis.project.converter.visitor;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -81,7 +80,7 @@ public class EndpointStepVisitor implements StepVisitor {
 
         final String camelConnectorPrefix = action.getCamelConnectorPrefix();
         final Connector connector = request.getConnectors().get(connectorId);
-        final Map<String, String> configuredProperties = aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties().orElseGet(Collections::emptyMap));
+        final Map<String, String> configuredProperties = aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
         final Map<String, String> properties = aggregate(connector.filterProperties(configuredProperties, connector::isEndpointProperty), action.filterProperties(configuredProperties, action::isEndpointProperty));
         final boolean hasComponentOptions = hasComponentProperties(configuredProperties, connector, action);
 

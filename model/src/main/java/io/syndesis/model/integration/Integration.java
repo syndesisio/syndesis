@@ -17,6 +17,7 @@ package io.syndesis.model.integration;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -76,9 +77,15 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     List<User> getUsers();
 
-    Optional<List<Connection>> getConnections();
+    @Value.Default
+    default List<Connection> getConnections() {
+        return Collections.emptyList();
+    }
 
-    Optional<List<? extends Step>> getSteps();
+    @Value.Default
+    default List<? extends Step> getSteps() {
+        return Collections.emptyList();
+    }
 
     Optional<String> getDescription();
 
@@ -86,7 +93,10 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     Optional<Status> getCurrentStatus();
 
-    Optional<List<String>> getStepsDone();
+    @Value.Default
+    default List<String> getStepsDone() {
+        return Collections.emptyList();
+    }
 
     Optional<String> getStatusMessage();
 

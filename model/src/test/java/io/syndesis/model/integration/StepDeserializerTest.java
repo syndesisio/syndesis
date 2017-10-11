@@ -32,8 +32,8 @@ public class StepDeserializerTest {
     public void shouldDeserializeRuleFilterStep() throws Exception {
         RuleFilterStep step = readTestFilter("/rule-filter-step.json");
         assertEquals("1", step.getId().get());
-        assertTrue(step.getConfiguredProperties().isPresent());
-        Map<String, String> props = step.getConfiguredProperties().get();
+        assertFalse(step.getConfiguredProperties().isEmpty());
+        Map<String, String> props = step.getConfiguredProperties();
         assertEquals(FilterPredicate.AND, FilterPredicate.valueOf(props.get("predicate").toUpperCase(Locale.US)));
         assertNotNull(props.get("rules"));
         assertEquals("rule-filter", step.getStepKind());
@@ -43,13 +43,13 @@ public class StepDeserializerTest {
     @Test
     public void shouldDeserializeExpressionFilterStep() throws Exception {
         ExpressionFilterStep step = readTestFilter("/filter-step.json");
-        ExpressionFilterStep exprFilterStep = (ExpressionFilterStep) step;
+        ExpressionFilterStep exprFilterStep = step;
         String expr = "${body.text} contains '#RHSummit'";
         assertEquals("2", exprFilterStep.getId().get());
         assertEquals("filter", exprFilterStep.getStepKind());
         assertEquals(expr, exprFilterStep.getFilterExpression());
-        assertEquals(1, exprFilterStep.getConfiguredProperties().get().size());
-        assertEquals(expr, exprFilterStep.getConfiguredProperties().get().get("filter"));
+        assertEquals(1, exprFilterStep.getConfiguredProperties().size());
+        assertEquals(expr, exprFilterStep.getConfiguredProperties().get("filter"));
     }
 
     private <T extends Step> T readTestFilter(String resource) throws java.io.IOException {

@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
@@ -38,6 +39,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,8 +66,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
@@ -124,14 +125,13 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     @Override
     public InputStream generate(GenerateProjectRequest request) throws IOException {
         Integration integration = request.getIntegration();
-        integration.getSteps().ifPresent(steps -> {
-            for (Step step : steps) {
-                LOG.debug("Integration [{}]: Adding step {} ",
-                          Names.sanitize(integration.getName()),
-                         step.getId().orElse(""));
-                step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
-            }
-        });
+
+        for (Step step : integration.getSteps()) {
+            LOG.debug("Integration [{}]: Adding step {} ",
+                Names.sanitize(integration.getName()),
+                step.getId().orElse(""));
+            step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
+        }
 
         return createTarInputStream(request);
     }
@@ -209,55 +209,47 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     public byte[] generatePom(Integration integration) throws IOException {
         Set<MavenGav> connectors = new LinkedHashSet<>();
         Set<String> gavsSeen = new HashSet<>();
-        integration.getSteps().ifPresent(steps -> {
-            for (Step step : steps) {
-                if (!step.getStepKind().equals(Endpoint.KIND)) {
-                    continue;
-                }
-                step.getAction().ifPresent(action -> {
-                    String gav = action.getCamelConnectorGAV();
-                    if (gavsSeen.contains(gav)) {
-                        return;
-                    }
-                    String[] splitGav = gav.split(":");
-                    if (splitGav.length == 3) {
-                        connectors.add(new MavenGav(splitGav[0], splitGav[1], splitGav[2]));
-                    }
-                    gavsSeen.add(gav);
-                });
+        for (Step step : integration.getSteps()) {
+            if (!step.getStepKind().equals(Endpoint.KIND)) {
+                continue;
             }
-        });
+            step.getAction().ifPresent(action -> {
+                String gav = action.getCamelConnectorGAV();
+                if (gavsSeen.contains(gav)) {
+                    return;
+                }
+                String[] splitGav = gav.split(":");
+                if (splitGav.length == 3) {
+                    connectors.add(new MavenGav(splitGav[0], splitGav[1], splitGav[2]));
+                }
+                gavsSeen.add(gav);
+            });
+        }
         return generateFromPomContext(new PomContext(integration.getId().orElse(""), integration.getName(), integration.getDescription().orElse(null), connectors), pomMustache);
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
     private byte[] generateFlowYaml(TarArchiveOutputStream tos, GenerateProjectRequest request) throws JsonProcessingException {
         final Map<Step, String> connectorIdMap = new HashMap<>();
+        final List<? extends Step> steps =  request.getIntegration().getSteps();
+        final Flow flow = new Flow();
 
-        // Determine connector prefix
-        request.getIntegration().getSteps().ifPresent(steps -> {
-                steps.stream()
-                    .filter(s -> s.getStepKind().equals(Endpoint.KIND))
-                    .filter(s -> s.getAction().isPresent())
-                    .filter(s -> s.getConnection().isPresent())
-                    .collect(Collectors.groupingBy(s -> s.getAction().get().getCamelConnectorPrefix()))
-                    .forEach(
-                        (prefix, stepList) -> {
-                            if (stepList.size() > 1) {
-                                for (int i = 0; i < stepList.size(); i++) {
-                                    connectorIdMap.put(stepList.get(i), Integer.toString(i + 1));
-                                }
+        if (!steps.isEmpty()) {
+            // Determine connector prefix
+            request.getIntegration().getSteps().stream()
+                .filter(s -> s.getStepKind().equals(Endpoint.KIND))
+                .filter(s -> s.getAction().isPresent())
+                .filter(s -> s.getConnection().isPresent())
+                .collect(Collectors.groupingBy(s -> s.getAction().get().getCamelConnectorPrefix()))
+                .forEach(
+                    (prefix, stepList) -> {
+                        if (stepList.size() > 1) {
+                            for (int i = 0; i < stepList.size(); i++) {
+                                connectorIdMap.put(stepList.get(i), Integer.toString(i + 1));
                             }
                         }
-                    );
-            }
-        );
-
-        Flow flow = new Flow();
-        request.getIntegration().getSteps().ifPresent(steps -> {
-            if (steps.isEmpty()) {
-                return;
-            }
+                    }
+                );
 
             Queue<Step> remaining = new LinkedList<>(steps);
             Step first = remaining.remove();
@@ -280,9 +272,11 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
                 visitStep(generatorContext, stepContext);
             }
-        });
+        }
+
         SyndesisModel syndesisModel = new SyndesisModel();
         syndesisModel.addFlow(flow);
+
         return YAML_OBJECT_MAPPER.writeValueAsBytes(syndesisModel);
     }
 

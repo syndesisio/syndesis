@@ -15,14 +15,15 @@
  */
 package io.syndesis.model.integration;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.Connection;
 import org.immutables.value.Value;
-
-import java.util.Map;
-import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(builder = SimpleStep.Builder.class)
@@ -39,7 +40,10 @@ public interface SimpleStep extends Step {
 
     String getStepKind();
 
-    Optional<Map<String, String>> getConfiguredProperties();
+    @Value.Default
+    default Map<String, String> getConfiguredProperties() {
+        return Collections.emptyMap();
+    }
 
     String getName();
 
