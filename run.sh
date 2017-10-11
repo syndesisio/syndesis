@@ -6,7 +6,6 @@
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-
 while [ $# -gt 0 ]; do
 	case $1 in
 		--from) 
@@ -19,18 +18,14 @@ while [ $# -gt 0 ]; do
 			shift 2 
 		;;
 		--update-project) 
+			ver="0.1-SNAPSHOT"
+			ver=${2:-$ver}			
 
-			jarlocation="https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&g=io.syndesis&a=syndesis-builder-image-generator&v=0.1-SNAPSHOT&e=jar"
-			jarlocation=${2:-$jarlocation}
+			echo "Updating project using: syndesis-builder-image-generator ver: $ver"			
+			mvn dependency:get "-Dartifact=io.syndesis:syndesis-builder-image-generator:$ver" -Ddest=syndesis-builder-image-generator.jar
 
-			echo "Updating project using: $jarlocation"
-			if [[ $jarlocation == http* ]] ; then 
-				wget --quiet -O syndesis-builder-image-generator.jar "$jarlocation"
-				jarlocation=syndesis-builder-image-generator.jar
-			fi
-
-			echo java -jar ${jarlocation} --to=$dir/project
-			java -jar ${jarlocation} --to=$dir/project
+			echo java -jar syndesis-builder-image-generator.jar --to=$dir/project
+			java -jar syndesis-builder-image-generator.jar --to=$dir/project
 			shift 2
 		;;
 		--to) 
