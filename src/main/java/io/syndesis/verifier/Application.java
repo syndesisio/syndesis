@@ -15,8 +15,12 @@
  */
 package io.syndesis.verifier;
 
+import javax.servlet.Filter;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 /**
  * @author roland
@@ -27,5 +31,17 @@ public class Application {
 
     public static void main(final String[] args) {
         SpringApplication.run(Application.class, args);
+    }
+
+    /**
+     * A filter used capture the request body
+     */
+    @Bean
+    public static Filter requestLoggingFilter() {
+        final CommonsRequestLoggingFilter loggingFilter = new CommonsRequestLoggingFilter();
+        loggingFilter.setIncludePayload(true);
+        loggingFilter.setMaxPayloadLength(512);
+
+        return loggingFilter;
     }
 }
