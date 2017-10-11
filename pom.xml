@@ -65,6 +65,10 @@
   </scm>
 
   <distributionManagement>
+    <snapshotRepository>
+      <id>oss-sonatype-staging</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
     <repository>
       <id>oss-sonatype-staging</id>
       <name>Sonatype Staging Repository</name>
