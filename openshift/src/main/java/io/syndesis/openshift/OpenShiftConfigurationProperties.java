@@ -34,6 +34,10 @@ public class OpenShiftConfigurationProperties {
 
     private String builderImageStreamTag = "s2i-java:2.0";
 
+    private String deploymentMemoryRequestMi = "280";
+    private String deploymentMemoryLimitMi = "512";
+    private String mavenOptions = "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx300m";
+
     private String apiBaseUrl;
 
     private String namespace;
@@ -89,5 +93,29 @@ public class OpenShiftConfigurationProperties {
 
     public void setImageStreamNamespace(String imageStreamNamespace) {
         this.imageStreamNamespace = imageStreamNamespace;
+    }
+
+    public String getDeploymentMemoryRequestMi() {
+        return deploymentMemoryRequestMi;
+    }
+
+    public void setDeploymentMemoryRequestMi(String deploymentMemoryRequestMi) {
+        this.deploymentMemoryRequestMi = deploymentMemoryRequestMi;
+    }
+
+    public String getDeploymentMemoryLimitMi() {
+        return deploymentMemoryLimitMi;
+    }
+
+    public void setDeploymentMemoryLimitMi(String deploymentMemoryLimitMi) {
+        this.deploymentMemoryLimitMi = deploymentMemoryLimitMi;
+    }
+
+    public String getMavenOptions() {
+        return mavenOptions;
+    }
+
+    public void setMavenOptions(String mavenOptions) {
+        this.mavenOptions = mavenOptions;
     }
 }

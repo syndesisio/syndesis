@@ -18,23 +18,13 @@ package io.syndesis.controllers;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("inspector")
+@ConfigurationProperties("controllers")
 public class ControllersConfigurationProperties {
 
-    public static final int DEFAULT_MAX_INTEGRATIONS_PER_USER = 1;
-    public static final int DEFAULT_MAX_DEPLOYMENTS_PER_USER = 1;
+    // Default values ....
 
-    private int maxIntegrationsPerUser = DEFAULT_MAX_INTEGRATIONS_PER_USER;
-    private int maxDeploymentsPerUser = DEFAULT_MAX_DEPLOYMENTS_PER_USER;
-
-    public ControllersConfigurationProperties() {
-        // behave like a Java bean
-    }
-
-    public ControllersConfigurationProperties(int maxIntegrationsPerUser, int maxDeploymentsPerUser) {
-        this.maxIntegrationsPerUser = maxIntegrationsPerUser;
-        this.maxDeploymentsPerUser = maxDeploymentsPerUser;
-    }
+    private int maxIntegrationsPerUser = 1;
+    private int maxDeploymentsPerUser = 1;
 
     public int getMaxIntegrationsPerUser() {
         return maxIntegrationsPerUser;
@@ -51,4 +41,5 @@ public class ControllersConfigurationProperties {
     public void setMaxDeploymentsPerUser(int maxDeploymentsPerUser) {
         this.maxDeploymentsPerUser = maxDeploymentsPerUser;
     }
+
 }
