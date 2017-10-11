@@ -178,6 +178,7 @@
           image: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
 {{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
+{{^Probeless}}
           livenessProbe:
             httpGet:
               path: /health
@@ -188,7 +189,7 @@
             httpGet:
               path: "/health"
               port: 8181
-            initialDelaySeconds: 10
+            initialDelaySeconds: 10{{/Probeless}}
           ports:
           - containerPort: 8080
             name: http
