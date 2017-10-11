@@ -11,8 +11,6 @@
 #   Template Parameter Values:
 #
 #   OPENSHIFT_MASTER
-#   GITHUB_OAUTH_CLIENT_ID
-#   GITHUB_OAUTH_CLIENT_SECRET
 
 #Configure the SYNDESIS_TEMPLATE_TYPE
 if [ -z "${SYNDESIS_TEMPLATE_TYPE}" ]; then
@@ -35,25 +33,8 @@ if [ -z "${OPENSHIFT_MASTER}" ]; then
     OPENSHIFT_MASTER="$(oc whoami --show-server)"
 fi
 
-#Configure the SYNDESIS_E2E_SECRET
-if [ -n "${SYNDESIS_E2E_SECRET}" ]; then
-	if [ -n "${GITHUB_E2E_OAUTH_CLIENT_ID}" ] && [ -n "${GITHUB_E2E_OAUTH_CLIENT_SECRET}" ]; then
-		echo "Using End to End Github account"
-    		GITHUB_OAUTH_CLIENT_ID=${GITHUB_E2E_OAUTH_CLIENT_ID}
-    		GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_E2E_OAUTH_CLIENT_SECRET}
-	else
-		echo "Warning: You provided SYNDESIS_E2E_SECRET but one of GITHUB_E2E_OAUTH_CLIENT_ID or GITHUB_E2E_OAUTH_CLIENT_SECRET is empty!"
-	fi
-fi
-
-if [ -z "${GITHUB_OAUTH_CLIENT_ID}" ]; then
-	echo "GITHUB_OAUTH_CLIENT_ID not found. Aborting!"
-	exit 1
-fi
-
-if [ -z "${GITHUB_OAUTH_CLIENT_SECRET}" ]; then
-	echo "GITHUB_OAUTH_CLIENT_SECRET not found. Aborting!"
-	exit 1
+if [ -z "${DEMO_DATA_ENABLED}" ]; then
+    DEMO_DATA_ENABLED=false
 fi
 
 # We pass the namespace on each command individually, because when this script is run inside a pod, all commands default to the pod namespace (ignoring commands like `oc project` etc)
@@ -66,9 +47,8 @@ oc create -f ${SYNDESIS_TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}  || oc replace 
 oc new-app ${SYNDESIS_TEMPLATE_TYPE}  \
     -p ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}.b6ff.rh-idev.openshiftapps.com \
     -p OPENSHIFT_MASTER=${OPENSHIFT_MASTER} \
-    -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_OAUTH_CLIENT_ID} \
-    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_OAUTH_CLIENT_SECRET} \
     -p OPENSHIFT_OAUTH_CLIENT_ID=$(oc project -q) \
+    -p DEMO_DATA_ENABLED=${DEMO_DATA_ENABLED} \
     -p TEST_SUPPORT_ENABLED=true \
     -n ${KUBERNETES_NAMESPACE}
 
