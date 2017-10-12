@@ -16,7 +16,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <camel.version>2.20.0.fuse-000091</camel.version>
+    <camel.version>2.20.0</camel.version>
   </properties>
 
   <dependencyManagement>
@@ -236,20 +236,5 @@
 
     </plugins>
   </build>
-
-  <repositories>
-    <repository>
-      <id>jboss-ea</id>
-      <name>JBoss Early-access repository</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
 
 </project>
