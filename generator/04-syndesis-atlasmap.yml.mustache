@@ -19,7 +19,7 @@
     ports:
     - port: 80
       protocol: TCP
-      targetPort: 8080
+      targetPort: 8443
     selector:
       app: syndesis
       component: syndesis-atlasmap
@@ -35,7 +35,7 @@
     host: ${ROUTE_HOSTNAME}
     path: /v2/atlas
     port:
-      targetPort: 8080
+      targetPort: 8443
     tls:
       insecureEdgeTerminationPolicy: Redirect
       termination: edge
@@ -83,7 +83,7 @@
                 "-ca-dir", "/usr/share/ca-certificates/mozilla"
               ],
               "volumeMounts": [{
-                "name": "syndesis-atlasmap-tls",
+                "name": "syndesis-atlasmap-openshift-ca",
                 "mountPath": "/tls-keystore"
               }],
               "resources": {
@@ -110,7 +110,7 @@
           - -ca-dir
           - /usr/share/ca-certificates/mozilla
           volumeMounts:
-          - name: syndesis-atlasmap-tls
+          - name: syndesis-atlasmap-openshift-ca
             mountPath: /tls-keystore
           resources:
             limits:
@@ -139,16 +139,21 @@
           image: ${SYNDESIS_REGISTRY}/{{Images.AtlasMapImagesPrefix}}/{{ Images.Syndesis.Atlasmap }}:{{ Tags.Atlasmap }}
 {{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
-          readinessProbe:
-            httpGet:
-              path: "/health"
-              port: 8181
-            initialDelaySeconds: 10
+{{^Probeless}}
           livenessProbe:
-            httpGet:
-              path: "/health"
-              port: 8181
+            exec:
+              command:
+              - curl
+              - -sSLf
+              - http://localhost:8080
             initialDelaySeconds: 180
+          readinessProbe:
+            exec:
+              command:
+              - curl
+              - -sSLf
+              - http://localhost:8181/health
+            initialDelaySeconds: 10{{/Probeless}}
           ports:
           - containerPort: 8080
             name: http
@@ -157,7 +162,7 @@
           - containerPort: 8778
             name: jolokia
           volumeMounts:
-          - name: syndesis-atlasmap-tls
+          - name: syndesis-atlasmap-openshift-ca
             mountPath: /tls-keystore
           - name: config-volume
             mountPath: /deployments/config
@@ -166,12 +171,50 @@
               memory: 612Mi
             requests:
               memory: 255Mi
+
+        - name: syndesis-oauthproxy
+{{^WithDockerImages}}
+          image: ' '{{/WithDockerImages}}{{#WithDockerImages}}
+          image: ${SYNDESIS_REGISTRY}/{{Images.OAuthProxyImagePrefix}}/{{ Images.Syndesis.OAuthProxy }}:{{ Tags.OAuthProxy }}{{/WithDockerImages}}
+          args:
+            - --https-address=:8443
+            - --provider=openshift
+            - --client-id={{#Restricted}}system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client{{/Restricted}}{{^Restricted}}${OPENSHIFT_OAUTH_CLIENT_ID}{{/Restricted}}
+            - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
+            - --upstream=http://127.0.0.1:8080
+            - --tls-cert=/etc/tls/private/tls.crt
+            - --tls-key=/etc/tls/private/tls.key
+            - --cookie-secret=${OAUTH_COOKIE_SECRET}
+            - --pass-access-token
+            - --skip-provider-button
+            - --skip-auth-regex=/api/v1/swagger.*
+            - --skip-auth-regex=/api/v1/index.html
+            - --skip-auth-regex=/api/v1/credentials/callback
+            - --skip-auth-preflight
+            {{#Restricted}}- --openshift-sar={"namespace":"${OPENSHIFT_PROJECT}","resource":"pods","verb":"get"}{{/Restricted}}
+          ports:
+          - containerPort: 8443
+            name: public
+            protocol: TCP
+{{^Probeless}}
+          readinessProbe:
+            tcpSocket:
+              port: 8443
+          livenessProbe:
+            tcpSocket:
+              port: 8443{{/Probeless}}
+          volumeMounts:
+          - mountPath: /etc/tls/private
+            name: syndesis-atlasmap-tls
         volumes:
-        - name: syndesis-atlasmap-tls
+        - name: syndesis-atlasmap-openshift-ca
           emptyDir: {}
         - name: config-volume
           configMap:
             name: syndesis-atlasmap-config
+        - name: syndesis-atlasmap-tls
+          secret:
+            secretName: syndesis-atlasmap-tls
     triggers:
     - type: ConfigChange
 {{^WithDockerImages}}
@@ -182,6 +225,15 @@
         from:
           kind: ImageStreamTag
           name: {{ Images.Syndesis.Atlasmap }}:{{ Tags.Atlasmap }}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-oauthproxy
+        from:
+          kind: ImageStreamTag
+          name: {{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 {{/WithDockerImages}}
@@ -206,6 +258,7 @@
     name: syndesis-atlasmap-config
   data:
     application.yml: |-
+      server.address: 127.0.0.1
       cors:
 {{^AllowLocalHost}}
         allowedOrigins: https://${ROUTE_HOSTNAME}

@@ -8,7 +8,6 @@
     annotations:
       service.alpha.openshift.io/serving-cert-secret-name: syndesis-ui-tls
       service.alpha.openshift.io/dependencies: |
-        [ {"name":"syndesis-keycloak","kind":"Service"},
           {"name":"syndesis-rest","kind":"Service"},
           {"name":"syndesis-verifier","kind":"Service"},
           {"name":"syndesis-atlasmap","kind":"Service"},
@@ -17,9 +16,9 @@
           {"name":"syndesis-db","kind":"Service"} ]
   spec:
     ports:
-    - port: 8080
+    - port: 8443
       protocol: TCP
-      targetPort: 8080
+      targetPort: 8443
     selector:
       app: syndesis
       component: syndesis-ui
@@ -33,10 +32,10 @@
   spec:
     host: ${ROUTE_HOSTNAME}
     port:
-      targetPort: 8080
+      targetPort: 8443
     tls:
       insecureEdgeTerminationPolicy: Redirect
-      termination: edge
+      termination: reencrypt
     to:
       kind: Service
       name: syndesis-ui
@@ -83,14 +82,18 @@
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
           livenessProbe:
-            httpGet:
-              path: "/"
-              port: 8080
+            exec:
+              command:
+              - curl
+              - -sSLf
+              - http://localhost:8080
             initialDelaySeconds: 30
           readinessProbe:
-            httpGet:
-              path: "/"
-              port: 8080
+            exec:
+              command:
+              - curl
+              - -sSLf
+              - http://localhost:8080
             initialDelaySeconds: 1{{/Probeless}}
           ports:
           - containerPort: 8080
@@ -103,10 +106,46 @@
               memory: 255Mi
             requests:
               memory: 50Mi
+        - name: syndesis-oauthproxy
+{{^WithDockerImages}}
+          image: ' '{{/WithDockerImages}}{{#WithDockerImages}}
+          image: ${SYNDESIS_REGISTRY}/{{Images.OAuthProxyImagePrefix}}/{{ Images.Syndesis.OAuthProxy }}:{{ Tags.OAuthProxy }}{{/WithDockerImages}}
+          args:
+            - --https-address=:8443
+            - --provider=openshift
+            - --client-id={{#Restricted}}system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client{{/Restricted}}{{^Restricted}}${OPENSHIFT_OAUTH_CLIENT_ID}{{/Restricted}}
+            - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
+            - --upstream=http://127.0.0.1:8080
+            - --tls-cert=/etc/tls/private/tls.crt
+            - --tls-key=/etc/tls/private/tls.key
+            - --cookie-secret=${OAUTH_COOKIE_SECRET}
+            - --pass-access-token
+            - --skip-provider-button
+            - --skip-auth-regex=/api/v1/swagger.*
+            - --skip-auth-regex=/api/v1/index.html
+            - --skip-auth-regex=/api/v1/credentials/callback
+            - --skip-auth-preflight
+            {{#Restricted}}- --openshift-sar={"namespace":"${OPENSHIFT_PROJECT}","resource":"pods","verb":"get"}{{/Restricted}}
+          ports:
+          - containerPort: 8443
+            name: public
+            protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: 8443
+          livenessProbe:
+            tcpSocket:
+              port: 8443
+          volumeMounts:
+          - mountPath: /etc/tls/private
+            name: syndesis-ui-tls
         volumes:
         - configMap:
             name: syndesis-ui-config
           name: config-volume
+        - secret:
+            secretName: syndesis-ui-tls
+          name: syndesis-ui-tls
     triggers:
 {{^WithDockerImages}}
     - imageChangeParams:
@@ -116,6 +155,15 @@
         from:
           kind: ImageStreamTag
           name: {{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-oauthproxy
+        from:
+          kind: ImageStreamTag
+          name: {{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 {{/WithDockerImages}}
@@ -137,14 +185,6 @@
           "baseXMLInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/xml/",
           "baseJSONInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/json/",
           "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/"
-        },
-        "oauth": {
-          "clientId": "syndesis-ui",
-          "scopes": ["openid"],
-          "oidc": true,
-          "hybrid": true,
-          "issuer": "https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}",
-          "auto-link-github": ${CONTROLLERS_INTEGRATION_ENABLED}
         },
 {{#Productized}}
         "branding": {

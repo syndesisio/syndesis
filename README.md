@@ -58,11 +58,6 @@ Once all pods are started up, you should be able to access the Syndesis at `http
 
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
-| **KEYCLOAK_ADMIN_USERNAME** |  The Keycloak admin username | admin |
-| **KEYCLOAK_ADMIN_PASSWORD** | The Keycloak admin password | _(generated)_ |
-| **KEYCLOAK_SYNDESIS_REALM_NAME** | Syndesis Keycloak realm name | syndesis |
-| **KEYCLOAK_SYNDESIS_REST_CLIENT_SECRET** | Syndesis REST service client secret | _(generated)_ |
-| **KEYCLOAK_ALLOW_ANY_HOSTNAME** | The Keycloack parameter to disable hostname validation on  certificate | false |
 | **OPENSHIFT_MASTER** | Public OpenShift master address | https://localhost:8443 |
 | **OPENSHIFT_OAUTH_CLIENT_ID** | OpenShift OAuth client ID | syndesis |
 | **OPENSHIFT_OAUTH_CLIENT_SECRET** | OpenShift OAuth client secret | _(generated)_ |
