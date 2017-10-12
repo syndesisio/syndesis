@@ -106,7 +106,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
               const definition: any = response['_body'] ? JSON.parse(response['_body']) : undefined;
               for (const actionProperty of Object.keys(data)) {
                 if (data[actionProperty] == null) {
-                  this.step.configuredProperties[actionProperty] = definition.propertyDefinitionSteps.map(actionDefinitionStep => {
+                  this.step.configuredProperties[actionProperty] = definition.propertyDefinitionSteps.map((actionDefinitionStep) => {
                     return actionDefinitionStep.properties[actionProperty].defaultValue;
                   })[0];
                 }
@@ -152,7 +152,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       .fetchMetadata(
         this.step.connection,
         this.step.action,
-        this.step.configuredProperties || {},
+        this.configuredPropertiesForMetadataCall(),
       )
       .toPromise()
       .then(response => {
@@ -230,6 +230,26 @@ export class IntegrationsConfigureActionComponent extends FlowPage
         this.detector.detectChanges();
       } catch (err) {}
     }, 30);
+  }
+
+  configuredPropertiesForMetadataCall() {
+    // fetches all properties from 0..this.position-1 steps, this way
+    // the backend does not fix a value and drills down into the detail
+    // of the selected value in this.position step, this allows enum
+    // values to be present in the same way as they are present when no
+    // value is selected by the user
+    const props = {};
+    const stepDefinitions = this.step.action.definition.propertyDefinitionSteps;
+    for (let p = 0; p < this.page; p++) {
+      for (const prop in stepDefinitions[p].properties) {
+        // we don't want null or undefined values here
+        if (this.step.configuredProperties[prop] != null) {
+          props[prop] = this.step.configuredProperties[prop];
+        }
+      }
+    }
+
+    return props;
   }
 
   ngOnInit() {
