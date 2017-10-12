@@ -30,7 +30,7 @@ jobs:
       - checkout
 
       - restore_cache:
-          key: syndesis-rest-m2-{{ checksum "pom.xml" }}-{{ checksum "connector-catalog/pom.xml" }}-{{ checksum "controllers/pom.xml" }}-{{ checksum "core/pom.xml" }}-{{ checksum "credential/pom.xml" }}-{{ checksum "dao/pom.xml" }}-{{ checksum "github/pom.xml" }}-{{ checksum "jsondb/pom.xml" }}-{{ checksum "model/pom.xml" }}-{{ checksum "model2/pom.xml" }}-{{ checksum "openshift/pom.xml" }}-{{ checksum "project-generator/pom.xml" }}-{{ checksum "rest/pom.xml" }}-{{ checksum "syndesis-maven-plugin/pom.xml" }}-{{ checksum "runtime/pom.xml" }}-{{ checksum "verifier/pom.xml" }}-{{ checksum "inspector/pom.xml" }}-{{ checksum "setup/pom.xml" }}
+          key: syndesis-rest-m2-{{ checksum "pom.xml" }}-{{ checksum "connector-catalog/pom.xml" }}-{{ checksum "controllers/pom.xml" }}-{{ checksum "core/pom.xml" }}-{{ checksum "credential/pom.xml" }}-{{ checksum "dao/pom.xml" }}-{{ checksum "jsondb/pom.xml" }}-{{ checksum "model/pom.xml" }}-{{ checksum "model2/pom.xml" }}-{{ checksum "openshift/pom.xml" }}-{{ checksum "project-generator/pom.xml" }}-{{ checksum "rest/pom.xml" }}-{{ checksum "syndesis-maven-plugin/pom.xml" }}-{{ checksum "runtime/pom.xml" }}-{{ checksum "verifier/pom.xml" }}-{{ checksum "inspector/pom.xml" }}-{{ checksum "setup/pom.xml" }}
           key: syndesis-rest-m2-{{ checksum "pom.xml" }}
           key: syndesis-rest-m2
 
@@ -39,7 +39,7 @@ jobs:
           command: ./mvnw --batch-mode -U -Pfabric8 install
 
       - save_cache:
-          key: syndesis-rest-m2-{{ checksum "pom.xml" }}-{{ checksum "connector-catalog/pom.xml" }}-{{ checksum "controllers/pom.xml" }}-{{ checksum "core/pom.xml" }}-{{ checksum "credential/pom.xml" }}-{{ checksum "dao/pom.xml" }}-{{ checksum "github/pom.xml" }}-{{ checksum "jsondb/pom.xml" }}-{{ checksum "model/pom.xml" }}-{{ checksum "model2/pom.xml" }}-{{ checksum "openshift/pom.xml" }}-{{ checksum "project-generator/pom.xml" }}-{{ checksum "rest/pom.xml" }}-{{ checksum "syndesis-maven-plugin/pom.xml" }}-{{ checksum "runtime/pom.xml" }}-{{ checksum "verifier/pom.xml" }}-{{ checksum "inspector/pom.xml" }}-{{ checksum "setup/pom.xml" }}
+          key: syndesis-rest-m2-{{ checksum "pom.xml" }}-{{ checksum "connector-catalog/pom.xml" }}-{{ checksum "controllers/pom.xml" }}-{{ checksum "core/pom.xml" }}-{{ checksum "credential/pom.xml" }}-{{ checksum "dao/pom.xml" }}-{{ checksum "jsondb/pom.xml" }}-{{ checksum "model/pom.xml" }}-{{ checksum "model2/pom.xml" }}-{{ checksum "openshift/pom.xml" }}-{{ checksum "project-generator/pom.xml" }}-{{ checksum "rest/pom.xml" }}-{{ checksum "syndesis-maven-plugin/pom.xml" }}-{{ checksum "runtime/pom.xml" }}-{{ checksum "verifier/pom.xml" }}-{{ checksum "inspector/pom.xml" }}-{{ checksum "setup/pom.xml" }}
 
           paths:
           - ~/.m2
