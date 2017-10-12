@@ -34,7 +34,7 @@ jobs:
 
       - run:
           name: Maven
-          command: /run.sh --to syndesis/syndesis-s2i:latest
+          command: ./run.sh --to syndesis/syndesis-s2i:latest
 
       # - save_cache:
       #     key: syndesis-s2i-m2
