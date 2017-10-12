@@ -33,32 +33,31 @@ jobs:
       #     key: syndesis-s2i-image-m2
 
       - run:
-          name: Maven
-          command: ./run.sh --to syndesis/syndesis-s2i:latest
+          name: Docker Build
+          command: |
+            curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
+            ./run.sh --to syndesis/syndesis-s2i:latest
 
-      # - save_cache:
-      #     key: syndesis-s2i-m2
-      #     paths:
-      #     - ~/.m2
+       # - save_cache:
+       #    key: syndesis-s2i-m2
+       #    paths:
+       #    - ~/.m2
 
       - deploy:
           command: |
             echo "hi"
-#            if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
-#              exit 0
-#            fi
-
-#            curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
-
-#            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#              docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-#              ./run.sh --to syndesis/syndesis-s2i:latest
-#              docker push syndesis/syndesis-s2i:latest | cat -
-#            fi
-#            if [[ "${CIRCLE_TAG}" =~ ^[0-9]+(\.[0-9]+){2} ]]; then
-#              docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-#              ./run.sh --to syndesis/syndesis-s2i:${CIRCLE_TAG}
-#              docker push syndesis/syndesis-s2i:${CIRCLE_TAG} | cat -
-#              docker tag syndesis/syndesis-s2i:${CIRCLE_TAG} syndesis/syndesis-s2i:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
-#              docker push syndesis/syndesis-s2i:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
-#            fi
+            if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
+              exit 0
+            fi
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+              ./run.sh --to syndesis/syndesis-s2i:latest
+              docker push syndesis/syndesis-s2i:latest | cat -
+            fi
+            if [[ "${CIRCLE_TAG}" =~ ^[0-9]+(\.[0-9]+){2} ]]; then
+              docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+              ./run.sh --to syndesis/syndesis-s2i:${CIRCLE_TAG}
+              docker push syndesis/syndesis-s2i:${CIRCLE_TAG} | cat -
+              docker tag syndesis/syndesis-s2i:${CIRCLE_TAG} syndesis/syndesis-s2i:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
+              docker push syndesis/syndesis-s2i:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
+           fi
