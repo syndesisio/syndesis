@@ -15,6 +15,9 @@
  */
 package io.syndesis.verifier.v1.metadata;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +38,13 @@ public final class SyndesisMetadata<T> {
         this.properties = properties;
         this.inputSchema = inputSchema;
         this.outputSchema = outputSchema;
+
+        if (properties != null) {
+            final Collection<List<PropertyPair>> propertyValues = properties.values();
+            for (final List<PropertyPair> propertyPairs : propertyValues) {
+                Collections.sort(propertyPairs, Comparator.comparing(PropertyPair::getDisplayValue));
+            }
+        }
     }
 
 }

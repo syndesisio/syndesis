@@ -2,6 +2,7 @@ package io.syndesis.verifier.v1.metadata;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -85,13 +86,13 @@ public class SqlStoredMetadataAdapterTest {
         SyndesisMetadata<JsonSchema> syndesisMetaData = adapter.adapt(parameters, metadata.get());
 
         ObjectMapper mapper = new ObjectMapper();
-        String expectedListOfProcedures = IOUtils.toString((this.getClass().getResource("/sql/stored_procedure_list.json")));
+        String expectedListOfProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8);
         String actualListOfProcedures = (mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData));
         assertEquals(expectedListOfProcedures, actualListOfProcedures);
 
         parameters.put("procedureName", "DEMO_ADD");
         SyndesisMetadata<JsonSchema> syndesisMetaData2 = adapter.adapt(parameters, metadata.get());
-        String expectedMetadata = IOUtils.toString((this.getClass().getResource("/sql/demo_add_metadata.json")));
+        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/demo_add_metadata.json"), StandardCharsets.UTF_8);
         String actualMetadata = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata);
     }
