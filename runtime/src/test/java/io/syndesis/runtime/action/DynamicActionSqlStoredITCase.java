@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 import org.junit.Before;
@@ -77,7 +78,7 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
                 "/api/v1/connectors/sql-stored-connector/actions/io.syndesis:sql-stored-connector:latest"))//
             .withHeader("Accept", containing("application/json"))//
             .withRequestBody(
-                    equalToJson("{\"template\":null,\"noop\":null,\"procedureName\":null,\"batch\":null,\"user\":\"sa\"}"))
+                    equalToJson("{\"template\":null,\"procedureName\":null,\"user\":\"sa\"}"))
             .willReturn(aResponse()//
                 .withStatus(200)//
                 .withHeader("Content-Type", "application/json")//
@@ -88,7 +89,7 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
                 "/api/v1/connectors/sql-stored-connector/actions/io.syndesis:sql-stored-connector:latest"))//
             .withHeader("Accept", equalTo("application/json"))//
             .withRequestBody(
-                    equalToJson("{\"template\":null,\"batch\":null,\"noop\":null,\"user\":\"sa\",\"procedureName\":\"DEMO_ADD\"}"))
+                    equalToJson("{\"template\":null,\"user\":\"sa\",\"procedureName\":\"DEMO_ADD\"}"))
             .willReturn(aResponse()//
                 .withStatus(200)//
                 .withHeader("Content-Type", "application/json")//
@@ -105,8 +106,6 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
             "/api/v1/connections/" + connectionId + "/actions/io.syndesis:sql-stored-connector:latest", null,
             ActionDefinition.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
-        //ObjectMapper mapper = new ObjectMapper();
-        //System.out.println("firstResponse:" + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(firstResponse));
         ConfigurationProperty procedureNames = firstResponse.getBody().getPropertyDefinitionSteps().iterator().next().getProperties().get("procedureName");
         assertThat(procedureNames.getEnum().size() == 2);
         assertThat(procedureNames.getEnum().iterator().next().getLabel().startsWith("DEMO_ADD"));
@@ -116,18 +115,8 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
                 Collections.singletonMap("procedureName", "DEMO_ADD"),
                 ActionDefinition.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
-        //System.out.println("secondResponse:" + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(secondResponse));
-        //System.out.println("inputSchema: " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(secondResponse.getBody().getInputDataShape().get()));
-        boolean isValid = false;
-        for (String propertyName :secondResponse.getBody().getPropertyDefinitionSteps().get(1).getProperties().keySet()) {
-            if ("template".equals(propertyName)) {
-                ConfigurationProperty property = secondResponse.getBody().getPropertyDefinitionSteps().get(1).getProperties().get(propertyName);
-                assertThat("DEMO_ADD( IN INTEGER ${body[A],  IN INTEGER ${body[B],  OUT INTEGER ${body[C])".equals(property.getDefaultValue()));
-                isValid = true;
-                break;
-            }
-        }
-        assertThat(isValid);
+        final Map<String, ConfigurationProperty> secondRequestProperties = secondResponse.getBody().getPropertyDefinitionSteps().get(0).getProperties();
+        assertThat(secondRequestProperties.get("template").getDefaultValue()).isEqualTo("DEMO_ADD(INTEGER ${body[A]}, INTEGER ${body[B]}, INTEGER ${body[C]})");
     }
 
     private static String read(final String path) {
