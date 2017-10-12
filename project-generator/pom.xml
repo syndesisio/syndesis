@@ -29,28 +29,6 @@
   <artifactId>project-generator</artifactId>
   <name>Syndesis REST :: Project Generator</name>
 
-  <repositories>
-    <repository>
-      <id>apache.snapshots</id>
-      <name>Apache Development Snapshot Repository</name>
-      <url>https://repository.apache.org/content/repositories/snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>jcenter-releases</id>
-      <name>jcenter</name>
-      <url>https://jcenter.bintray.com</url>
-    </repository>
-  </repositories>
-
   <dependencies>
 
     <dependency>
