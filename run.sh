@@ -35,6 +35,9 @@ while [ $# -gt 0 ]; do
 			echo "Building Image: $to"
 			docker build $dir -t $to
 			shift 2 
+		*)
+			echo "Invalid Syntax. Unsupported arg: $1"
+			exit 1
 		;;
 	esac
 done
