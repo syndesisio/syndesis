@@ -36,6 +36,10 @@ jobs:
           name: Install Docker client
           command: |
             curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
+
+      - run:
+          name: Build Image
+          command: |
             ./run.sh --to syndesis/syndesis-s2i:latest
 
       # - save_cache:
@@ -44,12 +48,13 @@ jobs:
       #     - ~/.m2
 
       - deploy:
+          name: Deploy Image to Docker Hub
           command: |
             if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
               exit 0
             fi
 
-            curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
+            # curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
 
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
