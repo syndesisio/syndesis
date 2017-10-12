@@ -43,7 +43,7 @@
     <jackson.version>2.8.7</jackson.version>
     <fabric8-maven-plugin.version>3.3.0</fabric8-maven-plugin.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
-    <syndesis-connector.version>0.5.7</syndesis-connector.version>
+    <syndesis-connector.version>0.5.8</syndesis-connector.version>
     <!-- Base image to use for Docker images. Pinned to 1.2.3 since 1.2.4 has issues because
          of Java 1.8.0_121 (1.2.3 is running 1.8.0_111) -->
     <java-image>fabric8/java-jboss-openjdk8-jdk:1.2.3</java-image>
