@@ -76,61 +76,6 @@
     </repository>
   </distributionManagement>
 
-  <repositories>
-
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>jcenter-releases</id>
-      <name>jcenter</name>
-      <url>https://jcenter.bintray.com</url>
-    </repository>
-
-    <!-- needed for Spring Social Salesforce fork from mikegirard/spring-social-salesforce -->
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
-
-    <!-- required for camel -->
-    <repository>
-      <id>jboss-ea</id>
-      <name>JBoss Early-access repository</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>jcenter-releases</id>
-      <name>jcenter</name>
-      <url>https://jcenter.bintray.com</url>
-    </pluginRepository>
-
-    <!-- required for camel -->
-    <pluginRepository>
-      <id>jboss-ea</id>
-      <name>JBoss Early-access repository</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -144,12 +89,12 @@
 
     <assertj-core.version>3.6.2</assertj-core.version>
     <caffeine.version>2.4.0</caffeine.version>
-    <camel.version>2.20.0.fuse-000106</camel.version>
+    <camel.version>2.20.0</camel.version>
     <jdbi.version>2.78</jdbi.version>
     <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
     <immutables.version>2.5.1</immutables.version>
     <infinispan.version>9.0.0.Final</infinispan.version>
-    <jackson.version>2.8.9</jackson.version>
+    <jackson.version>2.8.10</jackson.version>
     <junit.version>4.12</junit.version>
     <keycloak.version>2.5.4.Final</keycloak.version>
     <kubernetes.client.version>2.2.13</kubernetes.client.version>
