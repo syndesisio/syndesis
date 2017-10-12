@@ -15,7 +15,7 @@
     "test:cc": "yarn ng test -- --watch=false --cc",
     "test:xvfb": "docker run --rm -v `pwd`:/syndesis-ui:z -w /syndesis-ui -u `id -u` docker.io/syndesis/karma-xvfb ./karma-xvfb.sh",
     "sw": "sw-precache --root=dist --config=sw-precache-config.js",
-    "docker:build": "yarn ng build -- --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest .",
+    "docker:build": "yarn ng build -- --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest . && docker tag syndesis/syndesis-ui:latest docker.io/syndesis/syndesis-ui:latest",
     "commit": "yarn git-cz"
   },
   "private": true,
@@ -31,7 +31,6 @@
     "@angular/router": "4.1.2",
     "@ng2-dynamic-forms/core": "1.4.20",
     "@ng2-dynamic-forms/ui-bootstrap": "1.4.20",
-    "angular-oauth2-oidc-hybrid": "1.0.26",
     "angular2-text-mask": "^8.0.1",
     "better-npm-run": "^0.0.15",
     "bootstrap": "3.3.7",

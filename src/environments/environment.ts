@@ -14,13 +14,5 @@ export const environment = Object.freeze({
       baseJSONInspectionServiceUrl: 'http://localhost:8585/v2/atlas/json/',
       baseMappingServiceUrl: 'http://localhost:8585/v2/atlas/',
     },
-    oauth: {
-      clientId: 'syndesis-ui',
-      scopes: [],
-      oidc: true,
-      hybrid: true,
-      issuer: 'http://localhost:8282/auth/realms/syndesis-test',
-      'auto-link-github': true,
-    },
   },
 });
