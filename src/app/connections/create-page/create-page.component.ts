@@ -133,6 +133,12 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     }
   }
 
+  doCreate() {
+    this.current.events.emit({
+      kind: 'connection-trigger-create',
+    });
+  }
+
   handleEvent(event: ConnectionEvent) {
     const page = this.getCurrentPage();
     switch (event.kind) {

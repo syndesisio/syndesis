@@ -1,7 +1,13 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 
+import { Subscription } from 'rxjs/Subscription';
 import { CurrentConnectionService } from '../current-connection';
 import { Connection } from '../../../model';
 import { CanComponentDeactivate } from '../../../common/can-deactivate-guard.service';
@@ -15,10 +21,10 @@ const category = getCategory('Connections');
   selector: 'syndesis-connections-review',
   templateUrl: 'review.component.html',
 })
-export class ConnectionsReviewComponent implements CanComponentDeactivate {
-
+export class ConnectionsReviewComponent implements CanComponentDeactivate, OnInit, OnDestroy {
   saved = false;
   reviewForm: FormGroup;
+  sub: Subscription = undefined;
 
   constructor(
     private current: CurrentConnectionService,
@@ -42,11 +48,13 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate {
   async validateNameNotTaken() {
     const control = this.reviewForm.get('name');
     if (!control.hasError('required')) {
-      const validationErrors = await this.connectionService.validateName(control.value);
+      const validationErrors = await this.connectionService.validateName(
+        control.value,
+      );
       control.setErrors(validationErrors);
       this.detector.markForCheck();
     }
-}
+  }
 
   get name() {
     return this.reviewForm.get('name');
@@ -57,7 +65,9 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate {
       this.touchFormFields();
     } else {
       this.current.connection.name = this.reviewForm.get('name').value;
-      this.current.connection.description = this.reviewForm.get('description').value;
+      this.current.connection.description = this.reviewForm.get(
+        'description',
+      ).value;
       this.current.connection.tags = this.reviewForm.get('tags').value;
       this.saved = true;
       this.current.events.emit({
@@ -86,10 +96,26 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate {
   }
 
   canDeactivate(nextState: RouterStateSnapshot): boolean | Promise<boolean> {
-    return this.saved ||
-           nextState.url === '/connections/create/cancel' ||
-           nextState.url === '/connections/create/configure-fields' ||
-           this.modalService.show().then(modal => modal.result);
+    return (
+      this.saved ||
+      nextState.url === '/connections/create/cancel' ||
+      nextState.url === '/connections/create/configure-fields' ||
+      this.modalService.show().then(modal => modal.result)
+    );
+  }
+
+  ngOnInit() {
+    this.sub = this.current.events.subscribe((event) => {
+      if (event.kind === 'connection-trigger-create') {
+        this.createConnection();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 
 }

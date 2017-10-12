@@ -3,9 +3,14 @@
     <div class="card-pf">
       <h2 class="card-pf-title">Add Connection Details</h2>
       <div class="card-pf-body">
-        <form id="reviewForm" [formGroup]="reviewForm" (ngSubmit)="createConnection()" class="form-horizontal" novalidate>
-          <p class="fields-status-pf">The fields marked with <span class="required-pf">*</span> are required.</p>
-          <div class="form-group" [ngClass]="{'has-error': name.invalid && name.touched}">
+        <form id="reviewForm"
+              [formGroup]="reviewForm"
+              class="form-horizontal"
+              novalidate>
+          <p class="fields-status-pf">The fields marked with
+            <span class="required-pf">*</span> are required.</p>
+          <div class="form-group"
+               [ngClass]="{'has-error': name.invalid && name.touched}">
             <label class="col-sm-3 control-label required-pf">Connection Name</label>
             <!-- data-id is used in automated tests -->
             <div class="col-sm-9">
@@ -15,10 +20,12 @@
                      (blur)="validateNameNotTaken()"
                      required>
               <div *ngIf="name.invalid && name.touched">
-                <span class="help-block" *ngIf="name.errors.required">
+                <span class="help-block"
+                      *ngIf="name.errors.required">
                   Name is required
                 </span>
-                <span class="help-block" *ngIf="name.errors.UniqueProperty">
+                <span class="help-block"
+                      *ngIf="name.errors.UniqueProperty">
                   That name is taken. Try another.
                 </span>
               </div>
