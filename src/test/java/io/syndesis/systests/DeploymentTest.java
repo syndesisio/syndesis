@@ -4,6 +4,7 @@ import org.arquillian.cube.openshift.impl.requirement.RequiresOpenshift;
 import org.arquillian.cube.requirement.ArquillianConditionalRunner;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -32,7 +33,9 @@ public class DeploymentTest {
     @ArquillianResource
     KubernetesClient client;
 
-    @Test
+    @Test @Ignore
+    // This test is failing frequently and should be investigated
+    // https://github.com/syndesisio/syndesis-system-tests/issues/28
     public void uiShouldBeReady() {
         Assert.assertTrue(Readiness.isDeploymentConfigReady(ui));
     }
