@@ -80,14 +80,15 @@
 
           <!-- User w/ No Dropdown -->
 
+          <!--
           <li class="nav-item-iconic">
             <span title="Username"
                   class="fa pficon-user"></span>
             <span class="username">{{( user | async)?.name || ( user | async)?.fullName || ( user | async)?.username}}</span>
           </li>
+          -->
 
           <!-- User Dropdown -->
-          <!--
           <li dropdown
               class="dropdown user">
             <a dropdownToggle
@@ -104,6 +105,10 @@
                 class="dropdown-menu"
                 aria-labelledby="dropdownMenu2">
               <li>
+                <a (click)="logout()">Logout</a>
+              </li>
+              <!--
+              <li>
                 <a (click)="resetDB()">Reset DB</a>
               </li>
               <li>
@@ -112,9 +117,9 @@
               <li>
                 <a (click)="showImportDB()">Import DB</a>
               </li>
+              -->
             </ul>
           </li>
-        -->
         </ul>
       </nav>
     </nav>
