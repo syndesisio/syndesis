@@ -23,9 +23,9 @@
     name: syndesis-rest
   spec:
     ports:
-    - port: 80
+    - port: 443
       protocol: TCP
-      targetPort: 8080
+      targetPort: 8443
     selector:
       app: syndesis
       component: syndesis-rest
@@ -40,10 +40,10 @@
     host: ${ROUTE_HOSTNAME}
     path: /api
     port:
-      targetPort: 8080
+      targetPort: 8443
     tls:
       insecureEdgeTerminationPolicy: Redirect
-      termination: edge
+      termination: reencrypt
     to:
       kind: Service
       name: syndesis-rest
@@ -59,7 +59,7 @@
     host: ${ROUTE_HOSTNAME}
     path: /mapper
     port:
-      targetPort: 8080
+      targetPort: 8443
     tls:
       insecureEdgeTerminationPolicy: Redirect
       termination: edge
@@ -106,7 +106,7 @@
                 "-ca-dir", "/usr/share/ca-certificates/mozilla"
               ],
               "volumeMounts": [{
-                "name": "syndesis-rest-tls",
+                "name": "syndesis-rest-service-ca",
                 "mountPath": "/tls-keystore"
               }],
               "resources": {
@@ -133,7 +133,7 @@
           - -ca-dir
           - /usr/share/ca-certificates/mozilla
           volumeMounts:
-          - name: syndesis-rest-tls
+          - name: syndesis-rest-service-ca
             mountPath: /tls-keystore
           resources:
             limits:
@@ -162,16 +162,6 @@
             value: ${CONTROLLERS_INTEGRATION_ENABLED}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
-          - name: KEYCLOAK_ADMIN_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: syndesis-keycloak-admin
-                key: username
-          - name: KEYCLOAK_ADMIN_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: syndesis-keycloak-admin
-                key: password
 {{^WithDockerImages}}
           image: ' '
 {{/WithDockerImages}}{{#WithDockerImages}}
@@ -180,15 +170,18 @@
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
           livenessProbe:
-            httpGet:
-              path: /health
-              port: 8181
-              scheme: HTTP
+            exec:
+              command:
+              - curl
+              - -sSLf
+              - http://localhost:8080
             initialDelaySeconds: 180
           readinessProbe:
-            httpGet:
-              path: "/health"
-              port: 8181
+            exec:
+              command:
+              - curl
+              - -sSLf
+              - http://localhost:8181/health
             initialDelaySeconds: 10{{/Probeless}}
           ports:
           - containerPort: 8080
@@ -199,7 +192,7 @@
             name: jolokia
           workingDir: /deployments
           volumeMounts:
-          - name: syndesis-rest-tls
+          - name: syndesis-rest-service-ca
             mountPath: /tls-keystore
           - name: config-volume
             mountPath: /deployments/config
@@ -211,12 +204,50 @@
               memory: 612Mi
             requests:
               memory: 256Mi
+
+        - name: syndesis-oauthproxy
+{{^WithDockerImages}}
+          image: ' '{{/WithDockerImages}}{{#WithDockerImages}}
+          image: ${SYNDESIS_REGISTRY}/{{Images.OAuthProxyImagePrefix}}/{{ Images.Syndesis.OAuthProxy }}:{{ Tags.OAuthProxy }}{{/WithDockerImages}}
+          args:
+            - --https-address=:8443
+            - --provider=openshift
+            - --client-id={{#Restricted}}system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client{{/Restricted}}{{^Restricted}}${OPENSHIFT_OAUTH_CLIENT_ID}{{/Restricted}}
+            - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
+            - --upstream=http://127.0.0.1:8080
+            - --tls-cert=/etc/tls/private/tls.crt
+            - --tls-key=/etc/tls/private/tls.key
+            - --cookie-secret=${OAUTH_COOKIE_SECRET}
+            - --pass-access-token
+            - --skip-provider-button
+            - --skip-auth-regex=/api/v1/swagger.*
+            - --skip-auth-regex=/api/v1/index.html
+            - --skip-auth-regex=/api/v1/credentials/callback
+            - --skip-auth-preflight
+            {{#Restricted}}- --openshift-sar={"namespace":"${OPENSHIFT_PROJECT}","resource":"pods","verb":"get"}{{/Restricted}}
+          ports:
+          - containerPort: 8443
+            name: public
+            protocol: TCP
+{{^Probeless}}
+          readinessProbe:
+            tcpSocket:
+              port: 8443
+          livenessProbe:
+            tcpSocket:
+              port: 8443{{/Probeless}}
+          volumeMounts:
+          - mountPath: /etc/tls/private
+            name: syndesis-rest-tls
         volumes:
-        - name: syndesis-rest-tls
+        - name: syndesis-rest-service-ca
           emptyDir: {}
         - name: config-volume
           configMap:
             name: syndesis-rest-config
+        - name: syndesis-rest-tls
+          secret:
+            secretName: syndesis-rest-tls
     triggers:
 {{^WithDockerImages}}
     - imageChangeParams:
@@ -226,6 +257,15 @@
         from:
           kind: ImageStreamTag
           name: {{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-oauthproxy
+        from:
+          kind: ImageStreamTag
+          name: {{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 {{/WithDockerImages}}
@@ -251,6 +291,7 @@
     name: syndesis-rest-config
   data:
     application.yml: |-
+      server.address: 127.0.0.1
       deployment:
         load-demo-data: ${DEMO_DATA_ENABLED}
       cors:
@@ -276,6 +317,7 @@
         basic:
           enabled: false
       management:
+        address: 127.0.0.1
         port: 8181
         security:
           enabled: true
@@ -289,18 +331,5 @@
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
         builderImageStreamTag: {{ Images.S2i.ImageStream }}:{{ Images.S2i.Tag }}
-      keycloak:
-        enabled: true
-        configurationFile: file:config/syndesis-client.json
-        adminPassword: ${KEYCLOAK_ADMIN_PASSWORD}
       dao:
         kind: jsondb
-    syndesis-client.json: |-
-      {
-        "realm": "${KEYCLOAK_SYNDESIS_REALM_NAME}",
-        "bearer-only": true,
-        "auth-server-url": "https://${ROUTE_HOSTNAME}/auth",
-        "ssl-required": "external",
-        "resource": "syndesis-rest",
-        "allow-any-hostname" : ${KEYCLOAK_ALLOW_ANY_HOSTNAME}
-      }

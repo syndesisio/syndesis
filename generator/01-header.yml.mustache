@@ -21,37 +21,7 @@ parameters:
 - name: ROUTE_HOSTNAME
   description: The external hostname to access Syndesis
   required: true
-- name: GITHUB_OAUTH_CLIENT_ID
-  description: GitHub OAuth client ID
-  value: dummy
-  required: true
-- name: GITHUB_OAUTH_CLIENT_SECRET
-  description: GitHub OAuth client secret
-  value: dummy
-  required: true
 # Parameters with defaults:
-- name: KEYCLOAK_ADMIN_USERNAME
-  description: The Keycloak admin username
-  value: admin
-  required: true
-- name: KEYCLOAK_ADMIN_PASSWORD
-  description: The Keycloak admin password
-  generate: expression
-  from: "[a-zA-Z0-9]{40}"
-  required: true
-- name: KEYCLOAK_SYNDESIS_REALM_NAME
-  description: Keycloak Syndesis realm name
-  value: syndesis
-  required: true
-- name: KEYCLOAK_SYNDESIS_REST_CLIENT_SECRET
-  description: Syndesis REST service client secret
-  generate: expression
-  from: "[a-zA-Z0-9]{64}"
-  required: true
-- name: KEYCLOAK_ALLOW_ANY_HOSTNAME
-  description: The Keycloack parameter to disable hostname validation on certificate
-  value: "false"
-  required: true
 - name: OPENSHIFT_MASTER
   description: Public OpenShift master address
   value: https://localhost:8443
@@ -145,8 +115,11 @@ parameters:
   displayName: Image Stream Namespace
   name: IMAGE_STREAM_NAMESPACE
   value: '{{ Images.ImageStreamNamespace }}'
+- description: Secret to use to encrypt oauth cookies
+  displayName: OAuth Cookie Secret
+  name: OAUTH_COOKIE_SECRET
+  generate: expression
+  from: '[a-zA-Z0-9]{32}'
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
-
-    FYI Keycloak Admin username is '${KEYCLOAK_ADMIN_USERNAME}', password '${KEYCLOAK_ADMIN_PASSWORD}'.
 objects:

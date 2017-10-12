@@ -41,18 +41,6 @@ oc adm policy add-role-to-user edit system:serviceaccount:syndesis-staging:synde
 # Grant jenkins user from syndesis-ci project the proper rights:
 oc adm policy add-role-to-user admin system:serviceaccount:syndesis-ci:jenkins -n syndesis-staging
 
-# Adapt keycloak configuration:
-# - Goto to the OpenShift console
-# - "Resources" -> "Config Maps"
-# - Select "syndesis-keycloak-config"
-# - "Actions" -> "Edit"
-# - Goto to "syndesis-realm.json" field
-# - Look for "redirectUris"
-# - Check that the list includes http://localhost:4200/*"
-#   For example
-#   "redirectUris": [ "https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/*", "http://localhost:4200/*" ]
-# - Redeploy syndesis-keycloak
-
 # Adapt syndesis-rest configuration:
 # - Goto to config-map "syndesis-rest-config" and adapt entry "application.yml" (see above)
 # - Check for "http://localhost:4200" in 'allowedOrigins:'

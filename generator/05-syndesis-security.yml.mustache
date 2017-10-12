@@ -8,7 +8,7 @@
       component: syndesis-ui
   secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
   redirectURIs:
-  - https://${ROUTE_HOSTNAME}/auth/realms/${KEYCLOAK_SYNDESIS_REALM_NAME}
+  - https://${ROUTE_HOSTNAME}/
   grantMethod: prompt
 {{/Restricted}}
 
@@ -23,4 +23,4 @@
   subjects:
   - kind: ServiceAccount
     name: syndesis-rest
-    
+
