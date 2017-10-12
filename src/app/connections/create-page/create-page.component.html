@@ -29,10 +29,9 @@
                 [disabled]="!canContinue()">
           Next <i class="fa fa-chevron-right"></i>
         </button>
-        <button type="submit"
-                class="btn btn-primary"
+        <button class="btn btn-primary"
                 *ngIf="getCurrentPage() === 'review'"
-                form="reviewForm"
+                (click)="doCreate()"
                 [disabled]="!canContinue()">Create
         </button>
       </div>
