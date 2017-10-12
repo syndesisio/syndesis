@@ -7,5 +7,17 @@
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Helper</name>
+
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>sonatype-snapshots</id>
+      <name>sonatype</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
+
 </project>
 
