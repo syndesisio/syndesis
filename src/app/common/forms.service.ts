@@ -49,7 +49,7 @@ export class FormFactoryService {
         case 'hidden':
           break;
         default:
-          type = value.enum ? 'select' : 'text';
+          type = (value.enum && value.enum.length) ? 'select' : 'text';
           break;
       }
       // then use the appropriate ng2 dynamic forms constructor
@@ -106,6 +106,15 @@ export class FormFactoryService {
             validators: validators,
             errorMessages: errorMessages,
             options: value.enum,
+          },
+          {
+            element: {
+              label: 'control-label',
+            },
+            grid: {
+              control: 'col-sm-9',
+              label: 'col-sm-3',
+            },
           },
         );
       } else {
