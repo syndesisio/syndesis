@@ -1,23 +1,20 @@
-/* tslint:disable:no-unused-variable */
-
-import { TestBed, async } from '@angular/core/testing';
-import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
+import { async, TestBed } from '@angular/core/testing';
+import { BaseRequestOptions, Http, RequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BsDropdownModule, CollapseModule, ModalModule } from 'ngx-bootstrap';
 import { RestangularModule } from 'ngx-restangular';
-import { OAuthModule } from 'angular-oauth2-oidc-hybrid';
 import { NotificationModule } from 'patternfly-ng';
 
-import { CollapseModule, BsDropdownModule, ModalModule } from 'ngx-bootstrap';
-
-import { SyndesisCommonModule } from './common/common.module';
 import { AppComponent } from './app.component';
-import { ConfigService } from './config.service';
-import { UserService } from './common/user.service';
+import { SyndesisCommonModule } from './common/common.module';
 import { NavigationService } from './common/navigation.service';
+import { UserService } from './common/user.service';
+import { ConfigService } from './config.service';
 import { StoreModule } from './store/store.module';
-
 import { TestSupportService } from './store/test-support.service';
+
+/* tslint:disable:no-unused-variable */
 
 describe('AppComponent', () => {
   beforeEach(() => {
@@ -28,7 +25,6 @@ describe('AppComponent', () => {
         SyndesisCommonModule.forRoot(),
         ModalModule.forRoot(),
         RouterTestingModule.withRoutes([]),
-        OAuthModule.forRoot(),
         CollapseModule.forRoot(),
         BsDropdownModule.forRoot(),
         NotificationModule,

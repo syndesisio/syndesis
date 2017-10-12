@@ -32,14 +32,6 @@
     "debugValidationServiceCalls": false,
     "debugFieldActionServiceCalls": false,
     "debugDocumentParsing": false
-  },
-  "oauth": {
-    "clientId": "syndesis-ui",
-    "scopes": [],
-    "oidc": true,
-    "hybrid": true,
-    "issuer": "http://localhost:8282/auth/realms/syndesis-test",
-    "auto-link-github": true
   }
 }
 
