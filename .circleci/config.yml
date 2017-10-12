@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 version: 2
 jobs:
   build:
@@ -21,16 +20,12 @@ jobs:
     docker:
     - image: openjdk:8-jdk
     environment:
-      MAVEN_OPTS: -Xmx1024m
       DOCKER_VERSION: 17.04.0-ce
 
     steps:
       - setup_remote_docker
 
       - checkout
-
-      # - s2iore_cache:
-      #     key: syndesis-s2i-image-m2
 
       - run:
           name: Install Docker client
@@ -42,19 +37,12 @@ jobs:
           command: |
             ./run.sh --to syndesis/syndesis-s2i:latest
 
-      # - save_cache:
-      #     key: syndesis-s2i-m2
-      #     paths:
-      #     - ~/.m2
-
       - deploy:
           name: Deploy Image to Docker Hub
           command: |
             if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
               exit 0
             fi
-
-            # curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
 
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
