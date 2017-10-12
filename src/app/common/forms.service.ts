@@ -5,6 +5,7 @@ import {
   DynamicCheckboxModel,
   DynamicInputModel,
   DynamicTextAreaModel,
+  DynamicSelectModel,
 } from '@ng2-dynamic-forms/core';
 
 export interface ConfiguredConfigurationProperty extends ConfigurationProperty {
@@ -48,7 +49,7 @@ export class FormFactoryService {
         case 'hidden':
           break;
         default:
-          type = 'text';
+          type = value.enum ? 'select' : 'text';
           break;
       }
       // then use the appropriate ng2 dynamic forms constructor
@@ -91,6 +92,20 @@ export class FormFactoryService {
               control: 'col-sm-9',
               label: 'col-sm-3',
             },
+          },
+        );
+      } else if (type === 'select') {
+        formField = new DynamicSelectModel(
+          {
+            id: key,
+            multiple: false,
+            label: value.displayName || key,
+            value: (values[key] && values[key] in value.enum) ? values[key] : value.defaultValue || value.enum[0].value,
+            hint: value.description,
+            required: value.required,
+            validators: validators,
+            errorMessages: errorMessages,
+            options: value.enum,
           },
         );
       } else {
