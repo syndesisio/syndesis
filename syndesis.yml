@@ -227,6 +227,14 @@ objects:
       name: "2.0"
 
 - apiVersion: v1
+  kind: Secret
+  metadata:
+    name: syndesis-oauth-proxy-cookie-secret
+    labels:
+      app: syndesis
+  stringData:
+    oauthCookieSecret: ${OAUTH_COOKIE_SECRET}
+- apiVersion: v1
   kind: Service
   metadata:
     name: syndesis-ui
@@ -341,7 +349,7 @@ objects:
             - --upstream=http://127.0.0.1:8080
             - --tls-cert=/etc/tls/private/tls.crt
             - --tls-key=/etc/tls/private/tls.key
-            - --cookie-secret=${OAUTH_COOKIE_SECRET}
+            - --cookie-secret=$(OAUTH_COOKIE_SECRET)
             - --pass-access-token
             - --skip-provider-button
             - --skip-auth-regex=/api/v1/swagger.*
@@ -349,6 +357,12 @@ objects:
             - --skip-auth-regex=/api/v1/credentials/callback
             - --skip-auth-preflight
             
+          env:
+          - name: OAUTH_COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-oauth-proxy-cookie-secret
+                key: oauthCookieSecret
           ports:
           - containerPort: 8443
             name: public
@@ -600,7 +614,7 @@ objects:
             - --upstream=http://127.0.0.1:8080
             - --tls-cert=/etc/tls/private/tls.crt
             - --tls-key=/etc/tls/private/tls.key
-            - --cookie-secret=${OAUTH_COOKIE_SECRET}
+            - --cookie-secret=$(OAUTH_COOKIE_SECRET)
             - --pass-access-token
             - --skip-provider-button
             - --skip-auth-regex=/api/v1/swagger.*
@@ -608,6 +622,12 @@ objects:
             - --skip-auth-regex=/api/v1/credentials/callback
             - --skip-auth-preflight
             
+          env:
+          - name: OAUTH_COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-oauth-proxy-cookie-secret
+                key: oauthCookieSecret
           ports:
           - containerPort: 8443
             name: public
@@ -1079,7 +1099,7 @@ objects:
             - --upstream=http://127.0.0.1:8080
             - --tls-cert=/etc/tls/private/tls.crt
             - --tls-key=/etc/tls/private/tls.key
-            - --cookie-secret=${OAUTH_COOKIE_SECRET}
+            - --cookie-secret=$(OAUTH_COOKIE_SECRET)
             - --pass-access-token
             - --skip-provider-button
             - --skip-auth-regex=/api/v1/swagger.*
@@ -1087,6 +1107,12 @@ objects:
             - --skip-auth-regex=/api/v1/credentials/callback
             - --skip-auth-preflight
             
+          env:
+          - name: OAUTH_COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-oauth-proxy-cookie-secret
+                key: oauthCookieSecret
           ports:
           - containerPort: 8443
             name: public
