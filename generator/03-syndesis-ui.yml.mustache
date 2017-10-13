@@ -35,7 +35,7 @@
       targetPort: 8443
     tls:
       insecureEdgeTerminationPolicy: Redirect
-      termination: reencrypt
+      termination: edge
     to:
       kind: Service
       name: syndesis-ui
@@ -111,7 +111,8 @@
           image: ' '{{/WithDockerImages}}{{#WithDockerImages}}
           image: ${SYNDESIS_REGISTRY}/{{Images.OAuthProxyImagePrefix}}/{{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}{{/WithDockerImages}}
           args:
-            - --https-address=:8443
+            - --http-address=:8443
+            - --https-address=:8444
             - --provider=openshift
             - --client-id={{#Restricted}}system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client{{/Restricted}}{{^Restricted}}${OPENSHIFT_OAUTH_CLIENT_ID}{{/Restricted}}
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
