@@ -208,8 +208,8 @@ objects:
 
 - apiVersion: v1
   kind: ImageStream
-    name: s2i-java
   metadata:
+    name: s2i-java
     labels:
       app: syndesis
       component: s2i-java
@@ -259,7 +259,7 @@ objects:
       targetPort: 8443
     tls:
       insecureEdgeTerminationPolicy: Redirect
-      termination: reencrypt
+      termination: edge
     to:
       kind: Service
       name: syndesis-ui
@@ -329,7 +329,8 @@ objects:
         - name: syndesis-oauthproxy
           image: ' '
           args:
-            - --https-address=:8443
+            - --http-address=:8443
+            - --https-address=:8444
             - --provider=openshift
             - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
@@ -587,7 +588,8 @@ objects:
         - name: syndesis-oauthproxy
           image: ' '
           args:
-            - --https-address=:8443
+            - --http-address=:8443
+            - --https-address=:8444
             - --provider=openshift
             - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
@@ -878,7 +880,7 @@ objects:
       targetPort: 8443
     tls:
       insecureEdgeTerminationPolicy: Redirect
-      termination: reencrypt
+      termination: edge
     to:
       kind: Service
       name: syndesis-rest
@@ -1039,7 +1041,8 @@ objects:
         - name: syndesis-oauthproxy
           image: ' '
           args:
-            - --https-address=:8443
+            - --http-address=:8443
+            - --https-address=:8444
             - --provider=openshift
             - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
