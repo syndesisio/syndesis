@@ -175,7 +175,7 @@
         - name: syndesis-oauthproxy
 {{^WithDockerImages}}
           image: ' '{{/WithDockerImages}}{{#WithDockerImages}}
-          image: ${SYNDESIS_REGISTRY}/{{Images.OAuthProxyImagePrefix}}/{{ Images.Syndesis.OAuthProxy }}:{{ Tags.OAuthProxy }}{{/WithDockerImages}}
+          image: ${SYNDESIS_REGISTRY}/{{Images.OAuthProxyImagePrefix}}/{{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}{{/WithDockerImages}}
           args:
             - --https-address=:8443
             - --provider=openshift

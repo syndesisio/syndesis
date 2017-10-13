@@ -93,8 +93,8 @@
 {{/WithDockerImages}}
 - apiVersion: v1
   kind: ImageStream
-    name: {{ Images.S2i.ImageStream }}
   metadata:
+    name: {{ Images.S2i.ImageStream }}
     labels:
       app: syndesis
       component: s2i-java

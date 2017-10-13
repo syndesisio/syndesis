@@ -122,8 +122,8 @@ objects:
 
 - apiVersion: v1
   kind: ImageStream
-    name: s2i-java
   metadata:
+    name: s2i-java
     labels:
       app: syndesis
       component: s2i-java
@@ -241,7 +241,7 @@ objects:
             requests:
               memory: 50Mi
         - name: syndesis-oauthproxy
-          image: ${SYNDESIS_REGISTRY}/openshift/:v1.0.0
+          image: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.0.0
           args:
             - --https-address=:8443
             - --provider=openshift
@@ -481,7 +481,7 @@ objects:
               memory: 255Mi
 
         - name: syndesis-oauthproxy
-          image: ${SYNDESIS_REGISTRY}/openshift/:v1.0.0
+          image: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.0.0
           args:
             - --https-address=:8443
             - --provider=openshift
@@ -932,7 +932,7 @@ objects:
               memory: 256Mi
 
         - name: syndesis-oauthproxy
-          image: ${SYNDESIS_REGISTRY}/openshift/:v1.0.0
+          image: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.0.0
           args:
             - --https-address=:8443
             - --provider=openshift

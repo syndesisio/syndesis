@@ -208,8 +208,8 @@ objects:
 
 - apiVersion: v1
   kind: ImageStream
-    name: s2i-java
   metadata:
+    name: s2i-java
     labels:
       app: syndesis
       component: s2i-java
