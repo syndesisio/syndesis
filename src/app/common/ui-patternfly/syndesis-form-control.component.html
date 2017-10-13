@@ -188,7 +188,7 @@
             </fieldset>
 
 
-            <select *ngSwitchCase="6"
+            <select *ngSwitchCase="6" syndesisCombobox
                     class="form-control"
                     [attr.tabindex]="model.tabIndex"
                     [dynamicId]="bindId && model.id"
@@ -202,8 +202,7 @@
 
                 <option *ngFor="let option of model.options$ | async"
                         [attr.name]="model.name"
-                        [ngValue]="option.value">{{option.label}}
-                </option>
+                        [ngValue]="option.value">{{option.label}}</option>
 
             </select>
 
