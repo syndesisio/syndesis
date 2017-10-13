@@ -14,7 +14,7 @@ while [ $# -gt 0 ]; do
 			from=${2:-$from}			
 
 			echo "Updating Image: FROM $from"
-			perl -p -i -e "s|FROM .*|FROM $from|" Dockerfile
+			perl -p -i -e "s|FROM .*|FROM $from|" src/main/docker/Dockerfile
 			shift 2 
 		;;
 		--update-project) 
@@ -24,8 +24,8 @@ while [ $# -gt 0 ]; do
 			echo "Updating project using: syndesis-builder-image-generator ver: $ver"			
 			mvn dependency:get "-Dartifact=io.syndesis:syndesis-builder-image-generator:$ver" -Ddest=syndesis-builder-image-generator.jar
 
-			echo java -jar syndesis-builder-image-generator.jar --to=$dir/project
-			java -jar syndesis-builder-image-generator.jar --to=$dir/project
+			echo java -jar target/syndesis-builder-image-generator.jar --to=$dir/src/main/docker/project
+			java -jar target/syndesis-builder-image-generator.jar --to=$dir/src/main/docker/project
 			shift 2
 		;;
 		--to) 
