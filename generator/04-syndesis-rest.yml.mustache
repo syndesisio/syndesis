@@ -218,7 +218,7 @@
             - --upstream=http://127.0.0.1:8080
             - --tls-cert=/etc/tls/private/tls.crt
             - --tls-key=/etc/tls/private/tls.key
-            - --cookie-secret=${OAUTH_COOKIE_SECRET}
+            - --cookie-secret=$(OAUTH_COOKIE_SECRET)
             - --pass-access-token
             - --skip-provider-button
             - --skip-auth-regex=/api/v1/swagger.*
@@ -226,6 +226,12 @@
             - --skip-auth-regex=/api/v1/credentials/callback
             - --skip-auth-preflight
             {{#Restricted}}- --openshift-sar={"namespace":"${OPENSHIFT_PROJECT}","resource":"pods","verb":"get"}{{/Restricted}}
+          env:
+          - name: OAUTH_COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-oauth-proxy-cookie-secret
+                key: oauthCookieSecret
           ports:
           - containerPort: 8443
             name: public
