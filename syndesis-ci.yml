@@ -1146,6 +1146,9 @@ objects:
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
         builderImageStreamTag: s2i-java:2.0
+        deploymentMemoryRequestMi: 200
+        deploymentMemoryLimitMi: 512
+        mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
       dao:
         kind: jsondb
 - apiVersion: v1

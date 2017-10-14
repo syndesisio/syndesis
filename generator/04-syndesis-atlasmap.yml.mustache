@@ -145,7 +145,7 @@
               command:
               - curl
               - -sSLf
-              - http://localhost:8080
+              - http://localhost:8181/health
             initialDelaySeconds: 180
           readinessProbe:
             exec:
@@ -153,7 +153,7 @@
               - curl
               - -sSLf
               - http://localhost:8181/health
-            initialDelaySeconds: 10{{/Probeless}}
+            initialDelaySeconds: 30{{/Probeless}}
           ports:
           - containerPort: 8080
             name: http

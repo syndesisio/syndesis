@@ -468,7 +468,7 @@ objects:
               command:
               - curl
               - -sSLf
-              - http://localhost:8080
+              - http://localhost:8181/health
             initialDelaySeconds: 180
           readinessProbe:
             exec:
@@ -476,7 +476,7 @@ objects:
               - curl
               - -sSLf
               - http://localhost:8181/health
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
           ports:
           - containerPort: 8080
             name: http
@@ -922,7 +922,7 @@ objects:
               command:
               - curl
               - -sSLf
-              - http://localhost:8080
+              - http://localhost:8181/health
             initialDelaySeconds: 180
           readinessProbe:
             exec:
@@ -930,7 +930,7 @@ objects:
               - curl
               - -sSLf
               - http://localhost:8181/health
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
           ports:
           - containerPort: 8080
             name: http
@@ -1051,6 +1051,9 @@ objects:
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
         builderImageStreamTag: s2i-java:2.0
+        deploymentMemoryRequestMi: 200
+        deploymentMemoryLimitMi: 512
+        mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
       dao:
         kind: jsondb
 - apiVersion: v1
