@@ -21,10 +21,10 @@ done
 
 # Push FIS s2i builder image
 S2I_IMAGE_SRC="registry.access.redhat.com/jboss-fuse-6/fis-java-openshift:2.0-9"
-S2I_IMAGE_TRG="fuse-ignite-java-openshift:$SYNDESIS_VERSION"
+S2I_IMAGE_TARGET="fuse-ignite-java-openshift:$SYNDESIS_VERSION"
 docker pull ${S2I_IMAGE_SRC}
-docker tag ${S2I_IMAGE_SRC} ${TO_REGISTRY}/${S2I_IMAGE_TRG}
-head_s2i_image=$(echo $S2I_IMAGE_TRG | sed -e 's/^\(.*\)\(\.[^.]*\)$/\1/')
-docker tag ${TO_REGISTRY}/$S2I_IMAGE_TRG ${TO_REGISTRY}/${head_s2i_image}
-docker push ${TO_REGISTRY}/$S2I_IMAGE_TRG
+docker tag ${S2I_IMAGE_SRC} ${TO_REGISTRY}/${S2I_IMAGE_TARGET}
+head_s2i_image=$(echo $S2I_IMAGE_TARGET | sed -e 's/^\(.*\)\(\.[^.]*\)$/\1/')
+docker tag ${TO_REGISTRY}/$S2I_IMAGE_TARGET ${TO_REGISTRY}/${head_s2i_image}
+docker push ${TO_REGISTRY}/$S2I_IMAGE_TARGET
 docker push ${TO_REGISTRY}/${head_s2i_image}
