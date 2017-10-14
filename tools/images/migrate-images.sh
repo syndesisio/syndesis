@@ -6,7 +6,7 @@ SYNDESIS_VERSION=${1:-1.0.0}
 ATLASMAP_VERSION=${2:-1.30.0}
 FROM_REGISTRY=${3:-docker-registry.engineering.redhat.com/jboss-fuse-7-tech-preview}
 TO_REGISTRY=${4:-registry.fuse-ignite.openshift.com/fuse-ignite}
-IMAGES=${4:-" fuse-ignite-mapper:${ATLASMAP_VERSION} fuse-ignite-pemtokeystore:${SYNDESIS_VERSION} fuse-ignite-rest:${SYNDESIS_VERSION} fuse-ignite-ui:${SYNDESIS_VERSION} fuse-ignite-verifier:${SYNDESIS_VERSION}"}
+IMAGES=${5-" fuse-ignite-mapper:${ATLASMAP_VERSION} fuse-ignite-pemtokeystore:${SYNDESIS_VERSION} fuse-ignite-rest:${SYNDESIS_VERSION} fuse-ignite-ui:${SYNDESIS_VERSION} fuse-ignite-verifier:${SYNDESIS_VERSION}"}
 
 # Push all images to target regitry
 # Also push links to head versions (i.e. 1.0 -> 1.0.0)
