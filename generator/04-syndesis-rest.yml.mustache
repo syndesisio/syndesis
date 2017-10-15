@@ -174,7 +174,7 @@
               command:
               - curl
               - -sSLf
-              - http://localhost:8080
+              - http://localhost:8181/health
             initialDelaySeconds: 180
           readinessProbe:
             exec:
@@ -182,7 +182,7 @@
               - curl
               - -sSLf
               - http://localhost:8181/health
-            initialDelaySeconds: 10{{/Probeless}}
+            initialDelaySeconds: 30{{/Probeless}}
           ports:
           - containerPort: 8080
             name: http
@@ -338,5 +338,8 @@
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
         builderImageStreamTag: {{ Images.S2i.ImageStream }}:{{ Images.S2i.Tag }}
+        deploymentMemoryRequestMi: 200
+        deploymentMemoryLimitMi: 512
+        mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
       dao:
         kind: jsondb
