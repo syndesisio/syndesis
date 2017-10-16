@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    io.syndesis.rest.setup.SetupConfiguration,\
-    io.syndesis.rest.setup.keycloak.KeycloakSetupConfiguration
