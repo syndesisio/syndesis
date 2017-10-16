@@ -27,10 +27,6 @@ public class DeploymentTest {
     DeploymentConfig rest;
 
     @ArquillianResource
-    @Named("syndesis-keycloak")
-    DeploymentConfig keycloak;
-
-    @ArquillianResource
     KubernetesClient client;
 
     @Test @Ignore
@@ -43,10 +39,5 @@ public class DeploymentTest {
     @Test
     public void restShouldBeReady() {
         Assert.assertTrue(Readiness.isDeploymentConfigReady(rest));
-    }
-
-    @Test
-    public void keycloakShouldBeReady() {
-        Assert.assertTrue(Readiness.isDeploymentConfigReady(keycloak));
     }
 }
