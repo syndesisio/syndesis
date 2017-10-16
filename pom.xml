@@ -145,7 +145,6 @@
     <module>runtime</module>
     <module>verifier</module>
     <module>inspector</module>
-    <module>setup</module>
     <module>syndesis-builder-image-generator</module>
   </modules>
 
@@ -292,12 +291,6 @@
       <dependency>
         <groupId>io.syndesis</groupId>
         <artifactId>credential</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>setup</artifactId>
         <version>${project.version}</version>
       </dependency>
 
