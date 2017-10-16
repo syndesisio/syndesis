@@ -39,53 +39,7 @@
           app: syndesis
           component: syndesis-verifier
           deploymentconfig: syndesis-verifier
-        annotations:
-          pod.beta.kubernetes.io/init-containers: |-
-            [{
-              "name": "openshift-ca-pemtokeystore",
-              "image": "{{^WithInitContainerDockerImages}}' '{{/WithInitContainerDockerImages}}{{#WithInitContainerDockerImages}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/WithInitContainerDockerImages}}",
-              "imagePullPolicy": "IfNotPresent",
-              "args": [
-                "-keystore", "/tls-keystore/openshift-truststore.jks",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
-                "-ca-file", "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt",
-                "-ca-dir", "/usr/share/ca-certificates/mozilla"
-              ],
-              "volumeMounts": [{
-                "name": "syndesis-verifier-tls",
-                "mountPath": "/tls-keystore"
-              }],
-              "resources": {
-                "limits": {
-                  "memory": "255Mi"
-                },
-                "requests": {
-                  "memory": "20Mi"
-                }
-              }
-            }]
       spec:
-        initContainers:
-        - name: openshift-ca-pemtokeystore
-          image: {{^WithInitContainerDockerImages}}' '{{/WithInitContainerDockerImages}}{{#WithInitContainerDockerImages}}${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}{{/WithInitContainerDockerImages}}
-          imagePullPolicy: IfNotPresent
-          args:
-          - -keystore
-          - /tls-keystore/openshift-truststore.jks
-          - -ca-file
-          - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-          - -ca-file
-          - /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-          - -ca-dir
-          - /usr/share/ca-certificates/mozilla
-          volumeMounts:
-          - name: syndesis-verifier-tls
-            mountPath: /tls-keystore
-          resources:
-            limits:
-              memory: 255Mi
-            requests:
-              memory: 20Mi
         serviceAccountName: syndesis-rest
         containers:
         - name: syndesis-verifier
