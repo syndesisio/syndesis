@@ -112,15 +112,12 @@ case $RF in
         popd
     ;&
   verifier)
-      pushd syndesis-verifier
+      pushd verifier
       mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
       popd
     ;&
-  integration-runtime)
-      pushd integration-runtime
-      mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
-      popd
-      pushd syndesis-verifier
+  runtime)
+      pushd runtime
       mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
       popd
       ;&
@@ -149,3 +146,4 @@ case $RF in
       fi
       popd
 esac
+-
