@@ -58,7 +58,7 @@
              [innerHtml]="error.message">
         </div>
       </ng-container>
-      <div [class]="step.stepKind !== 'mapper' ? 'wizard-pf-body clearfix body' : 'body mapper'">
+      <div [class]="step.stepKind !== 'mapper' ? 'body' : 'body mapper'">
         <div [ngSwitch]="step.stepKind">
           <div *ngSwitchCase="'mapper'">
             <div class="row">
