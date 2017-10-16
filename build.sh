@@ -11,8 +11,9 @@ function displayHelp() {
     echo " --skip-tests            Skips the test execution."
     echo " --skip-image-builds     Skips image builds."
     echo " --with-image-streams    Builds everything using image streams."
-    echo " --clean                 Cleans up the projects."
     echo " --namespace N           Specifies the namespace to use."
+    echo " --resume-from           Resume build from module."
+    echo " --clean                 Cleans up the projects."
     echo " --help                  Displays this help message."
 }
 
@@ -53,6 +54,7 @@ WITH_IMAGE_STREAMS=$(hasflag --with-image-streams "$@" 2> /dev/null)
 
 NAMESPACE=$(readopt --namespace "$@" 2> /dev/null)
 
+RESUME_FROM=$(readopt --resume-from "$@" 2> /dev/null)
 HELP=$(hasflag --help "$@" 2> /dev/null)
 
 
@@ -67,6 +69,7 @@ OC_OPTS=""
 MAVEN_OPTS=""
 MAVEN_CLEAN_GOAL="clean"
 MAVEN_IMAGE_BUILD_GOAL="fabric8:build"
+RF=${RESUME_FROM:-"connectors"}
 
 #
 # Apply options
@@ -101,44 +104,48 @@ fi
 git submodule init
 git submodule update
 
-# connectors
-pushd connectors
-# We are ALWAYS clean this project, because build fails otherwise: https://github.com/syndesisio/connectors/issues/93
-mvn clean install $MAVEN_OPTS
-popd
+case $RF in
+    connectors)
+        pushd connectors
+        # We are ALWAYS clean this project, because build fails otherwise: https://github.com/syndesisio/connectors/issues/93
+        mvn clean install $MAVEN_OPTS
+        popd
+    ;&
+  verifier)
+      pushd syndesis-verifier
+      mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
+      popd
+    ;&
+  integration-runtime)
+      pushd integration-runtime
+      mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
+      popd
+      pushd syndesis-verifier
+      mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
+      popd
+      ;&
+  rest)
+      pushd rest
+      mvn $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_OPTS
+      popd
+      ;&
+  ui)
+      pushd ui
+      yarn
+      yarn ng build -- --aot --prod --progress=false
+      if [ -z "$SKIP_IMAGE_BUILDS" ]; then
 
-# syndesis-verifier
-pushd syndesis-verifier
-mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
-popd
-
-
-# integration-runtime
-pushd integration-runtime
-mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
-popd
-
-# syndesis-rest
-pushd rest
-mvn $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_OPTS
-popd
-
-# ui
-pushd ui
-yarn
-yarn ng build -- --aot --prod --progress=false
-if [ -z "$SKIP_IMAGE_BUILDS" ]; then
-
-    if [ -n "$WITH_IMAGE_STREAMS"]; then
-        BC_DETAILS=`oc get bc | grep syndesis-ui`
-        if [ -z $"BC_DETAILS" ]; then
-            cat docker/Dockerfile | oc new-build --dockerfile=- --to=syndesis/syndesis-ui:latest --strategy=docker $OC_OPTS
-        fi
-        tar -cvf archive.tar dist docker
-        oc start-build -F --from-archive=archive.tar syndesis-ui $OC_OPTS
-        rm archive.tar
-    else
-       docker build -t syndesis/syndesis-ui:latest -f docker/Dockerfile . | cat -
-    fi
-fi
-popd
+          if [ -n "$WITH_IMAGE_STREAMS" ]; then
+              BC_DETAILS=`oc get bc | grep syndesis-ui`
+              if [ -z $"BC_DETAILS" ]; then
+                  cat docker/Dockerfile | oc new-build --dockerfile=- --to=syndesis/syndesis-ui:latest --strategy=docker $OC_OPTS
+              fi
+              tar -cvf archive.tar dist docker
+              oc start-build -F --from-archive=archive.tar syndesis-ui $OC_OPTS
+              rm archive.tar
+          else
+              docker build -t syndesis/syndesis-ui:latest -f docker/Dockerfile . | cat -
+          fi
+      fi
+      popd
+esac
