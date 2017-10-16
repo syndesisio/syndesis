@@ -22,7 +22,10 @@ import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
 import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
 
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.WithId;
 import io.syndesis.model.connection.Connection;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.Integration.Status;
 import io.syndesis.model.validation.UniqueProperty;
 
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
@@ -43,7 +46,7 @@ import static org.mockito.Mockito.when;
 public class UniquePropertyValidatorTest {
 
     @Parameter(0)
-    public Connection connection;
+    public WithId<?> connection;
 
     @Parameter(1)
     public boolean validity;
@@ -60,6 +63,10 @@ public class UniquePropertyValidatorTest {
 
         when(validator.dataManager.fetchIdsByPropertyValue(Connection.class, "name", "Existing"))
             .thenReturn(new HashSet<>(Arrays.asList("same")));
+        when(validator.dataManager.fetchIdsByPropertyValue(Integration.class, "name", "Existing"))
+            .thenReturn(new HashSet<>(Arrays.asList("deleted")));
+        when(validator.dataManager.fetch(Integration.class, "deleted"))
+            .thenReturn(new Integration.Builder().name("Existing").id("deleted").currentStatus(Status.Deleted).build());
     }
 
     @Test
@@ -87,11 +94,14 @@ public class UniquePropertyValidatorTest {
 
         final Connection uniqueNameNoId = new Connection.Builder().name("Unique").build();
 
+        final Integration existingButDeleted = new Integration.Builder().name("Existing").id("different").build();
+
         return Arrays.asList(//
             new Object[] {existingNameNoId, false}, //
             new Object[] {existingNameWithSameId, true}, //
             new Object[] {existingNameWithDifferentId, false}, //
-            new Object[] {uniqueNameNoId, true}//
+            new Object[] {uniqueNameNoId, true}, //
+            new Object[] {existingButDeleted, true}//
         );
     }
 }
