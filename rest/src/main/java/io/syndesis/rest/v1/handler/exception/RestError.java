@@ -34,6 +34,9 @@ public class RestError {
     @JsonProperty("userMsg")
     /* default */ String userMsg;
 
+    @JsonProperty("userMsgDetail")
+    /* default */ String userMsgDetail;
+
     @JsonProperty("errorCode")
     /* default */ Integer errorCode;
 
@@ -41,9 +44,10 @@ public class RestError {
         // makes it a Java bean
     }
 
-    public RestError(String developerMsg, String userMsg, Integer errorCode) {
+    public RestError(String developerMsg, String userMsg,  String userMsgDetail, Integer errorCode) {
         this.developerMsg = developerMsg;
         this.userMsg = userMsg;
+        this.userMsgDetail = userMsgDetail;
         this.errorCode = errorCode;
     }
     public String getDeveloperMsg() {
@@ -57,6 +61,12 @@ public class RestError {
     }
     public void setUserMsg(String userMsg) {
         this.userMsg = userMsg;
+    }
+    public String getUserMsgDetail() {
+        return userMsgDetail;
+    }
+    public void setUserMsgDetail(String userMsgDetail) {
+        this.userMsgDetail = userMsgDetail;
     }
     public Integer getErrorCode() {
         return errorCode;

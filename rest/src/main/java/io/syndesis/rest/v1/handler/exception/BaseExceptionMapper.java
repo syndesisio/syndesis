@@ -43,7 +43,7 @@ abstract class BaseExceptionMapper<E extends Throwable> implements ExceptionMapp
 
         LOG.error(developerMessage, exception);
 
-        final RestError error = new RestError(developerMessage, userMessage, status.getStatusCode());
+        final RestError error = new RestError(developerMessage, userMessage, null, status.getStatusCode());
 
         return Response.status(error.errorCode).type(MediaType.APPLICATION_JSON_TYPE).entity(error).build();
     }
