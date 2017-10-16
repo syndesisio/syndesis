@@ -17,7 +17,7 @@ jobs:
           rm -rf $(dirname $(which yarn))/yarn*
           # download latest
           rm -rf ~/.yarn
-          curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.28.4
+          curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.2.1
           echo 'export PATH="${PATH}:${HOME}/.yarn/bin"' >> $BASH_ENV
 
     - run:
