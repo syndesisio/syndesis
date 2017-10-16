@@ -82,10 +82,6 @@ controllers:
   integration:
     enabled: true
 
-camel:
-  connector:
-    catalog:
-      mavenRepos:
-        maven.central: https://repo1.maven.org/maven2
-        redhat.ga: https://maven.repository.redhat.com/ga
-        jboss.ea: https://repository.jboss.org/nexus/content/groups/ea
+maven:
+  repositories:
+    maven.central: https://repo1.maven.org/maven2

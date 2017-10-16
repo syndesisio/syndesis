@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.validation.Validator;
 
+import io.syndesis.core.MavenProperties;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.rest.v1.state.ClientSideStateProperties;
 import io.syndesis.rest.v1.state.StaticEdition;
@@ -47,7 +48,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(exclude = {TwitterAutoConfiguration.class, FacebookAutoConfiguration.class,
     LinkedInAutoConfiguration.class, SocialWebAutoConfiguration.class})
-@EnableConfigurationProperties(ClientSideStateProperties.class)
+@EnableConfigurationProperties({ClientSideStateProperties.class, MavenProperties.class})
 public class Application extends SpringBootServletInitializer {
 
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);

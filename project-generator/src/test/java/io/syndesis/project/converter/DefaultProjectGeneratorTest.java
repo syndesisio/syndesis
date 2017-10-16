@@ -44,6 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.connector.catalog.ConnectorCatalogProperties;
+import io.syndesis.core.MavenProperties;
 import io.syndesis.integration.support.Strings;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.Connection;
@@ -73,7 +74,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(Parameterized.class)
 public class DefaultProjectGeneratorTest {
     private static final String CONNECTORS_VERSION = ResourceBundle.getBundle("test").getString("connectors.version");
-    private static final ConnectorCatalogProperties CATALOG_PROPERTIES = new ConnectorCatalogProperties();
+    private static MavenProperties mavenProperties = new MavenProperties(map("maven.central", "https://repo1.maven.org/maven2",
+        "redhat.ga", "https://maven.repository.redhat.com/ga",
+        "jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea"));
+    private static final ConnectorCatalogProperties CATALOG_PROPERTIES = new ConnectorCatalogProperties(mavenProperties);
     private static Properties properties = new Properties();
     private static final ObjectMapper OBJECT_MAPPER;
     private static final TypeReference<HashMap<String, Connector>> CONNECTOR_MAP_TYPE_REF;
@@ -96,11 +100,6 @@ public class DefaultProjectGeneratorTest {
             OBJECT_MAPPER = new ObjectMapper().registerModule(new Jdk8Module());
             CONNECTOR_MAP_TYPE_REF = new TypeReference<HashMap<String, Connector>>() {
             };
-            final Map<String, String> repositories = new HashMap<>();
-            repositories.put("maven.central", "https://repo1.maven.org/maven2");
-            repositories.put("redhat.ga", "https://maven.repository.redhat.com/ga");
-            repositories.put("jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea");
-            CATALOG_PROPERTIES.setMavenRepos(repositories);
     }
 
     private Path runtimeDir;
@@ -213,7 +212,7 @@ public class DefaultProjectGeneratorTest {
             .connectors(connectors)
             .build();
 
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
@@ -269,7 +268,7 @@ public class DefaultProjectGeneratorTest {
             .connectors(connectors)
             .build();
 
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         generatorProperties.setSecretMaskingEnabled(true);
@@ -334,7 +333,7 @@ public class DefaultProjectGeneratorTest {
             .connectors(connectors)
             .build();
 
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         generatorProperties.setSecretMaskingEnabled(true);
@@ -355,7 +354,7 @@ public class DefaultProjectGeneratorTest {
             .build();
 
 
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
@@ -409,7 +408,7 @@ public class DefaultProjectGeneratorTest {
             .connectors(connectors)
             .build();
 
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
@@ -498,7 +497,7 @@ public class DefaultProjectGeneratorTest {
             .connectors(connectors)
             .build();
 
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
@@ -527,7 +526,7 @@ public class DefaultProjectGeneratorTest {
     }
 
     // Helper method to help constuct maps with concise syntax
-    private Map<String, String> map(Object... values) {
+    private static Map<String, String> map(Object... values) {
         HashMap<String, String> rc = new HashMap<>();
         for (int i = 0; i + 1 < values.length; i += 2) {
             rc.put(values[i].toString(), values[i + 1].toString());

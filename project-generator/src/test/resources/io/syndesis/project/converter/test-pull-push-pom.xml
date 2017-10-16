@@ -18,6 +18,21 @@
     <camel-atlasmap.version>@camel-atlasmap.version@</camel-atlasmap.version>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>maven.central</id>
+      <url>https://repo1.maven.org/maven2</url>
+    </repository>
+    <repository>
+      <id>jboss.ea</id>
+      <url>https://repository.jboss.org/nexus/content/groups/ea</url>
+    </repository>
+    <repository>
+      <id>redhat.ga</id>
+      <url>https://maven.repository.redhat.com/ga</url>
+    </repository>
+  </repositories>
+
   <dependencyManagement>
     <dependencies>
       <dependency>

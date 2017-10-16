@@ -33,6 +33,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
@@ -48,6 +49,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import io.syndesis.connector.catalog.ConnectorCatalog;
+import io.syndesis.core.MavenProperties;
 import io.syndesis.core.Names;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.integration.model.SyndesisHelpers;
@@ -225,7 +227,12 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                 gavsSeen.add(gav);
             });
         }
-        return generateFromPomContext(new PomContext(integration.getId().orElse(""), integration.getName(), integration.getDescription().orElse(null), connectors), pomMustache);
+        return generateFromPomContext(new PomContext(integration.getId().orElse(""),
+                                                    integration.getName(),
+                                                    integration.getDescription().orElse(null),
+                                                    connectors,
+                                                    generatorProperties.getMavenProperties()),
+                                        pomMustache);
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
@@ -342,11 +349,14 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
         private final Set<MavenGav> connectors;
 
-        /* default */ PomContext(String id, String name, String description, Set<MavenGav> connectors) {
+        private final MavenProperties mavenProperties;
+
+        /* default */ PomContext(String id, String name, String description, Set<MavenGav> connectors, MavenProperties mavenProperties) {
             this.id = id;
             this.name = name;
             this.description = description;
             this.connectors = connectors;
+            this.mavenProperties = mavenProperties;
         }
 
         public String getId() {
@@ -363,6 +373,10 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
         public Set<MavenGav> getConnectors() {
             return connectors;
+        }
+
+        public Set<Entry<String, String>> getMavenRepositories() {
+            return mavenProperties.getRepositories().entrySet();
         }
     }
 }
