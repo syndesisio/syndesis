@@ -17,6 +17,17 @@
     <syndesis-integration-runtime.version>@syndesis-integration-runtime.version@</syndesis-integration-runtime.version>
     <camel-atlasmap.version>@camel-atlasmap.version@</camel-atlasmap.version>
   </properties>
+  {{^mavenRepositories.empty}}
+
+  <repositories>
+    {{#mavenRepositories}}
+    <repository>
+      <id>{{key}}</id>
+      <url>{{value}}</url>
+    </repository>
+    {{/mavenRepositories}}
+  </repositories>
+  {{/mavenRepositories.empty}}
 
   <dependencyManagement>
     <dependencies>

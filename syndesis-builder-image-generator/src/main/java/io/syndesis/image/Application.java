@@ -17,6 +17,7 @@ package io.syndesis.image;
 
 import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.connector.catalog.ConnectorCatalogProperties;
+import io.syndesis.core.MavenProperties;
 import io.syndesis.core.SuppressFBWarnings;
 import io.syndesis.dao.init.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
@@ -120,9 +121,9 @@ public class Application implements ApplicationRunner {
     @SuppressWarnings("PMD.UseProperClassLoader")
     private static void generate(GenerateProjectRequest request, File targetDir) throws IOException {
 
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties();
-        ConnectorCatalogProperties catalogProperties = new ConnectorCatalogProperties();
-        catalogProperties.setMavenRepos(new HashMap<>());
+        MavenProperties mavenProperties = new MavenProperties();
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
+        ConnectorCatalogProperties catalogProperties = new ConnectorCatalogProperties(mavenProperties);
         StepVisitorFactoryRegistry registry = new StepVisitorFactoryRegistry(Arrays.asList());
         DefaultProjectGenerator generator = new DefaultProjectGenerator(new ConnectorCatalog(catalogProperties), generatorProperties, registry);
 

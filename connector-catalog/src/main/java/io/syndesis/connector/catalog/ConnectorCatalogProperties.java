@@ -18,34 +18,31 @@ package io.syndesis.connector.catalog;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import io.syndesis.core.MavenProperties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("camel.connector.catalog")
 public class ConnectorCatalogProperties {
 
-    private Map<String, String> mavenRepos = new ConcurrentHashMap<>(1);
-
     private List<String> connectorGAVs = new ArrayList<>(5);
 
-    public ConnectorCatalogProperties() {
-        this.mavenRepos.put("maven.central", "https://repo.maven.apache.org/maven2/");
-    }
+    private final MavenProperties mavenProperties;
 
-    public Map<String, String> getMavenRepos() {
-        return mavenRepos;
-    }
-
-    public void setMavenRepos(Map<String, String> mavenRepos) {
-        this.mavenRepos = mavenRepos;
+    public ConnectorCatalogProperties(final MavenProperties mavenProperties) {
+        this.mavenProperties = mavenProperties;
     }
 
     public List<String> getConnectorGAVs() {
         return connectorGAVs;
     }
 
-    public void setConnectorGAVs(List<String> connectorGAVs) {
+    public Map<String, String> getMavenRepos() {
+        return mavenProperties.getRepositories();
+    }
+
+    public void setConnectorGAVs(final List<String> connectorGAVs) {
         this.connectorGAVs = connectorGAVs;
     }
 
