@@ -33,13 +33,14 @@ jobs:
 
     - run:
         name: Install Dependencies
-        command: yarn install --verbose --no-progress
+        command: rm -Rf ./node_modules && yarn cache clean && yarn install --verbose --no-progress
 
     - save_cache:
         key: syndesis-ui-{{ checksum "package.json" }}
         paths:
         - ~/.yarn
         - ~/.cache/yarn
+        - ./node_modules
 
     - run:
         name: Run AOT compile
