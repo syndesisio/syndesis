@@ -320,7 +320,7 @@ objects:
           - name: AB_OFF
             value: "true"
           - name: JAVA_OPTIONS
-            value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
+            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
           image: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
 
           imagePullPolicy: IfNotPresent
@@ -889,7 +889,7 @@ objects:
           - name: JAVA_APP_DIR
             value: /deployments
           - name: JAVA_OPTIONS
-            value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
+            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
           image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
 
           imagePullPolicy: IfNotPresent
@@ -923,13 +923,9 @@ objects:
           # spring-boot automatically picks up application.yml from ./config
           workingDir: /deployments
           volumeMounts:
-          - name: syndesis-verifier-tls
-            mountPath: /tls-keystore
           - name: config-volume
             mountPath: /deployments/config
         volumes:
-        - name: syndesis-verifier-tls
-          emptyDir: {}
         - name: config-volume
           configMap:
             name: syndesis-verifier-config
