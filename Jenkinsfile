@@ -23,7 +23,7 @@ slave {
                              stage ('build verifier') {
                                 container('maven') {
                                     sh """
-                                    cd syndesis-verifier
+                                    cd verifier
                                     mvn -B -U clean install
                                     """
                                 }
@@ -31,7 +31,7 @@ slave {
                              stage ('build integration runtime') {
                                 container('maven') {
                                     sh """
-                                    cd integration-runtime
+                                    cd runtime
                                     mvn -B -U clean install
                                     """
                                 }
