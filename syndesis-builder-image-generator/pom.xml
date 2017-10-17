@@ -111,6 +111,19 @@
       <artifactId>spring-beans</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging-api</artifactId>
+      <version>1.1</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
   </dependencies>
 
 </project>
