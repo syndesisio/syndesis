@@ -174,9 +174,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewStrategy()
                 .withType("Recreate")
                 .withNewResources()
-                   // TODO: Make the limits configurable
-                   .addToLimits("memory", new Quantity(config.getDeploymentMemoryLimitMi(), "Mi"))
-                   .addToRequests("memory", new Quantity(config.getDeploymentMemoryRequestMi(), "Mi"))
+                       .addToLimits("memory", new Quantity(config.getDeploymentMemoryLimitMi()  + "Mi"))
+                       .addToRequests("memory", new Quantity(config.getDeploymentMemoryRequestMi() +  "Mi"))
                 .endResources()
             .endStrategy()
             .withNewTemplate()
