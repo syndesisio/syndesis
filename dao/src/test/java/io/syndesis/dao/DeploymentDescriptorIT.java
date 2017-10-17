@@ -47,7 +47,7 @@ import static org.assertj.core.api.Assertions.fail;
  * Downloads all connectors defined in {@code deployment.json} and tries to
  * resolve their endpoints using Camel catalog.
  */
-public class DeploymentDescriptorTest {
+public class DeploymentDescriptorIT {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -59,9 +59,9 @@ public class DeploymentDescriptorTest {
 
     private final MavenArtifactProvider mavenArtifactProvider = createArtifactProvider();
 
-    public DeploymentDescriptorTest() throws IOException {
+    public DeploymentDescriptorIT() throws IOException {
         deployment = MAPPER
-            .readTree(DeploymentDescriptorTest.class.getResourceAsStream("/io/syndesis/dao/deployment.json"));
+            .readTree(DeploymentDescriptorIT.class.getResourceAsStream("/io/syndesis/dao/deployment.json"));
     }
 
     @Test
