@@ -72,6 +72,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private nav: NavigationService,
     private modalService: ModalService,
+    private http: Response,
   ) {}
 
   ngOnInit() {
@@ -137,7 +138,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       showClose: true,
     });
     this.loggedIn =  false;
-    return this.oauthService.logOut();
+    //return this.userService.logout();
   }
 
   /**
