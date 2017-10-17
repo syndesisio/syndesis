@@ -6,18 +6,18 @@ export class NavigationService {
   constructor() { }
 
   initialize() {
-    $.fn.setupVerticalNavigation ? $.fn.setupVerticalNavigation() : '';
+    (<any>$.fn).setupVerticalNavigation ? (<any>$.fn).setupVerticalNavigation() : '';
   }
 
   show() {
-    $.fn.setupVerticalNavigation
-      ? $.fn.setupVerticalNavigation().showMenu()
+    (<any>$.fn).setupVerticalNavigation
+      ? (<any>$.fn).setupVerticalNavigation().showMenu()
       : '';
   }
 
   hide() {
-    $.fn.setupVerticalNavigation
-      ? $.fn.setupVerticalNavigation().hideMenu()
+    (<any>$.fn).setupVerticalNavigation
+      ? (<any>$.fn).setupVerticalNavigation().hideMenu()
       : '';
 
   }
