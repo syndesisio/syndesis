@@ -15,10 +15,15 @@
  */
 package io.syndesis.credential;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.net.URI;
 import java.util.Optional;
-
-import io.syndesis.model.connection.Connection;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,12 +44,7 @@ import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.util.MultiValueMap;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import io.syndesis.model.connection.Connection;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CredentialsTest {

@@ -39,7 +39,7 @@ public class InternalServerErrorExceptionMapper implements ExceptionMapper<Inter
             final RestError error = new RestError(
                 "A remote call failed without a detailed error message, status message is: " + response.getStatus()
                     + " - " + response.getStatusInfo().getReasonPhrase(),
-                "Please contact the administrator and file a bug report", response.getStatus());
+                "Please contact the administrator and file a bug report", null, response.getStatus());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON_TYPE)
                 .entity(error).build();
         }
