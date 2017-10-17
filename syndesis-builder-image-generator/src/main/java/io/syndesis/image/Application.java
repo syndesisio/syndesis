@@ -16,6 +16,7 @@
 package io.syndesis.image;
 
 import io.syndesis.connector.catalog.ConnectorCatalog;
+import io.syndesis.connector.catalog.ConnectorCatalogConfiguration;
 import io.syndesis.connector.catalog.ConnectorCatalogProperties;
 import io.syndesis.core.MavenProperties;
 import io.syndesis.core.SuppressFBWarnings;
@@ -31,6 +32,7 @@ import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.DefaultProjectGenerator;
 import io.syndesis.project.converter.GenerateProjectRequest;
+import io.syndesis.project.converter.ProjectGeneratorConfiguration;
 import io.syndesis.project.converter.ProjectGeneratorProperties;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootApplication(exclude = {DaoConfiguration.class})
+@SpringBootApplication(exclude = {DaoConfiguration.class, ConnectorCatalogConfiguration.class, ProjectGeneratorConfiguration.class})
 public class Application implements ApplicationRunner {
 
     @Value("${to:image}")
