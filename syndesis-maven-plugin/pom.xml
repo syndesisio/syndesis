@@ -52,24 +52,8 @@
           <artifactId>spring-security-core</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.keycloak</groupId>
-          <artifactId>keycloak-spring-security-adapter</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.keycloak</groupId>
-          <artifactId>keycloak-core</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>org.springframework</groupId>
           <artifactId>spring-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.keycloak</groupId>
-          <artifactId>keycloak-common</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.keycloak</groupId>
-          <artifactId>keycloak-adapter-core</artifactId>
         </exclusion>
         <exclusion>
           <groupId>javax.ws.rs</groupId>
@@ -227,14 +211,6 @@
           <artifactId>spring-security-core</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.keycloak</groupId>
-          <artifactId>keycloak-spring-security-adapter</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.keycloak</groupId>
-          <artifactId>keycloak-core</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>org.springframework</groupId>
           <artifactId>spring-core</artifactId>
         </exclusion>
@@ -297,10 +273,6 @@
         <exclusion>
           <groupId>io.fabric8</groupId>
           <artifactId>kubernetes-model</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.keycloak</groupId>
-          <artifactId>keycloak-adapter-core</artifactId>
         </exclusion>
         <exclusion>
           <groupId>io.swagger</groupId>

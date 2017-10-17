@@ -70,11 +70,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-spring-security-adapter</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
     </dependency>
@@ -97,15 +92,6 @@
   <build>
 
     <plugins>
-
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>org.keycloak:keycloak-spring-security-adapter</ignoredUnusedDeclaredDependency>
-          </ignoredUnusedDeclaredDependencies>
-        </configuration>
-      </plugin>
 
       <plugin>
         <groupId>org.basepom.maven</groupId>

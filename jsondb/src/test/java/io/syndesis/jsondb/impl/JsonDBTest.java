@@ -207,16 +207,6 @@ public class JsonDBTest {
     }
 
     @Test
-    public void testCreateKey() {
-        String lastkey = jsondb.createKey();
-        for (int i = 0; i < 20000; i++) {
-            String key = jsondb.createKey();
-            assertThat(lastkey.compareTo(key) < 0).as("lastkey < key").isTrue();
-            lastkey = key;
-        }
-    }
-
-    @Test
     public void testArrayOfObject() throws IOException {
         Object[] original = new Object[]{map(
             "id", "foo"

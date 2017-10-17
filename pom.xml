@@ -96,7 +96,6 @@
     <infinispan.version>9.0.0.Final</infinispan.version>
     <jackson.version>2.8.10</jackson.version>
     <junit.version>4.12</junit.version>
-    <keycloak.version>2.5.4.Final</keycloak.version>
     <kubernetes.client.version>2.2.13</kubernetes.client.version>
     <mockwebserver.version>0.0.15</mockwebserver.version>
     <okhttp-eventsource.version>1.3.2</okhttp-eventsource.version>
@@ -127,6 +126,7 @@
     <process-exec-maven-plugin.version>0.8</process-exec-maven-plugin.version>
     <swagger-maven-plugin.version>1.0.0</swagger-maven-plugin.version>
     <swagger2markup-maven-plugin.version>1.1.0</swagger2markup-maven-plugin.version>
+    <base64.version>2.3.9</base64.version>
   </properties>
 
   <modules>
@@ -636,26 +636,6 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.keycloak</groupId>
-        <artifactId>keycloak-spring-security-adapter</artifactId>
-        <version>${keycloak.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.keycloak</groupId>
-        <artifactId>keycloak-common</artifactId>
-        <version>${keycloak.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.keycloak</groupId>
-        <artifactId>keycloak-core</artifactId>
-        <version>${keycloak.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.keycloak</groupId>
-        <artifactId>keycloak-adapter-core</artifactId>
-        <version>${keycloak.version}</version>
-      </dependency>
-      <dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>${postgresql.version}</version>
@@ -700,18 +680,6 @@
         <scope>test</scope>
       </dependency>
 
-      <dependency>
-        <groupId>org.keycloak</groupId>
-        <artifactId>keycloak-admin-client</artifactId>
-        <version>${keycloak.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.resteasy</groupId>
-        <artifactId>resteasy-multipart-provider</artifactId>
-        <version>${resteasy.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-
       <!-- Only here to exclude commons-logging transitive dependency - not direct dependency-->
       <dependency>
         <groupId>org.apache.james</groupId>
@@ -724,6 +692,12 @@
             <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>net.iharder</groupId>
+        <artifactId>base64</artifactId>
+        <version>${base64.version}</version>
       </dependency>
 
     </dependencies>
@@ -922,11 +896,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
-            <configuration>
-              <systemPropertyVariables>
-                <github.oauth.token>${github.oauth.token}</github.oauth.token>
-              </systemPropertyVariables>
-            </configuration>
             <executions>
               <execution>
                 <goals>

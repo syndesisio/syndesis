@@ -15,6 +15,11 @@
  */
 package io.syndesis.core;
 
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.Condition;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -24,9 +29,6 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * Unit tests for KeyGenerator
@@ -39,11 +41,12 @@ public class KeyGeneratorTest {
      */
     @Test
     public void testCreateKey() {
-        // Check to make sure we don't generate dup keys
+        // Check to make sure we don't generate dup keys and that they are ordered properly
         String last = KeyGenerator.createKey();
         for (int i = 0; i < 1000000; i++) {
+            final String lastKey = last;
             final String key = KeyGenerator.createKey();
-            Assert.assertNotEquals(key, last);
+            Assertions.assertThat(key).is(new Condition<>((other) -> lastKey.compareTo(other) < 0, "greater than " + lastKey));
             last = key;
         }
     }
@@ -71,16 +74,4 @@ public class KeyGeneratorTest {
             + " of distinct keys", count, keys.size());
     }
 
-    /**
-     * Generate keys in a tight loop and verify that we don't generate a dup key
-     * since keys have a timestamp component to them.
-     */
-    @Test
-    public void testGetRandomPart() {
-        final long last = KeyGenerator.getRandomPart(0);
-        for (int i = 0; i < 1000000; i++) {
-            final long key = KeyGenerator.getRandomPart(0);
-            Assert.assertNotEquals(key, last);
-        }
-    }
 }

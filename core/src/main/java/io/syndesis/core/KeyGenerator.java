@@ -15,6 +15,8 @@
  */
 package io.syndesis.core;
 
+import net.iharder.Base64;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
@@ -22,8 +24,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.System.currentTimeMillis;
-
-import org.keycloak.common.util.Base64;
 
 /**
  * Generates lexically sortable unique keys based on:
