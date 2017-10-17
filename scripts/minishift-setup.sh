@@ -8,7 +8,7 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 cd ..
 
 # Lets try to detect the local machine ip..
-LOCAL_IP="$(nslookup $(hostname) | tail -n +4 | grep Address | cut -d " " -f 2)"
+LOCAL_IP="$(dig $(hostname) +short)"
 LOCAL_IP="${1:-$LOCAL_IP}"
 
 sed "s/192.168.64.2/$(minishift ip)/" src/config.json.minishift > src/config.json
