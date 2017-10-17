@@ -20,17 +20,21 @@ git clone https://github.com/syndesisio/syndesis-ui.git
 # change directory to Syndesis
 cd syndesis-ui
 
-# Configure the UI
-sed "s/192.168.64.2/$(minishift ip)/" src/config.json.minishift > src/config.json
+# Configure the UI and Minishfit for dev mode.
+./scripts/minishift-setup.sh
 
 # install the dependencies
 yarn
 
 # start the server
-yarn start
+yarn start:minishift
 ```
 
-Go to [http://0.0.0.0:4200](http://0.0.0.0:4200) or [http://localhost:4200](http://localhost:4200) in your browser.
+Bring up the syndesis console in your browser.  You can start load it from the command line by running:
+
+```bash
+open http://$(oc get routes syndesis --template "{{.spec.host}}")
+```
 
 ## Table of Contents
 
