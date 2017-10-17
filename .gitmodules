@@ -7,17 +7,17 @@
 [submodule "project"]
 	path = project
 	url = https://github.com/syndesisio/syndesis-project.git
-[submodule "integration-runtime"]
-	path = integration-runtime
+[submodule "runtime"]
+	path = runtime
 	url = https://github.com/syndesisio/syndesis-integration-runtime.git
-[submodule "syndesis-verifier"]
-	path = syndesis-verifier
+[submodule "verifier"]
+	path = verifier
 	url = https://github.com/syndesisio/syndesis-verifier.git
 [submodule "ux"]
 	path = ux
 	url = https://github.com/syndesisio/syndesis-ux.git
-[submodule "system-tests"]
-	path = system-tests
+[submodule "tests"]
+	path = tests
 	url = https://github.com/syndesisio/syndesis-system-tests.git
 [submodule "connectors"]
 	path = connectors
