@@ -857,7 +857,7 @@ objects:
           - name: AB_OFF
             value: "true"
           - name: JAVA_OPTIONS
-            value: "-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.trustStore=/tls-keystore/openshift-truststore.jks -Duser.home=/tmp"
+            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
           - name: NAMESPACE
             valueFrom:
               fieldRef:
