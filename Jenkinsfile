@@ -67,7 +67,7 @@ slave {
                             }
 
                             stage('System Tests') {
-                                test(component: 'syndesis', namespace: "${testingNamespace}", serviceAccount: 'jenkins')
+                                test(component: 'syndesis', serviceAccount: 'jenkins')
                             }
 
                             if ("master" == branch) {
