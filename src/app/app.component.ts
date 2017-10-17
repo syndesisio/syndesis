@@ -1,30 +1,17 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  OnInit,
-  AfterViewInit,
-  ViewChild,
-} from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Restangular } from 'ngx-restangular';
-import { OAuthService } from 'angular-oauth2-oidc-hybrid';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Response } from '@angular/http';
-import {
-  Notification,
-  NotificationEvent,
-  NotificationService,
-} from 'patternfly-ng';
+import { saveAs } from 'file-saver';
+import { Restangular } from 'ngx-restangular';
+import { Notification, NotificationEvent, NotificationService } from 'patternfly-ng';
+import { Observable } from 'rxjs/Observable';
 
-import { TestSupportService } from './store/test-support.service';
-
-import { log } from './logging';
-
-import { ConfigService } from './config.service';
 import { ModalService } from './common/modal/modal.service';
 import { NavigationService } from './common/navigation.service';
 import { UserService } from './common/user.service';
+import { ConfigService } from './config.service';
+import { log } from './logging';
 import { User } from './model';
-import { saveAs } from 'file-saver';
+import { TestSupportService } from './store/test-support.service';
 
 @Component({
   selector: 'syndesis-root',
@@ -51,7 +38,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    * @type {boolean}
    * Flag used to determine whether or not the user is logged in.
    */
-  loggedIn = false;
+  loggedIn = true;
 
   /**
    * @type {boolean}
@@ -76,7 +63,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     private config: ConfigService,
-    private oauthService: OAuthService,
     private userService: UserService,
     public testSupport: TestSupportService,
     private notificationService: NotificationService,
@@ -131,7 +117,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     document.getElementById('appName').setAttribute('content', title);
     document.getElementById('appTitle').setAttribute('content', title);
     document.getElementById('touchIcon').setAttribute('href', touchIcon);
-    this.loggedIn = this.oauthService.hasValidAccessToken();
     this.user = this.userService.user;
     this.notifications = this.notificationService.getNotifications();
     this.showClose = true;

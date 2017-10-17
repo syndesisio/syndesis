@@ -1,141 +1,50 @@
+import { APP_INITIALIZER, NgModule, NgZone } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, NgZone, APP_INITIALIZER } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-
-import { RestangularModule } from 'ngx-restangular';
-import { OAuthService, OAuthModule } from 'angular-oauth2-oidc-hybrid';
 import { DynamicFormsCoreModule } from '@ng2-dynamic-forms/core';
-import { Observable } from 'rxjs/Observable';
-
 import {
-  TabsModule,
-  ModalModule,
+  AlertModule,
   BsDropdownModule,
   CollapseModule,
-  AlertModule,
+  ModalModule,
   PopoverModule,
+  TabsModule,
   TooltipModule,
   TypeaheadModule,
 } from 'ngx-bootstrap';
 import { TagInputModule } from 'ngx-chips';
-import { Notification, NotificationModule, NotificationService, NotificationType } from 'patternfly-ng';
-
-import { AppRoutingModule } from './approuting/approuting.module';
-import { StoreModule } from './store/store.module';
-import { SyndesisCommonModule } from './common/common.module';
+import { RestangularModule } from 'ngx-restangular';
+import { NotificationModule, NotificationService } from 'patternfly-ng';
+import { DataMapperModule } from 'syndesis.data.mapper';
 
 import { AppComponent } from './app.component';
-import { ConfigService } from './config.service';
-import { UserService } from './common/user.service';
+import { AppRoutingModule } from './approuting/approuting.module';
 import { CanDeactivateGuard } from './common/can-deactivate-guard.service';
-import { log } from './logging';
-
-import { DataMapperModule } from 'syndesis.data.mapper';
+import { SyndesisCommonModule } from './common/common.module';
+import { UserService } from './common/user.service';
+import { ConfigService } from './config.service';
+import { StoreModule } from './store/store.module';
 
 export function appInitializer(
   configService: ConfigService,
-  oauthService: OAuthService,
   userService: UserService,
   ngZone: NgZone,
   notificationService: NotificationService,
 ) {
   return () => {
-    return configService
-      .load()
-      .then(() => {
-        oauthService.clientId = configService.getSettings('oauth', 'clientId');
-        oauthService.scope = (configService.getSettings(
-          'oauth',
-          'scopes',
-        ) as string[]).join(' ');
-        oauthService.oidc = configService.getSettings('oauth', 'oidc');
-        oauthService.hybrid = configService.getSettings('oauth', 'hybrid');
-        oauthService.setStorage(sessionStorage);
-        oauthService.issuer = configService.getSettings('oauth', 'issuer');
-
-        return oauthService.loadDiscoveryDocument();
-      })
-      .then(() => {
-        // If we don't have a valid token, then let's try to get one. This means we haven't logged in at all.
-        if (!oauthService.hasValidAccessToken()) {
-          // Let's get the current location for the redirect URI.
-          let currentLocation = window.location.href;
-          const hashIndex = currentLocation.indexOf('#');
-          if (hashIndex > 0) {
-            currentLocation = currentLocation.substring(0, hashIndex);
-          }
-          oauthService.redirectUri = currentLocation;
-
-          // Before we kick off the implicit flow, we should check that this isn't a redirect back from the auth server
-          // and the token isn't present in the location hash - tryLogin does that.
-          if (!oauthService.tryLogin()) {
-            // There is no token stored or in location hash so kick off implicit flow.
-            return oauthService.initImplicitFlow();
-          }
-        }
-
-        // Use the token to load our user details and set up the refresh token flow.
-        oauthService.loadUserProfile().then(() => {
-          userService.setUser(oauthService.getIdentityClaims());
-
-          // Only do refreshes if we're doing a hybrid oauth flow.
-          if (oauthService.hybrid) {
-            ngZone.runOutsideAngular(() => {
-
-              const notification: Notification = {
-                type          : NotificationType.WARNING,
-                header        : 'Session expired!',
-                message       : 'Please refresh this page by clicking this link or your browser reload button',
-                primaryAction : { id: 'reload', title: 'Reload this page' },
-                moreActions   : [],
-                showClose     : false,
-              };
-
-              // see https://christianliebel.com/2016/11/angular-2-protractor-timeout-heres-fix/
-              // registered observable / timeout makes protractor wait forever
-              Observable.interval(1000 * 60).subscribe(() => {
-                ngZone.run(() => {
-                  oauthService
-                    .refreshToken()
-                    .catch(reason => {
-                      log.errorc(
-                        () => 'Failed to refresh token',
-                        () => new Error(reason),
-                      );
-                      if (!notificationService.getNotifications().find(n => n === notification)) {
-                        notificationService.getNotifications().push(notification);
-                      }
-                    });
-                });
-              });
-            });
-          }
-        });
-      });
+    return configService.load();
   };
 }
 
 export function restangularProviderConfigurer(
   restangularProvider: any,
   config: ConfigService,
-  oauthService: OAuthService,
 ) {
   restangularProvider.setPlainByDefault(true);
   restangularProvider.setBaseUrl(config.getSettings().apiEndpoint);
-
-  restangularProvider.addFullRequestInterceptor(
-    (_element, _operation, _path, _url, headers) => {
-      const accessToken = oauthService.getAccessToken();
-      return {
-        headers: Object.assign({}, headers, {
-          Authorization: 'Bearer ' + accessToken,
-        }),
-      };
-    },
-  );
 
   restangularProvider.addResponseInterceptor((data: any, operation: string) => {
     if (operation === 'getList' && data && Array.isArray(data.items)) {
@@ -179,7 +88,7 @@ export function restangularProviderConfigurer(
     HttpModule,
     DynamicFormsCoreModule.forRoot(),
     RestangularModule.forRoot(
-      [ConfigService, OAuthService],
+      [ConfigService],
       restangularProviderConfigurer,
     ),
     TabsModule.forRoot(),
@@ -194,7 +103,6 @@ export function restangularProviderConfigurer(
     AppRoutingModule,
     StoreModule,
     SyndesisCommonModule.forRoot(),
-    OAuthModule.forRoot(),
     DataMapperModule,
     NotificationModule,
   ],
@@ -202,11 +110,10 @@ export function restangularProviderConfigurer(
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
-      deps: [ConfigService, OAuthService, UserService, NgZone, NotificationService],
+      deps: [ConfigService, UserService, NgZone, NotificationService],
       multi: true,
     },
     ConfigService,
-    OAuthService,
     UserService,
     CanDeactivateGuard,
   ],
