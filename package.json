@@ -84,6 +84,7 @@
     "karma-jasmine": "1.1.0",
     "karma-junit-reporter": "1.2.0",
     "karma-mocha-reporter": "2.2.3",
+    "my-local-ip": "^1.0.0",
     "ncp": "^2.0.0",
     "patternfly-sass": "3.23.2",
     "prettier": "^1.5.2",

@@ -4732,6 +4732,10 @@ mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
 
+my-local-ip@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/my-local-ip/-/my-local-ip-1.0.0.tgz#37585555a4ff1985309edac7c2a045a466be6c32"
+
 nan@^2.3.0, nan@^2.3.2:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.7.0.tgz#d95bf721ec877e08db276ed3fc6eb78f9083ad46"

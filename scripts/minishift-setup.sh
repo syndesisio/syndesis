@@ -8,7 +8,9 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 cd ..
 
 # Lets try to detect the local machine ip..
-LOCAL_IP="$(dig $(hostname) +short)"
+LOCAL_IP="$(./node_modules/.bin/my-local-ip)"
+echo "DETECTED Local IP is: ${LOCAL_IP}"
+
 LOCAL_IP="${1:-$LOCAL_IP}"
 
 sed "s/192.168.64.2/$(minishift ip)/" src/config.json.minishift > src/config.json
