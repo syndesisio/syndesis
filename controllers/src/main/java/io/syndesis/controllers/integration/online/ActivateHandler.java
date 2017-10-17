@@ -63,16 +63,22 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
     @Override
     public StatusUpdate execute(Integration integration) {
 
-        int userIntegrations = countIntegrations(integration);
-        if (userIntegrations >= properties.getMaxIntegrationsPerUser()) {
-            //What the user sees.
-            return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userIntegrations + " integrations, while the maximum allowed number is " + properties.getMaxIntegrationsPerUser() + ".");
+        final int maxIntegrationsPerUser = properties.getMaxIntegrationsPerUser();
+        if (maxIntegrationsPerUser != ControllersConfigurationProperties.UNLIMITED) {
+            int userIntegrations = countIntegrations(integration);
+            if (userIntegrations >= maxIntegrationsPerUser) {
+                //What the user sees.
+                return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userIntegrations + " integrations, while the maximum allowed number is " + maxIntegrationsPerUser + ".");
+            }
         }
 
-        int userDeployments = countDeployments(integration);
-        if (userDeployments >= properties.getMaxDeploymentsPerUser()) {
-            //What we actually want to limit. So even though this should never happen, we still need to make sure.
-            return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userDeployments + " deployments, while the maximum allowed number is " + properties.getMaxDeploymentsPerUser() + ".");
+        final int maxDeploymentsPerUser = properties.getMaxDeploymentsPerUser();
+        if (maxDeploymentsPerUser != ControllersConfigurationProperties.UNLIMITED) {
+            int userDeployments = countDeployments(integration);
+            if (userDeployments >= maxDeploymentsPerUser) {
+                //What we actually want to limit. So even though this should never happen, we still need to make sure.
+                return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userDeployments + " deployments, while the maximum allowed number is " + maxDeploymentsPerUser + ".");
+            }
         }
 
         logInfo(integration,"Build started: {}, isRunning: {}, Deployment ready: {}",
