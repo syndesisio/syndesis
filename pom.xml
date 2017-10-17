@@ -34,10 +34,11 @@
     </license>
   </licenses>
   <properties>
-    <frontend-maven-plugin-version>1.4</frontend-maven-plugin-version>
-    <node.version>v6.11.0</node.version>
+    <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
+    <frontend-maven-plugin-version>1.6</frontend-maven-plugin-version>
+    <node.version>v8.7.0</node.version>
     <npm.version>3.10.10</npm.version>
-    <yarn.version>v0.24.6</yarn.version>
+    <yarn.version>v1.2.1</yarn.version>
   </properties>
 
   <build>
@@ -115,6 +116,22 @@
                 </configuration>
             </execution>
         </executions>
+    </plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>${clean-maven-plugin-version}</version>
+        <configuration>
+            <followSymLinks>false</followSymLinks>
+            <filesets>
+                <fileset>
+                    <directory>node_modules</directory>
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                </fileset>
+            </filesets>
+        </configuration>
     </plugin>
     </plugins>
   </build>
