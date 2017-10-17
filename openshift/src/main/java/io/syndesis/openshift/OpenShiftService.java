@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.fabric8.openshift.api.model.User;
 
 public interface OpenShiftService {
 
@@ -94,5 +95,11 @@ public interface OpenShiftService {
      * @return                  The list of {@link DeploymentConfig}s.
      */
     List<DeploymentConfig> getDeploymentsByLabel(Map<String, String> labels);
+
+    /**
+     * Returns the currently logged in user.
+     * @return The currently logged in user.
+     */
+    User whoAmI(String token);
 
 }

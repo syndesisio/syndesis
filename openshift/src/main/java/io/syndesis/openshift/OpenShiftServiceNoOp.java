@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.fabric8.openshift.api.model.User;
+import io.fabric8.openshift.api.model.UserBuilder;
 
 public class OpenShiftServiceNoOp implements OpenShiftService {
 
@@ -63,6 +65,11 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     @Override
     public List<DeploymentConfig> getDeploymentsByLabel(Map<String, String> labels) {
         return Collections.emptyList();
+    }
+
+    @Override
+    public User whoAmI(String openShiftToken) {
+        return new UserBuilder().withNewMetadata().withName("openshift_noop").and().withFullName("OpenShift NoOp").build();
     }
 
     @Override
