@@ -17,7 +17,7 @@ jobs:
           rm -rf $(dirname $(which yarn))/yarn*
           # download latest
           rm -rf ~/.yarn
-          curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.28.4
+          curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.2.1
           echo 'export PATH="${PATH}:${HOME}/.yarn/bin"' >> $BASH_ENV
 
     - run:
@@ -28,18 +28,9 @@ jobs:
 
     - checkout
 
-    - restore_cache:
-        key: syndesis-ui-{{ checksum "package.json" }}
-
     - run:
         name: Install Dependencies
-        command: yarn install --verbose --no-progress
-
-    - save_cache:
-        key: syndesis-ui-{{ checksum "package.json" }}
-        paths:
-        - ~/.yarn
-        - ~/.cache/yarn
+        command: rm -Rf ./node_modules && yarn cache clean && yarn install --verbose --no-progress
 
     - run:
         name: Run AOT compile
