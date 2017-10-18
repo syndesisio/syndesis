@@ -86,6 +86,7 @@ public class EventBusToWebSocket extends EventBusToServerSentEvents {
             }
             LOG.debug("Principal is: {}", reservation.getPrincipal());
             connection.send("connected", "message", null, null);
+            connection.setKeepAliveTime(25*1000);
             bus.subscribe(subscriptionId, (type, data) -> {
                 if (connection.isOpen()) {
                     connection.send(data, type, null, null);
