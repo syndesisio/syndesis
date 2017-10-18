@@ -745,6 +745,8 @@ objects:
             - --skip-auth-regex=/api/v1/index.html
             - --skip-auth-regex=/api/v1/credentials/callback
             - --skip-auth-preflight
+            - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
+            - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
             - --openshift-sar={"namespace":"${OPENSHIFT_PROJECT}","resource":"pods","verb":"get"}
           env:
           - name: OAUTH_COOKIE_SECRET
