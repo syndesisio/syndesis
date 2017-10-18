@@ -65,7 +65,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
 
         final int maxIntegrationsPerUser = properties.getMaxIntegrationsPerUser();
         if (maxIntegrationsPerUser != ControllersConfigurationProperties.UNLIMITED) {
-            int userIntegrations = countIntegrations(integration);
+            int userIntegrations = countActiveIntegrationsOfSameUserAs(integration);
             if (userIntegrations >= maxIntegrationsPerUser) {
                 //What the user sees.
                 return new StatusUpdate(Integration.Status.Deactivated, "User has currently " + userIntegrations + " integrations, while the maximum allowed number is " + maxIntegrationsPerUser + ".");
@@ -166,20 +166,19 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
     }
 
     /**
-     * Count the integrations (in DB) of the owner of the specified integration.
+     * Counts active integrations (in DB) of the owner of the specified integration.
      * @param integration   The specified integration.
      * @return              The number of integrations (excluding the current).
      */
-    private int countIntegrations(Integration integration) {
+    private int countActiveIntegrationsOfSameUserAs(Integration integration) {
         String id = integration.getId().orElse(null);
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         return (int) dataManager.fetchAll(Integration.class).getItems()
             .stream()
-            .filter(i -> i.getId().isPresent() && !i.getId().get().equals(id)) //The "current" integration will already be in the database.
-            .filter(i -> username.equals(i.getUserId().orElse(null)))
-            .filter(i -> i.getStatus().isPresent() && (Integration.Status.Activated.equals(i.getCurrentStatus().orElse(null))) ||
-                                                       Integration.Status.Activated.equals(i.getCurrentStatus().orElse(null)))
+            .filter(i -> !i.idEquals(id)) //The "current" integration will already be in the database.
+            .filter(i -> i.getUserId().map(username::equals).orElse(Boolean.FALSE))
+            .filter(i -> Integration.Status.Activated.equals(i.getStatus()))
             .count();
     }
 

@@ -107,12 +107,10 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     Optional<BigInteger> getTimesUsed();
 
     @JsonIgnore
-    default Optional<IntegrationStatus> getStatus() {
+    default IntegrationRevisionState getStatus() {
         Optional<IntegrationRevision> deployedRevision = getDeployedRevision();
 
-        return Optional.of(new IntegrationStatus.Builder()
-            .currentState(deployedRevision.map(r -> r.getCurrentState()).orElse(IntegrationRevisionState.Pending))
-            .build());
+        return deployedRevision.map(r -> r.getCurrentState()).orElse(IntegrationRevisionState.Pending);
     }
 
     @Override
