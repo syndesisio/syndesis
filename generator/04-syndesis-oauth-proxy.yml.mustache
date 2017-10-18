@@ -84,6 +84,7 @@
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            - --upstream-flush=0
             {{#Restricted}}- --openshift-sar={"namespace":"${OPENSHIFT_PROJECT}","resource":"pods","verb":"get"}{{/Restricted}}
           env:
           - name: OAUTH_COOKIE_SECRET
