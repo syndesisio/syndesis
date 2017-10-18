@@ -131,14 +131,8 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Function that calls UserService to log the user out.
    */
   logout() {
-    this.popNotification({
-      type: NotificationType.SUCCESS,
-      header: 'Logout Successful',
-      message: 'You\'ve successfully been logged out.',
-      showClose: true,
-    });
     this.loggedIn =  false;
-    //return this.userService.logout();
+    return this.userService.logout();
   }
 
   /**

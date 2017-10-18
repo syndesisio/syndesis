@@ -32,15 +32,10 @@ export class UserService {
 
   /**
    * Log the user out
-   * @param {Object} body
    * @returns {Observable<User[]>}
    */
-  logout(body: Object): Observable<User[]> {
-    const bodyString = JSON.stringify(body);
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
-
-    return this.http.post(this.apiBaseUrl + '/oauth/sign_out', bodyString, options)
+  logout(): Observable<User[]> {
+    return this.http.get(this.apiBaseUrl + '/oauth/sign_out')
       .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
