@@ -65,12 +65,6 @@ export class DashboardIntegrationsComponent implements OnInit {
     let total = 0;
 
     (this.integrations || []).forEach(function(a) {
-      /* TODO - too noisy
-      log.debugc(() => 'Integration: ' + JSON.stringify(a));
-      log.debugc(() => 'currentStatus: ' + JSON.stringify(a.currentStatus));
-      log.debugc(() => 'desiredStatus: ' + JSON.stringify(a.desiredStatus));
-      */
-
       switch (a.currentStatus) {
         case 'Activated':
           total = total + 1;
@@ -159,20 +153,6 @@ export class DashboardIntegrationsComponent implements OnInit {
     );
   }
 
-  //-----  Times Used ------------------->>
-
-  randomizeTimesUsed(integration: Integration) {
-    // For testing purposes only
-    /*
-    if (!integration.timesUsed) {
-      log.debugc(() => 'No times used available, auto-generating one..');
-      return Math.floor(Math.random() * 25) + 1;
-    } else {
-      log.debugc(() => 'Times used: ' + JSON.stringify(integration['timesUsed']));
-      return integration.timesUsed;
-    }
-    */
-  }
 
   //-----  Initialization ------------------->>
 
