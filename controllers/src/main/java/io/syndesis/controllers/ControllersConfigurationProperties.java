@@ -23,6 +23,8 @@ public class ControllersConfigurationProperties {
 
     // Default values ....
 
+    public static final int UNLIMITED = 0;
+
     private int maxIntegrationsPerUser = 1;
     private int maxDeploymentsPerUser = 1;
 
