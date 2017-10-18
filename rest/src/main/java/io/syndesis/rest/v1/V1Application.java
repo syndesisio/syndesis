@@ -28,6 +28,7 @@ public class V1Application extends Application {
     public V1Application() {
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setVersion("v1");
+        beanConfig.setTitle("Syndesis Rest API");
         beanConfig.setSchemes(new String[]{"http", "https"});
         beanConfig.setBasePath("/api/v1");
         beanConfig.setResourcePackage(getClass().getPackage().getName());
