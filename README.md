@@ -13,7 +13,7 @@
 - [Authentication](#authentication)
 
 ### Swagger
-[![Swagger](http://dgrechka.net/swagger_validator_content_type_proxy.php?url=https://circleci.com/api/v1/project/syndesisio/syndesis-rest/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)](https://online.swagger.io/validator/debug?url=https://circleci.com/api/v1/project/syndesisio/syndesis-rest/latest/artifacts/0/$CIRCLE_ARTIFACTS/swagger.json)
+[![Swagger](http://dgrechka.net/swagger_validator_content_type_proxy.php?url=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/api/v1/swagger.json)](https://online.swagger.io/validator/debug?url=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/api/v1/swagger.json)
 
 # Building
 
