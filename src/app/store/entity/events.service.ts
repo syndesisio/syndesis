@@ -45,17 +45,17 @@ export class EventsService {
           response => {
             const apiEndpoint = this.config.getSettings().apiEndpoint;
             const reservation = response.data;
-            try {
-              // First try to connect via a WebSocket
-              const wsApiEndpoint = apiEndpoint.replace(/^http/, 'ws');
-              this.connectWebSocket(
-                wsApiEndpoint + '/event/streams.ws/' + reservation,
-              );
-              log.info('Connecting using web socket');
-              this.starting = false;
-            } catch (error) {
-              // Then fallback to using EventSource
-              log.info('Unable to connect web socket, falling back to SSE');
+//            try {
+//              // First try to connect via a WebSocket
+//              const wsApiEndpoint = apiEndpoint.replace(/^http/, 'ws');
+//              this.connectWebSocket(
+//                wsApiEndpoint + '/event/streams.ws/' + reservation,
+//              );
+//              log.info('Connecting using web socket');
+//              this.starting = false;
+//            } catch (error) {
+//              // Then fallback to using EventSource
+//              log.info('Unable to connect web socket, falling back to SSE');
               try {
                 this.connectEventSource(
                   apiEndpoint + '/event/streams/' + reservation,
@@ -65,7 +65,7 @@ export class EventsService {
               } catch (err) {
                 log.info('Failed to connect to event source');
               }
-            }
+//            }
           },
           error => {
             if (sub) {
