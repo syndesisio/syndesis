@@ -18,7 +18,7 @@ import {
 import { TagInputModule } from 'ngx-chips';
 import { RestangularModule } from 'ngx-restangular';
 import { NotificationModule, NotificationService } from 'patternfly-ng';
-import { DataMapperModule } from 'syndesis.data.mapper';
+import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './approuting/approuting.module';

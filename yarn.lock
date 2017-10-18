@@ -86,7 +86,7 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/common@>=4.1.0", "@angular/common@^4.0.1":
+"@angular/common@^4.0.1":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@angular/common/-/common-4.1.2.tgz#8f6d0496c204210bfe255feb437a72253f06984d"
 
@@ -112,7 +112,7 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/compiler@>=4.1.0", "@angular/compiler@^4.0.1":
+"@angular/compiler@^4.0.1":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-4.1.2.tgz#09542381162fd8dd962d84559498ce69a05071ea"
 
@@ -122,7 +122,7 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/core@>=4.1.0", "@angular/core@^4.0.0", "@angular/core@^4.0.1":
+"@angular/core@^4.0.0", "@angular/core@^4.0.1":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-4.1.2.tgz#37b5c040b9dd37003499aea04319d699e3870596"
 
@@ -132,7 +132,7 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/forms@>=4.1.0", "@angular/forms@^4.0.1":
+"@angular/forms@^4.0.1":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-4.1.2.tgz#82983e9ec5d0833e7ae14beb8e47dd357c88f490"
 
@@ -142,7 +142,7 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/http@>=4.1.0", "@angular/http@^4.0.0", "@angular/http@^4.0.1":
+"@angular/http@^4.0.0", "@angular/http@^4.0.1":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@angular/http/-/http-4.1.2.tgz#fc378c3330c0410e1fb8aac2546329a6887776e4"
 
@@ -152,7 +152,7 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/platform-browser-dynamic@>=4.1.0", "@angular/platform-browser-dynamic@^4.0.1":
+"@angular/platform-browser-dynamic@^4.0.1":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-4.1.2.tgz#d241c61792c794bec627ab64b31a66bea22abb9f"
 
@@ -162,7 +162,7 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/platform-browser@>=4.1.0", "@angular/platform-browser@^4.0.0", "@angular/platform-browser@^4.0.1":
+"@angular/platform-browser@^4.0.0", "@angular/platform-browser@^4.0.1":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-4.1.2.tgz#16e50a8f75b4d675c9e2903e499e0fe4c6a125ac"
 
@@ -180,7 +180,7 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/router@>=4.1.0", "@angular/router@^4.0.1":
+"@angular/router@^4.0.1":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@angular/router/-/router-4.1.2.tgz#31b1b126fec2e1c32f4557ef8eb605536adccb27"
 
@@ -195,6 +195,34 @@
   resolved "https://registry.yarnpkg.com/@angular/tsc-wrapped/-/tsc-wrapped-4.4.5.tgz#30a0cbb43a663aa75dca984894be4813778ddc9c"
   dependencies:
     tsickle "^0.21.0"
+
+"@atlasmap/atlasmap.data.mapper@^1.32.0-SNAPSHOT.20171018190510":
+  version "1.32.0-SNAPSHOT.20171018190510"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.32.0-SNAPSHOT.20171018190510.tgz#c62a6726aff0bb7db8565d3c84b91c27dee4d91e"
+  dependencies:
+    "@angular/common" "4.4.5"
+    "@angular/compiler" "4.4.5"
+    "@angular/core" "4.4.5"
+    "@angular/forms" "4.4.5"
+    "@angular/http" "4.4.5"
+    "@angular/platform-browser" "4.4.5"
+    "@angular/platform-browser-dynamic" "4.4.5"
+    "@angular/router" "4.4.5"
+    angular-in-memory-web-api ">=0.3.2"
+    bootstrap "^3.3.7"
+    chart.js "^2.5.0"
+    core-js "^2.4.1"
+    font-awesome "4.7.0"
+    jquery "3.1.1"
+    mkdirp "^0.5.1"
+    moment "^2.18.1"
+    ncp "^2.0.0"
+    ngx-bootstrap "1.6.6"
+    patternfly "3.26.1"
+    patternfly-ng "^0.9.2"
+    rxjs "5.4.2"
+    systemjs "0.19.40"
+    zone.js ">=0.8.4"
 
 "@compodoc/compodoc@1.0.0-beta.11":
   version "1.0.0-beta.11"
@@ -2803,7 +2831,7 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
-font-awesome@^4.7.0:
+font-awesome@4.7.0, font-awesome@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
 
@@ -5329,6 +5357,30 @@ patternfly-ng@0.13.3:
     rxjs "^5.0.1"
     zone.js "0.8.4"
 
+patternfly-ng@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-0.9.2.tgz#441dbdf0f082bb38b785b61a2c005a846eccfb7f"
+  dependencies:
+    "@angular/animations" "^4.0.1"
+    "@angular/common" "^4.0.1"
+    "@angular/compiler" "^4.0.1"
+    "@angular/compiler-cli" "^4.0.1"
+    "@angular/core" "^4.0.1"
+    "@angular/forms" "^4.0.1"
+    "@angular/http" "^4.0.1"
+    "@angular/platform-browser" "^4.0.1"
+    "@angular/platform-browser-dynamic" "^4.0.1"
+    "@angular/platform-server" "^4.0.1"
+    "@angular/router" "^4.0.1"
+    angular-tree-component "4.1.0"
+    c3 "^0.4.15"
+    core-js "2.4.1"
+    moment "2.17.1"
+    ngx-bootstrap "1.8.0"
+    patternfly "^3.26.1"
+    rxjs "5.0.1"
+    zone.js "0.8.4"
+
 patternfly-sass@3.23.2:
   version "3.23.2"
   resolved "https://registry.yarnpkg.com/patternfly-sass/-/patternfly-sass-3.23.2.tgz#f07a916fa1e04ab6bf541f8b7028428cc2fe8832"
@@ -5382,7 +5434,7 @@ patternfly@3.26.1:
     patternfly-bootstrap-combobox "~1.1.7"
     patternfly-bootstrap-treeview "~2.1.0"
 
-patternfly@^3.28.0:
+patternfly@^3.26.1, patternfly@^3.28.0:
   version "3.28.3"
   resolved "https://registry.yarnpkg.com/patternfly/-/patternfly-3.28.3.tgz#fe496b8d338fc5d94e324a382aebc2fa52c40ef3"
   dependencies:
@@ -6279,9 +6331,9 @@ rx@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/rx/-/rx-4.1.0.tgz#a5f13ff79ef3b740fe30aa803fb09f98805d4782"
 
-rxjs@5.4.1:
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.1.tgz#b62f757f279445d265a18a58fb0a70dc90e91626"
+rxjs@5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.0.1.tgz#3a69bdf9f0ca0a986303370d4708f72bdfac8356"
   dependencies:
     symbol-observable "^1.0.1"
 
@@ -6956,29 +7008,6 @@ swagger-js-codegen@1.7.12:
 symbol-observable@^1.0.1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.4.tgz#29bf615d4aa7121bdd898b22d4b3f9bc4e2aa03d"
-
-"syndesis.data.mapper@https://github.com/atlasmap/atlasmap-ui.git#d5dcb718fe12f754749a54f2eb85b925a41cc9b0":
-  version "1.0.0"
-  resolved "https://github.com/atlasmap/atlasmap-ui.git#d5dcb718fe12f754749a54f2eb85b925a41cc9b0"
-  dependencies:
-    "@angular/common" ">=4.1.0"
-    "@angular/compiler" ">=4.1.0"
-    "@angular/core" ">=4.1.0"
-    "@angular/forms" ">=4.1.0"
-    "@angular/http" ">=4.1.0"
-    "@angular/platform-browser" ">=4.1.0"
-    "@angular/platform-browser-dynamic" ">=4.1.0"
-    "@angular/router" ">=4.1.0"
-    angular-in-memory-web-api ">=0.3.2"
-    bootstrap "^3.3.7"
-    core-js "^2.4.1"
-    mkdirp "^0.5.1"
-    moment "^2.18.1"
-    ncp "^2.0.0"
-    ngx-bootstrap "1.6.6"
-    rxjs "5.4.1"
-    systemjs "0.19.40"
-    zone.js ">=0.8.4"
 
 systemjs@0.19.40:
   version "0.19.40"

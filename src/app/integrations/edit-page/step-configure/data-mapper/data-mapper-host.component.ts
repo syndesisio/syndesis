@@ -9,18 +9,18 @@ import {
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { DocumentDefinition } from 'syndesis.data.mapper';
-import { MappingDefinition } from 'syndesis.data.mapper';
-import { ConfigModel } from 'syndesis.data.mapper';
-import { MappingModel } from 'syndesis.data.mapper';
+import { DocumentDefinition } from '@atlasmap/atlasmap.data.mapper';
+import { MappingDefinition } from '@atlasmap/atlasmap.data.mapper';
+import { ConfigModel } from '@atlasmap/atlasmap.data.mapper';
+import { MappingModel } from '@atlasmap/atlasmap.data.mapper';
 
-import { InitializationService } from 'syndesis.data.mapper';
-import { ErrorHandlerService } from 'syndesis.data.mapper';
-import { DocumentManagementService } from 'syndesis.data.mapper';
-import { MappingManagementService } from 'syndesis.data.mapper';
-import { MappingSerializer } from 'syndesis.data.mapper';
+import { InitializationService } from '@atlasmap/atlasmap.data.mapper';
+import { ErrorHandlerService } from '@atlasmap/atlasmap.data.mapper';
+import { DocumentManagementService } from '@atlasmap/atlasmap.data.mapper';
+import { MappingManagementService } from '@atlasmap/atlasmap.data.mapper';
+import { MappingSerializer } from '@atlasmap/atlasmap.data.mapper';
 
-import { DataMapperAppComponent } from 'syndesis.data.mapper';
+import { DataMapperAppComponent } from '@atlasmap/atlasmap.data.mapper';
 
 import { ConfigService } from '../../../../config.service';
 import { IntegrationSupportService } from '../../../../store/integration-support.service';

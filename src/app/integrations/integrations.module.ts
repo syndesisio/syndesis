@@ -10,7 +10,7 @@ import {
   TabsModule,
 } from 'ngx-bootstrap';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { DataMapperModule } from 'syndesis.data.mapper';
+import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
 import { IntegrationsListModule } from './list/list.module';
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
