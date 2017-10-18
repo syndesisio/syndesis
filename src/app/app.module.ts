@@ -79,7 +79,8 @@ export function restangularProviderConfigurer(
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
+    // TODO - commenting this out for now as it seems to prevent the angular router from clearing it's child elements on route changes
+    //BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
