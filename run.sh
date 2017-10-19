@@ -29,11 +29,11 @@ while [ $# -gt 0 ]; do
 			shift 2
 		;;
 		--to) 
-			to="syndesis/syndesis-s2i-builder"
+			to="syndesis/syndesis-s2i"
 			to=${2:-$to}			
 
 			echo "Building Image: $to"
-			docker build $dir -t $to
+			docker build $dir/src/main/docker -t $to
 			shift 2 
 		;;
 		*)

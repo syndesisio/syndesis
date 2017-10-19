@@ -20,6 +20,8 @@
   </repositories>
 
   <properties>
+    <docker-image-name>syndesis/syndesis-s2i</docker-image-name>
+
     <docker.maven.plugin.fabric8.version>0.22.1</docker.maven.plugin.fabric8.version>
     <maven.dependency.plugin.version>3.0.2</maven.dependency.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
@@ -78,7 +80,7 @@
           </goals>
           <images>
             <image>
-              <name>syndesisio/${project.artifactId}</name>
+              <name>${docker-image-name}</name>
               <build>
                 <dockerFile>Dockerfile</dockerFile>
               </build>

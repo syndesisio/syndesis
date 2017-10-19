@@ -7,6 +7,6 @@ USER 1000
 
 RUN \
   cd /deployments/project; \
-  mvn clean package ; \
+  mvn -Dmaven.repo.local=/tmp/artifacts/m2 package -DskipTests -e -Dfabric8.skip=true; \
   rm -rf /deployments/project;
 
