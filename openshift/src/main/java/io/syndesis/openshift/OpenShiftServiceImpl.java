@@ -15,18 +15,21 @@
  */
 package io.syndesis.openshift;
 
+import io.fabric8.kubernetes.api.model.EnvVar;
+import io.fabric8.kubernetes.api.model.Quantity;
+import io.fabric8.kubernetes.client.RequestConfigBuilder;
+import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.fabric8.openshift.api.model.DeploymentConfigStatus;
+import io.fabric8.openshift.api.model.ImageStream;
+import io.fabric8.openshift.api.model.User;
+import io.fabric8.openshift.client.NamespacedOpenShiftClient;
+import io.fabric8.openshift.client.OpenShiftClient;
+import io.syndesis.core.Names;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-
-import io.fabric8.kubernetes.api.model.EnvVar;
-import io.fabric8.kubernetes.api.model.Quantity;
-import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.fabric8.openshift.api.model.DeploymentConfigStatus;
-import io.fabric8.openshift.api.model.ImageStream;
-import io.fabric8.openshift.client.NamespacedOpenShiftClient;
-import io.syndesis.core.Names;
 
 public class OpenShiftServiceImpl implements OpenShiftService {
 
@@ -144,6 +147,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public List<DeploymentConfig> getDeploymentsByLabel(Map<String, String> labels) {
         return openShiftClient.deploymentConfigs().withLabels(labels).list().getItems();
+    }
+
+    @Override
+    public User whoAmI(String openShiftToken) {
+        return openShiftClient.withRequestConfig(
+            new RequestConfigBuilder().withOauthToken(openShiftToken).build()
+        ).call(OpenShiftClient::currentUser);
     };
 
     private int nullSafe(Integer nr) {

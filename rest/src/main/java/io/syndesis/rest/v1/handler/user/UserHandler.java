@@ -15,30 +15,47 @@
  */
 package io.syndesis.rest.v1.handler.user;
 
-import javax.ws.rs.Path;
-
+import io.swagger.annotations.Api;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.user.User;
+import io.syndesis.openshift.OpenShiftService;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
-import io.swagger.annotations.Api;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @Path("/users")
 @Api(value = "users")
 @Component
 public class UserHandler extends BaseHandler implements Lister<User>, Getter<User> {
 
-    public UserHandler(DataManager dataMgr) {
+    private final OpenShiftService openShiftService;
+
+    public UserHandler(DataManager dataMgr, OpenShiftService openShiftService) {
         super(dataMgr);
+        this.openShiftService = openShiftService;
     }
 
-     @Override
+    @Override
     public Kind resourceKind() {
         return Kind.User;
     }
-}
 
+    @Path("~")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public User whoAmI() {
+        String token = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getCredentials());
+        io.fabric8.openshift.api.model.User openShiftUser = this.openShiftService.whoAmI(token);
+        Assert.notNull(openShiftUser, "A valid user is required");
+        return new User.Builder().username(openShiftUser.getMetadata().getName()).fullName(openShiftUser.getFullName()).build();
+    }
+}
