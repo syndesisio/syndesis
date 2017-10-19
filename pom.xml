@@ -62,6 +62,7 @@
           <arguments>
             <argument>-jar</argument>
             <argument>${project.build.directory}/syndesis-builder-image-generator.jar</argument>
+            <argument>--to=${basedir}/src/main/docker/project</argument>
           </arguments>
         </configuration>
       </plugin>
