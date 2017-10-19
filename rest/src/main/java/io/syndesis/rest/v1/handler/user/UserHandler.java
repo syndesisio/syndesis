@@ -31,6 +31,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Optional;
 
 @Path("/users")
 @Api(value = "users")
@@ -56,6 +57,10 @@ public class UserHandler extends BaseHandler implements Lister<User>, Getter<Use
         String token = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getCredentials());
         io.fabric8.openshift.api.model.User openShiftUser = this.openShiftService.whoAmI(token);
         Assert.notNull(openShiftUser, "A valid user is required");
-        return new User.Builder().username(openShiftUser.getMetadata().getName()).fullName(openShiftUser.getFullName()).build();
+        return new User.Builder()
+            .username(openShiftUser.getMetadata().getName())
+            .fullName(Optional.ofNullable(openShiftUser.getFullName()))
+            .name(Optional.ofNullable(openShiftUser.getFullName()))
+            .build();
     }
 }

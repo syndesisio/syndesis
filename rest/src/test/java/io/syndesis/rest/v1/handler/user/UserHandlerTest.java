@@ -55,5 +55,22 @@ public class UserHandlerTest {
         Assertions.assertThat(user.getUsername()).isEqualTo("testuser");
         Assertions.assertThat(user.getFullName()).isNotEmpty().hasValue("Test User");
     }
+    @Test
+    public void successfulWhoAmIWithoutFullName() {
+        openShiftServer.expect()
+            .get().withPath("/oapi/v1/users/~")
+            .andReturn(
+                200,
+                new UserBuilder().withNewMetadata().withName("testuser").and().build()
+            ).once();
+
+        SecurityContextHolder.getContext().setAuthentication(new PreAuthenticatedAuthenticationToken("testuser", "doesn'tmatter"));
+
+        UserHandler userHandler = new UserHandler(null, new OpenShiftServiceImpl(openShiftServer.getOpenshiftClient(), null));
+        User user = userHandler.whoAmI();
+        Assertions.assertThat(user).isNotNull();
+        Assertions.assertThat(user.getUsername()).isEqualTo("testuser");
+        Assertions.assertThat(user.getFullName()).isEmpty();
+    }
 
 }
