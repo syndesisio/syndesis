@@ -9,6 +9,7 @@
       "lastUpdated": 1492095344060,
       "icon": "fa-twitter",
       "connectorId": "twitter",
+      "userId":"developer",
       "configuredProperties": {
         "accessToken": "twitter-access-token",
         "accessTokenSecret": "twitter-access-token-secret",
@@ -28,6 +29,7 @@
       "tags":["example","test"],
       "icon": "fa-globe",
       "connectorId": "salesforce",
+      "userId":"developer",
       "configuredProperties": {
         "loginUrl": "https://login.salesforce.com",
         "clientId": "salesforce-client-id",
@@ -47,6 +49,7 @@
       "tags":["example","test"],
       "icon": "fa-globe",
       "connectorId": "http",
+      "userId":"developer",
       "configuredProperties": {}
     }
   },
@@ -61,6 +64,7 @@
       "tags":["example","test"],
       "icon": "fa-globe",
       "connectorId": "timer",
+      "userId":"developer",
       "configuredProperties": {}
     }
   },
@@ -76,6 +80,7 @@
       "tags":["example","test"],
       "currentStatus": "Activated",
       "desiredStatus": "Activated",
+      "userId":"developer",
       "steps": [
         {
           "id": "1",
@@ -176,6 +181,7 @@
       "currentStatus": "Activated",
       "statusMessage": "This integration failed. Please contact system admin for errors.",
       "tags":["example","test"],
+      "userId":"developer",
       "steps": [
         {
           "id": "5",
@@ -287,6 +293,7 @@
       "lastUpdated": 1492095344060,
       "desiredStatus": "Activated",
       "currentStatus": "Activated",
+      "userId":"developer",
       "tags":["example","test"],
       "steps": [
         {
@@ -400,6 +407,7 @@
       "desiredStatus": "Deactivated",
       "currentStatus": "Deactivated",
       "tags":["example","test"],
+      "userId":"developer",
       "steps": [
         {
           "id": "5",
@@ -512,6 +520,7 @@
       "desiredStatus": "Activated",
       "currentStatus": "Pending",
       "tags":["example","test"],
+      "userId":"developer",
       "steps": [
         {
           "id": "5",
@@ -624,6 +633,7 @@
       "desiredStatus": "Draft",
       "currentStatus": "Draft",
       "tags":["example","test"],
+      "userId":"developer",
       "steps": [
         {
           "id": "5",
@@ -736,6 +746,7 @@
       "desiredStatus": "Deleted",
       "currentStatus": "Deleted",
       "tags":["example","test"],
+      "userId":"developer",
       "steps": [
         {
           "id": "5",

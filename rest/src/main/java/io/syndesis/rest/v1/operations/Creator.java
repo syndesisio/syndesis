@@ -20,7 +20,9 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 
 import io.syndesis.dao.manager.WithDataManager;
 import io.syndesis.model.WithId;
@@ -30,7 +32,7 @@ public interface Creator<T extends WithId<T>> extends Resource, WithDataManager 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes("application/json")
-    default T create(@NotNull @Valid T obj) {
+    default T create(@Context SecurityContext sec, @NotNull @Valid T obj) {
         return getDataManager().create(obj);
     }
 
