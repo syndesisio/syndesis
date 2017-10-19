@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /workspace
     docker:
-    - image: node:7.9
+    - image: node:8.7
     environment:
       CHROME_BIN: /usr/bin/chromium
       DOCKER_VERSION: 17.04.0-ce
