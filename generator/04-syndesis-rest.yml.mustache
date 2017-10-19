@@ -86,6 +86,7 @@
           livenessProbe:
             httpGet:
               port: 8080
+              path: /api/v1/version
             initialDelaySeconds: 180
           readinessProbe:
             httpGet:

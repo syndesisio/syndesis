@@ -750,7 +750,7 @@ objects:
             name: syndesis-oauthproxy-tls
           resources:
             limits:
-              memory: 256Mi
+              memory: 200Mi
             requests:
               memory: 20Mi
         volumes:

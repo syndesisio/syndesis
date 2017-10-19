@@ -773,7 +773,7 @@ objects:
             name: syndesis-oauthproxy-tls
           resources:
             limits:
-              memory: 256Mi
+              memory: 200Mi
             requests:
               memory: 20Mi
         volumes:
@@ -876,6 +876,7 @@ objects:
           livenessProbe:
             httpGet:
               port: 8080
+              path: /api/v1/version
             initialDelaySeconds: 180
           readinessProbe:
             httpGet:
