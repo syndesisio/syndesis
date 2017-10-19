@@ -7,6 +7,7 @@ import {
     Output,
     QueryList,
     SimpleChanges,
+    ChangeDetectorRef,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
@@ -94,8 +95,11 @@ export class SyndesisFormComponent extends DynamicFormControlComponent implement
         }
     }
 
-    constructor(protected validationService: DynamicFormValidationService) {
-        super(validationService);
+    constructor(
+        protected validationService: DynamicFormValidationService,
+        protected detector: ChangeDetectorRef,
+    ) {
+        super(detector, validationService);
     }
 
     ngOnChanges(changes: SimpleChanges) {
