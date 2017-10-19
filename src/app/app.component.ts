@@ -2,9 +2,13 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angu
 import { Response } from '@angular/http';
 import { saveAs } from 'file-saver';
 import { Restangular } from 'ngx-restangular';
-import { Notification, NotificationEvent, NotificationService } from 'patternfly-ng';
+import {
+  Notification,
+  NotificationEvent,
+  NotificationService,
+  NotificationType,
+} from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
-
 import { ModalService } from './common/modal/modal.service';
 import { NavigationService } from './common/navigation.service';
 import { UserService } from './common/user.service';
@@ -120,6 +124,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.user = this.userService.user;
     this.notifications = this.notificationService.getNotifications();
     this.showClose = true;
+  }
+
+  /**
+   * Function that calls UserService to log the user out.
+   */
+  logout() {
+    this.loggedIn =  false;
+    return this.userService.logout();
   }
 
   /**

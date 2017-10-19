@@ -1,3 +1,5 @@
+@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
+
 :host, .app, main {
   height: 100%;
 }
@@ -18,6 +20,12 @@ main {
         a:focus {
           outline: none;
           text-decoration: none;
+        }
+      }
+
+      .dropdown {
+        li {
+          cursor: pointer;
         }
       }
 
