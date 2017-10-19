@@ -30,9 +30,6 @@ import { StoreModule } from './store/store.module';
 
 export function appInitializer(
   configService: ConfigService,
-  userService: UserService,
-  ngZone: NgZone,
-  notificationService: NotificationService,
 ) {
   return () => {
     return configService.load();
@@ -110,7 +107,7 @@ export function restangularProviderConfigurer(
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
-      deps: [ConfigService, UserService, NgZone, NotificationService],
+      deps: [ConfigService],
       multi: true,
     },
     ConfigService,

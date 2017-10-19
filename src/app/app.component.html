@@ -83,7 +83,7 @@
           <li class="nav-item-iconic">
             <span title="Username"
                   class="fa pficon-user"></span>
-            <span class="username">{{( user | async)?.name}}</span>
+            <span class="username">{{( user | async)?.name || ( user | async)?.fullName || ( user | async)?.username}}</span>
           </li>
 
           <!-- User Dropdown -->
