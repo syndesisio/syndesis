@@ -1,6 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+//import { HttpModule } from '@angular/http';
 import { NotificationModule, NotificationService } from 'patternfly-ng';
 
 import { EditableTagsComponent } from './editable/editable-tags.component';
@@ -25,6 +26,7 @@ import { TagInputModule } from 'ngx-chips';
 
 @NgModule({
   imports: [
+    //HttpModule,
     FormsModule,
     CommonModule,
     TagInputModule,

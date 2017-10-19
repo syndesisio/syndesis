@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Restangular } from 'ngx-restangular';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { ConfigService } from '../config.service';
@@ -32,12 +32,9 @@ export class UserService {
 
   /**
    * Log the user out
-   * @returns {Observable<User[]>}
    */
-  logout(): Observable<User[]> {
-    return this.http.get(this.apiBaseUrl + '/oauth/sign_out')
-      .map((res: Response) => res.json())
-      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  logout(): Observable<any> {
+    return this.http.get(this.apiBaseUrl + '/oauth/sign_out').map((res: any) => res.json());
   }
 
   setUser(u: User) {

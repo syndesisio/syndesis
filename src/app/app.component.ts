@@ -72,7 +72,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private nav: NavigationService,
     private modalService: ModalService,
-    private http: Response,
   ) {}
 
   ngOnInit() {
@@ -192,19 +191,6 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   handleClose($event: NotificationEvent): void {
     this.notificationService.remove($event.notification);
-  }
-
-  //-----  Toast ------------------->>
-
-  popNotification(notification) {
-    this.notificationService.message(
-      notification.type,
-      notification.header,
-      notification.message,
-      false,
-      null,
-      [],
-    );
   }
 
   ngAfterViewInit() {
