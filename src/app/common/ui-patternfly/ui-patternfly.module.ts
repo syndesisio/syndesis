@@ -8,7 +8,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ToolbarModule } from 'patternfly-ng';
 import { SyndesisFormComponent } from './syndesis-form-control.component';
 import { ListToolbarComponent } from './list-toolbar/list-toolbar.component';
-import { SyndesisComboboxDirective } from './syndesis-combobox.directive';
 
 @NgModule({
 
@@ -24,7 +23,6 @@ import { SyndesisComboboxDirective } from './syndesis-combobox.directive';
     declarations: [
         SyndesisFormComponent,
         ListToolbarComponent,
-        SyndesisComboboxDirective,
     ],
     exports: [
         DynamicFormsCoreModule,

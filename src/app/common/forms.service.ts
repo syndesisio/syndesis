@@ -29,11 +29,12 @@ export class FormFactoryService {
       if (!properties.hasOwnProperty(key)) {
         continue;
       }
-      const value = <ConfiguredConfigurationProperty>properties[key];
+      const field = <ConfiguredConfigurationProperty>properties[key];
+      const value = values[key];
       let formField: any;
-      const validators = value.required ? {'required': null} : {};
-      const errorMessages = value.required ? {'required': '{{label}} is required'} : {};
-      let type = (value.type || '').toLowerCase();
+      const validators = field.required ? {'required': null} : {};
+      const errorMessages = field.required ? {'required': '{{label}} is required'} : {};
+      let type = (field.type || '').toLowerCase();
       // first normalize the type
       switch (type) {
         case 'boolean':
@@ -49,7 +50,7 @@ export class FormFactoryService {
         case 'hidden':
           break;
         default:
-          type = (value.enum && value.enum.length) ? 'select' : 'text';
+          type = (field.enum && field.enum.length) ? 'select' : 'text';
           break;
       }
       // then use the appropriate ng2 dynamic forms constructor
@@ -57,9 +58,9 @@ export class FormFactoryService {
         formField = new DynamicCheckboxModel(
           {
             id: key,
-            label: value.displayName || key,
-            hint: value.description,
-            value: value.value || values[key] || value.defaultValue,
+            label: field.displayName || key,
+            hint: field.description,
+            value: value || field.value || field.defaultValue,
           },
           {
             element: {
@@ -75,12 +76,12 @@ export class FormFactoryService {
         formField = new DynamicTextAreaModel(
           {
             id: key,
-            label: value.displayName || key,
-            value: value.value || values[key] || value.defaultValue,
-            hint: value.description,
-            required: value.required,
-            rows: value.rows,
-            cols: value.cols,
+            label: field.displayName || key,
+            value: value || field.value || field.defaultValue,
+            hint: field.description,
+            required: field.required,
+            rows: field.rows,
+            cols: field.cols,
             validators: validators,
             errorMessages: errorMessages,
           },
@@ -99,13 +100,13 @@ export class FormFactoryService {
           {
             id: key,
             multiple: false,
-            label: value.displayName || key,
-            value: (values[key] && values[key] in value.enum) ? values[key] : value.defaultValue || value.enum[0].value,
-            hint: value.description,
-            required: value.required,
+            label: field.displayName || key,
+            value: value || field.defaultValue || field.enum[0].value,
+            hint: field.description,
+            required: field.required,
             validators: validators,
             errorMessages: errorMessages,
-            options: value.enum,
+            options: field.enum,
           },
           {
             element: {
@@ -118,23 +119,23 @@ export class FormFactoryService {
           },
         );
       } else {
-        if (value.secret) {
+        if (field.secret) {
           type = 'password';
         }
         formField = new DynamicInputModel(
           {
             id: key,
-            label: type === 'hidden' ? null : value.displayName || key,
+            label: type === 'hidden' ? null : field.displayName || key,
             inputType: type,
-            value: value.value || values[key] || value.defaultValue,
-            hint: value.description,
-            list: value.enum ? (<Array<any>>value.enum).map((val) => {
+            value: value || field.value || field.defaultValue,
+            hint: field.description,
+            list: field.enum ? (<Array<any>>field.enum).map((val) => {
               if (typeof val === 'string') {
                 return val;
               }
               return val['value'];
             }) : undefined,
-            required: value.required,
+            required: field.required,
             validators: validators,
             errorMessages: errorMessages,
           },
