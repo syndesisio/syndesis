@@ -12,7 +12,7 @@
     "start:minishift": "yarn ng serve --host 0.0.0.0 --disable-host-check",
     "lint": "yarn ng lint",
     "lint:fix": "yarn ng lint --fix",
-    "test": "yarn ng test",
+    "test": "yarn ng test --sourcemaps=false",
     "test:cc": "yarn ng test --watch=false --cc",
     "test:xvfb": "docker run --rm -v `pwd`:/syndesis-ui:z -w /syndesis-ui -u `id -u` docker.io/syndesis/karma-xvfb ./karma-xvfb.sh",
     "sw": "sw-precache --root=dist --config=sw-precache-config.js",
