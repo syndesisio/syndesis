@@ -342,10 +342,12 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
                 runLength: rev['runLength'] || Math.floor(Math.random() * 300),
                 status: [status],
                 actions: [
+                  /*
                   {
                     label: 'Duplicate',
                     action: 'duplicate',
                   },
+                  */
                 ],
               };
               let isDeployed = false;
