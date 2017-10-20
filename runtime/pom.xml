@@ -189,7 +189,7 @@
           <generator>
             <config>
               <spring-boot>
-                <name>syndesis/syndesis-rest:latest</name>
+                <name>syndesis/syndesis-rest:%l</name>
               </spring-boot>
             </config>
           </generator>
