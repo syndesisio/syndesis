@@ -28,7 +28,7 @@ public class Lists {
      */
     public static <T> List<T> notNullList(List<T> list) {
         if (list == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         } else {
             return list;
         }

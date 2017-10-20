@@ -16,8 +16,20 @@
  */
 package io.syndesis.integration.runtime;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.ServiceLoader;
+import java.util.Set;
+
+import static java.util.Optional.ofNullable;
+
 import io.syndesis.integration.model.Flow;
-import io.syndesis.integration.model.SyndesisHelpers;
 import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.integration.model.steps.Function;
@@ -29,36 +41,15 @@ import org.apache.camel.Expression;
 import org.apache.camel.Predicate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http4.HttpEndpoint;
-import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spi.Language;
-import org.apache.camel.spring.boot.CamelSpringBootApplicationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.ServiceLoader;
-import java.util.Set;
-
-import static java.util.Optional.ofNullable;
 
 /**
  * A Camel {@link RouteBuilder} which maps the SyndesisModel rules to Camel routes
  */
-@Component
 public class SyndesisRouteBuilder extends RouteBuilder {
     private static final transient Logger LOG = LoggerFactory.getLogger(SyndesisRouteBuilder.class);
 
@@ -68,11 +59,16 @@ public class SyndesisRouteBuilder extends RouteBuilder {
 
     private Set<String> localHosts = new HashSet<>(Arrays.asList("localhost", "0.0.0.0", "127.0.0.1"));
 
-    // must have a main method spring-boot can run
-    public static void main(String[] args) {
-        ApplicationContext applicationContext = new SpringApplication(SyndesisRouteBuilder.class).run(args);
-        CamelSpringBootApplicationController ctx = applicationContext.getBean(CamelSpringBootApplicationController.class);
-        ctx.run();
+    private final Set<StepHandler<? extends Step>> handlers;
+    private final SyndesisModel model;
+
+    public SyndesisRouteBuilder(SyndesisModel model, Collection<StepHandler<? extends Step>> handlers) {
+        this.model = model;
+
+        this.handlers = new HashSet<>(handlers);
+        for (StepHandler handler : ServiceLoader.load(StepHandler.class, getClass().getClassLoader())) {
+            this.handlers.add(handler);
+        }
     }
 
     private static String replacePrefix(String text, String prefix, String replacement) {
@@ -82,31 +78,13 @@ public class SyndesisRouteBuilder extends RouteBuilder {
         return text;
     }
 
-    @Bean
-    ServletRegistrationBean camelServlet() {
-        // use a @Bean to register the Camel servlet which we need to do
-        // because we want to use the camel-servlet component for the Camel REST service
-        ServletRegistrationBean mapping = new ServletRegistrationBean();
-        mapping.setName("CamelServlet");
-        mapping.setLoadOnStartup(1);
-        mapping.setServlet(new CamelHttpTransportServlet());
-        mapping.addUrlMappings("/camel/*");
-        return mapping;
-    }
-
     @Override
     public void configure() throws Exception {
-        SyndesisModel config = loadSyndesis();
-
         int idx = 0;
-        List<Flow> rules = config.getFlows();
+        List<Flow> rules = model.getFlows();
         for (Flow rule : rules) {
             configureRule(rule, idx++);
         }
-    }
-
-    protected SyndesisModel loadSyndesis() throws IOException {
-        return SyndesisHelpers.load();
     }
 
     protected void configureRule(Flow flow, int syndesisIndex) throws MalformedURLException {
@@ -185,7 +163,7 @@ public class SyndesisRouteBuilder extends RouteBuilder {
 
     private ProcessorDefinition addStep(ProcessorDefinition route, Step item) {
         assertRouteNotNull(route, item);
-        for (StepHandler handler : ServiceLoader.load(StepHandler.class, getClass().getClassLoader())) {
+        for (StepHandler handler : handlers) {
             if (handler.canHandle(item)) {
                 return handler.handle(item, route, this);
             }

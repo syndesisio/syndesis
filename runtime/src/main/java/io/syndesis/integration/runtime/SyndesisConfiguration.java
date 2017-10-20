@@ -14,10 +14,22 @@
  * permissions and limitations under the License.
  *
  */
-package io.syndesis.integration.model;
+package io.syndesis.integration.runtime;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-public abstract class DtoSupport {
+@ConfigurationProperties(prefix = "syndesis")
+public class SyndesisConfiguration {
+    /**
+     * The Syndesis configuration location;
+     */
+    private String configuration = "classpath:syndesis.yml";
+
+    public String getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(String configuration) {
+        this.configuration = configuration;
+    }
 }

@@ -16,8 +16,13 @@
  */
 package io.syndesis.integration;
 
-import io.syndesis.integration.model.SyndesisHelpers;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+
 import io.syndesis.integration.model.SyndesisModel;
+import io.syndesis.integration.model.SyndesisModelBuilder;
 import io.syndesis.integration.runtime.SyndesisRouteBuilder;
 import org.apache.camel.Exchange;
 import org.apache.camel.RoutesBuilder;
@@ -27,57 +32,33 @@ import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-
 /**
  */
 public abstract class SyndesisTestSupport extends CamelTestSupport {
-    private static final transient Logger LOG = LoggerFactory.getLogger(SyndesisTestSupport.class);
-
-    public static File getBaseDir() {
-        String basedir = System.getProperty("basedir", System.getProperty("user.dir", "."));
-        File answer = new File(basedir);
-        return answer;
-    }
-
-    @Override
-    protected RoutesBuilder createRouteBuilder() throws Exception {
-        final SyndesisModel syndesis = createSyndesis();
-        if (isDumpFlowYAML()) {
-            String fileNamePrefix = "target/syndesis-tests/" + getClassNameAsPath() + "-" + getTestMethodName();
-            File file = new File(getBaseDir(), fileNamePrefix + ".yml");
-            file.getParentFile().mkdirs();
-            SyndesisHelpers.saveConfig(syndesis, file);
-            SyndesisHelpers.saveConfigJSON(syndesis, new File(getBaseDir(), fileNamePrefix + ".json"));
-        }
-        return new SyndesisRouteBuilder() {
-            @Override
-            protected SyndesisModel loadSyndesis() throws IOException {
-                return syndesis;
-            }
-        };
-
-    }
-
-    protected SyndesisModel loadTestYaml() throws IOException {
-        String path = getClassNameAsPath() + "-" + getTestMethodName() + ".yml";
-        LOG.info("Loading SyndesisModel flows from classpath at: " + path);
-        URL resource = getClass().getClassLoader().getResource(path);
-        Assertions.assertThat(resource).describedAs("Could not find " + path + " on the classpath!").isNotNull();
-        return SyndesisHelpers.loadFromURL(resource);
-    }
-
-    private String getClassNameAsPath() {
-        return getClass().getName().replace('.', '/');
-    }
-
+    private static final Logger LOG = LoggerFactory.getLogger(SyndesisTestSupport.class);
 
     @Override
     public boolean isDumpRouteCoverage() {
         return true;
+    }
+
+    @Override
+    protected RoutesBuilder createRouteBuilder() throws Exception {
+        final SyndesisModel model = createSyndesis();
+        final SyndesisRouteBuilder builder = new SyndesisRouteBuilder(model, Collections.emptySet());
+
+        return builder;
+
+    }
+
+    protected SyndesisModel loadTestYaml() throws IOException {
+        String path = getClass().getName().replace('.', '/') + "-" + getTestMethodName() + ".yml";
+        LOG.info("Loading SyndesisModel flows from classpath at: " + path);
+
+        URL resource = getClass().getClassLoader().getResource(path);
+        Assertions.assertThat(resource).describedAs("Could not find " + path + " on the classpath!").isNotNull();
+
+        return new SyndesisModelBuilder().build(resource.openStream());
     }
 
     /**
@@ -107,9 +88,5 @@ public abstract class SyndesisTestSupport extends CamelTestSupport {
      * Adds the flows to this syndesis using the SyndesisModel DSL
      */
     protected void addSyndesisFlows(SyndesisModel syndesis) {
-    }
-
-    protected boolean isDumpFlowYAML() {
-        return true;
     }
 }
