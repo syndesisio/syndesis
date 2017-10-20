@@ -26,7 +26,7 @@
 
   <groupId>io.syndesis</groupId>
   <artifactId>syndesis-rest-parent</artifactId>
-  <version>1.1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Syndesis REST :: Parent</name>
 
@@ -60,7 +60,7 @@
     <developerConnection>scm:git:git@github.com:syndesisio/syndesis-rest.git
     </developerConnection>
     <url>http://github.com/syndesisio/syndesis-rest/</url>
-    <tag>syndesis-rest-parent-1.1.0</tag>
+    <tag>${project.version}</tag>
   </scm>
 
   <distributionManagement>
