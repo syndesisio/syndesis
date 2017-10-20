@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2016 Red Hat, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,35 +15,27 @@
  */
 package io.syndesis.runtime;
 
-import io.syndesis.jsondb.impl.SqlJsonDB;
+import io.syndesis.filestore.FileStore;
+import io.syndesis.filestore.impl.SqlFileStore;
 import org.skife.jdbi.v2.DBI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.sql.DataSource;
-
 /**
- * Creates and configures a DBI object
+ * Creates and configures the file store
  */
 @Configuration
-public class StoreConfiguration {
-
-    @Bean
-    public DBI dbiBean(@Autowired DataSource dataSource) {
-        return new DBI(dataSource);
-    }
+@ConditionalOnProperty(value = "filestore.enabled")
+public class FileStoreConfiguration {
 
     @Bean
     @Autowired
-    @SuppressWarnings("PMD.EmptyCatchBlock")
-    public SqlJsonDB realTimeDB(DBI dbi) {
-        SqlJsonDB jsondb = new SqlJsonDB(dbi, null);
-        try {
-            jsondb.createTables();
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ignore) {
-        }
-        return jsondb;
+    public FileStore fileStore(DBI dbi) {
+        SqlFileStore fileStore = new SqlFileStore(dbi);
+        fileStore.init();
+        return fileStore;
     }
 
 }

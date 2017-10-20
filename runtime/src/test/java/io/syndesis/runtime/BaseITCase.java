@@ -59,7 +59,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = {
 		Application.class,
         InfinispanCacheConfiguration.class,
-        StoreConfiguration.class,
+        DataStoreConfiguration.class,
         SyndesisCorsConfiguration.class
 })
 public abstract class BaseITCase {
