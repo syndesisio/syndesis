@@ -85,7 +85,7 @@
     <basepom.failsafe.timeout>0</basepom.failsafe.timeout>
 
     <syndesis-connectors.version>0.5.8</syndesis-connectors.version>
-    <syndesis-integration-runtime.version>0.1.6</syndesis-integration-runtime.version>
+    <syndesis-integration-runtime.version>1.1.0</syndesis-integration-runtime.version>
 
     <assertj-core.version>3.6.2</assertj-core.version>
     <caffeine.version>2.4.0</caffeine.version>
@@ -111,8 +111,8 @@
     <spring-social.version>1.1.4.RELEASE</spring-social.version>
     <swagger.version>1.5.12</swagger.version>
     <undertow.version>1.4.18.Final</undertow.version>
-    <atlasmap.version>1.17.0</atlasmap.version>
-    <camel-atlasmap.version>1.30.0</camel-atlasmap.version>
+    <atlasmap.version>1.31.0</atlasmap.version>
+    <camel-atlasmap.version>1.31.0</camel-atlasmap.version>
     <apache-mime4j.version>0.6</apache-mime4j.version>
 
     <!-- maven plugin version -->
