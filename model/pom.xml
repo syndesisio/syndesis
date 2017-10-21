@@ -28,7 +28,7 @@
   <artifactId>model</artifactId>
   <packaging>jar</packaging>
 
-  <name>Syndesis:: Integration Runtime :: Model</name>
+  <name>Syndesis :: Integration Runtime :: Model</name>
 
   <dependencies>
     <dependency>
