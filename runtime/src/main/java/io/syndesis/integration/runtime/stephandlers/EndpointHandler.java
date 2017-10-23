@@ -31,7 +31,6 @@ public class EndpointHandler implements StepHandler<Endpoint> {
   public ProcessorDefinition handle(Endpoint step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
     String uri = step.getUri();
     if (!Strings.isEmpty(uri)) {
-      uri = routeBuilder.convertEndpointURI(uri);
       route = route.to(uri);
     }
     return route;

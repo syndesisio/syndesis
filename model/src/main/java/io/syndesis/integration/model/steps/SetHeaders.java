@@ -16,10 +16,10 @@
  */
 package io.syndesis.integration.model.steps;
 
-import com.google.auto.service.AutoService;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.auto.service.AutoService;
 
 /**
  * Sets headers on the payload
@@ -36,6 +36,7 @@ public class SetHeaders extends Step {
 
     public SetHeaders(Map<String, Object> headers) {
         super(KIND);
+
         this.headers = headers;
     }
 

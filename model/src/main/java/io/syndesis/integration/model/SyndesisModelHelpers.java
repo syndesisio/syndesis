@@ -16,8 +16,8 @@
  */
 package io.syndesis.integration.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ServiceLoader;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -45,21 +45,14 @@ public final class SyndesisModelHelpers {
             .disable(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS)
             .disable(SerializationFeature.WRITE_NULL_MAP_VALUES);
 
-        return mapper;
-    }
-
-    public static List<Step> loadDefaultSteps() {
-        List<Step> steps = new ArrayList<>();
-        ServiceLoader.load(Step.class, SyndesisModelBuilder.class.getClassLoader()).forEach(steps::add);
-
-        return steps;
-    }
-
-    public static ObjectMapper registerDefaultSteps(ObjectMapper mapper) {
-        for (Step step : loadDefaultSteps()) {
+        for (Step step : ServiceLoader.load(Step.class, SyndesisModelHelpers.class.getClassLoader())) {
             mapper.registerSubtypes(new NamedType(step.getClass(), step.getKind()));
         }
 
         return mapper;
+    }
+
+    public static SyndesisModel load(InputStream source) throws IOException {
+        return SyndesisModelHelpers.createObjectMapper().readValue(source, SyndesisModel.class);
     }
 }

@@ -16,6 +16,10 @@
  */
 package io.syndesis.integration.runtime.steps;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import io.syndesis.integration.SyndesisTestSupport;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.integration.model.SyndesisModel;
@@ -26,20 +30,18 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 
 /**
  */
 public class ChoiceTest extends SyndesisTestSupport {
+    private static final transient Logger LOG = LoggerFactory.getLogger(ChoiceTest.class);
+
     public static final String START_URI = "direct:start";
     public static final String MATCHED_JAMES_URI = "mock:matchedJames";
     public static final String MATCHED_JIMMI_URI = "mock:matchedJimmi";
     public static final String OTHERWISE_URI = "mock:matchedOtherwise";
     public static final String ALL_MESSAGES_URI = "mock:allMessages";
-    private static final transient Logger LOG = LoggerFactory.getLogger(ChoiceTest.class);
+
     @EndpointInject(uri = MATCHED_JAMES_URI)
     protected MockEndpoint matchedEndpoint;
 

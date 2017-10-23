@@ -36,8 +36,6 @@ public class MarshallingTest {
     public MarshallingTest(Step step) {
         this.step = step;
         this.mapper = SyndesisModelHelpers.createObjectMapper();
-
-        SyndesisModelHelpers.registerDefaultSteps(mapper);
     }
 
     @Test

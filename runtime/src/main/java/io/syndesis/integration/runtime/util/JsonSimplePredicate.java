@@ -22,9 +22,9 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Predicate;
-import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.spi.Language;
 import org.apache.camel.spi.Registry;
 import org.apache.camel.util.ExchangeHelper;
@@ -38,7 +38,7 @@ public class JsonSimplePredicate implements Predicate {
     private final Language language;
     private final String expression;
 
-    public JsonSimplePredicate(String expression, ModelCamelContext context) {
+    public JsonSimplePredicate(String expression, CamelContext context) {
         this.language = context.resolveLanguage("simple");
         this.expression = expression;
         Objects.requireNonNull(language, "The language 'simple' could not be resolved!");

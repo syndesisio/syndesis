@@ -35,7 +35,8 @@ public class Log extends Step {
     }
 
     public Log(String message, String loggingLevel, String logger, String marker) {
-        this();
+        super(KIND);
+
         this.message = message;
         this.marker = marker;
         this.logger = logger;
@@ -45,10 +46,6 @@ public class Log extends Step {
     @Override
     public String toString() {
         return "Log: " + message;
-    }
-
-    public String getKind() {
-        return "log";
     }
 
     public String getMessage() {

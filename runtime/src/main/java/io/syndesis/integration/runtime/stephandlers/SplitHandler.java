@@ -18,22 +18,24 @@ import io.syndesis.integration.model.steps.Split;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.runtime.StepHandler;
 import io.syndesis.integration.runtime.SyndesisRouteBuilder;
+import io.syndesis.integration.runtime.util.JsonSimpleHelpers;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
 import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.model.SplitDefinition;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
 @AutoService(StepHandler.class)
 public class SplitHandler implements StepHandler<Split> {
-  @Override
-  public boolean canHandle(Step step) {
-    return step.getClass().equals(Split.class);
-  }
+    @Override
+    public boolean canHandle(Step step) {
+        return step.getClass().equals(Split.class);
+    }
 
-  @Override
-  public ProcessorDefinition handle(Split step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
-    Expression expression = routeBuilder.getMandatoryExpression(step, step.getExpression());
-    ProcessorDefinition split = route.split(expression).marshal().json(JsonLibrary.Jackson);
-    return routeBuilder.addSteps(split, step.getSteps());
-  }
+    @Override
+    public ProcessorDefinition handle(Split step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+        CamelContext context = routeBuilder.getContext();
+        Expression expression = JsonSimpleHelpers.getMandatoryExpression(context, step, step.getExpression());
+        ProcessorDefinition split = route.split(expression).marshal().json(JsonLibrary.Jackson);
+        return routeBuilder.addSteps(split, step.getSteps());
+    }
 }

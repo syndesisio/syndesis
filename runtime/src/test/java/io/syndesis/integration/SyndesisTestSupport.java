@@ -17,12 +17,12 @@
 package io.syndesis.integration;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 
 import io.syndesis.integration.model.SyndesisModel;
-import io.syndesis.integration.model.SyndesisModelBuilder;
+import io.syndesis.integration.model.SyndesisModelHelpers;
 import io.syndesis.integration.runtime.SyndesisRouteBuilder;
 import org.apache.camel.Exchange;
 import org.apache.camel.RoutesBuilder;
@@ -45,7 +45,7 @@ public abstract class SyndesisTestSupport extends CamelTestSupport {
     @Override
     protected RoutesBuilder createRouteBuilder() throws Exception {
         final SyndesisModel model = createSyndesis();
-        final SyndesisRouteBuilder builder = new SyndesisRouteBuilder(model, Collections.emptySet());
+        final SyndesisRouteBuilder builder = new SyndesisRouteBuilder(model);
 
         return builder;
 
@@ -58,7 +58,9 @@ public abstract class SyndesisTestSupport extends CamelTestSupport {
         URL resource = getClass().getClassLoader().getResource(path);
         Assertions.assertThat(resource).describedAs("Could not find " + path + " on the classpath!").isNotNull();
 
-        return new SyndesisModelBuilder().build(resource.openStream());
+        try (InputStream is = resource.openStream()) {
+            return SyndesisModelHelpers.load(is);
+        }
     }
 
     /**
@@ -71,16 +73,14 @@ public abstract class SyndesisTestSupport extends CamelTestSupport {
     }
 
     protected void logMessagesReceived(MockEndpoint... mockEndpoints) {
-        System.out.println();
         for (MockEndpoint mockEndpoint : mockEndpoints) {
-            System.out.println("Messages received on endpoint " + mockEndpoint.getEndpointUri());
+            LOG.info("Messages received on endpoint " + mockEndpoint.getEndpointUri());
             List<Exchange> exchanges = mockEndpoint.getExchanges();
             Assertions.assertThat(exchanges).describedAs("exchanges on " + mockEndpoint).isNotNull();
             int count = 0;
             for (Exchange exchange : exchanges) {
-                System.out.println("  " + count++ + " = " + exchange.getIn().getBody(String.class));
+                LOG.info("  " + count++ + " = " + exchange.getIn().getBody(String.class));
             }
-            System.out.println();
         }
     }
 

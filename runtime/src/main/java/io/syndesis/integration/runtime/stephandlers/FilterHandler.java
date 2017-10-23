@@ -18,6 +18,8 @@ import io.syndesis.integration.model.steps.Filter;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.runtime.StepHandler;
 import io.syndesis.integration.runtime.SyndesisRouteBuilder;
+import io.syndesis.integration.runtime.util.JsonSimpleHelpers;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Predicate;
 import org.apache.camel.model.FilterDefinition;
 import org.apache.camel.model.ProcessorDefinition;
@@ -31,7 +33,8 @@ public class FilterHandler implements StepHandler<Filter> {
 
   @Override
   public ProcessorDefinition handle(Filter step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
-    Predicate predicate = routeBuilder.getMandatorySimplePredicate(step, step.getExpression());
+    CamelContext context = routeBuilder.getContext();
+    Predicate predicate = JsonSimpleHelpers.getMandatorySimplePredicate(context, step, step.getExpression());
     FilterDefinition filter = route.filter(predicate);
     return routeBuilder.addSteps(filter, step.getSteps());
   }

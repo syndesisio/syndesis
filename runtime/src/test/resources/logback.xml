@@ -26,7 +26,7 @@
     <file>target/runtime.log</file>
   </appender>
 
-  <root level="info">
+  <root level="INFO">
     <appender-ref ref="FILE" />
   </root>
 

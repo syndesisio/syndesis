@@ -16,11 +16,11 @@
  */
 package io.syndesis.integration.model.steps;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.google.auto.service.AutoService;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.google.auto.service.AutoService;
 
 /**
  * Performs a content based routing.
@@ -40,6 +40,8 @@ public class Choice extends Step {
     }
 
     public Choice(List<Filter> filters, Otherwise otherwise) {
+        super(KIND);
+
         this.filters = filters;
         this.otherwise = otherwise;
     }
@@ -67,10 +69,6 @@ public class Choice extends Step {
 
     // Properties
     //-------------------------------------------------------------------------
-
-    public String getKind() {
-        return KIND;
-    }
 
     public List<Filter> getFilters() {
         return filters;

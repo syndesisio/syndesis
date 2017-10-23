@@ -50,10 +50,6 @@ public class Throttle extends ChildSteps<Throttle> {
         return "Throttle: " + maximumRequests;
     }
 
-    public String getKind() {
-        return KIND;
-    }
-
     public long getMaximumRequests() {
         return maximumRequests;
     }

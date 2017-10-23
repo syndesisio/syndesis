@@ -31,7 +31,7 @@ public class ModelUnmarshalTest {
     @Test
     public void testUnmarshal() throws Exception {
         try (InputStream is = ModelUnmarshalTest.class.getResourceAsStream("/syndesis.yml")) {
-            SyndesisModel model = new SyndesisModelBuilder().build(is);
+            SyndesisModel model = SyndesisModelHelpers.load(is);
 
             List<Flow> rules = model.getFlows();
             assertThat(rules).isNotEmpty();
