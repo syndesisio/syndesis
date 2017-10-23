@@ -63,21 +63,6 @@
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: {{ Images.Support.PemToKeystore }}
-    labels:
-      app: syndesis
-      component: syndesis-pemtokeystore
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
-      importPolicy:
-        scheduled: true
-      name: "{{ Tags.PemToKeystore }}"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
     name: {{ Images.Support.OAuthProxy }}
     labels:
       app: syndesis

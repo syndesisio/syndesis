@@ -10,7 +10,6 @@ metadata:
 #
 # Allow localhost refs: false
 # Use docker images: false
-# Use docker images for init containers: true
 # Ephemeral: false
 # Without Probes: true
 # Atlasmap Tag: latest
@@ -179,21 +178,6 @@ objects:
       importPolicy:
         scheduled: true
       name: "latest"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: pemtokeystore
-    labels:
-      app: syndesis
-      component: syndesis-pemtokeystore
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/pemtokeystore:v0.2.1
-      importPolicy:
-        scheduled: true
-      name: "v0.2.1"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -1025,7 +1009,6 @@ objects:
           name: syndesis-verifier:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
-
 
     - type: ConfigChange
 

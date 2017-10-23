@@ -10,7 +10,6 @@ metadata:
 #
 # Allow localhost refs: true
 # Use docker images: true
-# Use docker images for init containers: true
 # Ephemeral: false
 # Without Probes: false
 # Atlasmap Tag: latest
@@ -933,7 +932,6 @@ objects:
           configMap:
             name: syndesis-verifier-config
     triggers:
-
 
     - type: ConfigChange
 
