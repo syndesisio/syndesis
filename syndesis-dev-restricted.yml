@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: syndesis-dev-restricted
+  name: syndesis-dev-restricted-1.1
 #
 # Template flavor:
 #
@@ -12,8 +12,8 @@ metadata:
 # Use docker images: true
 # Ephemeral: false
 # Without Probes: false
-# Atlasmap Tag: latest
-# Syndesis Tag: latest
+# Atlasmap Tag: 1.31
+# Syndesis Tag: 1.1
 # Restricted environment: true
 #
   labels:
@@ -89,7 +89,7 @@ parameters:
   displayName: Syndesis Image Registry
   name: SYNDESIS_REGISTRY
   required: true
-  value: 'docker.io'
+  value: 'registry.fuse-ignite.openshift.com'
 - description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
@@ -105,7 +105,7 @@ parameters:
 - description: Namespace containing image streams
   displayName: Image Stream Namespace
   name: IMAGE_STREAM_NAMESPACE
-  value: ''
+  value: 'fuse-ignite'
 - description: Secret to use to encrypt oauth cookies
   displayName: OAuth Cookie Secret
   name: OAUTH_COOKIE_SECRET
@@ -114,22 +114,6 @@ parameters:
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
-
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: s2i-java
-    labels:
-      app: syndesis
-      component: s2i-java
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: fabric8/s2i-java:2.0
-      importPolicy:
-        scheduled: true
-      name: "2.0"
 
 - apiVersion: v1
   kind: Secret
@@ -189,7 +173,7 @@ objects:
       spec:
         containers:
         - name: syndesis-ui
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-ui:1.1
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -239,11 +223,11 @@ objects:
           "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/"
         },
         "branding": {
-          "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
-          "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
-          "iconWhiteBg": "assets/images/glasses_logo_square.png",
-          "iconDarkBg": "assets/images/glasses_logo_square.png",
-          "appName": "Syndesis",
+          "logoWhiteBg": "",
+          "logoDarkBg": "",
+          "iconWhiteBg": "assets/images/FuseIgniteLogo_Black.svg",
+          "iconDarkBg": "assets/images/FuseIgniteLogo_White.svg",
+          "appName": "Ignite",
           "favicon32": "/favicon-32x32.png",
           "favicon16": "/favicon-16x16.png",
           "touchIcon": "/apple-touch-icon.png"
@@ -316,7 +300,7 @@ objects:
             value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
-          image: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
+          image: ${SYNDESIS_REGISTRY}/atlasmap/fuse-ignite-mapper:1.31
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -748,7 +732,7 @@ objects:
             value: ${CONTROLLERS_INTEGRATION_ENABLED}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-rest:1.1
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -832,7 +816,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: s2i-java:2.0
+        builderImageStreamTag: fuse-ignite-java-openshift:1.0
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
@@ -888,7 +872,7 @@ objects:
             value: /deployments
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/fuse-ignite-verifier:1.1
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
