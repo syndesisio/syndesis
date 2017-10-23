@@ -269,7 +269,9 @@ export class DataMapperHostComponent extends FlowPage
       this.detector.detectChanges();
     });
     this.initialized = true;
+    this.initializationService.initialize();
     this.detector.detectChanges();
+    /*
     log.debugc(() => 'Fetching POM for integration', category);
     this.support.requestPom(this.currentFlow.getIntegrationClone()).subscribe(
       data => {
@@ -295,6 +297,7 @@ export class DataMapperHostComponent extends FlowPage
         this.detector.detectChanges();
       },
     );
+    */
   }
 
   ngOnInit() {
