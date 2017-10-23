@@ -37,7 +37,6 @@ var installCommand = &cobra.Command{
 }
 
 type supportImages struct {
-	PemToKeystore string
 	Postgresql    string
 	OAuthProxy    string
 }
@@ -69,7 +68,6 @@ type tags struct {
 	Syndesis      string
 	Atlasmap      string
 	Postgresql    string
-	PemToKeystore string
 	OAuthProxy    string
 }
 
@@ -77,7 +75,6 @@ type Context struct {
 	Name                          string
 	AllowLocalHost                bool
 	WithDockerImages              bool
-	WithInitContainerDockerImages bool
 	Ephemeral                     bool
 	Restricted                    bool
 	Probeless                     bool
@@ -95,7 +92,6 @@ var syndesisContext = Context{
 		AtlasMapImagesPrefix:  "atlasmap",
 		OAuthProxyImagePrefix: "openshift",
 		Support: supportImages{
-			PemToKeystore: "pemtokeystore",
 			Postgresql:    "postgresql",
 			OAuthProxy:    "oauth-proxy",
 		},
@@ -113,7 +109,6 @@ var syndesisContext = Context{
 	},
 	Tags: tags{
 		Postgresql:    "9.5",
-		PemToKeystore: "v0.2.1",
 		OAuthProxy:    "v1.0.0",
 	},
 }
@@ -126,7 +121,6 @@ var productContext = Context{
 		AtlasMapImagesPrefix:  "atlasmap",
 		OAuthProxyImagePrefix: "openshift",
 		Support: supportImages{
-			PemToKeystore: "fuse-ignite-pemtokeystore",
 			Postgresql:    "postgresql",
 			OAuthProxy:    "oauth-proxy",
 		},
@@ -144,9 +138,8 @@ var productContext = Context{
 	},
 	Tags: tags{
 		Postgresql:    "9.5",
-		PemToKeystore: "1.0.0",
-		Syndesis:      "1.0.0",
-		Atlasmap:      "1.30.0",
+		Syndesis:      "1.1",
+		Atlasmap:      "1.31",
 		OAuthProxy:    "v1.0.0",
 	},
 	Registry: "registry.fuse-ignite.openshift.com",
@@ -160,7 +153,6 @@ func init() {
 	flags.StringVar(&context.Name, "name", "syndesis", "Name of the template")
 	flags.BoolVar(&context.AllowLocalHost, "allow-localhost", false, "Allow localhost")
 	flags.BoolVar(&context.WithDockerImages, "with-docker-images", false, "With docker images")
-	flags.BoolVar(&context.WithInitContainerDockerImages, "with-init-container-docker-images", false, "With init container docker images")
 	flags.BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
 	flags.BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
 	flags.BoolVar(&context.Probeless, "probeless", false, "Without probes")
@@ -177,6 +169,7 @@ func install(cmd *cobra.Command, args []string) {
 		if err := mergo.MergeWithOverwrite(&context, productContext); err != nil {
 			log.Fatal("Cannot merge in product image names")
 		}
+		context.Name = context.Name + "-" + context.Tags.Syndesis
 	}
 
 	files, err := ioutil.ReadDir("./")

@@ -103,17 +103,6 @@
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 {{/WithDockerImages}}
-{{^WithInitContainerDockerImages}}
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - openshift-ca-pemtokeystore
-        from:
-          kind: ImageStreamTag
-          name: {{ Images.Support.PemToKeystore }}:{{ Tags.PemToKeystore }}
-          namespace: ${IMAGE_STREAM_NAMESPACE}
-      type: ImageChange
-{{/WithInitContainerDockerImages}}
     - type: ConfigChange
 
 - apiVersion: v1
