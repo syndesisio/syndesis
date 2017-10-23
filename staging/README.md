@@ -9,29 +9,22 @@ oc new-project syndesis-staging
 # Create new SA as OAuthClient
 oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml
 
-# Get the GitHub params from attached github organization 'syndesisio', app 'RedHat iPaaS - STAGING ONLY'
-GITHUB_CLIENT_ID=...
-GITHUB_CLIENT_SECRET=...
-
 # Create template
 oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-restricted.yml
 
 # Instantiate application
 oc new-app syndesis-restricted \
-    -p ROUTE_HOSTNAME=syndesis-staging.b6ff.rh-idev.openshiftapps.com \
+    -p ROUTE_HOSTNAME=$(oc project -q).b6ff.rh-idev.openshiftapps.com \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p OPENSHIFT_PROJECT=$(oc project -q) \
-    -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
-    -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
-    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} \
-    -p INSECURE_SKIP_VERIFY=true
+    -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
 
 # Wait until everything's up ....
 
 # Create deployer SA and get the deploy token
 oc create sa syndesis-deployer
 oc sa get-token syndesis-deployer
-oc adm policy add-role-to-user edit system:serviceaccount:syndesis-staging:syndesis-deployer -n syndesis-staging
+oc adm policy add-role-to-user edit system:serviceaccount:$(oc project -q):syndesis-deployer -n $(oc project -q)
 
 # Take this token and insert it to the following circle-builds
 # as environment variable OPENSHIFT_TOKEN
@@ -39,7 +32,7 @@ oc adm policy add-role-to-user edit system:serviceaccount:syndesis-staging:synde
 # Also check that there is an OPENSHIFT_APISERVER env var (pointing to the staging installation)
 
 # Grant jenkins user from syndesis-ci project the proper rights:
-oc adm policy add-role-to-user admin system:serviceaccount:syndesis-ci:jenkins -n syndesis-staging
+oc adm policy add-role-to-user admin system:serviceaccount:syndesis-ci:jenkins -n $(oc project -q)
 
 # Adapt syndesis-rest configuration:
 # - Goto to config-map "syndesis-rest-config" and adapt entry "application.yml" (see above)
