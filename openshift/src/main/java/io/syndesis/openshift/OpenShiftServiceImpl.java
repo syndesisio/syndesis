@@ -188,6 +188,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                        .addToRequests("memory", new Quantity(config.getDeploymentMemoryRequestMi() +  "Mi"))
                 .endResources()
             .endStrategy()
+            .withRevisionHistoryLimit(0)
             .withNewTemplate()
             .withNewMetadata().addToLabels("integration", name).endMetadata()
             .withNewSpec()
