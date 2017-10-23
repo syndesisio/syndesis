@@ -16,7 +16,7 @@
  */
 package io.syndesis.integration.runtime.steps;
 
-import io.syndesis.integration.SyndesisTestSupport;
+import io.syndesis.integration.runtime.SyndesisTestSupport;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.integration.model.SyndesisModel;
 import org.apache.camel.EndpointInject;

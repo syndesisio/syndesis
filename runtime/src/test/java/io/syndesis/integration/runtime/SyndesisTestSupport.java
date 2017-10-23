@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration;
+package io.syndesis.integration.runtime;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,8 +22,7 @@ import java.net.URL;
 import java.util.List;
 
 import io.syndesis.integration.model.SyndesisModel;
-import io.syndesis.integration.model.SyndesisModelHelpers;
-import io.syndesis.integration.runtime.SyndesisRouteBuilder;
+import io.syndesis.integration.model.SyndesisHelpers;
 import org.apache.camel.Exchange;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -59,7 +58,7 @@ public abstract class SyndesisTestSupport extends CamelTestSupport {
         Assertions.assertThat(resource).describedAs("Could not find " + path + " on the classpath!").isNotNull();
 
         try (InputStream is = resource.openStream()) {
-            return SyndesisModelHelpers.load(is);
+            return SyndesisHelpers.load(is);
         }
     }
 

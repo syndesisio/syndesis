@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import io.syndesis.integration.model.SyndesisModel;
-import io.syndesis.integration.model.SyndesisModelHelpers;
+import io.syndesis.integration.model.SyndesisHelpers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -46,7 +46,7 @@ public class SyndesisAutoConfiguration {
         final Resource resource = context.getResource(configuration.getConfiguration());
 
         try (InputStream is = resource.getInputStream()) {
-            final SyndesisModel model = SyndesisModelHelpers.load(is);
+            final SyndesisModel model = SyndesisHelpers.load(is);
             final SyndesisRouteBuilder builder = new SyndesisRouteBuilder(model);
 
             return builder;

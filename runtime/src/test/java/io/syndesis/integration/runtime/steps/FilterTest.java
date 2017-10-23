@@ -16,11 +16,10 @@
  */
 package io.syndesis.integration.runtime.steps;
 
-import io.syndesis.integration.SyndesisTestSupport;
+import io.syndesis.integration.runtime.SyndesisTestSupport;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.integration.model.SyndesisModel;
 import org.apache.camel.EndpointInject;
-import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.junit.Test;
 import org.slf4j.Logger;

@@ -16,7 +16,7 @@ package io.syndesis.integration.runtime.steps;
 import java.util.ServiceLoader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.syndesis.integration.model.SyndesisModelHelpers;
+import io.syndesis.integration.model.SyndesisHelpers;
 import io.syndesis.integration.model.steps.Step;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class MarshallingTest {
 
     public MarshallingTest(Step step) {
         this.step = step;
-        this.mapper = SyndesisModelHelpers.createObjectMapper();
+        this.mapper = SyndesisHelpers.createObjectMapper();
     }
 
     @Test

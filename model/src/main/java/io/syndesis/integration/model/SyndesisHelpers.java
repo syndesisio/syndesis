@@ -28,8 +28,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import io.syndesis.integration.model.steps.Step;
 
-public final class SyndesisModelHelpers {
-    private SyndesisModelHelpers() {
+public final class SyndesisHelpers {
+    private SyndesisHelpers() {
     }
 
     public static ObjectMapper createObjectMapper() {
@@ -45,7 +45,7 @@ public final class SyndesisModelHelpers {
             .disable(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS)
             .disable(SerializationFeature.WRITE_NULL_MAP_VALUES);
 
-        for (Step step : ServiceLoader.load(Step.class, SyndesisModelHelpers.class.getClassLoader())) {
+        for (Step step : ServiceLoader.load(Step.class, SyndesisHelpers.class.getClassLoader())) {
             mapper.registerSubtypes(new NamedType(step.getClass(), step.getKind()));
         }
 
@@ -53,6 +53,6 @@ public final class SyndesisModelHelpers {
     }
 
     public static SyndesisModel load(InputStream source) throws IOException {
-        return SyndesisModelHelpers.createObjectMapper().readValue(source, SyndesisModel.class);
+        return SyndesisHelpers.createObjectMapper().readValue(source, SyndesisModel.class);
     }
 }

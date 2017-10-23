@@ -16,6 +16,15 @@
  */
 package io.syndesis.integration.runtime.components.json;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import io.syndesis.integration.support.Strings;
 import org.apache.camel.Component;
 import org.apache.camel.Consumer;
@@ -27,26 +36,16 @@ import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultEndpoint;
 import org.apache.camel.util.ServiceHelper;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-
-/**
- */
 public class JsonEndpoint extends DefaultEndpoint {
 
     public static final String JSON_CONTENT_TYPE = "application/json";
-    protected static final Set<Class<?>> stringableClasses = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            String.class, byte[].class, ByteBuffer.class
+    private static final Set<Class<?>> stringableClasses = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+        String.class, byte[].class, ByteBuffer.class
     )));
-    protected static final Set<Class<?>> stringableInterfaces = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            InputStream.class, Reader.class
+    private static final Set<Class<?>> stringableInterfaces = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+        InputStream.class, Reader.class
     )));
+
     private Producer jsonMarshalProducer;
     private Endpoint jsonMarshalEndpoint;
 

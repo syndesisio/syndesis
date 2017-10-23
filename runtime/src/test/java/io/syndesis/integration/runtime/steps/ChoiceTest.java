@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.syndesis.integration.SyndesisTestSupport;
+import io.syndesis.integration.runtime.SyndesisTestSupport;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.model.steps.Choice;
