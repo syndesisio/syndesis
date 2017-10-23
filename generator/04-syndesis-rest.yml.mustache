@@ -26,7 +26,24 @@
       targetPort: 8080
     selector:
       app: syndesis
+      component: syndesis-rest{{#Probeless}}
+
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: syndesis
       component: syndesis-rest
+    name: syndesis-rest
+  spec:
+    host: ${ROUTE_HOSTNAME}
+    path: /api
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: syndesis-rest{{/Probeless}}
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
