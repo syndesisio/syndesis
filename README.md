@@ -33,8 +33,19 @@ yarn start:minishift
 Bring up the syndesis console in your browser.  You can start load it from the command line by running:
 
 ```bash
+# To connect with Syndesis backend you don't have to use http://localhost:4200 url.
+# The url has a structure similar to http://syndesis-ui-default.192.168.42.205.nip.io
+
+# You can try to obtain it directly from Minishift configuration with one of the following commands.
+# on MacOSX
 open http://$(oc get routes syndesis --template "{{.spec.host}}")
+# on linux
+xdg-open http://$(oc get routes syndesis --template "{{.spec.host}}")
+# on windows
+start http://$(oc get routes syndesis --template "{{.spec.host}}")
 ```
+
+A smoke test to verify you are ready to work is to add any content at the beginning of `src/app/app.component.html` and verify you see the modification in the main page of the application.
 
 ## Table of Contents
 
