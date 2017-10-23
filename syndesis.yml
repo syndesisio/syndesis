@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: syndesis
+  name: syndesis-1.1
 #
 # Template flavor:
 #
@@ -12,8 +12,8 @@ metadata:
 # Use docker images: false
 # Ephemeral: false
 # Without Probes: false
-# Atlasmap Tag: latest
-# Syndesis Tag: latest
+# Atlasmap Tag: 1.31
+# Syndesis Tag: 1.1
 # Restricted environment: false
 #
   labels:
@@ -93,7 +93,7 @@ parameters:
   displayName: Syndesis Image Registry
   name: SYNDESIS_REGISTRY
   required: true
-  value: 'docker.io'
+  value: 'registry.fuse-ignite.openshift.com'
 - description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
@@ -109,7 +109,7 @@ parameters:
 - description: Namespace containing image streams
   displayName: Image Stream Namespace
   name: IMAGE_STREAM_NAMESPACE
-  value: ''
+  value: 'fuse-ignite'
 - description: Secret to use to encrypt oauth cookies
   displayName: OAuth Cookie Secret
   name: OAUTH_COOKIE_SECRET
@@ -118,97 +118,6 @@ parameters:
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: syndesis-rest
-    labels:
-      app: syndesis
-      component: syndesis-rest
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
-      importPolicy:
-        scheduled: true
-      name: "latest"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: syndesis-ui
-    labels:
-      app: syndesis
-      component: syndesis-ui
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
-      importPolicy:
-        scheduled: true
-      name: "latest"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: atlasmap
-    labels:
-      app: syndesis
-      component: syndesis-atlasmap
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
-      importPolicy:
-        scheduled: true
-      name: "latest"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: syndesis-verifier
-    labels:
-      app: syndesis
-      component: syndesis-verifier
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
-      importPolicy:
-        scheduled: true
-      name: "latest"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: oauth-proxy
-    labels:
-      app: syndesis
-      component: syndesis-oauthproxy
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.0.0
-      importPolicy:
-        scheduled: true
-      name: "v1.0.0"
-
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: s2i-java
-    labels:
-      app: syndesis
-      component: s2i-java
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: fabric8/s2i-java:2.0
-      importPolicy:
-        scheduled: true
-      name: "2.0"
 
 - apiVersion: v1
   kind: Secret
@@ -303,7 +212,7 @@ objects:
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: syndesis-ui:latest
+          name: fuse-ignite-ui:1.1
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -327,11 +236,11 @@ objects:
           "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/"
         },
         "branding": {
-          "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
-          "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
-          "iconWhiteBg": "assets/images/glasses_logo_square.png",
-          "iconDarkBg": "assets/images/glasses_logo_square.png",
-          "appName": "Syndesis",
+          "logoWhiteBg": "",
+          "logoDarkBg": "",
+          "iconWhiteBg": "assets/images/FuseIgniteLogo_Black.svg",
+          "iconDarkBg": "assets/images/FuseIgniteLogo_White.svg",
+          "appName": "Ignite",
           "favicon32": "/favicon-32x32.png",
           "favicon16": "/favicon-16x16.png",
           "touchIcon": "/apple-touch-icon.png"
@@ -444,7 +353,7 @@ objects:
         - atlasmap
         from:
           kind: ImageStreamTag
-          name: atlasmap:latest
+          name: fuse-ignite-mapper:1.31
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -898,7 +807,7 @@ objects:
         - syndesis-rest
         from:
           kind: ImageStreamTag
-          name: syndesis-rest:latest
+          name: fuse-ignite-rest:1.1
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -947,7 +856,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: s2i-java:2.0
+        builderImageStreamTag: fuse-ignite-java-openshift:1.0
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
@@ -1049,7 +958,7 @@ objects:
         - syndesis-verifier
         from:
           kind: ImageStreamTag
-          name: syndesis-verifier:latest
+          name: fuse-ignite-verifier:1.1
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
