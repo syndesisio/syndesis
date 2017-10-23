@@ -28,6 +28,7 @@ import javax.validation.groups.Default;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -96,10 +97,10 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
 
     @Override
     public Connection
-        create(@ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
+        create(@Context SecurityContext sec, @ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
         final Date rightNow = new Date();
         final Connection updatedConnection = new Connection.Builder().createFrom(connection).createdDate(rightNow)
-            .lastUpdated(rightNow).build();
+            .lastUpdated(rightNow).userId(sec.getUserPrincipal().getName()).build();
 
         final Set<CredentialFlowState> flowStates = CredentialFlowState.Builder.restoreFrom(state::restoreFrom,
             request);
@@ -114,7 +115,7 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
             return credentials.apply(updatedConnection, s);
         }).findFirst().orElse(updatedConnection);
 
-        return Creator.super.create(connectionToCreate);
+        return Creator.super.create(sec, connectionToCreate);
     }
 
     @Override

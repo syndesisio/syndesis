@@ -30,7 +30,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import io.swagger.annotations.Api;
@@ -118,7 +120,7 @@ public class IntegrationHandler extends BaseHandler
     }
 
     @Override
-    public Integration create(@ConvertGroup(from = Default.class, to = AllValidations.class) final Integration integration) {
+    public Integration create(@Context SecurityContext sec, @ConvertGroup(from = Default.class, to = AllValidations.class) final Integration integration) {
         Date rightNow = new Date();
 
         IntegrationRevision revision = IntegrationRevision
@@ -134,9 +136,10 @@ public class IntegrationHandler extends BaseHandler
             .lastUpdated(rightNow)
             .createdDate(rightNow)
             .currentStatus(determineCurrentStatus(integration))
+            .userId(sec.getUserPrincipal().getName())
             .build();
 
-        return Creator.super.create(updatedIntegration);
+        return Creator.super.create(sec, updatedIntegration);
     }
 
     @Override
