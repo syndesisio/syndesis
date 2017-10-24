@@ -2,18 +2,18 @@
   "component":{
     "kind":"component",
     "baseScheme":"sql-stored",
-    "scheme":"sql-stored-connector",
-    "syntax":"sql-stored-connector:template",
-    "title":"SqlStoredConnector",
+    "scheme":"sql-stored-start-connector",
+    "syntax":"sql-stored-start-connector:template",
+    "title":"SqlStoredStartConnector",
     "description":"SQL Stored Procedure Connector to invoke a SQL Stored Procedure",
     "label":"sql-stored",
     "deprecated":false,
     "async":false,
-    "producerOnly":true,
+    "consumerOnly":true,
     "lenientProperties":false,
-    "javaType":"io.syndesis.connector.sql.stored.SqlStoredConnectorComponent",
+    "javaType":"io.syndesis.connector.sql.stored.SqlStoredStartConnectorComponent",
     "groupId":"io.syndesis",
-    "artifactId":"sql-stored-connector",
+    "artifactId":"sql-stored-start-connector",
     "version":"0.5-SNAPSHOT"
   },
   "componentProperties":{
@@ -40,6 +40,18 @@
       "deprecated":false,
       "secret":false,
       "description":"Sets the StoredProcedure template to perform"
+    },
+    "schedulerPeriod":{
+      "kind":"parameter",
+      "displayName":"Period",
+      "group":"consumer",
+      "required":false,
+      "type":"integer",
+      "javaType":"long",
+      "deprecated":false,
+      "secret":false,
+      "defaultValue":1000,
+      "description":"Delay in milli seconds between scheduling (executing)"
     }
   },
   "connectorProperties":{

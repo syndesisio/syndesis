@@ -35,6 +35,17 @@
     <!-- connectors used in this example -->
     <dependency>
       <groupId>io.syndesis</groupId>
+      <artifactId>sql-stored-start-connector</artifactId>
+      <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-connector</artifactId>
       <version>${project.version}</version>
       <exclusions>
@@ -44,7 +55,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
     <!-- JSON support -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

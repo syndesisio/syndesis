@@ -9,9 +9,9 @@
     <version>0.5-SNAPSHOT</version>
   </parent>
 
-  <artifactId>sql-stored-connector</artifactId>
+  <artifactId>sql-stored-start-connector</artifactId>
   <packaging>jar</packaging>
-  <name>Syndesis Connectors :: Sql Stored Connector</name>
+  <name>Syndesis Connectors :: Sql Stored Start Connector</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -96,6 +96,11 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-stream</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
