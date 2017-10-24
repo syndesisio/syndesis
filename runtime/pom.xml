@@ -523,6 +523,12 @@
       <artifactId>jsondb</artifactId>
     </dependency>
 
+    <!-- FileStore implementation -->
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>filestore</artifactId>
+    </dependency>
+
     <!-- ===================================================================================== -->
 
     <dependency>

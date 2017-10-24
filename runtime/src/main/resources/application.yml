@@ -58,6 +58,9 @@ dao:
   schema:
     version: 20 # changing this will reset all the DB data.
 
+filestore:
+  enabled: false
+
 # OpenShift infra value
 openshift:
   # Base API Url up to the api version number (i.e. ending in sth like "oapi1/v1"
