@@ -133,7 +133,7 @@ export class DataMapperHostComponent extends FlowPage
     }
   }
 
-  createDocumentDefinition(dataShape: DataShape, isSource: boolean = false) {
+  createDocumentDefinition(connectorId: string, dataShape: DataShape, isSource: boolean = false) {
     if (!dataShape || !dataShape.kind) {
       // skip
       return;
@@ -144,7 +144,17 @@ export class DataMapperHostComponent extends FlowPage
     // TODO not sure what to do for `none` or `any` here
     switch (kind) {
       case 'java':
-        this.cfg.addJavaDocument(type, isSource);
+        const docDef: DocumentDefinition = this.cfg.addJavaDocument(type, isSource);
+        this.support.requestJavaInspection(connectorId, type).subscribe(
+          data => {
+            const inspection: string = data['_body'];
+            log.debugc(() => 'Precomputed java document found for ' + type + ': ' + inspection, category);
+            docDef.initCfg.inspectionResultContents = inspection;
+          },
+          err => {
+            log.debugc(() => 'No precomputed java document found: ' + type, category);
+          },
+        );
         break;
       case 'json':
       case 'json-instance':
@@ -171,8 +181,10 @@ export class DataMapperHostComponent extends FlowPage
     }
     this.cfg.mappings = new MappingDefinition();
 
-    this.createDocumentDefinition(this.outputDataShape, true);
-    this.createDocumentDefinition(this.inputDataShape, false);
+    const previousConnectorId: string = this.currentFlow.getPreviousConnection(this.position).connection.connectorId;
+    const subsequentConnectorId: string = this.currentFlow.getSubsequentConnection(this.position).connection.connectorId;
+    this.createDocumentDefinition(previousConnectorId, this.outputDataShape, true);
+    this.createDocumentDefinition(subsequentConnectorId, this.inputDataShape, false);
 
     // TODO for now set a really long timeout
     this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;

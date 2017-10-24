@@ -7,6 +7,7 @@ export const environment = Object.freeze({
   production: false,
   config: {
     apiEndpoint: 'http://localhost:8080/api/v1',
+    mapperEndpoint: 'http://localhost:8080/mapper/v1',
     title: 'DEVELOPMENT - Syndesis',
     datamapper: {
       baseJavaInspectionServiceUrl: 'http://localhost:8585/v2/atlas/java/',
