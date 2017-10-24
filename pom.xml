@@ -89,6 +89,7 @@
     <assertj-core.version>3.6.2</assertj-core.version>
     <caffeine.version>2.4.0</caffeine.version>
     <camel.version>2.20.0</camel.version>
+    <camel.runtime.version>2.20.0</camel.runtime.version>
     <derby.version>10.14.1.0</derby.version>
     <jdbi.version>2.78</jdbi.version>
     <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
