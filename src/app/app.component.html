@@ -5,6 +5,9 @@
                                 (onCloseSelect)="handleClose($event)"
                                 [showClose]="showClose">
   </pfng-toast-notification-list>
+
+  <tour-step-template></tour-step-template>
+
   <ng-template #brandTemplate>
     <a [routerLink]=" ['/'] "
        class="navbar-brand">
@@ -178,6 +181,7 @@
   </div>
   <main class="container-fluid container-pf-nav-pf-vertical"
         *ngIf="loggedIn">
+    <a style="cursor: pointer" (click)="tourService.toggle()" class="btn btn-primary" tourAnchor="start.tour">Start Demo Tour</a>
     <router-outlet></router-outlet>
   </main>
 

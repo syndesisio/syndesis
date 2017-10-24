@@ -4867,6 +4867,17 @@ ngx-restangular@1.0.9:
     "@types/lodash" "^4.14.62"
     rxjs "^5.0.0"
 
+ngx-tour-core@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-tour-core/-/ngx-tour-core-1.1.0.tgz#960fe3dcfaabf406fb2c7d9399b72325789030fa"
+
+ngx-tour-ngx-bootstrap@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/ngx-tour-ngx-bootstrap/-/ngx-tour-ngx-bootstrap-1.0.4.tgz#d310c252fc4cfeefcd2476c92e57a80e492ba0d1"
+  dependencies:
+    ngx-tour-core "^1.0.0"
+    withinviewport "^2.0.0"
+
 no-case@^2.2.0:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-2.3.2.tgz#60b813396be39b3f1288a4c1ed5d1e7d28b464ac"
@@ -7707,6 +7718,10 @@ win-release@^1.0.0:
 window-size@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.1.0.tgz#5438cd2ea93b202efa3a19fe8887aee7c94f9c9d"
+
+withinviewport@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/withinviewport/-/withinviewport-2.0.0.tgz#5df1468b087832812dfba0a793c2be4e96b2da85"
 
 word-wrap@^1.0.3:
   version "1.2.3"

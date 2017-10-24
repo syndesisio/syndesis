@@ -18,7 +18,8 @@ import {
 } from 'ngx-bootstrap';
 import { TagInputModule } from 'ngx-chips';
 import { Restangular, RestangularModule } from 'ngx-restangular';
-import { NotificationModule, NotificationService } from 'patternfly-ng';
+import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
+import { NotificationModule } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
 import { AppComponent } from './app.component';
@@ -115,6 +116,7 @@ export function mapperRestangularProvider(
     SyndesisCommonModule.forRoot(),
     DataMapperModule,
     NotificationModule,
+    TourNgxBootstrapModule.forRoot(),
   ],
   providers: [
     {
