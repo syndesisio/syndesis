@@ -1,0 +1,71 @@
+#
+# Copyright (C) 2016 Red Hat, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+version: 2
+jobs:
+  build:
+    working_directory: /workspace
+    docker:
+    - image: openjdk:8-jdk
+    environment:
+      MAVEN_OPTS: -Xmx1024m
+      DOCKER_VERSION: 17.04.0-ce
+
+    steps:
+      - setup_remote_docker
+
+      - checkout
+
+      - run:
+          name: Collect pom.xml
+          command: |
+            git submodule init
+            git submodule update
+            find . | grep pom.xml | grep -v src/test/resources | grep -v src/main/resources | xargs cat > all-poms
+
+      - restore_cache:
+          key: syndesis-all-poms-{{ checksum "all-poms" }}
+
+      - run:
+          name: Build
+          command: ./build.sh
+
+      - save_cache:
+          key: syndesis-all-poms-{{ checksum "all-poms" }}
+          paths:
+          - ~/.m2
+
+      - run:
+          name: Collect junit reports
+          command: |
+            mkdir ./junit/
+            find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} ./junit/ \;
+
+      - run:
+          name: Collect API docs
+          command: |
+            mkdir ./apidocs
+            cp runtime/target/classes/static/index.html ./apidocs
+            cp runtime/target/classes/static/swagger.json ./apidocs
+            cp runtime/target/classes/static/swagger.yaml ./apidocs
+
+      - store_artifacts:
+          path: ./apidocs
+      - store_artifacts:
+          path: ./junit
+
+      - store_test_results:
+          path: ./junit
+
