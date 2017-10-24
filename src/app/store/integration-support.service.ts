@@ -1,27 +1,32 @@
-import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Injector, Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
 import { Restangular } from 'ngx-restangular';
 import { Observable } from 'rxjs/Observable';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
+import { RESTANGULAR_MAPPER } from '../app.module';
 import { ConfigService } from '../config.service';
 import { Action, Connection, Integration } from '../model';
+import { log, getCategory } from '../logging';
 
 @Injectable()
 export class IntegrationSupportService {
-  mapperBaseUrl: string = undefined;
   service: Restangular = undefined;
   filterService: Restangular = undefined;
   metadataService: Restangular = undefined;
+  mapperService: Restangular = undefined;
   configService: ConfigService = undefined;
 
-  constructor(public restangular: Restangular,
-              public http: Http,
-              public config: ConfigService) {
+  constructor(restangular: Restangular,
+              injector: Injector,
+              private http: Http,
+              private config: ConfigService) {
     this.service = restangular.service('integration-support');
     this.filterService = restangular.service('integrations');
     this.metadataService = restangular.service('connections');
+    const restangularMapper = injector.get(RESTANGULAR_MAPPER);
+    this.mapperService = restangularMapper.service('java-inspections');
     this.configService = config;
-    this.mapperBaseUrl = config.getSettings().apiBase + config.getSettings().mapperEndpoint;
   }
 
   getFilterOptions(dataShape: any): Observable<any> {
@@ -41,8 +46,8 @@ export class IntegrationSupportService {
     return this.http.post(url, configuredProperties);
   }
 
-  requestJavaInspection(connectorId: String, type: String) {
-    const url = this.mapperBaseUrl + '/java-inspections/' + connectorId + '/' + type + '.json';
+  requestJavaInspection(connectorId: String, type: String): Observable<Response> {
+    const url = this.mapperService.one(connectorId).one(type + '.json').getRestangularUrl();
     return this.http.get(url);
   }
 }

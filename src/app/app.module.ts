@@ -1,4 +1,5 @@
 import { APP_INITIALIZER, NgModule, NgZone } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -16,7 +17,7 @@ import {
   TypeaheadModule,
 } from 'ngx-bootstrap';
 import { TagInputModule } from 'ngx-chips';
-import { RestangularModule } from 'ngx-restangular';
+import { Restangular, RestangularModule } from 'ngx-restangular';
 import { NotificationModule, NotificationService } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
@@ -57,6 +58,17 @@ export function restangularProviderConfigurer(
       return [];
     }
     return data;
+  });
+}
+
+export const RESTANGULAR_MAPPER = new InjectionToken<Restangular>('restangularMapper');
+export function mapperRestangularProvider(
+  restangular: Restangular,
+  config: ConfigService,
+) {
+  return restangular.withConfig((restangularConfigurer) => {
+    const mapperEndpoint = config.getSettings().mapperEndpoint;
+    restangularConfigurer.setBaseUrl(mapperEndpoint ? mapperEndpoint : '/mapper/v1');
   });
 }
 
@@ -110,6 +122,11 @@ export function restangularProviderConfigurer(
       useFactory: appInitializer,
       deps: [ConfigService],
       multi: true,
+    },
+    {
+      provide: RESTANGULAR_MAPPER,
+      useFactory: mapperRestangularProvider,
+      deps: [Restangular, ConfigService],
     },
     ConfigService,
     UserService,
