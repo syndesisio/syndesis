@@ -76,19 +76,14 @@ export class AppComponent implements OnInit, AfterViewInit {
               private modalService: ModalService,
               public tourService: TourService) {
     this.tourService.initialize([ {
-        anchorId: 'start.tour',
-        content: 'Welcome to the Ngx-Tour tour!',
-        placement: 'right',
-        title: 'Welcome',
-      }, {
         route: 'settings',
         title: 'Get Started',
         content: 'This series of popups acquaints you with Fuse Ignite. When you are ready to create a sample integration, ' +
         'click the help icon and select Documentation to get step-by-step instructions.',
-        anchorId: 'another.route',
-        placement: 'left',
+        anchorId: 'get.started',
+        placement: 'bottom',
       }, {
-        route: 'connections/create',
+        route: 'dashboard',
         title: 'Create Integration',
         content: 'After creating at least two connections, you can create an integration.',
         anchorId: 'dashboard.integration',

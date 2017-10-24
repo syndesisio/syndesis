@@ -59,7 +59,7 @@
           <!-- Help Navbar -->
 
           <li dropdown
-              class="dropdown help">
+              class="dropdown help" tourAnchor="get.started">
             <a dropdownToggle
                class="dropdown-toggle nav-item-iconic"
                id="dropdownHelp"
@@ -181,7 +181,6 @@
   </div>
   <main class="container-fluid container-pf-nav-pf-vertical"
         *ngIf="loggedIn">
-    <a style="cursor: pointer" (click)="tourService.toggle()" class="btn btn-primary" tourAnchor="start.tour">Start Demo Tour</a>
     <router-outlet></router-outlet>
   </main>
 
