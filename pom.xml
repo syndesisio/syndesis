@@ -164,6 +164,14 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+
+      <!-- Workaround for broken kubernetes-client BOM -->
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-model</artifactId>
+        <version>1.0.74</version>
+      </dependency>
+
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
