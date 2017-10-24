@@ -60,7 +60,7 @@ node {
                                     container ('openshift') {
                                         sh """
                                     cd ui
-                                    BC_DETAILS=`oc get bc | grep syndesis-ui`
+                                    BC_DETAILS=`oc get bc | grep syndesis-ui || echo ""`
                                     if [ -z "\$BC_DETAILS" ]; then
                                         cat docker/Dockerfile | oc new-build --dockerfile=- --to=syndesis/syndesis-ui:latest --strategy=docker
                                     fi
