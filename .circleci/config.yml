@@ -40,7 +40,9 @@ jobs:
 
       - run:
           name: Build
-          command: ./build.sh
+          command: |
+            alias mvn=`pwd`/mvnw 
+            ./build.sh
 
       - save_cache:
           key: syndesis-all-poms-{{ checksum "all-poms" }}
