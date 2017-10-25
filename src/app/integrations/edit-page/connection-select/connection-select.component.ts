@@ -122,6 +122,7 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
   }
 
   ngOnDestroy() {
+    super.ngOnDestroy();
     this.routeSubscription.unsubscribe();
   }
 }

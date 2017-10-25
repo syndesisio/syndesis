@@ -270,6 +270,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
   }
 
   ngOnDestroy() {
+    super.ngOnDestroy();
     this.routeSubscription.unsubscribe();
   }
 }

@@ -120,9 +120,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
   }
 
   ngOnDestroy() {
-    if (this.flowSubscription) {
-      this.flowSubscription.unsubscribe();
-    }
+    super.ngOnDestroy();
     if (this.actionsSubscription) {
       this.actionsSubscription.unsubscribe();
     }
