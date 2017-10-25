@@ -112,6 +112,7 @@
           </p>
         </dd>
       </dl>
+      <!--
       <dl class="dl-horizontal">
         <dt>
           History:
@@ -122,11 +123,9 @@
               <thead>
                 <tr>
                   <th>Version</th>
-                  <!--
                   <th>Start date/time</th>
                   <th>Run Length</th>
                   <th>Uses</th>
-                  -->
                   <th>Status</th>
                   <th width="25%">Actions</th>
                 </tr>
@@ -144,7 +143,6 @@
                         {{ row.version }}
                       </ng-container>
                     </td>
-                    <!--
                     <td>{{ row.startTime | date:"M/d/y H:m:s" }}</td>
                     <td>
                       <ng-container *ngIf="row.runLength || row.runLength === 0">
@@ -152,7 +150,6 @@
                       </ng-container>
                     </td>
                     <td>{{ row.uses }}</td>
-                    -->
                     <td>
                       <span *ngFor="let status of row.status"
                             [class]="status.class">
@@ -171,6 +168,7 @@
           </syndesis-loading>
         </dd>
       </dl>
+      -->
       <dl class="dl-horizontal">
         <dt>
         </dt>
