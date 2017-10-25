@@ -18,7 +18,7 @@ jobs:
   build:
     working_directory: /workspace
     docker:
-    - image: openjdk:8-jdk
+    - image: wombat7/openjdk-node-docker
     environment:
       MAVEN_OPTS: -Xmx1024m
       DOCKER_VERSION: 17.04.0-ce
@@ -29,24 +29,38 @@ jobs:
       - checkout
 
       - run:
-          name: Collect pom.xml
+          name: Install yarn
+          command: |
+            rm -rf ~/.yarn
+            curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.2.1
+            echo 'export PATH="${HOME}/.yarn/bin:${PATH}"' >> $BASH_ENV
+
+      - run:
+          name: Prep for Cache Load
           command: |
             git submodule init
             git submodule update
             find . | grep pom.xml | grep -v src/test/resources | grep -v src/main/resources | xargs cat > all-poms
 
       - restore_cache:
-          key: syndesis-all-poms-{{ checksum "all-poms" }}
+          key: syndesis-mvn-{{ checksum "all-poms" }}          
+      - restore_cache:
+          key: syndesis-yarn-{{ checksum "ui/yarn.lock" }}
 
       - run:
           name: Build
           command: |
+            echo Using node version: $(node --version)
             ./build.sh
 
       - save_cache:
-          key: syndesis-all-poms-{{ checksum "all-poms" }}
+          key: syndesis-mvn-{{ checksum "all-poms" }}
           paths:
           - ~/.m2
+      - save_cache:
+          key: syndesis-yarn-{{ checksum "ui/yarn.lock" }}
+          paths:
+          - /usr/local/share/.cache/yarn/v1
 
       - run:
           name: Collect junit reports
@@ -58,15 +72,16 @@ jobs:
           name: Collect API docs
           command: |
             mkdir ./apidocs
-            cp runtime/target/classes/static/index.html ./apidocs
-            cp runtime/target/classes/static/swagger.json ./apidocs
-            cp runtime/target/classes/static/swagger.yaml ./apidocs
+            if [[ -d runtime/runtime/target/classes/static ]]; then 
+              cp runtime/runtime/target/classes/static/index.html ./apidocs
+              cp runtime/runtime/target/classes/static/swagger.json ./apidocs
+              cp runtime/runtime/target/classes/static/swagger.yaml ./apidocs
+            fi
 
       - store_artifacts:
           path: ./apidocs
       - store_artifacts:
           path: ./junit
-
       - store_test_results:
           path: ./junit
 

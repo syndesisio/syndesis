@@ -73,9 +73,10 @@ function init_options() {
 
   # Internal variable default values
   OC_OPTS=""
-  MAVEN_OPTS=""
+  MAVEN_OPTS="--batch-mode"
   MAVEN_CLEAN_GOAL="clean"
   MAVEN_IMAGE_BUILD_GOAL="fabric8:build"
+  MAVEN_CMD="${MAVEN_CMD:-${BASEDIR}/mvnw}"
 
   # Apply options
   if [ -n "$SKIP_TESTS" ]; then
@@ -109,25 +110,25 @@ function init_options() {
 function connectors() {
   pushd connectors
   # We are ALWAYS clean this project, because build fails otherwise: https://github.com/syndesisio/connectors/issues/93
-  "${BASEDIR}/mvnw" clean install $MAVEN_OPTS
+  "${MAVEN_CMD}" clean install $MAVEN_OPTS
   popd
 }
 
 function verifier() {
   pushd verifier
-  "${BASEDIR}/mvnw" $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
   popd
 }
 
 function runtime() {
   pushd runtime
-  "${BASEDIR}/mvnw" $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
   popd  
 }
 
 function rest() {
   pushd rest
-  "${BASEDIR}/mvnw" $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_OPTS
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_OPTS
   popd
 }
 
