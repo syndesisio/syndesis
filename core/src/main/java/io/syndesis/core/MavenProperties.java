@@ -16,14 +16,14 @@
 package io.syndesis.core;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("maven")
 public class MavenProperties {
 
-    private final Map<String, String> repositories = new ConcurrentHashMap<>(3);
+    private final Map<String, String> repositories = new ConcurrentSkipListMap<>();
 
     public MavenProperties() {
     }
