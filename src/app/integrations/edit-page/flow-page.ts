@@ -103,6 +103,8 @@ export abstract class FlowPage implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.flowSubscription.unsubscribe();
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
   }
 }
