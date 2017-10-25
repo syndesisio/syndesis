@@ -494,7 +494,7 @@ objects:
         DECLARE
           task varchar;
         BEGIN
-          task := concat(lead_status || ' ', 'Lead: Please contact ', first_and_last_name, ' from ' || company, ' via phone: ' || phone, ' via email: ' || email, '. ', 'Lead is from || lead_source, '. Rating: || rating, '.');
+          task := concat(lead_status || ' ', 'Lead: Please contact ', first_and_last_name, ' from ' || company, ' via phone: ' || phone, ' via email: ' || email, '. ', 'Lead is from ' || lead_source, '. Rating: ' || rating, '.');
           insert into todo(task,completed) VALUES (task,0);
         END;
         $BODY$;
