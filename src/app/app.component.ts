@@ -92,19 +92,19 @@ export class AppComponent implements OnInit, AfterViewInit {
         route: 'connections/create/connection-basics',
         title: 'Connection',
         content: 'A connection represents a specific application that you want to obtain data from or send data to.',
-        anchorId: 'angular-ui-tour',
-        placement: 'left',
+        anchorId: 'connections.type',
+        placement: 'top',
       }, {
         route: 'connections/create/review',
         title: 'Make It Available',
         content: 'Click Create to make the new connection available for use in integrations.',
-        anchorId: 'usage',
+        anchorId: 'connections.create',
         placement: 'bottom',
       }, {
         route: 'integrations/create/connection-select/0',
         title: 'Available Connections',
         content: 'After at least two connections are available, you can create an integration that uses the connections you choose.',
-        anchorId: 'integrations.availableCon',
+        anchorId: 'integrations.connections',
         placement: 'top',
       }, {
         route: 'integrations/create/connection-select/0',
@@ -117,7 +117,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         route: 'integrations/create/action-select/0',
         title: 'Available Actions',
         content: 'When an integration uses the selected connection it performs the action you select.',
-        anchorId: 'integrations.availableAct',
+        anchorId: 'integrations.actions',
         placement: 'top',
       }, {
         route: 'integrations/create/action-configure/0/0',
@@ -130,7 +130,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         route: 'integrations/create/save-or-add-step?validate=true',
         title: 'Operate On Data',
         content: 'Clicking the plus sign lets you add an operation that the integration performs between the start and finish connections.',
-        anchorId: 'integrations.addStep',
+        anchorId: 'integrations.step',
         placement: 'right',
       /*
       }, {
