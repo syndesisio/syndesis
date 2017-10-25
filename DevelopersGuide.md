@@ -84,8 +84,8 @@ sudo dnf install -y yarn
 cd syndesis-ui
 yarn install
 cd scripts
-sh minishift-setup.sh
 sh syndesis-install
+sh minishift-setup.sh
 ```
 2. in another terminal
 ```
@@ -133,8 +133,8 @@ yarn install ; yarn start
 ###### In full integration with Syndesis
 - ends up using the steps for Web Development 
 ```bash
-# after you have built atalsmap-ui project with yarn
-yarn link # understand its output
+cd atlasmap-ui
+yarn link # understand the output
 cd ../syndesis-ui
 # based on the output of `yarn link`
 yarn link @atlasmap/atlasmap.data.mapper
