@@ -1,6 +1,7 @@
 package io.syndesis.connector.twitter.springboot;
 
 import javax.annotation.Generated;
+import io.syndesis.connector.twitter.TwitterMentionComponent;
 import org.apache.camel.component.twitter.data.TimelineType;
 
 /**
