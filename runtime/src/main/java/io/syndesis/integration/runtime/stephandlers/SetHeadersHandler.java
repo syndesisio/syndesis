@@ -13,32 +13,30 @@
  */
 package io.syndesis.integration.runtime.stephandlers;
 
+import java.util.Map;
+
+import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.SetHeaders;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.runtime.StepHandler;
 import io.syndesis.integration.runtime.SyndesisRouteBuilder;
 import org.apache.camel.model.ProcessorDefinition;
 
-import java.util.Map;
-import java.util.Set;
-
+@AutoService(StepHandler.class)
 public class SetHeadersHandler implements StepHandler<SetHeaders> {
-  @Override
-  public boolean canHandle(Step step) {
-    return step.getClass().equals(SetHeaders.class);
-  }
-
-  @Override
-  public ProcessorDefinition handle(SetHeaders step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
-    Map<String, Object> headers = step.getHeaders();
-    if (headers != null) {
-      Set<Map.Entry<String, Object>> entries = headers.entrySet();
-      for (Map.Entry<String, Object> entry : entries) {
-        String key = entry.getKey();
-        Object value = entry.getValue();
-        route.setHeader(key, routeBuilder.constant(value));
-      }
+    @Override
+    public boolean canHandle(Step step) {
+        return step.getClass().equals(SetHeaders.class);
     }
-    return route;
-  }
+
+    @Override
+    public ProcessorDefinition handle(SetHeaders step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+        Map<String, Object> headers = step.getHeaders();
+        if (headers != null) {
+            for (Map.Entry<String, Object> entry : headers.entrySet()) {
+                route.setHeader(entry.getKey(), routeBuilder.constant(entry.getValue()));
+            }
+        }
+        return route;
+    }
 }

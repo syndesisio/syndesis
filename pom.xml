@@ -32,9 +32,10 @@
   <modules>
     <module>bom</module>
     <module>model</module>
+    <module>runtime-api</module>
     <module>runtime</module>
   </modules>
-
+  
   <build>
     <plugins>
       <plugin>

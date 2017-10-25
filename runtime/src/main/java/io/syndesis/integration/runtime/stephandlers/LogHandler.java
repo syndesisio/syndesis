@@ -23,7 +23,6 @@ import org.apache.camel.model.ProcessorDefinition;
 
 @AutoService(StepHandler.class)
 public class LogHandler implements StepHandler<Log> {
-
   @Override
   public boolean canHandle(Step step) {
     return step.getClass().equals(Log.class);
