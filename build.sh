@@ -3,6 +3,8 @@
 # Exit if any error occurs
 set -e
 
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # Save global script args
 ARGS="$@"
 
@@ -107,25 +109,25 @@ function init_options() {
 function connectors() {
   pushd connectors
   # We are ALWAYS clean this project, because build fails otherwise: https://github.com/syndesisio/connectors/issues/93
-  mvn clean install $MAVEN_OPTS
+  "${BASEDIR}/mvnw" clean install $MAVEN_OPTS
   popd
 }
 
 function verifier() {
   pushd verifier
-  mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
+  "${BASEDIR}/mvnw" $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
   popd
 }
 
 function runtime() {
   pushd runtime
-  mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
+  "${BASEDIR}/mvnw" $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
   popd  
 }
 
 function rest() {
   pushd rest
-  mvn $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_OPTS
+  "${BASEDIR}/mvnw" $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_OPTS
   popd
 }
 
