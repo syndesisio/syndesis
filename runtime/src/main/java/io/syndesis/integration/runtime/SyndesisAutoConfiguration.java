@@ -17,19 +17,17 @@
 package io.syndesis.integration.runtime;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-import io.syndesis.integration.model.SyndesisModel;
-import io.syndesis.integration.model.SyndesisHelpers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
 
 @Configuration
+@ConditionalOnProperty(prefix = "syndesis", name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(SyndesisConfiguration.class)
 public class SyndesisAutoConfiguration {
     @Autowired
@@ -43,13 +41,6 @@ public class SyndesisAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public SyndesisRouteBuilder syndesisRouteBuilder() throws IOException {
-        final Resource resource = context.getResource(configuration.getConfiguration());
-
-        try (InputStream is = resource.getInputStream()) {
-            final SyndesisModel model = SyndesisHelpers.load(is);
-            final SyndesisRouteBuilder builder = new SyndesisRouteBuilder(model);
-
-            return builder;
-        }
+        return new SyndesisRouteBuilder(configuration.getConfiguration());
     }
 }

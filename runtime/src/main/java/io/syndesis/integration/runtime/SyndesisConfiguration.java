@@ -21,9 +21,22 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "syndesis")
 public class SyndesisConfiguration {
     /**
+     * Enable/Disable syndesis runtime.
+     */
+    private boolean enabled = true;
+
+    /**
      * The Syndesis configuration location;
      */
     private String configuration = "classpath:syndesis.yml";
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public String getConfiguration() {
         return configuration;

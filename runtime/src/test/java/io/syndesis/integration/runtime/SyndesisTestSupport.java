@@ -43,11 +43,12 @@ public abstract class SyndesisTestSupport extends CamelTestSupport {
 
     @Override
     protected RoutesBuilder createRouteBuilder() throws Exception {
-        final SyndesisModel model = createSyndesis();
-        final SyndesisRouteBuilder builder = new SyndesisRouteBuilder(model);
-
-        return builder;
-
+        return new SyndesisRouteBuilder("") {
+            @Override
+            protected SyndesisModel loadModel() throws Exception {
+                return createSyndesis();
+            }
+        };
     }
 
     protected SyndesisModel loadTestYaml() throws IOException {

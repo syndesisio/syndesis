@@ -16,10 +16,12 @@
  */
 package io.syndesis.integration.runtime;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.ServiceLoader;
 
 import io.syndesis.integration.model.Flow;
+import io.syndesis.integration.model.SyndesisHelpers;
 import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.integration.model.steps.Step;
@@ -28,6 +30,7 @@ import io.syndesis.integration.support.Strings;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.util.ResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,17 +40,23 @@ import org.slf4j.LoggerFactory;
 public class SyndesisRouteBuilder extends RouteBuilder {
     private static final transient Logger LOG = LoggerFactory.getLogger(SyndesisRouteBuilder.class);
 
-    private final SyndesisModel model;
+    private final String configurationUri;
 
-    public SyndesisRouteBuilder(SyndesisModel model) {
-        this.model = model;
+    public SyndesisRouteBuilder(String configurationUri) {
+        this.configurationUri = configurationUri;
+    }
+
+    protected SyndesisModel loadModel() throws Exception {
+        try (InputStream is = ResourceHelper.resolveMandatoryResourceAsInputStream(getContext(), configurationUri)) {
+            return SyndesisHelpers.load(is);
+        }
     }
 
     @Override
     public void configure() throws Exception {
         int flowIndex = 0;
 
-        for (Flow flow : model.getFlows()) {
+        for (Flow flow : loadModel().getFlows()) {
             getContext().setStreamCaching(true);
 
             if (flow.isTraceEnabled()) {
