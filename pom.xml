@@ -112,8 +112,8 @@
     <spring-social.version>1.1.4.RELEASE</spring-social.version>
     <swagger.version>1.5.12</swagger.version>
     <undertow.version>1.4.18.Final</undertow.version>
-    <atlasmap.version>1.31.0</atlasmap.version>
-    <camel-atlasmap.version>1.31.0</camel-atlasmap.version>
+    <atlasmap.version>1.31.1</atlasmap.version>
+    <camel-atlasmap.version>1.31.1</camel-atlasmap.version>
     <apache-mime4j.version>0.6</apache-mime4j.version>
 
     <!-- maven plugin version -->
