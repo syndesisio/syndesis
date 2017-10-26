@@ -27,16 +27,15 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
  * Camel SqlStoredConnector connector
  */
 public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
-
     public SqlStoredConnectorComponent() {
         super("sql-stored-connector", "io.syndesis.connector.SqlStoredConnectorComponent");
+        
         registerExtension(SqlStoredConnectorVerifierExtension::new);
         registerExtension(SqlStoredConnectorMetaDataExtension::new);
     }
 
     @Override
     public Processor getBeforeProducer() {
-
         final Processor processor = exchange -> {
             final String body = (String) exchange.getIn().getBody();
             final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
@@ -57,5 +56,4 @@ public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
 
         return super.createEndpoint(uri, remaining, parameters);
     }
-
 }

@@ -87,23 +87,6 @@
     </dependency>
      -->
 
-    <!-- logging -->
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-slf4j-impl</artifactId>
-      <scope>test</scope>
-    </dependency>
-
     <!-- testing -->
     <dependency>
       <groupId>org.apache.camel</groupId>
@@ -180,9 +163,11 @@
         </executions>
       </plugin>
 
-      <!-- generate components meta-data and validate component includes documentation etc
+      <!-- 
+      generate components meta-data and validate component includes documentation etc
       Disabled until the plugin supports adding parameters at the connector level. At the moment
-     they are added manually.
+      they are added manually.
+      -->
       <plugin>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-package-maven-plugin</artifactId>
@@ -204,9 +189,10 @@
           </execution>
         </executions>
       </plugin>
-      -->
 
-      <!-- generate connector
+      <!-- 
+          generate connector
+      -->
       <plugin>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-connector-maven-plugin</artifactId>
@@ -232,7 +218,6 @@
           </execution>
         </executions>
       </plugin>
-      -->
 
     </plugins>
   </build>
