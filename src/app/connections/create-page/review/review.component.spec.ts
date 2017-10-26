@@ -1,8 +1,7 @@
 import { RouterStateSnapshot } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ConnectionsReviewComponent } from './review.component';
 import { CurrentConnectionService } from '../current-connection';
-import { ModalService } from '../../../common/modal/modal.service';
 
 describe('ConnectionsReviewComponent', () => {
 
@@ -10,7 +9,6 @@ describe('ConnectionsReviewComponent', () => {
   let modalService;
   const connectionService = null;
   const detector = null;
-  const route = null;
   const router = null;
   let nextState;
   let component;
@@ -19,7 +17,7 @@ describe('ConnectionsReviewComponent', () => {
     current = <CurrentConnectionService>{};
     modalService = jasmine.createSpyObj('modalService', ['show']);
     nextState = <RouterStateSnapshot>{};
-    component = new ConnectionsReviewComponent(current, modalService, connectionService, detector, route, router);
+    component = new ConnectionsReviewComponent(current, modalService, connectionService, detector, router);
   });
 
   describe('createReviewForm', () => {
@@ -28,7 +26,6 @@ describe('ConnectionsReviewComponent', () => {
       expect(formGroup.get('name')).toBeDefined();
       expect(formGroup.get('name').hasError('required')).toBe(true);
       expect(formGroup.get('description')).toBeDefined();
-      expect(formGroup.get('tags')).toBeDefined();
     });
   });
 
