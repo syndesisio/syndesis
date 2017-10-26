@@ -52,6 +52,7 @@
     "tether": "1.4.0",
     "ts-helpers": "1.1.2",
     "typescript-logging": "0.4.0",
+    "url": "^0.11.0",
     "zone.js": "0.8.4"
   },
   "devDependencies": {
