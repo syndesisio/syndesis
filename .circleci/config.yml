@@ -40,7 +40,7 @@ jobs:
           command: |
             git submodule init
             git submodule update
-            find . | grep pom.xml | grep -v src/test/resources | grep -v src/main/resources | xargs cat > all-poms
+            find . | grep pom.xml | grep -v src/test/resources | grep -v src/main/resources | sort | xargs cat > all-poms
 
       - restore_cache:
           key: syndesis-mvn-{{ checksum "all-poms" }}          
@@ -78,6 +78,8 @@ jobs:
               cp runtime/runtime/target/classes/static/swagger.yaml ./apidocs
             fi
 
+      - store_artifacts:
+          path: all-poms
       - store_artifacts:
           path: ./apidocs
       - store_artifacts:
