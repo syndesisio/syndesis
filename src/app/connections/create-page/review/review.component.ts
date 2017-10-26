@@ -1,11 +1,10 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import {
-  AbstractControl,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
+import { Router, RouterStateSnapshot } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
 import { CurrentConnectionService } from '../current-connection';
@@ -31,7 +30,6 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
     private modalService: ModalService,
     private connectionService: ConnectionService,
     private detector: ChangeDetectorRef,
-    private route: ActivatedRoute,
     private router: Router,
   ) {
     this.reviewForm = this.createReviewForm();
@@ -41,7 +39,6 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
     return new FormGroup({
       name: new FormControl(null, Validators.required),
       description: new FormControl(),
-      tags: new FormControl(),
     });
   }
 
@@ -68,7 +65,6 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
       this.current.connection.description = this.reviewForm.get(
         'description',
       ).value;
-      this.current.connection.tags = this.reviewForm.get('tags').value;
       this.saved = true;
       this.current.events.emit({
         kind: 'connection-save-connection',
