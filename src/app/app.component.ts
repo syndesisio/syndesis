@@ -50,6 +50,8 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   firstTime = false;
 
+  productBuild = false;
+
   /**
    * @type {string}
    * Title of application. Used in the browser title tag.
@@ -75,6 +77,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
+    this.productBuild = this.config.getSettings(
+      'branding',
+      'productBuild',
+      false,
+    );
     this.logoWhiteBg = this.config.getSettings(
       'branding',
       'logoWhiteBg',

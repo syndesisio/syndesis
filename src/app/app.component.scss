@@ -12,6 +12,12 @@ main {
   header {
     // Navigation Bar
     nav {
+      .navbar-brand-name.product {
+        max-height: inherit;
+        height: 47px;
+        margin-top: -12px;
+        margin-bottom: -10px;
+      }
       li {
         border: 0;
 
