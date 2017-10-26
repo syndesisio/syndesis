@@ -11,7 +11,6 @@ import {
 } from 'ngx-bootstrap';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
-import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 
 import { IntegrationsListModule } from './list/list.module';
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
@@ -99,7 +98,6 @@ const routes: Routes = [
     PopoverModule,
     DataMapperModule,
     FileUploadModule,
-    TourNgxBootstrapModule.forRoot(),
   ],
   declarations: [
     DataMapperHostComponent,

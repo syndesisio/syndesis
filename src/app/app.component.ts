@@ -74,7 +74,59 @@ export class AppComponent implements OnInit, AfterViewInit {
               private notificationService: NotificationService,
               private nav: NavigationService,
               private modalService: ModalService,
-              public tourService: TourService) {
+              public tourService: TourService) {}
+
+  ngOnInit() {
+    this.logoWhiteBg = this.config.getSettings(
+      'branding',
+      'logoWhiteBg',
+      'assets/images/syndesis-logo-svg-white.svg',
+    );
+    this.logoDarkBg = this.config.getSettings(
+      'branding',
+      'logoDarkBg',
+      'assets/images/syndesis-logo-svg-white.svg',
+    );
+    this.iconDarkBg = this.config.getSettings(
+      'branding',
+      'iconDarkBg',
+      'assets/images/glasses_logo_square.png',
+    );
+    this.iconWhiteBg = this.config.getSettings(
+      'branding',
+      'iconWhiteBg',
+      'assets/images/glasses_logo_square.png',
+    );
+    const title = (this.title = this.config.getSettings(
+      'branding',
+      'appName',
+      'Syndesis',
+    ));
+    document.title = title;
+    const favicon32 = this.config.getSettings(
+      'branding',
+      'favicon32',
+      '/favicon-32x32.png',
+    );
+    const favicon16 = this.config.getSettings(
+      'branding',
+      'favicon16',
+      '/favicon-16x16.png',
+    );
+    const touchIcon = this.config.getSettings(
+      'branding',
+      'touchIcon',
+      '/apple-touch-icon.png',
+    );
+    document.getElementById('favicon32').setAttribute('href', favicon32);
+    document.getElementById('favicon16').setAttribute('href', favicon16);
+    document.getElementById('appName').setAttribute('content', title);
+    document.getElementById('appTitle').setAttribute('content', title);
+    document.getElementById('touchIcon').setAttribute('href', touchIcon);
+    this.user = this.userService.user;
+    this.notifications = this.notificationService.getNotifications();
+    this.showClose = true;
+
     this.tourService.initialize([ {
         route: 'settings',
         title: 'Get Started',
@@ -132,33 +184,33 @@ export class AppComponent implements OnInit, AfterViewInit {
         content: 'Clicking the plus sign lets you add an operation that the integration performs between the start and finish connections.',
         anchorId: 'integrations.step',
         placement: 'right',
-      /*
-      }, {
-        route: '',
-        title: 'Source Fields',
-        content: 'List of fields in the data that is coming into this mapping step.',
-        anchorId: 'mapper.source',
-        placement: 'top',
-      }, {
-        route: '',
-        title: 'Target Fields',
-        content: 'List of fields in the data that leaves this mapping step to continue the integration.',
-        anchorId: 'mapper.target',
-        placement: 'top',
-      }, {
-        route: '',
-        title: 'Data Mapper Tools',
-        content: 'Toggles for displaying details, listing mappings and showing types, lines, mapped or unmapped fields.',
-        anchorId: 'mapper.tools',
-        placement: 'bottom',
-      }, {
-        route: '',
-        title: 'Separate or Combine',
-        content: 'Define a mapping that separates one source field into two target fields ' +
-        'or combines two source fields into one target field.',
-        anchorId: 'mapper.details',
-        placement: 'top',
-        */
+        /*
+        }, {
+          route: '',
+          title: 'Source Fields',
+          content: 'List of fields in the data that is coming into this mapping step.',
+          anchorId: 'mapper.source',
+          placement: 'top',
+        }, {
+          route: '',
+          title: 'Target Fields',
+          content: 'List of fields in the data that leaves this mapping step to continue the integration.',
+          anchorId: 'mapper.target',
+          placement: 'top',
+        }, {
+          route: '',
+          title: 'Data Mapper Tools',
+          content: 'Toggles for displaying details, listing mappings and showing types, lines, mapped or unmapped fields.',
+          anchorId: 'mapper.tools',
+          placement: 'bottom',
+        }, {
+          route: '',
+          title: 'Separate or Combine',
+          content: 'Define a mapping that separates one source field into two target fields ' +
+          'or combines two source fields into one target field.',
+          anchorId: 'mapper.details',
+          placement: 'top',
+          */
       }, {
         route: 'integrations/create/integration-basics',
         title: 'Publish',
@@ -195,64 +247,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         route: '',
       },
     );
-    this.tourService.start();
-  }
 
-  ngOnInit() {
-    this.productBuild = this.config.getSettings(
-      'branding',
-      'productBuild',
-      false,
-    );
-    this.logoWhiteBg = this.config.getSettings(
-      'branding',
-      'logoWhiteBg',
-      'assets/images/syndesis-logo-svg-white.svg',
-    );
-    this.logoDarkBg = this.config.getSettings(
-      'branding',
-      'logoDarkBg',
-      'assets/images/syndesis-logo-svg-white.svg',
-    );
-    this.iconDarkBg = this.config.getSettings(
-      'branding',
-      'iconDarkBg',
-      'assets/images/glasses_logo_square.png',
-    );
-    this.iconWhiteBg = this.config.getSettings(
-      'branding',
-      'iconWhiteBg',
-      'assets/images/glasses_logo_square.png',
-    );
-    const title = (this.title = this.config.getSettings(
-      'branding',
-      'appName',
-      'Syndesis',
-    ));
-    document.title = title;
-    const favicon32 = this.config.getSettings(
-      'branding',
-      'favicon32',
-      '/favicon-32x32.png',
-    );
-    const favicon16 = this.config.getSettings(
-      'branding',
-      'favicon16',
-      '/favicon-16x16.png',
-    );
-    const touchIcon = this.config.getSettings(
-      'branding',
-      'touchIcon',
-      '/apple-touch-icon.png',
-    );
-    document.getElementById('favicon32').setAttribute('href', favicon32);
-    document.getElementById('favicon16').setAttribute('href', favicon16);
-    document.getElementById('appName').setAttribute('content', title);
-    document.getElementById('appTitle').setAttribute('content', title);
-    document.getElementById('touchIcon').setAttribute('href', touchIcon);
-    this.user = this.userService.user;
-    this.notifications = this.notificationService.getNotifications();
-    this.showClose = true;
+    this.tourService.start();
   }
 
   /**
