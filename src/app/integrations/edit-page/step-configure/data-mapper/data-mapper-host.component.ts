@@ -148,11 +148,12 @@ export class DataMapperHostComponent extends FlowPage
         this.support.requestJavaInspection(connectorId, type).subscribe(
           data => {
             const inspection: string = data['_body'];
-            log.debugc(() => 'Precomputed java document found for ' + type + ': ' + inspection, category);
+            log.infoc(() => 'Precomputed java document found for ' + type, category);
+            log.debugc(() => inspection, category);
             docDef.initCfg.inspectionResultContents = inspection;
           },
           err => {
-            log.debugc(() => 'No precomputed java document found: ' + type, category);
+            log.warnc(() => 'No precomputed java document found for ' + type + ': ' + err, category);
           },
         );
         break;
