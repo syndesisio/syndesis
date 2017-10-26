@@ -18,6 +18,7 @@ function displayHelp() {
     echo " --namespace N           Specifies the namespace to use."
     echo " --resume-from           Resume build from module."
     echo " --clean                 Cleans up the projects."
+    echo " --batch-mode            Runs mvn in batch mode."
     echo " --help                  Displays this help message."
 }
 
@@ -73,12 +74,16 @@ function init_options() {
 
   # Internal variable default values
   OC_OPTS=""
-  MAVEN_OPTS="--batch-mode"
+  MAVEN_OPTS=""
   MAVEN_CLEAN_GOAL="clean"
   MAVEN_IMAGE_BUILD_GOAL="fabric8:build"
   MAVEN_CMD="${MAVEN_CMD:-${BASEDIR}/mvnw}"
 
   # Apply options
+  if [ -n "$(hasflag --batch-mode $ARGS 2> /dev/null)" ]; then
+    MAVEN_OPTS="$MAVEN_OPTS --batch-mode"
+  fi
+
   if [ -n "$SKIP_TESTS" ]; then
       echo "Skipping tests ..."
       MAVEN_OPTS="$MAVEN_OPTS -DskipTests"

@@ -51,7 +51,7 @@ jobs:
           name: Build
           command: |
             echo Using node version: $(node --version)
-            ./build.sh
+            ./build.sh --batch-mode
 
       - save_cache:
           key: syndesis-mvn-{{ checksum "all-poms" }}
