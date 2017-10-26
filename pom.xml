@@ -36,8 +36,7 @@
   <properties>
     <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
     <frontend-maven-plugin-version>1.6</frontend-maven-plugin-version>
-    <node.version>v8.7.0</node.version>
-    <npm.version>3.10.10</npm.version>
+    <node.version>v6.11.5</node.version>
     <yarn.version>v1.2.1</yarn.version>
   </properties>
 
@@ -49,25 +48,23 @@
         <version>${frontend-maven-plugin-version}</version>
         <executions>
           <execution>
-            <id>install yarn</id>
-            <goals>
-              <goal>install-node-and-yarn</goal>
-            </goals>
-            <configuration>
-              <nodeVersion>${node.version}</nodeVersion>
-              <npmVersion>${npm.version}</npmVersion>
-              <yarnVersion>${yarn.version}</yarnVersion>
-            </configuration>
-          </execution>
-          <execution>
             <id>install node and npm</id>
             <goals>
               <goal>install-node-and-npm</goal>
             </goals>
             <configuration>
               <nodeVersion>${node.version}</nodeVersion>
-              <npmVersion>${npm.version}</npmVersion>
             </configuration> 
+          </execution>
+          <execution>
+            <id>install yarn</id>
+            <goals>
+              <goal>install-node-and-yarn</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>${node.version}</nodeVersion>
+              <yarnVersion>${yarn.version}</yarnVersion>
+            </configuration>
           </execution>
           <execution>
             <id>angular-cli install</id>
