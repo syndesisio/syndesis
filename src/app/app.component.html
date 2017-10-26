@@ -13,7 +13,7 @@
                [src]="loggedIn ? iconDarkBg : iconWhiteBg"
                alt="" />
           <img *ngIf="logoDarkBg"
-               class="navbar-brand-name"
+               [class]="productBuild ? 'navbar-brand-name product' : 'navbar-brand-name'"
                [src]="loggedIn ? logoDarkBg : logoWhiteBg"
                alt="{{title}}" />
           <span *ngIf="logoDarkBg === '' && logoWhiteBg === ''"

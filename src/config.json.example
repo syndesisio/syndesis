@@ -4,6 +4,7 @@
   "branding": {
     "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
     "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
+    "productBuild": false,
     "iconWhiteBg": "assets/images/glasses_logo_square.png",
     "iconDarkBg": "assets/images/glasses_logo_square.png",
     "appName": "Syndesis",
