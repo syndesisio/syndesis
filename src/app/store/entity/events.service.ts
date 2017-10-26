@@ -5,7 +5,7 @@ import { ConfigService } from '../../config.service';
 import { Restangular } from 'ngx-restangular';
 import { log } from '../../logging';
 import { resolve } from 'url';
-import 'rxjs/add/operator/first'
+import 'rxjs/add/operator/first';
 
 export class ChangeEvent {
   action: string;
@@ -32,31 +32,31 @@ export class EventsService {
   changeEvents: Subject<ChangeEvent> = new Subject<ChangeEvent>();
 
   constructor(private config: ConfigService, private restangular: Restangular) {
-    this.startConnection(this.retries%2==0);
+    this.startConnection(this.retries % 2 === 0);
   }
 
   onFailure(event) {
     this.starting = false;
     this.retries++;
 
-    if( this.webSocket ) {
-      this.webSocket.close()
+    if ( this.webSocket ) {
+      this.webSocket.close();
       this.webSocket = undefined;
     }
-    if( this.eventSource ) {
+    if ( this.eventSource ) {
       this.eventSource.close();
       this.eventSource = undefined;
     }
-    
+
     // Initialy retry very quickly.
-    var reconnectIn = RECONNECT_TIME;
-    if(this.retries < 3) { 
+    let reconnectIn = RECONNECT_TIME;
+    if (this.retries < 3) {
       reconnectIn = 1;
     }
 
     setTimeout(() => {
       log.info('Reconnecting');
-      switch(this.preferredProtocol) {
+      switch (this.preferredProtocol) {
           // Once we find a protocol that works, keep using it.
           case 'ws':
             this.startConnection(true);
@@ -67,7 +67,7 @@ export class EventsService {
           default:
             // Keep flipping between WS and ES untill we find one that
             // works.
-            this.startConnection(this.retries%2==0);
+            this.startConnection(this.retries % 2 === 0);
       }
     }, reconnectIn);
   }
@@ -77,42 +77,42 @@ export class EventsService {
       return;
     }
     this.starting = true;
-    
+
     try {
       this.restangular.all('event/reservations').customPOST().first().subscribe(
         response => {
           const apiEndpoint = this.config.getSettings().apiEndpoint;
           const reservation = response.data;
           try {
-            if( connectUsingWebSockets ) {
-              var wsApiEndpoint = resolve(window.location.href, apiEndpoint);
+            if ( connectUsingWebSockets ) {
+              let wsApiEndpoint = resolve(window.location.href, apiEndpoint);
               wsApiEndpoint = wsApiEndpoint.replace(/^http/, 'ws');
               wsApiEndpoint += '/event/streams.ws/' + reservation,
               this.connectWebSocket(wsApiEndpoint);
               log.info('Connecting using web socket');
-              this.starting = false;              
+              this.starting = false;
             } else {
               this.connectEventSource(
                 apiEndpoint + '/event/streams/' + reservation,
               );
               this.starting = false;
               log.info('Connecting using server side events');
-            } 
+            }
           } catch (error) {
-            this.onFailure(error)
+            this.onFailure(error);
           }
         },
         error => {
-          this.onFailure(error)
+          this.onFailure(error);
         },
       );
     } catch (error) {
-      this.onFailure(error)
+      this.onFailure(error);
     }
   }
 
   private connectEventSource(url: string) {
-    this.eventSource = new EventSource(url)
+    this.eventSource = new EventSource(url);
     this.eventSource.addEventListener('message', (event) => {
       this.starting = false;
       this.preferredProtocol = 'es';
@@ -126,8 +126,8 @@ export class EventsService {
     });
     const onError = (event) => {
       log.info('sse.close: ' + JSON.stringify(event));
-      this.onFailure(event)
-    }
+      this.onFailure(event);
+    };
     this.eventSource.addEventListener('close', onError);
     this.eventSource.addEventListener('error', onError);
   }
@@ -151,10 +151,10 @@ export class EventsService {
         default:
           log.info('ws.unknown-message: ' + JSON.stringify(event));
       }
-    };;
+    };
     this.webSocket.onclose = (event) => {
       log.info('ws.onclose: ' + JSON.stringify(event));
-      this.onFailure(event)
-    };;
+      this.onFailure(event);
+    };
   }
 }
