@@ -173,7 +173,12 @@
           sensitive: false
         jsondb:
           enabled: true
-      openshift:
+{{#Productized}}
+      maven:
+        repositories:
+          01_maven_central: https://repo1.maven.org/maven2
+          02_redhat_ga_repository: https://maven.repository.redhat.com/ga
+{{/Productized}}      openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}

@@ -139,7 +139,7 @@ var productContext = Context{
 	Tags: tags{
 		Postgresql:    "9.5",
 		Syndesis:      "1.1",
-		Atlasmap:      "1.31",
+		Atlasmap:      "1.1",
 		OAuthProxy:    "v1.0.0",
 	},
 	Registry: "registry.fuse-ignite.openshift.com",
