@@ -31,6 +31,7 @@ public enum Kind {
 
     Environment(io.syndesis.model.environment.Environment.class),
     EnvironmentType(io.syndesis.model.environment.EnvironmentType.class),
+    Extension(io.syndesis.model.extension.Extension.class),
     Organization(io.syndesis.model.environment.Organization.class),
 
     Integration(io.syndesis.model.integration.Integration.class),

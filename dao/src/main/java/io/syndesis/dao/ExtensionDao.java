@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.v1;
+package io.syndesis.dao;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
-/**
- * Configured in spring.factories so that this configuration is automatically picked
- * up when included in the classpath.
- */
-@Configuration
-@ComponentScan
-@ConditionalOnProperty(name = "features.api.v1.enabled")
-public class V1Configuration {
+import io.syndesis.dao.manager.DataAccessObject;
+import io.syndesis.model.extension.Extension;
+
+public interface ExtensionDao extends DataAccessObject<Extension> {
+
+    @Override
+    default Class<Extension> getType() {
+        return Extension.class;
+    }
 
 }

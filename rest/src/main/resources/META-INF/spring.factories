@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    io.syndesis.rest.v1.V1Configuration
+    io.syndesis.rest.v1.V1Configuration,\
+    io.syndesis.rest.v1beta1.V1Beta1Configuration

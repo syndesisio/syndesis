@@ -84,7 +84,7 @@ public abstract class BaseITCase {
 
     @PostConstruct()
     public void resetDB() {
-        get("/api/v1/test-support/reset-db", null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
+        get("/api/v1/test-support/reset-db", Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT);
     }
 
     protected void clearDB() {
@@ -161,6 +161,10 @@ public abstract class BaseITCase {
         return http(HttpMethod.GET, url, null, responseClass, token, expectedStatus);
     }
 
+    protected <T> ResponseEntity<T> get(String url, ParameterizedTypeReference<T> responseClass, String token, HttpStatus expectedStatus) {
+        return http(HttpMethod.GET, url, null, responseClass, token, new HttpHeaders(), expectedStatus);
+    }
+
     protected <T> ResponseEntity<T> post(String url, Object body,  Class<T> responseClass) {
         return post(url, body, responseClass, tokenRule.validToken(), HttpStatus.OK);
     }
@@ -175,6 +179,10 @@ public abstract class BaseITCase {
 
     protected <T> ResponseEntity<T> post(String url, Object body, ParameterizedTypeReference<T> responseClass, String token, HttpStatus expectedStatus) {
         return http(HttpMethod.POST, url, body, responseClass, token, new HttpHeaders(), expectedStatus);
+    }
+
+    protected <T> ResponseEntity<T> post(String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus, HttpHeaders headers) {
+        return http(HttpMethod.POST, url, body, responseClass, token, headers, expectedStatus);
     }
 
     protected <T> ResponseEntity<T> put(String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {
@@ -209,7 +217,7 @@ public abstract class BaseITCase {
     }
 
     private void prepareHeaders(Object body, HttpHeaders headers, String token) {
-        if( body!=null ) {
+        if( body!=null && !headers.containsKey(HttpHeaders.CONTENT_TYPE) ) {
             headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
         }
         if (token != null) {
