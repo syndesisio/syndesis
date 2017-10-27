@@ -20,7 +20,11 @@ This is the release plan for TP2, which consist of multiple distinct repos. This
 
 * Build, release and push Docker images with version `$VERSION_SYNDESIS` (e.g. 1.1.0)
   - https://github.com/syndesisio/syndesis-rest via https://jenkins-syndesis-ci.b6ff.rh-idev.openshiftapps.com/job/syndesis-rest-release/
-  - https://github.com/syndesisio/syndesis-ui (just tag manually)
+  - https://github.com/syndesisio/syndesis-ui (we should automate this)
+    * Edit pom.xml, set version number
+    * Commit to master
+    * Git tag & push
+    * Change back to snapshot version number in pom.xml and commit
   - https://github.com/syndesisio/syndesis-verifier via https://jenkins-syndesis-ci.b6ff.rh-idev.openshiftapps.com/job/syndesis-verifier-release/
 
 * Build atlasmap as Docker images
