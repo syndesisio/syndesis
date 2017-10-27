@@ -20,12 +20,12 @@
 
   <repositories>
     <repository>
-      <id>maven.central</id>
-      <url>https://repo1.maven.org/maven2</url>
-    </repository>
-    <repository>
       <id>jboss.ea</id>
       <url>https://repository.jboss.org/nexus/content/groups/ea</url>
+    </repository>
+    <repository>
+      <id>maven.central</id>
+      <url>https://repo1.maven.org/maven2</url>
     </repository>
     <repository>
       <id>redhat.ga</id>

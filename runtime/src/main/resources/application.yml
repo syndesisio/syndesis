@@ -87,4 +87,4 @@ controllers:
 
 maven:
   repositories:
-    maven.central: https://repo1.maven.org/maven2
+    01_maven_central: https://repo1.maven.org/maven2
