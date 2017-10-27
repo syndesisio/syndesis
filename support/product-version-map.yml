@@ -22,14 +22,14 @@ metadata:
 data:
   versions: |-
     [{ 
-      "version": "1.0",      
+      "version": "1.0.0",      
       "description": "Technical Preview 1",      
       "template": "syndesis-restricted-1.0",
       "oauthclient": "syndesis-oauthclient-1.0",
       "default": true
     },
     { 
-      "version": "1.1",
+      "version": "1.1.1",
       "description": "Technical Preview 2",
       "template": "syndesis-restricted-1.1",
       "oauthclient": "syndesis-oauthclient-1.1"
