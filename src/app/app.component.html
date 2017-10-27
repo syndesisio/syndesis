@@ -9,7 +9,7 @@
     <a [routerLink]=" ['/'] "
        class="navbar-brand">
           <img *ngIf="iconDarkBg && iconDarkBg !== ''"
-               class="navbar-brand-icon"
+               [class]="productBuild ? 'navbar-brand-icon product' : 'navbar-brand-icon'"
                [src]="loggedIn ? iconDarkBg : iconWhiteBg"
                alt="" />
           <img *ngIf="logoDarkBg"
