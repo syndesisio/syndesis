@@ -41,6 +41,9 @@ public enum Kind {
     Permission(io.syndesis.model.user.Permission.class),
     Role(io.syndesis.model.user.Role.class),
     User(io.syndesis.model.user.User.class),
+
+    TechExtension(io.syndesis.model.techextension.TechExtension.class),
+    TechExtensionAction(io.syndesis.model.techextension.TechExtensionAction.class),
     ;
 
     public final String modelName;
