@@ -123,6 +123,7 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     }
 
     class Builder extends ImmutableIntegration.Builder {
+        // allow access to ImmutableIntegration.Builder
     }
 
 }

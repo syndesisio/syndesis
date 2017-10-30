@@ -41,6 +41,7 @@ public interface IntegrationRevisionSpec {
     }
 
     class Builder extends ImmutableIntegrationRevisionSpec.Builder {
+        // allow access to ImmutableIntegrationRevisionSpec.Builder
     }
 
 }

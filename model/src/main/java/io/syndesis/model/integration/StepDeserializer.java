@@ -53,15 +53,15 @@ public class StepDeserializer extends JsonDeserializer<Step> {
             Class<? extends Step> resourceType = getTypeForName(value);
             if (resourceType == null) {
                 throw ctxt.mappingException("No step type found for kind:" + value);
-            } else {
-                return jp.getCodec().treeToValue(node, resourceType);
             }
+
+            return jp.getCodec().treeToValue(node, resourceType);
         }
         return null;
     }
 
     private static Class<? extends Step> getTypeForName(String name) {
-        Class result = KIND_TO_STEP_MAPPING.get(name);
+        Class<? extends Step> result = KIND_TO_STEP_MAPPING.get(name);
         if (result == null) {
             return DEFAULT_STEP_TYPE;
         }

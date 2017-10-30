@@ -44,6 +44,7 @@ public interface IntegrationRuntime extends WithId<IntegrationRuntime>, Serializ
     }
 
     class Builder extends ImmutableIntegrationRuntime.Builder {
+        // allow access to ImmutableIntegrationRuntime.Builder
     }
 
 }
