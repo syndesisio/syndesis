@@ -173,6 +173,7 @@ public abstract class IntegrationRevision {
     }
 
     public static class Builder extends ImmutableIntegrationRevision.Builder {
+        // allow access to ImmutableIntegrationRevision.Builder
     }
 
 }

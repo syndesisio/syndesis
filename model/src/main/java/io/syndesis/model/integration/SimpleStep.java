@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import io.syndesis.core.immutable.SkipNulls;
 import io.syndesis.model.Kind;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.Connection;
@@ -34,17 +36,23 @@ public interface SimpleStep extends Step {
         return Kind.Step;
     }
 
+    @Override
     Optional<Action> getAction();
 
+    @Override
     Optional<Connection> getConnection();
 
+    @Override
     String getStepKind();
 
+    @Override
     @Value.Default
+    @SkipNulls
     default Map<String, String> getConfiguredProperties() {
         return Collections.emptyMap();
     }
 
+    @Override
     String getName();
 
     @Override
@@ -53,6 +61,7 @@ public interface SimpleStep extends Step {
     }
 
     class Builder extends ImmutableSimpleStep.Builder {
+        // allow access to ImmutableSimpleStep.Builder
     }
 
 }

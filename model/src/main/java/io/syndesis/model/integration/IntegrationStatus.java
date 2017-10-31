@@ -52,5 +52,6 @@ public interface IntegrationStatus {
 
 
     class Builder extends ImmutableIntegrationStatus.Builder {
+        // allow access to ImmutableIntegrationStatus.Builder
     }
 }
