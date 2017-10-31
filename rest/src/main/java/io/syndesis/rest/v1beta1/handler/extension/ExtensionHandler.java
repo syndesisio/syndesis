@@ -16,31 +16,42 @@
 package io.syndesis.rest.v1beta1.handler.extension;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.syndesis.core.KeyGenerator;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.filestore.FileStore;
 import io.syndesis.model.Kind;
 import io.syndesis.model.extension.Extension;
+import io.syndesis.model.validation.AllValidations;
+import io.syndesis.model.validation.NonBlockingValidations;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
+import io.syndesis.rest.v1.operations.Violation;
 import io.syndesis.rest.v1beta1.util.ExtensionAnalyzer;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
+import javax.validation.groups.Default;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Path("/extensions")
 @Api(value = "extensions")
@@ -51,11 +62,14 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
     private final ExtensionAnalyzer extensionAnalyzer;
 
+    private final Validator validator;
+
     public ExtensionHandler(final DataManager dataMgr, final FileStore fileStore,
-                            final ExtensionAnalyzer extensionAnalyzer) {
+                            final ExtensionAnalyzer extensionAnalyzer, final Validator validator) {
         super(dataMgr);
         this.fileStore = fileStore;
         this.extensionAnalyzer = extensionAnalyzer;
+        this.validator = validator;
     }
 
     @Override
@@ -63,11 +77,15 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         return Kind.Extension;
     }
 
+    public Validator getValidator() {
+        return validator;
+    }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @SuppressWarnings("PMD.EmptyCatchBlock")
-    public Extension upload(@Context SecurityContext sec, MultipartFormDataInput dataInput) {
+    public Extension upload(MultipartFormDataInput dataInput) {
 
         String id = KeyGenerator.createKey();
         String fileLocation = "/extensions/" + id;
@@ -82,8 +100,6 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
                 .id(id)
                 .build();
 
-            // TODO: VALIDATE
-
             return getDataManager().create(extension);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex) {
             try {
@@ -97,8 +113,56 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
     @Override
     public void delete(String id) {
-        Deleter.super.delete(id);
-        fileStore.delete("/extensions/" + id);
+        // Not a real delete of the extension: changing the status to Deleted
+        Extension extension = getDataManager().fetch(Extension.class, id);
+        this.doDelete(extension);
+    }
+
+    @POST
+    @Path("/{id}/validation")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "All blocking validations pass", responseContainer = "Set",
+            response = Violation.class),
+        @ApiResponse(code = 400, message = "Found violations in validation", responseContainer = "Set",
+            response = Violation.class)
+    })
+    public Set<Violation> validate(@NotNull @PathParam("id") final String extensionId) {
+        Extension extension = getDataManager().fetch(Extension.class, extensionId);
+        return doValidate(extension);
+    }
+
+    @POST
+    @Path(value = "/validation")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "All blocking validations pass", responseContainer = "Set",
+            response = Violation.class),
+        @ApiResponse(code = 400, message = "Found violations in validation", responseContainer = "Set",
+            response = Violation.class)
+    })
+    public Set<Violation> validate(@NotNull final Extension extension) {
+        return doValidate(extension);
+    }
+
+    @POST
+    @Path(value = "/{id}/install")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Installed"),
+        @ApiResponse(code = 400, message = "Found violations in validation", responseContainer = "Set",
+            response = Violation.class)
+    })
+    public void install(@NotNull @PathParam("id") final String id) {
+        Extension extension = getDataManager().fetch(Extension.class, id);
+        doValidate(extension);
+
+        // Uninstall other active extensions
+        doDeleteInstalled(extension.getExtensionId());
+
+        getDataManager().update(new Extension.Builder().createFrom(extension)
+            .status(Extension.Status.Installed)
+            .build());
     }
 
     // ===============================================================
@@ -145,6 +209,36 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         } catch (IOException e) {
             throw new IllegalArgumentException("Error while reading multipart request", e);
         }
+    }
+
+    private Set<Violation> doValidate(Extension extension) {
+        final Set<ConstraintViolation<Extension>> constraintViolations = getValidator().validate(extension, Default.class, AllValidations.class);
+
+        if (!constraintViolations.isEmpty()) {
+            throw new ConstraintViolationException(constraintViolations);
+        }
+
+        Set<ConstraintViolation<Extension>> warnings = getValidator().validate(extension, NonBlockingValidations.class);
+        return warnings.stream()
+            .map(Violation.Builder::fromConstraintViolation)
+            .collect(Collectors.toSet());
+    }
+
+    private void doDeleteInstalled(String logicalExtensionId) {
+        Set<String> ids = getDataManager().fetchIdsByPropertyValue(Extension.class, "extensionId", logicalExtensionId);
+        for (String id : ids) {
+            Extension extension = getDataManager().fetch(Extension.class, id);
+            if (extension.getStatus().isPresent() && extension.getStatus().get() == Extension.Status.Installed) {
+                doDelete(extension);
+            }
+        }
+    }
+
+    private void doDelete(Extension extension) {
+        getDataManager().update(new Extension.Builder()
+            .createFrom(extension)
+            .status(Extension.Status.Deleted)
+            .build());
     }
 
 }
