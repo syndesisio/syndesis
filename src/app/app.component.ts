@@ -148,7 +148,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       },
     );
 
-    this.tourService.start();
+    //this.tourService.start();
   }
 
   /**

@@ -3,6 +3,7 @@ import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '../../model';
 import { Observable } from 'rxjs/Observable';
 import { ConfigService } from '../../config.service';
+import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';
@@ -69,6 +70,7 @@ export class OAuthAppsComponent implements OnInit {
     public store: OAuthAppStore,
     public detector: ChangeDetectorRef,
     public config: ConfigService,
+    public tourService: TourService,
   ) {
     this.loading = store.loading;
     this.list = store.list;
@@ -118,5 +120,29 @@ export class OAuthAppsComponent implements OnInit {
       }
     });
     this.store.loadAll();
+
+
+    this.tourService.initialize([ {
+        route: 'settings',
+        title: 'Get Started',
+        content: 'This series of popups acquaints you with Fuse Ignite. When you are ready to create a sample integration, ' +
+        'click the help icon and select Documentation to get step-by-step instructions.',
+        anchorId: 'get.started',
+        placement: 'bottom',
+        /*
+        }, {
+          route: 'dashboard',
+          title: 'Create Integration',
+          content: 'After creating at least two connections, you can create an integration.',
+          anchorId: 'dashboard.integration',
+          placement: 'bottom',
+          */
+      } ],
+      {
+        route: '',
+      },
+    );
+
+    this.tourService.start();
   }
 }
