@@ -65,15 +65,15 @@ public class SqlFileStoreTest {
 //        postgresDs.setPassword("password");
 
         return Arrays.asList(new Object[][]{
-            {derbyDs, SqlFileStore.DatabaseKind.DERBY},
-//            {postgresDs, SqlFileStore.DatabaseKind.PostgreSQL},
-            {h2Ds, SqlFileStore.DatabaseKind.H2},
+            {derbyDs},
+//            {postgresDs},
+            {h2Ds}
         });
     }
 
-    public SqlFileStoreTest(DataSource ds, SqlFileStore.DatabaseKind kind) throws Exception {
+    public SqlFileStoreTest(DataSource ds) throws Exception {
         DBI dbi = new DBI(ds);
-        this.fileStore = new SqlFileStore(dbi, kind);
+        this.fileStore = new SqlFileStore(dbi);
         this.fileStore.destroy();
         this.fileStore.init();
     }
@@ -233,6 +233,25 @@ public class SqlFileStoreTest {
             assertArrayEquals(dummyContent, read("/file" + i));
             fileStore.delete("/file" + i);
         }
+    }
+
+    @Test
+    public void testMultipleInitAreIdempotent() throws IOException {
+        fileStore.init();
+        fileStore.init();
+        fileStore.init();
+        fileStore.init();
+        assertNull(fileStore.read("/not-exists"));
+    }
+
+    @Test
+    public void testMultipleDestroyAreIdempotent() throws IOException {
+        fileStore.destroy();
+        fileStore.destroy();
+        fileStore.destroy();
+        fileStore.destroy();
+        fileStore.init();
+        assertNull(fileStore.read("/not-exists"));
     }
 
     private <T> void expectInvalidPath(Callable<T> callable) {

@@ -18,6 +18,7 @@ package io.syndesis.filestore.impl;
 import io.syndesis.filestore.FileStore;
 import io.syndesis.filestore.FileStoreException;
 import org.apache.commons.io.IOUtils;
+import org.postgresql.PGConnection;
 import org.postgresql.largeobject.LargeObject;
 import org.postgresql.largeobject.LargeObjectManager;
 import org.skife.jdbi.v2.DBI;
@@ -29,6 +30,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,10 +46,11 @@ import java.util.UUID;
 /**
  * Implementation of a {@code FileStore} backed by a SQL database.
  */
+@SuppressWarnings("PMD.GodClass")
 public class SqlFileStore implements FileStore {
 
     enum DatabaseKind {
-        PostgreSQL, H2, DERBY
+        PostgreSQL, H2, Apache_Derby
     }
 
     private final DBI dbi;
@@ -53,30 +58,34 @@ public class SqlFileStore implements FileStore {
     private DatabaseKind databaseKind;
 
     public SqlFileStore(DBI dbi) {
-        this(dbi, DatabaseKind.PostgreSQL);
-    }
-
-    public SqlFileStore(DBI dbi, DatabaseKind databaseKind) {
         this.dbi = dbi;
-        this.databaseKind = databaseKind;
+
+        this.databaseKind = dbi.inTransaction((h, s) -> {
+            String dbName = h.getConnection().getMetaData().getDatabaseProductName();
+            return DatabaseKind.valueOf(dbName.replace(" ", "_"));
+        });
     }
 
     @Override
     public void init() {
-        try {
-            dbi.useHandle(h -> {
-                if (databaseKind == DatabaseKind.PostgreSQL) {
-                    h.execute("CREATE TABLE filestore (path VARCHAR COLLATE \"C\" PRIMARY KEY, data OID)");
-                } else if (databaseKind == DatabaseKind.H2) {
-                    h.execute("CREATE TABLE filestore (path VARCHAR PRIMARY KEY, data BLOB)");
-                } else if (databaseKind == DatabaseKind.DERBY) {
-                    h.execute("CREATE TABLE filestore (path VARCHAR(1000), data BLOB, PRIMARY KEY (path))");
-                } else {
-                    throw new FileStoreException("Unsupported database kind: " + databaseKind);
-                }
-            });
-        } catch (CallbackFailedException ex) {
-            throw new FileStoreException("Unable to initialize the filestore", ex);
+        boolean needsInitialization = !dbi.inTransaction((h, s) -> tableExists(h, "filestore"));
+
+        if (needsInitialization) {
+            try {
+                dbi.useHandle(h -> {
+                    if (databaseKind == DatabaseKind.PostgreSQL) {
+                        h.execute("CREATE TABLE filestore (path VARCHAR COLLATE \"C\" PRIMARY KEY, data OID)");
+                    } else if (databaseKind == DatabaseKind.H2) {
+                        h.execute("CREATE TABLE filestore (path VARCHAR PRIMARY KEY, data BLOB)");
+                    } else if (databaseKind == DatabaseKind.Apache_Derby) {
+                        h.execute("CREATE TABLE filestore (path VARCHAR(1000), data BLOB, PRIMARY KEY (path))");
+                    } else {
+                        throw new FileStoreException("Unsupported database kind: " + databaseKind);
+                    }
+                });
+            } catch (CallbackFailedException ex) {
+                throw new FileStoreException("Unable to initialize the filestore", ex);
+            }
         }
     }
 
@@ -126,7 +135,7 @@ public class SqlFileStore implements FileStore {
         try {
             if (databaseKind == DatabaseKind.PostgreSQL) {
                 return doReadPostgres(path);
-            } else if (databaseKind == DatabaseKind.DERBY) {
+            } else if (databaseKind == DatabaseKind.Apache_Derby) {
                 return doReadDerby(path);
             } else {
                 return dbi.inTransaction((h, status) -> doReadStandard(h, path));
@@ -172,7 +181,7 @@ public class SqlFileStore implements FileStore {
     private void doWrite(Handle h, String path, InputStream file) {
         if (databaseKind == DatabaseKind.PostgreSQL) {
             doWritePostgres(h, path, file);
-        } else if (databaseKind == DatabaseKind.DERBY) {
+        } else if (databaseKind == DatabaseKind.Apache_Derby) {
             doWriteDerby(h, path, file);
         } else {
             doWriteStandard(h, path, file);
@@ -187,7 +196,7 @@ public class SqlFileStore implements FileStore {
     private void doWritePostgres(Handle h, String path, InputStream file) {
         doDelete(h, path);
         try {
-            LargeObjectManager lobj = ((org.postgresql.PGConnection) h.getConnection()).getLargeObjectAPI();
+            LargeObjectManager lobj = getPostgresConnection(h.getConnection()).getLargeObjectAPI();
             long oid = lobj.createLO();
             LargeObject obj = lobj.open(oid, LargeObjectManager.WRITE);
             try (OutputStream lob = obj.getOutputStream()) {
@@ -287,7 +296,7 @@ public class SqlFileStore implements FileStore {
                 .findFirst();
 
             if (oid.isPresent()) {
-                LargeObjectManager lobj = ((org.postgresql.PGConnection) h.getConnection()).getLargeObjectAPI();
+                LargeObjectManager lobj = getPostgresConnection(h.getConnection()).getLargeObjectAPI();
                 LargeObject obj = lobj.open(oid.get(), LargeObjectManager.READ);
                 return new HandleCloserInputStream(h, obj.getInputStream());
             } else {
@@ -305,9 +314,39 @@ public class SqlFileStore implements FileStore {
         return h.update("DELETE FROM filestore WHERE path=?", path) > 0;
     }
 
+    private PGConnection getPostgresConnection(Connection conn) throws SQLException {
+        if (conn instanceof PGConnection) {
+            return PGConnection.class.cast(conn);
+        }
+        return conn.unwrap(PGConnection.class);
+    }
+
     private String newRandomTempFilePath() {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd-HH-mm", Locale.ROOT);
         return "/tmp/" + fmt.format(new Date()) + "_" + UUID.randomUUID();
+    }
+
+    private boolean tableExists(Handle h, String tableName) {
+        try {
+            String tableToCheck = tableName;
+            boolean caseSensitive = this.databaseKind == DatabaseKind.PostgreSQL;
+            if (!caseSensitive) {
+                tableToCheck = tableName.toUpperCase(Locale.ROOT);
+            }
+            DatabaseMetaData metaData = h.getConnection().getMetaData();
+
+            try (ResultSet rs = metaData.getTables(null, null, tableToCheck, null)) {
+                while (rs.next()) {
+                    String foundTable = rs.getString("TABLE_NAME");
+                    if (tableToCheck.equalsIgnoreCase(foundTable)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (SQLException ex) {
+            throw FileStoreException.launderThrowable("Cannot check if the table " + tableName + " already exists", ex);
+        }
     }
 
     /**
