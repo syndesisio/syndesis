@@ -48,6 +48,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
   inputDataShape: DataShape = undefined;
   loading = false;
   error: any = undefined;
+  valid = true;
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -67,6 +68,13 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     step.stepKind = undefined;
     step.configuredProperties = undefined;
     super.goBack(['step-select', this.position]);
+  }
+
+  isInvalidInput() {
+    if (this.formGroup) {
+      return !this.formGroup.valid;
+    }
+    return !this.valid;
   }
 
   continue(data: any) {
