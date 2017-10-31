@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { CurrentConnectionService, ConnectionEvent } from '../current-connection';
 import { Connection, Connectors, Connector, TypeFactory } from '../../../model';
@@ -22,6 +23,7 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
   constructor(
     private current: CurrentConnectionService,
     private connectorStore: ConnectorStore,
+    public tourService: TourService,
   ) {
     this.loading = connectorStore.loading;
     this.connectors = connectorStore.list;
@@ -29,6 +31,20 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
 
   ngOnInit() {
     this.connectorStore.loadAll();
+
+    this.tourService.initialize([ {
+        route: 'connections/create/connection-basics',
+        anchorId: 'connections.type',
+        content: 'A connection represents a specific application that you want to obtain data from or send data to.',
+        placement: 'left',
+        title: 'Connection',
+      } ],
+      {
+        route: '',
+      },
+    );
+
+    this.tourService.start();
   }
 
   onSelected(connector: Connector) {

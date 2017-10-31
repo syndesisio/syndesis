@@ -26,8 +26,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private router: Router,
               private nav: NavigationService,
-              private detector: ChangeDetectorRef,
-              public tourService: TourService,) {
+              private detector: ChangeDetectorRef) {
   }
 
   get connection(): Connection {
@@ -196,34 +195,6 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     this.routerEventsSubscription = this.router.events.subscribe(event => {
       this.detector.detectChanges();
     });
-
-    this.tourService.initialize([ {
-        route: 'connections/create/connection-basics',
-        anchorId: 'connections.connection',
-        content: 'A connection represents a specific application that you want to obtain data from or send data to.',
-        placement: 'left',
-        title: 'Connection',
-      }, {
-        route: 'connections/create/connection-basics',
-        anchorId: 'connections.create',
-        content: 'Click Create to make the new connection available for use in integrations.',
-        placement: 'bottom',
-        title: 'Make It Available',
-        /*
-        }, {
-          route: 'dashboard',
-          title: 'Create Integration',
-          content: 'After creating at least two connections, you can create an integration.',
-          anchorId: 'dashboard.integration',
-          placement: 'bottom',
-          */
-      } ],
-      {
-        route: '',
-      },
-    );
-
-    this.tourService.start();
   }
 
   ngOnDestroy() {

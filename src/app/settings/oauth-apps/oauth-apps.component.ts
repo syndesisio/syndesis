@@ -121,7 +121,6 @@ export class OAuthAppsComponent implements OnInit {
     });
     this.store.loadAll();
 
-
     this.tourService.initialize([ {
         route: 'settings',
         title: 'Get Started',
