@@ -13,7 +13,6 @@ import { UserService } from './common/user.service';
 import { ConfigService } from './config.service';
 import { StoreModule } from './store/store.module';
 import { TestSupportService } from './store/test-support.service';
-import { TourNgxBootstrapModule, TourService } from 'ngx-tour-ngx-bootstrap';
 
 /* tslint:disable:no-unused-variable */
 
@@ -29,14 +28,12 @@ describe('AppComponent', () => {
         CollapseModule.forRoot(),
         BsDropdownModule.forRoot(),
         NotificationModule,
-        TourNgxBootstrapModule.forRoot(),
       ],
       providers: [
         ConfigService,
         UserService,
         TestSupportService,
         NavigationService,
-        TourService,
         MockBackend,
         { provide: RequestOptions, useClass: BaseRequestOptions },
         {
