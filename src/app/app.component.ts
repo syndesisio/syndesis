@@ -134,12 +134,14 @@ export class AppComponent implements OnInit, AfterViewInit {
         'click the help icon and select Documentation to get step-by-step instructions.',
         anchorId: 'get.started',
         placement: 'bottom',
+      /*
       }, {
         route: 'dashboard',
         title: 'Create Integration',
         content: 'After creating at least two connections, you can create an integration.',
         anchorId: 'dashboard.integration',
         placement: 'bottom',
+        */
       } ],
       {
         route: '',

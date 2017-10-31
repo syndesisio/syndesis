@@ -10,24 +10,25 @@ import {
 import { Connection, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
 import { CanComponentDeactivate } from '../../common/can-deactivate-guard.service';
+import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 const category = getCategory('Connections');
 
 @Component({
   selector: 'syndesis-connection-create-page',
   templateUrl: 'create-page.component.html',
-  styleUrls: ['./create-page.component.scss'],
+  styleUrls: [ './create-page.component.scss' ],
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
   private routerEventsSubscription: Subscription;
 
-  constructor(
-    private current: CurrentConnectionService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private nav: NavigationService,
-    private detector: ChangeDetectorRef,
-  ) {}
+  constructor(private current: CurrentConnectionService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private nav: NavigationService,
+              private detector: ChangeDetectorRef,
+              public tourService: TourService,) {
+  }
 
   get connection(): Connection {
     return this.current.connection;
@@ -37,7 +38,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     const child = this.route.firstChild;
     if (child && child.snapshot) {
       const path = child.snapshot.url;
-      return path[0].path;
+      return path[ 0 ].path;
     } else {
       return undefined;
     }
@@ -76,7 +77,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.router.navigate(['cancel'], { relativeTo: this.route });
+    this.router.navigate([ 'cancel' ], { relativeTo: this.route });
   }
 
   goBack() {
@@ -149,7 +150,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
         log.infoc(() => 'hasCredentials: ' + this.current.hasCredentials());
         if (!this.current.hasConnector() && page !== 'connection-basics') {
           setTimeout(() => {
-            this.router.navigate(['connection-basics'], {
+            this.router.navigate([ 'connection-basics' ], {
               relativeTo: this.route,
             });
           }, 10);
@@ -169,7 +170,8 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     }
     try {
       this.detector.detectChanges();
-    } catch (err) {}
+    } catch (err) {
+    }
   }
 
   ngOnInit() {
@@ -194,6 +196,34 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     this.routerEventsSubscription = this.router.events.subscribe(event => {
       this.detector.detectChanges();
     });
+
+    this.tourService.initialize([ {
+        route: 'connections/create/connection-basics',
+        anchorId: 'connections.connection',
+        content: 'A connection represents a specific application that you want to obtain data from or send data to.',
+        placement: 'left',
+        title: 'Connection',
+      }, {
+        route: 'connections/create/connection-basics',
+        anchorId: 'connections.create',
+        content: 'Click Create to make the new connection available for use in integrations.',
+        placement: 'bottom',
+        title: 'Make It Available',
+        /*
+        }, {
+          route: 'dashboard',
+          title: 'Create Integration',
+          content: 'After creating at least two connections, you can create an integration.',
+          anchorId: 'dashboard.integration',
+          placement: 'bottom',
+          */
+      } ],
+      {
+        route: '',
+      },
+    );
+
+    this.tourService.start();
   }
 
   ngOnDestroy() {
