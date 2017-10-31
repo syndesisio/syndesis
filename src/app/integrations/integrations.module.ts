@@ -34,6 +34,7 @@ import { FlowViewStepComponent } from './edit-page/flow-view/flow-view-step.comp
 import { CurrentFlow } from './edit-page/current-flow.service';
 import { SyndesisCommonModule } from '../common/common.module';
 import { ConnectionsModule } from '../connections/connections.module';
+import { FileUploadModule } from 'ng2-file-upload-base/src';
 
 const editIntegrationChildRoutes = [
   { path: 'save-or-add-step', component: IntegrationsSaveOrAddStepComponent },
@@ -96,6 +97,7 @@ const routes: Routes = [
     ModalModule,
     PopoverModule,
     DataMapperModule,
+    FileUploadModule,
   ],
   declarations: [
     DataMapperHostComponent,
