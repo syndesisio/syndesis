@@ -15,19 +15,18 @@
  */
 package io.syndesis.runtime;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import io.syndesis.model.integration.Integration;
 import io.syndesis.rest.v1.handler.exception.RestError;
 import io.syndesis.rest.v1.operations.Violation;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,7 +56,7 @@ public class IntegrationsITCase extends BaseITCase {
     }
 
     @Test
-    public void createAndGetIntegration() {
+    public void createAndGetIntegration() throws IOException {
 
         // Verify that the integration does not exist.
         get("/api/v1/integrations/2001", RestError.class,
@@ -91,6 +90,10 @@ public class IntegrationsITCase extends BaseITCase {
         assertThat(list.getBody().getTotalCount()).as("total count").isEqualTo(2);
         assertThat(list.getBody().getItems()).as("items").hasSize(2);
 
+        // We should be able to export the integration too.
+        ResponseEntity<byte[]> exportData = get("/api/v1/integrations/2001/export.zip", byte[].class);
+        assertThat(exportData.getBody()).isNotNull();
+
         // Lets delete it
         delete("/api/v1/integrations/2001");
 
@@ -98,15 +101,17 @@ public class IntegrationsITCase extends BaseITCase {
         get("/api/v1/integrations/2001", RestError.class,
             tokenRule.validToken(), HttpStatus.NOT_FOUND);
 
-
         // The list size should get smaller
         list = get("/api/v1/integrations", IntegrationListResult.class);
         assertThat(list.getBody().getTotalCount()).as("total count").isEqualTo(1);
         assertThat(list.getBody().getItems()).as("items").hasSize(1);
 
+        // Lets now re-import the integration:
+        post("/api/v1/integration-support/import", exportData.getBody(), null);
+
     }
 
-    @Test
+        @Test
     public void shouldDetermineValidityForInvalidIntegrations() {
         dataManager.create(new Integration.Builder().name("Existing integration").build());
 

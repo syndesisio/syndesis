@@ -45,6 +45,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.test.context.ActiveProfiles;
@@ -125,6 +126,7 @@ public abstract class BaseITCase {
         List<HttpMessageConverter<?>> messageConverters = testRestTemplate.getRestTemplate().getMessageConverters();
         messageConverters.add(0, new YamlJackson2HttpMessageConverter());
         messageConverters.add(0, new JsonJackson2HttpMessageConverter());
+        messageConverters.add( 0, new ByteArrayHttpMessageConverter());
         this.restTemplate = testRestTemplate;
     }
 
@@ -146,7 +148,7 @@ public abstract class BaseITCase {
     }
 
     protected <T> ResponseEntity<T> get(String url, Class<T> responseClass) {
-        return get(url, responseClass, HttpStatus.OK);
+        return get(url, responseClass, responseClass == null ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     protected <T> ResponseEntity<T> get(String url, Class<T> responseClass, HttpStatus expectedStatus) {
@@ -154,7 +156,7 @@ public abstract class BaseITCase {
     }
 
     protected <T> ResponseEntity<T> get(String url, Class<T> responseClass, String token) {
-        return get(url, responseClass, token, HttpStatus.OK);
+        return get(url, responseClass, token, responseClass == null ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     protected <T> ResponseEntity<T> get(String url, Class<T> responseClass, String token, HttpStatus expectedStatus) {
@@ -166,11 +168,11 @@ public abstract class BaseITCase {
     }
 
     protected <T> ResponseEntity<T> post(String url, Object body,  Class<T> responseClass) {
-        return post(url, body, responseClass, tokenRule.validToken(), HttpStatus.OK);
+        return post(url, body, responseClass, tokenRule.validToken(), responseClass == null ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     protected <T> ResponseEntity<T> post(String url, Object body, Class<T> responseClass, String token) {
-        return post(url, body, responseClass, token, HttpStatus.OK);
+        return post(url, body, responseClass, token, responseClass == null ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     protected <T> ResponseEntity<T> post(String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {
