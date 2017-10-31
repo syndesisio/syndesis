@@ -8,7 +8,6 @@ import {
   NotificationService,
   NotificationType,
 } from 'patternfly-ng';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { Observable } from 'rxjs/Observable';
 import { ModalService } from './common/modal/modal.service';
 import { NavigationService } from './common/navigation.service';
@@ -73,8 +72,7 @@ export class AppComponent implements OnInit, AfterViewInit {
               public testSupport: TestSupportService,
               private notificationService: NotificationService,
               private nav: NavigationService,
-              private modalService: ModalService,
-              public tourService: TourService) {}
+              private modalService: ModalService) {}
 
   ngOnInit() {
     this.logoWhiteBg = this.config.getSettings(
@@ -126,29 +124,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.user = this.userService.user;
     this.notifications = this.notificationService.getNotifications();
     this.showClose = true;
-
-    this.tourService.initialize([ {
-        route: 'settings',
-        title: 'Get Started',
-        content: 'This series of popups acquaints you with Fuse Ignite. When you are ready to create a sample integration, ' +
-        'click the help icon and select Documentation to get step-by-step instructions.',
-        anchorId: 'get.started',
-        placement: 'bottom',
-      /*
-      }, {
-        route: 'dashboard',
-        title: 'Create Integration',
-        content: 'After creating at least two connections, you can create an integration.',
-        anchorId: 'dashboard.integration',
-        placement: 'bottom',
-        */
-      } ],
-      {
-        route: '',
-      },
-    );
-
-    //this.tourService.start();
   }
 
   /**
