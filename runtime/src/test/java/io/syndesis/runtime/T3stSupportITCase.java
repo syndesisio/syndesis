@@ -35,7 +35,7 @@ public class T3stSupportITCase extends BaseITCase {
     public void createAndGetIntegration() {
 
         // Reset to fresh startup state..
-        get("/api/v1/test-support/reset-db", null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
+        get("/api/v1/test-support/reset-db", Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // We should have some initial data in the snapshot since we start up with deployment.json
         @SuppressWarnings({"unchecked", "rawtypes"})
@@ -61,7 +61,7 @@ public class T3stSupportITCase extends BaseITCase {
         assertThat(r2.getBody().length).isEqualTo(1);
 
         // Reset to fresh startup state..
-        get("/api/v1/test-support/reset-db", null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
+        get("/api/v1/test-support/reset-db", Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // Verify that the new state has the same number of entities as the original
         ResponseEntity<ModelData<?>[]> r3 = get("/api/v1/test-support/snapshot-db", type);
