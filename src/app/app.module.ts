@@ -22,7 +22,7 @@ import { NotificationModule, NotificationService } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './approuting/approuting.module';
+import { AppRoutingModule } from './approuting.module';
 import { CanDeactivateGuard } from './common/can-deactivate-guard.service';
 import { SyndesisCommonModule } from './common/common.module';
 import { UserService } from './common/user.service';
