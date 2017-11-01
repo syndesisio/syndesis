@@ -51,7 +51,7 @@ export class IntegrationSupportService {
     return this.http.get(url);
   }
 
-  exportIntegration(id:string): Observable<Response> {
+  exportIntegration(id: string): Observable<Response> {
     const url = this.config.getSettings().apiEndpoint + '/integrations/' + id + '/export.zip';
     return this.http.get(url, {responseType: ResponseContentType.Blob});
   }

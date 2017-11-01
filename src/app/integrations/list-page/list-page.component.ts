@@ -18,7 +18,7 @@ import { FileUploader, FileItem, ParsedResponseHeaders } from 'ng2-file-upload-b
 })
 export class IntegrationsListPage implements OnInit {
 
-  public uploader:FileUploader;
+  public uploader: FileUploader;
 
   loading: Observable<boolean>;
   integrations: Observable<Integrations>;
@@ -50,7 +50,7 @@ export class IntegrationsListPage implements OnInit {
       autoUpload: true,
     });
     this.uploader.onCompleteItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
-      if( status === 204 ) {
+      if ( status === 204 ) {
         this.notificationService.message(
           NotificationType.SUCCESS,
           'Imported!',
