@@ -15,7 +15,80 @@
   "pattern" : "To",
   "inputDataType" : "json",
   "outputDataType" : "json",
-  "componentOptions" : [ "user", "password", "url", "schema", "catalog" ],
-  "endpointOptions" : [ "procedureName", "template", "batch", "noop" ],
-  "endpointValues" : {}
+  "componentOptions" : [ "dataSource" ],
+  "endpointOptions" : [ "template" ],
+  "connectorProperties" : {
+    "user" : {
+      "kind" : "property",
+      "displayName" : "DB User Name",
+      "group": "common",
+      "label" : "",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : true,
+      "description" : "DB User Name"
+    },
+    "password" : {
+      "kind" : "property",
+      "displayName" : "DB User Password",
+      "group": "common",
+      "label" : "",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : true,
+      "description" : "DB User Password"
+    },
+    "url" : {
+      "kind" : "property",
+      "displayName" : "DB URL",
+      "group": "common",
+      "label" : "",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "DB URL"
+    },
+    "schema" : {
+      "kind" : "property",
+      "displayName" : "DB Schema",
+      "group": "common",
+      "label" : "",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "DB Schema"
+    },
+    "catalog" : {
+      "kind" : "property",
+      "displayName" : "DB Catalog",
+      "group": "common",
+      "label" : "",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "DB Catalog"
+    },
+    "procedureName" : {
+      "kind" : "property",
+      "displayName" : "Stored Procedure Name",
+      "group": "common",
+      "label" : "",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : true,
+      "description" : "Stored Procedure Name"
+    }
+  }
 }
