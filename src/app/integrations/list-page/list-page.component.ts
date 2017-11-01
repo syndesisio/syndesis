@@ -9,7 +9,6 @@ import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integrations } from '../../model';
 import { ModalService } from '../../common/modal/modal.service';
 import { IntegrationSupportService } from '../../store/integration-support.service';
-import { ResponseContentType , Http } from '@angular/http';
 import { ConfigService } from '../../config.service';
 import { FileUploader, FileItem, ParsedResponseHeaders } from 'ng2-file-upload-base/src';
 
@@ -43,7 +42,6 @@ export class IntegrationsListPage implements OnInit {
     private integrationSupportService: IntegrationSupportService,
     public notificationService: NotificationService,
     public application: ApplicationRef,
-    private http: Http,
     private config: ConfigService,
   ) {
     this.integrations = this.store.list;
