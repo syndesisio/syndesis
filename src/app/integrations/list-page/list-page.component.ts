@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ApplicationRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { FilterField } from 'patternfly-ng';
+import { FilterField, NotificationService, NotificationType } from 'patternfly-ng';
 
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integrations } from '../../model';
+import { ModalService } from '../../common/modal/modal.service';
+import { IntegrationSupportService } from '../../store/integration-support.service';
+import { FileUploader, FileItem, ParsedResponseHeaders } from 'ng2-file-upload-base/src';
 
 @Component({
   selector: 'syndesis-integrations-list-page',
@@ -14,6 +17,9 @@ import { Integrations } from '../../model';
   styleUrls: ['./list-page.component.scss'],
 })
 export class IntegrationsListPage implements OnInit {
+
+  public uploader: FileUploader;
+
   loading: Observable<boolean>;
   integrations: Observable<Integrations>;
   filteredIntegrations: Subject<Integrations> = new BehaviorSubject(<Integrations>{});
@@ -29,12 +35,51 @@ export class IntegrationsListPage implements OnInit {
     ],
   }];
 
-  constructor(private store: IntegrationStore) {
+  constructor(
+    private store: IntegrationStore,
+    private modalService: ModalService,
+    private integrationSupportService: IntegrationSupportService,
+    public notificationService: NotificationService,
+    public application: ApplicationRef,
+  ) {
     this.integrations = this.store.list;
     this.loading = this.store.loading;
+    this.uploader = new FileUploader({
+      url: integrationSupportService.importIntegrationURL(),
+      disableMultipart: true,
+      autoUpload: true,
+    });
+    this.uploader.onCompleteItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
+      if ( status === 204 ) {
+        this.notificationService.message(
+          NotificationType.SUCCESS,
+          'Imported!',
+          'Your integration has been imported',
+          false, null, [],
+        );
+      } else {
+        this.notificationService.message(
+          NotificationType.DANGER,
+          'Import Failed!',
+          'Your integration could not be imported.',
+          false, null, [],
+        );
+      }
+
+    };
   }
 
   ngOnInit() {
     this.store.loadAll();
   }
+
+  /**
+   * Function that displays a modal for importing a database.
+   */
+  showImportDialog() {
+    this.modalService.show('importIntegration').then(modal => {
+      this.uploader.clearQueue();
+    });
+  }
+
 }

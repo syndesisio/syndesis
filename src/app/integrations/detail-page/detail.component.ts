@@ -5,6 +5,7 @@ import {
   OnDestroy,
   ChangeDetectorRef,
 } from '@angular/core';
+
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,7 +15,9 @@ import { Integration, Step, Connection, Action } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationViewBase } from '../components/integrationViewBase.component';
 import { ModalService } from '../../common/modal/modal.service';
+import { IntegrationSupportService } from '../../store/integration-support.service';
 import { NotificationService, NotificationType } from 'patternfly-ng';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'syndesis-integration-detail-page',
@@ -136,6 +139,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     public notificationService: NotificationService,
     public modalService: ModalService,
     public application: ApplicationRef,
+    private integrationSupportService: IntegrationSupportService,
   ) {
     super(store, route, router, notificationService, modalService, application);
     this.integration = this.store.resource;
@@ -401,5 +405,12 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
   ngOnDestroy() {
     this.integrationSubscription.unsubscribe();
     this.routeSubscription.unsubscribe();
+  }
+
+  exportIntegration() {
+    const id = this.i.id;
+    this.integrationSupportService.exportIntegration(this.i.id).toPromise().then(value => {
+      saveAs(value.blob(), id + '-export.zip');
+    });
   }
 }
