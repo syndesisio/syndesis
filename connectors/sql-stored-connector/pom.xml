@@ -164,9 +164,7 @@
       </plugin>
 
       <!-- 
-      generate components meta-data and validate component includes documentation etc
-      Disabled until the plugin supports adding parameters at the connector level. At the moment
-      they are added manually.
+        generate components meta-data and validate component includes documentation etc 
       -->
       <plugin>
         <groupId>org.apache.camel</groupId>
