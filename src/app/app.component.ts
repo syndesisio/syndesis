@@ -75,6 +75,11 @@ export class AppComponent implements OnInit, AfterViewInit {
               private modalService: ModalService) {}
 
   ngOnInit() {
+    this.productBuild = this.config.getSettings(
+      'branding',
+      'productBuild',
+      false,
+    );
     this.logoWhiteBg = this.config.getSettings(
       'branding',
       'logoWhiteBg',
