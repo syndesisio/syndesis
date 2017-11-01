@@ -46,7 +46,14 @@ export function createBasicFilterModel(configuredProperties: BasicFilter, ops: A
         {
           id: 'path',
           maxLength: 51,
-          placeholder: paths.length ? paths[0] : 'Field Name',
+          required: true,
+          validators: {
+            required: null,
+          },
+          errorMessages: {
+            required: 'Object property name is required',
+          },
+          //placeholder: paths.length ? paths[0] : 'Field Name',
           value: rule ? rule.path : undefined,
           list: paths,
           //suffix: 'Browse...', // This is just a suffix; this whole field needs to change

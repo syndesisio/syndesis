@@ -60,6 +60,9 @@ export class BasicFilterComponent implements OnChanges {
     ],
   };
   @Output() configuredPropertiesChange = new EventEmitter<BasicFilter>();
+  @Input() valid: boolean;
+  @Output() validChange = new EventEmitter<boolean>();
+
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -99,6 +102,8 @@ export class BasicFilterComponent implements OnChanges {
       ) as DynamicFormArrayModel;
       self.loading = false;
       self.detector.detectChanges();
+      self.valid = self.formGroup.valid;
+      self.validChange.emit(self.formGroup.valid);
     }
 
     // check if there's a data mapper in the previous steps
@@ -140,6 +145,8 @@ export class BasicFilterComponent implements OnChanges {
       this.rulesArrayControl,
       this.rulesArrayModel,
     );
+    this.valid = this.formGroup.valid;
+    this.validChange.emit(this.valid);
   }
 
   remove(context: DynamicFormArrayModel, index: number) {
@@ -148,9 +155,16 @@ export class BasicFilterComponent implements OnChanges {
       this.rulesArrayControl,
       context,
     );
+    this.valid = this.formGroup.valid;
+    this.validChange.emit(this.valid);
   }
 
   onChange($event) {
+    this.valid = this.formGroup.valid;
+    this.validChange.emit(this.valid);
+    if (!this.valid) {
+      return;
+    }
     const formGroupObj = this.formGroup.value;
 
     const formattedProperties: BasicFilter = {
