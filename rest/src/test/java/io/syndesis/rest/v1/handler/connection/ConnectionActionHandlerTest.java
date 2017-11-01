@@ -26,6 +26,7 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
+import io.syndesis.controllers.EncryptionComponent;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.ActionDefinition;
 import io.syndesis.model.connection.DynamicActionMetadata;
@@ -98,7 +99,7 @@ public class ConnectionActionHandlerTest {
         final Connection connection = new Connection.Builder().connector(connector)
             .putConfiguredProperty("clientId", "some-clientId").build();
 
-        handler = new ConnectionActionHandler(connection, new VerificationConfigurationProperties()) {
+        handler = new ConnectionActionHandler(connection, new VerificationConfigurationProperties(), new EncryptionComponent(null)) {
             @Override
             /* default */ Client createClient() {
                 return client;

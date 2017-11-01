@@ -15,26 +15,6 @@
  */
 package io.syndesis.rest.v1.handler.integration;
 
-import java.math.BigInteger;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityNotFoundException;
-import javax.validation.Validator;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.Api;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.Inspectors;
@@ -59,9 +39,28 @@ import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.operations.Validating;
-
+import io.syndesis.controllers.EncryptionComponent;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Validator;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Path("/integrations")
 @Api(value = "integrations")
@@ -70,13 +69,15 @@ public class IntegrationHandler extends BaseHandler
     implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration>, Validating<Integration> {
 
     private final Inspectors inspectors;
+    private final EncryptionComponent encryptionSupport;
 
     private final Validator validator;
 
-    public IntegrationHandler(final DataManager dataMgr, final Validator validator, final Inspectors inspectors) {
+    public IntegrationHandler(final DataManager dataMgr, final Validator validator, final Inspectors inspectors, final EncryptionComponent encryptionSupport) {
         super(dataMgr);
         this.validator = validator;
         this.inspectors = inspectors;
+        this.encryptionSupport = encryptionSupport;
     }
 
     @Override
@@ -123,19 +124,21 @@ public class IntegrationHandler extends BaseHandler
     public Integration create(@Context SecurityContext sec, @ConvertGroup(from = Default.class, to = AllValidations.class) final Integration integration) {
         Date rightNow = new Date();
 
+        Integration encryptedIntegration = encryptionSupport.encrypt(integration);
+
         IntegrationRevision revision = IntegrationRevision
-            .createNewRevision(integration)
+            .createNewRevision(encryptedIntegration)
             .withCurrentState(IntegrationRevisionState.Draft);
 
         Integration updatedIntegration = new Integration.Builder()
-            .createFrom(integration)
+            .createFrom(encryptedIntegration)
             .deployedRevisionId(revision.getVersion())
             .addRevision(revision)
             .userId(SecurityContextHolder.getContext().getAuthentication().getName())
             .statusMessage(Optional.empty())
             .lastUpdated(rightNow)
             .createdDate(rightNow)
-            .currentStatus(determineCurrentStatus(integration))
+            .currentStatus(determineCurrentStatus(encryptedIntegration))
             .userId(sec.getUserPrincipal().getName())
             .build();
 
@@ -152,7 +155,7 @@ public class IntegrationHandler extends BaseHandler
             .withTargetState(IntegrationRevisionState.from(integration.getDesiredStatus().orElse(Status.Pending)));
 
         Integration updatedIntegration = new Integration.Builder()
-            .createFrom(integration)
+            .createFrom(encryptionSupport.encrypt(integration))
             .deployedRevisionId(existing.getDeployedRevisionId())
             .lastUpdated(new Date())
             .currentStatus(currentStatus)

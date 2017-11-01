@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.syndesis.controllers.ControllersConfigurationProperties;
+import io.syndesis.controllers.EncryptionComponent;
 import io.syndesis.controllers.integration.IntegrationSupport;
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.core.Names;
@@ -46,13 +47,15 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
     private final DataManager dataManager;
     private final ProjectGenerator projectConverter;
     private final ControllersConfigurationProperties properties;
+    private final EncryptionComponent encryptionComponent;
 
     /* default */ ActivateHandler(DataManager dataManager, OpenShiftService openShiftService,
-                                  ProjectGenerator projectConverter, ControllersConfigurationProperties properties) {
+                                  ProjectGenerator projectConverter, ControllersConfigurationProperties properties, EncryptionComponent encryptionComponent) {
         super(openShiftService);
         this.dataManager = dataManager;
         this.projectConverter = projectConverter;
         this.properties = properties;
+        this.encryptionComponent = encryptionComponent;
     }
 
     @Override
@@ -109,7 +112,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
     }
 
     private DeploymentData createDeploymentData(Integration integration) {
-        Properties applicationProperties = IntegrationSupport.buildApplicationProperties(integration, fetchConnectorsMap(dataManager));
+        Properties applicationProperties = IntegrationSupport.buildApplicationProperties(integration, fetchConnectorsMap(dataManager), encryptionComponent);
         IntegrationRevision revision = IntegrationRevision.createNewRevision(integration);
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 

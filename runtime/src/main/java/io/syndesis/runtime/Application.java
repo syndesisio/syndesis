@@ -15,20 +15,15 @@
  */
 package io.syndesis.runtime;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.validation.Validator;
-
 import io.syndesis.core.MavenProperties;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.rest.v1.state.ClientSideStateProperties;
 import io.syndesis.rest.v1.state.StaticEdition;
-
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.social.FacebookAutoConfiguration;
@@ -43,8 +38,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
+
+import javax.validation.Validator;
+import java.io.IOException;
+import java.util.List;
 
 @SpringBootApplication(exclude = {TwitterAutoConfiguration.class, FacebookAutoConfiguration.class,
     LinkedInAutoConfiguration.class, SocialWebAutoConfiguration.class})
@@ -52,6 +53,9 @@ import org.springframework.web.client.RestTemplate;
 public class Application extends SpringBootServletInitializer {
 
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
+
+    @Value("${encrypt.key}")
+    private String encryptKey;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -70,6 +74,12 @@ public class Application extends SpringBootServletInitializer {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+
+    @Bean
+    public TextEncryptor getTextEncryptor() {
+        return Encryptors.text(encryptKey, "deadbeef");
     }
 
     @Bean

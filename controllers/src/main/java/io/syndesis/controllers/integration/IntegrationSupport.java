@@ -24,6 +24,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.syndesis.controllers.EncryptionComponent;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.connection.Action;
@@ -83,7 +84,7 @@ public final class IntegrationSupport {
         return Collections.unmodifiableMap(connectorIdMap);
     }
 
-    public static Properties buildApplicationProperties(Integration integration, Map<String, Connector> connectorMap) {
+    public static Properties buildApplicationProperties(Integration integration, Map<String, Connector> connectorMap, EncryptionComponent encryptionSupport) {
         final Properties applicationProperties = new Properties();
         final Map<Step, String> connectorIdMap = buildConnectorSuffixMap(integration);
 
@@ -162,9 +163,9 @@ public final class IntegrationSupport {
                     .forEach(
                         e -> {
                             if (connector.isComponentProperty(e) || action.isComponentProperty(e)) {
-                                applicationProperties.put(componentKeyConverter.apply(e), e.getValue());
+                                applicationProperties.put(componentKeyConverter.apply(e), encryptionSupport.decrypt(e.getValue()));
                             } else if (connector.isSecret(e) || action.isSecret(e)) {
-                                applicationProperties.put(secretKeyConverter.apply(e), e.getValue());
+                                applicationProperties.put(secretKeyConverter.apply(e), encryptionSupport.decrypt(e.getValue()));
                             }
                         }
                     );

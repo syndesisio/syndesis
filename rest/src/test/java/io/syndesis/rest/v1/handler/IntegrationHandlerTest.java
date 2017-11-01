@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import javax.validation.Validator;
 
+import io.syndesis.controllers.EncryptionComponent;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.connection.DataShape;
@@ -49,7 +50,7 @@ public class IntegrationHandlerTest {
         DataManager manager = mock(DataManager.class);
         Validator validator = mock(Validator.class);
         inspectors = mock(Inspectors.class);
-        handler = new IntegrationHandler(manager, validator, inspectors);
+        handler = new IntegrationHandler(manager, validator, inspectors, new EncryptionComponent(null));
     }
 
     @Test
