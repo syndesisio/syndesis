@@ -56,4 +56,8 @@ export class IntegrationSupportService {
     return this.http.get(url, {responseType: ResponseContentType.Blob});
   }
 
+  importIntegrationURL(): string {
+    return this.service.one('import').getRestangularUrl();
+  }
+
 }

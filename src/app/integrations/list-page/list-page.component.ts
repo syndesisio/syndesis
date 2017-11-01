@@ -9,7 +9,6 @@ import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integrations } from '../../model';
 import { ModalService } from '../../common/modal/modal.service';
 import { IntegrationSupportService } from '../../store/integration-support.service';
-import { ConfigService } from '../../config.service';
 import { FileUploader, FileItem, ParsedResponseHeaders } from 'ng2-file-upload-base/src';
 
 @Component({
@@ -42,13 +41,11 @@ export class IntegrationsListPage implements OnInit {
     private integrationSupportService: IntegrationSupportService,
     public notificationService: NotificationService,
     public application: ApplicationRef,
-    private config: ConfigService,
   ) {
     this.integrations = this.store.list;
     this.loading = this.store.loading;
-    const url = this.config.getSettings().apiEndpoint + '/integration-support/import';
     this.uploader = new FileUploader({
-      url: url,
+      url: integrationSupportService.importIntegrationURL(),
       disableMultipart: true,
       autoUpload: true,
     });
