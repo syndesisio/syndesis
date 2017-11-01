@@ -51,7 +51,7 @@ export function createBasicFilterModel(configuredProperties: BasicFilter, ops: A
             required: null,
           },
           errorMessages: {
-            required: 'Object property name is required'
+            required: 'Object property name is required',
           },
           //placeholder: paths.length ? paths[0] : 'Field Name',
           value: rule ? rule.path : undefined,
