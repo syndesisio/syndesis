@@ -80,7 +80,7 @@ public class EndpointStepVisitor implements StepVisitor {
 
         final String camelConnectorPrefix = action.getCamelConnectorPrefix();
         final Connector connector = request.getConnectors().get(connectorId);
-        final Map<String, String> configuredProperties = aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
+        final Map<String, String> configuredProperties = aggregate(connector.getConfiguredProperties(), connection.getConfiguredProperties(), step.getConfiguredProperties());
         final Map<String, String> properties = aggregate(connector.filterProperties(configuredProperties, connector::isEndpointProperty), action.filterProperties(configuredProperties, action::isEndpointProperty));
         final boolean hasComponentOptions = hasComponentProperties(configuredProperties, connector, action);
 

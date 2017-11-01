@@ -102,7 +102,7 @@ public final class IntegrationSupport {
 
                 final String connectorPrefix = action.getCamelConnectorPrefix();
                 final Connector connector = connectorMap.get(connectorId);
-                final Map<String, String> properties = aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
+                final Map<String, String> properties = aggregate(connector.getConfiguredProperties(), connection.getConfiguredProperties(), step.getConfiguredProperties());
 
                 final Function<Map.Entry<String, String>, String> componentKeyConverter;
                 final Function<Map.Entry<String, String>, String> secretKeyConverter;
