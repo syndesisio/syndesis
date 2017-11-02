@@ -16,10 +16,16 @@
 package io.syndesis.rest.v1.handler.integration;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
+import io.syndesis.controllers.EncryptionComponent;
+import io.syndesis.core.Json;
+import io.syndesis.dao.init.ModelData;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
+import io.syndesis.model.connection.Connection;
+import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.DataShape;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
@@ -27,6 +33,7 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Integration.Status;
 import io.syndesis.model.integration.IntegrationRevision;
 import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.rest.util.PaginationFilter;
 import io.syndesis.rest.util.ReflectiveSorter;
@@ -39,28 +46,37 @@ import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.operations.Validating;
-import io.syndesis.controllers.EncryptionComponent;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import static io.syndesis.rest.v1.handler.integration.IntegrationSupportHandler.EXPORT_MODEL_FILE_NAME;
+
 
 @Path("/integrations")
 @Api(value = "integrations")
@@ -107,6 +123,44 @@ public class IntegrationHandler extends BaseHandler
         }
 
         return integration;
+    }
+
+
+    @GET
+    @Path("/{id}/export.zip")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public StreamingOutput export(@NotNull @PathParam("id") @ApiParam(required = true) String id) throws IOException {
+        ArrayList<ModelData> models = new ArrayList<>();
+
+        Integration integration = this.get(id);
+        models.add(new ModelData(Kind.Integration, integration));
+
+        for (Step step : integration.getSteps()) {
+            Optional<Connection> c = step.getConnection();
+            if( c.isPresent() ) {
+                Connection connection = c.get();
+                models.add(new ModelData(Kind.Connection, connection));
+                Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId().get());
+                if( connector != null ) {
+                    models.add(new ModelData(Kind.Connector, connector));
+                }
+            }
+        }
+
+        return out -> {
+            try (ZipOutputStream tos = new ZipOutputStream(out) ) {
+                addEntry(tos, EXPORT_MODEL_FILE_NAME, Json.mapper().writeValueAsBytes(models));
+                // Eventually we might need to add things like tech extensions too..
+            }
+        };
+    }
+
+    private void addEntry(ZipOutputStream os, String path, byte[] content) throws IOException {
+        ZipEntry entry = new ZipEntry(path);
+        entry.setSize(content.length);
+        os.putNextEntry(entry);
+        os.write(content);
+        os.closeEntry();
     }
 
     @Override
