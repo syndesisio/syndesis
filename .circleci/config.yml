@@ -41,7 +41,7 @@ jobs:
           yarn build:ci
 
     - run:
-      name: Install Test Dependencies
+        name: Install Test Dependencies
         command: |
           apt-get update
           apt-get upgrade
