@@ -30,11 +30,22 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.syndesis.core.Json;
+import io.syndesis.dao.manager.EncryptionComponent;
 
 public class ReadApiClientData {
 
     private static final TypeReference<List<ModelData<?>>> MODEL_DATA_TYPE = new TypeReference<List<ModelData<?>>>(){};
     private static final Pattern PATTERN = Pattern.compile("\\@(.*?)\\@");
+    private final EncryptionComponent encryptionComponent;
+
+    public ReadApiClientData() {
+        this(new EncryptionComponent(null));
+    }
+
+    public ReadApiClientData(EncryptionComponent encryptionComponent) {
+        this.encryptionComponent = encryptionComponent;
+    }
+
     /**
      *
      * @param fileName
@@ -78,9 +89,16 @@ public class ReadApiClientData {
         Matcher m = PATTERN.matcher(jsonText);
         String json = jsonText;
         while(m.find()) {
-            String token = m.group(1).toUpperCase(Locale.US);
-            String value = env.get(token);
+            final String token = m.group(1).toUpperCase(Locale.US);
+            String envKey = token;
+            if( token.startsWith("ENC:") ) {
+                envKey = EncryptionComponent.stripPrefix(token, "ENC:");
+            }
+            String value = env.get(envKey);
             if (value!=null) {
+                if( token.startsWith("ENC:") ) {
+                    value = encryptionComponent.encrypt(value);
+                }
                 json = jsonText.replaceAll("@" + token + "@", value);
             }
         }

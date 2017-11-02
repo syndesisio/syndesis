@@ -18,6 +18,7 @@ package io.syndesis.dao;
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.connection.Connection;
@@ -51,7 +52,7 @@ public class DataManagerTest {
     @Before
     public void setup() {
         //Create Data Manager
-        dataManager = new DataManager(infinispan.getCaches(), new ArrayList<>(), null);
+        dataManager = new DataManager(infinispan.getCaches(), new ArrayList<>(), null, new EncryptionComponent(null));
         dataManager.init();
         dataManager.resetDeploymentData();
     }

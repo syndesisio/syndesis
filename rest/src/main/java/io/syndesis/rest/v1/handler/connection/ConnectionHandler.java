@@ -33,7 +33,7 @@ import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.operations.Validating;
 import io.syndesis.rest.v1.state.ClientSideState;
-import io.syndesis.controllers.EncryptionComponent;
+import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.verifier.VerificationConfigurationProperties;
 import org.springframework.stereotype.Component;
 

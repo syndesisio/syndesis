@@ -53,6 +53,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
     private final CacheContainer caches;
     private final EventBus eventBus;
+    private final EncryptionComponent encryptionComponent;
 
     @Value("${deployment.file:io/syndesis/dao/deployment.json}")
     @SuppressWarnings("PMD.ImmutableField") // @Value cannot be applied to final properties
@@ -66,9 +67,13 @@ public class DataManager implements DataAccessObjectRegistry {
 
     // Inject mandatory via constructor injection.
     @Autowired
-    public DataManager(CacheContainer caches, List<DataAccessObject<?>> dataAccessObjects, EventBus eventBus) {
+    public DataManager(CacheContainer caches,
+                       List<DataAccessObject<?>> dataAccessObjects,
+                       EventBus eventBus,
+                       EncryptionComponent encryptionComponent) {
         this.caches = caches;
         this.eventBus = eventBus;
+        this.encryptionComponent = encryptionComponent;
         if (dataAccessObjects != null) {
             this.dataAccessObjects.addAll(dataAccessObjects);
         }
@@ -91,7 +96,7 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     private void loadData(String file) {
-        ReadApiClientData reader = new ReadApiClientData();
+        ReadApiClientData reader = new ReadApiClientData(encryptionComponent);
         try {
             List<ModelData<?>> mdList = reader.readDataFromFile(file);
             for (ModelData<?> modelData : mdList) {
@@ -283,7 +288,7 @@ public class DataManager implements DataAccessObjectRegistry {
      * This is just a way to avoid, duplicating the dao lookup and checks, which are going to change.
      * @param model         The model class of the {@link DataAccessObject}.
      * @param function      The function to perfom on the {@link DataAccessObject}.
-     * @param <O>           The return type.
+     * @param <R>           The return type.
      * @return              The outcome of the function.
      */
     private <T extends WithId<T>, R> R doWithDataAccessObject(Class<T> model, Function<DataAccessObject<T>, R> function) {

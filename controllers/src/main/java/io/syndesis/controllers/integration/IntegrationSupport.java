@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.syndesis.controllers.EncryptionComponent;
+import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.connection.Action;

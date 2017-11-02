@@ -15,14 +15,11 @@
  */
 package io.syndesis.credential;
 
-import java.util.Arrays;
-
 import io.syndesis.core.EventBus;
 import io.syndesis.credential.CredentialsIntegrationTest.TestConfiguration;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
-
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,11 +36,15 @@ import org.springframework.boot.autoconfigure.social.TwitterAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -72,6 +73,11 @@ public class CredentialsIntegrationTest {
 
     @Configuration
     public static class TestConfiguration {
+
+        @Bean
+        public TextEncryptor getTextEncryptor() {
+            return Encryptors.noOpText();
+        }
 
         @Bean
         public DataManager dataManager() {

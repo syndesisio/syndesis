@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.controllers;
+package io.syndesis.dao.manager;
 
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.integration.Integration;
@@ -42,8 +42,16 @@ public class EncryptionComponent {
         this.textEncryptor = textEncryptor;
     }
 
-    private static String stripPrefix(String value, String prefix) {
+    public static String stripPrefix(String value, String prefix) {
         return value != null && value.startsWith(prefix)?value.substring(prefix.length()):value;
+    }
+
+    public String encrypt(final String value) {
+        String result = value;
+        if( !value.startsWith(ENCRYPTED_PREFIX) ) {
+            result = ENCRYPTED_PREFIX+textEncryptor.encrypt(value);
+        }
+        return result;
     }
 
     public Map<String, String> encryptPropertyValues(Map<String, String> values, Map<String, ConfigurationProperty> properties) {
@@ -55,15 +63,7 @@ public class EncryptionComponent {
                 if(property==null || !property.isSecret()) {
                     continue;
                 }
-
-                String value = entry.getValue();
-
-                // Lets find values that need to be encrypted...
-                if( !value.startsWith(ENCRYPTED_PREFIX) ) {
-                    // Lets encrypt the value.
-                    value = ENCRYPTED_PREFIX+textEncryptor.encrypt(value);
-                    result.put(entry.getKey(), value);
-                }
+                result.put(entry.getKey(), encrypt(entry.getValue()));
             }
         }
         return result;

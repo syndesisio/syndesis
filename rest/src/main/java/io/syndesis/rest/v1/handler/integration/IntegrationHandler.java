@@ -17,7 +17,6 @@ package io.syndesis.rest.v1.handler.integration;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import io.syndesis.controllers.EncryptionComponent;
 import io.syndesis.core.Json;
 import io.syndesis.dao.init.ModelData;
 import io.syndesis.dao.manager.DataManager;
@@ -46,6 +45,7 @@ import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.operations.Validating;
+import io.syndesis.dao.manager.EncryptionComponent;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 

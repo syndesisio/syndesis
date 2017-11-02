@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import javax.validation.Validator;
 
-import io.syndesis.controllers.EncryptionComponent;
+import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.connection.DataShape;

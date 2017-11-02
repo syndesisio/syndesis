@@ -826,7 +826,7 @@
       "configuredProperties": {
         "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
         "user": "sampledb",
-        "password": "@POSTGRESQL_SAMPLEDB_PASSWORD@",
+        "password": "@ENC:POSTGRESQL_SAMPLEDB_PASSWORD@",
         "schema": "sampledb"
       }
     }
