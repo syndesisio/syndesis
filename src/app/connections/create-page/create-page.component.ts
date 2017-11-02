@@ -199,22 +199,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    /*
-    this.tourService.initialize([ {
-        route: 'connections/create/connection-basics',
-        anchorId: 'connections.type',
-        content: 'A connection represents a specific application that you want to obtain data from or send data to.',
-        placement: 'left',
-        title: 'Connection',
-      } ],
-      {
-        route: '',
-      },
-    );*/
-
-    //this.tourService.start();
-  }
+  ngAfterViewInit() {}
 
   ngOnDestroy() {
     this.current.dispose();
