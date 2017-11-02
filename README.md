@@ -76,6 +76,7 @@ Once all pods are started up, you should be able to access the Syndesis at `http
 | **CONTROLLERS_INTEGRATION_ENABLED**  | Should deployment of integrations be enabled? | true |
 | **ACCESS_TOKEN_LIFESPAN** | How many seconds should an access token be valid? | 300 |
 | **SESSION_LIFESPAN** | How long are idle SSO Sesions allow to exist (in ms) ? | 36000 |
+| **SYNDESIS_ENCRYPT_KEY** | The encryption key used to encrypt/decrypt stored secrets | _(generated)_ |
 
 ## Running as a Cluster Admin
 

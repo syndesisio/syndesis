@@ -115,6 +115,11 @@ parameters:
   name: OAUTH_COOKIE_SECRET
   generate: expression
   from: '[a-zA-Z0-9]{32}'
+- name: SYNDESIS_ENCRYPT_KEY
+  description: The encryption key used to encrypt/decrypt stored secrets
+  generate: expression
+  from: "[a-zA-Z0-9]{64}"
+  required: true
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
@@ -812,6 +817,8 @@ objects:
           name: SyndesisCluster
         max:
           entries: 100
+      encrypt:
+        key: ${SYNDESIS_ENCRYPT_KEY}
       spring:
         zipkin:
           enabled: false
