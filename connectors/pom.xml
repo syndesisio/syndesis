@@ -30,6 +30,7 @@
 
   <modules>
     <module>aws-s3-copy-object-connector</module>
+    <module>aws-s3-get-object-connector</module>
     <module>http-get-connector</module>
     <module>http-post-connector</module>
     <module>timer-connector</module>
