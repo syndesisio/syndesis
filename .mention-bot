@@ -1,5 +1,5 @@
 {
-  "message": "@pullRequester, thanks! @reviewers, please review this.",
+  "message": "@pullRequester, thanks!  @syndesisio/ui-api, please review this...",
   "assignToReviewer": false,
   "createReviewRequest": true,
   "actions": ["opened", "reopened"],
