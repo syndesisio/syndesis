@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 import io.syndesis.integration.model.Flow;
-import io.syndesis.integration.model.SyndesisHelpers;
+import io.syndesis.integration.model.YamlHelpers;
 import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.integration.model.steps.Step;
@@ -48,7 +48,7 @@ public class SyndesisRouteBuilder extends RouteBuilder {
 
     protected SyndesisModel loadModel() throws Exception {
         try (InputStream is = ResourceHelper.resolveMandatoryResourceAsInputStream(getContext(), configurationUri)) {
-            return SyndesisHelpers.load(is);
+            return YamlHelpers.load(is);
         }
     }
 

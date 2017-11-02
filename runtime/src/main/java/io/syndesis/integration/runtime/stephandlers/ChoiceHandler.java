@@ -13,6 +13,7 @@
  */
 package io.syndesis.integration.runtime.stephandlers;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.google.auto.service.AutoService;
@@ -27,8 +28,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Predicate;
 import org.apache.camel.model.ChoiceDefinition;
 import org.apache.camel.model.ProcessorDefinition;
-
-import static io.syndesis.integration.support.Lists.notNullList;
+import org.apache.camel.util.ObjectHelper;
 
 @AutoService(StepHandler.class)
 public class ChoiceHandler implements StepHandler<Choice> {
@@ -42,7 +42,7 @@ public class ChoiceHandler implements StepHandler<Choice> {
         final CamelContext context = routeBuilder.getContext();
         final ChoiceDefinition choice = route.choice();
 
-        List<Filter> filters = notNullList(step.getFilters());
+        List<Filter> filters = ObjectHelper.supplyIfEmpty(step.getFilters(), Collections::emptyList);
         for (Filter filter : filters) {
             Predicate predicate = JsonSimpleHelpers.getMandatorySimplePredicate(context, filter, filter.getExpression());
             ChoiceDefinition when = choice.when(predicate);
@@ -52,7 +52,7 @@ public class ChoiceHandler implements StepHandler<Choice> {
 
         Otherwise otherwiseStep = step.getOtherwise();
         if (otherwiseStep != null) {
-            List<Step> otherwiseSteps = notNullList(otherwiseStep.getSteps());
+            List<Step> otherwiseSteps = ObjectHelper.supplyIfEmpty(otherwiseStep.getSteps(), Collections::emptyList);
             if (!otherwiseSteps.isEmpty()) {
                 route = routeBuilder.addSteps(choice.otherwise(), otherwiseSteps);
             }

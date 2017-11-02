@@ -37,12 +37,12 @@ public class ModelMarshalTest {
         SyndesisModel expected = new SyndesisModel();
         expected.createFlow().name(expectedName).endpoint(expectedTrigger).function(expectedFunctionName).endpoint(expectedEndpointUrl);
 
-        String yaml = SyndesisHelpers.createObjectMapper().writeValueAsString(expected);
+        String yaml = YamlHelpers.createObjectMapper().writeValueAsString(expected);
 
         LOG.info("Created YAML:\n{}", yaml);
 
         try(InputStream is = new ByteArrayInputStream(yaml.getBytes(StandardCharsets.UTF_8))) {
-            SyndesisModel actual = SyndesisHelpers.load(is);
+            SyndesisModel actual = YamlHelpers.load(is);
 
             Flow actualFlow = SyndesisAssertions.assertFlow(actual, 0);
             SyndesisAssertions.assertEndpointStep(actualFlow, 0, expectedTrigger);

@@ -22,7 +22,7 @@ import java.net.URL;
 import java.util.List;
 
 import io.syndesis.integration.model.SyndesisModel;
-import io.syndesis.integration.model.SyndesisHelpers;
+import io.syndesis.integration.model.YamlHelpers;
 import org.apache.camel.Exchange;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -59,7 +59,7 @@ public abstract class SyndesisTestSupport extends CamelTestSupport {
         Assertions.assertThat(resource).describedAs("Could not find " + path + " on the classpath!").isNotNull();
 
         try (InputStream is = resource.openStream()) {
-            return SyndesisHelpers.load(is);
+            return YamlHelpers.load(is);
         }
     }
 
