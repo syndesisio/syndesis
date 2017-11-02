@@ -115,7 +115,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
 
         return DeploymentData.builder()
             .addLabel(OpenShiftService.REVISION_ID_ANNOTATION, revision.getVersion().orElse(0).toString())
-            .addAnnotation(OpenShiftService.USERNAME_LABEL, username)
+            .addLabel(OpenShiftService.USERNAME_LABEL, Names.sanitize(username))
             .addSecretEntry("application.properties", propsToString(applicationProperties))
             .build();
     }

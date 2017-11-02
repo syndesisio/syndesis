@@ -26,7 +26,7 @@ import io.fabric8.openshift.api.model.User;
 public interface OpenShiftService {
 
     String REVISION_ID_ANNOTATION = "syndesis.io/revision-id";
-    String USERNAME_LABEL = "USERNAME";
+    String USERNAME_LABEL = "syndesis.io/username";
 
     /**
      * Start a previously created build with the data from the given directory
