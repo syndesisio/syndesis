@@ -14,20 +14,43 @@ First get a developer deployment of Syndesis running in a minishift environment 
 [Syndesis Quickstart](https://syndesis.io/quickstart/).  Then do the following to get a local developer UI with hot reloading running against the Syndesis backend running in minishift:
 
 ```bash
-# clone our repo
+# Clone our repo:
 git clone https://github.com/syndesisio/syndesis-ui.git
 
-# change directory to Syndesis
+# Change directory to Syndesis:
 cd syndesis-ui
 
-# Configure the UI and Minishfit for dev mode.
-./scripts/minishift-setup.sh
+# For a fresh install of Syndesis:
+$ ./scripts/syndesis-install
 
-# install the dependencies
-yarn
+# If you do a fresh install, then configure the UI and Minishift routing for dev mode:
+$ ./scripts/minishift-setup.sh
 
-# start the server
-yarn start:minishift
+# Install the dependencies:
+$ yarn install
+```
+
+Day-to-day development workflow:
+
+```bash
+# Start up Minishift
+$ minishift start
+
+# Make sure Minishift is running:
+$ minishift status
+
+# Which should look like:
+Minishift:  Running
+Profile:    minishift
+OpenShift:  Running (openshift v3.6.0+c4dd4cf)
+DiskUsage:  11% of 17.9G
+
+# Set environment variables to point to Minishift resources:
+$ eval $(minishift oc-env)
+$ eval $(minishift docker-env)
+
+# Start the UI server:
+$ yarn start:minishift
 ```
 
 Bring up the syndesis console in your browser.  You can start load it from the command line by running:
@@ -46,6 +69,11 @@ start http://$(oc get routes syndesis --template "{{.spec.host}}")
 ```
 
 A smoke test to verify you are ready to work is to add any content at the beginning of `src/app/app.component.html` and verify you see the modification in the main page of the application.
+
+In a separate tab, you might want to run unit tests and lint checks as you code. See below for more information on how to do so.
+
+At the end of the day you might want to stop Minishift:
+`$ minishift stop`
 
 ## Table of Contents
 
