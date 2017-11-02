@@ -20,10 +20,6 @@ jobs:
           curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.2.1
           echo 'export PATH="${PATH}:${HOME}/.yarn/bin"' >> $BASH_ENV
 
-    - run:
-        name: Install Chromium and Xvfb
-        command: apt-get update -qq && apt-get install -qq -y chromium Xvfb > /dev/null
-
     - setup_remote_docker
 
     - checkout
@@ -46,7 +42,7 @@ jobs:
         command: |
           rm -Rf ./coverage ./junit
           mkdir ./coverage ./junit
-          ./karma-xvfb.sh
+          yarn ng test --watch=false --log-level=debug -cc --no-progress
 
     - store_test_results:
         path: ./junit
