@@ -35,6 +35,7 @@ jobs:
     - run:
         name: Run AOT compile
         command: |
+          yarn build:ci
           yarn ng build --aot --prod --progress=false
 
     - run:
@@ -42,7 +43,7 @@ jobs:
         command: |
           rm -Rf ./coverage ./junit
           mkdir ./coverage ./junit
-          yarn ng test --watch=false --log-level=debug -cc --no-progress
+          yarn test:ci
 
     - store_test_results:
         path: ./junit
