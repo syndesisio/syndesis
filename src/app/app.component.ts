@@ -6,7 +6,6 @@ import {
   Notification,
   NotificationEvent,
   NotificationService,
-  NotificationType,
 } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
 import { ModalService } from './common/modal/modal.service';
@@ -16,6 +15,7 @@ import { ConfigService } from './config.service';
 import { log } from './logging';
 import { User } from './model';
 import { TestSupportService } from './store/test-support.service';
+import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 @Component({
   selector: 'syndesis-root',
@@ -72,6 +72,7 @@ export class AppComponent implements OnInit, AfterViewInit {
               public testSupport: TestSupportService,
               private notificationService: NotificationService,
               private nav: NavigationService,
+              public tourService: TourService,
               private modalService: ModalService) {}
 
   ngOnInit() {

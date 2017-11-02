@@ -60,7 +60,6 @@ import { TourNgxBootstrapModule, TourService } from 'ngx-tour-ngx-bootstrap';
   providers: [
     CurrentConnectionService,
     ConnectionConfigurationService,
-    TourService,
   ],
 })
 export class ConnectionsModule {}
