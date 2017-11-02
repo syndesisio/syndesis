@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -14,7 +14,7 @@ import { ConnectorStore } from '../../../store/connector/connector.store';
   selector: 'syndesis-connections-connection-basics',
   templateUrl: 'connection-basics.component.html',
 })
-export class ConnectionsConnectionBasicsComponent implements OnInit {
+export class ConnectionsConnectionBasicsComponent implements OnInit, AfterViewInit {
 
   loading: Observable<boolean>;
   connectors: Observable<Connectors>;
@@ -32,6 +32,24 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
   ngOnInit() {
     this.connectorStore.loadAll();
 
+    /*
+    this.tourService.initialize([ {
+        route: 'connections/create/connection-basics',
+        anchorId: 'connections.type',
+        content: 'A connection represents a specific application that you want to obtain data from or send data to.',
+        placement: 'left',
+        title: 'Connection',
+      } ],
+      {
+        route: '',
+      },
+    );
+
+    this.tourService.start();
+    */
+  }
+
+  ngAfterViewInit() {
     this.tourService.initialize([ {
         route: 'connections/create/connection-basics',
         anchorId: 'connections.type',

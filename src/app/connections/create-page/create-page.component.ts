@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -19,14 +19,16 @@ const category = getCategory('Connections');
   templateUrl: 'create-page.component.html',
   styleUrls: [ './create-page.component.scss' ],
 })
-export class ConnectionsCreatePage implements OnInit, OnDestroy {
+export class ConnectionsCreatePage implements OnInit, OnDestroy, AfterViewInit {
   private routerEventsSubscription: Subscription;
 
   constructor(private current: CurrentConnectionService,
               private route: ActivatedRoute,
               private router: Router,
               private nav: NavigationService,
-              private detector: ChangeDetectorRef) {
+              private detector: ChangeDetectorRef,
+              public tourService: TourService,
+              ) {
   }
 
   get connection(): Connection {
@@ -195,6 +197,23 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     this.routerEventsSubscription = this.router.events.subscribe(event => {
       this.detector.detectChanges();
     });
+  }
+
+  ngAfterViewInit() {
+    /*
+    this.tourService.initialize([ {
+        route: 'connections/create/connection-basics',
+        anchorId: 'connections.type',
+        content: 'A connection represents a specific application that you want to obtain data from or send data to.',
+        placement: 'left',
+        title: 'Connection',
+      } ],
+      {
+        route: '',
+      },
+    );*/
+
+    //this.tourService.start();
   }
 
   ngOnDestroy() {
