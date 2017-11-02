@@ -1,12 +1,10 @@
-import { AfterViewInit, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 
-import { CurrentConnectionService, ConnectionEvent } from '../current-connection';
+import { CurrentConnectionService } from '../current-connection';
 import { Connection, Connectors, Connector, TypeFactory } from '../../../model';
 import { ConnectorStore } from '../../../store/connector/connector.store';
 
@@ -14,7 +12,7 @@ import { ConnectorStore } from '../../../store/connector/connector.store';
   selector: 'syndesis-connections-connection-basics',
   templateUrl: 'connection-basics.component.html',
 })
-export class ConnectionsConnectionBasicsComponent implements OnInit, AfterViewInit {
+export class ConnectionsConnectionBasicsComponent implements OnInit {
 
   loading: Observable<boolean>;
   connectors: Observable<Connectors>;
@@ -44,8 +42,6 @@ export class ConnectionsConnectionBasicsComponent implements OnInit, AfterViewIn
     );
     this.tourService.start();
   }
-
-  ngAfterViewInit() {}
 
   onSelected(connector: Connector) {
     const connection = TypeFactory.createConnection();
