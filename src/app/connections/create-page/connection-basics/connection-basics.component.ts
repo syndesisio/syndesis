@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -12,7 +12,7 @@ import { ConnectorStore } from '../../../store/connector/connector.store';
   selector: 'syndesis-connections-connection-basics',
   templateUrl: 'connection-basics.component.html',
 })
-export class ConnectionsConnectionBasicsComponent implements OnInit, AfterViewInit {
+export class ConnectionsConnectionBasicsComponent implements OnInit {
 
   loading: Observable<boolean>;
   connectors: Observable<Connectors>;
@@ -40,10 +40,8 @@ export class ConnectionsConnectionBasicsComponent implements OnInit, AfterViewIn
         route: '',
       },
     );
-    this.tourService.start();
+    setTimeout(() => this.tourService.start());
   }
-
-  ngAfterViewInit() {}
 
   onSelected(connector: Connector) {
     const connection = TypeFactory.createConnection();

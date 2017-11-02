@@ -24,7 +24,7 @@ import { ConnectionDetailInfoComponent } from './detail-page/info.component';
 import { ConnectionDetailConfigurationComponent } from './detail-page/configuration.component';
 import { ConnectionConfigurationService } from './common/configuration/configuration.service';
 import { ConnectionConfigurationValidationComponent } from './common/configuration/validation.component';
-import { TourNgxBootstrapModule, TourService } from 'ngx-tour-ngx-bootstrap';
+import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 
 @NgModule({
   imports: [

@@ -134,6 +134,6 @@ export class OAuthAppsComponent implements OnInit {
       },
     );
 
-    this.tourService.start();
+    setTimeout(() => this.tourService.start());
   }
 }

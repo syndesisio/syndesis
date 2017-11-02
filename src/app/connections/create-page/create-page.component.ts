@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -21,7 +21,7 @@ const category = getCategory('Connections');
     TourService,
   ],
 })
-export class ConnectionsCreatePage implements OnInit, OnDestroy, AfterViewInit {
+export class ConnectionsCreatePage implements OnInit, OnDestroy {
   private routerEventsSubscription: Subscription;
 
   constructor(private current: CurrentConnectionService,
@@ -203,8 +203,6 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy, AfterViewInit {
       this.detector.detectChanges();
     });
   }
-
-  ngAfterViewInit() {}
 
   ngOnDestroy() {
     this.current.dispose();
