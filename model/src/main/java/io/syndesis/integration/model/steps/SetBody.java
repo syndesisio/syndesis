@@ -32,17 +32,14 @@ public class SetBody extends Step {
     }
 
     public SetBody(String body) {
-        this();
+        super(KIND);
+
         this.body = body;
     }
 
     @Override
     public String toString() {
         return "SetBody: " + body;
-    }
-
-    public String getKind() {
-        return "setBody";
     }
 
     public String getBody() {

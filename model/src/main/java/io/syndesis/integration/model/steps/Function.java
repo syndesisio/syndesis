@@ -32,7 +32,8 @@ public class Function extends Step {
     }
 
     public Function(String name) {
-        this();
+        super(KIND);
+
         this.name = name;
     }
 

@@ -16,17 +16,33 @@
  */
 package io.syndesis.integration.runtime;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@SpringBootApplication
-public class Main {
+@ConfigurationProperties(prefix = "syndesis")
+public class SyndesisConfiguration {
+    /**
+     * Enable/Disable syndesis runtime.
+     */
+    private boolean enabled = true;
 
     /**
-     * A main method to start this SyndesisModel.
+     * The Syndesis configuration location;
      */
-    public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+    private String configuration = "classpath:syndesis.yml";
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(String configuration) {
+        this.configuration = configuration;
+    }
 }

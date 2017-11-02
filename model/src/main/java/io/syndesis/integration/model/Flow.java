@@ -16,6 +16,10 @@
  */
 package io.syndesis.integration.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.syndesis.integration.model.steps.Choice;
 import io.syndesis.integration.model.steps.Endpoint;
@@ -28,10 +32,6 @@ import io.syndesis.integration.model.steps.Split;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.model.steps.Throttle;
 import io.syndesis.integration.support.Strings;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class Flow extends DtoSupport {
     private String name;

@@ -16,20 +16,28 @@
  */
 package io.syndesis.integration.runtime;
 
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConditionalOnProperty(prefix = "syndesis", name = "enabled", matchIfMissing = true)
+@EnableConfigurationProperties(SyndesisConfiguration.class)
 public class SyndesisAutoConfiguration {
+    @Autowired
+    private SyndesisConfiguration configuration;
 
     /**
      * To automatic add SyndesisRouteBuilder which loads the syndesis.yml file
      */
     @Bean
-    @ConditionalOnMissingBean(SyndesisRouteBuilder.class)
-    public SyndesisRouteBuilder syndesisRouteBuilder() {
-        return new SyndesisRouteBuilder();
+    @ConditionalOnMissingBean
+    public SyndesisRouteBuilder syndesisRouteBuilder() throws IOException {
+        return new SyndesisRouteBuilder(configuration.getConfiguration());
     }
-
 }

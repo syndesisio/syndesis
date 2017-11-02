@@ -34,17 +34,14 @@ public class Filter extends ChildSteps<Filter> {
     }
 
     public Filter(String expression) {
-        this();
+        super(KIND);
+
         this.expression = expression;
     }
 
     @Override
     public String toString() {
         return "Filter: " + expression + " => " + getSteps();
-    }
-
-    public String getKind() {
-        return KIND;
     }
 
     public String getExpression() {

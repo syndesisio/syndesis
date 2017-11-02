@@ -13,37 +13,33 @@
  */
 package io.syndesis.integration.runtime.steps;
 
+import java.util.ServiceLoader;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.syndesis.integration.model.SyndesisHelpers;
+import io.syndesis.integration.model.YamlHelpers;
 import io.syndesis.integration.model.steps.Step;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.ServiceLoader;
-
 @RunWith(Parameterized.class)
 public class MarshallingTest {
+    private final Step step;
+    private final ObjectMapper mapper;
 
-  private Step step;
+    @Parameterized.Parameters
+    public static Iterable<Step> steps() {
+        return ServiceLoader.load(Step.class, MarshallingTest.class.getClassLoader());
+    }
 
-  private ObjectMapper om = SyndesisHelpers.createObjectMapper();
+    public MarshallingTest(Step step) {
+        this.step = step;
+        this.mapper = YamlHelpers.createObjectMapper();
+    }
 
-  @Parameterized.Parameters
-  public static Iterable<Step> steps() {
-    return ServiceLoader.load(Step.class, MarshallingTest.class.getClassLoader());
-  }
-
-  public MarshallingTest(Step step) {
-    this.step = step;
-  }
-
-  @Test
-  public void testLowercaseKind() throws Exception {
-    ObjectMapper om = SyndesisHelpers.createObjectMapper();
-    String marshalled = om.writeValueAsString(step);
-    Assertions.assertThat(marshalled).containsPattern("(?m)^kind: " + step.getKind() + "$");
-  }
-
+    @Test
+    public void testLowercaseKind() throws Exception {
+        Assertions.assertThat(mapper.writeValueAsString(step)).containsPattern("(?m)^kind: " + step.getKind() + "$");
+    }
 }

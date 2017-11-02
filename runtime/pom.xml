@@ -47,16 +47,6 @@
 
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-http4</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-servlet</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.camel</groupId>
       <artifactId>camel-jackson</artifactId>
       <scope>runtime</scope>
     </dependency>
@@ -78,18 +68,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-spring-boot</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
     </dependency>
 
     <dependency>
@@ -108,10 +88,22 @@
       <optional>true</optional>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+
     <!-- testing -->
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -122,20 +114,29 @@
     </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-spring-boot</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
@@ -143,5 +144,24 @@
     </dependency>
 
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <ignoredUsedUndeclaredDependencies>
+            <ignoredUsedUndeclaredDependency>org.springframework:spring-core</ignoredUsedUndeclaredDependency>
+            <ignoredUsedUndeclaredDependency>org.springframework:spring-beans</ignoredUsedUndeclaredDependency>
+            <ignoredUsedUndeclaredDependency>org.springframework:spring-context</ignoredUsedUndeclaredDependency>
+          </ignoredUsedUndeclaredDependencies>
+          <ignoredUnusedDeclaredDependencies>
+            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-configuration-processor</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.google.auto.service:auto-service</ignoredUnusedDeclaredDependency>
+          </ignoredUnusedDeclaredDependencies>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

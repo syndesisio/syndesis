@@ -16,9 +16,9 @@
  */
 package io.syndesis.integration.model.steps;
 
-import com.google.auto.service.AutoService;
-
 import java.util.List;
+
+import com.google.auto.service.AutoService;
 
 /**
  * Represents the otherwise clause in a {@link Choice}
@@ -39,9 +39,4 @@ public class Otherwise extends ChildSteps<Otherwise> {
     public String toString() {
         return "Otherwise: " + getSteps();
     }
-
-    public String getKind() {
-        return KIND;
-    }
-
 }

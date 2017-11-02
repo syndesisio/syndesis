@@ -43,7 +43,6 @@ public class FunctionHandler implements StepHandler<Function> {
       if (method != null) {
         uri += "?method=" + method;
       }
-      uri = routeBuilder.convertEndpointURI(uri);
       route = route.to(uri);
     }
     return route;

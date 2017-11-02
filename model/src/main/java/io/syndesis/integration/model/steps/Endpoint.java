@@ -32,7 +32,8 @@ public class Endpoint extends Step {
     }
 
     public Endpoint(String uri) {
-        this();
+        super(KIND);
+
         this.uri = uri;
     }
 

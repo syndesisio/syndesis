@@ -12,6 +12,10 @@
  * limitations under the License.
  */
 package io.syndesis.integration.runtime.stephandlers;
+
+import java.util.Collections;
+import java.util.List;
+
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.Choice;
 import io.syndesis.integration.model.steps.Filter;
@@ -19,39 +23,41 @@ import io.syndesis.integration.model.steps.Otherwise;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.runtime.StepHandler;
 import io.syndesis.integration.runtime.SyndesisRouteBuilder;
+import io.syndesis.integration.runtime.util.JsonSimpleHelpers;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Predicate;
 import org.apache.camel.model.ChoiceDefinition;
 import org.apache.camel.model.ProcessorDefinition;
-
-import java.util.List;
-
-import static io.syndesis.integration.support.Lists.notNullList;
+import org.apache.camel.util.ObjectHelper;
 
 @AutoService(StepHandler.class)
 public class ChoiceHandler implements StepHandler<Choice> {
-  @Override
-  public boolean canHandle(Step step) {
-    return step.getClass().equals(Choice.class);
-  }
-
-  @Override
-  public ProcessorDefinition handle(Choice step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
-    ChoiceDefinition choice = route.choice();
-    List<Filter> filters = notNullList(step.getFilters());
-    for (Filter filter : filters) {
-      Predicate predicate = routeBuilder.getMandatorySimplePredicate(filter, filter.getExpression());
-      ChoiceDefinition when = choice.when(predicate);
-      route = routeBuilder.addSteps(when, filter.getSteps());
-    }
-    Otherwise otherwiseStep = step.getOtherwise();
-    if (otherwiseStep != null) {
-      List<Step> otherwiseSteps = notNullList(otherwiseStep.getSteps());
-      if (!otherwiseSteps.isEmpty()) {
-        ChoiceDefinition otherwise = choice.otherwise();
-        route = routeBuilder.addSteps(otherwise, otherwiseSteps);
-      }
+    @Override
+    public boolean canHandle(Step step) {
+        return step.getClass().equals(Choice.class);
     }
 
-    return route;
-  }
+    @Override
+    public ProcessorDefinition handle(Choice step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+        final CamelContext context = routeBuilder.getContext();
+        final ChoiceDefinition choice = route.choice();
+
+        List<Filter> filters = ObjectHelper.supplyIfEmpty(step.getFilters(), Collections::emptyList);
+        for (Filter filter : filters) {
+            Predicate predicate = JsonSimpleHelpers.getMandatorySimplePredicate(context, filter, filter.getExpression());
+            ChoiceDefinition when = choice.when(predicate);
+
+            route = routeBuilder.addSteps(when, filter.getSteps());
+        }
+
+        Otherwise otherwiseStep = step.getOtherwise();
+        if (otherwiseStep != null) {
+            List<Step> otherwiseSteps = ObjectHelper.supplyIfEmpty(otherwiseStep.getSteps(), Collections::emptyList);
+            if (!otherwiseSteps.isEmpty()) {
+                route = routeBuilder.addSteps(choice.otherwise(), otherwiseSteps);
+            }
+        }
+
+        return route;
+    }
 }

@@ -34,17 +34,14 @@ public class Split extends ChildSteps<Split> {
     }
 
     public Split(String expression) {
-        this();
+        super(KIND);
+
         this.expression = expression;
     }
 
     @Override
     public String toString() {
         return "Split: " + expression;
-    }
-
-    public String getKind() {
-        return KIND;
     }
 
     public String getExpression() {
