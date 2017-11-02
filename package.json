@@ -15,7 +15,7 @@
     "lint:fix": "yarn ng lint --fix",
     "test": "yarn ng test --sourcemaps=false",
     "test:cc": "yarn ng test --watch=false --cc",
-    "test:ci": "npm rebuild && yarn ng test --watch=false --progress=false",
+    "test:ci": "npm rebuild && yarn ng test --watch=false --progress=false --log-level=DEBUG",
     "sw": "sw-precache --root=dist --config=sw-precache-config.js",
     "docker:build": "yarn ng build --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest . && docker tag syndesis/syndesis-ui:latest docker.io/syndesis/syndesis-ui:latest",
     "commit": "yarn git-cz"
