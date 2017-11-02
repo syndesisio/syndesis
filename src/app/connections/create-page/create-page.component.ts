@@ -9,8 +9,6 @@ import {
 } from './current-connection';
 import { Connection, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
-import { CanComponentDeactivate } from '../../common/can-deactivate-guard.service';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 const category = getCategory('Connections');
 
@@ -27,7 +25,6 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy, AfterViewInit {
               private router: Router,
               private nav: NavigationService,
               private detector: ChangeDetectorRef,
-              public tourService: TourService,
               ) {
   }
 
@@ -109,7 +106,9 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // TODO this is terrible, the page flow should be handled in the individual steps
+  /**
+   *  TODO this is terrible, the page flow should be handled in the individual steps
+   */
   goForward() {
     const page = this.getCurrentPage();
     const target = [];
@@ -181,7 +180,9 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy, AfterViewInit {
       this.handleEvent(event);
     });
     this.route.fragment.subscribe(fragment => {
-      // detect if there's a selected connection ID already or not
+      /**
+       * Detect if there's a selected connection ID already or not
+       */
       if (this.current.connection && this.current.connection.connectorId) {
         return;
       }
