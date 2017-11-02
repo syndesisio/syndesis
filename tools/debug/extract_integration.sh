@@ -27,9 +27,7 @@ if [ ! -d $dest ]; then
   exit 1
 fi
 
-if [[ ! $pod =~ "[0-9]$" ]]; then
-  pod=$(oc get pods -o name | grep -v -- "-build" | grep $1 | sed -e "s/^pods\///")
-fi
+pod=$(oc get pods -o name | grep -v -- "-build" | grep $pod | sed -e "s/^pods\///")
 
 oc cp ${pod}:/tmp/src $dest
 
