@@ -26,7 +26,10 @@ jobs:
 
     - run:
         name: Install Dependencies
-        command: rm -Rf ./node_modules && yarn cache clean && yarn install --no-progress
+        command: |
+          rm -Rf ./node_modules
+          yarn cache clean
+          yarn install --no-progress
 
     - run:
         name: Lint
@@ -36,7 +39,6 @@ jobs:
         name: Run AOT compile
         command: |
           yarn build:ci
-          yarn ng build --aot --prod --progress=false
 
     - run:
         name: Run unit tests
@@ -75,7 +77,7 @@ jobs:
 
           curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
 
-          yarn ng build --aot --prod --progress=false
+          yarn build:ci
           docker build -t syndesis/syndesis-ui:${DOCKER_IMAGE_TAG} -f docker/Dockerfile . | cat -
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
           docker push syndesis/syndesis-ui:${DOCKER_IMAGE_TAG} | cat -
