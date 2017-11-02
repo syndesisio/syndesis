@@ -356,6 +356,7 @@
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-undertow</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-web</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-websocket</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.security:spring-security-crypto</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.cloud:spring-cloud-starter-security</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.cloud:spring-cloud-starter-zipkin</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>postgresql:postgresql</ignoredUnusedDeclaredDependency>
@@ -586,6 +587,11 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-crypto</artifactId>
     </dependency>
 
     <dependency>

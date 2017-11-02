@@ -15,20 +15,9 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
+import io.syndesis.controllers.EncryptionComponent;
 import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.Inspectors;
@@ -41,8 +30,18 @@ import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
-
 import org.springframework.stereotype.Component;
+
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
+import java.util.Map;
 
 @Path("/connectors")
 @Api(value = "connectors")
@@ -53,14 +52,16 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     private final Credentials credentials;
     private final Inspectors inspectors;
     private final ClientSideState state;
+    private final EncryptionComponent encryptionComponent;
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials,
-        final Inspectors inspectors, final ClientSideState state) {
+                            final Inspectors inspectors, final ClientSideState state, EncryptionComponent encryptionComponent) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
         this.inspectors = inspectors;
         this.state = state;
+        this.encryptionComponent = encryptionComponent;
     }
 
     @Override
@@ -79,7 +80,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Path("/{id}/verifier")
     public List<Verifier.Result> verifyConnectionParameters(@NotNull @PathParam("id") final String connectorId,
         final Map<String, String> props) {
-        return verifier.verify(connectorId, props);
+        return verifier.verify(connectorId, encryptionComponent.decrypt(props));
     }
 
     @Path("/{id}/credentials")

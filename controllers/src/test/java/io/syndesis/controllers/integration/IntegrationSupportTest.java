@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import io.syndesis.controllers.EncryptionComponent;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
@@ -113,7 +114,8 @@ public class IntegrationSupportTest {
             new Integration.Builder()
                 .steps(Arrays.asList(s1, s2, s3))
                 .build(),
-            connectors
+            connectors,
+            new EncryptionComponent(null)
         );
 
         assertThat(properties.size()).isEqualTo(7);

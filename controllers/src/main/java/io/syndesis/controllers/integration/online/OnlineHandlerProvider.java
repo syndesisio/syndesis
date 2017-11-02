@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.syndesis.controllers.ControllersConfigurationProperties;
+import io.syndesis.controllers.EncryptionComponent;
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.openshift.OpenShiftService;
@@ -33,19 +34,22 @@ public class OnlineHandlerProvider extends BaseHandler implements StatusChangeHa
     private final DataManager dataManager;
     private final ProjectGenerator projectConverter;
     private final ControllersConfigurationProperties properties;
+    private final EncryptionComponent encryptionComponent;
 
     public OnlineHandlerProvider(DataManager dataManager, OpenShiftService openShiftService,
-                                 ProjectGenerator projectConverter, ControllersConfigurationProperties properties) {
+                                 ProjectGenerator projectConverter, ControllersConfigurationProperties properties,
+                                 EncryptionComponent encryptionComponent) {
         super(openShiftService);
         this.dataManager = dataManager;
         this.projectConverter = projectConverter;
         this.properties = properties;
+        this.encryptionComponent = encryptionComponent;
     }
 
     @Override
     public List<StatusChangeHandler> getStatusChangeHandlers() {
         return Arrays.asList(
-            new ActivateHandler(dataManager, openShiftService(), projectConverter, properties),
+            new ActivateHandler(dataManager, openShiftService(), projectConverter, properties, encryptionComponent),
             new DeactivateHandler(openShiftService()),
             new DeleteHandler(openShiftService()));
     }

@@ -41,6 +41,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.syndesis.controllers.EncryptionComponent;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.ActionDefinition;
 import io.syndesis.model.connection.ConfigurationProperty;
@@ -59,14 +60,16 @@ public class ConnectionActionHandler {
     private final List<Action> actions;
 
     private final VerificationConfigurationProperties config;
+    private final EncryptionComponent encryptionComponent;
 
     private final Connection connection;
 
     private final Connector connector;
 
-    public ConnectionActionHandler(final Connection connection, final VerificationConfigurationProperties config) {
+    public ConnectionActionHandler(final Connection connection, final VerificationConfigurationProperties config, EncryptionComponent encryptionComponent) {
         this.connection = connection;
         this.config = config;
+        this.encryptionComponent = encryptionComponent;
 
         final Optional<Connector> maybeConnector = connection.getConnector();
         connector = maybeConnector.orElseThrow(() -> new EntityNotFoundException(
@@ -97,13 +100,13 @@ public class ConnectionActionHandler {
 
         final String connectorId = connector.getId().get();
 
-        final Map<String, String> parameters = new HashMap<>(Optional.ofNullable(properties).orElseGet(HashMap::new));
+        final Map<String, String> parameters = encryptionComponent.decrypt(new HashMap<>(Optional.ofNullable(properties).orElseGet(HashMap::new)));
         // put all action parameters with `null` values
         defaultDefinition.getPropertyDefinitionSteps()
             .forEach(step -> step.getProperties().forEach((k, v) -> parameters.putIfAbsent(k, null)));
 
         // lastly put all connection properties
-        parameters.putAll(connection.getConfiguredProperties());
+        parameters.putAll(encryptionComponent.decrypt(connection.getConfiguredProperties()));
 
         final Client client = createClient();
         final WebTarget target = client

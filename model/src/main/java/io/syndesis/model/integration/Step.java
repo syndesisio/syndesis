@@ -48,4 +48,9 @@ public interface Step extends WithId<Step>, Serializable {
 
     String getName();
 
+    class Builder extends ImmutableIntegration.Builder {
+        // allow access to ImmutableIntegration.Builder
+    }
+
+
 }
