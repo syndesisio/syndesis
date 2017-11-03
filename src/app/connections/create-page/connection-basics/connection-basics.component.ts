@@ -40,16 +40,7 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
           content: 'A connection represents a specific application that you want to obtain data from or send data to.',
           placement: 'left',
           title: 'Connection',
-        }, {
-          route: 'connections/create/review',
-          title: 'Make It Available',
-          content: 'Click Create to make the new connection available for use in integrations.',
-          anchorId: 'connections.publish',
-          placement: 'bottom',
         } ],
-        {
-          route: '',
-        },
       );
       setTimeout(() => this.tourService.start());
     }
