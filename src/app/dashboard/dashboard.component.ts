@@ -46,19 +46,8 @@ export class DashboardComponent implements OnInit {
           content: 'View integrations, connections or settings for applications that Fuse Ignite is registered with.',
           placement: 'right',
           title: 'Navigation',
-        }, {
-          anchorId: 'dashboard.integration',
-          content: 'Create Integration',
-          placement: 'bottom',
-          title: 'After creating at least two connections, you can create an integration.',
-        }, {
-          anchorId: 'dashboard.connection',
-          content: 'After registering Fuse Ignite with a particular application, ' +
-          'you can create a connection that Fuse Ignite can use to connect to that application.',
-          placement: 'bottom',
-          title: 'Create Connection',
         } ], {
-          route: '',
+          route: 'dashboard',
         },
       );
       setTimeout(() => this.tourService.start());
