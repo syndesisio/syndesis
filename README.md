@@ -86,7 +86,7 @@ If you are having issues with Minishift, you can also use `localhost:4200` to ac
 
 In a separate tab, you might want to run unit tests and lint checks as you code. See below for more information on how to do that.
 
-### Day-to-day developer workflow:
+### Day-to-day developer workflow
 
 ```bash
 # Start up Minishift
