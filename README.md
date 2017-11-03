@@ -8,10 +8,18 @@ For the middle tier API that this client communicates with, please see the [synd
 
 ## UI Developer Quick Start
 
-**Make sure you have installed [node](https://nodejs.org/en/download/) version >= 6.x.x and [Yarn](https://yarnpkg.com/en/docs/install) version >= 0.18.1**
+### Setup or fresh install
+You can follow these steps if it's your first time setting up Syndesis, or if you want a fresh local installation to replace an existing one.
 
-First get a developer deployment of Syndesis running in a minishift environment as described in the
-[Syndesis Quickstart](https://syndesis.io/quickstart/).  Then do the following to get a local developer UI with hot reloading running against the Syndesis backend running in minishift:
+1. Make sure you have installed [node](https://nodejs.org/en/download/) version >= 6.x.x and [Yarn](https://yarnpkg.com/en/docs/install) version >= 0.18.1.
+
+2. Get a developer deployment of Syndesis running in a Minishift environment as described in the
+[Syndesis Quickstart](https://syndesis.io/quickstart/). Most are specific to your environment, so follow the links below for a quick setup:
+
+- [Install a hypervisor for Minishift](https://docs.openshift.org/latest/minishift/getting-started/installing.html#install-prerequisites). For macOS, we recommend using the Docker xhyve plugin [here](https://docs.openshift.org/latest/minishift/getting-started/setting-up-driver-plugin.html#xhyve-driver-install), which can be installed using Homebrew.
+- [Install Minishift](https://docs.openshift.org/latest/minishift/getting-started/installing.html#installing-instructions). For macOS, we recommend you use the Homebrew method.
+
+3. Get a local developer UI with hot reloading, using the Syndesis backend running on Minishift:
 
 ```bash
 # Clone our repo:
@@ -21,7 +29,7 @@ git clone https://github.com/syndesisio/syndesis-ui.git
 cd syndesis-ui
 
 # For a fresh install of Syndesis:
-$ ./scripts/syndesis-install
+$ ./scripts/syndesis-install --clean --pull
 
 # If you do a fresh install, then configure the UI and Minishift routing for dev mode:
 $ ./scripts/minishift-setup.sh
@@ -30,7 +38,7 @@ $ ./scripts/minishift-setup.sh
 $ yarn install
 ```
 
-Day-to-day development workflow:
+### Day-to-day developer workflow:
 
 ```bash
 # Start up Minishift
@@ -45,6 +53,11 @@ Profile:    minishift
 OpenShift:  Running (openshift v3.6.0+c4dd4cf)
 DiskUsage:  11% of 17.9G
 
+# Log into OpenShift
+# Username: developer
+# Password: whatever you like
+$ oc login
+
 # Set environment variables to point to Minishift resources:
 $ eval $(minishift oc-env)
 $ eval $(minishift docker-env)
@@ -53,7 +66,7 @@ $ eval $(minishift docker-env)
 $ yarn start:minishift
 ```
 
-Bring up the syndesis console in your browser.  You can start load it from the command line by running:
+Bring up the Syndesis console in your browser.  You can load it from the command line by running:
 
 ```bash
 # To connect with Syndesis backend you don't have to use http://localhost:4200 url.
