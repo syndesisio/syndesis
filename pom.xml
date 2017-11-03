@@ -27,6 +27,8 @@
   <artifactId>integration-runtime</artifactId>
   <packaging>pom</packaging>
 
+  <name>Syndesis :: Integration Runtime</name>
+
   <modules>
     <module>bom</module>
     <module>model</module>
