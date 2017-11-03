@@ -7,6 +7,7 @@ import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { CurrentConnectionService } from '../current-connection';
 import { Connection, Connectors, Connector, TypeFactory } from '../../../model';
 import { ConnectorStore } from '../../../store/connector/connector.store';
+import { UserService } from '../../../common/user.service';
 
 @Component({
   selector: 'syndesis-connections-connection-basics',
@@ -22,6 +23,7 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
     private current: CurrentConnectionService,
     private connectorStore: ConnectorStore,
     public tourService: TourService,
+    private userService: UserService,
   ) {
     this.loading = connectorStore.loading;
     this.connectors = connectorStore.list;
@@ -29,18 +31,30 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
 
   ngOnInit() {
     this.connectorStore.loadAll();
-    this.tourService.initialize([ {
-        route: 'connections/create/connection-basics',
-        anchorId: 'connections.type',
-        content: 'A connection represents a specific application that you want to obtain data from or send data to.',
-        placement: 'left',
-        title: 'Connection',
-      } ],
-      {
-        route: '',
-      },
-    );
-    setTimeout(() => this.tourService.start());
+
+    /**
+     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
+     */
+    if(this.userService.getTourState() === true) {
+      this.tourService.initialize([ {
+          route: 'connections/create/connection-basics',
+          anchorId: 'connections.type',
+          content: 'A connection represents a specific application that you want to obtain data from or send data to.',
+          placement: 'left',
+          title: 'Connection',
+        }, {
+          route: 'connections/create/review',
+          title: 'Make It Available',
+          content: 'Click Create to make the new connection available for use in integrations.',
+          anchorId: 'connections.publish',
+          placement: 'bottom',
+        } ],
+        {
+          route: '',
+        },
+      );
+      setTimeout(() => this.tourService.start());
+    }
   }
 
   onSelected(connector: Connector) {
