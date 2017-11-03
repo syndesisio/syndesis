@@ -10,7 +10,6 @@ import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { ConnectionStore } from '../../../store/connection/connection.store';
 import { Connections, Connection } from '../../../model';
 import { FlowPage } from '../flow-page';
-
 const category = getCategory('Integrations');
 
 @Component({

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Input } from '@angular/core';
 import { Restangular } from 'ngx-restangular';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Http } from '@angular/http';
@@ -28,6 +28,20 @@ export class UserService {
       this.initializeCurrentUser();
     }
     return this._user.asObservable();
+  }
+
+  /**
+   * Set state of Guided Tour
+   */
+  setTourState(val): void {
+    return localStorage.setItem('guidedTourState', JSON.stringify(val));
+  }
+
+  /**
+   * Get state of Guided Tour
+   */
+  getTourState() {
+    return JSON.parse(localStorage.getItem('guidedTourState'));
   }
 
   /**

@@ -24,6 +24,7 @@ import { ConnectionDetailInfoComponent } from './detail-page/info.component';
 import { ConnectionDetailConfigurationComponent } from './detail-page/configuration.component';
 import { ConnectionConfigurationService } from './common/configuration/configuration.service';
 import { ConnectionConfigurationValidationComponent } from './common/configuration/validation.component';
+import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { ConnectionConfigurationValidationComponent } from './common/configurati
     ModalModule,
     BsDropdownModule,
     TagInputModule,
+    TourNgxBootstrapModule,
   ],
   declarations: [
     ConnectionsCreatePage,

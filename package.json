@@ -46,6 +46,7 @@
     "ngx-bootstrap": "1.9.3",
     "ngx-chips": "1.5.3",
     "ngx-restangular": "1.0.9",
+    "ngx-tour-ngx-bootstrap": "^1.0.4",
     "patternfly": "3.26.1",
     "patternfly-ng": "0.13.3",
     "pluralize": "5.0.0",

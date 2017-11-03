@@ -1,11 +1,11 @@
 <div *ngIf="!loading && (!integrations || !integrations.length)">
-  <div class='row text-center syndesis-dashboard-empty-state'>
+  <div class="row text-center syndesis-dashboard-empty-state">
 
     <!-- Page Header & Content Area  -->
 
     <div class="first-row">
       <h1>No Integrations Available</h1>
-      <div class='row description'>
+      <div class="row description">
         <!--
         <p>
           Integration helps you connect two or more web services. To create an integration, choose one of the templates below and add some contextual details.
@@ -14,8 +14,12 @@
         -->
         <p>Integrations help you connect two or more web services.</p>
       </div>
-      <div class='row'>
-        <button type="button" class="btn btn-primary" [routerLink]="['/integrations/create']">Create Integration</button>
+      <div class="row">
+        <button type="button"
+                class="btn btn-primary"
+                [routerLink]="['/integrations/create']"
+                tourAnchor="dashboard.integration">Create Integration
+        </button>
       </div>
       <!--
       <div class='row'>
@@ -32,8 +36,8 @@
       <h2>Suggested Connections</h2>
 
       <syndesis-dashboard-connections [connections]="connections | async"
-                                   [loading]="loading"
-                                   (selectedConnection)="selectedConnection($event)"></syndesis-dashboard-connections>
+                                      [loading]="loading"
+                                      (selectedConnection)="selectedConnection($event)"></syndesis-dashboard-connections>
 
       <!--
       <syndesis-popular-templates [templates]="templates | async" [loading]="loading | async"></syndesis-popular-templates>

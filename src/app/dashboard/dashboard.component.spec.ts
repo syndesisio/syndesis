@@ -10,6 +10,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NotificationModule } from 'patternfly-ng';
+import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { SyndesisCommonModule } from '../common/common.module';
 import { IntegrationsListModule } from '../integrations/list/list.module';
@@ -56,6 +57,7 @@ describe('DashboardComponent', () => {
             },
             deps: [MockBackend, RequestOptions],
           },
+          TourService,
         ],
       }).compileComponents();
     }),

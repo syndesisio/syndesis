@@ -32,6 +32,7 @@
         <button class="btn btn-primary"
                 *ngIf="getCurrentPage() === 'review'"
                 (click)="doCreate()"
+                tourAnchor="connections.publish"
                 [disabled]="!canContinue()">Create
         </button>
       </div>
@@ -44,7 +45,8 @@
 <div class="row toolbar-pf steps">
   <!-- hidden -->
   <ul class="wizard-pf-steps-indicator center">
-    <li class="wizard-pf-step">
+    <li class="wizard-pf-step"
+        tourAnchor="connections.type">
       <a class="disabled"
           [routerLink]=" ['connection-basics'] "
           routerLinkActive="active">

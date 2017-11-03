@@ -9,25 +9,28 @@ import {
 } from './current-connection';
 import { Connection, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
-import { CanComponentDeactivate } from '../../common/can-deactivate-guard.service';
+import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 const category = getCategory('Connections');
 
 @Component({
   selector: 'syndesis-connection-create-page',
   templateUrl: 'create-page.component.html',
-  styleUrls: ['./create-page.component.scss'],
+  styleUrls: [ './create-page.component.scss' ],
+  providers: [
+    TourService,
+  ],
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
   private routerEventsSubscription: Subscription;
 
-  constructor(
-    private current: CurrentConnectionService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private nav: NavigationService,
-    private detector: ChangeDetectorRef,
-  ) {}
+  constructor(private current: CurrentConnectionService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private nav: NavigationService,
+              private detector: ChangeDetectorRef,
+              ) {
+  }
 
   get connection(): Connection {
     return this.current.connection;
@@ -37,7 +40,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     const child = this.route.firstChild;
     if (child && child.snapshot) {
       const path = child.snapshot.url;
-      return path[0].path;
+      return path[ 0 ].path;
     } else {
       return undefined;
     }
@@ -76,7 +79,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.router.navigate(['cancel'], { relativeTo: this.route });
+    this.router.navigate([ 'cancel' ], { relativeTo: this.route });
   }
 
   goBack() {
@@ -107,7 +110,9 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     }
   }
 
-  // TODO this is terrible, the page flow should be handled in the individual steps
+  /**
+   *  TODO this is terrible, the page flow should be handled in the individual steps
+   */
   goForward() {
     const page = this.getCurrentPage();
     const target = [];
@@ -149,7 +154,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
         log.infoc(() => 'hasCredentials: ' + this.current.hasCredentials());
         if (!this.current.hasConnector() && page !== 'connection-basics') {
           setTimeout(() => {
-            this.router.navigate(['connection-basics'], {
+            this.router.navigate([ 'connection-basics' ], {
               relativeTo: this.route,
             });
           }, 10);
@@ -169,7 +174,8 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     }
     try {
       this.detector.detectChanges();
-    } catch (err) {}
+    } catch (err) {
+    }
   }
 
   ngOnInit() {
@@ -178,7 +184,9 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       this.handleEvent(event);
     });
     this.route.fragment.subscribe(fragment => {
-      // detect if there's a selected connection ID already or not
+      /**
+       * Detect if there's a selected connection ID already or not
+       */
       if (this.current.connection && this.current.connection.connectorId) {
         return;
       }

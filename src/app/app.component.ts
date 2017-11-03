@@ -6,7 +6,6 @@ import {
   Notification,
   NotificationEvent,
   NotificationService,
-  NotificationType,
 } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
 import { ModalService } from './common/modal/modal.service';
@@ -16,13 +15,14 @@ import { ConfigService } from './config.service';
 import { log } from './logging';
 import { User } from './model';
 import { TestSupportService } from './store/test-support.service';
+import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 @Component({
   selector: 'syndesis-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: [ './app.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [Restangular, TestSupportService],
+  providers: [ Restangular, TestSupportService ],
 })
 export class AppComponent implements OnInit, AfterViewInit {
   // TODO icon?
@@ -53,6 +53,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   productBuild = false;
 
   /**
+   * Guided Tour status
+   */
+  guidedTourStatus = true;
+
+  /**
    * @type {string}
    * Title of application. Used in the browser title tag.
    */
@@ -67,14 +72,14 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   showClose: boolean;
 
-  constructor(
-    private config: ConfigService,
-    private userService: UserService,
-    public testSupport: TestSupportService,
-    private notificationService: NotificationService,
-    private nav: NavigationService,
-    private modalService: ModalService,
-  ) {}
+  constructor(private config: ConfigService,
+              private userService: UserService,
+              public testSupport: TestSupportService,
+              private notificationService: NotificationService,
+              private nav: NavigationService,
+              public tourService: TourService,
+              private modalService: ModalService) {
+  }
 
   ngOnInit() {
     this.productBuild = this.config.getSettings(
@@ -134,10 +139,34 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * Guided Tour
+   */
+  getTourState() {
+    this.guidedTourStatus = this.userService.getTourState();
+    return this.guidedTourStatus;
+  }
+
+  startTour() {
+    if (this.guidedTourStatus = false) {
+      this.tourService.start();
+      this.userService.setTourState(true);
+      this.guidedTourStatus = true;
+    }
+  }
+
+  endTour() {
+    if (this.guidedTourStatus = true) {
+      this.tourService.end();
+      this.userService.setTourState(false);
+      this.guidedTourStatus = false;
+    }
+  }
+
+  /**
    * Function that calls UserService to log the user out.
    */
   logout() {
-    this.loggedIn =  false;
+    this.loggedIn = false;
     return this.userService.logout();
   }
 
@@ -155,7 +184,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   exportDB() {
     this.testSupport.snapshotDB().subscribe((value: Response) => {
-      const blob = new Blob([value.text()], {
+      const blob = new Blob([ value.text() ], {
         type: 'text/plain;charset=utf-8',
       });
       saveAs(blob, 'syndesis-db-export.json');
@@ -169,7 +198,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.modalService.show('importDb').then(modal => {
       if (modal.result) {
         return this.testSupport
-          .restoreDB(modal['json'])
+          .restoreDB(modal[ 'json' ])
           .take(1)
           .toPromise()
           .then(_ => log.debugc(() => 'DB has been imported'));
@@ -181,9 +210,9 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Function that imports a database.
    */
   importDB(event, modal) {
-    const file = event.srcElement.files[0];
+    const file = event.srcElement.files[ 0 ];
     const reader = new FileReader();
-    reader.onload = _ => (modal['json'] = JSON.parse(reader.result));
+    reader.onload = _ => (modal[ 'json' ] = JSON.parse(reader.result));
     reader.readAsText(file, 'text/plain;charset=utf-8');
   }
 
@@ -201,7 +230,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    $(document).ready(function() {
+    $(document).ready(function () {
       /**
        * On document ready, invoke jQuery's matchHeight method to adjust card height across app based
        * on contents of each .card-pf and then the .card-pf division itself.
@@ -219,5 +248,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
     });
     this.nav.initialize();
+    this.userService.setTourState(true);
+    this.guidedTourStatus = this.userService.getTourState();
   }
 }
