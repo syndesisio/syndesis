@@ -86,13 +86,13 @@ Open the Syndesis UI in your browser from the command line by running:
 # You can try to obtain it directly from Minishift configuration with one of the following commands.
 
 # on macOS
-$ open http://$(oc get routes syndesis --template "{{.spec.host}}")
+$ open https://$(oc get routes syndesis --template "{{.spec.host}}")
 
 # on linux
-$ xdg-open http://$(oc get routes syndesis --template "{{.spec.host}}")
+$ xdg-open https://$(oc get routes syndesis --template "{{.spec.host}}")
 
 # on windows
-$ start http://$(oc get routes syndesis --template "{{.spec.host}}")
+$ start https://$(oc get routes syndesis --template "{{.spec.host}}")
 ```
 
 A smoke test to verify you are ready to work is to add any content at the beginning of `src/app/app.component.html` and verify you see the modification in the main page of the application.
