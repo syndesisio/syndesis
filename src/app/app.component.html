@@ -10,15 +10,14 @@
     <ng-template let-step="step">
       <p class="tour-step-content">{{step?.content}}</p>
       <div class="tour-step-navigation">
-        <!--
         <button *ngIf="tourService.hasPrev(step)" class="btn btn-sm btn-default" (click)="tourService.prev()">« Prev</button>
         <button *ngIf="tourService.hasNext(step)" class="btn btn-sm btn-default" (click)="tourService.next()">Next »</button>
+        <!--
         <button class="btn btn-sm btn-default" (click)="tourService.end()">End</button>
         <button (click)="tourService.end()"
                 class="close end-tour pull-right">
           <span class="pficon pficon-close"></span>
         </button>
-        -->
         <!--
         <button (click)="tourService.end()"
                 class="close end-tour">

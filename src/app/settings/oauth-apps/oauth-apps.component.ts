@@ -17,7 +17,7 @@ export interface OAuthAppListItem {
 @Component({
   selector: 'syndesis-oauth-apps',
   templateUrl: 'oauth-apps.component.html',
-  styleUrls: ['./oauth-apps.component.scss'],
+  styleUrls: [ './oauth-apps.component.scss' ],
 })
 export class OAuthAppsComponent implements OnInit {
   // Holds the candidate for clearing credentials
@@ -67,13 +67,11 @@ export class OAuthAppsComponent implements OnInit {
 
   items: Array<OAuthAppListItem> = [];
 
-  constructor(
-    public store: OAuthAppStore,
-    public detector: ChangeDetectorRef,
-    public config: ConfigService,
-    public tourService: TourService,
-    private userService: UserService,
-  ) {
+  constructor(public store: OAuthAppStore,
+              public detector: ChangeDetectorRef,
+              public config: ConfigService,
+              public tourService: TourService,
+              private userService: UserService) {
     this.loading = store.loading;
     this.list = store.list;
   }
@@ -126,7 +124,7 @@ export class OAuthAppsComponent implements OnInit {
     /**
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
-    if(this.userService.getTourState() === true) {
+    if (this.userService.getTourState() === true) {
       this.tourService.initialize([ {
           route: 'settings',
           title: 'Get Started',

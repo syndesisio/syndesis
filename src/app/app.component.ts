@@ -78,7 +78,8 @@ export class AppComponent implements OnInit, AfterViewInit {
               private notificationService: NotificationService,
               private nav: NavigationService,
               public tourService: TourService,
-              private modalService: ModalService) {}
+              private modalService: ModalService) {
+  }
 
   ngOnInit() {
     this.productBuild = this.config.getSettings(
@@ -142,26 +143,22 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   getTourState() {
     this.guidedTourStatus = this.userService.getTourState();
-    //console.log('this.guidedTourStatus: ' + JSON.stringify(this.guidedTourStatus));
     return this.guidedTourStatus;
   }
 
   startTour() {
-    if(this.guidedTourStatus = false) {
+    if (this.guidedTourStatus = false) {
       this.tourService.start();
       this.userService.setTourState(true);
       this.guidedTourStatus = true;
-      //console.log('this.guidedTourStatus: ' + JSON.stringify(this.guidedTourStatus));
     }
   }
 
   endTour() {
-    if(this.guidedTourStatus = true) {
+    if (this.guidedTourStatus = true) {
       this.tourService.end();
       this.userService.setTourState(false);
       this.guidedTourStatus = false;
-      //console.log('End tour: ' + JSON.stringify(this.guidedTourStatus));
-      //console.log('this.userService.getTourState(): ' + JSON.stringify(this.userService.getTourState()));
     }
   }
 
