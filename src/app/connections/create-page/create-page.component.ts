@@ -9,7 +9,6 @@ import {
 } from './current-connection';
 import { Connection, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 const category = getCategory('Connections');
 
@@ -17,9 +16,6 @@ const category = getCategory('Connections');
   selector: 'syndesis-connection-create-page',
   templateUrl: 'create-page.component.html',
   styleUrls: [ './create-page.component.scss' ],
-  providers: [
-    TourService,
-  ],
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
   private routerEventsSubscription: Subscription;
