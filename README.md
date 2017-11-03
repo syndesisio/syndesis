@@ -6,9 +6,24 @@ The front end application or UI for Syndesis - a flexible, customizable, cloud-h
 
 For the middle tier API that this client communicates with, please see the [syndesis-rest](https://github.com/syndesisio/syndesis-rest) repo.
 
-## UI Developer Quick Start
+## Table of Contents
 
-### Setup or fresh install
+* [Quick Start](#quick-start)
+* [Day-to-Day Workflow](#day-to-day-workflow)
+* [Technology Stack](#technology-stack)
+* [File Structure](#file-structure)
+* [Getting Started](#getting-started)
+  * [Dependencies](#dependencies)
+  * [Installing](#installing)
+  * [Running](#running)
+  * [Testing](#testing)
+  * [Configuring](#configuring)
+* [Contributing](#contributing)
+* [Resources](#resources)
+* [Data Mapper Updates](#data-mapper)
+
+
+## Quick Start
 You can follow these steps if it's your first time setting up Syndesis, or if you want a fresh local installation to replace an existing one.
 
 1. Make sure you have installed [node](https://nodejs.org/en/download/) version >= 6.x.x and [Yarn](https://yarnpkg.com/en/docs/install) version >= 0.18.1.
@@ -82,11 +97,11 @@ $ start http://$(oc get routes syndesis --template "{{.spec.host}}")
 
 A smoke test to verify you are ready to work is to add any content at the beginning of `src/app/app.component.html` and verify you see the modification in the main page of the application.
 
-If you are having issues with Minishift, you can also use `localhost:4200` to access the UI for quick development, but it will not use Minishift resources, so the app will not work properly.
+If you are having issues with Minishift, you can also use `https://0.0.0.0:4200/` to access the UI for quick development, but it will not use Minishift resources, so the app will not work properly.
 
 In a separate tab, you might want to run unit tests and lint checks as you code. See below for more information on how to do that.
 
-### Day-to-day developer workflow
+### Day-to-Day Workflow
 
 ```bash
 # Start up Minishift
@@ -110,19 +125,6 @@ Follow the instructions above for opening the Syndesis UI in your browser.
 At the end of the day you might want to stop Minishift:
 `$ minishift stop`
 
-## Table of Contents
-
-* [Technology Stack](#technology-stack)
-* [File Structure](#file-structure)
-* [Getting Started](#getting-started)
-  * [Dependencies](#dependencies)
-  * [Installing](#installing)
-  * [Running](#running)
-  * [Testing](#testing)
-  * [Configuring](#configuring)
-* [Contributing](#contributing)
-* [Resources](#resources)
-* [Data Mapper Updates](#data-mapper)
 
 ### Technology Stack
 
@@ -194,25 +196,6 @@ What you need to run this app:
 * Ensure you're running the latest versions Node `v6.x.x`+ and Yarn
 
 You do *not* need to install Angular CLI globally, but we recommend it if you'd like to use the [convenient commands](https://cli.angular.io/reference.pdf) it provides, or any of the `ng` commands we reference below.
-
-### Installing
-
-* `fork` the syndesis repo
-* `clone` your fork
-* `yarn` to install all dependencies
-* `yarn start` or `ng serve` to start the dev server
-
-### Running
-
-After you have installed all dependencies you can now run the app. Run `yarn start` or `ng serve` to start a local server which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:4200` (or if you prefer IPv6, then it's `http://[::1]:4200/`).
-
-#### Development
-
-`yarn start`
-
-Or, with angular-cli:
-
-`ng serve`
 
 ### Committing changes
 
