@@ -23,24 +23,11 @@ You can follow these steps if it's your first time setting up Syndesis, or if yo
 
 ```bash
 # Clone our repo:
-git clone https://github.com/syndesisio/syndesis-ui.git
+$ git clone https://github.com/syndesisio/syndesis-ui.git
 
 # Change directory to Syndesis:
-cd syndesis-ui
+$ cd syndesis-ui
 
-# For a fresh install of Syndesis:
-$ ./scripts/syndesis-install --clean --pull
-
-# If you do a fresh install, then configure the UI and Minishift routing for dev mode:
-$ ./scripts/minishift-setup.sh
-
-# Install the dependencies:
-$ yarn install
-```
-
-### Day-to-day developer workflow:
-
-```bash
 # Start up Minishift
 $ minishift start
 
@@ -62,28 +49,63 @@ $ oc login
 $ eval $(minishift oc-env)
 $ eval $(minishift docker-env)
 
+# For a fresh install of Syndesis:
+$ ./scripts/syndesis-install --clean --pull
+
+# If you do a fresh install, then configure the UI and Minishift routing for dev mode:
+$ ./scripts/minishift-setup.sh
+
+# Install the dependencies:
+$ yarn install
+
 # Start the UI server:
 $ yarn start:minishift
 ```
 
-Bring up the Syndesis console in your browser.  You can load it from the command line by running:
+Open the Syndesis UI in your browser from the command line by running:
 
 ```bash
 # To connect with Syndesis backend you don't have to use http://localhost:4200 url.
 # The url has a structure similar to http://syndesis-ui-default.192.168.42.205.nip.io
 
 # You can try to obtain it directly from Minishift configuration with one of the following commands.
-# on MacOSX
-open http://$(oc get routes syndesis --template "{{.spec.host}}")
+
+# on macOS
+$ open http://$(oc get routes syndesis --template "{{.spec.host}}")
+
 # on linux
-xdg-open http://$(oc get routes syndesis --template "{{.spec.host}}")
+$ xdg-open http://$(oc get routes syndesis --template "{{.spec.host}}")
+
 # on windows
-start http://$(oc get routes syndesis --template "{{.spec.host}}")
+$ start http://$(oc get routes syndesis --template "{{.spec.host}}")
 ```
 
 A smoke test to verify you are ready to work is to add any content at the beginning of `src/app/app.component.html` and verify you see the modification in the main page of the application.
 
-In a separate tab, you might want to run unit tests and lint checks as you code. See below for more information on how to do so.
+If you are having issues with Minishift, you can also use `localhost:4200` to access the UI for quick development, but it will not use Minishift resources, so the app will not work properly.
+
+In a separate tab, you might want to run unit tests and lint checks as you code. See below for more information on how to do that.
+
+### Day-to-day developer workflow:
+
+```bash
+# Start up Minishift
+$ minishift start
+
+# Log into OpenShift
+# Username: developer
+# Password: whatever you like
+$ oc login
+
+# Set environment variables to point to Minishift resources:
+$ eval $(minishift oc-env)
+$ eval $(minishift docker-env)
+
+# Start the UI server:
+$ yarn start:minishift
+```
+
+Follow the instructions above for opening the Syndesis UI in your browser.
 
 At the end of the day you might want to stop Minishift:
 `$ minishift stop`
