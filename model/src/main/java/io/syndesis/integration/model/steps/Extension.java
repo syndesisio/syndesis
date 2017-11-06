@@ -21,25 +21,19 @@ import java.util.Map;
 
 import com.google.auto.service.AutoService;
 
-/**
- * Invokes a function with the current payload
- */
+
 @AutoService(Step.class)
-public class Function extends Step {
-    public static final String KIND = "function";
+public class Extension extends Step {
+    public static final String KIND = "extension";
 
     private String name;
     private Map<String, Object> properties;
 
-    public Function() {
-        this(null, null);
+    public Extension() {
+        this(null, new HashMap<>());
     }
 
-    public Function(String name) {
-        this(name, null);
-    }
-
-    public Function(String name, Map<String, Object> properties) {
+    public Extension(String name, Map<String, Object> properties) {
         super(KIND);
 
         this.name = name;
@@ -48,8 +42,8 @@ public class Function extends Step {
 
     @Override
     public String toString() {
-        return "Function{" +
-            "name='" + name + '\'' +
+        return "Extension{" +
+            "target='" + name + '\'' +
             ", properties=" + properties +
             '}';
     }
@@ -67,21 +61,20 @@ public class Function extends Step {
     }
 
     public void setProperties(Map<String, Object> properties) {
-        this.properties.clear();
-        this.properties.putAll(properties);
+        this.properties = properties;
     }
 
-    // ***************
+    // ****************************
     // DSL
-    // ***************
+    // ****************************
 
-    public Function name(String name) {
-        this.name = name;
+    public Extension name(String name) {
+        setName(name);
 
         return this;
     }
 
-    public Function property(String name, Object value) {
+    public Extension property(String name, Object value) {
         if (this.properties == null) {
             this.properties = new HashMap<>();
         }

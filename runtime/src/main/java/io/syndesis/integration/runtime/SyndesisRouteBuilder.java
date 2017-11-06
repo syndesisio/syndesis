@@ -47,15 +47,16 @@ public class SyndesisRouteBuilder extends RouteBuilder {
     }
 
     protected SyndesisModel loadModel() throws Exception {
-        try (InputStream is = ResourceHelper.resolveMandatoryResourceAsInputStream(getContext(), configurationUri)) {
-            return YamlHelpers.load(is);
+        try (InputStream is = ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri)) {
+            return is == null
+                ? new SyndesisModel()
+                : YamlHelpers.load(is);
         }
     }
 
     @Override
     public void configure() throws Exception {
         int flowIndex = 0;
-
         for (Flow flow : loadModel().getFlows()) {
             getContext().setStreamCaching(true);
 
