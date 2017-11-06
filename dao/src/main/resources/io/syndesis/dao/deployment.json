@@ -72,6 +72,7 @@
           "id": "io.syndesis:twitter-mention-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-mention-connector",
+          "pattern": "From",
           "definition": {
             "inputDataShape": {
                "kind": "none"
@@ -89,6 +90,7 @@
           "id": "io.syndesis:twitter-search-connector:latest",
           "camelConnectorGAV": "io.syndesis:twitter-search-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "twitter-search-connector",
+          "pattern": "From",
           "definition": {
             "inputDataShape": {
                "kind" : "none"
@@ -254,6 +256,7 @@
           "camelConnectorGAV": "io.syndesis:salesforce-create-sobject-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-create-sobject",
           "tags": [ "dynamic" ],
+          "pattern": "To",
           "definition": {
             "inputDataShape": {
                "kind": "json-schema"
@@ -290,6 +293,7 @@
           "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-delete-sobject",
           "tags": [ "dynamic" ],
+          "pattern": "To",
           "definition": {
             "inputDataShape": {
                "kind": "java",
@@ -326,6 +330,7 @@
           "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-with-id-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-delete-sobject-with-id",
           "tags": [ "dynamic" ],
+          "pattern": "To",
           "definition": {
             "inputDataShape": {
                "kind": "java",
@@ -381,6 +386,7 @@
           "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-get-sobject",
           "tags": [ "dynamic" ],
+          "pattern": "To",
           "definition": {
             "inputDataShape": {
                "kind": "java",
@@ -417,6 +423,7 @@
           "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-with-id-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-get-sobject-with-id",
           "tags": [ "dynamic" ],
+          "pattern": "To",
           "definition": {
             "inputDataShape": {
                "kind": "java",
@@ -472,6 +479,7 @@
           "camelConnectorGAV": "io.syndesis:salesforce-update-sobject-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-update-sobject",
           "tags": [ "dynamic" ],
+          "pattern": "To",
           "definition": {
             "inputDataShape": {
                "kind": "json-schema"
@@ -507,6 +515,7 @@
           "camelConnectorGAV": "io.syndesis:salesforce-upsert-sobject-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-upsert-sobject",
           "tags": [ "dynamic" ],
+          "pattern": "To",
           "definition": {
             "inputDataShape": {
                "kind": "json-schema"
@@ -562,6 +571,7 @@
           "camelConnectorGAV": "io.syndesis:salesforce-on-create-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-on-create",
           "tags": [ "dynamic" ],
+          "pattern": "From",
           "definition": {
             "inputDataShape": {
                "kind": "none"
@@ -597,6 +607,7 @@
           "camelConnectorGAV": "io.syndesis:salesforce-on-update-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-on-update",
           "tags": [ "dynamic" ],
+          "pattern": "From",
           "definition": {
             "inputDataShape": {
                "kind": "none"
@@ -632,6 +643,7 @@
           "camelConnectorGAV": "io.syndesis:salesforce-on-delete-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "salesforce-on-delete",
           "tags": [ "dynamic" ],
+          "pattern": "From",
           "definition": {
             "inputDataShape": {
                "kind": "none"
@@ -756,6 +768,7 @@
           "camelConnectorGAV": "io.syndesis:sql-stored-connector:@syndesis-connectors.version@",
           "camelConnectorPrefix": "sql-stored-connector",
           "tags": [ "dynamic" ],
+          "pattern": "To",
           "definition": {
             "inputDataShape": {
                "kind" : "json-schema"
