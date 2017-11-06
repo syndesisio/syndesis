@@ -21,20 +21,13 @@ import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TimerSqlStoredRoute extends RouteBuilder {
+public class SqlStoredStartRoute extends RouteBuilder {
     
     @Override
     public void configure() throws Exception {
-        
-        String jsonBody = "{\"a\":20,\"b\":30}";
-        
-        from("timer://myTimer?period=1000")
-        .setBody().constant(jsonBody)  
-        
-        .to("sql-stored-connector:DEMO_ADD( "
-                + "INTEGER ${body[a]}, "
-                + "INTEGER ${body[b]}, "
-                + "OUT INTEGER c)")
+
+        from("sql-stored-start-connector:DEMO_OUT( "
+                + "OUT INTEGER C )?schedulerPeriod=5000")
         .process(new Processor() {
             
             public void process(Exchange exchange)

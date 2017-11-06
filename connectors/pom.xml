@@ -48,7 +48,9 @@
     <module>salesforce-on-create-connector</module>
     <module>salesforce-on-update-connector</module>
     <module>salesforce-on-delete-connector</module>
+    <module>sql-common</module>
     <module>sql-stored-connector</module>
+    <module>sql-stored-start-connector</module>
     <module>day-trade-get-connector</module>
     <module>day-trade-place-connector</module>
     <module>trade-insight-buy-connector</module>

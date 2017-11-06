@@ -28,8 +28,9 @@ import java.util.Properties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import io.syndesis.connector.DatabaseProduct;
-import io.syndesis.connector.SampleStoredProcedures;
+import io.syndesis.connector.sql.DatabaseProduct;
+import io.syndesis.connector.sql.stored.SampleStoredProcedures;
+
 
 //CHECKSTYLE:OFF
 @SpringBootApplication
@@ -58,6 +59,8 @@ public class SqlStoredApplication {
                 try (Statement stmt = connection.createStatement()) {
                     stmt.execute(SampleStoredProcedures.DERBY_DEMO_ADD_SQL);
                     System.out.println("Created procedure " + SampleStoredProcedures.DERBY_DEMO_ADD_SQL);
+                    stmt.execute(SampleStoredProcedures.DERBY_DEMO_OUT_SQL);
+                    System.out.println("Created procedure " + SampleStoredProcedures.DERBY_DEMO_OUT_SQL);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

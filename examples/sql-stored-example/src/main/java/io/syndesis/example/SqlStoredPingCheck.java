@@ -28,7 +28,7 @@ import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.apache.camel.component.extension.ComponentVerifierExtension.Result;
 import org.apache.camel.impl.DefaultCamelContext;
 
-import io.syndesis.connector.SqlStoredConnectorVerifierExtension;
+import io.syndesis.connector.sql.stored.SqlStoredConnectorVerifierExtension;
 
 public class SqlStoredPingCheck {
 
