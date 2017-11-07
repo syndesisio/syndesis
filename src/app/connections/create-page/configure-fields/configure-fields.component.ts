@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterStateSnapshot } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService } from '@ng2-dynamic-forms/core';
+import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { CurrentConnectionService } from '../current-connection';

@@ -4,7 +4,7 @@ import {
   DynamicFormArrayModel,
   DynamicFormArrayGroupModel,
   DynamicFormGroupModel,
-} from '@ng2-dynamic-forms/core';
+} from '@ng-dynamic-forms/core';
 import { Observable } from 'rxjs/Observable';
 
 import { BasicFilter, Rule, Op, getDefaultOps, convertOps } from './filter.interface';
