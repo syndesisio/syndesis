@@ -33,7 +33,7 @@
   </tour-step-template>
 
   <ng-template #brandTemplate>
-    <a [routerLink]=" ['/'] "
+    <a routerLink="/"
        class="navbar-brand">
           <img *ngIf="iconDarkBg && iconDarkBg !== ''"
                [class]="productBuild ? 'navbar-brand-icon product' : 'navbar-brand-icon'"
@@ -42,9 +42,9 @@
           <img *ngIf="logoDarkBg"
                [class]="productBuild ? 'navbar-brand-name product' : 'navbar-brand-name'"
                [src]="loggedIn ? logoDarkBg : logoWhiteBg"
-               alt="{{title}}" />
+               alt="{{ appName }}" />
           <span *ngIf="logoDarkBg === '' && logoWhiteBg === ''"
-               class="navbar-brand-name">{{title}}</span>
+               class="navbar-brand-name">{{ appName }}</span>
         </a>
   </ng-template>
 
@@ -128,7 +128,7 @@
                aria-expanded="true">
               <span title="Username"
                     class="fa pficon-user"></span>
-              <span class="username">{{( user | async)?.name}}</span>
+              <span class="username">{{( user$ | async)?.name}}</span>
               <span class="caret"></span>
             </a>
             <ul *dropdownMenu

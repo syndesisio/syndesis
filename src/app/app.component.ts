@@ -1,5 +1,7 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { Response } from '@angular/http';
+import { Meta, Title } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
 import { Restangular } from 'ngx-restangular';
 import {
@@ -39,10 +41,22 @@ export class AppComponent implements OnInit, AfterViewInit {
   iconDarkBg = 'assets/images/glasses_logo_square.png';
 
   /**
+   * @type {Observable<User>}
+   * Observable instance of the active user
+   */
+  user$: Observable<User>;
+
+  /**
    * @type {boolean}
    * Flag used to determine whether or not the user is logged in.
    */
   loggedIn = true;
+
+  /**
+   * @type {string}
+   * Brand name for the application. Populates the browser title tag, amongst other uses.
+   */
+  appName = 'Syndesis';
 
   /**
    * @type {boolean}
@@ -56,13 +70,6 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Guided Tour status
    */
   guidedTourStatus = true;
-
-  /**
-   * @type {string}
-   * Title of application. Used in the browser title tag.
-   */
-  title = 'Syndesis';
-  user: Observable<User>;
 
   notifications: Notification[];
 
@@ -78,10 +85,18 @@ export class AppComponent implements OnInit, AfterViewInit {
               private notificationService: NotificationService,
               private nav: NavigationService,
               public tourService: TourService,
-              private modalService: ModalService) {
+              private modalService: ModalService,
+              private title: Title,
+              private meta: Meta,
+              @Inject(DOCUMENT) private document: any) {
   }
 
   ngOnInit() {
+    this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
+    this.title.setTitle(this.appName);
+    this.meta.updateTag({ content: this.appName }, 'id="appName"');
+    this.meta.updateTag({ content: this.appName }, 'id="appTitle"');
+
     this.productBuild = this.config.getSettings(
       'branding',
       'productBuild',
@@ -107,12 +122,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       'iconWhiteBg',
       'assets/images/glasses_logo_square.png',
     );
-    const title = (this.title = this.config.getSettings(
-      'branding',
-      'appName',
-      'Syndesis',
-    ));
-    document.title = title;
     const favicon32 = this.config.getSettings(
       'branding',
       'favicon32',
@@ -128,12 +137,13 @@ export class AppComponent implements OnInit, AfterViewInit {
       'touchIcon',
       '/apple-touch-icon.png',
     );
-    document.getElementById('favicon32').setAttribute('href', favicon32);
-    document.getElementById('favicon16').setAttribute('href', favicon16);
-    document.getElementById('appName').setAttribute('content', title);
-    document.getElementById('appTitle').setAttribute('content', title);
-    document.getElementById('touchIcon').setAttribute('href', touchIcon);
-    this.user = this.userService.user;
+
+    this.document.getElementById('favicon32').setAttribute('href', favicon32);
+    this.document.getElementById('favicon16').setAttribute('href', favicon16);
+    this.document.getElementById('touchIcon').setAttribute('href', touchIcon);
+
+    this.user$ = this.userService.user;
+
     this.notifications = this.notificationService.getNotifications();
     this.showClose = true;
   }
@@ -147,7 +157,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   startTour() {
-    if (this.guidedTourStatus = false) {
+    if (!this.guidedTourStatus) {
       this.tourService.start();
       this.userService.setTourState(true);
       this.guidedTourStatus = true;
@@ -155,7 +165,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   endTour() {
-    if (this.guidedTourStatus = true) {
+    if (!!this.guidedTourStatus) {
       this.tourService.end();
       this.userService.setTourState(false);
       this.guidedTourStatus = false;
@@ -230,23 +240,18 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    $(document).ready(function () {
-      /**
-       * On document ready, invoke jQuery's matchHeight method to adjust card height across app based
-       * on contents of each .card-pf and then the .card-pf division itself.
-       * This is applicable for layouts that utilize PatternFly's card view.
-       */
-      $(
-        ".row-cards-pf > [class*='col'] > .card-pf .card-pf-title",
-      ).matchHeight();
-      $(
-        ".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body",
-      ).matchHeight();
-      $(
-        ".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer",
-      ).matchHeight();
-      $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
-    });
+    /**
+     * On document ready, invoke jQuery's matchHeight method to adjust card height across app based
+     * on contents of each .card-pf and then the .card-pf division itself.
+     * This is applicable for layouts that utilize PatternFly's card view.
+     * @TODO: Replace by a CSS-driven workaround based on Flexbox and then remove the jQuery dep
+     */
+    const $patternFlyCards = $('.row-cards-pf > [class*="col"] > .card-pf');
+    $patternFlyCards.find('> .card-pf-body').matchHeight();
+    $patternFlyCards.find('> .card-pf-footer').matchHeight();
+    $patternFlyCards.find('.card-pf-title').matchHeight();
+    $patternFlyCards.matchHeight();
+
     this.nav.initialize();
     this.userService.setTourState(true);
     this.guidedTourStatus = this.userService.getTourState();
