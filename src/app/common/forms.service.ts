@@ -6,7 +6,7 @@ import {
   DynamicInputModel,
   DynamicTextAreaModel,
   DynamicSelectModel,
-} from '@ng2-dynamic-forms/core';
+} from '@ng-dynamic-forms/core';
 
 export interface ConfiguredConfigurationProperty extends ConfigurationProperty {
   value: any;

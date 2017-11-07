@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DynamicFormControlModel, DynamicInputModel } from '@ng2-dynamic-forms/core';
+import { DynamicFormControlModel, DynamicInputModel } from '@ng-dynamic-forms/core';
 import { FormFactoryService } from '../../../common/forms.service';
 import { Connection } from '../../../model';
 

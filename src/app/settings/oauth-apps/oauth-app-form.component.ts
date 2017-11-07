@@ -14,7 +14,7 @@ import {
   DynamicFormControlModel,
   DynamicFormService,
   DynamicInputModel,
-} from '@ng2-dynamic-forms/core';
+} from '@ng-dynamic-forms/core';
 
 // Default form config object for OAuth client settings
 const OAUTH_APP_FORM_CONFIG = {

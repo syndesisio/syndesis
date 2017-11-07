@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
   DynamicFormService,
-} from '@ng2-dynamic-forms/core';
+} from '@ng-dynamic-forms/core';
 
 import { IntegrationSupportService } from '../../../store/integration-support.service';
 import { Action, Step } from '../../../model';
