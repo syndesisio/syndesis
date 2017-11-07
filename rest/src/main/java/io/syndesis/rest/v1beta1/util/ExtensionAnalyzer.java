@@ -51,6 +51,8 @@ public class ExtensionAnalyzer {
         }
 
         return new Extension.Builder()
+            .extensionId("dummy-extension")
+            .status(Extension.Status.Draft)
             .name("Dummy")
             .description("Dummy description")
             .build();

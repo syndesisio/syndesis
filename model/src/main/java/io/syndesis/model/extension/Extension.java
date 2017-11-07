@@ -21,19 +21,32 @@ import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
+import io.syndesis.model.validation.NonBlockingValidations;
+import io.syndesis.model.validation.extension.NoDuplicateExtension;
 import org.immutables.value.Value;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(builder = Extension.Builder.class)
+@NoDuplicateExtension(groups = NonBlockingValidations.class)
 public interface Extension extends WithId<Extension>, WithName, WithTags, WithConfigurationProperties, Serializable {
+
+    enum Status { Draft, Installed, Deleted}
 
     @Override
     default Kind getKind() {
         return Kind.Extension;
     }
 
+    Optional<Status> getStatus();
+
+    @NotNull
+    String getExtensionId();
+
+    @NotNull
     String getDescription();
 
     @Override
