@@ -60,10 +60,9 @@
 
   <scm>
     <connection>scm:git:git@github.com:syndesisio/connectors.git</connection>
-    <developerConnection>scm:git:git@github.com:syndesisio/connectors.git
-    </developerConnection>
+    <developerConnection>scm:git:git@github.com:syndesisio/connectors.git</developerConnection>
     <url>https://github.com/syndesisio/connectors/</url>
-    <tag>syndesis-connectors-project-0.5.8</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
