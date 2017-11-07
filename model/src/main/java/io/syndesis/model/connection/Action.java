@@ -30,12 +30,15 @@ import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
+
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Action.Builder.class)
 @JsonIgnoreProperties(value = {"properties", "inputDataShape", "outputDataShape"}, allowGetters = true)
 public interface Action extends WithId<Action>, WithName, WithTags, WithConfigurationProperties, Serializable {
+
+    enum Pattern { From, To }
 
     @Override
     default Kind getKind() {
@@ -51,6 +54,8 @@ public interface Action extends WithId<Action>, WithName, WithTags, WithConfigur
     String getCamelConnectorPrefix();
 
     ActionDefinition getDefinition();
+
+    Pattern getPattern();
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     default Optional<DataShape> getInputDataShape() {
