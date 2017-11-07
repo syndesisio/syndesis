@@ -16,6 +16,9 @@
  */
 package io.syndesis.connector.sql.stored;
 
+import java.util.Map;
+
+import org.apache.camel.Processor;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
 /**
@@ -27,5 +30,16 @@ public class SqlStoredStartConnectorComponent extends DefaultConnectorComponent 
         super("sql-stored-start-connector", "io.syndesis.connector.sql.stored.SqlStoredStartConnectorComponent");
         registerExtension(SqlStoredConnectorVerifierExtension::new);
         registerExtension(SqlStoredConnectorMetaDataExtension::new);
+    }
+
+    @Override
+    public Processor getAfterProducer() {
+        final Processor processor = exchange -> {
+            @SuppressWarnings("unchecked")
+            Map<String,Object> map = (Map<String,Object>) exchange.getIn().getBody();
+            String jsonBean = JSONBeanUtil.mapToJSONBean(map);
+            exchange.getIn().setBody(jsonBean);
+        };
+        return processor;
     }
 }

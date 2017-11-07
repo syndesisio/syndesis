@@ -18,7 +18,6 @@ package io.syndesis.connector.sql.stored;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -77,13 +76,8 @@ public class SqlStoredStartConnectorComponentTest {
                         @Override
                         public void process(Exchange exchange)
                                 throws Exception {
-                            System.out.println(exchange.getIn()
-                                    .getBody().getClass());
-                            @SuppressWarnings("unchecked")
-                            Map<String,Object> map = (Map<String,Object>) exchange.getIn().getBody();
-                            System.out.println(exchange.getIn()
-                                    .getBody());
-                            result.setResult(map);
+                            String jsonBean = (String) exchange.getIn().getBody();
+                            result.setResult(jsonBean);
                             latch.countDown();
                         }
                     }).to("stream:out");
@@ -91,20 +85,20 @@ public class SqlStoredStartConnectorComponentTest {
             });
             context.start();
             latch.await(5l,TimeUnit.SECONDS);
-            Assert.assertEquals("60", String.valueOf(result.getMap().get("c")));
+            Assert.assertEquals("{\"c\":60}", result.getJsonBean());
         } finally {
             context.stop();
         }
     }
 
     class Result {
-        Map<String,Object> map;
+        String jsonBean;
 
-        public Map<String,Object> getMap() {
-            return map;
+        public String getJsonBean() {
+            return jsonBean;
         }
-        public void setResult(Map<String,Object> map) {
-            this.map = map;
+        public void setResult(String jsonBean) {
+            this.jsonBean = jsonBean;
         }
     }
 }
