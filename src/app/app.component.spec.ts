@@ -18,7 +18,13 @@ import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 /* tslint:disable:no-unused-variable */
 
 describe('AppComponent', () => {
+  const APP_NAME = 'Syndesis';
+
   beforeEach(() => {
+    const configServiceStub = {
+      getSettings: (...params) => APP_NAME,
+    };
+
     TestBed.configureTestingModule({
       imports: [
         RestangularModule,
@@ -45,6 +51,7 @@ describe('AppComponent', () => {
           },
           deps: [MockBackend, RequestOptions],
         },
+        { provide: ConfigService, useValue: configServiceStub },
       ],
       declarations: [AppComponent],
     });
@@ -61,11 +68,11 @@ describe('AppComponent', () => {
   );
 
   it(
-    `should have as title 'Syndesis'`,
+    `should expose the application property name as '${APP_NAME}'`,
     async(() => {
       const fixture = TestBed.createComponent(AppComponent);
       const app = fixture.debugElement.componentInstance;
-      expect(app.title).toEqual('Syndesis');
+      expect(app.appName).toEqual(APP_NAME);
     }),
   );
 });
