@@ -15,6 +15,7 @@
  */
 package io.syndesis.rest.v1beta1.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.model.extension.Extension;
 import org.springframework.stereotype.Component;
@@ -22,19 +23,21 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 
 /**
  * Tools to analyze binary extensions.
- *
- * TODO: determine the right place to put this component
  */
 @Component
 public class ExtensionAnalyzer {
 
+    private static final String MANIFEST_LOCATION = "META-INF/syndesis/extension-definition.json";
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
     /**
      * Analyze a binary extension to obtain the embedded {@link Extension} object.
-     *
-     * TODO: implement it, this is a dummy stub
      *
      * @param binaryExtension the binary stream of the extension
      * @return the embedded {@code Extension} object
@@ -42,20 +45,43 @@ public class ExtensionAnalyzer {
     @Nonnull
     public Extension analyze(InputStream binaryExtension) {
         try {
-            if (binaryExtension.read() < 0) {
-                // TODO: remove it from the actual code. This simulates a read from the stream
-                throw new IllegalArgumentException("Empty stream");
-            }
+            return getExtension(binaryExtension);
         } catch (IOException ex) {
             throw SyndesisServerException.launderThrowable("Cannot read from binary extension file", ex);
         }
+    }
 
-        return new Extension.Builder()
-            .extensionId("dummy-extension")
-            .status(Extension.Status.Draft)
-            .name("Dummy")
-            .description("Dummy description")
-            .build();
+    private Extension getExtension(InputStream binaryExtension) throws IOException {
+        InputStream entry = readManifest(binaryExtension);
+        if (entry == null) {
+            throw new IllegalArgumentException("Cannot find manifest file (" + MANIFEST_LOCATION + ") inside JAR");
+        }
+
+        return MAPPER.readValue(entry, Extension.class);
+    }
+
+    @SuppressWarnings("PMD.EmptyCatchBlock")
+    private InputStream readManifest(InputStream binaryExtension) throws IOException {
+        JarInputStream jar = new JarInputStream(binaryExtension);
+        try {
+            JarEntry entry;
+            do {
+                entry = jar.getNextJarEntry();
+                if (entry != null && MANIFEST_LOCATION.equals(entry.getName())) {
+                    return jar;
+                }
+            } while (entry != null);
+
+            jar.close();
+            return null;
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+            try {
+                jar.close();
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex2) {
+                // ignore
+            }
+            throw SyndesisServerException.launderThrowable(e);
+        }
     }
 
 }

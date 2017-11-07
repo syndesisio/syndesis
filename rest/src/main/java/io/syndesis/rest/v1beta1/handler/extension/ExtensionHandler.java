@@ -98,6 +98,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             Extension extension = new Extension.Builder()
                 .createFrom(embeddedExtension)
                 .id(id)
+                .status(Extension.Status.Draft)
                 .build();
 
             return getDataManager().create(extension);

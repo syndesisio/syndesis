@@ -68,6 +68,16 @@
       <testResource>
         <directory>src/test/resources</directory>
         <filtering>true</filtering>
+        <excludes>
+          <exclude>*.bin</exclude>
+        </excludes>
+      </testResource>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>*.bin</include>
+        </includes>
       </testResource>
     </testResources>
 
@@ -768,6 +778,12 @@
     <dependency>
         <groupId>com.github.tomakehurst</groupId>
         <artifactId>wiremock-standalone</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
