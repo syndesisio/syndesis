@@ -4,13 +4,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>connectors</artifactId>
+    <artifactId>aws-connectors</artifactId>
     <groupId>io.syndesis</groupId>
     <version>0.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>aws-s3-polling-bucket-connector</artifactId>
-  <name>Syndesis Connectors :: AWS S3 Polling Bucket Connector</name>
+  <name>Syndesis AWS Connectors :: AWS S3 Polling Bucket Connector</name>
   <packaging>jar</packaging>
   <version>0.5-SNAPSHOT</version>
 
