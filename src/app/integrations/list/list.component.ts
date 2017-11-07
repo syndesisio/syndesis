@@ -79,7 +79,7 @@ export class IntegrationsListComponent extends IntegrationViewBase {
         {
           id: 'view',
           title: 'View',
-          tooltip: 'View ${integration.name}',
+          tooltip: `View ${integration.name}`,
           visible: true,
         },
         {
