@@ -138,9 +138,11 @@ export class AppComponent implements OnInit, AfterViewInit {
       '/apple-touch-icon.png',
     );
 
-    this.document.getElementById('favicon32').setAttribute('href', favicon32);
-    this.document.getElementById('favicon16').setAttribute('href', favicon16);
-    this.document.getElementById('touchIcon').setAttribute('href', touchIcon);
+    if (this.document && this.document.getElementById) {
+      this.document.getElementById('favicon32').setAttribute('href', favicon32);
+      this.document.getElementById('favicon16').setAttribute('href', favicon16);
+      this.document.getElementById('touchIcon').setAttribute('href', touchIcon);
+    }
 
     this.user$ = this.userService.user;
 
