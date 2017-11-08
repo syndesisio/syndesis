@@ -211,15 +211,21 @@ export class FlowViewComponent extends ChildAwarePage
   }
 
   ngOnInit() {
+    /*
     this.routeSubscription = this.router.events.subscribe(event => {
       try {
         this.detector.detectChanges();
       } catch (err) {}
     });
+    */
   }
 
   ngOnDestroy() {
-    this.routeSubscription.unsubscribe();
-    this.flowSubscription.unsubscribe();
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
   }
 }
