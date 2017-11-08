@@ -24,9 +24,11 @@ This design covers the following workflows:
 
 2. Users can import new technical extensions by clicking the “Import Technical Extension” primary action button.  
 
-3. Cliking on an individual row would bring users to a detailed view of the selected technical extension.
+3. Clicking on an individual row would bring users to a detailed view of the selected technical extension.
 
-4. User has the ability to upldate or delete a technical extension from the list.  
+4. Information about how many integrations is using a given tech extension.
+
+5. User has the ability to update or delete a technical extension from the list.  
 
 ### Tech Extension Details
 ![Image of choosing connection](img/technical_extensions_details.png)
@@ -36,6 +38,8 @@ This design covers the following workflows:
 2. Users can update technical extension by clicking on the Update button.  
 
 3. User can inline edit Name and Description.
+
+4. Table showing usage of the tech extension. Users see a list of integrations that are using this tech extension.
 
 ## Import New Technical Extension
 
@@ -75,11 +79,9 @@ User select "Import Technical Extension" to start the workflow.
 
 1.  The bottom part of the page would appear if user’s file uploaded successfully. Fields would autopopulate with information extracted from the uploaded file. User would be able to see the tech extension ID.
 
-2. User can edit both Name and Description fields.
+2. User can review Name, Description and steps included in the tech extension file.
 
-3. User can review steps included in the tech extension file.
-
-4. Select “Import” to confim importing the tech extension.  
+3. Select “Import” to confirm importing the tech extension.
 
 ## Update Existing Technical Extension
 
@@ -92,6 +94,10 @@ Select "Update" to update a specific technical extension.
 1. When updating an existing tech extension, user would see the ID associated with this tech extension.
 
 2. Same workflow as importing a new tech extension.
+
+![Image of choosing connection](img/tech_ext_update_validation.png)
+
+1. Show validation message if there's an error.
 
 ![Image of choosing connection](img/tech_ext_update_finalscreen.png)
 
@@ -107,7 +113,17 @@ Select "Delete" to delete a specific technical extension.
 
 1. If the tech extension is in use when user deletes it, a modal window would appear stating that tech extension is in use and user need to confirm deletion.
 
-2. Use destructive button styling for the “Delete” button.
+2. Provide a link for users to quickly get to the tech extension details page.
+
+3. Use destructive button styling for the “Delete” button.
+
+![Image of choosing connection](img/technical_extensions_details_delete.png)
+
+1.  Delete a tech extension from the details page.
+
+![Image of choosing connection](img/technical_extensions_details_delete_warning.png)
+
+1.  Show a warning message to confirm delete action.  
 
 ## Technical Extensions in Create Integration - Add a Step
 
