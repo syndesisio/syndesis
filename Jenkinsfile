@@ -16,7 +16,7 @@ node {
                     containerEnvVar(key:'GITHUB_OAUTH_CLIENT_ID', value: "${env.GITHUB_OAUTH_CLIENT_ID}"),
                     containerEnvVar(key:'GITHUB_OAUTH_CLIENT_SECRET', value: "${env.GITHUB_OAUTH_CLIENT_SECRET}")
                 ],
-                serviceAccount: "jenkins", mavenSettingsXmlSecret: 'm2-settings') {
+                serviceAccount: "jenkins", mavenSettingsXmlSecret: 'm2-settings', mavenLocalRepositoryPath: '/home/jenkins/mvnrepo/') {
                 inside {
                     def testingNamespace = generateProjectName()
 
