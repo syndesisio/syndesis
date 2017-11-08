@@ -9,8 +9,6 @@ import { Integration } from '../../model';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
 import { log, getCategory } from '../../logging';
 import { ChildAwarePage } from './child-aware-page';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '../../common/user.service';
 
 const category = getCategory('IntegrationsEditPage');
 
@@ -39,9 +37,7 @@ export class IntegrationsEditPage extends ChildAwarePage
     public route: ActivatedRoute,
     public router: Router,
     public detector: ChangeDetectorRef,
-    public nav: NavigationService,
-    public tourService: TourService,
-    private userService: UserService
+    public nav: NavigationService
   ) {
     super(currentFlow, route, router);
     this.integration = this.store.resource;
@@ -128,73 +124,6 @@ export class IntegrationsEditPage extends ChildAwarePage
       (i: Integration) => {
         if (i) {
           this.currentFlow.integration = i;
-          /**
-           * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-           */
-          /*
-          if (this.userService.getTourState() === true) {
-            this.tourService.initialize(
-              [
-                {
-                  route: 'integrations/create/connection-select/0',
-                  title: 'Available Connections',
-                  content:
-                    'After at least two connections are available, you can create an integration that uses the connections you choose.',
-                  anchorId: 'integrations.connections',
-                  placement: 'top',
-                },
-                {
-                  route: 'integrations/create/connection-select/0',
-                  title: 'Integration Panel',
-                  content:
-                    'As you create an integration, see its connections and steps in the order ' +
-                    'in which they occur when the integration is running.',
-                  anchorId: 'integrations.panel',
-                  placement: 'right',
-                },
-                {
-                  route: 'integrations/create/action-select/0',
-                  title: 'Available Actions',
-                  content:
-                    'When an integration uses the selected connection it performs the action you select.',
-                  anchorId: 'integrations.actions',
-                  placement: 'top',
-                },
-                {
-                  route: 'integrations/create/action-configure/0/0',
-                  title: 'Done',
-                  content:
-                    'Clicking Done adds the finish connection to the integration. ' +
-                    'You can then add one or more steps that operate on the data.',
-                  anchorId: 'integrations.done',
-                  placement: 'bottom',
-                },
-                {
-                  route: 'integrations/create/save-or-add-step?validate=true',
-                  title: 'Operate On Data',
-                  content:
-                    'Clicking the plus sign lets you add an operation that ' +
-                    'the integration performs between the start and finish connections.',
-                  anchorId: 'integrations.step',
-                  placement: 'right',
-                },
-                {
-                  route: 'integrations/create/integration-basics',
-                  title: 'Publish',
-                  content:
-                    'Click Publish to start running the integration, which will take a moment or two. ' +
-                    'Click Save as Draft to save the integration without deploying it.',
-                  anchorId: 'integrations.publish',
-                  placement: 'bottom',
-                },
-              ],
-              {
-                route: '',
-              },
-            );
-            this.tourService.start();
-          }
-          */
         }
       }
     );

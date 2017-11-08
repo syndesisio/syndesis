@@ -10,7 +10,10 @@ import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { ConnectionStore } from '../../../store/connection/connection.store';
 import { Connections, Connection } from '../../../model';
 import { FlowPage } from '../flow-page';
+
 const category = getCategory('Integrations');
+import { TourService } from 'ngx-tour-ngx-bootstrap';
+import { UserService } from '../../../common/user.service';
 
 @Component({
   moduleId: module.id,
@@ -33,7 +36,9 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef
+    public detector: ChangeDetectorRef,
+    public tourService: TourService,
+    private userService: UserService
   ) {
     super(currentFlow, route, router, detector);
     this.loading = store.loading;
@@ -41,7 +46,7 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
   }
 
   gotoCreateConnection() {
-    this.router.navigate(['/connections/create']);
+    this.router.navigate([ '/connections/create' ]);
   }
 
   onSelected(connection: Connection) {
@@ -65,7 +70,7 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
   goBack() {
     const step = this.currentFlow.getStep(this.position);
     step.connection = undefined;
-    super.goBack(['save-or-add-step']);
+    super.goBack([ 'save-or-add-step' ]);
   }
 
   positionText() {
@@ -84,7 +89,7 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
     }
     const step = this.currentFlow.getStep(this.position);
     if (!step || step.stepKind !== 'endpoint') {
-      // safety net
+      /* Safety net */
       this.router.navigate(['save-or-add-step'], {
         relativeTo: this.route.parent
       });
@@ -121,6 +126,27 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
         this.loadConnections();
       })
       .subscribe();
+
+    /**
+     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
+     */
+    if (this.userService.getTourState() === true) {
+      this.tourService.initialize([ {
+          anchorId: 'integrations.panel',
+          title: 'Integration Panel',
+          content: 'As you create an integration, see its connections and steps ' +
+          'in the order in which they occur when the integration is running.',
+          placement: 'right',
+        }, {
+          anchorId: 'connections.available',
+          title: 'Available Connections',
+          content: 'After at least two connections are available, you can create ' +
+          'an integration that uses the connections you choose.',
+          placement: 'top',
+        } ],
+      );
+      setTimeout(() => this.tourService.start());
+    }
   }
 
   ngOnDestroy() {

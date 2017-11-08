@@ -1,13 +1,15 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { CurrentFlow, FlowEvent } from '../current-flow.service';
+import { CurrentFlow } from '../current-flow.service';
 import { FlowPage } from '../flow-page';
+import { TourService } from 'ngx-tour-ngx-bootstrap';
+import { UserService } from '../../../common/user.service';
 
 @Component({
   selector: 'syndesis-integrations-integration-basics',
   templateUrl: 'integration-basics.component.html',
+<<<<<<< HEAD
   styleUrls: ['./integration-basics.component.scss']
 })
 export class IntegrationBasicsComponent extends FlowPage {
@@ -17,6 +19,17 @@ export class IntegrationBasicsComponent extends FlowPage {
     public router: Router,
     public detector: ChangeDetectorRef
   ) {
+=======
+  styleUrls: [ './integration-basics.component.scss' ],
+})
+export class IntegrationBasicsComponent extends FlowPage implements OnInit {
+  constructor(public currentFlow: CurrentFlow,
+              public route: ActivatedRoute,
+              public router: Router,
+              public detector: ChangeDetectorRef,
+              public tourService: TourService,
+              private userService: UserService) {
+>>>>>>> feat(guided-tour): Add remaining steps to guided tour
     super(currentFlow, route, router, detector);
   }
 
@@ -28,7 +41,7 @@ export class IntegrationBasicsComponent extends FlowPage {
   }
 
   continue() {
-    this.router.navigate(['save-or-add-step'], {
+    this.router.navigate([ 'save-or-add-step' ], {
       queryParams: { validate: true },
       relativeTo: this.route.parent
     });
@@ -74,5 +87,22 @@ export class IntegrationBasicsComponent extends FlowPage {
       property: 'tags',
       value: _tags
     });
+  }
+
+  ngOnInit() {
+    /**
+     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
+     */
+    if (this.userService.getTourState() === true) {
+      this.tourService.initialize([ {
+          anchorId: 'integrations.publish',
+          title: 'Publish',
+          content: 'Click Publish to start running the integration, which will take a moment or two. ' +
+          'Click Save as Draft to save the integration without deploying it.',
+          placement: 'left',
+        } ],
+      );
+      setTimeout(() => this.tourService.start());
+    }
   }
 }

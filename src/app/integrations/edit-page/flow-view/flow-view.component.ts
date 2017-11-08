@@ -19,6 +19,8 @@ import { Integration, Step, TypeFactory } from '../../../model';
 import { ChildAwarePage } from '../child-aware-page';
 
 const category = getCategory('IntegrationsCreatePage');
+import { TourService } from 'ngx-tour-ngx-bootstrap';
+import { UserService } from '../../../common/user.service';
 
 @Component({
   selector: 'syndesis-integrations-flow-view',
@@ -41,7 +43,9 @@ export class FlowViewComponent extends ChildAwarePage
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef
+    public detector: ChangeDetectorRef,
+    public tourService: TourService,
+    private userService: UserService
   ) {
     super(currentFlow, route, router);
     this.flowSubscription = this.currentFlow.events.subscribe(
@@ -228,6 +232,20 @@ export class FlowViewComponent extends ChildAwarePage
       }
     });
     */
+
+    /**
+     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
+     */
+    if (this.userService.getTourState() === true) {
+      this.tourService.initialize([ {
+        anchorId: 'integrations.step',
+        title: 'Operate On Data',
+        content: 'Clicking the plus sign lets you add an operation that the integration performs between the start and finish connections.',
+        placement: 'right',
+        } ],
+      );
+      setTimeout(() => this.tourService.start());
+    }
   }
 
   ngOnDestroy() {

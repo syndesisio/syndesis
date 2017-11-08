@@ -11,6 +11,9 @@ import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { ConnectorStore } from '../../../store/connector/connector.store';
 import { FlowPage } from '../flow-page';
 
+import { TourService } from 'ngx-tour-ngx-bootstrap';
+import { UserService } from '../../../common/user.service';
+
 const category = getCategory('Integrations');
 
 @Component({
@@ -34,7 +37,9 @@ export class IntegrationsSelectActionComponent extends FlowPage
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef
+    public detector: ChangeDetectorRef,
+    public tourService: TourService,
+    private userService: UserService
   ) {
     super(currentFlow, route, router, detector);
     this.connector = connectorStore.resource;
@@ -57,7 +62,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
   }
 
   goBack() {
-    super.goBack(['connection-select', this.position]);
+    super.goBack([ 'connection-select', this.position ]);
   }
 
   loadActions() {
@@ -66,7 +71,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
     }
     const step = (this.step = this.currentFlow.getStep(this.position));
     if (!step) {
-      // safety net
+      /* Safety net */
       this.router.navigate(['save-or-add-step'], {
         relativeTo: this.route.parent
       });
@@ -114,6 +119,20 @@ export class IntegrationsSelectActionComponent extends FlowPage
         this.loadActions();
       })
       .subscribe();
+
+    /**
+     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
+     */
+    if (this.userService.getTourState() === true) {
+      this.tourService.initialize([ {
+        anchorId: 'actions.available',
+        title: 'Available Actions',
+        content: 'When an integration uses the selected connection it performs the action you select.',
+        placement: 'top',
+        } ],
+      );
+      setTimeout(() => this.tourService.start());
+    }
   }
 
   ngOnDestroy() {

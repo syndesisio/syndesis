@@ -166,11 +166,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   startTour() {
-    if (!this.guidedTourStatus) {
-      this.tourService.start();
-      this.userService.setTourState(true);
-      this.guidedTourStatus = true;
-    }
+    this.tourService.start();
+    this.userService.setTourState(true);
+    this.guidedTourStatus = true;
   }
 
   endTour() {

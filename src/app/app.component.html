@@ -8,22 +8,10 @@
 
   <tour-step-template>
     <ng-template let-step="step">
-      <p class="tour-step-content">{{ step?.content }}</p>
-      <div class="tour-step-navigation">
-        <button *ngIf="tourService.hasPrev(step)" class="btn btn-sm btn-default" (click)="tourService.prev()">« Prev</button>
-        <button *ngIf="tourService.hasNext(step)" class="btn btn-sm btn-default" (click)="tourService.next()">Next »</button>
-        <!--
-        <button class="btn btn-sm btn-default" (click)="tourService.end()">End</button>
-        <button (click)="tourService.end()"
-                class="close end-tour pull-right">
-          <span class="pficon pficon-close"></span>
-        </button>
-        <!--
-        <button (click)="tourService.end()"
-                class="close end-tour">
-          <span class="pficon pficon-close"></span>
-        </button>
-        -->
+      <p class="tour-step-content">{{step?.content}}</p>
+      <div class="tour-step-navigation text-right">
+        <button *ngIf="tourService.hasPrev(step)" class="btn btn-sm btn-primary" (click)="tourService.prev()">« Prev</button>
+        <button *ngIf="tourService.hasNext(step)" class="btn btn-sm btn-primary" (click)="tourService.next()">Next »</button>
         <button (click)="endTour()"
                 class="close end-tour">
           <span class="pficon pficon-close"></span>
@@ -99,9 +87,7 @@
               <li><a href="https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/fuse_ignite_sample_integration_tutorial/"
                    rel="nofollow"
                    target="_blank">Documentation</a></li>
-              <!--
               <li><a (click)="startTour()">Guided Tour</a></li>
-              -->
               <li><a href="mailto:fuse-ignite-tech-preview@redhat.com"
                    rel="nofollow"
                    target="_blank">Contact Us</a></li>

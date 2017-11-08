@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
+import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { Subscription } from 'rxjs/Subscription';
 import { CurrentConnectionService } from '../current-connection';
@@ -9,6 +10,7 @@ import { CanComponentDeactivate } from '../../../common/can-deactivate-guard.ser
 import { ModalService } from '../../../common/modal/modal.service';
 import { ConnectionService } from '../../../store/connection/connection.service';
 import { log, getCategory } from '../../../logging';
+import { UserService } from '../../../common/user.service';
 
 const category = getCategory('Connections');
 
@@ -27,7 +29,9 @@ export class ConnectionsReviewComponent
     private modalService: ModalService,
     private connectionService: ConnectionService,
     private detector: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    public tourService: TourService,
+    private userService: UserService
   ) {
     this.reviewForm = this.createReviewForm();
   }
@@ -96,6 +100,21 @@ export class ConnectionsReviewComponent
         this.createConnection();
       }
     });
+
+    /**
+     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
+     */
+    if (this.userService.getTourState() === true) {
+      this.tourService.initialize([ {
+        route: 'connections/create/review',
+        anchorId: 'connections.publish',
+        title: 'Make It Available',
+        content: 'Click Create to make the new connection available for use in integrations.',
+        placement: 'left',
+        } ],
+      );
+      setTimeout(() => this.tourService.start());
+    }
   }
 
   ngOnDestroy() {
@@ -104,7 +123,7 @@ export class ConnectionsReviewComponent
     }
   }
 
-  // This will trigger validation
+  /* This will trigger validation */
   private touchFormFields(): void {
     Object.keys(this.reviewForm.controls).forEach(key => {
       this.reviewForm.get(key).markAsTouched();

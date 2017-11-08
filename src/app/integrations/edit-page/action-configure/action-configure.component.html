@@ -18,7 +18,8 @@
     </button>
     <button type="button"
             class="btn btn-primary"
-            (click)="continue()">
+            (click)="continue()"
+            tourAnchor="integrations.done">
       <ng-container *ngIf="page >= lastPage || !definition">
         Done
       </ng-container>

@@ -9,12 +9,13 @@ import {
 
 import { IntegrationSupportService } from '../../../store/integration-support.service';
 import { Action, Step } from '../../../model';
-import { CurrentFlow, FlowEvent } from '../current-flow.service';
+import { CurrentFlow } from '../current-flow.service';
 import { FlowPage } from '../flow-page';
 import { FormFactoryService } from '../../../common/forms.service';
-import { log, getCategory } from '../../../logging';
+import { log } from '../../../logging';
 
-const category = getCategory('IntegrationsCreatePage');
+import { TourService } from 'ngx-tour-ngx-bootstrap';
+import { UserService } from '../../../common/user.service';
 
 @Component({
   selector: 'syndesis-integrations-action-configure',
@@ -43,7 +44,9 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public detector: ChangeDetectorRef,
-    public integrationSupport: IntegrationSupportService
+    public integrationSupport: IntegrationSupportService,
+    public tourService: TourService,
+    private userService: UserService
   ) {
     super(currentFlow, route, router, detector);
   }
@@ -51,7 +54,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
   goBack() {
     const step = this.currentFlow.getStep(this.position);
     step.action = undefined;
-    super.goBack(['action-select', this.position]);
+    super.goBack([ 'action-select', this.position ]);
   }
 
   buildData(data: any) {
@@ -67,13 +70,13 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       properties: data,
       onSave: () => {
         if (this.page === 0) {
-          // all done...
-          this.router.navigate(['save-or-add-step'], {
+          /* All done... */
+          this.router.navigate([ 'save-or-add-step' ], {
             queryParams: { validate: true },
             relativeTo: this.route.parent
           });
         } else {
-          // go to the next page...
+          /* Go to the next page... */
           this.router.navigate(
             ['action-configure', this.position, this.page - 1],
             { relativeTo: this.route.parent }
@@ -91,9 +94,11 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       properties: data,
       onSave: () => {
         if (!this.lastPage || this.page >= this.lastPage) {
-          // if there are action properties that depend on having other action
-          // properties defined in previous steps we need to fetch metadata one
-          // more time and apply those action property values that we get
+          /**
+           * If there are action properties that depend on having other action
+           * properties defined in previous steps we need to fetch metadata one
+           * more time and apply those action property values that we get
+           */
           if (Object.keys(this.step.configuredProperties).length > 0) {
             this.integrationSupport
               .fetchMetadata(this.step.connection, this.step.action, data)
@@ -128,13 +133,13 @@ export class IntegrationsConfigureActionComponent extends FlowPage
               });
           }
 
-          // all done...
-          this.router.navigate(['save-or-add-step'], {
+          /* All done... */
+          this.router.navigate([ 'save-or-add-step' ], {
             queryParams: { validate: true },
             relativeTo: this.route.parent
           });
         } else {
-          // go to the next page...
+          /* Go to the next page... */
           this.router.navigate(
             ['action-configure', this.position, this.page + 1],
             { relativeTo: this.route.parent }
@@ -166,8 +171,8 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       .toPromise()
       .then(response => {
         log.debug('Response: ' + JSON.stringify(response, undefined, 2));
-        const definition: any = response['_body']
-          ? JSON.parse(response['_body'])
+        const definition: any = response[ '_body' ]
+          ? JSON.parse(response[ '_body' ])
           : undefined;
         this.initForm(position, page, definition);
         this.step.action.inputDataShape = definition.inputDataShape;
@@ -176,10 +181,10 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       .catch(response => {
         log.debug('Error response: ' + JSON.stringify(response, undefined, 2));
         try {
-          const error = JSON.parse(response['_body']);
+          const error = JSON.parse(response[ '_body' ]);
           this.initForm(position, page, undefined, error);
         } catch (err) {
-          // bailout at this point...
+          /* Nailout at this point... */
           this.initForm(position, page, undefined, {
             message: response['_body']
           });
@@ -220,7 +225,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       this.formConfig = {};
     }
     if (!Object.keys(this.formConfig).length) {
-      // No configuration, store an empty value and move along to the next page...
+      /* No configuration, store an empty value and move along to the next page... */
       this.continue({});
       return;
     }
@@ -244,18 +249,20 @@ export class IntegrationsConfigureActionComponent extends FlowPage
   }
 
   configuredPropertiesForMetadataCall() {
-    // fetches all properties from 0..this.position-1 steps, this way
-    // the backend does not fix a value and drills down into the detail
-    // of the selected value in this.position step, this allows enum
-    // values to be present in the same way as they are present when no
-    // value is selected by the user
+    /**
+     * Fetches all properties from 0..this.position-1 steps, this way
+     * the backend does not fix a value and drills down into the detail
+     * of the selected value in this.position step, this allows enum
+     * values to be present in the same way as they are present when no
+     * value is selected by the user
+     */
     const props = {};
     const stepDefinitions = this.step.action.definition.propertyDefinitionSteps;
     for (let p = 0; p < this.page; p++) {
-      for (const prop in stepDefinitions[p].properties) {
-        // we don't want null or undefined values here
-        if (this.step.configuredProperties[prop] != null) {
-          props[prop] = this.step.configuredProperties[prop];
+      for (const prop in stepDefinitions[ p ].properties) {
+        /* We don't want null or undefined values here */
+        if (this.step.configuredProperties[ prop ] != null) {
+          props[ prop ] = this.step.configuredProperties[ prop ];
         }
       }
     }
@@ -267,7 +274,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     this.routeSubscription = this.route.paramMap.subscribe(
       (params: ParamMap) => {
         if (!params.has('page')) {
-          this.router.navigate(['0'], { relativeTo: this.route });
+          this.router.navigate([ '0' ], { relativeTo: this.route });
           return;
         }
         const page = (this.page = Number.parseInt(params.get('page')));
@@ -278,6 +285,21 @@ export class IntegrationsConfigureActionComponent extends FlowPage
         this.initialize(position, page);
       }
     );
+
+    /**
+     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
+     */
+    if (this.userService.getTourState() === true) {
+      this.tourService.initialize([ {
+          anchorId: 'integrations.done',
+          title: 'Done',
+          content: 'Clicking Done adds the finish connection to the integration. ' +
+          'You can then add one or more steps that operate on the data.',
+          placement: 'left',
+        } ],
+      );
+      setTimeout(() => this.tourService.start());
+    }
   }
 
   ngOnDestroy() {
