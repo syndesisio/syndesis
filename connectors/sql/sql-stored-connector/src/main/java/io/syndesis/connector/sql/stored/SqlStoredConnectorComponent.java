@@ -16,6 +16,7 @@
  */
 package io.syndesis.connector.sql.stored;
 
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.camel.Processor;
@@ -43,4 +44,14 @@ public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
         return processor;
     }
 
+    @Override
+    public Processor getAfterProducer() {
+        final Processor processor = exchange -> {
+            @SuppressWarnings("unchecked")
+            Map<String,Object> map = (Map<String,Object>) exchange.getIn().getBody();
+            String jsonBean = JSONBeanUtil.mapToJSONBean(map);
+            exchange.getIn().setBody(jsonBean);
+        };
+        return processor;
+    }
 }

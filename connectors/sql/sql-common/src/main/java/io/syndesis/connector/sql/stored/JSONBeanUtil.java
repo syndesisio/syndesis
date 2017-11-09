@@ -17,6 +17,7 @@
 package io.syndesis.connector.sql.stored;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 import org.json.JSONException;
@@ -51,5 +52,20 @@ public class JSONBeanUtil {
             properties.setProperty(key, value);
         }
         return properties;
+    }
+    /**
+     * Convenience method to convert a Camel Map output to a JSON Bean String.
+     * 
+     * @param map
+     * @return JSON bean String
+     */
+    public static String mapToJSONBean(final Map<String,Object> map) {
+        final JSONObject obj = new JSONObject();
+        for (String key : map.keySet()) {
+            if (! key.startsWith("#")) {  //don't include Camel stats
+                obj.put(key, map.get(key));
+            }
+        }
+        return obj.toString();
     }
 }
