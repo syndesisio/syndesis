@@ -203,7 +203,6 @@ export class IntegrationsEditPage extends ChildAwarePage
     this.routeSubscription = this.route.params
       .pluck<Params, string>('integrationId')
       .map((integrationId: string) => {
-        console.log('Integration id: ', integrationId);
         this.store.loadOrCreate(integrationId);
       })
       .subscribe();
