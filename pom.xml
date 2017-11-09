@@ -147,6 +147,7 @@
     <module>openshift</module>
     <module>project-generator</module>
     <module>rest</module>
+    <module>syndesis-annotation-processor</module>
     <module>syndesis-maven-plugin</module>
     <module>syndesis-build-helper-maven-plugin</module>
     <module>runtime</module>

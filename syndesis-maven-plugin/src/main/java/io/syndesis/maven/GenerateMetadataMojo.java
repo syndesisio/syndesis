@@ -15,6 +15,19 @@
  */
 package io.syndesis.maven;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.core.Json;
 import io.syndesis.model.techextension.TechExtension;
@@ -31,19 +44,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.StringUtils;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
-
 
 /**
  * Helper Maven plugin
@@ -53,7 +53,7 @@ import java.util.Properties;
 @Mojo(name = "generate-metadata", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, requiresProject = true, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateMetadataMojo extends AbstractMojo {
 
-    public static final String METADATA_DESTINATION = "META-INF/syndesis/extension.json";
+    public static final String METADATA_DESTINATION = "META-INF/syndesis/extension-definition.json";
 
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
