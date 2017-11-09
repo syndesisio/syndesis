@@ -16,6 +16,7 @@
 package io.syndesis.dao.manager;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -160,6 +161,29 @@ public class DataManager implements DataAccessObjectRegistry {
             }
         }
         return value;
+    }
+
+    public <T extends WithId<T>> Set<String> fetchIdsByPropertyValue(Class<T> model, String property, String value, String... additionalPropValues) {
+        if (additionalPropValues.length % 2 != 0) {
+            throw new IllegalArgumentException("You must provide a even number of additional property/value pairs. " +
+                "Found: " + additionalPropValues.length);
+        }
+
+        return doWithDataAccessObject(model, d -> {
+            Set<String> matchingIds = new HashSet<>(d.fetchIdsByPropertyValue(property, value));
+            for (int i = 0; i < additionalPropValues.length - 1; i += 2) {
+                if (matchingIds.isEmpty()) {
+                    // short circuit
+                    return matchingIds;
+                }
+
+                String propKey = additionalPropValues[i];
+                String propValue = additionalPropValues[i + 1];
+                Set<String> ids = d.fetchIdsByPropertyValue(propKey, propValue);
+                matchingIds.retainAll(ids);
+            }
+            return matchingIds;
+        });
     }
 
     public <T extends WithId<T>> Set<String> fetchIdsByPropertyValue(Class<T> model, String property, String value) {

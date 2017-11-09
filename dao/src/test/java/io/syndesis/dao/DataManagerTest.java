@@ -15,11 +15,6 @@
  */
 package io.syndesis.dao;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Optional;
-
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.DataManager;
@@ -27,14 +22,22 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -146,4 +149,50 @@ public class DataManagerTest {
         assertThat(dataManager.fetchIdsByPropertyValue(Connector.class, "prop", "exists")).containsOnly("id");
         assertThat(dataManager.fetchIdsByPropertyValue(Connector.class, "prop", "not")).isEmpty();
     }
+
+    @Test
+    public void shouldFetchIdsByMultiplePropertyValuePairs() {
+        @SuppressWarnings("unchecked")
+        final DataAccessObject<Extension> extensionDao = mock(DataAccessObject.class);
+        when(extensionDao.getType()).thenReturn(Extension.class);
+        dataManager.registerDataAccessObject(extensionDao);
+
+        when(extensionDao.fetchIdsByPropertyValue("prop1", "value1"))
+            .thenReturn(new HashSet<>(Arrays.asList("1", "2", "3")));
+        when(extensionDao.fetchIdsByPropertyValue("prop2", "value2"))
+            .thenReturn(new HashSet<>(Arrays.asList("2", "3")));
+        when(extensionDao.fetchIdsByPropertyValue("prop3", "value3"))
+            .thenReturn(new HashSet<>(Arrays.asList("3", "4")));
+
+        assertThat(dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1",
+            "prop2", "value2", "prop3", "value3")).containsExactly("3");
+    }
+
+    @Test
+    public void shouldUseShortCircuitWhenFetchingIdsByMultiplePropertyValuePairs() {
+        @SuppressWarnings("unchecked")
+        final DataAccessObject<Extension> extensionDao = mock(DataAccessObject.class);
+        when(extensionDao.getType()).thenReturn(Extension.class);
+        dataManager.registerDataAccessObject(extensionDao);
+
+        when(extensionDao.fetchIdsByPropertyValue("prop1", "value1"))
+            .thenReturn(Collections.emptySet());
+        when(extensionDao.fetchIdsByPropertyValue("prop2", "value2"))
+            .thenThrow(new RuntimeException());
+
+        assertThat(dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1",
+            "prop2", "value2")).isEmpty();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void multiplePropertyValuePairsShouldCheckInput() {
+        @SuppressWarnings("unchecked")
+        final DataAccessObject<Extension> extensionDao = mock(DataAccessObject.class);
+        when(extensionDao.getType()).thenReturn(Extension.class);
+        dataManager.registerDataAccessObject(extensionDao);
+
+        dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1","prop2");
+        fail("Should fail before getting here");
+    }
+
 }
