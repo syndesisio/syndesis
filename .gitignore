@@ -87,3 +87,5 @@ crashlytics-build.properties
 .pmdruleset.xml
 .checkstyle
 
+/filestore/test/
+/filestore/derby.log
