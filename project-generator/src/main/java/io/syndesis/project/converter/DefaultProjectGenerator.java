@@ -52,8 +52,8 @@ import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.core.MavenProperties;
 import io.syndesis.core.Names;
 import io.syndesis.integration.model.Flow;
-import io.syndesis.integration.model.SyndesisHelpers;
 import io.syndesis.integration.model.SyndesisModel;
+import io.syndesis.integration.model.YamlHelpers;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.integration.support.Strings;
 import io.syndesis.model.integration.Integration;
@@ -71,7 +71,7 @@ import org.slf4j.LoggerFactory;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
 
-    private static final ObjectMapper YAML_OBJECT_MAPPER = SyndesisHelpers.createObjectMapper();
+    private static final ObjectMapper YAML_OBJECT_MAPPER = YamlHelpers.createObjectMapper();
 
     private final MustacheFactory mf = new DefaultMustacheFactory();
 

@@ -85,7 +85,7 @@
 
       <plugin>
         <groupId>io.syndesis</groupId>
-        <artifactId>syndesis-maven-plugin</artifactId>
+        <artifactId>syndesis-build-helper-maven-plugin</artifactId>
         <version>${project.version}</version>
         <executions>
           <execution>

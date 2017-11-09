@@ -22,12 +22,12 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.core.SyndesisServerException;
-import io.syndesis.integration.model.SyndesisHelpers;
+import io.syndesis.integration.model.YamlHelpers;
 import io.syndesis.model.integration.Step;
 
 public class GenericStepVisitor implements StepVisitor {
 
-    private static final ObjectMapper OBJECT_MAPPER = SyndesisHelpers.createObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = YamlHelpers.createObjectMapper();
 
     public static final String GENERIC = "generic";
 
