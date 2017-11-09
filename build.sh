@@ -3,6 +3,8 @@
 # Exit if any error occurs
 set -e
 
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # Save global script args
 ARGS="$@"
 
@@ -16,6 +18,7 @@ function displayHelp() {
     echo " --namespace N           Specifies the namespace to use."
     echo " --resume-from           Resume build from module."
     echo " --clean                 Cleans up the projects."
+    echo " --batch-mode            Runs mvn in batch mode."
     echo " --help                  Displays this help message."
 }
 
@@ -74,8 +77,13 @@ function init_options() {
   MAVEN_OPTS=""
   MAVEN_CLEAN_GOAL="clean"
   MAVEN_IMAGE_BUILD_GOAL="fabric8:build"
+  MAVEN_CMD="${MAVEN_CMD:-${BASEDIR}/mvnw}"
 
   # Apply options
+  if [ -n "$(hasflag --batch-mode $ARGS 2> /dev/null)" ]; then
+    MAVEN_OPTS="$MAVEN_OPTS --batch-mode"
+  fi
+
   if [ -n "$SKIP_TESTS" ]; then
       echo "Skipping tests ..."
       MAVEN_OPTS="$MAVEN_OPTS -DskipTests"
@@ -107,25 +115,25 @@ function init_options() {
 function connectors() {
   pushd connectors
   # We are ALWAYS clean this project, because build fails otherwise: https://github.com/syndesisio/connectors/issues/93
-  mvn clean install $MAVEN_OPTS
+  "${MAVEN_CMD}" clean install $MAVEN_OPTS
   popd
 }
 
 function verifier() {
   pushd verifier
-  mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
   popd
 }
 
 function runtime() {
   pushd runtime
-  mvn $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
   popd  
 }
 
 function rest() {
   pushd rest
-  mvn $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_OPTS
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_OPTS
   popd
 }
 
