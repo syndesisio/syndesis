@@ -41,7 +41,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.syndesis.controllers.EncryptionComponent;
+import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.ActionDefinition;
 import io.syndesis.model.connection.ConfigurationProperty;

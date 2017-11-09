@@ -26,7 +26,7 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
-import io.syndesis.controllers.EncryptionComponent;
+import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.ActionDefinition;
 import io.syndesis.model.connection.DynamicActionMetadata;

@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.syndesis.controllers.ControllersConfigurationProperties;
-import io.syndesis.controllers.EncryptionComponent;
+import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.openshift.OpenShiftService;

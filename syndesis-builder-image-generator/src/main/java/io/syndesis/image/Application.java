@@ -77,16 +77,15 @@ public class Application implements ApplicationRunner {
 
 
     private static void generateIntegrationProject(File project) throws IOException {
+        final ReadApiClientData reader = new ReadApiClientData();
         ArrayList<Step> steps = new ArrayList<>();
         HashMap<String, Connector> connectors = new HashMap<String, Connector>();
 
         String deploymentText;
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("io/syndesis/dao/deployment.json")) {
-            ReadApiClientData readApiClientData = new ReadApiClientData();
-            deploymentText = readApiClientData.from(is);
+            deploymentText = reader.from(is);
         }
 
-        final ReadApiClientData reader = new ReadApiClientData();
         final List<ModelData<?>> modelList = reader.readDataFromString(deploymentText);
         for (final ModelData<?> model : modelList) {
             if (model.getKind() == Kind.Connector) {
