@@ -6,15 +6,15 @@
     <label *ngIf="type !== 2 && model.label !== null"
            [attr.for]="model.id"
            [ngClass]="[model.cls.element.label, model.cls.grid.label]">
-      <label [ngClass]="{'required-pf': model.required}">
-        {{model.label}}
-      </label>
-    <div *ngIf="model.hint !== null"
-         [tooltip]="model.hint"
-         placement="right"
-         class="hint-icon">
-        <span class="glyphicon glyphicon-info-sign"></span>
-    </div>
+        <label [ngClass]="{'required-pf': model.required}">
+            {{ model.label }}
+        </label>
+        <div *ngIf="model.hint !== null"
+             [tooltip]="model.hint"
+             placement="right"
+             class="hint-icon">
+            <span class="glyphicon glyphicon-info-sign"></span>
+        </div>
     </label>
 
     <ng-template *ngIf="type !== 1 && template?.align === 'START'"
@@ -41,16 +41,17 @@
                        [value]="model.value"
                        (blur)="onFocusChange($event)"
                        (change)="onValueChange($event)"
-                       (focus)="onFocusChange($event)"/>
-                       <span [innerHTML]="model.label"
-                                                              [ngClass]="[model.cls.element.label, model.cls.grid.label]">
-                        </span>
-                        <div *ngIf="model.hint !== null"
-                            [tooltip]="model.hint"
-                            placement="right"
-                            class="inline-block hint-icon">
-                            &nbsp;<span class="glyphicon glyphicon-info-sign"></span>
-                        </div>
+                       (focus)="onFocusChange($event)" />
+                <span [innerHTML]="model.label"
+                      [ngClass]="[model.cls.element.label, model.cls.grid.label]">
+                </span>
+                <div *ngIf="model.hint !== null"
+                     [tooltip]="model.hint"
+                     placement="right"
+                     class="inline-block hint-icon">
+                    &nbsp;
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                </div>
             </label>
         </div>
 
@@ -182,7 +183,9 @@
                                [name]="model.name"
                                [value]="option.value"
                                (blur)="onFocusChange($event)"
-                               (focus)="onFocusChange($event)"/><span [innerHTML]="option.label"></span></label>
+                               (focus)="onFocusChange($event)" />
+                        <span [innerHTML]="option.label"></span>
+                    </label>
                 </div>
 
             </fieldset>
@@ -202,7 +205,7 @@
 
                 <option *ngFor="let option of model.options$ | async"
                         [attr.name]="model.name"
-                        [ngValue]="option.value">{{option.label}}</option>
+                        [ngValue]="option.value">{{ option.label }}</option>
 
             </select>
 
@@ -235,7 +238,7 @@
         </ng-container>
 
         <span class="help-block"
-              *ngIf="showErrorMessages">{{errorMessages[0]}}</span>
+              *ngIf="showErrorMessages">{{ errorMessages[0] }}</span>
 
     </div>
 

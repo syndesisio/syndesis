@@ -18,7 +18,7 @@ import { EditableComponent } from './editable.component';
     <ng-container *ngIf="editing">
       <div class="form-group" [ngClass]="{'has-error': errorMessage}">
         <input #textInput type="text" class="form-control" [ngModel]="value">
-        <span class="help-block" *ngIf="errorMessage">{{errorMessage}}</span>
+        <span class="help-block" *ngIf="errorMessage">{{ errorMessage }}</span>
       </div>
       <button type="button" class="btn btn-primary" (click)="submit(textInput.value.trim())">Save</button>
       <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>

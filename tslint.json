@@ -119,7 +119,7 @@
     "encoding": true,
     "callable-types": true,
     "comment-format": [
-      true,
+      false,
       "check-space",
       "check-uppercase"
     ],

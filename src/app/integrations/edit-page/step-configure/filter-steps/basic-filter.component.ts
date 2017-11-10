@@ -63,7 +63,6 @@ export class BasicFilterComponent implements OnChanges {
   @Input() valid: boolean;
   @Output() validChange = new EventEmitter<boolean>();
 
-
   constructor(
     public currentFlow: CurrentFlow,
     public integrationSupport: IntegrationSupportService,

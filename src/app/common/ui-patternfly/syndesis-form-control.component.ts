@@ -110,5 +110,4 @@ export class SyndesisFormComponent extends DynamicFormControlComponent implement
         }
     }
 
-
 }
