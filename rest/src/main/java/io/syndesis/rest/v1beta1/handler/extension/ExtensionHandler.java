@@ -23,7 +23,10 @@ import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.filestore.FileStore;
 import io.syndesis.model.Kind;
+import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.extension.Extension;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.model.validation.NonBlockingValidations;
 import io.syndesis.rest.v1.handler.BaseHandler;
@@ -42,14 +45,13 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -166,6 +168,16 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             .build());
     }
 
+    @GET
+    @Path(value = "/{id}/integrations")
+    public Set<ResourceIdentifier> integrations(@NotNull @PathParam("id") final String id) {
+        Extension extension = getDataManager().fetch(Extension.class, id);
+        return getDataManager().fetchAll(Integration.class).getItems().stream()
+            .filter(integration -> isIntegrationActiveAndUsingExtension(integration, extension))
+            .map(this::toResourceIdentifier)
+            .collect(Collectors.toSet());
+    }
+
     // ===============================================================
 
     @Nonnull
@@ -240,6 +252,34 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             .createFrom(extension)
             .status(Extension.Status.Deleted)
             .build());
+    }
+
+    private ResourceIdentifier toResourceIdentifier(Integration integration) {
+        return new ResourceIdentifier.Builder()
+            .id(integration.getId())
+            .kind(integration.getKind())
+            .name(Optional.ofNullable(integration.getName()))
+            .build();
+    }
+
+    private boolean isIntegrationActiveAndUsingExtension(Integration integration, Extension extension) {
+        if (integration == null || extension == null) {
+            return false;
+        }
+
+        List<Integration.Status> inactiveStatus = Arrays.asList(Integration.Status.Deleted, Integration.Status.Deactivated);
+        if (integration.getDesiredStatus().isPresent() && inactiveStatus.contains(integration.getDesiredStatus().get())) {
+            return false;
+        }
+
+        return integration.getSteps().stream().anyMatch(step ->
+            extension.getExtensionId().equals(
+                Optional.ofNullable(step)
+                .flatMap(Step::getExtension)
+                .map(Extension::getExtensionId)
+                .orElse(null)
+            )
+        );
     }
 
 }
