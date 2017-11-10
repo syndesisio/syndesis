@@ -36,7 +36,7 @@ These are the Maven dependencies used by other apps. They do not necessarily req
 * Check `syndesis-template.go` for proper version numbers
 * Run `./run.sh --product` in `generators`
 * Commit and push
-* Tag with release version number, e.g. `git tag 1.1.0` and push
+* Tag with release version number, e.g. `git tag ignite-fuse-1.1.0` and push
 * Run `./run.sh`
 * Commit and push
 
