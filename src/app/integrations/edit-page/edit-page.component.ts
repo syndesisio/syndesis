@@ -52,58 +52,6 @@ export class IntegrationsEditPage extends ChildAwarePage
         this.handleFlowEvent(event);
       },
     );
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
-          route: 'integrations/create/connection-select/0',
-          title: 'Available Connections',
-          content: 'After at least two connections are available, you can create an integration that uses the connections you choose.',
-          anchorId: 'integrations.connections',
-          placement: 'top',
-        }, {
-          route: 'integrations/create/connection-select/0',
-          title: 'Integration Panel',
-          content: 'As you create an integration, see its connections and steps in the order ' +
-          'in which they occur when the integration is running.',
-          anchorId: 'integrations.panel',
-          placement: 'right',
-        }, {
-          route: 'integrations/create/action-select/0',
-          title: 'Available Actions',
-          content: 'When an integration uses the selected connection it performs the action you select.',
-          anchorId: 'integrations.actions',
-          placement: 'top',
-        }, {
-          route: 'integrations/create/action-configure/0/0',
-          title: 'Done',
-          content: 'Clicking Done adds the finish connection to the integration. ' +
-          'You can then add one or more steps that operate on the data.',
-          anchorId: 'integrations.done',
-          placement: 'bottom',
-        }, {
-          route: 'integrations/create/save-or-add-step?validate=true',
-          title: 'Operate On Data',
-          content: 'Clicking the plus sign lets you add an operation that ' +
-          'the integration performs between the start and finish connections.',
-          anchorId: 'integrations.step',
-          placement: 'right',
-        }, {
-          route: 'integrations/create/integration-basics',
-          title: 'Publish',
-          content: 'Click Publish to start running the integration, which will take a moment or two. ' +
-          'Click Save as Draft to save the integration without deploying it.',
-          anchorId: 'integrations.publish',
-          placement: 'bottom',
-        } ],
-        {
-          route: '',
-        },
-      );
-      this.tourService.start();
-    }
   }
 
   getPageRow() {
@@ -176,29 +124,102 @@ export class IntegrationsEditPage extends ChildAwarePage
         // @TODO: Remove this try/catch once ChangeDetection is restored
       }
     });
+    this.integrationSubscription = this.integration.subscribe(
+      (i: Integration) => {
+        if (i) {
+          this.currentFlow.integration = i;
+          /**
+           * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
+           */
+          /*
+          if (this.userService.getTourState() === true) {
+            this.tourService.initialize(
+              [
+                {
+                  route: 'integrations/create/connection-select/0',
+                  title: 'Available Connections',
+                  content:
+                    'After at least two connections are available, you can create an integration that uses the connections you choose.',
+                  anchorId: 'integrations.connections',
+                  placement: 'top',
+                },
+                {
+                  route: 'integrations/create/connection-select/0',
+                  title: 'Integration Panel',
+                  content:
+                    'As you create an integration, see its connections and steps in the order ' +
+                    'in which they occur when the integration is running.',
+                  anchorId: 'integrations.panel',
+                  placement: 'right',
+                },
+                {
+                  route: 'integrations/create/action-select/0',
+                  title: 'Available Actions',
+                  content:
+                    'When an integration uses the selected connection it performs the action you select.',
+                  anchorId: 'integrations.actions',
+                  placement: 'top',
+                },
+                {
+                  route: 'integrations/create/action-configure/0/0',
+                  title: 'Done',
+                  content:
+                    'Clicking Done adds the finish connection to the integration. ' +
+                    'You can then add one or more steps that operate on the data.',
+                  anchorId: 'integrations.done',
+                  placement: 'bottom',
+                },
+                {
+                  route: 'integrations/create/save-or-add-step?validate=true',
+                  title: 'Operate On Data',
+                  content:
+                    'Clicking the plus sign lets you add an operation that ' +
+                    'the integration performs between the start and finish connections.',
+                  anchorId: 'integrations.step',
+                  placement: 'right',
+                },
+                {
+                  route: 'integrations/create/integration-basics',
+                  title: 'Publish',
+                  content:
+                    'Click Publish to start running the integration, which will take a moment or two. ' +
+                    'Click Save as Draft to save the integration without deploying it.',
+                  anchorId: 'integrations.publish',
+                  placement: 'bottom',
+                },
+              ],
+              {
+                route: '',
+              },
+            );
+            this.tourService.start();
+          }
+          */
+        }
+      },
+    );
     this.routeSubscription = this.route.params
       .pluck<Params, string>('integrationId')
       .map((integrationId: string) => {
         this.store.loadOrCreate(integrationId);
       })
       .subscribe();
-    this.integrationSubscription = this.integration.subscribe(
-      (i: Integration) => {
-        if (i) {
-          this.currentFlow.integration = i;
-        }
-      },
-    );
     this.nav.hide();
   }
 
   ngOnDestroy() {
     this.nav.show();
-    this.integrationSubscription.unsubscribe();
-    this.routeSubscription.unsubscribe();
+    if (this.integrationSubscription) {
+      this.integrationSubscription.unsubscribe();
+    }
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
     }
-    this.routerEventsSubscription.unsubscribe();
+    if (this.routerEventsSubscription) {
+      this.routerEventsSubscription.unsubscribe();
+    }
   }
 }
