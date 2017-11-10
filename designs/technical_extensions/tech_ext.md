@@ -37,9 +37,7 @@ This design covers the following workflows:
 
 2. Users can update technical extension by clicking on the Update button.  
 
-3. User can inline edit Name and Description.
-
-4. Table showing usage of the tech extension. Users see a list of integrations that are using this tech extension.
+3. Table showing usage of the tech extension. Users see a list of integrations that are using this tech extension.
 
 ## Import New Technical Extension
 
