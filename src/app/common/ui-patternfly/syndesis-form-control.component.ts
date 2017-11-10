@@ -48,19 +48,22 @@ export const enum SyndesisFormControlType {
 })
 export class SyndesisFormComponent extends DynamicFormControlComponent implements OnChanges {
 
+    @ContentChildren(DynamicTemplateDirective) contentTemplates: QueryList<DynamicTemplateDirective>;
+    // TODO disabling this for now as the base class is in a dependency
+    /* tslint:disable */
+    @Input('templates') inputTemplates: QueryList<DynamicTemplateDirective>;
+    /* tslint:enable */
+
     @Input() asBootstrapFormGroup= true;
     @Input() bindId= true;
     @Input() context: DynamicFormArrayGroupModel = null;
     @Input() group: FormGroup;
     @Input() hasErrorMessaging= false;
     @Input() model: DynamicFormControlModel;
-    @Input() nestedTemplates: QueryList<DynamicTemplateDirective>;
 
     @Output() blur: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
     @Output() change: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
     @Output() focus: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
-
-    @ContentChildren(DynamicTemplateDirective) contentTemplates: QueryList<DynamicTemplateDirective>;
 
     type: SyndesisFormControlType | null;
 

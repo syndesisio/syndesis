@@ -78,13 +78,13 @@
                                            [group]="control.at(idx)"
                                            [hasErrorMessaging]="item.hasErrorMessages"
                                            [model]="item"
-                                           [nestedTemplates]="templates"
+                                           [templates]="templates"
                                            [ngClass]="[item.cls.element.host, item.cls.grid.host]"
                                            (blur)="onFocusChange($event)"
                                            (change)="onValueChange($event)"
                                            (focus)="onFocusChange($event)"></syndesis-form-control>
 
-                    <ng-container *ngTemplateOutlet="template?.templateRef; context: groupModel"></ng-container>
+                    <ng-container *ngTemplateOutlet="template?.templateRef; context: { context: groupModel.context, index: idx }"></ng-container>
 
                 </div>
 
@@ -105,7 +105,7 @@
                                        [group]="control"
                                        [hasErrorMessaging]="controlModel.hasErrorMessages"
                                        [model]="controlModel"
-                                       [nestedTemplates]="templates"
+                                       [templates]="templates"
                                        [ngClass]="[controlModel.cls.element.host, controlModel.cls.grid.host]"
                                        (blur)="onFocusChange($event)"
                                        (change)="onValueChange($event)"
