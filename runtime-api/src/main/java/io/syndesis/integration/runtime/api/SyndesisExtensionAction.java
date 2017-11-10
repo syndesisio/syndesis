@@ -25,11 +25,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface SyndesisExtensionAction {
     /**
-     * Alias for {@link #id()} ;
-     */
-    String value();
-
-    /**
      * The action id;
      */
     String id();
@@ -37,12 +32,12 @@ public @interface SyndesisExtensionAction {
     /**
      * The action name.
      */
-    String name() default "";
+    String name();
 
     /**
      * The action description.
      */
-    String description() default "";
+    String description();
 
     /**
      * The action tags;
