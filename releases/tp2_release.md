@@ -56,7 +56,7 @@ These are the Maven dependencies used by other apps. They do not necessarily req
   - fuse-ignite-verifier
   - oauth-proxy
 
-* Import template to fues-ignite namespace:
+* Import template to fuse-ignite namespace:
 
 ```
 oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/fuse-ignite-1.1.0/syndesis-restricted.yml
