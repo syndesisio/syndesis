@@ -1,254 +1,249 @@
-
-
 <div [class.form-group]="asBootstrapFormGroup || model.cls.element.container.includes('form-group')"
-  [class.has-error]="showErrorMessages"
-  [formgroup]="group"
-  [ngclass]="[model.cls.element.container, model.cls.grid.container]">
+     [class.has-error]="showErrorMessages"
+     [formGroup]="group"
+     [ngClass]="[model.cls.element.container, model.cls.grid.container]">
 
-  <label *ngif="type !== 2 && model.label !== null"
-    [attr.for]="model.id"
-    [ngclass]="[model.cls.element.label, model.cls.grid.label]">
-
-    <label [ngclass]="{'required-pf': model.required}">{{model.label}}
+    <label *ngIf="type !== 2 && model.label !== null"
+           [attr.for]="model.id"
+           [ngClass]="[model.cls.element.label, model.cls.grid.label]">
+      <label [ngClass]="{'required-pf': model.required}">
+        {{model.label}}
+      </label>
+    <div *ngIf="model.hint !== null"
+         [tooltip]="model.hint"
+         placement="right"
+         class="hint-icon">
+        <span class="glyphicon glyphicon-info-sign"></span>
+    </div>
     </label>
 
-    <div *ngif="model.hint !== null"
-      [tooltip]="model.hint"
-      placement="right"
-      class="hint-icon">
-      <span class="glyphicon glyphicon-info-sign" />
+    <ng-template *ngIf="type !== 1 && template?.align === 'START'"
+                 [ngTemplateOutlet]="template.templateRef"
+                 [ngTemplateOutletContext]="model"></ng-template>
+
+
+    <div *ngIf="type === 2"
+         [ngClass]="model.cls.grid.control">
+
+        <div [class.disabled]="model.disabled"
+             [ngClass]="model.cls.element.control || 'checkbox'">
+
+            <label>
+
+                <input type="checkbox"
+                       [attr.tabindex]="model.tabIndex"
+                       [checked]="model.checked"
+                       [dynamicId]="bindId && model.id"
+                       [formControlName]="model.id"
+                       [name]="model.name"
+                       [ngClass]="model.cls.element.control"
+                       [required]="model.required"
+                       [value]="model.value"
+                       (blur)="onFocusChange($event)"
+                       (change)="onValueChange($event)"
+                       (focus)="onFocusChange($event)"/>
+                       <span [innerHTML]="model.label"
+                                                              [ngClass]="[model.cls.element.label, model.cls.grid.label]">
+                        </span>
+                        <div *ngIf="model.hint !== null"
+                            [tooltip]="model.hint"
+                            placement="right"
+                            class="inline-block hint-icon">
+                            &nbsp;<span class="glyphicon glyphicon-info-sign"></span>
+                        </div>
+            </label>
+        </div>
 
     </div>
-  </label>
-
-  <ng-template *ngif="type !== 1 && template?.align === 'START'"
-    [ngtemplateoutlet]="template.templateRef"
-    [ngtemplateoutletcontext]="model" />
 
 
-  <div *ngif="type === 2"
-    [ngclass]="model.cls.grid.control">
+    <div *ngIf="type !== 2"
+         [ngClass]="model.cls.grid.control">
 
-    <div [class.disabled]="model.disabled"
-      [ngclass]="model.cls.element.control || 'checkbox'">
+        <ng-container [ngSwitch]="type">
 
-      <label>
+            <div *ngSwitchCase="1"
+                 [dynamicId]="bindId && model.id"
+                 [formArrayName]="model.id"
+                 [ngClass]="model.cls.element.control">
 
-        <input type="checkbox"
-          [attr.tabindex]="model.tabIndex"
-          [checked]="model.checked"
-          [dynamicid]="bindId && model.id"
-          [formcontrolname]="model.id"
-          [name]="model.name"
-          [ngclass]="model.cls.element.control"
-          [required]="model.required"
-          [value]="model.value"
-          (blur)="onFocusChange($event)"
-          (change)="onValueChange($event)"
-          (focus)="onFocusChange($event)">
+                <div *ngFor="let groupModel of model.groups; let idx = index"
+                     role="group"
+                     [formGroupName]="idx"
+                     [ngClass]="[model.cls.element.group, model.cls.grid.group]">
+
+                    <syndesis-form-control *ngFor="let item of groupModel.group"
+                                           [bindId]="false"
+                                           [context]="groupModel"
+                                           [group]="control.at(idx)"
+                                           [hasErrorMessaging]="item.hasErrorMessages"
+                                           [model]="item"
+                                           [templates]="templates"
+                                           [ngClass]="[item.cls.element.host, item.cls.grid.host]"
+                                           (blur)="onFocusChange($event)"
+                                           (change)="onValueChange($event)"
+                                           (focus)="onFocusChange($event)"></syndesis-form-control>
+
+                    <ng-container *ngTemplateOutlet="template?.templateRef; context: { context: groupModel.context, index: idx }"></ng-container>
+
+                </div>
+
+            </div>
 
 
-        <span [innerhtml]="model.label"
-          [ngclass]="[model.cls.element.label, model.cls.grid.label]">
-        </span>
+            <fieldset *ngSwitchCase="3"
+                      [dynamicId]="bindId && model.id"
+                      [formGroupName]="model.id"
+                      [name]="model.name"
+                      [ngClass]="model.cls.element.control">
 
-        <div *ngif="model.hint !== null"
-          [tooltip]="model.hint"
-          placement="right"
-          class="inline-block hint-icon">
-          <span class="glyphicon glyphicon-info-sign" />
+                <legend *ngIf="model.legend"
+                        [innerHTML]="model.legend"></legend>
 
-        </div>
-      </label>
+                <syndesis-form-control *ngFor="let controlModel of model.group"
+                                       [asBootstrapFormGroup]="false"
+                                       [group]="control"
+                                       [hasErrorMessaging]="controlModel.hasErrorMessages"
+                                       [model]="controlModel"
+                                       [templates]="templates"
+                                       [ngClass]="[controlModel.cls.element.host, controlModel.cls.grid.host]"
+                                       (blur)="onFocusChange($event)"
+                                       (change)="onValueChange($event)"
+                                       (focus)="onFocusChange($event)"></syndesis-form-control>
+            </fieldset>
+
+
+            <div *ngSwitchCase="4"
+                 [class.input-group]="model.prefix || model.suffix">
+
+                <div *ngIf="model.prefix"
+                     class="input-group-addon"
+                     [innerHTML]="model.prefix"></div>
+
+                <input class="form-control"
+                       [attr.accept]="model.accept"
+                       [attr.autoComplete]="model.autoComplete"
+                       [attr.list]="model.listId"
+                       [attr.max]="model.max"
+                       [attr.min]="model.min"
+                       [attr.multiple]="model.multiple"
+                       [attr.step]="model.step"
+                       [attr.tabindex]="model.tabIndex"
+                       [autofocus]="model.autoFocus"
+                       [dynamicId]="bindId && model.id"
+                       [formControlName]="model.id"
+                       [maxlength]="model.maxLength"
+                       [minlength]="model.minLength"
+                       [name]="model.name"
+                       [ngClass]="model.cls.element.control"
+                       [pattern]="model.pattern"
+                       [placeholder]="model.placeholder"
+                       [readonly]="model.readOnly"
+                       [required]="model.required"
+                       [spellcheck]="model.spellCheck"
+                       [textMask]="{mask: (model.mask || false), showMask: model.mask && !(model.placeholder)}"
+                       [type]="model.inputType"
+                       (blur)="onFocusChange($event)"
+                       (change)="onValueChange($event)"
+                       (focus)="onFocusChange($event)" />
+
+                <div *ngIf="model.suffix"
+                     class="input-group-addon"
+                     [innerHTML]="model.suffix"></div>
+
+                <datalist *ngIf="model.list"
+                          [id]="model.listId">
+
+                    <option *ngFor="let option of model.list"
+                            [value]="option">
+
+                </datalist>
+
+            </div>
+
+
+            <fieldset *ngSwitchCase="5"
+                      role="radiogroup"
+                      [attr.tabindex]="model.tabIndex"
+                      [dynamicId]="bindId && model.id"
+                      [name]="model.name"
+                      (change)="onValueChange($event)">
+
+                <legend *ngIf="model.legend"
+                        [innerHTML]="model.legend"></legend>
+
+                <div *ngFor="let option of model.options$ | async"
+                     [ngClass]="model.cls.element.control || 'radio'">
+
+                    <label>
+
+                        <input type="radio"
+                               [formControlName]="model.id"
+                               [name]="model.name"
+                               [value]="option.value"
+                               (blur)="onFocusChange($event)"
+                               (focus)="onFocusChange($event)"/><span [innerHTML]="option.label"></span></label>
+                </div>
+
+            </fieldset>
+
+
+            <select *ngSwitchCase="6"
+                    class="form-control"
+                    [attr.tabindex]="model.tabIndex"
+                    [dynamicId]="bindId && model.id"
+                    [formControlName]="model.id"
+                    [name]="model.name"
+                    [ngClass]="model.cls.element.control"
+                    [required]="model.required"
+                    (blur)="onFocusChange($event)"
+                    (change)="onValueChange($event)"
+                    (focus)="onFocusChange($event)">
+
+                <option *ngFor="let option of model.options$ | async"
+                        [attr.name]="model.name"
+                        [ngValue]="option.value">{{option.label}}</option>
+
+            </select>
+
+
+            <textarea *ngSwitchCase="7"
+                      class="form-control"
+                      [attr.tabindex]="model.tabIndex"
+                      [dynamicId]="bindId && model.id"
+                      [cols]="model.cols"
+                      [formControlName]="model.id"
+                      [maxlength]="model.maxLength"
+                      [minlength]="model.minLength"
+                      [name]="model.name"
+                      [ngClass]="model.cls.element.control"
+                      [placeholder]="model.placeholder"
+                      [readonly]="model.readOnly"
+                      [required]="model.required"
+                      [rows]="model.rows"
+                      [spellcheck]="model.spellCheck"
+                      [wrap]="model.wrap"
+                      (blur)="onFocusChange($event)"
+                      (change)="onValueChange($event)"
+                      (focus)="onFocusChange($event)"></textarea>
+
+
+            <!--<span *ngIf="model.hint" class="help-block"-->
+            <!--[innerHTML]="model.hint"-->
+            <!--[ngClass]="model.cls.element.hint"></span>-->
+
+        </ng-container>
+
+        <span class="help-block"
+              *ngIf="showErrorMessages">{{errorMessages[0]}}</span>
+
     </div>
-  </div>
 
-  <div *ngif="type !== 2"
-    [ngclass]="model.cls.grid.control">
-
-    <ng-container [ngswitch]="type">
-
-      <div *ngswitchcase="1"
-        [dynamicid]="bindId && model.id"
-        [formarrayname]="model.id"
-        [ngclass]="model.cls.element.control">
-
-        <div *ngfor="let groupModel of model.groups; let idx = index"
-          role="group"
-          [formgroupname]="idx"
-          [ngclass]="[model.cls.element.group, model.cls.grid.group]">
-
-          <syndesis-form-control *ngfor="let item of groupModel.group"
-            [bindid]="false"
-            [context]="groupModel"
-            [group]="control.at(idx)"
-            [haserrormessaging]="item.hasErrorMessages"
-            [model]="item"
-            [templates]="templates"
-            [ngclass]="[item.cls.element.host, item.cls.grid.host]"
-            (blur)="onFocusChange($event)"
-            (change)="onValueChange($event)"
-            (focus)="onFocusChange($event)" />
-
-          <ng-container *ngtemplateoutlet="template?.templateRef; context: { context: groupModel.context, index: idx }" />
-
-        </div>
-      </div>
-
-      <fieldset *ngswitchcase="3"
-        [dynamicid]="bindId && model.id"
-        [formgroupname]="model.id"
-        [name]="model.name"
-        [ngclass]="model.cls.element.control">
-
-        <legend *ngif="model.legend"
-          [innerhtml]="model.legend" />
+    <ng-template *ngIf="type !== 1 && template?.align === 'END'"
+                 [ngTemplateOutlet]="template.templateRef"
+                 [ngTemplateOutletContext]="model"></ng-template>
 
 
-        <syndesis-form-control *ngfor="let controlModel of model.group"
-          [asbootstrapformgroup]="false"
-          [group]="control"
-          [haserrormessaging]="controlModel.hasErrorMessages"
-          [model]="controlModel"
-          [templates]="templates"
-          [ngclass]="[controlModel.cls.element.host, controlModel.cls.grid.host]"
-          (blur)="onFocusChange($event)"
-          (change)="onValueChange($event)"
-          (focus)="onFocusChange($event)" />
-
-      </fieldset>
-
-      <div *ngswitchcase="4"
-        [class.input-group]="model.prefix || model.suffix">
-
-        <div *ngif="model.prefix"
-          class="input-group-addon"
-          [innerhtml]="model.prefix" />
-
-
-        <input class="form-control"
-          [attr.accept]="model.accept"
-          [attr.autocomplete]="model.autoComplete"
-          [attr.list]="model.listId"
-          [attr.max]="model.max"
-          [attr.min]="model.min"
-          [attr.multiple]="model.multiple"
-          [attr.step]="model.step"
-          [attr.tabindex]="model.tabIndex"
-          [autofocus]="model.autoFocus"
-          [dynamicid]="bindId && model.id"
-          [formcontrolname]="model.id"
-          [maxlength]="model.maxLength"
-          [minlength]="model.minLength"
-          [name]="model.name"
-          [ngclass]="model.cls.element.control"
-          [pattern]="model.pattern"
-          [placeholder]="model.placeholder"
-          [readonly]="model.readOnly"
-          [required]="model.required"
-          [spellcheck]="model.spellCheck"
-          [textmask]="{mask: (model.mask || false), showMask: model.mask && !(model.placeholder)}"
-          [type]="model.inputType"
-          (blur)="onFocusChange($event)"
-          (change)="onValueChange($event)"
-          (focus)="onFocusChange($event)">
-
-
-        <div *ngif="model.suffix"
-          class="input-group-addon"
-          [innerhtml]="model.suffix" />
-
-
-        <datalist *ngif="model.list"
-          [id]="model.listId">
-
-          <option *ngfor="let option of model.list"
-            [value]="option">
-          </option>
-        </datalist>
-      </div>
-
-      <fieldset *ngswitchcase="5"
-        role="radiogroup"
-        [attr.tabindex]="model.tabIndex"
-        [dynamicid]="bindId && model.id"
-        [name]="model.name"
-        (change)="onValueChange($event)">
-
-        <legend *ngif="model.legend"
-          [innerhtml]="model.legend" />
-
-
-        <div *ngfor="let option of model.options$ | async"
-          [ngclass]="model.cls.element.control || 'radio'">
-
-          <label>
-
-            <input type="radio"
-              [formcontrolname]="model.id"
-              [name]="model.name"
-              [value]="option.value"
-              (blur)="onFocusChange($event)"
-              (focus)="onFocusChange($event)">
-
-            <span [innerhtml]="option.label" />
-
-          </label>
-        </div>
-      </fieldset>
-
-      <select *ngswitchcase="6"
-        class="form-control"
-        [attr.tabindex]="model.tabIndex"
-        [dynamicid]="bindId && model.id"
-        [formcontrolname]="model.id"
-        [name]="model.name"
-        [ngclass]="model.cls.element.control"
-        [required]="model.required"
-        (blur)="onFocusChange($event)"
-        (change)="onValueChange($event)"
-        (focus)="onFocusChange($event)">
-
-        <option *ngfor="let option of model.options$ | async"
-          [attr.name]="model.name"
-          [ngvalue]="option.value">{{option.label}}
-        </option>
-      </select>
-
-      <textarea *ngswitchcase="7"
-        class="form-control"
-        [attr.tabindex]="model.tabIndex"
-        [dynamicid]="bindId && model.id"
-        [cols]="model.cols"
-        [formcontrolname]="model.id"
-        [maxlength]="model.maxLength"
-        [minlength]="model.minLength"
-        [name]="model.name"
-        [ngclass]="model.cls.element.control"
-        [placeholder]="model.placeholder"
-        [readonly]="model.readOnly"
-        [required]="model.required"
-        [rows]="model.rows"
-        [spellcheck]="model.spellCheck"
-        [wrap]="model.wrap"
-        (blur)="onFocusChange($event)"
-        (change)="onValueChange($event)"
-        (focus)="onFocusChange($event)" />
-
-      <!-- <span *ngIf="model.hint" class="help-block" -->
-      <!-- [innerHTML]="model.hint" -->
-      <!-- [ngClass]="model.cls.element.hint"></span> -->
-    </ng-container>
-
-    <span class="help-block"
-      *ngif="showErrorMessages">{{errorMessages[0]}}
-    </span>
-  </div>
-
-  <ng-template *ngif="type !== 1 && template?.align === 'END'"
-    [ngtemplateoutlet]="template.templateRef"
-    [ngtemplateoutletcontext]="model" />
-
-  <ng-content />
+    <ng-content></ng-content>
 
 </div>
