@@ -783,7 +783,7 @@ objects:
       component: syndesis-rest
     name: syndesis-rest
   spec:
-    host: ${ROUTE_HOSTNAME}
+    host: rest-${ROUTE_HOSTNAME}
     path: /api
     tls:
       insecureEdgeTerminationPolicy: Redirect
