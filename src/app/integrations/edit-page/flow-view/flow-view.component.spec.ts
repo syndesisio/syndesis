@@ -4,9 +4,7 @@ import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TabsModule } from 'ngx-bootstrap';
-import { CollapseModule } from 'ngx-bootstrap';
-import { PopoverModule } from 'ngx-bootstrap';
+import { TabsModule, CollapseModule, PopoverModule } from 'ngx-bootstrap';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { RestangularModule } from 'ngx-restangular';

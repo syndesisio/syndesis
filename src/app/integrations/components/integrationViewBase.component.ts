@@ -16,14 +16,8 @@ import {
 } from 'patternfly-ng';
 
 export class IntegrationViewBase {
-
   currentAction: string = undefined;
   selectedIntegration: Integration = undefined;
-
-  canEdit = int => int.currentStatus !== 'Deleted';
-  canActivate = int => int.currentStatus === 'Deactivated' || int.currentStatus === 'Draft';
-  canDeactivate = int => int.currentStatus === 'Activated';
-  canDelete = int => int.currentStatus !== 'Deleted';
 
   constructor(
     public store: IntegrationStore,
@@ -33,6 +27,11 @@ export class IntegrationViewBase {
     public modalService: ModalService,
     public application: ApplicationRef,
   ) {}
+
+  canEdit = int => int.currentStatus !== 'Deleted';
+  canActivate = int => int.currentStatus === 'Deactivated' || int.currentStatus === 'Draft';
+  canDeactivate = int => int.currentStatus === 'Activated';
+  canDelete = int => int.currentStatus !== 'Deleted';
 
   //----- Actions ------------------->>
 
@@ -64,6 +63,8 @@ export class IntegrationViewBase {
         reason = 'Error deleting integration';
         request = this.requestDelete(integration);
         break;
+      default:
+        break;
     }
     return request.then(modal => modal.result
       ? this.doAction(action, integration)
@@ -89,6 +90,8 @@ export class IntegrationViewBase {
         return this.deactivateAction(integration);
       case 'delete':
         return this.deleteAction(integration);
+      default:
+        break;
     }
   }
 
@@ -169,7 +172,7 @@ export class IntegrationViewBase {
 
   //-----  Modal ------------------->>
 
-  public showModal(action: string) {
+  showModal(action: string) {
     this.currentAction = action;
     return this.modalService.show();
   }

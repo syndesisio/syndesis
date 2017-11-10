@@ -8,17 +8,17 @@ export class ModalService {
 
   private registeredModals = new Map<string, Modal>();
 
-  constructor(private bsModalService: BsModalService) {}
+  constructor(private bsModalService: BsModalService) { }
 
   registerModal(id: string, template: TemplateRef<any>): void {
-    this.registeredModals.set(id, {template: template});
+    this.registeredModals.set(id, { template: template });
   }
 
   unregisterModal(id: string): void {
     this.registeredModals.delete(id);
   }
 
-  show(id: string = 'modal'): Promise<Modal> {
+  show(id = 'modal'): Promise<Modal> {
     const modal = this.registeredModals.get(id);
     modal.bsModalRef = this.bsModalService.show(modal.template);
     return this.bsModalService.onHide.take(1)

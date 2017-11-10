@@ -150,18 +150,6 @@ export class StepStore {
     */
   ];
 
-  private stepsHaveOutputDataShape(steps: Array<Step>): boolean {
-    return steps
-      .filter(s => s.action && s.action.outputDataShape && s.action.outputDataShape.kind !== 'none')
-      .length > 0;
-  }
-
-  private stepsHaveInputDataShape(steps: Array<Step>): boolean {
-    return steps
-      .filter(s => s.action && s.action.inputDataShape && s.action.inputDataShape.kind !== 'none')
-      .length > 0;
-  }
-
   getStepName(kind: string): string {
     const step = this.getStepConfig(kind);
     if (step) {
@@ -190,5 +178,17 @@ export class StepStore {
   // properties in customProperties
   isCustomStep(step: Step): boolean {
     return step.stepKind === BASIC_FILTER || step.stepKind === DATA_MAPPER;
+  }
+
+  private stepsHaveOutputDataShape(steps: Array<Step>): boolean {
+    return steps
+      .filter(s => s.action && s.action.outputDataShape && s.action.outputDataShape.kind !== 'none')
+      .length > 0;
+  }
+
+  private stepsHaveInputDataShape(steps: Array<Step>): boolean {
+    return steps
+      .filter(s => s.action && s.action.inputDataShape && s.action.inputDataShape.kind !== 'none')
+      .length > 0;
   }
 }

@@ -289,12 +289,16 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     );
   }
 
-  onRevisionAction(action: any, revision) {
+  onRevisionAction(action: any, revision): void {
     switch (action.action) {
       case 'duplicate':
-        return this.duplicateRevision(revision);
+        this.duplicateRevision(revision);
+        break;
       case 'deploy':
-        return this.deployRevision(revision);
+        this.deployRevision(revision);
+        break;
+      default:
+        break;
     }
   }
 
@@ -336,6 +340,8 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
                   status.icon = 'pf-icon pficon-error-circle-o';
                   status.label = 'Failure';
                   break;
+                default:
+                  break;
               }
               const row = {
                 revision: rev,
@@ -375,6 +381,8 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
                   case 'Error':
                     state.class = 'label label-warning pull-right';
                     break;
+                  default:
+                    break;
                 }
                 row.status.push(state);
               }
@@ -391,7 +399,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
           try {
             this.detector.detectChanges();
           } catch (err) {
-            // ignore
+            // @TODO: Remove this try/catch once ChangeDetection is restored
           }
         }, 50);
       },

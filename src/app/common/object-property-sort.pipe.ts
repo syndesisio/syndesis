@@ -1,4 +1,4 @@
-import { Pipe } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { getPropertyValue } from './object-property-filter.pipe';
 
 export class ObjectPropertySortConfig {
@@ -9,7 +9,7 @@ export class ObjectPropertySortConfig {
 @Pipe({
   name: 'objectPropertySort',
 })
-export class ObjectPropertySortPipe {
+export class ObjectPropertySortPipe implements PipeTransform {
   transform(objects: any[], config: ObjectPropertySortConfig) {
     if (!config || !('sortField' in config)) {
       return objects;

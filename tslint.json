@@ -7,7 +7,7 @@
     // TypeScript linting Ruleset
     // ***************************************************
     "member-access": false,
-    "no-empty": true,
+    "no-empty": [true, "allow-empty-catch"],
     "no-conditional-assignment": true,
     "no-consecutive-blank-lines": [
       true,
@@ -78,7 +78,7 @@
       true,
       "ban-keywords",
       "check-format",
-      "allow-trailing-underscore"
+      "allow-leading-underscore"
     ],
     "whitespace": [
       true,
@@ -136,9 +136,9 @@
         "order": [
           "public-static-field",
           "public-instance-field",
-          "public-constructor",
           "private-static-field",
           "private-instance-field",
+          "public-constructor",
           "private-constructor",
           "public-instance-method",
           "protected-instance-method",
@@ -170,7 +170,14 @@
     "trailing-comma": [
       true,
       {
-        "multiline": "always",
+        "multiline": {
+          "arrays": "ignore",
+          "objects": "ignore",
+          "functions": "ignore",
+          "imports": "ignore",
+          "exports": "ignore",
+          "typeLiterals": "ignore"
+        },
         "singleline": "never"
       }
     ],

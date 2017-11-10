@@ -52,8 +52,9 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       // TODO validate form
       case 'review':
       // TODO is this ever going to be false?
+      default:
+        return true;
     }
-    return true;
   }
 
   showBack() {
@@ -61,8 +62,9 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     switch (page) {
       case 'connection-basics':
         return false;
+      default:
+        return true;
     }
-    return true;
   }
 
   showNext() {
@@ -70,8 +72,9 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     switch (page) {
       case 'connection-basics':
         return false;
+      default:
+        return true;
     }
-    return true;
   }
 
   cancel() {
@@ -167,10 +170,13 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
           return;
         }
         break;
+      default:
+        break;
     }
     try {
       this.detector.detectChanges();
     } catch (err) {
+      // @TODO: Remove this try/catch once ChangeDetection is restored
     }
   }
 

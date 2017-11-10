@@ -136,32 +136,30 @@ export class IntegrationsEditPage extends ChildAwarePage
   handleFlowEvent(event: FlowEvent) {
     const child = this.getCurrentChild();
     let validate = false;
-    // TODO we could probably tidy up the unused cases at some point
     switch (event.kind) {
       case 'integration-updated':
         if (!child) {
           validate = true;
         }
         break;
-      case 'integration-no-actions':
-        break;
       case 'integration-no-connections':
         validate = true;
         break;
+      case 'integration-no-actions':
       case 'integration-action-select':
       case 'integration-connection-select':
-        break;
       case 'integration-selected-action':
-        break;
       case 'integration-selected-connection':
-        break;
       case 'integration-action-configure':
       case 'integration-connection-configure':
+      default:
         break;
     }
     try {
       this.detector.detectChanges();
-    } catch (err) {}
+    } catch (err) {
+      // @TODO: Remove this try/catch once ChangeDetection is restored
+    }
     if (validate) {
       this.router.navigate(['save-or-add-step'], {
         queryParams: { validate: true },
@@ -175,7 +173,7 @@ export class IntegrationsEditPage extends ChildAwarePage
       try {
         this.detector.detectChanges();
       } catch (err) {
-        // ignore;
+        // @TODO: Remove this try/catch once ChangeDetection is restored
       }
     });
     this.routeSubscription = this.route.params

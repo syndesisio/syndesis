@@ -46,7 +46,7 @@ export abstract class AbstractStore<
     this.changeEvents = this.eventService.changeEvents.filter(x => {
       return x.kind === this.service.kind;
     });
-    this.currentSub = this._current.asObservable().subscribe((current) => {
+    this.currentSub = this._current.asObservable().subscribe(current => {
       if (!current) {
         this.currentId = undefined;
         return;
@@ -136,14 +136,6 @@ export abstract class AbstractStore<
     }
   }
 
-  private plain(entity: T): T {
-    if ('plain' in entity) {
-      return (<any>entity).plain();
-    } else {
-      return entity;
-    }
-  }
-
   // Use clear() to clear the current resource so views don't show stale data
   clear(): void {
     this._current.next(undefined);
@@ -177,22 +169,6 @@ export abstract class AbstractStore<
     return this._current.asObservable();
   }
 
-  private massageError(error: any) {
-    switch (typeof error) {
-      case 'object':
-        return error;
-      case 'string':
-        try {
-          return JSON.parse(error);
-        } catch (err) {
-          // some random text back from the server :-(
-          return { error: error };
-        }
-      default:
-        return { error: error };
-    }
-  }
-
   create(entity: T): Observable<T> {
     const created = new Subject<T>();
     this.service.create(entity).subscribe(
@@ -218,7 +194,7 @@ export abstract class AbstractStore<
     return created.share();
   }
 
-  update(entity: T, reload: boolean = false): Observable<T> {
+  update(entity: T, reload = false): Observable<T> {
     if (reload) {
       this._loading.next(true);
     }
@@ -283,5 +259,34 @@ export abstract class AbstractStore<
       },
     );
     return deleted.share();
+  }
+
+  private massageError(error: any) {
+    let errorMessage: any;
+    switch (typeof error) {
+      case 'object':
+      errorMessage = error;
+      break;
+      case 'string':
+        try {
+          errorMessage = JSON.parse(error);
+        } catch (err) {
+          // some random text back from the server :-(
+          errorMessage = { error: error };
+        }
+        break;
+      default:
+        errorMessage = { error: error };
+    }
+
+    return errorMessage;
+  }
+
+  private plain(entity: T): T {
+    if ('plain' in entity) {
+      return (<any>entity).plain();
+    } else {
+      return entity;
+    }
   }
 }

@@ -65,6 +65,8 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
       case 'integration-updated':
         this.validateFlow();
         break;
+      default:
+        break;
     }
   }
 
@@ -127,7 +129,7 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
   }
 
   validateFlow() {
-    if (!this.currentFlow._loaded) {
+    if (!this.currentFlow.loaded) {
       return;
     }
     if (this.currentFlow.getStartConnection() === undefined) {
@@ -154,7 +156,9 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
       this.validateFlow();
       try {
         this.detector.detectChanges();
-      } catch (err) {}
+      } catch (err) {
+        // @TODO: Remove this try/catch once ChangeDetection is restored
+      }
     }
   }
 }

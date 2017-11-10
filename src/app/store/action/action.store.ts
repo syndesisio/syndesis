@@ -7,8 +7,8 @@ import { EventsService } from '../entity/events.service';
 
 @Injectable()
 export class ActionStore extends AbstractStore<Action, Actions, ActionService> {
-  constructor(ActionService: ActionService, eventService: EventsService) {
-    super(ActionService, eventService, [], <Action>{});
+  constructor(actionService: ActionService, eventService: EventsService) {
+    super(actionService, eventService, [], <Action>{});
   }
 
   protected get kind() {

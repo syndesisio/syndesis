@@ -1,9 +1,5 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -84,13 +80,6 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
     }
   }
 
-  // This will trigger validation
-  private touchFormFields(): void {
-    Object.keys(this.reviewForm.controls).forEach(key => {
-      this.reviewForm.get(key).markAsTouched();
-    });
-  }
-
   canDeactivate(nextState: RouterStateSnapshot): boolean | Promise<boolean> {
     return (
       this.saved ||
@@ -101,7 +90,7 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
   }
 
   ngOnInit() {
-    this.sub = this.current.events.subscribe((event) => {
+    this.sub = this.current.events.subscribe(event => {
       if (event.kind === 'connection-trigger-create') {
         this.createConnection();
       }
@@ -114,4 +103,10 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
     }
   }
 
+  // This will trigger validation
+  private touchFormFields(): void {
+    Object.keys(this.reviewForm.controls).forEach(key => {
+      this.reviewForm.get(key).markAsTouched();
+    });
+  }
 }

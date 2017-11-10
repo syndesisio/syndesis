@@ -1,10 +1,10 @@
-import { Pipe } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'truncate',
 })
-export class TruncateCharactersPipe {
-  transform(value: string, limit: number = 40, trail: String = '…'): string {
+export class TruncateCharactersPipe implements PipeTransform {
+  transform(value: string, limit = 40, trail = '…'): string {
     if (!value) {
       return '';
     }

@@ -4,8 +4,8 @@ import { EditableComponent } from './editable.component';
 describe('EditableComponent', () => {
 
   class MyEditableComponent extends EditableComponent {
-    constructor(detector: ChangeDetectorRef) {
-      super(detector);
+    constructor(changeDetectorRef: ChangeDetectorRef) {
+      super(changeDetectorRef);
     }
   }
 
@@ -22,7 +22,7 @@ describe('EditableComponent', () => {
   });
 
   describe('submit', () => {
-    it('sets error message', (done) => {
+    it('sets error message', done => {
       spyOn(component, 'validate').and.returnValue(Promise.resolve(ERROR));
       component.submit(VALUE2)
         .then(() => {
@@ -31,7 +31,7 @@ describe('EditableComponent', () => {
         });
     });
 
-    it('saves value when valid', (done) => {
+    it('saves value when valid', done => {
       spyOn(component, 'validate').and.returnValue(Promise.resolve(null));
       const spy = spyOn(component, 'save');
       component.submit(VALUE2)
@@ -41,7 +41,7 @@ describe('EditableComponent', () => {
         });
     });
 
-    it('does not save value when invalid', (done) => {
+    it('does not save value when invalid', done => {
       spyOn(component, 'validate').and.returnValue(Promise.resolve(ERROR));
       const spy = spyOn(component, 'save');
       component.submit(VALUE2)
@@ -51,7 +51,7 @@ describe('EditableComponent', () => {
         });
     });
 
-    it('detects changes', (done) => {
+    it('detects changes', done => {
       spyOn(component, 'validate').and.returnValue(Promise.resolve(ERROR));
       component.submit(VALUE2)
         .then(() => {
@@ -62,18 +62,18 @@ describe('EditableComponent', () => {
   });
 
   describe('validate', () => {
-    it('returns Promise that resolves to null when validation function is not set', (done) => {
+    it('returns Promise that resolves to null when validation function is not set', done => {
       component.validate(VALUE2)
-        .then((result) => {
+        .then(result => {
           expect(result).toBe(null);
           done();
         });
     });
 
-    it('returns Promise that resolves to value returned by validation function', (done) => {
+    it('returns Promise that resolves to value returned by validation function', done => {
       component.validationFn = value => ERROR;
       component.validate(VALUE2)
-        .then((result) => {
+        .then(result => {
           expect(result).toBe(ERROR);
           done();
         });

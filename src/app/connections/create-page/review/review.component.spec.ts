@@ -48,7 +48,7 @@ describe('ConnectionsReviewComponent', () => {
       expect(canDeactivate).toBe(true);
     });
 
-    it('should return true when user confirms he wants to leave wizard', (done) => {
+    it('should return true when user confirms he wants to leave wizard', done => {
       modalService.show.and.returnValue(Promise.resolve({ result: true }));
       component.canDeactivate(nextState)
         .then(canDeactivate => {
@@ -57,7 +57,7 @@ describe('ConnectionsReviewComponent', () => {
         });
     });
 
-    it('should return false when user does not confirm he wants to leave wizard', (done) => {
+    it('should return false when user does not confirm he wants to leave wizard', done => {
       modalService.show.and.returnValue(Promise.resolve({ result: false }));
       component.canDeactivate(nextState)
         .then(canDeactivate => {

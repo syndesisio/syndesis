@@ -17,21 +17,20 @@ export class ConnectionEvent {
 
 @Injectable()
 export class CurrentConnectionService {
+  events = new EventEmitter<ConnectionEvent>();
+
   private _loaded: boolean;
   private _connection: Connection;
   private _credentials: any;
   private _oauthStatus: any;
   private subscription: Subscription;
 
-  events = new EventEmitter<ConnectionEvent>();
-
   constructor(
     private store: ConnectionStore,
     private connectorStore: ConnectorStore,
-  ) {
-  }
+  ) { }
 
-  public init() {
+  init() {
     this._credentials = undefined;
     this._oauthStatus = undefined;
     this._connection = undefined;
@@ -41,10 +40,108 @@ export class CurrentConnectionService {
     );
   }
 
-  public dispose() {
+  dispose() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  handleEvent(event: ConnectionEvent) {
+    log.infoc(() => 'connection event: ' + JSON.stringify(event), category);
+    switch (event.kind) {
+      case 'connection-check-connector':
+        if (!this.fetchConnector(this._connection.connectorId)) {
+          this.events.emit({
+            kind: 'connection-check-credentials',
+            connectorId: this._connection.connectorId,
+          });
+        }
+        break;
+      case 'connection-check-credentials':
+        if (!this.checkCredentials()) {
+          this.events.emit({
+            kind: 'connection-set-connection',
+            connection: this._connection,
+          });
+        }
+        break;
+      case 'connection-set-connection':
+        this._loaded = true;
+        break;
+      // TODO not sure if these next 3 cases are needed really
+      case 'connection-set-name':
+        this._connection.name = event['name'];
+        break;
+      case 'connection-set-description':
+        this._connection.description = event['description'];
+        break;
+      case 'connection-set-tags':
+        this._connection.tags = event['tags'];
+        break;
+      case 'connection-save-connection':
+        this.saveConnection(event);
+        break;
+      default:
+    }
+  }
+
+  hasConnector() {
+    return this.connection.connectorId !== undefined;
+  }
+
+  acquireCredentials() {
+    if (!this._connection || !this._connection.connectorId) {
+      this._credentials = undefined;
+      return Observable.empty();
+    }
+    const connectorId = this._connection.connectorId;
+    this.connectorStore
+      .acquireCredentials(connectorId)
+      .subscribe((resp: any) => {
+        log.infoc(() => 'Got response: ' + JSON.stringify(resp));
+      });
+  }
+
+  clearOAuthError() {
+    this.oauthStatus = undefined;
+  }
+
+  hasCredentials(): boolean {
+    return this._credentials && this._credentials.type !== undefined;
+  }
+
+  get oauthError(): boolean {
+    return this._oauthStatus && this._oauthStatus !== 'SUCCESS';
+  }
+
+  get oauthStatus(): any {
+    return this._oauthStatus;
+  }
+
+  set oauthStatus(oauthStatus: any) {
+    this._oauthStatus = oauthStatus;
+  }
+
+  get loaded(): boolean {
+    return this._loaded;
+  }
+
+  get credentials(): any {
+    return this._credentials;
+  }
+
+  get connection(): Connection {
+    return this._connection;
+  }
+
+  set connection(connection: Connection) {
+    this._loaded = false;
+    this._connection = connection;
+    const connectorId = connection.connectorId;
+    this.events.emit({
+      kind: 'connection-check-connector',
+      connection: this._connection,
+    });
   }
 
   private checkCredentials() {
@@ -118,49 +215,6 @@ export class CurrentConnectionService {
     return false;
   }
 
-  handleEvent(event: ConnectionEvent) {
-    log.infoc(() => 'connection event: ' + JSON.stringify(event), category);
-    switch (event.kind) {
-      case 'connection-check-connector':
-        if (!this.fetchConnector(this._connection.connectorId)) {
-          this.events.emit({
-            kind: 'connection-check-credentials',
-            connectorId: this._connection.connectorId,
-          });
-        }
-        break;
-      case 'connection-check-credentials':
-        if (!this.checkCredentials()) {
-          this.events.emit({
-            kind: 'connection-set-connection',
-            connection: this._connection,
-          });
-        }
-        break;
-      case 'connection-set-connection':
-        this._loaded = true;
-        break;
-      // TODO not sure if these next 3 cases are needed really
-      case 'connection-set-name':
-        this._connection.name = event['name'];
-        break;
-      case 'connection-set-description':
-        this._connection.description = event['description'];
-        break;
-      case 'connection-set-tags':
-        this._connection.tags = event['tags'];
-        break;
-      case 'connection-save-connection':
-        this.saveConnection(event);
-        break;
-      default:
-    }
-  }
-
-  public hasConnector() {
-    return this.connection.connectorId !== undefined;
-  }
-
   private fetchCredentials() {
     if (!this._connection || !this._connection.connectorId) {
       this._credentials = undefined;
@@ -177,19 +231,6 @@ export class CurrentConnectionService {
     });
   }
 
-  public acquireCredentials() {
-    if (!this._connection || !this._connection.connectorId) {
-      this._credentials = undefined;
-      return Observable.empty();
-    }
-    const connectorId = this._connection.connectorId;
-    this.connectorStore
-      .acquireCredentials(connectorId)
-      .subscribe((resp: any) => {
-        log.infoc(() => 'Got response: ' + JSON.stringify(resp));
-      });
-  }
-
   private saveConnection(event: ConnectionEvent) {
     // poor man's clone
     const connection = <Connection>JSON.parse(
@@ -200,11 +241,16 @@ export class CurrentConnectionService {
       if (!prop.hasOwnProperty(prop)) {
         continue;
       }
+      // @FIXME avoid using 'delete' since it leaves memory pointers unhandled by the garbage collector
       delete connection.connector.properties[prop]['value'];
     }
     const tags = connection.tags || [];
     const connectorTag = connection.connectorId || connection.connector.id;
-    tags.indexOf(connectorTag) === -1 ? tags.push(connectorTag) : false;
+
+    if (tags.indexOf(connectorTag) === -1) {
+      tags.push(connectorTag);
+    }
+
     connection.tags = tags;
     const sub = this.store.updateOrCreate(connection).subscribe(
       (c: Connection) => {
@@ -231,47 +277,5 @@ export class CurrentConnectionService {
         sub.unsubscribe();
       },
     );
-  }
-
-  get oauthError(): boolean {
-    return this._oauthStatus && this._oauthStatus !== 'SUCCESS';
-  }
-
-  public clearOAuthError() {
-    this.oauthStatus = undefined;
-  }
-
-  set oauthStatus(oauthStatus: any) {
-    this._oauthStatus = oauthStatus;
-  }
-
-  get oauthStatus(): any {
-    return this._oauthStatus;
-  }
-
-  get loaded(): boolean {
-    return this._loaded;
-  }
-
-  get credentials(): any {
-    return this._credentials;
-  }
-
-  hasCredentials(): boolean {
-    return this._credentials && this._credentials.type !== undefined;
-  }
-
-  get connection(): Connection {
-    return this._connection;
-  }
-
-  set connection(connection: Connection) {
-    this._loaded = false;
-    this._connection = connection;
-    const connectorId = connection.connectorId;
-    this.events.emit({
-      kind: 'connection-check-connector',
-      connection: this._connection,
-    });
   }
 }

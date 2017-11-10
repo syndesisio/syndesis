@@ -107,6 +107,9 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
     switch (event.kind) {
       case 'integration-updated':
         this.loadConnections();
+        break;
+      default:
+        break;
     }
   }
 

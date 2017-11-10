@@ -1,5 +1,4 @@
-import { Pipe } from '@angular/core';
-
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'toId',
@@ -7,8 +6,9 @@ import { Pipe } from '@angular/core';
 /**
  * Converts and normalizes a string to a valid and standardized
  * HTML 5 DOM id
+ * @TODO: Rename this to SlugPipe with selector 'slug'
  */
-export class ToIdPipe {
+export class ToIdPipe implements PipeTransform {
   transform(value: string, config: any) {
     if (!value) {
       return undefined;
@@ -16,4 +16,3 @@ export class ToIdPipe {
     return value.replace(' ', '-').toLowerCase();
   }
 }
-

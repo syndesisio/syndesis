@@ -1,4 +1,4 @@
-import { Component, Pipe } from '@angular/core';
+import { Component, Pipe, PipeTransform } from '@angular/core';
 import { StepStore, StepKind, StepKinds } from '../../../store/step/step.store';
 import { CurrentFlow } from '../current-flow.service';
 import { Step, Steps, TypeFactory } from '../../../model';
@@ -11,7 +11,7 @@ export class StepVisibleConfig {
   name: 'stepVisible',
   pure: false,
 })
-export class StepVisiblePipe {
+export class StepVisiblePipe implements PipeTransform {
   constructor(
     private currentFlow: CurrentFlow,
   ) {}

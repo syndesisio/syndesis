@@ -14,8 +14,9 @@ export class ConnectionConfigurationService {
       case 'twitter':
       case 'sql-stored-connector':
         return true;
+      default:
+        return false;
     }
-    return false;
   }
 
   sanitize(data: {}) {
@@ -38,6 +39,10 @@ export class ConnectionConfigurationService {
     return formModel;
   }
 
+  cloneObject(obj: {}) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
   private getFormConfig(connection: Connection) {
     let props = {};
     if (connection.connector) {
@@ -52,9 +57,4 @@ export class ConnectionConfigurationService {
     }
     return props;
   }
-
-  cloneObject(obj: {}) {
-    return JSON.parse(JSON.stringify(obj));
-  }
-
 }

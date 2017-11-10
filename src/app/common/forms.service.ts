@@ -129,7 +129,7 @@ export class FormFactoryService {
             inputType: type,
             value: value || field.value || field.defaultValue,
             hint: field.description,
-            list: field.enum ? (<Array<any>>field.enum).map((val) => {
+            list: field.enum ? (<Array<any>>field.enum).map(val => {
               if (typeof val === 'string') {
                 return val;
               }

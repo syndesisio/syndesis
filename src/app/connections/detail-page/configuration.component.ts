@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService} from '@ng-dynamic-forms/core';
+import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
 
 import { Connection } from '../../model';
 import { ConnectionConfigurationService } from '../common/configuration/configuration.service';
@@ -47,5 +47,4 @@ export class ConnectionDetailConfigurationComponent implements OnChanges {
     this.formModel = this.configurationService.getFormModel(this.connection, readOnly);
     this.formGroup = this.formService.createFormGroup(this.formModel);
   }
-
 }
