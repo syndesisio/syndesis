@@ -67,15 +67,14 @@ $ eval $(minishift docker-env)
 # For a fresh install of Syndesis:
 $ ./scripts/syndesis-install --clean --pull
 
-# If you do a fresh install, then configure the UI and Minishift routing for dev mode:
-$ ./scripts/minishift-setup.sh
-
 # Install the dependencies:
 $ yarn install
 
 # Start the UI server:
 $ yarn start:minishift
 ```
+
+The `yarn start:minishift` command works when it can properly detect your local development machine's IP address.  A proxy server inside the minishift deployment will use that IP address to connect back to the development server being run by the yarn command.  If detection of the IP is failing for you, then set the `SYNDESIS_DEV_LOCAL_IP` env variable to your local machine's IP address before running the yarn `yarn start:minishift` command.
 
 Open the Syndesis UI in your browser from the command line by running:
 
