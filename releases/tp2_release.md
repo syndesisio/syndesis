@@ -47,7 +47,9 @@ These are the Maven dependencies used by other apps. They do not necessarily req
 * Import images in to cluster
   - Goto `syndesis-project`, cd to `tools/images`
   - Docker login to iginite-fuse cluster: `docker login -u $(oc whoami) -p $(oc whoami -t) registry.fuse-ignite.openshift.com`
-  - Run import scripts: `./migrate.sh`
+  - Check `migrate-images.pl` for the configuration map in the top and whether they match the product build numbers.
+  - Build number are synced via https://docs.google.com/spreadsheets/u/1/d/1ohR6poCaYmQ7Ga3OWgSd189sT8MlXexDCZbmb_SY994/edit?usp=drive_web
+  - Run import scripts: `perl migrate-images.pl`
 * Ensure that all images streams have been created properly in the namespace fuse-ignite:
   - fuse-ignite-java-openshift      
   - fuse-ignite-mapper
