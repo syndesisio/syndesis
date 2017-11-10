@@ -106,6 +106,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>log4j-over-slf4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
       <version>3.5</version>
@@ -337,6 +343,7 @@
             <ignoredClassPattern>org.apache.maven.*</ignoredClassPattern>
             <ignoredClassPattern>org.codehaus.plexus.*</ignoredClassPattern>
             <ignoredClassPattern>org.eclipse.aether.*</ignoredClassPattern>
+            <ignoredClassPattern>org.apache.log4j.*</ignoredClassPattern>
           </ignoredClassPatterns>
         </configuration>
       </plugin>

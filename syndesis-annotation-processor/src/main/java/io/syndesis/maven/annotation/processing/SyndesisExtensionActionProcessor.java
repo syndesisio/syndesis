@@ -28,20 +28,27 @@ import java.util.Properties;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.syndesis.integration.runtime.api.SyndesisExtensionAction;
+import io.syndesis.integration.runtime.api.SyndesisStepExtension;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.RouteDefinition;
+import org.springframework.context.annotation.Bean;
 
 @SuppressWarnings({"PMD.AvoidSynchronizedAtMethodLevel", "PMD.AvoidCatchingGenericException", "PMD.ExcessiveImports"})
 @SupportedSourceVersion(value = SourceVersion.RELEASE_8)
@@ -50,40 +57,28 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 })
 public class SyndesisExtensionActionProcessor extends AbstractProcessor {
     public static final String ANNOTATION_NAME = "io.syndesis.integration.runtime.api.SyndesisExtensionAction";
-    public static final String STEP_EXTENSION_NAME = "io.syndesis.integration.runtime.api.SyndesisStepExtension";
-
-    public TypeMirror steExtensionType;
-    public Class<? extends Annotation> annotationClass ;
-
-    @Override
-    public synchronized void init(ProcessingEnvironment env){
-        this.processingEnv = env;
-        this.steExtensionType = processingEnv.getElementUtils().getTypeElement(STEP_EXTENSION_NAME).asType();
-
-        try {
-            annotationClass = (Class<? extends Annotation>) Class.forName(ANNOTATION_NAME);
-        } catch (ClassNotFoundException e) {
-            error("Unable to find Annotation " +  ANNOTATION_NAME + " on Classpath");
-        }
-    }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
-        // a lot of noisy logic to prevent this method to ever fail, since it's required by the compiler implicit contract
-        if(annotationClass == null){
-            return false;
-        }
-        for (Element annotatedElement : env.getElementsAnnotatedWith(annotationClass)) {
-            if (annotatedElement.getKind() != ElementKind.CLASS) {
+        for (Element annotatedElement : env.getElementsAnnotatedWith(SyndesisExtensionAction.class)) {
+            if (annotatedElement.getKind() == ElementKind.CLASS) {
+                try {
+                    Properties props = gatherProperties(annotatedElement);
+                    augmentProperties((TypeElement) annotatedElement, props);
+                    persistToFile(annotatedElement, props);
+                } catch (IOException|InvocationTargetException|IllegalAccessException e){
+                    return false;
+                }
+            } else if (annotatedElement.getKind() == ElementKind.METHOD) {
+                try {
+                    Properties props = gatherProperties(annotatedElement);
+                    augmentProperties((ExecutableElement) annotatedElement, props);
+                    persistToFile(annotatedElement, props);
+                } catch (IOException|InvocationTargetException|IllegalAccessException e){
+                    return false;
+                }
+            } else {
                 return true; // Exit processing
-            }
-            try {
-                TypeElement typedElement = (TypeElement) annotatedElement;
-                Properties props = gatherProperties(typedElement);
-                augmentProperties(typedElement, props);
-                persistToFile(typedElement, props);
-            } catch (IOException|InvocationTargetException|IllegalAccessException e){
-                return false;
             }
         }
         return false;
@@ -91,33 +86,67 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
 
     /**
      * Explicitly add properties that elude reflection implicit strategy
-     * @param typedElement
+     * @param element
      * @param props
      */
-    protected void augmentProperties(TypeElement typedElement, Properties props) {
-        if (processingEnv.getTypeUtils().isAssignable(typedElement.asType(), steExtensionType)) {
+    protected void augmentProperties(TypeElement element, Properties props) {
+        Elements elements = processingEnv.getElementUtils();
+        TypeMirror extensionType = elements.getTypeElement(SyndesisStepExtension.class.getName()).asType();
+
+        if (processingEnv.getTypeUtils().isAssignable(element.asType(), extensionType)) {
             props.put("kind", "STEP");
-            props.put("entrypoint", typedElement.getQualifiedName().toString());
+            props.put("entrypoint", element.getQualifiedName().toString());
         } else {
             props.put("kind", "BEAN");
-            props.put("entrypoint", typedElement.getQualifiedName().toString());
+            props.put("entrypoint", element.getQualifiedName().toString());
         }
     }
 
-    protected Properties gatherProperties(TypeElement classElement) throws InvocationTargetException, IllegalAccessException {
+    /**
+     * Explicitly add properties that elude reflection implicit strategy
+     * @param element
+     * @param props
+     */
+    protected void augmentProperties(ExecutableElement element, Properties props) {
+        SyndesisExtensionAction action = element.getAnnotation(SyndesisExtensionAction.class);
+        Elements elements = processingEnv.getElementUtils();
+        Types types = processingEnv.getTypeUtils();
+
+        TypeElement typedElement = (TypeElement) element.getEnclosingElement();
+        TypeMirror returnType = element.getReturnType();
+        TypeMirror routeBuilderType = elements.getTypeElement(RouteBuilder.class.getName()).asType();
+        TypeMirror routeDefinitionType = elements.getTypeElement(RouteDefinition.class.getName()).asType();
+
+        if (element.getAnnotation(Bean.class) != null && (types.isAssignable(returnType, routeBuilderType) || types.isAssignable(returnType, routeDefinitionType))) {
+            String entrypoint = action.entrypoint();
+            if (entrypoint != null && !entrypoint.isEmpty()) {
+                props.put("kind", "ROUTE");
+                props.put("entrypoint", entrypoint);
+            } else {
+                warning("Action with id '" + action.id() + "' must define an entrypoint");
+            }
+        } else if (element.getAnnotation(Bean.class) == null && !types.isAssignable(returnType, routeBuilderType) && !types.isAssignable(returnType, routeDefinitionType)) {
+            props.put("kind", "BEAN");
+            props.put("entrypoint", typedElement.getQualifiedName().toString() + "::" + element.getSimpleName());
+        }
+    }
+
+    protected Properties gatherProperties(Element element) throws InvocationTargetException, IllegalAccessException {
         Properties prop = new Properties();
-        Annotation annotation = classElement.getAnnotation(annotationClass);
-        Method[] methods = annotationClass.getDeclaredMethods();
+        Annotation annotation = element.getAnnotation(SyndesisExtensionAction.class);
+        Method[] methods = SyndesisExtensionAction.class.getDeclaredMethods();
         for (Method m : methods) {
             writeIfNotEmpty(prop, m.getName(), m.invoke(annotation));
         }
         return prop;
     }
 
-    protected void persistToFile(TypeElement classElement, Properties props) throws IOException {
-        File file = obtainResourceFile(classElement);
-        try(Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
-            props.store(writer, "Generated by Syndesis Annotation Processor");
+    protected void persistToFile(Element element, Properties props) throws IOException {
+        File file = obtainResourceFile(element);
+        if (file != null) {
+            try (Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
+                props.store(writer, "Generated by Syndesis Annotation Processor");
+            }
         }
     }
 
@@ -153,14 +182,28 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
      * Helper method to produce class output text file using the given handler
      */
     @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
-    protected File obtainResourceFile(TypeElement classElement) throws IOException {
-        File result = null;
-        Filer filer = processingEnv.getFiler();
+    protected File obtainResourceFile(Element element) throws IOException {
+        TypeElement classElement;
+        if (element instanceof TypeElement) {
+            classElement = (TypeElement)element;
+        } else if (element instanceof ExecutableElement) {
+            classElement = (TypeElement)element.getEnclosingElement();
+        } else {
+            warning("Unsupported element kind: " + element.getKind());
+            return null;
+        }
 
         final String javaTypeName = canonicalClassName(classElement.getQualifiedName().toString());
-        String packageName = javaTypeName.substring(0, javaTypeName.lastIndexOf('.'));
-        String fileName = classElement.getSimpleName().toString() + ".properties";
+        final String packageName = javaTypeName.substring(0, javaTypeName.lastIndexOf('.'));
 
+        final String fileName = new StringBuilder()
+            .append(classElement.getSimpleName().toString())
+            .append(element.getAnnotation(SyndesisExtensionAction.class).id())
+            .append(".properties")
+            .toString();
+
+        File result = null;
+        Filer filer = processingEnv.getFiler();
         FileObject resource;
         try {
             resource = filer.getResource(StandardLocation.SOURCE_OUTPUT, packageName, fileName);
