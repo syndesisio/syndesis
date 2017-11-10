@@ -22,14 +22,12 @@
             <ng-template modelId="rulesFormArray"
                          let-context="context"
                          let-index="index">
-
               <div class="pull-right rule-buttons">
-                <a *ngIf="index !== 0"
+                <a *ngIf="index > 0"
                    class="fa fa-trash-o"
                    (click)="remove(context, index)">
-              </a>
+                </a>
               </div>
-
             </ng-template>
 
           </syndesis-form-control>
