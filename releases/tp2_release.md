@@ -6,11 +6,15 @@ This is the release plan for TP2, which consist of multiple distinct repos. This
 
 ### Maven Dependencies
 
+These are the Maven dependencies used by other apps. They do not necessarily require a new version on release. Here is how they are released. Don't forget to update the versionb numbers in the dependent projects.
+
 * Connectors via https://jenkins-syndesis-ci.b6ff.rh-idev.openshiftapps.com/job/connectors-release/
-  - https://github.com/syndesisio/connectors (syndesis-rest, syndesis-verifier, atlasmap)
+  - https://github.com/syndesisio/connectors (required by syndesis-rest, syndesis-verifier)
 
 * Integration runtime via https://jenkins-syndesis-ci.b6ff.rh-idev.openshiftapps.com/job/syndesis-integration-runtime-release/
-  - https://github.com/syndesisio/syndesis-integration-runtime (syndesis-rest)
+  - https://github.com/syndesisio/syndesis-integration-runtime (required by syndesis-rest)
+
+### Atlasmap
 
 * Atlasmap, release with version `$VERSION_ATLAS_MAP` (e.g. 1.31.0)
   - https://github.com/atlasmap/atlasmap via https://jenkins-syndesis-ci.b6ff.rh-idev.openshiftapps.com/job/atlasmap-release/ This will also build the atlasmap/atlasmap images.
@@ -26,10 +30,6 @@ This is the release plan for TP2, which consist of multiple distinct repos. This
     * Git tag & push
     * Change back to snapshot version number in pom.xml and commit
   - https://github.com/syndesisio/syndesis-verifier via https://jenkins-syndesis-ci.b6ff.rh-idev.openshiftapps.com/job/syndesis-verifier-release/
-
-* Check those, but not necessarily requires a new release (they are used as Maven deps only):
-  - https://github.com/syndesisio/connectors (required by syndesis-rest, syndesis-verifier)
-  - https://github.com/syndesisio/syndesis-integration-runtime (required by syndesis-rest)
 
 ### Templates
 
