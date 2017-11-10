@@ -1,5 +1,31 @@
+/*
+ * Copyright (C) 2016 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.syndesis.maven.annotation.processing;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Properties;
+import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -10,19 +36,12 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.util.Properties;
-import java.util.Set;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings({"PMD.AvoidSynchronizedAtMethodLevel", "PMD.AvoidCatchingGenericException", "PMD.ExcessiveImports"})
 @SupportedSourceVersion(value = SourceVersion.RELEASE_8)
@@ -31,11 +50,16 @@ import java.util.Set;
 })
 public class SyndesisExtensionActionProcessor extends AbstractProcessor {
     public static final String ANNOTATION_NAME = "io.syndesis.integration.runtime.api.SyndesisExtensionAction";
+    public static final String STEP_EXTENSION_NAME = "io.syndesis.integration.runtime.api.SyndesisStepExtension";
+
+    public TypeMirror steExtensionType;
     public Class<? extends Annotation> annotationClass ;
 
-	@Override
-	public synchronized void init(ProcessingEnvironment env){
+    @Override
+    public synchronized void init(ProcessingEnvironment env){
         this.processingEnv = env;
+        this.steExtensionType = processingEnv.getElementUtils().getTypeElement(STEP_EXTENSION_NAME).asType();
+
         try {
             annotationClass = (Class<? extends Annotation>) Class.forName(ANNOTATION_NAME);
         } catch (ClassNotFoundException e) {
@@ -43,10 +67,10 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
         }
     }
 
-	@Override
-	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
-	    // a lot of noisy logic to prevent this method to ever fail, since it's required by the compiler implicit contract
-	    if(annotationClass == null){
+    @Override
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
+        // a lot of noisy logic to prevent this method to ever fail, since it's required by the compiler implicit contract
+        if(annotationClass == null){
             return false;
         }
         for (Element annotatedElement : env.getElementsAnnotatedWith(annotationClass)) {
@@ -58,11 +82,11 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
                 Properties props = gatherProperties(typedElement);
                 augmentProperties(typedElement, props);
                 persistToFile(typedElement, props);
-            } catch (Exception e){
+            } catch (IOException|InvocationTargetException|IllegalAccessException e){
                 return false;
             }
         }
-	    return false;
+        return false;
     }
 
     /**
@@ -71,7 +95,13 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
      * @param props
      */
     protected void augmentProperties(TypeElement typedElement, Properties props) {
-        props.put("kind", typedElement.getQualifiedName().toString());
+        if (processingEnv.getTypeUtils().isAssignable(typedElement.asType(), steExtensionType)) {
+            props.put("kind", "STEP");
+            props.put("entrypoint", typedElement.getQualifiedName().toString());
+        } else {
+            props.put("kind", "BEAN");
+            props.put("entrypoint", typedElement.getQualifiedName().toString());
+        }
     }
 
     protected Properties gatherProperties(TypeElement classElement) throws InvocationTargetException, IllegalAccessException {
@@ -86,18 +116,18 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
 
     protected void persistToFile(TypeElement classElement, Properties props) throws IOException {
         File file = obtainResourceFile(classElement);
-        try(Writer writer = new FileWriter(file)) {
+        try(Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
             props.store(writer, "Generated by Syndesis Annotation Processor");
         }
     }
 
 
     protected void writeIfNotEmpty(Properties prop, String key, Object value) {
-	    if(value != null && !"".equals(value.toString().trim())){
-	        if(value instanceof String[]){
-	            String[] arr = (String[])value;
-	            if(arr.length > 0){
-	                prop.put(key, String.join(",", arr));
+        if(value != null && !"".equals(value.toString().trim())){
+            if(value instanceof String[]){
+                String[] arr = (String[])value;
+                if(arr.length > 0){
+                    prop.put(key, String.join(",", arr));
                 }
             } else {
                 prop.put(key, value);
@@ -122,6 +152,7 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
     /**
      * Helper method to produce class output text file using the given handler
      */
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     protected File obtainResourceFile(TypeElement classElement) throws IOException {
         File result = null;
         Filer filer = processingEnv.getFiler();
