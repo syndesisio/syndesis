@@ -33,24 +33,18 @@ All template parameters are required. Most of them have sane defaults, but some 
 | Parameter | Description |
 | --------- | ----------- |
 | **ROUTE_HOSTNAME** | The external hostname to access Syndesis |
-| **GITHUB_OAUTH_CLIENT_ID** | GitHub OAuth client ID |
-| **GITHUB_OAUTH_CLIENT_SECRET** | GitHub OAuth client secret |
 
 In order to one of the templates described above these parameters must be provided:
 
 ```
 $ oc new-app syndesis -p \
-       ROUTE_HOSTNAME=<external hostname> \
-       GITHUB_OAUTH_CLIENT_ID=<oauth client> \
-       GITHUB_OAUTH_CLIENT_SECRET=<secret>
+       ROUTE_HOSTNAME=<external hostname>
 ```
 
 Replace _&lt;external hostname&gt;_ with a value that will resolve to the address of the OpenShift router.
 
 You have to chose an address or _&lt;external hostname&gt;_ which is routable on your system (and also resolvable from inside your cluster). For a development setup you can use an external DNS resolving service like xip.io or nip.io:
 Assuming that your OpenShift cluster is reachable under the IP address _ip_ then use `syndesis.`_ip_`.nip.io`.) (e.g. `syndesis.127.0.0.1.nip.io` if your cluster is listening on localhost). With minishift you can retrieve the IP of the cluster with `minishift ip`.
-
-In order to use the GitHub integration you need a GitHub OAuth application registered at https://github.com/settings/developers For the registration of a [new OAuth application](https://github.com/settings/applications/new), you will be asked for a _callback URL_. Please use the route you have given above: `https://<external hostname>` (e.g. `https://syndesis.127.0.0.1.nip.io`). GitHub will you then give a _client id_ and a _client secret_ which you set for the corresponding template parameters.
 
 Once all pods are started up, you should be able to access the Syndesis at `https://`_&lt;external hostname&gt;_`/`.
 
@@ -62,7 +56,6 @@ Once all pods are started up, you should be able to access the Syndesis at `http
 | **OPENSHIFT_OAUTH_CLIENT_ID** | OpenShift OAuth client ID | syndesis |
 | **OPENSHIFT_OAUTH_CLIENT_SECRET** | OpenShift OAuth client secret | _(generated)_ |
 | **OPENSHIFT_OAUTH_DEFAULT_SCOPES** | OpenShift OAuth default scopes | user:full |
-| **GITHUB_OAUTH_DEFAULT_SCOPES** | GitHub OAuth default scopes | user:email public_repo |
 | **POSTGRESQL_MEMORY_LIMIT** | Maximum amount of memory the PostgreSQL container can use | 512Mi |
 | **POSTGRESQL_IMAGE_STREAM_NAMESPACE** | The OpenShift Namespace where the PostgreSQL ImageStream resides | openshift |
 | **POSTGRESQL_USER** | Username for PostgreSQL user that will be used for accessing the database | syndesis |
@@ -74,8 +67,6 @@ Once all pods are started up, you should be able to access the Syndesis at `http
 | **DEMO_DATA_ENABLED** | Whether demo data is automatically imported on startup | true |
 | **SYNDESIS_REGISTRY** | Registry from where to fetch Syndesis images | docker.io |
 | **CONTROLLERS_INTEGRATION_ENABLED**  | Should deployment of integrations be enabled? | true |
-| **ACCESS_TOKEN_LIFESPAN** | How many seconds should an access token be valid? | 300 |
-| **SESSION_LIFESPAN** | How long are idle SSO Sesions allow to exist (in ms) ? | 36000 |
 | **SYNDESIS_ENCRYPT_KEY** | The encryption key used to encrypt/decrypt stored secrets | _(generated)_ |
 
 ## Running as a Cluster Admin
@@ -88,7 +79,7 @@ Once they are started and you have logged in with `oc login -u system:admin`, ru
 $ oc create -n openshift -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis.yml
 $ oc new-project syndesis
 # Create app with the required params
-$ oc new-app syndesis -p ROUTE_HOSTNAME=syndesis.127.0.0.1.nip.io -p GITHUB_CLIENT_ID=... -p GITHUB_CLIENT_SECRET=...
+$ oc new-app syndesis -p ROUTE_HOSTNAME=syndesis.127.0.0.1.nip.io
 # Wait until all started
 $ oc get pods -w
 ```
@@ -139,8 +130,6 @@ $ oc new-app syndesis-dev-restricted \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p OPENSHIFT_PROJECT=$(oc project -q) \
     -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
-    -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
-    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} \
     -p INSECURE_SKIP_VERIFY=true
 ```
 
@@ -152,7 +141,7 @@ You should be able to log in at `https://<EXTERNAL_HOSTNAME>`.
 
 ## Minishift Quickstart
 
-With Minishift you can easily try out Syndesis. The only prerequisite is that you have a GitHub application registered at https://github.com/settings/developers For the registration, please use as callback URL the output of `https://syndesis.$(minishift ip).xip.io`. Then you get a `<GITHUB_CLIENT_ID>` and a `<GITHUB_CLIENT_SECRET>`. These should be used in the commands below.
+With Minishift you can easily try out Syndesis.
 
 ### Template selection
 
@@ -173,29 +162,17 @@ Here are step-by-step the installation instructions for setting up a Minishift i
 # 4 MB of memories are recommended
 minishift start --memory 4192
 
-# Register a GitHub application at https://github.com/settings/developers
-# .....
-
-# Use the result of this command as callback URL for the GitHub registration:
-echo https://syndesis.$(minishift ip).nip.io
-
-# Set your GitHub credentials
-GITHUB_CLIENT_ID=....
-GITHUB_CLIENT_SECRET=....
-
 # Add a serviceaccount as OAuth client to OpenShift
 oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml
 
 # Install the OpenShift template
 oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev-restricted.yml
 
-# Create an App. Add the proper GitHub credentials. Use "syndesis-dev" or "syndesis" depending on the template
+# Create an App. Use "syndesis-dev" or "syndesis" depending on the template
 # you have installed
 oc new-app syndesis-dev-restricted \
     -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
-    -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
-    -p GITHUB_OAUTH_CLIENT_ID=${GITHUB_CLIENT_ID} \
-    -p GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+    -p OPENSHIFT_MASTER=$(oc whoami --show-server)
 
 # Wait until all pods are running. Some pods are crashing at first, but are restarted
 # so that the system will eventually converts to a stable state ;-). Especially the proxies

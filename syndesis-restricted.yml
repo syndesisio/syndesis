@@ -37,10 +37,6 @@ parameters:
   generate: expression
   from: "[a-zA-Z0-9]{64}"
   required: true
-- name: GITHUB_OAUTH_DEFAULT_SCOPES
-  description: GitHub OAuth default scopes
-  value: "user:email public_repo"
-  required: true
 - description: Maximum amount of memory the PostgreSQL container can use.
   displayName: Memory Limit
   name: POSTGRESQL_MEMORY_LIMIT
@@ -94,14 +90,6 @@ parameters:
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
   value: 'true'
-- description: How many seconds should an access token be valid?
-  displayName: Acess Token Lifespan
-  name: ACCESS_TOKEN_LIFESPAN
-  value: '300'
-- description: How long are idle SSO Sesions allow to exist?
-  displayName: Idle Session Lifespan
-  name: SESSION_LIFESPAN
-  value: '36000'
 - description: Namespace containing image streams
   displayName: Image Stream Namespace
   name: IMAGE_STREAM_NAMESPACE
