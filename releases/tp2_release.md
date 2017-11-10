@@ -13,8 +13,8 @@ This is the release plan for TP2, which consist of multiple distinct repos. This
   - https://github.com/syndesisio/syndesis-integration-runtime (syndesis-rest)
 
 * Atlasmap, release with version `$VERSION_ATLAS_MAP` (e.g. 1.31.0)
-  - https://github.com/atlasmap/atlasmap
-  - https://github.com/atlasmap/camel-atlasmap (required by syndesis-rest)
+  - https://github.com/atlasmap/atlasmap via https://jenkins-syndesis-ci.b6ff.rh-idev.openshiftapps.com/job/atlasmap-release/ This will also build the atlasmap/atlasmap images.
+  - https://github.com/atlasmap/camel-atlasmap (required by syndesis-rest) via https://jenkins-syndesis-ci.b6ff.rh-idev.openshiftapps.com/job/camel-atlasmap-release/
  
 ### Syndesis
 
@@ -26,8 +26,6 @@ This is the release plan for TP2, which consist of multiple distinct repos. This
     * Git tag & push
     * Change back to snapshot version number in pom.xml and commit
   - https://github.com/syndesisio/syndesis-verifier via https://jenkins-syndesis-ci.b6ff.rh-idev.openshiftapps.com/job/syndesis-verifier-release/
-
-* Build atlasmap as Docker images
 
 * Check those, but not necessarily requires a new release (they are used as Maven deps only):
   - https://github.com/syndesisio/connectors (required by syndesis-rest, syndesis-verifier)
