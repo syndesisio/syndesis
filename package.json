@@ -9,7 +9,7 @@
     "generate": "node ./scripts/generate-ts.js",
     "start": "yarn ng serve --ssl true --ssl-key localhost.key --ssl-cert localhost.crt --proxy-config proxy.conf.js",
     "start:prod": "yarn ng serve --ssl true --ssl-key localhost.key --ssl-cert localhost.crt --proxy-config proxy.conf.js --aot --prod",
-    "start:minishift": "yarn ng serve --host 0.0.0.0 --disable-host-check",
+    "start:minishift": "./scripts/minishift-setup.sh && yarn ng serve --host 0.0.0.0 --disable-host-check --public-host $(oc get routes syndesis --template '{{.spec.host}}')",
     "build:ci": "yarn ng build --aot --prod --progress=false",
     "lint": "yarn ng lint",
     "lint:fix": "yarn ng lint --fix",
