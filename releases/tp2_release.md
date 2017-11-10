@@ -76,4 +76,4 @@ oc new-app fuse-ignite/syndesis-restricted-1.1 \
     -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
 ```
 
-* Important: Communicate to OpenShit Online Team to update the provisioning script to point to the tagged github URL 
+* Important: Communicate to OpenShift Online Team to update the provisioning script to point to the tagged github URL 
