@@ -67,10 +67,10 @@ public class GenerateMetadataMojo extends AbstractMojo {
     @Parameter
     private String version;
 
-    @Parameter
+    @Parameter(defaultValue = "${project.name}")
     private String name;
 
-    @Parameter
+    @Parameter(defaultValue = "${project.description}")
     private String description;
 
     @Parameter

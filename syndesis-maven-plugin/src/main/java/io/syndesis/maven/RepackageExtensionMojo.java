@@ -15,6 +15,16 @@
  */
 package io.syndesis.maven;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import io.syndesis.maven.layouts.ModuleLayoutFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
@@ -43,16 +53,6 @@ import org.jboss.shrinkwrap.resolver.impl.maven.MavenWorkingSessionContainer;
 import org.springframework.boot.maven.Exclude;
 import org.springframework.boot.maven.ExcludeFilter;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 /**
  * Helper Maven plugin
  *
@@ -62,10 +62,10 @@ import java.util.Set;
 @Mojo(name = "repackage-extension", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class RepackageExtensionMojo extends SupportMojo {
 
-    public static final String SPRING_BOOT_BOM = "org.springframework.boot:spring-boot-dependencies:pom:RELEASE";
-    public static final String CAMEL_BOM = "org.apache.camel:camel-spring-boot-dependencies:pom:RELEASE";
-    public static final String SYNDESIS_BOM = "io.syndesis:integration-runtime-bom:pom:RELEASE";
-    public static final String SYNDESIS_RUNTIME_BOM = "io.syndesis:syndesis-rest-parent:pom:RELEASE";
+    public static final String SPRING_BOOT_BOM = "org.springframework.boot:spring-boot-dependencies:pom:";
+    public static final String CAMEL_BOM = "org.apache.camel:camel-spring-boot-dependencies:pom:";
+    public static final String SYNDESIS_INTEGRATION_RUNTIME_BOM = "io.syndesis:integration-runtime-bom:pom:";
+    public static final String SYNDESIS_BOM = "io.syndesis:syndesis-rest-parent:pom:";
     public static final String NET_MINIDEV_JSON_SMART = "net.minidev:json-smart";
     public static final String NET_MINIDEV_ACCESSORS_SMART = "net.minidev:accessors-smart";
     public static final String ORG_OW2_ASM_ASM = "org.ow2.asm:asm";
@@ -74,7 +74,6 @@ public class RepackageExtensionMojo extends SupportMojo {
     protected String blackListedBoms;
     @Parameter
     protected String blackListedGAVs;
-
 
     @Component
     private RepositorySystem repoSystem;
@@ -153,8 +152,18 @@ public class RepackageExtensionMojo extends SupportMojo {
         bomsUsed = Arrays.asList(boms);
     }
 
+    private String resolveBomVersion(String bom, String property) {
+        return bom + project.getProperties().getProperty(property, "RELEASE");
+    }
+
     protected void addDefaultBOMs(Collection<MavenDependency> dependencies) {
-        String[] defaultBoms = new String[]{SPRING_BOOT_BOM, CAMEL_BOM, SYNDESIS_BOM, SYNDESIS_RUNTIME_BOM };
+        String[] defaultBoms = new String[]{
+            resolveBomVersion(SPRING_BOOT_BOM, "spring-boot.version"),
+            resolveBomVersion(CAMEL_BOM, "camel.version"),
+            resolveBomVersion(SYNDESIS_BOM, "syndesis.version"),
+            resolveBomVersion(SYNDESIS_INTEGRATION_RUNTIME_BOM, "syndesis-integration-runtime.version")
+        };
+
         try {
             for(String bom : defaultBoms){
                 dependencies.addAll(obtainBomDependencies(bom));
