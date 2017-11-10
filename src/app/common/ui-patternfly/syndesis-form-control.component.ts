@@ -54,11 +54,11 @@ export class SyndesisFormComponent extends DynamicFormControlComponent implement
     @Input('templates') inputTemplates: QueryList<DynamicTemplateDirective>;
     /* tslint:enable */
 
-    @Input() asBootstrapFormGroup= true;
-    @Input() bindId= true;
+    @Input() asBootstrapFormGroup = true;
+    @Input() bindId = true;
+    @Input() hasErrorMessaging = false;
     @Input() context: DynamicFormArrayGroupModel = null;
     @Input() group: FormGroup;
-    @Input() hasErrorMessaging= false;
     @Input() model: DynamicFormControlModel;
 
     @Output() blur: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
