@@ -24,6 +24,7 @@
       <relativePath>bom/pom.xml</relativePath>
   </parent>
 
+  <groupId>io.syndesis</groupId>
   <artifactId>integration-runtime</artifactId>
   <packaging>pom</packaging>
 
