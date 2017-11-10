@@ -61,9 +61,9 @@ export class SyndesisFormComponent extends DynamicFormControlComponent implement
     @Input() group: FormGroup;
     @Input() model: DynamicFormControlModel;
 
-    @Output() blur: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
-    @Output() change: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
-    @Output() focus: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
+    @Output() blur = new EventEmitter<DynamicFormControlEvent>();
+    @Output() change = new EventEmitter<DynamicFormControlEvent>();
+    @Output() focus = new EventEmitter<DynamicFormControlEvent>();
 
     type: SyndesisFormControlType | null;
 
