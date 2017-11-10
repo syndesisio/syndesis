@@ -259,6 +259,8 @@ export class IntegrationsStepConfigureComponent extends FlowPage
 
   ngOnDestroy() {
     super.ngOnDestroy();
-    this.routeSubscription.unsubscribe();
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
   }
 }
