@@ -42,4 +42,5 @@ Thumbs.db
 /yarn-error.log
 
 src/config.json
+src/config.json.bak
 users.json
