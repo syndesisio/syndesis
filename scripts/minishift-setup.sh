@@ -11,8 +11,9 @@ echo "Local IP is: ${LOCAL_IP}"
 # Let's also just back this up in case.
 mv -f src/config.json src/config.json.bak || true
 cp src/config.json.minishift src/config.json
-sed -i "s/192.168.64.2/$(minishift ip)/" src/config.json
-sed -i "s/Syndesis/Syndesis - DEVELOPMENT/" src/config.json
+sed -i.bu "s/192.168.64.2/$(minishift ip)/" src/config.json
+sed -i.bu "s/Syndesis/Syndesis - DEVELOPMENT/" src/config.json
+rm src/config.json.bu
 
 oc replace --force -f - <<EOF
 {
