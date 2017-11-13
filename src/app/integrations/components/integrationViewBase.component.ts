@@ -29,8 +29,10 @@ export class IntegrationViewBase {
   ) {}
 
   canEdit = int => int.currentStatus !== 'Deleted';
+  /* tslint:disable semicolon */
   canActivate = int =>
     int.currentStatus === 'Deactivated' || int.currentStatus === 'Draft';
+  /* tslint:enable semicolon */
   canDeactivate = int => int.currentStatus === 'Activated';
   canDelete = int => int.currentStatus !== 'Deleted';
 
