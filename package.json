@@ -2,19 +2,26 @@
   "name": "syndesis-ui",
   "version": "0.0.0",
   "license": "Apache-2.0",
-  "description": "Presentation layer for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service.",
+  "description":
+    "Presentation layer for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service.",
   "homepage": "https://github.com/syndesisio/syndesis-ui",
   "bugs": "https://github.com/syndesisio/syndesis-ui/issues",
   "scripts": {
     "compodoc": "./node_modules/.bin/compodoc -p src/tsconfig.json -s",
-    "copy:assets": "yarn ncp node_modules/@atlasmap/atlasmap.data.mapper/src/assets/dm src/assets/dm",
-    "format": "yarn prettier --single-quote --trailing-a all --write \"./src/**/*.{ts,css,scss,js,json}\"",
+    "copy:assets":
+      "yarn ncp node_modules/@atlasmap/atlasmap.data.mapper/src/assets/dm src/assets/dm",
+    "format":
+      "yarn prettier --no-color --single-quote --trailing-a all --write \"./src/**/*.{ts,css,scss,js,json}\"",
     "generate": "node ./scripts/generate-ts.js",
-    "prestart": "cp -f ./scripts/pre-commit ./.git/hooks && chmod +x ./.git/hooks/pre-commit",
-    "start": "yarn ng serve --ssl true --ssl-key localhost.key --ssl-cert localhost.crt --proxy-config proxy.conf.js",
-    "start:prod": "yarn ng serve --ssl true --ssl-key localhost.key --ssl-cert localhost.crt --proxy-config proxy.conf.js --aot --prod",
+    "prestart":
+      "cp -f ./scripts/pre-commit ./.git/hooks && chmod +x ./.git/hooks/pre-commit",
+    "start":
+      "yarn ng serve --ssl true --ssl-key localhost.key --ssl-cert localhost.crt --proxy-config proxy.conf.js",
+    "start:prod":
+      "yarn ng serve --ssl true --ssl-key localhost.key --ssl-cert localhost.crt --proxy-config proxy.conf.js --aot --prod",
     "prestart:minishift": "yarn run prestart",
-    "start:minishift": "./scripts/minishift-setup.sh && yarn ng serve --host 0.0.0.0 --disable-host-check --public-host $(oc get routes syndesis --template '{{.spec.host}}')",
+    "start:minishift":
+      "./scripts/minishift-setup.sh && yarn ng serve --host 0.0.0.0 --disable-host-check --public-host $(oc get routes syndesis --template '{{.spec.host}}')",
     "build:ci": "yarn ng build --aot --prod --progress=false",
     "lint": "yarn ng lint",
     "lint:fix": "yarn ng lint --fix",
@@ -22,7 +29,8 @@
     "test:cc": "yarn ng test --watch=false --cc",
     "test:ci": "npm rebuild && yarn ng test --watch=false --progress=false",
     "sw": "sw-precache --root=dist --config=sw-precache-config.js",
-    "docker:build": "yarn ng build --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest . && docker tag syndesis/syndesis-ui:latest docker.io/syndesis/syndesis-ui:latest",
+    "docker:build":
+      "yarn ng build --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest . && docker tag syndesis/syndesis-ui:latest docker.io/syndesis/syndesis-ui:latest",
     "commit": "yarn git-cz"
   },
   "private": true,
@@ -48,7 +56,8 @@
     "jquery": "3.1.1",
     "merge": "^1.2.0",
     "ng2-charts": "1.6.0",
-    "ng2-file-upload-base": "https://github.com/valor-software/ng2-file-upload.git#0d97b76228526befc1a9f752fbaeed8c856cdabd",
+    "ng2-file-upload-base":
+      "https://github.com/valor-software/ng2-file-upload.git#0d97b76228526befc1a9f752fbaeed8c856cdabd",
     "ngx-bootstrap": "1.9.3",
     "ngx-chips": "1.5.3",
     "ngx-restangular": "1.0.9",
