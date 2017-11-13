@@ -8,7 +8,7 @@
 
   <tour-step-template>
     <ng-template let-step="step">
-      <p class="tour-step-content">{{step?.content}}</p>
+      <p class="tour-step-content">{{ step?.content }}</p>
       <div class="tour-step-navigation text-right">
         <button *ngIf="tourService.hasPrev(step)" class="btn btn-sm btn-primary" (click)="tourService.prev()">« Prev</button>
         <button *ngIf="tourService.hasNext(step)" class="btn btn-sm btn-primary" (click)="tourService.next()">Next »</button>

@@ -19,7 +19,6 @@ import { ConnectionsModule } from '../../../connections/connections.module';
 import { EventsService } from '../../../store/entity/events.service';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 
-
 describe('IntegrationsCreateComponent', () => {
   let component: FlowViewComponent;
   let fixture: ComponentFixture<FlowViewComponent>;

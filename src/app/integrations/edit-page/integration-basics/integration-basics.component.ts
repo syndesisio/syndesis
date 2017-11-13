@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CurrentFlow } from '../current-flow.service';
@@ -9,27 +9,17 @@ import { UserService } from '../../../common/user.service';
 @Component({
   selector: 'syndesis-integrations-integration-basics',
   templateUrl: 'integration-basics.component.html',
-<<<<<<< HEAD
   styleUrls: ['./integration-basics.component.scss']
 })
-export class IntegrationBasicsComponent extends FlowPage {
+export class IntegrationBasicsComponent extends FlowPage implements OnInit {
   constructor(
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef
+    public detector: ChangeDetectorRef,
+    public tourService: TourService,
+    private userService: UserService
   ) {
-=======
-  styleUrls: [ './integration-basics.component.scss' ],
-})
-export class IntegrationBasicsComponent extends FlowPage implements OnInit {
-  constructor(public currentFlow: CurrentFlow,
-              public route: ActivatedRoute,
-              public router: Router,
-              public detector: ChangeDetectorRef,
-              public tourService: TourService,
-              private userService: UserService) {
->>>>>>> feat(guided-tour): Add remaining steps to guided tour
     super(currentFlow, route, router, detector);
   }
 
