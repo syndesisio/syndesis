@@ -119,6 +119,23 @@ public class GenerateMetadataMojo extends AbstractMojo {
     }
 
     protected void assignProperties(Properties p) {
+        if (StringUtils.isEmpty(p.getProperty("id"))) {
+            getLog().warn("Unable to define action, reason: 'id' is not set (properties: " + p + ")");
+            return;
+        }
+        if (StringUtils.isEmpty(p.getProperty("name"))) {
+            getLog().warn("Unable to define action, reason: 'name' is not set (properties: " + p + ")");
+            return;
+        }
+        if (StringUtils.isEmpty(p.getProperty("kind"))) {
+            getLog().warn("Unable to define action, reason: 'kind' is not set (properties: " + p + ")");
+            return;
+        }
+        if (StringUtils.isEmpty(p.getProperty("entrypoint"))) {
+            getLog().warn("Unable to define action, reason: 'entrypoint' is not set (properties: " + p + ")");
+            return;
+        }
+
         TechExtensionAction.Builder actionBuilder = new TechExtensionAction.Builder();
         actionBuilder.id(p.getProperty("id"));
         actionBuilder.name(p.getProperty("name"));
@@ -144,6 +161,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
         descriptorBuilder.outputDataShape(outputBuilder.build());
 
         actionBuilder.descriptor(descriptorBuilder.build());
+
+
         techExtensionBuilder.addAction(actionBuilder.build());
     }
 
