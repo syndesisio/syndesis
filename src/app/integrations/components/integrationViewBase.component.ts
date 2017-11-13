@@ -1,16 +1,11 @@
-import { ApplicationRef, Input, ViewChild } from '@angular/core';
+import { ApplicationRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
-import { Integrations, Integration } from '../../model';
+import { Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { ModalService } from '../../common/modal/modal.service';
-import { log, getCategory } from '../../logging';
+import { log } from '../../logging';
 
 import {
-  Action,
-  ActionConfig,
-  ListEvent,
-  Notification,
   NotificationService,
   NotificationType
 } from 'patternfly-ng';
