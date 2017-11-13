@@ -9,9 +9,9 @@ describe('ObjectPropertyFilterPipe', () => {
       number: 4,
       stuff: {
         inner: {
-          name: 'foo',
-        },
-      },
+          name: 'foo'
+        }
+      }
     },
     {
       name: 'bar',
@@ -19,9 +19,9 @@ describe('ObjectPropertyFilterPipe', () => {
       number: 5,
       stuff: {
         inner: {
-          name: 'bar',
-        },
-      },
+          name: 'bar'
+        }
+      }
     },
     {
       name: 'bar2',
@@ -29,9 +29,9 @@ describe('ObjectPropertyFilterPipe', () => {
       number: 6,
       stuff: {
         inner: {
-          name: 'bar2',
-        },
-      },
+          name: 'bar2'
+        }
+      }
     },
     {
       name: 'yum',
@@ -39,10 +39,10 @@ describe('ObjectPropertyFilterPipe', () => {
       number: 7,
       stuff: {
         inner: {
-          name: 'yum',
-        },
-      },
-    },
+          name: 'yum'
+        }
+      }
+    }
   ];
 
   beforeEach(() => {
@@ -52,7 +52,7 @@ describe('ObjectPropertyFilterPipe', () => {
   it('will return a filtered list of objects', () => {
     const results = pipe.transform(testArray, {
       filter: 'ba',
-      propertyName: 'name',
+      propertyName: 'name'
     });
     expect(results.length).toEqual(2);
     const result = results.shift();
@@ -64,7 +64,7 @@ describe('ObjectPropertyFilterPipe', () => {
   it('will not return any objects if the filter doesnt match', () => {
     const results = pipe.transform(testArray, {
       filter: 'bla',
-      propertyName: 'name',
+      propertyName: 'name'
     });
     expect(results.length).toEqual(0);
   });
@@ -72,7 +72,7 @@ describe('ObjectPropertyFilterPipe', () => {
   it('can filter on a numeric value', () => {
     const results = pipe.transform(testArray, {
       filter: 4,
-      propertyName: 'number',
+      propertyName: 'number'
     });
     expect(results.length).toEqual(1);
     const result = results.shift();
@@ -82,7 +82,7 @@ describe('ObjectPropertyFilterPipe', () => {
   it('can filter on a boolean', () => {
     const results = pipe.transform(testArray, {
       filter: true,
-      propertyName: 'yes',
+      propertyName: 'yes'
     });
     expect(results.length).toEqual(1);
     const result = results.shift();
@@ -93,10 +93,10 @@ describe('ObjectPropertyFilterPipe', () => {
     const results = pipe.transform(testArray, {
       filter: {
         inner: {
-          name: 'bar',
-        },
+          name: 'bar'
+        }
       },
-      propertyName: 'stuff',
+      propertyName: 'stuff'
     });
     expect(results.length).toEqual(1);
     const result = results.shift();
@@ -106,7 +106,7 @@ describe('ObjectPropertyFilterPipe', () => {
   it('can descend into an object', () => {
     const results = pipe.transform(testArray, {
       filter: 'ba',
-      propertyName: 'stuff.inner.name',
+      propertyName: 'stuff.inner.name'
     });
     expect(results.length).toEqual(2);
     const result = results.shift();
@@ -118,7 +118,7 @@ describe('ObjectPropertyFilterPipe', () => {
   it('lets me use a function', () => {
     const results = pipe.transform(testArray, {
       filter: (val: any) => val === 'bar',
-      propertyName: 'name',
+      propertyName: 'name'
     });
     expect(results.length).toEqual(1);
   });

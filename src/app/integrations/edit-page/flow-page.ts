@@ -14,12 +14,12 @@ export abstract class FlowPage implements OnDestroy {
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
+    public detector: ChangeDetectorRef
   ) {
     this.flowSubscription = this.currentFlow.events.subscribe(
       (event: FlowEvent) => {
         this.handleFlowEvent(event);
-      },
+      }
     );
   }
 
@@ -28,7 +28,9 @@ export abstract class FlowPage implements OnDestroy {
   }
 
   get integrationName() {
-    return this.currentFlow.integration ? this.currentFlow.integration.name : undefined;
+    return this.currentFlow.integration
+      ? this.currentFlow.integration.name
+      : undefined;
   }
 
   cancel() {
@@ -54,7 +56,7 @@ export abstract class FlowPage implements OnDestroy {
       this.currentFlow.integration.name === ''
     ) {
       this.router.navigate(['integration-basics'], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       this.saveInProgress = false;
       this.publishInProgress = false;
@@ -79,7 +81,7 @@ export abstract class FlowPage implements OnDestroy {
           this.publishInProgress = false;
           this.detector.detectChanges();
         }, 10);
-      },
+      }
     });
   }
 
@@ -95,7 +97,7 @@ export abstract class FlowPage implements OnDestroy {
   }
 
   publish(
-    status: 'Draft' | 'Activated' | 'Deactivated' | 'Deleted' = 'Activated',
+    status: 'Draft' | 'Activated' | 'Deactivated' | 'Deleted' = 'Activated'
   ) {
     this.currentFlow.integration.desiredStatus = status;
     this.publishInProgress = true;

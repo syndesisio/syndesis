@@ -27,8 +27,8 @@ export class CurrentConnectionService {
 
   constructor(
     private store: ConnectionStore,
-    private connectorStore: ConnectorStore,
-  ) { }
+    private connectorStore: ConnectorStore
+  ) {}
 
   init() {
     this._credentials = undefined;
@@ -36,7 +36,7 @@ export class CurrentConnectionService {
     this._connection = undefined;
     this._loaded = false;
     this.subscription = this.events.subscribe((event: ConnectionEvent) =>
-      this.handleEvent(event),
+      this.handleEvent(event)
     );
   }
 
@@ -53,7 +53,7 @@ export class CurrentConnectionService {
         if (!this.fetchConnector(this._connection.connectorId)) {
           this.events.emit({
             kind: 'connection-check-credentials',
-            connectorId: this._connection.connectorId,
+            connectorId: this._connection.connectorId
           });
         }
         break;
@@ -61,7 +61,7 @@ export class CurrentConnectionService {
         if (!this.checkCredentials()) {
           this.events.emit({
             kind: 'connection-set-connection',
-            connection: this._connection,
+            connection: this._connection
           });
         }
         break;
@@ -140,7 +140,7 @@ export class CurrentConnectionService {
     const connectorId = connection.connectorId;
     this.events.emit({
       kind: 'connection-check-connector',
-      connection: this._connection,
+      connection: this._connection
     });
   }
 
@@ -156,21 +156,21 @@ export class CurrentConnectionService {
           sub.unsubscribe();
           this.events.emit({
             kind: 'connection-set-connection',
-            connection: this._connection,
+            connection: this._connection
           });
         },
         error => {
           log.infoc(
             () =>
               'Failed to fetch connector credentials: ' + JSON.stringify(error),
-            category,
+            category
           );
           sub.unsubscribe();
           this.events.emit({
             kind: 'connection-set-connection',
-            connection: this._connection,
+            connection: this._connection
           });
-        },
+        }
       );
       return true;
     } else {
@@ -189,7 +189,7 @@ export class CurrentConnectionService {
           this._connection.icon = connector.icon;
           this.events.emit({
             kind: 'connection-check-credentials',
-            connection: this._connection,
+            connection: this._connection
           });
           sub.unsubscribe();
         },
@@ -197,7 +197,7 @@ export class CurrentConnectionService {
           try {
             log.infoc(
               () => 'Failed to fetch connector: ' + JSON.stringify(error),
-              category,
+              category
             );
           } catch (err) {
             log.infoc(() => 'Failed to fetch connector: ' + error, category);
@@ -205,10 +205,10 @@ export class CurrentConnectionService {
           this.events.emit({
             kind: 'connection-check-credentials',
             error: error,
-            connection: this._connection,
+            connection: this._connection
           });
           sub.unsubscribe();
-        },
+        }
       );
       return true;
     }
@@ -234,7 +234,7 @@ export class CurrentConnectionService {
   private saveConnection(event: ConnectionEvent) {
     // poor man's clone
     const connection = <Connection>JSON.parse(
-      JSON.stringify(event['connection'] || this.connection),
+      JSON.stringify(event['connection'] || this.connection)
     );
     // just in case this leaks through from the form
     for (const prop in connection.connector.properties) {
@@ -256,7 +256,7 @@ export class CurrentConnectionService {
       (c: Connection) => {
         log.debugc(
           () => 'Saved connection: ' + JSON.stringify(c, undefined, 2),
-          category,
+          category
         );
         const action = event['action'];
         if (action && typeof action === 'function') {
@@ -268,14 +268,14 @@ export class CurrentConnectionService {
         log.debugc(
           () =>
             'Error saving connection: ' + JSON.stringify(reason, undefined, 2),
-          category,
+          category
         );
         const errorAction = event['error'];
         if (errorAction && typeof errorAction === 'function') {
           errorAction(reason);
         }
         sub.unsubscribe();
-      },
+      }
     );
   }
 }

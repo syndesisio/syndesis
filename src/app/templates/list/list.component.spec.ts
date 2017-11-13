@@ -14,11 +14,11 @@ describe('TemplatesListComponent', () => {
       TestBed.configureTestingModule({
         imports: [
           SyndesisCommonModule.forRoot(),
-          RouterTestingModule.withRoutes([]),
+          RouterTestingModule.withRoutes([])
         ],
-        declarations: [TemplatesListComponent],
+        declarations: [TemplatesListComponent]
       }).compileComponents();
-    }),
+    })
   );
 
   beforeEach(() => {

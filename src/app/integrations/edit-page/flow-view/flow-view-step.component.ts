@@ -16,7 +16,7 @@ const category = getCategory('IntegrationsCreatePage');
 @Component({
   selector: 'syndesis-integrations-flow-view-step',
   templateUrl: './flow-view-step.component.html',
-  styleUrls: ['./flow-view-step.component.scss'],
+  styleUrls: ['./flow-view-step.component.scss']
 })
 export class FlowViewStepComponent extends ChildAwarePage {
   // the step object in the current flow
@@ -39,7 +39,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
     public router: Router,
     private stepStore: StepStore,
     private modalService: ModalService,
-    private detector: ChangeDetectorRef,
+    private detector: ChangeDetectorRef
   ) {
     super(currentFlow, route, router);
   }
@@ -95,7 +95,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
   deletePrompt() {
     this.modalService
       .show('delete-integration-step-' + this.position)
-      .then( modal => {
+      .then(modal => {
         if (modal.result) {
           this.deleteStep();
         }
@@ -119,15 +119,15 @@ export class FlowViewStepComponent extends ChildAwarePage {
           }
           if (isFirst || isLast) {
             this.router.navigate(['connection-select', position], {
-              relativeTo: this.route,
+              relativeTo: this.route
             });
           } else {
             this.router.navigate(['save-or-add-step'], {
-              relativeTo: this.route,
+              relativeTo: this.route
             });
           }
         }, 10);
-      },
+      }
     });
   }
 
@@ -295,12 +295,12 @@ export class FlowViewStepComponent extends ChildAwarePage {
     if (step && !this.stepIsComplete(step)) {
       return;
     }
-    const route  = [page, this.getPosition()];
+    const route = [page, this.getPosition()];
     if (index !== undefined) {
       route.push(index);
     }
     this.router.navigate(route, {
-      relativeTo: this.route,
+      relativeTo: this.route
     });
   }
 

@@ -8,14 +8,14 @@ import { FlowPage } from '../flow-page';
 @Component({
   selector: 'syndesis-integrations-integration-basics',
   templateUrl: 'integration-basics.component.html',
-  styleUrls: ['./integration-basics.component.scss'],
+  styleUrls: ['./integration-basics.component.scss']
 })
 export class IntegrationBasicsComponent extends FlowPage {
   constructor(
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
+    public detector: ChangeDetectorRef
   ) {
     super(currentFlow, route, router, detector);
   }
@@ -30,7 +30,7 @@ export class IntegrationBasicsComponent extends FlowPage {
   continue() {
     this.router.navigate(['save-or-add-step'], {
       queryParams: { validate: true },
-      relativeTo: this.route.parent,
+      relativeTo: this.route.parent
     });
   }
 
@@ -43,7 +43,7 @@ export class IntegrationBasicsComponent extends FlowPage {
     this.currentFlow.events.emit({
       kind: 'integration-set-property',
       property: 'name',
-      value: name,
+      value: name
     });
   }
 
@@ -55,7 +55,7 @@ export class IntegrationBasicsComponent extends FlowPage {
     this.currentFlow.events.emit({
       kind: 'integration-set-property',
       property: 'description',
-      value: description,
+      value: description
     });
   }
 
@@ -72,7 +72,7 @@ export class IntegrationBasicsComponent extends FlowPage {
     this.currentFlow.events.emit({
       kind: 'integration-set-property',
       property: 'tags',
-      value: _tags,
+      value: _tags
     });
   }
 }

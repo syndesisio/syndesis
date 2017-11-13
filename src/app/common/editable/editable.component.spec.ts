@@ -2,7 +2,6 @@ import { ChangeDetectorRef } from '@angular/core';
 import { EditableComponent } from './editable.component';
 
 describe('EditableComponent', () => {
-
   class MyEditableComponent extends EditableComponent {
     constructor(changeDetectorRef: ChangeDetectorRef) {
       super(changeDetectorRef);
@@ -24,59 +23,53 @@ describe('EditableComponent', () => {
   describe('submit', () => {
     it('sets error message', done => {
       spyOn(component, 'validate').and.returnValue(Promise.resolve(ERROR));
-      component.submit(VALUE2)
-        .then(() => {
-          expect(component.errorMessage).toBe(ERROR);
-          done();
-        });
+      component.submit(VALUE2).then(() => {
+        expect(component.errorMessage).toBe(ERROR);
+        done();
+      });
     });
 
     it('saves value when valid', done => {
       spyOn(component, 'validate').and.returnValue(Promise.resolve(null));
       const spy = spyOn(component, 'save');
-      component.submit(VALUE2)
-        .then(() => {
-          expect(spy).toHaveBeenCalledWith(VALUE2);
-          done();
-        });
+      component.submit(VALUE2).then(() => {
+        expect(spy).toHaveBeenCalledWith(VALUE2);
+        done();
+      });
     });
 
     it('does not save value when invalid', done => {
       spyOn(component, 'validate').and.returnValue(Promise.resolve(ERROR));
       const spy = spyOn(component, 'save');
-      component.submit(VALUE2)
-        .then(() => {
-          expect(spy).not.toHaveBeenCalled();
-          done();
-        });
+      component.submit(VALUE2).then(() => {
+        expect(spy).not.toHaveBeenCalled();
+        done();
+      });
     });
 
     it('detects changes', done => {
       spyOn(component, 'validate').and.returnValue(Promise.resolve(ERROR));
-      component.submit(VALUE2)
-        .then(() => {
-          expect(detector.detectChanges).toHaveBeenCalled();
-          done();
-        });
+      component.submit(VALUE2).then(() => {
+        expect(detector.detectChanges).toHaveBeenCalled();
+        done();
+      });
     });
   });
 
   describe('validate', () => {
     it('returns Promise that resolves to null when validation function is not set', done => {
-      component.validate(VALUE2)
-        .then(result => {
-          expect(result).toBe(null);
-          done();
-        });
+      component.validate(VALUE2).then(result => {
+        expect(result).toBe(null);
+        done();
+      });
     });
 
     it('returns Promise that resolves to value returned by validation function', done => {
       component.validationFn = value => ERROR;
-      component.validate(VALUE2)
-        .then(result => {
-          expect(result).toBe(ERROR);
-          done();
-        });
+      component.validate(VALUE2).then(result => {
+        expect(result).toBe(ERROR);
+        done();
+      });
     });
   });
 
@@ -112,5 +105,4 @@ describe('EditableComponent', () => {
       expect(component.editing).toBe(false);
     });
   });
-
 });

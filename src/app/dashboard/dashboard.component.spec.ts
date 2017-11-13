@@ -39,13 +39,13 @@ describe('DashboardComponent', () => {
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),
           NotificationModule,
-          IntegrationsListModule,
+          IntegrationsListModule
         ],
         declarations: [
           DashboardComponent,
           EmptyStateComponent,
           DashboardConnectionsComponent,
-          DashboardIntegrationsComponent,
+          DashboardIntegrationsComponent
         ],
         providers: [
           MockBackend,
@@ -55,12 +55,12 @@ describe('DashboardComponent', () => {
             useFactory: (backend, options) => {
               return new Http(backend, options);
             },
-            deps: [MockBackend, RequestOptions],
+            deps: [MockBackend, RequestOptions]
           },
-          TourService,
-        ],
+          TourService
+        ]
       }).compileComponents();
-    }),
+    })
   );
 
   beforeEach(() => {

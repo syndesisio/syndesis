@@ -30,5 +30,4 @@ export class NavigationService {
   private get setupVerticalNavigation(): any {
     return this.jQuery['setupVerticalNavigation'];
   }
-
 }

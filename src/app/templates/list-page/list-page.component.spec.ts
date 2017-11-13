@@ -22,12 +22,12 @@ describe('TemplatesListPage', () => {
           SyndesisCommonModule.forRoot(),
           StoreModule,
           RestangularModule.forRoot(),
-          RouterTestingModule.withRoutes([]),
+          RouterTestingModule.withRoutes([])
         ],
         declarations: [
           TemplatesListPage,
           ListToolbarComponent,
-          TemplatesListComponent,
+          TemplatesListComponent
         ],
         providers: [
           MockBackend,
@@ -37,11 +37,11 @@ describe('TemplatesListPage', () => {
             useFactory: (backend, options) => {
               return new Http(backend, options);
             },
-            deps: [MockBackend, RequestOptions],
-          },
-        ],
+            deps: [MockBackend, RequestOptions]
+          }
+        ]
       }).compileComponents();
-    }),
+    })
   );
 
   beforeEach(() => {

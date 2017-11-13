@@ -11,18 +11,19 @@ import { UserService } from '../../../common/user.service';
 
 @Component({
   selector: 'syndesis-connections-connection-basics',
-  templateUrl: 'connection-basics.component.html',
+  templateUrl: 'connection-basics.component.html'
 })
 export class ConnectionsConnectionBasicsComponent implements OnInit {
-
   loading: Observable<boolean>;
   connectors: Observable<Connectors>;
   filteredConnectors: Subject<Connectors> = new BehaviorSubject(<Connectors>{});
 
-  constructor(private current: CurrentConnectionService,
-              private connectorStore: ConnectorStore,
-              public tourService: TourService,
-              private userService: UserService) {
+  constructor(
+    private current: CurrentConnectionService,
+    private connectorStore: ConnectorStore,
+    public tourService: TourService,
+    private userService: UserService
+  ) {
     this.loading = connectorStore.loading;
     this.connectors = connectorStore.list;
   }
@@ -34,21 +35,23 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
     if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
+      this.tourService.initialize([
+        {
           route: 'connections/create/connection-basics',
           anchorId: 'connections.type',
-          content: 'A connection represents a specific application that you want to obtain data from or send data to.',
+          content:
+            'A connection represents a specific application that you want to obtain data from or send data to.',
           placement: 'left',
-          title: 'Connection',
-        } ],
-      );
+          title: 'Connection'
+        }
+      ]);
       setTimeout(() => this.tourService.start());
     }
   }
 
   onSelected(connector: Connector) {
     const connection = TypeFactory.createConnection();
-    const plain = connector[ 'plain' ];
+    const plain = connector['plain'];
     if (plain && typeof plain === 'function') {
       connection.connector = plain();
     } else {
@@ -58,5 +61,4 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
     connection.connectorId = connector.id;
     this.current.connection = connection;
   }
-
 }

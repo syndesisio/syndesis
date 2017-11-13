@@ -22,7 +22,8 @@ import { ConnectionStore } from '../../store/connection/connection.store';
       </ng-container>
     </syndesis-loading>
   `,
-  styles: [`
+  styles: [
+    `
   :host {
     display: flex;
     flex-direction: column;
@@ -43,7 +44,8 @@ import { ConnectionStore } from '../../store/connection/connection.store';
     padding-bottom: 20px;
   }
 
-`],
+`
+  ]
 })
 export class ConnectionDetailPageComponent implements OnInit, OnDestroy {
   connection: Connection;
@@ -53,7 +55,7 @@ export class ConnectionDetailPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private connectionStore: ConnectionStore,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     this.loading = connectionStore.loading;
   }
@@ -61,9 +63,11 @@ export class ConnectionDetailPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
-      this.subscription = this.connectionStore.load(id).subscribe(connection => {
-        this.connection = connection;
-      });
+      this.subscription = this.connectionStore
+        .load(id)
+        .subscribe(connection => {
+          this.connection = connection;
+        });
     });
   }
 
@@ -75,5 +79,4 @@ export class ConnectionDetailPageComponent implements OnInit, OnDestroy {
     this.connection = connection;
     this.connectionStore.update(connection);
   }
-
 }

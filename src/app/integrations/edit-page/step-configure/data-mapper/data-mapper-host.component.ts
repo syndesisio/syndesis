@@ -3,20 +3,22 @@ import {
   Component,
   ViewChild,
   OnInit,
-  Input,
+  Input
 } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
-  DocumentDefinition, MappingDefinition,
-  ConfigModel, MappingModel,
+  DocumentDefinition,
+  MappingDefinition,
+  ConfigModel,
+  MappingModel,
   InitializationService,
   ErrorHandlerService,
   DocumentManagementService,
   MappingManagementService,
   MappingSerializer,
-  DataMapperAppComponent,
+  DataMapperAppComponent
 } from '@atlasmap/atlasmap.data.mapper';
 
 import { ConfigService } from '../../../../config.service';
@@ -51,7 +53,7 @@ const MAPPING_KEY = 'atlasmapping';
         /* TODO probably a better way to set this height to the viewport */
         height: calc(100vh - 140px);
       }
-    `,
+    `
   ],
   providers: [
     // @FIXME - This overrides the provider singletons from this point on down the component subtree,
@@ -60,8 +62,8 @@ const MAPPING_KEY = 'atlasmapping';
     InitializationService,
     MappingManagementService,
     ErrorHandlerService,
-    DocumentManagementService,
-  ],
+    DocumentManagementService
+  ]
 })
 export class DataMapperHostComponent extends FlowPage implements OnInit {
   routeSubscription: Subscription;
@@ -86,13 +88,17 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     public configService: ConfigService,
     public initializationService: InitializationService,
     public support: IntegrationSupportService,
-    public detector: ChangeDetectorRef,
+    public detector: ChangeDetectorRef
   ) {
     super(currentFlow, route, router, detector);
     this.resetConfig();
   }
 
-  createDocumentDefinition(connectorId: string, dataShape: DataShape, isSource = false) {
+  createDocumentDefinition(
+    connectorId: string,
+    dataShape: DataShape,
+    isSource = false
+  ) {
     if (!dataShape || !dataShape.kind) {
       // skip
       return;
@@ -103,17 +109,27 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     // TODO not sure what to do for `none` or `any` here
     switch (kind) {
       case 'java':
-        const docDef: DocumentDefinition = this.cfg.addJavaDocument(type, isSource);
+        const docDef: DocumentDefinition = this.cfg.addJavaDocument(
+          type,
+          isSource
+        );
         this.support.requestJavaInspection(connectorId, type).subscribe(
           data => {
             const inspection: string = data['_body'];
-            log.infoc(() => 'Precomputed java document found for ' + type, category);
+            log.infoc(
+              () => 'Precomputed java document found for ' + type,
+              category
+            );
             log.debugc(() => inspection, category);
             docDef.initCfg.inspectionResultContents = inspection;
           },
           err => {
-            log.warnc(() => 'No precomputed java document found for ' + type + ': ' + err, category);
-          },
+            log.warnc(
+              () =>
+                'No precomputed java document found for ' + type + ': ' + err,
+              category
+            );
+          }
         );
         break;
       case 'json':
@@ -143,10 +159,22 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     }
     this.cfg.mappings = new MappingDefinition();
 
-    const previousConnectorId: string = this.currentFlow.getPreviousConnection(this.position).connection.connectorId;
-    const subsequentConnectorId: string = this.currentFlow.getSubsequentConnection(this.position).connection.connectorId;
-    this.createDocumentDefinition(previousConnectorId, this.outputDataShape, true);
-    this.createDocumentDefinition(subsequentConnectorId, this.inputDataShape, false);
+    const previousConnectorId: string = this.currentFlow.getPreviousConnection(
+      this.position
+    ).connection.connectorId;
+    const subsequentConnectorId: string = this.currentFlow.getSubsequentConnection(
+      this.position
+    ).connection.connectorId;
+    this.createDocumentDefinition(
+      previousConnectorId,
+      this.outputDataShape,
+      true
+    );
+    this.createDocumentDefinition(
+      subsequentConnectorId,
+      this.inputDataShape,
+      false
+    );
 
     // TODO for now set a really long timeout
     this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;
@@ -157,7 +185,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
         MappingSerializer.deserializeMappingServiceJSON(
           JSON.parse(mappings),
           mappingDefinition,
-          this.cfg,
+          this.cfg
         );
       } catch (err) {
         // TODO popup or error alert?  At least catch this so we initialize
@@ -188,14 +216,14 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
       'debugClassPathServiceCalls',
       'debugValidationServiceCalls',
       'debugFieldActionServiceCalls',
-      'debugDocumentParsing',
+      'debugDocumentParsing'
     ];
     for (const debugConfigKey of debugConfigKeys) {
       let debugKeyValue = false;
       try {
         debugKeyValue = this.configService.getSettings(
           'datamapper',
-          debugConfigKey,
+          debugConfigKey
         );
       } catch (err) {
         // @TODO: Remove this try/catch once ChangeDetection is restored
@@ -208,7 +236,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
       (saveHandler: Function) => {
         const json = this.cfg.mappingService.serializeMappingsToJSON();
         const properties = {
-          atlasmapping: JSON.stringify(json),
+          atlasmapping: JSON.stringify(json)
         };
         this.currentFlow.events.emit({
           kind: 'integration-set-properties',
@@ -217,9 +245,9 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
           onSave: () => {
             this.cfg.mappingService.handleMappingSaveSuccess(saveHandler);
             log.debugc(() => 'Saved mapping file: ' + json, category);
-          },
+          }
         });
-      },
+      }
     );
 
     // make sure the property is set on the integration
@@ -227,13 +255,13 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
       kind: 'integration-set-properties',
       position: this.position,
       properties: {
-        atlasmapping: mappings ? mappings : '',
+        atlasmapping: mappings ? mappings : ''
       },
       onSave: () => {
         setTimeout(() => {
           this.initializeMapper();
         }, 10);
-      },
+      }
     });
   }
 
@@ -289,29 +317,29 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     this.cfg.initCfg.baseJavaInspectionServiceUrl = this.fetchServiceUrl(
       'baseJavaInspectionServiceUrl',
       baseUrl + 'java/',
-      this.configService,
+      this.configService
     );
     this.cfg.initCfg.baseXMLInspectionServiceUrl = this.fetchServiceUrl(
       'baseXMLInspectionServiceUrl',
       baseUrl + 'xml/',
-      this.configService,
+      this.configService
     );
     this.cfg.initCfg.baseJSONInspectionServiceUrl = this.fetchServiceUrl(
       'baseJSONInspectionServiceUrl',
       baseUrl + 'json/',
-      this.configService,
+      this.configService
     );
     this.cfg.initCfg.baseMappingServiceUrl = this.fetchServiceUrl(
       'baseMappingServiceUrl',
       baseUrl,
-      this.configService,
+      this.configService
     );
   }
 
   private fetchServiceUrl(
     configKey: string,
     defaultUrl: string,
-    configService: ConfigService,
+    configService: ConfigService
   ): string {
     try {
       return configService.getSettings('datamapper', configKey);

@@ -20,7 +20,7 @@ import { DashboardConnectionsComponent } from './connections.component';
 import { DashboardIntegrationsComponent } from './integrations.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent, pathMatch: 'full' },
+  { path: '', component: DashboardComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -33,14 +33,14 @@ const routes: Routes = [
     ChartsModule,
     ModalModule,
     TooltipModule,
-    BsDropdownModule,
+    BsDropdownModule
   ],
   declarations: [
     DashboardComponent,
     DashboardConnectionsComponent,
     DashboardIntegrationsComponent,
     EmptyStateComponent,
-    PopularTemplatesComponent,
-  ],
+    PopularTemplatesComponent
+  ]
 })
 export class DashboardModule {}

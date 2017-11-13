@@ -13,7 +13,7 @@ export class IntegrationStore extends AbstractStore<
 > {
   constructor(
     integrationService: IntegrationService,
-    eventService: EventsService,
+    eventService: EventsService
   ) {
     super(integrationService, eventService, [], <Integration>{});
   }

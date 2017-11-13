@@ -3,7 +3,7 @@ import {
   CategoryLogger,
   CategoryServiceFactory,
   CategoryDefaultConfiguration,
-  LogLevel,
+  LogLevel
 } from 'typescript-logging';
 
 // TODO typescript-logging will support a console API to change this at runtime in the future, for now we'll use localStorage
@@ -13,7 +13,7 @@ const logLevel = LogLevel[storedLogLevel] || LogLevel.Info;
 
 // default configuration
 CategoryServiceFactory.setDefaultConfiguration(
-  new CategoryDefaultConfiguration(logLevel),
+  new CategoryDefaultConfiguration(logLevel)
 );
 
 const rootCategory = new Category('root');
@@ -31,5 +31,5 @@ export function getCategory(name: string) {
 
 // files should import this logger instance
 export const log: CategoryLogger = CategoryServiceFactory.getLogger(
-  rootCategory,
+  rootCategory
 );

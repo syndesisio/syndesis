@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  Inject
+} from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Response } from '@angular/http';
 import { Meta, Title } from '@angular/platform-browser';
@@ -7,7 +13,7 @@ import { Restangular } from 'ngx-restangular';
 import {
   Notification,
   NotificationEvent,
-  NotificationService,
+  NotificationService
 } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
 import { ModalService } from './common/modal/modal.service';
@@ -22,9 +28,9 @@ import { TourService } from 'ngx-tour-ngx-bootstrap';
 @Component({
   selector: 'syndesis-root',
   templateUrl: './app.component.html',
-  styleUrls: [ './app.component.scss' ],
+  styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ Restangular, TestSupportService ],
+  providers: [Restangular, TestSupportService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
   // TODO icon?
@@ -79,17 +85,18 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   showClose: boolean;
 
-  constructor(private config: ConfigService,
-              private userService: UserService,
-              public testSupport: TestSupportService,
-              private notificationService: NotificationService,
-              private navigationService: NavigationService,
-              public tourService: TourService,
-              private modalService: ModalService,
-              private title: Title,
-              private meta: Meta,
-              @Inject(DOCUMENT) private document: any) {
-  }
+  constructor(
+    private config: ConfigService,
+    private userService: UserService,
+    public testSupport: TestSupportService,
+    private notificationService: NotificationService,
+    private navigationService: NavigationService,
+    public tourService: TourService,
+    private modalService: ModalService,
+    private title: Title,
+    private meta: Meta,
+    @Inject(DOCUMENT) private document: any
+  ) {}
 
   ngOnInit() {
     this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
@@ -100,42 +107,42 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.productBuild = this.config.getSettings(
       'branding',
       'productBuild',
-      false,
+      false
     );
     this.logoWhiteBg = this.config.getSettings(
       'branding',
       'logoWhiteBg',
-      'assets/images/syndesis-logo-svg-white.svg',
+      'assets/images/syndesis-logo-svg-white.svg'
     );
     this.logoDarkBg = this.config.getSettings(
       'branding',
       'logoDarkBg',
-      'assets/images/syndesis-logo-svg-white.svg',
+      'assets/images/syndesis-logo-svg-white.svg'
     );
     this.iconDarkBg = this.config.getSettings(
       'branding',
       'iconDarkBg',
-      'assets/images/glasses_logo_square.png',
+      'assets/images/glasses_logo_square.png'
     );
     this.iconWhiteBg = this.config.getSettings(
       'branding',
       'iconWhiteBg',
-      'assets/images/glasses_logo_square.png',
+      'assets/images/glasses_logo_square.png'
     );
     const favicon32 = this.config.getSettings(
       'branding',
       'favicon32',
-      '/favicon-32x32.png',
+      '/favicon-32x32.png'
     );
     const favicon16 = this.config.getSettings(
       'branding',
       'favicon16',
-      '/favicon-16x16.png',
+      '/favicon-16x16.png'
     );
     const touchIcon = this.config.getSettings(
       'branding',
       'touchIcon',
-      '/apple-touch-icon.png',
+      '/apple-touch-icon.png'
     );
 
     if (this.document && this.document.getElementById) {
@@ -196,8 +203,8 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   exportDB() {
     this.testSupport.snapshotDB().subscribe((value: Response) => {
-      const blob = new Blob([ value.text() ], {
-        type: 'text/plain;charset=utf-8',
+      const blob = new Blob([value.text()], {
+        type: 'text/plain;charset=utf-8'
       });
       saveAs(blob, 'syndesis-db-export.json');
     });
@@ -210,7 +217,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.modalService.show('importDb').then(modal => {
       if (modal.result) {
         return this.testSupport
-          .restoreDB(modal[ 'json' ])
+          .restoreDB(modal['json'])
           .take(1)
           .toPromise()
           .then(_ => log.debugc(() => 'DB has been imported'));
@@ -222,9 +229,9 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Function that imports a database.
    */
   importDB(event, modal) {
-    const file = event.srcElement.files[ 0 ];
+    const file = event.srcElement.files[0];
     const reader = new FileReader();
-    reader.onload = _ => (modal[ 'json' ] = JSON.parse(reader.result));
+    reader.onload = _ => (modal['json'] = JSON.parse(reader.result));
     reader.readAsText(file, 'text/plain;charset=utf-8');
   }
 

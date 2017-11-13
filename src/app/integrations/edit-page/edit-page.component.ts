@@ -17,7 +17,7 @@ const category = getCategory('IntegrationsEditPage');
 @Component({
   selector: 'syndesis-integrations-edit-page',
   templateUrl: './edit-page.component.html',
-  styleUrls: ['./edit-page.component.scss'],
+  styleUrls: ['./edit-page.component.scss']
 })
 export class IntegrationsEditPage extends ChildAwarePage
   implements OnInit, OnDestroy {
@@ -41,7 +41,7 @@ export class IntegrationsEditPage extends ChildAwarePage
     public detector: ChangeDetectorRef,
     public nav: NavigationService,
     public tourService: TourService,
-    private userService: UserService,
+    private userService: UserService
   ) {
     super(currentFlow, route, router);
     this.integration = this.store.resource;
@@ -50,7 +50,7 @@ export class IntegrationsEditPage extends ChildAwarePage
     this.flowSubscription = this.currentFlow.events.subscribe(
       (event: FlowEvent) => {
         this.handleFlowEvent(event);
-      },
+      }
     );
   }
 
@@ -111,7 +111,7 @@ export class IntegrationsEditPage extends ChildAwarePage
     if (validate) {
       this.router.navigate(['save-or-add-step'], {
         queryParams: { validate: true },
-        relativeTo: this.route,
+        relativeTo: this.route
       });
     }
   }
@@ -196,7 +196,7 @@ export class IntegrationsEditPage extends ChildAwarePage
           }
           */
         }
-      },
+      }
     );
     this.routeSubscription = this.route.params
       .pluck<Params, string>('integrationId')

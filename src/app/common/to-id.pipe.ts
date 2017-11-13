@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'toId',
+  name: 'toId'
 })
 /**
  * Converts and normalizes a string to a valid and standardized

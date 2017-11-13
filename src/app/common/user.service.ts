@@ -48,7 +48,9 @@ export class UserService {
    * Log the user out
    */
   logout(): Observable<any> {
-    return this.http.get(this.apiBaseUrl + '/oauth/sign_out').map((res: any) => res.json());
+    return this.http
+      .get(this.apiBaseUrl + '/oauth/sign_out')
+      .map((res: any) => res.json());
   }
 
   setUser(user: User) {
@@ -59,8 +61,12 @@ export class UserService {
     // @FIXME: `first()` is perhaps unnecessary here. Angular's Http (and HttpClient)
     //  Apis flag the observable stream as COMPLETE (and hence finish the subscription stream)
     // when the response is received, hence leaving the `.first()` RxJS call as unnecessary
-    this.restangularService.one('~').get().first().subscribe(user => {
-      this.setUser(user);
-    });
+    this.restangularService
+      .one('~')
+      .get()
+      .first()
+      .subscribe(user => {
+        this.setUser(user);
+      });
   }
 }

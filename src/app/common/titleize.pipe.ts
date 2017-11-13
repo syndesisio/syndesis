@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'titleize',
+  name: 'titleize'
 })
 export class TitleizePipe implements PipeTransform {
   transform(value: string, config: any) {

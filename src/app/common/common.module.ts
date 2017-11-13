@@ -29,7 +29,7 @@ import { TagInputModule } from 'ngx-chips';
     //HttpModule,
     FormsModule,
     CommonModule,
-    TagInputModule,
+    TagInputModule
   ],
   declarations: [
     DerpPipe,
@@ -44,7 +44,7 @@ import { TagInputModule } from 'ngx-chips';
     ModalComponent,
     EditableTagsComponent,
     EditableTextComponent,
-    EditableTextareaComponent,
+    EditableTextareaComponent
   ],
   exports: [
     DerpPipe,
@@ -59,11 +59,9 @@ import { TagInputModule } from 'ngx-chips';
     ModalComponent,
     EditableTagsComponent,
     EditableTextComponent,
-    EditableTextareaComponent,
+    EditableTextareaComponent
   ],
-  providers: [
-    FormFactoryService,
-  ],
+  providers: [FormFactoryService]
 })
 export class SyndesisCommonModule {
   static forRoot(): ModuleWithProviders {
@@ -75,8 +73,8 @@ export class SyndesisCommonModule {
         ConfigService,
         ModalService,
         NotificationService,
-        NavigationService,
-      ],
+        NavigationService
+      ]
     };
   }
 }

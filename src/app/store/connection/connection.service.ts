@@ -7,7 +7,6 @@ import { Connection, Connections, TypeFactory } from '../../model';
 
 @Injectable()
 export class ConnectionService extends RESTService<Connection, Connections> {
-
   private validationService;
 
   constructor(restangular: Restangular) {
@@ -22,10 +21,11 @@ export class ConnectionService extends RESTService<Connection, Connections> {
       .post(connection)
       .toPromise()
       .then(response => null)
-      .catch(response => response.data.reduce((errors, item) => {
-        errors[item.error] = true;
-        return errors;
-      }, {}));
+      .catch(response =>
+        response.data.reduce((errors, item) => {
+          errors[item.error] = true;
+          return errors;
+        }, {})
+      );
   }
-
 }

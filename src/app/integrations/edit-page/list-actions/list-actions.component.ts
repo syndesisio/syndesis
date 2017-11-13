@@ -9,7 +9,7 @@ const category = getCategory('Actions');
 @Component({
   selector: 'syndesis-list-actions',
   templateUrl: './list-actions.component.html',
-  styleUrls: ['./list-actions.component.scss'],
+  styleUrls: ['./list-actions.component.scss']
 })
 export class ListActionsComponent implements OnInit {
   truncateLimit = 80;
@@ -36,7 +36,7 @@ export class ListActionsComponent implements OnInit {
   ngOnInit() {
     log.debugc(
       () => 'Got actions: ' + JSON.stringify(this.actions, undefined, 2),
-      category,
+      category
     );
   }
 }

@@ -3,17 +3,12 @@ import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 
 @Component({
   selector: 'syndesis-connections-cancel',
-  template: '',
+  template: ''
 })
 export class ConnectionsCancelComponent implements OnInit {
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-  ) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     this.router.navigate(['../..'], { relativeTo: this.route });
   }
-
 }

@@ -24,11 +24,17 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
   }
 
   validate(id: string, data: Map<string, string>) {
-    return this.restangularService.one(id).one('verifier').customPOST(data);
+    return this.restangularService
+      .one(id)
+      .one('verifier')
+      .customPOST(data);
   }
 
   credentials(id: string) {
-    return this.restangularService.one(id).one('credentials').get();
+    return this.restangularService
+      .one(id)
+      .one('credentials')
+      .get();
   }
 
   acquireCredentials(id: string) {
@@ -44,7 +50,7 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
               .replace(/^ +/, '')
               .replace(
                 /=.*/,
-                '=;expires=' + new Date().toUTCString() + ';path=/',
+                '=;expires=' + new Date().toUTCString() + ';path=/'
               );
           }
         });
@@ -53,7 +59,7 @@ export class ConnectorService extends RESTService<Connector, Connectors> {
           this.restangularService
             .one(id)
             .post('credentials', {
-              returnUrl: window.location.pathname + '#' + id,
+              returnUrl: window.location.pathname + '#' + id
             })
             .subscribe((resp: AcquisitionResponse) => {
               document.cookie = resp.state.spec;

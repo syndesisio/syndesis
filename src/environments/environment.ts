@@ -12,7 +12,7 @@ export const environment = Object.freeze({
       baseJavaInspectionServiceUrl: 'http://localhost:8585/v2/atlas/java/',
       baseXMLInspectionServiceUrl: 'http://localhost:8585/v2/atlas/xml/',
       baseJSONInspectionServiceUrl: 'http://localhost:8585/v2/atlas/json/',
-      baseMappingServiceUrl: 'http://localhost:8585/v2/atlas/',
-    },
-  },
+      baseMappingServiceUrl: 'http://localhost:8585/v2/atlas/'
+    }
+  }
 });

@@ -14,7 +14,7 @@ const category = getCategory('IntegrationsCreatePage');
 @Component({
   selector: 'syndesis-integrations-save-or-add-step',
   templateUrl: 'save-or-add-step.component.html',
-  styleUrls: ['./save-or-add-step.component.scss'],
+  styleUrls: ['./save-or-add-step.component.scss']
 })
 export class IntegrationsSaveOrAddStepComponent extends FlowPage
   implements OnInit, OnDestroy {
@@ -26,7 +26,7 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
     public store: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
+    public detector: ChangeDetectorRef
   ) {
     super(currentFlow, route, router, detector);
   }
@@ -73,14 +73,14 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
   addNew(type: string) {
     this.currentFlow.events.emit({
       kind: 'integration-add-step',
-      type: type,
+      type: type
     });
   }
 
   showPopouts(type: string) {
     this.currentFlow.events.emit({
       kind: 'integration-show-popouts',
-      type: type,
+      type: type
     });
   }
 
@@ -90,9 +90,9 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
       position: position,
       onSave: () => {
         this.router.navigate(['step-select', position + 1], {
-          relativeTo: this.route,
+          relativeTo: this.route
         });
-      },
+      }
     });
   }
 
@@ -102,9 +102,9 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
       position: position,
       onSave: () => {
         this.router.navigate(['connection-select', position + 1], {
-          relativeTo: this.route,
+          relativeTo: this.route
         });
-      },
+      }
     });
   }
 
@@ -135,14 +135,14 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
     if (this.currentFlow.getStartConnection() === undefined) {
       this.router.navigate(
         ['connection-select', this.currentFlow.getFirstPosition()],
-        { relativeTo: this.route.parent },
+        { relativeTo: this.route.parent }
       );
       return;
     }
     if (this.currentFlow.getEndConnection() === undefined) {
       this.router.navigate(
         ['connection-select', this.currentFlow.getLastPosition()],
-        { relativeTo: this.route.parent },
+        { relativeTo: this.route.parent }
       );
       return;
     }
@@ -150,7 +150,7 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
 
   ngOnInit() {
     const validate = this.route.queryParams.map(
-      params => params['validate'] || false,
+      params => params['validate'] || false
     );
     if (validate) {
       this.validateFlow();

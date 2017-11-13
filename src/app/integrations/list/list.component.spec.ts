@@ -32,11 +32,11 @@ xdescribe('IntegrationsListComponent', () => {
           StoreModule,
           ActionModule,
           ListModule,
-          NotificationModule,
+          NotificationModule
         ],
-        declarations: [IntegrationStatusComponent, IntegrationsListComponent],
+        declarations: [IntegrationStatusComponent, IntegrationsListComponent]
       }).compileComponents();
-    }),
+    })
   );
 
   beforeEach(() => {

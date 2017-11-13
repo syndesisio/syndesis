@@ -5,7 +5,7 @@ import {
   OnInit,
   EventEmitter,
   ViewChild,
-  ChangeDetectorRef,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import { NotificationService, NotificationType } from 'patternfly-ng';
@@ -20,7 +20,7 @@ const category = getCategory('Connections');
 @Component({
   selector: 'syndesis-connections-list',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  styleUrls: ['./list.component.scss']
 })
 export class ConnectionsListComponent implements OnInit {
   truncateTrail = '…';
@@ -38,7 +38,7 @@ export class ConnectionsListComponent implements OnInit {
     public store: ConnectionStore,
     public detector: ChangeDetectorRef,
     private notificationService: NotificationService,
-    private modalService: ModalService,
+    private modalService: ModalService
   ) {}
 
   //-----  Delete ------------------->>
@@ -53,7 +53,7 @@ export class ConnectionsListComponent implements OnInit {
             type: NotificationType.SUCCESS,
             header: 'Delete Successful',
             message: 'Connection successfully deleted.',
-            showClose: true,
+            showClose: true
           });
         }, 10);
       },
@@ -64,10 +64,10 @@ export class ConnectionsListComponent implements OnInit {
             type: NotificationType.DANGER,
             header: 'Delete Failed',
             message: `Failed to delete connection: ${err}`,
-            showClose: true,
+            showClose: true
           });
         }, 10);
-      },
+      }
     );
   }
 
@@ -85,7 +85,7 @@ export class ConnectionsListComponent implements OnInit {
     if (connection) {
       log.debugc(
         () => 'Selected connection (list): ' + connection.name,
-        category,
+        category
       );
       this.selectedId = connection.id;
     }
@@ -102,7 +102,7 @@ export class ConnectionsListComponent implements OnInit {
     log.debugc(
       () =>
         'Got connections: ' + JSON.stringify(this.connections, undefined, 2),
-      category,
+      category
     );
   }
 
@@ -115,7 +115,7 @@ export class ConnectionsListComponent implements OnInit {
       notification.message,
       false,
       null,
-      [],
+      []
     );
   }
 }

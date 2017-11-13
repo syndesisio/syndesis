@@ -3,7 +3,7 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ChangeDetectorRef,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
@@ -22,7 +22,7 @@ import { saveAs } from 'file-saver';
 @Component({
   selector: 'syndesis-integration-detail-page',
   templateUrl: 'detail.component.html',
-  styleUrls: ['detail.component.scss'],
+  styleUrls: ['detail.component.scss']
 })
 export class IntegrationsDetailComponent extends IntegrationViewBase
   implements OnInit, OnDestroy {
@@ -41,9 +41,9 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
       status: undefined,
       actions: [
         {
-          label: 'Edit Draft',
-        },
-      ],
+          label: 'Edit Draft'
+        }
+      ]
     },
     {
       version: 'V. 1.4',
@@ -54,19 +54,19 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
         {
           icon: 'pf-icon pficon-ok',
           class: '',
-          label: 'Success',
+          label: 'Success'
         },
         {
           icon: undefined,
           class: 'label label-info pull-right',
-          label: 'Running',
-        },
+          label: 'Running'
+        }
       ],
       actions: [
         {
-          label: 'Duplicate',
-        },
-      ],
+          label: 'Duplicate'
+        }
+      ]
     },
     {
       version: 'V. 1.3',
@@ -76,17 +76,17 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
       status: [
         {
           icon: 'pf-icon pficon-ok',
-          label: 'Success',
-        },
+          label: 'Success'
+        }
       ],
       actions: [
         {
-          label: 'Deploy',
+          label: 'Deploy'
         },
         {
-          label: 'Duplicate',
-        },
-      ],
+          label: 'Duplicate'
+        }
+      ]
     },
     {
       version: 'V. 1.2',
@@ -96,17 +96,17 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
       status: [
         {
           icon: 'pf-icon pficon-ok',
-          label: 'Success',
-        },
+          label: 'Success'
+        }
       ],
       actions: [
         {
-          label: 'Deploy',
+          label: 'Deploy'
         },
         {
-          label: 'Duplicate',
-        },
-      ],
+          label: 'Duplicate'
+        }
+      ]
     },
     {
       version: 'V. 1.1',
@@ -116,18 +116,18 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
       status: [
         {
           icon: 'pf-icon pficon-error-circle-o',
-          label: 'Failure',
-        },
+          label: 'Failure'
+        }
       ],
       actions: [
         {
-          label: 'Deploy',
+          label: 'Deploy'
         },
         {
-          label: 'Duplicate',
-        },
-      ],
-    },
+          label: 'Duplicate'
+        }
+      ]
+    }
   ];
 
   constructor(
@@ -139,7 +139,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     public notificationService: NotificationService,
     public modalService: ModalService,
     public application: ApplicationRef,
-    private integrationSupportService: IntegrationSupportService,
+    private integrationSupportService: IntegrationSupportService
   ) {
     super(store, route, router, notificationService, modalService, application);
     this.integration = this.store.resource;
@@ -180,7 +180,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
           'Updated description',
           false,
           undefined,
-          undefined,
+          undefined
         );
       })
       .catch(reason => {
@@ -190,7 +190,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
           'Failed to update description: ' + reason,
           false,
           undefined,
-          undefined,
+          undefined
         );
       });
   }
@@ -207,7 +207,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
           'Updated ' + attr,
           false,
           undefined,
-          undefined,
+          undefined
         );
       })
       .catch(reason => {
@@ -217,7 +217,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
           'Failed to update ' + attr + ': ' + reason,
           false,
           undefined,
-          undefined,
+          undefined
         );
       });
   }
@@ -237,7 +237,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     this.popNotification({
       type: NotificationType.INFO,
       header: 'Duplicating revision',
-      message: 'Duplicating revision ' + revision.version,
+      message: 'Duplicating revision ' + revision.version
     });
     const sub = this.store.create(integration).subscribe(
       created => {
@@ -249,12 +249,10 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
           type: NotificationType.DANGER,
           header: 'Failed to duplicate revision',
           message:
-            resp.length !== undefined
-              ? resp.data[0].message
-              : resp.data.message,
+            resp.length !== undefined ? resp.data[0].message : resp.data.message
         });
         sub.unsubscribe();
-      },
+      }
     );
   }
 
@@ -264,14 +262,14 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     this.popNotification({
       type: NotificationType.INFO,
       header: 'Deploying revision',
-      message: 'Deploying revision ' + revision.version,
+      message: 'Deploying revision ' + revision.version
     });
     const sub = this.store.update(integration).subscribe(
       updated => {
         this.popNotification({
           type: NotificationType.SUCCESS,
           header: 'Deployment successful',
-          message: 'Deployed revision ' + revision.version,
+          message: 'Deployed revision ' + revision.version
         });
         sub.unsubscribe();
       },
@@ -280,12 +278,10 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
           type: NotificationType.DANGER,
           header: 'Failed to deploy revision',
           message:
-            resp.length !== undefined
-              ? resp.data[0].message
-              : resp.data.message,
+            resp.length !== undefined ? resp.data[0].message : resp.data.message
         });
         sub.unsubscribe();
-      },
+      }
     );
   }
 
@@ -323,7 +319,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
               const status = {
                 icon: undefined,
                 class: '',
-                label: '',
+                label: ''
               };
               // TODO this is kinda fake data
               switch (rev.currentState) {
@@ -333,8 +329,8 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
                 case 'Undeployed':
                   break;
                 case 'Active':
-                  (status.icon = 'pf-icon pficon-ok'), (status.label =
-                    'Success');
+                  (status.icon = 'pf-icon pficon-ok'),
+                    (status.label = 'Success');
                   break;
                 case 'Error':
                   status.icon = 'pf-icon pficon-error-circle-o';
@@ -358,7 +354,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
                     action: 'duplicate',
                   },
                   */
-                ],
+                ]
               };
               let isDeployed = false;
               if (row.version === i.deployedRevisionId) {
@@ -366,7 +362,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
                 const state = {
                   icon: undefined,
                   class: '',
-                  label: rev.currentState,
+                  label: rev.currentState
                 };
                 switch (rev.currentState) {
                   case 'Draft':
@@ -389,7 +385,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
               if (!isDeployed && rev.spec && rev.spec.steps) {
                 row.actions.push({
                   label: 'Deploy',
-                  action: 'deploy',
+                  action: 'deploy'
                 });
               }
               return row;
@@ -402,7 +398,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
             // @TODO: Remove this try/catch once ChangeDetection is restored
           }
         }, 50);
-      },
+      }
     );
     this.routeSubscription = this.route.params
       .pluck<Params, string>('integrationId')
@@ -417,8 +413,11 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
 
   exportIntegration() {
     const id = this.i.id;
-    this.integrationSupportService.exportIntegration(this.i.id).toPromise().then(value => {
-      saveAs(value.blob(), id + '-export.zip');
-    });
+    this.integrationSupportService
+      .exportIntegration(this.i.id)
+      .toPromise()
+      .then(value => {
+        saveAs(value.blob(), id + '-export.zip');
+      });
   }
 }

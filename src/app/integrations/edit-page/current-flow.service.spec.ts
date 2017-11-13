@@ -13,7 +13,7 @@ import {
   Step,
   Steps,
   Action,
-  TypeFactory,
+  TypeFactory
 } from '../../model';
 import { EventsService } from '../../store/entity/events.service';
 import { SyndesisCommonModule } from '../../common/common.module';
@@ -21,10 +21,7 @@ import { SyndesisCommonModule } from '../../common/common.module';
 describe('CurrentFlow', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RestangularModule.forRoot(),
-        SyndesisCommonModule.forRoot(),
-      ],
+      imports: [RestangularModule.forRoot(), SyndesisCommonModule.forRoot()],
       providers: [
         CurrentFlow,
         IntegrationStore,
@@ -37,9 +34,9 @@ describe('CurrentFlow', () => {
           useFactory: (backend, options) => {
             return new Http(backend, options);
           },
-          deps: [MockBackend, RequestOptions],
-        },
-      ],
+          deps: [MockBackend, RequestOptions]
+        }
+      ]
     });
   });
 
@@ -82,7 +79,7 @@ describe('CurrentFlow', () => {
       service.integration = getDummyIntegration();
       const step = service.getPreviousConnection(2);
       expect(step.id).toEqual('3');
-    }),
+    })
   );
 
   it(
@@ -91,7 +88,7 @@ describe('CurrentFlow', () => {
       service.integration = getDummyIntegration();
       const step = service.getSubsequentConnection(2);
       expect(step.id).toEqual('4');
-    }),
+    })
   );
 
   it(
@@ -101,7 +98,7 @@ describe('CurrentFlow', () => {
       const steps = service.getSubsequentConnections(2);
       expect(steps.length).toEqual(1);
       expect(steps[0].id).toEqual('4');
-    }),
+    })
   );
 
   it(
@@ -111,7 +108,7 @@ describe('CurrentFlow', () => {
       const steps = service.getPreviousConnections(2);
       expect(steps.length).toEqual(2);
       expect(steps[0].id).toEqual('foobar');
-    }),
+    })
   );
 
   it(
@@ -120,7 +117,7 @@ describe('CurrentFlow', () => {
       service.integration = getDummyIntegration();
       const conn = service.getStartConnection();
       expect(conn.connectorId).toEqual('timer');
-    }),
+    })
   );
 
   it(
@@ -129,7 +126,7 @@ describe('CurrentFlow', () => {
       service.integration = getDummyIntegration();
       const conn = service.getEndConnection();
       expect(conn.connectorId).toEqual('http');
-    }),
+    })
   );
 
   it(
@@ -140,7 +137,7 @@ describe('CurrentFlow', () => {
       expect(steps.length).toEqual(2);
       expect(steps[0].id).toEqual('3');
       expect(steps[0].stepKind).toEqual('endpoint');
-    }),
+    })
   );
 
   it(
@@ -151,6 +148,6 @@ describe('CurrentFlow', () => {
       expect(service.getEndConnection()).toBeUndefined();
       expect(service.getFirstPosition()).toEqual(0);
       expect(service.getLastPosition()).toEqual(1);
-    }),
+    })
   );
 });

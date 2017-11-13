@@ -14,7 +14,7 @@ const category = getCategory('Dashboard');
 @Component({
   selector: 'syndesis-dashboard-empty-state',
   templateUrl: './emptystate.component.html',
-  styleUrls: [ './emptystate.component.scss' ],
+  styleUrls: ['./emptystate.component.scss']
 })
 export class EmptyStateComponent implements OnInit {
   connections: Observable<Connections>;
@@ -23,15 +23,17 @@ export class EmptyStateComponent implements OnInit {
   truncateLimit = 80;
   truncateTrail = '…';
 
-  constructor(private connectionStore: ConnectionStore,
-              private router: Router,
-              public tourService: TourService,
-              private userService: UserService) {
+  constructor(
+    private connectionStore: ConnectionStore,
+    private router: Router,
+    public tourService: TourService,
+    private userService: UserService
+  ) {
     this.connections = this.connectionStore.list;
   }
 
   selectedConnection(connection: Connection) {
-    this.router.navigate([ '/connections', connection.id ]);
+    this.router.navigate(['/connections', connection.id]);
   }
 
   ngOnInit() {
@@ -40,13 +42,15 @@ export class EmptyStateComponent implements OnInit {
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
     if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
+      this.tourService.initialize([
+        {
           anchorId: 'dashboard.integration',
           content: 'Create Integration',
           placement: 'bottom',
-          title: 'After creating at least two connections, you can create an integration.',
-        } ],
-      );
+          title:
+            'After creating at least two connections, you can create an integration.'
+        }
+      ]);
       setTimeout(() => this.tourService.start());
     }
   }

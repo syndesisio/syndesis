@@ -17,7 +17,7 @@ of a larger data structure. Please read: https://github.com/angular/angular/issu
 */
 @Pipe({
   name: 'derp',
-  pure: false,
+  pure: false
 })
 export class DerpPipe implements PipeTransform {
   transform(value, args) {

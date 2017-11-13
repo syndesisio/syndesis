@@ -13,7 +13,7 @@ export class ConnectionStore extends AbstractStore<
 > {
   constructor(
     connectionService: ConnectionService,
-    eventService: EventsService,
+    eventService: EventsService
   ) {
     super(connectionService, eventService, [], <Connection>{});
   }

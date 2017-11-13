@@ -6,7 +6,7 @@ import {
   OnDestroy,
   ChangeDetectorRef,
   ViewChild,
-  ViewChildren,
+  ViewChildren
 } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -23,7 +23,7 @@ const category = getCategory('IntegrationsCreatePage');
 @Component({
   selector: 'syndesis-integrations-flow-view',
   templateUrl: './flow-view.component.html',
-  styleUrls: ['./flow-view.component.scss'],
+  styleUrls: ['./flow-view.component.scss']
 })
 export class FlowViewComponent extends ChildAwarePage
   implements OnInit, OnDestroy {
@@ -41,13 +41,13 @@ export class FlowViewComponent extends ChildAwarePage
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
+    public detector: ChangeDetectorRef
   ) {
     super(currentFlow, route, router);
     this.flowSubscription = this.currentFlow.events.subscribe(
       (event: FlowEvent) => {
         this.handleFlowEvent(event);
-      },
+      }
     );
   }
 
@@ -129,10 +129,10 @@ export class FlowViewComponent extends ChildAwarePage
             // @TODO: Remove this try/catch once ChangeDetection is restored
           }
           this.router.navigate(['step-select', position + 1], {
-            relativeTo: this.route,
+            relativeTo: this.route
           });
         }, 10);
-      },
+      }
     });
   }
 
@@ -151,10 +151,10 @@ export class FlowViewComponent extends ChildAwarePage
             // @TODO: Remove this try/catch once ChangeDetection is restored
           }
           this.router.navigate(['connection-select', position + 1], {
-            relativeTo: this.route,
+            relativeTo: this.route
           });
         }, 10);
-      },
+      }
     });
   }
 
@@ -166,7 +166,7 @@ export class FlowViewComponent extends ChildAwarePage
     this.currentFlow.events.emit({
       kind: 'integration-set-property',
       property: 'name',
-      value: name,
+      value: name
     });
   }
 

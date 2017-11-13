@@ -37,18 +37,18 @@ import { TestSupportService } from './test-support.service';
     TestSupportService,
     StepStore,
     OAuthAppService,
-    OAuthAppStore,
-  ],
+    OAuthAppStore
+  ]
 })
 export class StoreModule {
   constructor(
     @Optional()
     @SkipSelf()
-    parentModule: StoreModule,
+    parentModule: StoreModule
   ) {
     if (parentModule) {
       throw new Error(
-        'StoreModule is already loaded. Import it in the AppModule only',
+        'StoreModule is already loaded. Import it in the AppModule only'
       );
     }
   }

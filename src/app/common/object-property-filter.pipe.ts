@@ -19,7 +19,7 @@ export function getPropertyValue(obj: any, prop: string): any {
 
 @Pipe({
   name: 'objectPropertyFilter',
-  pure: false,
+  pure: false
 })
 export class ObjectPropertyFilterPipe implements PipeTransform {
   transform(objects: any[], config: ObjectPropertyFilterConfig) {
@@ -35,7 +35,7 @@ export class ObjectPropertyFilterPipe implements PipeTransform {
       switch (typeof config.filter) {
         case 'string':
           if (config.exact && config.filter.length > 0) {
-            return (<string>value) === config.filter;
+            return <string>value === config.filter;
           }
           return (
             (<string>value)

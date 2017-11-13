@@ -1,16 +1,25 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
+import {
+  DynamicFormControlModel,
+  DynamicFormService
+} from '@ng-dynamic-forms/core';
 
 import { Connection } from '../../model';
 import { ConnectionConfigurationService } from '../common/configuration/configuration.service';
 
 @Component({
   selector: 'syndesis-connection-detail-configuration',
-  templateUrl: './configuration.component.html',
+  templateUrl: './configuration.component.html'
 })
 export class ConnectionDetailConfigurationComponent implements OnChanges {
-
   @Input() connection: Connection;
   @Output() updated = new EventEmitter<Connection>();
   mode: 'view' | 'edit' = 'view';
@@ -19,8 +28,8 @@ export class ConnectionDetailConfigurationComponent implements OnChanges {
 
   constructor(
     private configurationService: ConnectionConfigurationService,
-    private formService: DynamicFormService,
-  ) { }
+    private formService: DynamicFormService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.resetView(true);
@@ -38,13 +47,18 @@ export class ConnectionDetailConfigurationComponent implements OnChanges {
 
   save() {
     this.mode = 'view';
-    this.connection.configuredProperties = this.configurationService.sanitize(this.formGroup.value);
+    this.connection.configuredProperties = this.configurationService.sanitize(
+      this.formGroup.value
+    );
     this.updated.emit(this.connection);
     this.resetView(true);
   }
 
   resetView(readOnly: boolean) {
-    this.formModel = this.configurationService.getFormModel(this.connection, readOnly);
+    this.formModel = this.configurationService.getFormModel(
+      this.connection,
+      readOnly
+    );
     this.formGroup = this.formService.createFormGroup(this.formModel);
   }
 }

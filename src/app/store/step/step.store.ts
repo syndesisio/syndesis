@@ -8,7 +8,7 @@ export interface StepKind extends Step {
   visible?: (
     position: number,
     previous: Array<Step>,
-    subsequent: Array<Step>,
+    subsequent: Array<Step>
   ) => boolean;
 }
 export type StepKinds = Array<StepKind>;
@@ -36,10 +36,12 @@ export class StepStore {
       visible: (
         position: number,
         previousSteps: Array<Step>,
-        subsequentSteps: Array<Step>,
-      ) => this.stepsHaveOutputDataShape(previousSteps) && this.stepsHaveInputDataShape(subsequentSteps),
+        subsequentSteps: Array<Step>
+      ) =>
+        this.stepsHaveOutputDataShape(previousSteps) &&
+        this.stepsHaveInputDataShape(subsequentSteps),
       properties: {},
-      configuredProperties: undefined,
+      configuredProperties: undefined
     },
     {
       id: undefined,
@@ -51,7 +53,7 @@ export class StepStore {
         ' most integrations.',
       stepKind: BASIC_FILTER,
       properties: undefined,
-      configuredProperties: undefined,
+      configuredProperties: undefined
     },
     {
       id: undefined,
@@ -66,11 +68,11 @@ export class StepStore {
           type: 'textarea',
           displayName: 'Only continue if',
           required: true,
-          rows: 10,
-        },
+          rows: 10
+        }
       },
-      configuredProperties: undefined,
-    },
+      configuredProperties: undefined
+    }
     /*
     {
       id: undefined,
@@ -181,14 +183,24 @@ export class StepStore {
   }
 
   private stepsHaveOutputDataShape(steps: Array<Step>): boolean {
-    return steps
-      .filter(s => s.action && s.action.outputDataShape && s.action.outputDataShape.kind !== 'none')
-      .length > 0;
+    return (
+      steps.filter(
+        s =>
+          s.action &&
+          s.action.outputDataShape &&
+          s.action.outputDataShape.kind !== 'none'
+      ).length > 0
+    );
   }
 
   private stepsHaveInputDataShape(steps: Array<Step>): boolean {
-    return steps
-      .filter(s => s.action && s.action.inputDataShape && s.action.inputDataShape.kind !== 'none')
-      .length > 0;
+    return (
+      steps.filter(
+        s =>
+          s.action &&
+          s.action.inputDataShape &&
+          s.action.inputDataShape.kind !== 'none'
+      ).length > 0
+    );
   }
 }

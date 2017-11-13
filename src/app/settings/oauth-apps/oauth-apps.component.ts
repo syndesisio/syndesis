@@ -17,7 +17,7 @@ export interface OAuthAppListItem {
 @Component({
   selector: 'syndesis-oauth-apps',
   templateUrl: 'oauth-apps.component.html',
-  styleUrls: [ './oauth-apps.component.scss' ],
+  styleUrls: ['./oauth-apps.component.scss']
 })
 export class OAuthAppsComponent implements OnInit {
   // Holds the candidate for clearing credentials
@@ -25,17 +25,17 @@ export class OAuthAppsComponent implements OnInit {
   // Pipe configuration
   filter: ObjectPropertyFilterConfig = {
     filter: '',
-    propertyName: 'client.name',
+    propertyName: 'client.name'
   };
   sort: ObjectPropertySortConfig = {
     sortField: 'client.name',
-    descending: false,
+    descending: false
   };
   // List configuration
   listConfig = {
     multiSelect: false,
     selectItems: false,
-    showCheckbox: false,
+    showCheckbox: false
   };
   // Toolbar configuration
   toolbarConfig = {
@@ -45,20 +45,20 @@ export class OAuthAppsComponent implements OnInit {
           id: 'client.name',
           title: 'Name',
           placeholder: 'Filter by Name...',
-          type: 'text',
-        },
-      ],
+          type: 'text'
+        }
+      ]
     },
     sortConfig: {
       fields: [
         {
           id: 'client.name',
           title: 'Name',
-          sortType: 'alpha',
-        },
+          sortType: 'alpha'
+        }
       ],
-      isAscending: true,
-    },
+      isAscending: true
+    }
   };
   // Data
   list: Observable<OAuthApps>;
@@ -67,11 +67,13 @@ export class OAuthAppsComponent implements OnInit {
 
   items: Array<OAuthAppListItem> = [];
 
-  constructor(public store: OAuthAppStore,
-              public detector: ChangeDetectorRef,
-              public config: ConfigService,
-              public tourService: TourService,
-              private userService: UserService) {
+  constructor(
+    public store: OAuthAppStore,
+    public detector: ChangeDetectorRef,
+    public config: ConfigService,
+    public tourService: TourService,
+    private userService: UserService
+  ) {
     this.loading = store.loading;
     this.list = store.list;
   }
@@ -115,7 +117,7 @@ export class OAuthAppsComponent implements OnInit {
         });
         this.items.push({
           expanded: oldApp ? oldApp.expanded : false,
-          client: app,
+          client: app
         });
       }
     });
@@ -125,17 +127,21 @@ export class OAuthAppsComponent implements OnInit {
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
     if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
-          route: 'settings',
-          title: 'Get Started',
-          content: 'This series of popups acquaints you with Fuse Ignite. When you are ready to create a sample integration, ' +
-          'click the help icon and select Documentation to get step-by-step instructions.',
-          anchorId: 'get.started',
-          placement: 'bottom',
-        } ],
+      this.tourService.initialize(
+        [
+          {
+            route: 'settings',
+            title: 'Get Started',
+            content:
+              'This series of popups acquaints you with Fuse Ignite. When you are ready to create a sample integration, ' +
+              'click the help icon and select Documentation to get step-by-step instructions.',
+            anchorId: 'get.started',
+            placement: 'bottom'
+          }
+        ],
         {
-          route: '',
-        },
+          route: ''
+        }
       );
 
       setTimeout(() => this.tourService.start());

@@ -1,18 +1,13 @@
-import { ApplicationRef, Input, ViewChild } from '@angular/core';
+import { ApplicationRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
-import { Integrations, Integration } from '../../model';
+import { Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { ModalService } from '../../common/modal/modal.service';
-import { log, getCategory } from '../../logging';
+import { log } from '../../logging';
 
 import {
-  Action,
-  ActionConfig,
-  ListEvent,
-  Notification,
   NotificationService,
-  NotificationType,
+  NotificationType
 } from 'patternfly-ng';
 
 export class IntegrationViewBase {
@@ -25,11 +20,14 @@ export class IntegrationViewBase {
     public router: Router,
     public notificationService: NotificationService,
     public modalService: ModalService,
-    public application: ApplicationRef,
+    public application: ApplicationRef
   ) {}
 
   canEdit = int => int.currentStatus !== 'Deleted';
-  canActivate = int => int.currentStatus === 'Deactivated' || int.currentStatus === 'Draft';
+  /* tslint:disable semicolon */
+  canActivate = int =>
+    int.currentStatus === 'Deactivated' || int.currentStatus === 'Draft';
+  /* tslint:enable semicolon */
   canDeactivate = int => int.currentStatus === 'Activated';
   canDelete = int => int.currentStatus !== 'Deleted';
 
@@ -44,14 +42,16 @@ export class IntegrationViewBase {
         return this.router.navigate(['/integrations', integration.id, 'edit']);
       case 'activate':
         header = 'Integration is activating';
-        message = 'Please allow a moment for the integration to fully activate.';
+        message =
+          'Please allow a moment for the integration to fully activate.';
         danger = 'Failed to activate integration';
         reason = 'Error activating integration';
         request = this.requestActivate(integration);
         break;
       case 'deactivate':
         header = 'Integration is deactivating';
-        message = 'Please allow a moment for the integration to be deactivated.';
+        message =
+          'Please allow a moment for the integration to be deactivated.';
         danger = 'Failed to deactivate integration';
         reason = 'Error deactivating integration';
         request = this.requestDeactivate(integration);
@@ -66,20 +66,27 @@ export class IntegrationViewBase {
       default:
         break;
     }
-    return request.then(modal => modal.result
-      ? this.doAction(action, integration)
-          .then(_ => this.popNotification({
-            type: NotificationType.SUCCESS,
-            header,
-            message,
-          }))
-          .catch(error => this.popNotification({
-              type: NotificationType.DANGER,
-              header: danger,
-              message: `${reason}: ${error}`,
-            }))
-          .then(_ => this.application.tick())
-      : false);
+    return request.then(
+      modal =>
+        modal.result
+          ? this.doAction(action, integration)
+              .then(_ =>
+                this.popNotification({
+                  type: NotificationType.SUCCESS,
+                  header,
+                  message
+                })
+              )
+              .catch(error =>
+                this.popNotification({
+                  type: NotificationType.DANGER,
+                  header: danger,
+                  message: `${reason}: ${error}`
+                })
+              )
+              .then(_ => this.application.tick())
+          : false
+    );
   }
 
   doAction(action: string, integration: Integration) {
@@ -103,7 +110,7 @@ export class IntegrationViewBase {
     log.debugc(
       () =>
         'Selected integration for activation: ' +
-        JSON.stringify(integration['id']),
+        JSON.stringify(integration['id'])
     );
     this.selectedIntegration = integration;
     return this.showModal('activate');
@@ -114,7 +121,7 @@ export class IntegrationViewBase {
     log.debugc(
       () =>
         'Selected integration for deactivation: ' +
-        JSON.stringify(integration['id']),
+        JSON.stringify(integration['id'])
     );
     this.selectedIntegration = integration;
     return this.showModal('deactivate');
@@ -124,7 +131,7 @@ export class IntegrationViewBase {
   requestDelete(integration: Integration) {
     log.debugc(
       () =>
-        'Selected integration for delete: ' + JSON.stringify(integration['id']),
+        'Selected integration for delete: ' + JSON.stringify(integration['id'])
     );
     this.selectedIntegration = integration;
     return this.showModal('delete');
@@ -136,9 +143,12 @@ export class IntegrationViewBase {
     log.debugc(
       () =>
         'Selected integration for activation: ' +
-        JSON.stringify(integration['id']),
+        JSON.stringify(integration['id'])
     );
-    return this.store.activate(integration).take(1).toPromise();
+    return this.store
+      .activate(integration)
+      .take(1)
+      .toPromise();
   }
 
   // Actual activate/deactivate action once the user confirms
@@ -146,18 +156,24 @@ export class IntegrationViewBase {
     log.debugc(
       () =>
         'Selected integration for deactivation: ' +
-        JSON.stringify(integration['id']),
+        JSON.stringify(integration['id'])
     );
-    return this.store.deactivate(integration).take(1).toPromise();
+    return this.store
+      .deactivate(integration)
+      .take(1)
+      .toPromise();
   }
 
   // Actual delete action once the user confirms
   deleteAction(integration: Integration): Promise<any> {
     log.debugc(
       () =>
-        'Selected integration for delete: ' + JSON.stringify(integration['id']),
+        'Selected integration for delete: ' + JSON.stringify(integration['id'])
     );
-    return this.store.delete(integration).take(1).toPromise();
+    return this.store
+      .delete(integration)
+      .take(1)
+      .toPromise();
   }
 
   //-----  Icons ------------------->>
@@ -202,7 +218,7 @@ export class IntegrationViewBase {
       notification.message,
       false,
       null,
-      [],
+      []
     );
   }
 }

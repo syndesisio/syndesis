@@ -1,7 +1,12 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ChangeDetectorRef
+} from '@angular/core';
 
 export abstract class EditableComponent {
-
   @Input() value;
   @Input() placeholder = 'No value set';
   @Input() validationFn: (value) => string | Promise<string>;
@@ -34,5 +39,4 @@ export abstract class EditableComponent {
     this.errorMessage = null;
     this.editing = false;
   }
-
 }

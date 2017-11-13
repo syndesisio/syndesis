@@ -14,9 +14,10 @@ const category = getCategory('Connections');
 
 @Component({
   selector: 'syndesis-connections-review',
-  templateUrl: 'review.component.html',
+  templateUrl: 'review.component.html'
 })
-export class ConnectionsReviewComponent implements CanComponentDeactivate, OnInit, OnDestroy {
+export class ConnectionsReviewComponent
+  implements CanComponentDeactivate, OnInit, OnDestroy {
   saved = false;
   reviewForm: FormGroup;
   sub: Subscription = undefined;
@@ -26,7 +27,7 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
     private modalService: ModalService,
     private connectionService: ConnectionService,
     private detector: ChangeDetectorRef,
-    private router: Router,
+    private router: Router
   ) {
     this.reviewForm = this.createReviewForm();
   }
@@ -34,7 +35,7 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
   createReviewForm(): FormGroup {
     return new FormGroup({
       name: new FormControl(null, Validators.required),
-      description: new FormControl(),
+      description: new FormControl()
     });
   }
 
@@ -42,7 +43,7 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
     const control = this.reviewForm.get('name');
     if (!control.hasError('required')) {
       const validationErrors = await this.connectionService.validateName(
-        control.value,
+        control.value
       );
       control.setErrors(validationErrors);
       this.detector.markForCheck();
@@ -59,7 +60,7 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
     } else {
       this.current.connection.name = this.reviewForm.get('name').value;
       this.current.connection.description = this.reviewForm.get(
-        'description',
+        'description'
       ).value;
       this.saved = true;
       this.current.events.emit({
@@ -73,9 +74,9 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
             () =>
               'Error creating connection: ' +
               JSON.stringify(reason, undefined, 2),
-            category,
+            category
           );
-        },
+        }
       });
     }
   }

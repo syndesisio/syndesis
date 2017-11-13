@@ -47,9 +47,9 @@ div.integration-basics {
       border: 1px solid #bbb;
       border-radius: 1px;
       box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.075);
-      -webkit-transition: border-color ease-in-out .15s,
-        box-shadow ease-in-out .15s;
-      transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+      -webkit-transition: border-color ease-in-out 0.15s,
+        box-shadow ease-in-out 0.15s;
+      transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
     }
   }
 }

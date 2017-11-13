@@ -13,12 +13,14 @@ const category = getCategory('Connections');
 @Component({
   selector: 'syndesis-connections-list-page',
   templateUrl: './list-page.component.html',
-  styleUrls: ['./list-page.component.scss'],
+  styleUrls: ['./list-page.component.scss']
 })
 export class ConnectionsListPage implements OnInit {
   loading: Observable<boolean>;
   connections: Observable<Connections>;
-  filteredConnections: Subject<Connections> = new BehaviorSubject(<Connections>{});
+  filteredConnections: Subject<
+    Connections
+  > = new BehaviorSubject(<Connections>{});
 
   constructor(private store: ConnectionStore, private router: Router) {
     this.loading = store.loading;

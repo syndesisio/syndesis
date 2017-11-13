@@ -23,12 +23,10 @@ import { EditableComponent } from './editable.component';
       <button type="button" class="btn btn-primary" (click)="submit(textareaInput.value.trim())">Save</button>
       <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
     </ng-container>
-  `,
+  `
 })
 export class EditableTextareaComponent extends EditableComponent {
-
   constructor(detector: ChangeDetectorRef) {
     super(detector);
   }
-
 }

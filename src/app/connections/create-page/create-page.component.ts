@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { NavigationService } from '../../common/navigation.service';
 import {
   CurrentConnectionService,
-  ConnectionEvent,
+  ConnectionEvent
 } from './current-connection';
 import { Connection, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
@@ -15,18 +15,18 @@ const category = getCategory('Connections');
 @Component({
   selector: 'syndesis-connection-create-page',
   templateUrl: 'create-page.component.html',
-  styleUrls: [ './create-page.component.scss' ],
+  styleUrls: ['./create-page.component.scss']
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
   private routerEventsSubscription: Subscription;
 
-  constructor(private current: CurrentConnectionService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private nav: NavigationService,
-              private detector: ChangeDetectorRef,
-              ) {
-  }
+  constructor(
+    private current: CurrentConnectionService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private nav: NavigationService,
+    private detector: ChangeDetectorRef
+  ) {}
 
   get connection(): Connection {
     return this.current.connection;
@@ -36,7 +36,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     const child = this.route.firstChild;
     if (child && child.snapshot) {
       const path = child.snapshot.url;
-      return path[ 0 ].path;
+      return path[0].path;
     } else {
       return undefined;
     }
@@ -78,7 +78,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.router.navigate([ 'cancel' ], { relativeTo: this.route });
+    this.router.navigate(['cancel'], { relativeTo: this.route });
   }
 
   goBack() {
@@ -139,7 +139,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
 
   doCreate() {
     this.current.events.emit({
-      kind: 'connection-trigger-create',
+      kind: 'connection-trigger-create'
     });
   }
 
@@ -148,17 +148,20 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     switch (event.kind) {
       case 'connection-set-connection':
         log.infoc(
-          () => 'Credentials: ' + JSON.stringify(this.current.credentials),
+          () => 'Credentials: ' + JSON.stringify(this.current.credentials)
         );
         log.infoc(() => 'hasCredentials: ' + this.current.hasCredentials());
         if (!this.current.hasConnector() && page !== 'connection-basics') {
           setTimeout(() => {
-            this.router.navigate([ 'connection-basics' ], {
-              relativeTo: this.route,
+            this.router.navigate(['connection-basics'], {
+              relativeTo: this.route
             });
           }, 10);
           return;
-        } else if (this.current.hasConnector() && page === 'connection-basics') {
+        } else if (
+          this.current.hasConnector() &&
+          page === 'connection-basics'
+        ) {
           this.goForward();
         }
         if (

@@ -16,15 +16,15 @@ const category = getCategory('Integrations');
   moduleId: module.id,
   selector: 'syndesis-integrations-connection-select',
   templateUrl: 'connection-select.component.html',
-  styleUrls: ['./connection-select.component.scss'],
+  styleUrls: ['./connection-select.component.scss']
 })
 export class IntegrationsSelectConnectionComponent extends FlowPage
   implements OnInit, OnDestroy {
   loading: Observable<boolean>;
   connections: Observable<Connections>;
-  filteredConnections: Subject<Connections> = new BehaviorSubject(
-    <Connections>{},
-  );
+  filteredConnections: Subject<
+    Connections
+  > = new BehaviorSubject(<Connections>{});
   routeSubscription: Subscription;
   position: number;
 
@@ -33,7 +33,7 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
+    public detector: ChangeDetectorRef
   ) {
     super(currentFlow, route, router, detector);
     this.loading = store.loading;
@@ -56,9 +56,9 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
       connection: connection,
       onSave: () => {
         this.router.navigate(['action-select', this.position], {
-          relativeTo: this.route.parent,
+          relativeTo: this.route.parent
         });
-      },
+      }
     });
   }
 
@@ -86,20 +86,20 @@ export class IntegrationsSelectConnectionComponent extends FlowPage
     if (!step || step.stepKind !== 'endpoint') {
       // safety net
       this.router.navigate(['save-or-add-step'], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
     if (step.connection) {
       this.router.navigate(['action-select', this.position], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
     this.store.loadAll();
     this.currentFlow.events.emit({
       kind: 'integration-connection-select',
-      position: this.position,
+      position: this.position
     });
   }
 

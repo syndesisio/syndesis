@@ -5,7 +5,7 @@ import {
   DynamicCheckboxModel,
   DynamicInputModel,
   DynamicTextAreaModel,
-  DynamicSelectModel,
+  DynamicSelectModel
 } from '@ng-dynamic-forms/core';
 
 export interface ConfiguredConfigurationProperty extends ConfigurationProperty {
@@ -22,7 +22,7 @@ export class FormFactoryService {
       | Map<string, ConfigurationProperty>
       | Map<string, any>
       | {},
-    values: any = {},
+    values: any = {}
   ): DynamicFormControlModel[] {
     const answer = <DynamicFormControlModel[]>[];
     for (const key in properties) {
@@ -32,8 +32,10 @@ export class FormFactoryService {
       const field = <ConfiguredConfigurationProperty>properties[key];
       const value = values[key];
       let formField: any;
-      const validators = field.required ? {'required': null} : {};
-      const errorMessages = field.required ? {'required': '{{label}} is required'} : {};
+      const validators = field.required ? { required: null } : {};
+      const errorMessages = field.required
+        ? { required: '{{label}} is required' }
+        : {};
       let type = (field.type || '').toLowerCase();
       // first normalize the type
       switch (type) {
@@ -50,7 +52,7 @@ export class FormFactoryService {
         case 'hidden':
           break;
         default:
-          type = (field.enum && field.enum.length) ? 'select' : 'text';
+          type = field.enum && field.enum.length ? 'select' : 'text';
           break;
       }
       // then use the appropriate ng2 dynamic forms constructor
@@ -60,17 +62,17 @@ export class FormFactoryService {
             id: key,
             label: field.displayName || key,
             hint: field.description,
-            value: value || field.value || field.defaultValue,
+            value: value || field.value || field.defaultValue
           },
           {
             element: {
-              control: 'element-control checkbox',
+              control: 'element-control checkbox'
             },
             grid: {
               control: 'col-sm-offset-3 col-sm-9',
-              label: '',
-            },
-          },
+              label: ''
+            }
+          }
         );
       } else if (type === 'textarea') {
         formField = new DynamicTextAreaModel(
@@ -83,17 +85,17 @@ export class FormFactoryService {
             rows: field.rows,
             cols: field.cols,
             validators: validators,
-            errorMessages: errorMessages,
+            errorMessages: errorMessages
           },
           {
             element: {
-              label: 'control-label',
+              label: 'control-label'
             },
             grid: {
               control: 'col-sm-9',
-              label: 'col-sm-3',
-            },
-          },
+              label: 'col-sm-3'
+            }
+          }
         );
       } else if (type === 'select') {
         formField = new DynamicSelectModel(
@@ -106,17 +108,17 @@ export class FormFactoryService {
             required: field.required,
             validators: validators,
             errorMessages: errorMessages,
-            options: field.enum,
+            options: field.enum
           },
           {
             element: {
-              label: 'control-label',
+              label: 'control-label'
             },
             grid: {
               control: 'col-sm-9',
-              label: 'col-sm-3',
-            },
-          },
+              label: 'col-sm-3'
+            }
+          }
         );
       } else {
         if (field.secret) {
@@ -129,25 +131,27 @@ export class FormFactoryService {
             inputType: type,
             value: value || field.value || field.defaultValue,
             hint: field.description,
-            list: field.enum ? (<Array<any>>field.enum).map(val => {
-              if (typeof val === 'string') {
-                return val;
-              }
-              return val['value'];
-            }) : undefined,
+            list: field.enum
+              ? (<Array<any>>field.enum).map(val => {
+                  if (typeof val === 'string') {
+                    return val;
+                  }
+                  return val['value'];
+                })
+              : undefined,
             required: field.required,
             validators: validators,
-            errorMessages: errorMessages,
+            errorMessages: errorMessages
           },
           {
             element: {
-              label: 'control-label',
+              label: 'control-label'
             },
             grid: {
               control: 'col-sm-9',
-              label: 'col-sm-3',
-            },
-          },
+              label: 'col-sm-3'
+            }
+          }
         );
       }
 

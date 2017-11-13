@@ -38,32 +38,32 @@ describe('IntegrationsEditComponent', () => {
           PopoverModule.forRoot(),
           CollapseModule.forRoot(),
           StoreModule,
-          ToolbarModule,
+          ToolbarModule
         ],
         declarations: [
           IntegrationsEditPage,
           ConnectionsListComponent,
           FlowViewComponent,
-          FlowViewStepComponent,
+          FlowViewStepComponent
         ],
         providers: [
           MockBackend,
           {
             provide: RequestOptions,
-            useClass: BaseRequestOptions,
+            useClass: BaseRequestOptions
           },
           {
             provide: Http,
             useFactory: (backend, options) => {
               return new Http(backend, options);
             },
-            deps: [MockBackend, RequestOptions],
+            deps: [MockBackend, RequestOptions]
           },
           NavigationService,
-          CurrentFlow,
-        ],
+          CurrentFlow
+        ]
       }).compileComponents();
-    }),
+    })
   );
 
   // TODO: Add separate test for editing

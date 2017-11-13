@@ -4,7 +4,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
-  DynamicFormService,
+  DynamicFormService
 } from '@ng-dynamic-forms/core';
 
 import { IntegrationSupportService } from '../../../store/integration-support.service';
@@ -19,7 +19,7 @@ const category = getCategory('IntegrationsCreatePage');
 @Component({
   selector: 'syndesis-integrations-action-configure',
   templateUrl: 'action-configure.component.html',
-  styleUrls: ['./action-configure.component.scss'],
+  styleUrls: ['./action-configure.component.scss']
 })
 export class IntegrationsConfigureActionComponent extends FlowPage
   implements OnInit, OnDestroy {
@@ -43,7 +43,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public detector: ChangeDetectorRef,
-    public integrationSupport: IntegrationSupportService,
+    public integrationSupport: IntegrationSupportService
   ) {
     super(currentFlow, route, router, detector);
   }
@@ -70,16 +70,16 @@ export class IntegrationsConfigureActionComponent extends FlowPage
           // all done...
           this.router.navigate(['save-or-add-step'], {
             queryParams: { validate: true },
-            relativeTo: this.route.parent,
+            relativeTo: this.route.parent
           });
         } else {
           // go to the next page...
           this.router.navigate(
             ['action-configure', this.position, this.page - 1],
-            { relativeTo: this.route.parent },
+            { relativeTo: this.route.parent }
           );
         }
-      },
+      }
     });
   }
 
@@ -95,43 +95,52 @@ export class IntegrationsConfigureActionComponent extends FlowPage
           // properties defined in previous steps we need to fetch metadata one
           // more time and apply those action property values that we get
           if (Object.keys(this.step.configuredProperties).length > 0) {
-            this.integrationSupport.fetchMetadata(
-              this.step.connection,
-              this.step.action,
-              data,
-            )
-            .toPromise()
-            .then(response => {
-              log.debug('Response: ' + JSON.stringify(response, undefined, 2));
-              const definition: any = response['_body'] ? JSON.parse(response['_body']) : undefined;
-              for (const actionProperty of Object.keys(data)) {
-                if (data[actionProperty] == null) {
-                  this.step.configuredProperties[actionProperty] = definition.propertyDefinitionSteps.map(actionDefinitionStep => {
-                    return actionDefinitionStep.properties[actionProperty].defaultValue;
-                  })[0];
+            this.integrationSupport
+              .fetchMetadata(this.step.connection, this.step.action, data)
+              .toPromise()
+              .then(response => {
+                log.debug(
+                  'Response: ' + JSON.stringify(response, undefined, 2)
+                );
+                const definition: any = response['_body']
+                  ? JSON.parse(response['_body'])
+                  : undefined;
+                for (const actionProperty of Object.keys(data)) {
+                  if (data[actionProperty] == null) {
+                    this.step.configuredProperties[
+                      actionProperty
+                    ] = definition.propertyDefinitionSteps.map(
+                      actionDefinitionStep => {
+                        return actionDefinitionStep.properties[actionProperty]
+                          .defaultValue;
+                      }
+                    )[0];
+                  }
                 }
-              }
-            })
-            .catch(response => {
-              this.error = {
-                message: response.message || response.userMsg || response.developerMsg,
-              };
-            });
+              })
+              .catch(response => {
+                this.error = {
+                  message:
+                    response.message ||
+                    response.userMsg ||
+                    response.developerMsg
+                };
+              });
           }
 
           // all done...
           this.router.navigate(['save-or-add-step'], {
             queryParams: { validate: true },
-            relativeTo: this.route.parent,
+            relativeTo: this.route.parent
           });
         } else {
           // go to the next page...
           this.router.navigate(
             ['action-configure', this.position, this.page + 1],
-            { relativeTo: this.route.parent },
+            { relativeTo: this.route.parent }
           );
         }
-      },
+      }
     });
   }
 
@@ -140,7 +149,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     const step = <Step>this.currentFlow.getStep(this.position);
     if (!step) {
       this.router.navigate(['connection-select', this.position], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
@@ -152,7 +161,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       .fetchMetadata(
         this.step.connection,
         this.step.action,
-        this.configuredPropertiesForMetadataCall(),
+        this.configuredPropertiesForMetadataCall()
       )
       .toPromise()
       .then(response => {
@@ -172,7 +181,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
         } catch (err) {
           // bailout at this point...
           this.initForm(position, page, undefined, {
-            message: response['_body'],
+            message: response['_body']
           });
         }
       });
@@ -192,7 +201,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       // TODO figure out how to get a link in here that works
       this.error = {
         class: 'alert alert-info',
-        message: 'There are no properties to configure for this action',
+        message: 'There are no properties to configure for this action'
       };
       this.detector.detectChanges();
       setTimeout(() => {
@@ -204,7 +213,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       definition.propertyDefinitionSteps.length - 1);
     if (definition.propertyDefinitionSteps && page <= lastPage) {
       this.definition = JSON.parse(
-        JSON.stringify(definition.propertyDefinitionSteps[page]),
+        JSON.stringify(definition.propertyDefinitionSteps[page])
       );
       this.formConfig = this.definition.properties;
     } else {
@@ -217,14 +226,14 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     }
     this.formModel = this.formFactory.createFormModel(
       this.formConfig,
-      this.step.configuredProperties,
+      this.step.configuredProperties
     );
     this.formGroup = this.formService.createFormGroup(this.formModel);
     setTimeout(() => {
       try {
         this.currentFlow.events.emit({
           kind: 'integration-action-configure',
-          position: this.position,
+          position: this.position
         });
         this.loading = false;
         this.detector.detectChanges();
@@ -263,11 +272,11 @@ export class IntegrationsConfigureActionComponent extends FlowPage
         }
         const page = (this.page = Number.parseInt(params.get('page')));
         const position = (this.position = Number.parseInt(
-          params.get('position'),
+          params.get('position')
         ));
         this.loading = true;
         this.initialize(position, page);
-      },
+      }
     );
   }
 
