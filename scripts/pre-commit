@@ -8,10 +8,11 @@ GREEN="\033[0;32m"
 RESET="\033[0m"
 
 INCLUDED='(\.ts|\.css|\.scss|\.js|\.json)'
+EXCLUDED='(package\.json)'
 
 # Let's format the code first
 echo "\nRunning formatters on Syndesis UI...\n"
-FILES=`git diff --cached --name-only | grep -E $INCLUDED`
+FILES=`git diff --cached --name-only | grep -E $INCLUDED | grep -E -v $EXCLUDED`
 echo "On files: \n\n$FILES"
 for EACH in $FILES; do
   yarn prettier --write --no-color --single-quote --trailing-a all --write $EACH
