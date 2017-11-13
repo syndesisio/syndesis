@@ -26,8 +26,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -44,23 +46,40 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.syndesis.integration.runtime.api.SyndesisExtensionAction;
-import io.syndesis.integration.runtime.api.SyndesisStepExtension;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.RouteDefinition;
-import org.springframework.context.annotation.Bean;
 
 @SuppressWarnings({"PMD.AvoidSynchronizedAtMethodLevel", "PMD.AvoidCatchingGenericException", "PMD.ExcessiveImports"})
 @SupportedSourceVersion(value = SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
-    SyndesisExtensionActionProcessor.ANNOTATION_NAME
+    SyndesisExtensionActionProcessor.SYNDESIS_ANNOTATION_CLASS_NAME
 })
 public class SyndesisExtensionActionProcessor extends AbstractProcessor {
-    public static final String ANNOTATION_NAME = "io.syndesis.integration.runtime.api.SyndesisExtensionAction";
+    public static final String SYNDESIS_ANNOTATION_CLASS_NAME = "io.syndesis.integration.runtime.api.SyndesisExtensionAction";
+    public static final String SYNDESIS_STEP_CLASS_NAME = "io.syndesis.integration.runtime.api.SyndesisStepExtension";
+    public static final String BEAN_ANNOTATION_CLASS_NAME = "org.springframework.context.annotation.Bean";
+    public static final String ROUTE_BUILDER_CLASS_NAME = "org.apache.camel.builder.RouteBuilder";
+    public static final String ROUTE_DEFINITION_CLASS_NAME = "org.apache.camel.model.RouteDefinition";
+
+    private Class<? extends Annotation> annotationClass ;
+    private Class<? extends Annotation> beanAnnotationClass;
+    private Class<?> stepClass;
+
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+
+        annotationClass = (Class<? extends Annotation>)mandatoryFindClass(SYNDESIS_ANNOTATION_CLASS_NAME);
+        stepClass = findClass(SYNDESIS_STEP_CLASS_NAME);
+        beanAnnotationClass = (Class<? extends Annotation>)findClass(BEAN_ANNOTATION_CLASS_NAME);
+    }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
-        for (Element annotatedElement : env.getElementsAnnotatedWith(SyndesisExtensionAction.class)) {
+        // a lot of noisy logic to prevent this method to ever fail, since it's required by the compiler implicit contract
+        if(annotationClass == null){
+            return false;
+        }
+
+        for (Element annotatedElement : env.getElementsAnnotatedWith(annotationClass)) {
             if (annotatedElement.getKind() == ElementKind.CLASS) {
                 try {
                     Properties props = gatherProperties(annotatedElement);
@@ -90,10 +109,10 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
      * @param props
      */
     protected void augmentProperties(TypeElement element, Properties props) {
-        Elements elements = processingEnv.getElementUtils();
-        TypeMirror extensionType = elements.getTypeElement(SyndesisStepExtension.class.getName()).asType();
+        final Elements elements = processingEnv.getElementUtils();
+        final TypeElement extensionTypeElement = elements.getTypeElement(stepClass.getName());
 
-        if (processingEnv.getTypeUtils().isAssignable(element.asType(), extensionType)) {
+        if (extensionTypeElement != null && processingEnv.getTypeUtils().isAssignable(element.asType(), extensionTypeElement.asType())) {
             props.put("kind", "STEP");
             props.put("entrypoint", element.getQualifiedName().toString());
         } else {
@@ -107,34 +126,34 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
      * @param element
      * @param props
      */
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
     protected void augmentProperties(ExecutableElement element, Properties props) {
-        SyndesisExtensionAction action = element.getAnnotation(SyndesisExtensionAction.class);
-        Elements elements = processingEnv.getElementUtils();
-        Types types = processingEnv.getTypeUtils();
+        final Elements elements = processingEnv.getElementUtils();
+        final Types types = processingEnv.getTypeUtils();
+        final TypeElement typedElement = (TypeElement) element.getEnclosingElement();
+        final TypeMirror returnType = element.getReturnType();
+        final TypeElement routeBuilderElement = elements.getTypeElement(ROUTE_BUILDER_CLASS_NAME);
+        final TypeElement routeDefinitionElement = elements.getTypeElement(ROUTE_DEFINITION_CLASS_NAME);
 
-        TypeElement typedElement = (TypeElement) element.getEnclosingElement();
-        TypeMirror returnType = element.getReturnType();
-        TypeMirror routeBuilderType = elements.getTypeElement(RouteBuilder.class.getName()).asType();
-        TypeMirror routeDefinitionType = elements.getTypeElement(RouteDefinition.class.getName()).asType();
-
-        if (element.getAnnotation(Bean.class) != null && (types.isAssignable(returnType, routeBuilderType) || types.isAssignable(returnType, routeDefinitionType))) {
-            String entrypoint = action.entrypoint();
-            if (entrypoint != null && !entrypoint.isEmpty()) {
+        if (beanAnnotationClass != null && element.getAnnotation(beanAnnotationClass) != null) {
+            if (types.isAssignable(returnType, routeBuilderElement.asType()) || types.isAssignable(returnType, routeDefinitionElement.asType())) {
                 props.put("kind", "ROUTE");
-                props.put("entrypoint", entrypoint);
-            } else {
-                warning("Action with id '" + action.id() + "' must define an entrypoint");
             }
-        } else if (element.getAnnotation(Bean.class) == null && !types.isAssignable(returnType, routeBuilderType) && !types.isAssignable(returnType, routeDefinitionType)) {
-            props.put("kind", "BEAN");
-            props.put("entrypoint", typedElement.getQualifiedName().toString() + "::" + element.getSimpleName());
+        } else {
+            if (routeBuilderElement == null || routeDefinitionElement == null) {
+                props.put("kind", "BEAN");
+                props.put("entrypoint", typedElement.getQualifiedName().toString() + "::" + element.getSimpleName());
+            } else if (!types.isAssignable(returnType, routeBuilderElement.asType()) && !types.isAssignable(returnType, routeDefinitionElement.asType())) {
+                props.put("kind", "BEAN");
+                props.put("entrypoint", typedElement.getQualifiedName().toString() + "::" + element.getSimpleName());
+            }
         }
     }
 
     protected Properties gatherProperties(Element element) throws InvocationTargetException, IllegalAccessException {
         Properties prop = new Properties();
-        Annotation annotation = element.getAnnotation(SyndesisExtensionAction.class);
-        Method[] methods = SyndesisExtensionAction.class.getDeclaredMethods();
+        Annotation annotation = element.getAnnotation(annotationClass);
+        Method[] methods = annotationClass.getDeclaredMethods();
         for (Method m : methods) {
             writeIfNotEmpty(prop, m.getName(), m.invoke(annotation));
         }
@@ -167,7 +186,7 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
     /**
      * Returns the canonical class name by removing any generic type information.
      */
-    public static String canonicalClassName(String className) {
+    protected static String canonicalClassName(String className) {
         // remove generics
         int pos = className.indexOf('<');
         if (pos != -1) {
@@ -198,7 +217,8 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
 
         final String fileName = new StringBuilder()
             .append(classElement.getSimpleName().toString())
-            .append(element.getAnnotation(SyndesisExtensionAction.class).id())
+            .append('-')
+            .append(UUID.randomUUID().toString())
             .append(".properties")
             .toString();
 
@@ -226,16 +246,35 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
         return result;
     }
 
-    public void info(String message) {
+    protected void info(String message) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, message);
     }
 
-    public void warning(String message) {
+    protected void warning(String message) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, message);
     }
 
-    public void error(String message) {
+    protected void error(String message) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message);
     }
 
+    protected Class<?> mandatoryFindClass(String name) {
+        try {
+            return Class.forName(name);
+        } catch (ClassNotFoundException e) {
+            error("Unable to find Class " +  name + " on Classpath");
+        }
+
+        return null;
+    }
+
+    protected Class<?> findClass(String name) {
+        try {
+            return Class.forName(name);
+        } catch (ClassNotFoundException e) {
+            warning("Unable to find Class " +  name + " on Classpath");
+        }
+
+        return null;
+    }
 }
