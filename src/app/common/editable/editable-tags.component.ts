@@ -10,7 +10,7 @@ import { EditableComponent } from './editable.component';
       </em>
       <ng-container *ngIf="value && value.length !== 0">
         <ng-container *ngFor="let tag of value">
-          <span class="label label-primary">{{tag}}</span>
+          <span class="label label-primary">{{ tag }}</span>
         </ng-container>
       </ng-container>
       <button type="button" class="btn btn-link" (click)="editing = true">

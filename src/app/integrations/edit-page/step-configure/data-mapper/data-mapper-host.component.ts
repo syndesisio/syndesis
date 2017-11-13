@@ -3,24 +3,21 @@ import {
   Component,
   ViewChild,
   OnInit,
-  OnDestroy,
   Input,
 } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { DocumentDefinition } from '@atlasmap/atlasmap.data.mapper';
-import { MappingDefinition } from '@atlasmap/atlasmap.data.mapper';
-import { ConfigModel } from '@atlasmap/atlasmap.data.mapper';
-import { MappingModel } from '@atlasmap/atlasmap.data.mapper';
-
-import { InitializationService } from '@atlasmap/atlasmap.data.mapper';
-import { ErrorHandlerService } from '@atlasmap/atlasmap.data.mapper';
-import { DocumentManagementService } from '@atlasmap/atlasmap.data.mapper';
-import { MappingManagementService } from '@atlasmap/atlasmap.data.mapper';
-import { MappingSerializer } from '@atlasmap/atlasmap.data.mapper';
-
-import { DataMapperAppComponent } from '@atlasmap/atlasmap.data.mapper';
+import {
+  DocumentDefinition, MappingDefinition,
+  ConfigModel, MappingModel,
+  InitializationService,
+  ErrorHandlerService,
+  DocumentManagementService,
+  MappingManagementService,
+  MappingSerializer,
+  DataMapperAppComponent,
+} from '@atlasmap/atlasmap.data.mapper';
 
 import { ConfigService } from '../../../../config.service';
 import { IntegrationSupportService } from '../../../../store/integration-support.service';
@@ -57,14 +54,16 @@ const MAPPING_KEY = 'atlasmapping';
     `,
   ],
   providers: [
+    // @FIXME - This overrides the provider singletons from this point on down the component subtree,
+    //          which might lead to data inconsistencies in non-immutable service members.
+    //          Track down dependency injection map and remove this after moving providers to CoreModule.
     InitializationService,
     MappingManagementService,
     ErrorHandlerService,
     DocumentManagementService,
   ],
 })
-export class DataMapperHostComponent extends FlowPage
-  implements OnInit, OnDestroy {
+export class DataMapperHostComponent extends FlowPage implements OnInit {
   routeSubscription: Subscription;
   initialized = false;
   sourceDocTypes = [];
@@ -93,47 +92,7 @@ export class DataMapperHostComponent extends FlowPage
     this.resetConfig();
   }
 
-  private resetConfig(): void {
-    this.initializationService.resetConfig();
-    this.cfg = this.initializationService.cfg;
-
-    const baseUrl =
-      'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
-    this.cfg.initCfg.baseJavaInspectionServiceUrl = this.fetchServiceUrl(
-      'baseJavaInspectionServiceUrl',
-      baseUrl + 'java/',
-      this.configService,
-    );
-    this.cfg.initCfg.baseXMLInspectionServiceUrl = this.fetchServiceUrl(
-      'baseXMLInspectionServiceUrl',
-      baseUrl + 'xml/',
-      this.configService,
-    );
-    this.cfg.initCfg.baseJSONInspectionServiceUrl = this.fetchServiceUrl(
-      'baseJSONInspectionServiceUrl',
-      baseUrl + 'json/',
-      this.configService,
-    );
-    this.cfg.initCfg.baseMappingServiceUrl = this.fetchServiceUrl(
-      'baseMappingServiceUrl',
-      baseUrl,
-      this.configService,
-    );
-  }
-
-  private fetchServiceUrl(
-    configKey: string,
-    defaultUrl: string,
-    configService: ConfigService,
-  ): string {
-    try {
-      return configService.getSettings('datamapper', configKey);
-    } catch (err) {
-      return defaultUrl;
-    }
-  }
-
-  createDocumentDefinition(connectorId: string, dataShape: DataShape, isSource: boolean = false) {
+  createDocumentDefinition(connectorId: string, dataShape: DataShape, isSource = false) {
     if (!dataShape || !dataShape.kind) {
       // skip
       return;
@@ -169,6 +128,8 @@ export class DataMapperHostComponent extends FlowPage
         break;
       case 'xml-schema':
         this.cfg.addXMLSchemaDocument(type, specification, isSource);
+        break;
+      default:
         break;
     }
   }
@@ -236,7 +197,9 @@ export class DataMapperHostComponent extends FlowPage
           'datamapper',
           debugConfigKey,
         );
-      } catch (err) {}
+      } catch (err) {
+        // @TODO: Remove this try/catch once ChangeDetection is restored
+      }
       this.cfg.initCfg[debugConfigKey] = debugKeyValue;
     }
 
@@ -317,5 +280,43 @@ export class DataMapperHostComponent extends FlowPage
     this.initialize();
   }
 
-  ngOnDestroy() {}
+  private resetConfig(): void {
+    this.initializationService.resetConfig();
+    this.cfg = this.initializationService.cfg;
+
+    const baseUrl =
+      'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
+    this.cfg.initCfg.baseJavaInspectionServiceUrl = this.fetchServiceUrl(
+      'baseJavaInspectionServiceUrl',
+      baseUrl + 'java/',
+      this.configService,
+    );
+    this.cfg.initCfg.baseXMLInspectionServiceUrl = this.fetchServiceUrl(
+      'baseXMLInspectionServiceUrl',
+      baseUrl + 'xml/',
+      this.configService,
+    );
+    this.cfg.initCfg.baseJSONInspectionServiceUrl = this.fetchServiceUrl(
+      'baseJSONInspectionServiceUrl',
+      baseUrl + 'json/',
+      this.configService,
+    );
+    this.cfg.initCfg.baseMappingServiceUrl = this.fetchServiceUrl(
+      'baseMappingServiceUrl',
+      baseUrl,
+      this.configService,
+    );
+  }
+
+  private fetchServiceUrl(
+    configKey: string,
+    defaultUrl: string,
+    configService: ConfigService,
+  ): string {
+    try {
+      return configService.getSettings('datamapper', configKey);
+    } catch (err) {
+      return defaultUrl;
+    }
+  }
 }

@@ -8,7 +8,7 @@
 
   <tour-step-template>
     <ng-template let-step="step">
-      <p class="tour-step-content">{{step?.content}}</p>
+      <p class="tour-step-content">{{ step?.content }}</p>
       <div class="tour-step-navigation">
         <button *ngIf="tourService.hasPrev(step)" class="btn btn-sm btn-default" (click)="tourService.prev()">« Prev</button>
         <button *ngIf="tourService.hasNext(step)" class="btn btn-sm btn-default" (click)="tourService.next()">Next »</button>
@@ -128,7 +128,7 @@
                aria-expanded="true">
               <span title="Username"
                     class="fa pficon-user"></span>
-              <span class="username">{{( user$ | async)?.name}}</span>
+              <span class="username">{{ ( user$ | async)?.name }}</span>
               <span class="caret"></span>
             </a>
             <ul *dropdownMenu

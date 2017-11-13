@@ -86,7 +86,7 @@ export class FlowViewComponent extends ChildAwarePage
   }
 
   loaded() {
-    return this.currentFlow._loaded;
+    return this.currentFlow.loaded;
   }
 
   get currentStep() {
@@ -125,7 +125,9 @@ export class FlowViewComponent extends ChildAwarePage
         setTimeout(() => {
           try {
             this.detector.detectChanges();
-          } catch (err) {}
+          } catch (err) {
+            // @TODO: Remove this try/catch once ChangeDetection is restored
+          }
           this.router.navigate(['step-select', position + 1], {
             relativeTo: this.route,
           });
@@ -145,7 +147,9 @@ export class FlowViewComponent extends ChildAwarePage
         setTimeout(() => {
           try {
             this.detector.detectChanges();
-          } catch (err) {}
+          } catch (err) {
+            // @TODO: Remove this try/catch once ChangeDetection is restored
+          }
           this.router.navigate(['connection-select', position + 1], {
             relativeTo: this.route,
           });
@@ -186,28 +190,32 @@ export class FlowViewComponent extends ChildAwarePage
         this.i = event['integration'];
         setTimeout(() => this.maybeShowPopover(this.popovers[0]), 50);
         break;
-      case 'integration-connection-select':
-        break;
-      case 'integration-connection-configure':
-        break;
       case 'integration-add-step':
         switch (event['type']) {
           case 'connection':
             this.insertConnectionAfter(0);
-            return;
+            break;
           case 'step':
             this.insertStepAfter(0);
-            return;
+            break;
+          default:
+            break;
         }
         break;
       case 'integration-show-popouts':
         this.selectedKind = event['type'] || false;
         this.popovers.forEach(popover => popover.show());
         break;
+      case 'integration-connection-select':
+      case 'integration-connection-configure':
+      default:
+        break;
     }
     try {
       this.detector.detectChanges();
-    } catch (err) {}
+    } catch (err) {
+      // @TODO: Remove this try/catch once ChangeDetection is restored
+    }
   }
 
   ngOnInit() {
@@ -215,7 +223,9 @@ export class FlowViewComponent extends ChildAwarePage
     this.routeSubscription = this.router.events.subscribe(event => {
       try {
         this.detector.detectChanges();
-      } catch (err) {}
+      } catch (err) {
+        // @TODO: Remove this try/catch once ChangeDetection is restored
+      }
     });
     */
   }

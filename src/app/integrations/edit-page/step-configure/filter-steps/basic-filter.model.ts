@@ -27,6 +27,9 @@ export function findById(id: string, model: any): any {
           return answer;
         }
       }
+      break;
+    default:
+      break;
   }
   return false;
 }

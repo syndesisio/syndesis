@@ -83,7 +83,7 @@ export class AppComponent implements OnInit, AfterViewInit {
               private userService: UserService,
               public testSupport: TestSupportService,
               private notificationService: NotificationService,
-              private nav: NavigationService,
+              private navigationService: NavigationService,
               public tourService: TourService,
               private modalService: ModalService,
               private title: Title,
@@ -254,7 +254,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     $patternFlyCards.find('.card-pf-title').matchHeight();
     $patternFlyCards.matchHeight();
 
-    this.nav.initialize();
+    this.navigationService.initialize();
     this.userService.setTourState(true);
     this.guidedTourStatus = this.userService.getTourState();
   }

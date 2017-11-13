@@ -17,12 +17,12 @@ const defaultConfigJson = '/config.json';
 export class ConfigService {
   private settingsRepository: any = defaults;
 
-  constructor(private _http: Http) {
+  constructor(private http: Http) {
     this.settingsRepository = this.getSettings();
   }
 
   load(configJson: string = defaultConfigJson): Promise<ConfigService> {
-    return <Promise<ConfigService>>this._http
+    return <Promise<ConfigService>>this.http
       .get(configJson)
       .map(res => res.json())
       .toPromise()

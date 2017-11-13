@@ -68,11 +68,14 @@ export class IntegrationsStepSelectComponent extends FlowPage
           });
           return;
         }
+        break;
+      default:
+        break;
     }
     try {
       this.detector.detectChanges();
     } catch (err) {
-      // ignore
+      // @TODO: Remove this try/catch once ChangeDetection is restored
     }
   }
 

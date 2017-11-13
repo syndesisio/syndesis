@@ -1,4 +1,4 @@
-import { Pipe } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 export class ObjectPropertyFilterConfig {
   filter: any;
@@ -21,7 +21,7 @@ export function getPropertyValue(obj: any, prop: string): any {
   name: 'objectPropertyFilter',
   pure: false,
 })
-export class ObjectPropertyFilterPipe {
+export class ObjectPropertyFilterPipe implements PipeTransform {
   transform(objects: any[], config: ObjectPropertyFilterConfig) {
     if (!config || !('filter' in config) || !('propertyName' in config)) {
       return objects;

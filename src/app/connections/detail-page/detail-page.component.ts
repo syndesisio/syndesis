@@ -46,10 +46,10 @@ import { ConnectionStore } from '../../store/connection/connection.store';
 `],
 })
 export class ConnectionDetailPageComponent implements OnInit, OnDestroy {
-
-  private subscription: Subscription;
   connection: Connection;
   loading: Observable<boolean>;
+
+  private subscription: Subscription;
 
   constructor(
     private connectionStore: ConnectionStore,

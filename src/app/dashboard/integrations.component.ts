@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -15,7 +15,7 @@ const category = getCategory('Dashboard');
   templateUrl: './integrations.component.html',
   styleUrls: ['./integrations.component.scss'],
 })
-export class DashboardIntegrationsComponent implements OnInit {
+export class DashboardIntegrationsComponent {
 
   @Input() integrations: Integrations;
   @Input() connections: Connections;
@@ -24,7 +24,7 @@ export class DashboardIntegrationsComponent implements OnInit {
   selectedId = undefined;
   truncateTrail = '…';
 
-  public doughnutChartLabels: string[] = ['Active', 'Draft', 'Inactive'];
+  doughnutChartLabels: string[] = ['Active', 'Draft', 'Inactive'];
 
   get doughnutChartData() {
     return [
@@ -34,9 +34,9 @@ export class DashboardIntegrationsComponent implements OnInit {
     ];
   }
 
-  public doughnutChartType = 'doughnut';
-  public doughnutChartLegend = false;
-  public doughnutChartColors = [
+  doughnutChartType = 'doughnut';
+  doughnutChartLegend = false;
+  doughnutChartColors = [
     {
       backgroundColor: [
         '#0088CE', // PatternFly Blue 400, Active
@@ -45,7 +45,7 @@ export class DashboardIntegrationsComponent implements OnInit {
       ],
     },
   ];
-  public doughnutChartOptions: any = {
+  doughnutChartOptions: any = {
     cutoutPercentage: 75,
   };
 
@@ -58,7 +58,7 @@ export class DashboardIntegrationsComponent implements OnInit {
 
   //-----  Integration Board Chart ------------------->>
 
-  public filterIntegrations() {
+  filterIntegrations() {
     const active = [];
     const draft = [];
     const inactive = [];
@@ -84,6 +84,8 @@ export class DashboardIntegrationsComponent implements OnInit {
           total = total + 1;
           inactive.push(a);
           break;
+        default:
+          break;
       }
     });
     return {
@@ -94,34 +96,34 @@ export class DashboardIntegrationsComponent implements OnInit {
     };
   }
 
-  public countActiveIntegrations() {
+  countActiveIntegrations() {
     return this.filterIntegrations().active.length;
   }
 
-  public countDraftIntegrations() {
+  countDraftIntegrations() {
     return this.filterIntegrations().draft.length;
   }
 
-  public countInactiveIntegrations() {
+  countInactiveIntegrations() {
     return this.filterIntegrations().inactive.length;
   }
 
-  public countTotalIntegrations() {
+  countTotalIntegrations() {
     return this.filterIntegrations().total;
   }
 
-  public chartClicked(e: any): void {
+  chartClicked(e: any): void {
     //log.debugc(() => 'Click event: ' + JSON.stringify(e));
     log.debugc(() => 'Click event: ' + e);
   }
 
-  public chartHovered(e: any): void {
+  chartHovered(e: any): void {
     log.debugc(() => 'Hover event: ' + JSON.stringify(e));
   }
 
   //-----  Recent Updates Section ------------------->>
 
-  public getLabelClass(integration): string {
+  getLabelClass(integration): string {
     /* TODO - too noisy
     log.debugc(() => 'Integration: ' + JSON.stringify(integration));
     */
@@ -136,14 +138,15 @@ export class DashboardIntegrationsComponent implements OnInit {
     }
   }
 
-  public getStatusText(integration: Integration): string {
+  getStatusText(integration: Integration): string {
     switch (integration.currentStatus) {
       case 'Activated':
         return 'Active';
       case 'Deactivated':
         return 'Inactive';
+      default:
+        return integration.currentStatus;
     }
-    return integration.currentStatus;
   }
 
   //-----  Selecting a Connection or Integration ------------------->>
@@ -172,11 +175,5 @@ export class DashboardIntegrationsComponent implements OnInit {
       return integration.timesUsed;
     }
     */
-  }
-
-  //-----  Initialization ------------------->>
-
-  ngOnInit() {
-
   }
 }

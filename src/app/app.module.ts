@@ -1,7 +1,5 @@
-import { APP_INITIALIZER, NgModule, NgZone } from '@angular/core';
-import { InjectionToken } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { APP_INITIALIZER, NgModule, NgZone, InjectionToken } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -67,7 +65,7 @@ export function mapperRestangularProvider(
   restangular: Restangular,
   config: ConfigService,
 ) {
-  return restangular.withConfig((restangularConfigurer) => {
+  return restangular.withConfig(restangularConfigurer => {
     const mapperEndpoint = config.getSettings().mapperEndpoint;
     restangularConfigurer.setBaseUrl(mapperEndpoint ? mapperEndpoint : '/mapper/v1');
   });

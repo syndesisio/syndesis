@@ -106,7 +106,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
               const definition: any = response['_body'] ? JSON.parse(response['_body']) : undefined;
               for (const actionProperty of Object.keys(data)) {
                 if (data[actionProperty] == null) {
-                  this.step.configuredProperties[actionProperty] = definition.propertyDefinitionSteps.map((actionDefinitionStep) => {
+                  this.step.configuredProperties[actionProperty] = definition.propertyDefinitionSteps.map(actionDefinitionStep => {
                     return actionDefinitionStep.properties[actionProperty].defaultValue;
                   })[0];
                 }
@@ -228,7 +228,9 @@ export class IntegrationsConfigureActionComponent extends FlowPage
         });
         this.loading = false;
         this.detector.detectChanges();
-      } catch (err) {}
+      } catch (err) {
+        // @TODO: Remove this try/catch once ChangeDetection is restored
+      }
     }, 30);
   }
 

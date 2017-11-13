@@ -10,11 +10,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { Actions, Action } from '../../../model';
+import { Actions, Action, Step, Connector } from '../../../model';
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { ConnectorStore } from '../../../store/connector/connector.store';
-import { Step, Connector } from '../../../model';
 import { FlowPage } from '../flow-page';
 
 const category = getCategory('Integrations');
@@ -97,6 +96,9 @@ export class IntegrationsSelectActionComponent extends FlowPage
     switch (event.kind) {
       case 'integration-updated':
         this.loadActions();
+        break;
+      default:
+        break;
     }
   }
 

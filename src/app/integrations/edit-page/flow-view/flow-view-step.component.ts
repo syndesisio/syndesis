@@ -95,7 +95,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
   deletePrompt() {
     this.modalService
       .show('delete-integration-step-' + this.position)
-      .then((modal) => {
+      .then( modal => {
         if (modal.result) {
           this.deleteStep();
         }
@@ -115,7 +115,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
           try {
             this.detector.detectChanges();
           } catch (err) {
-            // ignore
+            // @TODO: Remove this try/catch once ChangeDetection is restored
           }
           if (isFirst || isLast) {
             this.router.navigate(['connection-select', position], {
@@ -150,25 +150,6 @@ export class FlowViewStepComponent extends ChildAwarePage {
       clazz = clazz + ' disabled';
     }
     return 'parent-step ' + clazz;
-  }
-
-  private thingIsEnabled(step: Step) {
-    if (!step) {
-      return false;
-    }
-    switch (step.stepKind) {
-      case 'endpoint':
-        if (step.connection && step.connection && step.configuredProperties) {
-          return true;
-        }
-        break;
-      default:
-        if (step.configuredProperties) {
-          return true;
-        }
-        break;
-    }
-    return false;
   }
 
   getPropertyDefinitions(action: Action) {
@@ -265,6 +246,8 @@ export class FlowViewStepComponent extends ChildAwarePage {
           return 'active';
         }
         break;
+      default:
+        break;
     }
     if (
       (this.currentState === state || !state) &&
@@ -354,5 +337,24 @@ export class FlowViewStepComponent extends ChildAwarePage {
 
   isCollapsed() {
     return this.getPosition() !== this.currentPosition;
+  }
+
+  private thingIsEnabled(step: Step) {
+    if (!step) {
+      return false;
+    }
+    switch (step.stepKind) {
+      case 'endpoint':
+        if (step.connection && step.connection && step.configuredProperties) {
+          return true;
+        }
+        break;
+      default:
+        if (step.configuredProperties) {
+          return true;
+        }
+        break;
+    }
+    return false;
   }
 }

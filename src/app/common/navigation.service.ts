@@ -2,24 +2,33 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class NavigationService {
+  private jQuery: JQuery;
+  private verticalNavigationHandler: any;
 
-  constructor() { }
+  constructor() {
+    this.jQuery = $.fn;
+  }
 
   initialize() {
-    (<any>$.fn).setupVerticalNavigation ? (<any>$.fn).setupVerticalNavigation() : '';
+    if (this.setupVerticalNavigation) {
+      this.verticalNavigationHandler = this.setupVerticalNavigation();
+    }
   }
 
   show() {
-    (<any>$.fn).setupVerticalNavigation
-      ? (<any>$.fn).setupVerticalNavigation().showMenu()
-      : '';
+    if (this.verticalNavigationHandler) {
+      this.verticalNavigationHandler.showMenu();
+    }
   }
 
   hide() {
-    (<any>$.fn).setupVerticalNavigation
-      ? (<any>$.fn).setupVerticalNavigation().hideMenu()
-      : '';
+    if (this.verticalNavigationHandler) {
+      this.verticalNavigationHandler.hideMenu();
+    }
+  }
 
+  private get setupVerticalNavigation(): any {
+    return this.jQuery['setupVerticalNavigation'];
   }
 
 }

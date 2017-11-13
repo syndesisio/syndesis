@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { Integration } from '../../model';
 
@@ -22,14 +22,11 @@ import { Integration } from '../../model';
   `,
   styleUrls: ['./status.component.scss'],
 })
-export class IntegrationStatusComponent implements OnInit {
+export class IntegrationStatusComponent {
   @Input() integration: Integration;
 
-  constructor() {}
-
   //-----  Get Status Icon Class ------------------->>
-
-  getLabelClass(currentStatus) {
+  getLabelClass(currentStatus): string|any {
     switch (currentStatus) {
       case 'Activated':
         return 'primary';
@@ -39,10 +36,12 @@ export class IntegrationStatusComponent implements OnInit {
         return 'danger';
       case 'Draft':
         return 'warning';
+      default:
+        return currentStatus;
     }
   }
 
-  getStatusText(currentStatus) {
+  getStatusText(currentStatus): string|any {
     switch (currentStatus) {
       case 'Activated':
         return 'Active';
@@ -54,6 +53,4 @@ export class IntegrationStatusComponent implements OnInit {
         return currentStatus;
     }
   }
-
-  ngOnInit() {}
 }

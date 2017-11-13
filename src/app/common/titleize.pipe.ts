@@ -1,9 +1,9 @@
-import { Pipe } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'titleize',
 })
-export class TitleizePipe {
+export class TitleizePipe implements PipeTransform {
   transform(value: string, config: any) {
     const separator = config
       ? config.separator ? config.separator : ' '

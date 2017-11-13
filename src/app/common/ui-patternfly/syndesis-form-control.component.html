@@ -7,7 +7,7 @@
          [attr.for]="model.id"
          [ngClass]="[model.cls.element.label, model.cls.grid.label]">
     <label [ngClass]="{'required-pf': model.required}">
-      {{model.label}}
+      {{ model.label }}
     </label>
     <div *ngIf="model.hint !== null"
          [tooltip]="model.hint"
@@ -86,7 +86,6 @@
                                  (focus)="onFocusChange($event)"></syndesis-form-control>
 
           <ng-container *ngTemplateOutlet="template?.templateRef; context: { context: groupModel.context, index: idx }"></ng-container>
-
         </div>
 
       </div>
@@ -187,7 +186,6 @@
             <span [innerHTML]="option.label"></span>
           </label>
         </div>
-
       </fieldset>
 
 
@@ -205,7 +203,7 @@
 
         <option *ngFor="let option of model.options$ | async"
                 [attr.name]="model.name"
-                [ngValue]="option.value">{{option.label}}</option>
+                [ngValue]="option.value">{{ option.label }}</option>
 
       </select>
 
@@ -238,7 +236,7 @@
     </ng-container>
 
     <span class="help-block"
-          *ngIf="showErrorMessages">{{errorMessages[0]}}</span>
+          *ngIf="showErrorMessages">{{ errorMessages[0] }}</span>
 
   </div>
 

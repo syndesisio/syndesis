@@ -17,7 +17,7 @@
                 </li>
                 <li>
                   <a *ngIf="integrationName"
-                     [routerLink]="['/integrations', currentFlow.integration.id]">{{integrationName}}</a>
+                     [routerLink]="['/integrations', currentFlow.integration.id]">{{ integrationName }}</a>
                   <ng-container *ngIf="!integrationName">New Integration</ng-container>
                 </li>
                 <li class="active">Save or Add Step</li>

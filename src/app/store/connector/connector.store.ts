@@ -11,8 +11,8 @@ export class ConnectorStore extends AbstractStore<
   Connectors,
   ConnectorService
 > {
-  constructor(ConnectorService: ConnectorService, eventService: EventsService) {
-    super(ConnectorService, eventService, [], <Connector>{});
+  constructor(connectorService: ConnectorService, eventService: EventsService) {
+    super(connectorService, eventService, [], <Connector>{});
   }
 
   protected get kind() {

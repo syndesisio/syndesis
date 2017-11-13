@@ -32,16 +32,17 @@ import { ObjectPropertySortPipe } from '../../object-property-sort.pipe';
   styleUrls: ['./list-toolbar.component.scss'],
 })
 export class ListToolbarComponent<T> implements OnInit, OnDestroy {
-
   @Input() items: Observable<Array<T>> = Observable.empty();
   @Input() filteredItems: Subject<Array<T>>;
   @Input() actionTemplate: TemplateRef<any>;
   @Input() viewTemplate: TemplateRef<any>;
   @Input() filterFields: Array<FilterField> = [];
   @Input() filterTags: true;
+
   toolbarConfig: ToolbarConfig;
-  private _allItems: Array<T> = [];
-  private _filteredItems: Array<T> = [];
+
+  private allItems: Array<T> = [];
+  private itemsFiltered: Array<T> = [];
   private subscription: Subscription;
   private currentSortFieldId: string;
   private isAscendingSort = true;
@@ -74,7 +75,7 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
     } as ToolbarConfig;
 
     this.subscription = this.items
-      .do(items => this._allItems = items)
+      .do(items => this.allItems = items)
       .do(items => {
         if (!this.filterTags) {
           return;
@@ -113,9 +114,9 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
             filter: filter.value,
             propertyName: filter.field.id,
             exact: filter.field.type !== 'text',
-          }), this._allItems);
+          }), this.allItems);
     this.toolbarConfig.filterConfig.resultsCount = result.length;
-    this._filteredItems = result;
+    this.itemsFiltered = result;
     this.sort();
   }
 
@@ -124,7 +125,7 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
       this.currentSortFieldId = $event.field.id;
       this.isAscendingSort = $event.isAscending;
     }
-    const result = this.propertySorter.transform(this._filteredItems, {
+    const result = this.propertySorter.transform(this.itemsFiltered, {
       sortField  : this.currentSortFieldId || 'name',
       descending : !this.isAscendingSort,
     });
@@ -134,7 +135,7 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
   filterFieldSelected($event: FilterEvent) {
     const field = $event.field;
     if (field.id === 'tag') {
-      field.queries = this._allItems
+      field.queries = this.allItems
         .map(item => item['tags'] || [])
         .reduce((array, tags) => array.concat(tags), [])
         .filter((tag, i, tags) => tags.indexOf(tag) === i)

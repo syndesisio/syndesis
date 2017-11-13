@@ -22,14 +22,14 @@ const RECONNECT_TIME = 5000;
 
 @Injectable()
 export class EventsService {
+  messageEvents = new Subject<String>();
+  changeEvents = new Subject<ChangeEvent>();
+
   private eventSource: EventSource;
   private webSocket: WebSocket;
   private starting = false;
   private retries = 0;
   private preferredProtocol = null;
-
-  messageEvents: Subject<String> = new Subject<String>();
-  changeEvents: Subject<ChangeEvent> = new Subject<ChangeEvent>();
 
   constructor(private config: ConfigService, private restangular: Restangular) {
     this.startConnection(this.retries % 2 === 0);
@@ -60,14 +60,14 @@ export class EventsService {
           // Once we find a protocol that works, keep using it.
           case 'ws':
             this.startConnection(true);
-              break;
+            break;
           case 'es':
             this.startConnection(false);
-              break;
+            break;
           default:
-            // Keep flipping between WS and ES untill we find one that
-            // works.
+            // Keep flipping between WS and ES untill we find one that works.
             this.startConnection(this.retries % 2 === 0);
+            break;
       }
     }, reconnectIn);
   }
@@ -113,18 +113,18 @@ export class EventsService {
 
   private connectEventSource(url: string) {
     this.eventSource = new EventSource(url);
-    this.eventSource.addEventListener('message', (event) => {
+    this.eventSource.addEventListener('message', event => {
       this.starting = false;
       this.preferredProtocol = 'es';
       log.info('sse.message: ' + JSON.stringify(event.data));
       this.messageEvents.next(event.data);
     });
-    this.eventSource.addEventListener('change-event', (event) => {
+    this.eventSource.addEventListener('change-event', event => {
       const value = JSON.parse(event.data) as ChangeEvent;
       log.info('sse.change-event: ' + JSON.stringify(value));
       this.changeEvents.next(value);
     });
-    const onError = (event) => {
+    const onError = event => {
       log.info('sse.close: ' + JSON.stringify(event));
       this.onFailure(event);
     };
@@ -134,7 +134,7 @@ export class EventsService {
 
   private connectWebSocket(url) {
     this.webSocket = new WebSocket(url);
-    this.webSocket.onmessage = (event) => {
+    this.webSocket.onmessage = event => {
       const messageEvent = JSON.parse(event.data) as MessageEvent;
       switch (messageEvent.event) {
         case 'message':
@@ -152,7 +152,7 @@ export class EventsService {
           log.info('ws.unknown-message: ' + JSON.stringify(event));
       }
     };
-    this.webSocket.onclose = (event) => {
+    this.webSocket.onclose = event => {
       log.info('ws.onclose: ' + JSON.stringify(event));
       this.onFailure(event);
     };

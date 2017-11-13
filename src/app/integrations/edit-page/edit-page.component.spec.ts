@@ -1,4 +1,3 @@
-/* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,8 +16,7 @@ import { StoreModule } from '../../store/store.module';
 import { CurrentFlow } from './current-flow.service';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { CollapseModule } from 'ngx-bootstrap';
-import { PopoverModule } from 'ngx-bootstrap';
+import { CollapseModule, PopoverModule } from 'ngx-bootstrap';
 
 import { IntegrationsEditPage } from './edit-page.component';
 

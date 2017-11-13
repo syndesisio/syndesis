@@ -6,10 +6,10 @@
             (click)="cancel()">
       <span class="pficon pficon-close"></span>
     </button>
-    <h4 class="modal-title">{{title}}</h4>
+    <h4 class="modal-title">{{ title }}</h4>
   </div>
   <div class="modal-body">
-    <p>{{message}}</p>
+    <p>{{ message }}</p>
     <ng-template *ngIf="body"
                  [ngTemplateOutlet]="body"
                  [ngOutletContext]="{ modal: this }"></ng-template>

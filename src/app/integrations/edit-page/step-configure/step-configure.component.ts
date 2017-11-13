@@ -117,8 +117,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage
         return 'toolbar basic-filter';
       case DATA_MAPPER:
         return 'toolbar mapper';
+      default:
+        return 'toolbar';
     }
-    return 'toolbar';
   }
 
   getConfiguredProperties(props: any) {
@@ -136,7 +137,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     this.loading = false;
     try {
       this.detector.detectChanges();
-    } catch (err) {}
+    } catch (err) {
+      // @TODO: Remove this try/catch once ChangeDetection is restored
+    }
     this.currentFlow.events.emit({
       kind: 'integration-action-configure',
       position: this.position,
@@ -245,6 +248,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     switch (event.kind) {
       case 'integration-updated':
         this.loadForm();
+        break;
+      default:
+        break;
     }
   }
 
