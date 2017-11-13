@@ -9,9 +9,9 @@ describe('ObjectPropertySortPipe', () => {
       number: 8,
       stuff: {
         inner: {
-          name: 'foo',
-        },
-      },
+          name: 'foo'
+        }
+      }
     },
     {
       name: 'bar',
@@ -19,9 +19,9 @@ describe('ObjectPropertySortPipe', () => {
       number: 5,
       stuff: {
         inner: {
-          name: 'bar',
-        },
-      },
+          name: 'bar'
+        }
+      }
     },
     {
       name: 'bar2',
@@ -29,9 +29,9 @@ describe('ObjectPropertySortPipe', () => {
       number: 6,
       stuff: {
         inner: {
-          name: 'bar2',
-        },
-      },
+          name: 'bar2'
+        }
+      }
     },
     {
       name: 'yum',
@@ -39,10 +39,10 @@ describe('ObjectPropertySortPipe', () => {
       number: 7,
       stuff: {
         inner: {
-          name: 'yum',
-        },
-      },
-    },
+          name: 'yum'
+        }
+      }
+    }
   ];
 
   beforeEach(() => {
@@ -52,7 +52,7 @@ describe('ObjectPropertySortPipe', () => {
   it('will sort an array of objects', () => {
     const results = pipe.transform(testArray, {
       sortField: 'name',
-      descending: false,
+      descending: false
     });
 
     expect(results.length).toEqual(4);
@@ -69,7 +69,7 @@ describe('ObjectPropertySortPipe', () => {
   it('will sort an array of objects in reverse', () => {
     const results = pipe.transform(testArray, {
       sortField: 'name',
-      descending: true,
+      descending: true
     });
 
     expect(results.length).toEqual(4);
@@ -86,7 +86,7 @@ describe('ObjectPropertySortPipe', () => {
   it('will sort an array of objects using numbers', () => {
     const results = pipe.transform(testArray, {
       sortField: 'number',
-      descending: false,
+      descending: false
     });
 
     expect(results.length).toEqual(4);

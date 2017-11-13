@@ -16,11 +16,11 @@ describe('ListActionsComponent', () => {
         imports: [
           SyndesisCommonModule,
           RouterTestingModule.withRoutes([]),
-          StoreModule,
+          StoreModule
         ],
-        declarations: [ListActionsComponent],
+        declarations: [ListActionsComponent]
       }).compileComponents();
-    }),
+    })
   );
 
   beforeEach(() => {

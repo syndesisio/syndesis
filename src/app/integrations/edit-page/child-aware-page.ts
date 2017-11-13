@@ -6,7 +6,7 @@ export abstract class ChildAwarePage {
   constructor(
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
-    public router: Router,
+    public router: Router
   ) {}
 
   getChildPath(route: ActivatedRoute = this.route) {

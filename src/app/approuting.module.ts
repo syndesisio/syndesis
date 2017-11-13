@@ -5,32 +5,31 @@ const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
-    loadChildren: './dashboard/dashboard.module#DashboardModule',
+    loadChildren: './dashboard/dashboard.module#DashboardModule'
   },
   {
     path: 'integrations',
-    loadChildren: './integrations/integrations.module#IntegrationsModule',
+    loadChildren: './integrations/integrations.module#IntegrationsModule'
   },
   {
     path: 'templates',
-    loadChildren: './templates/templates-routes.module#TemplateRoutesModule',
+    loadChildren: './templates/templates-routes.module#TemplateRoutesModule'
   },
   {
     path: 'connections',
     loadChildren:
-      './connections/connections-routes.module#ConnectionsRoutesModule',
+      './connections/connections-routes.module#ConnectionsRoutesModule'
   },
   {
     path: 'settings',
-    loadChildren:
-      './settings/settings.module#SettingsModule',
-  },
+    loadChildren: './settings/settings.module#SettingsModule'
+  }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
   ],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

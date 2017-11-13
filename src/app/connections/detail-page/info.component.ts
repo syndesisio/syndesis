@@ -41,22 +41,23 @@ import { ConnectionConfigurationService } from '../common/configuration/configur
       </dd>
     </dl>
   `,
-  styles: [`
+  styles: [
+    `
     h1 dt { width: 46px; }
     h1 dd { margin-left: 66px; }
     dt { text-align: left; width: 120px; }
     dd { margin-left: 140px; }
     dt:not(:first-child), dd:not(:first-child) { margin-top: 10px; }
-  `],
+  `
+  ]
 })
 export class ConnectionDetailInfoComponent {
-
   @Input() connection: Connection;
   @Output() updated = new EventEmitter<Connection>();
 
   constructor(
     private connectionService: ConnectionService,
-    private configurationService: ConnectionConfigurationService,
+    private configurationService: ConnectionConfigurationService
   ) {}
 
   onAttributeUpdated(attr: string, value) {
@@ -68,7 +69,8 @@ export class ConnectionDetailInfoComponent {
     if (name === '') {
       return 'Name is required';
     } else if (name !== this.connection.name) {
-      return this.connectionService.validateName(name)
+      return this.connectionService
+        .validateName(name)
         .then(validationErrors => {
           if (validationErrors && validationErrors.UniqueProperty) {
             return 'That name is taken. Try another.';
@@ -77,6 +79,5 @@ export class ConnectionDetailInfoComponent {
           }
         });
     }
-  }
-
+  };
 }

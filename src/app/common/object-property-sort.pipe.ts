@@ -7,7 +7,7 @@ export class ObjectPropertySortConfig {
 }
 
 @Pipe({
-  name: 'objectPropertySort',
+  name: 'objectPropertySort'
 })
 export class ObjectPropertySortPipe implements PipeTransform {
   transform(objects: any[], config: ObjectPropertySortConfig) {

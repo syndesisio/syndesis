@@ -20,13 +20,13 @@ import { Integration } from '../../model';
       </div>
     </div>
   `,
-  styleUrls: ['./status.component.scss'],
+  styleUrls: ['./status.component.scss']
 })
 export class IntegrationStatusComponent {
   @Input() integration: Integration;
 
   //-----  Get Status Icon Class ------------------->>
-  getLabelClass(currentStatus): string|any {
+  getLabelClass(currentStatus): string | any {
     switch (currentStatus) {
       case 'Activated':
         return 'primary';
@@ -41,7 +41,7 @@ export class IntegrationStatusComponent {
     }
   }
 
-  getStatusText(currentStatus): string|any {
+  getStatusText(currentStatus): string | any {
     switch (currentStatus) {
       case 'Activated':
         return 'Active';

@@ -6,13 +6,13 @@ import {
   Input,
   Output,
   ViewChild,
-  TemplateRef,
+  TemplateRef
 } from '@angular/core';
 import { ModalService } from './modal.service';
 
 @Component({
   selector: 'syndesis-modal',
-  templateUrl: './modal.component.html',
+  templateUrl: './modal.component.html'
 })
 export class ModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() id = 'modal';

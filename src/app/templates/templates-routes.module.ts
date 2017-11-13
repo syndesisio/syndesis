@@ -5,10 +5,10 @@ import { TemplatesModule } from './templates.module';
 import { TemplatesListPage } from './list-page/list-page.component';
 
 const routes: Routes = [
-  { path: '', component: TemplatesListPage, pathMatch: 'full' },
+  { path: '', component: TemplatesListPage, pathMatch: 'full' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes), TemplatesModule],
+  imports: [RouterModule.forChild(routes), TemplatesModule]
 })
 export class TemplateRoutesModule {}

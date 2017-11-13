@@ -37,7 +37,7 @@ import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
     ModalModule,
     BsDropdownModule,
     TagInputModule,
-    TourNgxBootstrapModule,
+    TourNgxBootstrapModule
   ],
   declarations: [
     ConnectionsCreatePage,
@@ -51,14 +51,9 @@ import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
     ConnectionDetailBreadcrumbComponent,
     ConnectionDetailInfoComponent,
     ConnectionDetailConfigurationComponent,
-    ConnectionConfigurationValidationComponent,
+    ConnectionConfigurationValidationComponent
   ],
-  exports: [
-    ConnectionsListComponent,
-  ],
-  providers: [
-    CurrentConnectionService,
-    ConnectionConfigurationService,
-  ],
+  exports: [ConnectionsListComponent],
+  providers: [CurrentConnectionService, ConnectionConfigurationService]
 })
 export class ConnectionsModule {}

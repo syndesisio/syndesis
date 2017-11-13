@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { DynamicFormControlModel, DynamicInputModel } from '@ng-dynamic-forms/core';
+import {
+  DynamicFormControlModel,
+  DynamicInputModel
+} from '@ng-dynamic-forms/core';
 import { FormFactoryService } from '../../../common/forms.service';
 import { Connection } from '../../../model';
 
 @Injectable()
 export class ConnectionConfigurationService {
-
-  constructor(private formFactory: FormFactoryService) { }
+  constructor(private formFactory: FormFactoryService) {}
 
   shouldValidate(id: string) {
     switch (id) {
@@ -30,12 +32,15 @@ export class ConnectionConfigurationService {
     return sanitized;
   }
 
-  getFormModel(connection: Connection, readOnly: boolean): DynamicFormControlModel[] {
+  getFormModel(
+    connection: Connection,
+    readOnly: boolean
+  ): DynamicFormControlModel[] {
     const config = this.getFormConfig(connection);
     const formModel = this.formFactory.createFormModel(config);
     formModel
       .filter(model => model instanceof DynamicInputModel)
-      .forEach(model => (<DynamicInputModel>model).readOnly = readOnly);
+      .forEach(model => ((<DynamicInputModel>model).readOnly = readOnly));
     return formModel;
   }
 

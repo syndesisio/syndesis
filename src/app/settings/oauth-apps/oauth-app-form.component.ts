@@ -4,7 +4,7 @@ import {
   EventEmitter,
   Input,
   Output,
-  ChangeDetectorRef,
+  ChangeDetectorRef
 } from '@angular/core';
 import { OAuthApp, OAuthApps } from '../../model';
 import { FormFactoryService } from '../../common/forms.service';
@@ -13,7 +13,7 @@ import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
   DynamicFormService,
-  DynamicInputModel,
+  DynamicInputModel
 } from '@ng-dynamic-forms/core';
 
 // Default form config object for OAuth client settings
@@ -21,18 +21,18 @@ const OAUTH_APP_FORM_CONFIG = {
   clientId: {
     displayName: 'Client ID',
     type: 'string',
-    description: 'The OAuth client ID setting for the target application',
+    description: 'The OAuth client ID setting for the target application'
   },
   clientSecret: {
     displayName: 'Client Secret',
     type: 'password',
-    description: 'The OAuth client secret value for the target application',
-  },
+    description: 'The OAuth client secret value for the target application'
+  }
 };
 
 @Component({
   selector: 'syndesis-oauth-app-form',
-  templateUrl: 'oauth-app-form.component.html',
+  templateUrl: 'oauth-app-form.component.html'
 })
 export class OAuthAppFormComponent implements OnInit {
   @Input() item: any = {};
@@ -47,7 +47,7 @@ export class OAuthAppFormComponent implements OnInit {
     private formFactory: FormFactoryService,
     private formService: DynamicFormService,
     private store: OAuthAppStore,
-    public detector: ChangeDetectorRef,
+    public detector: ChangeDetectorRef
   ) {}
 
   save() {
@@ -71,13 +71,16 @@ export class OAuthAppFormComponent implements OnInit {
         this.error = error;
         sub.unsubscribe();
         this.detector.detectChanges();
-      },
+      }
     );
   }
 
   ngOnInit() {
     const formConfig = JSON.parse(JSON.stringify(OAUTH_APP_FORM_CONFIG));
-    this.formModel = this.formFactory.createFormModel(formConfig, this.item.client);
+    this.formModel = this.formFactory.createFormModel(
+      formConfig,
+      this.item.client
+    );
     this.formGroup = this.formService.createFormGroup(this.formModel);
   }
 }

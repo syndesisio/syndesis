@@ -1,13 +1,17 @@
 .basic-filter {
   .basic-filter-form-container {
-    background: #FFFFFF;
+    background: #ffffff;
     padding: 30px;
 
     .basic-filter-form {
       .rule-buttons {
         padding: 12px 0;
 
-        a, a:hover, a:active, a:visited, a:focus {
+        a,
+        a:hover,
+        a:active,
+        a:visited,
+        a:focus {
           cursor: pointer;
           font-size: initial;
           text-decoration: none;

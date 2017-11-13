@@ -13,8 +13,8 @@ import { TemplatesListComponent } from './list/list.component';
   declarations: [
     TemplatesListPage,
     TemplatesListComponent,
-    ListToolbarComponent,
+    ListToolbarComponent
   ],
-  exports: [TemplatesListComponent],
+  exports: [TemplatesListComponent]
 })
 export class TemplatesModule {}

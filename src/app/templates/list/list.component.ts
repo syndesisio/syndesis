@@ -5,7 +5,7 @@ import { IntegrationTemplates } from '../../model';
 @Component({
   selector: 'syndesis-templates-list',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  styleUrls: ['./list.component.scss']
 })
 export class TemplatesListComponent {
   @Input() templates: IntegrationTemplates;

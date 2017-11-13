@@ -19,14 +19,14 @@ const routes: Routes = [
     children: [
       {
         path: 'oauth-clients',
-        component: OAuthAppsComponent,
+        component: OAuthAppsComponent
       },
       {
         path: '',
-        redirectTo: 'oauth-clients',
-      },
-    ],
-  },
+        redirectTo: 'oauth-clients'
+      }
+    ]
+  }
 ];
 
 @NgModule({
@@ -39,15 +39,15 @@ const routes: Routes = [
     ListModule,
     ToolbarModule,
     RouterModule.forChild(routes),
-    SyndesisCommonModule,
+    SyndesisCommonModule
   ],
   exports: [],
   declarations: [
     SettingsRootComponent,
     OAuthAppsComponent,
     OAuthAppFormComponent,
-    OAuthAppModalComponent,
+    OAuthAppModalComponent
   ],
-  providers: [],
+  providers: []
 })
 export class SettingsModule {}

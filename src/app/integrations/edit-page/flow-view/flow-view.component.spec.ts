@@ -36,29 +36,29 @@ describe('IntegrationsCreateComponent', () => {
           PopoverModule.forRoot(),
           CollapseModule.forRoot(),
           SyndesisCommonModule.forRoot(),
-          CollapseModule,
+          CollapseModule
         ],
         declarations: [FlowViewComponent, FlowViewStepComponent],
         providers: [
           MockBackend,
           {
             provide: RequestOptions,
-            useClass: BaseRequestOptions,
+            useClass: BaseRequestOptions
           },
           {
             provide: Http,
             useFactory: (backend, options) => {
               return new Http(backend, options);
             },
-            deps: [MockBackend, RequestOptions],
+            deps: [MockBackend, RequestOptions]
           },
           CurrentFlow,
           IntegrationStore,
           IntegrationService,
-          EventsService,
-        ],
+          EventsService
+        ]
       }).compileComponents();
-    }),
+    })
   );
 
   beforeEach(() => {

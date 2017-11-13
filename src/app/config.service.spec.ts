@@ -18,9 +18,9 @@ describe('ConfigService', () => {
           useFactory: (backend, options) => {
             return new Http(backend, options);
           },
-          deps: [MockBackend, RequestOptions],
-        },
-      ],
+          deps: [MockBackend, RequestOptions]
+        }
+      ]
     });
   });
 
@@ -28,6 +28,6 @@ describe('ConfigService', () => {
     'should ...',
     inject([ConfigService], (service: ConfigService) => {
       expect(service).toBeTruthy();
-    }),
+    })
   );
 });

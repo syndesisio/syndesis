@@ -12,13 +12,10 @@ describe('ListToolbarComponent', () => {
   beforeEach(
     async(() => {
       TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule.withRoutes([]),
-          ToolbarModule,
-        ],
-        declarations: [ListToolbarComponent],
+        imports: [RouterTestingModule.withRoutes([]), ToolbarModule],
+        declarations: [ListToolbarComponent]
       }).compileComponents();
-    }),
+    })
   );
 
   beforeEach(() => {

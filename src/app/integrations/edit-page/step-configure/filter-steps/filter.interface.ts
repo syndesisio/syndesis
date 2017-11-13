@@ -24,7 +24,7 @@ export function convertOps(ops: Array<Op>): Array<Op> {
     const label = op.label === '' ? op.value || op.operator : op.label;
     const newOp = {
       label: label,
-      value: op.value || op.operator,
+      value: op.value || op.operator
     };
     answer.push(newOp);
   }
@@ -35,27 +35,27 @@ export function getDefaultOps(): Array<Op> {
   return [
     {
       label: 'Contains',
-      value: 'contains',
+      value: 'contains'
     },
     {
       label: 'Does Not Contain',
-      value: 'not contains',
+      value: 'not contains'
     },
     {
       label: 'Matches Regex',
-      value: 'regex',
+      value: 'regex'
     },
     {
       label: 'Does Not Match Regex',
-      value: 'not regex',
+      value: 'not regex'
     },
     {
       label: 'Starts With',
-      value: 'starts with',
+      value: 'starts with'
     },
     {
       label: 'Ends With',
-      value: 'ends with',
-    },
+      value: 'ends with'
+    }
   ];
 }

@@ -13,7 +13,7 @@ const category = getCategory('Dashboard');
 
 @Component({
   selector: 'syndesis-dashboard',
-  templateUrl: './dashboard.component.html',
+  templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
   connections: Observable<Connections>;
@@ -24,10 +24,12 @@ export class DashboardComponent implements OnInit {
   truncateLimit = 80;
   truncateTrail = '…';
 
-  constructor(private connectionStore: ConnectionStore,
-              private integrationStore: IntegrationStore,
-              public tourService: TourService,
-              private userService: UserService) {
+  constructor(
+    private connectionStore: ConnectionStore,
+    private integrationStore: IntegrationStore,
+    public tourService: TourService,
+    private userService: UserService
+  ) {
     this.connections = this.connectionStore.list;
     this.integrations = this.integrationStore.list;
     this.connectionsLoading = this.connectionStore.loading;
@@ -41,14 +43,19 @@ export class DashboardComponent implements OnInit {
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
     if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
-          anchorId: 'dashboard.navigation',
-          content: 'View integrations, connections or settings for applications that Fuse Ignite is registered with.',
-          placement: 'right',
-          title: 'Navigation',
-        } ], {
-          route: 'dashboard',
-        },
+      this.tourService.initialize(
+        [
+          {
+            anchorId: 'dashboard.navigation',
+            content:
+              'View integrations, connections or settings for applications that Fuse Ignite is registered with.',
+            placement: 'right',
+            title: 'Navigation'
+          }
+        ],
+        {
+          route: 'dashboard'
+        }
       );
       setTimeout(() => this.tourService.start());
     }

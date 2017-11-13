@@ -9,12 +9,10 @@ export class StepVisibleConfig {
 
 @Pipe({
   name: 'stepVisible',
-  pure: false,
+  pure: false
 })
 export class StepVisiblePipe implements PipeTransform {
-  constructor(
-    private currentFlow: CurrentFlow,
-  ) {}
+  constructor(private currentFlow: CurrentFlow) {}
   transform(objects: Array<StepKind>, config: StepVisibleConfig) {
     if (!this.currentFlow.loaded) {
       return false;

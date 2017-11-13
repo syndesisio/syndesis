@@ -29,14 +29,17 @@ export class ConfigService {
       .then(config => {
         log.debugc(
           () => 'Received config: ' + JSON.stringify(config, undefined, 2),
-          category,
+          category
         );
-        this.settingsRepository = Object.freeze({ ...this.settingsRepository, ...config });
+        this.settingsRepository = Object.freeze({
+          ...this.settingsRepository,
+          ...config
+        });
         log.debugc(
           () =>
             'Using merged config: ' +
             JSON.stringify(this.settingsRepository, undefined, 2),
-          category,
+          category
         );
         return this;
       })
@@ -45,7 +48,7 @@ export class ConfigService {
           () =>
             'Error: Configuration service unreachable! Using defaults: ' +
             JSON.stringify(this.settingsRepository),
-          category,
+          category
         );
       });
   }
@@ -60,7 +63,7 @@ export class ConfigService {
         return def;
       }
       throw new Error(
-        `Error: No setting found with the specified group [${group}]!`,
+        `Error: No setting found with the specified group [${group}]!`
       );
     }
 
@@ -73,7 +76,7 @@ export class ConfigService {
         return def;
       }
       throw new Error(
-        `Error: No setting found with the specified group/key [${group}/${key}]!`,
+        `Error: No setting found with the specified group/key [${group}/${key}]!`
       );
     }
 

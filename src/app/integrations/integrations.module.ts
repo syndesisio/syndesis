@@ -7,7 +7,7 @@ import {
   CollapseModule,
   ModalModule,
   PopoverModule,
-  TabsModule,
+  TabsModule
 } from 'ngx-bootstrap';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
@@ -41,25 +41,25 @@ const editIntegrationChildRoutes = [
   { path: 'integration-basics', component: IntegrationBasicsComponent },
   {
     path: 'connection-select/:position',
-    component: IntegrationsSelectConnectionComponent,
+    component: IntegrationsSelectConnectionComponent
   },
   {
     path: 'action-select/:position',
-    component: IntegrationsSelectActionComponent,
+    component: IntegrationsSelectActionComponent
   },
   {
     path: 'action-configure/:position/:page',
-    component: IntegrationsConfigureActionComponent,
+    component: IntegrationsConfigureActionComponent
   },
   {
     path: 'action-configure/:position',
-    component: IntegrationsConfigureActionComponent,
+    component: IntegrationsConfigureActionComponent
   },
   { path: 'step-select/:position', component: IntegrationsStepSelectComponent },
   {
     path: 'step-configure/:position',
-    component: IntegrationsStepConfigureComponent,
-  },
+    component: IntegrationsStepConfigureComponent
+  }
 ];
 
 const routes: Routes = [
@@ -67,17 +67,17 @@ const routes: Routes = [
   {
     path: 'create',
     component: IntegrationsEditPage,
-    children: editIntegrationChildRoutes,
+    children: editIntegrationChildRoutes
   },
   {
     path: ':integrationId',
-    component: IntegrationsDetailComponent,
+    component: IntegrationsDetailComponent
   },
   {
     path: ':integrationId/edit',
     component: IntegrationsEditPage,
-    children: editIntegrationChildRoutes,
-  },
+    children: editIntegrationChildRoutes
+  }
 ];
 
 @NgModule({
@@ -97,7 +97,7 @@ const routes: Routes = [
     ModalModule,
     PopoverModule,
     DataMapperModule,
-    FileUploadModule,
+    FileUploadModule
   ],
   declarations: [
     DataMapperHostComponent,
@@ -118,9 +118,8 @@ const routes: Routes = [
     FlowViewStepComponent,
     ListActionsComponent,
     StepVisiblePipe,
-    CancelAddStepComponent,
+    CancelAddStepComponent
   ],
-  providers: [ CurrentFlow ],
+  providers: [CurrentFlow]
 })
-export class IntegrationsModule {
-}
+export class IntegrationsModule {}

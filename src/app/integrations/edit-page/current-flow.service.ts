@@ -7,7 +7,7 @@ import {
   Integration,
   Step,
   Connection,
-  TypeFactory,
+  TypeFactory
 } from '../../model';
 import { log, getCategory } from '../../logging';
 
@@ -28,7 +28,7 @@ export class CurrentFlow {
 
   constructor(private store: IntegrationStore) {
     this.subscription = this.events.subscribe((event: FlowEvent) =>
-      this.handleEvent(event),
+      this.handleEvent(event)
     );
   }
 
@@ -268,7 +268,7 @@ export class CurrentFlow {
         setTimeout(() => {
           if (this.isEmpty()) {
             this.events.emit({
-              kind: 'integration-no-connections',
+              kind: 'integration-no-connections'
             });
           }
         }, 10);
@@ -325,7 +325,7 @@ export class CurrentFlow {
             position +
             ' step: ' +
             JSON.stringify(step),
-          category,
+          category
         );
         break;
       }
@@ -340,7 +340,7 @@ export class CurrentFlow {
         this.maybeDoAction(event['onSave']);
         log.debugc(
           () => 'Set action ' + action.name + ' at position: ' + position,
-          category,
+          category
         );
         break;
       }
@@ -355,7 +355,7 @@ export class CurrentFlow {
         log.debugc(
           () =>
             'Set connection ' + connection.name + ' at position: ' + position,
-          category,
+          category
         );
         break;
       }
@@ -373,7 +373,9 @@ export class CurrentFlow {
         // poor man's clone in case we need to munge the data
         const integration = this.getIntegrationClone();
         const tags = integration.tags || [];
-        const connectorIds = this.getSubsequentConnections(0).map( step => step.connection.connectorId);
+        const connectorIds = this.getSubsequentConnections(0).map(
+          step => step.connection.connectorId
+        );
         connectorIds.forEach(id => {
           if (tags.indexOf(id) === -1) {
             tags.push(id);
@@ -384,7 +386,7 @@ export class CurrentFlow {
           (i: Integration) => {
             log.debugc(
               () => 'Saved integration: ' + JSON.stringify(i, undefined, 2),
-              category,
+              category
             );
             const action = event['action'];
             if (action && typeof action === 'function') {
@@ -397,14 +399,14 @@ export class CurrentFlow {
               () =>
                 'Error saving integration: ' +
                 JSON.stringify(reason, undefined, 2),
-              category,
+              category
             );
             const errorAction = event['error'];
             if (errorAction && typeof errorAction === 'function') {
               errorAction(reason);
             }
             sub.unsubscribe();
-          },
+          }
         );
         break;
       }
@@ -449,7 +451,7 @@ export class CurrentFlow {
     setTimeout(() => {
       this.events.emit({
         kind: 'integration-updated',
-        integration: this.integration,
+        integration: this.integration
       });
     }, 10);
   }

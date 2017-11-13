@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -21,7 +16,7 @@ const category = getCategory('Integrations');
 @Component({
   selector: 'syndesis-integrations-action-select',
   templateUrl: 'action-select.component.html',
-  styleUrls: ['./action-select.component.scss'],
+  styleUrls: ['./action-select.component.scss']
 })
 export class IntegrationsSelectActionComponent extends FlowPage
   implements OnInit, OnDestroy {
@@ -39,7 +34,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
+    public detector: ChangeDetectorRef
   ) {
     super(currentFlow, route, router, detector);
     this.connector = connectorStore.resource;
@@ -55,9 +50,9 @@ export class IntegrationsSelectActionComponent extends FlowPage
       action: action,
       onSave: () => {
         this.router.navigate(['action-configure', this.position], {
-          relativeTo: this.route.parent,
+          relativeTo: this.route.parent
         });
-      },
+      }
     });
   }
 
@@ -73,19 +68,19 @@ export class IntegrationsSelectActionComponent extends FlowPage
     if (!step) {
       // safety net
       this.router.navigate(['save-or-add-step'], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
     if (!step.connection) {
       this.router.navigate(['connection-select', this.position], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
     if (step.action) {
       this.router.navigate(['action-configure', this.position], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
@@ -106,11 +101,11 @@ export class IntegrationsSelectActionComponent extends FlowPage
     this.actions = this.connector
       .filter(connector => connector !== undefined)
       .map(connector => connector.actions);
-    this.actionsSubscription = this.actions.subscribe(_ => this.currentFlow.events
-      .emit({
+    this.actionsSubscription = this.actions.subscribe(_ =>
+      this.currentFlow.events.emit({
         kind: 'integration-action-select',
-        position: this.position,
-      }),
+        position: this.position
+      })
     );
     this.routeSubscription = this.route.params
       .pluck<Params, string>('position')

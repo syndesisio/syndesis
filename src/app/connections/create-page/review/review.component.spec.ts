@@ -4,7 +4,6 @@ import { ConnectionsReviewComponent } from './review.component';
 import { CurrentConnectionService } from '../current-connection';
 
 describe('ConnectionsReviewComponent', () => {
-
   let current;
   let modalService;
   const connectionService = null;
@@ -17,11 +16,17 @@ describe('ConnectionsReviewComponent', () => {
     current = <CurrentConnectionService>{};
     modalService = jasmine.createSpyObj('modalService', ['show']);
     nextState = <RouterStateSnapshot>{};
-    component = new ConnectionsReviewComponent(current, modalService, connectionService, detector, router);
+    component = new ConnectionsReviewComponent(
+      current,
+      modalService,
+      connectionService,
+      detector,
+      router
+    );
   });
 
   describe('createReviewForm', () => {
-    it ('should return expected formGroup', () => {
+    it('should return expected formGroup', () => {
       const formGroup: FormGroup = component.createReviewForm();
       expect(formGroup.get('name')).toBeDefined();
       expect(formGroup.get('name').hasError('required')).toBe(true);
@@ -50,21 +55,18 @@ describe('ConnectionsReviewComponent', () => {
 
     it('should return true when user confirms he wants to leave wizard', done => {
       modalService.show.and.returnValue(Promise.resolve({ result: true }));
-      component.canDeactivate(nextState)
-        .then(canDeactivate => {
-          expect(canDeactivate).toBe(true);
-          done();
-        });
+      component.canDeactivate(nextState).then(canDeactivate => {
+        expect(canDeactivate).toBe(true);
+        done();
+      });
     });
 
     it('should return false when user does not confirm he wants to leave wizard', done => {
       modalService.show.and.returnValue(Promise.resolve({ result: false }));
-      component.canDeactivate(nextState)
-        .then(canDeactivate => {
-          expect(canDeactivate).toBe(false);
-          done();
-        });
+      component.canDeactivate(nextState).then(canDeactivate => {
+        expect(canDeactivate).toBe(false);
+        done();
+      });
     });
   });
-
 });

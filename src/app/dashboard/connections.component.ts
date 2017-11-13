@@ -4,7 +4,7 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 
 import { log, getCategory } from '../logging';
@@ -17,7 +17,7 @@ const category = getCategory('Dashboard');
 @Component({
   selector: 'syndesis-dashboard-connections',
   templateUrl: './connections.component.html',
-  styleUrls: ['./connections.component.scss'],
+  styleUrls: ['./connections.component.scss']
 })
 export class DashboardConnectionsComponent implements OnInit {
   selectedId = undefined;
@@ -33,7 +33,7 @@ export class DashboardConnectionsComponent implements OnInit {
   onSelect(connection: Connection) {
     log.debugc(
       () => 'Selected connection (list): ' + connection.name,
-      category,
+      category
     );
     this.selectedId = connection.id;
     this.selectedConnection.emit(connection);
@@ -45,7 +45,7 @@ export class DashboardConnectionsComponent implements OnInit {
     log.debugc(
       () =>
         'Got connections: ' + JSON.stringify(this.connections, undefined, 2),
-      category,
+      category
     );
   }
 }

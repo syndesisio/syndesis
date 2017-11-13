@@ -1,7 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterStateSnapshot } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
+import {
+  DynamicFormControlModel,
+  DynamicFormService
+} from '@ng-dynamic-forms/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { CurrentConnectionService } from '../current-connection';
@@ -12,10 +15,10 @@ import { ConnectionConfigurationService } from '../../common/configuration/confi
 
 @Component({
   selector: 'syndesis-connections-configure-fields',
-  templateUrl: 'configure-fields.component.html',
+  templateUrl: 'configure-fields.component.html'
 })
-export class ConnectionsConfigureFieldsComponent implements OnInit, OnDestroy, CanComponentDeactivate {
-
+export class ConnectionsConfigureFieldsComponent
+  implements OnInit, OnDestroy, CanComponentDeactivate {
   formModel: DynamicFormControlModel[];
   formGroup: FormGroup;
   formChangesSubscription: Subscription;
@@ -24,20 +27,25 @@ export class ConnectionsConfigureFieldsComponent implements OnInit, OnDestroy, C
     public current: CurrentConnectionService,
     public modalService: ModalService,
     private configurationService: ConnectionConfigurationService,
-    private formService: DynamicFormService,
+    private formService: DynamicFormService
   ) {}
 
   ngOnInit() {
-    this.formModel = this.configurationService.getFormModel(this.connection, false);
+    this.formModel = this.configurationService.getFormModel(
+      this.connection,
+      false
+    );
     this.formGroup = this.formService.createFormGroup(this.formModel);
-    this.formChangesSubscription = this.formGroup.valueChanges.subscribe(data => {
-      Object.keys(data).forEach(key => {
-        if (data[key] === null) {
-          delete data[key];
-        }
-      });
-      this.connection.configuredProperties = data;
-    });
+    this.formChangesSubscription = this.formGroup.valueChanges.subscribe(
+      data => {
+        Object.keys(data).forEach(key => {
+          if (data[key] === null) {
+            delete data[key];
+          }
+        });
+        this.connection.configuredProperties = data;
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -70,7 +78,9 @@ export class ConnectionsConfigureFieldsComponent implements OnInit, OnDestroy, C
   }
 
   private clickedNextButFormInvalid(nextState: RouterStateSnapshot) {
-    return nextState.url === '/connections/create/review' && this.formGroup.invalid;
+    return (
+      nextState.url === '/connections/create/review' && this.formGroup.invalid
+    );
   }
 
   // This will trigger validation
@@ -79,5 +89,4 @@ export class ConnectionsConfigureFieldsComponent implements OnInit, OnDestroy, C
       this.formGroup.get(key).markAsTouched();
     });
   }
-
 }

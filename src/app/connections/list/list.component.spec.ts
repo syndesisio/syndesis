@@ -27,11 +27,11 @@ describe('ConnectionsListComponent', () => {
           ModalModule.forRoot(),
           BsDropdownModule.forRoot(),
           StoreModule,
-          NotificationModule,
+          NotificationModule
         ],
-        declarations: [ConnectionsListComponent],
+        declarations: [ConnectionsListComponent]
       }).compileComponents();
-    }),
+    })
   );
 
   beforeEach(() => {

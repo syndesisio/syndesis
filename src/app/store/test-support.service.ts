@@ -6,10 +6,7 @@ import { Restangular } from 'ngx-restangular';
 export class TestSupportService {
   service: Restangular = undefined;
 
-  constructor(
-    public restangular: Restangular,
-    public http: Http,
-  ) {
+  constructor(public restangular: Restangular, public http: Http) {
     this.service = restangular.service('test-support');
   }
 

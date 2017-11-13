@@ -18,7 +18,8 @@ import { Connection } from '../../model';
       </div>
     </div>
   `,
-  styles: [`
+  styles: [
+    `
     .toolbar-pf {
       background: inherit;
     }
@@ -26,6 +27,7 @@ import { Connection } from '../../model';
       display: inline-block;
       margin-bottom: 6px;
     }
-  `],
+  `
+  ]
 })
 export class ConnectionDetailBreadcrumbComponent {}

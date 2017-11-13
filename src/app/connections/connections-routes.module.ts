@@ -20,27 +20,27 @@ const routes: Routes = [
       {
         path: 'connection-basics',
         component: ConnectionsConnectionBasicsComponent,
-        canDeactivate: [CanDeactivateGuard],
+        canDeactivate: [CanDeactivateGuard]
       },
       {
         path: 'configure-fields',
         component: ConnectionsConfigureFieldsComponent,
-        canDeactivate: [CanDeactivateGuard],
+        canDeactivate: [CanDeactivateGuard]
       },
       {
         path: 'review',
         component: ConnectionsReviewComponent,
-        canDeactivate: [CanDeactivateGuard],
+        canDeactivate: [CanDeactivateGuard]
       },
-      { path: 'cancel', component: ConnectionsCancelComponent},
-      { path: '**', redirectTo: 'connection-basics', pathMatch: 'full' },
-    ],
+      { path: 'cancel', component: ConnectionsCancelComponent },
+      { path: '**', redirectTo: 'connection-basics', pathMatch: 'full' }
+    ]
   },
-  { path: ':id', component: ConnectionDetailPageComponent, pathMatch: 'full' },
+  { path: ':id', component: ConnectionDetailPageComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes), ConnectionsModule],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class ConnectionsRoutesModule {}

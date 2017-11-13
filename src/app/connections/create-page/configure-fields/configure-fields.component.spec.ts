@@ -14,7 +14,12 @@ describe('ConnectionsConfigureFieldsComponent', () => {
     current = <CurrentConnectionService>{};
     modalService = jasmine.createSpyObj('modalService', ['show']);
     nextState = <RouterStateSnapshot>{};
-    component = new ConnectionsConfigureFieldsComponent(current, modalService, null, null);
+    component = new ConnectionsConfigureFieldsComponent(
+      current,
+      modalService,
+      null,
+      null
+    );
     component.formGroup = {};
   });
 
@@ -39,20 +44,18 @@ describe('ConnectionsConfigureFieldsComponent', () => {
 
     it('should return true when user confirms he wants to leave wizard', done => {
       modalService.show.and.returnValue(Promise.resolve({ result: true }));
-      component.canDeactivate(nextState)
-        .then(canDeactivate => {
-          expect(canDeactivate).toBe(true);
-          done();
-        });
+      component.canDeactivate(nextState).then(canDeactivate => {
+        expect(canDeactivate).toBe(true);
+        done();
+      });
     });
 
     it('should return false when user does not confirm he wants to leave wizard', done => {
       modalService.show.and.returnValue(Promise.resolve({ result: false }));
-      component.canDeactivate(nextState)
-        .then(canDeactivate => {
-          expect(canDeactivate).toBe(false);
-          done();
-        });
+      component.canDeactivate(nextState).then(canDeactivate => {
+        expect(canDeactivate).toBe(false);
+        done();
+      });
     });
 
     it('should return false when user clicked next and form is invalid', () => {
@@ -88,7 +91,10 @@ describe('ConnectionsConfigureFieldsComponent', () => {
 
   describe('touchFormFields', () => {
     it('should mark formGroup controls as touched', () => {
-      component.formGroup = new FormGroup({a: new FormControl('a'), b: new FormControl('b')});
+      component.formGroup = new FormGroup({
+        a: new FormControl('a'),
+        b: new FormControl('b')
+      });
       assertControlsTouched(false);
       component.touchFormFields();
       assertControlsTouched(true);
@@ -101,5 +107,4 @@ describe('ConnectionsConfigureFieldsComponent', () => {
       });
     }
   });
-
 });

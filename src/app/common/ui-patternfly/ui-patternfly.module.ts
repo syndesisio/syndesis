@@ -10,26 +10,16 @@ import { SyndesisFormComponent } from './syndesis-form-control.component';
 import { ListToolbarComponent } from './list-toolbar/list-toolbar.component';
 
 @NgModule({
-
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        TextMaskModule,
-        DynamicFormsCoreModule,
-        TooltipModule.forRoot(),
-        RouterModule,
-        ToolbarModule,
-    ],
-    declarations: [
-        SyndesisFormComponent,
-        ListToolbarComponent,
-    ],
-    exports: [
-        DynamicFormsCoreModule,
-        SyndesisFormComponent,
-        ListToolbarComponent,
-    ],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TextMaskModule,
+    DynamicFormsCoreModule,
+    TooltipModule.forRoot(),
+    RouterModule,
+    ToolbarModule
+  ],
+  declarations: [SyndesisFormComponent, ListToolbarComponent],
+  exports: [DynamicFormsCoreModule, SyndesisFormComponent, ListToolbarComponent]
 })
-
-export class PatternflyUIModule {
-}
+export class PatternflyUIModule {}

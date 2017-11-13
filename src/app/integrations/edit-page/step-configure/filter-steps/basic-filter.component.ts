@@ -5,14 +5,14 @@ import {
   Output,
   ViewEncapsulation,
   OnChanges,
-  ChangeDetectorRef,
+  ChangeDetectorRef
 } from '@angular/core';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import {
   DynamicFormService,
   DynamicFormControlModel,
   DynamicFormArrayModel,
-  DynamicInputModel,
+  DynamicInputModel
 } from '@ng-dynamic-forms/core';
 
 import { CurrentFlow, FlowEvent } from '../../current-flow.service';
@@ -27,7 +27,7 @@ import { BasicFilter } from './filter.interface';
   selector: 'syndesis-basic-filter',
   templateUrl: './basic-filter.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./basic-filter.component.scss'],
+  styleUrls: ['./basic-filter.component.scss']
 })
 export class BasicFilterComponent implements OnChanges {
   basicFilterModel: DynamicFormControlModel[];
@@ -50,14 +50,14 @@ export class BasicFilterComponent implements OnChanges {
     rules: [
       {
         path: 'body.text',
-        value: 'antman',
+        value: 'antman'
       },
       {
         path: 'header.kind',
         op: '=~',
-        value: 'DC Comics',
-      },
-    ],
+        value: 'DC Comics'
+      }
+    ]
   };
   @Output() configuredPropertiesChange = new EventEmitter<BasicFilter>();
   @Input() valid: boolean;
@@ -67,7 +67,7 @@ export class BasicFilterComponent implements OnChanges {
     public currentFlow: CurrentFlow,
     public integrationSupport: IntegrationSupportService,
     private formService: DynamicFormService,
-    private detector: ChangeDetectorRef,
+    private detector: ChangeDetectorRef
   ) {}
 
   ngOnChanges(changes: any) {
@@ -82,7 +82,7 @@ export class BasicFilterComponent implements OnChanges {
       self.basicFilterModel = createBasicFilterModel(
         self.configuredProperties || <any>{},
         ops,
-        paths,
+        paths
       );
       self.formGroup = self.formService.createFormGroup(self.basicFilterModel);
       self.predicateControl = self.formGroup
@@ -90,14 +90,14 @@ export class BasicFilterComponent implements OnChanges {
         .get('predicate') as FormControl;
       self.predicateModel = findById(
         'predicate',
-        self.basicFilterModel,
+        self.basicFilterModel
       ) as DynamicInputModel;
       self.rulesArrayControl = self.formGroup
         .get('rulesGroup')
         .get('rulesFormArray') as FormArray;
       self.rulesArrayModel = findById(
         'rulesFormArray',
-        self.basicFilterModel,
+        self.basicFilterModel
       ) as DynamicFormArrayModel;
       self.loading = false;
       self.detector.detectChanges();
@@ -128,7 +128,7 @@ export class BasicFilterComponent implements OnChanges {
       .catch(error => {
         try {
           log.infoc(
-            () => 'Failed to fetch filter form data: ' + JSON.parse(error),
+            () => 'Failed to fetch filter form data: ' + JSON.parse(error)
           );
         } catch (err) {
           log.infoc(() => 'Failed to fetch filter form data: ' + error);
@@ -142,7 +142,7 @@ export class BasicFilterComponent implements OnChanges {
   add() {
     this.formService.addFormArrayGroup(
       this.rulesArrayControl,
-      this.rulesArrayModel,
+      this.rulesArrayModel
     );
     this.valid = this.formGroup.valid;
     this.validChange.emit(this.valid);
@@ -152,7 +152,7 @@ export class BasicFilterComponent implements OnChanges {
     this.formService.removeFormArrayGroup(
       index,
       this.rulesArrayControl,
-      context,
+      context
     );
     this.valid = this.formGroup.valid;
     this.validChange.emit(this.valid);
@@ -169,7 +169,7 @@ export class BasicFilterComponent implements OnChanges {
     const formattedProperties: BasicFilter = {
       type: 'rule',
       predicate: formGroupObj.filterSettingsGroup.predicate,
-      rules: formGroupObj.rulesGroup.rulesFormArray,
+      rules: formGroupObj.rulesGroup.rulesFormArray
     };
 
     this.configuredPropertiesChange.emit(formattedProperties);

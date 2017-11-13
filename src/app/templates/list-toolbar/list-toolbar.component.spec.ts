@@ -12,9 +12,9 @@ describe('ListToolbarComponent', () => {
   beforeEach(
     async(() => {
       TestBed.configureTestingModule({
-        declarations: [ListToolbarComponent],
+        declarations: [ListToolbarComponent]
       }).compileComponents();
-    }),
+    })
   );
 
   beforeEach(() => {

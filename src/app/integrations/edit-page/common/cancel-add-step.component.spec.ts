@@ -3,14 +3,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CurrentFlow } from '../current-flow.service';
 
 describe('CancelAddStepComponent', () => {
-
   let component, currentFlow, route, router;
 
   beforeEach(() => {
-    currentFlow = jasmine.createSpyObj('currentFlow', ['getLastPosition', 'getStep']);
+    currentFlow = jasmine.createSpyObj('currentFlow', [
+      'getLastPosition',
+      'getStep'
+    ]);
     currentFlow.events = jasmine.createSpyObj('events', ['emit']);
     route = {
-      paramMap: jasmine.createSpyObj('paramMap', ['subscribe']),
+      paramMap: jasmine.createSpyObj('paramMap', ['subscribe'])
     };
     router = jasmine.createSpyObj('router', ['navigate']);
     component = new CancelAddStepComponent(currentFlow, route, router);
@@ -53,5 +55,4 @@ describe('CancelAddStepComponent', () => {
       expect(currentFlow.events.emit).toHaveBeenCalled();
     });
   });
-
 });

@@ -3,21 +3,21 @@ import {
   Input,
   OnInit,
   OnDestroy,
-  ChangeDetectorRef,
+  ChangeDetectorRef
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import {
   DynamicFormControlModel,
-  DynamicFormService,
+  DynamicFormService
 } from '@ng-dynamic-forms/core';
 
 import { FlowPage } from '../flow-page';
 import {
   StepStore,
   DATA_MAPPER,
-  BASIC_FILTER,
+  BASIC_FILTER
 } from '../../../store/step/step.store';
 import { FormFactoryService } from '../../../common/forms.service';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
@@ -30,7 +30,7 @@ const category = getCategory('IntegrationsCreatePage');
 @Component({
   selector: 'syndesis-integrations-step-configure',
   templateUrl: './step-configure.component.html',
-  styleUrls: ['./step-configure.component.scss'],
+  styleUrls: ['./step-configure.component.scss']
 })
 export class IntegrationsStepConfigureComponent extends FlowPage
   implements OnInit, OnDestroy {
@@ -58,7 +58,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     public formService: DynamicFormService,
     public detector: ChangeDetectorRef,
     public stepStore: StepStore,
-    public integrationSupport: IntegrationSupportService,
+    public integrationSupport: IntegrationSupportService
   ) {
     super(currentFlow, route, router, detector);
   }
@@ -84,7 +84,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     if (step.stepKind === DATA_MAPPER) {
       this.router.navigate(['save-or-add-step'], {
         queryParams: { validate: true },
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
@@ -104,9 +104,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage
       onSave: () => {
         this.router.navigate(['save-or-add-step'], {
           queryParams: { validate: true },
-          relativeTo: this.route.parent,
+          relativeTo: this.route.parent
         });
-      },
+      }
     });
   }
 
@@ -142,7 +142,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     }
     this.currentFlow.events.emit({
       kind: 'integration-action-configure',
-      position: this.position,
+      position: this.position
     });
   }
 
@@ -151,7 +151,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
       .fetchMetadata(
         step.connection,
         step.action,
-        step.configuredProperties || {},
+        step.configuredProperties || {}
       )
       .toPromise()
       .then(response => {
@@ -170,13 +170,13 @@ export class IntegrationsStepConfigureComponent extends FlowPage
         const error = JSON.parse(response['_body']);
         this.error = {
           class: 'alert alert-warning',
-          message: error.message || error.userMsg || error.developerMsg,
+          message: error.message || error.userMsg || error.developerMsg
         };
         log.info(
           'Error fetching data shape for ' +
             JSON.stringify(step) +
             ' : ' +
-            JSON.stringify(response),
+            JSON.stringify(response)
         );
         this.detector.detectChanges();
       });
@@ -191,18 +191,18 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     // If no Step exists, redirect to the Select Step view
     if (!step) {
       this.router.navigate(['step-select', this.position], {
-        relativeTo: this.route.parent,
+        relativeTo: this.route.parent
       });
       return;
     }
 
     // we want the output shape of the previous connection
     const prevConnection = this.currentFlow.getPreviousConnection(
-      this.position,
+      this.position
     );
     // we want the input shape of the next connection
     const nextConnection = this.currentFlow.getSubsequentConnection(
-      this.position,
+      this.position
     );
 
     this.fetchDataShapesFor(prevConnection, true)
@@ -222,7 +222,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     // Now check if we've a custom view for this step kind
     if (this.stepStore.isCustomStep(step)) {
       this.customProperties = this.getConfiguredProperties(
-        step.configuredProperties || {},
+        step.configuredProperties || {}
       );
       this.postEvent();
       return;
@@ -235,7 +235,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     const values: any = this.getConfiguredProperties(step.configuredProperties);
     log.info(
       'Form config: ' + JSON.stringify(this.formConfig, undefined, 2),
-      category,
+      category
     );
 
     // Call formService to build the form
@@ -259,7 +259,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage
       (paramMap: ParamMap) => {
         this.position = +paramMap.get('position');
         this.loadForm();
-      },
+      }
     );
   }
 

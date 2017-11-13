@@ -39,11 +39,11 @@ export class EventsService {
     this.starting = false;
     this.retries++;
 
-    if ( this.webSocket ) {
+    if (this.webSocket) {
       this.webSocket.close();
       this.webSocket = undefined;
     }
-    if ( this.eventSource ) {
+    if (this.eventSource) {
       this.eventSource.close();
       this.eventSource = undefined;
     }
@@ -57,17 +57,17 @@ export class EventsService {
     setTimeout(() => {
       log.info('Reconnecting');
       switch (this.preferredProtocol) {
-          // Once we find a protocol that works, keep using it.
-          case 'ws':
-            this.startConnection(true);
-            break;
-          case 'es':
-            this.startConnection(false);
-            break;
-          default:
-            // Keep flipping between WS and ES untill we find one that works.
-            this.startConnection(this.retries % 2 === 0);
-            break;
+        // Once we find a protocol that works, keep using it.
+        case 'ws':
+          this.startConnection(true);
+          break;
+        case 'es':
+          this.startConnection(false);
+          break;
+        default:
+          // Keep flipping between WS and ES untill we find one that works.
+          this.startConnection(this.retries % 2 === 0);
+          break;
       }
     }, reconnectIn);
   }
@@ -79,33 +79,37 @@ export class EventsService {
     this.starting = true;
 
     try {
-      this.restangular.all('event/reservations').customPOST().first().subscribe(
-        response => {
-          const apiEndpoint = this.config.getSettings().apiEndpoint;
-          const reservation = response.data;
-          try {
-            if ( connectUsingWebSockets ) {
-              let wsApiEndpoint = resolve(window.location.href, apiEndpoint);
-              wsApiEndpoint = wsApiEndpoint.replace(/^http/, 'ws');
-              wsApiEndpoint += '/event/streams.ws/' + reservation,
-              this.connectWebSocket(wsApiEndpoint);
-              log.info('Connecting using web socket');
-              this.starting = false;
-            } else {
-              this.connectEventSource(
-                apiEndpoint + '/event/streams/' + reservation,
-              );
-              this.starting = false;
-              log.info('Connecting using server side events');
+      this.restangular
+        .all('event/reservations')
+        .customPOST()
+        .first()
+        .subscribe(
+          response => {
+            const apiEndpoint = this.config.getSettings().apiEndpoint;
+            const reservation = response.data;
+            try {
+              if (connectUsingWebSockets) {
+                let wsApiEndpoint = resolve(window.location.href, apiEndpoint);
+                wsApiEndpoint = wsApiEndpoint.replace(/^http/, 'ws');
+                (wsApiEndpoint += '/event/streams.ws/' + reservation),
+                  this.connectWebSocket(wsApiEndpoint);
+                log.info('Connecting using web socket');
+                this.starting = false;
+              } else {
+                this.connectEventSource(
+                  apiEndpoint + '/event/streams/' + reservation
+                );
+                this.starting = false;
+                log.info('Connecting using server side events');
+              }
+            } catch (error) {
+              this.onFailure(error);
             }
-          } catch (error) {
+          },
+          error => {
             this.onFailure(error);
           }
-        },
-        error => {
-          this.onFailure(error);
-        },
-      );
+        );
     } catch (error) {
       this.onFailure(error);
     }

@@ -7,7 +7,7 @@ import { IntegrationTemplates } from '../../model';
 @Component({
   selector: 'syndesis-templates-list-page',
   templateUrl: './list-page.component.html',
-  styleUrls: ['./list-page.component.scss'],
+  styleUrls: ['./list-page.component.scss']
 })
 export class TemplatesListPage implements OnInit {
   templates: Observable<IntegrationTemplates>;

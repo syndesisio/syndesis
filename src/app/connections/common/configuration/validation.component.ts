@@ -8,12 +8,13 @@ import { ConnectorStore } from '../../../store/connector/connector.store';
 @Component({
   selector: 'syndesis-connection-configuration-validation',
   templateUrl: './validation.component.html',
-  styles: [`
+  styles: [
+    `
     .alert { margin-top: 15px; margin-bottom: 0; }
-  `],
+  `
+  ]
 })
 export class ConnectionConfigurationValidationComponent {
-
   @Input() connection: Connection;
   @Input() formGroup: FormGroup;
   @Input() placement: 'left' | 'right' = 'left';
@@ -25,8 +26,8 @@ export class ConnectionConfigurationValidationComponent {
   constructor(
     private configurationService: ConnectionConfigurationService,
     private connectorStore: ConnectorStore,
-    private detector: ChangeDetectorRef,
-  ) { }
+    private detector: ChangeDetectorRef
+  ) {}
 
   showValidateButton(id: string) {
     return this.configurationService.shouldValidate(id);
@@ -66,8 +67,7 @@ export class ConnectionConfigurationValidationComponent {
           this.validating = false;
           this.detector.detectChanges();
         }, 10);
-      },
+      }
     );
   }
-
 }

@@ -5,10 +5,9 @@ import { Modal } from './modal';
 
 @Injectable()
 export class ModalService {
-
   private registeredModals = new Map<string, Modal>();
 
-  constructor(private bsModalService: BsModalService) { }
+  constructor(private bsModalService: BsModalService) {}
 
   registerModal(id: string, template: TemplateRef<any>): void {
     this.registeredModals.set(id, { template: template });
@@ -21,7 +20,8 @@ export class ModalService {
   show(id = 'modal'): Promise<Modal> {
     const modal = this.registeredModals.get(id);
     modal.bsModalRef = this.bsModalService.show(modal.template);
-    return this.bsModalService.onHide.take(1)
+    return this.bsModalService.onHide
+      .take(1)
       .toPromise()
       .then(_ => modal);
   }

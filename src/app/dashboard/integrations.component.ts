@@ -13,10 +13,9 @@ const category = getCategory('Dashboard');
 @Component({
   selector: 'syndesis-dashboard-integrations',
   templateUrl: './integrations.component.html',
-  styleUrls: ['./integrations.component.scss'],
+  styleUrls: ['./integrations.component.scss']
 })
 export class DashboardIntegrationsComponent {
-
   @Input() integrations: Integrations;
   @Input() connections: Connections;
   @Input() integrationsLoading: boolean;
@@ -30,7 +29,7 @@ export class DashboardIntegrationsComponent {
     return [
       this.countActiveIntegrations(),
       this.countDraftIntegrations(),
-      this.countInactiveIntegrations(),
+      this.countInactiveIntegrations()
     ];
   }
 
@@ -41,20 +40,15 @@ export class DashboardIntegrationsComponent {
       backgroundColor: [
         '#0088CE', // PatternFly Blue 400, Active
         '#EC7A08', // PatternFly Orange 400, Draft
-        '#D1D1D1', // PatternFly Black 300, Inactive
-      ],
-    },
+        '#D1D1D1' // PatternFly Black 300, Inactive
+      ]
+    }
   ];
   doughnutChartOptions: any = {
-    cutoutPercentage: 75,
+    cutoutPercentage: 75
   };
 
-  constructor(
-    public route: ActivatedRoute,
-    private router: Router,
-  ) {
-
-  }
+  constructor(public route: ActivatedRoute, private router: Router) {}
 
   //-----  Integration Board Chart ------------------->>
 
@@ -92,7 +86,7 @@ export class DashboardIntegrationsComponent {
       active: active,
       draft: draft,
       inactive: inactive,
-      total: total,
+      total: total
     };
   }
 
@@ -158,7 +152,7 @@ export class DashboardIntegrationsComponent {
   goto(integration: Integration) {
     this.router.navigate(
       ['/integrations/edit', integration.id, 'save-or-add-step'],
-      { relativeTo: this.route },
+      { relativeTo: this.route }
     );
   }
 

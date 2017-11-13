@@ -11,7 +11,7 @@ import { log, getCategory } from '../../../logging';
 @Component({
   selector: 'syndesis-integrations-step-select',
   templateUrl: './step-select.component.html',
-  styleUrls: ['./step-select.component.scss'],
+  styleUrls: ['./step-select.component.scss']
 })
 export class IntegrationsStepSelectComponent extends FlowPage
   implements OnInit {
@@ -24,7 +24,7 @@ export class IntegrationsStepSelectComponent extends FlowPage
     public route: ActivatedRoute,
     public router: Router,
     public stepStore: StepStore,
-    public detector: ChangeDetectorRef,
+    public detector: ChangeDetectorRef
   ) {
     super(currentFlow, route, router, detector);
     this.steps = stepStore.getSteps();
@@ -58,13 +58,13 @@ export class IntegrationsStepSelectComponent extends FlowPage
         if (!step) {
           // safety net
           this.router.navigate(['save-or-add-step'], {
-            relativeTo: this.route.parent,
+            relativeTo: this.route.parent
           });
           return;
         }
         if (step.configuredProperties) {
           this.router.navigate(['step-configure', this.position], {
-            relativeTo: this.route.parent,
+            relativeTo: this.route.parent
           });
           return;
         }
@@ -91,9 +91,9 @@ export class IntegrationsStepSelectComponent extends FlowPage
       step: step,
       onSave: () => {
         this.router.navigate(['step-configure', this.position], {
-          relativeTo: this.route.parent,
+          relativeTo: this.route.parent
         });
-      },
+      }
     });
   }
 
@@ -104,7 +104,7 @@ export class IntegrationsStepSelectComponent extends FlowPage
         this.position = Number.parseInt(position);
         this.currentFlow.events.emit({
           kind: 'integration-step-select',
-          position: this.position,
+          position: this.position
         });
       })
       .subscribe();

@@ -3,11 +3,17 @@ import {
   DynamicSelectModel,
   DynamicFormArrayModel,
   DynamicFormArrayGroupModel,
-  DynamicFormGroupModel,
+  DynamicFormGroupModel
 } from '@ng-dynamic-forms/core';
 import { Observable } from 'rxjs/Observable';
 
-import { BasicFilter, Rule, Op, getDefaultOps, convertOps } from './filter.interface';
+import {
+  BasicFilter,
+  Rule,
+  Op,
+  getDefaultOps,
+  convertOps
+} from './filter.interface';
 
 export function findById(id: string, model: any): any {
   switch (typeof model) {
@@ -34,8 +40,11 @@ export function findById(id: string, model: any): any {
   return false;
 }
 
-export function createBasicFilterModel(configuredProperties: BasicFilter, ops: Array<Op> = [], paths: Array<string> = []) {
-
+export function createBasicFilterModel(
+  configuredProperties: BasicFilter,
+  ops: Array<Op> = [],
+  paths: Array<string> = []
+) {
   if (!ops || !ops.length) {
     ops = getDefaultOps();
   } else {
@@ -51,53 +60,53 @@ export function createBasicFilterModel(configuredProperties: BasicFilter, ops: A
           maxLength: 51,
           required: true,
           validators: {
-            required: null,
+            required: null
           },
           errorMessages: {
-            required: 'Object property name is required',
+            required: 'Object property name is required'
           },
           //placeholder: paths.length ? paths[0] : 'Field Name',
           value: rule ? rule.path : undefined,
-          list: paths,
+          list: paths
           //suffix: 'Browse...', // This is just a suffix; this whole field needs to change
         },
         {
           element: {
-            container: 'form-group col-xs-3',
+            container: 'form-group col-xs-3'
           },
           grid: {
-            control: 'input-group',
-          },
-        },
+            control: 'input-group'
+          }
+        }
       ),
       new DynamicSelectModel<string>(
         {
           id: 'op',
           value: rule ? rule.op : 'contains',
-          options: Observable.of(<any> ops),
+          options: Observable.of(<any>ops)
         },
         {
           element: {
             container: 'form-group col-xs-3',
-            label: 'control-label',
+            label: 'control-label'
           },
           grid: {
-            control: 'input-group',
-          },
-        },
+            control: 'input-group'
+          }
+        }
       ),
       new DynamicInputModel(
         {
           id: 'value',
           value: rule ? rule.value : undefined,
-          placeholder: 'Keywords...',
+          placeholder: 'Keywords...'
         },
         {
           grid: {
-            container: 'input-group col-xs-4 keywords',
-          },
-        },
-      ),
+            container: 'input-group col-xs-4 keywords'
+          }
+        }
+      )
     ];
   }
   let groups = undefined;
@@ -113,7 +122,7 @@ export function createBasicFilterModel(configuredProperties: BasicFilter, ops: A
     groups = [];
     for (const rule of rules) {
       groups.push(
-        new DynamicFormArrayGroupModel(undefined, groupFactory(rule)),
+        new DynamicFormArrayGroupModel(undefined, groupFactory(rule))
       );
     }
   }
@@ -128,25 +137,25 @@ export function createBasicFilterModel(configuredProperties: BasicFilter, ops: A
             options: Observable.of([
               {
                 label: 'ALL of the following',
-                value: 'AND',
+                value: 'AND'
               },
               {
                 label: 'ANY of the following',
-                value: 'OR',
-              },
+                value: 'OR'
+              }
             ]),
-            value: configuredProperties.predicate || 'AND',
+            value: configuredProperties.predicate || 'AND'
           },
           {
             element: {
-              label: 'control-label pull-left',
+              label: 'control-label pull-left'
             },
             grid: {
-              control: 'col-xs-3 match-select',
-            },
-          },
-        ),
-      ],
+              control: 'col-xs-3 match-select'
+            }
+          }
+        )
+      ]
     }),
 
     new DynamicFormGroupModel({
@@ -157,16 +166,16 @@ export function createBasicFilterModel(configuredProperties: BasicFilter, ops: A
             id: 'rulesFormArray',
             groups: groups,
             initialCount: rules ? rules.length : 1,
-            groupFactory: groupFactory,
+            groupFactory: groupFactory
           },
           {
             element: {
-              container: 'form-inline form-array rules-group',
-            },
-          },
-        ),
-      ],
-    }),
+              container: 'form-inline form-array rules-group'
+            }
+          }
+        )
+      ]
+    })
   ];
   return answer;
 }

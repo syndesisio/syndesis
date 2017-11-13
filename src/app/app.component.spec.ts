@@ -22,7 +22,7 @@ describe('AppComponent', () => {
 
   beforeEach(() => {
     const configServiceStub = {
-      getSettings: (...params) => APP_NAME,
+      getSettings: (...params) => APP_NAME
     };
 
     TestBed.configureTestingModule({
@@ -35,7 +35,7 @@ describe('AppComponent', () => {
         CollapseModule.forRoot(),
         BsDropdownModule.forRoot(),
         NotificationModule,
-        TourNgxBootstrapModule.forRoot(),
+        TourNgxBootstrapModule.forRoot()
       ],
       providers: [
         ConfigService,
@@ -49,11 +49,11 @@ describe('AppComponent', () => {
           useFactory: (backend, options) => {
             return new Http(backend, options);
           },
-          deps: [MockBackend, RequestOptions],
+          deps: [MockBackend, RequestOptions]
         },
-        { provide: ConfigService, useValue: configServiceStub },
+        { provide: ConfigService, useValue: configServiceStub }
       ],
-      declarations: [AppComponent],
+      declarations: [AppComponent]
     });
     TestBed.compileComponents();
   });
@@ -64,7 +64,7 @@ describe('AppComponent', () => {
       const fixture = TestBed.createComponent(AppComponent);
       const app = fixture.debugElement.componentInstance;
       expect(app).toBeTruthy();
-    }),
+    })
   );
 
   it(
@@ -73,6 +73,6 @@ describe('AppComponent', () => {
       const fixture = TestBed.createComponent(AppComponent);
       const app = fixture.debugElement.componentInstance;
       expect(app.appName).toEqual(APP_NAME);
-    }),
+    })
   );
 });

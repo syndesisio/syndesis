@@ -13,16 +13,9 @@ import { IntegrationsListComponent } from './list.component';
     CommonModule,
     ListModule,
     SyndesisCommonModule,
-    TooltipModule,
+    TooltipModule
   ],
-  declarations: [
-    IntegrationStatusComponent,
-    IntegrationsListComponent,
-  ],
-  exports: [
-    IntegrationsListComponent,
-    IntegrationStatusComponent,
-  ],
+  declarations: [IntegrationStatusComponent, IntegrationsListComponent],
+  exports: [IntegrationsListComponent, IntegrationStatusComponent]
 })
-export class IntegrationsListModule {
-}
+export class IntegrationsListModule {}
