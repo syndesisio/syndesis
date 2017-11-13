@@ -35,6 +35,7 @@ import { CurrentFlow } from './edit-page/current-flow.service';
 import { SyndesisCommonModule } from '../common/common.module';
 import { ConnectionsModule } from '../connections/connections.module';
 import { FileUploadModule } from 'ng2-file-upload-base/src';
+import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 
 const editIntegrationChildRoutes = [
   { path: 'save-or-add-step', component: IntegrationsSaveOrAddStepComponent },
@@ -97,7 +98,8 @@ const routes: Routes = [
     ModalModule,
     PopoverModule,
     DataMapperModule,
-    FileUploadModule
+    FileUploadModule,
+    TourNgxBootstrapModule
   ],
   declarations: [
     DataMapperHostComponent,

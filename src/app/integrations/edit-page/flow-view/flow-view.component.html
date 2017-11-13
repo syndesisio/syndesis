@@ -24,7 +24,8 @@
            placement="right"
            #pop="bs-popover">
         <p>
-          <i class="fa fa-plus-square"></i>
+          <i class="fa fa-plus-square"
+             tourAnchor="integrations.step"></i>
         </p>
       </div>
       <div class="col-md-10">
@@ -36,12 +37,12 @@
 
     <!-- Header -->
     <div class="row name"
-         *ngIf="currentStepKind !== 'mapper'"
-         tourAnchor="integrations.panel">
+         *ngIf="currentStepKind !== 'mapper'">
       <div class="col-md-12">
         <div class="form-group">
           <div class="clickable"
-               (click)="startEditingName()">
+               (click)="startEditingName()"
+               tourAnchor="integrations.panel">
             <input type="text"
                    #nameInput
                    class="form-control integration-name"

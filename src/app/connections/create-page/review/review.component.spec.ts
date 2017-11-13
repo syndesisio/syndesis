@@ -6,6 +6,8 @@ import { CurrentConnectionService } from '../current-connection';
 describe('ConnectionsReviewComponent', () => {
   let current;
   let modalService;
+  const tourService = null;
+  const userService = null;
   const connectionService = null;
   const detector = null;
   const router = null;
@@ -21,7 +23,9 @@ describe('ConnectionsReviewComponent', () => {
       modalService,
       connectionService,
       detector,
-      router
+      router,
+      tourService,
+      userService
     );
   });
 

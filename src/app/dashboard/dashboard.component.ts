@@ -1,15 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { log, getCategory } from '../logging';
-
-import { Connection, Connections, Integration, Integrations } from '../model';
+import { Connections, Integrations } from '../model';
 import { ConnectionStore } from '../store/connection/connection.store';
 import { IntegrationStore } from '../store/integration/integration.store';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { UserService } from '../common/user.service';
-
-const category = getCategory('Dashboard');
 
 @Component({
   selector: 'syndesis-dashboard',
@@ -39,22 +35,25 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.connectionStore.loadAll();
     this.integrationStore.loadAll();
+
     /**
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
     if (this.userService.getTourState() === true) {
-      this.tourService.initialize(
-        [
-          {
-            anchorId: 'dashboard.navigation',
-            content:
-              'View integrations, connections or settings for applications that Fuse Ignite is registered with.',
-            placement: 'right',
-            title: 'Navigation'
-          }
-        ],
-        {
-          route: 'dashboard'
+      this.tourService.initialize([ {
+        route: 'dashboard',
+        anchorId: 'dashboard.navigation',
+        title: 'Navigation',
+        content: 'View integrations, connections or settings for applications that Fuse Ignite is registered with.',
+        placement: 'right',
+        }, {
+        route: 'dashboard',
+        anchorId: 'dashboard.integration',
+        title: 'Create Integration',
+        placement: 'bottom',
+        content: 'After creating at least two connections, you can create an integration.',
+        } ], {
+          route: 'dashboard',
         }
       );
       setTimeout(() => this.tourService.start());

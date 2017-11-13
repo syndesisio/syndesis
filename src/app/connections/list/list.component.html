@@ -38,6 +38,7 @@
         <div class="connection col-xs-12 col-sm-3 col-md-2 card"
              title="{{connection.name}}"
              *ngFor="let connection of connections"
+             tourAnchor="connections.available"
              (click)="onSelect(connection, $event)">
 
           <!-- Connection Card -->
