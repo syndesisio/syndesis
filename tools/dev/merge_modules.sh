@@ -12,6 +12,7 @@ repos=(
   "tests:syndesis-system-tests"
   "connectors:connectors"
   "runtime:syndesis-integration-runtime"
+  "s2i-image:syndesis-s2i-image"
   )
 
 # Clone syndesis in a fresh repository
