@@ -52,9 +52,6 @@ import org.apache.maven.shared.utils.StringUtils;
  */
 @Mojo(name = "generate-metadata", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, requiresProject = true, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateMetadataMojo extends AbstractMojo {
-
-    public static final String METADATA_DESTINATION = "META-INF/syndesis/extension-definition.json";
-
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
 
@@ -79,6 +76,9 @@ public class GenerateMetadataMojo extends AbstractMojo {
     @Parameter
     private String tags;
 
+    @Parameter(readonly = true, defaultValue = "${project.build.directory}/classes/META-INF/syndesis/extension-definition.json")
+    private String metadataDestination;
+
     /**
      * Partial Extension JSON descriptor to augment
      */
@@ -101,24 +101,45 @@ public class GenerateMetadataMojo extends AbstractMojo {
     protected void processAnnotations() throws MojoExecutionException {
         String directory = project.getModel().getBuild().getDirectory();
         Path dir = Paths.get(directory, "generated-sources", "annotations");
-        getLog().info("Looking in for annotated classes in: " + dir);
-        try {
-            Files.find(dir, Integer.MAX_VALUE, (path, basicFileAttributes) -> String.valueOf(path).endsWith(".properties" )).forEach( path -> {
-                Properties p = new Properties();
-                try(Reader reader = new FileReader(path.toFile())) {
-                    getLog().info("Loading annotations properties from: " + path);
-                    p.load(reader);
-                    assignProperties(p);
-                } catch (IOException e) {
-                    getLog().error("Error reading file " + path);
-                }
-            });
-        } catch (IOException e) {
-            throw new MojoExecutionException("Error checking annotations.", e);
+        if (Files.exists(dir)) {
+            getLog().info("Looking in for annotated classes in: " + dir);
+            try {
+                Files.find(dir, Integer.MAX_VALUE, (path, basicFileAttributes) -> String.valueOf(path).endsWith(".properties")).forEach(path -> {
+                    Properties p = new Properties();
+                    try (Reader reader = new FileReader(path.toFile())) {
+                        getLog().info("Loading annotations properties from: " + path);
+                        p.load(reader);
+                        assignProperties(p);
+                    } catch (IOException e) {
+                        getLog().error("Error reading file " + path);
+                    }
+                });
+            } catch (IOException e) {
+                throw new MojoExecutionException("Error checking annotations.", e);
+            }
+        } else {
+            getLog().debug("Path " + dir + " does not exists");
         }
     }
 
     protected void assignProperties(Properties p) {
+        if (StringUtils.isEmpty(p.getProperty("id"))) {
+            getLog().warn("Unable to define action, reason: 'id' is not set (properties: " + p + ")");
+            return;
+        }
+        if (StringUtils.isEmpty(p.getProperty("name"))) {
+            getLog().warn("Unable to define action, reason: 'name' is not set (properties: " + p + ")");
+            return;
+        }
+        if (StringUtils.isEmpty(p.getProperty("kind"))) {
+            getLog().warn("Unable to define action, reason: 'kind' is not set (properties: " + p + ")");
+            return;
+        }
+        if (StringUtils.isEmpty(p.getProperty("entrypoint"))) {
+            getLog().warn("Unable to define action, reason: 'entrypoint' is not set (properties: " + p + ")");
+            return;
+        }
+
         TechExtensionAction.Builder actionBuilder = new TechExtensionAction.Builder();
         actionBuilder.id(p.getProperty("id"));
         actionBuilder.name(p.getProperty("name"));
@@ -144,6 +165,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
         descriptorBuilder.outputDataShape(outputBuilder.build());
 
         actionBuilder.descriptor(descriptorBuilder.build());
+
+
         techExtensionBuilder.addAction(actionBuilder.build());
     }
 
@@ -153,14 +176,26 @@ public class GenerateMetadataMojo extends AbstractMojo {
      */
     protected void tryImportingPartialJSON() throws MojoExecutionException {
         if(StringUtils.isNotEmpty(source)){
-            TechExtension techExtension = null;
+            TechExtension techExtension ;
             try {
                 techExtension = objectMapper.readValue(new File(source), TechExtension.class);
-                getLog().info("Loaded base parital metadata configuration file: " + source);
+                getLog().info("Loaded base partial metadata configuration file: " + source);
             } catch (IOException e) {
                 throw new MojoExecutionException("Invalid input json: " + source, e );
             }
             techExtensionBuilder = techExtensionBuilder.createFrom(techExtension);
+        } else {
+            File targetFile = new File(metadataDestination);
+            if (targetFile.exists()) {
+                TechExtension techExtension;
+                try {
+                    techExtension = objectMapper.readValue(targetFile, TechExtension.class);
+                    getLog().info("Loaded base partial metadata configuration file: " + targetFile.getAbsolutePath());
+                } catch (IOException e) {
+                    throw new MojoExecutionException("Invalid input json: " + targetFile.getAbsolutePath(), e );
+                }
+                techExtensionBuilder = techExtensionBuilder.createFrom(techExtension);
+            }
         }
     }
 
@@ -208,7 +243,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
     }
 
     protected void saveExtensionMetaData(TechExtension jsonObject) throws MojoExecutionException {
-        File targetFile = new File(METADATA_DESTINATION);
+        File targetFile = new File(metadataDestination);
         if (!targetFile.getParentFile().exists() &&
             !targetFile.getParentFile().mkdirs()) {
             throw new MojoExecutionException("Cannot create directory " + targetFile.getParentFile());
@@ -217,7 +252,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(targetFile, jsonObject);
             getLog().info("Created file " + targetFile.getAbsolutePath());
         } catch (IOException e) {
-            throw new MojoExecutionException("Cannot write to file: " + METADATA_DESTINATION, e);
+            throw new MojoExecutionException("Cannot write to file: " + metadataDestination, e);
         }
     }
 }
