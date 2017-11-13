@@ -26,7 +26,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Properties;
 import java.util.Set;
-import java.util.UUID;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -85,7 +84,7 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
                     Properties props = gatherProperties(annotatedElement);
                     augmentProperties((TypeElement) annotatedElement, props);
                     persistToFile(annotatedElement, props);
-                } catch (IOException|InvocationTargetException|IllegalAccessException e){
+                } catch (IOException|InvocationTargetException|IllegalAccessException|NoSuchMethodException e){
                     return false;
                 }
             } else if (annotatedElement.getKind() == ElementKind.METHOD) {
@@ -93,7 +92,7 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
                     Properties props = gatherProperties(annotatedElement);
                     augmentProperties((ExecutableElement) annotatedElement, props);
                     persistToFile(annotatedElement, props);
-                } catch (IOException|InvocationTargetException|IllegalAccessException e){
+                } catch (IOException|InvocationTargetException|IllegalAccessException|NoSuchMethodException e){
                     return false;
                 }
             } else {
@@ -160,7 +159,7 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
         return prop;
     }
 
-    protected void persistToFile(Element element, Properties props) throws IOException {
+    protected void persistToFile(Element element, Properties props) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         File file = obtainResourceFile(element);
         if (file != null) {
             try (Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
@@ -201,7 +200,7 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
      * Helper method to produce class output text file using the given handler
      */
     @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
-    protected File obtainResourceFile(Element element) throws IOException {
+    protected File obtainResourceFile(Element element) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         TypeElement classElement;
         if (element instanceof TypeElement) {
             classElement = (TypeElement)element;
@@ -214,11 +213,16 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
 
         final String javaTypeName = canonicalClassName(classElement.getQualifiedName().toString());
         final String packageName = javaTypeName.substring(0, javaTypeName.lastIndexOf('.'));
+        final Annotation annotation = element.getAnnotation(annotationClass);
+
+        if (annotation == null) {
+            error("Annotation SyndesisExtensionAction not found processing element " + element);
+        }
 
         final String fileName = new StringBuilder()
             .append(classElement.getSimpleName().toString())
             .append('-')
-            .append(UUID.randomUUID().toString())
+            .append((String)annotationClass.getMethod("id").invoke(annotation))
             .append(".properties")
             .toString();
 

@@ -118,6 +118,9 @@
     <atlasmap.version>1.31.1</atlasmap.version>
     <camel-atlasmap.version>1.31.1</camel-atlasmap.version>
     <apache-mime4j.version>0.6</apache-mime4j.version>
+    <google-testing-compile.version>0.12</google-testing-compile.version>
+    <google-testing-compile-guava.version>21.0</google-testing-compile-guava.version>
+    <google-truth.version>0.35</google-truth.version>
 
     <!-- maven plugin version -->
     <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
