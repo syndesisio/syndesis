@@ -31,6 +31,8 @@
 
   <modules>
     <module>http-pull-push-example</module>
+    <module>activemq-publish-subscribe-example</module>
+    <module>activemq-request-response-example</module>
     <module>twitter-salesforce-example</module>
     <module>trade-buy-place-example</module>
     <module>twitter-search-example</module>   
