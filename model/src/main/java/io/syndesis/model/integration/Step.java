@@ -25,6 +25,7 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
 import io.syndesis.model.connection.Action;
 import io.syndesis.model.connection.Connection;
+import io.syndesis.model.extension.Extension;
 import org.immutables.value.Value;
 
 @JsonDeserialize(using = StepDeserializer.class)
@@ -38,6 +39,8 @@ public interface Step extends WithId<Step>, Serializable {
     Optional<Action> getAction();
 
     Optional<Connection> getConnection();
+
+    Optional<Extension> getExtension();
 
     String getStepKind();
 
