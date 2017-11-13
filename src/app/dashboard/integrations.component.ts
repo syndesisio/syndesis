@@ -57,7 +57,6 @@ export class DashboardIntegrationsComponent {
     const draft = [];
     const inactive = [];
     let total = 0;
-
     (this.integrations || []).forEach(function(a) {
       /* TODO - too noisy
       log.debugc(() => 'Integration: ' + JSON.stringify(a));

@@ -65,6 +65,7 @@ export class ConnectionDetailInfoComponent {
     this.updated.emit(this.connection);
   }
 
+  /* tslint:disable semicolon */
   validateName = (name: string) => {
     if (name === '') {
       return 'Name is required';
@@ -80,4 +81,5 @@ export class ConnectionDetailInfoComponent {
         });
     }
   };
+  /* tslint:enable semicolon */
 }
