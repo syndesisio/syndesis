@@ -45,7 +45,13 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,7 +93,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @SuppressWarnings("PMD.EmptyCatchBlock")
-    public Extension upload(MultipartFormDataInput dataInput) {
+    public Extension upload(MultipartFormDataInput dataInput, @QueryParam("updatedId") String updatedId) {
 
         String id = KeyGenerator.createKey();
         String fileLocation = "/extensions/" + id;
@@ -96,6 +102,14 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             storeFile(fileLocation, dataInput);
 
             Extension embeddedExtension = extractExtension(fileLocation);
+
+            if (updatedId != null) {
+                Extension replacedExtension = getDataManager().fetch(Extension.class, updatedId);
+                if (!replacedExtension.getExtensionId().equals(embeddedExtension.getExtensionId())) {
+                    throw new IllegalArgumentException("The uploaded extensionId (" + embeddedExtension.getExtensionId() +
+                        ") does not match the existing extensionId (" + replacedExtension.getExtensionId() + ")");
+                }
+            }
 
             Extension extension = new Extension.Builder()
                 .createFrom(embeddedExtension)

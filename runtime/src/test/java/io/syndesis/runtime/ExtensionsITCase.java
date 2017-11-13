@@ -84,6 +84,33 @@ public class ExtensionsITCase extends BaseITCase {
     }
 
     @Test
+    public void testUpdateExtension() throws IOException {
+        ResponseEntity<Extension> created = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
+            Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+
+        assertThat(created.getBody().getId().isPresent());
+        String id = created.getBody().getId().get();
+
+        ResponseEntity<Extension> updated = post("/api/v1beta1/extensions?updatedId=" + id, multipartBody(extensionData(1)),
+            Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+
+        assertThat(updated.getBody().getId().isPresent());
+    }
+
+    @Test
+    public void testUpdateExtensionFailure() throws IOException {
+        ResponseEntity<Extension> created = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
+            Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+
+        assertThat(created.getBody().getId().isPresent());
+        String id = created.getBody().getId().get();
+
+        // Using wrong extensionId="extension2"
+        post("/api/v1beta1/extensions?updatedId=" + id, multipartBody(extensionData(2)),
+            Void.class, tokenRule.validToken(), HttpStatus.BAD_REQUEST, multipartHeaders());
+    }
+
+    @Test
     public void testValidateExtension() throws IOException {
         // Create one extension
         ResponseEntity<Extension> created1 = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
