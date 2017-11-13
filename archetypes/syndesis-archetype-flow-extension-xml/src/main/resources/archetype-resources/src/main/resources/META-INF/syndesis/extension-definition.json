@@ -1,0 +1,20 @@
+{
+  "actions": [
+    {
+      "actionType" : "extension",
+      "id" : "my-step",
+      "name" : "My Step",
+      "description" : "A simple step",
+      "descriptor" : {
+        "kind" : "ROUTE",
+        "entrypoint" : "direct:my-step",
+        "inputDataShape" : {
+          "kind" : "any"
+        },
+        "outputDataShape" : {
+          "kind" : "any"
+        }
+      }
+    }
+  ]
+}

@@ -122,6 +122,8 @@
     <!-- maven plugin version -->
     <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
     <maven-resolver-api.version>1.0.3</maven-resolver-api.version>
+    <maven-archetype-plugin.version>2.2</maven-archetype-plugin.version>
+    <archetype-packaging.version>2.2</archetype-packaging.version>
 
     <!-- third party plugin version -->
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
@@ -132,6 +134,9 @@
     <swagger-maven-plugin.version>1.0.0</swagger-maven-plugin.version>
     <swagger2markup-maven-plugin.version>1.1.0</swagger2markup-maven-plugin.version>
     <base64.version>2.3.9</base64.version>
+
+    <!-- maven archetypes -->
+    <maven-archetype-packaging.version>2.0</maven-archetype-packaging.version>
   </properties>
 
   <modules>
@@ -154,6 +159,7 @@
     <module>verifier</module>
     <module>inspector</module>
     <module>syndesis-builder-image-generator</module>
+    <module>archetypes</module>
   </modules>
 
   <dependencyManagement>
@@ -884,6 +890,7 @@
             <exclude>**/test/resources/**</exclude>
             <exclude>**/spring.factories</exclude>
             <exclude>**/*.adoc</exclude>
+            <exclude>archetypes/**/src/main/resources/archetype-resources/**</exclude>
           </excludes>
         </configuration>
       </plugin>
