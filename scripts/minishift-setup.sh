@@ -9,7 +9,7 @@ LOCAL_IP="${SYNDESIS_DEV_LOCAL_IP:=$(./node_modules/.bin/my-local-ip)}"
 echo "Local IP is: ${LOCAL_IP}"
 
 # Let's also just back this up in case.
-mv -f src/config.json src/config.json.bak
+mv -f src/config.json src/config.json.bak || true
 cp src/config.json.minishift src/config.json
 sed -i "s/192.168.64.2/$(minishift ip)/" src/config.json
 sed -i "s/Syndesis/Syndesis - DEVELOPMENT/" src/config.json
