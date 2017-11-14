@@ -106,9 +106,9 @@ function init_options() {
 
   if [ -n "$WITH_IMAGE_STREAMS" ]; then
     echo "With image streams ..."
-    MAVEN_OPTS=" -Dfabric8.mode=openshift"
+    MAVEN_OPTS="$MAVEN_OPTS -Dfabric8.mode=openshift"
   else
-    MAVEN_OPTS=" -Dfabric8.mode=kubernetes"
+    MAVEN_OPTS="$MAVEN_OPTS -Dfabric8.mode=kubernetes"
   fi
 }
 
