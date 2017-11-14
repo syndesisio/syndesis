@@ -613,7 +613,7 @@ objects:
       spec:
         containers:
         - name: syndesis-oauthproxy
-          image: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.0.0
+          image: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.1.0
           args:
             - --http-address=:8443
             - --https-address=:8444
