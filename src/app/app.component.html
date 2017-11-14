@@ -1,6 +1,6 @@
 <div class="app">
 
-  <pfng-toast-notification-list [notifications]="notifications"
+  <pfng-toast-notification-list [notifications]="notifications|async"
                                 (onActionSelect)="handleAction($event)"
                                 (onCloseSelect)="handleClose($event)"
                                 [showClose]="showClose">

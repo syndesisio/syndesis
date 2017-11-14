@@ -3,11 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {
-  FilterField,
-  NotificationService,
-  NotificationType
-} from 'patternfly-ng';
+import { FilterField, NotificationType } from 'patternfly-ng';
 
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { Integrations } from '../../model';
@@ -18,6 +14,7 @@ import {
   FileItem,
   ParsedResponseHeaders
 } from 'ng2-file-upload-base/src';
+import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 
 @Component({
   selector: 'syndesis-integrations-list-page',

@@ -16,8 +16,9 @@ import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationViewBase } from '../components/integrationViewBase.component';
 import { ModalService } from '../../common/modal/modal.service';
 import { IntegrationSupportService } from '../../store/integration-support.service';
-import { NotificationService, NotificationType } from 'patternfly-ng';
+import { NotificationType } from 'patternfly-ng';
 import { saveAs } from 'file-saver';
+import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 
 @Component({
   selector: 'syndesis-integration-detail-page',

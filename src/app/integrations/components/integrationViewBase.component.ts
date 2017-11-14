@@ -5,10 +5,8 @@ import { IntegrationStore } from '../../store/integration/integration.store';
 import { ModalService } from '../../common/modal/modal.service';
 import { log } from '../../logging';
 
-import {
-  NotificationService,
-  NotificationType
-} from 'patternfly-ng';
+import { NotificationType } from 'patternfly-ng';
+import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 
 export class IntegrationViewBase {
   currentAction: string = undefined;
