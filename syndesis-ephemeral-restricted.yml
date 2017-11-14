@@ -178,10 +178,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.0.0
+        name: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.1.0
       importPolicy:
         scheduled: true
-      name: "v1.0.0"
+      name: "v1.1.0"
 
 - apiVersion: v1
   kind: ImageStream
@@ -734,7 +734,7 @@ objects:
         - syndesis-oauthproxy
         from:
           kind: ImageStreamTag
-          name: oauth-proxy:v1.0.0
+          name: oauth-proxy:v1.1.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 

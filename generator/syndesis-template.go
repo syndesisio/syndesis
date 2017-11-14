@@ -109,7 +109,7 @@ var syndesisContext = Context{
 	},
 	Tags: tags{
 		Postgresql:    "9.5",
-		OAuthProxy:    "v1.0.0",
+		OAuthProxy:    "v1.1.0",
 	},
 }
 
@@ -140,7 +140,7 @@ var productContext = Context{
 		Postgresql:    "9.5",
 		Syndesis:      "1.1",
 		Atlasmap:      "1.1",
-		OAuthProxy:    "v1.0.0",
+		OAuthProxy:    "v1.1.0",
 	},
 	Registry: "registry.fuse-ignite.openshift.com",
 }
