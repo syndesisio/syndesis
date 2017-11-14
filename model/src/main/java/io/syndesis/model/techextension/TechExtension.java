@@ -15,14 +15,15 @@
  */
 package io.syndesis.model.techextension;
 
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
 import org.immutables.value.Value;
-
-import java.io.Serializable;
-import java.util.List;
-import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(builder = TechExtension.Builder.class)
@@ -41,13 +42,19 @@ public interface TechExtension extends WithId<TechExtension>, Serializable {
     Optional<String> getStatus();
     Optional<String> getDescription();
     Optional<String> getIcon();
-    Optional<List<String>> getTags();
+
+    @Value.Default
+    default List<String>getTags() {
+        return Collections.emptyList();
+    }
 
     List<TechExtensionAction> getActions();
 
-    Optional<List<String>> getDependencies();
+    @Value.Default
+    default List<String> getDependencies() {
+        return Collections.emptyList();
+    }
 
     class Builder extends ImmutableTechExtension.Builder {
     }
-
 }
