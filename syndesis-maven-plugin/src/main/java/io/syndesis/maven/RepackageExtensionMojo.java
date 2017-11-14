@@ -69,6 +69,7 @@ public class RepackageExtensionMojo extends SupportMojo {
     public static final String NET_MINIDEV_JSON_SMART = "net.minidev:json-smart";
     public static final String NET_MINIDEV_ACCESSORS_SMART = "net.minidev:accessors-smart";
     public static final String ORG_OW2_ASM_ASM = "org.ow2.asm:asm";
+    public static final String SYNDESIS_ANNOTATION_PROCESSOR = "io.syndesis:syndesis-annotation-processor";
 
     @Parameter
     protected String blackListedBoms;
@@ -121,7 +122,7 @@ public class RepackageExtensionMojo extends SupportMojo {
     }
 
     protected void addDefaultGAVs(Collection<MavenDependency> dependencies) {
-        String[] defaultGAVs = new String[]{NET_MINIDEV_JSON_SMART, NET_MINIDEV_ACCESSORS_SMART, ORG_OW2_ASM_ASM};
+        String[] defaultGAVs = new String[]{NET_MINIDEV_JSON_SMART, NET_MINIDEV_ACCESSORS_SMART, ORG_OW2_ASM_ASM, SYNDESIS_ANNOTATION_PROCESSOR};
         for (String gav : defaultGAVs){
             dependencies.add(newMavenDependency(gav));
         }
@@ -198,7 +199,8 @@ public class RepackageExtensionMojo extends SupportMojo {
     /*
      * @param artifact The artifact coordinates in the format
      *            {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>}, must not be {@code null}.
-     *            */
+     *
+     */
     protected ArtifactResult downloadAndInstallArtifact(String artifact) throws MojoExecutionException {
         ArtifactResult result;
 
