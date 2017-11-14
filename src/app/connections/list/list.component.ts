@@ -8,12 +8,13 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 
-import { NotificationService, NotificationType } from 'patternfly-ng';
+import { NotificationType } from 'patternfly-ng';
 
 import { ModalService } from '../../common/modal/modal.service';
 import { ConnectionStore } from '../../store/connection/connection.store';
 import { log, getCategory } from '../../logging';
 import { Connections, Connection } from '../../model';
+import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 
 const category = getCategory('Connections');
 

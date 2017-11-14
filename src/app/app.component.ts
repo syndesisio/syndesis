@@ -10,11 +10,7 @@ import { Response } from '@angular/http';
 import { Meta, Title } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
 import { Restangular } from 'ngx-restangular';
-import {
-  Notification,
-  NotificationEvent,
-  NotificationService
-} from 'patternfly-ng';
+import { Notification, NotificationEvent } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
 import { ModalService } from './common/modal/modal.service';
 import { NavigationService } from './common/navigation.service';
@@ -24,6 +20,7 @@ import { log } from './logging';
 import { User } from './model';
 import { TestSupportService } from './store/test-support.service';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
+import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 
 @Component({
   selector: 'syndesis-root',
@@ -77,7 +74,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   guidedTourStatus = true;
 
-  notifications: Notification[];
+  notifications: Observable<Notification[]>;
 
   /**
    * Local var used to determine whether or not to display a close
@@ -153,7 +150,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.user$ = this.userService.user;
 
-    this.notifications = this.notificationService.getNotifications();
+    this.notifications = this.notificationService.getNotificationsObservable();
     this.showClose = true;
   }
 

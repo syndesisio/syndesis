@@ -10,7 +10,6 @@ import {
   ListEvent,
   EmptyStateConfig,
   Notification,
-  NotificationService,
   NotificationType
 } from 'patternfly-ng';
 
@@ -19,6 +18,7 @@ import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationViewBase } from '../components/integrationViewBase.component';
 import { ModalService } from '../../common/modal/modal.service';
 import { log, getCategory } from '../../logging';
+import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 
 @Component({
   selector: 'syndesis-integrations-list',
