@@ -223,8 +223,6 @@ Or manually with `compodoc -s`, or `compodoc` if you want it to simply generate 
 
 `ng serve --prod -aot`
 
-For a list of common commands, see [here](/docs/commands.md).
-
 ## Testing
 
 ### Watch and Run Unit Tests
@@ -235,7 +233,6 @@ For a list of common commands, see [here](/docs/commands.md).
 
 `ng test --watch=false`
 
-For a list of common commands, see [here](/docs/commands.md).
 
 ### Linting
 
@@ -251,9 +248,6 @@ Pull requests are always welcome. Please read through our [Contribution](https:/
 
 New feature development should generally follow [these guidelines](https://syndesis.io/community/engineering_guidelines/).
 
-## Frequently Asked Questions (FAQ)
-
-You can read our FAQ, located in our `/docs` directory, [here](/docs/faq.md).
 
 ## Data Mapper
 
