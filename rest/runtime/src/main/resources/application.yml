@@ -1,0 +1,99 @@
+#
+# Copyright (C) 2016 Red Hat, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+features:
+  api:
+    v1:
+      enabled: true
+    v1beta1:
+      enabled: false
+  filestore:
+    enabled: false
+
+server:
+  useForwardHeaders: true
+
+cors:
+  allowedOrigins: "*"
+
+cache:
+  cluster:
+    name: SyndesisCluster
+  max:
+    entries: 100
+
+spring:
+  zipkin:
+    enabled: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/syndesis?sslmode=disable
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+security:
+  basic:
+    enabled: false
+
+management:
+  port: 8181
+  health:
+    db:
+      enabled: false
+  security:
+    enabled: true
+
+endpoints:
+  health:
+    sensitive: false
+  jsondb:
+    enabled: true
+
+dao:
+  kind: jsondb
+  schema:
+    version: 21 # changing this will reset all the DB data.
+
+filestore:
+  enabled: false
+
+# OpenShift infra value
+openshift:
+  # Base API Url up to the api version number (i.e. ending in sth like "oapi1/v1"
+  apiBaseUrl: "http://openshift/oapi1/v1"
+  # The namespace in which the build configs are created
+  namespace: "myproject"
+  # Namespace where the image stream for the builder image can be found
+  imageStreamNamespace: ""
+
+# GitHub service specific config
+github:
+  enabled: true
+
+verifier:
+  kind: service
+  service: syndesis-verifier
+
+generator:
+  secretMaskingEnabled: true
+
+controllers:
+  integration:
+    enabled: true
+
+maven:
+  repositories:
+    01_maven_central: https://repo1.maven.org/maven2

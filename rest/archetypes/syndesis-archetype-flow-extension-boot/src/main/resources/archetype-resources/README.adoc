@@ -1,0 +1,12 @@
+= Syndesis Flow Extension
+
+This project is a template of a Syndesis Flow Extension.
+
+To build this project use
+
+    mvn install
+
+For more help see the Sydnesis documentsion:
+
+    hhttps://syndesis.io/
+

@@ -1,0 +1,14 @@
+{
+  "properties": {
+    "sObjectName": [
+      {
+        "value": "Account",
+        "displayValue": "Accounts"
+      },
+      {
+        "value": "Contact",
+        "displayValue": "Contacts"
+      }
+    ]
+  }
+}

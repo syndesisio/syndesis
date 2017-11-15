@@ -1,0 +1,2 @@
+io.syndesis.credential.CredentialProviderFactory=\
+io.syndesis.runtime.credential.TestCredentialProviderFactory

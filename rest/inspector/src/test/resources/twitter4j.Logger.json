@@ -1,0 +1,115 @@
+{
+  "JavaClass" : {
+    "jsonType" : "io.atlasmap.java.v2.JavaClass",
+    "modifiers" : {
+      "modifier" : [ "ABSTRACT", "PUBLIC" ]
+    },
+    "className" : "twitter4j.Logger",
+    "primitive" : false,
+    "synthetic" : false,
+    "javaEnumFields" : {
+      "javaEnumField" : [ ]
+    },
+    "javaFields" : {
+      "javaField" : [ {
+        "jsonType" : "io.atlasmap.java.v2.JavaClass",
+        "path" : "LOGGER_FACTORY",
+        "status" : "SUPPORTED",
+        "fieldType" : "COMPLEX",
+        "modifiers" : {
+          "modifier" : [ "ABSTRACT", "PUBLIC", "FINAL", "PRIVATE", "STATIC" ]
+        },
+        "name" : "LOGGER_FACTORY",
+        "className" : "twitter4j.LoggerFactory",
+        "primitive" : false,
+        "synthetic" : false,
+        "javaEnumFields" : {
+          "javaEnumField" : [ ]
+        },
+        "javaFields" : {
+          "javaField" : [ ]
+        },
+        "packageName" : "twitter4j",
+        "annotation" : false,
+        "annonymous" : false,
+        "enumeration" : false,
+        "localClass" : false,
+        "memberClass" : false,
+        "uri" : "atlas:java?className=twitter4j.LoggerFactory",
+        "interface" : false
+      }, {
+        "jsonType" : "io.atlasmap.java.v2.JavaField",
+        "path" : "LOGGER_FACTORY_IMPLEMENTATION",
+        "status" : "SUPPORTED",
+        "fieldType" : "STRING",
+        "modifiers" : {
+          "modifier" : [ "FINAL", "PRIVATE", "STATIC" ]
+        },
+        "name" : "LOGGER_FACTORY_IMPLEMENTATION",
+        "className" : "java.lang.String",
+        "primitive" : true,
+        "synthetic" : false
+      }, {
+        "jsonType" : "io.atlasmap.java.v2.JavaField",
+        "path" : "warnEnabled",
+        "status" : "SUPPORTED",
+        "fieldType" : "BOOLEAN",
+        "modifiers" : {
+          "modifier" : [ ]
+        },
+        "name" : "warnEnabled",
+        "className" : "boolean",
+        "getMethod" : "isWarnEnabled",
+        "primitive" : true,
+        "synthetic" : false
+      }, {
+        "jsonType" : "io.atlasmap.java.v2.JavaField",
+        "path" : "infoEnabled",
+        "status" : "SUPPORTED",
+        "fieldType" : "BOOLEAN",
+        "modifiers" : {
+          "modifier" : [ ]
+        },
+        "name" : "infoEnabled",
+        "className" : "boolean",
+        "getMethod" : "isInfoEnabled",
+        "primitive" : true,
+        "synthetic" : false
+      }, {
+        "jsonType" : "io.atlasmap.java.v2.JavaField",
+        "path" : "debugEnabled",
+        "status" : "SUPPORTED",
+        "fieldType" : "BOOLEAN",
+        "modifiers" : {
+          "modifier" : [ ]
+        },
+        "name" : "debugEnabled",
+        "className" : "boolean",
+        "getMethod" : "isDebugEnabled",
+        "primitive" : true,
+        "synthetic" : false
+      }, {
+        "jsonType" : "io.atlasmap.java.v2.JavaField",
+        "path" : "errorEnabled",
+        "status" : "SUPPORTED",
+        "fieldType" : "BOOLEAN",
+        "modifiers" : {
+          "modifier" : [ ]
+        },
+        "name" : "errorEnabled",
+        "className" : "boolean",
+        "getMethod" : "isErrorEnabled",
+        "primitive" : true,
+        "synthetic" : false
+      } ]
+    },
+    "packageName" : "twitter4j",
+    "annotation" : false,
+    "annonymous" : false,
+    "enumeration" : false,
+    "localClass" : false,
+    "memberClass" : false,
+    "uri" : "atlas:java?className=twitter4j.Logger",
+    "interface" : false
+  }
+}
