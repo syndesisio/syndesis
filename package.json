@@ -9,7 +9,7 @@
   "scripts": {
     "compodoc": "./node_modules/.bin/compodoc -p src/tsconfig.json -s",
     "copy:assets": "yarn ncp node_modules/@atlasmap/atlasmap.data.mapper/src/assets/dm src/assets/dm",
-    "format": "yarn prettier --no-color --single-quote --trailing-a all --write \"./src/**/*.{ts,css,scss,js,json}\"",
+    "format": "yarn prettier --no-color --single-quote --trailing-comma all --write \"./src/**/*.{ts,css,scss,js,json}\"",
     "generate": "node ./scripts/generate-ts.js",
     "prestart": "cp -f ./scripts/pre-commit ./.git/hooks && chmod +x ./.git/hooks/pre-commit",
     "start": "yarn ng serve --ssl true --ssl-key localhost.key --ssl-cert localhost.crt --proxy-config proxy.conf.js",

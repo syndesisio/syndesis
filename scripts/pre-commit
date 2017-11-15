@@ -15,7 +15,7 @@ echo "\nRunning formatters on Syndesis UI...\n"
 FILES=`git diff --cached --name-only | grep -E $INCLUDED | grep -E -v $EXCLUDED`
 echo "On files: \n\n$FILES"
 for EACH in $FILES; do
-  yarn prettier --write --no-color --single-quote --trailing-a all --write $EACH
+  yarn prettier --write --no-color --single-quote --trailing-comma all --write $EACH
   git add $EACH
 done
 
